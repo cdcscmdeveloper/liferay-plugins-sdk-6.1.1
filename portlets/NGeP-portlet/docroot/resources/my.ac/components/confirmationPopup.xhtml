@@ -16,6 +16,8 @@
 		<cc:attribute name="okAction" required="true" default="" />
 		<cc:attribute name="width" default="400" />
 		<cc:attribute name="height" default="200" />
+		<cc:attribute name="resetInput" default="" />
+		<cc:attribute name="okProcess" default="@this" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -35,10 +37,22 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
-					partialSubmit="true"
-					action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-					oncomplete="#{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
+				<c:choose>
+				    <c:when test="#{empty cc.attrs.resetInput}">
+				       <p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+							partialSubmit="true"
+							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
+							oncomplete="#{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
+				    </c:when>
+				    <c:otherwise>
+				        <p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+							partialSubmit="true"
+							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
+							oncomplete="#{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" >
+								<p:resetInput target="#{cc.attrs.resetInput}" />
+							</p:commandButton>
+				    </c:otherwise>
+				</c:choose>
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					oncomplete="#{cc.attrs.widget}.hide();" />
 			</div>
