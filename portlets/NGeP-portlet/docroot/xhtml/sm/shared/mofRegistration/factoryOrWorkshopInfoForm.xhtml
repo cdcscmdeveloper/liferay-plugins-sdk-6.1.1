@@ -17,7 +17,7 @@
 				<ac:paginator for="facDt" />
 				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.applFactoryFacilities}"/>
 
-				<p:column headerText="#{lbl['lbl.sm.factory.name']}">
+				<p:column headerText="#{lbl['lbl.sm.facility.factory.name']}">
 					<h:outputText value="#{fac.facilityName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.factory.address']}"
@@ -101,14 +101,7 @@
 				showDetail="true" autoUpdate="true" closable="true" />
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.facilityType}" readonly="true"
-							disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.facility.name']}" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.sm.facility.factory.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText size="35" maxlength="50" id="smFacFactorName"
 							required="#{backingBean.managedBean.valueReqd}" label="Name"
