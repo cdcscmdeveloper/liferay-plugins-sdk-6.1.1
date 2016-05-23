@@ -8,34 +8,50 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="contentSection">
 
+
 		<style>
-#opUserCommonMainDiv {
-	border: 1px solid #d3d3d3;
-	padding: 10px 8px;
+a {
+	text-decoration: none;
+	color: #009ae5;
 }
 
-#_pmUserCommonDetailsR_WAR_NGePportlet_\:form {
-	margin: 0px !important
+textarea {
+	width: 205px;
+	margin: 5px;
 }
 
-.role-odd {
-	font-size: 14px;
+#profile-bg {
+	border: 1px solid #f2f2f2;
+	width: 220px;
+	padding: 0 0 5px;
+	background: -webkit-linear-gradient(#fff 0%, #f8f8f8 1%, white 20%);
+	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#fff 0%, #f8f8f8 1%, white 20%);
+	/* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#fff 0%, #f8f8f8 1%, white 20%);
+	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(#fff 0%, #f8f8f8 1%, white 20%);
+	/* Standard syntax (must be last) */
 }
 
-.role-even {
-	font-size: 14px;
-	background: #ffffff;
+.myProfile-title {
+	font-family: arial;
+	font-size: 11.5px;
+	font-weight: bold;
+	color: #0054a6;
+	margin: 10px 5px 0;
 }
 
-.div-content-break-word{
+.myProfile-text {
+	font-family: arial;
+	font-size: 11.5px;
+	font-size: #000;
+	margin: 5px;
+}
+
+.div-content-break-word {
 	word-wrap: break-word;
 }
-
-div#opUserCommonDetDiv div{
-margin-left:0px;}
-
-div#opUserCommonDetSuppDiv div{
-margin-left:0px;}
 </style>
 		<c:if test="#{not profilePersonalizationBackingBean.tempSupplierRole}">
 			<p:messages id="messages" showDetail="true" autoUpdate="true"
@@ -47,129 +63,94 @@ margin-left:0px;}
 			<ui:param name="showExpSection"
 				value="#{profilePersonalizationBackingBean.mofExpiryShown or profilePersonalizationBackingBean.virtualCertShown or
 			profilePersonalizationBackingBean.softCertExpiryShown}" />
-			<div class="span12" style="font-weight:bold;background-color:#f4f4f4;padding:5px;text-align:center;border-top: 1px solid #d3d3d3;border-right: 1px solid #d3d3d3;border-left: 1px solid #d3d3d3;"> 
-				<h:outputText value="#{lbl['lbl.pm.profiles.authorisation.myprofile']}" /></div>
-			<div id="opUserCommonMainDiv" class="span12">
-				
-				<div id="opUserCommonDetDiv" class="span12">
-					
-							<div class="span2">
-								<p:graphicImage value="/css/images/design/icon-organization.png"
-									title="#{lbl['lbl.pm.access.app.org']}" />
-							</div>
-							<div class="span10">
-								<div class="div-content-break-word">
-									<h:outputText style="white-space:normal;" value="#{orgName}" />
-								</div>
-							</div>
-					
-							<div class="span2">
-								<p:graphicImage value="/css/images/design/icon-email.png"
-									title="#{lbl['lbl.pm.address.email']}" />
-							</div>
-							<div class="span10">
-								<div class="div-content-break-word">
-									<h:outputText
-									value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" />
-								&#160;
-								<h:graphicImage value="/css/images/design/tick.png"
-									rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" />
-								</div>
-								
-							</div>
-							<div class="span2">
-								<p:graphicImage value="/css/images/design/icon-sms.png"
-									title="#{lbl['lbl.pm.profiles.preferences.sms']}" />
-							</div>
-							<div class="span10">
-								<div class="div-content-break-word">
-								<h:outputText style="white-space:normal;"
-									value="#{not empty profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull 
-                  ? profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull : '-'}" />
-								&#160;
-								<h:graphicImage value="/css/images/design/tick.png"
-									rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" />
-								</div>
-							</div>
-					
-							<div class="span2">
-								<p:graphicImage value="/css/images/design/icon-account-info.png"
-									title="#{lbl['lbl.pm.profiles.authorisation.roles']}" />
-							</div>
-							<div class="span10">
-								<p:scrollPanel
-									style="max-height: 60px; min-height:20px;max-width:210px;padding: 0px !important;margin-top: 0px !important;"
-									mode="native">
 
-									<ui:repeat var="role"
-										value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
-										varStatus="status">
-										<div class="#{status.odd ? 'role-odd' : 'role-even'}">
-											<div class="div-content-break-word">
-												<h:outputText value="#{role}" />
-											</div>
-										</div>
-
-									</ui:repeat>
-
-								</p:scrollPanel>
-							</div>
+			<div id="profile-bg">
+				<div class="myProfile-title">#{lbl['lbl.pm.profiles.authorisation.org.lov']}</div>
+				<div class="myProfile-text">
+					<div class="div-content-break-word">
+						<h:outputText style="white-space:normal;" value="#{orgName}" />
+					</div>
 				</div>
+				<div class="myProfile-title">#{lbl['lbl.pm.profiles.userdetails.email']}</div>
+				<div class="myProfile-text">
+					<div class="div-content-break-word">
+						<h:outputText
+							value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" />
+						&#160;
+						<h:graphicImage value="/css/images/design/tick.png"
+							rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" />
+					</div>
+				</div>
+				<div class="myProfile-title">#{lbl['lbl.pm.profiles.userdetails.mobileno']}</div>
+				<div class="myProfile-text">
+					<div class="div-content-break-word">
+						<h:outputText style="white-space:normal;"
+							value="#{not empty profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull 
+                  ? profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull : '-'}" />
+						&#160;
+						<h:graphicImage value="/css/images/design/tick.png"
+							rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" />
+					</div>
+				</div>
+				<div class="myProfile-title">#{lbl['lbl.pm.profiles.authorisation.roles']}</div>
+				<p:scrollPanel
+					style="max-height: 100px; min-height:20px;max-width:210px;padding: 0px !important;margin-top: 0px !important;margin-left:5px;"
+					mode="native">
+					<ui:repeat var="role"
+						value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
+						varStatus="status">
+						<div class="#{status.odd ? 'role-odd' : 'role-even'}">
+							<div class="div-content-break-word">
+								<h:outputText value="#{role}" />
+							</div>
+						</div>
+
+					</ui:repeat>
+
+				</p:scrollPanel>
 				<c:if test="#{showExpSection}">
-					<div id="opUserCommonDetSuppDiv" class="span12" style="margin: 10px 0px 5px 0px">
-						<div class="span12">
+					<div id="opUserCommonDetSuppDiv">
 							<c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">
-								<div class="span12">
-									<h:outputText value="#{lbl['lbl.pm.ucd.mof.exp']}" />
-								    <h:outputText
+								<div class="myProfile-title">#{lbl['lbl.pm.ucd.mof.exp']}</div>
+  								<div class="myProfile-text"><h:outputText
 										value="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null ? ' : ' : ' : - '}" />
 									<h:outputText
 										value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}"
 										rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null}">
 										<f:convertDateTime
 											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-									</h:outputText>
-								</div>
+									</h:outputText></div>
 							</c:if>
 							<c:if
 								test="#{profilePersonalizationBackingBean.virtualCertShown}">
-								<div>
-									<div class="span12">
-										<p:graphicImage value="/css/images/design/icon-view.png" />
+								  <div class="myProfile-text"><p:graphicImage value="/css/images/design/icon-view.png" />
 										&#160;
 										<p:commandLink
 											action="#{supplierAlertBackingBean.navigateToViewVirtualCert}"
-											value="#{lbl['lbl.pm.ucd.virtual.cert']}" />
-									</div>
-								</div>
+											value="#{lbl['lbl.pm.ucd.virtual.cert']}" /></div>
 							</c:if>
 							<c:if
 								test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
-									<div class="span12">
-										<h:outputText value="#{lbl['lbl.pm.ucd.softcert.exp']}" />
-										<h:outputText
-											value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null ? ' : ' : ' : - '}" />
-										<h:outputText
-											value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate}"
-											rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null}">
-											<f:convertDateTime
-												pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-										</h:outputText>
-									</div>
-								
+								  <div class="myProfile-title">#{lbl['lbl.pm.ucd.softcert.exp']}</div>
+  								  <div class="myProfile-text"><h:outputText
+										value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null ? ' : ' : ' : - '}" />
+									<h:outputText
+										value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate}"
+										rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null}">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</h:outputText></div>
+
 							</c:if>
 							<c:if
 								test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
-								<div class="span12">
-									<p:graphicImage value="/css/images/design/icon-view.png" />
+								<div class="myProfile-text"><p:graphicImage value="/css/images/design/icon-view.png" />
 									&#160;
 									<p:commandLink
 										action="#{softCertBackingBean.navigateToViewSoftCert}"
-										value="#{lbl['lbl.pm.ucd.soft.cert']}" />
-								</div>
-
+										value="#{lbl['lbl.pm.ucd.soft.cert']}" /></div>
 							</c:if>
-						</div>
+						
 					</div>
 				</c:if>
 			</div>
