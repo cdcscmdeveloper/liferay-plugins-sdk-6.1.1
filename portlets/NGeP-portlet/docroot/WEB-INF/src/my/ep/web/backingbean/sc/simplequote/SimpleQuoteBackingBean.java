@@ -3707,10 +3707,12 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private  void getDaysAndHours(Date dateOne, Date dateTwo){
 		long diff = dateTwo.getTime() - dateOne.getTime();
+		long diffMinutes = diff / (60 * 1000) % 60;
 		long diffHours = diff / (60 * 60 * 1000) % 24;
 		long diffDays = diff / (24 * 60 * 60 * 1000);
+		double time = (double)diffHours + (double)diffMinutes / 60;
         getManagedBean().setDays(diffDays);
-        getManagedBean().setHours(diffHours);
+        getManagedBean().setHours(time);
 	}
 
 	

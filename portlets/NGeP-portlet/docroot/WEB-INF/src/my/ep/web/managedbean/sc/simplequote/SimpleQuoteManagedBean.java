@@ -405,7 +405,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private long days;
 	
 	/** The hours. */
-	private long hours;
+	private double hours;
 	
 	/**
 	 * Gets the spki backing bean.
@@ -2590,7 +2590,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 *
 	 * @return the hours
 	 */
-	public long getHours() {
+	public double getHours() {
 		return hours;
 	}
 
@@ -2599,7 +2599,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 *
 	 * @param hours the new hours
 	 */
-	public void setHours(long hours) {
+	public void setHours(double hours) {
 		this.hours = hours;
 	}
 	

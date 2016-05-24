@@ -236,6 +236,7 @@
 							maxlength="5"
 							value="#{simpleQuoteBackingBean.managedBean.hours}"
 							disabled="true" style="text-align:right;">
+							<f:convertNumber pattern="##0.0" />
 						</p:inputText>
 						<h:outputText value="#{lbl['lbl.sc.simple.quote.hours']}" style="font-weight:bold;margin-left: 3px;" />
 					</p:outputPanel></td>
