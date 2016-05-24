@@ -379,52 +379,8 @@
 		</table>	
 	</p:outputPanel>
 	
-	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" styleClass="header-spacing">
-		<table style="width: 100%" id="remarksList">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;">
-					<p:outputLabel value="#{lbl['lbl.sc.remark']}" />
-				</td>
-				<td class="TableFieldRight">
-					<p:dataGrid var="remarkVar"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{suppFinalizationBackingBean.managedBean.finalizationRemarks}"
-						rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top">
-									<h:graphicImage
-										height="30"
-										value="#{suppFinalizationBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										width="30" />
-								</td>
-								<td width="5"></td>
-								<td>
-									<h:outputText value="#{remarkVar.createdUser.userName}" />, 
-									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText>
-								</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td>
-									<p:inputTextarea cols="40" value="#{remarkVar.remark}" 
-												     rendered="#{remarkVar.remarkId eq null or remarkVar.createdUser.loginId eq 
-												     				suppFinalizationBackingBean.managedBean.loggedInUserId}">
-										<p:ajax partialSubmit="true" process="@this" update="@this"/>
-									</p:inputTextarea> 
-									<h:outputText value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null and remarkVar.createdUser.loginId ne 
-												     				suppFinalizationBackingBean.managedBean.loggedInUserId}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" />									
-								</td>
-							</tr>
-						</table>
-					</p:dataGrid>
-				</td>
-			</tr>
-		</table>
-	</p:panel>
+	<ac:scRemarkAndAttachment
+		remarkList="#{suppFinalizationBackingBean.managedBean.finalizationRemarks}"
+		showAttachment="false" />
 	
 </ui:composition>
