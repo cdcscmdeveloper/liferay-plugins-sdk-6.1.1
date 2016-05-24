@@ -3513,7 +3513,10 @@ public class DirectLOABackingBean extends
 					.getScQtSchedules();
 
 			if (CollectionUtils.isNotEmpty(scheduleList)) {
-				List<ScQtSchedule> toBeRemoveList = new ArrayList<ScQtSchedule>();
+				List<ScQtSchedule> toBeRemoveList = getManagedBean().getToBeRemoveSchedules();
+				if (toBeRemoveList == null) {
+					toBeRemoveList = new ArrayList<ScQtSchedule>();	
+				}
 
 				for (ScQtSchedule qtSchedule : scheduleList) {
 					if (null != qtSchedule.getQtScheduleId()) {
@@ -3532,7 +3535,10 @@ public class DirectLOABackingBean extends
 					.getScLoa().getScQtProgPayments();
 
 			if (CollectionUtils.isNotEmpty(payments)) {
-				List<ScQtProgressivePayment> toBeRemoveList = new ArrayList<ScQtProgressivePayment>();
+				List<ScQtProgressivePayment> toBeRemoveList = getManagedBean().getToBeRemoveProgPayments();
+				if (toBeRemoveList == null) {
+					toBeRemoveList = new ArrayList<ScQtProgressivePayment>();	
+				}
 
 				for (ScQtProgressivePayment payment : payments) {
 					if (null != payment.getQtPaymentId()) {
