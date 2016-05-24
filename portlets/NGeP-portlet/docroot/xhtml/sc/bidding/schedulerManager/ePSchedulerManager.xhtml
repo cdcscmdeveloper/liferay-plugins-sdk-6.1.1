@@ -144,40 +144,18 @@
 							oncomplete="blockWidget.hide()">
 							<p:graphicImage value="/css/images/design/action.png" title="#{lbl['lbl.quartz.update.job']}" />
 						</p:commandLink>
-						&#160;
-						<p:commandLink id="deleteActionId"
-							partialSubmit="true"
-							process="@this" action="#{schedulerManagerBB.onDeleteJob(jobBean)}"
-							update="jobBeanDt,@([id$=Msg])" onstart="blockWidget.show()"
-							oncomplete="blockWidget.hide()">
-							<p:graphicImage value="/css/images/design/ico-termination.png" title="#{lbl['lbl.quartz.delete.job']}" />
-						</p:commandLink>
-						<ui:remove>
-							<p:outputPanel rendered="#{jobBean.state eq 'BLOCKED'}">
-								&#160;
-								<p:commandLink id="recoveryActionId"
-									partialSubmit="true"
-									process="@this" action="#{schedulerManagerBB.recoverJob(jobBean)}"
-									update="@form" onstart="blockWidget.show()"
-									oncomplete="blockWidget.hide()">
-									<p:graphicImage value="/css/images/design/ico-termination-history.png" title="#{lbl['lbl.quartz.recovery.block.job']}" />
-								</p:commandLink>
-							</p:outputPanel>
-							<p:outputPanel rendered="#{jobBean.state eq 'COMPLETE'}">
-								&#160;
-								<p:commandLink id="rescheduleActionId"
-									partialSubmit="true"
-									process="@this" action="#{schedulerManagerBB.rescheduledJob(jobBean)}"
-									update="@form" onstart="blockWidget.show()"
-									oncomplete="blockWidget.hide()">
-									<p:graphicImage value="/css/images/design/ico-termination-history.png" title="#{lbl['lbl.quartz.reschedule.job']}" />
-								</p:commandLink>
-							</p:outputPanel>
-						</ui:remove>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{empty jobBean.trigger}">
 						<h:outputText value="#{lbl['lbl.quartz.action.not.available']}" />
 					</p:outputPanel>
+					&#160;
+					<p:commandLink id="deleteActionId"
+						partialSubmit="true"
+						process="@this" action="#{schedulerManagerBB.onDeleteJob(jobBean)}"
+						update="jobBeanDt,@([id$=Msg])" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()">
+						<p:graphicImage value="/css/images/design/ico-termination.png" title="#{lbl['lbl.quartz.delete.job']}" />
+					</p:commandLink>
 				</p:column>
 
 			</p:dataTable>
