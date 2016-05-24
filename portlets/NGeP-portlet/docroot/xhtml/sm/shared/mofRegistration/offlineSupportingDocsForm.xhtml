@@ -73,16 +73,6 @@
 								<p:graphicImage value="/css/images/design/print.png"
 											style="margin-right:2px;" title="#{lbl['lbl.sm.printList']}"/>
 							</p:commandLink>
-							||
-							<p:commandLink action="#{backingBean.printDeclarationForm}" update="@form" value="print declaration formddddd"
-							   onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this">
-							</p:commandLink>
-							||
-							<p:commandLink value="download test"
-								action="#{backingBean.downloadSignatureSuppDoc('SBP')}"
-								update=":form" ajax="false">
-								<p:fileDownload value="#{backingBean.file}" />
-							</p:commandLink>
 						</div>
 					</td>
 
