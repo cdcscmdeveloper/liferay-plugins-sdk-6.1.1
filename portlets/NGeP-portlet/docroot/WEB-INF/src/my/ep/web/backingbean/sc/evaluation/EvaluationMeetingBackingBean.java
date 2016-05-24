@@ -715,6 +715,7 @@ public class EvaluationMeetingBackingBean extends
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTMeetingSO.class);
 		metReqDtO.setUser(new FacesScopes().getUserSessionBean());
+		metReqDtO.setCommitteType(this.getManagedBean().getCommitteeType());
 		meetingso.validateCommitteDtls(metReqDtO);
 	}
 
