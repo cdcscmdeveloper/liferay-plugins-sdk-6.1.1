@@ -7802,7 +7802,8 @@ public class SmApplicationUtil {
 			String vm = "/sm/application/MOF-declaration-form.vm";
 			VelocityContext context = new VelocityContext();
 			FacesScopes fs = new FacesScopes();
-			context.put("hostUrl", fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort());
+			context.put("hostUrl", fs.getRequest().getServerName() + ":"
+					+ fs.getRequest().getServerPort());
 			context.put("applNo", smAppl.getApplNo());
 			context.put("applType", smAppl.getApplType());
 			context.put("companyName", smAppl.getSmSupplier().getCompanyName());
@@ -7964,6 +7965,23 @@ public class SmApplicationUtil {
 					retVal = sd.getStatusName();
 					break;
 				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * Check if all supporting doc already verified
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 * @return boolean
+	 */
+	public static boolean isAllSuppDocAlreadyVerified(SmAppl appl) {
+		boolean retVal = true;
+		for (SmApplSupportDoc doc : appl.getSmApplSupportDocs()) {
+			if(doc.getVerifiedFlg()!=1){
+				retVal = false;
 			}
 		}
 		return retVal;
