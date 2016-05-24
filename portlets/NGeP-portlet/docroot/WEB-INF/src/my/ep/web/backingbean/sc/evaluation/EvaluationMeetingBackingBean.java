@@ -31,7 +31,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -75,7 +74,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -264,6 +262,7 @@ public class EvaluationMeetingBackingBean extends
 
 				reqDTO.setCommitteType(commType);
 				resDTO = meetingSO.retrieveMeetingDls(reqDTO);
+				ScQtCommittee qtCommittee = resDTO.getQtCommittee();
 
 				if (null != resDTO.getMeetingDtls()) {
 
@@ -271,42 +270,14 @@ public class EvaluationMeetingBackingBean extends
 							resDTO.getMeetingDtls());
 
 				}
-				if (null != resDTO.getQtCommittee()) {
-					this.getManagedBean().setScQtCommittee(
-							resDTO.getQtCommittee());
-
-					/*
-					 * if (null != resDTO.getQtCommittee()
-					 * .getCommitteeActivities()
-					 * 
-					 * && !resDTO.getQtCommittee()
-					 * .getCommitteeActivities().isEmpty()) {
-					 * Collections.sort(resDTO.getQtCommittee()
-					 * .getCommitteeActivities());
-					 * this.getManagedBean().setCommitteeMemberActivity(
-					 * resDTO.getQtCommittee() .getCommitteeActivities());
-					 * 
-					 * } else {
-					 */
+				if (null != qtCommittee) {
+					this.getManagedBean().setScQtCommittee(qtCommittee);
 
 					ScCommittee sccommittee = resDTO.getQtCommittee()
 							.getScCommittee();
 					List<ScCommitteeMember> localList = new ArrayList<ScCommitteeMember>();
 					if (null != sccommittee.getScCommitteeMembers()
 							&& !sccommittee.getScCommitteeMembers().isEmpty()) {
-						/*
-						 * for (ScCommitteeMember scCommitteeMember :
-						 * sccommittee .getScCommitteeMembers()) { //
-						 * scCommitteeMember.setScCommittee(sccommittee); //
-						 * setUserDetails(scCommitteeMember);
-						 * 
-						 * ScQtCommitteeActivity activity = new
-						 * ScQtCommitteeActivity();
-						 * activity.setScQtCommittee(this.getManagedBean()
-						 * .getScQtCommittee());
-						 * activity.setScCommitteeMember(scCommitteeMember);
-						 * setUserDetails(activity); localList.add(activity); }
-						 */
 						localList.addAll(sccommittee.getScCommitteeMembers());
 					}
 
@@ -321,8 +292,7 @@ public class EvaluationMeetingBackingBean extends
 						qtRemarkList = new ArrayList<ScQtCommitteRemarks>();
 					}
 
-					List<ScQtCommitteRemarks> remarks = this.getManagedBean()
-							.getScQtCommittee().getQtCommitteRemarks();
+					List<ScQtCommitteRemarks> remarks = qtCommittee.getQtCommitteRemarks();
 
 					if (null != remarks && !remarks.isEmpty()) {
 						for (ScRemark remark : remarks) {
@@ -332,9 +302,10 @@ public class EvaluationMeetingBackingBean extends
 						this.getManagedBean().setQtCommitteeRemarks(
 								qtRemarkList);
 					}
-					List<ScQtCommitteRemarks> remark = initializeRemarks(this
-							.getManagedBean().getScQtCommittee(), null,
-							qtRemarkList, ScQtCommitteRemarks.class);
+					qtRemarkList = initializeRemarks(qtCommittee, 
+							qtCommittee.getCurrentStatus(),
+							qtRemarkList, 
+							ScQtCommitteRemarks.class);
 					// qtRemarkList.addAll(remark);
 					this.getManagedBean().setQtCommitteeRemarks(qtRemarkList);
 
