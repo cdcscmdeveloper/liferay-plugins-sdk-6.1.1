@@ -19,6 +19,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -703,14 +704,15 @@ public class TemplateSpecBackingBean extends
 	/**
 	 * Template Type dropdown change action
 	 */
-	public void templateTypeChange() {
+	public void templateTypeChange(AjaxBehaviorEvent event) {
 		IParameterSO parameterSO = null;
 		IOrgProfileSO orgProfileSO = null;
 		try {
 			TplSpecMaster specMaster = getManagedBean().getTemplateSpecBean()
 					.getSpecMaster();
-			Long parameterId = specMaster.getTemplateTypeCode()
-					.getParameterId();
+			Long parameterId = (Long) event.getComponent().getAttributes()
+					.get("value");
+			
 			PmOrgProfile pmOrgProfile = null;
 
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
