@@ -33,8 +33,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
-import com.bluecast.xml.EntityManager;
-
 @ManagedBean(name = "notifyRetryBackingBean")
 @ViewScoped
 public class NotifyRetryBackingBean extends
