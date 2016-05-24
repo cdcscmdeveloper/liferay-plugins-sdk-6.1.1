@@ -38,11 +38,21 @@
 				<td style="width: 5%;"><h:outputLabel
 						value="#{lbl['lbl.sc.proposal.validity.until']}" /></td>
 				<c:if test="#{validatevalue eq 'true'}">
-					<td style="width: 22%" class="header-info-text">#{scQt.proposalValidityUntil}</td>
+					<td style="width: 22%" class="header-info-text">
+						<h:outputText value="#{scQt.proposalValidityEndDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</td>
 				</c:if>
 				<c:if test="#{validatevalue eq 'false'}">
 					<td style="width: 22%; font-weight: bold; color: red;"
-						class="header-info-text">#{scQt.proposalValidityUntil}</td>
+						class="header-info-text">
+						<h:outputText value="#{scQt.proposalValidityEndDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</td>
 				</c:if>
 			</tr>
 		</table>
