@@ -118,11 +118,12 @@
 							value="#{specMaster.templateTypeCode.parameterId}"
 							required="true"
 							label="#{lbl['lbl.tpl.spec.template.type']}" disabled="#{isReadOnly}">
-							<p:ajax event="change" partialSubmit="true" process="@this" update="ministryLBL, ministryDD" listener="#{templateSpecBackingBean.templateTypeChange()}" />
+							<p:ajax event="change" partialSubmit="true" process="@this" update="ministryLBL,ministryDD" listener="#{templateSpecBackingBean.templateTypeChange}" />
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.templateType)}" />
 						</p:selectOneMenu>
 						<p:message id="templateTypeMsg" for="templateType" display="icon" />
 					</td>
+					
 					<td class="TableFieldLeft">
 						<h:panelGroup id="ministryLBL">
 							<c:if test="#{specMaster.templateTypeCode.parameterCode == ParameterConst.templateTypeMinistry or specMaster.templateTypeCode.parameterCode == ParameterConst.templateTypePtj}">
