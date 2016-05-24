@@ -38,7 +38,15 @@
 						<div class="flow-chart">
 							<!-- Basic Account-->
 							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.supplierTypeBasicWithoutMof}">
-								<p class="title">#{lbl['lbl.sm.basic.pls.proceed']}</p>
+								<c:choose>
+									<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeG2g}">
+										<p class="title">#{lbl['lbl.sm.basic.pls.proceed.g2g']}</p>
+									</c:when>
+
+									<c:otherwise>
+										<p class="title">#{lbl['lbl.sm.basic.pls.proceed']}</p>
+									</c:otherwise>
+								</c:choose>
 								<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowBasic.xhtml"></ui:include>
 							</p:outputPanel>
 							
