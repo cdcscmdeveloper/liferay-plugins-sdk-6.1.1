@@ -49,6 +49,8 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	private ScQt scQt;
 	private String docType;
+	private PmOrgProfile orgProfileOfLoginUser;
+	private boolean cloneBtnRendered;
 	
 	public TemplateSpecManagedBean() {
 	}
@@ -247,5 +249,33 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	 */
 	public void setG2G(boolean isG2G) {
 		this.isG2G = isG2G;
+	}
+
+	/**
+	 * @return the orgProfileOfLoginUser
+	 */
+	public PmOrgProfile getOrgProfileOfLoginUser() {
+		return orgProfileOfLoginUser;
+	}
+
+	/**
+	 * @param orgProfileOfLoginUser the orgProfileOfLoginUser to set
+	 */
+	public void setOrgProfileOfLoginUser(PmOrgProfile orgProfileOfLoginUser) {
+		this.orgProfileOfLoginUser = orgProfileOfLoginUser;
+	}
+
+	/**
+	 * @return the cloneBtnRendered
+	 */
+	public boolean isCloneBtnRendered() {
+		return cloneBtnRendered;
+	}
+
+	/**
+	 * @param cloneBtnRendered the cloneBtnRendered to set
+	 */
+	public void setCloneBtnRendered(boolean cloneBtnRendered) {
+		this.cloneBtnRendered = cloneBtnRendered;
 	}
 }
