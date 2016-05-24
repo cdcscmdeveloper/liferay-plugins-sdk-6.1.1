@@ -140,20 +140,20 @@ body {margin-top: 0px;margin-left: 0px;}
 <tr>
 	<td class="tr3 td2"><p class="p1 ft1">Alamat Bank</p></td>
 	<td class="tr3 td31"><p class="p1 ft3"><span class="ft1">: </span></p></td>
-	<td class="tr3 td30" colspan="4"><p class="p1 ft3">&#160;</p></td>
+	<td class="tr3 td30" colspan="4"><p class="p1 ft3">&#160;$bankStreetAddress</p></td>
 </tr>
 <tr>
 	<td class="tr2 td2"><p class="p1 ft4">&#160;</p></td>
 	<td class="tr2 td31"><p class="p5 ft3">&#160;</p></td>
-	<td class="tr2 td30" colspan="4"><p class="p5 ft3">&#160;</p></td>
+	<td class="tr2 td30" colspan="4"><p class="p5 ft3">$bankCityDistrict</p></td>
 </tr>
 <tr>	
 	<td class="tr2 td2"><p class="p1 ft1">Poskod</p></td>
 	<td class="tr2 td31"><p class="p1 ft2"><span class="ft0">: </span></p></td>
-	<td class="tr2 td30"><p class="p1 ft2">&#160;</p></td>
+	<td class="tr2 td30"><p class="p1 ft2">&#160;$bankPostCode</p></td>
 	<td class="tr2 td2"><p class="p1 ft1">&#160;&#160;Negeri</p></td>
 	<td class="tr2 td31"><p class="p1 ft2"><span class="ft0">: </span></p></td>	
-	<td class="tr2 td30"><p class="p1 ft2">&#160;</p></td>
+	<td class="tr2 td30"><p class="p1 ft2">&#160;$bankState</p></td>
 </tr>
 <tr>
 	<td class="tr3 td2"><p class="p1 ft1">No. Akaun</p></td>
@@ -184,24 +184,24 @@ body {margin-top: 0px;margin-left: 0px;}
 	<td class="tr0 td12"><p class="p10 ft1">Tandatangan</p></td>
 </tr>
 <tr>
-	<td class="tr7 td13"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr7 td14"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr7 td15"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr7 td13"><p class="p1 ft3">&#160;$!csNo0</p></td>
+	<td class="tr7 td14"><p class="p1 ft3">&#160;$!csName0<br />&#160;$!csIc0</p></td>
+	<td class="tr7 td15"><p class="p1 ft3">&#160;</p></td>
 </tr>
 <tr>
-	<td class="tr8 td13"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr8 td14"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr8 td15"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr8 td13"><p class="p1 ft3">&#160;$!csNo1</p></td>
+	<td class="tr8 td14"><p class="p1 ft3">&#160;$!csName1<br />&#160;$!csIc1</p></td>
+	<td class="tr8 td15"><p class="p1 ft3">&#160;</p></td>
 </tr>
 <tr>
-	<td class="tr8 td13"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr8 td14"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr8 td15"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr8 td13"><p class="p1 ft3">&#160;$!csNo2</p></td>
+	<td class="tr8 td14"><p class="p1 ft3">&#160;$!csName2<br />&#160;$!csIc2</p></td>
+	<td class="tr8 td15"><p class="p1 ft3">&#160;</p></td>
 </tr>
 <tr>
-	<td class="tr8 td13"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr8 td14"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr8 td15"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr8 td13"><p class="p1 ft3">&#160;$!csNo3</p></td>
+	<td class="tr8 td14"><p class="p1 ft3">&#160;$!csName3<br />&#160;$!csIc3</p></td>
+	<td class="tr8 td15"><p class="p1 ft3">&#160;</p></td>
 </tr>
 </table>
 <table cellpadding="0" cellspacing="0" class="t3">
@@ -211,7 +211,7 @@ body {margin-top: 0px;margin-left: 0px;}
 	<td class="tr0 td17"><p class="p1 ft4">&#160;</p></td>
 </tr>
 <tr>
-	<td class="tr2 td36"><p class="p1 ft3">&#160;</p></td>
+	<td class="tr2 td36"><p class="p1 ft3">&#160;$bankTnC</p></td>
 	<td class="tr0 td37"><p class="p1 ft4">&#160;</p></td>
 	<td class="tr2 td17"><p class="p1 ft4">&#160;</p></td>
 </tr>
