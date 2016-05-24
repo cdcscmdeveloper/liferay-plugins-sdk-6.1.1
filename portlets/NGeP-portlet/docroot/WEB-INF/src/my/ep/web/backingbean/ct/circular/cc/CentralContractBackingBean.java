@@ -452,6 +452,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
         	          Iterator<CtContract> ctContracts = getManagedBean().getContractList().iterator();
      			     while(ctContracts.hasNext()){
      			    	CtContract  contract = ctContracts.next();
+     			    	    if(contract.isSelectedCheckBox()){
                                 circularContract = new CtCircularContract();
         		                reqDTO.setContractId(contract.getContractId());
         		                ContractResDTO resDTO = contractSO.retrieveSelectedContract(reqDTO);
@@ -466,7 +467,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					                 item.setCtContractItem(ctitems);
 					                 ctCircularContract.getCtCircularItems().add(item);
 				              }
-        	         }
+        	              }
+     			     }
         	     RequestContext.getCurrentInstance().execute("contractDlg.hide()");
 	    	} catch (Exception e) {
 			        e.printStackTrace();
