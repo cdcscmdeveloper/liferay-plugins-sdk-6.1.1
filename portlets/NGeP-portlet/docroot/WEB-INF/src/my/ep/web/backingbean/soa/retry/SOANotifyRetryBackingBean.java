@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 @ViewScoped
 public class SOANotifyRetryBackingBean extends
 		BaseBackingBean<SOANotifyRetryManagedBean> {
+	
 	private static final Logger logger = EpLogger
 			.getLogger(SOANotifyRetryBackingBean.class);
 
