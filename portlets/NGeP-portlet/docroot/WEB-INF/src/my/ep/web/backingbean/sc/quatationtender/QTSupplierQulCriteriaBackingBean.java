@@ -563,8 +563,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 					long days = DateUtils.getDaysDifference(presentDate, expDate);
 					int day = (int) days;
 					if (day > 0) {
-						ScQtSupplier scQtSupplier = new ScQtSupplier();
-						scQtSupplier = populateScQtSupplierDetails(scQtSupplier, smSupplier);
+						ScQtSupplier scQtSupplier = populateScQtSupplierDetails(smSupplier);
 						
 						scQtSupplier.setSmSupplier(smSupplier);
 						scQtSupplier.setScQt(scQt);
@@ -1751,18 +1750,18 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * 
 	 * @return ScQtSupplier
 	 */
-	public ScQtSupplier populateScQtSupplierDetails(ScQtSupplier scQtSupplier, 
-												    SmSupplier smSupplier) {
-		IQTSupplierSO qtSupplierSO;
+	public ScQtSupplier populateScQtSupplierDetails(SmSupplier smSupplier) {
+		ScQtSupplier scQtSupplier = null;
+		IQTSupplierSO qtSupplierSO = null;
+		
 		try {
 			qtSupplierSO = (IQTSupplierSO) BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
 		
 			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
-			reqDTO.setScQtSupplier(scQtSupplier);
 			reqDTO.setSupplierId(smSupplier.getSupplierId());
 			
-			QTSupplierResDTO resDTO = qtSupplierSO.populateScQtSupplierDetails(reqDTO);
+			QTSupplierResDTO resDTO = qtSupplierSO.createAndPopulateScQtSupplierDetails(reqDTO);
 			scQtSupplier = resDTO.getScQtSupplier();
 		} finally {
 			qtSupplierSO = null;
