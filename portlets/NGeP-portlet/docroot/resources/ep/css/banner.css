@@ -19,65 +19,61 @@ a.bannerlink:hover {
 }
 
 
-.banner1-container p{
-	font-size:15pt;
-	margin-top:0;	
-}
-
+/* Banner 1 */
 .banner1{
-	color: #000000;
-	border-radius:8px;
-	border: 1px solid #d1d3d4;
-	background-image:url(#{resource['ep/images/supplierregistration/upload-catalogue-bg.png']}) !important;
+    background-image: url("http://ngepdevwps01.eperolehan.com.my:8621/web/epapp/dashboard?p_p_id=supplierPromotion_WAR_NGePportlet&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_cacheability=cacheLevelPage&p_p_col_id=column-3&p_p_col_count=2&p_p_col_pos=1&_supplierPromotion_WAR_NGePportlet_javax.faces.resource=ep%2Fimages%2Fsupplierregistration%2Fupload-catalogue-bg.png") !important;
     background-repeat: no-repeat;
-	height: 80px;
-	}
-.banner1-text{
-	padding-left: 90px;
-	padding-top: 17px;
-	padding-bottom: 17px;
-	}
-
-.banner2-container p{
-	font-size:17pt;
-	margin:0;	
+    border: 1px solid #d1d3d4;
+    border-radius: 8px;
+    color: #000000;
+    height: 60px;
+    background-size: auto 60px;
+}
+.banner1-text {
+    padding: 12px 10px 10px 65px;
+}
+.banner1-container p {
+    font-size: 12px;
+    font-weight: bold;
 }
 
 
-.banner2{
-	color: #ffffff;
-	border-radius:8px;
-	border: 1px solid #d1d3d4;
-	background-image:url(#{resource['ep/images/supplierregistration/request-softcert-bg.png']})!important;
+/* Banner 2 */
+.banner2 {
+    background-image: url("http://ngepdevwps01.eperolehan.com.my:8621/web/epapp/dashboard?p_p_id=supplierPromotion_WAR_NGePportlet&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_cacheability=cacheLevelPage&p_p_col_id=column-3&p_p_col_count=2&p_p_col_pos=1&_supplierPromotion_WAR_NGePportlet_javax.faces.resource=ep%2Fimages%2Fsupplierregistration%2Frequest-softcert-bg.png") !important;
+    background-position: right center;
     background-repeat: no-repeat;
-	background-position:right;
-	height: 80px;
-	}
-.banner2-text{
-	padding-left: 20px;
-	padding-top: 26px;
-	padding-bottom: 26px;
-	}
-	
-	
-.banner3-container p{
-	font-size:15pt;
-	margin:0;	
+    border: 1px solid #d1d3d4;
+    border-radius: 8px;
+    color: #ffffff;
+    height: 60px;
+    background-size: auto 60px;
+}
+.banner2-text {
+    padding: 20px 10px 0 10px;
+}
+.banner2-container p {
+    font-size: 13px;
+    font-weight: bold;
 }
 
 
-.banner3{
-	color: #000 !important;
-	border-radius:8px;
-	border: 1px solid #d1d3d4;
-	background-image:url(#{resource['ep/images/supplierregistration/upgrade-mof-bg.png']}) !important;
+
+/* Banner 3 */
+.banner3 {
+    background-image: url("http://ngepdevwps01.eperolehan.com.my:8621/web/epapp/dashboard?p_p_id=supplierPromotion_WAR_NGePportlet&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_cacheability=cacheLevelPage&p_p_col_id=column-3&p_p_col_count=2&p_p_col_pos=1&_supplierPromotion_WAR_NGePportlet_javax.faces.resource=ep%2Fimages%2Fsupplierregistration%2Fupgrade-mof-bg.png") !important;
+    background-position: left center;
     background-repeat: no-repeat;
-	background-position:left;
-	height: 80px;
-	}
-.banner3-text{
-	color: #000 !important;
-	padding-left: 100px !important;
-	padding-top: 28px;
-	padding-bottom: 28px;
-	}
+    border: 1px solid #d1d3d4;
+    border-radius: 8px;
+    color: #000 !important;
+    height: 60px;
+    background-size: auto 60px;
+}
+.banner3-text {
+    padding: 12px 10px 10px 70px;
+}
+.banner3-container p {
+    font-size: 12px;
+    font-weight: bold;
+}
