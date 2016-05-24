@@ -7,9 +7,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -174,6 +174,12 @@ import org.primefaces.model.StreamedContent;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 
 // TODO: Auto-generated Javadoc
 public class SmCommonUtil {
@@ -1918,6 +1924,14 @@ public class SmCommonUtil {
 		bpmReqDTO.setState("ASSIGNED");
 		BpmResponseDTO bpmResDTO = (BpmResponseDTO) SmServiceLookup.getBpmSO()
 				.getTasks(bpmReqDTO);
+		if(bpmResDTO.getWorklistVO() != null) {
+			System.out.println("bpmResDTO.getWorklistVO().getTotal(): " + bpmResDTO.getWorklistVO().getTotal());
+			for (WorklistItemVO item : bpmResDTO.getWorklistVO()
+					.getWorklistItem()) {
+				System.out.println("item.getAssignees(): " + item.getAssignees());
+			}
+		}
+		
 		if (bpmResDTO.getWorklistVO() != null
 				&& !EntityHelper.isCollectionEmpty(bpmResDTO.getWorklistVO()
 						.getWorklistItem())) {
@@ -3857,6 +3871,45 @@ public class SmCommonUtil {
 		return fileNamePath;
 	}
 
+	public static void combinePdf(List<File> pdfs, String fileName) throws Exception {
+		List<InputStream> list = new ArrayList<InputStream>(); 
+		for(File pdf : pdfs) {
+			list.add(new FileInputStream(pdf));
+		}
+		
+        String latestFile = fileName;
+        OutputStream combined = new FileOutputStream(new File(latestFile));
+        
+        doMerge(list, combined);
+        
+        combined.flush();
+        combined.close();
+	}
+	
+	public static void doMerge(List<InputStream> list, OutputStream outputStream)
+            throws DocumentException, IOException {
+        Document document = new Document();
+        PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+        document.open();
+        PdfContentByte cb = writer.getDirectContent();
+        
+        for (InputStream in : list) {
+            PdfReader reader = new PdfReader(in);
+            for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+                document.newPage();
+                //import the page from source pdf
+                PdfImportedPage page = writer.getImportedPage(reader, i);
+                //add the page to the destination pdf
+                cb.addTemplate(page, 0, 0);
+            }
+            in.close();
+        }
+        
+        outputStream.flush();
+        document.close();
+        outputStream.close();
+    }
+	
 	/**
 	 * Get as PDF type stream content
 	 * 
