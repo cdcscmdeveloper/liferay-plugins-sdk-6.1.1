@@ -90,18 +90,23 @@ public class PaymentReceiptBackingBean extends BaseBackingBean<PaymentReceiptMan
 //		getManagedBean().getSearchDataModel().getList().clear();
 	}
 	
-	private SmSupplier getSupplierProfileByUserId(){
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		log.info("***pmUser name***" + pmUser.getUserName());
-		log.info("***pmUser id***" + pmUser.getUserId());
-
-		if(pmUser != null){
-			if(SmApplicationUtil.getCurrentSupplier() != null){
-				SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
-				return smSupp;
+	/**
+	 * Payment Type Onchange Listener
+	 */
+	public void paymentTypeOnChange(){
+		if(getManagedBean().getSelectedTypes() != null && getManagedBean().getSelectedTypes().size() > 0){
+			for(String pymtType : getManagedBean().getSelectedTypes()){
+				if(getManagedBean().getSelectedTypes() != null && getManagedBean().getSelectedTypes().size() > 0){
+					if(pymtType.equals("")){
+						getManagedBean().setAllType(true);
+						break;
+					}
+				}else{
+					getManagedBean().setAllType(false);
+				}
 			}
+		}else{
+			getManagedBean().setAllType(false);
 		}
-
-		return null;
 	}
 }

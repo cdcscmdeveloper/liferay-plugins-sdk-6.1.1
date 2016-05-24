@@ -13,7 +13,7 @@
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>		
 		<p:panel id="searchContent">
-			<table style="customTbl">
+			<table class="customTbl">
 				<tr>
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.payment.receipt.date.from']}" />	
@@ -43,28 +43,17 @@
 					<td class="tdTitle">
 						<p:outputLabel value="Payment Type" />	
 					</td>
-					
-					<td class="tdContent" colspan="3">
-						<table>
-							<tr>
-								<td>
-								<p:selectBooleanCheckbox value="#{paymentReceiptBB.managedBean.allType}">
-									<p:ajax event="change" update="pymtSelectionTypes" />
-								</p:selectBooleanCheckbox>
-								<h:outputText value="#{lbl['lbl.sm.payment.receipt.payment.type.all']}"></h:outputText>
-								&#160;
-								</td>
-								
-								<td>
-								<p:selectManyCheckbox id="pymtSelectionTypes" value="#{paymentReceiptBB.managedBean.selectedTypes}"
-								 disabled="#{paymentReceiptBB.managedBean.allType}">
-							        <f:selectItem itemLabel="#{lbl['lbl.sm.payment.receipt.payment.type.reg']}" itemValue="#{SupplierMgmtConst.billTypeRegFee}"  />
-							        <f:selectItem itemLabel="#{lbl['lbl.sm.payment.receipt.payment.type.proc']}" itemValue="#{SupplierMgmtConst.billTypeProcessFee}" />
-							        <f:selectItem itemLabel="#{lbl['lbl.sm.payment.receipt.payment.type.softcert']}" itemValue="#{SupplierMgmtConst.billTypeSoftcert}" />
-							    </p:selectManyCheckbox>
-							    </td>
-						    </tr>
-					    </table>
+					<td class="tdContent">
+						<p:selectManyCheckbox id="pymtSelectionTypes" value="#{paymentReceiptBB.managedBean.selectedTypes}">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.payment.receipt.payment.type.all']}" itemValue=""  />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.payment.receipt.payment.type.reg']}" itemValue="#{SupplierMgmtConst.billTypeRegFee}" 
+							itemDisabled="#{paymentReceiptBB.managedBean.allType}" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.payment.receipt.payment.type.proc']}" itemValue="#{SupplierMgmtConst.billTypeProcessFee}" 
+							itemDisabled="#{paymentReceiptBB.managedBean.allType}" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.payment.receipt.payment.type.softcert']}" itemValue="#{SupplierMgmtConst.billTypeSoftcert}" 
+							itemDisabled="#{paymentReceiptBB.managedBean.allType}" />
+							<p:ajax event="change" update="pymtSelectionTypes" listener="#{paymentReceiptBB.paymentTypeOnChange}"></p:ajax>
+						</p:selectManyCheckbox>
 					</td>
 				</tr>
 			</table>
@@ -80,7 +69,7 @@
 		</p:panel>
 	
 		<p:panel>
-			<p:dataTable var="payment" value="#{paymentReceiptBB.managedBean.searchDataModel}" 
+			<p:dataTable var="payment" value="#{paymentReceiptBB.managedBean.searchDataModel}" rowIndexVar="index"
 			lazy="true" rows="10" id="rsDt"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="rsDt"></ac:paginator>
 				<p:column style="width : 5%;">
