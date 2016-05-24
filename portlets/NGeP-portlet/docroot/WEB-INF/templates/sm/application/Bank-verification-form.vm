@@ -106,12 +106,12 @@ body {margin-top: 0px;margin-left: 0px;}
 <tr>
 	<td class="tr0 td0"><p class="p1 ft1">Nama Syarikat</p></td>
 	<td class="tr0 td1"><p class="p2 ft1">:</p></td>
-	<td class="tr0 td18"><p class="p1 ft1">&#160;$companyName</p></td>
+	<td class="tr0 td18"><p class="p1 ft1">$companyName</p></td>
 </tr>
 <tr>
 	<td class="tr1 td0"><p class="p1 ft0">No. Pendaftaran ROC/ROB/ROS</p></td>
 	<td class="tr1 td1"><p class="p2 ft0">:</p></td>
-	<td class="tr0 td18"><p class="p1 ft1">&#160;$companyRegNo</p></td>
+	<td class="tr0 td18"><p class="p1 ft1">$companyRegNo</p></td>
 </tr>
 </table>
 <p class="p3 ft2">Setiausaha,</p>
@@ -125,55 +125,55 @@ body {margin-top: 0px;margin-left: 0px;}
 <table cellpadding="0" cellspacing="0" class="t1" >
 <tr>
 	<td class="tr0 td2"><p class="p1 ft3">Tuan,</p></td>
-	<td class="tr0 td3" colspan="5"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr0 td3" colspan="5"><p class="p1 ft4"></p></td>
 </tr>
 <tr>
 	<td class="tr2 td2"><p class="p1 ft1">Nama Bank</p></td>
 	<td class="tr2 td31"><p class="p1 ft2"><span class="ft0">:</span></p></td>
-	<td class="tr2 td30" colspan="4"><p class="p1 ft2">&#160;$bankName</p></td>
+	<td class="tr2 td30" colspan="4"><p class="p1 ft2">$bankName</p></td>
 </tr>
 <tr>
 	<td class="tr2 td2"><p class="p1 ft0">Cawangan Bank</p></td>
 	<td class="tr2 td31"><p class="p1 ft2"><span class="ft0">: </span></p></td>
-	<td class="tr2 td30" colspan="4"><p class="p1 ft2">&#160;$bankBranch</p></td>
+	<td class="tr2 td30" colspan="4"><p class="p1 ft2">$bankBranch</p></td>
 </tr>
 <tr>
 	<td class="tr3 td2"><p class="p1 ft1">Alamat Bank</p></td>
 	<td class="tr3 td31"><p class="p1 ft3"><span class="ft1">: </span></p></td>
-	<td class="tr3 td30" colspan="4"><p class="p1 ft3">&#160;$bankStreetAddress</p></td>
+	<td class="tr3 td30" colspan="4"><p class="p1 ft3">$bankStreetAddress</p></td>
 </tr>
 <tr>
-	<td class="tr2 td2"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr2 td31"><p class="p5 ft3">&#160;</p></td>
+	<td class="tr2 td2"><p class="p1 ft4"></p></td>
+	<td class="tr2 td31"><p class="p5 ft3"></p></td>
 	<td class="tr2 td30" colspan="4"><p class="p5 ft3">$bankCityDistrict</p></td>
 </tr>
 <tr>	
 	<td class="tr2 td2"><p class="p1 ft1">Poskod</p></td>
 	<td class="tr2 td31"><p class="p1 ft2"><span class="ft0">: </span></p></td>
-	<td class="tr2 td30"><p class="p1 ft2">&#160;$bankPostCode</p></td>
-	<td class="tr2 td2"><p class="p1 ft1">&#160;&#160;Negeri</p></td>
+	<td class="tr2 td30"><p class="p1 ft2">$bankPostCode</p></td>
+	<td class="tr2 td2"><p class="p1 ft1">Negeri</p></td>
 	<td class="tr2 td31"><p class="p1 ft2"><span class="ft0">: </span></p></td>	
-	<td class="tr2 td30"><p class="p1 ft2">&#160;$bankState</p></td>
+	<td class="tr2 td30"><p class="p1 ft2">$bankState</p></td>
 </tr>
 <tr>
 	<td class="tr3 td2"><p class="p1 ft1">No. Akaun</p></td>
 	<td class="tr3 td31"><p class="p1 ft3"><span class="ft0">: </span></p></td>
-	<td class="tr3 td30" colspan="4"><p class="p1 ft3">&#160;$bankAccountNo</p></td>
+	<td class="tr3 td30" colspan="4"><p class="p1 ft3">$bankAccountNo</p></td>
 </tr>
 <tr>
-	<td class="tr4 td4"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr4 td35"><p class="p1 ft3"><span class="ft1">&#160;</span></p></td>
-	<td class="tr4 td5" colspan="4"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr4 td4"><p class="p1 ft4"></p></td>
+	<td class="tr4 td35"><p class="p1 ft3"><span class="ft1"></span></p></td>
+	<td class="tr4 td5" colspan="4"><p class="p1 ft4"></p></td>
 </tr>
 <tr>
-	<td class="tr5 td6"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr5 td33"><p class="p1 ft3">&#160;</p></td>
+	<td class="tr5 td6"><p class="p1 ft4"></p></td>
+	<td class="tr5 td33"><p class="p1 ft3"></p></td>
 	<td class="tr5 td7" colspan="4"><p class="p6 ft1">PENANDATANGAN CEK</p></td>
 </tr>
 <tr>
-	<td class="tr6 td8"><p class="p1 ft5">&#160;</p></td>
-	<td class="tr6 td34"><p class="p1 ft3"><span class="ft1">&#160;</span></p></td>
-	<td class="tr6 td9" colspan="4"><p class="p1 ft5">&#160;</p></td>
+	<td class="tr6 td8"><p class="p1 ft5"></p></td>
+	<td class="tr6 td34"><p class="p1 ft3"><span class="ft1"></span></p></td>
+	<td class="tr6 td9" colspan="4"><p class="p1 ft5"></p></td>
 </tr>
 </table>
 <p class="p7 ft2">Adalah diakui bahawa <NOBR>nama-nama</NOBR> berikut telah diberi kuasa oleh syarikat untuk menandatangani cek akaun di atas:</p>
@@ -184,45 +184,45 @@ body {margin-top: 0px;margin-left: 0px;}
 	<td class="tr0 td12"><p class="p10 ft1">Tandatangan</p></td>
 </tr>
 <tr>
-	<td class="tr7 td13"><p class="p1 ft3">&#160;$!csNo0</p></td>
-	<td class="tr7 td14"><p class="p1 ft3">&#160;$!csName0<br />&#160;$!csIc0</p></td>
-	<td class="tr7 td15"><p class="p1 ft3">&#160;</p></td>
+	<td class="tr7 td13"><p class="p1 ft3">$!csNo0</p></td>
+	<td class="tr7 td14"><p class="p1 ft3">$!csName0<br />$!csIc0</p></td>
+	<td class="tr7 td15"><p class="p1 ft3"></p></td>
 </tr>
 <tr>
-	<td class="tr8 td13"><p class="p1 ft3">&#160;$!csNo1</p></td>
-	<td class="tr8 td14"><p class="p1 ft3">&#160;$!csName1<br />&#160;$!csIc1</p></td>
-	<td class="tr8 td15"><p class="p1 ft3">&#160;</p></td>
+	<td class="tr8 td13"><p class="p1 ft3">$!csNo1</p></td>
+	<td class="tr8 td14"><p class="p1 ft3">$!csName1<br />$!csIc1</p></td>
+	<td class="tr8 td15"><p class="p1 ft3"></p></td>
 </tr>
 <tr>
-	<td class="tr8 td13"><p class="p1 ft3">&#160;$!csNo2</p></td>
-	<td class="tr8 td14"><p class="p1 ft3">&#160;$!csName2<br />&#160;$!csIc2</p></td>
-	<td class="tr8 td15"><p class="p1 ft3">&#160;</p></td>
+	<td class="tr8 td13"><p class="p1 ft3">$!csNo2</p></td>
+	<td class="tr8 td14"><p class="p1 ft3">$!csName2<br />$!csIc2</p></td>
+	<td class="tr8 td15"><p class="p1 ft3"></p></td>
 </tr>
 <tr>
-	<td class="tr8 td13"><p class="p1 ft3">&#160;$!csNo3</p></td>
-	<td class="tr8 td14"><p class="p1 ft3">&#160;$!csName3<br />&#160;$!csIc3</p></td>
-	<td class="tr8 td15"><p class="p1 ft3">&#160;</p></td>
+	<td class="tr8 td13"><p class="p1 ft3">$!csNo3</p></td>
+	<td class="tr8 td14"><p class="p1 ft3">$!csName3<br />$!csIc3</p></td>
+	<td class="tr8 td15"><p class="p1 ft3"></p></td>
 </tr>
 </table>
 <table cellpadding="0" cellspacing="0" class="t3">
 <tr>
 	<td class="tr0 td16"><p class="p1 ft1">Terma dan keadaan untuk tandatangan cek <span class="ft3">:</span></p></td>
-	<td class="tr0 td37"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr0 td17"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr0 td37"><p class="p1 ft4"></p></td>
+	<td class="tr0 td17"><p class="p1 ft4"></p></td>
 </tr>
 <tr>
-	<td class="tr2 td36"><p class="p1 ft3">&#160;$bankTnC</p></td>
-	<td class="tr0 td37"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr2 td17"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr2 td36"><p class="p1 ft3">$bankTnC</p></td>
+	<td class="tr0 td37"><p class="p1 ft4"></p></td>
+	<td class="tr2 td17"><p class="p1 ft4"></p></td>
 </tr>
 <tr>
 	<td class="tr2 td16"><p class="p1 ft2">Tarikh :_________________</p></td>
-	<td class="tr0 td37"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr0 td37"><p class="p1 ft4"></p></td>
 	<td class="tr2 td17"><p class="p1 ft6">Disahkan Oleh: __________________</p></td>
 </tr>
 <tr>
-	<td class="tr9 td16"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr0 td37"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr9 td16"><p class="p1 ft4"></p></td>
+	<td class="tr0 td37"><p class="p1 ft4"></p></td>
 	<td class="tr9 td17"><p class="p11 ft0"><span class="ft2">(</span>Pengurus Bank <span class="ft2">)</span></p></td>
 </tr>
 </table>
