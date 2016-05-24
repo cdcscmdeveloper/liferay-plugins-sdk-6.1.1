@@ -50,7 +50,6 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -73,7 +72,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -1936,18 +1934,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.info("scQt.getProposalValidityEndDate() not null"
 					+ scQt.getProposalValidityEndDate());
 			validityDate = scQt.getProposalValidityEndDate();
-		} else {
-			log.info("scQt.getProposalValidityEndDate()  null value");
-			if (null != scQt.getClosingDate()) {
-				validityDate = DateUtils.addDays(scQt.getClosingDate(),
-						scQt.getQtValidityPeriod());
-			}
 		}
 		
 		boolean isValidityDateNotReached = false;
 		if (null != validityDate) {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
-			scQt.setProposalValidityUntil(sdf.format(validityDate));
 			isValidityDateNotReached = 
 						checkProposalValidityDateReach(validityDate);
 		}
@@ -2545,30 +2535,5 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		
 		return scAddress;
-	}
-	
-	/**
-	 * Get Current Workflow Status by document type and document id
-	 * 
-	 * @param docType
-	 * 		the document type
-	 * @param docId
-	 * 		the document id
-	 * @return	the ScWorkFlowStatus ins1tance
-	 */
-	protected ScWorkFlowStatus getCurrentStatusByTypeAndId(String docType, Long docId) {
-		IScWorkFlowStatusSO workFlowStatusSO;
-		try {
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			ScWorkFlowStatusReqDTO workFlowStatusReqDTO = new ScWorkFlowStatusReqDTO();
-			workFlowStatusReqDTO.setDocType(docType);
-			workFlowStatusReqDTO.setDocId(docId);
-			
-			return workFlowStatusSO
-					.retrieveStatusByTypeAndId(workFlowStatusReqDTO).getWorkFlowStatus();
-		} finally {
-			workFlowStatusSO = null;
-		}
 	}
 }
