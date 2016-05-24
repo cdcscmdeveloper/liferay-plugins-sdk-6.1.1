@@ -3560,8 +3560,9 @@ public class LOADetailBackingBean extends
 		
 		BigDecimal unitPrice = item.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setUnitPrice(unitPrice.toString());
-		jadualHarga.setUom(item.getScRequestItem().getTplSpecQuestion()
-				.getClUom().getUomName());
+		jadualHarga.setFreqUom(null == item.getScRequestItem().getTplSpecQuestion()
+				.getClUom() ? "" : item.getScRequestItem().getTplSpecQuestion()
+						.getClUom().getUomName());
 		jadualHarga.setFreqUom(null == item.getScRequestItem()
 				.getTplSpecQuestion().getClUomFrequency() ? "" : item
 				.getScRequestItem().getTplSpecQuestion().getClUomFrequency()
