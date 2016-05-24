@@ -17,59 +17,76 @@
 		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width="100%" valign="top">
+					
 					<table width="100%">
+					
 						<tr>
+					
 							<td colspan="2">
 								
 								<div style="text-align: left; float: right;">
 									
 									#{lbl['lbl.portal.soa.targetSystem']} :
 									
-									<p:selectOneMenu id="targetSystemId" value="#{soaNotifyRetryBackingBean.managedBean.targetSystem}">
+									<p:selectOneMenu id="targetSystemId" value="#{notifyRetryBackingBean.managedBean.targetSystem}">
 										<f:selectItem itemLabel="#{lbl['lbl.portal.soa.all']}" itemValue=""></f:selectItem>
-										 <f:selectItems value="#{soaNotifyRetryBackingBean.statusDropdown}" />
+										 <f:selectItems value="#{notifyRetryBackingBean.statusDropdown}" />
 									</p:selectOneMenu>
 									
 									<p:commandButton
-									value="#{lbl['lbl.portal.soa.btn.submit']}"
-									action="#{soaNotifyRetryBackingBean.submitNotifyRetryList}"
-									update=":form:notifyRetryTable" /> <p:commandButton
-									value="#{lbl['lbl.portal.soa.btn.refresh']}"
-									action="#{soaNotifyRetryBackingBean.refreshNotifyRetryList}"
-									update=":form:notifyRetryTable" />
+										value="#{lbl['lbl.portal.soa.btn.submit']}"
+										action="#{notifyRetryBackingBean.submitNotifyRetryList}"
+										update=":form:notifyRetryTable" /> 
+										
+									<p:commandButton
+										value="#{lbl['lbl.portal.soa.btn.refresh']}"
+										action="#{notifyRetryBackingBean.refreshNotifyRetryList}"
+										update=":form:notifyRetryTable" />
 									
 								</div>
+							
 							</td>
+						
 						</tr>
+						
 						<tr>
 							<td colspan="2" width="100%" valign="top"><p:dataTable
-									value="#{soaNotifyRetryBackingBean.notifyRetryDataModel}"
+									value="#{notifyRetryBackingBean.notifyRetryDataModel}"
 									var="notifyRetry" id="notifyRetryTable" rows="10" rowIndexVar="index"
 									width="100%" rowKey="#{notifyRetry}" lazy="true"
-									selection="#{soaNotifyRetryBackingBean.managedBean.selectedNotifyRetries}">
+									selection="#{notifyRetryBackingBean.managedBean.selectedNotifyRetries}">
 
 									<ac:paginator for="notifyRetryTable" />
 
 									<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
 
 									<p:column headerText="#{lbl['lbl.portal.soa.transId']}">
-										<p:commandLink 
-											action="#{soaNotifyRetryBackingBean.managedBean.setPayload(notifyRetry.transId, notifyRetry.payload)}"
-											oncomplete="payloadPopUp.show()" update="@form">
-											#{notifyRetry.transId}			
-										</p:commandLink>
+																				
+										<c:choose>
+										    <c:when test="#{notifyRetry.notifyMode == 'B'}">
+										        #{notifyRetry.batchNo}
+										    </c:when>
+										    <c:otherwise>
+										        #{notifyRetry.uuid}
+										    </c:otherwise>
+										</c:choose>
+
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.portal.soa.serviceName']}">
-											#{notifyRetry.serviceName}
+										Notification Service
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.portal.soa.targetSystem']}">
-										#{notifyRetry.targetSystem}
+										
+										<h:outputText value="Bulk" rendered="#{not empty notifyRetry and notifyRetry.notifyMode == 'B'}"/>
+										<h:outputText value="Real Time" rendered="#{not empty notifyRetry and notifyRetry.notifyMode == 'R'}"/>
+										<h:outputText value="Direct Email" rendered="#{not empty notifyRetry and notifyRetry.notifyMode == 'D'}"/>
+								
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.portal.soa.statusDesc']}">
-										#{notifyRetry.errorMsg}
+										#{notifyRetry.remark}
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.portal.soa.dateTime']}"
@@ -81,23 +98,26 @@
 									
 									</p:column>
 									
-									<p:column headerText="#{lbl['lbl.portal.soa.retryCount']}" styleClass="#{soaNotifyRetryBackingBean.getRetryCountFieldColor(notifyRetry.retryCount)}">
+									<p:column headerText="#{lbl['lbl.portal.soa.retryCount']}" styleClass="#{notifyRetryBackingBean.getRetryCountFieldColor(notifyRetry.retryCount)}">
 										#{notifyRetry.retryCount}
 									</p:column>
 									
 								</p:dataTable>
+								
 							</td>
 						</tr>
 					</table>
+					
 				</td>
 			</tr>
 		</table>
 		
 		<p:dialog id="payloadPopUp" widgetVar="payloadPopUp"
-			header="Payload transId = #{soaNotifyRetryBackingBean.managedBean.payloadSubject}" styleClass="screen-title"
+			header="Payload transId = #{notifyRetryBackingBean.managedBean.payloadSubject}" styleClass="screen-title"
 			resizable="false" modal="true" width="800" height="700">
-			<h:outputText value="#{soaNotifyRetryBackingBean.managedBean.payloadContent}" />
+			<h:outputText value="#{notifyRetryBackingBean.managedBean.payloadContent}" />
 		</p:dialog>
 		
 	</ui:define>
+	
 </ui:composition>
