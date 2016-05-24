@@ -477,24 +477,12 @@ public class QTCommitteBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
-			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
-				qtSearchBean
-						.getDataFilterBeans()
-						.add(new SearchFilterBean(
-								"pmOrgProfile."
-										+ OrgProfileUtil
-												.getSearchBeanParentString(OrganizationType.MINISTRY
-														.value()),
-								SearchOperator.OPERATOR_EQUALS.value(),
-
-								retrieveMinistryOrgProfile(
-										this.getManagedBean().getQt()
-												.getPmOrgProfile()
-												.getOrgProfileId())
-										.getOrgProfileId()
-
-						));
-			}
+			// Filter by ptj org profileId
+			qtSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmOrgProfile.orgProfileId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getPTJOrgProfileByLoginUser().getOrgProfileId()));
+						
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
