@@ -7781,6 +7781,10 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * generate the MOF declaration form and populate required informatiion into the PDF.
+	 * @param smAppl
+	 */
 	public static void generateDeclarationFormPdf(SmAppl smAppl) {
 		try {
 			String tmpPath = null;
@@ -7806,6 +7810,96 @@ public class SmApplicationUtil {
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		}
+	}
+	
+	/**
+	 * Generate the bank verification form in PDF format for the respective application
+	 * @param smAppl
+	 */
+	public static void generateBankVerificationFormPdf(SmAppl smAppl) {
+		try {
+			String tmpPath = null;
+			String tmpFolder = SmCommonUtil
+					.getUploadFilePath(SupplierManagementConst.SUPPORTING_DOC_TEMP_PATH);
+			tmpPath = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+			tmpPath = tmpPath + File.separator + tmpFolder;
+			File dir = new File(tmpPath);
+			if (!dir.exists())
+				dir.mkdirs();
+			
+			List<String> filePaths = new ArrayList<String>();
+			String fileName = smAppl.getApplNo()
+					+ SupplierManagementConst.BANK_VERIFICATION_FORM_PREFIX;
+			
+			for(int i = 0; i < smAppl.getSmSupplierBanks().size(); i++) {
+				SmSupplierBank supplierBank = smAppl.getSmSupplierBanks().get(i); 
+			
+				String fileNameAndPath = tmpPath + i + fileName;
+				String vm = "/sm/application/Bank-verification-form.vm";
+				VelocityContext context = new VelocityContext();
+				FacesScopes fs = new FacesScopes();
+				context.put("hostUrl", fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort());
+				context.put("companyName", smAppl.getSmSupplier().getCompanyName());
+				context.put("companyRegNo", smAppl.getSmSupplier().getRegNo());
+				context.put("bankName", supplierBank.getPmFinancialOrg().getFinOrgName());
+				context.put("bankBranch", supplierBank.getBankBranch());
+				context.put("bankStreetAddress", getBankAddress(supplierBank.getSmAddress()));
+				context.put("bankCityDistrict", getBankCityDistrict(supplierBank.getSmAddress()));
+				context.put("bankPostCode", supplierBank.getSmAddress().getPostcode());
+				context.put("bankState", supplierBank.getSmAddress().getPmState().getStateName());
+				context.put("bankAccountNo", supplierBank.getAccountNo());
+				context.put("bankTnC", supplierBank.getSignatureInstruction());
+				context = setSignatories(context, supplierBank.getSmChequeSignatories());
+				
+				SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
+				filePaths.add(fileNameAndPath);
+			}
+			
+			List<File> tempFiles = new ArrayList<File>();
+			for(String filePath : filePaths) {
+				tempFiles.add(new File(filePath));
+			}
+			SmCommonUtil.combinePdf(tempFiles, tmpPath + fileName);
+		} catch (Exception e) {
+			throw new EpException(e.getMessage());
+		}
+	}
+	
+	private static VelocityContext setSignatories(VelocityContext context, List<SmChequeSignatory> smChequeSignatories) {
+		for(int i = 0; i < smChequeSignatories.size(); i++) {
+			SmChequeSignatory smChequeSignatory = smChequeSignatories.get(i);
+			context.put("csNo" + i, i + 1);
+			context.put("csName" + i, smChequeSignatory.getSmPersonnel().getName());
+			context.put("csIc" + i, smChequeSignatory.getSmPersonnel().getIdentificationNo());
+			System.out.println("Signatory " + i + ": " + smChequeSignatory.getSmPersonnel().getName() + " : " + smChequeSignatory.getSmPersonnel().getIdentificationNo() );
+		}
+		return context;
+	}
+	
+	private static String getBankCityDistrict(SmAddress address) {
+		String cityName = address.getPmCity().getCityName();
+		String districtName = address.getPmDistrict().getDistrictName();
+		
+		return cityName.concat(", ").concat(districtName);
+	}
+	
+	private static String getBankAddress(SmAddress address) {
+		
+		String streetAddress = address.getAddress1();
+		streetAddress = checkAddressSuffix(address.getAddress1()) + checkAddressSuffix(address.getAddress2()) + checkAddressSuffix(address.getAddress3()) + checkAddressSuffix(address.getAddress4()); 
+		
+		return streetAddress;
+	}
+	
+	private static String checkAddressSuffix(String addressLine) {
+		if(StringUtils.isBlank(addressLine)) {
+			return "";
+		}
+		if(addressLine.substring(addressLine.length() - 1).equals(",")) {
+			addressLine.concat(", ");
+		}
+		return addressLine;
 	}
 	
 	public static SmAppl deleteApplChildEntities(SmAppl appl) {
