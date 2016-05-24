@@ -14398,18 +14398,20 @@ public class SpecificationBackingBean extends
 			}
 		}
 		if(selectedPanelItems.size()>1){
-			//String panelCoverage="";
-			//String localPanelCoverage="";
+			String panelCoverage="";
+			String localPanelCoverage="";
 			String locationLevel="";
 			String locallocationLevel="";
 			for(CtPanelItem checkItem:selectedPanelItems){
-				String panelCoverage="";
-				String localPanelCoverage="";
+				//String panelCoverage="";
+				//String localPanelCoverage="";
 				if(null!=checkItem.getPanelCoverageId()){
 				panelCoverage=checkItem.getPanelCoverageId().getParameterCode();
 				}
 				if(null!=checkItem.getLocationLevelId()){
 				locationLevel=checkItem.getLocationLevelId().getParameterCode();
+				}else{
+					locationLevel="";
 				}
 				if("".equals(localPanelCoverage) || !localPanelCoverage.equals(panelCoverage)){
 					if(null!=localPanelCoverage && !"".equals(localPanelCoverage)){
