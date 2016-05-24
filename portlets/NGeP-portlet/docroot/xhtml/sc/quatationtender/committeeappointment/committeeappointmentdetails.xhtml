@@ -7,8 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<ui:param name="isQTStatusChecklistAndAfter" value="#{qTDetailBB.isQTStatusGreaterThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
-
+    <ui:param name="statusId" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId}" />
+	<ui:param name="isQtScheduleAndDoc" value="#{statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}"/>
+	<ui:param name="evaluationType" value="#{qTDetailBB.managedBean.qt.evaluationType}"/>
+		
 	<p:panel header="#{lbl['lbl.sc.qt.committee.appointment']}" toggleable="true">
+
 		<c:if test="#{isQTStatusChecklistAndAfter}">
 			<table style="width: 100%">
 				<tr>
@@ -21,7 +25,12 @@
 							value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
 				</tr>
 			</table>
-
+               
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.one.tier.instruction']}" escape="false" rendered="#{isQtScheduleAndDoc and evaluationType eq 1}"/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.oc.instruction']}" escape="false" rendered="#{isQtScheduleAndDoc and evaluationType eq 2}"/> 
+		<c:if test="#{isQtScheduleAndDoc and evaluationType eq 2}"><BR/></c:if>   
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.tec.fec.instruction']}" escape="false" rendered="#{isQtScheduleAndDoc and evaluationType eq 2}"/>
+		<BR/>	
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.instruction']}" escape="false" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.clone']}" rendered="#{!qTCommitteBackingBean.isEnableCloneButton()}"
@@ -32,13 +41,7 @@
 			<ui:include src="clonecommitteeappointment.xhtml" />
 		</c:if>
 		
-		<ui:param name="statusId" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId}"></ui:param>
-		<ui:param name="isQtScheduleAndDoc" value="#{statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}"></ui:param>
-		<ui:param name="evaluationType" value="#{qTDetailBB.managedBean.qt.evaluationType}"></ui:param>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.sc.instruction']}" escape="false" rendered="#{statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}"/>
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.one.tier.instruction']}" escape="false" rendered="#{isQtScheduleAndDoc and evaluationType eq 1}"/>
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.oc.instruction']}" escape="false" rendered="#{isQtScheduleAndDoc and evaluationType eq 2}"/>
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.tec.fec.instruction']}" escape="false" rendered="#{isQtScheduleAndDoc and evaluationType eq 2}"/>
 		
 		<p:remoteCommand name="committeTabChangeAction" update="@form" partialSubmit="true" process="@form" action="#{qTDetailBB.committeTabChangeAction}" />
 		
