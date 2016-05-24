@@ -395,7 +395,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
 			this.getManagedBean().setBillMobile(pmUser.getMobileFull());
 			this.getManagedBean().setBillEmail(pmUser.getEmail());
-			this.getManagedBean().setBillName(pmUser.getUserName());
+			
+			String billType = getBillName(pyBill.getBillType(), getManagedBean().getSmAppl().getSmSupplier().getCompanyName(), pyBill.getBillNo());
+			this.getManagedBean().setBillName(billType != null ? billType : getManagedBean().getSmAppl().getSmSupplier().getCompanyName());
 			this.getManagedBean().setBillDesc(getManagedBean().getNewPyBillDtlLs().get(0).getItemDesc());
 			// this.getManagedBean().
 			String orderId = resDTO.getPyBill().getPyPayments().get(0)
@@ -1154,22 +1156,19 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	
 	}
 	
-	private String getSupplierRoleByUserId(SmAppl appl,Long userId) {
-		String retVal = StringUtils.EMPTY;
-		if (userId != null
-				&& !EntityHelper.isCollectionEmpty(appl
-						.getSmPersonnels())) {
-			for (SmPersonnel personnel : appl
-					.getSmPersonnels()) {
-				if (personnel.getPmUser() != null
-						&& personnel.getPmUser().getUserId() != null
-						&& personnel.getPmUser().getUserId().compareTo(userId) == 0) {
-					retVal = personnel.getEpRole();
-				}
+	private String getBillName(String billType, String supplierName, String docNo){
+		String billName = null;
+		
+		if(billType != null){
+			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
+				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.proccessing", new String[]{supplierName,docNo});
+			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)){
+				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.registration", new String[]{supplierName,docNo});
+			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
+				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.softcert", new String[]{supplierName,docNo});
 			}
 		}
-		return retVal;
+		return billName;
 	}
-	
 	
 }
