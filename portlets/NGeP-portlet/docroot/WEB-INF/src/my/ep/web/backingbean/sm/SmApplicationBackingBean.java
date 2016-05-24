@@ -9830,6 +9830,24 @@ public class SmApplicationBackingBean extends
 				+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX);
 	}
 
+	private void printBankVerificationForm() throws Exception {
+		SmApplicationUtil.generateBankVerificationFormPdf(getManagedBean().getSmAppl());
+		String fileName = SmCommonUtil
+				.getUploadFilePath(SupplierManagementConst.SUPPORTING_DOC_TEMP_PATH) + File.separator + getManagedBean().getSmAppl().getApplNo()
+				+ SupplierManagementConst.BANK_VERIFICATION_FORM_PREFIX;
+		commonDownload(fileName,  getManagedBean().getSmAppl().getApplNo() + SupplierManagementConst.BANK_VERIFICATION_FORM_PREFIX);
+	}
+	
+	public void downloadSignatureSuppDoc(String docDefinitionKey) throws Exception {
+		if(org.apache.commons.lang.StringUtils.isNotBlank(docDefinitionKey)) {
+			if(docDefinitionKey.equals("SBP")) {
+				printDeclarationForm();
+			} else if(docDefinitionKey.equals("SBV")) {
+				printBankVerificationForm();
+			}
+		} 
+	}
+	
 	/**
 	 * Print Supplier Profile
 	 * 
