@@ -422,11 +422,12 @@ public class SupplierFinalizationBackingBean extends
 	
 	private void initializeCommitteeRemarks() {
 		ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		if (scQtCommittee != null) {
-			
 			// Retrieve committee remarks
 			List<ScQtCommitteRemarks> remarks = initializeRemarks(scQtCommittee,
-					null, scQtCommittee.getQtCommitteRemarks(),
+					scQtFinalization.getCurrentStatus(), 
+					scQtCommittee.getQtCommitteRemarks(),
 					ScQtCommitteRemarks.class);
 			scQtCommittee.setQtCommitteRemarks(remarks);
 	
@@ -440,7 +441,9 @@ public class SupplierFinalizationBackingBean extends
 
 		// Retrieve Finalization remarks
 		List<ScQtFinalizationRemarks> remarks = initializeRemarks(scQtFinalization,
-				null, scQtFinalization.getScQtFinalizationRemarks(), ScQtFinalizationRemarks.class);
+				scQtFinalization.getCurrentStatus(), 
+				scQtFinalization.getScQtFinalizationRemarks(), 
+				ScQtFinalizationRemarks.class);
 		scQtFinalization.setScQtFinalizationRemarks(remarks);
 
 		// Finalization Remarks list
@@ -452,8 +455,9 @@ public class SupplierFinalizationBackingBean extends
 
 		// Retrieve finalization endorsement remarks
 		List<ScQtFinalizationEndorsementRemarks> remarks = initializeRemarks(scQtFinalization,
-								null, scQtFinalization.getScQtFinalizationEndorsementRemarks(), 
-								ScQtFinalizationEndorsementRemarks.class);
+				scQtFinalization.getCurrentStatus(), 
+				scQtFinalization.getScQtFinalizationEndorsementRemarks(), 
+				ScQtFinalizationEndorsementRemarks.class);
 		scQtFinalization.setScQtFinalizationEndorsementRemarks(remarks);
 
 		// Finalization Endorsement Remarks list
