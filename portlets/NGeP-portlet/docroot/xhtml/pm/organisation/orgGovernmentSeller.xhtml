@@ -45,9 +45,12 @@
 			</p:column>
 	        <p:column style="width :5%;text-align:center;" headerText="#{lbl['lbl.pm.financialorg.action']}">
              <p:commandLink partialSubmit="true" disabled="#{!supplierBank.brandNew}"             	
-				process="@this" action="#{organisationBackingBean.deleteSupplierBank(rowIndex)}"
-				update="govorgid" >
+				process="@this" 
+				oncomplete="paymentBankDeletePopUp.show();"
+				update="@([id$=#{paymentBankDeleteId}])" >
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:setPropertyActionListener target="#{organisationBackingBean.managedBean.selectedDeletePaymentBank}" 
+							value="#{supplierBank}" />
 			</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -58,11 +61,14 @@
 				action="#{organisationBackingBean.addSupplierBank}" 
 				oncomplete="supplierBankWidget.paginator.endLink.click();"
 				update="govorgid" />
-
-
 		</div>
-
-
+		<ac:confirmationPopup id="paymentBankDeleteId"
+			widget="paymentBankDeletePopUp"
+			okAction="organisationBackingBean.deleteSupplierBank()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":#{p:component('govorgid')}" />	
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.pm.header.general.org.supplierusr']}"
@@ -94,8 +100,11 @@
 			<p:column style="width :5%;text-align:center;" headerText="#{lbl['lbl.pm.financialorg.action']}">
              <p:commandLink partialSubmit="true"
 				process="@this" disabled="#{!personnel.brandNew}"
-				action="#{organisationBackingBean.deletePersonnel(index)}" update="supplierUsers">
+				oncomplete="supplierUserDeletePopUp.show();"
+				update="@([id$=#{supplierUserDeleteId}])" >
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:setPropertyActionListener target="#{organisationBackingBean.managedBean.selectedDeleteSupplierUser}" 
+							value="#{personnel}" />
 			</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -106,7 +115,14 @@
 				action="#{organisationBackingBean.addPersonnel}" update="userSearch"
 				oncomplete="userlistpopup.show();"  />
 
-		</div>		
+		</div>
+		<ac:confirmationPopup id="supplierUserDeleteId"
+			widget="supplierUserDeletePopUp"
+			okAction="organisationBackingBean.deletePersonnel()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":#{p:component('supplierUsers')}" />			
 	</p:panel>
 	<p:dialog id="userSearch" header="#{lbl['lbl.pm.org.govseller.user.list']}"
 		widgetVar="userlistpopup" modal="true" width="600" height="300"

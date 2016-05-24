@@ -1714,13 +1714,26 @@ public class OrganisationBackingBean extends
 		}
 	}
 
+//	/**
+//	 * The method used for delete supplier bank in government seller tab.
+//	 * 
+//	 */
+//	public void deleteSupplierBank(int index) {
+//		SmSupplierBank smSupplierBank = this.getManagedBean()
+//				.getSmSupplierBanks().get(index);
+//		smSupplierBank.setDeleted(true);
+//		this.getManagedBean().getDeletedSupplierBankList().add(smSupplierBank);
+//		// should added to original list before save
+//		this.getManagedBean().getSmSupplierBanks().remove(smSupplierBank);
+//
+//	}
+	
 	/**
 	 * The method used for delete supplier bank in government seller tab.
 	 * 
 	 */
-	public void deleteSupplierBank(int index) {
-		SmSupplierBank smSupplierBank = this.getManagedBean()
-				.getSmSupplierBanks().get(index);
+	public void deleteSupplierBank() {
+		SmSupplierBank smSupplierBank = this.getManagedBean().getSelectedDeletePaymentBank();
 		smSupplierBank.setDeleted(true);
 		this.getManagedBean().getDeletedSupplierBankList().add(smSupplierBank);
 		// should added to original list before save
@@ -1810,8 +1823,8 @@ public class OrganisationBackingBean extends
 	 * 
 	 * 
 	 **/
-	public void deleteOrgUnit(PmProfileGroup pmProfileGroup) {
-
+	public void deleteOrgUnit() {
+		PmProfileGroup pmProfileGroup = getManagedBean().getSelectedDeleteOrgUnit();
 		if (pmProfileGroup != null && pmProfileGroup.isBrandNew()) {
 			if (this.getManagedBean().getProfileGroup() == null) {
 				this.getManagedBean().setProfileGroup(
@@ -1855,10 +1868,9 @@ public class OrganisationBackingBean extends
 	 * This method used to delete personnel in government seller tab.
 	 * 
 	 **/
-	public void deletePersonnel(int index) {
+	public void deletePersonnel() {
 
-		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnels()
-				.get(index);
+		SmPersonnel smPersonnel = this.getManagedBean().getSelectedDeleteSupplierUser();
 		smPersonnel.setDeleted(true);
 		Long selectedUserId = smPersonnel.getPmUser().getUserId();
 		

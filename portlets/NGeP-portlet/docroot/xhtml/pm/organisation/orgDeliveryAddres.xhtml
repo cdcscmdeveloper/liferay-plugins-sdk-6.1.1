@@ -45,11 +45,20 @@
 				</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				actionListener="#{organisationBackingBean.deleteSelectedAdddress}"
-				update="deliveryAddressId,deliveryAddressDialog" process="@this,deliveryAddressId"
+				update="@([id$=#{delAddressDeleteId}])" process="@this"
+				oncomplete="delAddressDeletePopUp.show();"
 				partialSubmit="true" >
-				<p:resetInput target=":form:addressTabs:deliveryAddressPanel" />
 			</p:commandButton>
 		</div>
+		<ac:confirmationPopup id="delAddressDeleteId"
+			widget="delAddressDeletePopUp"
+			okAction="organisationBackingBean.deleteSelectedAdddress()"
+			okProcess="@this,:#{p:component('deliveryAddressId')}"
+			width="400" height="100"
+			resetInput=":form:addressTabs:deliveryAddressPanel"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 			
+			update=":#{p:component('deliveryAddressId')}, :#{p:component('deliveryAddressDialog')}"  />	
 	</p:panel>
 	<p:dialog header="#{lbl['lbl.pm.header.general.org.delivery']}" widgetVar="addressPopup" id="deliveryAddressDialog" resizable="false"
 		modal="true" width="910" height="450">
