@@ -436,10 +436,11 @@
 							value="*" styleClass="mandatory" />
 					</td>
 					<td class="TableFieldRight">
-						<ac:scSingleFileUploadButton id="pidUploadBtn" 
+						<ac:scSingleFileUploadButton id="pidUploadBtn" popupWidgetVar="pidUploadDlg"
 							attachment="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}"
 							readonly="#{!isPendingSubmissionStatus}" />
-						<ac:scSingleFileUploadPopup fileUploadListener="purchaseInDefaultBackingBean.handleFileUpload"
+						<ac:scSingleFileUploadPopup widgetVar="pidUploadDlg"
+							fileUploadListener="purchaseInDefaultBackingBean.handleFileUpload"
 							update="@([id$=pidUploadBtn])"
 							readonly="#{!isPendingSubmissionStatus}" />
 						
