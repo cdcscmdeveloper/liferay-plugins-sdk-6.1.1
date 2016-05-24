@@ -116,13 +116,17 @@
 			<f:facet name="header">				
 				<h:outputText value="#{lbl['lbl.pm.action']}" />
 			</f:facet>
-			<p:commandLink partialSubmit="true"
-				process="@this"
-				disabled="#{!(groupuser.brandNew)}"
-				action="#{usergroupBackingBean.deleteUserGroup(rowIndex)}"
-				update="groupUser">
-				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+			<p:commandLink 
+					partialSubmit="true"
+					process="@this"
+					disabled="#{!(groupuser.brandNew)}"
+					oncomplete="groupUserDeletePopUp.show();"
+					update="@([id$=#{groupUserDeleteId}])">
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener target="#{usergroupBackingBean.managedBean.selectedDeleteGroupUser}" 
+							value="#{groupuser}" />
 			</p:commandLink>
+			
 			
 		</p:column>
 
@@ -139,6 +143,14 @@
 						conditionField="#{usergroupBackingBean.constuctConditionFields()}">
 				</ac:lov>
 		</div>
+		
+		<ac:confirmationPopup id="groupUserDeleteId"
+			widget="groupUserDeletePopUp"
+			okAction="usergroupBackingBean.deleteUserGroup()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":form:groupUser" />	
 	</p:panel>
 
 </ui:composition>

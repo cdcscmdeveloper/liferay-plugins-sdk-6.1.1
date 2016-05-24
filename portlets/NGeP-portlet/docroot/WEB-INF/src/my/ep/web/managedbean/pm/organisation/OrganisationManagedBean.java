@@ -90,6 +90,10 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private SmGstSupplier gstSupplier;
 	
 	private Long selectedStateId;
+	
+	private SmSupplierBank selectedDeletePaymentBank;
+	private SmPersonnel selectedDeleteSupplierUser;
+	private PmProfileGroup selectedDeleteOrgUnit;
 
 	public OrganisationManagedBean() {
 
@@ -789,5 +793,47 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	 */
 	public void setSelectedStateId(Long selectedStateId) {
 		this.selectedStateId = selectedStateId;
+	}
+
+	/**
+	 * @return the selectedDeletePaymentBank
+	 */
+	public SmSupplierBank getSelectedDeletePaymentBank() {
+		return selectedDeletePaymentBank;
+	}
+
+	/**
+	 * @param selectedDeletePaymentBank the selectedDeletePaymentBank to set
+	 */
+	public void setSelectedDeletePaymentBank(SmSupplierBank selectedDeletePaymentBank) {
+		this.selectedDeletePaymentBank = selectedDeletePaymentBank;
+	}
+
+	/**
+	 * @return the selectedDeleteSupplierUser
+	 */
+	public SmPersonnel getSelectedDeleteSupplierUser() {
+		return selectedDeleteSupplierUser;
+	}
+
+	/**
+	 * @param selectedDeleteSupplierUser the selectedDeleteSupplierUser to set
+	 */
+	public void setSelectedDeleteSupplierUser(SmPersonnel selectedDeleteSupplierUser) {
+		this.selectedDeleteSupplierUser = selectedDeleteSupplierUser;
+	}
+
+	/**
+	 * @return the selectedDeleteOrgUnit
+	 */
+	public PmProfileGroup getSelectedDeleteOrgUnit() {
+		return selectedDeleteOrgUnit;
+	}
+
+	/**
+	 * @param selectedDeleteOrgUnit the selectedDeleteOrgUnit to set
+	 */
+	public void setSelectedDeleteOrgUnit(PmProfileGroup selectedDeleteOrgUnit) {
+		this.selectedDeleteOrgUnit = selectedDeleteOrgUnit;
 	}
 }

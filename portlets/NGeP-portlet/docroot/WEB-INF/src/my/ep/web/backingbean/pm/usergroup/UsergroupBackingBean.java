@@ -426,10 +426,31 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		
 	}
 
-	public void deleteUserGroup(int rowIndex) {
+//	public void deleteUserGroup(int rowIndex) {
+//
+//		List<PmUserGroupUser> grpUsers = this.getManagedBean().getUserGroups();
+//		PmUserGroupUser removeGroupUser = grpUsers.get(rowIndex);
+////		List<PmUserGroupUser> selectedUsrGrp = this.getManagedBean()
+////				.getSelectedUsrGrps();
+////
+////		if (selectedUsrGrp.isEmpty()) {
+////			throw new EpException(MessageConst.ERR_900003);
+////		}
+////		if (grpUsers.size() == selectedUsrGrp.size()) {
+////			throw new EpException(MessageConst.ERR_900004);
+////		}
+//		grpUsers.remove(removeGroupUser);
+////		for (PmUserGroupUser pmUserGroupUser : selectedUsrGrp) {
+////			grpUsers.remove(pmUserGroupUser);
+////		}
+//
+//		this.getManagedBean().setUserGroups(grpUsers);
+//	}
+	
+	public void deleteUserGroup() {
 
 		List<PmUserGroupUser> grpUsers = this.getManagedBean().getUserGroups();
-		PmUserGroupUser removeGroupUser = grpUsers.get(rowIndex);
+		PmUserGroupUser removeGroupUser = getManagedBean().getSelectedDeleteGroupUser();
 //		List<PmUserGroupUser> selectedUsrGrp = this.getManagedBean()
 //				.getSelectedUsrGrps();
 //

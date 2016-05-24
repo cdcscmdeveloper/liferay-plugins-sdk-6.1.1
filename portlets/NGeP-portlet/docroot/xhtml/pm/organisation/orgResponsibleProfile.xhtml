@@ -48,9 +48,16 @@
 	           
 	       
 	        <p:column style="width :5%;text-align:center;" headerText="#{lbl['lbl.pm.financialorg.action']}">  
-      		    <p:commandLink action="#{organisationBackingBean.deleteOrgUnit(orgUnit)}" disabled="#{!orgUnit.brandNew}"
-      		    	partialSubmit="true" process="@this" update="dtOrgUnit">
+      		    <p:commandLink 
+      		    	disabled="#{!orgUnit.brandNew}"
+      		    	partialSubmit="true" 
+      		    	process="@this" 
+      		    	oncomplete="orgUnitDeletePopUp.show();"
+					update="@([id$=#{orgUnitDeleteId}])">
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener 
+						target="#{organisationBackingBean.managedBean.selectedDeleteOrgUnit}" 
+							value="#{orgUnit}" />
 				</p:commandLink>
 	        </p:column>  
 		</p:dataTable>
@@ -61,6 +68,13 @@
 		   	 	update="dtOrgUnit" action="#{organisationBackingBean.addOrgUnit()}" id="responsiblePTJAddBtnId"
 		   	 	oncomplete="responsibleOrg.paginator.endLink.click();" />
 		</div>
+		<ac:confirmationPopup id="orgUnitDeleteId"
+			widget="orgUnitDeletePopUp"
+			okAction="organisationBackingBean.deleteOrgUnit()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":#{p:component('dtOrgUnit')}" />	
     	<ac:lovPopup /> 		
 	</p:panel>
 </ui:composition>	
