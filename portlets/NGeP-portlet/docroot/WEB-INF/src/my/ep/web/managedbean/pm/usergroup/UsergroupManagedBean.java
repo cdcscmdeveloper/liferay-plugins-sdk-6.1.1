@@ -37,6 +37,8 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private String orgConditionField;
 	private PmOrgProfile orgProfile;
 
+	private PmUserGroupUser selectedDeleteGroupUser;
+	
 	private String orgId;
 
 	private Long orgProfileId;
@@ -223,6 +225,20 @@ public class UsergroupManagedBean extends BaseManagedBean {
 
 	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
 		this.pmOrgProfile = pmOrgProfile;
+	}
+
+	/**
+	 * @return the selectedDeleteGroupUser
+	 */
+	public PmUserGroupUser getSelectedDeleteGroupUser() {
+		return selectedDeleteGroupUser;
+	}
+
+	/**
+	 * @param selectedDeleteGroupUser the selectedDeleteGroupUser to set
+	 */
+	public void setSelectedDeleteGroupUser(PmUserGroupUser selectedDeleteGroupUser) {
+		this.selectedDeleteGroupUser = selectedDeleteGroupUser;
 	}
 
 }
