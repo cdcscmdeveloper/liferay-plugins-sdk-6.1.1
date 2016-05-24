@@ -5154,17 +5154,18 @@ public class SupplierFinalizationBackingBean extends
 		}
 		
 		if (ajaxEvent != null) {
-			if (isForwardToBPK) {
-				scQtFinalization.setHigherCommitte(null);
-				scQtFinalization.setHigherCommitteStr(null);
-				scQtFinalization.setHigherSecretary(null);
-				scQtFinalization.setHigherSecretaryStr(null);
-			} else {
+			if (!isForwardToBPK) {
 				scQtFinalization.setHigherCommitte(new PmParameter());
 				scQtFinalization.setHigherCommitteStr(StringUtils.EMPTY);
 				scQtFinalization.setHigherSecretary(new PmUser());
 				scQtFinalization.setHigherSecretaryStr(StringUtils.EMPTY);
 			}
+		}
+		if (isForwardToBPK) {
+			scQtFinalization.setHigherCommitte(null);
+			scQtFinalization.setHigherCommitteStr(null);
+			scQtFinalization.setHigherSecretary(null);
+			scQtFinalization.setHigherSecretaryStr(null);
 		}
 		getManagedBean().setForwardToBpk(isForwardToBPK);
 	}	
@@ -5619,7 +5620,7 @@ public class SupplierFinalizationBackingBean extends
 				
 				if (scQtFinalization.getHigherCommitte() != null && 
 						committeeType.equals(scQtFinalization
-								.getHigherCommitte().getParameterCode())) {
+							.getHigherCommitte().getParameterCode())) {
 					resetForwardToHigherAuthorityParams(scQtFinalization);
 					scQtFinalization.setHigherCommitte(new PmParameter());
 					scQtFinalization.setHigherSecretary(new PmUser());
