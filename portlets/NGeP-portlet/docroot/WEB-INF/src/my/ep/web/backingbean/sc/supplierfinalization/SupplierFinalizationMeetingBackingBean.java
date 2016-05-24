@@ -17,14 +17,12 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import javax.persistence.criteria.JoinType;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -62,7 +60,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -198,6 +195,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			reqDTO.setQtId(qtId);
 			String committeeType = getManagedBean().getCommitteeType();
 			reqDTO.setCommitteType(committeeType);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
 			MeetingResDTO resDTO = qtMeetingSO.retrieveMeetingDls(reqDTO);
 
 			if (resDTO.getMeetingDtls() != null) {
@@ -268,12 +266,9 @@ public class SupplierFinalizationMeetingBackingBean extends
 				}
 			}
 			
-			ScWorkFlowStatus currentWorkFlowStatus = getCurrentStatusByTypeAndId(
-					ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION,
-					qtId);
 			List<ScQtCommitteRemarks> remarks = initializeRemarks(
 					committee, 
-					currentWorkFlowStatus, 
+					committee.getCurrentStatus(), 
 					committee.getQtCommitteRemarks(), 
 					ScQtCommitteRemarks.class);
 			
