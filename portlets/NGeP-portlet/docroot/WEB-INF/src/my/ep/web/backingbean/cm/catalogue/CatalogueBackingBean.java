@@ -1539,7 +1539,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		.setCompareDesc(resDTO.getSupplierItem().getItemDesc());
 		this.getManagedBean().setTabActiveIndex(2);
 		this.getManagedBean().setDisplayCatalogue(true);
-		this.getManagedBean().setPreviousScreen(1);//catMaintenance
+		this.getManagedBean().setPreviousScreen(3);//catMaintenance exclude draft
 		//updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 		return "addCatalogItem";
 		//return "editCatalogItem";
@@ -9000,6 +9000,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			return cancelToMaintenanceFile();
 		else if (a==2)//2=pendingTask
 			return cancelToPendingApprovalItem();
+		else if(a==3)/// catMaintenance exclude draft
+			return cancelBackToMaintenanceFile();
 		else
 			return cancelToSupplierItemSearch();
 	}
