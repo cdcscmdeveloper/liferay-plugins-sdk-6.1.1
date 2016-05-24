@@ -26,5 +26,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bpmRemoteClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bpm-schema"/>
 	<classpathentry kind="lib" path="/NGeP-ear/EarContent/APP-INF/lib/eclipselink.jar"/>
+	<classpathentry kind="lib" path="/NGeP-ear/EarContent/APP-INF/lib/bcpg-jdk16-1.46.jar"/>
+	<classpathentry kind="lib" path="/NGeP-ear/EarContent/APP-INF/lib/bcprov-jdk16-146.jar"/>
 	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
 </classpath>
