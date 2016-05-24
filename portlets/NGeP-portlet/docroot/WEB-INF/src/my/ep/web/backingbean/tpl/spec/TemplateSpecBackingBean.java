@@ -63,6 +63,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -74,6 +75,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -92,6 +94,9 @@ public class TemplateSpecBackingBean extends
 	private static Logger log = Logger.getLogger(TemplateSpecBackingBean.class);
 
 	public static final String NAVIGATE_TO_SEARCH = "templateSpecSearch";
+	private static final String TPL_SPEC_KEY = "lbl.sc.template.spec";
+	private static final String EDIT_LABEL_NAME = "ui-icon-edit";
+	private static final String VIEW_LABEL_NAME = "ui-icon-view";
 
 	private IPagingDataModel<TplSpecMaster> specMasterDataModel = new SpecMasterPagingDataModel();
 
@@ -197,6 +202,9 @@ public class TemplateSpecBackingBean extends
 						&& resDTO.getSpecAnswerList() != null) {
 					calcGrandTotalAmount(templateSpecBean);
 				}
+				
+				this.getManagedBean().setReadOnly(!isSpecCreatedByLoginUserPtj(specMaster));
+				this.getManagedBean().setCloneBtnRendered(true);
 			}
 		} finally {
 			templateSpecSO = null;
@@ -235,7 +243,7 @@ public class TemplateSpecBackingBean extends
 				retrieveTemplateSpecMaster(templateSpecBean);
 
 				getManagedBean().setTemplateSpecBean(templateSpecBean);
-
+				
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -2092,6 +2100,11 @@ public class TemplateSpecBackingBean extends
 						new SearchFilterBean("specName",
 								SearchOperator.OPERATOR_NOT_EQUALS.value(),
 								TemplateSpecConst.TEMPLATE_SPEC_BLANK));
+				
+				// Removed the restriction condition to get All spec's across org profile.
+				if (CollectionUtils.isNotEmpty(searchBean.getDataFilterMetadatas())) {
+					searchBean.getDataFilterMetadatas().clear();
+				}
 
 				TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 				reqDTO.setSearchBean(searchBean);
@@ -2205,5 +2218,77 @@ public class TemplateSpecBackingBean extends
 					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
 		baseObject.setChangedBy(user.getUserId());
+	}
+	
+	/**
+	 * @param specMaster
+	 * @return
+	 */
+	public String getIconLabelName(TplSpecMaster specMaster){
+		
+		String labelName = EDIT_LABEL_NAME;
+		if (!isSpecCreatedByLoginUserPtj(specMaster)) {
+			labelName = VIEW_LABEL_NAME;
+		}
+		return labelName;
+	}
+	
+	private boolean isSpecCreatedByLoginUserPtj(TplSpecMaster specMaster) {
+
+		boolean isYes = true;
+		if (this.getManagedBean().getOrgProfileOfLoginUser() == null) {
+			this.getManagedBean().setOrgProfileOfLoginUser(retrieveUserOrgListByUserId());
+		}
+		if (!specMaster.getOwnerOrgProfile().getOrgProfileId()
+				.equals(this.getManagedBean().getOrgProfileOfLoginUser().getOrgProfileId())) {
+			isYes = false;
+		}
+		return isYes;
+	}
+	
+	public void cloneAction(TemplateSpecBean templateSpecBean) {
+
+		debugLogger("cloneAction");
+		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
+		TplSpecMaster clonedSpecMaster = TemplateSpecHelper.getInstance()
+				.cloneTplSpecMaster(specMaster, true, true, false);
+		if (this.getManagedBean().getOrgProfileOfLoginUser() == null) {
+			this.getManagedBean().setOrgProfileOfLoginUser(retrieveUserOrgListByUserId());
+		}
+		clonedSpecMaster.setOwnerOrgProfile(this.getManagedBean().getOrgProfileOfLoginUser());
+		clonedSpecMaster.setCreatedUser(new FacesScopes().getUserSessionBean());
+		this.getManagedBean().setReadOnly(false);
+		this.getManagedBean().setCloneBtnRendered(false);
+		templateSpecBean.setSpecMaster(clonedSpecMaster);
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.ERROR_760150,
+								new String[] {ResourceBundleUtils.getMessage(
+										TPL_SPEC_KEY, 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale())},
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+		
+	}
+	
+	private PmOrgProfile retrieveUserOrgListByUserId() {
+
+		IUserSO userSO = null;
+		PmOrgProfile pmOrgProfile = null;
+		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			if (resDTO.getUserOrgList() != null
+					&& resDTO.getUserOrgList().size() > 0) {
+				pmOrgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+		} finally {
+			userSO = null;
+		}
+		return pmOrgProfile;
 	}
 }

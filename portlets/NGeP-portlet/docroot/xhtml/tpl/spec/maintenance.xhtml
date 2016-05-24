@@ -13,7 +13,7 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="specMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
-		
+		<ui:param name="isReadOnly" value="#{templateSpecBackingBean.managedBean.readOnly}"/>
 		<table border="0" cellpadding="0" cellspacing="0" width="100%">
 		<tr>
 			<td>
@@ -23,9 +23,12 @@
 					process="@this" />
 			</td>
 			<td class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.clone']}" 
+					action="#{templateSpecBackingBean.cloneAction(templateSpecBackingBean.managedBean.templateSpecBean)}"
+					update="@form" rendered="#{templateSpecBackingBean.managedBean.cloneBtnRendered}"/>
 				<p:commandButton value="#{lbl['lbl.btn.save']}" 
 					action="#{templateSpecBackingBean.saveAction(templateSpecBackingBean.managedBean.templateSpecBean)}"
-					update="@form" />
+					update="@form" rendered="#{!isReadOnly}"/>
 			</td>
 		</tr>
 		</table>
@@ -41,7 +44,7 @@
 						<p:inputTextarea id="title" rows="3" style="width:280px" 
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.specName}"
 							required="true" maxlength="200"
-							label="#{lbl['lbl.tpl.spec.title']}" ><p:ajax partialSubmit="true" process="@this" /></p:inputTextarea>
+							label="#{lbl['lbl.tpl.spec.title']}" disabled="#{isReadOnly}"><p:ajax partialSubmit="true" process="@this" /></p:inputTextarea>
 						<p:message id="titleMsg" for="title" display="icon" />
 					</td>
 					<td class="TableFieldLeft">
@@ -51,7 +54,7 @@
 						<p:inputTextarea id="descr" rows="3" style="width:280px" 
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.specDesc}"
 							maxlength="500"
-							label="#{lbl['lbl.tpl.spec.description']}" ><p:ajax partialSubmit="true" process="@this" />
+							label="#{lbl['lbl.tpl.spec.description']}"  disabled="#{isReadOnly}"><p:ajax partialSubmit="true" process="@this" />
 							</p:inputTextarea>
 					</td>
 				</tr>	
@@ -64,7 +67,7 @@
 						<p:selectOneMenu id="procCat" style="width:289px" 
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.procurementCategory.parameterId}"
 							required="true"
-							label="#{lbl['lbl.sc.procurement.category']}">
+							label="#{lbl['lbl.sc.procurement.category']}" disabled="#{isReadOnly}">
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 							<p:ajax partialSubmit="true" process="@this" />
 						</p:selectOneMenu>
@@ -80,7 +83,7 @@
 						<p:selectOneMenu id="itemType" style="width:289px" 
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.itemTypeCode.parameterId}"
 							required="true"
-							label="#{lbl['lbl.sc.item.type']}">
+							label="#{lbl['lbl.sc.item.type']}" disabled="#{isReadOnly}">
 							<f:selectItems value="#{templateSpecBackingBean.itemTypeDropdownList}" />
 							<p:ajax event="change" partialSubmit="true" process="@this" update="spg" listener="#{templateSpecBackingBean.itemTypeChange()}" />
 						</p:selectOneMenu>
@@ -94,7 +97,7 @@
 						<p:selectOneMenu id="specType" style="width:289px" 
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.specTypeCode.parameterId}"
 							required="true"
-							label="#{lbl['lbl.tpl.spec.specification.type']}">
+							label="#{lbl['lbl.tpl.spec.specification.type']}" disabled="#{isReadOnly}">
 							<f:selectItems value="#{templateSpecBackingBean.getSpecTypeDropdownList()}" />
 							<p:ajax event="change" partialSubmit="true" process="@this" update="spg" listener="#{templateSpecBackingBean.specTypeChange()}" />
 						</p:selectOneMenu>
@@ -110,7 +113,7 @@
 						<p:selectOneMenu id="templateType" style="width:289px" 
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.templateTypeCode.parameterId}"
 							required="true"
-							label="#{lbl['lbl.tpl.spec.template.type']}">
+							label="#{lbl['lbl.tpl.spec.template.type']}" disabled="#{isReadOnly}">
 							<p:ajax event="change" partialSubmit="true" process="@this" update="ministryLBL, ministryDD" listener="#{templateSpecBackingBean.templateTypeChange()}" />
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.templateType)}" />
 						</p:selectOneMenu>
@@ -133,7 +136,7 @@
 									saveObject="templateSpecBackingBean.managedBean.templateSpecBean.specMaster.orgProfile"
 									value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.orgProfile.orgName}"
 									size="32" readonly="true"
-									required="true" label="#{lbl['lbl.tpl.spec.ministry']}" />
+									required="true" label="#{lbl['lbl.tpl.spec.ministry']}" disabled="#{isReadOnly}"/>
 							</c:when>
 							<c:when test="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.templateTypeCode.parameterCode == ParameterConst.templateTypePtj}">
 								<ac:lov id="ptjOrg" lovId="PM_ORG_PROFILE_PTJ"
@@ -141,7 +144,7 @@
 									saveObject="templateSpecBackingBean.managedBean.templateSpecBean.specMaster.orgProfile"
 									value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.orgProfile.orgName}"
 									size="32" readonly="true"
-									required="true" label="#{lbl['lbl.tpl.spec.ministry']}" />
+									required="true" label="#{lbl['lbl.tpl.spec.ministry']}" disabled="#{isReadOnly}" />
 							</c:when>
 							</c:choose>
 							
@@ -168,7 +171,7 @@
 					<td class="TableFieldRight" colspan="3">
 						<p:selectOneMenu id="recStatus" 
 							required="true" style="width:289px" 
-							label="#{lbl['lbl.pm.status']}"  disabled="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.brandNew}"
+							label="#{lbl['lbl.pm.status']}"  disabled="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.brandNew or isReadOnly}"
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.recordStatusFlg}">
 							<f:selectItems  value="#{templateSpecBackingBean.getStatusOptions()}"/>
 						</p:selectOneMenu>
@@ -179,7 +182,7 @@
 		</p:panel>
 		
 		<h:panelGroup id="spg">
-			<ac:templateSpec templateSpecBean="#{templateSpecBackingBean.managedBean.templateSpecBean}" />
+			<ac:templateSpec templateSpecBean="#{templateSpecBackingBean.managedBean.templateSpecBean}" editable="#{!isReadOnly}"/>
 		</h:panelGroup>
 	</ui:define>
 
