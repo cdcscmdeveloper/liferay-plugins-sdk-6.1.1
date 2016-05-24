@@ -117,14 +117,14 @@ body {margin-top: 0px;margin-left: 0px;}
 <tr>
 	<td class="tr0 td0"><p class="p3 ft0">Application Reference No</p></td>
 	<td class="tr0 td1"><p class="p4 ft0">:</p></td>
-	<td class="tr1 td1"><p class="p4 ft0">&#160;</p></td>
-	<td class="tr0 td9"><p class="p3 ft0">&#160;&#160;$applNo</p></td>
+	<td class="tr1 td1"><p class="p4 ft0"></p></td>
+	<td class="tr0 td9"><p class="p3 ft0">$applNo</p></td>
 </tr>
 <tr>
 	<td class="tr1 td0"><p class="p5 ft0">Application Type</p></td>
 	<td class="tr1 td1"><p class="p4 ft0">:</p></td>
-	<td class="tr1 td1"><p class="p4 ft0">&#160;</p></td>
-	<td class="tr1 td9"><p class="p3 ft0">&#160;&#160;$applType</p></td>
+	<td class="tr1 td1"><p class="p4 ft0"></p></td>
+	<td class="tr1 td9"><p class="p3 ft0">$applType</p></td>
 </tr>
 </table>
 <p class="p6 ft2">Declaration For Application To Register With The Ministry Of Finance Malaysia</p>
@@ -142,103 +142,103 @@ body {margin-top: 0px;margin-left: 0px;}
 <tr>
 	<td class="tr0 td2"><p class="p3 ft0">Signature</p></td>
 	<td class="tr0 td3"><p class="p17 ft0">:</p></td>
-	<td class="tr0 td4"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr0 td5"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr0 td4"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr0 td6"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr0 td4"><p class="p3 ft9"></p></td>
+	<td class="tr0 td5"><p class="p3 ft9"></p></td>
+	<td class="tr0 td4"><p class="p3 ft9"></p></td>
+	<td class="tr0 td6"><p class="p3 ft9"></p></td>
 </tr>
 <tr>
 	<td rowspan="2" class="tr2 td2"><p class="p3 ft0">Applicant's Name*</p></td>
 	<td rowspan="2" class="tr2 td3"><p class="p17 ft0">:</p></td>
-	<td class="tr3 td7"><p class="p3 ft10">&#160;</p></td>
-	<td class="tr3 td8"><p class="p3 ft10">&#160;</p></td>
-	<td class="tr4 td4"><p class="p3 ft11">&#160;</p></td>
-	<td class="tr4 td6"><p class="p3 ft11">&#160;</p></td>
+	<td class="tr3 td7"><p class="p3 ft10"></p></td>
+	<td class="tr3 td8"><p class="p3 ft10"></p></td>
+	<td class="tr4 td4"><p class="p3 ft11"></p></td>
+	<td class="tr4 td6"><p class="p3 ft11"></p></td>
 </tr>
 <tr>
-	<td class="tr5 td4"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr5 td5"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr5 td4"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr5 td6"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr5 td4"><p class="p3 ft9"></p></td>
+	<td class="tr5 td5"><p class="p3 ft9"></p></td>
+	<td class="tr5 td4"><p class="p3 ft9"></p></td>
+	<td class="tr5 td6"><p class="p3 ft9"></p></td>
 </tr>
 <tr>
 	<td rowspan="2" class="tr6 td2"><p class="p3 ft0">NRIC/Passport No.</p></td>
 	<td rowspan="2" class="tr6 td3"><p class="p17 ft0">:</p></td>
-	<td class="tr4 td7"><p class="p3 ft11">&#160;</p></td>
-	<td class="tr4 td8"><p class="p3 ft11">&#160;</p></td>
-	<td class="tr7 td4"><p class="p3 ft12">&#160;</p></td>
+	<td class="tr4 td7"><p class="p3 ft11"></p></td>
+	<td class="tr4 td8"><p class="p3 ft11"></p></td>
+	<td class="tr7 td4"><p class="p3 ft12"></p></td>
 	<td rowspan="3" class="tr8 td6"><p class="p18 ft13">Official Seal Of</p></td>
 </tr>
 <tr>
-	<td class="tr9 td4"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr9 td5"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr9 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr9 td4"><p class="p3 ft9"></p></td>
+	<td class="tr9 td5"><p class="p3 ft9"></p></td>
+	<td class="tr9 td4"><p class="p3 ft9"></p></td>
 </tr>
 <tr>
-	<td class="tr10 td2"><p class="p3 ft14">&#160;</p></td>
-	<td class="tr10 td3"><p class="p3 ft14">&#160;</p></td>
-	<td class="tr7 td7"><p class="p3 ft12">&#160;</p></td>
-	<td class="tr7 td8"><p class="p3 ft12">&#160;</p></td>
-	<td class="tr10 td4"><p class="p3 ft14">&#160;</p></td>
+	<td class="tr10 td2"><p class="p3 ft14"></p></td>
+	<td class="tr10 td3"><p class="p3 ft14"></p></td>
+	<td class="tr7 td7"><p class="p3 ft12"></p></td>
+	<td class="tr7 td8"><p class="p3 ft12"></p></td>
+	<td class="tr10 td4"><p class="p3 ft14"></p></td>
 </tr>
 <tr>
 	<td rowspan="2" class="tr11 td2"><p class="p3 ft0">Designation</p></td>
 	<td rowspan="2" class="tr11 td3"><p class="p17 ft0">:</p></td>
-	<td class="tr12 td4"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr12 td5"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr12 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr12 td4"><p class="p3 ft9"></p></td>
+	<td class="tr12 td5"><p class="p3 ft9"></p></td>
+	<td class="tr12 td4"><p class="p3 ft9"></p></td>
 	<td class="tr12 td6"><p class="p19 ft13">Company/Consulting</p></td>
 </tr>
 <tr>
-	<td class="tr13 td4"><p class="p3 ft15">&#160;</p></td>
-	<td class="tr13 td5"><p class="p3 ft15">&#160;</p></td>
-	<td class="tr13 td4"><p class="p3 ft15">&#160;</p></td>
+	<td class="tr13 td4"><p class="p3 ft15"></p></td>
+	<td class="tr13 td5"><p class="p3 ft15"></p></td>
+	<td class="tr13 td4"><p class="p3 ft15"></p></td>
 	<td rowspan="2" class="tr14 td6"><p class="p18 ft0">Firm</p></td>
 </tr>
 <tr>
-	<td class="tr3 td2"><p class="p3 ft10">&#160;</p></td>
-	<td class="tr3 td3"><p class="p3 ft10">&#160;</p></td>
-	<td class="tr15 td7"><p class="p3 ft16">&#160;</p></td>
-	<td class="tr15 td8"><p class="p3 ft16">&#160;</p></td>
-	<td class="tr3 td4"><p class="p3 ft10">&#160;</p></td>
+	<td class="tr3 td2"><p class="p3 ft10"></p></td>
+	<td class="tr3 td3"><p class="p3 ft10"></p></td>
+	<td class="tr15 td7"><p class="p3 ft16"></p></td>
+	<td class="tr15 td8"><p class="p3 ft16"></p></td>
+	<td class="tr3 td4"><p class="p3 ft10"></p></td>
 </tr>
 <tr>
 	<td class="tr5 td2"><p class="p3 ft0">Name of Company/Consulting</p></td>
-	<td class="tr5 td3"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr5 td4"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr5 td5"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr5 td4"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr5 td6"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr5 td3"><p class="p3 ft9"></p></td>
+	<td class="tr5 td4"><p class="p3 ft9"></p></td>
+	<td class="tr5 td5"><p class="p3 ft9"></p></td>
+	<td class="tr5 td4"><p class="p3 ft9"></p></td>
+	<td class="tr5 td6"><p class="p3 ft9"></p></td>
 </tr>
 <tr>
 	<td class="tr16 td2"><p class="p3 ft17">Firm</p></td>
 	<td class="tr16 td3"><p class="p17 ft17">:</p></td>
-	<td class="tr16 td4"><p class="p3 ft18">&#160;</p></td>
-	<td class="tr16 td5"><p class="p3 ft18">&#160;</p>$companyName</td>
-	<td class="tr16 td4"><p class="p3 ft18">&#160;</p></td>
-	<td class="tr16 td6"><p class="p3 ft18">&#160;</p></td>
+	<td class="tr16 td4"><p class="p3 ft18"></p></td>
+	<td class="tr16 td5"><p class="p3 ft18"></p>$companyName</td>
+	<td class="tr16 td4"><p class="p3 ft18"></p></td>
+	<td class="tr16 td6"><p class="p3 ft18"></p></td>
 </tr>
 <tr>
 	<td rowspan="2" class="tr17 td2"><p class="p3 ft0">Date</p></td>
 	<td rowspan="2" class="tr17 td3"><p class="p17 ft0">:</p></td>
-	<td class="tr10 td4"><p class="p3 ft14">&#160;</p></td>
-	<td class="tr7 td8"><p class="p3 ft12">&#160;</p></td>
-	<td class="tr7 td7"><p class="p3 ft12">&#160;</p></td>
-	<td class="tr10 td6"><p class="p3 ft14">&#160;</p></td>
+	<td class="tr10 td4"><p class="p3 ft14"></p></td>
+	<td class="tr7 td8"><p class="p3 ft12"></p></td>
+	<td class="tr7 td7"><p class="p3 ft12"></p></td>
+	<td class="tr10 td6"><p class="p3 ft14"></p></td>
 </tr>
 <tr>
-	<td class="tr11 td4"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr11 td5"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr11 td4"><p class="p3 ft9">&#160;</p></td>
-	<td class="tr11 td6"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr11 td4"><p class="p3 ft9"></p></td>
+	<td class="tr11 td5"><p class="p3 ft9"></p></td>
+	<td class="tr11 td4"><p class="p3 ft9"></p></td>
+	<td class="tr11 td6"><p class="p3 ft9"></p></td>
 </tr>
 <tr>
-	<td class="tr10 td2"><p class="p3 ft14">&#160;</p></td>
-	<td class="tr10 td3"><p class="p3 ft14">&#160;</p></td>
-	<td class="tr10 td4"><p class="p3 ft14">&#160;</p></td>
-	<td class="tr7 td8"><p class="p3 ft12">&#160;</p></td>
-	<td class="tr7 td7"><p class="p3 ft12">&#160;</p></td>
-	<td class="tr10 td6"><p class="p3 ft14">&#160;</p></td>
+	<td class="tr10 td2"><p class="p3 ft14"></p></td>
+	<td class="tr10 td3"><p class="p3 ft14"></p></td>
+	<td class="tr10 td4"><p class="p3 ft14"></p></td>
+	<td class="tr7 td8"><p class="p3 ft12"></p></td>
+	<td class="tr7 td7"><p class="p3 ft12"></p></td>
+	<td class="tr10 td6"><p class="p3 ft14"></p></td>
 </tr>
 </table>
 </div>
