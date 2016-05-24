@@ -6608,9 +6608,8 @@ public class EvaluationBackingBean extends
 
 			resDto = qtDetailSO.retriveQtRemarks(qtReqDTO);
 			ScQt scQt = this.getManagedBean().getScQt();
-			ScWorkFlowStatus currentWorkFlowStatus = getCurrentStatusByTypeAndId(
-					this.getManagedBean().getCommitteeType(),
-					scQt.getQtId());
+			ScQtCommittee qtCommittee = this.getManagedBean().getScQtCommittee();
+			ScWorkFlowStatus currentWorkFlowStatus = qtCommittee.getCurrentStatus();
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				if (resDto.getRemarks() == null) {
