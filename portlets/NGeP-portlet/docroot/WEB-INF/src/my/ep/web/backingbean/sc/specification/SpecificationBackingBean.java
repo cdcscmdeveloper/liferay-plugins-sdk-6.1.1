@@ -1728,8 +1728,8 @@ public class SpecificationBackingBean extends
 			}
 			// reqDTO.setSpecType("T");
 			List<Integer> settinglist = new ArrayList<Integer>();
-			settinglist.add(1);
-			settinglist.add(3);
+			settinglist.add(QTConstants.SETTING_TYPE_TECHNICAL);
+			settinglist.add(QTConstants.SETTING_TYPE_DEMO);
 			reqDTO.setSettingTypes(settinglist);
 			specSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
@@ -1739,7 +1739,7 @@ public class SpecificationBackingBean extends
 					&& resDTO.getScoreSettingResultBean().getResultList()
 							.isEmpty()) {
 				if (null == this.getManagedBean().getTechnicalScoreSetting()) {
-					ScQtScoreSetting technicalScoresetting = constructScoreSetting(1);
+					ScQtScoreSetting technicalScoresetting = constructScoreSetting(QTConstants.SETTING_TYPE_TECHNICAL);
 					technicalScoresetting
 							.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE));
 					this.getManagedBean().setTechnicalScoreSetting(
@@ -1748,7 +1748,7 @@ public class SpecificationBackingBean extends
 				}
 
 				if (null == this.getManagedBean().getDemoScoreSetting()) {
-					ScQtScoreSetting demoScoresetting = constructScoreSetting(3);
+					ScQtScoreSetting demoScoresetting = constructScoreSetting(QTConstants.SETTING_TYPE_DEMO);
 					this.getManagedBean().setDemoScoreSetting(demoScoresetting);
 
 				}
@@ -1759,7 +1759,7 @@ public class SpecificationBackingBean extends
 
 				for (ScQtScoreSetting recommnendationSetting : resDTO
 						.getScoreSettingResultBean().getResultList()) {
-					if (recommnendationSetting.getSettingType() == 1) {
+					if (recommnendationSetting.getSettingType() == QTConstants.SETTING_TYPE_TECHNICAL) {
 						if (null == this.getManagedBean()
 								.getTechnicalScoreSetting()) {
 							this.getManagedBean().setTechnicalScoreSetting(
@@ -1767,7 +1767,7 @@ public class SpecificationBackingBean extends
 						}
 					}
 
-					if (recommnendationSetting.getSettingType() == 3) {
+					if (recommnendationSetting.getSettingType() == QTConstants.SETTING_TYPE_DEMO) {
 						if (null == this.getManagedBean().getDemoScoreSetting()) {
 							this.getManagedBean().setDemoScoreSetting(
 									recommnendationSetting);
@@ -1864,8 +1864,8 @@ public class SpecificationBackingBean extends
 						resDTO1.getFinancialCheckLists());
 			}
 			List<Integer> settinglist = new ArrayList<Integer>();
-			settinglist.add(2);
-			settinglist.add(6);
+			settinglist.add(QTConstants.SETTING_TYPE_FINANCIAL_BY_PACKAGE);
+			settinglist.add(QTConstants.SETTING_TYPE_FINANCIAL_BY_ITEM);
 
 			// reqDTO.setSpecType("T");
 			reqDTO.setSettingTypes(settinglist);
@@ -1878,12 +1878,12 @@ public class SpecificationBackingBean extends
 					&& resDTO.getScoreSettingResultBean().getResultList()
 							.isEmpty()) {
 				if (null == this.getManagedBean().getFinancialScoreSetting()) {
-					ScQtScoreSetting scoreSetting = constructScoreSetting(2);
+					ScQtScoreSetting scoreSetting = constructScoreSetting(QTConstants.SETTING_TYPE_FINANCIAL_BY_PACKAGE);
 					this.getManagedBean()
 							.setFinancialScoreSetting(scoreSetting);
 				}
 				if (null == this.getManagedBean().getFinacialItemScoreSetting()) {
-					ScQtScoreSetting scoreSetting = constructScoreSetting(6);
+					ScQtScoreSetting scoreSetting = constructScoreSetting(QTConstants.SETTING_TYPE_FINANCIAL_BY_ITEM);
 					this.getManagedBean().setFinacialItemScoreSetting(
 							scoreSetting);
 				}
@@ -1892,14 +1892,14 @@ public class SpecificationBackingBean extends
 				if (resDTO.getScoreSettingResultBean().getResultList().size() == 2) {
 					for (ScQtScoreSetting scoreSttting : resDTO
 							.getScoreSettingResultBean().getResultList()) {
-						if (scoreSttting.getSettingType() == 2) {
+						if (scoreSttting.getSettingType() == QTConstants.SETTING_TYPE_FINANCIAL_BY_PACKAGE) {
 							if (null == this.getManagedBean()
 									.getFinancialScoreSetting()) {
 								this.getManagedBean().setFinancialScoreSetting(
 										scoreSttting);
 							}
 						}
-						if (scoreSttting.getSettingType() == 6) {
+						if (scoreSttting.getSettingType() == QTConstants.SETTING_TYPE_FINANCIAL_BY_ITEM) {
 							if (null == this.getManagedBean()
 									.getFinacialItemScoreSetting()) {
 								this.getManagedBean()
@@ -1916,7 +1916,7 @@ public class SpecificationBackingBean extends
 						.size() == 1) {
 					for (ScQtScoreSetting scoreSttting : resDTO
 							.getScoreSettingResultBean().getResultList()) {
-						if (scoreSttting.getSettingType() == 2) {
+						if (scoreSttting.getSettingType() == QTConstants.SETTING_TYPE_FINANCIAL_BY_PACKAGE) {
 							if (null == this.getManagedBean()
 									.getFinancialScoreSetting()) {
 								this.getManagedBean().setFinancialScoreSetting(
@@ -1926,7 +1926,7 @@ public class SpecificationBackingBean extends
 
 						if (null == this.getManagedBean()
 								.getFinacialItemScoreSetting()) {
-							ScQtScoreSetting scoreSetting = constructScoreSetting(6);
+							ScQtScoreSetting scoreSetting = constructScoreSetting(QTConstants.SETTING_TYPE_FINANCIAL_BY_ITEM);
 							this.getManagedBean().setFinacialItemScoreSetting(
 									scoreSetting);
 						}
@@ -2145,8 +2145,8 @@ public class SpecificationBackingBean extends
 				// reqDTO.setSpecType("T");
 
 				List<Integer> settinglist = new ArrayList<Integer>();
-				settinglist.add(4);
-				settinglist.add(5);
+				settinglist.add(QTConstants.SETTING_TYPE_RECOMMENDATION_BY_PACKAGE);
+				settinglist.add(QTConstants.SETTING_TYPE_RECOMMENDATION_BY_ITEM);
 				reqDTO.setSettingTypes(settinglist);
 				specSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
@@ -2159,7 +2159,7 @@ public class SpecificationBackingBean extends
 
 					if (null == this.getManagedBean()
 							.getRecommendationPackageScore()) {
-						ScQtScoreSetting pkgScoreSetting = constructScoreSetting(4);
+						ScQtScoreSetting pkgScoreSetting = constructScoreSetting(QTConstants.SETTING_TYPE_RECOMMENDATION_BY_PACKAGE);
 						BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 						pkgScoreSetting.setOverallTechnical(passingScore);
 						int financial=100-passingScore.intValue();
@@ -2171,7 +2171,7 @@ public class SpecificationBackingBean extends
 								pkgScoreSetting);
 					}
 					if (null == this.getManagedBean().getRecommendationScore()) {
-						ScQtScoreSetting itemScoreSetting = constructScoreSetting(5);
+						ScQtScoreSetting itemScoreSetting = constructScoreSetting(QTConstants.SETTING_TYPE_RECOMMENDATION_BY_ITEM);
 						this.getManagedBean().setRecommendationScore(
 								itemScoreSetting);
 					}
@@ -2181,7 +2181,7 @@ public class SpecificationBackingBean extends
 					for (ScQtScoreSetting recommnendationSetting : resDTO
 							.getScoreSettingResultBean().getResultList()) {
 
-						if (recommnendationSetting.getSettingType() == 4) {
+						if (recommnendationSetting.getSettingType() == QTConstants.SETTING_TYPE_RECOMMENDATION_BY_PACKAGE) {
 							this.getManagedBean()
 									.setRecommendationPackageScore(
 											recommnendationSetting);
@@ -2189,7 +2189,7 @@ public class SpecificationBackingBean extends
 									.getRecommendationPackageScore());
 						}
 
-						if (recommnendationSetting.getSettingType() == 5) {
+						if (recommnendationSetting.getSettingType() == QTConstants.SETTING_TYPE_RECOMMENDATION_BY_ITEM) {
 							this.getManagedBean().setRecommendationScore(
 									recommnendationSetting);
 							calculateRecommendtechnicalScore(this
