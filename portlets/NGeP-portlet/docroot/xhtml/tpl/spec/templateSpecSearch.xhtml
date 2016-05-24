@@ -155,9 +155,12 @@
 							</p:column>
 							<p:column>  
 					            #{(tplMasterObj.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
-					        </p:column> 
+					        </p:column>
+
+							<ui:param name="iconLabel"
+								value="#{templateSpecBackingBean.getIconLabelName(tplMasterObj)}"></ui:param>
 							<p:column style="width:4%">
-								<p:commandButton icon="ui-icon-edit" style="background-color:transparent !important; border:0px none;"
+								<p:commandButton icon="#{iconLabel}" style="background-color:transparent !important; border:0px none;"
 									action="#{templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBackingBean.managedBean.templateSpecBean)}">
 									
 									<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster}" value="#{tplMasterObj}" />
