@@ -2071,6 +2071,20 @@ important;
 	height: 16px !important;
 }
 
+.ui-icon-untick {
+	background-image: url('../images/design/ico-disabled-chckbx.png') !important;
+	background-position: center;
+	border-radius: 0px;
+	height: 16px !important;
+}
+
+.ui-icon-tickcheckbox {
+	background-image: url('../images/design/ico-tick-checkbox.png') !important;
+	background-position: center;
+	border-radius: 0px;
+	height: 16px !important;
+}
+
 .ui-icon-complete {
 	background-image: url('../images/design/tick.png') !important;
 	background-position: center;
