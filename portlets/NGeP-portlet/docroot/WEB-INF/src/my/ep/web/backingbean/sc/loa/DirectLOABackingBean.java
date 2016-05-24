@@ -5169,7 +5169,7 @@ public class DirectLOABackingBean extends
 		BigDecimal unitPrice = specAnswer.getRatePerUom().setScale(2,
 				BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setUnitPrice(unitPrice.toString());
-		jadualHarga.setUom(specQuestion.getClUom().getUomName());
+		jadualHarga.setUom(null == specQuestion.getClUom() ? "" : specQuestion.getClUom().getUomName());
 		jadualHarga.setFreqUom(null == specQuestion.getClUomFrequency() ? ""
 				: specQuestion.getClUomFrequency().toString());
 		jadualHarga.setUomPerDay(null == specQuestion.getClUomPerDay() ? ""
