@@ -7805,7 +7805,11 @@ public class SmApplicationUtil {
 			context.put("hostUrl", fs.getRequest().getServerName() + ":"
 					+ fs.getRequest().getServerPort());
 			context.put("applNo", smAppl.getApplNo());
-			context.put("applType", smAppl.getApplType());
+			context.put(
+					"applType",
+					SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang(
+							ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+							smAppl.getApplType(), "en").getCodeName());
 			context.put("companyName", smAppl.getSmSupplier().getCompanyName());
 			SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
 		} catch (Exception e) {
