@@ -72,16 +72,21 @@
 
 		</p:dataTable>
 		<div align="right">
-
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
-				action="#{zoneBackingBean.addState}" immediate="true" update="searchStateId"
-				/>
+				action="#{zoneBackingBean.addState}" immediate="true" update="searchStateId"/>
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this,selectedStateId" partialSubmit="true"
-				action="#{zoneBackingBean.deleteState}" update="selectedStateId" />
-
-
+				oncomplete="stateDeletePopUp.show();"
+				update="@([id$=#{stateDeleteId}])"/>
 		</div>
+		<ac:confirmationPopup id="stateDeleteId"
+			widget="stateDeletePopUp"
+			okProcess="@this,:#{p:component('selectedStateId')}"
+			okAction="zoneBackingBean.deleteState()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":#{p:component('selectedStateId')}" />
 	</p:panel>
 	<p:dialog id="stateSearch" header="#{lbl['lbl.pm.zone.select.state']}"
 		widgetVar="statelistpopup" modal="true" width="600" height="300"
