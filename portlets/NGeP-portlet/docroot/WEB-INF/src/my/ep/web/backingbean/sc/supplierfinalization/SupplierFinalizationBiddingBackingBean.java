@@ -59,6 +59,7 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
@@ -1036,6 +1037,24 @@ public class SupplierFinalizationBiddingBackingBean extends
 			getManagedBean().setCommitteeEndorsementList(
 					committeeEndorsementList);
 		}
+		
+		initializeCommitteeRemarks();
+	}
+	
+	private void initializeCommitteeRemarks() {
+		ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		if (scQtCommittee != null) {
+			// Retrieve committee remarks
+			List<ScQtCommitteRemarks> remarks = initializeRemarks(scQtCommittee,
+					scQtFinalization.getCurrentStatus(), 
+					scQtCommittee.getQtCommitteRemarks(),
+					ScQtCommitteRemarks.class);
+			scQtCommittee.setQtCommitteRemarks(remarks);
+	
+			// Committee Remarks list
+			this.getManagedBean().setCommitteeRemarkList(remarks);
+		}		
 	}
 	
 	private void setDefaultValueForCommitteeActivityIfNull(ScQtCommitteeActivity committeeActivity) {
@@ -1569,7 +1588,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 				.getScQtFinalization();
 		
 		List<ScQtFinalizationEndorsementRemarks> remarks = initializeRemarks(
-				scQtFinalization, null, scQtFinalization.getScQtFinalizationEndorsementRemarks(), ScQtFinalizationEndorsementRemarks.class);
+				scQtFinalization, 
+				scQtFinalization.getCurrentStatus(), 
+				scQtFinalization.getScQtFinalizationEndorsementRemarks(), 
+				ScQtFinalizationEndorsementRemarks.class);
 		
 		scQtFinalization.setScQtFinalizationEndorsementRemarks(remarks);
 		getManagedBean().setRemarks(remarks);
@@ -1841,7 +1863,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 					 .add(scQtMeeting);
 				}
 			}
-		}		
+		}
+		
+		List<ScQtCommitteRemarks> remarksList = finalizeRemarks(this
+				.getManagedBean().getCommitteeRemarkList());
+		if (CollectionUtils.isNotEmpty(remarksList)) {
+			scQtCommittee.setQtCommitteRemarks(remarksList);
+		}
 		
 		// Meeting Attendance Details
 		List<ScQtMeetingAttendance> meetingAttendanceList 
