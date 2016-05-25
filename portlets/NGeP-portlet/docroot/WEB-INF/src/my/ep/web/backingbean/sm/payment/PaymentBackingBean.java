@@ -666,7 +666,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					}
 				}
 				
-				showPaymentResponse(status, paymentId,errorDesc);
+				if(validPayment){
+					showPaymentResponse(status, pymtResDTO.getPyPayment().getPaymentId(),errorDesc);
+				}else{
+					showPaymentResponse(status, paymentId,errorDesc);
+				}
+				
 				this.renewSesionObject();
 			} else {
 				showPaymentResponse(
