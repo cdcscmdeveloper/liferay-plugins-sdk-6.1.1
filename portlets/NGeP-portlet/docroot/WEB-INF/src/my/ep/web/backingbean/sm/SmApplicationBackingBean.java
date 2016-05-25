@@ -1058,11 +1058,12 @@ public class SmApplicationBackingBean extends
 		}
 
 		// set latest mofAccount
-		if(getManagedBean().getSmAppl().getSmSupplier()!=null){
+		if (getManagedBean().getSmAppl().getSmSupplier() != null) {
 			getManagedBean().setExpiryDate(StringUtils.EMPTY);
 			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
-					getManagedBean().getSmAppl().getSmSupplier().getSupplierId(),
-					getManagedBean().getSmAppl().getSupplierType());
+					getManagedBean().getSmAppl().getSmSupplier()
+							.getSupplierId(), getManagedBean().getSmAppl()
+							.getSupplierType());
 			if (acc != null) {
 				getManagedBean().setExpiryDate(
 						SmCommonUtil.getDisplayDateFormat(acc.getExpDate()));
@@ -1422,6 +1423,113 @@ public class SmApplicationBackingBean extends
 	 */
 	public String getStateLabelById(Long stateId) {
 		return SmCommonUtil.getStateLabelById(stateId);
+	}
+
+	/**
+	 * Show side menu icon
+	 * 
+	 * @param String
+	 *            sectionType
+	 * @return String
+	 */
+	public String getStepIcon(String sectionType) {
+		String retVal = StringUtils.EMPTY;
+		if (!getManagedBean().isSupplierUser()) {
+			retVal = "ui-icon-untick";
+			SmApplSectionReview rev = getManagedBean().isPoUser() ? getManagedBean()
+					.getPoSecReview() : getManagedBean().getApprvrSecReview();
+			if (sectionType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
+					&& rev.isBasicVerified()
+					&& rev.isStaffVerified()
+					&& rev.isOfficeFacilityVerfied() && rev.isCertVerified()) {
+				if (getManagedBean().getSmAppl().getSupplierType().equals("J")) {
+					if (rev.isAssocBodyVerified()) {
+						retVal = "ui-icon-tickcheckbox";
+					}
+				} else {
+					if (rev.isTrnsNetworkVerified()) {
+						retVal = "ui-icon-tickcheckbox";
+					}
+				}
+			} else if (sectionType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)
+					&& rev.isAssociateVerified() && rev.isExperienceVerified()) {
+				retVal = "ui-icon-tickcheckbox";
+			} else if (sectionType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)
+					&& rev.isPersonnelVerified() && rev.isBranchVerified()) {
+				retVal = "ui-icon-tickcheckbox";
+			} else if (sectionType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+				if (getManagedBean()
+						.getBusinessTypeVal()
+						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)) {
+					if (rev.isCaptialVerified()) {
+						retVal = "ui-icon-tickcheckbox";
+					}
+				} else {
+					if (rev.isCaptialVerified() && rev.isShareholderVerifed()) {
+						if (getManagedBean()
+								.getBusinessTypeVal()
+								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+								|| getManagedBean()
+										.getBusinessTypeVal()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)) {
+							if (rev.isEquityCompVerifed()) {
+								retVal = "ui-icon-tickcheckbox";
+							}
+						} else {
+							retVal = "ui-icon-tickcheckbox";
+						}
+					}
+				}
+			} else if (sectionType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)
+					&& rev.isBankVerified()) {
+				retVal = "ui-icon-tickcheckbox";
+			} else if (sectionType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				if (getManagedBean().getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+						|| getManagedBean().getSmAppl().getApplType()
+								.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
+					retVal = "ui-icon-tickcheckbox";
+				} else {
+					boolean isAllCatcodeVerified = true;
+					if (!EntityHelper.isCollectionEmpty(getManagedBean()
+							.getActiveCategoryList())) {
+						for (SmSupplierCategory cat : getManagedBean()
+								.getActiveCategoryList()) {
+							if (cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS
+									&& cat.getPoDecFlg() == null) {
+								isAllCatcodeVerified = false;
+							}
+						}
+						if (isAllCatcodeVerified) {
+							retVal = "ui-icon-tickcheckbox";
+						}
+					}
+				}
+			} else if (sectionType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)
+					&& rev.isFactoryVerify()) {
+				retVal = "ui-icon-tickcheckbox";
+			} else if (sectionType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)
+					&& rev.isManufacturingVerified()
+					&& rev.isSupplierSystemVerified()
+					&& rev.isMachineryVerified()) {
+				retVal = "ui-icon-tickcheckbox";
+			} else if (sectionType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
+					&& SmApplicationUtil
+							.isAllSuppDocAlreadyVerified(getManagedBean()
+									.getSmAppl())) {
+				retVal = "ui-icon-tickcheckbox";
+			}
+		}
+		return retVal;
 	}
 
 	/**
