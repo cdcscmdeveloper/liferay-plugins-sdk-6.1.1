@@ -669,124 +669,124 @@ public class SupportDocumentBackingBean extends
 		}
 	}
 
-	/**
-	 * delete document restriction
-	 * 
-	 * @param restrictionType
-	 */
-	public void deleteRestrictions(int restrictionType) {
-		log.info("deleteRestrictions");
-		if (restrictionType == RESTR_APP) {
-			if (this.getManagedBean().getDeleteAppTypeRestrictions() != null
-					&& !this.getManagedBean().getDeleteAppTypeRestrictions()
-							.isEmpty()) {
-				if (this.getManagedBean().getAppTypeRestrictions() == null) {
-					this.getManagedBean().setAppTypeRestrictions(
-							new ArrayList<PmDocumentRestr>());
-				}
-				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-						.getDeleteAppTypeRestrictions()) {
-					this.getManagedBean().getAppTypeRestrictions()
-							.remove(pmDocumentRestr);
-				}
-				this.getManagedBean().getDeleteAppTypeRestrictions().clear();
-
-			} else {
-				throw new EpException(MessageConst.ERROR_770063);
-			}
-		} else if (restrictionType == RESTR_COMP) {
-			if (this.getManagedBean().getDeleteComTypeRestrictions() != null
-					&& !this.getManagedBean().getDeleteComTypeRestrictions()
-							.isEmpty()) {
-				if (this.getManagedBean().getComTypeRestrictions() == null) {
-					this.getManagedBean().setComTypeRestrictions(
-							new ArrayList<PmDocumentRestr>());
-				}
-				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-						.getDeleteComTypeRestrictions()) {
-					this.getManagedBean().getComTypeRestrictions()
-							.remove(pmDocumentRestr);
-				}
-				this.getManagedBean().getDeleteComTypeRestrictions().clear();
-
-			} else {
-				throw new EpException(MessageConst.ERROR_770063);
-			}
-		} else if (restrictionType == RESTR_SUPP) {
-			if (this.getManagedBean().getDeleteSuppTypeRestrictions() != null
-					&& !this.getManagedBean().getDeleteSuppTypeRestrictions()
-							.isEmpty()) {
-				if (this.getManagedBean().getSuppTypeRestrictions() == null) {
-					this.getManagedBean().setSuppTypeRestrictions(
-							new ArrayList<PmDocumentRestr>());
-				}
-				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-						.getDeleteSuppTypeRestrictions()) {
-					this.getManagedBean().getSuppTypeRestrictions()
-							.remove(pmDocumentRestr);
-				}
-				this.getManagedBean().getDeleteSuppTypeRestrictions().clear();
-
-			} else {
-				throw new EpException(MessageConst.ERROR_770063);
-			}
-		} else if (restrictionType == RESTR_CATEGORY) {
-			if (this.getManagedBean().getDeleteCategoryRestrictions() != null
-					&& !this.getManagedBean().getDeleteCategoryRestrictions()
-							.isEmpty()) {
-				if (this.getManagedBean().getCategoryRestrictions() == null) {
-					this.getManagedBean().setCategoryRestrictions(
-							new ArrayList<PmDocumentRestr>());
-				}
-				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-						.getDeleteCategoryRestrictions()) {
-					this.getManagedBean().getCategoryRestrictions()
-							.remove(pmDocumentRestr);
-				}
-				this.getManagedBean().getDeleteCategoryRestrictions().clear();
-
-			} else {
-				throw new EpException(MessageConst.ERROR_770063);
-			}
-		} else if (restrictionType == CHECKLIST) {
-			if (this.getManagedBean().getDeleteCheckListRestrictions() != null
-					&& !this.getManagedBean().getDeleteCheckListRestrictions()
-							.isEmpty()) {
-				if (this.getManagedBean().getCheckListRestrictions() == null) {
-					this.getManagedBean().setCheckListRestrictions(
-							new ArrayList<PmDocumentRestr>());
-				}
-				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-						.getDeleteCheckListRestrictions()) {
-					this.getManagedBean().getCheckListRestrictions()
-							.remove(pmDocumentRestr);
-				}
-				this.getManagedBean().getDeleteCheckListRestrictions().clear();
-
-			} else {
-				throw new EpException(MessageConst.ERROR_770063);
-			}
-		} else if (restrictionType == RESTR_CERTBODY) {
-			if (this.getManagedBean().getDeleteCertBodyRestrictions() != null
-					&& !this.getManagedBean().getDeleteCertBodyRestrictions()
-							.isEmpty()) {
-				if (this.getManagedBean().getCertBodyRestrictions() == null) {
-					this.getManagedBean().setCertBodyRestrictions(
-							new ArrayList<PmDocumentRestr>());
-				}
-				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-						.getDeleteCertBodyRestrictions()) {
-					this.getManagedBean().getCertBodyRestrictions()
-							.remove(pmDocumentRestr);
-				}
-				this.getManagedBean().getDeleteCertBodyRestrictions().clear();
-
-			} else {
-				throw new EpException(MessageConst.ERROR_770063);
-			}
-
-		}
-	}
+//	/**
+//	 * delete document restriction
+//	 * 
+//	 * @param restrictionType
+//	 */
+//	public void deleteRestrictions(int restrictionType) {
+//		log.info("deleteRestrictions");
+//		if (restrictionType == RESTR_APP) {
+//			if (this.getManagedBean().getDeleteAppTypeRestrictions() != null
+//					&& !this.getManagedBean().getDeleteAppTypeRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getAppTypeRestrictions() == null) {
+//					this.getManagedBean().setAppTypeRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteAppTypeRestrictions()) {
+//					this.getManagedBean().getAppTypeRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteAppTypeRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//		} else if (restrictionType == RESTR_COMP) {
+//			if (this.getManagedBean().getDeleteComTypeRestrictions() != null
+//					&& !this.getManagedBean().getDeleteComTypeRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getComTypeRestrictions() == null) {
+//					this.getManagedBean().setComTypeRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteComTypeRestrictions()) {
+//					this.getManagedBean().getComTypeRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteComTypeRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//		} else if (restrictionType == RESTR_SUPP) {
+//			if (this.getManagedBean().getDeleteSuppTypeRestrictions() != null
+//					&& !this.getManagedBean().getDeleteSuppTypeRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getSuppTypeRestrictions() == null) {
+//					this.getManagedBean().setSuppTypeRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteSuppTypeRestrictions()) {
+//					this.getManagedBean().getSuppTypeRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteSuppTypeRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//		} else if (restrictionType == RESTR_CATEGORY) {
+//			if (this.getManagedBean().getDeleteCategoryRestrictions() != null
+//					&& !this.getManagedBean().getDeleteCategoryRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getCategoryRestrictions() == null) {
+//					this.getManagedBean().setCategoryRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteCategoryRestrictions()) {
+//					this.getManagedBean().getCategoryRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteCategoryRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//		} else if (restrictionType == CHECKLIST) {
+//			if (this.getManagedBean().getDeleteCheckListRestrictions() != null
+//					&& !this.getManagedBean().getDeleteCheckListRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getCheckListRestrictions() == null) {
+//					this.getManagedBean().setCheckListRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteCheckListRestrictions()) {
+//					this.getManagedBean().getCheckListRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteCheckListRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//		} else if (restrictionType == RESTR_CERTBODY) {
+//			if (this.getManagedBean().getDeleteCertBodyRestrictions() != null
+//					&& !this.getManagedBean().getDeleteCertBodyRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getCertBodyRestrictions() == null) {
+//					this.getManagedBean().setCertBodyRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteCertBodyRestrictions()) {
+//					this.getManagedBean().getCertBodyRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteCertBodyRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//
+//		}
+//	}
 
 	public void deleteRestrictions(int restrictionType, int rowIndex) {
 		log.info("deleteRestrictions");
@@ -846,6 +846,70 @@ public class SupportDocumentBackingBean extends
 			 * this.getManagedBean().setOldDeleteRestrictions(oldDeleteRestrictions
 			 * );
 			 */
+		}
+	}
+	
+	public void deleteRestrictions(int restrictionType) {
+		log.info("deleteRestrictions");
+		PmDocumentRestr pmDocRestr = null;
+		Integer rowIndex = getManagedBean().getDeleteRowIndex();
+		if(rowIndex != null){
+			if (restrictionType == RESTR_APP) {
+				pmDocRestr = getManagedBean().getAppTypeRestrictions()
+						.get(rowIndex.intValue());
+				pmDocRestr.setDeleted(true);
+				getManagedBean().getAppTypeRestrictions().remove(pmDocRestr);
+			} else if (restrictionType == RESTR_COMP) {
+				pmDocRestr = getManagedBean().getComTypeRestrictions()
+						.get(rowIndex.intValue());
+				pmDocRestr.setDeleted(true);
+				getManagedBean().getComTypeRestrictions().remove(pmDocRestr);
+
+			} else if (restrictionType == RESTR_SUPP) {
+				pmDocRestr = getManagedBean().getSuppTypeRestrictions().get(
+						rowIndex.intValue());
+				pmDocRestr.setDeleted(true);
+				getManagedBean().getSuppTypeRestrictions().remove(pmDocRestr);
+
+			} else if (restrictionType == RESTR_CATEGORY) {
+				pmDocRestr = getManagedBean().getCategoryRestrictions().get(
+						rowIndex.intValue());
+				pmDocRestr.setDeleted(true);
+				getManagedBean().getCategoryRestrictions().remove(pmDocRestr);
+
+			} else if (restrictionType == CHECKLIST) {
+				pmDocRestr = getManagedBean().getCheckListRestrictions().get(
+						rowIndex.intValue());
+				pmDocRestr.setDeleted(true);
+				getManagedBean().getCheckListRestrictions().remove(pmDocRestr);
+
+			} else if (restrictionType == RESTR_CERTBODY) {
+				pmDocRestr = getManagedBean().getCertBodyRestrictions().get(
+						rowIndex.intValue());
+				pmDocRestr.setDeleted(true);
+				getManagedBean().getCertBodyRestrictions().remove(pmDocRestr);
+
+			}
+
+			if (pmDocRestr != null && !pmDocRestr.isBrandNew()) {
+				if (getManagedBean().getDeleteRestrictions() == null) {
+					getManagedBean().setDeleteRestrictions(
+							new ArrayList<PmDocumentRestr>());
+				}
+				pmDocRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+				pmDocRestr.setDeleted(true);
+				getManagedBean().getDeleteRestrictions().add(pmDocRestr);
+
+				/*
+				 * try { oldDeleteRestrictions =
+				 * (List<PmDocumentRestr>)BeanUtils.cloneBean
+				 * (getManagedBean().getDeleteRestrictions()); } catch (Exception e)
+				 * { e.printStackTrace(); }
+				 * 
+				 * this.getManagedBean().setOldDeleteRestrictions(oldDeleteRestrictions
+				 * );
+				 */
+			}
 		}
 	}
 

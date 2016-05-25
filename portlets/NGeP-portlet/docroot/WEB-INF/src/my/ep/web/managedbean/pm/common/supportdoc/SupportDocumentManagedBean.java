@@ -51,6 +51,7 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List <PmCertBody> selectedCertBodies;
 	private int selectedTabIndex;
 	private PmParameter supplierDocParameter;
+	private Integer deleteRowIndex;
 	
 	
 	public PmParameter getSupplierDocParameter() {
@@ -338,6 +339,20 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setDocDefinitionOptions(SelectItem[] docDefinitionOptions) {
 		this.docDefinitionOptions = docDefinitionOptions;
+	}
+
+	/**
+	 * @return the deleteRowIndex
+	 */
+	public Integer getDeleteRowIndex() {
+		return deleteRowIndex;
+	}
+
+	/**
+	 * @param deleteRowIndex the deleteRowIndex to set
+	 */
+	public void setDeleteRowIndex(Integer deleteRowIndex) {
+		this.deleteRowIndex = deleteRowIndex;
 	}
 
 	

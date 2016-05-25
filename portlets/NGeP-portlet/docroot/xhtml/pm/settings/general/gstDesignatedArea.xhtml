@@ -138,22 +138,32 @@
 			<f:facet name="header">				
 				<h:outputText value="#{lbl['lbl.pm.action']}" />
 			</f:facet>
-			<p:commandLink id="deldaItemCl" partialSubmit="true"
-				process="@this" disabled="#{!daObj.brandNew and (daObj.effDate le ruleCatalogueBackingBean.managedBean.today)}"
-				action="#{ruleCatalogueBackingBean.deleteDesignatedArea(rowIndex)}"
-				update=":form:settingTabId:gstId">
+			<p:commandLink id="deldaItemCl" 
+				partialSubmit="true"
+				process="@this" 
+				disabled="#{!daObj.brandNew and (daObj.effDate le ruleCatalogueBackingBean.managedBean.today)}"
+				oncomplete="daItemDeletePopUp.show();"
+				update="@([id$=#{daItemDeleteId}])">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:setPropertyActionListener target="#{ruleCatalogueBackingBean.managedBean.deleteRowIndex}" 
+							value="#{rowIndex}" />
 			</p:commandLink>
-			
 		</p:column>
-		
-		
 	</p:dataTable>
 	
 		<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true" id="daAddBtn"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true" id="daAddBtn"
 				process=":form:settingTabId:gstId"
 				update=":form:settingTabId:gstId"
-				action="#{ruleCatalogueBackingBean.addDesignatedArea()}"></p:commandButton>
-			</div>
+				action="#{ruleCatalogueBackingBean.addDesignatedArea()}">
+			</p:commandButton>
+		</div>
+		
+		<ac:confirmationPopup id="daItemDeleteId"
+				widget="daItemDeletePopUp"
+				okAction="ruleCatalogueBackingBean.deleteDesignatedArea()"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" 
+				update=":form:settingTabId:gstId" />
 	</ui:composition>

@@ -30,7 +30,9 @@
 		</table>
 		
 		<ac:lovPopup />
-		<p:dataTable id="searchSignatoryResults" rowIndexVar="index"
+		<p:dataTable id="searchSignatoryResults"
+			widgetVar="searchSignatoryResultsWidVar"
+			rowIndexVar="index"
 			rowKey="#{certSignatory}" rows="10" sortMode="multiple"
 			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			selection="#{authorizedsignatoryBackingBean.managedBean.deletedCertSignatories}"
@@ -90,10 +92,14 @@
 			<p:column headerText="#{lbl['lbl.pm.action']}"
 				style="width :5%;text-align:center;">
 				<p:commandLink
-					action="#{authorizedsignatoryBackingBean.deleteAuthorizedSignatory(certSignatory)}"
-					disabled="#{!certSignatory.brandNew}" partialSubmit="true"
-					process="@this" update="searchSignatoryResults">
+					disabled="#{!certSignatory.brandNew}" 
+					partialSubmit="true"
+					process="@this" 
+					oncomplete="signatoryDeletePopUp.show();"
+					update="@([id$=#{signatoryDeleteId}])">
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener target="#{authorizedsignatoryBackingBean.managedBean.deleteSignatory}" 
+							value="#{certSignatory}" />
 				</p:commandLink>
 			</p:column>
 
@@ -107,5 +113,13 @@
 				action="#{authorizedsignatoryBackingBean.addAuthorizer}"
 				update="searchSignatoryResults" />
 		</div>
+		
+		<ac:confirmationPopup id="signatoryDeleteId"
+				widget="signatoryDeletePopUp"
+				okAction="authorizedsignatoryBackingBean.deleteAuthorizedSignatory()"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" 
+				update=":#{p:component('searchSignatoryResults')}"/>
 	</p:panel>
 </ui:composition>

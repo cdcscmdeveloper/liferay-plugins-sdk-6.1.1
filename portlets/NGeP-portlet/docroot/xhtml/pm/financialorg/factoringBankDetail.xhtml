@@ -106,10 +106,15 @@
 			</p:column>
 			
 			<p:column width="6%" headerText="#{lbl['lbl.pm.financialorg.action']}">
-	             <p:commandLink partialSubmit="true" disabled="#{!financialacc.brandNew}"
-					process="@this" action="#{financialOrgBackingBean.deleteFinancialAcc(rowIndex)}"
-					update="financialaccid" >
+	             <p:commandLink 
+	             	partialSubmit="true" 
+	             	disabled="#{!financialacc.brandNew}"
+					process="@this" 
+					oncomplete="factoringBankDeletePopUp.show();"
+					update="@([id$=#{factoringBankDeleteId}])" >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener target="#{financialOrgBackingBean.managedBean.selectedDeleteFactoringBank}" 
+								value="#{financialacc}" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -121,7 +126,13 @@
 				update="financialaccid" />
 
 		</div>
-
-
+		<ac:confirmationPopup id="factoringBankDeleteId"
+			widget="factoringBankDeletePopUp"
+			okAction="financialOrgBackingBean.deleteFinancialAcc()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":#{p:component('financialaccid')}" />	
+			
 	</p:outputPanel>
 </ui:composition>

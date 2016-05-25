@@ -32,11 +32,14 @@
 	    	#{restrict.pmCategoryL3.categoryName}
         </p:column>
 
-			<p:column style="width:9%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
-				<p:commandLink partialSubmit="true" process="@this"
-					action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrCategory,rowIndex)}"
-					update="dtCat">
+			<p:column style="width:9%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">				
+				<p:commandLink partialSubmit="true" 
+					process="@this" 
+					oncomplete="categoryDeletePopUp.show();"
+					update="@([id$=#{categoryDeleteId}])"  >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener target="#{supportDocBackingBean.managedBean.deleteRowIndex}" 
+							value="#{rowIndex}" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -48,7 +51,14 @@
 						oncomplete="catCodePopup.show();" action="#{categoryCodeSearchBackingBean.renewSesionObject}">								
 			</p:commandButton>
 		</div>
-		  <ac:categoryCodePopup okAction="supportDocBackingBean.updateCategoryL3"
+		<ac:confirmationPopup id="categoryDeleteId"
+				widget="categoryDeletePopUp"
+				okAction="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrCategory)}"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" 
+				update=":#{p:component('dtCat')}" />
+		<ac:categoryCodePopup okAction="supportDocBackingBean.updateCategoryL3"
 						update=":form:tvDocRestriction:dtCat" />
 	</p:outputPanel>
 </ui:composition>

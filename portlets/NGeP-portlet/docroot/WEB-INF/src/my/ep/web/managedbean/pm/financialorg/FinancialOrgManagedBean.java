@@ -8,7 +8,9 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmFinancialSvc;
 import my.ep.web.bean.pm.FinancialOrgSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 /**
@@ -45,6 +47,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	private boolean isLazy = false; 
 	
 	private Integer tabActiveIndex = 0;
+	private PmFinancialSvc selectedDeleteSvc;
+	private PmFinancialAcc selectedDeleteFactoringBank;
 
 
 	/**
@@ -242,6 +246,35 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	 */
 	public void setTabActiveIndex(Integer tabActiveIndex) {
 		this.tabActiveIndex = tabActiveIndex;
+	}
+
+	/**
+	 * @return the selectedDeleteFactoringBank
+	 */
+	public PmFinancialAcc getSelectedDeleteFactoringBank() {
+		return selectedDeleteFactoringBank;
+	}
+
+	/**
+	 * @param selectedDeleteFactoringBank the selectedDeleteFactoringBank to set
+	 */
+	public void setSelectedDeleteFactoringBank(
+			PmFinancialAcc selectedDeleteFactoringBank) {
+		this.selectedDeleteFactoringBank = selectedDeleteFactoringBank;
+	}
+
+	/**
+	 * @return the selectedDeleteSvc
+	 */
+	public PmFinancialSvc getSelectedDeleteSvc() {
+		return selectedDeleteSvc;
+	}
+
+	/**
+	 * @param selectedDeleteSvc the selectedDeleteSvc to set
+	 */
+	public void setSelectedDeleteSvc(PmFinancialSvc selectedDeleteSvc) {
+		this.selectedDeleteSvc = selectedDeleteSvc;
 	}
 
 
