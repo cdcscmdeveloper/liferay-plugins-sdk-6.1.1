@@ -55,7 +55,6 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
-import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -1612,25 +1611,19 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public void handleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
 		if (event.getFile() != null) {
-			ScAttachment scAttachment = null;
-			ScQtFinalization scQtFinalization = this.getManagedBean()
-					.getScQtFinalization();
-			ScQtFinalizationEndorsementAttachment attachment = scQtFinalization
-					.getScQtFinalizationEndorsementAttachment();
-			if (null == attachment) {
-				attachment = new ScQtFinalizationEndorsementAttachment();
-				attachment.setScQtFinalization(scQtFinalization);
-				scQtFinalization
-						.setScQtFinalizationEndorsementAttachment(attachment);
-			} else {
-				attachment.setScQtFinalization(scQtFinalization);
-				scQtFinalization
-						.setScQtFinalizationEndorsementAttachment(attachment);
+			ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+			ScQtFinalizationEndorsementAttachment attachment = new ScQtFinalizationEndorsementAttachment();
+			
+			List<ScQtFinalizationEndorsementAttachment> attachments = scQtFinalization
+					.getScQtFinalizationEndorsementAttachments();
+			if (null == attachments) {
+				attachments = new ArrayList<ScQtFinalizationEndorsementAttachment>();
+				scQtFinalization.setScQtFinalizationEndorsementAttachments(attachments);
 			}
+			attachment.setScQtFinalization(scQtFinalization);
 			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
-			scAttachment = attachment;
-			uploadAttachment(event.getFile(), scAttachment);
-			getManagedBean().setScQtFinalization(scQtFinalization);
+			attachments.add(attachment);
+			uploadAttachment(event.getFile(), attachment);
 		}
 	}
 
