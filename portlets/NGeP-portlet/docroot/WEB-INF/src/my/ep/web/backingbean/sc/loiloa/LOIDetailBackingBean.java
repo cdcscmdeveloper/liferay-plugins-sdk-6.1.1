@@ -76,6 +76,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
@@ -1548,7 +1549,8 @@ public class LOIDetailBackingBean extends
 		boolean isBiddingAward = Boolean.FALSE;
 		ScLoi scLoi = resDTO.getScLoi();
 		getManagedBean().setScLoi(scLoi);
-		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
+		ScWorkFlowStatus currentStatus = scLoi.getScWorkFlowStatus();
+		Long statusId = currentStatus.getPmStatus().getStatusId()
 				.longValue();
 
 		// online bidding
@@ -1715,12 +1717,13 @@ public class LOIDetailBackingBean extends
 
 		// remarks
 		getManagedBean().getScLoi().setScLoiRemarks(
-				initializeRemarks(getManagedBean().getScLoi(), null,
+				initializeRemarks(getManagedBean().getScLoi(), 
+						currentStatus,
 						getManagedBean().getScLoi().getScLoiRemarks(),
 						ScLoiRemark.class));
 
 		// status
-		getCurrentStatus(scLoi.getScWorkFlowStatus().getPmStatus()
+		getCurrentStatus(currentStatus.getPmStatus()
 				.getStatusId());
 
 		// Contract Signer
