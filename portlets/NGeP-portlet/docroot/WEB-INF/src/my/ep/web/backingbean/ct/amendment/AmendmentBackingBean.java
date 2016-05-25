@@ -4687,14 +4687,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				supplierCompName = scLoiLoa.getSupplierName();
 				supplierCompAddress = supplierAddress;
 				// Witness
-				witnessName = getManagedBean().getScLoaWitness().getWitnessName();
-				witnessID = getManagedBean().getScLoaWitness().getIdentificationNo();
-				witnessDesignation = getManagedBean().getScLoaWitness().getDesignation();
-				witnessAddress = getManagedBean().getScLoaWitness().getAddress();
-				witnessTelNo = getManagedBean().getScLoaWitness().getPhoneNo();	//TODO: Full Phone No
-				witnessFaxNo = getManagedBean().getScLoaWitness().getFaxNo();
-				witnessMobileNo = getManagedBean().getScLoaWitness().getMobileNo();
-				witnessEmail = getManagedBean().getScLoaWitness().getEmail();
+				witnessName = (getManagedBean().getScLoaWitness().getWitnessName() != null) ? getManagedBean().getScLoaWitness().getWitnessName() : "";
+				witnessID = (getManagedBean().getScLoaWitness().getIdentificationNo() != null) ? getManagedBean().getScLoaWitness().getIdentificationNo() : "";
+				witnessDesignation = (getManagedBean().getScLoaWitness().getDesignation() != null) ? getManagedBean().getScLoaWitness().getDesignation() : "";
+				witnessAddress = (getManagedBean().getScLoaWitness().getAddress() != null) ? getManagedBean().getScLoaWitness().getAddress() : "";
+				witnessTelNo = (getManagedBean().getScLoaWitness().getPhoneNo() != null) ? getManagedBean().getScLoaWitness().getPhoneNo() : "";	//TODO: Full Phone No
+				witnessFaxNo = (getManagedBean().getScLoaWitness().getFaxNo() != null) ? getManagedBean().getScLoaWitness().getFaxNo() : "";
+				witnessMobileNo = (getManagedBean().getScLoaWitness().getMobileNo() != null) ? getManagedBean().getScLoaWitness().getMobileNo() : "";
+				witnessEmail = (getManagedBean().getScLoaWitness().getEmail() != null) ? getManagedBean().getScLoaWitness().getEmail() : "";
 			} else if (ContractStatusConst.FA_PENDING_VERIFICATION.equals(
 					ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
 				ackDate = dateSDF.format(scLoa.getAckDate());
