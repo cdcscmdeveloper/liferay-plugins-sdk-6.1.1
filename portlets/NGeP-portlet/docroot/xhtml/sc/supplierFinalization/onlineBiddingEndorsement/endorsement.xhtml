@@ -80,7 +80,7 @@
 				update="@form" />
 		</p:tabMenu>
 
-		<p:panel id="contentPanel">
+		<h:panelGroup id="contentPanel">
 			<c:if
 				test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
 							suppFinalBiddingBackingBean.getOnlineBiddingFinalizationMeetingActiveIndex()}">
@@ -100,17 +100,13 @@
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/onlineEndorsement.xhtml" />
 			</c:if>
-			<c:if
-				test="#{!isOnlineBiddingEndorseMeeting and
+			<ui:fragment rendered="#{!isOnlineBiddingEndorseMeeting and
 								suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
 									suppFinalBiddingBackingBean.getOnlineBiddingActiveIndexOfflineEndorsement()}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/offlineEndorsement.xhtml" />
-			</c:if>
-		</p:panel>
-
-		<ui:include
-			src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/uploads.xhtml" />
+			</ui:fragment>
+		</h:panelGroup>
 
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/signOff.xhtml" />
