@@ -157,13 +157,23 @@
 					            #{(tplMasterObj.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 					        </p:column>
 
-							<ui:param name="iconLabel"
-								value="#{templateSpecBackingBean.getIconLabelName(tplMasterObj)}"></ui:param>
+							<ui:param name="isRender"
+								value="#{templateSpecBackingBean.isSpecCreatedByLoginUserPtj(tplMasterObj)}"></ui:param>
 							<p:column style="width:4%">
-								<p:commandButton icon="#{iconLabel}" style="background-color:transparent !important; border:0px none;"
-									action="#{templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBackingBean.managedBean.templateSpecBean)}">
-									
-									<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster}" value="#{tplMasterObj}" />
+								<p:commandButton icon="ui-icon-edit"
+									style="background-color:transparent !important; border:0px none;"
+									action="#{templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBackingBean.managedBean.templateSpecBean,!isRender)}"
+									rendered="#{isRender}">
+									<f:setPropertyActionListener
+										target="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster}" value="#{tplMasterObj}" />
+										
+								</p:commandButton>
+								<p:commandButton icon="ui-icon-view"
+									style="background-color:transparent !important; border:0px none;"
+									action="#{templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBackingBean.managedBean.templateSpecBean,isRender)}"
+									rendered="#{!isRender}">
+									<f:setPropertyActionListener
+										target="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster}" value="#{tplMasterObj}" />
 								</p:commandButton>
 							</p:column>
 						</p:dataTable>
