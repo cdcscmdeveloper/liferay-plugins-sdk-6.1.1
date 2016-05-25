@@ -32,33 +32,31 @@
 					process="@this" update="@([id$=suppDetailsPopup])">
 					<f:setPropertyActionListener value="#{qtSupplier.smSupplier}"
 						target="#{supplierDetailBackingBean.smSupplier}" />
-					<h:outputText value="#{qtSupplier.smSupplier.companyName}" />
+					<h:outputText value="#{qtSupplier.supplierName}" />
 				</p:commandLink>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.mofno']}" style="width : 10%;">
-				<h:outputText
-					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).mofNo}" />
+				<h:outputText value="#{qtSupplier.supplierMofNo}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.mofexp.date']}"
 				style="width : 10%;">
-				<h:outputText
-					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).expDate}">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				<h:outputText value="#{qtSupplier.mofAccountExpDate}">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(
+											      CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.supplier.status.bumiputra']}"
 				style="width: 10%;">
-				<h:outputText
-					value="#{qtSupplier.smSupplier.bumi ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
+				<h:outputText value="#{qtSupplier.bumi ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width : 10%;">
 				<h:outputText
-					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(ParameterTypeConst.recordStatus, qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).recordStatusFlg)}" />
+					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(ParameterTypeConst.recordStatus, 
+							 qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).recordStatusFlg)}" />
 			</p:column>
 
 		</p:dataTable>
