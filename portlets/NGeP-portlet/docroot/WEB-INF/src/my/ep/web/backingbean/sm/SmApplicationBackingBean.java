@@ -1526,6 +1526,10 @@ public class SmApplicationBackingBean extends
 							.isAllSuppDocAlreadyVerified(getManagedBean()
 									.getSmAppl())) {
 				retVal = "ui-icon-tickcheckbox";
+			} else if (sectionType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)
+					&& rev.isSitevisitVerified()) {
+				retVal = "ui-icon-tickcheckbox";
 			}
 		}
 		return retVal;
