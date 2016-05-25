@@ -147,10 +147,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			        </p:column>  
 			        <p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 	          			 <p:commandLink partialSubmit="true" 
-							process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.checklist,rowIndex)}"
-							update="dtProcureCat" >
+							process="@this" 
+							oncomplete="checkListDeletePopUp.show();"
+							update="@([id$=#{checkListDeleteId}])" >
 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-					</p:commandLink>
+							<f:setPropertyActionListener target="#{supportDocBackingBean.managedBean.deleteRowIndex}" 
+									value="#{rowIndex}" />
+						</p:commandLink>
 			</p:column>
 			   	</p:dataTable>
 			   
@@ -159,6 +162,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.checklist)}"
 						immediate="true"/>
 				</div>
+				<ac:confirmationPopup id="checkListDeleteId"
+					widget="checkListDeletePopUp"
+					okAction="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.checklist)}"
+					width="400" height="100"
+					title="#{lbl['lbl.msg.confirm.delete.header']}"
+					content="#{lbl['lbl.msg.confirm.delete']}" 
+					update=":#{p:component('dtProcureCat')}" />
 			</p:tab>
 		</p:tabView>
 	</p:panel>

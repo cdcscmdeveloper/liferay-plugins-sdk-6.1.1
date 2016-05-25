@@ -1,14 +1,10 @@
 package my.ep.web.backingbean.pm.signatory;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -45,6 +41,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 
 /**
@@ -156,6 +153,8 @@ public class AuthorizedSignatoryBackingBean extends
 		pmCertSignatory.setEffDate(this.getManagedBean().getTomorrow());
 		this.getManagedBean().getCertSignatories().add(pmCertSignatory);
 		this.getManagedBean().setSignatoryUser(null);
+		RequestContext.getCurrentInstance().execute(
+				"searchSignatoryResultsWidVar.paginator.endLink.click()");
 	}
 	
 	/**
@@ -182,8 +181,8 @@ public class AuthorizedSignatoryBackingBean extends
 	 * 
 	 */		
 	
-	public void deleteAuthorizedSignatory(PmCertSignatory pmCertSignatory) {
-
+	public void deleteAuthorizedSignatory() {
+		PmCertSignatory pmCertSignatory = getManagedBean().getDeleteSignatory();
 		if (pmCertSignatory != null && pmCertSignatory.isBrandNew()) {
 			if (this.getManagedBean().getCertSignatories() == null) {
 				this.getManagedBean().setCertSignatories(

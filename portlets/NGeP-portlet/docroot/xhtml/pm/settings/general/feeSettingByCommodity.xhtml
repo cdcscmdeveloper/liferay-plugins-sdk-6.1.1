@@ -132,12 +132,15 @@
 			<f:facet name="header">
                 #{lbl['lbl.pm.action']}
 			</f:facet>
-			<p:commandLink id="comoditydeleteFee" partialSubmit="true"
+			<p:commandLink id="comoditydeleteFee" 
+				partialSubmit="true"
 				process="@this"
 				disabled="#{!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
-				action="#{ruleCatalogueBackingBean.deleteComodityFee(rowIndex)}"
-				update=":form:settingTabId:feeSettingId:feeByComodityTableID">
+				oncomplete="commodityDeletePopUp.show();"
+				update="@([id$=#{commodityDeleteId}])">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:setPropertyActionListener target="#{ruleCatalogueBackingBean.managedBean.deleteRowIndex}" 
+							value="#{rowIndex}" />
 			</p:commandLink>
 		</p:column>
 	</p:dataTable>
@@ -149,6 +152,14 @@
 			action="#{ruleCatalogueBackingBean.addMoreComodityFee()}"></p:commandButton>
 
 	</div>
+	
+	<ac:confirmationPopup id="commodityDeleteId"
+				widget="commodityDeletePopUp"
+				okAction="#{ruleCatalogueBackingBean.deleteComodityFee()}"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" 
+				update=":form:settingTabId:feeSettingId:feeByComodityTableID" />
 
 	<p:dialog id="feeCommodityStatusConfirmDialog"
 		widgetVar="feeCommodityStatusConfirmDialog" closable="false"

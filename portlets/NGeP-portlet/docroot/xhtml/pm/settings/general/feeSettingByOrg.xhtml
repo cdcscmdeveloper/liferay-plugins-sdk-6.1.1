@@ -118,13 +118,16 @@
 			<f:facet name="header">
                #{lbl['lbl.pm.action']}
 			</f:facet>
-			<p:commandLink id="orgDeleteFee" partialSubmit="true" process="@this" 
+			<p:commandLink id="orgDeleteFee" 
+				partialSubmit="true" 
+				process="@this" 
 				disabled="#{(feeObj.isG2G == 1) || (!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime()))}"
-				action="#{ruleCatalogueBackingBean.deleteOrgAndItemFee(rowIndex)}"
-				update=":form:settingTabId:feeSettingId:feeByOrgItemTableID">
+				oncomplete="orgDeletePopUp.show();"
+				update="@([id$=#{orgDeleteId}])">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:setPropertyActionListener target="#{ruleCatalogueBackingBean.managedBean.deleteRowIndex}" 
+							value="#{rowIndex}" />
 			</p:commandLink>
-
 		</p:column>
 	</p:dataTable>
 
@@ -135,6 +138,13 @@
 			action="#{ruleCatalogueBackingBean.addMoreOrgAndItemFee()}"></p:commandButton>
 
 	</div>
+	<ac:confirmationPopup id="orgDeleteId"
+				widget="orgDeletePopUp"
+				okAction="ruleCatalogueBackingBean.deleteOrgAndItemFee()"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" 
+				update=":form:settingTabId:feeSettingId:feeByOrgItemTableID" />
 	<p:dialog id="feeOrgStatusConfirmDialog"
 		widgetVar="feeOrgStatusConfirmDialog" closable="false"
 		header="#{lbl['lbl.pm.inactive.popUp.header']}"

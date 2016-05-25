@@ -303,9 +303,11 @@
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					id="deleteValue" partialSubmit="true" process="@this"
-					update=":form:settingTabId:ruleTypeValueTableID"
-					action="#{ruleCatalogueBackingBean.deleteMoreRuleValue(index)}">
+					oncomplete="ruleValueDeletePopUp.show();"
+					update="@([id$=#{ruleValueDeleteId}])">
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener target="#{ruleCatalogueBackingBean.managedBean.deleteRowIndex}" 
+							value="#{index}" />
 				</p:commandLink>
 				<h:panelGroup id="errorLink">
 					<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
@@ -340,6 +342,15 @@
 				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
 
 		</div>
+		
+		<ac:confirmationPopup id="ruleValueDeleteId"
+				widget="ruleValueDeletePopUp"
+				okAction="#{ruleCatalogueBackingBean.deleteMoreRuleValue()}"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" 
+				update=":form:settingTabId:ruleTypeValueTableID" />
+		
 		<ac:categoryCodePopup
 			okAction="ruleCatalogueBackingBean.selectCategoryAction"
 			update="@form" />

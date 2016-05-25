@@ -36,9 +36,12 @@
 			</p:column>		
 			<p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
 	           <p:commandLink partialSubmit="true" 
-					process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrApp,rowIndex)}"
-					update="dtAppType" >
+					process="@this" 
+					oncomplete="appTypeDeletePopUp.show();"
+					update="@([id$=#{appTypeDeleteId}])"  >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener target="#{supportDocBackingBean.managedBean.deleteRowIndex}" 
+							value="#{rowIndex}" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -48,5 +51,12 @@
 				action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrApp)}"
 				immediate="true" />			
 		</div>
+		<ac:confirmationPopup id="appTypeDeleteId"
+				widget="appTypeDeletePopUp"
+				okAction="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrApp)}"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" 
+				update=":#{p:component('dtAppType')}" />
 	</p:outputPanel>
 </ui:composition>

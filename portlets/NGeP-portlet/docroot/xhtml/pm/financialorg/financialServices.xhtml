@@ -73,10 +73,14 @@
 			</p:column>
 			
 			<p:column width="27%" headerText="#{lbl['lbl.pm.financialorg.action']}">
-	             <p:commandLink partialSubmit="true" disabled="#{!financialsrv.brandNew}"
-					process="@this" action="#{financialOrgBackingBean.deleteFinancialService(rowIndex)}"
-					update="financialsrvid" >
+	             <p:commandLink partialSubmit="true" 
+	             	disabled="#{!financialsrv.brandNew}"
+					process="@this" 
+					oncomplete="financialSvcDeletePopUp.show();"
+					update="@([id$=#{financialSvcDeleteId}])" >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener target="#{financialOrgBackingBean.managedBean.selectedDeleteSvc}" 
+								value="#{financialsrv}" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -87,6 +91,13 @@
 				action="#{financialOrgBackingBean.addFinancialService}"
 				update="financialsrvid" />
 		</div>
+		<ac:confirmationPopup id="financialSvcDeleteId"
+			widget="financialSvcDeletePopUp"
+			okAction="financialOrgBackingBean.deleteFinancialService()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":#{p:component('financialsrvid')}" />
 
 
 	</p:outputPanel>

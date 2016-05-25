@@ -1044,9 +1044,8 @@ public class FinancialOrgBackingBean extends
 	/**
 	 * delete financial service from list
 	 */
-	public void deleteFinancialService(int index) {
-		PmFinancialSvc pmFinancialSvc = getManagedBean().getFinancialOrg()
-				.getPmFinancialSvcs().get(index);
+	public void deleteFinancialService() {
+		PmFinancialSvc pmFinancialSvc = getManagedBean().getSelectedDeleteSvc();
 		pmFinancialSvc.setDeleted(true);
 		getManagedBean().getFinancialOrg()
 		.getPmFinancialSvcs().remove(pmFinancialSvc);
@@ -1148,11 +1147,9 @@ public class FinancialOrgBackingBean extends
 	/**
 	 * delete financial acc from list
 	 */
-	public void deleteFinancialAcc(int index) {
+	public void deleteFinancialAcc() {
 		log.info("deleteFinancialAcc");	
-		
-		PmFinancialAcc pmFinancialAcc = getManagedBean().getFinancialOrg()
-				.getPmFinancialAccs().get(index);
+		PmFinancialAcc pmFinancialAcc = getManagedBean().getSelectedDeleteFactoringBank();
 		pmFinancialAcc.setDeleted(true);
 		getManagedBean().getFinancialOrg()
 		.getPmFinancialAccs().remove(pmFinancialAcc);

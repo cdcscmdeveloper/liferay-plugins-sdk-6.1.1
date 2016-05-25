@@ -114,19 +114,9 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 //	private boolean error4 = false;
 	private PmCategoryL3 selectedCategoryL3;
 	private PmOrgProfile currentActiveOrg;
-	/**
-	 * @return the selectedCategoryL3
-	 */
-	public PmCategoryL3 getSelectedCategoryL3() {
-		return selectedCategoryL3;
-	}
-
-	/**
-	 * @param selectedCategoryL3 the selectedCategoryL3 to set
-	 */
-	public void setSelectedCategoryL3(PmCategoryL3 selectedCategoryL3) {
-		this.selectedCategoryL3 = selectedCategoryL3;
-	}
+	private Integer deleteRowIndex;
+	
+	
 
 	public RuleCatalogueManageBean() {
 		
@@ -930,6 +920,34 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 */
 	public void setMaxDate(Date maxDate) {
 		this.maxDate = maxDate;
+	}
+
+	/**
+	 * @return the deleteRowIndex
+	 */
+	public Integer getDeleteRowIndex() {
+		return deleteRowIndex;
+	}
+
+	/**
+	 * @param deleteRowIndex the deleteRowIndex to set
+	 */
+	public void setDeleteRowIndex(Integer deleteRowIndex) {
+		this.deleteRowIndex = deleteRowIndex;
 	} 
+	
+	/**
+	 * @return the selectedCategoryL3
+	 */
+	public PmCategoryL3 getSelectedCategoryL3() {
+		return selectedCategoryL3;
+	}
+
+	/**
+	 * @param selectedCategoryL3 the selectedCategoryL3 to set
+	 */
+	public void setSelectedCategoryL3(PmCategoryL3 selectedCategoryL3) {
+		this.selectedCategoryL3 = selectedCategoryL3;
+	}
 
 }

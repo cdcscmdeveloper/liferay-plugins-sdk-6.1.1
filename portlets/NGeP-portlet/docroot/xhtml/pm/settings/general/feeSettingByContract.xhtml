@@ -115,11 +115,15 @@
 			<f:facet name="header">
                #{lbl['lbl.pm.action']}
 			</f:facet>
-			<p:commandLink id="contractdeleteFee" partialSubmit="true" process="@this"
-			disabled="#{!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
-				action="#{ruleCatalogueBackingBean.deleteContractFee(rowIndex)}"
-				update=":form:settingTabId:feeSettingId:feeByContractTableID">
+			<p:commandLink id="contractdeleteFee" 
+				partialSubmit="true" 
+				process="@this"
+				disabled="#{!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
+				oncomplete="contractFeeDeletePopUp.show();"
+				update="@([id$=#{contractFeeDeleteId}])">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:setPropertyActionListener target="#{ruleCatalogueBackingBean.managedBean.deleteRowIndex}" 
+							value="#{rowIndex}" />
 			</p:commandLink>
 		</p:column>
 	</p:dataTable>
@@ -130,6 +134,13 @@
 			action="#{ruleCatalogueBackingBean.addMoreContractFee()}"></p:commandButton>
 
 	</div>
+	<ac:confirmationPopup id="contractFeeDeleteId"
+				widget="contractFeeDeletePopUp"
+				okAction="ruleCatalogueBackingBean.deleteContractFee()"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" 
+				update=":form:settingTabId:feeSettingId:feeByContractTableID" />
 	<p:dialog id="feeContractStatusConfirmDialog" widgetVar="feeContractStatusConfirmDialog" closable="false"
 			header="#{lbl['lbl.pm.inactive.popUp.header']}" styleClass="screen-title"
 			resizable="false" modal="true" width="400" height="100">
