@@ -7980,7 +7980,7 @@ public class SmApplicationUtil {
 	public static boolean isAllSuppDocAlreadyVerified(SmAppl appl) {
 		boolean retVal = true;
 		for (SmApplSupportDoc doc : appl.getSmApplSupportDocs()) {
-			if(doc.getVerifiedFlg()!=1){
+			if(doc.getVerifiedFlg()==null){
 				retVal = false;
 			}
 		}
