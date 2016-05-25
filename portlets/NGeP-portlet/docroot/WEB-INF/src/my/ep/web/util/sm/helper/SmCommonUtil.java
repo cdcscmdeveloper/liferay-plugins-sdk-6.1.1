@@ -843,9 +843,13 @@ public class SmCommonUtil {
 	private static BigDecimal getPercentage(int param, int total) {
 		BigDecimal retVal = BigDecimal.ZERO;
 		if (total != 0) {
-			retVal = new BigDecimal(param).divide(new BigDecimal(total))
-					.multiply(percent);
-			retVal = retVal.setScale(2, RoundingMode.CEILING);
+			try {
+				retVal = new BigDecimal(param).divide(new BigDecimal(total))
+						.multiply(percent);
+				retVal = retVal.setScale(2, RoundingMode.CEILING);
+			} catch (ArithmeticException e) {
+				log.info("FAILED GET PERCENTAG:" + e.getMessage());
+			}
 		}
 		return retVal;
 	}
@@ -1924,14 +1928,16 @@ public class SmCommonUtil {
 		bpmReqDTO.setState("ASSIGNED");
 		BpmResponseDTO bpmResDTO = (BpmResponseDTO) SmServiceLookup.getBpmSO()
 				.getTasks(bpmReqDTO);
-		if(bpmResDTO.getWorklistVO() != null) {
-			System.out.println("bpmResDTO.getWorklistVO().getTotal(): " + bpmResDTO.getWorklistVO().getTotal());
+		if (bpmResDTO.getWorklistVO() != null) {
+			System.out.println("bpmResDTO.getWorklistVO().getTotal(): "
+					+ bpmResDTO.getWorklistVO().getTotal());
 			for (WorklistItemVO item : bpmResDTO.getWorklistVO()
 					.getWorklistItem()) {
-				System.out.println("item.getAssignees(): " + item.getAssignees());
+				System.out.println("item.getAssignees(): "
+						+ item.getAssignees());
 			}
 		}
-		
+
 		if (bpmResDTO.getWorklistVO() != null
 				&& !EntityHelper.isCollectionEmpty(bpmResDTO.getWorklistVO()
 						.getWorklistItem())) {
@@ -3871,45 +3877,46 @@ public class SmCommonUtil {
 		return fileNamePath;
 	}
 
-	public static void combinePdf(List<File> pdfs, String fileName) throws Exception {
-		List<InputStream> list = new ArrayList<InputStream>(); 
-		for(File pdf : pdfs) {
+	public static void combinePdf(List<File> pdfs, String fileName)
+			throws Exception {
+		List<InputStream> list = new ArrayList<InputStream>();
+		for (File pdf : pdfs) {
 			list.add(new FileInputStream(pdf));
 		}
-		
-        String latestFile = fileName;
-        OutputStream combined = new FileOutputStream(new File(latestFile));
-        
-        doMerge(list, combined);
-        
-        combined.flush();
-        combined.close();
+
+		String latestFile = fileName;
+		OutputStream combined = new FileOutputStream(new File(latestFile));
+
+		doMerge(list, combined);
+
+		combined.flush();
+		combined.close();
 	}
-	
+
 	public static void doMerge(List<InputStream> list, OutputStream outputStream)
-            throws DocumentException, IOException {
-        Document document = new Document();
-        PdfWriter writer = PdfWriter.getInstance(document, outputStream);
-        document.open();
-        PdfContentByte cb = writer.getDirectContent();
-        
-        for (InputStream in : list) {
-            PdfReader reader = new PdfReader(in);
-            for (int i = 1; i <= reader.getNumberOfPages(); i++) {
-                document.newPage();
-                //import the page from source pdf
-                PdfImportedPage page = writer.getImportedPage(reader, i);
-                //add the page to the destination pdf
-                cb.addTemplate(page, 0, 0);
-            }
-            in.close();
-        }
-        
-        outputStream.flush();
-        document.close();
-        outputStream.close();
-    }
-	
+			throws DocumentException, IOException {
+		Document document = new Document();
+		PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+		document.open();
+		PdfContentByte cb = writer.getDirectContent();
+
+		for (InputStream in : list) {
+			PdfReader reader = new PdfReader(in);
+			for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+				document.newPage();
+				// import the page from source pdf
+				PdfImportedPage page = writer.getImportedPage(reader, i);
+				// add the page to the destination pdf
+				cb.addTemplate(page, 0, 0);
+			}
+			in.close();
+		}
+
+		outputStream.flush();
+		document.close();
+		outputStream.close();
+	}
+
 	/**
 	 * Get as PDF type stream content
 	 * 
