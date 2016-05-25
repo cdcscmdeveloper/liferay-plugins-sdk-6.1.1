@@ -267,10 +267,22 @@ public class SmCommonUtil {
 	 */
 	public static PmParameterDesc retrieveParameterDescByTypeAndCodeAndLang(
 			String paramType, String paramCode) {
+		return retrieveParameterDescByTypeAndCodeAndLang(paramType, paramCode, new FacesScopes().getUserLocale().getLanguage());
+	}
+
+	/**
+	 * Retrieve parameter description list by param type,param code and language code
+	 * @param paramType
+	 * @param paramCode
+	 * @param lang
+	 * @return
+	 */
+	public static PmParameterDesc retrieveParameterDescByTypeAndCodeAndLang(
+			String paramType, String paramCode, String lang) {
 		PmParameterDesc retVal = null;
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterType(paramType);
-		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		reqDTO.setLanguageCode(lang);
 		reqDTO.setParameterCode(paramCode);
 		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -281,7 +293,7 @@ public class SmCommonUtil {
 		}
 		return retVal;
 	}
-
+	
 	/**
 	 * Retrieve country by country code.
 	 * 
