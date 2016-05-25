@@ -10,10 +10,12 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -24,6 +26,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -33,6 +36,8 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
+import oracle.bpel.services.identity.xpath.GetManagerFunction;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
@@ -207,8 +212,11 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
     private List<PmUser> approverList;
     private boolean gfmasError=false;
 	private String gfmasErrorContent;
+	private String docStatusDesc;
+	private List<Long> statusIds;
     
     private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
+    private IPagingDataModel<FlFulfilmentOrder> pendingFlDataModel = new PendingFlPagingDataModel();
     
     /**
 	 * @return the pendingDoDataModel
@@ -264,10 +272,66 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				searchBean.setUseEntityClass(true);
 				reqDTO.setPendingDoSearchBean(searchBean);
+				if(!getStatusIds().isEmpty()){
+					reqDTO.setStatusIds(getStatusIds());
+				}
+				
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 				FulfilmentResDTO resDTO = orderSO.searchPendingDoList(reqDTO);
 				if(resDTO.isSuccessful()) {
 					return resDTO.getPendingDoResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
+	/**
+	 * The Class PendingFlPagingDataModel.
+	 */
+	private class PendingFlPagingDataModel extends PagingDataModel<FlFulfilmentOrder> {
+		
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Instantiates a new pending do paging data model.
+		 */
+		public PendingFlPagingDataModel() {
+			super("flPendingFlListDt");
+		}
+		
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<FlFulfilmentOrder> pageChangeListener(ISearchBean<FlFulfilmentOrder> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			try {
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
+				if(pmUserOrgs.get(0) == null){
+					log.info("User does not have any active orgs.");
+				}
+				if(pmUserOrgs.get(0) != null || pmUserOrgs.get(0).getPmOrgProfile() != null){
+					reqDTO.setOrgProfileId(pmUserOrgs.get(0).getPmOrgProfile().getOrgProfileId());
+				}
+				
+				searchBean.setUseEntityClass(true);
+				reqDTO.setPendingDoSearchBean(searchBean);
+				if(!getStatusIds().isEmpty()){
+					reqDTO.setStatusIds(getStatusIds());
+				}
+				
+				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+				FulfilmentResDTO resDTO = orderSO.searchPendingFlList(reqDTO);
+				if(resDTO.isSuccessful()) {
+					return resDTO.getPendingFlResultBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1191,6 +1255,33 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 	public void setGfmasErrorContent(String gfmasErrorContent) {
 		this.gfmasErrorContent = gfmasErrorContent;
+	}
+
+	public String getDocStatusDesc() {
+		return docStatusDesc;
+	}
+
+	public void setDocStatusDesc(String docStatusDesc) {
+		this.docStatusDesc = docStatusDesc;
+	}
+
+	public List<Long> getStatusIds() {
+		if(statusIds == null){
+			statusIds = new ArrayList<Long>();
+		}
+		return statusIds;
+	}
+
+	public void setStatusIds(List<Long> statusIds) {
+		this.statusIds = statusIds;
+	}
+
+	public IPagingDataModel<FlFulfilmentOrder> getPendingFlDataModel() {
+		return pendingFlDataModel;
+	}
+
+	public void setPendingFlDataModel(IPagingDataModel<FlFulfilmentOrder> pendingFlDataModel) {
+		this.pendingFlDataModel = pendingFlDataModel;
 	}
 
 }
