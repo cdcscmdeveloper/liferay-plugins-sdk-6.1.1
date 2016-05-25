@@ -14,17 +14,23 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -124,6 +130,8 @@ public class CmTrackingDiaryBackingBean extends
 
 		bb.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 		
+		retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
+		
 		bb.getManagedBean().setDisplayCatalogue(true);
 		
 		TrackingDiaryReqDTO reqDTOPM = new TrackingDiaryReqDTO();
@@ -144,6 +152,39 @@ public class CmTrackingDiaryBackingBean extends
 			}
 			
 		return NAV_TO_CATALOG_DETAIL_SEARCH + "?faces-redirect=true";
+	}
+	
+	private void retriveSupplierGstInfomation(SmSupplier supplier) {
+		ISupplierGstSO supplierGstSo = null;
+		CatalogueBackingBean bb = new CatalogueBackingBean();
+		try {
+			if (null != supplier && null != supplier.getSupplierId()) {
+				supplierGstSo = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								ISupplierGstSO.class);
+				SupplierGstReqDTO supplierGstreqDTO = new SupplierGstReqDTO();
+				System.out.println("*******supplier.getSupplierId()**********"+supplier.getSupplierId());
+				supplierGstreqDTO.setSupplierId(supplier.getSupplierId());
+				supplierGstreqDTO.setBranchCode(null);
+				SupplierGstResDTO supplierGstresDTO = supplierGstSo
+						.retrieveGstInfoBySupplierIdAndBranchCode(supplierGstreqDTO);
+				if (null != supplierGstresDTO
+						&& null != supplierGstresDTO.getSmGstSupplier()) {
+					bb.getManagedBean().setSmGstSupplier(
+							supplierGstresDTO.getSmGstSupplier());
+
+				} else {
+					bb.getManagedBean().setSmGstSupplier(new SmGstSupplier());
+				}
+
+			} else {
+				bb.getManagedBean().setSmGstSupplier(new SmGstSupplier());
+			}
+
+		} finally {
+			supplierGstSo = null;
+		}
+
 	}
 
 	public void reset(){
