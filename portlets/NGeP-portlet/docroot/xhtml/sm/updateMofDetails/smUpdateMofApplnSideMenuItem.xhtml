@@ -8,27 +8,27 @@
 	<p:tabMenu activeIndex="#{backingBean.managedBean.tabActiveIndex}"
 		styleClass="sidemenu">
 
-		<p:menuitem value="#{lbl['lbl.sm.companyStepLbl']}"
+		<p:menuitem value="#{lbl['lbl.sm.companyStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'0')}"
 			action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
 			update=":form" />
-		<p:menuitem value="#{lbl['lbl.sm.branchStepLbl']}"
+		<p:menuitem value="#{lbl['lbl.sm.branchStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'1')}"
 			action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
 			update=":form" />
-		<p:menuitem value="#{lbl['lbl.sm.personStepLbl']}"
+		<p:menuitem value="#{lbl['lbl.sm.personStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'2')}"
 			action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
 			update=":form" />
-		<p:menuitem value="#{lbl['lbl.sm.capitalStepLbl']}"
+		<p:menuitem value="#{lbl['lbl.sm.capitalStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'3')}"
 			action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
 			update=":form" />
-		<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}"
+		<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'4')}"
 			action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
@@ -43,7 +43,7 @@
 					update=":form" />
 			</c:when>
 			<c:otherwise>
-				<p:menuitem value="#{lbl['lbl.sm.catCodeStepLbl']}"
+				<p:menuitem value="#{lbl['lbl.sm.catCodeStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5',SupplierManagementConst.SM_APPL_BUTTON_TYPE_SAME)}"
 					action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
@@ -51,19 +51,19 @@
 				
 				<c:choose>
 					<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
-						<p:menuitem value="#{lbl['lbl.sm.factoryStepLbl']}"
+						<p:menuitem value="#{lbl['lbl.sm.factoryStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
 							action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
 							update=":form" />
 		
-						<p:menuitem value="#{lbl['lbl.sm.equipmentStepLbl']}"
+						<p:menuitem value="#{lbl['lbl.sm.equipmentStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
 							action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 							update=":form" />
 							
-						<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}"
+						<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
 							action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
@@ -115,7 +115,7 @@
 						 </c:choose>
 					</c:when>
 					<c:otherwise>
-						<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}"
+						<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
 							action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
