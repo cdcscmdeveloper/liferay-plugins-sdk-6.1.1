@@ -1184,7 +1184,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 	}
 
-	public void deleteMoreRuleValue(int rowIndex) {
+	public void deleteMoreRuleValue() {
 		log.info(".................deleteMoreRuleValue...................");
 
 		// PmConfigRuleValue ruleValue =
@@ -1193,9 +1193,10 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		// int indexOfSelectedRuleType =
 		// this.getManagedBean().getConfigRuleList().indexOf(this.getManagedBean().getSelectedRuleType());
 		// this.getManagedBean().getConfigRuleList().remove(indexOfSelectedRuleType);
+		Integer rowIndex = getManagedBean().getDeleteRowIndex();
 		List<PmConfigRuleValue> removeList = new ArrayList<PmConfigRuleValue>();
 		PmConfigRuleValue selectedValueToDel = this.getManagedBean()
-				.getSelectedRuleType().getConfigRuleValues().get(rowIndex);
+				.getSelectedRuleType().getConfigRuleValues().get(rowIndex.intValue());
 
 		if (this.getManagedBean().getSelectedRuleType().getRangeType() == 1
 				&& selectedValueToDel.isShowFlag()) {// if its range and parent
@@ -1212,7 +1213,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					.removeAll(removeList);
 		} else {
 			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-					.remove(rowIndex);
+					.remove(rowIndex.intValue());
 		}
 
 		// merge selectedRuleType with changes in values into ConfigRuleTypes
@@ -1245,16 +1246,21 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 	}
 
-	public void deleteOrgAndItemFee(int rowIndex) {
+	public void deleteOrgAndItemFee() {
 		log.info(".................deleteOrgAndItemFee...................");
-		PmFeeExemption deletedExemption = this.getManagedBean()
-				.getFeeExemptionsForOrgAndItem().get(rowIndex);
-		deletedExemption.setDeleted(true);
-		this.getManagedBean().getDeletedOrgAndItemFeeExemptions()
-				.add(deletedExemption);// should added to original list before
-										// save
-		this.getManagedBean().getFeeExemptionsForOrgAndItem()
-				.remove(deletedExemption);
+		Integer rowIndex = getManagedBean().getDeleteRowIndex();
+		if(rowIndex != null){
+			PmFeeExemption deletedExemption = this.getManagedBean()
+					.getFeeExemptionsForOrgAndItem().get(rowIndex.intValue());
+			if(deletedExemption != null){
+				deletedExemption.setDeleted(true);
+				this.getManagedBean().getDeletedOrgAndItemFeeExemptions()
+					.add(deletedExemption);// should added to original list before
+											// save
+				this.getManagedBean().getFeeExemptionsForOrgAndItem()
+					.remove(deletedExemption);
+			}
+		}
 
 	}
 
@@ -1320,31 +1326,38 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 	}
 	
-	public void deleteComodityFee(int rowIndex) {
+	public void deleteComodityFee() {
 		log.info(".................deleteComodityFee...................");
-
-		PmFeeExemption deletedExemption = this.getManagedBean()
-				.getFeeExemptionsForComodity().get(rowIndex);
-		deletedExemption.setDeleted(true);
-		this.getManagedBean().getDeletedComodityFeeExemptions()
-				.add(deletedExemption);// should added to original list before
-										// save
-		this.getManagedBean().getFeeExemptionsForComodity()
-				.remove(deletedExemption);
-
+		Integer rowIndex = getManagedBean().getDeleteRowIndex();
+		if(rowIndex != null){
+			PmFeeExemption deletedExemption = this.getManagedBean()
+					.getFeeExemptionsForComodity().get(rowIndex.intValue());
+			if(deletedExemption != null){
+				deletedExemption.setDeleted(true);
+				this.getManagedBean().getDeletedComodityFeeExemptions()
+						.add(deletedExemption);// should added to original list before
+												// save
+				this.getManagedBean().getFeeExemptionsForComodity()
+						.remove(deletedExemption);
+			}
+		}
 	}
 	
-	public void deleteOrgTypeFee(int rowIndex) {
+	public void deleteOrgTypeFee() {
 		log.info(".................deleteOrgTypeFee...................");
-
-		PmFeeExemption deletedExemption = this.getManagedBean()
-				.getFeeExemptionsForOrgType().get(rowIndex);
-		deletedExemption.setDeleted(true);
-		this.getManagedBean().getDeletedOrgTypeFeeExemptions()
-				.add(deletedExemption);// should added to original list before
-										// save
-		this.getManagedBean().getFeeExemptionsForOrgType()
-				.remove(deletedExemption);
+		Integer rowIndex = getManagedBean().getDeleteRowIndex();
+		if(rowIndex != null){
+			PmFeeExemption deletedExemption = this.getManagedBean()
+					.getFeeExemptionsForOrgType().get(rowIndex.intValue());
+			if(deletedExemption != null){
+				deletedExemption.setDeleted(true);
+				this.getManagedBean().getDeletedOrgTypeFeeExemptions()
+						.add(deletedExemption);// should added to original list before
+											// save
+				this.getManagedBean().getFeeExemptionsForOrgType()
+						.remove(deletedExemption);
+			}
+		}
 
 	}
 
@@ -1364,18 +1377,21 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 	}
 
-	public void deleteContractFee(int rowIndex) {
+	public void deleteContractFee() {
 		log.info(".................deleteContractFee...................");
-
-		PmFeeExemption deletedExemption = this.getManagedBean()
-				.getFeeExemptionsForContract().get(rowIndex);
-		deletedExemption.setDeleted(true);
-		this.getManagedBean().getDeletedContractFeeExemptions()
-				.add(deletedExemption);// should added to original list before
-										// save
-		this.getManagedBean().getFeeExemptionsForContract()
-				.remove(deletedExemption);
-
+		Integer rowIndex = getManagedBean().getDeleteRowIndex();
+		if(rowIndex != null){
+			PmFeeExemption deletedExemption = this.getManagedBean()
+					.getFeeExemptionsForContract().get(rowIndex.intValue());
+			if(deletedExemption != null){
+				deletedExemption.setDeleted(true);
+				this.getManagedBean().getDeletedContractFeeExemptions()
+						.add(deletedExemption);// should added to original list before
+												// save
+				this.getManagedBean().getFeeExemptionsForContract()
+						.remove(deletedExemption);
+			}
+		}
 	}
 
 	public void saveRuleCatalog() {
@@ -3630,14 +3646,18 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		}
 	}
 
-	public void deleteDesignatedArea(int rowIndex) {
+	public void deleteDesignatedArea() {
 		log.info(".................deleteDesignatedArea...................");
-
-		PmDaValidity deletedDa = getManagedBean().getDaValidityList().get(
-				rowIndex);
-		deletedDa.setDeleted(true);
-		this.getManagedBean().getDeletedDaValidityList().add(deletedDa);
-		this.getManagedBean().getDaValidityList().remove(deletedDa);
+		Integer rowIndex = getManagedBean().getDeleteRowIndex();
+		if(rowIndex != null){
+			PmDaValidity deletedDa = getManagedBean().getDaValidityList().get(
+					rowIndex.intValue());
+			if(deletedDa != null){
+				deletedDa.setDeleted(true);
+				this.getManagedBean().getDeletedDaValidityList().add(deletedDa);
+				this.getManagedBean().getDaValidityList().remove(deletedDa);
+			}
+		}
 	}
 
 	private void validateDesignatedArea() {

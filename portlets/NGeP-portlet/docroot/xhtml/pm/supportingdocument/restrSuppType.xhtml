@@ -36,10 +36,13 @@
 				<p:message id="somSuppTypeMsg" for="somSuppType" display="icon" />
 			</p:column>			
 			<p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
-	           <p:commandLink partialSubmit="true" 
-					process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrSupp,rowIndex)}"
-					update="dtSuppType" >
+	        	<p:commandLink partialSubmit="true" 
+					process="@this" 
+					oncomplete="suppTypeDeletePopUp.show();"
+					update="@([id$=#{suppTypeDeleteId}])"  >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener target="#{supportDocBackingBean.managedBean.deleteRowIndex}" 
+							value="#{rowIndex}" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -49,5 +52,12 @@
 				action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrSupp)}"
 				immediate="true" />	
 		</div>
+		<ac:confirmationPopup id="suppTypeDeleteId"
+				widget="suppTypeDeletePopUp"
+				okAction="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrSupp)}"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" 
+				update=":#{p:component('dtSuppType')}" />
 	</p:outputPanel>
 </ui:composition>

@@ -1,6 +1,5 @@
 package my.ep.web.managedbean.pm.signatory;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,6 +39,9 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	private boolean validationError = false;
 	private Map<Long , Date> idToCertSignMapForChangedRecs = new HashMap<Long , Date>();
 	private Date  tomorrow = tomorrowDate();
+	private PmCertSignatory deleteSignatory;
+	
+	public AuthorizedSignatoryManagedBean(){}
 
 	public Date getTomorrow() {
 		return tomorrow;
@@ -172,6 +174,18 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	public void setIdToCertSignMapForChangedRecs(
 			Map<Long, Date> idToCertSignMapForChangedRecs) {
 		this.idToCertSignMapForChangedRecs = idToCertSignMapForChangedRecs;
+	}
+	/**
+	 * @return the deleteSignatory
+	 */
+	public PmCertSignatory getDeleteSignatory() {
+		return deleteSignatory;
+	}
+	/**
+	 * @param deleteSignatory the deleteSignatory to set
+	 */
+	public void setDeleteSignatory(PmCertSignatory deleteSignatory) {
+		this.deleteSignatory = deleteSignatory;
 	}
 
 		

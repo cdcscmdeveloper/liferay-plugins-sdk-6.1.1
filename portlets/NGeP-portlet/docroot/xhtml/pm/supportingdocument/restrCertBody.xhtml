@@ -19,10 +19,13 @@
         </p:column>
 			
 			<p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
-	           <p:commandLink partialSubmit="true"
-					process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrCertbody,rowIndex)}"
-					update="dtCertBody" >
+	          	<p:commandLink partialSubmit="true" 
+					process="@this" 
+					oncomplete="certBodyDeletePopUp.show();"
+					update="@([id$=#{certBodyDeleteId}])"  >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:setPropertyActionListener target="#{supportDocBackingBean.managedBean.deleteRowIndex}" 
+							value="#{rowIndex}" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -39,5 +42,13 @@
 							conditionField="recordStatus^1|isCertifiedBody^1|isGlp^1" />					
 			
 		</div>
+		
+		<ac:confirmationPopup id="certBodyDeleteId"
+				widget="certBodyDeletePopUp"
+				okAction="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrCertbody)}"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" 
+				update=":#{p:component('dtCertBody')}" />
 	</p:outputPanel>
 </ui:composition>
