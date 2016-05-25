@@ -2223,7 +2223,7 @@ public class TemplateSpecBackingBean extends
 		if (this.getManagedBean().getOrgProfileOfLoginUser() == null) {
 			this.getManagedBean().setOrgProfileOfLoginUser(retrieveUserOrgListByUserId());
 		}
-		if(specMaster.getOwnerOrgProfile() != null){
+		if(specMaster != null && specMaster.getOwnerOrgProfile() != null){
 			if (!specMaster.getOwnerOrgProfile().getOrgProfileId()
 					.equals(this.getManagedBean().getOrgProfileOfLoginUser().getOrgProfileId())) {
 				isYes = false;
