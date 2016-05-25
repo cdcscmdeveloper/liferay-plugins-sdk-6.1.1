@@ -96,8 +96,6 @@ public class TemplateSpecBackingBean extends
 
 	public static final String NAVIGATE_TO_SEARCH = "templateSpecSearch";
 	private static final String TPL_SPEC_KEY = "lbl.sc.template.spec";
-	private static final String EDIT_LABEL_NAME = "ui-icon-edit";
-	private static final String VIEW_LABEL_NAME = "ui-icon-view";
 
 	private IPagingDataModel<TplSpecMaster> specMasterDataModel = new SpecMasterPagingDataModel();
 
@@ -203,9 +201,6 @@ public class TemplateSpecBackingBean extends
 						&& resDTO.getSpecAnswerList() != null) {
 					calcGrandTotalAmount(templateSpecBean);
 				}
-				
-				this.getManagedBean().setReadOnly(!isSpecCreatedByLoginUserPtj(specMaster));
-				this.getManagedBean().setCloneBtnRendered(true);
 			}
 		} finally {
 			templateSpecSO = null;
@@ -241,7 +236,7 @@ public class TemplateSpecBackingBean extends
 				this.renewSesionObject();
 
 				templateSpecBean.setSpecMaster(resDTO.getSpecMaster());
-				retrieveTemplateSpecMaster(templateSpecBean);
+				retrieveTemplateSpecMaster(templateSpecBean,!isSpecCreatedByLoginUserPtj(specMaster));
 
 				getManagedBean().setTemplateSpecBean(templateSpecBean);
 				
@@ -2222,20 +2217,7 @@ public class TemplateSpecBackingBean extends
 		baseObject.setChangedBy(user.getUserId());
 	}
 	
-	/**
-	 * @param specMaster
-	 * @return
-	 */
-	public String getIconLabelName(TplSpecMaster specMaster){
-		
-		String labelName = EDIT_LABEL_NAME;
-		if (!isSpecCreatedByLoginUserPtj(specMaster)) {
-			labelName = VIEW_LABEL_NAME;
-		}
-		return labelName;
-	}
-	
-	private boolean isSpecCreatedByLoginUserPtj(TplSpecMaster specMaster) {
+	public boolean isSpecCreatedByLoginUserPtj(TplSpecMaster specMaster) {
 
 		boolean isYes = true;
 		if (this.getManagedBean().getOrgProfileOfLoginUser() == null) {
@@ -2295,5 +2277,58 @@ public class TemplateSpecBackingBean extends
 			userSO = null;
 		}
 		return pmOrgProfile;
+	}
+	
+	public String retrieveTemplateSpecMaster(TemplateSpecBean templateSpecBean, boolean isReadOnly) {
+		
+		ITemplateSpecSO templateSpecSO = null;
+		String contentType = templateSpecBean.getContentType();
+		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
+		TplSpecZoneDtl speczoneDtl = templateSpecBean.getTplSpecZoneDtl();
+
+		try {
+			templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance()
+					.getServiceObject("cc", ITemplateSpecSO.class);
+
+			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+			reqDTO.setSpecMaster(specMaster);
+			reqDTO.setContentType(contentType);
+			if (!TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(contentType)) {
+				SmSupplier smSupplier = templateSpecBean.getSupplier();
+				reqDTO.setSupplier(smSupplier);
+			}
+			if (null != speczoneDtl) {
+				reqDTO.setTplSpecZoneDtl(speczoneDtl);
+			}
+			reqDTO.setScQt(this.getManagedBean().getScQt());
+			reqDTO.setDocType(this.getManagedBean().getDocType());
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.getTemplateMaster(reqDTO);
+			if (resDTO.isSuccessful()) {
+				specMaster = resDTO.getSpecMaster();
+
+				if (specMaster.getOrgProfile() == null) {
+					specMaster.setOrgProfile(new PmOrgProfile());
+				}
+
+				templateSpecBean.setSpecMaster(specMaster);
+				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+				templateSpecBean.setSelectedSpecQuestion(null);
+				templateSpecBean.setSpecAnswersToDelete(null);
+
+				if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL
+						.equals(specMaster)
+						&& resDTO.getSpecAnswerList() != null) {
+					calcGrandTotalAmount(templateSpecBean);
+				}
+				
+				this.getManagedBean().setReadOnly(isReadOnly);
+				this.getManagedBean().setCloneBtnRendered(true);
+			}
+		} finally {
+			templateSpecSO = null;
+		}
+
+		return "maintenance";
 	}
 }
