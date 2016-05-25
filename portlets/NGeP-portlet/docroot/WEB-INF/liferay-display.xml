@@ -181,6 +181,8 @@
 			<portlet id="flViewPurchaseRequest" />
 			<portlet id="flViewContractRequest" />
 			<portlet id="flViewStopInstuction" />
+			<portlet id="flPendingDeliveryListDashBoard" />
+			<portlet id="flPendingFlListDashBoard" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />

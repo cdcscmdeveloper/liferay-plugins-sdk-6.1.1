@@ -24,8 +24,6 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
@@ -39,6 +37,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
@@ -1257,6 +1256,148 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		getManagedBean().getPendingDoDataModel().reloadData();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doPendingTable.xhtml");
+	}
+	
+	public void preRenderViewDODashBoardTable(){
+		getManagedBean().getPendingDoDataModel().reloadData();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doPendingTableDashBoard.xhtml");
+	}
+	
+	public void preRenderViewFlDashBoardTable(){
+		getManagedBean().getPendingFlDataModel().reloadData();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "pendingFulfilment.xhtml");
+	}
+	
+	/**
+	 * Selected order type.
+	 *
+	 * @param e the e
+	 */
+	public void getSelectedDocStatusDesc(AjaxBehaviorEvent e) {
+		String id = (String) e.getComponent().getAttributes().get("value");
+
+		if(id!=null) {
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			getManagedBean().getStatusIds().clear();
+			if(id.equals("Pending Partial Fulfilment")){
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_PARTIAL_FL);
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
+			}else if(id.equals("Pending Fulfilment")){
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_FULFILMENT);
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
+			}
+		}
+		if(id == null){
+			getManagedBean().getStatusIds().clear();
+		}
+		getManagedBean().getPendingDoDataModel().reloadData();
+	}
+	
+	/**
+	 * Selected order type.
+	 *
+	 * @param e the e
+	 */
+	public void getSelectedFlDocStatusDesc(AjaxBehaviorEvent e) {
+		String id = (String) e.getComponent().getAttributes().get("value");
+
+		if(id!=null) {
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			getManagedBean().getStatusIds().clear();
+			if(id.equals("Pending Partial Fulfilment")){
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_PARTIAL_FL);
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
+			}else if(id.equals("Pending Fulfilment")){
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_FULFILMENT);
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
+			}else if(id.equals("Pending Invoice")){
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_INVOICE);
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_INVOICE);
+			}else if(id.equals("Pending Supplier Acknowledgement")){
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_SUPPLIER_ACKNOWLEDGEMENT);
+				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT);
+			}
+		}
+		if(id == null){
+			getManagedBean().getStatusIds().clear();
+		}
+		getManagedBean().getPendingFlDataModel().reloadData();
+	}
+	
+	/**
+	 * Get status select items by module and doc type for dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getPendingDeliveryListStatus() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<String> statusDescs = new ArrayList<String>();
+			statusDescs.add("Pending Partial Fulfilment");
+			statusDescs.add("Pending Fulfilment");
+
+			items = new SelectItem[statusDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (String statusDesc : statusDescs) {
+				items[i++] = new SelectItem(statusDesc);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	/**
+	 * Get status select items by module and doc type for dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getPendingFlListStatus() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<String> statusDescs = new ArrayList<String>();
+			statusDescs.add("Pending Partial Fulfilment");
+			statusDescs.add("Pending Fulfilment");
+			statusDescs.add("Pending Invoice");
+			statusDescs.add("Pending Supplier Acknowledgement");
+
+			items = new SelectItem[statusDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (String statusDesc : statusDescs) {
+				items[i++] = new SelectItem(statusDesc);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
 	}
 		
 }

@@ -451,6 +451,20 @@
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>flviewsi-portlet</css-class-wrapper>
 	</portlet>	
+	<portlet>
+		<portlet-name>flPendingDeliveryListDashBoard</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>fldopendingdashboard-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>flPendingFlListDashBoard</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>flpendingdashboard-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Fulfilment End Added by Giri -->
 
 	<portlet>
