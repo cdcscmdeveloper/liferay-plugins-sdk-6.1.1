@@ -60,7 +60,7 @@
 						width="8%">
 
 						<p:selectOneMenu value="#{role.recordStatusFlg}"
-							disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode or role.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0 or isSupplierOrgType}">
+							disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode or role.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or isSupplierOrgType}">
 							<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 							<p:ajax event="change" 
@@ -89,7 +89,7 @@
 					<p:commandButton
 						action="#{profileManagementBackingBean.getAvailbleUserRole}"
 						immediate="true" value="#{lbl['lbl.btn.add']}"
-						disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0 or isSupplierOrgType}"
+						disabled="#{profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or isSupplierOrgType}"
 						oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions" />
 				</div>
 			</p:tab>
@@ -112,7 +112,7 @@
 					<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}" style="width:15%">
 
 						<p:selectOneMenu value="#{receivAddrType.recordStatusFlg}"
-							disabled="#{receivAddrType.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
+							disabled="#{receivAddrType.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 }">
 							<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 							<p:ajax event="change"
@@ -142,7 +142,7 @@
 						<!-- Receiving Address Selection Popup -->
 						<ac:lov id="lovAddrType" lovId="PM_ADDRESS_TYPE"
 							styleClass="ppDisplayCalS" readonly="true"
-							disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0 or (not profileManagementBackingBean.checkActiveReceivingOfficerExist())}"
+							disabled="#{profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or (not profileManagementBackingBean.checkActiveReceivingOfficerExist())}"
 							selectionMode="multiple" buttonLabel="#{lbl['lbl.btn.add']}"
 							headerText="#{lbl['lbl.pm.profiles.authorisation.select.address']}"
 							update=":form:tvRoleReceivingAddr:dtReceiveAddr"
