@@ -7,15 +7,16 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.log4j.Logger;
+import org.primefaces.model.DualListModel;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -37,10 +38,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import oracle.bpel.services.identity.xpath.GetManagerFunction;
-
-import org.apache.log4j.Logger;
-import org.primefaces.model.DualListModel;
 
 // TODO: Auto-generated Javadoc
 /**
