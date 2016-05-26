@@ -30,6 +30,7 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
@@ -770,7 +771,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 												       ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 							      	         } 
 								        	  for(CtPanelSupplier panelSupplier : panelZone.getCtPanelSuppliers()){
-								        		     if(panelSupplier.getBankAccountNo().isEmpty()){
+								        		     if(StringUtils.isBlank(panelSupplier.getBankAccountNo())){
 								        		    	 throw new EpException(MessageConst.ERROR_100022, 
 													                new String[]{ResourceBundleUtils.getMessage("lbl.ct.bank.account.name", 
 															       ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
