@@ -1269,13 +1269,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 						&& resDTO.getViewSuppItemResultBean().getResultList()
 						.size() > 0) {
 					
-					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+resDTO.getViewSuppItemResultBean().getResultList().size()},
+					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+resDTO.getViewSuppItemResultBean().getTotalRecord()},
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 					
 				
 				} else {
 					
-					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+resDTO.getViewSuppItemResultBean().getResultList().size()},
+					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+resDTO.getViewSuppItemResultBean().getTotalRecord()},
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 				}
 				
