@@ -1,0 +1,55 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+    <ui:define name="contentSection">
+     <style>
+      .column-align-center { text-align: center !important;}
+    </style>
+    <p:blockUI widgetVar="blkAssoSearchTable"  block=":form" trigger="searchButtonId">  
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
+	</p:blockUI> 
+  	<p:messages id="messages" showDetail="true" 
+ 		showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" >
+  	</p:messages>
+     <p:panel id="supplier" header="#{lbl['lbl.ct.dash.board.panel']}" toggleable="true"  toggleSpeed="500">
+		     <h:panelGrid columns="2">
+		          <h:outputLabel for="expDaysId" value="#{lbl['lbl.ct.dash.board.edays']}" style="width:150px;"/>
+			     <p:selectOneMenu id="expDaysId"  value="#{contractDashboardBackingBean.managedBean.ctExpInDays}" style="width:150px;">
+				   <f:selectItems value="#{contractDashboardBackingBean.getCtExpiryDaysMenu()}" />
+			                 <p:ajax event="change" update=":form:tblCtExpId" 
+			                      process="@this" partialSubmit="true" listener="#{contractDashboardBackingBean.filterCtExpDetails}"/>  
+	            </p:selectOneMenu>
+           </h:panelGrid>
+           <p:spacer height="5"/>
+	           <p:dataTable id="tblCtExpId" value="#{contractDashboardBackingBean.vCtDataModel}"
+					var="data1" lazy="true" rowIndexVar="index" rowKey="#{data1}" rows="10">
+			           <p:column headerText="#{lbl['lbl.ct.contract.no']}"  styleClass="column-align-center">
+				                   <h:outputText value="#{data1.contractNo}" style="text-align:left; float:left;" />
+				       </p:column> 
+				       <p:column headerText="#{lbl['lbl.ct.contract.title']}" styleClass="column-align-center" >
+				             	<h:outputText value="#{data1.contractName}"  style="text-align:left; float:left;" />
+				       </p:column> 
+				       <p:column  headerText="#{lbl['lbl.ct.contract.start']}" styleClass="column-align-center">
+				          <h:outputText value="#{data1.latestContractVer.ctContractValue.effDate}" style="text-align:left; float:left;">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+				       </p:column>
+				        <p:column  headerText="#{lbl['lbl.ct.contract.end']}"  styleClass="column-align-center">
+				           <h:outputText value="#{data1.latestContractVer.ctContractValue.expDate}" style="text-align:left; float:left;">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+				       </p:column>
+				         <p:column  headerText="#{lbl['lbl.ct.name.supplier']}" styleClass="column-align-center" >
+				            	<h:outputText value="#{data1.smSupplier.companyName}" style="text-align:left; float:left;" />
+				       </p:column>
+	            </p:dataTable>
+         </p:panel>
+     </ui:define>
+</ui:composition>
