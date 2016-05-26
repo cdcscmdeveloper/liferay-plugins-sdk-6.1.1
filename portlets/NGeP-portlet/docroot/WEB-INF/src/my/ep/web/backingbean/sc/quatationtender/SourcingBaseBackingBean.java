@@ -2498,12 +2498,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return null;
 	}
 	
-	protected ScAddress createScAddress(SmAddress smAddress, 
+	protected ScAddress createOrUpdateScAddress(ScAddress scAddress, SmAddress smAddress, 
 							SmPersonnel smPersonnel, SmCompanyBasic smCompanyBasic) {
-		ScAddress scAddress = null;
 		
 		if (smAddress != null) {
-			scAddress = new ScAddress();
+			if (scAddress != null) {
+				scAddress = new ScAddress();
+			}
 			scAddress.setAddress1(smAddress.getAddress1());
 			scAddress.setAddress2(smAddress.getAddress2());
 			scAddress.setAddress3(smAddress.getAddress3());
