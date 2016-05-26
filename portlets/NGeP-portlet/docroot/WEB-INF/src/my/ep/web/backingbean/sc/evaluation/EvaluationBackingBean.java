@@ -2565,7 +2565,7 @@ public class EvaluationBackingBean extends
 					this.getManagedBean()
 							.setTechnicalOrFinancialReEvaluateRequired(false);
 				}
-				this.getManagedBean().setUserScoreSchemaType("2");
+				this.getManagedBean().setUserScoreSchemaType(QTConstants.USER_SCORE);
 				this.getManagedBean().setUserScores(
 						checklist.getQtScoreWeightage().getScore().toString());
 				this.getManagedBean()
@@ -3135,7 +3135,7 @@ public class EvaluationBackingBean extends
 					this.getManagedBean()
 							.setTechnicalOrFinancialReEvaluateRequired(false);
 				}
-				this.getManagedBean().setUserScoreSchemaType("2");
+				this.getManagedBean().setUserScoreSchemaType(QTConstants.USER_SCORE);
 				this.getManagedBean().setUserScores(
 						this.getManagedBean().getScQtChecklist()
 								.getQtScoreWeightage().getScore().toString());
@@ -3468,7 +3468,7 @@ public class EvaluationBackingBean extends
 							.getDefinationType().getParameterCode())) {
 				this.getManagedBean().setSampleItemSpecifications(null);
 				if (proposalCheckList.getScQtCheckList().isScoringReq()) {
-					this.getManagedBean().setUserScoreSchemaType("2");
+					this.getManagedBean().setUserScoreSchemaType(QTConstants.USER_SCORE);
 				}
 				this.getManagedBean().setUserScores(
 						proposalCheckList.getScQtCheckList()
@@ -11210,7 +11210,7 @@ public class EvaluationBackingBean extends
 			if (null != specQuestion.getScoreTypeCode()
 					&& specQuestion.getScoreTypeCode().getParameterCode()
 							.equalsIgnoreCase("U")) {
-				this.getManagedBean().setUserScoreSchemaType("2");
+				this.getManagedBean().setUserScoreSchemaType(QTConstants.USER_SCORE);
 
 				break;
 			} else {
