@@ -74,6 +74,8 @@
 			       <h:panelGrid columns="3">
 			             <p:selectBooleanCheckbox disabled="true" style="text-align:top;"
 			                      value="#{panelBackingBean.managedBean.circularVer.directPurchase}" >
+			                       <p:ajax event="change" update=":form:pmGridId"
+			                             process="@this" partialSubmit="@this" listener="#{panelBackingBean.setPidValue()}"/>
 			             </p:selectBooleanCheckbox>
 			             <p:spacer width="2" />	
 			  	          <h:outputText value="#{lbl['lbl.ct.panel.dp']}"  />
@@ -89,9 +91,10 @@
 			  	      </h:panelGrid>    
 			  	           
 			     <p:outputLabel value="#{lbl['lbl.ct.pid']}" rendered="#{panelBackingBean.managedBean.circularVer.directPurchase}" />
-			      <p:selectBooleanCheckbox disabled="true" 
-			                  value="#{panelBackingBean.managedBean.circularVer.pid}" 
-			                   style="text-align:top;" rendered="#{panelBackingBean.managedBean.circularVer.directPurchase}">
+			      <p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}" 
+			                  value="#{panelBackingBean.managedBean.circularVer.pid}"  style="text-align:top;" 
+			                  rendered="#{panelBackingBean.managedBean.circularVer.directPurchase}" >
+			                       <p:ajax event="change"  update=":form:groupPaneId" process="@this"></p:ajax>
 			       </p:selectBooleanCheckbox>
 			
 			  	       <p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
