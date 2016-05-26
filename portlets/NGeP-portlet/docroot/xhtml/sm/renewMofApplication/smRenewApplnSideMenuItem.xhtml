@@ -73,7 +73,7 @@
 							update=":form" />
 						<c:choose>
 							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-								<p:menuitem value="#{lbl['lbl.sm.siteReviewLbl']}"
+								<p:menuitem value="#{lbl['lbl.sm.siteReviewLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
 									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
@@ -104,7 +104,7 @@
 							update=":form" />
 						<c:choose>
 							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-								<p:menuitem value="#{lbl['lbl.sm.siteReviewLbl']}"
+								<p:menuitem value="#{lbl['lbl.sm.siteReviewLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
 									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
