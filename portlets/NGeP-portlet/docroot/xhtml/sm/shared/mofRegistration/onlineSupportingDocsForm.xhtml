@@ -132,7 +132,7 @@
 					style="float: left;white-space: normal;" />
 
 				<p:commandLink rendered="#{table.pmDocument.download}"
-					action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.filePath,table.pmDocument.filePath)}"
+					action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.docDefinitionKey)}"
 					update=":form" ajax="false">
 					<p:fileDownload value="#{backingBean.file}" />
 					<p:graphicImage value="/css/images/design/download.png"
