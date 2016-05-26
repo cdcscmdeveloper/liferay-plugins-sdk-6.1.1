@@ -70,7 +70,7 @@
 	<tr>
 		<td>
 			GST Registration No: $gstRegNo <br />
-			GST Effective Date : $gstEffectiveDate <br />
+			GST Registration Effective Date : $gstEffectiveDate <br />
 			 GST Declared Date : $gstDeclaredDate <br /><br />
 		</td>
 	</tr>
