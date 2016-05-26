@@ -2837,9 +2837,18 @@ public class LOADetailBackingBean extends
 	 */
 	private void parseLOADetails(ScLoa scLoa, String outcome) {
 		if (scLoa.isBrandNew()) {
+			ScLoaWorkFlowStatus currentStatus = (ScLoaWorkFlowStatus)scLoa.getCurrentStatus();
 			List<ScLoaWorkFlowStatus> workFlowStatuses = new ArrayList<ScLoaWorkFlowStatus>();
-			workFlowStatuses.add((ScLoaWorkFlowStatus)scLoa.getCurrentStatus());
+			workFlowStatuses.add(currentStatus);
 			scLoa.setScLoaWorkFlowStatuses(workFlowStatuses);
+			
+			// To avoid workflow status reset to null when got error during direct submit without save.
+			List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
+			if (CollectionUtils.isNotEmpty(remarks)) {
+				for (ScLoaRemark remark : remarks) {
+					remark.setScWorkFlowStatus(currentStatus);
+				}
+			}
 		}
 		
 		scLoa.setIssueDate(scLoa.getContractEffDate());
