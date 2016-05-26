@@ -392,13 +392,15 @@
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.grade}"
 								maxlength="10"
 								disabled="#{isSupplierOrgType}"
-								label="#{lbl['lbl.pm.profiles.userdetails.grade']}" /> &#160; <p:graphicImage id="giUserGrade"
+								label="#{lbl['lbl.pm.profiles.userdetails.grade']}" /> &#160; 
+								<p:graphicImage id="giUserGrade"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
-								for="giUserGrade"
+								for="giUserGrade"  id="ttUserGrade"
 								value="#{lbl['lbl.pm.profiles.userdetails.grade.tooltip']}"
 								showEffect="fade" hideEffect="fade" /> &#160;
 								<p:message id="userGradeMsg" for="userGrade"
 								display="icon" />
+								
 						</td>	
 					</tr>
 					<tr>
