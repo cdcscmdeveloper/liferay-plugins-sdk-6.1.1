@@ -3548,7 +3548,7 @@ public class EvaluationBackingBean extends
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
-							if (checklistScore.getCriteriaType() == 10) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -3574,7 +3574,7 @@ public class EvaluationBackingBean extends
 
 								}
 
-							} else if (checklistScore.getCriteriaType() == 11) {
+							} else if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV) {
 
 								this.getManagedBean().setCompanyScoreType(
 										String.valueOf(checklistScore
@@ -3610,7 +3610,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 10) {
+							if (proposalScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -3620,7 +3620,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean()
 												.getNoOfContractsProposalScore());
 							}
-							if (proposalScore.getCriteriaType() == 11
+							if (proposalScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV
 									|| proposalScore.getCriteriaType() == 0) {
 								this.getManagedBean()
 										.setNoOfyearsProposalScore(
@@ -3637,12 +3637,12 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(10);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV);
 						setUserDetails(proposalScore);
 						ScQtProposalScore proposalScoreyears = new ScQtProposalScore();
 						proposalScoreyears.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScoreyears.setCriteriaType(11);
+						proposalScoreyears.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV);
 						setUserDetails(proposalScoreyears);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
@@ -3694,7 +3694,7 @@ public class EvaluationBackingBean extends
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
-							if (checklistScore.getCriteriaType() == 15) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -3720,7 +3720,7 @@ public class EvaluationBackingBean extends
 
 								}
 
-							} else if (checklistScore.getCriteriaType() == 16) {
+							} else if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV) {
 
 								this.getManagedBean().setCompanyScoreType(
 										String.valueOf(checklistScore
@@ -3761,7 +3761,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 15) {
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -3771,7 +3771,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean()
 												.getNoOfContractsProposalScore());
 							}
-							if (proposalScore.getCriteriaType() == 16
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV 
 									|| proposalScore.getCriteriaType() == 0) {
 								this.getManagedBean()
 										.setNoOfyearsProposalScore(
@@ -3788,12 +3788,12 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(15);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV);
 						setUserDetails(proposalScore);
 						ScQtProposalScore proposalScoreyears = new ScQtProposalScore();
 						proposalScoreyears.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScoreyears.setCriteriaType(16);
+						proposalScoreyears.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
 						setUserDetails(proposalScoreyears);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
@@ -3842,7 +3842,7 @@ public class EvaluationBackingBean extends
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
-							if (checklistScore.getCriteriaType() == 20) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -3876,7 +3876,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 20) {
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -3895,7 +3895,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(20);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE);
 						setUserDetails(proposalScore);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
@@ -3944,7 +3944,7 @@ public class EvaluationBackingBean extends
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
-							if (checklistScore.getCriteriaType() == 21) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_EMPLOYEE) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -3978,7 +3978,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 21) {
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_EMPLOYEE) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -3995,7 +3995,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(21);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_EMPLOYEE);
 						setUserDetails(proposalScore);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
@@ -4235,7 +4235,7 @@ public class EvaluationBackingBean extends
 									.isEmpty()) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
-							if (checklistScore.getCriteriaType() == 12) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -4269,7 +4269,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 12) {
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -4286,7 +4286,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(12);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV);
 						setUserDetails(proposalScore);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
@@ -4324,7 +4324,7 @@ public class EvaluationBackingBean extends
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
-							if (checklistScore.getCriteriaType() == 17) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -4358,7 +4358,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 17) {
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -4375,7 +4375,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(17);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV);
 						setUserDetails(proposalScore);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
@@ -4406,7 +4406,7 @@ public class EvaluationBackingBean extends
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
-							if (checklistScore.getCriteriaType() == 50) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -4439,7 +4439,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 50) {
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -4456,7 +4456,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(50);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT);
 						setUserDetails(proposalScore);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
@@ -4489,7 +4489,7 @@ public class EvaluationBackingBean extends
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
-							if (checklistScore.getCriteriaType() == 51) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -4523,7 +4523,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 51) {
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -4540,7 +4540,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(51);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES);
 						setUserDetails(proposalScore);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
@@ -4574,7 +4574,7 @@ public class EvaluationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
 
-							if (checklistScore.getCriteriaType() == 52) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -4608,7 +4608,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 52) {
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -4625,7 +4625,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(52);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND);
 						setUserDetails(proposalScore);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
@@ -4661,7 +4661,7 @@ public class EvaluationBackingBean extends
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
-							if (checklistScore.getCriteriaType() == 60) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -4689,7 +4689,7 @@ public class EvaluationBackingBean extends
 
 							}
 							
-							 else if (checklistScore.getCriteriaType() == 61) {
+							 else if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO) {
 
 									this.getManagedBean().setCompanyScoreType(
 											String.valueOf(checklistScore
@@ -4724,7 +4724,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 60) {
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -4734,7 +4734,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean()
 												.getNoOfContractsProposalScore());
 							}
-							if (proposalScore.getCriteriaType() == 61
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO
 									) {
 								this.getManagedBean()
 										.setNoOfyearsProposalScore(
@@ -4751,7 +4751,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(60);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO);
 						setUserDetails(proposalScore);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
@@ -4763,7 +4763,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalcurrentRatioScore = new ScQtProposalScore();
 						proposalcurrentRatioScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalcurrentRatioScore.setCriteriaType(61);
+						proposalcurrentRatioScore.setCriteriaType(QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO);
 						setUserDetails(proposalcurrentRatioScore);
 						this.getManagedBean().setNoOfyearsProposalScore(
 								proposalcurrentRatioScore);
@@ -4794,7 +4794,7 @@ public class EvaluationBackingBean extends
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
-							if (checklistScore.getCriteriaType() == 70) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -4828,7 +4828,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 70) {
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -4845,7 +4845,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(70);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT);
 						setUserDetails(proposalScore);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
@@ -4888,7 +4888,7 @@ public class EvaluationBackingBean extends
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
-							if (checklistScore.getCriteriaType() == 30) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_SUPPLIER_DETAILS) {
 
 								this.getManagedBean().setChecklistScoreType(
 										String.valueOf(checklistScore
@@ -4913,7 +4913,7 @@ public class EvaluationBackingBean extends
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() == 30) {
+							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_SUPPLIER_DETAILS) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
@@ -4932,7 +4932,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalScore proposalScore = new ScQtProposalScore();
 						proposalScore.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
-						proposalScore.setCriteriaType(30);
+						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_SUPPLIER_DETAILS);
 						setUserDetails(proposalScore);
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
