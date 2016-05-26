@@ -11209,14 +11209,14 @@ public class EvaluationBackingBean extends
 			log.info("===specQuestion name====" + specQuestion.getClItem());
 			if (null != specQuestion.getScoreTypeCode()
 					&& specQuestion.getScoreTypeCode().getParameterCode()
-							.equalsIgnoreCase("U")) {
+							.equalsIgnoreCase(ParameterConst.SCORE_TYPE_USER)) {
 				this.getManagedBean().setUserScoreSchemaType(QTConstants.USER_SCORE);
 
 				break;
 			} else {
 				if (null != specQuestion.getScoreTypeCode()
 						&& specQuestion.getScoreTypeCode().getParameterCode()
-								.equalsIgnoreCase("A")) {
+								.equalsIgnoreCase(ParameterConst.SCORE_TYPE_AUTO)) {
 
 				}
 			}
