@@ -1022,8 +1022,10 @@ public class DirectLOABackingBean extends
 					scLoa.setSupplierBranch("HQ");
 					scLoa.setSupplierAddress(smCompanyAddress.getSmAddress());
 					
-					ScAddress supplierAddress = createScAddress(smCompanyAddress.getSmAddress(), 
-																supplierHQPersonnel, smCompanyBasic);
+					ScAddress supplierAddress = createOrUpdateScAddress(
+														scLoa.getScSupplierAddress(),
+														smCompanyAddress.getSmAddress(), 
+														supplierHQPersonnel, smCompanyBasic);
 					scLoa.setScSupplierAddress(supplierAddress);					
 					scLoa.setSupplierContact(supplierHQPersonnel.getName());
 					scLoa.setSupplierPhoneNo(smCompanyBasic.getPhoneFull());
@@ -1060,8 +1062,11 @@ public class DirectLOABackingBean extends
 												.getSmCompanyBasic();
 						}
 					}
-					ScAddress supplierAddress = createScAddress(supplierBranch.getSmAddress(), 
-													supplierBranch.getSmPersonnel(), smCompanyBasic);
+					ScAddress supplierAddress = createOrUpdateScAddress(
+													scLoa.getScSupplierAddress(),
+													supplierBranch.getSmAddress(), 
+													supplierBranch.getSmPersonnel(), 
+													smCompanyBasic);
 					scLoa.setScSupplierAddress(supplierAddress);					
 					scLoa.setSupplierPhoneNo(supplierBranch.getPhoneFull());
 					scLoa.setSupplierFaxNo(supplierBranch.getFaxFull());
@@ -1098,8 +1103,9 @@ public class DirectLOABackingBean extends
 							.getFinOrgName());
 					scLoa.setBankBranch(supplierBank.getBankBranch());
 					scLoa.setBankAddress(supplierBank.getSmAddress());
-					scLoa.setScBankAddress(createScAddress(
-								supplierBank.getSmAddress(), null, null));
+					scLoa.setScBankAddress(createOrUpdateScAddress(
+											scLoa.getScBankAddress(),
+											supplierBank.getSmAddress(), null, null));
 					
 					scLoa.getScLoiLoa().getSmSupplier();
 
