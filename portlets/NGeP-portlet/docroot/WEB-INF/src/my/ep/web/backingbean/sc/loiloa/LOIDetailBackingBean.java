@@ -1818,8 +1818,10 @@ public class LOIDetailBackingBean extends
 						scLoi.setSupplierAddress(smCompanyAddress
 								.getSmAddress());
 						
-						ScAddress supplierAddress = createScAddress(smCompanyAddress.getSmAddress(), 
-																	supplierHQPersonnel, smCompanyBasic);
+						ScAddress supplierAddress = createOrUpdateScAddress(
+														scLoi.getScSupplierAddress(),
+														smCompanyAddress.getSmAddress(), 
+														supplierHQPersonnel, smCompanyBasic);
 						scLoi.setScSupplierAddress(supplierAddress);
 						scLoi.setSupplierContact(supplierHQPersonnel.getName());
 						scLoi.setSupplierPhoneNo(smCompanyBasic.getPhoneFull());
@@ -1855,8 +1857,10 @@ public class LOIDetailBackingBean extends
 												.getSmCompanyBasic();
 						}
 					}					
-					ScAddress supplierAddress = createScAddress(supplierBranch.getSmAddress(), 
-																smPersonnel, smCompanyBasic);
+					ScAddress supplierAddress = createOrUpdateScAddress(
+													scLoi.getScSupplierAddress(),
+													supplierBranch.getSmAddress(), 
+													smPersonnel, smCompanyBasic);
 					scLoi.setScSupplierAddress(supplierAddress);
 					scLoi.setSupplierPhoneNo(supplierBranch.getPhoneFull());
 					scLoi.setSupplierFaxNo(supplierBranch.getFaxFull());

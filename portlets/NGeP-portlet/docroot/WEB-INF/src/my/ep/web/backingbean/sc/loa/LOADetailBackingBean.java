@@ -2161,7 +2161,8 @@ public class LOADetailBackingBean extends
 					scLoa.setSupplierBranch(supplierBranchAsHQ);
 					scLoa.setSupplierAddress(smCompanyAddress.getSmAddress());
 					
-					ScAddress supplierAddress = createScAddress(smCompanyAddress.getSmAddress(), 
+					ScAddress supplierAddress = createOrUpdateScAddress(scLoa.getScSupplierAddress(),
+																smCompanyAddress.getSmAddress(), 
 																supplierHQPersonnel, smCompanyBasic);
 					scLoa.setScSupplierAddress(supplierAddress);
 					scLoa.setSupplierContact(supplierHQPersonnel.getName());
@@ -2201,8 +2202,8 @@ public class LOADetailBackingBean extends
 												.getSmCompanyBasic();
 						}
 					}					
-					ScAddress supplierAddress = createScAddress(supplierBranch.getSmAddress(), 
-																smPersonnel, smCompanyBasic);
+					ScAddress supplierAddress = createOrUpdateScAddress(scLoa.getScSupplierAddress(), 
+										 supplierBranch.getSmAddress(), smPersonnel, smCompanyBasic);
 					scLoa.setScSupplierAddress(supplierAddress);					
 					scLoa.setSupplierPhoneNo(supplierBranch.getPhoneFull());
 					scLoa.setSupplierFaxNo(supplierBranch.getFaxFull());
@@ -2239,9 +2240,9 @@ public class LOADetailBackingBean extends
 							.getFinOrgName());
 					scLoa.setBankBranch(supplierBank.getBankBranch());
 					scLoa.setBankAddress(supplierBank.getSmAddress());
-					scLoa.setScBankAddress(createScAddress(
-								supplierBank.getSmAddress(), null, null));					
-					
+					scLoa.setScBankAddress(createOrUpdateScAddress(
+											scLoa.getScBankAddress(), 
+											supplierBank.getSmAddress(), null, null));				
 					break;
 				}
 			}
