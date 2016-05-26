@@ -1439,7 +1439,7 @@ public class SmApplicationBackingBean extends
 	 * @return String
 	 */
 	public String getStepIcon(String sectionType) {
-		String retVal = "no-image";
+		String retVal = "ui-icon-white-blank";
 		if (!getManagedBean().isSupplierUser()) {
 			retVal = "ui-icon-untick";
 			SmApplSectionReview rev = getManagedBean().isPoUser() ? getManagedBean()
