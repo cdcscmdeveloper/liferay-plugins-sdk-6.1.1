@@ -2086,6 +2086,17 @@ public class LOIDetailBackingBean extends
 			
 			parseLOIDetails(scLoi, outcome);
 			
+			scLoi.setScLoiWorkFlowStatuses(null);
+			// To avoid insert workflow status when direct submit without save.
+			if (scLoi.isBrandNew()) {
+				List<ScLoiRemark> remarks = scLoi.getScLoiRemarks();
+				if (CollectionUtils.isNotEmpty(remarks)) {
+					for (ScLoiRemark remark : remarks) {
+						remark.setScWorkFlowStatus(null);
+					}
+				}	
+			}
+			
 			//pending loiloas
 			List<ScLoiLoa> pendingloiloas  = getPendingLoiLoas(scLoi, getManagedBean().getRecSupplierList());
 
@@ -2998,11 +3009,18 @@ public class LOIDetailBackingBean extends
 		if (scLoi.isBrandNew()) {
 			scLoi.setIssueDate(new Date());
 
+			ScLoiWorkFlowStatus currentStatus = (ScLoiWorkFlowStatus)scLoi.getScWorkFlowStatus();
 			List<ScLoiWorkFlowStatus> workFlowStatuses = new ArrayList<ScLoiWorkFlowStatus>();
-
-			workFlowStatuses.add((ScLoiWorkFlowStatus) scLoi
-					.getScWorkFlowStatus());
+			workFlowStatuses.add(currentStatus);
 			scLoi.setScLoiWorkFlowStatuses(workFlowStatuses);
+			
+			// To avoid workflow status reset to null when got error during direct submit without save.
+			List<ScLoiRemark> remarks = scLoi.getScLoiRemarks();
+			if (CollectionUtils.isNotEmpty(remarks)) {
+				for (ScLoiRemark remark : remarks) {
+					remark.setScWorkFlowStatus(currentStatus);
+				}
+			}
 		}
 		
 		// validate
