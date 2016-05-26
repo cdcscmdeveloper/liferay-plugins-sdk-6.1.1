@@ -4807,7 +4807,7 @@ public class SpecificationBackingBean extends
 								.getCheckListScores()) {
 							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV) {
 								
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -4818,7 +4818,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											noOfContracts);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() ==Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -4830,7 +4830,7 @@ public class SpecificationBackingBean extends
 								}
 
 							} else if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV) {
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 
 									this.getManagedBean()
 											.setCompanyScoreType(
@@ -4841,7 +4841,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setScoringForYears(
 											noOfYears);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setCompanyScoreType(
 													String.valueOf(checklistScore
@@ -4913,7 +4913,7 @@ public class SpecificationBackingBean extends
 							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV) {
 								
 				                  
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -4924,7 +4924,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											noOfContracts);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -4937,7 +4937,7 @@ public class SpecificationBackingBean extends
 
 							} else if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV) {
 								
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 
 									this.getManagedBean()
 											.setCompanyScoreType(
@@ -4948,7 +4948,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setScoringForYears(
 											noOfYears);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setCompanyScoreType(
 													String.valueOf(checklistScore
@@ -5014,7 +5014,7 @@ public class SpecificationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
 							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE) {
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5024,7 +5024,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											technicalEmployee);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5078,7 +5078,7 @@ public class SpecificationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
 							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_EMPLOYEE) {
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5088,7 +5088,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											totalEmployee);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5260,7 +5260,7 @@ public class SpecificationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
 							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV) {
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5270,7 +5270,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											contarctAmount);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5327,7 +5327,7 @@ public class SpecificationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
 							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV) {
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5337,7 +5337,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											contarctAmount);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5391,7 +5391,7 @@ public class SpecificationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
 							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES) {
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5401,7 +5401,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											creditFacility);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5449,7 +5449,7 @@ public class SpecificationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
 							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND) {
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5459,7 +5459,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											cashOnHand);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5518,7 +5518,7 @@ public class SpecificationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
 							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT) {
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5528,7 +5528,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											bankStatement);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5595,7 +5595,7 @@ public class SpecificationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
 							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO) {
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5605,7 +5605,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											assetLiability);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5618,7 +5618,7 @@ public class SpecificationBackingBean extends
 
 							} else if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO) {
 
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 
 									this.getManagedBean()
 											.setCompanyScoreType(
@@ -5629,7 +5629,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setScoringForYears(
 											currentRation);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setCompanyScoreType(
 													String.valueOf(checklistScore
@@ -5692,7 +5692,7 @@ public class SpecificationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
 							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_SUPPLIER_DETAILS) {
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5702,7 +5702,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											suppliersScore);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5748,7 +5748,7 @@ public class SpecificationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
 							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT) {
-								if (checklistScore.getScoreType().intValue() == 1) {
+								if (checklistScore.getScoreType().intValue() == Integer.valueOf(QTConstants.AUTO_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
@@ -5758,7 +5758,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setCheckListScore(
 											paidUpCapital);
 								} else if (checklistScore.getScoreType()
-										.intValue() == 2) {
+										.intValue() == Integer.valueOf(QTConstants.USER_SCORE)) {
 									this.getManagedBean()
 											.setChecklistScoreType(
 													String.valueOf(checklistScore
