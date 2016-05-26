@@ -130,7 +130,7 @@ public class CmTrackingDiaryBackingBean extends
 
 		bb.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 		
-		retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
+		CatalogueBackingBean.retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
 		
 		bb.getManagedBean().setDisplayCatalogue(true);
 		
@@ -154,38 +154,7 @@ public class CmTrackingDiaryBackingBean extends
 		return NAV_TO_CATALOG_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 	
-	private void retriveSupplierGstInfomation(SmSupplier supplier) {
-		ISupplierGstSO supplierGstSo = null;
-		CatalogueBackingBean bb = new CatalogueBackingBean();
-		try {
-			if (null != supplier && null != supplier.getSupplierId()) {
-				supplierGstSo = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-								ISupplierGstSO.class);
-				SupplierGstReqDTO supplierGstreqDTO = new SupplierGstReqDTO();
-				System.out.println("*******supplier.getSupplierId()**********"+supplier.getSupplierId());
-				supplierGstreqDTO.setSupplierId(supplier.getSupplierId());
-				supplierGstreqDTO.setBranchCode(null);
-				SupplierGstResDTO supplierGstresDTO = supplierGstSo
-						.retrieveGstInfoBySupplierIdAndBranchCode(supplierGstreqDTO);
-				if (null != supplierGstresDTO
-						&& null != supplierGstresDTO.getSmGstSupplier()) {
-					bb.getManagedBean().setSmGstSupplier(
-							supplierGstresDTO.getSmGstSupplier());
 
-				} else {
-					bb.getManagedBean().setSmGstSupplier(new SmGstSupplier());
-				}
-
-			} else {
-				bb.getManagedBean().setSmGstSupplier(new SmGstSupplier());
-			}
-
-		} finally {
-			supplierGstSo = null;
-		}
-
-	}
 
 	public void reset(){
 		this.getManagedBean().setSearchItemCodeValue(null);

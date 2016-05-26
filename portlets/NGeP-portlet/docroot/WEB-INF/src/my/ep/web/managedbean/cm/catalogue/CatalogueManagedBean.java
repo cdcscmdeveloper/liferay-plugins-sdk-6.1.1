@@ -82,6 +82,7 @@ import my.ep.web.vo.PricingVO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.TreeNode;
 
 /**
  * The Class CatalogueManagedBean.
@@ -489,6 +490,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private CmUnspsc unspscObj;
 	
 	private String totalRecords;
+	
+	private List<TreeNode> zoneTrees;
+	
+	
+	
+	
+	
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -3853,7 +3861,20 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.totalRecords = totalRecords;
 	}
 
-	
+	/**
+	 * @return the zoneTrees
+	 */
+	public List<TreeNode> getZoneTrees() {
+		return zoneTrees;
+	}
+
+	/**
+	 * @param zoneTrees the zoneTrees to set
+	 */
+	public void setZoneTrees(List<TreeNode> zoneTrees) {
+		this.zoneTrees = zoneTrees;
+	}
+
 	
 	
 	

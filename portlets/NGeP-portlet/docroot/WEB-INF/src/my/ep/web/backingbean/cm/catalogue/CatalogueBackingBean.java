@@ -137,6 +137,8 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -160,6 +162,8 @@ import my.ep.web.constant.cm.CmHelper;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
+import my.ep.web.util.cm.helper.CmSupplierZoneSingleton;
+import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.ExtensionCodeVO;
@@ -177,9 +181,11 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -789,7 +795,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		return "/xhtml/common/acknowledge.xhtml";
 	}
-	
+
 
 
 	/**
@@ -980,7 +986,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			// FacesMessage(FacesMessage.SEVERITY_INFO," Records Added Successfully",
 			// ""));
 
-/*			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+			/*			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
 				retrieveSupplierItemsBySupplierId(catalogueSO, smSupplier.getSupplierId(), null);
 			} else {
 				facesContext.addMessage(
@@ -995,7 +1001,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			//		} catch (Exception e) {
 			//			e.printStackTrace();
 
-/*			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+			/*			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
 
 
 
@@ -1023,7 +1029,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				return navigateToCatalogDetForTempSupp(0);
 			}
-*/
+			 */
 
 		}finally {
 			catalogueSO = null;
@@ -8914,7 +8920,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			boolean found = false;
 			for(VCmSupplierItem vCmSupplierItem: this.getManagedBean().getSelectViewItems()){
 				if(vCmSupplierItem.getDocId()==supplierItem.getDocId()){
-									
+
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 							FacesMessage.SEVERITY_ERROR,
 							null, MessageUtils.getMessage(MessageConst.ERROR_715054, new String[]{vCmSupplierItem.getItemName()},MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
@@ -9831,8 +9837,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		System.out.println("****last****"+this.getManagedBean().isSupplierItemcheckBoxAll());
 	}
 
-	private void retriveSupplierGstInfomation(SmSupplier supplier) {
+	public static void retriveSupplierGstInfomation(SmSupplier supplier) {
 		ISupplierGstSO supplierGstSo = null;
+		CatalogueBackingBean bb = new CatalogueBackingBean();
 		try {
 			if (null != supplier && null != supplier.getSupplierId()) {
 				supplierGstSo = BusinessDelegate.getInstance()
@@ -9846,21 +9853,40 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						.retrieveGstInfoBySupplierIdAndBranchCode(supplierGstreqDTO);
 				if (null != supplierGstresDTO
 						&& null != supplierGstresDTO.getSmGstSupplier()) {
-					this.getManagedBean().setSmGstSupplier(
+					bb.getManagedBean().setSmGstSupplier(
 							supplierGstresDTO.getSmGstSupplier());
 
 				} else {
-					this.getManagedBean().setSmGstSupplier(new SmGstSupplier());
+					bb.getManagedBean().setSmGstSupplier(new SmGstSupplier());
 				}
 
 			} else {
-				this.getManagedBean().setSmGstSupplier(new SmGstSupplier());
+				bb.getManagedBean().setSmGstSupplier(new SmGstSupplier());
 			}
 
 		} finally {
 			supplierGstSo = null;
 		}
 
+	}
+
+
+	public void viewAllZone(Long zoneId){
+		
+		
+		IZoneMaintenanceSO zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
+		
+		System.out.println("zoneId:"+zoneId);
+		ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
+		reqDTO.setCmSupplierZoneId(zoneId);
+		ZoneMaintenanceResDTO resDTO = zoneMaintenanceSO.getCmSupplierZonesByZoneId(reqDTO);
+		
+		this.getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(resDTO.getCmSupplierZones()));
+		
+		
+		
+		
 	}
 
 }

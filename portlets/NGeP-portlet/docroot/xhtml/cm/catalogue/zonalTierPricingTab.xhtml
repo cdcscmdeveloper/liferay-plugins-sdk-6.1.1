@@ -36,6 +36,12 @@
 						listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}"
 						update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId" />
 				</p:selectOneMenu>
+				<p:commandLink id="viewAllTierId" title="#{lbl['lbl.cm.view']}"
+					disabled="#{tier.cmSupplierZone.suppZoneId==0}" update=":form:zoneDtlsId"
+					oncomplete="zoneDtlspopUp.show()"
+					action="#{catalogueBackingBean.viewAllZone(tier.cmSupplierZone.suppZoneId)}">
+					<p:graphicImage value="/css/images/design/document.png"></p:graphicImage>
+				</p:commandLink>
 
 			</p:column>
 

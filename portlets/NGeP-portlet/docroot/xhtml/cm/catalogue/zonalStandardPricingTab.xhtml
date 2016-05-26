@@ -35,8 +35,14 @@
 						itemValue="#{zone.suppZoneId}"></f:selectItems>
 					<p:ajax event="change"
 						listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}"
-						update="zonalStanErrorLink zPromoLink" />
+						update="zonalStanErrorLink zPromoLink viewAllId" />
 				</p:selectOneMenu>
+				<p:commandLink id="viewAllId" title="#{lbl['lbl.cm.view']}"
+					disabled="#{standard.cmSupplierZone.suppZoneId==0}" update=":form:zoneDtlsId"
+					oncomplete="zoneDtlspopUp.show()"
+					action="#{catalogueBackingBean.viewAllZone(standard.cmSupplierZone.suppZoneId)}">
+					<p:graphicImage value="/css/images/design/document.png"></p:graphicImage>
+				</p:commandLink>
 
 			</p:column>
 
@@ -98,12 +104,12 @@
 					action="#{catalogueBackingBean.setRowIndexForDelete(rowIndex)}"
 					oncomplete="confirmationDeleteZonal.show()"
 					update=":form:pricingTabID:headerTabId:zonalId:zStanPriceTableId">
-						<f:param name="indexDelete" value="#{rowIndex}"></f:param>
+					<f:param name="indexDelete" value="#{rowIndex}"></f:param>
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 				</p:commandLink>
-				
-				
-				
+
+
+
 
 				<p:commandLink id="zPromoLink"
 					title="#{lbl['lbl.cm.add.to.promotion']}"
@@ -148,7 +154,8 @@
 			header="#{lbl['lbl.cm.dialog.cofirm.header']}"
 			widgetVar="confirmationDeleteZonal">
 
-			<p:commandButton id="confirmID" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+			<p:commandButton id="confirmID"
+				value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 				actionListener="#{catalogueBackingBean.deleteZonalStandardPrice()}"
 				update=":form" oncomplete="confirmationDeleteZonal.hide()" />
 			<p:commandButton id="declineID"
@@ -158,8 +165,8 @@
 		</p:confirmDialog>
 
 
-
 	</p:outputPanel>
 
+	
 
 </ui:composition>
