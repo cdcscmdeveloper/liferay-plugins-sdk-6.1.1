@@ -873,6 +873,12 @@ public class SmApplicationBackingBean extends
 				&& (getManagedBean().isPoUser() || getManagedBean()
 						.isApproverUser())) {
 			setRevUrl();
+
+			// set whether to show or not approve and recommend button because
+			// of site visit
+			getManagedBean().setShowPoApprovedOrRecommendButton(
+					showPoApprovedOrRecommendButton());
+
 			getManagedBean().setMaxReviewCount(
 					assignMaxReviewCount(applicationType, getManagedBean()
 							.getSmAppl().getApplCategoryType(),
@@ -8342,6 +8348,20 @@ public class SmApplicationBackingBean extends
 			reqSO = null;
 		}
 		return retMsg;
+	}
+
+	private boolean showPoApprovedOrRecommendButton() {
+		boolean retVal = true;
+		if (getManagedBean().getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				|| getManagedBean().getSmAppl().getApplCategoryType()
+						.equals("S")) {
+			if (EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+					.getSmSvTasks())) {
+				retVal = false;
+			}
+		}
+		return retVal;
 	}
 
 	private void setCategoryNameForApprovedCategory(SmSupplierCategory cat) {

@@ -430,7 +430,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean siteVisitAfterApproval;
 	private boolean poInquiryRespond;
 	private boolean changeCurrRegStatus;
-
+	private boolean showPoApprovedOrRecommendButton;
 	private boolean showNewChanges;
 
 	private String businessTypeParamCode;
@@ -3479,5 +3479,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setExpiryDate(String expiryDate) {
 		this.expiryDate = expiryDate;
+	}
+
+	public boolean isShowPoApprovedOrRecommendButton() {
+		return showPoApprovedOrRecommendButton;
+	}
+
+	public void setShowPoApprovedOrRecommendButton(
+			boolean showPoApprovedOrRecommendButton) {
+		this.showPoApprovedOrRecommendButton = showPoApprovedOrRecommendButton;
 	}
 }
