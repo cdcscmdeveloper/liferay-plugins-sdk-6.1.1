@@ -771,7 +771,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 												       ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 							      	         } 
 								        	  for(CtPanelSupplier panelSupplier : panelZone.getCtPanelSuppliers()){
-								        		     if(StringUtils.isBlank(panelSupplier.getBankAccountNo())){
+								        		     if(StringUtils.isEmpty(panelSupplier.getBankAccountNo())){
 								        		    	 throw new EpException(MessageConst.ERROR_100022, 
 													                new String[]{ResourceBundleUtils.getMessage("lbl.ct.bank.account.name", 
 															       ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
