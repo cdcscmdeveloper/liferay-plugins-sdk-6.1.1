@@ -726,7 +726,8 @@ public class LOADetailBackingBean extends
 		getManagedBean().setApproverList(resDTO.getApproverList());
 
 		// Remarks
-		scLoa.setScLoaRemarks(initializeRemarks(scLoa, null,
+		scLoa.setScLoaRemarks(initializeRemarks(scLoa, 
+				scLoa.getCurrentStatus(),
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
 
 		if (scLoa.getBondAmt() != null) {
@@ -2478,6 +2479,16 @@ public class LOADetailBackingBean extends
 			validateLOADetails(scLoa, outcome);
 			
 			scLoa.setScLoaWorkFlowStatuses(null);
+			// To avoid insert workflow status when direct submit without save.
+			if (scLoa.isBrandNew()) {
+				List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
+				if (CollectionUtils.isNotEmpty(remarks)) {
+					for (ScLoaRemark remark : remarks) {
+						remark.setScWorkFlowStatus(null);
+					}
+				}	
+			}
+			
 			if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
 				for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
 					freqScheduleValidation(scQtSchedule);
@@ -2827,11 +2838,7 @@ public class LOADetailBackingBean extends
 	private void parseLOADetails(ScLoa scLoa, String outcome) {
 		if (scLoa.isBrandNew()) {
 			List<ScLoaWorkFlowStatus> workFlowStatuses = new ArrayList<ScLoaWorkFlowStatus>();
-			ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
-			workFlowStatus.setScLoa(scLoa);
-			workFlowStatus.setPmStatus(scLoa.getPmStatus());
-			workFlowStatus.setCurrent(true);
-			workFlowStatuses.add(workFlowStatus);
+			workFlowStatuses.add((ScLoaWorkFlowStatus)scLoa.getCurrentStatus());
 			scLoa.setScLoaWorkFlowStatuses(workFlowStatuses);
 		}
 		
@@ -3887,7 +3894,12 @@ public class LOADetailBackingBean extends
 	public String createQtLOAAction(ScLoiLoa scLoiLoa) {
 		ScLoa scLoa = new ScLoa();
 		scLoa.setScLoiLoa(scLoiLoa);
-		scLoa.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_PENDING_SUBMISSION));
+		ScLoaWorkFlowStatus currentStatus = new ScLoaWorkFlowStatus();
+		currentStatus.setScLoa(scLoa);
+		currentStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_PENDING_SUBMISSION));
+		currentStatus.setCurrent(true);
+		scLoa.setCurrentStatus(currentStatus);
+		scLoa.setPmStatus(currentStatus.getPmStatus());
 		//scLoa.setLoaNo(getQtAwardSO().generateLoaNo());
 
 		FacesContext fc = FacesContext.getCurrentInstance();
