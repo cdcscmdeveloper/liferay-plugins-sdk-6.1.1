@@ -91,16 +91,15 @@
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:approveDialog" partialSubmit="true"
-								process="@this"
+								process="@this" rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 								action="#{backingBean.assignFinalApproveOrReject('approveDialog')}" />
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								update=":form:tt:rejectDialogId" partialSubmit="true"
-								process="@this"
+								update=":form:tt:rejectDialogId" partialSubmit="true" process="@this"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-								<p:commandButton
+								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
 									value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
@@ -108,7 +107,7 @@
 									action="#{backingBean.submitPOEscalationToApprover('APPROVE')}" />
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-								<p:commandButton
+								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
 									value="#{lbl['lbl.sm.button.recommend.to.reject']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
