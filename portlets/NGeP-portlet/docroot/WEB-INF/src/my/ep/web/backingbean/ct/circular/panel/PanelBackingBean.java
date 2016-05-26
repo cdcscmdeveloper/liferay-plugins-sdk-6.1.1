@@ -34,6 +34,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -2755,25 +2758,15 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
     			getManagedBean().setButtonHideActiveDel(true);
     		}	
     	}
-    	
-    	public void selectAllDltDlgChkBoxSelect(AjaxBehaviorEvent e){
-    		getManagedBean().setSelectAll(false);
-        	for (CtCircularVer ctCircularVers : getManagedBean().getCircularVerList()){
-        		if(ctCircularVers.isSelectedCheckBox()){
-        			getManagedBean().setButtonHideActiveDel(false);
-        			return;
-        		}
-        	}
-    		if((boolean) e.getComponent().getAttributes().get("value")){
-    			getManagedBean().setButtonHideActiveDel(false);
-    		}else{
-    			getManagedBean().setButtonHideActiveDel(true);
-    		}	
-    	}
-    	
-	public void setPidValue(){
-		if(!getManagedBean().getCircularVer().isDirectPurchase()){
-			getManagedBean().getCircularVer().setPid(false);
-		}
+	public void onToggleSelect(ToggleSelectEvent event) {
+		getManagedBean().setButtonHideActiveDel(false);
+	}
+	
+	public void onRowSelect(SelectEvent event) {
+		getManagedBean().setButtonHideActiveDel(false);
+	}
+ 
+    public void onRowUnselect(UnselectEvent event) {
+    	getManagedBean().setButtonHideActiveDel(true);
     }
 }
