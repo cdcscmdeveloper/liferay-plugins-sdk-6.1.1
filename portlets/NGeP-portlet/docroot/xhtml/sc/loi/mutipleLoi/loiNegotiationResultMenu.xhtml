@@ -93,7 +93,7 @@
 				update="@form">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-					value="5" />
+					value="3" />
 			</p:menuitem>
 
 		</p:tabMenu>
@@ -115,7 +115,7 @@
 					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationRecomendation.xhtml" />
 			</c:if>
 			<c:if
-				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '5'}">
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}">
 				<ui:include
 					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationReport.xhtml" />
 			</c:if>
