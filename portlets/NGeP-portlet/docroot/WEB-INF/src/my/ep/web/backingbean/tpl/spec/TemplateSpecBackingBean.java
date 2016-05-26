@@ -233,10 +233,11 @@ public class TemplateSpecBackingBean extends
 			TemplateSpecResDTO resDTO = templateSpecSO.saveTemplateSpec(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				boolean isReadOnly = this.getManagedBean().isReadOnly();
 				this.renewSesionObject();
 
 				templateSpecBean.setSpecMaster(resDTO.getSpecMaster());
-				retrieveTemplateSpecMaster(templateSpecBean,!isSpecCreatedByLoginUserPtj(specMaster));
+				retrieveTemplateSpecMaster(templateSpecBean,isReadOnly);
 
 				getManagedBean().setTemplateSpecBean(templateSpecBean);
 				
@@ -2279,56 +2280,11 @@ public class TemplateSpecBackingBean extends
 		return pmOrgProfile;
 	}
 	
-	public String retrieveTemplateSpecMaster(TemplateSpecBean templateSpecBean, boolean isReadOnly) {
-		
-		ITemplateSpecSO templateSpecSO = null;
-		String contentType = templateSpecBean.getContentType();
-		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
-		TplSpecZoneDtl speczoneDtl = templateSpecBean.getTplSpecZoneDtl();
+	public String retrieveTemplateSpecMaster(TemplateSpecBean templateSpecBean,
+			boolean isReadOnly) {
 
-		try {
-			templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance()
-					.getServiceObject("cc", ITemplateSpecSO.class);
-
-			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
-			reqDTO.setSpecMaster(specMaster);
-			reqDTO.setContentType(contentType);
-			if (!TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(contentType)) {
-				SmSupplier smSupplier = templateSpecBean.getSupplier();
-				reqDTO.setSupplier(smSupplier);
-			}
-			if (null != speczoneDtl) {
-				reqDTO.setTplSpecZoneDtl(speczoneDtl);
-			}
-			reqDTO.setScQt(this.getManagedBean().getScQt());
-			reqDTO.setDocType(this.getManagedBean().getDocType());
-			TemplateSpecResDTO resDTO = templateSpecSO
-					.getTemplateMaster(reqDTO);
-			if (resDTO.isSuccessful()) {
-				specMaster = resDTO.getSpecMaster();
-
-				if (specMaster.getOrgProfile() == null) {
-					specMaster.setOrgProfile(new PmOrgProfile());
-				}
-
-				templateSpecBean.setSpecMaster(specMaster);
-				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-				templateSpecBean.setSelectedSpecQuestion(null);
-				templateSpecBean.setSpecAnswersToDelete(null);
-
-				if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL
-						.equals(specMaster)
-						&& resDTO.getSpecAnswerList() != null) {
-					calcGrandTotalAmount(templateSpecBean);
-				}
-				
-				this.getManagedBean().setReadOnly(isReadOnly);
-				this.getManagedBean().setCloneBtnRendered(true);
-			}
-		} finally {
-			templateSpecSO = null;
-		}
-
-		return "maintenance";
+		this.getManagedBean().setReadOnly(isReadOnly);
+		this.getManagedBean().setCloneBtnRendered(true);
+		return retrieveTemplateSpecMaster(templateSpecBean);
 	}
 }
