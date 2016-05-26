@@ -99,6 +99,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDocAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
+import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
@@ -333,6 +334,16 @@ public class DirectLOABackingBean extends
 			validateContractAmount(scLoa.getLoaAmt());
 
 			scLoa.setScLoaWorkFlowStatuses(null);
+			// To avoid insert workflow status when direct submit without save.
+			if (scLoa.isBrandNew()) {
+				List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
+				if (CollectionUtils.isNotEmpty(remarks)) {
+					for (ScLoaRemark remark : remarks) {
+						remark.setScWorkFlowStatus(null);
+					}
+				}	
+			}
+			
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
@@ -1323,6 +1334,21 @@ public class DirectLOABackingBean extends
 	 */
 	private void parseLOADetails(ScLoa scLoa, String outcome,
 			DirectAwardReqDTO awardReqDTO) {
+		
+		if (scLoa.isBrandNew()) {
+			ScLoaWorkFlowStatus currentStatus = (ScLoaWorkFlowStatus)scLoa.getCurrentStatus();
+			List<ScLoaWorkFlowStatus> workFlowStatuses = new ArrayList<ScLoaWorkFlowStatus>();
+			workFlowStatuses.add(currentStatus);
+			scLoa.setScLoaWorkFlowStatuses(workFlowStatuses);
+			
+			// To avoid workflow status reset to null when got error during direct submit without save.
+			List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
+			if (CollectionUtils.isNotEmpty(remarks)) {
+				for (ScLoaRemark remark : remarks) {
+					remark.setScWorkFlowStatus(currentStatus);
+				}
+			}
+		}
 
 		scLoa.setIssueDate(scLoa.getContractEffDate());
 
@@ -4027,7 +4053,8 @@ public class DirectLOABackingBean extends
 			this.getManagedBean().setApproverUser(
 					scLoa.getScLoaApproval().getApprover());
 		}
-		scLoa.setScLoaRemarks(initializeRemarks(scLoa, null,
+		scLoa.setScLoaRemarks(initializeRemarks(scLoa, 
+				scLoa.getCurrentStatus(),
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
 		
 		// bond calculation
