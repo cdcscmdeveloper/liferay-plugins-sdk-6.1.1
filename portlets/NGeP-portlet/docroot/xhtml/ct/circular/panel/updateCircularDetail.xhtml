@@ -88,10 +88,10 @@
 			  	          <h:outputText value="#{lbl['lbl.ct.panel.qt']}"  />   
 			  	      </h:panelGrid>    
 			  	           
-			     <p:outputLabel value="#{lbl['lbl.ct.pid']}"  />
-			      <p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}" 
-			                  value="#{panelBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
-			                       <p:ajax event="change"  update=":form:groupPaneId" process="@this"></p:ajax>
+			     <p:outputLabel value="#{lbl['lbl.ct.pid']}" rendered="#{panelBackingBean.managedBean.circularVer.directPurchase}" />
+			      <p:selectBooleanCheckbox disabled="true" 
+			                  value="#{panelBackingBean.managedBean.circularVer.pid}" 
+			                   style="text-align:top;" rendered="#{panelBackingBean.managedBean.circularVer.directPurchase}">
 			       </p:selectBooleanCheckbox>
 			
 			  	       <p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
