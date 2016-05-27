@@ -2502,7 +2502,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							SmPersonnel smPersonnel, SmCompanyBasic smCompanyBasic) {
 		
 		if (smAddress != null) {
-			if (scAddress != null) {
+			if (scAddress == null) {
 				scAddress = new ScAddress();
 			}
 			scAddress.setAddress1(smAddress.getAddress1());
