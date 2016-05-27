@@ -121,6 +121,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private String resume = BiddingConst.BID_ACTION_TYPE_RESUME;
 	private String reBidding = BiddingConst.BID_ACTION_TYPE_REBIDDING;
 	private String reschedule = BiddingConst.BID_ACTION_TYPE_RESCHEDULE;
+	private Long remainingTimeForTimers;
 
 	/**
 	 * Default Constructor
@@ -1104,5 +1105,40 @@ public class BiddingManagedBean extends BaseManagedBean {
 
 		}
 	}
+
+	/**
+	 * @return the remainingTimeForTimers
+	 */
+	public Long getRemainingTimeForTimers() {
+		if (this.scheduledBid != null
+				&& this.scheduledBid.getPmStatus().getStatusId()
+						.equals(BidStatusConst.BID_IN_PROGRESS)) {
+
+			remainingTimeForTimers = durationCalculator(new Date(),
+					this.scheduledBid.getEndDate());
+		}
+
+		else if (this.scheduledBid != null
+				&& this.scheduledBid.getPmStatus().getStatusId()
+						.equals(BidStatusConst.BID_PENDING_BIDDING)) {
+
+			remainingTimeForTimers = durationCalculator(new Date(),
+					this.scheduledBid.getStartDate());
+
+		} else {
+			remainingTimeForTimers = 0L;
+		}
+
+		return remainingTimeForTimers;
+	}
+
+	/**
+	 * @param remainingTimeForTimers the remainingTimeForTimers to set
+	 */
+	public void setRemainingTimeForTimers(Long remainingTimeForTimers) {
+		this.remainingTimeForTimers = remainingTimeForTimers;
+	}
+	
+	
 
 }

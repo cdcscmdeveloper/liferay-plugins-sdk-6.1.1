@@ -48,12 +48,9 @@
 		</p:dataTable>
 
 	</p:panel>
-	
+
 	<p:panel header="#{lbl['lbl.sc.bid.summary']}" id="bidSummaryByPackage"
 		toggleable="true">
-
-		<p:spacer height="2"></p:spacer>
-
 		<div align="center">
 
 			<h4>
@@ -61,15 +58,21 @@
 			</h4>
 
 		</div>
-		
+
 		<div>
-			<p:lineChart id="LineChartVBP" animate="true" yaxisLabel="#{lbl['lbl.sc.bid.price']}" xaxisLabel="#{lbl['lbl.sc.bid.time']}"
+			<p:lineChart id="LineChartVBP" animate="true"
+				yaxisLabel="#{lbl['lbl.sc.bid.price']}"
+				xaxisLabel="#{lbl['lbl.sc.bid.time']}"
 				value="#{biddingBB.managedBean.bidPriceLinearModel}"
 				legendPosition="e" style="height:300px;" />
 		</div>
-		
+		<h:panelGrid
+			rendered="#{biddingBB.managedBean.remainingTimeForTimers ne 0}">
+			<ui:include src="bidManagementTimers.xhtml"></ui:include>
+		</h:panelGrid>
+
 		<p:dataTable id="bidPackagesListForBMBP"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{biddingBB.managedBean.bidPackages}" var="item">
 			<ac:paginator for="bidPackagesListForBMBP"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.ranking']}">
@@ -205,6 +208,7 @@
 	<p:dialog closeOnEscape="true"
 		header="#{lbl['lbl.sc.item.price.section']}" widgetVar="pricePop"
 		showEffect="fade" hideEffect="fade" modal="true" id="itemPricePop">
-		<ui:include src="/xhtml/sc/bidding/bidManagement/BMByZoneItemPricePopup.xhtml"></ui:include>
+		<ui:include
+			src="/xhtml/sc/bidding/bidManagement/BMByZoneItemPricePopup.xhtml"></ui:include>
 	</p:dialog>
 </ui:composition>
