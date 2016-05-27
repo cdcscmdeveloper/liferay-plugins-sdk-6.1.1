@@ -1139,17 +1139,23 @@ public class SPDetailManagedBean extends BaseManagedBean {
 				&& !this.getScQtPRPExperiences().isEmpty()) {
 			List<Date> effectiveDates = new ArrayList<Date>();
 			List<Date> expiryDates = new ArrayList<Date>();
-			for (ScQtPRPExperience experience : this.getScQtPRPExperiences()) {
-				if (experience.getEffectiveDate() != null
-						&& experience.getExpiryDate() != null) {
-					effectiveDates.add(experience.getEffectiveDate());
-					expiryDates.add(experience.getExpiryDate());
+			
+			if(this.getScQtPRPExperiences().size() >=1 ){
+				for (ScQtPRPExperience experience : this.getScQtPRPExperiences()) {
+					if (experience.getEffectiveDate() != null
+							&& experience.getExpiryDate() != null) {
+						effectiveDates.add(experience.getEffectiveDate());
+						expiryDates.add(experience.getExpiryDate());
+					}
 				}
+				Date minEffectiveDate = getMinEffectiveDate(effectiveDates);
+				Date maxExpiryDate = getMaxExpiryDate(expiryDates);
+				this.totalYears = numberOfMonthsBetweenTwoDates(minEffectiveDate,
+						maxExpiryDate);
+			}else{
+				this.totalYears = 0;
 			}
-			Date minEffectiveDate = getMinEffectiveDate(effectiveDates);
-			Date maxExpiryDate = getMaxExpiryDate(expiryDates);
-			this.totalYears = numberOfMonthsBetweenTwoDates(minEffectiveDate,
-					maxExpiryDate);
+			
 			effectiveDates = null;
 			expiryDates = null;
 		}
