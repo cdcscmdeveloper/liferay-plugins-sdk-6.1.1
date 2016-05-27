@@ -14696,7 +14696,43 @@ public class ReportBackingBean extends
 									+ smSupplier.getPmCategoryL3()
 											.getCategoryL3Id());
 						}
-
+						if (this.getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)) {
+							if (this.getSmState() == null) {
+								if (smSupplier.getPmCategoryL1()
+										.getCategoryL1Id() == null) {
+									throw new EpException(
+											MessageConst.ERROR_REPORT_780047);
+								}
+							} else if (smSupplier.getPmCategoryL2()
+									.getCategoryL2Id() == null) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780048);
+							} else if (smSupplier.getPmCategoryL3()
+									.getCategoryL3Id() == null) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780049);
+							}
+						}
+						if (this.getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL) || this.getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SM_CATEGORY_OVERLAPPING_RPT_VAL)) {						
+								if (smSupplier.getPmCategoryL1()
+										.getCategoryL1Id() == null) {
+									throw new EpException(
+											MessageConst.ERROR_REPORT_780047);
+								}
+							}
+						
 						/*
 						 * else if
 						 * ((smSupplier.getPmCategoryL1().getCategoryL1Id() !=
