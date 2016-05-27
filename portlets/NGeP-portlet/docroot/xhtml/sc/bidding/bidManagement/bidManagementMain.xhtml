@@ -1,22 +1,26 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<ui:define name="resourceSection">
 
+	<ui:define name="resourceSection">
+		<script src="#{resource['js/countdown.js']}" />
 	</ui:define>
 
 	<ui:define name="contentSection">
+
 		<ui:param name="isZonal"
 			value="#{!empty biddingBB.managedBean.scheduledBid.tplSpecZoneDtl}" />
 		<ui:param name="isViewByPackage"
 			value="#{biddingBB.managedBean.bidManagementViewBy eq 'P'}" />
 		<ui:param name="isViewByItem"
 			value="#{biddingBB.managedBean.bidManagementViewBy eq 'I'}" />
+
 
 		<table>
 			<tr>
@@ -54,12 +58,8 @@
 
 			</table>
 		</div>
-
-		<p:spacer height="5px"></p:spacer>
-
 		<p:panel header="#{lbl['lbl.sc.bid.details']}"
 			id="bidDetailsForBidManagement" toggleable="true">
-
 			<div align="center">
 				<table style="width: 60%">
 
@@ -91,17 +91,18 @@
 						<td style="width: 15%"></td>
 
 					</tr>
-					<c:if test="#{isZonal}"> 
+					<c:if test="#{isZonal}">
 						<tr>
 							<td style="width: 15%"><p:outputLabel id="zoneNameLbl"
 									value="#{lbl['lbl.sc.zone.name']}" /></td>
 							<td style="width: 15%"><p:inputText id="zoneNameLabel"
 									disabled="true" size="15"
 									value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName}" />
-								 <p:commandLink id="zoneName"
-									oncomplete="zoneLocPopup.show();" partialSubmit="true"
-									process="@this" update="@([id$=zoneLocPopup])">
-									<p:graphicImage id="zoneDtlId"  title="#{lbl['lbl.sc.zone.details']}"
+								<p:commandLink id="zoneName" oncomplete="zoneLocPopup.show();"
+									partialSubmit="true" process="@this"
+									update="@([id$=zoneLocPopup])">
+									<p:graphicImage id="zoneDtlId"
+										title="#{lbl['lbl.sc.zone.details']}"
 										value="#{CommonUIConstant.imagePathUptoDesign}/evaluate.png" />
 									<f:setPropertyActionListener
 										target="#{zoneLocationBackingBean.tplSpecZoneDtl}"
@@ -110,7 +111,7 @@
 							<td style="width: 15%"></td>
 							<td style="width: 15%"></td>
 						</tr>
-					 </c:if> 
+					</c:if>
 
 
 					<tr>
@@ -123,19 +124,16 @@
 						<td style="width: 15%"></td>
 						<td style="width: 15%"></td>
 					</tr>
-					</table>
+				</table>
 			</div>
 
 		</p:panel>
-
 		<c:if test="#{isViewByPackage}">
 			<ui:include src="bidManagementByPackage.xhtml"></ui:include>
 		</c:if>
 		<c:if test="#{isViewByItem}">
 			<ui:include src="bidManagementByItem.xhtml"></ui:include>
 		</c:if>
-
-
 		<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup" rendered="true"
 			header="#{lbl['lbl.sc.zone.details']}" modal="true" width="350"
 			height="200">

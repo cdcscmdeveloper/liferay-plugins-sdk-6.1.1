@@ -284,7 +284,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 		if (type.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING)) {
 			getManagedBean().setMindate(getNextDate());
-		}else{
+		} else {
 			getManagedBean().setMindate(new Date());
 		}
 	}
@@ -310,7 +310,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				.getBidAction()
 				.getActionType()
 				.equalsIgnoreCase(
-						ParameterConst.BID_ACTION_TYPES_RESUME_BIDDING) || getManagedBean()
+						ParameterConst.BID_ACTION_TYPES_RESUME_BIDDING)
+				|| getManagedBean()
 						.getBidAction()
 						.getActionType()
 						.equalsIgnoreCase(
@@ -359,8 +360,12 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getManagedBean().getBidAction().setNewEndDate(endDate);
 
 		if (getManagedBean().getBidAction().getActionType()
-				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING) || getManagedBean().getBidAction().getActionType()
-				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_RESCHEDULE)) {
+				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING)
+				|| getManagedBean()
+						.getBidAction()
+						.getActionType()
+						.equalsIgnoreCase(
+								ParameterConst.BID_ACTION_TYPES_RESCHEDULE)) {
 
 			getManagedBean().setNewBidDuration(
 					durationCalculator(getManagedBean().getBidAction()
@@ -442,7 +447,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 * 
 	 * @param bid
 	 */
-	public void bidManagementAction(ScBidSchedule bid) {
+	public String bidManagementAction(ScBidSchedule bid) {
 		renewSesionObject();
 
 		getManagedBean().setScheduledBid(bid);
@@ -498,12 +503,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 
 		getManagedBean().setRendered(false);
-
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "bidManagementMain.xhtml");
-
-		// return "bidManagementMain";
+		return "bidManagementMain.xhtml?faces-redirect=true";
 
 	}
 
@@ -938,5 +938,12 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		SelectItem[] items = super.getRadioButtonCodeValuesBySearchBean(
 				parameterType, searchBean);
 		return items;
+	}
+
+	public void pollListener(){
+		bidManagementAction(this.getManagedBean().getScheduledBid());
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "bidManagementMain.xhtml?faces-redirect=true");	
 	}
 }
