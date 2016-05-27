@@ -1065,28 +1065,6 @@ public class SPDetailBackingBean extends
 					BigDecimal.valueOf(getManagedBean().getTotalYears())
 							.divide(BigDecimal.valueOf(12), mc));
 			
-			// Added to set null which is the data will be encrypted and save .
-				List<List<EncryptDataBean>>	encryptExpriencList = new ArrayList<List<EncryptDataBean>>();	
-				 for(ScQtPRPExperience experience:experiences){
-					List<EncryptDataBean> experienceBeanList = new ArrayList<EncryptDataBean>();
-					if(experience.getEffectiveDate() != null){
-						EncryptDataBean effDateBean = new EncryptDataBean();
-						 effDateBean.setTableName(EncryptTableName.SC_QT_PRP_EXPERIENCE.toString());
-						 effDateBean.setColumnName(EncryptColumnName.EFF_DATE.toString());
-						 effDateBean.setValue(DateUtils.dateToString("dd-MMM-yyyy", experience.getEffectiveDate()));
-						 experienceBeanList.add(effDateBean);
-						  experience.setEffectiveDate(null);
-					}
-					if(experience.getExpiryDate() != null){
-						EncryptDataBean expDateBean = new EncryptDataBean();
-						expDateBean.setTableName(EncryptTableName.SC_QT_PRP_EXPERIENCE.toString());
-						expDateBean.setColumnName(EncryptColumnName.EXP_DATE.toString());
-						expDateBean.setValue(DateUtils.dateToString("dd-MMM-yyyy", experience.getExpiryDate()));
-						experienceBeanList.add(expDateBean);
-						experience.setExpiryDate(null);
-					 }
-					encryptExpriencList.add(experienceBeanList);
-				}
 			scQtProposalChecklist.setSubmitted(isCompleted);
 
 			// initial save list is empty
@@ -1100,7 +1078,32 @@ public class SPDetailBackingBean extends
 					experiencesTosave.add(prpExperience);
 				}
 			}
-
+			// Added to set null which is the data will be encrypted and save .
+			List<List<EncryptDataBean>>	encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
+			if(CollectionUtils.isNotEmpty(experiencesTosave)){
+			 for(ScQtPRPExperience experience:experiencesTosave){
+				List<EncryptDataBean> experienceBeanList = new ArrayList<EncryptDataBean>();
+				if(experience.getEffectiveDate() != null){
+					EncryptDataBean effDateBean = new EncryptDataBean();
+					 effDateBean.setTableName(EncryptTableName.SC_QT_PRP_EXPERIENCE.toString());
+					 effDateBean.setColumnName(EncryptColumnName.EFF_DATE.toString());
+					 effDateBean.setValue(DateUtils.dateToString("dd-MMM-yyyy", experience.getEffectiveDate()));
+					 experienceBeanList.add(effDateBean);
+					  experience.setEffectiveDate(null);
+				}
+				if(experience.getExpiryDate() != null){
+					EncryptDataBean expDateBean = new EncryptDataBean();
+					expDateBean.setTableName(EncryptTableName.SC_QT_PRP_EXPERIENCE.toString());
+					expDateBean.setColumnName(EncryptColumnName.EXP_DATE.toString());
+					expDateBean.setValue(DateUtils.dateToString("dd-MMM-yyyy", experience.getExpiryDate()));
+					experienceBeanList.add(expDateBean);
+					experience.setExpiryDate(null);
+				 }
+				encryptExpriencList.add(experienceBeanList);
+			}
+			}
+			
+			
 			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
 					scQtProposalChecklist, this.getManagedBean()
 							.getScQtProposalScoreList(), totalContractsVal,
