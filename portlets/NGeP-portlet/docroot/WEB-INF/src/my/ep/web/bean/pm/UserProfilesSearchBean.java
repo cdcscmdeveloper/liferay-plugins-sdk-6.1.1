@@ -1,7 +1,7 @@
 package my.ep.web.bean.pm;
 
 /**
- * Search Bean for Rejection Reason
+ * Search Bean for User Profile
  * 
  * @author RAIN POH
  * @since 8/7/2013
