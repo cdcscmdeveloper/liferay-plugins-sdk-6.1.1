@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.fl.po;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -15,6 +16,7 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -34,6 +36,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
@@ -73,6 +76,7 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.common.CommonBackingBean;
@@ -1398,6 +1402,84 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}
 
 		return items;
+	}
+	
+	/**
+	 * Navigate to delivery order page.
+	 *
+	 * @param index the index
+	 * @return the string
+	 */
+	public String navigateToFlOrderFromDashBoard(int index) {
+		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
+		if(getManagedBean().getSelectedFlOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+			reqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+			reqDTO.setFlOrderId(Long.valueOf(getManagedBean().getSelectedFlOrder().getFulfilmentOrderId()));
+			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);			
+			
+			flOrderBB.renewSesionObject();
+			flOrderBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setSelectedTabIndex(0);
+			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+			flOrderBB.getManagedBean().setRemoveFactoring(false);
+			flOrderBB.getManagedBean().setDocMaintainRemarks(true);
+			flOrderBB.getManagedBean().setBackToPrevious(null);
+			if(resDTO.getFlOrder().isFactored()) {
+				flOrderBB.getManagedBean().setFactoringCheck("true");
+				flOrderBB.getFactoringCompanyDtl();
+			}
+			
+			flBB.initializeRemarkAndAttachement(null, resDTO.getRemarkList(), resDTO.getAttachmentList());
+			flBB.getManagedBean().setHideRemarks(true);
+		}else{
+			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER);
+			reqDTO.setFlOrderId(Long.valueOf(getManagedBean().getSelectedFlOrder().getFulfilmentOrderId()));
+			FulfilmentResDTO coResDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
+			flOrderBB=new FulfilmentOrderBackingBean();
+			flOrderBB.renewSesionObject();
+			flOrderBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			flOrderBB.getManagedBean().setSelectedTabIndex(0);
+			flOrderBB.getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
+			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			flOrderBB.getManagedBean().setBackToPrevious(null);
+			
+			flBB.initializeRemarkAndAttachement(null, coResDTO.getRemarkList(), coResDTO.getAttachmentList());
+			flBB.getManagedBean().setHideRemarks(true);
+		}
+		
+//		if(!isGovtSeller()){
+//			flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
+//		}
+		return constructOrderUrl(getManagedBean().getSelectedFlOrder().getFulfilmentOrderId(), getManagedBean().getSelectedFlOrder().getDocNo(), getManagedBean().getSelectedFlOrder().getDocType());
+	}
+	
+	private String constructOrderUrl(Long orderId,String docNo,String docType) {
+		  StringBuilder orderUILink = new StringBuilder();
+		  
+		  orderUILink.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)); // portal application url
+		  if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+			  orderUILink.append(FulfilmentConst.VIEW_PURCHASE_ORDER); // PO
+		  }else{
+			  orderUILink.append(FulfilmentConst.VIEW_CONTRACT_ORDER); // CO
+		  }
+		  
+		  orderUILink.append("?fulfilmentOrderId="+orderId); // parameter - orderId
+		  
+		  String url = orderUILink.toString();
+		  ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		    try {
+				externalContext.redirect(url);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  return url;
+		  
 	}
 		
 }
