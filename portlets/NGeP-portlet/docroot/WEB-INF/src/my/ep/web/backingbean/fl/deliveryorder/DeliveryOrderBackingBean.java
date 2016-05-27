@@ -21,12 +21,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -92,6 +86,12 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.util.PortalUtil;
+
 // TODO: Auto-generated Javadoc
 /**
  * Backing Bean for Create Delivery Order.
@@ -107,6 +107,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
 	
 	private static final String NAV_STOP_INSTRUCTION = "/xhtml/fl/stopInstruction/siBasePage.xhtml";
+	private static final String NAV_FL_ACK_REPORT = "/xhtml/fl/shared/acknowledgeReport.xhtml";
 	
 	private static Logger log = Logger.getLogger(DeliveryOrderBackingBean.class);
 	private FlFulfilmentItemAddr amountSectionItemRow;
@@ -327,14 +328,25 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				} else {
 					messageId = MessageConst.INFO_700043;
 					String message = "";
-					for(String supplierDORef : resDTO.getSupplierDeliveryOrderNoList()) {
+					String messageView = ResourceBundleUtils.getMessage("lbl.txt.view",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
+					Map<String, String> paramMap = new HashMap<String, String>();
+					for(FlDeliveryOrder deliveryOrder : resDTO.getDeliveryOrdersList()){
+						
+						paramMap.put(ReportConst.PARAM_DOC_NO, deliveryOrder.getDeliveryOrderNo());
+						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+						CommonBackingBean commonBackingBean = new CommonBackingBean();
+						commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_DELIVERY);
+						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.do",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+						commonBackingBean.getManagedBean().setParamMap(paramMap);
+						
 						message = MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), supplierDORef}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), deliveryOrder.getSupplierDoRef()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null, message));
-						//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null, message+"View "+"<a href='"+generateReportURL(ReportConst.FL_NGEP_DELIVERY,paramMap)+ "'>"+"Delivery Order"+"</a>"));
+						
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null, message+ messageView+"<a href='#' onclick='generateReportURL(\""+deliveryOrder.getDeliveryOrderNo()+ "\");'>"+"Delivery Order"+"</a>"));
+						
+						
 					}
-					
 				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
@@ -342,22 +354,28 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					/*
 					Map<String, String> paramMap = new HashMap<String, String>();
-					String deliveryOrderNoList = "";
+					List<String> reportValuesList=new ArrayList<String>();
+					
 					for(String deliveryOrderNo : resDTO.getDeliveryOrderNoList()) {
+						String deliveryOrderNOWithUserId = "";
 						if(deliveryOrderNo.length()==0) {
-							deliveryOrderNoList = deliveryOrderNo;
+							deliveryOrderNOWithUserId = deliveryOrderNo;
 						} else {
-							deliveryOrderNoList = deliveryOrderNoList + "," + deliveryOrderNo;
+							deliveryOrderNOWithUserId = deliveryOrderNOWithUserId + "," + deliveryOrderNo;
 						}
+						reportValuesList.add(deliveryOrderNo);
 					}
-					paramMap.put(ReportConst.PARAM_DOC_NO, deliveryOrderNoList);
-					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+					//paramMap.put(ReportConst.PARAM_DOC_NO, deliveryOrderNoList);
+					//paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 					CommonBackingBean commonBackingBean = new CommonBackingBean();
 					commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_DELIVERY);
 					commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.do",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
-					commonBackingBean.getManagedBean().setParamMap(paramMap);
-					return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
+					//commonBackingBean.getManagedBean().setParamMap(paramMap);
+					commonBackingBean.getManagedBean().setUserId(getFacesScopes().getUserSessionBean().getUserId()+"");
+					commonBackingBean.getManagedBean().setReportValueList(reportValuesList);*/
+					return NAV_FL_ACK_REPORT;
 				}		
 				RequestContext.getCurrentInstance().update("@form");
 				return CommonUIConst.ACKNOWLEDGE_PAGE;

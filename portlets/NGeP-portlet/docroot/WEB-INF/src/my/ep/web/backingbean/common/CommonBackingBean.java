@@ -4,12 +4,16 @@
 package my.ep.web.backingbean.common;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.common.CommonManagedBean;
+import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
 
@@ -22,6 +26,7 @@ import org.apache.log4j.Logger;
 @ManagedBean(name="commonBackingBean")
 @RequestScoped
 public class CommonBackingBean extends BaseBackingBean<CommonManagedBean> {
+	private String orderNo;
 
 	private static Logger log = Logger.getLogger(CommonBackingBean.class);
 	
@@ -33,5 +38,35 @@ public class CommonBackingBean extends BaseBackingBean<CommonManagedBean> {
 			e.printStackTrace();
 		}
 	}
+	protected FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
 	
+	public void generateReportByOrderNo(){
+		//orderNo=orderNo.substring(1,orderNo.indexOf("_No"));
+		log.debug("generateReport() : "+getManagedBean().getReportDisplayName()+" Order NO:" +orderNo);
+		try {
+			Map<String,String> paramMap=new HashMap<String, String>();
+			paramMap.put(ReportConst.PARAM_DOC_NO,orderNo);
+			paramMap.put(ReportConst.PARAM_USER_ID,getFacesScopes().getUserSessionBean().getUserId()+"");
+			generateReport(getManagedBean().getReportName(), paramMap);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @return the orderNo
+	 */
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	/**
+	 * @param orderNo the orderNo to set
+	 */
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
 }
