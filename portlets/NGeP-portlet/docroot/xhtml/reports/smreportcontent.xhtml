@@ -4137,7 +4137,6 @@
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
 									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.mainCat']}"
 										id="consultProjParCatCode"
-										required="#{reportBackingBean.mainCatValueReqd}"
 										value="#{expCategoryBean.pmCategoryL1.categoryL1Id}"
 										style="width: 320px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -4163,8 +4162,7 @@
 										rendered="#{reportBackingBean.subCatValueReqd}"
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
 									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.subCat']}"
-										value="#{expCategoryBean.pmCategoryL2.categoryL2Id}"
-										required="#{reportBackingBean.subCatValueReqd}"
+										value="#{expCategoryBean.pmCategoryL2.categoryL2Id}"										
 										id="conslChild" style="width: 320px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -4186,8 +4184,7 @@
 										rendered="#{reportBackingBean.subCatDivisionValueReqd}"
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
 									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
-										value="#{expCategoryBean.pmCategoryL3.categoryL3Id}"
-										required="#{reportBackingBean.subCatDivisionValueReqd}"
+										value="#{expCategoryBean.pmCategoryL3.categoryL3Id}"										
 										id="conslSubChild" style="width: 320px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -4239,7 +4236,7 @@
 								<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
 									<h:outputText value="*"
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
-									<p:selectOneMenu required="#{reportBackingBean.valueReqd}"
+									<p:selectOneMenu 
 										label="#{lbl['lbl.sm.projDtls.mainCat']}"
 										id="consultProjParCatCode"
 										value="#{expCategoryBean.pmCategoryL1.categoryL1Id}"
