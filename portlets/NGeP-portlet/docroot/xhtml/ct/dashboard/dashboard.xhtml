@@ -12,23 +12,18 @@
      <style>
       .column-align-center { text-align: center !important;}
     </style>
-    <p:blockUI widgetVar="blkAssoSearchTable"  block=":form" trigger="searchButtonId">  
-		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
-	</p:blockUI> 
-  	<p:messages id="messages" showDetail="true" 
- 		showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" >
-  	</p:messages>
-     <p:panel id="supplier" header="#{lbl['lbl.ct.dash.board.panel']}" toggleable="true"  toggleSpeed="500">
+   	    <p:panel id="supplier" header="#{lbl['lbl.ct.dash.board.panel']}" toggleable="true"  toggleSpeed="500">
 		     <h:panelGrid columns="2">
-		          <h:outputLabel for="expDaysId" value="#{lbl['lbl.ct.dash.board.edays']}" style="width:150px;"/>
-			     <p:selectOneMenu id="expDaysId"  value="#{contractDashboardBackingBean.managedBean.ctExpInDays}" style="width:150px;">
+		          <h:outputLabel for="expDaysId" value="#{lbl['lbl.ct.dash.board.edays']}" style="width:120px;"/>
+			     <p:selectOneMenu id="expDaysId"  value="#{contractDashboardBackingBean.managedBean.ctExpInDays}" style="width:170px;">
 				   <f:selectItems value="#{contractDashboardBackingBean.getCtExpiryDaysMenu()}" />
 			                 <p:ajax event="change" update=":form:tblCtExpId" 
 			                      process="@this" partialSubmit="true" listener="#{contractDashboardBackingBean.filterCtExpDetails}"/>  
 	            </p:selectOneMenu>
            </h:panelGrid>
            <p:spacer height="5"/>
-	           <p:dataTable id="tblCtExpId" value="#{contractDashboardBackingBean.vCtDataModel}"
+           <h:panelGrid style="width:850px;">
+	           <p:dataTable id="tblCtExpId" value="#{contractDashboardBackingBean.ctDashboardDataModel}"
 					var="data1" lazy="true" rowIndexVar="index" rowKey="#{data1}" rows="10">
 			           <p:column headerText="#{lbl['lbl.ct.contract.no']}"  styleClass="column-align-center">
 				                   <h:outputText value="#{data1.contractNo}" style="text-align:left; float:left;" />
@@ -50,6 +45,7 @@
 				            	<h:outputText value="#{data1.smSupplier.companyName}" style="text-align:left; float:left;" />
 				       </p:column>
 	            </p:dataTable>
+	            </h:panelGrid>
          </p:panel>
      </ui:define>
 </ui:composition>
