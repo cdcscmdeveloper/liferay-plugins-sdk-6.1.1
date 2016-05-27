@@ -25,6 +25,7 @@ public class TaskAssignmentSearchBean {
 	private PmParameterDesc docType;
 	private String docNo;
 	private List<String> selectedRoles;
+	private PmUser excludeUser;
 	
 //	private PmOrgProfile ptj;
 //	private Long ministryId;
@@ -105,6 +106,18 @@ public class TaskAssignmentSearchBean {
 	 */
 	public void setSelectedRoles(List<String> selectedRoles) {
 		this.selectedRoles = selectedRoles;
+	}
+	/**
+	 * @return the excludeUser
+	 */
+	public PmUser getExcludeUser() {
+		return excludeUser;
+	}
+	/**
+	 * @param excludeUser the excludeUser to set
+	 */
+	public void setExcludeUser(PmUser excludeUser) {
+		this.excludeUser = excludeUser;
 	}
 
 	
