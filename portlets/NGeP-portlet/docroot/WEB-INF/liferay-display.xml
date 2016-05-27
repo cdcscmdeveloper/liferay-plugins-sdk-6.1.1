@@ -29,6 +29,7 @@
 			<portlet id="ctChangeBankAccount" />
 			<portlet id="ctRequestTermination" />
 			<portlet id="ctContractSearch" />
+			<portlet id="ctContractDashBoard" />
 		</category>
 		
 		<!-- Profile Management - START -->
