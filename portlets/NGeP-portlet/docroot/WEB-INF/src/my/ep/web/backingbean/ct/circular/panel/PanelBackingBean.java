@@ -2770,4 +2770,10 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
     public void onRowUnselect(UnselectEvent event) {
     	getManagedBean().setButtonHideActiveDel(true);
     }
+    
+    public void setPidValue(){
+		if(!getManagedBean().getCircularVer().isDirectPurchase()){
+			getManagedBean().getCircularVer().setPid(false);
+		}
+    }
 }
