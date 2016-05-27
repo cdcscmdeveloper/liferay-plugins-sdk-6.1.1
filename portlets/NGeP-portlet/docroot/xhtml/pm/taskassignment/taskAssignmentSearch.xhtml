@@ -70,7 +70,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						headerText="#{lbl['lbl.pm.ta.user.lov']}"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.loginId} &#160; #{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.userName}" 
 						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user"
-						conditionField="pmUserOrgs.pmOrgProfile.orgProfileId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId}|recordStatus^1"
+						conditionField="pmUserOrgs.pmOrgProfile.orgProfileId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId}|userId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.excludeUser.userId}^2|recordStatus^1"
 						postUpdateListener ="taskAssignBackingBean.onChangeUser"/>
 				</td>
 				
