@@ -54,7 +54,6 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
-import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -82,6 +81,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
+import my.ep.web.vo.SmSectionEditorVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
@@ -445,7 +445,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private BigDecimal currGovtEquity;
 	private BigDecimal currForeignCompanyEquity;
 	private BigDecimal currLocalCompanyEquity;
-
+	
+	private SmSectionEditorVO editVO;
 	private List<PmReasonDesc> selectedPmReasonDescs;
 	private String searchRejectReason;
 	private IPagingDataModel<PmReasonDesc> rejectReasonDataModel = new RejectReasonPagingDataModel();
@@ -3488,5 +3489,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setShowPoApprovedOrRecommendButton(
 			boolean showPoApprovedOrRecommendButton) {
 		this.showPoApprovedOrRecommendButton = showPoApprovedOrRecommendButton;
+	}
+
+	public SmSectionEditorVO getEditVO() {
+		return editVO;
+	}
+
+	public void setEditVO(SmSectionEditorVO editVO) {
+		this.editVO = editVO;
 	}
 }
