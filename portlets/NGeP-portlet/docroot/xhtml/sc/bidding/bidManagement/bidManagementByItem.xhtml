@@ -9,13 +9,13 @@
 	<p:panel header="#{lbl['lbl.sc.item.details']}" toggleable="true">
 
 		<p:dataTable id="biddingListBMBI" selectionMode="single" rows="10"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{biddingBB.managedBean.scheduledBid.scBidItems}"
 			var="bidItem" rowIndexVar="index" rowKey="#{bidItem.bidItemId}"
 			selection="#{biddingBB.managedBean.selectedBidItem}">
 
 			<p:ajax event="rowSelect" listener="#{biddingBB.rowSelectListener}"
-				update="@([id$=itemPriceLineChartPanel])" />
+				update="@([id$=itemPriceLineChartPanel],[id$=itemizedSupplierPricesPanel])" />
 			<ac:paginator for="biddingListBMBI"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.sc.item.name']}">
@@ -51,11 +51,9 @@
 		</p:dataTable>
 
 	</p:panel>
-
-	<h:panelGroup id="itemPriceLineChartPanel">
-		<p:panel header="#{lbl['lbl.sc.bid.summary']}" toggleable="true"
-			rendered="#{!empty biddingBB.managedBean.selectedBidItem}">
-
+	<p:panel header="#{lbl['lbl.sc.bid.summary']}" toggleable="true"
+		rendered="#{!empty biddingBB.managedBean.selectedBidItem}">
+		<h:panelGroup id="itemPriceLineChartPanel">
 			<div align="center">
 
 				<h4>
@@ -66,14 +64,21 @@
 
 			<div>
 
-				<p:lineChart id="lineChartBMBI" animate="true" yaxisLabel="#{lbl['lbl.sc.bid.price']}" xaxisLabel="#{lbl['lbl.sc.bid.time']}"
+				<p:lineChart id="lineChartBMBI" animate="true"
+					yaxisLabel="#{lbl['lbl.sc.bid.price']}"
+					xaxisLabel="#{lbl['lbl.sc.bid.time']}"
 					value="#{biddingBB.managedBean.itemPriceLinearModel}"
 					legendPosition="e" style="height:300px;" />
-
 			</div>
+		</h:panelGroup>
 
+		<c:if test="#{biddingBB.managedBean.remainingTimeForTimers ne 0}">
+			<ui:include src="bidManagementTimers.xhtml"></ui:include>
+		</c:if>
+
+		<h:panelGroup id="itemizedSupplierPricesPanel">
 			<p:dataTable id="rankingList" rowIndexVar="index" rows="10"
-			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{biddingBB.managedBean.bidPriceItems}" var="bidPriceItem">
 				<ac:paginator for="rankingList"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.sc.ranking']}"
@@ -131,17 +136,17 @@
 				</p:column>
 
 			</p:dataTable>
-		</p:panel>
-	</h:panelGroup>
+			</h:panelGroup>
+	</p:panel>
+	
 
 	<h:panelGrid id="historyPricePopupPanel">
 		<p:dialog rendered="#{biddingBB.managedBean.rendered}"
 			header="#{lbl['lbl.sc.history.price']}" widgetVar="priceHistory"
 			showEffect="fade" hideEffect="fade" modal="true" id="historyPrice">
-			<ui:include src="/xhtml/sc/bidding/bidManagement/BMByItemHistoryPricePopup.xhtml"></ui:include>
+			<ui:include
+				src="/xhtml/sc/bidding/bidManagement/BMByItemHistoryPricePopup.xhtml"></ui:include>
 		</p:dialog>
 	</h:panelGrid>
-
-
 
 </ui:composition>
