@@ -194,6 +194,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	public void resetTaskAssignSearchBean(){
 		log.info("resetTaskAssignSearchBean");
 		this.getManagedBean().setTaskAssignmentSearchBean(new TaskAssignmentSearchBean());
+		this.getManagedBean().getTaskAssignmentSearchBean().setExcludeUser(getFacesScopes().getUserSessionBean());
 	}
 	
 	/**
@@ -907,6 +908,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			reqDTO.setDocStatus(task.getDocStatus());
 			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
 			reqDTO.setActionedByUser(getFacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setFromUser(getManagedBean().getTaskAssignmentSearchBean().getUser());
 			
 			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ITaskAssignmentSO.class);
