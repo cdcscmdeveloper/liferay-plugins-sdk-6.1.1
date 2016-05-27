@@ -118,27 +118,6 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 			throw new EpException(MessageConst.ERROR_760329);
 		}
 	}
-	
-	/**
-	 * method to handle download events related to encrypted file
-	 * 
-	 * @param scAttachment
-	 * 		the ScAttachment instance
-	 * @return the encrypted file
-	 * @throws IOException
-	 */
-	public <ATTACHMENT extends ScAttachment> File downloadEncryptedFile(
-			ATTACHMENT scAttachment) throws IOException {
-		if (scAttachment != null
-				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
-
-			return downloadEncryptedFile(null, 
-					getActualFilePath(scAttachment),
-					scAttachment.getFileName());
-		} else {
-			throw new EpException(MessageConst.ERROR_760329);
-		}
-	}
 
 	/**
 	 * method to handle download events related to encrypted file
