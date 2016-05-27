@@ -10,6 +10,8 @@
 <cc:interface>
 	<cc:attribute name="attachment" required="true" />
 	<cc:attribute name="readonly" default="false" />
+	<cc:attribute name="encrypted" default="false" />
+	<cc:attribute name="encryptionKey" required="#{cc.attrs.encrypted}" />
 	<cc:attribute name="popupWidgetVar" required="true" />
 </cc:interface>
 
@@ -25,9 +27,18 @@
 					disabled="#{readonly}" />
 			</c:when>
 			<c:otherwise>
-				<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
-					immediate="true"
-					action="#{scRemarkAndAttachmentBackingBean.downloadFile(cc.attrs.attachment)}" />
+				<c:choose>
+					<c:when test="#{cc.attrs.encrypted}">
+						<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
+							immediate="true"
+							action="#{scRemarkAndAttachmentBackingBean.downloadEncryptedFile(scAttachment, cc.attrs.encryptionKey)}" />
+					</c:when>
+					<c:otherwise>
+						<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
+							immediate="true"
+							action="#{scRemarkAndAttachmentBackingBean.downloadFile(cc.attrs.attachment)}" />
+					</c:otherwise>
+				</c:choose>
 				<p:commandLink 
 					process="@this" partialSubmit="true" update="@([id$=#{cc.id}delAttPopupId])"
 					oncomplete="#{cc.id}delAttPopup.show();" 
