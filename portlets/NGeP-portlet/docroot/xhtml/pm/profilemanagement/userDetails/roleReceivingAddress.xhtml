@@ -87,10 +87,12 @@
 				</p:dataTable>				
 				<div class="ppRightBtn">
 					<p:commandButton
-						action="#{profileManagementBackingBean.getAvailbleUserRole}"
+						action="#{profileManagementBackingBean.resetAvailbleUserRole()}"
 						immediate="true" value="#{lbl['lbl.btn.add']}"
+						partialSubmit="true"
+						process="@this" 
 						disabled="#{profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or isSupplierOrgType}"
-						oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions" />
+						oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions,:form:roleSearchPanel" />
 				</div>
 			</p:tab>
 

@@ -525,6 +525,8 @@ public class ProfileManagementBackingBean extends
 		this.retrieveIdentityTypeMap();
 		this.retrieveOrgTypeMap();
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
+		getManagedBean().setSearchRoleName(null);
+		getManagedBean().setSelectedRoleSearchOption(null);
 		logger.info("selectedOrg=" + selectedOrg);
 		if (selectedOrg != null) {
 			logger.info("selectedOrg.getUserOrgId()="
@@ -2547,13 +2549,27 @@ public class ProfileManagementBackingBean extends
 		
 		return searchBean;
 	}
-
+	
 	/**
 	 * search user roles
 	 */
-	public void getAvailbleUserRole() {
-		logger.info("getAvailbleUserRole");
+	public void searchAvailbleUserRole() {
+		logger.info("searchAvailbleUserRole");
+		if(getManagedBean().getSelectedRoleSearchOption() == null 
+				&& StringUtils.isNotBlank(getManagedBean().getSearchRoleName())){
+			throw new EpException(MessageConst.ERROR_100060);
+		}
 		roleDataModel.reloadData();
+	}
+	
+	/**
+	 * reset user roles
+	 */
+	public void resetAvailbleUserRole() {
+		logger.info("resetAvailbleUserRole");
+		getManagedBean().setSearchRoleName(null);
+		getManagedBean().setSelectedRoleSearchOption(null);
+		roleDataModel.resetData();
 	}
 
 	/**
@@ -2604,8 +2620,9 @@ public class ProfileManagementBackingBean extends
 				logger.info("..getFacesScopes().getUserSessionBean().getUserId()="
 								+ getFacesScopes().getUserSessionBean()
 										.getUserId());
-
+				
 				roleReqDTO.setSearchRoleBean(searchBeanData);
+				roleReqDTO.setRoleName(getManagedBean().getSearchRoleName());
 				roleSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IRoleSO.class);
@@ -5532,7 +5549,7 @@ public class ProfileManagementBackingBean extends
 		IRoleSO roleSO = null;		
 		UserProfilesSearchBean searchBean = getManagedBean().getUserProfileSearchBean();
 		if(searchBean.getSelectedRoleOptionSearch() == null && StringUtils.isNotBlank(searchBean.getUserRoleNameSearch())){
-			throw new EpException("Please select the role options");
+			throw new EpException(MessageConst.ERROR_100060);
 		}
 		
 		try {
