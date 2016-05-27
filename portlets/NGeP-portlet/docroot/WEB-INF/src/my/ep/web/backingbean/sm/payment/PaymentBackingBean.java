@@ -648,6 +648,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				pymtReqDTO.setPaymentType(paymentType);
 
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				log.info("******ResponsePreRender - After Update******");
 				if(pymtResDTO.isSuccessful()){
 					//to auto generate mof cert
 					/*if(pyPayment.getPyBill().getBillType().
