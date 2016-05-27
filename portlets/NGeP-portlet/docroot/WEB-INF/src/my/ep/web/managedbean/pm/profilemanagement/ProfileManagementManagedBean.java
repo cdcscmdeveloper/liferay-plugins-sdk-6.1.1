@@ -79,6 +79,8 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private PmUserRole selectedDeleteUserRole;
 	private PmUserAttachment selectedDeleteAttachment;
 	private PmAddressType selectedDeleteReceivingAddr;
+	private String searchRoleName;
+	private Integer selectedRoleSearchOption;
 	
 	public PmUser getPmUserOriginal() {
 		return pmUserOriginal;
@@ -578,6 +580,30 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setSelectedDeleteReceivingAddr(
 			PmAddressType selectedDeleteReceivingAddr) {
 		this.selectedDeleteReceivingAddr = selectedDeleteReceivingAddr;
+	}
+	/**
+	 * @return the searchRoleName
+	 */
+	public String getSearchRoleName() {
+		return searchRoleName;
+	}
+	/**
+	 * @param searchRoleName the searchRoleName to set
+	 */
+	public void setSearchRoleName(String searchRoleName) {
+		this.searchRoleName = searchRoleName;
+	}
+	/**
+	 * @return the selectedRoleSearchOption
+	 */
+	public Integer getSelectedRoleSearchOption() {
+		return selectedRoleSearchOption;
+	}
+	/**
+	 * @param selectedRoleSearchOption the selectedRoleSearchOption to set
+	 */
+	public void setSelectedRoleSearchOption(Integer selectedRoleSearchOption) {
+		this.selectedRoleSearchOption = selectedRoleSearchOption;
 	}
 	
 
