@@ -20,7 +20,14 @@
 			value="#{biddingBB.managedBean.bidManagementViewBy eq 'P'}" />
 		<ui:param name="isViewByItem"
 			value="#{biddingBB.managedBean.bidManagementViewBy eq 'I'}" />
-
+		<h:panelGroup id="pollPanelGroup">
+			<c:if
+				test="#{biddingBB.managedBean.scheduledBid.pmStatus.statusId eq biddingBB.managedBean.pendingBidding or biddingBB.managedBean.scheduledBid.pmStatus.statusId eq biddingBB.managedBean.bidInProgress}">
+				<p:poll id="pollCOmponent"
+					interval="#{biddingBB.managedBean.remainingTimeForTimers}"
+					listener="#{biddingBB.pollListener}" />
+			</c:if>
+		</h:panelGroup>
 
 		<table>
 			<tr>
