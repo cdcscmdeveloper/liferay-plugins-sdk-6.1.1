@@ -100,7 +100,7 @@
 			              <h:panelGrid columns="3">
 			                  <p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}" 
 			                       value="#{panelBackingBean.managedBean.circularVer.directPurchase}"  style="text-align:top;">
-			                       <p:ajax event="change" update=":form:panelleftsideid"
+			                       <p:ajax event="change" update=":form:panelleftsideid,:form:groupPaneId"
 			                             process="@this" partialSubmit="@this" listener="#{panelBackingBean.setPidValue()}"/>
 			                   </p:selectBooleanCheckbox>
 			                   <p:spacer width="2" />	
