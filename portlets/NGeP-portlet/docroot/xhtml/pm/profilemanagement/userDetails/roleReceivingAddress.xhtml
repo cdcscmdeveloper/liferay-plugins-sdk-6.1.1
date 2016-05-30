@@ -101,7 +101,8 @@
 			<p:tab
 				title="#{lbl['lbl.pm.profiles.authorisation.receiving.address']}"
 				id="tReceivingAddr"
-				disabled="#{!profileManagementBackingBean.managedBean.receivingAddressFlag}">
+				disabled="#{!profileManagementBackingBean.managedBean.receivingAddressFlag}"
+				rendered="#{isPTJOrgType}">
 				<p:dataTable id="dtReceiveAddr"
 					value="#{profileManagementBackingBean.managedBean.selectedReceivingAddrTypes}"					
 					emptyMessage="#{lbl['lbl.pp.no.record.found']}"
