@@ -10,15 +10,15 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-
-
+/*
+ * @author P Ganga prasad
+ */
 public class GfmasBatchPmInboundJob implements Job {
 
-	public static Logger log = EpLogger
-			.getLogger(GfmasBatchPmInboundJob.class);
-	
-	public static IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.INTEGRATION,
+	public static Logger log = EpLogger.getLogger(GfmasBatchPmInboundJob.class);
+
+	public static IGfmasServiceSO gfmasServiceSO = EpEjbBusinessDelegate
+			.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
 					IGfmasServiceSO.class);
 
 	public void execute(JobExecutionContext context)
@@ -36,13 +36,13 @@ public class GfmasBatchPmInboundJob implements Job {
 			gfmasServiceSO.projectGfmasInbound();
 			gfmasServiceSO.programAktivitiGfmasInbound();
 			gfmasServiceSO.masterDataPtjGfmasInbound();
-			
-		} catch(Exception e) {
-			log.info("GfmasBatchPmInboundJob :"+e.getMessage());
+
+		} catch (Exception e) {
+			log.info("GfmasBatchPmInboundJob :" + e.getMessage());
 		}
 
 		log.info("GfmasBatchPmInboundJob  : End");
-		
+
 	}
 
 }

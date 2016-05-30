@@ -10,17 +10,19 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/*
+ * @author P Ganga prasad
+ */
 public class GovernmentProjectJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(GovernmentProjectJob.class);
-
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("GovernmentProjectJob start");
-		IEperundingServiceSO  eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
+		IEperundingServiceSO eperundingServiceSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
 						IEperundingServiceSO.class);
 		eperundingServiceSO.createGovernmentProject();
 		log.info("GovernmentProjectJob end");

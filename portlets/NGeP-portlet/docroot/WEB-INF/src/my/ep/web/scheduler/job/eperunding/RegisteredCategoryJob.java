@@ -10,6 +10,9 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/*
+ * @author P Ganga prasad
+ */
 public class RegisteredCategoryJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(RegisteredCategoryJob.class);
@@ -18,8 +21,8 @@ public class RegisteredCategoryJob implements Job {
 			throws JobExecutionException {
 
 		log.info("RegisteredCategoryJob start");
-		IEperundingServiceSO  eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
+		IEperundingServiceSO eperundingServiceSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
 						IEperundingServiceSO.class);
 		eperundingServiceSO.createRegisteredCategory();
 		log.info("RegisteredCategoryJob end");

@@ -10,24 +10,27 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class UpdateGovernmentUserInfoJob implements Job{
+/*
+ * @author P Ganga prasad
+ */
+public class UpdateGovernmentUserInfoJob implements Job {
 
 	public static Logger log = EpLogger
 			.getLogger(UpdateGovernmentUserInfoJob.class);
-	
-	public static ICRMServiceSO  crmServiceSO = EpEjbBusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.INTEGRATION,
+
+	public static ICRMServiceSO crmServiceSO = EpEjbBusinessDelegate
+			.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
 					ICRMServiceSO.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("UpdateGovernmentUserInfoJob start");
-		
+
 		crmServiceSO.UpdateGovernmentUserInfoService();
-		
+
 		log.info("UpdateGovernmentUserInfoJob End");
-		
+
 	}
 
 }

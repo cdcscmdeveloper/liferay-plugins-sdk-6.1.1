@@ -10,18 +10,19 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/*
+ * @author P Ganga prasad
+ */
 public class BoardOfDirectorJob implements Job {
 
-	public static Logger log = EpLogger
-			.getLogger(BoardOfDirectorJob.class);
-
+	public static Logger log = EpLogger.getLogger(BoardOfDirectorJob.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("BoardOfDirectorJob start");
-		IEperundingServiceSO  eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
+		IEperundingServiceSO eperundingServiceSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
 						IEperundingServiceSO.class);
 		eperundingServiceSO.createBoardOfDirector();
 		log.info("BoardOfDirectorJob end");
