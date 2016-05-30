@@ -59,20 +59,8 @@
 		</tr>
 	</table>
 
-	<p:dialog id="attachmentDlgid" widgetVar="attachmentDlg" modal="true"
-		resizable="false" width="900px" height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.txt.choose.files']}">
-
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{supplierProposalDetailBackingBean.handleFileUpload}"
-			mode="advanced" id="uploadattachment"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}"
-			uploadLabel="#{lbl['lbl.btn.upload']}"
-			cancelLabel="#{lbl['lbl.btn.cancel']}" update="proposalMenuContent"
-			oncomplete="attachmentDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
+	<ac:scSingleFileUploadPopup widgetVar="checklistUploadDlg"
+		fileUploadListener="supplierProposalDetailBackingBean.handleFileUpload"
+		update="@([id$=proposalMenuContent])"
+		readonly="#{supplierProposalDetailBackingBean.managedBean.closed}" />
 </ui:composition>
