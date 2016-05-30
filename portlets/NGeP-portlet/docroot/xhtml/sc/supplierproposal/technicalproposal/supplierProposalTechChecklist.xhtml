@@ -61,7 +61,7 @@
 					value="#{lbl['lbl.sc.view']}" />
 			</p:column>
 
-			<p:column style="white-space: normal;">
+			<p:column style="white-space: normal;" styleClass="column-align-center">
 				<ui:fragment
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
@@ -81,18 +81,15 @@
 
 				<ui:fragment
 					rendered="#{((techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'O') or (techList.scQtCheckList.definationType.parameterCode eq 'NA'))}">
-					<p:commandButton oncomplete="attachmentDlg.show();return false;"
-						rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
-						value="#{lbl['lbl.txt.attachment']}" style="width:101px;">
-						<f:setPropertyActionListener value="#{techList}"
+					<ac:scSingleFileUploadButton id="tcUploadBtn" popupWidgetVar="checklistUploadDlg"
+						attachment="#{techList.scQtProposalChecklistAttachment}"
+						encrypted="true" encryptionKey="#{supplierProposalDetailBackingBean.encryptionKey}"
+						readonly="#{supplierProposalDetailBackingBean.managedBean.closed}"
+						rowIndex="#{rowIndex}">
+						<f:setPropertyActionListener for="actionEvent" 
+							value="#{techList}"
 							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
-					</p:commandButton>
-					<h:commandLink
-						value="#{techList.scQtProposalChecklistAttachment.fileName}"
-						styleClass="blue_font" immediate="true"
-						action="#{supplierProposalDetailBackingBean.downloadEncryptedFile(techList.scQtProposalChecklistAttachment)}"
-						rendered="#{!empty techList.scQtProposalChecklistAttachment}" />
-
+					</ac:scSingleFileUploadButton>
 				</ui:fragment>
 
 				<ui:fragment
