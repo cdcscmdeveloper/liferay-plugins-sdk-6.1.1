@@ -614,9 +614,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	public void validateCircular(String outcome) {
 			getManagedBean().setAutoUpdate(true);
+		
 			if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				 if(!getManagedBean().getCircularVer().isDirectPurchase() 
 					  && getManagedBean().getCircularVer().isDirectNego() && getManagedBean().getCircularVer().isQt()){
+					 getManagedBean().setSelectedTabIndex(0);
 					 throw new EpException(MessageConst.ERROR_100022,  
 							 new String[]{"Direct Nego, Direct Purchase or Quotation Tender checkbox"});
 				 }
@@ -626,6 +628,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					&& getManagedBean().getCircularVer().isPid() && 
 					(getManagedBean().getCircularVer().getCtCircularPidReason() == null 
 					|| getManagedBean().getCircularVer().getCtCircularPidReason().size() == 0)) {
+				 getManagedBean().setSelectedTabIndex(0);
 				 throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -635,12 +638,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					 && getManagedBean().getCircularVer().getCtCircularPidReason().size() > 0 ){
 				for(CtCircularPidReason reason : getManagedBean().getCircularVer().getCtCircularPidReason()){
 					   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
+						   getManagedBean().setSelectedTabIndex(0);
 						   throw new EpException(MessageConst.ERROR_100022, 
 									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					   }
 					   if(PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
 						   if(reason.getReasonDesc().isEmpty()){
+							   getManagedBean().setSelectedTabIndex(0);
 							   throw new EpException(MessageConst.ERROR_100022, 
 										new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -653,6 +658,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					&& getManagedBean().getCircularVer().getCtContactPersons().size() >= 1) {				
 			        for(CtContactPerson CtPerson : getManagedBean().getCircularVer().getCtContactPersons()){
 				        if(CtPerson.getName() == null  || CtPerson.getName().isEmpty()){
+				        	 getManagedBean().setSelectedTabIndex(0);
 					       throw new EpException(MessageConst.ERROR_100022, 
 							 new String[]{ResourceBundleUtils.getMessage("lbl.ct.contact.person.name", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -673,6 +679,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				if((circularRemark == null || circularRemark.length() == 0)
 						&& (itemRemark == null || itemRemark.length() == 0)) {
+					 getManagedBean().setSelectedTabIndex(0);
 	 				throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -681,6 +688,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			if(getManagedBean().getCircularVer().getCtPanelItems().size()==0) {
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					 getManagedBean().setSelectedTabIndex(1);
 					throw new EpException(MessageConst.ERROR_100023, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.panel.item", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -691,12 +699,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				for (CtPanelItem panelItem: getManagedBean().getCircularVer().getCtPanelItems()) {
 					
 					if(panelItem.getZoneAllParamterId()==null) {
+						 getManagedBean().setSelectedTabIndex(1);
 						throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.panel.coverage", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					 }
 					
 					if(panelItem.getCategoryParameterId() == null) {
+						 getManagedBean().setSelectedTabIndex(1);
 						throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.category", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -704,10 +714,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
 								&& getItemGeneralCode(panelItem.getCategoryParameterId()).equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)) {
 							     if(panelItem.getCtPanelItemSpecs() == null || panelItem.getCtPanelItemSpecs().isEmpty()) {
+							    	 getManagedBean().setSelectedTabIndex(1);
 								      throw new EpException(MessageConst.ERROR_750029, new String[]{panelItem.getItemName()});
 							     } else {
 								     for (CtPanelItemSpec ctPanelItemSpec: panelItem.getCtPanelItemSpecs()) {
 									        if (ctPanelItemSpec.getSpecification() == null || ctPanelItemSpec.getSpecification().length() == 0) {
+									         	 getManagedBean().setSelectedTabIndex(1);
 										         throw new EpException(MessageConst.ERROR_750030, new String[]{panelItem.getItemName()});
 									        }
 								    }
@@ -716,18 +728,21 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					 }
 					
 					if(panelItem.getCtPanelItemGroup() == null) {
+						 getManagedBean().setSelectedTabIndex(1);
 						throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.group", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 					
 					if(panelItem.getItemType() == null || panelItem.getItemType().getParameterId()==null) {
+						 getManagedBean().setSelectedTabIndex(1);
 						throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.type", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 					
 					if(panelItem.getItemName().length()==0) {
+						 getManagedBean().setSelectedTabIndex(1);
 						throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.name", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -735,6 +750,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					
 					
 					if(panelItem.getPmUom().getUomId()==null) {
+						 getManagedBean().setSelectedTabIndex(1);
 						throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.uom", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -743,12 +759,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 						  if(getItemGeneralCode(panelItem.getZoneAllParamterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)) {
 							     if(panelItem.getLocationLevelId().getParameterId()==null) {
+							    	 getManagedBean().setSelectedTabIndex(1);
 								       throw new EpException(MessageConst.ERROR_100022, 
 										    new String[]{ResourceBundleUtils.getMessage("lbl.ct.location.level", 
 												 ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 							      }
 							
 							     if(panelItem.getCtPanelZones().size()==0) {
+							    	 getManagedBean().setSelectedTabIndex(1);
 								       throw new EpException(MessageConst.ERROR_100023, 
 										   new String[]{ResourceBundleUtils.getMessage("lbl.ct.Zone", 
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -756,22 +774,26 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 								        for (CtPanelZone panelZone: panelItem.getCtPanelZones()) {
 									        
 								        	  if(panelZone.getName().length()==0) {
+								        			 getManagedBean().setSelectedTabIndex(1);
 										          throw new EpException(MessageConst.ERROR_100022, 
 												      new String[]{ResourceBundleUtils.getMessage("lbl.ct.zone.name", 
 														ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 										          
 								        	  }  if(panelZone.getPanelZoneDtls().size() == 0){
+								        			 getManagedBean().setSelectedTabIndex(1);
 										          throw new EpException(MessageConst.ERROR_100022, 
 												      new String[]{ResourceBundleUtils.getMessage("lbl.ct.zone.location", 
 														 ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 									       
 								        	  }  if(panelZone.getCtPanelSuppliers().size()==0) {
+								        			 getManagedBean().setSelectedTabIndex(1);
 								                      throw new EpException(MessageConst.ERROR_100023, 
 										                new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier", 
 												       ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 							      	         } 
 								        	  for(CtPanelSupplier panelSupplier : panelZone.getCtPanelSuppliers()){
 								        		     if(StringUtils.isEmpty(panelSupplier.getBankAccountNo())){
+								        		    	 getManagedBean().setSelectedTabIndex(1);
 								        		    	 throw new EpException(MessageConst.ERROR_100022, 
 													                new String[]{ResourceBundleUtils.getMessage("lbl.ct.bank.account.name", 
 															       ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -782,6 +804,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					
 						  } else {					
 							   if(panelItem.getCtPanelSuppliers().size()==0) {
+									 getManagedBean().setSelectedTabIndex(1);
 								    throw new EpException(MessageConst.ERROR_100023, 
 										new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier", 
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -789,6 +812,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 							   
 							   for(CtPanelSupplier panelSupplier : panelItem.getCtPanelSuppliers()){
 				        		     if(panelSupplier.getBankAccountNo() == null || panelSupplier.getBankAccountNo().isEmpty()){
+				        		    	 getManagedBean().setSelectedTabIndex(1);
 				        		    	 throw new EpException(MessageConst.ERROR_100022, 
 									                new String[]{ResourceBundleUtils.getMessage("lbl.ct.bank.account.name", 
 											       ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -805,6 +829,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		//}
 		if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) 
 				&& getManagedBean().getApproverModel().getTarget().size()==0) {
+			 getManagedBean().setSelectedTabIndex(2);
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.			
 		}
 		
@@ -1354,10 +1379,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				mofAccResDTO = mofAccountSO.retrieveMofNoBySupplierId(mofAccReqDTO);
 				getManagedBean().setSmMofAccount(mofAccResDTO.getMofAccount());
 	
-				SmCompanyBasic smCompanyBasic = ctPanelSupplier.getSupplier().getSmAppl().getSmCompanyBasic();
+				SmCompanyBasic smCompanyBasic = qtSupplierResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic();
 				getManagedBean().setSmCompanyBasic(smCompanyBasic);
 	
-				List<SmPersonnel> smPersonnelList = ctPanelSupplier.getSupplier().getSmAppl().getSmPersonnels();
+				List<SmPersonnel> smPersonnelList = qtSupplierResDTO.getSmSupplier().getSmAppl().getSmPersonnels();
 				for (SmPersonnel smPersonnel : smPersonnelList) {
 					if (smPersonnel.isContactPerson()) {
 						getManagedBean().setSmPersonnel(smPersonnel);
