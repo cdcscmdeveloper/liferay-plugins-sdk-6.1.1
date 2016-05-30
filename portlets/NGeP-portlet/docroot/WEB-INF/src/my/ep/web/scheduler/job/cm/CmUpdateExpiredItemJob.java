@@ -1,11 +1,8 @@
 package my.ep.web.scheduler.job.cm;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
-import my.ep.web.integration.common.GfmasIntegration;
-import my.ep.web.integration.common.PhisIntegration;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
