@@ -14,6 +14,7 @@ import java.net.URLConnection;
 import java.util.List;
 
 import javax.el.MethodExpression;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -62,6 +63,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	 */
 	public void handleFileUploadListener(FileUploadEvent event) {
 		try {
+			String widgetComponent = (String)event.getComponent().getAttributes().get("widgetComponent");
 			String fileUploadListenerMethod = (String)event.getComponent().getAttributes().get("fileUploadListenerMethod");
 			
 			if (StringUtils.isNotBlank(fileUploadListenerMethod)) {
@@ -73,7 +75,20 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 				methodExp.invoke(
 						FacesContext.getCurrentInstance().getELContext(), 
 						new Object[]{event});
-			}	
+			}
+			
+			if (StringUtils.isNotBlank(widgetComponent)) {
+				RequestContext.getCurrentInstance().execute(
+						widgetComponent + "reRender();");
+				RequestContext.getCurrentInstance().execute(
+						widgetComponent + ".hide();");
+			}
+			
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"The file was uploaded successfully.", null);
+
+			FacesContext.getCurrentInstance().addMessage(null, message);	
+			
 		} catch (Exception e) {
 			handleException(e);
 		}
@@ -91,11 +106,32 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	}
 	
 	/**
-	 * Delete Single Attachment Action
+	 * Execute Delete Single Attachment Action
 	 */
-	public void deleteSingleAttachmentAction() {
+	public void executeDeleteAttachmentAction() {
 		RequestContext.getCurrentInstance().execute(
 				this.selectedComponentId + "deleteSelAttachment()");
+	}
+	
+	/**
+	 * Delete Single Attachment Action
+	 */
+	public void deleteSingleAttachmentAction(BaseEntity selectedAttachment, String deleteFileUploadListener, String widgetComponent) {
+		if (StringUtils.isNotBlank(deleteFileUploadListener)) {
+			MethodExpression methodExp = FacesScopes
+	                .createMethodExpression(FacesContext.getCurrentInstance(),
+	                		deleteFileUploadListener, null,
+	                        new Class[] { BaseEntity.class });
+			
+			methodExp.invoke(
+					FacesContext.getCurrentInstance().getELContext(), 
+					new Object[]{selectedAttachment});
+			
+			if (StringUtils.isNotBlank(widgetComponent)) {
+				RequestContext.getCurrentInstance().execute(
+						widgetComponent + "reRender();");
+			}
+		}
 	}
 	
 	/**

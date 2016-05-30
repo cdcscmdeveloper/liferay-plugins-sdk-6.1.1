@@ -14,6 +14,7 @@
 	<cc:attribute name="encryptionKey" required="#{cc.attrs.encrypted}" />
 	<cc:attribute name="popupWidgetVar" required="true" />
 	<cc:attribute name="rowIndex" default="0" />
+	<cc:attribute name="deleteFileUploadListener" />
 	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}Btn" />
 </cc:interface>
 
@@ -57,8 +58,11 @@
 		
 	<c:if test="#{!cc.attrs.readonly}">
 		<p:remoteCommand name="#{cc.attrs.id}#{rowIndex}deleteSelAttachment"
-			partialSubmit="true" process="@this" update="@([id$=#{cc.attrs.id}])">
-			<f:setPropertyActionListener target="#{cc.attrs.attachment}" value="#{null}" />
+			partialSubmit="true" process="@this" update="@([id$=#{cc.attrs.id}])"
+			action="#{scRemarkAndAttachmentBackingBean.deleteSingleAttachmentAction(cc.attrs.attachment, cc.attrs.deleteFileUploadListener, cc.attrs.popupWidgetVar)}">
+			<c:if test="#{empty cc.attrs.deleteFileUploadListener}">
+				<f:setPropertyActionListener target="#{cc.attrs.attachment}" value="#{null}" />
+			</c:if>
 		</p:remoteCommand>
 	</c:if>
 </cc:implementation>

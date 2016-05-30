@@ -30,8 +30,8 @@
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 				label="#{lbl['lbl.btn.choose']}" 
-				showButtons="false"
-				oncomplete="#{cc.attrs.widgetVar}reRender(); #{cc.attrs.widgetVar}.hide();">
+				showButtons="false">
+				<f:attribute name="widgetComponent" value="#{cc.attrs.widgetVar}" />
 				<f:attribute name="fileUploadListenerMethod" value="#{cc.attrs.fileUploadListener}" />
 			</p:fileUpload>
 			<div class="ppRightBtn">
@@ -44,7 +44,7 @@
 			
 		<ac:confirmationPopup id="#{cc.attrs.widgetVar}delAttPopupId"
 			widget="#{cc.attrs.widgetVar}delAttPopup"
-			okAction="scRemarkAndAttachmentBackingBean.deleteSingleAttachmentAction"
+			okAction="scRemarkAndAttachmentBackingBean.executeDeleteAttachmentAction"
 			width="33%" height="100" title="#{lbl['lbl.sc.supporting.document']}"
 			content="#{lbl['lbl.ct.dialog.delete.attachment.msg']}"
 			update="@this" />
