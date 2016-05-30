@@ -9816,8 +9816,7 @@ public class EvaluationBackingBean extends
 				ProposalReqDTO reqDTO = new ProposalReqDTO();
 				reqDTO.setScQt(this.getManagedBean().getScQt());
 
-				//encryptionKey = proposalSO.getGeneratedEncrpyptedKey(reqDTO);
-				encryptionKey = "SECRET_1SECRET_2";
+				encryptionKey = proposalSO.getGeneratedEncrpyptedKey(reqDTO);
 				getManagedBean().setEncryptionKey(encryptionKey);
 
 			} finally {
