@@ -24,8 +24,8 @@
 											lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 											headerText="#{lbl['lbl.rpt.ministry']}" readonly="true"
 											value="#{reportBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
-											postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}"
 											saveObject="reportBackingBean.managedBean.selectedMinistry"
+                                            postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}" 
 											conditionField="#{reportBackingBean.constructMinistryConditionFields()}" />
 										<p:message id="lovFlMinistryMsg" for="lovFlMinistry"
 											display="icon" /></td>
@@ -361,13 +361,13 @@
 
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flSupplierTextView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.supplierScreen']}"
-								style="margin-top:5px;width:190px;" />
-							<p:inputText maxlength="100"
-								value="#{reportBackingBean.flSupplier}"
-								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
+							<p:outputLabel value="#{lbl['lbl.rpt.supplierScreen']}" />
+							<ac:lov id="flCompanyName" readonly="true" style="width:264px;"
+								lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
+								headerText="#{lbl['lbl.rpt.supplierScreen']}" update="@form" 
+								value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
+								postUpdateListener="#{reportBackingBean.onSupplierNameChangeForFLLOV()}"
+								saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
 						</c:if>
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flSupplierDropdownView}">

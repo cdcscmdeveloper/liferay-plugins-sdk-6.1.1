@@ -49,6 +49,8 @@ public class PMReportBackingBean extends
 			break;
 
 		case ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL:
+			rptGenBean.setGenerateButton(false);
+			rptGenBean.setConditionGenerateButton(true);
 			rptGenBean.setPmMandatoryOrgCategoryTypeView(true);
 			rptGenBean.setPmMandatoryOrgTypeView(true);
 			rptGenBean.setPmNonMandatoryOrgNameView(true);
@@ -57,8 +59,10 @@ public class PMReportBackingBean extends
 			break;
 
 		case ReportConst.PM_LIST_OF_PROFILES_RPT_VAL:
-			rptGenBean.setPmMandatoryOrgTypeView(true);
-			rptGenBean.setPmMandatoryOrgNameView(true);
+			rptGenBean.setGenerateButton(false);
+			rptGenBean.setConditionGenerateButton(true);
+			rptGenBean.setPmNonMandatoryOrgTypeView(true);
+			rptGenBean.setPmNonMandatoryOrgNameForProfileView(true);
 			rptGenBean.setPmStatusView(true);
 			rptGenBean.setPmIdentificationNoView(true);
 			rptGenBean.setPmUserNameView(true);
@@ -66,6 +70,8 @@ public class PMReportBackingBean extends
 			break;
 
 		case ReportConst.PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL:
+			rptGenBean.setGenerateButton(false);
+			rptGenBean.setConditionGenerateButton(true);
 			rptGenBean.setPmNonMandatoryOrgNameView(true);
 			rptGenBean.setPmOrgCodeView(true);
 			rptGenBean.setPmStatusView(true);

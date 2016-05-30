@@ -4678,6 +4678,12 @@ public class ReportsGenerateBean {
 
 	/** The Pm mandatory org type view. */
 	private boolean pmMandatoryOrgTypeView = false;
+	
+	/** The pm non mandatory org type view. */
+	private boolean pmNonMandatoryOrgTypeView = false;
+	
+	/** The pm non mandatory org name for profile view. */
+	private boolean pmNonMandatoryOrgNameForProfileView = false;		
 
 	/** The Pm org name view. */
 	private boolean pmOrgNameView = false;
@@ -5070,6 +5076,45 @@ public class ReportsGenerateBean {
 	 */
 	public boolean isCtCircularNoView() {
 		return ctCircularNoView;
+	}
+
+	/**
+	 * Checks if is pm non mandatory org type view.
+	 * 
+	 * @return the pmNonMandatoryOrgTypeView
+	 */
+	public boolean isPmNonMandatoryOrgTypeView() {
+		return pmNonMandatoryOrgTypeView;
+	}
+
+	/**
+	 * Sets the pm non mandatory org type view.
+	 * 
+	 * @param pmNonMandatoryOrgTypeView
+	 *            the pmNonMandatoryOrgTypeView to set
+	 */
+	public void setPmNonMandatoryOrgTypeView(boolean pmNonMandatoryOrgTypeView) {
+		this.pmNonMandatoryOrgTypeView = pmNonMandatoryOrgTypeView;
+	}
+
+	/**
+	 * Checks if is pm non mandatory org name for profile view.
+	 * 
+	 * @return the pmNonMandatoryOrgNameForProfileView
+	 */
+	public boolean isPmNonMandatoryOrgNameForProfileView() {
+		return pmNonMandatoryOrgNameForProfileView;
+	}
+
+	/**
+	 * Sets the pm non mandatory org name for profile view.
+	 * 
+	 * @param pmNonMandatoryOrgNameForProfileView
+	 *            the pmNonMandatoryOrgNameForProfileView to set
+	 */
+	public void setPmNonMandatoryOrgNameForProfileView(
+			boolean pmNonMandatoryOrgNameForProfileView) {
+		this.pmNonMandatoryOrgNameForProfileView = pmNonMandatoryOrgNameForProfileView;
 	}
 
 	/**
