@@ -131,10 +131,10 @@
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="state"
-							value="#{registrationBackingBean.getDropDownPmStateByCountry(registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId)}"
+							value="#{registrationBackingBean.managedBean.permenantStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<p:ajax event="change"
-							listener="#{registrationBackingBean.stateOnChangeByType(SupplierMgmtConst.addressTypePermenant)}"
+							listener="#{registrationBackingBean.populateDistrictByAddType('permenant', false)}"
 							update="cmbPermDistrict,cmbPermCity" />
 					</p:selectOneMenu> <p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 			</tr>
@@ -154,10 +154,10 @@
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDistrict.districtId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dist"
-							value="#{registrationBackingBean.getDropDownPmDistrictByState(registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId)}"
+							value="#{registrationBackingBean.managedBean.permenantDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
 						<p:ajax event="change"
-							listener="#{registrationBackingBean.districtOnChangeByType(SupplierMgmtConst.addressTypePermenant)}"
+							listener="#{registrationBackingBean.populateCityByAddType('permenant',false)}"
 							update="cmbPermCity" />
 					</p:selectOneMenu> <p:message id="cmbPermDistrictMsg" for="cmbPermDistrict"
 						display="icon" /></td>
@@ -178,7 +178,7 @@
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCity.cityId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
-							value="#{registrationBackingBean.getDropDownPmCityByDistrict(registrationBackingBean.managedBean.smPermenantAdd.pmDistrict.districtId)}"
+							value="#{registrationBackingBean.managedBean.permenantCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
 					</p:selectOneMenu> <p:message id="cmbPermCityMsg" for="cmbPermCity" display="icon" /></td>
 			</tr>

@@ -120,8 +120,7 @@
 						<f:selectItems var="counLs"
 							value="#{registrationBackingBean.managedBean.countryLs}"
 							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
-						<p:ajax event="change" listener="#{registrationBackingBean.ownerNationalityOnChange}" 
-						update="cmbUsrIdenType,txtIdNumber,pnlIdentLabel" />
+						<p:ajax event="change" listener="#{registrationBackingBean.ownerNationalityOnChange}" update="cmbUsrIdenType,txtIdNumber,pnlIdentLabel" />
 					</p:selectOneMenu>
 					<p:message id="nationalityIdMsg" for="nationalityId" display="icon" /></td>
 			</tr>
@@ -242,10 +241,11 @@
 				<td class="tdContent"><p:selectOneMenu id="compCountryId" disabled="#{registrationBackingBean.managedBean.sabahSarawakType}"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.country']}"  style="width:80%"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId}">
-						<f:selectItems var="counLs" 
+						<f:selectItems var="counLs"
 							value="#{registrationBackingBean.managedBean.countryLs}"
 							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
-						<p:ajax event="change" listener="#{registrationBackingBean.countryOnChangeByType(SupplierMgmtConst.addressTypeBusiness)}"
+						<p:ajax event="change"
+							listener="#{registrationBackingBean.populateStateByAddType('business',true)}"
 							update="busState,busDistrict,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
 						display="icon" /></td>
@@ -267,9 +267,10 @@
 						style="width:80%">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="state"
-							value="#{registrationBackingBean.businessTypeStateDropdown()}"
+							value="#{registrationBackingBean.managedBean.businessStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
-						<p:ajax event="change" process="@this" listener="#{registrationBackingBean.stateOnChangeByType(SupplierMgmtConst.addressTypeBusiness)}"
+						<p:ajax event="change" process="@this"
+							listener="#{registrationBackingBean.populateDistrictByAddType('business', true)}"
 							update="busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 			</tr>
@@ -290,9 +291,10 @@
 						style="width:80%">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dist"
-							value="#{registrationBackingBean.getDropDownPmDistrictByState(registrationBackingBean.managedBean.smBusinessAdd.pmState.stateId)}"
+							value="#{registrationBackingBean.managedBean.businessDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
-						<p:ajax event="change" process="@this" listener="#{registrationBackingBean.districtOnChangeByType(SupplierMgmtConst.addressTypeBusiness)}"
+						<p:ajax event="change" process="@this"
+							listener="#{registrationBackingBean.populateCityByAddType('business',true)}"
 							update="busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId" />
 					</p:selectOneMenu> <p:message id="busDistrictMsg" for="busDistrict" display="icon" /></td>
 			</tr>
@@ -313,9 +315,9 @@
 						style="width:80%">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
-							value="#{registrationBackingBean.getDropDownPmCityByDistrict(registrationBackingBean.managedBean.smBusinessAdd.pmDistrict.districtId)}"
+							value="#{registrationBackingBean.managedBean.businessCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
-						<p:ajax event="change" process="@this" update=":form:acgmap:gmapInput:gmapInput" 
+						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput" process="@this"
 							listener="#{registrationBackingBean.onSelectCity('business')}"/>
 					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
 			</tr>
