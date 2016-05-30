@@ -10,6 +10,9 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/*
+ * @author P Ganga prasad
+ */
 public class SignatoryJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(SignatoryJob.class);
@@ -18,8 +21,8 @@ public class SignatoryJob implements Job {
 			throws JobExecutionException {
 
 		log.info("SignatoryJob start");
-		IEperundingServiceSO  eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
+		IEperundingServiceSO eperundingServiceSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
 						IEperundingServiceSO.class);
 		eperundingServiceSO.createAuthorizedSignatory();
 		log.info("SignatoryJob end");

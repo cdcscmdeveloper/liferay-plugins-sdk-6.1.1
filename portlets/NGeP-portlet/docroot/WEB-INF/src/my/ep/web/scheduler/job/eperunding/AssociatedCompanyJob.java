@@ -10,17 +10,19 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/*
+ * @author P Ganga prasad
+ */
 public class AssociatedCompanyJob implements Job {
 
-	public static Logger log = EpLogger
-			.getLogger(AssociatedCompanyJob.class);
+	public static Logger log = EpLogger.getLogger(AssociatedCompanyJob.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("AssociatedCompanyJob start");
-		IEperundingServiceSO  eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
+		IEperundingServiceSO eperundingServiceSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
 						IEperundingServiceSO.class);
 		eperundingServiceSO.createAssociatedCompany();
 		log.info("AssociatedCompanyJob end");

@@ -10,6 +10,9 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/*
+ * @author P Ganga prasad
+ */
 public class ManagementPersonnelJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(ManagementPersonnelJob.class);
@@ -18,8 +21,8 @@ public class ManagementPersonnelJob implements Job {
 			throws JobExecutionException {
 
 		log.info("ManagementPersonnelJob start");
-		IEperundingServiceSO  eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
+		IEperundingServiceSO eperundingServiceSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
 						IEperundingServiceSO.class);
 		eperundingServiceSO.createManagementPersonnel();
 		log.info("ManagementPersonnelJob end");

@@ -10,10 +10,12 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/*
+ * @author P Ganga prasad
+ */
 public class RetryBatchInboundJob implements Job {
 
-	public static Logger log = EpLogger
-			.getLogger(RetryBatchInboundJob.class);
+	public static Logger log = EpLogger.getLogger(RetryBatchInboundJob.class);
 
 	public static IGfmasServiceSO gfmasServiceSO = EpEjbBusinessDelegate
 			.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
