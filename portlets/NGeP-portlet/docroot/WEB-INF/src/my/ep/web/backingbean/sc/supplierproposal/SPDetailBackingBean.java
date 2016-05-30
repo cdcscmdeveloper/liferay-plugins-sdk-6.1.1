@@ -1,17 +1,11 @@
 package my.ep.web.backingbean.sc.supplierproposal;
 
-import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,9 +22,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.sc.EncryptDataBean;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptColumnName;
@@ -95,7 +87,6 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
 import my.ep.web.util.DateUtils;
@@ -1308,6 +1299,7 @@ public class SPDetailBackingBean extends
 								IQTProposalSO.class);
 
 				ProposalReqDTO reqDTO = new ProposalReqDTO();
+				
 				ScQtProposalChecklist scQtProposalChecklist = this
 						.getManagedBean().getQtProposalChecklist();
 				ScQtProposalChecklistAttachment attachment = scQtProposalChecklist
@@ -1320,7 +1312,7 @@ public class SPDetailBackingBean extends
 				attachment.setPrefixFileName(getManagedBean().getQtProposal()
 						.getProposalNo());
 
-				uploadAttachmentWithEncryption(event.getFile(), attachment);
+				uploadAttachmentWithEncryption(getEncryptionKey(), event.getFile(), attachment);
 
 				scQtProposalChecklist
 						.setScQtProposalChecklistAttachment(attachment);
@@ -1350,8 +1342,7 @@ public class SPDetailBackingBean extends
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	@SuppressWarnings("resource")
-	protected void uploadAttachmentWithEncryption(UploadedFile file,
+	private void uploadAttachmentWithEncryption(String encryptionKey, UploadedFile file,
 			ScAttachment attachment) throws FileNotFoundException, IOException {
 		try{
 			String fileName = file.getFileName();
@@ -1366,7 +1357,7 @@ public class SPDetailBackingBean extends
 			fos = new FileOutputStream(getActualFilePath(attachment));
 			// fos.write(fileBytes);
 			// fos.close();
-			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
+			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC(encryptionKey);
 			bc.InitEncryptCipher();
 			bc.CBCEncryptFile(fis, fos);
 		}
@@ -1379,144 +1370,34 @@ public class SPDetailBackingBean extends
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
-
+	
 	/**
-	 * method to handle download events
+	 * To get the encryption key by quotation / tender id.
 	 * 
-	 * @param scQtProposalChecklist
-	 * @throws IOException
+	 * @return	the encryption key
 	 */
-
-	public void downloadPTJFile(ScQtProposalChecklist scQtProposalChecklist)
-			throws IOException {
-		debugLogger("downloadPTJFile");
-
-		downloadFile(scQtProposalChecklist.getScQtCheckList()
-				.getScQtCheckListAttachment());
-	}
-
-	/**
-	 * method to handle download events related to encrypted file
-	 * 
-	 * @param scAttachment
-	 * @return encrypted file
-	 * @throws IOException
-	 */
-	public <ATTACHMENT extends ScAttachment> File downloadEncryptedFile(
-			ATTACHMENT scAttachment) throws IOException {
-		if (scAttachment != null
-				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
-
-			return downloadEncryptedFile(getActualFilePath(scAttachment),
-					scAttachment.getFileName());
-		} else {
-			throw new EpException(MessageConst.ERROR_760329);
-		}
-	}
-
-	/**
-	 * method to handle download events related to encrypted file
-	 * 
-	 * @param filePath
-	 * @param fileName
-	 * @return encrypted file
-	 * @throws IOException
-	 */
-	public File downloadEncryptedFile(String filePath, String fileName)
-			throws IOException {
-
-		log.info("Inside downloadFile(...)");
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse response = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);
-
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
-		// response.setContentType("application/vnd.ms-excel");
-		// response.setHeader("Content-Transfer-Encoding", "binary");
-		String finalFileName = fileName.replaceAll("\\s+",QTConstants.REPLACE_CHAR);
-		response.setHeader("Content-Disposition", "attachment; filename="
-				+ finalFileName);
-		response.setContentType("application/octet-stream");
-		response.flushBuffer();
-
-		OutputStream out = response.getOutputStream();
-
-		if (filePath != null) {
-			InputStream input = null;
+	public String getEncryptionKey() {
+		String encryptionKey = getManagedBean().getEncryptionKey();
+		
+		if (StringUtils.isBlank(encryptionKey)) {
+			IQTProposalSO proposalSO = null;
 			try {
-				log.info("Inside filePath(...)");
-				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream());
+				proposalSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTProposalSO.class);
 
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				log.info("Inside filePaths(...)");
-				input = new FileInputStream(filePath);
+				ProposalReqDTO reqDTO = new ProposalReqDTO();
+				reqDTO.setScQt(this.getManagedBean().getQt());
+
+				encryptionKey = proposalSO.getGeneratedEncrpyptedKey(reqDTO);
+				getManagedBean().setEncryptionKey(encryptionKey);
+
+			} finally {
+				proposalSO = null;
 			}
-			// byte[] buffer = new byte[4096];
-			// int bytesRead;
-			// while ((bytesRead = input.read(buffer)) != -1) {
-			// out.write(buffer, 0, bytesRead);
-			// buffer = new byte[4096];
-
-			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
-			bc.InitDecryptCipher();
-			bc.CBCDecryptFile(input, out);
-
-			input.close();
 		}
-
-		out.flush();
-		out.close();
-		FacesContext.getCurrentInstance().responseComplete();
-
-		// use to upload back to database
-		File file = new File(filePath);
-		return file;
-	}
-
-	/**
-	 * method to handle download events related to SP file
-	 * 
-	 * @param scQtProposalChecklist
-	 * @throws Exception
-	 */
-	public void downloadSPFile(ScQtProposalChecklist scQtProposalChecklist)
-			throws Exception {
-		debugLogger("downloadSPFile");
-		/*
-		 * ScQtProposalChecklistAttachment checklistAttachment =
-		 * scQtProposalChecklist .getScQtProposalChecklistAttachment();
-		 * System.out.println("File Name : " +
-		 * checklistAttachment.getFilePath());
-		 * 
-		 * File file = new File(checklistAttachment.getFilePath()); InputStream
-		 * input = new FileInputStream(file);
-		 * 
-		 * PortletResponse portletResponse = (PortletResponse) FacesContext
-		 * .getCurrentInstance().getExternalContext().getResponse();
-		 * HttpServletResponse res = com.liferay.portal.util.PortalUtil
-		 * .getHttpServletResponse(portletResponse);
-		 * res.setHeader("Content-Disposition", "attachment; filename=\"" +
-		 * checklistAttachment.getFileName() + "\"");
-		 * res.setHeader("Content-Transfer-Encoding", "binary");
-		 * res.setContentType("application/octet-stream"); res.flushBuffer();
-		 * OutputStream out = res.getOutputStream(); if
-		 * (checklistAttachment.getFilePath() != null) {
-		 * 
-		 * try { URLConnection uc = new URL(checklistAttachment.getFilePath())
-		 * .openConnection(); input = new
-		 * BufferedInputStream(uc.getInputStream()); } catch (Exception e) { //
-		 * Cannot open connection, maybe local file input = new
-		 * FileInputStream(checklistAttachment.getFilePath()); } byte[] buffer =
-		 * new byte[4096]; int bytesRead; while ((bytesRead =
-		 * input.read(buffer)) != -1) { out.write(buffer, 0, bytesRead); buffer
-		 * = new byte[4096]; } input.close(); } else { //
-		 * out.write(attachment.getFileByte()); } out.flush(); out.close();
-		 */
-
+		
+		return encryptionKey;
 	}
 
 	private IQTProposalSO getProposalSO() {

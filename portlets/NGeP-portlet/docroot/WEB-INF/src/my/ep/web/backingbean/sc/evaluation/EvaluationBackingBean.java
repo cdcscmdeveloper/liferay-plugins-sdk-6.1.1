@@ -54,6 +54,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
+import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
@@ -77,6 +78,7 @@ import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
+import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -138,8 +140,8 @@ import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.MessageUtils;
-import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.common.ScRemarkAndAttachmentBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
@@ -9797,81 +9799,32 @@ public class EvaluationBackingBean extends
 	 */
 	public <ATTACHMENT extends ScAttachment> File downloadEncryptedFile(
 			ATTACHMENT scAttachment) throws IOException {
-		if (scAttachment != null
-				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
-
-			return downloadEncryptedFile(getActualFilePath(scAttachment),
-					scAttachment.getFileName());
-		} else {
-			throw new EpException("Attachment not found.");
-		}
+		return new ScRemarkAndAttachmentBackingBean().downloadEncryptedFile(
+				scAttachment, getEncryptionKey());
 	}
-
-	/**
-	 * Download encrypted file.
-	 * 
-	 * @param filePath
-	 *            the file path
-	 * @param fileName
-	 *            the file name
-	 * @return the file
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public File downloadEncryptedFile(String filePath, String fileName)
-			throws IOException {
-
-		log.info("Inside downloadFile(...)");
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse response = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);
-
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
-		// response.setContentType("application/vnd.ms-excel");
-		// response.setHeader("Content-Transfer-Encoding", "binary");
-		// fire fox issue regarding space
-		String finalFileName = fileName.replaceAll("\\s+",
-				QTConstants.REPLACE_CHAR);
-		response.setHeader("Content-Disposition", "attachment; filename="
-				+ finalFileName);
-		response.setContentType("application/octet-stream");
-		response.flushBuffer();
-
-		OutputStream out = response.getOutputStream();
-
-		if (filePath != null) {
-			InputStream input = null;
+	
+	private String getEncryptionKey() {
+		String encryptionKey = getManagedBean().getEncryptionKey();
+		
+		if (StringUtils.isBlank(encryptionKey)) {
+			IQTProposalSO proposalSO = null;
 			try {
-				log.info("Inside filePath(...)");
-				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream());
+				proposalSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTProposalSO.class);
 
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				log.info("Inside filePaths(...)");
-				input = new FileInputStream(filePath);
+				ProposalReqDTO reqDTO = new ProposalReqDTO();
+				reqDTO.setScQt(this.getManagedBean().getScQt());
+
+				encryptionKey = proposalSO.getGeneratedEncrpyptedKey(reqDTO);
+				getManagedBean().setEncryptionKey(encryptionKey);
+
+			} finally {
+				proposalSO = null;
 			}
-			// byte[] buffer = new byte[4096];
-			// int bytesRead;
-			// while ((bytesRead = input.read(buffer)) != -1) {
-			// out.write(buffer, 0, bytesRead);
-			// buffer = new byte[4096];
-
-			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
-			bc.InitDecryptCipher();
-			bc.CBCDecryptFile(input, out);
-			input.close();
 		}
-
-		out.flush();
-		out.close();
-		FacesContext.getCurrentInstance().responseComplete();
-
-		// use to upload back to database
-		File file = new File(filePath);
-		return file;
+		
+		return encryptionKey;
 	}
 
 	/**
