@@ -1447,8 +1447,7 @@ public class SPDetailBackingBean extends
 				ProposalReqDTO reqDTO = new ProposalReqDTO();
 				reqDTO.setScQt(this.getManagedBean().getQt());
 
-				//encryptionKey = proposalSO.getGeneratedEncrpyptedKey(reqDTO);
-				encryptionKey = "SECRET_1SECRET_2";
+				encryptionKey = proposalSO.getGeneratedEncrpyptedKey(reqDTO);
 				getManagedBean().setEncryptionKey(encryptionKey);
 
 			} finally {
