@@ -197,6 +197,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
+	
+	private String encryptionKey;
 
 	/**
 	 * Gets the spki backing bean.
@@ -1666,5 +1668,19 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH)
 				- startCalendar.get(Calendar.MONTH);
 		return diffMonth;
+	}
+
+	/**
+	 * @return the encryptionKey
+	 */
+	public String getEncryptionKey() {
+		return encryptionKey;
+	}
+
+	/**
+	 * @param encryptionKey the encryptionKey to set
+	 */
+	public void setEncryptionKey(String encryptionKey) {
+		this.encryptionKey = encryptionKey;
 	}
 }

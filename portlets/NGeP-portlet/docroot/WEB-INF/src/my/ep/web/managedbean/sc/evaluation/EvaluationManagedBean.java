@@ -483,6 +483,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	private ScQtEvaluationReport selectedReport;
 	
+	private String encryptionKey;
+	
 
 	/**
 	 * Gets the today.
@@ -3329,6 +3331,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedReport(ScQtEvaluationReport selectedReport) {
 		this.selectedReport = selectedReport;
+	}
+
+	/**
+	 * @return the encryptionKey
+	 */
+	public String getEncryptionKey() {
+		return encryptionKey;
+	}
+
+	/**
+	 * @param encryptionKey the encryptionKey to set
+	 */
+	public void setEncryptionKey(String encryptionKey) {
+		this.encryptionKey = encryptionKey;
 	}
 
 }
