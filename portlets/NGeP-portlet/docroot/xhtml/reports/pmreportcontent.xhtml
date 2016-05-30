@@ -55,16 +55,16 @@
 									<tr>
 										<td><p:selectOneMenu
 												label="#{lbl['lbl.rpt.org.category']}" id="orgCatg"
-												value="#{reportBackingBean.pmOrgCategory}" required="true"
+												value="#{reportBackingBean.pmOrgCategory}" 
 												style="width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-													itemValue=""></f:selectItem>
+													itemValue="#{null}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.federal']}"
 													itemValue="1"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.others']}"
 													itemValue="2"></f:selectItem>
-												<p:ajax event="change" partialSubmit="true" update="@form" 
-													listener="#{reportBackingBean.getOrgTypeDropdownValues()}" />
+												<p:ajax event="change" partialSubmit="true" update="@form"
+													listener="#{reportBackingBean.changeOrgCategoryType}" />
 											</p:selectOneMenu></td>
 										<td><p:message id="rptOrgCatgMsg" for="orgCatg"
 												display="icon" showDetail="false" /></td>
@@ -87,65 +87,81 @@
 									<tr>
 										<td><p:selectOneMenu label="#{lbl['lbl.rpt.org.type']}"
 												id="orgType" value="#{reportBackingBean.pmOrgType}"
-												required="true" style="width:300px;">
-												<f:selectItems
-													value="#{reportBackingBean.itemsList}"></f:selectItems>
-												<p:ajax event="change" partialSubmit="true" update="@form" />
+												style="width:300px;">
+												<f:selectItems value="#{reportBackingBean.itemsList}"></f:selectItems>
+												<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.changeOrgTypeValues}" update="@form" />
 											</p:selectOneMenu></td>
-										<td style="width:47%;"><p:message id="rptOrgTypeMsg" for="orgType"
+										<td><p:message id="rptOrgTypeMsg" for="orgType"
 												display="icon" showDetail="false" /></td>
 									</tr>
 								</table>
 							</p:column>
 						</c:if>
-
-						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryOrgNameView}">
+                        <c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmNonMandatoryOrgTypeView}">
 							<p:column>
 								<table style="width: 100%;">
 									<tr>
-										<td class="pmColumn3Width"><p:outputLabel
-												value="#{lbl['lbl.rpt.orgName']}" /> <p:outputLabel
-												value="*" styleClass="mandatory" /></td>
+										<td><p:outputLabel value="#{lbl['lbl.rpt.org.type']}" /></td>
 									</tr>
 								</table>
 							</p:column>
 							<p:column>
 								<table style="width: 100%">
 									<tr>
-										<td><p:inputText
-												label="#{lbl['lbl.rpt.orgName']}" id="orgName"
-												maxlength="100" value="#{reportBackingBean.pmOrgName}"
-												required="true" style="margin-top:5px;width:290px;">
-												<p:ajax event="change" partialSubmit="true"
-													update="@form" />
-											</p:inputText></td>
-										<td style="width:47%;"><p:message id="orgNameMsg" for="orgName"
-												display="icon" showDetail="false" /></td>
+										<td><p:selectOneMenu label="#{lbl['lbl.rpt.org.type']}"
+												id="orgType" value="#{reportBackingBean.pmOrgType}"
+												style="width:300px;">
+												<f:selectItems value="#{reportBackingBean.itemsList}"></f:selectItems>
+												<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.changeOrgTypeValues}" update="@form" />
+											</p:selectOneMenu></td>										
 									</tr>
 								</table>
 							</p:column>
 						</c:if>
 
-
-
+						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmNonMandatoryOrgNameForProfileView}">
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td class="pmColumn3Width"><p:outputLabel
+												value="#{lbl['lbl.rpt.orgName']}" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 100%"><ac:lov id="pmOrgName"
+												style="width:265px;" lovId="PM_ORG_PROFILE_REPORT" size="40"
+												update="@form" headerText="#{lbl['lbl.rpt.orgName']}"
+												readonly="true" 
+												value="#{reportBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}"
+												postUpdateListener="#{reportBackingBean.onNonMandatoryOrgNameChangeForProfileLOV()}"
+												saveObject="reportBackingBean.managedBean.selectedOrgProfile" /></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmOrgCodeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.orgCode']}" />
-							<p:inputText maxlength="30"
-								value="#{reportBackingBean.pmOrgCode}" style="width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
-						</c:if>
-						<c:if
+							<ac:lov id="pmOrgCode" style="width:265px;"
+								lovId="PM_ORG_PROFILE_REPORT" size="40" update="@form"
+								headerText="#{lbl['lbl.rpt.orgCode']}" readonly="true"
+								value="#{reportBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgCode}"
+								postUpdateListener="#{reportBackingBean.onOrgCodeChangeForLOV()}"
+								saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
+						</c:if>						
+                        <c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmNonMandatoryOrgNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.orgName']}" />
-							<p:inputText maxlength="120"
+							<p:inputText maxlength="120" readonly="true"
 								value="#{reportBackingBean.pmOrgName}" style="width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
-
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmContractNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}" />
@@ -185,16 +201,18 @@
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmItemCodeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.itemCode']}" />
-							<p:inputText maxlength="100"
-								value="#{reportBackingBean.pmItemCode}" style="width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
+							<ac:lov id="itemCode" style="width:265px;" lovId="CM_ITEM_REPORT"
+								readonly="true" size="40" update="@form"
+								headerText="#{lbl['lbl.rpt.itemCode']}"
+								value="#{reportBackingBean.managedBean.selectedItem.extensionCode}"
+								postUpdateListener="#{reportBackingBean.onItemCodeChangeForLOV()}"
+								saveObject="reportBackingBean.managedBean.selectedItem" />
 						</c:if>
 
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmItemNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.itemName']}" />
-							<p:inputText maxlength="100"
+							<p:inputText maxlength="100" readonly="true"
 								value="#{reportBackingBean.pmItemName}" style="width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
@@ -205,7 +223,7 @@
 							<p:inputText maxlength="30"
 								value="#{reportBackingBean.pmIdentificationNo}"
 								style="width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+								<p:ajax  process="@this" partialSubmit="true"  listener="#{reportBackingBean.onChangePmListOfProfileFields}"  update="@form" />
 							</p:inputText>
 						</c:if>
 
@@ -214,7 +232,7 @@
 							<p:outputLabel value="#{lbl['lbl.rpt.username']}" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.pmUserName}" style="width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+								<p:ajax  process="@this" partialSubmit="true" listener="#{reportBackingBean.onChangePmListOfProfileFields}" update="@form" />
 							</p:inputText>
 						</c:if>
 
@@ -223,7 +241,7 @@
 							<p:outputLabel value="#{lbl['lbl.rpt.roleCode']}" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.pmRoleCode}" style="width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+								<p:ajax event="change" process="@this" partialSubmit="true" listener="#{reportBackingBean.onChangePmListOfProfileFields}" update="@form" />
 							</p:inputText>
 						</c:if>
 
@@ -238,9 +256,8 @@
 									itemValue="#{1}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}"
 									itemValue="#{0}"></f:selectItem>
-
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.checkPmStatusValue()}"
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -347,10 +364,14 @@
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedCompanyNameView}">
 					<TD class="pmColumn1Width"><p:outputLabel
 							value="#{lbl['lbl.rpt.companyName']}" /></TD>
-					<TD><p:inputText maxlength="100"
-							value="#{reportBackingBean.pmCompanyName}" style="width:289px;">
-							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-						</p:inputText></TD>
+					<TD><ac:lov id="pmCompanyName" readonly="true"
+							style="width:289px;" lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT"
+							size="44" update="@form"
+							headerText="#{lbl['lbl.rpt.companyName']}"
+							value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
+							postUpdateListener="#{reportBackingBean.onCompanyNameChangeForLOV()}"
+							saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
+					</TD>
 				</c:if>
 			</TR>
 
@@ -378,10 +399,12 @@
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemCodeView}">
 					<TD class="pmColumn1Width"><p:outputLabel
 							value="#{lbl['lbl.rpt.itemCode']}" /></TD>
-					<TD><p:inputText maxlength="100"
-							value="#{reportBackingBean.pmItemCode}" style="width:290px;">
-							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-						</p:inputText></TD>
+					<TD><ac:lov id="itemCode" style="width:265px;"
+							lovId="CM_ITEM_REPORT" size="40" update="@form"
+							headerText="#{lbl['lbl.rpt.itemCode']}" readonly="true"
+							value="#{reportBackingBean.managedBean.selectedItem.extensionCode}"
+							postUpdateListener="#{reportBackingBean.onItemCodeChangeForLOV()}"
+							saveObject="reportBackingBean.managedBean.selectedItem" /></TD>
 				</c:if>
 				<c:if
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemNameView}">
