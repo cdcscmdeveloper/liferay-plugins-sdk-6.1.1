@@ -574,11 +574,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			for(CtAgreementContent agContent : getManagedBean().getCtAgreement().getAgreementContents()){
 				if(agContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_USER_UPLOAD_DOC)){
 					if(agContent.getTitle() == null ||  agContent.getTitle().isEmpty()){
+				    	getManagedBean().setSelectedTabIndex(0);
 						throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.contents", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 					if(agContent.getFilePath() == null ||  agContent.getFilePath().isEmpty()){
+						getManagedBean().setSelectedTabIndex(0);
 						throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.contents.attach", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -588,6 +590,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 				if (getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -597,6 +600,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			if(getManagedBean().getCtAgencySigner() != null && getManagedBean().getCtAgencySigner().size() > 0) {
 			      for (CtAgreementParty agencySigner : getManagedBean().getCtAgencySigner()) {
 				      if (agencySigner.getOfficer().getUserId() == null) {
+				    	  getManagedBean().setSelectedTabIndex(1);
 					       throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer.agency", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -607,6 +611,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			if(getManagedBean().getCtSupplierSigner() != null && getManagedBean().getCtSupplierSigner().size() > 0) {
 			      for (CtAgreementParty supplierSigner : getManagedBean().getCtSupplierSigner()) {
 				      if(supplierSigner.getOfficer().getUserId() == null) {
+				    	  getManagedBean().setSelectedTabIndex(1);
 					      throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer.supplier", 
 							  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -618,15 +623,18 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		       if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
 			        if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
 			        	if(getManagedBean().getAgreementContractVer().getSignedDate() == null){
+			        		getManagedBean().setSelectedTabIndex(2);
 			        		 throw new EpException(MessageConst.ERROR_100022, 
 								        new String[]{ResourceBundleUtils.getMessage("lbl.ct.signed.date", 
 										     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			        	}
 			        	if (getManagedBean().getCtAgreement().getSignedPageName() == null) {
+			        		getManagedBean().setSelectedTabIndex(2);
 				             throw new EpException(MessageConst.ERROR_100022, 
 						        new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.signed.page", 
 								     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			        	} else if (getManagedBean().getCtAgreement().getStampedPageName() == null) {
+			        		getManagedBean().setSelectedTabIndex(2);
 				             throw new EpException(MessageConst.ERROR_100022, 
 						        new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.stamped.page", 
 								     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -635,28 +643,33 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		      }
 		
 		     if (getManagedBean().getCtAgencySigner().size() == 0) {
+		    	 getManagedBean().setSelectedTabIndex(1);
 			      throw new EpException(MessageConst.ERROR_100023, 
 					  new String[]{ResourceBundleUtils.getMessage("lbl.ct.agency.signer", 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		      } 
 		
 		      if (getManagedBean().getCtSignAgencyWitness().size() == 0) {
+		    	  getManagedBean().setSelectedTabIndex(1);
 			       throw new EpException(MessageConst.ERROR_100023, 
 					  new String[]{ResourceBundleUtils.getMessage("lbl.ct.agency.witness", 
 					    ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	       	 } else {	
 			     for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
 				       if (agencyWitness.getOfficerName() == null || agencyWitness.getOfficerName().isEmpty()) {
+				    	   getManagedBean().setSelectedTabIndex(1);
 					         throw new EpException(MessageConst.ERROR_100022, 
 							    new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.agency.witness", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				      
 				       } if (agencyWitness.getOfficerIc() == null || agencyWitness.getOfficerIc().isEmpty()) {
+				    	   getManagedBean().setSelectedTabIndex(1);
 					          throw new EpException(MessageConst.ERROR_100022, 
 							    new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.agency.witness", 
 								  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				    
 				       } if (agencyWitness.getOfficerPosition() == null || agencyWitness.getOfficerPosition().isEmpty()) {
+				    	   getManagedBean().setSelectedTabIndex(1);
 					          throw new EpException(MessageConst.ERROR_100022, 
 							      new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.agency.witness", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -665,28 +678,33 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			     }
 		 
 	       	 } if (getManagedBean().getCtSupplierSigner().size() == 0) {
+	       		   getManagedBean().setSelectedTabIndex(1);
 		        	throw new EpException(MessageConst.ERROR_100023, 
 					   new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.signer", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		     } 
 	       	 
 	       	 if(getManagedBean().getCtSupplierWitness().size() == 0) {
+	       		  getManagedBean().setSelectedTabIndex(1);
 		    	   throw new EpException(MessageConst.ERROR_100023,
 					   new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.witness", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		     } else {
 	    	     for(CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
 				      if(supplierWitness.getOfficerName() == null || supplierWitness.getOfficerName().isEmpty()) {
+				    	  getManagedBean().setSelectedTabIndex(1);
 					       throw new EpException(MessageConst.ERROR_100022, 
 							   new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.supplier.witness", 
 								  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				   
 				      } if(supplierWitness.getOfficerIc() == null || supplierWitness.getOfficerIc().isEmpty()) {
+				    	  getManagedBean().setSelectedTabIndex(1);
 					        throw new EpException(MessageConst.ERROR_100022, 
 							   new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.supplier.witness", 
 								  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				   
 				      } if (supplierWitness.getOfficerPosition() == null || supplierWitness.getOfficerPosition().isEmpty()) {
+				    	  getManagedBean().setSelectedTabIndex(1);
 					      throw new EpException(MessageConst.ERROR_100022, 
 							 new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.supplier.witness", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -698,6 +716,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		     if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 				    && getManagedBean().getApproverModel().getTarget().size() == 0) {
 			        //Approver is mandatory for document submission. Please select at least one approver.
+		    	   if(getManagedBean().isUploadStampedAndSignedPage()){
+		    	          getManagedBean().setSelectedTabIndex(3);
+		    	   }else{
+		    	     getManagedBean().setSelectedTabIndex(2);
+		    	   }
 			        throw new EpException(MessageConst.ERROR_750010);
 		      }
 		
@@ -706,7 +729,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		      if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
 				     && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_DRAFT_AGREEMENT_HT_NAME)) {			
 			         if (getManagedBean().getCtContract().getLatestContractVer() == null) { // FD creation in progress
-				         throw new EpException(MessageConst.ERROR_750041, 
+			        	 getManagedBean().setSelectedTabIndex(0);
+			        	 throw new EpException(MessageConst.ERROR_750041, 
 						    new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			         }		
@@ -724,6 +748,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			        ContractAgreementResDTO resDTO = agreementSO.validatePendingFinalistApproval(reqDTO);
 			        
 			        if(!resDTO.isFdComplete()) {
+			        	getManagedBean().setSelectedTabIndex(0);
 				         throw new EpException(MessageConst.ERROR_750041, 
 						    new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -735,6 +760,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	       if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
 			     && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)) {			
 		         if (!getManagedBean().isAgreementDisclaimer()) {
+		        	 getManagedBean().setSelectedTabIndex(0);
 			         throw new EpException(MessageConst.ERROR_750042);
 		         }		
 	       }

@@ -612,7 +612,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			        //Validation for PID
 			        if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getCircularVer().isPid() && 
 					     (getManagedBean().getCircularVer().getCtCircularPidReason() == null || getManagedBean().getCircularVer().getCtCircularPidReason().size() == 0)) {
-				        throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+				        getManagedBean().setSelectedTabIndex(0);
+			        	throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			        }
 			
@@ -620,13 +621,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					    && getManagedBean().getCircularVer().getCtCircularPidReason().size() > 0 ){
 				             for(CtCircularPidReason reason : getManagedBean().getCircularVer().getCtCircularPidReason()){
 					              if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
-						                throw new EpException(MessageConst.ERROR_100022, 
+					            	  getManagedBean().setSelectedTabIndex(0);
+					            	  throw new EpException(MessageConst.ERROR_100022, 
 									         new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					               }
 					  
 					              if(PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
 						                 if(reason.getReasonDesc().isEmpty()){
-							                  throw new EpException(MessageConst.ERROR_100022, 
+						                	 getManagedBean().setSelectedTabIndex(0);
+						                	 throw new EpException(MessageConst.ERROR_100022, 
 										            new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						                 }
 					              }
@@ -636,11 +639,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		          	if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 							
 					        if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
-						            throw new EpException(MessageConst.ERROR_100023, 
+					        	 getManagedBean().setSelectedTabIndex(1);
+					        	throw new EpException(MessageConst.ERROR_100023, 
 								        new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.list", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					        }
 					
 					       if(getManagedBean().getApproverModel().getTarget().size()==0) {
+					    	   getManagedBean().setSelectedTabIndex(2);
 						         throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.			
 					        }
 			      }
@@ -648,6 +653,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			      if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				         String remark = getManagedBean().getRemarkList().get(0).getRemark();
 	 			         if((remark == null || remark.length() == 0)) {
+	 			        	 getManagedBean().setSelectedTabIndex(0);
 	 				            throw new EpException(MessageConst.ERROR_100022, 
 							       new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	 			          }
@@ -664,6 +670,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 						           contractReqDTO.setLoaId(scLoa.getLoaId());
 						           CtContract ctContract = contractSO.retrieveContractByLoaId(contractReqDTO).getContract();
 						           if(ctContract==null || ctContract.getLatestContractVer()==null) { 
+						        	   getManagedBean().setSelectedTabIndex(1);
 							            throw new EpException(MessageConst.ERROR_750005, new String[]{circularContrart.getCtContract().getContractName()});
 						           }
 					         }
@@ -674,6 +681,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				       for(CtContactPerson contrartPerson : getManagedBean().getCircularVer().getCtContactPersons()) {	
 					       if(contrartPerson.getName().isEmpty() ||contrartPerson.getAddress().isEmpty() 
 							    || contrartPerson.getEmail().isEmpty() || contrartPerson.getPhoneNo().isEmpty()) {
+					    	   getManagedBean().setSelectedTabIndex(0);
 						        throw new EpException(MessageConst.ERROR_100022, new String[]{"Contact Person Details"});
 					      }
 				     }
