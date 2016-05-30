@@ -13,53 +13,50 @@
 	<cc:attribute name="encrypted" default="false" />
 	<cc:attribute name="encryptionKey" required="#{cc.attrs.encrypted}" />
 	<cc:attribute name="popupWidgetVar" required="true" />
+	<cc:attribute name="rowIndex" default="0" />
+	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}Btn" />
 </cc:interface>
 
 <cc:implementation>
-	<h:panelGroup id="#{cc.id}">
-		<c:choose>
-			<c:when test="#{empty cc.attrs.attachment}">
-				<p:commandButton id="#{cc.id}Btn"
-					value="#{lbl['lbl.txt.attach.file']}"
-					icon="iconAttachment" 
-					partialSubmit="true" process="@this" update="@([id$=#{cc.attrs.popupWidgetVar}Id])"
-					oncomplete="#{cc.attrs.popupWidgetVar}.show();return false;"
-					disabled="#{readonly}" />
-			</c:when>
-			<c:otherwise>
-				<c:choose>
-					<c:when test="#{cc.attrs.encrypted}">
-						<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
-							immediate="true"
-							action="#{scRemarkAndAttachmentBackingBean.downloadEncryptedFile(scAttachment, cc.attrs.encryptionKey)}" />
-					</c:when>
-					<c:otherwise>
-						<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
-							immediate="true"
-							action="#{scRemarkAndAttachmentBackingBean.downloadFile(cc.attrs.attachment)}" />
-					</c:otherwise>
-				</c:choose>
-				<p:commandLink 
-					process="@this" partialSubmit="true" update="@([id$=#{cc.id}delAttPopupId])"
-					oncomplete="#{cc.id}delAttPopup.show();" 
-					rendered="#{!cc.attrs.readonly and scRemarkAndAttachmentBackingBean.compareUserName(cc.attrs.attachment.createdUser.loginId)}">
-					<h:graphicImage
-						value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
-						styleClass="tasklist_title1" />
-				</p:commandLink>
-			</c:otherwise>
-		</c:choose>
+	<h:panelGroup id="#{cc.attrs.id}">
+		<p:commandButton id="#{cc.attrs.id}Btn"
+			icon="ui-icon-upload"
+			partialSubmit="true" process="@this" update="@([id$=#{cc.attrs.popupWidgetVar}Id])"
+			oncomplete="#{cc.attrs.popupWidgetVar}.show();return false;"
+			disabled="#{readonly}"
+			rendered="#{empty cc.attrs.attachment}">
+			<cc:insertChildren />
+		</p:commandButton>
+		
+		<h:panelGroup rendered="#{!empty cc.attrs.attachment}">
+			<c:choose>
+				<c:when test="#{cc.attrs.encrypted}">
+					<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
+						immediate="true"
+						action="#{scRemarkAndAttachmentBackingBean.downloadEncryptedFile(cc.attrs.attachment, cc.attrs.encryptionKey)}" />
+				</c:when>
+				<c:otherwise>
+					<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
+						immediate="true"
+						action="#{scRemarkAndAttachmentBackingBean.downloadFile(cc.attrs.attachment)}" />
+				</c:otherwise>
+			</c:choose>
+			<p:commandLink 
+				process="@this" partialSubmit="true" update="@([id$=#{cc.attrs.popupWidgetVar}delAttPopupId])"
+				oncomplete="#{cc.attrs.popupWidgetVar}delAttPopup.show();" 
+				rendered="#{!cc.attrs.readonly}">
+				<h:graphicImage
+					value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
+					styleClass="tasklist_title1" />
+				<f:setPropertyActionListener
+					target="#{scRemarkAndAttachmentBackingBean.selectedComponentId}"
+					value="#{cc.attrs.id}#{rowIndex}" />
+			</p:commandLink>
+		</h:panelGroup>
 	</h:panelGroup>
 		
 	<c:if test="#{!cc.attrs.readonly}">
-		<ac:confirmationPopup id="#{cc.id}delAttPopupId"
-			widget="#{cc.id}delAttPopup"
-			okAction="scRemarkAndAttachmentBackingBean.deleteSingleAttachmentAction"
-			width="33%" height="100" title="#{lbl['lbl.sc.supporting.document']}"
-			content="#{lbl['lbl.ct.dialog.delete.attachment.msg']}"
-			update="@this" />
-		
-		<p:remoteCommand name="deleteSelAttachment"
+		<p:remoteCommand name="#{cc.attrs.id}#{rowIndex}deleteSelAttachment"
 			partialSubmit="true" process="@this" update="@([id$=#{cc.attrs.id}])">
 			<f:setPropertyActionListener target="#{cc.attrs.attachment}" value="#{null}" />
 		</p:remoteCommand>

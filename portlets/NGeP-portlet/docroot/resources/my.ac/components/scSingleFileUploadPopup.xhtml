@@ -41,6 +41,13 @@
 		
 		<p:remoteCommand name="#{cc.attrs.widgetVar}reRender"
 			partialSubmit="true" process="@this" update="#{cc.attrs.update}" />
+			
+		<ac:confirmationPopup id="#{cc.attrs.widgetVar}delAttPopupId"
+			widget="#{cc.attrs.widgetVar}delAttPopup"
+			okAction="scRemarkAndAttachmentBackingBean.deleteSingleAttachmentAction"
+			width="33%" height="100" title="#{lbl['lbl.sc.supporting.document']}"
+			content="#{lbl['lbl.ct.dialog.delete.attachment.msg']}"
+			update="@this" />
 	</c:if>
 </cc:implementation>
 </ui:composition>
