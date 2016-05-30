@@ -14,7 +14,6 @@ import java.net.URLConnection;
 import java.util.List;
 
 import javax.el.MethodExpression;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -82,12 +81,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 						widgetComponent + "reRender();");
 				RequestContext.getCurrentInstance().execute(
 						widgetComponent + ".hide();");
-			}
-			
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"The file was uploaded successfully.", null);
-
-			FacesContext.getCurrentInstance().addMessage(null, message);	
+			}	
 			
 		} catch (Exception e) {
 			handleException(e);

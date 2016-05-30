@@ -35,7 +35,6 @@ import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
@@ -255,11 +254,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			fos = new FileOutputStream(getActualFilePath(attachment));
 			fos.write(fileBytes);
 			fos.close();
-
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"The file was uploaded successfully.", null);
-
-			FacesContext.getCurrentInstance().addMessage(null, message);	
 		}
 	}
 
