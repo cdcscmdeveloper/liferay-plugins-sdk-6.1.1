@@ -47,6 +47,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	public static Logger log = EpLogger
 			.getLogger(ScRemarkAndAttachmentBackingBean.class);
 	
+	private String selectedComponentId;
 	private BaseEntity selectedAttachment;
 	private List<? extends BaseEntity> attachmentList;
 
@@ -93,7 +94,8 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	 * Delete Single Attachment Action
 	 */
 	public void deleteSingleAttachmentAction() {
-		RequestContext.getCurrentInstance().execute("deleteSelAttachment()");
+		RequestContext.getCurrentInstance().execute(
+				this.selectedComponentId + "deleteSelAttachment()");
 	}
 	
 	/**
@@ -181,6 +183,20 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 		// use to upload back to database
 		File file = new File(filePath);
 		return file;
+	}
+
+	/**
+	 * @return the selectedComponentId
+	 */
+	public String getSelectedComponentId() {
+		return selectedComponentId;
+	}
+
+	/**
+	 * @param selectedComponentId the selectedComponentId to set
+	 */
+	public void setSelectedComponentId(String selectedComponentId) {
+		this.selectedComponentId = selectedComponentId;
 	}
 
 	/**
