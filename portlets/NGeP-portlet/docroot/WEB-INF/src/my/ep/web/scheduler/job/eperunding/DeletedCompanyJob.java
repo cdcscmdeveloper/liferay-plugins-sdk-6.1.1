@@ -10,6 +10,9 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/*
+ * @author P Ganga prasad
+ */
 public class DeletedCompanyJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(DeletedCompanyJob.class);
@@ -18,8 +21,8 @@ public class DeletedCompanyJob implements Job {
 			throws JobExecutionException {
 
 		log.info("DeletedCompanyJob start");
-		IEperundingServiceSO  eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
+		IEperundingServiceSO eperundingServiceSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
 						IEperundingServiceSO.class);
 		eperundingServiceSO.createDeletedCompany();
 		log.info("DeletedCompanyJob end");
