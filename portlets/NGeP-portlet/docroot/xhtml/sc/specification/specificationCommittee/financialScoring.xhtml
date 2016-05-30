@@ -37,7 +37,8 @@
 			<!-- <ac:paginator for="financialweightage" /> -->
 			<!-- 	<p:column selectionMode="multiple" style="text-align:center;" /> -->
 
-			<p:column headerText="#{lbl['lbl.sc.spec.technical.financial.scoring.title']}"
+			<p:column
+				headerText="#{lbl['lbl.sc.spec.technical.financial.scoring.title']}"
 				style="width:50%;white-space: normal;">
 				<h:outputText value="#{fn:replace(finance.title,',','&lt;/br&gt;')}"
 					size="50" escape="false" />
@@ -130,7 +131,7 @@
 				value="#{lbl['lbl.sc.passing.score.financial.instruction']}"
 				escape="false" />
 
-		
+
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.spec.score.variance.instruction']}"
 				escape="false" />
@@ -195,7 +196,7 @@
 
 			</p:panelGrid>
 			<p:spacer height="15"></p:spacer>
-	<table>
+			<table>
 				<tr>
 					<td style="width: 250px;"><p:outputLabel
 							value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
@@ -209,7 +210,7 @@
 				</tr>
 			</table>
 
-			
+
 
 		</p:panel>
 	</h:panelGroup>
@@ -219,7 +220,7 @@
 			value="#{lbl['lbl.sc.passing.score.financial.instruction']}"
 			escape="false" />
 
-		
+
 
 
 		<p:panelGrid style="margin-top:5px;width:100%;">
@@ -278,7 +279,7 @@
 		</p:panelGrid>
 		<p:spacer height="15"></p:spacer>
 
-<table>
+		<table>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
@@ -286,6 +287,7 @@
 				<td><p:inputText style="text-align:right" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.passingScore}">
+						<p:ajax event="change" process="@this" partialSubmit="true" />
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="3" integerOnly="true" />
@@ -307,11 +309,11 @@
 
 				<td class="TableFieldLeft" style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.supporting.document']}" /></td>
-				<td class="TableFieldRight" >
+				<td class="TableFieldRight">
 					<table style="width: 500px;">
 						<tr>
 							<td colspan="2"><p:commandButton
-							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 									oncomplete="financialUserScoringSchema.show();return false;"
 									value="#{lbl['lbl.txt.attach.files']}" partialSubmit="true"
 									process="@this">
@@ -319,7 +321,8 @@
 						</tr>
 						<tr>
 							<td />
-							<td><p:dataGrid id="financialattachedIdsDemo" var="attachFile"
+							<td><p:dataGrid id="financialattachedIdsDemo"
+									var="attachFile"
 									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									value="#{specificationBackingBean.managedBean.qt.financialUserScoringSchemaAttachment}"
 									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
@@ -342,7 +345,7 @@
 													styleClass="blue_font" immediate="true"
 													action="#{specificationBackingBean.downloadFile(attachFile)}" />
 												<p:commandLink
-												disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+													disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 													action="#{specificationBackingBean.deleteTechnicalFinacialUserScoringSchema('F')}"
 													immediate="true" update="@form">
 													<h:graphicImage styleClass="tasklist_title1"
