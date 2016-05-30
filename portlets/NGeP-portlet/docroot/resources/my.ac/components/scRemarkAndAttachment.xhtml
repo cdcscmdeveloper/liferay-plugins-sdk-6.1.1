@@ -41,7 +41,7 @@
 			<p:ajax event="close" />
 			<p:fileUpload id="fileUploadId" style="display:inline;"
 				fileUploadListener="#{scRemarkAndAttachmentBackingBean.handleFileUploadListener}"
-				mode="advanced" 
+				mode="advanced" multiple="true"
 				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
