@@ -192,7 +192,7 @@ public class PmTrackingDiaryBackingBean extends
 	
 	public String getUserName(Long userId) {
 		if(userId.longValue()==CommonConstants.TRACKING_DIARY_SYSTEM_USER_ID) {
-			return "Sistem";
+			return ResourceBundleUtils.getMessage("lbl.pm.system", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
 		}
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);
@@ -376,7 +376,7 @@ public class PmTrackingDiaryBackingBean extends
 	public String getRoleDescByRoleCode(String roleCode) {
 		log.info("getRoleDescByRoleCode");
 		if(roleCode==null) {
-			return "Sistem";
+			return ResourceBundleUtils.getMessage("lbl.pm.system", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
 		}
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		return PmCommonUtil.getRoleDescByRoleCodeAndLanguage(roleCode, languageCode);
