@@ -265,6 +265,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 	 */
 	public void addNewZone() {
 		log.debug("********************ZoneMaintenanceBackingBean addNewZone***************");
+		this.getManagedBean().setSelectedNodes(null);
 		getManagedBean().setEditMode(false);
 		assignValReqdToTrue();
 		getManagedBean().setSelectedSupplierZone(new CmSupplierZone());
