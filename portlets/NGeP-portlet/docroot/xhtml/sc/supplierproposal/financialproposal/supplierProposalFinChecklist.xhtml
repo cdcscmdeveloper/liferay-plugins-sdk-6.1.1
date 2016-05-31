@@ -85,7 +85,7 @@
 						encrypted="true" encryptionKey="#{supplierProposalDetailBackingBean.encryptionKey}"
 						readonly="#{supplierProposalDetailBackingBean.managedBean.closed}"
 						rowIndex="#{rowIndex}"
-						deleteFileUploadListener="supplierProposalDetailBackingBean.deleteFinAttachmentAction">
+						deleteFileUploadListener="supplierProposalDetailBackingBean.deleteProposalChecklistAttachmentAction">
 						<f:setPropertyActionListener for="actionEvent"
 							value="#{financeList}"
 							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />

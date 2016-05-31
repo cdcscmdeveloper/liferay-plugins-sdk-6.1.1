@@ -15,7 +15,7 @@
 	<cc:attribute name="popupWidgetVar" required="true" />
 	<cc:attribute name="rowIndex" default="0" />
 	<cc:attribute name="deleteFileUploadListener" />
-	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}Btn" />
+	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}Btn #{cc.attrs.id}Del" />
 </cc:interface>
 
 <cc:implementation>
@@ -42,7 +42,7 @@
 						action="#{scRemarkAndAttachmentBackingBean.downloadFile(cc.attrs.attachment)}" />
 				</c:otherwise>
 			</c:choose>
-			<p:commandLink 
+			<p:commandLink id="#{cc.attrs.id}Del"
 				process="@this" partialSubmit="true" update="@([id$=#{cc.attrs.popupWidgetVar}delAttPopupId])"
 				oncomplete="#{cc.attrs.popupWidgetVar}delAttPopup.show();" 
 				rendered="#{!cc.attrs.readonly}">
@@ -52,6 +52,7 @@
 				<f:setPropertyActionListener
 					target="#{scRemarkAndAttachmentBackingBean.selectedComponentId}"
 					value="#{cc.attrs.id}#{rowIndex}" />
+				<cc:insertChildren />
 			</p:commandLink>
 		</h:panelGroup>
 	</h:panelGroup>

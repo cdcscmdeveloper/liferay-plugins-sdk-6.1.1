@@ -1287,54 +1287,34 @@ public class SPDetailBackingBean extends
 	 * @param entity
 	 * 		the deleted attachment
 	 */
-	public void deleteTecAttachmentAction(BaseEntity deletedEntity) {
-		unselectProposalCheckList(deletedEntity, getManagedBean().getTecCheckDetailsList());
-	}
-	
-	/**
-	 * Delete Financial Attachment Action
-	 * 
-	 * @param entity
-	 * 		the deleted attachment
-	 */
-	public void deleteFinAttachmentAction(BaseEntity deletedEntity) {
-		unselectProposalCheckList(deletedEntity, getManagedBean().getFinanceCheckDetailsList());
-	}
-	
-	private void unselectProposalCheckList(BaseEntity deletedEntity, List<ScQtProposalChecklist> scQtProposalChecklists) {
-		if (CollectionUtils.isNotEmpty(scQtProposalChecklists)) {
-			for (ScQtProposalChecklist scQtProposalChecklist : scQtProposalChecklists) {
-				if (scQtProposalChecklist.getScQtProposalChecklistAttachment() != null &&
-						scQtProposalChecklist.getScQtProposalChecklistAttachment().equals(deletedEntity)) {
-					IQTProposalSO proposalSO = null;
-					try {
-						proposalSO = BusinessDelegate.getInstance()
-								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-										IQTProposalSO.class);
+	public void deleteProposalChecklistAttachmentAction(BaseEntity deletedEntity) {
+		IQTProposalSO proposalSO = null;
+		try {
+			proposalSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTProposalSO.class);
+			
+			ScQtProposalChecklist scQtProposalChecklist = getManagedBean().getQtProposalChecklist();
 
-						ProposalReqDTO reqDTO = new ProposalReqDTO();
-						scQtProposalChecklist.setSubmitted(false);
-						scQtProposalChecklist.setScQtProposalChecklistAttachment(null);
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			scQtProposalChecklist.setSubmitted(false);
+			scQtProposalChecklist.setScQtProposalChecklistAttachment(null);
 
-						reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-						reqDTO.setScQt(this.getManagedBean().getQt());
-						
-						List<ScQtProposalChecklistAttachment> attachments = new ArrayList<ScQtProposalChecklistAttachment>();
-						attachments.add((ScQtProposalChecklistAttachment)deletedEntity);
-						reqDTO.setTobeRemovedProposalChecklistAttachments(attachments);
-						ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
+			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setScQt(this.getManagedBean().getQt());
+			
+			List<ScQtProposalChecklistAttachment> attachments = new ArrayList<ScQtProposalChecklistAttachment>();
+			attachments.add((ScQtProposalChecklistAttachment)deletedEntity);
+			reqDTO.setTobeRemovedProposalChecklistAttachments(attachments);
+			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
-						if (resDTO.isSuccessful()) {
-							updateQtProposalCheckList(scQtProposalChecklist,
-									resDTO.getProposalChecklist());
-						}
-
-					} finally {
-						proposalSO = null;
-					}
-					break;
-				}
+			if (resDTO.isSuccessful()) {
+				updateQtProposalCheckList(scQtProposalChecklist,
+						resDTO.getProposalChecklist());
 			}
+
+		} finally {
+			proposalSO = null;
 		}
 	}
 
