@@ -47,6 +47,7 @@
 			style="width: 100px" id="telcoCompId" disabled="#{cc.attrs.disabled}">
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{applicationBean.telcoItems}" />
+			<p:ajax process="@this" event="change" update="@this" partialSubmit="true"/>
 		</p:selectOneMenu>
 		<p:graphicImage id="#{phonePanelId}telco"	value="/css/images/design/tooltips.png" rendered="#{cc.attrs.isMobile and !cc.attrs.hideTelco}" /> 
 		<p:tooltip	id="#{phonePanelId}tftelco" for="#{phonePanelId}telco">
