@@ -14,6 +14,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	}
 	
 	</style>
+	<ui:param name="isSysOrgType" value="#{ParameterConst.orgTypeSys eq taskAssignBackingBean.managedBean.currentActiveOrg.orgTypeCode.parameterCode}" />		
 	<p:panel id="pTaskAssignSearch" header="#{lbl['lbl.pm.ta.search']}" toggleable="true">
 		
 		<table class="ppTwoTable">
@@ -23,7 +24,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td width="55%" style="white-space:nowrap;">
-					<p:selectOneMenu value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId}" 
+					<p:selectOneMenu 
+						disabled="#{not isSysOrgType}"
+						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId}" 
 						styleClass="ppDropDownWidthM" id="somOrgType"   
 						label="#{lbl['lbl.pm.ta.org.type.name']}">  
 						<f:selectItems value="#{taskAssignBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.organisationTypes, taskAssignBackingBean.orgTypeSearchBean)}" />   
