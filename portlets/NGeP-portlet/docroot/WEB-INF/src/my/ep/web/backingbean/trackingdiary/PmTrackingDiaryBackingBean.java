@@ -375,7 +375,7 @@ public class PmTrackingDiaryBackingBean extends
 	 */
 	public String getRoleDescByRoleCode(String roleCode) {
 		log.info("getRoleDescByRoleCode");
-		if(roleCode==null) {
+		if(roleCode==null || roleCode.isEmpty()) {
 			return ResourceBundleUtils.getMessage("lbl.pm.system", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
 		}
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
