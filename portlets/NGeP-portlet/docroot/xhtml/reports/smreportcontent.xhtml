@@ -2208,7 +2208,7 @@
 							<p:column>
 								<table style="width: 100%;">
 									<tr style="width: 100%;">
-										<td><p:outputLabel  style="width:138px;"
+										<td><p:outputLabel  style="width:124px;"
 												value="#{lbl['lbl.rpt.supportingDocumentMode']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 
@@ -3083,7 +3083,7 @@
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smCanApplicationDateView}">
-						<TD class="columnGenClass"><p:outputLabel
+						<TD class="columnGenClass"><p:outputLabel style="width:78%;"
 								value="#{lbl['lbl.rpt.application.submissiondatefrom']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></TD>
 					</c:if>
@@ -3675,7 +3675,7 @@
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 							<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 						</p:selectOneMenu></TD>
-					<TD style="width:53%;"><p:message id="MandatoryToYearMsg" for="MandatoryToYear"
+					<TD><p:message id="MandatoryToYearMsg" for="MandatoryToYear"
 							display="icon" showDetail="false" /></TD>
 				</TR>
 			</TABLE>
