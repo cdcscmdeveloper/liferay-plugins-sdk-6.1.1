@@ -85,5 +85,19 @@
 					</p:outputPanel></td>
 			</tr>
 		</table>
+		<p:confirmDialog message="#{lbl['lbl.fl.confirmation.reject.dialogue']}"
+			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+					partialSubmit="true" 
+					action="#{flOrderBB.fulfillmentOrderAction(BpmOutcomeConstant.bpmReject)}"
+					onstart="cancelConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					partialSubmit="true"
+					onclick="cancelConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>	
 	</ui:define>
 </ui:composition>

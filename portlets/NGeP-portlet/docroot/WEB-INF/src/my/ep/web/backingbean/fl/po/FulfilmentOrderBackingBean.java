@@ -927,6 +927,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			if(hasFactoringUserRole()) {
 				validateFulfillmentOrder(outcome);
 			}
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || hasFactoringUserRole()){
+				validateFulfillmentOrder(outcome);
+				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+				return null;
+			}
 			return fulfillmentOrderAction(outcome);
 		} else if((hasSupplierRole() && !hasGovtSellerRole())) {
 			validateFulfillmentOrder(outcome);
@@ -1480,6 +1485,95 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 		  return url;
 		  
+	}
+	
+	/**
+	 * Navigate to delivery order page.
+	 *
+	 * @param index the index
+	 * @return the string
+	 */
+	public String navigateToDeliveryOrder(int index) {
+		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+		IReasonSO reasonSO = (IReasonSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
+		reqDTO.setFlOrderId(getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+		FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
+		BigDecimal delAmtCal= BigDecimal.ZERO;
+		//String others="Justification Other";
+		
+		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
+		doMB.setDeliveryOrder(resDTO);
+		for(FlDeliveryAddress deliveryAddress : resDTO.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
+			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
+				BigDecimal remainOrderQty=itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
+				if(itemAddr.getDeliveredQty().doubleValue()==0) {
+					itemAddr.setDeliveredQty(remainOrderQty);
+				}
+				if(itemAddr.getDeliveredQty().doubleValue()>0){
+					if(itemAddr.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
+						BigDecimal unitPriceCal=itemAddr.getUnitPrice();
+						delAmtCal=unitPriceCal.multiply(itemAddr.getDeliveredQty());
+						itemAddr.setDeliveredAmt(delAmtCal.setScale(2, RoundingMode.HALF_UP));
+					}
+				}
+			}
+		}
+		for(FlDeliveryAddress deliveryAddress : resDTO.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
+			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
+				BigDecimal remainOrderQty=itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
+				deliveryAddress.setSuppDelOrdNoEnabled(false);
+				if(remainOrderQty.doubleValue()> 0){
+					deliveryAddress.setSuppDelOrdNoEnabled(true);
+					break;
+				}
+			}
+		}
+		doMB.getSupplierGst(resDTO.getFlFulfilmentRequest());
+		doMB.getManagedBean().setDisplayStopIntrDetls(false);
+		if(resDTO.getFlStopInstr() !=null){
+			doMB.getManagedBean().setDisplayStopIntrDetls(true);
+			doMB.getManagedBean().setFlStopInstr(resDTO.getFlStopInstr());
+			reasonReqDTO.setReasonId(resDTO.getFlStopInstr().getPmReason().getReasonId());
+			reasonReqDTO.setLanguage(CommonConstants.DEFAULT_LANGUAGE_CODE);
+			ReasonResDTO reasonResDTO = reasonSO.retrieveReasonDescById(reasonReqDTO);
+			PmReasonDesc reasonDesc=reasonResDTO.getReasonDesc();
+			if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(resDTO.getFlStopInstr().getPmReason().getReasonCode())) {
+				doMB.getManagedBean().setReasonDesc(reasonDesc.getReasonDesc() + " " +  "-"+ " "+ resDTO.getFlStopInstr().getReasonDesc());
+			}else{
+				doMB.getManagedBean().setReasonDesc(reasonDesc.getReasonDesc());
+			}
+			
+			doMB.getManagedBean().getFlStopInstr().setChangedDate(resDTO.getFlStopInstr().getChangedDate());
+			doMB.getManagedBean().getFlStopInstr().setStopInstrNo(resDTO.getFlStopInstr().getStopInstrNo());
+			doMB.getManagedBean().setRejectedRemark(resDTO.getStopInstrRejectedRemarkList());
+		}
+		doMB.sortOrderSummaryList(doMB.getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
+		FacesContext fc = FacesContext.getCurrentInstance();
+		doMB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+		doMB.getManagedBean().setFromDoPage(true);
+		doMB.getManagedBean().setFromPageUrl("/xhtml/fl/dopending/doPendingTable.xhtml");
+		return constructDOUrl(doMB.getManagedBean().getFlDeliveryOrder().getDeliveryOrderId());
+	}
+	
+	private String constructDOUrl(Long doId) {
+		StringBuilder doUrlLink = new StringBuilder();
+
+		doUrlLink.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)); // portal application url
+		doUrlLink.append(FulfilmentConst.VIEW_DELIVERY_ORDER); // invoice page
+		doUrlLink.append("?doId="+doId); // parameter - do id
+		String url = doUrlLink.toString();
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		try {
+			externalContext.redirect(url);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return url;
+
 	}
 		
 }

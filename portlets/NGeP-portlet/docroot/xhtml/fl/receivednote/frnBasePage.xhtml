@@ -142,5 +142,19 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
+	<p:confirmDialog message="#{lbl['lbl.fl.confirmation.reject.dialogue']}"
+			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+					partialSubmit="true" 
+					action="#{receivedNoteBackingBean.submitAction(BpmOutcomeConstant.bpmReject)}"
+					onstart="cancelConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					partialSubmit="true"
+					onclick="cancelConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>	
 	</ui:define>
 </ui:composition>
