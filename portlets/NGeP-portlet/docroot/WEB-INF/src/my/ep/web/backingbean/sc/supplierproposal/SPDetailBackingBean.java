@@ -520,7 +520,7 @@ public class SPDetailBackingBean extends
 					ctAmtDateBean.setColumnName(EncryptColumnName.CONTRACT_AMT.toString());
 					ctAmtDateBean.setValue(experience.getContractAmt().toString());
 					experienceBeanList.add(ctAmtDateBean);
-					experience.setExpiryDate(null);
+					experience.setContractAmt(null);
 				}
 				encryptExpriencList.add(experienceBeanList);
 			}
