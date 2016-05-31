@@ -116,12 +116,12 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	
 	public void preLoading() throws EpException{
 		log.info("preLoading");
+		this.resetTaskAssignSearchBean();
+		this.getManagedBean().setOrgProfileRequired(true);
 		this.setCurrentActiveOrg();
 		this.generateAdditionalFilter();
-		this.resetTaskAssignSearchBean();
 		this.retrieveOrgTypeMap();
 		
-		this.getManagedBean().setOrgProfileRequired(true);
 		this.getManagedBean().setResultUser(null);
 		this.getManagedBean().setResultOrgProfile(null);
 
@@ -146,6 +146,21 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+		
+		if(ParameterConst.ORG_TYPE_PTJ.equals(pmOrgProfile.getOrgTypeCode().getParameterCode()) ||
+				ParameterConst.ORG_TYPE_MINISTRY.equals(pmOrgProfile.getOrgTypeCode().getParameterCode()) ||
+				ParameterConst.ORG_TYPE_JABATAN.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())){			
+			if(ParameterConst.ORG_TYPE_PTJ.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())){
+				//default org profile
+				this.getManagedBean().getTaskAssignmentSearchBean().setOrgProfile(pmOrgProfile);			
+			}			
+			PmParameter ptjParam = getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES, ParameterConst.ORG_TYPE_PTJ);
+			this.getManagedBean().getTaskAssignmentSearchBean().setOrgType(ptjParam);
+			this.getManagedBean().setOrgProfileRequired(false);					
+			
+		}else{
+			this.getManagedBean().setOrgProfileRequired(true);
+		}
 	}
 	
 	public ISearchBean<PmParameterDesc> getOrgTypeSearchBean() {
