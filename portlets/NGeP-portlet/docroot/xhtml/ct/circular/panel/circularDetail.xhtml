@@ -130,7 +130,11 @@
 							   	   </c:if>
 			                    </p:column>
 			        
-			                   <p:column headerText="#{lbl['lbl.ct.email']}"  style="width:20%;" styleClass="column-align-center" >
+			                   <p:column style="width:20%;" styleClass="column-align-center" >
+			                       <f:facet name="header">
+							            <h:outputText value="#{lbl['lbl.ct.email']}"/>
+					               		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.email']}"/>
+					               	</f:facet>	
 			                        <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 				                      <p:inputText id="email" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}" 
 				                            style="width:95%;" 
@@ -141,7 +145,11 @@
 							   	     </c:if>
 			                   </p:column>
 			         
-			                   <p:column headerText="#{lbl['lbl.ct.tel']}" style="width:20%;" styleClass="column-align-center" >
+			                   <p:column style="width:20%;" styleClass="column-align-center" >
+			                         <f:facet name="header">
+							            <h:outputText value="#{lbl['lbl.ct.tel']}"/>
+					               		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.tel.no']}"/>
+					               	</f:facet>
 			                         <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 				                       <p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:95%;" 
 				                             validator="#{webappBean.checkPhoneNumber}" label="#{lbl['lbl.ct.tel']}" maxlength="100"
