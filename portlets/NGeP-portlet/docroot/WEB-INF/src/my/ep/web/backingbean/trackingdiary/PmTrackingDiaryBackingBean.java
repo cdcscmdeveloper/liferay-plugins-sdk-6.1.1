@@ -24,6 +24,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -190,6 +191,9 @@ public class PmTrackingDiaryBackingBean extends
 	}
 	
 	public String getUserName(Long userId) {
+		if(userId.longValue()==CommonConstants.TRACKING_DIARY_SYSTEM_USER_ID) {
+			return "Sistem";
+		}
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);
 		UserResDTO resDTO = new UserResDTO();
@@ -371,6 +375,9 @@ public class PmTrackingDiaryBackingBean extends
 	 */
 	public String getRoleDescByRoleCode(String roleCode) {
 		log.info("getRoleDescByRoleCode");
+		if(roleCode==null) {
+			return "Sistem";
+		}
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		return PmCommonUtil.getRoleDescByRoleCodeAndLanguage(roleCode, languageCode);
 	}
