@@ -1,0 +1,118 @@
+package my.ep.web.backingbean.sc.bidding;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.BidStatusConst;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.util.ResourceBundleUtils;
+import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.managedbean.sc.bidding.BiddingListManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.pm.helper.StatusHelper;
+
+import org.apache.log4j.Logger;
+
+/**
+ * Bidding List Backing Bean
+ * 
+ * @author Venkat Chanumolu
+ */
+
+@ManagedBean(name = "biddingListBB")
+@ViewScoped
+public class BiddingListBackingBean extends
+		BaseBackingBean<BiddingListManagedBean> {
+
+	private static Logger log = Logger.getLogger(BiddingListBackingBean.class);
+
+	/**
+	 * Default Constructor
+	 */
+	public BiddingListBackingBean() {
+		getStatusDescList();
+	}
+
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
+	}
+
+	/**
+	 * method to reset search fields
+	 */
+	public void resetSearchFormAction() {
+		getManagedBean().setSearchBiddingDateTo(null);
+		getManagedBean().setSelectedStatusDesc(null);
+		getManagedBean().getSearchDataModel().resetData();
+	}
+
+	/**
+	 * method to fetch status drop down list values
+	 * 
+	 * @return
+	 */
+	public void getStatusDescList() {
+		SelectItem[] statusDescs = getManagedBean().getStatusDescs();
+		if (statusDescs == null || statusDescs.length == 0) {
+			statusDescs = getBiddingDropdownValues(
+					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(),
+					ParameterConst.DOCTYPE_BIDDING);
+			getManagedBean().setStatusDescs(statusDescs);
+		}
+	}
+
+	private SelectItem[] getBiddingDropdownValues(String moduleCode,
+			String docType) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
+					.getStatusDescList(moduleCode, docType);
+			List<PmStatusDesc> requiredStatusDescs = new ArrayList<PmStatusDesc>();
+			for (PmStatusDesc statusDesc : statusDescs) {
+				if (statusDesc.getPmStatus().getStatusId()
+						.equals(BidStatusConst.BID_PENDING_BIDDING)
+						|| statusDesc.getPmStatus().getStatusId()
+								.equals(BidStatusConst.BID_IN_PROGRESS)
+						|| statusDesc.getPmStatus().getStatusId()
+								.equals(BidStatusConst.BID_RESCHEDULE_BIDDING)) {
+					requiredStatusDescs.add(statusDesc);
+				}
+
+			}
+
+			items = new SelectItem[requiredStatusDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmStatusDesc statusDesc : requiredStatusDescs) {
+
+				items[i++] = new SelectItem(statusDesc.getPmStatus()
+						.getStatusId(), statusDesc.getStatusName());
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+
+}
