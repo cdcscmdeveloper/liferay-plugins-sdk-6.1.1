@@ -171,6 +171,7 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
+import com.augtech.kmc.client.handler.IServiceHandler;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -267,11 +268,14 @@ public class SmCommonUtil {
 	 */
 	public static PmParameterDesc retrieveParameterDescByTypeAndCodeAndLang(
 			String paramType, String paramCode) {
-		return retrieveParameterDescByTypeAndCodeAndLang(paramType, paramCode, new FacesScopes().getUserLocale().getLanguage());
+		return retrieveParameterDescByTypeAndCodeAndLang(paramType, paramCode,
+				new FacesScopes().getUserLocale().getLanguage());
 	}
 
 	/**
-	 * Retrieve parameter description list by param type,param code and language code
+	 * Retrieve parameter description list by param type,param code and language
+	 * code
+	 * 
 	 * @param paramType
 	 * @param paramCode
 	 * @param lang
@@ -293,7 +297,7 @@ public class SmCommonUtil {
 		}
 		return retVal;
 	}
-	
+
 	/**
 	 * Retrieve country by country code.
 	 * 
@@ -1502,6 +1506,31 @@ public class SmCommonUtil {
 		log.info("Directory:" + baseDir + smRevisionDir);
 		log.info("Is File Exist:" + exist);
 		return exist;
+	}
+
+	public static String getSerializedFileFullDirByApplNo(String applNo,
+			String serType) {
+		String retVal = StringUtils.EMPTY;
+		boolean exist = true;
+		// Check if approved serialized file exists for latest approved
+		// application, if exists - do nothing, else, generate
+		String fileName = applNo + "_" + serType + ".ser";
+		String baseDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)
+				+ File.separator
+				+ Calendar.getInstance().get(Calendar.YEAR)
+				+ File.separator;
+		String smRevisionDir = "SM" + File.separator + applNo + File.separator
+				+ "Revision" + File.separator;
+		exist = new File(baseDir + smRevisionDir, fileName).exists();
+		log.info("File Name:" + fileName);
+		log.info("SER type:" + serType);
+		log.info("Directory:" + baseDir + smRevisionDir);
+		log.info("Is File Exist:" + exist);
+		if (exist) {
+			retVal = baseDir + smRevisionDir + fileName;
+		}
+		return retVal;
 	}
 
 	/**

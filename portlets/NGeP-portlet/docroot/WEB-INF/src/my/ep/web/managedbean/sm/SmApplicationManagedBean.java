@@ -445,7 +445,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private BigDecimal currGovtEquity;
 	private BigDecimal currForeignCompanyEquity;
 	private BigDecimal currLocalCompanyEquity;
-	
+
+	private SmAppl supplierAppl;
+	private SmAppl poAppl;
+
 	private SmSectionEditorVO editVO;
 	private List<PmReasonDesc> selectedPmReasonDescs;
 	private String searchRejectReason;
@@ -565,6 +568,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 						.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
 		// defaultAddr.getPmCountry().setCountryId(1l);
 		defaultAddr.setPmState(new PmState());
+		
+		editVO = new SmSectionEditorVO();
 
 		selectedCategories = new ArrayList<SmSupplierCategory>();
 		selectedBranch = new SmSupplierBranch();
@@ -3497,5 +3502,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setEditVO(SmSectionEditorVO editVO) {
 		this.editVO = editVO;
+	}
+
+	public SmAppl getSupplierAppl() {
+		return supplierAppl;
+	}
+
+	public void setSupplierAppl(SmAppl supplierAppl) {
+		this.supplierAppl = supplierAppl;
+	}
+
+	public SmAppl getPoAppl() {
+		return poAppl;
+	}
+
+	public void setPoAppl(SmAppl poAppl) {
+		this.poAppl = poAppl;
 	}
 }
