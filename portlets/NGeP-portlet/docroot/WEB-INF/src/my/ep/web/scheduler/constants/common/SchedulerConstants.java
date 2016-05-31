@@ -216,6 +216,8 @@ public class SchedulerConstants {
 	public static final String CM_EXPIRED_ITEM_TIMER = "0 01 00 * * ?";
 
 	public static final String CM_DROP_DOC_SEQ_JOB_GROUP = "DROP DOC SEQUENCE JOB";
+	
+	public static final String NTF_JOB_GROUP = "NTF JOB GROUP";
 
 	public static final String NTF_MESSAGE_BULK_INTERNAL_JOB = "NTF BULK MESSAGE JOB";
 	public static final String NTF_MESSAGE_BULK_JOB_GROUP = "NTF BULK MESSAGE JOB GROUP";
