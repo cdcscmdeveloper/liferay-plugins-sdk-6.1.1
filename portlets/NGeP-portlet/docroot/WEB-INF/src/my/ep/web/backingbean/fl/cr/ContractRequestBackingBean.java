@@ -3820,6 +3820,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}else{
 			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
 				getManagedBean().setValidated(Boolean.FALSE);
+			}else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
+				validateContractRequest(outcome);
+				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+				return null;
 			}
 			return submitAction(outcome);
 		}

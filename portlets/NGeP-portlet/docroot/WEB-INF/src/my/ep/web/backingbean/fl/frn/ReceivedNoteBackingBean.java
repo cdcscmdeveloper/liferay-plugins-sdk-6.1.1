@@ -735,6 +735,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 				return null;
 			}
+			if(getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT) ||
+					getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_FRN_HT)){
+				getManagedBean().setValidated(Boolean.TRUE);
+				getManagedBean().setAutoUpdate(Boolean.TRUE);
+				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+				return null;
+			}
 			getManagedBean().setValidated(Boolean.TRUE);
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			return submitAction(outcome);
