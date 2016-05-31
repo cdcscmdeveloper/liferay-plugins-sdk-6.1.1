@@ -5210,13 +5210,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 
 
-
-			for(CmSupplierItem csi : this.getManagedBean().getSelectedApprovedItems()) {
+			
+			
+			for(CmSupplierItem csi : this.getManagedBean().getSelectedApprovedItems()) { 
 				csiList.add(csi);
 				reqDTO.setTrackingStatus(true);
 				reqDTO.setSupplierId(csi.getSupplierId());
 
-				String actionDesc ="Item "+this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah diiklankan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
+				String actionDesc ="Item "+csi.getCmItem().getItemName()+" telah diiklankan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
 				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(csi,actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			}			
 			try {
