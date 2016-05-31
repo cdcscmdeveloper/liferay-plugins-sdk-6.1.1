@@ -681,6 +681,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
 				ctBB.getManagedBean().getContractVer().getCtContractValue().isPid() && 
 				(ctBB.getManagedBean().getContractVer().getCtPidReasons() == null || ctBB.getManagedBean().getContractVer().getCtPidReasons().size() == 0)) {
+			getManagedBean().setSelectedTabIndex(0);
 			  throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -690,12 +691,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if(ctBB.getManagedBean().getContractVer().getCtPidReasons() != null && ctBB.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
 			for(CtPidReason reason : ctBB.getManagedBean().getContractVer().getCtPidReasons()){
 			   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
+				   getManagedBean().setSelectedTabIndex(0);
 				   throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			   }
+			   ctBB.validatePidReason(reason.getPmReason().getReasonId());
 			   if(ctBB.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
 				   if(reason.getReasonDesc().isEmpty()){
+					   getManagedBean().setSelectedTabIndex(0);
 					   throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -732,7 +736,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					   throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.type", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				   }
+				   }ctBB.validateDeductionType(deduction.getDeductionType().getParameterId());
 			  }
 		}		
 		// Validation for zone
@@ -1156,7 +1160,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @param  currentTab  current selected tab index
 	 * @param  outputTab   current selected tab constant
      */
-	public void setTabValue(int currentTab, String outputTab) {	 
+	public void setTabValue(String outputTab) {	 
 		getManagedBean().setItemIndex(11);
 		getManagedBean().setDeductionIndex(11);
 		getManagedBean().setFactoring(11);
