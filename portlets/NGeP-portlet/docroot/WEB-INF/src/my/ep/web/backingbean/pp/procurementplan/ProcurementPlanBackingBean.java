@@ -1532,20 +1532,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //								|| !justification.isBrandNew() && justification.isEditable()){
 //							
 						if(justification!=null ){
-							if(!StringUtils.isBlank(justification.getRemark())){
-								justification.setItemSeq(itemIndex);
-								justification.setDocId(ppExpenditureItem.getExpenditureItemId());
-								justification.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
-								if(justification.getRoleCode() ==null || StringUtils.isBlank(justification.getRoleCode().getRoleCode())){
-									log.info("set setRemarkRole");
-									PmRole roleCode = new PmRole();
-									roleCode.setRoleCode(RoleCode.PLAN_OFFICER.value());
-								//	roleCode.setRoleCode(RoleCode.PLAN_EXPEN_OFFICER.value());
-									justification.setRoleCode(roleCode);
-									justification.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
-								}
-							}else{
+							if(StringUtils.isBlank(justification.getRemark())){
 								justification.setRemark(" ");
+							}
+							justification.setItemSeq(itemIndex);
+							justification.setDocId(ppExpenditureItem.getExpenditureItemId());
+							justification.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
+							if(justification.getRoleCode() ==null || StringUtils.isBlank(justification.getRoleCode().getRoleCode())){
+								log.info("set setRemarkRole");
+								PmRole roleCode = new PmRole();
+								roleCode.setRoleCode(RoleCode.PLAN_OFFICER.value());
+							//	roleCode.setRoleCode(RoleCode.PLAN_EXPEN_OFFICER.value());
+								justification.setRoleCode(roleCode);
+								justification.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 							}
 							
 							justifications.add(justification);
