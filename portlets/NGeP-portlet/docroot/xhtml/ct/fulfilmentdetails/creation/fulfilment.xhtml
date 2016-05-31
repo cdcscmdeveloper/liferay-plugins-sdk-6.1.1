@@ -83,41 +83,41 @@
 						activeIndex="#{contractDetailsBackingBean.managedBean.selectedTabIndex}" >
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.fd']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'FD')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabValue('FD')}" update=":form" />
 	
 	    <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.zone']}"  onstart="blockWidget.show()" 
 		    oncomplete="blockWidget.hide()" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.zonalPricing}"
-			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'ZO')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabValue('ZO')}" update=":form" />
 
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.agency']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'AG')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabValue('AG')}" update=":form" />
 			 
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'IT')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabValue('IT')}" update=":form" />
 		
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.deduction']}" 
 		     onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
-		     actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'DE')}" update=":form" />
+		     actionListener="#{contractDetailsBackingBean.setTabValue('DE')}" update=":form" />
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.schedule']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled}"
-			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'SC')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabValue('SC')}" update=":form" />
 		
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.factoring']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{ctBackingBean.managedBean.contractVer.ctContract.factored and contractDetailsBackingBean.checkFactoringExpiryDate()}"
-			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'FT')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabValue('FT')}" update=":form" />
 		  	  
 		  <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.adv.payment.tracking']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'PY')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabValue('PY')}" update=":form" />
 		  	 
 		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'SE')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabValue('SE')}" update=":form" />
 		</p:tabMenu>
 		</p:outputPanel>
 		

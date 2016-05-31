@@ -643,6 +643,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					   }
+					   validatePidReason(reason.getPmReason().getReasonId());
+						   
 					   if(PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
 						   if(reason.getReasonDesc().isEmpty()){
 							   getManagedBean().setSelectedTabIndex(0);
@@ -2426,6 +2428,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 *  add new record in datatable
 	 */
 	public void addPurchaseInDefault(){
+		
 		CtCircularPidReason ctCircularPidReasons = new CtCircularPidReason();
 		ctCircularPidReasons.setPmReason(new PmReason());
 		getManagedBean().getCircularVer().getCtCircularPidReason().add(ctCircularPidReasons);
@@ -2477,6 +2480,25 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			pmReason = null;
 		}
 		return false;
+	}
+	
+	public void validatePidReason(Long resonId){
+	
+		if(resonId == null || resonId.intValue() == 0){
+			return;
+		}
+		if(getManagedBean().getCircularVer().getCtCircularPidReason().size() > 0){
+			int counter = 0;
+			  for(CtCircularPidReason  ctCircularPidReasons : getManagedBean().getCircularVer().getCtCircularPidReason()){
+				     if(ctCircularPidReasons.getPmReason() != null 
+				    		 && ctCircularPidReasons.getPmReason().getReasonId().equals(resonId)){
+				    	 counter++;
+				    	 if(!PidPurchaseTypeOther(resonId) && counter == 2){
+				    		   throw new EpException(MessageConst.ERROR_755020);
+				    	 }
+				     }
+			  }
+		}
 	}
 	
 	/**
