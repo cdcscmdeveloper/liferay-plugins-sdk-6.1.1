@@ -31,7 +31,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.title']}" style="white-space:normal;text-align:center">
 				<p:commandLink value="#{pending.flFulfilmentRequest.title}"
-					action="#{flOrderBB.navigateToFlOrder(rowIndex)}" style="text-align:left;float:left;">
+					action="#{flOrderBB.navigateToDeliveryOrder(rowIndex)}" style="text-align:left;float:left;">
 					<f:setPropertyActionListener
 						target="#{flOrderBB.managedBean.selectedFlOrder}"
 						value="#{pending}"></f:setPropertyActionListener>
