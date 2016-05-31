@@ -1079,13 +1079,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */	
 	public void validateDeductionType(Long parameteId)  {
 		
-		   getManagedBean().setSelectedDeduction(null);
+		 getManagedBean().setSelectedDeduction(null);
 		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
 			    int count = 0;
 		         for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
 					    if(deId.getDeductionType().getParameterId() != null && parameteId.intValue() == deId.getDeductionType().getParameterId().intValue()){
 						    count++;
-						    if(count == 2)
+						    if(!getParameterCode(deId.getDeductionType()).equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) && count == 2)
 							     throw new EpException(MessageConst.ERROR_100046,
 							    		 new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(parameteId))});
 				         }
@@ -2741,6 +2741,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				return false;
 		 }
 	  
+	  public void validatePidReason(Long resonId){
+			
+			if(resonId == null || resonId.intValue() == 0){
+				return;
+			}
+			if(getManagedBean().getContractVer().getCtPidReasons().size() > 0){
+				int counter = 0;
+				  for(CtPidReason  pidReasons : getManagedBean().getContractVer().getCtPidReasons()){
+					     if(pidReasons.getPmReason() != null 
+					    		 && pidReasons.getPmReason().getReasonId().equals(resonId)){
+					    	 counter++;
+					    	 if(!PidPurchaseTypeOther(resonId) && counter == 2){
+					    		   throw new EpException(MessageConst.ERROR_755020);
+					    	 }
+					     }
+				  }
+			}
+		}
 	  /**
 	   * Route to Central Contract Circular Page. 
 	   * @param contractVerId
