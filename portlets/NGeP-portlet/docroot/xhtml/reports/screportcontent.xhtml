@@ -151,7 +151,7 @@
 							test="#{scReportBackingBean.managedBean.rptGenBean.scSupplierView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.supplierName']}" />
 							<ac:lov id="scCompanyName" readonly="true" style="width:264px;"
-								lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
+								lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="42"
 								headerText="#{lbl['lbl.rpt.supplierName']}" update="@form"
 								value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
 								postUpdateListener="#{reportBackingBean.onSupplierNameChangeForLOV()}"
