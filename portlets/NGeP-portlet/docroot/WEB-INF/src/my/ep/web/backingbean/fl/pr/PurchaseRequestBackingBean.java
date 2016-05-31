@@ -2995,6 +2995,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
 					|| BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
 				getManagedBean().setValidated(Boolean.FALSE);
+			}else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
+				validateFulfilmentRequest(outcome);
+				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+				return null;
 			}
 			return fulfillmentRequestAction(outcome);
 		}
