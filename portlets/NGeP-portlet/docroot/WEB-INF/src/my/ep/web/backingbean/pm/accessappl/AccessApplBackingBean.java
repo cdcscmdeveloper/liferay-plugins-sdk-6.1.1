@@ -574,8 +574,16 @@ public class AccessApplBackingBean extends
 			if(currentUserOrg != null){
 				if(!currentUserOrg.getPmOrgProfile().getOrgProfileId()
 						.equals(accessAppl.getOrgProfile().getOrgProfileId())){
+					String orgName = null;
+					if(ParameterConst.ORG_TYPE_SUPPLIER.equals(currentUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())){
+						orgName = currentUserOrg.getPmOrgProfile().getSmSupplier().getCompanyName();
+					}else if(ParameterConst.ORG_TYPE_FACTORING.equals(currentUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())){
+						orgName = currentUserOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName();
+					}else{
+						orgName = currentUserOrg.getPmOrgProfile().getOrgName();
+					}
 					throw new EpException(MessageConst.ERROR_770217,
-							new String[] {currentUserOrg.getPmOrgProfile().getOrgName()});
+							new String[] {orgName});
 				}else{
 					boolean hasMrRole = false;
 					boolean hasCpRole = false;
