@@ -35,7 +35,8 @@
 		                                        disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails
 		                                        or ctBackingBean.managedBean.contractVer.panel}"  style="width:360px;float:left;text-align:left;">
 			                                        <f:selectItems value="#{ctBackingBean.getDropdownPidCodeValues(pidObj.pmReason.reasonId)}" />
-			                                       <p:ajax event="change" partialSubmit="true" update="purchaseInDefaultTable"></p:ajax>
+			                                       <p:ajax event="change" partialSubmit="true" update="purchaseInDefaultTable"
+			                                           process="@this" listener="#{ctBackingBean.validatePidReason(pidObj.pmReason.reasonId)}"></p:ajax>
 			                              </p:selectOneMenu>
 			                      </p:column> 
 		             

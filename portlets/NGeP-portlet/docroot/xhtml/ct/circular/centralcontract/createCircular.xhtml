@@ -44,7 +44,8 @@
 		                                    <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" 
 		                                             disabled="#{centralContractBackingBean.managedBean.viewContract}" style="width:360px;float:left;text-align:left;">
 			                                             <f:selectItems value="#{centralContractBackingBean.getDropdownPidCodeValues(pidObj.pmReason.reasonId)}" />
-			                                             <p:ajax event="change" partialSubmit="true" update=":form:pidTableId"></p:ajax>
+			                                             <p:ajax event="change" partialSubmit="true" update=":form:pidTableId"
+			                                                 process="@this" listener="#{centralContractBackingBean.validatePidReason(pidObj.pmReason.reasonId)}"></p:ajax>
 			                               </p:selectOneMenu>
 			                               </c:if>
 			                                 <c:if test="#{centralContractBackingBean.managedBean.viewContract}">

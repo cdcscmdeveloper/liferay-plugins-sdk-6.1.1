@@ -1140,6 +1140,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 	     									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	     			   }
+	     			  ctBackingBean.validatePidReason(reason.getPmReason().getReasonId());
 	     			   if(ctBackingBean.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
 	     				   if(reason.getReasonDesc().isEmpty()){
 	     					   throw new EpException(MessageConst.ERROR_100022, 
