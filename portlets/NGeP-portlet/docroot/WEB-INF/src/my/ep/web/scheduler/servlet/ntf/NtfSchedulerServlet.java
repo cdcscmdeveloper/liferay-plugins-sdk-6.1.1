@@ -24,31 +24,31 @@ public class NtfSchedulerServlet extends HttpServlet {
 
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.NTF_MESSAGE_BULK_INTERNAL_JOB,
-				SchedulerConstants.NTF_JOB_GROUP),
+				SchedulerConstants.NTF_MESSAGE_BULK_INTERNAL_JOB),
 				NtfMessageBulkJob.class,
 				SchedulerConstants.NTF_MESSAGE_BULK_JOB_DESC, "0 0/1 * * * ?");
 		
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.NTF_MESSAGE_REAL_TIME_INTERNAL_JOB,
-				SchedulerConstants.NTF_JOB_GROUP),
+				SchedulerConstants.NTF_MESSAGE_REAL_TIME_JOB_GROUP),
 				NtfMessageRealTimelJob.class,
 				SchedulerConstants.NTF_MESSAGE_REAL_TIME_JOB_DESC, "0 0/1 * * * ?");
 		
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.NTF_MESSAGE_DIRECT_EMAIL_INTERNAL_JOB,
-				SchedulerConstants.NTF_JOB_GROUP),
+				SchedulerConstants.NTF_MESSAGE_DIRECT_EMAIL_JOB_GROUP),
 				NtfMessageDirectEmailJob.class,
 				SchedulerConstants.NTF_MESSAGE_DIRECT_EMAIL_JOB_DESC, "0 0/1 * * * ?");
 		
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.NTF_EMAIL_BULK_INTERNAL_JOB,
-				SchedulerConstants.NTF_JOB_GROUP),
+				SchedulerConstants.NTF_EMAIL_BULK_JOB_GROUP),
 				NtfEmailBulkJob.class,
 				SchedulerConstants.NTF_EMAIL_BULK_JOB_DESC, "0 0/20 * * * ?");
 		
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.NTF_EMAIL_REAL_TIME_INTERNAL_JOB,
-				SchedulerConstants.NTF_JOB_GROUP),
+				SchedulerConstants.NTF_EMAIL_REAL_TIME_JOB_GROUP),
 				NtfEmailRealTimeJob.class,
 				SchedulerConstants.NTF_EMAIL_REAL_TIME_JOB_DESC, "0 0/5 * * * ?");
 	}
