@@ -152,11 +152,11 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				ParameterConst.ORG_TYPE_JABATAN.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())){			
 			if(ParameterConst.ORG_TYPE_PTJ.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())){
 				//default org profile
-				this.getManagedBean().getTaskAssignmentSearchBean().setOrgProfile(pmOrgProfile);			
+				this.getManagedBean().getTaskAssignmentSearchBean().setOrgProfile(pmOrgProfile);
+				this.getManagedBean().setOrgProfileRequired(false);	
 			}			
 			PmParameter ptjParam = getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES, ParameterConst.ORG_TYPE_PTJ);
-			this.getManagedBean().getTaskAssignmentSearchBean().setOrgType(ptjParam);
-			this.getManagedBean().setOrgProfileRequired(false);					
+			this.getManagedBean().getTaskAssignmentSearchBean().setOrgType(ptjParam);							
 			
 		}else{
 			this.getManagedBean().setOrgProfileRequired(true);
