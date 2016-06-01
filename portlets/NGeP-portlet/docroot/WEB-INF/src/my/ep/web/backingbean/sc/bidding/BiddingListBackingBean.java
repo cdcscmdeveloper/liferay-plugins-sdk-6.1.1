@@ -48,16 +48,6 @@ public class BiddingListBackingBean extends
 		}
 		log.info(message);
 	}
-	
-	
-	/**
-	 * method to reset search fields
-	 */
-	public void resetSearchFormAction() {
-		getManagedBean().setSearchBiddingDateTo(null);
-		getManagedBean().setSelectedStatusDesc(null);
-		getManagedBean().getSearchDataModel().resetData();
-	}
 
 	/**
 	 * method to fetch status drop down list values
