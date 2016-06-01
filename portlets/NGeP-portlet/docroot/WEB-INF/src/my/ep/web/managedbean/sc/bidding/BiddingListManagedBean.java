@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sc.bidding;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.BidStatusConst;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
@@ -38,6 +40,7 @@ public class BiddingListManagedBean extends BaseManagedBean {
 
 	private SelectItem[] statusDescs;
 	private Long selectedStatusDesc;
+	private List<Long> statusIdList;
 	private Date searchBiddingDateTo;
 	private List<ScBidSchedule> scheduledBidList;
 
@@ -108,6 +111,28 @@ public class BiddingListManagedBean extends BaseManagedBean {
 	public Date getSearchBiddingDateTo() {
 		return searchBiddingDateTo;
 	}
+	
+	
+
+	/**
+	 * @return the statusIdList
+	 */
+	public List<Long> getStatusIdList() {
+		if(this.statusIdList == null || this.statusIdList.size() != 0){
+			this.statusIdList = new ArrayList<Long>();
+			this.statusIdList.add(BidStatusConst.BID_PENDING_BIDDING);
+			this.statusIdList.add(BidStatusConst.BID_IN_PROGRESS);
+			this.statusIdList.add(BidStatusConst.BID_RESCHEDULE_BIDDING);
+		}
+		return statusIdList;
+	}
+
+	/**
+	 * @param statusIdList the statusIdList to set
+	 */
+	public void setStatusIdList(List<Long> statusIdList) {
+		this.statusIdList = statusIdList;
+	}
 
 	/**
 	 * @param searchBiddingDateTo
@@ -172,11 +197,16 @@ public class BiddingListManagedBean extends BaseManagedBean {
 									DateUtils.getCurrentDateWithoutTime()));
 				}
 
-				if (selectedStatusDesc != null) {
+				if (selectedStatusDesc != null && selectedStatusDesc.equals(0)) {
 					bidSchSearchBean.getDataFilterBeans().add(
 							new SearchFilterBean("pmStatus.statusId",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getSelectedStatusDesc()));
+				}else if(getStatusIdList() != null && !getStatusIdList().isEmpty()){
+					bidSchSearchBean.getDataFilterBeans().add(
+							new SearchFilterBean("pmStatus.statusId",
+									SearchOperator.OPERATOR_IN.value(),
+									getStatusIdList()));
 				}
 
 				// Order by bid Start date
