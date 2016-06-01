@@ -35,6 +35,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -54,6 +55,8 @@ import my.ep.dto.pm.common.clause.ClauseReqDTO;
 import my.ep.dto.pm.common.clause.ClauseResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -117,6 +120,7 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.type.sc.LoiLoaDocType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.constant.sc.QTConstants;
@@ -2410,15 +2414,35 @@ public class LOIDetailBackingBean extends
 		debugLogger("updateMultiLoiBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
+		CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
+		ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
 		
 		if (StringUtils.isNotBlank(committeeType) && 
-				isDigiSigningRequired(committeeType + QTConstants.CHAIRPERSON,
+				ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) &&
+				isDigiSigningRequired(committeeResDTO.getRoleCode(),
 						this.getManagedBean().getFcActivityList())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
 			signOff();
 			updateMultiLoiBpmTask(outcome, null);
 		}
+	}
+	
+	private CommitteResDTO getCommitteMemberByUserId() {
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		String committeeType = this.getManagedBean()
+				.getCommitteeType();
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setCommitteeType(committeeType);
+		
+		return committeSO.retrieveCommitteMemberByUserId(
+				committeReqDTO);
 	}
 
 	/**
