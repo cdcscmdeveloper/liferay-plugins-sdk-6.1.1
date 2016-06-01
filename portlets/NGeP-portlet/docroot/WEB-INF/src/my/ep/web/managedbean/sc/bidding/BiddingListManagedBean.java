@@ -197,7 +197,7 @@ public class BiddingListManagedBean extends BaseManagedBean {
 									DateUtils.getCurrentDateWithoutTime()));
 				}
 
-				if (selectedStatusDesc != null && selectedStatusDesc.equals(0)) {
+				if (selectedStatusDesc != null && !selectedStatusDesc.equals(0)) {
 					bidSchSearchBean.getDataFilterBeans().add(
 							new SearchFilterBean("pmStatus.statusId",
 									SearchOperator.OPERATOR_EQUALS.value(),
