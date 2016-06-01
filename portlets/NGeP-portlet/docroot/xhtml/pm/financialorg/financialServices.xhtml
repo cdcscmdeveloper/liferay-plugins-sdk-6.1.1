@@ -15,7 +15,7 @@
 			rowKey="#{financialsrv}" rowIndexVar="rowIndex">
 			<ac:paginator for="financialsrv" />
 
-			<p:column width="45%">
+			<p:column width="65%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.servicetype']}" />
@@ -62,7 +62,7 @@
 						styleClass="ppDisplayTextM" size="30" maxlength="20" />
 				</ui:fragment>
 			</p:column> -->
-			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}" width="35%">
+			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}" width="25%">
 				<p:selectOneMenu style="width: 110px !important;" id="finServiceStatusId"
 					disabled="#{financialsrv.serviceTypeCode.parameterCode eq  ParameterConst.bankServicesPaymentBank ? true : financialsrv.brandNew}"
 					value="#{financialsrv.recordStatusFlg}" required="true"	>
@@ -72,7 +72,7 @@
 
 			</p:column>
 			
-			<p:column width="27%" headerText="#{lbl['lbl.pm.financialorg.action']}">
+			<p:column width="10%" headerText="#{lbl['lbl.pm.financialorg.action']}">
 	             <p:commandLink partialSubmit="true" 
 	             	disabled="#{!financialsrv.brandNew}"
 					process="@this" 
@@ -97,7 +97,7 @@
 			width="400" height="100"
 			title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}" 
-			update=":#{p:component('financialsrvid')}" />
+			update=":form:opGeneralTopMenu" />
 
 
 	</p:outputPanel>

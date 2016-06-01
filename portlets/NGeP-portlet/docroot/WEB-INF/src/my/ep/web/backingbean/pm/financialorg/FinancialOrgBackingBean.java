@@ -283,7 +283,7 @@ public class FinancialOrgBackingBean extends
 			 if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
 				
 				
-				 if(DbValueConst.RECORD_STATUS_DELETED == financialSvc.getRecordStatusFlg()){
+				 if(DbValueConst.RECORD_STATUS_SUSPENDED == financialSvc.getRecordStatusFlg()){
 					 
 					 this.getManagedBean().setShowFactoringBank(false);
 				 }	
@@ -914,10 +914,10 @@ public class FinancialOrgBackingBean extends
 			//System.out.println("Record Status Fin SVC---====>>>"+financialSvc.getRecordStatusFlg());
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
 			if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
-				if(financialSvc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+				if(financialSvc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
 					for(PmFinancialAcc finAcc:financialOrg.getPmFinancialAccs()){
 						//System.out.println("Record Status Fin ACC---====>>>"+finAcc.getRecordStatusFlg());
-						finAcc.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						finAcc.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 						finAcc.setExpDate(new Date());
 						
 					}
@@ -1049,6 +1049,25 @@ public class FinancialOrgBackingBean extends
 		pmFinancialSvc.setDeleted(true);
 		getManagedBean().getFinancialOrg()
 		.getPmFinancialSvcs().remove(pmFinancialSvc);
+		
+		PmParameter pmParameter = null;
+		getManagedBean().setServiceTypes(new ArrayList<String>());
+		Set<String> serviceTypeSet= new HashSet<String>();
+		boolean hasFactoringSvc = false;
+		for(PmFinancialSvc finSev :getManagedBean().getFinancialOrg().getPmFinancialSvcs()){
+			pmParameter = (PmParameter) serviceTypeMapper.get(finSev.getServiceTypeCode().getParameterId());
+			serviceTypeSet.add(pmParameter.getParameterCode());
+			if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
+				hasFactoringSvc = true;
+			}
+		}		
+		
+		//to remove financial accs if factoring company service has been removed.
+		if(!hasFactoringSvc){
+			getManagedBean().getFinancialOrg().setPmFinancialAccs(null);		
+		}
+		getManagedBean().getServiceTypes().addAll(serviceTypeSet);			
+		getManagedBean().setTabActiveIndex(1);
 	}
 
 	

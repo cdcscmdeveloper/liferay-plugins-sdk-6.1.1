@@ -13,7 +13,7 @@
 			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialAccs}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex">
 			<ac:paginator for="financialacc" />
-			<p:column style="width: 25% !important">
+			<p:column style="width: 25% !important;white-space:normal;">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.paymentbankname']}" />
