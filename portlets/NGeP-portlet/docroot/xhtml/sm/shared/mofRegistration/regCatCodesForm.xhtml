@@ -54,11 +54,35 @@
 		
 		<p:panel header="#{lbl['lbl.sm.addtnl.catCodes.panHdr']}" toggleable="true">
 			<c:if test="#{backingBean.managedBean.overLappedCategoryExists}">
+			
+	<script>
+		function blink() {
+		    var e = document.getElementById('blinkId');
+		    setInterval(function() {
+		    	if (e.style.display == 'block' || e.style.display=='') e.style.display = 'none';
+			    else e.style.display = 'block';   
+		    }, 1000);
+		};
+		window.onload = blink;
+	</script>
+			
 				<table style="width: 100%">
 					<tr>
-						<td><h:outputText styleClass="instruction" value="#{backingBean.managedBean.overLappedCategoryMsg}" escape="false"/></td>
+						<td>
+							<span id="blinkId3"><h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" /></span><br />
+							<h:outputText styleClass="instruction" value="#{backingBean.managedBean.overLappedCategoryMsg}" escape="false"/>
+						</td>
 					</tr>
 				</table>
+				
+				<script>
+					$(function(){
+					    // Self-executing recursive animation
+					    (function pulse(){
+					        $('#blinkId3').delay(1000).fadeOut('slow').delay(50).fadeIn('slow',pulse);
+					    })();
+					});
+				</script>
 			</c:if>
 			<c:choose>
 				<c:when
