@@ -2556,6 +2556,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if(selectedTabIndex==2){
 			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()!=null) { 
 				sortOrderSummaryList(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
+				getOrderSummaryGrandTotal();
 			}
 		}
 		if(selectedTabIndex==3){
@@ -2579,7 +2580,21 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			initializeApproverGroup();
 		}
 	}
-	
+	private void getOrderSummaryGrandTotal() {
+		BigDecimal orderSummaryTotalOrderAmt = null;
+		BigDecimal grandOrderSummaryTotalOrderAmt=new BigDecimal(0);
+		getManagedBean().setOrderedAmtGrandTotal(grandOrderSummaryTotalOrderAmt);
+		for(FlDeliveryAddress  deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			orderSummaryTotalOrderAmt = new BigDecimal(0);
+			for(FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()){
+				orderSummaryTotalOrderAmt = orderSummaryTotalOrderAmt.add(itemAddress.getOrderedAmt());
+			}
+			grandOrderSummaryTotalOrderAmt = grandOrderSummaryTotalOrderAmt.add(orderSummaryTotalOrderAmt);
+		}
+		getManagedBean().setOrderSummaryOrderedAmtGrandTotal(grandOrderSummaryTotalOrderAmt);
+		
+	}
+
 	/**
 	 * Update delivery date based on delivery Term and uomCode.
 	 */

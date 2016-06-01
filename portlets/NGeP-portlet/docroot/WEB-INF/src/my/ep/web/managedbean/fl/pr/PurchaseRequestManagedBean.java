@@ -519,6 +519,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
 	
+	/** The ordered amt grand total. */
+	private BigDecimal orderSummaryOrderedAmtGrandTotal ;
+	
 /**
  * Gets the charge line item root.
  *
@@ -3356,6 +3359,21 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setBpmApproverList(List<Long> bpmApproverList) {
 		this.bpmApproverList = bpmApproverList;
+	}
+
+	/**
+	 * @return the orderSummaryOrderedAmtGrandTotal
+	 */
+	public BigDecimal getOrderSummaryOrderedAmtGrandTotal() {
+		return orderSummaryOrderedAmtGrandTotal;
+	}
+
+	/**
+	 * @param orderSummaryOrderedAmtGrandTotal the orderSummaryOrderedAmtGrandTotal to set
+	 */
+	public void setOrderSummaryOrderedAmtGrandTotal(
+			BigDecimal orderSummaryOrderedAmtGrandTotal) {
+		this.orderSummaryOrderedAmtGrandTotal = orderSummaryOrderedAmtGrandTotal;
 	}
 
 }
