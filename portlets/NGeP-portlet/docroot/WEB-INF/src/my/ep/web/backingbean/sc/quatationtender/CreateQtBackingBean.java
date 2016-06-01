@@ -626,8 +626,11 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 				populateEvaluationTypes(scQt, amount);
 			}			
 		} else {
-			// Open For
-			updateRestrictedTenderOpenFor(scQt);
+			if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
+					.equalsIgnoreCase(qtType)) {
+				// Open For - Restricted Tender
+				updateRestrictedTenderOpenFor(scQt);
+			}
 		}
 
 		// All State
