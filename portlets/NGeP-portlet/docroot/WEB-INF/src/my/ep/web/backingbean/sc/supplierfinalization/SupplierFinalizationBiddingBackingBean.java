@@ -24,6 +24,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -38,6 +39,8 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -52,6 +55,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
@@ -77,6 +81,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
@@ -1900,10 +1905,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 		
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
+		CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
+		ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
 		if (StringUtils.isNotBlank(committeeType) && 
-				ParameterConst.ONLINE_BIDDING_MEETING.equals(
-						getManagedBean().getScQtFinalization().getOnlineBiddingEndorse()) &&
-							isDigiSigningRequired(committeeType + QTConstants.CHAIRPERSON, 
+				ParameterConst.ONLINE_BIDDING_MEETING.equals(getManagedBean().getScQtFinalization().getOnlineBiddingEndorse()) &&
+				ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) &&
+				isDigiSigningRequired(committeeResDTO.getRoleCode(), 
 											getManagedBean().getCommitteeEndorsementList())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
@@ -1914,6 +1921,23 @@ public class SupplierFinalizationBiddingBackingBean extends
 			}
 			updateBPMTask(outcome, null);
 		}	
+	}
+	
+	private CommitteResDTO getCommitteMemberByUserId() {
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		String committeeType = this.getManagedBean()
+				.getCommitteeType();
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setCommitteeType(committeeType);
+		
+		return committeSO.retrieveCommitteMemberByUserId(
+				committeReqDTO);
 	}
 
 	private void updateBPMTask(String outCome, PmDigiSign digiSign){
