@@ -612,12 +612,21 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
 				searchBean.getDataFilterBeans().add(bean);
 				
-				// not current selected user
-				bean = new SearchFilterBean();
-				bean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
-				bean.setSearchField("userId");
-				bean.setSearchValue(userId);
-				searchBean.getDataFilterBeans().add(bean);
+				// not current selected user and not current login user
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"userId",
+								SearchOperator.OPERATOR_NOT_IN.value(), 
+								new ArrayList<Long>(Arrays
+										.asList(userId,
+												getFacesScopes().getUserSessionBean().getUserId()))));
+				
+//				// not current selected user
+//				bean = new SearchFilterBean();
+//				bean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
+//				bean.setSearchField("userId");
+//				bean.setSearchValue(userId);
+//				searchBean.getDataFilterBeans().add(bean);
 					
 				// same org profile id
 				bean = new SearchFilterBean();
