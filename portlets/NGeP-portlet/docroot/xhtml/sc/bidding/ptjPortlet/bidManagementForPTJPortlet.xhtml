@@ -12,15 +12,8 @@
 		<script src="#{resource['js/countdown.js']}" />
 	</ui:define>
 	<ui:define name="contentSection">
-	<table>
-			<tr>
-				<td><p:commandButton id="backButton" styleClass="BtnSpacing" disabled="true"
-						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						partialSubmit="true" process="@this"
-						action="#{biddingListBB.biddingManagementBackAction}" /></td>
-			</tr>
-		</table>
-		<ui:include src="/xhtml/sc/bidding/bidManagement/bidManagementSupplemenatryPage.xhtml"></ui:include>
+		<ui:include
+			src="/xhtml/sc/bidding/bidManagement/bidManagementSupplemenatryPage.xhtml"></ui:include>
 	</ui:define>
-	
+
 </ui:composition>
