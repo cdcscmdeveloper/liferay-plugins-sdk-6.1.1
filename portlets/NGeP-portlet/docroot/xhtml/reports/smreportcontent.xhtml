@@ -1167,9 +1167,12 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smCPSupplierNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.supName']}" />
-							<p:inputText maxlength="100"
-								value="#{reportBackingBean.smSupplierName}" style="width:290px;">
-							</p:inputText>
+							<ac:lov id="smSupplierName" readonly="true" style="width:264px;"
+								lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="40"
+								headerText="#{lbl['lbl.rpt.supName']}" update="@form" 
+								value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
+								postUpdateListener="#{reportBackingBean.onCompanyNameChangeForLOV()}"
+								saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
 						</c:if>
 
 						<c:if
@@ -2098,6 +2101,14 @@
 							test="#{smReportBackingBean.managedBean.rptGenBean.smRoleView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.role']}" />
 							<p:inputText maxlength="2000" value="#{reportBackingBean.smRole}"
+								style="width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
+						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smEpNumberView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.epNo']}" />
+							<p:inputText maxlength="12" value="#{reportBackingBean.smEpNo}"
 								style="width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>

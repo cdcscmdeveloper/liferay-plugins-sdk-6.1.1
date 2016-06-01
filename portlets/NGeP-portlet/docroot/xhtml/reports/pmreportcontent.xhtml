@@ -409,7 +409,7 @@
 				<c:if
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemNameView}">
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.itemName']}" /></TD>
-					<TD><p:inputText maxlength="100"
+					<TD><p:inputText maxlength="100" readonly="true"
 							value="#{reportBackingBean.pmItemName}" style="width:290px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 						</p:inputText></TD>

@@ -13165,6 +13165,8 @@ public class ReportBackingBean extends
 					.getSmSupplier().getCompanyName());
 			this.setSmCompanyName(this.getManagedBean().getSelectedOrgProfile()
 					.getSmSupplier().getCompanyName());
+			this.setSmSupplierName(this.getManagedBean().getSelectedOrgProfile()
+					.getSmSupplier().getCompanyName());
 		}
 		/*
 		 * if (this.getReportValue().equalsIgnoreCase(
