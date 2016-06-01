@@ -69,7 +69,11 @@
 				<table style="width: 100%">
 					<tr>
 						<td>
-							<span id="blinkId3"><h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" /></span><br />
+							<span id="blinkId3"><h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" /></span><span style="opacity: 0.0;"><h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" /></span>
+						</td>
+					</tr>
+					<tr>
+						<td>
 							<h:outputText styleClass="instruction" value="#{backingBean.managedBean.overLappedCategoryMsg}" escape="false"/>
 						</td>
 					</tr>
