@@ -1194,7 +1194,10 @@ public class EvaluationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			List<ScQtProposalChecklist> presentatiodemo = this.getManagedBean()
 					.getPresentationDemoSupplierListDM().getList();
-
+			List<ScQtProposalChecklistAttachment> toBeRemoveChecklist=this.getManagedBean().getToBeRemovedProposalAttachmentsChecklists();
+			if(CollectionUtils.isNotEmpty(toBeRemoveChecklist)){
+				reqDTO.setToBeRemovedProposalAttachmentsChecklists(toBeRemoveChecklist);
+			}
 			if (null != presentatiodemo && !presentatiodemo.isEmpty()) {
 				PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
 				for (ScQtProposalChecklist demoChecklist : presentatiodemo) {
@@ -7470,6 +7473,7 @@ public class EvaluationBackingBean extends
 
 				ScQtProposalChecklist scQtProposalChecklist = this
 						.getManagedBean().getQtProposalChecklist();
+				if(null!=scQtProposalChecklist){
 				ScQtProposalChecklistAttachment attachment = scQtProposalChecklist
 						.getScQtProposalChecklistAttachment();
 				if (null == attachment) {
@@ -7484,6 +7488,7 @@ public class EvaluationBackingBean extends
 
 				scQtProposalChecklist
 						.setScQtProposalChecklistAttachment(attachment);
+				}
 
 			} finally {
 
@@ -9364,9 +9369,23 @@ public class EvaluationBackingBean extends
 	 * Delete demo upload file.Event handle to delete upload file in
 	 * presentation demo tab.
 	 */
-	public void deleteDemoUploadFile() {
+	public void deleteDemoUploadFile(BaseEntity delEntity) {
 		debugLogger("deleteUploadFile");
+		IQTEvaluationSO evaluationSO=null;
+		try{
+		evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		getManagedBean().getScQtChecklist().setScQtCheckListAttachment(null);
+		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+		reqDTO.setCheckList(getManagedBean().getScQtChecklist());
+
+		EvaluationResDTO resDTO = evaluationSO
+				.saveOrUpdatePresentationDemoCheckList(reqDTO);
+
+		this.getManagedBean().setScQtChecklist(resDTO.getCheckList());
+		}finally{
+			evaluationSO=null;
+		}
 
 	}
 
@@ -11176,6 +11195,26 @@ public class EvaluationBackingBean extends
 		}
 
 	}
-
+	/**
+	 * Delete ProposalChecklistAttachments file.Event handle to delete upload file in
+	 * presentation demo tab.
+	 */
+	public void deleteProposalChecklistAttachments(BaseEntity delEntity) {
+		debugLogger("deleteUploadFile");
+		List<ScQtProposalChecklistAttachment> proposalChecklist=this.getManagedBean().getToBeRemovedProposalAttachmentsChecklists();
+		if(null==proposalChecklist){
+			proposalChecklist=new ArrayList<ScQtProposalChecklistAttachment>();
+		}
+     ScQtProposalChecklist proposalCheckList=this.getManagedBean().getQtProposalChecklist();
+     if(null!=proposalCheckList){
+     if (!proposalCheckList.isBrandNew()) {
+      proposalChecklist.add(proposalCheckList.getScQtProposalChecklistAttachment());
+      proposalCheckList.setScQtProposalChecklistAttachment(null);
+     }else{
+    	 proposalCheckList.setScQtProposalChecklistAttachment(null); 
+     }
+     }
+     this.getManagedBean().setToBeRemovedProposalAttachmentsChecklists(proposalChecklist);
+	}
 
 }
