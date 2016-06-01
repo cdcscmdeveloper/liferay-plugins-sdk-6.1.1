@@ -983,6 +983,9 @@ public class ReportsGenerateBean {
 
 	/** The sm ep no view. */
 	private boolean smEpNoView = false;
+	
+	/** The sm ep number view. */
+	private boolean smEpNumberView=false;
 
 	/** The sm of application no view. */
 	private boolean smOFApplicationNoView = false;
@@ -5458,6 +5461,25 @@ public class ReportsGenerateBean {
 	 */
 	public String getPmBusinessRegNoVar() {
 		return pmBusinessRegNoVar;
+	}
+
+	/**
+	 * Checks if is sm ep number view.
+	 * 
+	 * @return the smEpNumberView
+	 */
+	public boolean isSmEpNumberView() {
+		return smEpNumberView;
+	}
+
+	/**
+	 * Sets the sm ep number view.
+	 * 
+	 * @param smEpNumberView
+	 *            the smEpNumberView to set
+	 */
+	public void setSmEpNumberView(boolean smEpNumberView) {
+		this.smEpNumberView = smEpNumberView;
 	}
 
 	/**
