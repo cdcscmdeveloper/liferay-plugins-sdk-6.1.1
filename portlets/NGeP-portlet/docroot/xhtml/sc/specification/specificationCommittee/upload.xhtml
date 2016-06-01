@@ -6,77 +6,25 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="900px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{specificationBackingBean.checkListFileUpload}"
-			mode="advanced" id="upload"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="@form" oncomplete="uploadDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
+	<ac:scSingleFileUploadPopup widgetVar="scChecklistUploadDlg"
+		fileUploadListener="specificationBackingBean.checkListFileUpload"
+		readonly="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+		update="@form" />
 
 
-	<p:dialog id="uploadS1Fin" widgetVar="uploadS1Fin" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="900px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{specificationBackingBean.checkListFileUpload}"
-			mode="advanced" id="uploads1fin"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="@form" oncomplete="uploadS1Fin.hide()">
-		</p:fileUpload>
-	</p:dialog>
-	
-	
-	
-	<p:dialog id="uploadSctechnicalUserScoringSchemaId" widgetVar="technicalUserScoringSchema" modal="true"
-		dynamic="true" resizable="false" width="900px" height="200"
-		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
 
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{specificationBackingBean.technicalUserScoringSchemaFileUpload}"
-			mode="advanced" id="uploadScscoringTechnicalUserSchemaId"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="@form" oncomplete="technicalUserScoringSchema.hide()">
-		</p:fileUpload>
-	</p:dialog>
-	
-	
-	<p:dialog id="uploadScFinancialUserScoringSchemaId" widgetVar="financialUserScoringSchema" modal="true"
-		dynamic="true" resizable="false" width="900px" height="200"
-		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
 
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{specificationBackingBean.financialUserScoringSchemaFileUpload}"
-			mode="advanced" id="uploadScscoringFinanciallUserSchemaId"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="@form" oncomplete="financialUserScoringSchema.hide()">
-		</p:fileUpload>
-	</p:dialog>
 
-	
+	<ac:scSingleFileUploadPopup widgetVar="technicalUserScoringSchema"
+		fileUploadListener="specificationBackingBean.technicalUserScoringSchemaFileUpload"
+		readonly="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+		update="@([id$=sctechnicalScoringUserScoringSchemaIds])" />
+
+
+
+	<ac:scSingleFileUploadPopup widgetVar="financialUserScoringSchema"
+		fileUploadListener="specificationBackingBean.financialUserScoringSchemaFileUpload"
+		readonly="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+		update="@([id$=financialAllUserScoringCheckistScUploadIds])" />
+
 </ui:composition>

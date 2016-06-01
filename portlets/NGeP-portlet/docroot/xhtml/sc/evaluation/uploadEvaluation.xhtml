@@ -26,38 +26,17 @@
 		</p:fileUpload>
 	</p:dialog>
 
-	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{evaluationBackingBean.preSentationDemoFileUpload}"
-			mode="advanced" id="upload"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="@form" oncomplete="uploadDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
+	
+	
+		<ac:scSingleFileUploadPopup widgetVar="demoSupplierListUpload"
+		fileUploadListener="evaluationBackingBean.preSentationDemoFileUpload"
+		readonly="#{evaluationBackingBean.managedBean.readOnly}"
+		update="@([id$=evaluationPresentationDemoTechnicalQualifiedSupplierListDatatableIds])" />
 
-	<p:dialog id="demotAttachDlgids" widgetVar="demoAttachDlg" modal="true"
-		dynamic="true" resizable="false" width="700px" height="200"
-		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+	
 
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{evaluationBackingBean.demoChecklistUpload}"
-			mode="advanced" id="demodlgsuploadids"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="@form" oncomplete="demoAttachDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
-
+<ac:scSingleFileUploadPopup widgetVar="demoChecklistAttachDlg"
+		fileUploadListener="evaluationBackingBean.demoChecklistUpload"
+		readonly="#{evaluationBackingBean.managedBean.readOnly}"
+		update="@([id$=demoremarksupdtls])" />
 </ui:composition>

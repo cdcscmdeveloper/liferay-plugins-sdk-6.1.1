@@ -43,7 +43,8 @@
 			<!-- <ac:paginator for="technicalWeigtage" /> -->
 			<!-- <p:column selectionMode="multiple" style="text-align:center;" /> -->
 
-			<p:column headerText="#{lbl['lbl.sc.spec.technical.financial.scoring.title']}"
+			<p:column
+				headerText="#{lbl['lbl.sc.spec.technical.financial.scoring.title']}"
 				style="width:50%;white-space: normal;">
 				<h:outputText value="#{tech.title}" size="50" />
 			</p:column>
@@ -181,62 +182,23 @@
 
 	</p:panel>
 
-	<p:panel
+	<p:panel id="sctechnicalScoringUserScoringSchemaIds"
 		header="#{lbl['lbl.sc.spec.technical.financial.user.scoring.schema']}"
 		rendered="#{specificationBackingBean.managedBean.technicalUserScoringSchema}"
-		toggleable="true" id="technicalAllUserScoringCheckistScUploadIds">
+		toggleable="true">
 		<table>
 			<tr>
 
 
 				<td style="width: 200px;" class="TableFieldLeft"><p:outputLabel
 						value="#{lbl['lbl.sc.supporting.document']}" /></td>
-				<td class="TableFieldRight">
-					<table style="width: 500px;">
-						<tr>
-							<td colspan="2"><p:commandButton
-									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
-									oncomplete="technicalUserScoringSchema.show();return false;"
-									value="#{lbl['lbl.txt.attach.files']}" partialSubmit="true"
-									process="@this">
-								</p:commandButton></td>
-						</tr>
-						<tr>
-							<td />
-							<td><p:dataGrid id="attachedIdsDemo" var="attachFile"
-									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-									value="#{specificationBackingBean.managedBean.qt.technicalUserScoringSchemaAttachment}"
-									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
-									<table>
-										<tr>
-											<!-- <td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage
-													name="/css/images/design/#{specificationBackingBean.determineIcon(attachFile)}"
-													height="30" width="30" />
-											</td> -->
-											<td><h:outputText
-													value="#{attachFile.createdUser.userName}" />, <h:outputText
-													value="#{attachFile.createdDate}">
-													<f:convertDateTime
-														pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-												</h:outputText></td>
-										</tr>
-										<tr>
-											<td><h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font" immediate="true"
-													action="#{specificationBackingBean.downloadFile(attachFile)}" />
-												<p:commandLink
-													disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
-													action="#{specificationBackingBean.deleteTechnicalFinacialUserScoringSchema('T')}"
-													immediate="true" update="@form">
-													<h:graphicImage styleClass="tasklist_title1"
-														value="/css/images/design/trash.png" />
-												</p:commandLink></td>
-										</tr>
-									</table>
-								</p:dataGrid></td>
-						</tr>
-					</table>
+				<td class="TableFieldRight"><ac:scSingleFileUploadButton
+						id="techUserScoreUploadBtn"
+						popupWidgetVar="technicalUserScoringSchema"
+						attachment="#{specificationBackingBean.managedBean.qt.technicalUserScoringSchemaAttachment}"
+						readonly="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}" />
+
+
 				</td>
 			</tr>
 		</table>
