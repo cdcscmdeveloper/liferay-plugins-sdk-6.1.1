@@ -106,6 +106,7 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
@@ -12702,11 +12703,11 @@ public class SpecificationBackingBean extends
 	 * @param checkListAttachment
 	 *            (ScQtCheckListAttachment checkListAttachment).
 	 */
-	public void deleteCheckListAttachmentFile(
-			ScQtCheckListAttachment checkListAttachment) {
-		checkListAttachment = null;
+	public void deleteCheckListAttachmentFile(BaseEntity delEntity
+			) {
+		
 		this.getManagedBean().getScQtChecklist()
-				.setScQtCheckListAttachment(checkListAttachment);
+				.setScQtCheckListAttachment(null);
 		if (null != this.getManagedBean().getScQtChecklist()
 				&& null == this.getManagedBean().getScQtChecklist()
 						.getScQtCheckListAttachment()) {
