@@ -36,7 +36,11 @@
 			<ac:paginator for="activeBidList"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.sc.bidding.no']}">
-				<h:outputText id="bidNoBL" value="#{bid.bidNo}" />
+				<div style="align: right">
+					<p:commandLink id="bidNoBL" value="#{bid.bidNo}"
+						action="#{biddingListBB.navigateToBidManagementAction(bid)}">
+					</p:commandLink>
+				</div>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.document.no']}">
 				<h:outputText id="docNoBL" value="#{bid.scBid.docNo}" />
