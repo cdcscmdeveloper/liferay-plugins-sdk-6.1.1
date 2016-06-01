@@ -710,23 +710,27 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		// WorkFlow Status should be set In the save
-		if (null == scQuote.getCurrentStatus()) {
-			List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
-			ScSQWorkFlowStatus scWorkFlowStatus = new ScSQWorkFlowStatus();
-			PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
-			getCurrentStatus(currentStatus);
-			scWorkFlowStatus.setPmStatus(currentStatus);
-			scWorkFlowStatus.setQuote(scQuote);
-			scWorkFlowStatus.setCurrent(Boolean.TRUE);
-			workFlowStatuses.add(scWorkFlowStatus);
-			scQuote.setWorkflowStatuses(workFlowStatuses);
+		if (scQuote.isBrandNew()) {
+			ScSQWorkFlowStatus scWorkFlowStatus = null;
+			if(CollectionUtils.isEmpty(scQuote.getWorkflowStatuses())){
+				List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
+				scWorkFlowStatus = new ScSQWorkFlowStatus();
+				PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
+				getCurrentStatus(currentStatus);
+				scWorkFlowStatus.setPmStatus(currentStatus);
+				scWorkFlowStatus.setQuote(scQuote);
+				scWorkFlowStatus.setCurrent(Boolean.TRUE);
+				workFlowStatuses.add(scWorkFlowStatus);
+				scQuote.setWorkflowStatuses(workFlowStatuses);
+			}
+			if(CollectionUtils.isEmpty(scQuote.getRemarks())){
+				// Initializing Remarks
+				scQuote.setRemarks(initializeRemarks(scQuote, scWorkFlowStatus,
+						scQuote.getRemarks(), ScSQRemark.class));
+			}
 		}
 		
-		// Initializing Remarks
-		scQuote.setRemarks(initializeRemarks(scQuote, null,
-				scQuote.getRemarks(), ScSQRemark.class));
 		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
-		
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		
 		// zone location level by default - district
@@ -2210,6 +2214,15 @@ public class SimpleQuoteBackingBean extends
 
 			finalizeRemarks(quote.getRemarks());
 			quote.setWorkflowStatuses(null);
+			// To avoid insert workflow status when direct submit without save.
+			if (quote.isBrandNew()) {
+				List<ScSQRemark> remarks = quote.getRemarks();
+				if (CollectionUtils.isNotEmpty(remarks)) {
+					for (ScSQRemark remark : remarks) {
+						remark.setScWorkFlowStatus(null);
+					}
+				}	
+			}
 
 			// product and service
 			List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
@@ -5450,7 +5463,7 @@ public class SimpleQuoteBackingBean extends
 
 		scQuote.setMultipleQuote(Boolean.FALSE);
 		// WorkFlow Status should be set In the save
-		if (scQuote.getCurrentStatus() == null) {
+		if (scQuote.isBrandNew()) {
 			List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
 			ScSQWorkFlowStatus scWorkFlowStatus = new ScSQWorkFlowStatus();
 			PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
@@ -5460,10 +5473,12 @@ public class SimpleQuoteBackingBean extends
 			scWorkFlowStatus.setCurrent(Boolean.TRUE);
 			workFlowStatuses.add(scWorkFlowStatus);
 			scQuote.setWorkflowStatuses(workFlowStatuses);
+			
+			// Initializing Remarks
+			scQuote.setRemarks(initializeRemarks(scQuote, scWorkFlowStatus,
+					scQuote.getRemarks(), ScSQRemark.class));
 		}
-		// Initializing Remarks
-		scQuote.setRemarks(initializeRemarks(scQuote, null,
-				scQuote.getRemarks(), ScSQRemark.class));
+		
 
 		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
 		this.getManagedBean().setScQuote(scQuote);
