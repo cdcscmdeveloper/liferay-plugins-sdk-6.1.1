@@ -14080,8 +14080,25 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean().setGenerateButtonView(true);
 				// generateReportTimer();
 				// generateReportIntime();
-
+                 
+				
+				/*   1.TO replace '%20' as in total white spacce Of constructedParamString  
+				     2.Report Server(Linux Env) Consider white space as '%20'*/
+				
+				/*String spaceRemovalParameter = constructedParamString
+						.replaceAll(" ", "%20");
 				if (StringUtils.isNotEmpty(strLanguage)
+						&& (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
+					fileGenerateReport(getManagedBean().getReportTitle(),
+							spaceRemovalParameter);
+				} else if (StringUtils.isNotEmpty(strLanguage)
+						&& (strLanguage
+								.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
+					fileGenerateReport(getManagedBean().getReportTitle(),
+							spaceRemovalParameter);
+				}   */           
+ 				
+                 if (StringUtils.isNotEmpty(strLanguage)
 						&& (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 					fileGenerateReport(getManagedBean().getReportTitle(),
 							constructedParamString);
@@ -14091,7 +14108,8 @@ public class ReportBackingBean extends
 					fileGenerateReport(getManagedBean().getReportTitle(),
 							constructedParamString);
 				}
-
+                 
+                 
 				/*
 				 * FacesContext.getCurrentInstance().getPartialViewContext().
 				 * getRenderIds().add("reportGenDialog.hide()");//execute(
