@@ -49,16 +49,7 @@ public class BiddingListBackingBean extends
 		log.info(message);
 	}
 	
-	/**
-	 * action method to navigate toprevious page
-	 * 
-	 * @return
-	 */
-	public String biddingManagementBackAction() {
-		debugLogger("supplierProposalBackAction");
-		return "/xhtml/sc/bidding/ptjPortlet/ptjPortletBidList.xhtml ? faces-redirect=true";
-	}
-
+	
 	/**
 	 * method to reset search fields
 	 */
