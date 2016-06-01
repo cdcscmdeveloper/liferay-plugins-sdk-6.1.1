@@ -188,9 +188,9 @@
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctSupplierNameView}">
 							<c:if
-								test="#{flReportBackingBean.managedBean.rptGenBean.ctSupplierTextView}">
+								test="#{ctReportBackingBean.managedBean.rptGenBean.ctSupplierTextView}">
 								<p:outputLabel value="#{lbl['lbl.rpt.supplierName']}" />
-								<ac:lov id="ctCompanyName" readonly="true" style="width:264px;"
+								<ac:lov id="ctSupplierName" readonly="true" style="width:264px;"
 									lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
 									headerText="#{lbl['lbl.rpt.supplierName']}" update="@form"
 									value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
@@ -198,7 +198,7 @@
 									saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
 							</c:if>
 							<c:if
-								test="#{flReportBackingBean.managedBean.rptGenBean.ctSupplierDefaultView}">
+								test="#{ctReportBackingBean.managedBean.rptGenBean.ctSupplierDefaultView}">
 								<p:outputLabel value="#{lbl['lbl.rpt.supplierName']}"
 									style="margin-bottom:5px;width:190px;" />
 								<p:outputLabel value="#{reportBackingBean.ctSupplierName}"
