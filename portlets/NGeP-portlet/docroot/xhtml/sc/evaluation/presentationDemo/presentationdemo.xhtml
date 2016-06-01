@@ -34,17 +34,18 @@
 			<p:column headerText="#{lbl['lbl.sc.document']}"
 				style="width:15%;text-align: center;">
 
-				<p:commandLink oncomplete="uploadDlg.show();return false;"
-					disabled="#{evaluationBackingBean.managedBean.readOnly}"
-					update="demoSupplierId">
-					<h:graphicImage value="/css/images/design/upload.png" />
-					<f:setPropertyActionListener value="#{demoSupplier}"
-						target="#{evaluationBackingBean.managedBean.qtProposalChecklist}" />
-
-				</p:commandLink>
-				<p:spacer width="10" height="5" />
-				<h:outputText
-					value="#{demoSupplier.scQtProposalChecklistAttachment.fileName}"></h:outputText>
+			
+					
+					<ac:scSingleFileUploadButton id="evaluationdemoUploadBtn"
+							popupWidgetVar="demoSupplierListUpload"
+							attachment="#{demoSupplier.scQtProposalChecklistAttachment}"
+							readonly="#{evaluationBackingBean.managedBean.readOnly}"
+							deleteFileUploadListener="evaluationBackingBean.deleteProposalChecklistAttachments"
+							rowIndex="#{index}">
+							<f:setPropertyActionListener for="actionEvent"
+								value="#{demoSupplier}"
+								target="#{evaluationBackingBean.managedBean.qtProposalChecklist}" />
+						</ac:scSingleFileUploadButton>
 
 			</p:column>
 
@@ -89,51 +90,13 @@
 				<td class="TableFieldLeft"><p:outputLabel
 						value="#{lbl['lbl.txt.attachment']}" /></td>
 				<td class="TableFieldRight">
-					<table style="width: 150px;">
-						<tr>
-							<td colspan="2"><p:commandButton
-									disabled="#{evaluationBackingBean.managedBean.readOnly}"
-									oncomplete="demoAttachDlg.show();"
-									value="#{lbl['lbl.txt.attach.files']}" partialSubmit="true"
-									process="@this" update="@([id$=demoremarksupdtls])">
-								</p:commandButton></td>
-						</tr>
-						<tr>
-							<td />
-							<td><p:dataGrid id="attachedIdsDemo" var="attachFile"
-									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-									value="#{evaluationBackingBean.managedBean.scQtChecklist.scQtCheckListAttachment}"
-									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
-									<table>
-										<tr>
-											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage
-													name="/css/images/design/#{evaluationBackingBean.determineIcon(attachFile)}"
-													height="30" width="30" />
-											</td>
-											<td><h:outputText
-													value="#{attachFile.createdUser.userName}" />, <h:outputText
-													value="#{attachFile.createdDate}">
-													<f:convertDateTime
-														pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-												</h:outputText></td>
-										</tr>
-										<tr>
-											<td><h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font" immediate="true"
-													action="#{evaluationBackingBean.downloadFile(attachFile)}" />
-												<p:commandLink
-													disabled="#{evaluationBackingBean.managedBean.readOnly}"
-													action="#{evaluationBackingBean.deleteDemoUploadFile}"
-													immediate="true" update="@form">
-													<h:graphicImage styleClass="tasklist_title1"
-														value="/css/images/design/trash.png" />
-												</p:commandLink></td>
-										</tr>
-									</table>
-								</p:dataGrid></td>
-						</tr>
-					</table>
+				<ac:scSingleFileUploadButton
+						id="attachedIdsDemo"
+						popupWidgetVar="demoChecklistAttachDlg"
+						attachment="#{evaluationBackingBean.managedBean.scQtChecklist.scQtCheckListAttachment}"
+						deleteFileUploadListener="evaluationBackingBean.deleteDemoUploadFile"
+						readonly="#{evaluationBackingBean.managedBean.readOnly}" />
+			
 				</td>
 			</tr>
 		</table>
