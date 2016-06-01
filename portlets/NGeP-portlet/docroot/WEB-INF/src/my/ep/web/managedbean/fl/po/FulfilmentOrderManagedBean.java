@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.fl.po;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -214,6 +215,9 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
     
     private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
     private IPagingDataModel<FlFulfilmentOrder> pendingFlDataModel = new PendingFlPagingDataModel();
+    
+    /** The ordered amt grand total. */
+	private BigDecimal orderSummaryOrderedAmtGrandTotal ;
     
     /**
 	 * @return the pendingDoDataModel
@@ -1279,6 +1283,21 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 	public void setPendingFlDataModel(IPagingDataModel<FlFulfilmentOrder> pendingFlDataModel) {
 		this.pendingFlDataModel = pendingFlDataModel;
+	}
+
+	/**
+	 * @return the orderSummaryOrderedAmtGrandTotal
+	 */
+	public BigDecimal getOrderSummaryOrderedAmtGrandTotal() {
+		return orderSummaryOrderedAmtGrandTotal;
+	}
+
+	/**
+	 * @param orderSummaryOrderedAmtGrandTotal the orderSummaryOrderedAmtGrandTotal to set
+	 */
+	public void setOrderSummaryOrderedAmtGrandTotal(
+			BigDecimal orderSummaryOrderedAmtGrandTotal) {
+		this.orderSummaryOrderedAmtGrandTotal = orderSummaryOrderedAmtGrandTotal;
 	}
 
 }

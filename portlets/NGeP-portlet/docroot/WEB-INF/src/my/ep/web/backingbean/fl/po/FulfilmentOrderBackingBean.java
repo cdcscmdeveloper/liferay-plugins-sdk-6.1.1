@@ -789,6 +789,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			if(getManagedBean().getFlRequest().getFlDeliveryAddresses()!=null) {
 				sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
+				getOrderSummaryGrandTotal();
+				
 			}
 		}
 	}
@@ -1574,6 +1576,21 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}
 		return url;
 
+	}
+	
+	private void getOrderSummaryGrandTotal() {
+		BigDecimal orderSummaryTotalOrderAmt = null;
+		BigDecimal grandOrderSummaryTotalOrderAmt=new BigDecimal(0);
+		//getManagedBean().setOrderedAmtGrandTotal(grandOrderSummaryTotalOrderAmt);
+		for(FlDeliveryAddress  deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			orderSummaryTotalOrderAmt = new BigDecimal(0);
+			for(FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()){
+				orderSummaryTotalOrderAmt = orderSummaryTotalOrderAmt.add(itemAddress.getOrderedAmt());
+			}
+			grandOrderSummaryTotalOrderAmt = grandOrderSummaryTotalOrderAmt.add(orderSummaryTotalOrderAmt);
+		}
+		getManagedBean().setOrderSummaryOrderedAmtGrandTotal(grandOrderSummaryTotalOrderAmt);
+		
 	}
 		
 }
