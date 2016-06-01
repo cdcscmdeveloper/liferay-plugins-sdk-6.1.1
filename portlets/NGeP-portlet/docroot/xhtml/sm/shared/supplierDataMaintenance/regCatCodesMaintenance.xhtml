@@ -14,11 +14,23 @@
 			<c:if test="#{supplierDataMaintenanceBackingBean.managedBean.overLappedCategoryExists}">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel escape="false"
+						<td>
+						<span id="blinkId4"><h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" /></span><br />
+						<p:outputLabel escape="false"
 								value="#{supplierDataMaintenanceBackingBean.managedBean.overLappedCategoryMsg}"
 								style="color: red;font-weight: bold;float:left;" /></td>
 					</tr>
 				</table>
+				
+				<script>
+					$(function(){
+					    // Self-executing recursive animation
+					    (function pulse(){
+					        $('#blinkId4').delay(1000).fadeOut('slow').delay(50).fadeIn('slow',pulse);
+					    })();
+					});
+				</script>
+				
 			</c:if>
 			<table>
 				<tr>
