@@ -226,31 +226,20 @@
 			<p:column headerText="#{lbl['lbl.sc.document']}"
 				style="width:16%;white-space: normal;text-align: center;">
 				<h:panelGroup id="uploadFinance">
-					<p:commandLink oncomplete="uploadS1Fin.show();return false;"
-						update="financeProposaltwo" process="@this" partialSubmit="true"
-						rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and (specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()))}">
-						<h:graphicImage value="/css/images/design/upload.png" />
-						<f:setPropertyActionListener value="#{stageTwofunctional}"
-							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
-
-					</p:commandLink>
-					<p:spacer width="10" height="5" />
-					<h:commandLink
-						value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"
-						styleClass="blue_font" immediate="true"
-						action="#{specificationBackingBean.downloadFile(stageTwofunctional.scQtCheckListAttachment)}" />
-
-					<p:commandLink
-						rendered="#{stageTwofunctional.scQtCheckListAttachment.fileName ne null and (specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
-						action="#{specificationBackingBean.deleteCheckListAttachmentFile(stageTwofunctional.scQtCheckListAttachment)}"
-						immediate="true" update="@form">
-						<h:graphicImage styleClass="tasklist_title1"
-							value="/css/images/design/trash.png" />
-						<f:setPropertyActionListener value="#{stageTwofunctional}"
-							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
-					</p:commandLink>
-					<!-- 	<h:outputText
-						value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"></h:outputText> -->
+				
+							<ui:fragment
+						rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP'}">
+						<ac:scSingleFileUploadButton id="scfcsUploadBtn"
+							popupWidgetVar="scChecklistUploadDlg"
+							attachment="#{stageTwofunctional.scQtCheckListAttachment}"
+							readonly="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+							deleteFileUploadListener="specificationBackingBean.deleteCheckListAttachmentFile"
+							rowIndex="#{index}">
+							<f:setPropertyActionListener for="actionEvent"
+								value="#{stageTwofunctional}"
+								target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+						</ac:scSingleFileUploadButton>
+					</ui:fragment>
 				</h:panelGroup>
 			</p:column>
 
