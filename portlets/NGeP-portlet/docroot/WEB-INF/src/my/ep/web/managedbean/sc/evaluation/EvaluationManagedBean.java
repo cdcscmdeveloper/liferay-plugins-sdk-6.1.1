@@ -37,6 +37,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtOpeningCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
 import my.ep.persistence.entity.sc.quationtender.ScQtTechnicalCommitteeRemark;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
@@ -485,7 +486,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	private String encryptionKey;
 	
-
+	private List<ScQtProposalChecklistAttachment> toBeRemovedProposalAttachmentsChecklists;
 	/**
 	 * Gets the today.
 	 * 
@@ -3346,5 +3347,22 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEncryptionKey(String encryptionKey) {
 		this.encryptionKey = encryptionKey;
 	}
+
+	/**
+	 * @return the toBeRemovedProposalAttachmentsChecklists
+	 */
+	public List<ScQtProposalChecklistAttachment> getToBeRemovedProposalAttachmentsChecklists() {
+		return toBeRemovedProposalAttachmentsChecklists;
+	}
+
+	/**
+	 * @param toBeRemovedProposalAttachmentsChecklists the toBeRemovedProposalAttachmentsChecklists to set
+	 */
+	public void setToBeRemovedProposalAttachmentsChecklists(
+			List<ScQtProposalChecklistAttachment> toBeRemovedProposalAttachmentsChecklists) {
+		this.toBeRemovedProposalAttachmentsChecklists = toBeRemovedProposalAttachmentsChecklists;
+	}
+
+	
 
 }
