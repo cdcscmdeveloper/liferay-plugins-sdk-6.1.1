@@ -679,14 +679,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							    	getManagedBean().getCtServiceItemList().add(item);
 						     	}
 					    	}
-							if (getManagedBean().getCtServiceItemList() != null 
-									&& getManagedBean().getCtServiceItemList().size() > 0) {
-					        	Collections.sort(this.getManagedBean().getCtServiceItemList(), new CtContractItem());
-							}
-							if (getManagedBean().getCtItemList() != null 
-									&& getManagedBean().getCtItemList().size() > 0) {
-								Collections.sort(getManagedBean().getCtItemList(), new CtContractItem());
-							}
 						}
 					}
 					// Retrieve Zone
