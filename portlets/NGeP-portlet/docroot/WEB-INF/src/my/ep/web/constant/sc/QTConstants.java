@@ -179,8 +179,6 @@ public interface QTConstants {
 	public static final String OTHERS_APPROVAL = "Others Approval";
 	public static final String QT_OPEN = "Open";
 	
-	public static final String CHAIRPERSON = "_CHAIRPERSON";
-	
 	public static final String REPLACE_CHAR = "_";
 	public static final String CT_PANEL_ZONE_COVERAGE = "Z";
 	public static final String CT_PANEL_ALL_COVERAGE = "A";
