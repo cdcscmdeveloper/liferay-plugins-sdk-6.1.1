@@ -33,9 +33,14 @@
 		<ac:gpkiPopup textBeforeSign="#{directLOABackingBean.textBeforeSign}"
 			postSignAction="#{directLOABackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus}"
 			value="#{lbl['lbl.sc.loiloa.direct.loa.header.instruction']}">
 		</h:outputText>
+		
+		<h:outputText styleClass="instruction" rendered="#{isPendingVerification}"
+			value="#{lbl['lbl.sc.loiloa.loa.verify.instruction']}">
+		</h:outputText>
+		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd"><h:panelGroup
