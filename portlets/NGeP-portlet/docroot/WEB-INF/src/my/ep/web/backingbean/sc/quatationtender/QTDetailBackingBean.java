@@ -655,15 +655,20 @@ public class QTDetailBackingBean extends
 				if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
 					if (selectedScQt.isZonal()) {
 						this.getManagedBean().setCtzones(Boolean.TRUE);
-						if (isNotNullOREmpty(resDTO.getZoneDetails())) {
-							for (TplSpecZoneDtl zone : resDTO.getZoneDetails()) {
-								getManagedBean()
-										.getZoneGeneralTrees()
-										.add(LocationSingleton
-												.getInstance()
-												.constuctTreeNode(
-														zone,
-														zone.getTplSpecZoneLocs()));
+						
+						if (selectedScQt.getScQtSupplierCriteria() != null &&
+								selectedScQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+							List<TplSpecZoneDtl> specZoneDtls = selectedScQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
+							if (isNotNullOREmpty(specZoneDtls)) {
+								for (TplSpecZoneDtl zone : specZoneDtls) {
+									getManagedBean()
+											.getZoneGeneralTrees()
+											.add(LocationSingleton
+													.getInstance()
+													.constuctTreeNode(
+															zone,
+															zone.getTplSpecZoneLocs()));
+								}
 							}
 						}
 					}
@@ -785,13 +790,6 @@ public class QTDetailBackingBean extends
 				}
 
 			}
-		}
-		
-
-		if (null != this.getManagedBean().getSupplierCriteria()) {
-			setUserDetails(this.getManagedBean().getSupplierCriteria());
-			scQt.setScQtSupplierCriteria(this.getManagedBean()
-					.getSupplierCriteria());
 		}
 		
 		if (scQt.getScQtSupplierCriteria() != null
@@ -2239,6 +2237,7 @@ public class QTDetailBackingBean extends
 
 			tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
 
+			getManagedBean().setSupplierCriteria(tenderResDTO.getQtDetail().getScQtSupplierCriteria());
 			// Commented as a fix for SIR#9289
 //			scQt = tenderResDTO.getQtDetail();
 			this.getManagedBean().setAllStateCode(tenderResDTO.getStateCode());
@@ -2928,8 +2927,8 @@ public class QTDetailBackingBean extends
 								.isEmpty())) {
 					tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 					if (tenderResDTO.getQtDetail() != null) {
-						getManagedBean().setQt(tenderResDTO.getQtDetail());
-						scQt = this.getManagedBean().getQt();
+						scQt = tenderResDTO.getQtDetail();
+						getManagedBean().setQt(scQt);
 						Long currentStatus = this.getManagedBean().getQt()
 								.getQtStatus().getStatusId();
 						this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -2945,23 +2944,13 @@ public class QTDetailBackingBean extends
 												.getZoneLocationLevel()
 												.getParameterCode());
 							}
-							ScQtSupplierCriteria suppCriteria = tenderResDTO
-									.getQtSupplierCriteria();
-							if (suppCriteria != null) {
-								this.getManagedBean().setSupplierCriteria(
-										suppCriteria);
-								/*this.getManagedBean().setCtPanelItem(
-										suppCriteria.getCtPanelItem());*/
-								/*
-								 * scQt.setPanelItemId(
-								 * suppCriteria.getCtPanelItem
-								 * ().getPanelItemId());
-								 */
-							}
 
 							// Populate zone detail into tree node
-							populateZoneDetailIntoTreeNode(tenderResDTO.getQtDetail(), tenderResDTO
-									.getZoneDetails());
+							if (scQt.getScQtSupplierCriteria() != null &&
+									scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+								List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
+								populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+							}
 						}
 
 					}
@@ -4633,9 +4622,6 @@ public class QTDetailBackingBean extends
 							.getParameterCode();
 					this.getManagedBean().setLocalLevelCode(locationLevelCode);
 					this.getManagedBean().getQt().getScQtSupplierCriteria().setLocationLevel( paramDesc.getPmParameter());
-					if(this.getManagedBean().getSupplierCriteria() != null){
-						this.getManagedBean().getSupplierCriteria().setLocationLevel( paramDesc.getPmParameter());
-					}
 					
 					break;
 				}

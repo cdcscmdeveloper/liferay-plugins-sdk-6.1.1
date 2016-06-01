@@ -2330,8 +2330,13 @@ public class QTDocumentsBackingBean extends
 			qtReqDTO.setBdgDtlsReq(true);
 			QuationTenderResDTO qtResDTO = new QuationTenderResDTO();
 			qtResDTO = qtDtlSO.retriveQTDetails(qtReqDTO);
+			ScQt scQt = qtResDTO.getQtDetail();
 			if (this.getManagedBean().getQt().isZonal()) {
-				context.put("zoneLocality", qtResDTO.getZoneDetails());
+				if (scQt.getScQtSupplierCriteria() != null &&
+						scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+					List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
+					context.put("zoneLocality", specZoneDtls);
+				}
 			}
 		} finally {
 			QtDetailsSO = null;
