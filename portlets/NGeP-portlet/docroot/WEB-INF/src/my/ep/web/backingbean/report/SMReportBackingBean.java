@@ -589,7 +589,7 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmSupplierPerformanceView(true);
 			rptGenBean.setSmRegistrationTypeView(true);
 			rptGenBean.setSmSupplierView(true);
-			rptGenBean.setSmEpNoView(true);
+			rptGenBean.setSmEpNumberView(true);
 			rptGenBean.setSmLAMofRegNoView(true);
 			rptGenBean.setSmFromAndToYearView(true);
 			rptGenBean.setSmYearFromView(true);
