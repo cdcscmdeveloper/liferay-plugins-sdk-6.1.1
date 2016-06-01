@@ -1143,8 +1143,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractResDTO contractResDTO = contractSO.retrieveContract(ctDTO);
 			getManagedBean().getFlRequest().setCtContract(contractResDTO.getContract());
 			if( null != getManagedBean().getFlRequest().getCtContract().getCtFactoring()){
-				if( null != getManagedBean().getFlRequest().getCtContract().getCtFactoring().getFinancialOrgAddress()){
-					getSelectedFactoringCompDtl(getManagedBean().getFlRequest().getCtContract().getCtFactoring());
+				if(DateUtils.isDateGreaterOrEqual(DateUtils.getCurrentDateWithoutTime(), getManagedBean().getFlRequest().getCtContract().getCtFactoring().getEffDate()) && 
+					DateUtils.isDateGreater(getManagedBean().getFlRequest().getCtContract().getCtFactoring().getExpDate(), DateUtils.getCurrentDateWithoutTime()) ) {
+					if( null != getManagedBean().getFlRequest().getCtContract().getCtFactoring().getFinancialOrgAddress()){
+						getSelectedFactoringCompDtl(getManagedBean().getFlRequest().getCtContract().getCtFactoring());
+					}
+				} else {
+					getManagedBean().getFlRequest().getCtContract().setFactored(false);
 				}
 			}else{
 				getManagedBean().getFlRequest().getCtContract().setFactored(false);
