@@ -42,12 +42,27 @@
 		<p:remoteCommand name="#{cc.attrs.widgetVar}reRender"
 			partialSubmit="true" process="@this" update="#{cc.attrs.update}" />
 			
-		<ac:confirmationPopup id="#{cc.attrs.widgetVar}delAttPopupId"
-			widget="#{cc.attrs.widgetVar}delAttPopup"
-			okAction="scRemarkAndAttachmentBackingBean.executeDeleteAttachmentAction"
-			width="33%" height="100" title="#{lbl['lbl.sc.supporting.document']}"
-			content="#{lbl['lbl.ct.dialog.delete.attachment.msg']}"
-			update="@this" />
+		<p:dialog id="#{cc.attrs.widgetVar}delAttPopupId" widgetVar="#{cc.attrs.widgetVar}delAttPopup"
+			header="#{lbl['lbl.sc.supporting.document']}" resizable="false"
+			width="33%" height="100"
+			closable="false" modal="true">
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.ct.dialog.delete.attachment.msg']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				 <p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+					partialSubmit="true"
+					action="#{cofirmationPopUpBackingBean.okAction('scRemarkAndAttachmentBackingBean.executeDeleteAttachmentAction')}"
+					oncomplete="#{cc.attrs.widgetVar}delAttPopup.hide();" update="@this" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
+					oncomplete="#{cc.attrs.widgetVar}delAttPopup.hide();" />
+			</div>
+		</p:dialog>
 	</c:if>
 </cc:implementation>
 </ui:composition>
