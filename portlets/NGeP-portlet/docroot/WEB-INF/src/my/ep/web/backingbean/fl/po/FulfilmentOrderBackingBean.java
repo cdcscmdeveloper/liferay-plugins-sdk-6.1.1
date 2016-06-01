@@ -927,7 +927,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			if(hasFactoringUserRole()) {
 				validateFulfillmentOrder(outcome);
 			}
-			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || hasFactoringUserRole()){
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) && hasFactoringUserRole()){
 				validateFulfillmentOrder(outcome);
 				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 				return null;
