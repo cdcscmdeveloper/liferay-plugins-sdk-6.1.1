@@ -7,11 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -28,26 +26,18 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
-import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
-import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
-import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
-import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -55,8 +45,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.ct.ContractReqDTO;
-import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -65,52 +53,32 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
-import my.ep.dto.sc.quationtender.BriefingReqDTO;
-import my.ep.dto.sc.quationtender.BriefingResDTO;
-import my.ep.dto.sc.quationtender.EvaluationReqDTO;
-import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
-import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
-import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
-import my.ep.dto.sc.quationtender.ProposalReqDTO;
-import my.ep.dto.sc.quationtender.ProposalResDTO;
-import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
-import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
-import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
-import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
-import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
@@ -122,18 +90,13 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
-import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -141,7 +104,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
@@ -2180,43 +2142,6 @@ public class SupplierFinalizationBackingBean extends
 
 	}
 
-	private void submitRecommendSupplier(ScQtFinalization scQtFinalization) {
-		// TODO - BPM
-		String recommendType = scQtFinalization.getRecommendedTypeId()
-				.getParameterCode();
-
-		if (scQtFinalization.isHigherAuthReq()) {
-			// BPM Send task to DO/commitee for the re-finalize by higher
-			// authority
-		} else {
-			if (recommendType.equals(ParameterConst.RECOMMEND_TYPE_PACKAGE)) {
-				// BPM send task for award/online bidding/multiple LOI by
-				// package
-			} else if (recommendType.equals(ParameterConst.RECOMMEND_TYPE_ITEM)) {
-				// BPM send task for award/online bidding/multiple LOI by items
-			}
-		}
-	}
-
-	private void submitReEvaluateQT(ScQtFinalization scQtFinalization) {
-		// TODO - BPM
-		/*
-		 * String reEvaluateBy = scQtFinalization.getReEvaluateCommitte();
-		 * boolean reEvaluateTech = getManagedBean().isReEvaluateReqForTech();
-		 * boolean reEvaluateFin = getManagedBean().isReEvaluateReqForFin();
-		 * 
-		 * if(reEvaluateBy.equals(SelectionType.New)){ //BPM send task to
-		 * maintain committee } if(reEvaluateTech && reEvaluateFin){ //BPM send
-		 * task to reEvaluate technical and financial
-		 * 
-		 * }else if(reEvaluateTech && !reEvaluateFin){ //BPM send task to
-		 * reEvaluate technical only
-		 * 
-		 * }else if(!reEvaluateTech && reEvaluateFin){ //BPM send task to
-		 * reEvaluate financial only }
-		 */
-	}
-
 	/**
 	 * To retrieve the document list in PMDocument for Briefing Paper/Kertas
 	 * Taklimat
@@ -2633,912 +2558,6 @@ public class SupplierFinalizationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment, false);		
 	}
 
-	private void generateAnalysisEvaluationReportPdf(ScAttachment attachment,
-			ScQt scQt) throws Exception {
-		// attachment.setFileName("AnalysisOfEvaluation.pdf");
-		populateAttachmentDetails(attachment);
-
-		if (!getManagedBean().isSubmit()) {
-			FacesScopes facesScopes = new FacesScopes();
-			long qtId = scQt.getQtId();
-			String reportId = "";
-			String reportName = ReportConst.SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP;
-			reportId = "SC_037";
-	
-			Map<String, String> paramMap = new HashMap<String, String>();
-			paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
-			paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
-					.getUserSessionBean().getUserId() + "");
-			paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
-	
-			generatePdfFromOracle(reportName, paramMap, attachment, false);
-		}
-	}
-
-	private void generateCoverPdf(ScAttachment attachment, ScQt scQt)
-			throws Exception {
-		debugLogger("generateCoverPdf");
-		// attachment.setFileName("finalization-Cover.pdf");
-		populateAttachmentDetails(attachment);
-
-		// ScQt scQt = scQtFinalization.getScQt();
-		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(
-				commonUtils
-						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-		VelocityContext context = new VelocityContext();
-
-		Calendar cal = Calendar.getInstance();
-		int year = cal.get(Calendar.YEAR);
-		log.info("Current Year : " + year);
-
-		context.put("qtNo", scQt.getQtNo());
-		context.put("year", year);
-		// context.put("fileNo", scQt.getFileNo());
-		
-//		String departmentOrgName = null;
-//		if (scQt.getDepartmentOrgProfile() != null) {
-//			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
-//		} else {
-//			departmentOrgName = StringUtils.EMPTY;
-//		}
-//		context.put("jabatan", departmentOrgName);
-		
-		context.put("ptj", scQt.getPmOrgProfile().getOrgName());
-		context.put("title", scQt.getQtTitle());
-
-		context.put("procurementMode", scQt.getProcurementMode()
-				.getParameterCode());
-
-		String committeeType = this.getManagedBean().getCommitteeType();
-		log.info("committeeType : " + committeeType);
-		StringBuilder commType = new StringBuilder();
-		if (commType != null) {
-			commType.append(getParameterDesc(
-					ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));
-		}
-		context.put("commType", commType);
-
-		List<ScQtMeeting> scQtMeetings = new ArrayList<ScQtMeeting>();
-		IQTMeetingSO meetingSO = null;
-		try {
-			meetingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
-			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			reqDTO.setCommitteType(committeeType);
-			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
-			scQtMeetings = resDTO.getMeetingDtls();
-		} finally {
-			meetingSO = null;
-		}
-		for (ScQtMeeting meeting : scQtMeetings) {
-			meeting.setMeetDateStr(dateSDF.format(meeting.getMeetingDate()));
-			DateFormat formatter = DateFormat.getInstance();
-			formatter = DateFormat.getTimeInstance(); // time only
-			meeting.setMeetTimeStr(formatter.format(meeting.getMeetingDate()));
-		}
-		context.put("scQtMeetings", scQtMeetings);
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_FZ_COVER, context,
-				new FileOutputStream(getActualFilePath(attachment)));
-	}
-
-	private void generateOfferedAndQTDtlsPdf(ScAttachment attachment, ScQt scQt)
-			throws Exception {
-		debugLogger("generateOfferedAndQTDtlsPdf");
-
-		attachment
-				.setFileName("Keterangan_Tawaran_dan_Maklumat_Tender_Sebut_Harga.pdf");
-		populateAttachmentDetails(attachment);
-
-		// ScQt scQt = scQtFinalization.getScQt();
-		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(
-				commonUtils
-						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-		// DecimalFormat amountDF = new
-		// DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-		VelocityContext context = new VelocityContext();
-
-		String committeeType = this.getManagedBean().getCommitteeType();
-		log.info("committeeType : " + committeeType);
-		StringBuilder commType = new StringBuilder();
-		if (commType != null) {
-			commType.append(getParameterDesc(
-					ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));
-		}
-		context.put("commType", commType);
-		context.put("ptj", scQt.getPmOrgProfile().getOrgName());
-		
-//		String departmentOrgName = null;
-//		if (scQt.getDepartmentOrgProfile() != null) {
-//			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
-//		} else {
-//			departmentOrgName = StringUtils.EMPTY;
-//		}
-//		context.put("jabatan", departmentOrgName);	
-		
-		context.put("title", scQt.getQtTitle());
-		context.put("estimatedAmount", scQt.getEstimatedAmount());
-		context.put("procurementMode", scQt.getProcurementMode().getParameterCode());
-		context.put("fulfilmentType", scQt.getFulfilmentType().getParameterCode());
-
-		boolean planned = false;
-		if (scQt.isPlanned()) {
-			planned = true;
-			if (scQt.getScQtGosodoBudgets() != null) {
-				context.put("budgetList", scQt.getScQtGosodoBudgets());
-			}
-		}
-		context.put("isPlanned", planned);
-		
-		StringBuilder contractDuration = new StringBuilder();
-		if (scQt.getContractDuration() != null) {
-			contractDuration.append(scQt.getContractDuration() + " " + getMessageCommon("lbl.sc.sp.month")); 
-		}
-		context.put("contractDuration", contractDuration);
-		
-		boolean isSample = false;
-		if (scQt.isSampleReq()) {
-			isSample = true;
-		}
-		context.put("isSample", isSample);
-		if (isSample) {
-			String sampleClosingDate = "";
-			if (scQt.getSampleClosingDate() != null) {
-				sampleClosingDate = dateSDF.format(scQt.getSampleClosingDate());
-			}
-			context.put("sampleClosingDate", sampleClosingDate);
-			
-			IQTEvaluationSO evaluationSo = null;
-			try {
-				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-				EvaluationResDTO resDTO = evaluationSo
-						.retrieveSampleLableDtls(reqDTO);	
-				
-				Map<String,SampleLabelDTO> sampleLabelsMap = null;
-				
-				List<ScQtSampleLable> scQtSampleLabelList = 
-							resDTO.getLableResultBean().getResultList();
-				if (CollectionUtils.isNotEmpty(scQtSampleLabelList)) {
-					sampleLabelsMap = new HashMap<String,SampleLabelDTO>();
-				}
-				for (ScQtSampleLable scQtSampleLabel 
-										: scQtSampleLabelList) {
-					reqDTO.setLableId(scQtSampleLabel.getSampleLableId());
-					resDTO = evaluationSo.retrieveSampleItemDtlsByLable(reqDTO);
-					List<ScQtSampleItem> sampleItemsList = resDTO.getItemResultBean().getResultList();
-					if (CollectionUtils.isNotEmpty(sampleItemsList)) {
-						for (ScQtSampleItem scQtSampleItem : 
-													sampleItemsList) {
-							String itemName = scQtSampleItem.getScRequestItem().getItemName();
-							if (sampleLabelsMap.containsKey(itemName)) {
-								SampleLabelDTO sampleLabelDTO = sampleLabelsMap.get(itemName);
-								String submissionStatusCode
-												= scQtSampleItem.getSubmissionStatus().getParameterCode();
-								if (!ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_SUBMIT
-										.equals(submissionStatusCode)) {
-									sampleLabelDTO.setTotalSubmitted(
-											sampleLabelDTO.getTotalSubmitted() + 1);									
-									if (ParameterConst.SAMPLE_SUBMISSION_STATUS_COMPLIANCE
-											.equals(submissionStatusCode)) {
-										sampleLabelDTO.setTotalCompliant(
-												sampleLabelDTO.getTotalCompliant() + 1);										
-									} else {
-										sampleLabelDTO.setTotalNotCompliant(
-												sampleLabelDTO.getTotalNotCompliant() + 1);										
-									}
-								} 
-							} else {
-								SampleLabelDTO sampleLabelDTO = new SampleLabelDTO();
-								String submissionStatusCode
-											= scQtSampleItem.getSubmissionStatus().getParameterCode();
-								if (!ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_SUBMIT
-										.equals(submissionStatusCode)) {
-									sampleLabelDTO.setTotalSubmitted(1);									
-									if (ParameterConst.SAMPLE_SUBMISSION_STATUS_COMPLIANCE
-											.equals(submissionStatusCode)) {
-										sampleLabelDTO.setTotalCompliant(1);										
-									} else {
-										sampleLabelDTO.setTotalNotCompliant(1);										
-									}
-								}
-								sampleLabelsMap.put(itemName, sampleLabelDTO);
-							}
-						}
-					}
-				}
-				context.put("sampleLabelsMap", sampleLabelsMap);
-			} finally {
-				evaluationSo = null;
-			}
-		}
-
-		String publishDate = "";
-		if (scQt.getPublishDate() != null) {
-			publishDate = dateSDF.format(scQt.getPublishDate());
-		}
-		context.put("publishDate", publishDate);
-
-		String closingDate = "";
-		if (scQt.getClosingDate() != null) {
-			closingDate = dateSDF.format(scQt.getClosingDate());
-		}
-		context.put("closingDate", closingDate);
-		
-		context.put("isBsvRequired", scQt.isBsvRequired());
-		context.put("isZone", scQt.isZonal());
-		
-		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getZoneDetails();
-		context.put("zoneDetails", zoneDetails);
-
-		// get Total Suppliers based on Zone
-		Object[] object = null;
-		BriefingZoneBean briefingZoneBean = null;
-		Map<Long,BriefingZoneBean> zoneBeansMap 
-					= new HashMap<Long,BriefingZoneBean>();
-		IQTBriefingSO qTBriefingSO;
-		if (scQt.isBsvRequired()) {
-			try {
-				qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
-				String languageCode = new FacesScopes().getUserLocale()
-						.getLanguage();
-				BriefingReqDTO reqDTO = new BriefingReqDTO();
-				reqDTO.setQtId(scQt.getQtId());
-				reqDTO.setLanguageCode(languageCode);
-				BriefingResDTO resDTO = qTBriefingSO
-						.retrieveBriefingSiteVisitDtl(reqDTO);
-				if (scQt.isZonal()) {
-					List<TplSpecZoneDtl> zoneDtls = resDTO.getZonesList();
-					if (null != zoneDtls) {
-						context.put("zones", zoneDtls);
-						for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
-//							List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
-							reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
-							BriefingResDTO briefingResDTO = qTBriefingSO
-									.getTotalAttendedSupplier(reqDTO);
-							object = briefingResDTO.getTotalAttendedSupplier();
-							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
-							briefingZoneBean = new BriefingZoneBean(specZoneDtl,
-									briefingResDTO.getBriefingList(),
-									briefingResDTO.getSiteVisitList(), scQtBsv);
-							
-							int totalAttendedSuppliers = 0;
-							if (object != null) {
-								Long totalAttended = (Long) object[1];
-								if (totalAttended != null) {
-									totalAttendedSuppliers = totalAttended.intValue();
-								}
-							}
-							briefingZoneBean.setTotalSuppliersAttended(
-													totalAttendedSuppliers);
-							zoneBeansMap.put(specZoneDtl.getSpecZoneId(),briefingZoneBean);
-						}
-					}
-					context.put("zoneBeansMap", zoneBeansMap);					
-				} else {
-					BriefingResDTO briefingResDTO = qTBriefingSO
-							.getTotalAttendedSupplier(reqDTO);
-					object = briefingResDTO.getTotalAttendedSupplier();
-				}
-			} finally {
-				qTBriefingSO = null;
-			}
-		} 
-		String supplierSize = "";
-		if (object != null) {
-			Long totalAttended = (Long) object[1];
-			if (totalAttended != null) {
-				supplierSize = totalAttended.toString();
-			}
-		}
-		context.put("supplierSize", supplierSize);		
-
-		Integer totalQualifiedSuppliers = null;
-		Map<Long,Integer> totalQualifiedSuppliersByZone = null;
-		
-		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
-			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			
-			if (scQt.isZonal()) {
-				List<TplSpecZoneDtl> zoneDtls 
-							= this.getManagedBean().getZoneDetails();
-				if (null != zoneDtls) {
-					totalQualifiedSuppliersByZone = 
-									new HashMap<Long,Integer>();
-					for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
-						reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
-						SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
-								.getCountOfTotalQualifiedSuppliersByCriteria(reqDTO);
-						totalQualifiedSuppliers 
-							= resDTO.getTotalQualifiedSuppliers();
-						
-						if (totalQualifiedSuppliers == null) {
-							totalQualifiedSuppliers = 0;
-						}						
-						totalQualifiedSuppliersByZone.put(
-								specZoneDtl.getSpecZoneId(), 
-								totalQualifiedSuppliers);
-					}
-					context.put("totalQualifiedSuppliersByZone", totalQualifiedSuppliersByZone);
-				}
-			} else {
-				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
-						.getCountOfTotalQualifiedSuppliersByCriteria(reqDTO);
-				totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
-				
-				if (totalQualifiedSuppliers == null) {
-					totalQualifiedSuppliers = 0;
-				}
-				context.put("totalQualifiedSuppliers", totalQualifiedSuppliers);				
-			}
-		} finally {
-			qTBriefingSO = null;
-		}
-
-		// QTProposalSO.retrieveTotalSubmittedProposal
-		Long totalSuppliers;
-		Map<Long,Long> totalSuppliersSubmittedProposalByZone = null;
-		IQTProposalSO qTProposalSO;
-		try {
-			qTProposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
-			proposalReqDTO.setQtId(scQt.getQtId());
-			if (scQt.isZonal() && 
-					CollectionUtils.isNotEmpty(zoneDetails)) {
-				totalSuppliersSubmittedProposalByZone 
-								= new HashMap<Long,Long>();
-				for (TplSpecZoneDtl zoneDtl : zoneDetails) {
-					proposalReqDTO.setSpecZoneId(zoneDtl.getSpecZoneId());
-					ProposalResDTO proposalResDTO = qTProposalSO
-							.getTotalSubmittedProposal(proposalReqDTO);
-					totalSuppliers = proposalResDTO.getTotalSubmitted();
-					totalSuppliersSubmittedProposalByZone.put(
-							zoneDtl.getSpecZoneId(),totalSuppliers);
-				}
-				context.put("totalSuppliersSubmittedProposalByZone", 
-									totalSuppliersSubmittedProposalByZone);				
-			} else {
-				ProposalResDTO proposalResDTO = qTProposalSO
-						.getTotalSubmittedProposal(proposalReqDTO);
-				totalSuppliers = proposalResDTO.getTotalSubmitted();
-				context.put("totalSuppliersSubmittedProposal", totalSuppliers);
-			}
-
-		} finally {
-			qTProposalSO = null;
-		}
-
-		Integer validityDays = scQt.getQtValidityPeriod();
-		context.put("validityDays", validityDays);
-		
-		String proposalValidityDate = null;
-		if (scQt.getProposalValidityEndDate() != null) {
-			proposalValidityDate = dateSDF.format(scQt
-					.getProposalValidityEndDate());
-		}
-		context.put("proposalValidityDate", proposalValidityDate);
-		
-		StringBuilder openType = new StringBuilder();
-		if (openType != null) {
-			openType.append(getParameterDesc(
-					ParameterTypeConst.QUOTATION_TENDER_TYPE, scQt.getQtType()));
-		}
-		context.put("openType", openType);
-		context.put("openFor", scQt.getOpenFor());
-
-		String existingContract = scQt.getExistingContractNo();
-		if (scQt.getExistingContractNo() == null) {
-			existingContract = "";
-		} else {
-			IContractSO contractSO;
-			try {
-				contractSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				ContractReqDTO contractReqDTO = new ContractReqDTO();
-				contractReqDTO.setContractNo(scQt.getExistingContractNo());
-				ContractResDTO contractResDTO = contractSO
-						.retriveContractInfoByContractNo(contractReqDTO);
-				if (contractResDTO.getContract() != null) {
-					CtContract contract = contractResDTO.getContract();
-					context.put("contract", contract);
-				}
-			} finally {
-				contractSO = null;
-			}
-		}
-		context.put("existingContract", existingContract);
-		
-		boolean isInitialDecisionFwdToBPK = this.getManagedBean().isInitialDecisionFwdToBPK();
-		context.put("initialDecisionFwdToBPK", isInitialDecisionFwdToBPK);
-
-		if (!isInitialDecisionFwdToBPK) {
-			List<ScQtCommitteeActivity> committeeActivities = new ArrayList<ScQtCommitteeActivity>();
-			List<ScQtCommitteeActivity> committeeActivitiesList = new ArrayList<ScQtCommitteeActivity>();
-			ScQtCommittee scQtCommittee = new ScQtCommittee();
-			IQTMeetingSO meetingSO = null;
-			MeetingResDTO resDTO = null;
-			try {
-				meetingSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
-				MeetingReqDTO reqDTO = new MeetingReqDTO();
-				reqDTO.setQtId(scQt.getQtId());
-				reqDTO.setCommitteType(committeeType);
-				resDTO = meetingSO.retrieveMeetingDls(reqDTO);
-				scQtCommittee = resDTO.getQtCommittee();
-				if (null == scQtCommittee) {
-					scQtCommittee = new ScQtCommittee();
-				}
-				if (null != scQtCommittee) {
-					committeeActivitiesList = scQtCommittee.getCommitteeActivities();
-					
-					if (CollectionUtils.isNotEmpty(committeeActivitiesList)) {
-						for (ScQtCommitteeActivity committeeActivity : committeeActivitiesList) {
-							setDefaultValueForCommitteeActivityIfNull(committeeActivity);
-							committeeActivities.add(committeeActivity);
-						}
-					} else {
-						ScCommittee sccommittee = resDTO.getQtCommittee()
-								.getScCommittee();
-						committeeActivities = new ArrayList<ScQtCommitteeActivity>();
-						if (CollectionUtils.isNotEmpty(sccommittee.getScCommitteeMembers())) {
-							for (ScCommitteeMember scCommitteeMember : sccommittee
-									.getScCommitteeMembers()) {
-								ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
-								activity.setScQtCommittee(this.getManagedBean()
-										.getScQtCommittee());
-								activity.setScCommitteeMember(scCommitteeMember);
-								setDefaultValueForCommitteeActivityIfNull(activity);
-								committeeActivities.add(activity);
-							}
-						}
-						Collections.sort(committeeActivities);
-					}
-				}
-			} finally {
-				meetingSO = null;
-			}
-			context.put("committeeActivities", committeeActivities);
-		}
-		
-		context.put("bean", this);
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_FZ_OFFERED_QT_DTLS, context,
-				new FileOutputStream(getActualFilePath(attachment)));
-	}
-
-	private void generateNoticeBoardPdf(ScAttachment attachment, ScQt scQt)
-			throws Exception {
-		debugLogger("generateNoticeBoardPdf");
-
-		attachment.setFileName("Notice_Board.pdf");
-		populateAttachmentDetails(attachment);
-
-		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(
-				commonUtils
-						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-		DecimalFormat amountDF = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-		VelocityContext context = new VelocityContext();
-		
-		context.put("dateSDF", dateSDF);
-
-		context.put("title", scQt.getQtTitle());
-		context.put("qtNo", scQt.getQtNo());
-		context.put("zonal", scQt.isZonal());
-		
-		String ministryOrgName = null;
-		if (scQt.getMinistryOrgProfile() != null) {
-			ministryOrgName = scQt.getMinistryOrgProfile().getOrgName();
-		} else {
-			ministryOrgName = StringUtils.EMPTY;
-		}
-		context.put("ministry", ministryOrgName);		
-		
-//		String departmentOrgName = null;
-//		if (scQt.getDepartmentOrgProfile() != null) {
-//			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
-//		} else {
-//			departmentOrgName = StringUtils.EMPTY;
-//		}
-//		context.put("jabatan", departmentOrgName);
-		
-		context.put("ptj", scQt.getPmOrgProfile().getOrgName());
-		String publishDate = "";
-		if (scQt.getPublishDate() != null) {
-			publishDate = dateSDF.format(scQt.getPublishDate());
-		}
-		context.put("publishDate", publishDate);
-		context.put("publishPeriod", scQt.getPublishPeriod());
-		String closingDate = "";
-		if (scQt.getClosingDate() != null) {
-			closingDate = dateSDF.format(scQt.getClosingDate());
-		}
-		context.put("closingDate", closingDate);
-		context.put("tier", scQt.getEvaluationType());
-		
-		Integer validityDays = scQt.getQtValidityPeriod();
-		context.put("validityDays", validityDays);
-		
-		String proposalValidityDate = null;
-		if (scQt.getProposalValidityEndDate() != null) {
-			proposalValidityDate = dateSDF.format(scQt
-					.getProposalValidityEndDate());
-		}
-		context.put("proposalValidityDate", proposalValidityDate);	
-
-		context.put("openFor", scQt.getOpenFor());
-
-		String paidupcapital = "";
-		if (scQt.getScQtSupplierCriteria() != null) {
-			if (scQt.getScQtSupplierCriteria().getMinPaidUpCapital() != null) {
-				paidupcapital = amountDF.format(scQt.getScQtSupplierCriteria()
-						.getMinPaidUpCapital());
-			}
-		}
-		context.put("paidupcapital", paidupcapital);
-
-		context.put("categoryList", scQt.getScQtCategorys());
-		context.put("bean", this);
-		
-		boolean isPanel = false;
-		if (scQt.isPanel()) {
-			isPanel = true;
-			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-			specReqDTO.setQtId(scQt.getQtId());
-			ITemplateSpecSO templateSpecSO=EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
-			TemplateSpecResDTO templateSpecResDTO = templateSpecSO
-					.retrievePanelItemsByQtId(specReqDTO);
-
-			List<CtPanelItem> panelList = templateSpecResDTO.getCtPanelItems();
-			context.put("ctCircularVer", scQt.getCircularVer());
-			context.put("panelList", panelList);
-			context.put("bean", this);
-		} else {
-			
-		}
-		context.put("panel", isPanel);
-
-		
-		String locationDistrict = "District";
-		String locationLevel = null;
-		boolean isLocLevel = false;
-		boolean isSubLocLevel = false;
-		if (scQt.isZonal() && scQt.getZoneLocationLevel() != null) {
-			if (ParameterConst.LOCATION_LEVEL_STATE.equals(scQt
-					.getZoneLocationLevel().getParameterCode())) {
-				isLocLevel = true;
-				locationLevel = "State";
-			} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(scQt
-					.getZoneLocationLevel().getParameterCode())) {
-				isLocLevel = true;
-				locationLevel = "Division";
-			} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(scQt
-					.getZoneLocationLevel().getParameterCode())) {
-				isLocLevel = true;
-				locationLevel = locationDistrict;
-			}
-			context.put("zoneLocLevel", isLocLevel);
-			context.put("zoneLocationLevel", locationLevel);
-			
-			IQTDetailSO qtDtlSO;
-			try {
-				qtDtlSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-				qtReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-				qtReqDTO.setBdgDtlsReq(true);
-				QuationTenderResDTO qtResDTO = new QuationTenderResDTO();
-				qtResDTO = qtDtlSO.retriveQTDetails(qtReqDTO);
-
-				Map<TplSpecZoneDtl, Map<PmState,List<PmDistrict>>> zoneLocationMap = 
-							new HashMap<TplSpecZoneDtl, Map<PmState,List<PmDistrict>>>();
-				if (CollectionUtils.isNotEmpty(
-							qtResDTO.getZoneDetails())) {
-					for (TplSpecZoneDtl zoneDtl 
-								: qtResDTO.getZoneDetails()) {
-						if (CollectionUtils.isNotEmpty(
-								zoneDtl.getTplSpecZoneLocs())) {
-							Map<PmState,List<PmDistrict>> stateAndDistrict
-									= new HashMap<PmState,List<PmDistrict>>();					
-							for (TplSpecZoneLoc specZoneLoc 
-										: zoneDtl.getTplSpecZoneLocs()) {
-								PmState state = specZoneLoc.getPmState();
-								
-								if (locationDistrict.equals(locationLevel)) {
-									List<PmDistrict> districtList 
-										= stateAndDistrict.get(state);
-									if (districtList == null) {
-										districtList = new ArrayList<PmDistrict>();
-									}
-									districtList.add(specZoneLoc.getPmDistrict());
-									stateAndDistrict.put(state, districtList);
-								} else {
-									stateAndDistrict.put(state, null);
-								}
-							}
-							zoneLocationMap.put(zoneDtl, stateAndDistrict);
-						}
-						
-					}
-				}
-				context.put("zoneLocality", zoneLocationMap);
-			} finally {
-				qtDtlSO = null;
-			}			
-		}
-		
-		locationLevel = null;
-		isLocLevel = false;
-		boolean isAllState = false;
-		ScQtSupplierCriteria criteria = scQt.getScQtSupplierCriteria();
-		
-		if (criteria != null) {
-			isAllState = criteria.isAllState();
-			
-			if (criteria.getLocationLevel() != null) {
-				if (ParameterConst.LOCATION_LEVEL_STATE.equals(criteria
-						.getLocationLevel().getParameterCode())) {
-					isSubLocLevel = true;
-					locationLevel = "State";
-				} else if (ParameterConst.LOCATION_LEVEL_DISTRICT
-						.equals(criteria.getLocationLevel()
-								.getParameterCode())) {
-					isSubLocLevel = true;
-					locationLevel = locationDistrict;
-				}
-				context.put("subLocLevel", isSubLocLevel);
-			} else {
-				context.put("subLocLevel", isSubLocLevel);
-			}
-		}
-		context.put("locLevel", isLocLevel);
-		context.put("isAllState", isAllState);
-		context.put("locationLevel", locationLevel);	
-		
-//		List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
-		IQTDetailSO qtDetailsSO;
-		try {
-			qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			tenderReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			tenderReqDTO.setQtdetail(this.getManagedBean().getScQt());
-			QuationTenderResDTO tenderResDTO = qtDetailsSO
-					.retriveQTSuppQulCriDetails(tenderReqDTO);
-//			categoryResults = tenderResDTO.getCategoryResultBean()
-//					.getResultList();
-			Map<PmState,List<PmDistrict>> locationMap = 
-							new HashMap<PmState,List<PmDistrict>>();
-			if (CollectionUtils.isNotEmpty(
-					tenderResDTO.getLocationDetails())) {
-				for (TplSpecLoc specLoc 
-							: tenderResDTO.getLocationDetails()) {
-					PmState state = specLoc.getPmState();
-					List<PmDistrict> districtList = null;
-					
-					if (locationDistrict.equals(locationLevel)) {
-						districtList = locationMap.get(state);
-						
-						if (districtList == null) {
-							districtList = new ArrayList<PmDistrict>();
-						}
-						districtList.add(specLoc.getPmDistrict());
-					}
-					locationMap.put(state, districtList);
-				}
-				context.put("locality", tenderResDTO.getLocationDetails());				
-			}			
-		} finally {
-			qtDetailsSO = null;
-		}		
-
-		boolean isbsv = false;
-		if (scQt.isBsvRequired()) {
-			isbsv = true;
-			boolean isZone = false;
-			IQTBriefingSO qTBriefingSO = null;
-			ScQtBsv qtBsv = null;
-			BriefingZoneBean briefingZoneBean = null;
-			List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
-			try {
-				qTBriefingSO = (IQTBriefingSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTBriefingSO.class);
-				BriefingReqDTO reqDTO = new BriefingReqDTO();
-				// reqDTO.setQtId(getManagedBean().getQt());
-				reqDTO.setScQt(this.getManagedBean().getScQt());
-				BriefingResDTO resDTO = qTBriefingSO
-						.retrieveBriefingSiteVisitDtl(reqDTO);
-				ScQt qt = resDTO.getScQt();
-				if (qt.isZonal()) {
-					List<TplSpecZoneDtl> zones = resDTO.getZonesList();
-					if (null != zones) {
-						isZone = true;
-						BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-						briefingReqDTO.setQtId(getManagedBean().getScQt()
-								.getQtId());
-						for (TplSpecZoneDtl specZoneDtl : zones) {
-							briefingReqDTO.setSpecZoneId(specZoneDtl
-									.getSpecZoneId());
-							BriefingResDTO briefingResDTO = qTBriefingSO
-									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
-							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
-							briefingZoneBean = new BriefingZoneBean(
-									specZoneDtl,
-									briefingResDTO.getBriefingList(),
-									briefingResDTO.getSiteVisitList(), scQtBsv);
-							zoneBeans.add(briefingZoneBean);
-						}
-					}
-				} else {
-					qtBsv = resDTO.getScQtBsv();
-					briefingZoneBean = new BriefingZoneBean(null,
-							resDTO.getBriefingList(),
-							resDTO.getSiteVisitList(), qtBsv);
-					zoneBeans.add(briefingZoneBean);
-				}
-			} finally {
-				qTBriefingSO = null;
-			}
-			context.put("isbsv", isbsv);
-			context.put("isZone", isZone);
-			context.put("zoneBeans", zoneBeans);
-		} else {
-			isbsv = false;
-			context.put("isbsv", isbsv);
-		}
-
-		/*
-		 * List<BriefingZoneBean> bsvZoneBeans = new
-		 * ArrayList<BriefingZoneBean>(); IQTNoticeBoardSO qtNoticeBoardSO =
-		 * null; NoticeBoardReqDTO noticeBoardReqDTO = new NoticeBoardReqDTO();
-		 * NoticeBoardResDTO noticeBoardResDTO = new NoticeBoardResDTO();
-		 * 
-		 * if (!scQt.isZonal()) { if (null !=
-		 * noticeBoardResDTO.getLocCriteria()) { List<PmState> states = new
-		 * ArrayList<PmState>(); for (TplSpecLoc locCriteria :
-		 * noticeBoardResDTO.getLocCriteria()) { PmState pmState =
-		 * locCriteria.getPmState(); TreeNode root = null; if
-		 * (!states.contains(pmState)) { root = new DefaultTreeNode("state",
-		 * pmState, null); root.setExpanded(true); locations.add(root); }
-		 * PmDivision division = locCriteria.getPmDivision(); TreeNode
-		 * divisonNode = null; if (division != null) { divisonNode = new
-		 * DefaultTreeNode("division", division, root);
-		 * divisonNode.setExpanded(true); } PmDistrict pmDistrict =
-		 * locCriteria.getPmDistrict(); TreeNode districtNode = null; if
-		 * (pmDistrict != null) { if (divisonNode == null) { districtNode = new
-		 * DefaultTreeNode("district", pmDistrict, root);
-		 * districtNode.setExpanded(true); } else { districtNode = new
-		 * DefaultTreeNode("district", pmDistrict, divisonNode);
-		 * districtNode.setExpanded(true); } } states.add(pmState); } } ScQtBsv
-		 * scQtBsv = noticeBoardResDTO.getScQtBsv();
-		 * 
-		 * briefingZoneBean = new BriefingZoneBean(null,
-		 * noticeBoardResDTO.getBriefingResultBean(),
-		 * noticeBoardResDTO.getSiteVisitResultBean(), scQtBsv); } else if
-		 * (scQt.isZonal()) { List<TplSpecZoneDtl> zoneDtls =
-		 * noticeBoardResDTO.getZones(); if (null != zoneDtls) { isZone = true;
-		 * for (TplSpecZoneDtl specZoneDtl : zoneDtls) { BriefingReqDTO
-		 * briefingReqDTO = new BriefingReqDTO();
-		 * briefingReqDTO.setQtId(scQt.getQtId());
-		 * briefingReqDTO.setSpecZoneId(specZoneDtl .getSpecZoneId());
-		 * IQTBriefingSO briefingSO = EpEjbBusinessDelegate
-		 * .getInstance().getServiceObject( ModuleCodeConst.SUPPLIER_SELECTION,
-		 * IQTBriefingSO.class); BriefingResDTO briefingResDTO = briefingSO
-		 * .retrieveBriefingSiteVisitDtls(briefingReqDTO); ScQtBsv scQtBsv =
-		 * briefingResDTO.getScQtBsv(); briefingZoneBean = new BriefingZoneBean(
-		 * specZoneDtl, briefingResDTO.getBriefingList(),
-		 * briefingResDTO.getSiteVisitList(), scQtBsv);
-		 * bsvZoneBeans.add(briefingZoneBean); } } }
-		 * 
-		 * context.put("locations", locations); context.put("isZone", isZone);
-		 * context.put("bsvZoneBeansList", bsvZoneBeans);
-		 */
-
-		List<ScQtContactPerson> contactPersons = new ArrayList<ScQtContactPerson>();
-		List<ScQtContactPerson> contactPersonsList = new ArrayList<ScQtContactPerson>();
-		IQTNoticeBoardSO qtNoticeBoardSO = null;
-		NoticeBoardReqDTO noticeBoardReqDTO = new NoticeBoardReqDTO();
-		NoticeBoardResDTO noticeBoardResDTO = new NoticeBoardResDTO();
-		try {
-			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-			noticeBoardReqDTO.setQtId(scQt.getQtId());
-			noticeBoardResDTO = qtNoticeBoardSO
-					.retrieveQtNoticeDtl(noticeBoardReqDTO);
-			if (noticeBoardResDTO.getContactPersonResultBean().getResultList() != null) {
-				contactPersons = noticeBoardResDTO.getContactPersonResultBean()
-						.getResultList();
-			}
-		} finally {
-			qtNoticeBoardSO = null;
-		}
-		for (ScQtContactPerson contactPerson : contactPersons) {
-			if (contactPerson.getPhoneNo() == null) {
-				contactPerson.setPhoneNo("");
-			}
-			if (contactPerson.getFaxNo() == null) {
-				contactPerson.setFaxNo("");
-			}
-			if (contactPerson.getEmail() == null) {
-				contactPerson.setEmail("");
-			}
-			contactPersonsList.add(contactPerson);
-		}
-		context.put("contactPersons", contactPersonsList);
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_FZ_NOTICE_BOARD, context,
-				new FileOutputStream(getActualFilePath(attachment)));
-	}
-
-	private void generatePriceSchedulePdf(ScAttachment attachment, ScQt scQt)
-			throws Exception {
-		debugLogger("generatePriceSchedulePdf");
-
-		// attachment.setFileName("finalization-priceSchedule.pdf");
-		populateAttachmentDetails(attachment);
-
-		VelocityContext context = new VelocityContext();
-
-		List<TplSpecZoneDtl> list = new ArrayList<TplSpecZoneDtl>();
-		List<SupplierQualificationBean> beans = new ArrayList<SupplierQualificationBean>();
-		boolean isZone = false;
-		IQTNoticeBoardSO qtNoticeBoardSO = null;
-		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-		try {
-			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-			reqDTO.setQtId(scQt.getQtId());
-			NoticeBoardResDTO resDTO = qtNoticeBoardSO
-					.retrieveOfferedPriceDtls(reqDTO);
-//			this.getManagedBean().setScQt(resDTO.getScQt());
-			if (resDTO.getScQt().isZonal()) {
-				Map<Long,List<SupplierQualificationBean>>
-						zonalQualifiedSuppliersMap = new HashMap<Long,List<SupplierQualificationBean>>();
-				List<TplSpecZoneDtl> zones = resDTO.getZones();
-				if (null != zones) {
-					isZone = true;
-					NoticeBoardReqDTO boardReqDTO = new NoticeBoardReqDTO();
-					boardReqDTO.setQtId(scQt.getQtId());
-					list.addAll(resDTO.getZones());
-					context.put("zones", list);
-					for (TplSpecZoneDtl zoneDtl : zones) {
-						boardReqDTO.setZoneId(zoneDtl.getSpecZoneId());
-						NoticeBoardResDTO boardResDTO = qtNoticeBoardSO
-								.retrieveOfferedPriceDtlsByZone(boardReqDTO);
-						zonalQualifiedSuppliersMap.put(zoneDtl.getSpecZoneId(), 
-								boardResDTO.getQualificationBean());
-					}
-					context.put("zones", list);
-					context.put("supplierBeansMap", zonalQualifiedSuppliersMap);
-				}
-			} else {
-				beans.addAll(resDTO.getQualificationBean());
-				context.put("supplierBeans", beans);
-			}
-		} finally {
-			qtNoticeBoardSO = null;
-		}
-		context.put("isZone", isZone);
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_FZ_PRICE_SCHEDULE, context,
-				new FileOutputStream(getActualFilePath(attachment)));
-	}
-
 	private void generateEndorsementReportFromVelocityToPdf(
 			ScQtFinalization scQtFinalization, ScAttachment attachment)
 			throws Exception {
@@ -3856,7 +2875,7 @@ public class SupplierFinalizationBackingBean extends
 		}	
 		
 		String chairPersonName = null;
-		String secretaryName = null;
+		//String secretaryName = null;
 		String memberName = null;
 		
 		List<ScCommitteeMember> commMembers = new ArrayList<ScCommitteeMember>();
@@ -3866,10 +2885,10 @@ public class SupplierFinalizationBackingBean extends
 			if (commMember.getMemberRole().getParameterCode()
 					.equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 				chairPersonName = commMember.getMemberName().toUpperCase();
-			} else if (commMember.getMemberRole().getParameterCode()
+			} /*else if (commMember.getMemberRole().getParameterCode()
 					.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 				secretaryName = commMember.getMemberName().toUpperCase();
-			} else if (commMember.getMemberRole().getParameterCode()
+			}*/ else if (commMember.getMemberRole().getParameterCode()
 					.equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
 				memberName = commMember.getMemberName().toUpperCase();
 				commMembers.add(commMember);
@@ -3946,57 +2965,6 @@ public class SupplierFinalizationBackingBean extends
 		}
 		
 		return validItems;
-	}
-
-	private void setDefaultValueForCommitteeActivityIfNull(ScQtCommitteeActivity committeeActivity) {
-		if (committeeActivity.getScCommitteeMember() != null) {
-			if (committeeActivity.getScCommitteeMember()
-					.getMemberName() == null) {
-				committeeActivity.getScCommitteeMember()
-						.setMemberName("");
-			}
-		} else {
-			committeeActivity
-					.setScCommitteeMember(new ScCommitteeMember());
-			committeeActivity.getScCommitteeMember()
-					.setMemberName("");
-		}
-		if (committeeActivity.getScCommitteeMember() != null) {
-			if (committeeActivity.getScCommitteeMember()
-					.getDesignation() == null) {
-				committeeActivity.getScCommitteeMember()
-						.setDesignation("");
-			}
-		} else {
-			committeeActivity
-					.setScCommitteeMember(new ScCommitteeMember());
-			committeeActivity.getScCommitteeMember()
-					.setDesignation("");
-		}
-		if (committeeActivity.getScCommitteeMember() != null) {
-			if (committeeActivity.getScCommitteeMember()
-					.getGrade() == null) {
-				committeeActivity.getScCommitteeMember()
-						.setGrade("");
-			}
-		} else {
-			committeeActivity
-					.setScCommitteeMember(new ScCommitteeMember());
-			committeeActivity.getScCommitteeMember().setGrade(
-					"");
-		}
-		if (committeeActivity.getScCommitteeMember() != null) {
-			if (committeeActivity.getScCommitteeMember()
-					.getIcPassport() == null) {
-				committeeActivity.getScCommitteeMember()
-						.setIcPassport("");
-			}
-		} else {
-			committeeActivity
-					.setScCommitteeMember(new ScCommitteeMember());
-			committeeActivity.getScCommitteeMember()
-					.setIcPassport("");
-		}		
 	}
 	
 	// Kertas Taklimat
@@ -4676,15 +3644,6 @@ public class SupplierFinalizationBackingBean extends
 		}
 
 		getManagedBean().setBoardofDirectors(boardofDirectors);
-	}
-
-	private void resetCompanyInfo() {
-		this.getManagedBean().setSmSupplier(null);
-		this.getManagedBean().setSmMofAccount(null);
-		this.getManagedBean().setSmCompanyBasic(null);
-		this.getManagedBean().setSmPersonnel(null);
-		this.getManagedBean().setSupplierBranch(null);
-		this.getManagedBean().setSupplierAddress(null);
 	}
 
 	/**
@@ -7502,38 +6461,6 @@ public class SupplierFinalizationBackingBean extends
 		return totalIntendedPrice;
 	}
 	
-	private BigDecimal calculateIntendedPrice(List<ScQtEvaluationResultDtl> shortlistedSuppliers, 
-										List<ScQtRecommend> items) {
-		BigDecimal intendedPrice = new BigDecimal(0);
-		if (CollectionUtils.isNotEmpty(
-					shortlistedSuppliers) && 
-					!items.get(0).isCancelled()) {
-			for (ScQtEvaluationResultDtl shortlistedSupplier
-							: shortlistedSuppliers) {
-				if (shortlistedSupplier.isAwareded()) {
-					for (ScQtRecommend item : items) {
-						calculateOfferedPrice(shortlistedSupplier, item);
-						
-						BigDecimal price = null;
-						if (shortlistedSupplier.getBidRank() != null) {
-							price = shortlistedSupplier.getBidPrice();
-						} else {
-							price = shortlistedSupplier.getQtEvaluationResult()
-									.getOfferedPrice();												
-						}
-						if (price != null) {
-							intendedPrice = intendedPrice.add(price);
-							intendedPrice = intendedPrice.setScale(2,
-													BigDecimal.ROUND_HALF_EVEN);
-						}
-					}
-				}
-			}			
-		}			
-		
-		return intendedPrice;
-	}
-	
 	private void calculateOfferedPrice(ScQtEvaluationResultDtl evalResultDtl,
 									   ScQtRecommend scQtRecommend) {
 		ScRequestItem requestItem = scQtRecommend.getRequestItem();
@@ -7620,21 +6547,6 @@ public class SupplierFinalizationBackingBean extends
 			qtSuppFinalizationSO = null;
 		}
 
-		return resDTO;
-	}
-
-	private QTSupplierResDTO retrieveSupplierDetails(SmSupplier smSupplier) {
-		QTSupplierResDTO resDTO = new QTSupplierResDTO();
-		IQTSupplierSO qtSupplierSO = null;
-		try {
-			qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
-			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
-			reqDTO.setSupplierId(smSupplier.getSupplierId());
-			resDTO = qtSupplierSO.retrieveSupplierDetails(reqDTO);
-		} finally {
-			qtSupplierSO = null;
-		}
 		return resDTO;
 	}
 
