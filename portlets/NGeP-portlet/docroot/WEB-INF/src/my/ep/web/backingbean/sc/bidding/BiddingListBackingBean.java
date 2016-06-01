@@ -13,6 +13,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.BidStatusConst;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.bidding.BiddingListManagedBean;
@@ -46,6 +47,16 @@ public class BiddingListBackingBean extends
 			log.debug(message);
 		}
 		log.info(message);
+	}
+	
+	/**
+	 * action method to navigate toprevious page
+	 * 
+	 * @return
+	 */
+	public String biddingManagementBackAction() {
+		debugLogger("supplierProposalBackAction");
+		return "/xhtml/sc/bidding/ptjPortlet/ptjPortletBidList.xhtml ? faces-redirect=true";
 	}
 
 	/**
@@ -115,4 +126,11 @@ public class BiddingListBackingBean extends
 		return items;
 	}
 
+	
+	public String navigateToBidManagementAction(ScBidSchedule scheduledBid){
+		BiddingBackingBean biddingBB = new BiddingBackingBean();
+		biddingBB.getManagedBean().setScheduledBid(scheduledBid);
+		biddingBB.bidManagementAction(scheduledBid);
+		return "bidManagementForPTJPortlet.xhtml?faces-redirect=true";
+	}
 }
