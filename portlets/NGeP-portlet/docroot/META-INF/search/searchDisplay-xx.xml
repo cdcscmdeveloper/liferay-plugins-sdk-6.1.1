@@ -443,6 +443,32 @@
 					<property name="columnName" value="smSupplier.companyName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.supName" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.regNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.regno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>				
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="PM_ORG_PROFILE_WITH_COMPANY_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilesWithSupplier" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.companyname" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>				
