@@ -2326,6 +2326,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						int index=0;
 						int countRow =0;
 						for (CtItemPrice itemPrice1 : ctContractItem.getCtItemPrices()) {
+							if(itemPrice1.getCtContractZone() != null){
 							countRow++;
 							if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
 									|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
@@ -2352,7 +2353,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 									}
 								}
 							}
-						}
+						 }
+					 }
 						if (index > 0) {
 							CtItemPrice priceOfItem = ctContractItem.getCtItemPrices().get(index-1);
 							priceOfItem.setChangeZoneLabel(true);
