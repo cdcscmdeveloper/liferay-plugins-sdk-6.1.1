@@ -254,21 +254,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setPmUser(face.getUserSessionBean());
 	    requestNoteReqDTO.setRoleCode(getUserRoleCode());
 	    
-	    if(requestNote.getCurrentStatus() == null){
-	    	// WorkFlow Status 
-	    	List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
-	    	ScRNWorkFlowStatus scWorkFlowStatus = new ScRNWorkFlowStatus();
-	    	PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-	    	getCurrentStatus(currentStatus);
-	    	scWorkFlowStatus.setCurrent(Boolean.TRUE);
-	    	scWorkFlowStatus.setPmStatus(currentStatus);
-	    	scWorkFlowStatus.setRequestNote(requestNote);
-	    	workFlowStatuses.add(scWorkFlowStatus);
-	    	requestNote.setWorkFlowStatuses(workFlowStatuses);
-	    } else{
-	    	requestNote.setWorkFlowStatuses(null);
-	    }
-
 	    // reRecommend
 	    requestNoteReqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
 	    requestNoteReqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
@@ -522,6 +507,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 		parseRequestNote(scRequestNote, outcome);
+		
+		scRequestNote.setWorkFlowStatuses(null);
+		// To avoid insert workflow status when direct submit without save.
+		if (scRequestNote.isBrandNew()) {
+			List<ScRequestNoteRemark> remarks = scRequestNote.getRemarks();
+			if (CollectionUtils.isNotEmpty(remarks)) {
+				for (ScRequestNoteRemark remark : remarks) {
+					remark.setScWorkFlowStatus(null);
+				}
+			}	
+		}
+		
 		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || 
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
@@ -1760,13 +1757,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		initializeApproverGroup();
 		
 		getManagedBean().setRequestNote(requestNote);
-	
-		try {
-			if(requestNote.getCurrentStatus() == null){
-				
+
+		if(requestNote.isBrandNew()){
+			ScRNWorkFlowStatus scWorkFlowStatus = null;
+			if(CollectionUtils.isEmpty(requestNote.getWorkFlowStatuses())){
 				// WorkFlow Status 
 				List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
-				ScRNWorkFlowStatus scWorkFlowStatus = new ScRNWorkFlowStatus();
+				scWorkFlowStatus = new ScRNWorkFlowStatus();
 				PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
 				getCurrentStatus(currentStatus);
 				scWorkFlowStatus.setCurrent(Boolean.TRUE);
@@ -1775,16 +1772,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				workFlowStatuses.add(scWorkFlowStatus);
 				requestNote.setWorkFlowStatuses(workFlowStatuses);
 			}
-			
-		} finally {
-			//geStatusSO() = null;
+			if(CollectionUtils.isEmpty(requestNote.getRemarks())){
+				requestNote.setRemarks(initializeRemarks(
+						requestNote,
+						scWorkFlowStatus,
+						requestNote.getRemarks(),
+						ScRequestNoteRemark.class));
+			}
 		}
-		
-		requestNote.setRemarks(initializeRemarks(
-				requestNote,
-				null,
-				requestNote.getRemarks(),
-				ScRequestNoteRemark.class));
 
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		fulfilmentTypeEvent(scRequestNoteDtl);
@@ -2053,7 +2048,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			} else {
 				List<String> roleCodes= new ArrayList<String>();
 				roleCodes.add(RoleCode.DESK_OFFICER.value());
-				roleCodes.add(RoleCode.REQUISITIONER.value());
+				//roleCodes.add(RoleCode.REQUISITIONER.value());
 				reqDTO.setRoleCodes(roleCodes);
 			}
 			
