@@ -356,14 +356,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    			      ctBB.getManagedBean().getCtItemList().add(item);
 	    		      }
 	    	      }
-	    	
-			    	if (ctBB.getManagedBean().getCtItemList() != null && ctBB.getManagedBean().getCtItemList().size() > 0) {
-			    		Collections.sort(ctBB.getManagedBean().getCtItemList(), new CtContractItem());
-			    	}
-	    	
-			    	if (ctBB.getManagedBean().getCtItemServiceList() != null && ctBB.getManagedBean().getCtItemServiceList().size() > 0) {
-	    		          Collections.sort(ctBB.getManagedBean().getCtItemServiceList(), new CtContractItem());
-	    	         }
 	           }
 	
 	              // Retrieve Deduction Clauses
