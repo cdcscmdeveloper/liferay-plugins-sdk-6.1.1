@@ -1153,7 +1153,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
 			
 			if (commMember.getMemberRole() == null || 
-					MemberRole.SECRETARY.getMemberRole()
+					ParameterConst.COMMITTEE_ROLE_SECRETARY
 						.equals(commMember.getMemberRole().getParameterCode())) {
 				PmParameter memberRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
 							ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
