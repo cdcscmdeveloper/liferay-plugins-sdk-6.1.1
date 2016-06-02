@@ -4667,6 +4667,7 @@ public class ProfileManagementBackingBean extends
 	}
 	public void checkIdentificationNumber() {
 		System.out.println(".............checkIdentificationNumber...........");
+		//getManagedBean().getSelectedUser().setLoginId(null);
 		this.getManagedBean().getSelectedUser().setHasActiveOrg(false);
 		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
 		if (getManagedBean().getSelectedUser().getIdentificationNo() != null
@@ -4778,8 +4779,9 @@ public class ProfileManagementBackingBean extends
 			} finally {
 				userSO = null;
 			}
-		}
 
+			//getManagedBean().getSelectedUser().setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
+		}
 	}
 
 	private String getActionDesc(String messageId, String[] params) {
@@ -5602,6 +5604,16 @@ public class ProfileManagementBackingBean extends
 			getManagedBean()
 			.getUserProfileSearchBean().setUserRole(getManagedBean().getSelectedRoleDesc().getPmRole().getRoleCode());
 		}
+	}
+	
+	public boolean isUserRolesEmpty(){
+		boolean isEmpty = true;
+		if(getManagedBean().getSelectedUserOrg() != null && 
+				getManagedBean().getSelectedUserOrg().getPmUserRoles() !=null &&
+				!getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()){
+			isEmpty = false;
+		}
+		return isEmpty;
 	}
 
 }
