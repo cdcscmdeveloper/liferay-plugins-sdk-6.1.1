@@ -31,6 +31,14 @@
 		}
 		
 	</style>
+	<table>
+		<tr>
+			<td colspan="2" style="padding-bottom:5px;">
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.profiles.userdetails.roles.instruction']}" />
+			</td>
+		</tr>
+	</table>
+	
 	<!-- User Profile -->
 	<p:panel header="#{lbl['lbl.pm.profiles.org.detail']}" id="orgDetailPanel"
 		toggleable="true">
@@ -241,6 +249,15 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
+						<ui:remove><td width="40%"><p:inputText styleClass="ppDisplayTextL" id="itLoginId"
+								maxlength="15" 
+								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
+								required="#{!empty param['disableValidation']}"
+								disabled="true"
+								value="#{profileManagementBackingBean.managedBean.selectedUser.loginId}">								
+							</p:inputText> 
+						</td>
+						</ui:remove>
 						<td width="40%"><p:inputText styleClass="ppDisplayTextL" id="itLoginId"
 								maxlength="75" converter="toLowerCaseConverter"
 								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"

@@ -22,6 +22,7 @@
 				   <c:choose>
 				  		<c:when test="#{profileManagementBackingBean.managedBean.isNewUser}">
 				  			<p:commandButton value="#{lbl['lbl.btn.save']}" update="@form" 
+				  				disabled="#{profileManagementBackingBean.isUserRolesEmpty()}"
 				  				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				  				action="#{profileManagementBackingBean.saveUserProfile()}">
 			  					<f:param name="disableValidation" value="true" />     
