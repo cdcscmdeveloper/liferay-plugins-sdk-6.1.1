@@ -1045,7 +1045,7 @@ public class SmApplicationBackingBean extends
 				SmCommonUtil.isSiteVisitAfterApproved(getManagedBean()
 						.getSmAppl()));
 
-		// init current regsitration status description
+		// init current registration status description
 		getManagedBean().setCurrRegStatus(
 				SmApplicationUtil.getCurrRegStatusDescBySmAppl(getManagedBean()
 						.getSmAppl()));
@@ -1834,7 +1834,6 @@ public class SmApplicationBackingBean extends
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 					&& !valid) {
 				saveOrUpdateAppl();
-
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
 					&& valid) {
@@ -8103,7 +8102,7 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.manageAndSaveNewSmRemarks(
 							getManagedBean().getSmAppl().getApplId(),
 							ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY,
-							getManagedBean().getOverLappedCategoryMsg());
+							getManagedBean().getOverLappedCategoryRemarks());
 				}
 
 			}
