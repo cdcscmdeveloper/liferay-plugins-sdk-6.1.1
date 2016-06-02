@@ -80,6 +80,9 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	private boolean readOnlyFlag = false;
 	
 	
+	private TreeNode treenodeObject;
+	
+	
 
 	public TreeNode[] getTreenode() {
 		return treenode;
@@ -400,6 +403,20 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 
 	public void setReadOnlyFlag(boolean readOnlyFlag) {
 		this.readOnlyFlag = readOnlyFlag;
+	}
+
+	/**
+	 * @return the treenodeObject
+	 */
+	public TreeNode getTreenodeObject() {
+		return treenodeObject;
+	}
+
+	/**
+	 * @param treenodeObject the treenodeObject to set
+	 */
+	public void setTreenodeObject(TreeNode treenodeObject) {
+		this.treenodeObject = treenodeObject;
 	}
 
 
