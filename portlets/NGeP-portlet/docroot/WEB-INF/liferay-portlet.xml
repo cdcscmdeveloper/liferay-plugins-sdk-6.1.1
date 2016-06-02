@@ -2552,6 +2552,18 @@
 		<css-class-wrapper>paymentReceipt-portlet</css-class-wrapper>
 	 </portlet>
 	 
+	 <portlet>
+	 	<portlet-name>scSupplierInvitation</portlet-name>
+	 	<icon>/icon.png</icon>
+	 	<instanceable>false</instanceable>
+	 	<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+	 	<footer-portlet-javascript>
+	 		/js/main.js
+	 	</footer-portlet-javascript>
+	 	<css-class-wrapper>
+	 		scsupplierinvitation-portlet
+	 	</css-class-wrapper>
+	 </portlet>
 	 
 	 <role-mapper>
 		<role-name>administrator</role-name>
