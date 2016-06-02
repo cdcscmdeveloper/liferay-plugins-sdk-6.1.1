@@ -25,14 +25,14 @@
 				listener="#{evaluationBackingBean.savePresentationDemoDtls}"
 				update="demoSupplierId" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:30%">
+				style="width:15%">
 
 				<h:outputText value="#{demoSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.document']}"
-				style="width:15%;text-align: center;">
+				style="width:30%;text-align: center;">
 
 			
 					
@@ -52,7 +52,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
-				style="width:15%">
+				style="width:25%">
 				<p:inputText value="#{demoSupplier.totalUserScore}"
 					style="text-align:right" maxlength="18"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}">
@@ -69,7 +69,7 @@
 					value="/#{evaluationBackingBean.managedBean.userScores}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:30%">
 				<p:inputTextarea rows="2" cols="40" value="#{demoSupplier.remark}">
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:inputTextarea>
