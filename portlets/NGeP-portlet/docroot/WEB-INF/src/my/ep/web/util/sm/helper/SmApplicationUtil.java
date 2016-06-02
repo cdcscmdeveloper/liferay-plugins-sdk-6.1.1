@@ -2540,6 +2540,7 @@ public class SmApplicationUtil {
 					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
 			managedBean.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
 					"lbl.sm.category.overlappingMsg", null)
+					+ "<br />"
 					+ getOverlappedCategoryMsg(resultList));
 			Locale loc = new Locale("ms", "MY");
 			ResourceBundleUtils.getMessage("lbl.sm.category.overlappingMsg",
@@ -2547,6 +2548,8 @@ public class SmApplicationUtil {
 			managedBean.setOverLappedCategoryRemarks(ResourceBundleUtils
 					.getMessage("lbl.sm.category.overlappingMsg", null,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
+					+ System.lineSeparator()
+					+ System.lineSeparator()
 					+ getOverlappedCategoryRemarks(resultList));
 		}
 	}
@@ -2632,6 +2635,7 @@ public class SmApplicationUtil {
 			int count = 1;
 			for (Object[] arr : resultList) {
 				if (arr.length == 5) {
+					msg.append(SPACE).append(SPACE).append(SPACE);
 					msg.append(count);
 					msg.append(")").append(SPACE);
 					msg.append(arr[0]).append(arr[1]).append(arr[2])
