@@ -20,8 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import my.ep.biz.service.sm.payment.IPaymentSO;
-import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
-import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
@@ -31,13 +29,10 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
-import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.py.PyBill;
 import my.ep.persistence.entity.py.PyBillDtl;
 import my.ep.persistence.entity.py.PyPayment;
@@ -59,7 +54,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -437,13 +431,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			SecurityException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 
-/*		PortletRequest pr = (PortletRequest) FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestMap()
-				.get("javax.portlet.request");
-		Method method = pr.getClass()
-				.getMethod("getOriginalHttpServletRequest");
-		HttpServletRequest httpServletRequest = (HttpServletRequest) method
-				.invoke(pr, new Object[] {});*/
+		log.info("*******responsePreRender*******");
 		SmAppl appl = null;
 		
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
@@ -476,6 +464,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
 		appl = (SmAppl)session.getAttribute("smAppl");
 		
+		if(paymentTaskId != null && paymentBpmPojo != null){
 		log.info("paymentBean.getPaymentTaskId(): " + paymentTaskId);
 		log.info("paymentBean.getPaymentBpmPojo(): " + paymentBpmPojo);
 		this.getManagedBean().setTaskId(paymentTaskId);
@@ -517,14 +506,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			if (resDTO.getPyPayment() != null) {
 				PyPayment pyPayment = resDTO.getPyPayment();
 
-				List<PmStatusDesc> pmStatLs = SmCommonUtil
-						.retrievePmStatusList("SM",
-								SupplierManagementConst.PM_STATUS_PAYMENT,
-								new FacesScopes().getUserLocale().getLanguage());
-				Map<Long, PmStatusDesc> pmStatusDescMap = SmCommonUtil
-						.converPmStatusListToMap(pmStatLs);
-
-				log.info("pmStatLs>>>>>" + pmStatLs.size());
 				PyPaymentResponse smPaymentRes = new PyPaymentResponse();
 				PyPaymentOrder paymentOrder = pyPayment.getPyPaymentOrder();
 				Long statusCode = null;
@@ -537,15 +518,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					log.info("orderId>>>>" + orderId);
 					log.info("paymentAmount>>>>" + paymentAmount);
 					log.info("txAmount>>>>" + txAmount);
-
-					/*
-					 * boolean test = (paymentId == ordId &&
-					 * paymentAmount.compareTo(txAmount) == 0); boolean payOrd =
-					 * (paymentId == ordId); boolean px =
-					 * (paymentAmount.compareTo(txAmount) == 0);
-					 * log.info("test<>>>>>" + test); log.info("payOrd<>>>>>" +
-					 * payOrd); log.info("px<>>>>>" + px);
-					 */
 
 					if (paymentId.longValue() == ordId.longValue()
 							&& paymentAmount.compareTo(txAmount) == 0) {
@@ -601,8 +573,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				smPaymentRes.setPaidAmt(txAmount);
 				paymentOrder.getPyPaymentResponses().add(smPaymentRes);
 
-				PmStatusDesc pmStatDesc = pmStatusDescMap.get(statusCode);
-				pyPayment.setPmStatus(pmStatDesc.getPmStatus());
+				PmStatus paymentStatus = SmCommonUtil.getInstance().retrievePmStatusById(statusCode);
+				pyPayment.setPmStatus(paymentStatus);
 
 				// updatePayment(smPayment,validPayment);
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -668,28 +640,34 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				}
 				
 				showPaymentResponse(status, paymentId,errorDesc);
-				this.renewSesionObject();
+				//this.renewSesionObject();
 			} else {
 				showPaymentResponse(
 						SupplierManagementConst.PAYMENT_INVALID_RES, null,null);
-				this.renewSesionObject();
+				//this.renewSesionObject();
 			}
 		} else {
 			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null);
-			this.renewSesionObject();
+			//this.renewSesionObject();
 
 		}
 
 		session.removeAttribute("paymentBpmTaskId");
 		session.removeAttribute("paymentBpmPojo");
-		
+		this.renewSesionObject();
 		// paymentBean.setPaymentBpmPojo(null);
 		// paymentBean.setPaymentTaskId(null);
 
 /*		if (paymentBean.getPaymentMap().containsKey(orderId)) {
 			paymentBean.getPaymentMap().remove(orderId);
 		}*/
-
+		}
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+		.getNavigationHandler()
+		.handleNavigation(fc, null,
+				"/xhtml/sm/payment/paymentAcknowledge.xhtml");
 	}
 
 	/**
@@ -775,10 +753,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			paymentAckBB.getManagedBean().setPaymentStatus(true);
 		}
 
-		fc.getApplication()
+/*		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
-						"/xhtml/sm/payment/paymentAcknowledge.xhtml");
+						"/xhtml/sm/payment/paymentAcknowledge.xhtml");*/
 
 	}
 
@@ -793,11 +771,11 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	public void tempPaymentSuccess() {
 		log.info("********submitPayment******");
 		if (this.getManagedBean().getPyBill() != null) {
-			List<PmStatusDesc> pmStatLs = SmCommonUtil.retrievePmStatusList(
+/*			List<PmStatusDesc> pmStatLs = SmCommonUtil.retrievePmStatusList(
 					"SM", SupplierManagementConst.PM_STATUS_PAYMENT,
 					new FacesScopes().getUserLocale().getLanguage());
 			Map<Long, PmStatusDesc> pmStatusDescMap = SmCommonUtil
-					.converPmStatusListToMap(pmStatLs);
+					.converPmStatusListToMap(pmStatLs);*/
 			PmParameter paymentMode = new PmParameter();
 			PyPayment payment = new PyPayment();
 			PmStatus paymentStatus = new PmStatus();
@@ -806,9 +784,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					SupplierManagementConst.PM_PAYMENT_MODE,
 					SupplierManagementConst.ONLINE_PAYMENT, new FacesScopes()
 							.getUserLocale().getLanguage());
-			paymentStatus = pmStatusDescMap.get(
+/*			paymentStatus = pmStatusDescMap.get(
 					SupplierManagementConst.PM_STAT_PENDING_PAYMENT)
-					.getPmStatus();
+					.getPmStatus();*/
+			paymentStatus = SmCommonUtil.getInstance().retrievePmStatusById(SupplierManagementConst.PM_STAT_PENDING_PAYMENT);
 
 			payment.setPaymentMode(paymentMode);
 			payment.setPmStatus(paymentStatus);
@@ -898,10 +877,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			// SmPaymentResponse smPaymentRes = new SmPaymentResponse();
 			// SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
 
-			PmStatusDesc pmStatDesc = pmStatusDescMap.get(statusCode);
-			log.info(">>>>PaymentStatus ID>>>>"
-					+ pmStatDesc.getPmStatus().getStatusId());
-			pyPayment.setPmStatus(pmStatDesc.getPmStatus());
+			PmStatus pyStatus = SmCommonUtil.getInstance().retrievePmStatusById(statusCode);
+			pyPayment.setPmStatus(pyStatus);
 
 			paymentOrder.setChannelName("");
 			smPaymentRes.setTransactionId(txID);
@@ -935,6 +912,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 			showPaymentResponse(status, ordId, null);
 			this.renewSesionObject();
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					"/xhtml/sm/payment/paymentAcknowledge.xhtml");
 		}
 
 		/*
