@@ -5208,7 +5208,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return days;
 	}
 	
-	public void selectAllComitMem(AjaxBehaviorEvent e){
+	public void selectAllComitMemCheckBox(AjaxBehaviorEvent e){
 		getManagedBean().setSelectAll(false);
 		for (PmUser pmUsers : getCommitteDataModel().getList()){
 			if(pmUsers.isSelectedCheckBox()){
@@ -5223,7 +5223,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}	
 	}
 
-	public void selectAllComitMemCheckBox(AjaxBehaviorEvent e){
+	public void selectAllComitMem(AjaxBehaviorEvent e){
 	    
 		for (PmUser pmUsers : getCommitteDataModel().getList()){
 			if (getManagedBean().isSelectAll()) {
