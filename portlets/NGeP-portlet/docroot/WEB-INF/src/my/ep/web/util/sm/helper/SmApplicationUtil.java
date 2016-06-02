@@ -2532,11 +2532,22 @@ public class SmApplicationUtil {
 			}
 		}
 		if (managedBean.isOverLappedCategoryExists()) {
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSupplierId(managedBean.getSmAppl().getSmSupplier()
+					.getSupplierId());
+			reqDTO.setApplId(managedBean.getSmAppl().getApplId());
+			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
+					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
 			managedBean.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
 					"lbl.sm.category.overlappingMsg", null)
-					+ getOverlappedCategoryMsg(managedBean.getSmAppl()
-							.getSmSupplier().getSupplierId(), managedBean
-							.getSmAppl().getApplId()));
+					+ getOverlappedCategoryMsg(resultList));
+			Locale loc = new Locale("ms", "MY");
+			ResourceBundleUtils.getMessage("lbl.sm.category.overlappingMsg",
+					null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
+			managedBean.setOverLappedCategoryRemarks(ResourceBundleUtils
+					.getMessage("lbl.sm.category.overlappingMsg", null,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
+					+ getOverlappedCategoryRemarks(resultList));
 		}
 	}
 
@@ -2591,13 +2602,8 @@ public class SmApplicationUtil {
 	 *            applId
 	 * @return String
 	 */
-	public static String getOverlappedCategoryMsg(Long supplierId, Long applId) {
+	public static String getOverlappedCategoryMsg(List<Object[]> resultList) {
 		StringBuilder msg = new StringBuilder();
-		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setSupplierId(supplierId);
-		reqDTO.setApplId(applId);
-		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
-				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
 		if (!SmCommonUtil.isCollectionEmpty(resultList)) {
 			int count = 1;
 			msg.append("<table style='width: 55%;table-layout:fixed'>");
@@ -2615,6 +2621,26 @@ public class SmApplicationUtil {
 				}
 			}
 			msg.append("</table><br />");
+		}
+		return msg.toString();
+	}
+
+	public static String getOverlappedCategoryRemarks(List<Object[]> resultList) {
+		StringBuilder msg = new StringBuilder();
+		String SPACE = " ";
+		if (!SmCommonUtil.isCollectionEmpty(resultList)) {
+			int count = 1;
+			for (Object[] arr : resultList) {
+				if (arr.length == 5) {
+					msg.append(count);
+					msg.append(")").append(SPACE);
+					msg.append(arr[0]).append(arr[1]).append(arr[2])
+							.append(SPACE).append(SPACE);
+					msg.append("(").append(arr[3]).append(" / ").append(arr[4])
+							.append(")").append(System.lineSeparator());
+					count++;
+				}
+			}
 		}
 		return msg.toString();
 	}
@@ -7782,7 +7808,9 @@ public class SmApplicationUtil {
 	}
 
 	/**
-	 * generate the MOF declaration form and populate required informatiion into the PDF.
+	 * generate the MOF declaration form and populate required informatiion into
+	 * the PDF.
+	 * 
 	 * @param smAppl
 	 */
 	public static void generateDeclarationFormPdf(SmAppl smAppl) {
@@ -7816,9 +7844,11 @@ public class SmApplicationUtil {
 			throw new EpException(e.getMessage());
 		}
 	}
-	
+
 	/**
-	 * Generate the bank verification form in PDF format for the respective application
+	 * Generate the bank verification form in PDF format for the respective
+	 * application
+	 * 
 	 * @param smAppl
 	 */
 	public static void generateBankVerificationFormPdf(SmAppl smAppl) {
@@ -7832,37 +7862,46 @@ public class SmApplicationUtil {
 			File dir = new File(tmpPath);
 			if (!dir.exists())
 				dir.mkdirs();
-			
+
 			List<String> filePaths = new ArrayList<String>();
 			String fileName = smAppl.getApplNo()
 					+ SupplierManagementConst.BANK_VERIFICATION_FORM_PREFIX;
-			
-			for(int i = 0; i < smAppl.getSmSupplierBanks().size(); i++) {
-				SmSupplierBank supplierBank = smAppl.getSmSupplierBanks().get(i); 
-			
+
+			for (int i = 0; i < smAppl.getSmSupplierBanks().size(); i++) {
+				SmSupplierBank supplierBank = smAppl.getSmSupplierBanks()
+						.get(i);
+
 				String fileNameAndPath = tmpPath + i + fileName;
 				String vm = "/sm/application/Bank-verification-form.vm";
 				VelocityContext context = new VelocityContext();
 				FacesScopes fs = new FacesScopes();
-				context.put("hostUrl", fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort());
-				context.put("companyName", smAppl.getSmSupplier().getCompanyName());
+				context.put("hostUrl", fs.getRequest().getServerName() + ":"
+						+ fs.getRequest().getServerPort());
+				context.put("companyName", smAppl.getSmSupplier()
+						.getCompanyName());
 				context.put("companyRegNo", smAppl.getSmSupplier().getRegNo());
-				context.put("bankName", supplierBank.getPmFinancialOrg().getFinOrgName());
+				context.put("bankName", supplierBank.getPmFinancialOrg()
+						.getFinOrgName());
 				context.put("bankBranch", supplierBank.getBankBranch());
-				context.put("bankStreetAddress", getBankAddress(supplierBank.getSmAddress()));
-				context.put("bankCityDistrict", getBankCityDistrict(supplierBank.getSmAddress()));
-				context.put("bankPostCode", supplierBank.getSmAddress().getPostcode());
-				context.put("bankState", supplierBank.getSmAddress().getPmState().getStateName());
+				context.put("bankStreetAddress",
+						getBankAddress(supplierBank.getSmAddress()));
+				context.put("bankCityDistrict",
+						getBankCityDistrict(supplierBank.getSmAddress()));
+				context.put("bankPostCode", supplierBank.getSmAddress()
+						.getPostcode());
+				context.put("bankState", supplierBank.getSmAddress()
+						.getPmState().getStateName());
 				context.put("bankAccountNo", supplierBank.getAccountNo());
 				context.put("bankTnC", supplierBank.getSignatureInstruction());
-				context = setSignatories(context, supplierBank.getSmChequeSignatories());
-				
+				context = setSignatories(context,
+						supplierBank.getSmChequeSignatories());
+
 				SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
 				filePaths.add(fileNameAndPath);
 			}
-			
+
 			List<File> tempFiles = new ArrayList<File>();
-			for(String filePath : filePaths) {
+			for (String filePath : filePaths) {
 				tempFiles.add(new File(filePath));
 			}
 			SmCommonUtil.combinePdf(tempFiles, tmpPath + fileName);
@@ -7870,43 +7909,51 @@ public class SmApplicationUtil {
 			throw new EpException(e.getMessage());
 		}
 	}
-	
-	private static VelocityContext setSignatories(VelocityContext context, List<SmChequeSignatory> smChequeSignatories) {
-		for(int i = 0; i < smChequeSignatories.size(); i++) {
+
+	private static VelocityContext setSignatories(VelocityContext context,
+			List<SmChequeSignatory> smChequeSignatories) {
+		for (int i = 0; i < smChequeSignatories.size(); i++) {
 			SmChequeSignatory smChequeSignatory = smChequeSignatories.get(i);
 			context.put("csNo" + i, i + 1);
-			context.put("csName" + i, smChequeSignatory.getSmPersonnel().getName());
-			context.put("csIc" + i, smChequeSignatory.getSmPersonnel().getIdentificationNo());
-			System.out.println("Signatory " + i + ": " + smChequeSignatory.getSmPersonnel().getName() + " : " + smChequeSignatory.getSmPersonnel().getIdentificationNo() );
+			context.put("csName" + i, smChequeSignatory.getSmPersonnel()
+					.getName());
+			context.put("csIc" + i, smChequeSignatory.getSmPersonnel()
+					.getIdentificationNo());
+			System.out.println("Signatory " + i + ": "
+					+ smChequeSignatory.getSmPersonnel().getName() + " : "
+					+ smChequeSignatory.getSmPersonnel().getIdentificationNo());
 		}
 		return context;
 	}
-	
+
 	private static String getBankCityDistrict(SmAddress address) {
 		String cityName = address.getPmCity().getCityName();
 		String districtName = address.getPmDistrict().getDistrictName();
-		
+
 		return cityName.concat(", ").concat(districtName);
 	}
-	
+
 	private static String getBankAddress(SmAddress address) {
-		
+
 		String streetAddress = address.getAddress1();
-		streetAddress = checkAddressSuffix(address.getAddress1()) + checkAddressSuffix(address.getAddress2()) + checkAddressSuffix(address.getAddress3()) + checkAddressSuffix(address.getAddress4()); 
-		
+		streetAddress = checkAddressSuffix(address.getAddress1())
+				+ checkAddressSuffix(address.getAddress2())
+				+ checkAddressSuffix(address.getAddress3())
+				+ checkAddressSuffix(address.getAddress4());
+
 		return streetAddress;
 	}
-	
+
 	private static String checkAddressSuffix(String addressLine) {
-		if(StringUtils.isBlank(addressLine)) {
+		if (StringUtils.isBlank(addressLine)) {
 			return "";
 		}
-		if(addressLine.substring(addressLine.length() - 1).equals(",")) {
+		if (addressLine.substring(addressLine.length() - 1).equals(",")) {
 			addressLine.concat(", ");
 		}
 		return addressLine;
 	}
-	
+
 	public static SmAppl deleteApplChildEntities(SmAppl appl) {
 		appl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
 		appl.setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
@@ -7984,7 +8031,7 @@ public class SmApplicationUtil {
 	public static boolean isAllSuppDocAlreadyVerified(SmAppl appl) {
 		boolean retVal = true;
 		for (SmApplSupportDoc doc : appl.getSmApplSupportDocs()) {
-			if(doc.getVerifiedFlg()==null){
+			if (doc.getVerifiedFlg() == null) {
 				retVal = false;
 			}
 		}
