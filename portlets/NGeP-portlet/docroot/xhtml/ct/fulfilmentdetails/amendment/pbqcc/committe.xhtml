@@ -156,7 +156,7 @@
 				                    <f:facet name="header">
 						                <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.selectAll}">
 						                   	<p:ajax partialSubmit="true" process="@this"
-								                update=":form:committeTable, :form:cmtOkBtnId" listener="#{amendmentBackingBean.selectAllComitMem}" />
+								                update=":form:newCommitteTable, :form:cmtOkBtnId" listener="#{amendmentBackingBean.selectAllComitMem}" />
 						                </p:selectBooleanCheckbox>
 					               </f:facet>
 					                <p:selectBooleanCheckbox value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
