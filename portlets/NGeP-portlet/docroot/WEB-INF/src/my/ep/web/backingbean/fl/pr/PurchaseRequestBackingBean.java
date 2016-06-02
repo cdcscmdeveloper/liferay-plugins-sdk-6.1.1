@@ -2583,7 +2583,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	private void getOrderSummaryGrandTotal() {
 		BigDecimal orderSummaryTotalOrderAmt = null;
 		BigDecimal grandOrderSummaryTotalOrderAmt=new BigDecimal(0);
-		getManagedBean().setOrderedAmtGrandTotal(grandOrderSummaryTotalOrderAmt);
 		for(FlDeliveryAddress  deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			orderSummaryTotalOrderAmt = new BigDecimal(0);
 			for(FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()){
