@@ -1511,7 +1511,7 @@ public class SmCommonUtil {
 	public static String getSerializedFileFullDirByApplNo(String applNo,
 			String serType) {
 		String retVal = StringUtils.EMPTY;
-		boolean exist = true;
+		boolean exist = isSerFileExist(applNo, serType);
 		// Check if approved serialized file exists for latest approved
 		// application, if exists - do nothing, else, generate
 		String fileName = applNo + "_" + serType + ".ser";
@@ -1522,7 +1522,6 @@ public class SmCommonUtil {
 				+ File.separator;
 		String smRevisionDir = "SM" + File.separator + applNo + File.separator
 				+ "Revision" + File.separator;
-		exist = new File(baseDir + smRevisionDir, fileName).exists();
 		log.info("File Name:" + fileName);
 		log.info("SER type:" + serType);
 		log.info("Directory:" + baseDir + smRevisionDir);

@@ -49,6 +49,11 @@ public class SmSectionEditorVO implements Serializable {
 	private boolean appEditEquipment;
 	private boolean suppEditEquipment;
 
+	// suppdoc
+	private boolean poEditSuppDoc;
+	private boolean appEditSuppDoc;
+	private boolean suppEditSuppDoc;
+
 	public boolean isPoEditCompBasic() {
 		return poEditCompBasic;
 	}
@@ -239,6 +244,30 @@ public class SmSectionEditorVO implements Serializable {
 
 	public void setSuppEditEquipment(boolean suppEditEquipment) {
 		this.suppEditEquipment = suppEditEquipment;
+	}
+
+	public boolean isPoEditSuppDoc() {
+		return poEditSuppDoc;
+	}
+
+	public void setPoEditSuppDoc(boolean poEditSuppDoc) {
+		this.poEditSuppDoc = poEditSuppDoc;
+	}
+
+	public boolean isAppEditSuppDoc() {
+		return appEditSuppDoc;
+	}
+
+	public void setAppEditSuppDoc(boolean appEditSuppDoc) {
+		this.appEditSuppDoc = appEditSuppDoc;
+	}
+
+	public boolean isSuppEditSuppDoc() {
+		return suppEditSuppDoc;
+	}
+
+	public void setSuppEditSuppDoc(boolean suppEditSuppDoc) {
+		this.suppEditSuppDoc = suppEditSuppDoc;
 	}
 
 }
