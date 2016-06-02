@@ -366,6 +366,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean selected;
 	private int personnelCountCheck;
 	private String overLappedCategoryMsg;
+	private String overLappedCategoryRemarks;
 	private boolean overLappedCategoryExists;
 	private boolean disAllowOwnerEdit;
 	private boolean disabledHomeOffice;
@@ -3518,5 +3519,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPoAppl(SmAppl poAppl) {
 		this.poAppl = poAppl;
+	}
+
+	public String getOverLappedCategoryRemarks() {
+		return overLappedCategoryRemarks;
+	}
+
+	public void setOverLappedCategoryRemarks(String overLappedCategoryRemarks) {
+		this.overLappedCategoryRemarks = overLappedCategoryRemarks;
 	}
 }
