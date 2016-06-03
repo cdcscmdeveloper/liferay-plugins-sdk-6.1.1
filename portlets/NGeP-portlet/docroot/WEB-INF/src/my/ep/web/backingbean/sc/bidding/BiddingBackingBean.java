@@ -199,6 +199,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			BiddingReqDTO reqDto = new BiddingReqDTO();
 
 			reqDto.setScBidAction(getManagedBean().getBidAction());
+			
+			reqDto.setPmUser(new FacesScopes().getUserSessionBean());
 
 			BiddingResDTO resDto = biddingSO.updateBidAction(reqDto);
 			if (resDto.isSuccessful()) {
@@ -402,6 +404,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 			reqDTO.setScBidAction(this.getManagedBean().getBidAction());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			BiddingResDTO resDTO = biddingSO.updateBidAction(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("resume Or Rebid Or Reschedule Action successful");
