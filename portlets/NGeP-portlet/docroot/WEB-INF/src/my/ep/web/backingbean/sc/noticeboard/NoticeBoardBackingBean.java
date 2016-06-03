@@ -37,7 +37,6 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -1609,7 +1608,6 @@ public class NoticeBoardBackingBean extends
 			reqDTO.setBriefingReqDtls(registrations);
 			ScQt currentQt = this.getManagedBean().getScQt();
 			reqDTO.setScQt(currentQt);
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_COMPLETE);
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setRoleCode(super.getUserRoleCode());
 
