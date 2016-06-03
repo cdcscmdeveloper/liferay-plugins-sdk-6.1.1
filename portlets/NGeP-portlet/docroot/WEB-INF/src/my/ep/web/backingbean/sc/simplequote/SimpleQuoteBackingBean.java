@@ -711,23 +711,7 @@ public class SimpleQuoteBackingBean extends
 
 		// WorkFlow Status should be set In the save
 		if (scQuote.isBrandNew()) {
-			ScSQWorkFlowStatus scWorkFlowStatus = null;
-			if(CollectionUtils.isEmpty(scQuote.getWorkflowStatuses())){
-				List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
-				scWorkFlowStatus = new ScSQWorkFlowStatus();
-				PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
-				getCurrentStatus(currentStatus);
-				scWorkFlowStatus.setPmStatus(currentStatus);
-				scWorkFlowStatus.setQuote(scQuote);
-				scWorkFlowStatus.setCurrent(Boolean.TRUE);
-				workFlowStatuses.add(scWorkFlowStatus);
-				scQuote.setWorkflowStatuses(workFlowStatuses);
-			}
-			if(CollectionUtils.isEmpty(scQuote.getRemarks())){
-				// Initializing Remarks
-				scQuote.setRemarks(initializeRemarks(scQuote, scWorkFlowStatus,
-						scQuote.getRemarks(), ScSQRemark.class));
-			}
+			updateWorkFlowAndRemarks(scQuote);
 		}
 		
 		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
@@ -1433,7 +1417,10 @@ public class SimpleQuoteBackingBean extends
 			if (suppliers != null && !suppliers.isEmpty()) {
 				quote.setScQuoteSuppliers(suppliers);
 			}
-
+			
+			//update workflow status and remarks
+			updateWorkFlowAndRemarks(quote);
+			
 			finalizeRemarks(quote.getRemarks());
 			// product and service
 			List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
@@ -5464,19 +5451,7 @@ public class SimpleQuoteBackingBean extends
 		scQuote.setMultipleQuote(Boolean.FALSE);
 		// WorkFlow Status should be set In the save
 		if (scQuote.isBrandNew()) {
-			List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
-			ScSQWorkFlowStatus scWorkFlowStatus = new ScSQWorkFlowStatus();
-			PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
-			getCurrentStatus(currentStatus);
-			scWorkFlowStatus.setPmStatus(currentStatus);
-			scWorkFlowStatus.setQuote(scQuote);
-			scWorkFlowStatus.setCurrent(Boolean.TRUE);
-			workFlowStatuses.add(scWorkFlowStatus);
-			scQuote.setWorkflowStatuses(workFlowStatuses);
-			
-			// Initializing Remarks
-			scQuote.setRemarks(initializeRemarks(scQuote, scWorkFlowStatus,
-					scQuote.getRemarks(), ScSQRemark.class));
+			updateWorkFlowAndRemarks(scQuote);
 		}
 		
 
@@ -6522,6 +6497,44 @@ public class SimpleQuoteBackingBean extends
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
+		}
+	}
+	
+	
+	/**
+	 * Update work flow and remarks.
+	 *
+	 * @param scQuote the sc quote
+	 */
+	private void updateWorkFlowAndRemarks(ScQuote scQuote){
+		// remarks and workflow status
+		ScSQWorkFlowStatus scWorkFlowStatus = null;
+		if(CollectionUtils.isEmpty(scQuote.getWorkflowStatuses())){
+			List<ScSQWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScSQWorkFlowStatus>();
+			scWorkFlowStatus = new ScSQWorkFlowStatus();
+			PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
+			getCurrentStatus(currentStatus);
+			scWorkFlowStatus.setCurrent(Boolean.TRUE);
+			scWorkFlowStatus.setPmStatus(currentStatus);
+			scWorkFlowStatus.setQuote(scQuote);
+			workFlowStatuses.add(scWorkFlowStatus);
+			scQuote.setWorkflowStatuses(workFlowStatuses);
+		} else{
+			scWorkFlowStatus = scQuote.getWorkflowStatuses().get(0);
+		}
+		
+		if(CollectionUtils.isEmpty(scQuote.getRemarks())){
+			scQuote.setRemarks(initializeRemarks(
+					scQuote,
+					scWorkFlowStatus,
+					scQuote.getRemarks(),
+					ScSQRemark.class));
+		} else{
+			for (ScSQRemark scSQRemark : scQuote.getRemarks()) {
+				if(null == scSQRemark.getScWorkFlowStatus()){
+					scSQRemark.setScWorkFlowStatus(scWorkFlowStatus);
+				}
+			}
 		}
 	}
 
