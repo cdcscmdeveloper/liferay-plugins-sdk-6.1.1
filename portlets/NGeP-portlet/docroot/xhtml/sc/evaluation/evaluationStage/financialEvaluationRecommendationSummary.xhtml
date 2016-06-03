@@ -22,8 +22,8 @@
 					value="#{evaluationBackingBean.managedBean.financialSummaryView}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="Package Preference Margin" itemValue="FPM"></f:selectItem>
-					<f:selectItem itemLabel="Item" itemValue="FI"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.sc.evaluation.view.by.package.preference.margin']}" itemValue="FPM"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.sc.evaluation.view.by.item.preference.margin']}" itemValue="FI"></f:selectItem>
 					<p:ajax event="change" process="@this" partialSubmit="true"
 						listener="#{evaluationBackingBean.financialsummaryChange}"
 						update="@([id$=financialviewSummary])"></p:ajax>
