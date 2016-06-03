@@ -3,6 +3,8 @@
  */
 package my.ep.web.managedbean.sc.supplierinvitation;
 
+import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -18,5 +20,36 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class SCSupplierInvitationManagedBean extends BaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
+	
+	private Long selectedInvitationType;
+	private Map<Long,String> invitationTypeMap;
+
+	/**
+	 * @return the selectedInvitationType
+	 */
+	public Long getSelectedInvitationType() {
+		return selectedInvitationType;
+	}
+
+	/**
+	 * @param selectedInvitationType the selectedInvitationType to set
+	 */
+	public void setSelectedInvitationType(Long selectedInvitationType) {
+		this.selectedInvitationType = selectedInvitationType;
+	}
+	
+	/**
+	 * @return the invitationTypeMap
+	 */
+	public Map<Long, String> getInvitationTypeMap() {
+		return invitationTypeMap;
+	}
+
+	/**
+	 * @param invitationTypeMap the invitationTypeMap to set
+	 */
+	public void setInvitationTypeMap(Map<Long, String> invitationTypeMap) {
+		this.invitationTypeMap = invitationTypeMap;
+	}
 	
 }

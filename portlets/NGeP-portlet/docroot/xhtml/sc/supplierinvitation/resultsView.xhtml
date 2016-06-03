@@ -8,6 +8,24 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 <ui:define name="contentSection">
+
+		<table>
+			<TR>
+				<td style="width: 20%; white-space: nowrap;"><p:outputLabel
+						value="#{lbl['lbl.sc.invitation.type']}" /></td>
+				<td style="width: 80%"> <p:selectOneMenu
+						value="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}"
+						style="width: 250px; margin-bottom: 5px;">
+						<f:selectItems
+							value="#{scSupplirInvitationdBB.managedBean.invitationTypeMap.entrySet()}" var="typeMap" itemValue="#{typeMap.key}" 
+							itemLabel="#{typeMap.value}"/>
+						<p:ajax event="change" update="scSuppInviteTblId"
+							listener="#{scSupplirInvitationdBB.searchSelectedInvitationType}" partialSubmit="true" process="@this" />
+					</p:selectOneMenu>
+					</td>
+			</TR>
+		</table>
+		
 		<p:dataTable id="scSuppInviteTblId"
 			value="#{scSupplirInvitationdBB.supplierInvitationModel}" lazy="true"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
