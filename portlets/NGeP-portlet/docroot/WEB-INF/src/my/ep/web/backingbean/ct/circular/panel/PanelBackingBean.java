@@ -2818,6 +2818,21 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
     	getManagedBean().setButtonHideActiveDel(true);
     }
     
+    public void selectAllDltDlgChkBoxSelect(AjaxBehaviorEvent e){
+		getManagedBean().setSelectAll(false);
+    	for (CtCircularVer ctCircularVers : getManagedBean().getCircularVerList()){
+    		if(ctCircularVers.isSelectedCheckBox()){
+    			getManagedBean().setButtonHideActiveDel(false);
+    			return;
+    		}
+    	}
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			getManagedBean().setButtonHideActiveDel(false);
+		}else{
+			getManagedBean().setButtonHideActiveDel(true);
+		}	
+	}
+    
     public void setPidValue(){
 		if(!getManagedBean().getCircularVer().isDirectPurchase()){
 			getManagedBean().getCircularVer().setPid(false);
