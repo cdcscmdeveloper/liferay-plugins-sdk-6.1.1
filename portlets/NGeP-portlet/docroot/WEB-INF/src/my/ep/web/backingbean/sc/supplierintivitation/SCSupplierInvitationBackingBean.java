@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.sc.supplierintivitation.ISCSupplierInvitationSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
@@ -99,6 +100,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("qtStatus.STATUS_ID",
 								SearchOperator.OPERATOR_IN.value(), qtStatusIds));
+				sortOrder(searchBean,false);
 				
 			} else if(QTStatusConst.QT_PROPOSAL_PREPARATION.equals(selectedInvitationType)){
 				List<Long> qtStatusIds = new ArrayList<Long>();
@@ -106,6 +108,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("qtStatus.STATUS_ID",
 								SearchOperator.OPERATOR_IN.value(), qtStatusIds));
+				sortOrder(searchBean,false);
 				
 			} else if(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE.equals(selectedInvitationType)){
 				List<Long> sqStatusIds = new ArrayList<Long>();
@@ -113,6 +116,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("sqStatus.STATUS_ID",
 								SearchOperator.OPERATOR_IN.value(), sqStatusIds));
+				sortOrder(searchBean,true);
 				
 			} else if(QTStatusConst.SF_PENDING_BIDDING.equals(selectedInvitationType)){
 				List<Long> bidStatusIds = new ArrayList<Long>();
@@ -120,6 +124,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("bidStatus.STATUS_ID",
 								SearchOperator.OPERATOR_IN.value(), bidStatusIds));
+				sortOrder(searchBean,false);
 			}
 			
 			ISCSupplierInvitationSO dashBoardSO = null;
@@ -181,6 +186,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 						.append(id);
 
 			}
+		
 		return url.toString();
 		
 	}
@@ -215,6 +221,21 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				new FacesScopes().getUserLocale());
 	}
 	
+	private void sortOrder(ISearchBean<Object[]> searchBean,
+			boolean isSimplequote) {
+
+		if (isSimplequote) {
+			searchBean.getSortColumns().add(
+					new SearchOrderBean(
+							"to_char(quote.CREATED_DATE,'yyyy-MM-dd')", false));
+		} else {
+			searchBean.getSortColumns().add(
+					new SearchOrderBean(
+							"to_char(qt.CREATED_DATE,'yyyy-MM-dd')", false));
+		}
+
+	}
+	
 	public void searchSelectedInvitationType() {
 		supplierInvitationModel.reloadData();
 	}
@@ -233,7 +254,6 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 			IPagingDataModel<Object[]> supplierInvitationModel) {
 		this.supplierInvitationModel = supplierInvitationModel;
 	}
-	
 	
 
 }
