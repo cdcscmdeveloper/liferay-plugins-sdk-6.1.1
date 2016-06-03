@@ -22,6 +22,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmNotifyUser;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -109,12 +110,13 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 				
 				debugLogger("NotifyResDTO isSuccessful[" + resDTO.isSuccessful()
 						+ "]");
+				
 				if (resDTO.isSuccessful()) {
 					resetSelectedNotify();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"Record removed successfully.", ""));
+									ResourceBundleUtils.getMessage("lbl.portal.notify.recordRemovedSuccesssfully",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()), ""));
 					notifyDataModel.reloadData();
 				}
 				
@@ -123,7 +125,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Please select at least one record.", ""));
+								ResourceBundleUtils.getMessage("lbl.portal.notify.selectAtLeastARecord",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()), ""));
 				notifyDataModel.reloadData();
 			}
 		}
