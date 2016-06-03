@@ -378,6 +378,7 @@ public class SPDetailBackingBean extends
 		// retrievePaidUpCapitalNdDeclarationDtls();
 
 		IQTProposalSO proposalSO = null;
+		ProposalReqDTO reqDTO = null;
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -419,7 +420,7 @@ public class SPDetailBackingBean extends
 			 * originalText); }
 			 */
 
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
 			reqDTO.setQtSupplierId(getManagedBean().getQtProposal()
 					.getScQtSupplier().getQtSupplierId());
@@ -433,6 +434,8 @@ public class SPDetailBackingBean extends
 			reqDTO.setAgreeWithOthersTermsConditions(getManagedBean()
 					.isAgreeWithOthersTermsConditions());
 			// reqDTO.setDigiSignData(digiSign);
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setRoleCode(super.getUserRoleCode());
 
 			ProposalResDTO resDTO = proposalSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -443,6 +446,10 @@ public class SPDetailBackingBean extends
 			} else {
 				throw new EpException("Failed.");
 			}
+		} catch (Exception e) {
+			proposalSO.insertTrackingDiary(reqDTO);
+			
+			throw e;
 		} finally {
 			proposalSO = null;
 		}
