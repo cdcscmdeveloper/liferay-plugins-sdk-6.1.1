@@ -3,12 +3,19 @@
  */
 package my.ep.web.backingbean.sc.supplierintivitation;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.supplierintivitation.ISCSupplierInvitationSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
@@ -17,6 +24,7 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.supplierintivitation.ScSupplierInvitationReqDTO;
 import my.ep.dto.sc.supplierintivitation.ScSupplierInvitationResDTO;
+import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -42,6 +50,25 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 	private static final String BIDDING_LABEL_KEY = "lbl.sc.bidding";
 	private static final String SQ_LABEL_KEY = "lbl.sc.sq";
 	private static final String QT_LABEL_KEY = "lbl.sc.quotation.tender";
+	private static final String ALL_LABEL_KEY = "lbl.txt.all";
+	
+	@PostConstruct
+	private void init() {
+		
+		if (this.getManagedBean().getInvitationTypeMap() == null) {
+			
+			Map<Long, String> invitationTypesMap = new LinkedHashMap<Long, String>();
+			invitationTypesMap.put(1L, getLabelName(ALL_LABEL_KEY));
+			invitationTypesMap.put(QTStatusConst.QT_PROPOSAL_PREPARATION,getLabelName(QT_LABEL_KEY));
+			invitationTypesMap.put(QTStatusConst.QT_BRIEFING_SITE_VISIT,
+					getStatusDescById(QTStatusConst.QT_BRIEFING_SITE_VISIT));
+			invitationTypesMap.put(QTStatusConst.SF_PENDING_BIDDING,
+					getLabelName(BIDDING_LABEL_KEY));
+			invitationTypesMap.put(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE,
+					getLabelName(SQ_LABEL_KEY));
+			this.getManagedBean().setInvitationTypeMap(invitationTypesMap);
+		}
+	}
 	
 	public void preRenderView() {
 		
@@ -63,6 +90,36 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				ISearchBean<Object[]> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
+			}
+			
+			Long selectedInvitationType = getManagedBean().getSelectedInvitationType();
+			if(QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(selectedInvitationType)){
+				List<Long> qtStatusIds = new ArrayList<Long>();
+				qtStatusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("qtStatus.STATUS_ID",
+								SearchOperator.OPERATOR_IN.value(), qtStatusIds));
+				
+			} else if(QTStatusConst.QT_PROPOSAL_PREPARATION.equals(selectedInvitationType)){
+				List<Long> qtStatusIds = new ArrayList<Long>();
+				qtStatusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("qtStatus.STATUS_ID",
+								SearchOperator.OPERATOR_IN.value(), qtStatusIds));
+				
+			} else if(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE.equals(selectedInvitationType)){
+				List<Long> sqStatusIds = new ArrayList<Long>();
+				sqStatusIds.add(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("sqStatus.STATUS_ID",
+								SearchOperator.OPERATOR_IN.value(), sqStatusIds));
+				
+			} else if(QTStatusConst.SF_PENDING_BIDDING.equals(selectedInvitationType)){
+				List<Long> bidStatusIds = new ArrayList<Long>();
+				bidStatusIds.add(QTStatusConst.SF_PENDING_BIDDING);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("bidStatus.STATUS_ID",
+								SearchOperator.OPERATOR_IN.value(), bidStatusIds));
 			}
 			
 			ISCSupplierInvitationSO dashBoardSO = null;
@@ -157,7 +214,11 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
 	}
-
+	
+	public void searchSelectedInvitationType() {
+		supplierInvitationModel.reloadData();
+	}
+	
 	/**
 	 * @return the supplierInvitationModel
 	 */
@@ -172,5 +233,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 			IPagingDataModel<Object[]> supplierInvitationModel) {
 		this.supplierInvitationModel = supplierInvitationModel;
 	}
+	
+	
 
 }
