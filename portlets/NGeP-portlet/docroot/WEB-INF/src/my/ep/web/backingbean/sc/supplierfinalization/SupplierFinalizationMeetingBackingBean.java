@@ -1438,13 +1438,18 @@ public class SupplierFinalizationMeetingBackingBean extends
 											: deletedCommitteeMembers) {
 					if (currentCommMemberIcs.containsKey(
 							deletedCommitteeMember.getIcPassport())) {
-						ScCommitteeMember committeeMember = currentCommMemberIcs.get(
-												deletedCommitteeMember.getIcPassport());
+						ScCommitteeMember currentCommitteeMember = currentCommMemberIcs
+												.get(deletedCommitteeMember.getIcPassport());
 						deletedCommitteeMember.setDeleted(false);
 						deletedCommitteeMember.setRepresentativeType(
-									committeeMember.getRepresentativeType());
-						currentCommitteeMembers.remove(committeeMember);
+								currentCommitteeMember.getRepresentativeType());
+						deletedCommitteeMember.setMemberRole(
+								currentCommitteeMember.getMemberRole());
+						deletedCommitteeMember.setMemberRoleId(
+								currentCommitteeMember.getMemberRoleId());
+						currentCommitteeMembers.remove(currentCommitteeMember);
 						currentCommitteeMembers.add(deletedCommitteeMember);
+						
 						if (deletedCommitteeMember.getRepresentativeType() != null) {
 							deletedCommitteeMember.setRepresentativeTypeId(
 									deletedCommitteeMember.getRepresentativeType().getParameterId());
