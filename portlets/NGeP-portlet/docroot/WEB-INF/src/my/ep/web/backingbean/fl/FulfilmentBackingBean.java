@@ -314,4 +314,43 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		}
 	}	
 	
+	/**
+	 * Initialize remark .
+	 * <p> get remarks lists.
+	 * @param flWorkflowStatus the fl workflow status
+	 * @param remarkList the remark list
+	 */
+	public void initializeRemark(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> remarkList) {
+		FacesScopes facesScopes = new FacesScopes();
+
+		boolean flWorkflowStatusMatch = false;
+		if(flWorkflowStatus!=null) {
+			if(remarkList.size()>0 && remarkList.get(0).getFlWorkflowStatus()!=null) {
+				if(flWorkflowStatus.getWorkflowStatusId().longValue()==remarkList.get(0).getFlWorkflowStatus().getWorkflowStatusId().longValue()) {
+					flWorkflowStatusMatch = true;
+				}
+			}
+		} else { // both also null
+			flWorkflowStatusMatch = true;
+		}
+		
+		if (remarkList.size() == 0 || !flWorkflowStatusMatch) {
+			FlRemark remark = new FlRemark();
+			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			remark.setCreatedUsername(facesScopes.getUserSessionBean()
+					.getUserName());
+			remark.setUserId(facesScopes.getUserSessionBean().getLoginId());
+
+			getManagedBean().setRemarkList(remarkList);
+			if(!getManagedBean().isHideRemarks()) {
+				getManagedBean().getRemarkList().add(0, remark);
+			}
+		} else {
+			getManagedBean().setRemarkList(remarkList);
+		}
+	}
+	
 }
