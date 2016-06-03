@@ -444,10 +444,12 @@ public class ConsolidationReportBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 
 			// BPM Params
-			reqDTO.setToken((new FacesScopes()).getBPMAuthenticationCtxToken());
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setOutcome(getManagedBean().getOutcome());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			
 			SuppFinalizationResDTO resDTO 
 					= qtSuppFinalizationSO.submitConsolidationReport(reqDTO);

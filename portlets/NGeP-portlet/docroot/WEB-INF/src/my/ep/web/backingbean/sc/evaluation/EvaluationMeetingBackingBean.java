@@ -1512,6 +1512,7 @@ public class EvaluationMeetingBackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setOutcome(outCome);
 			MeetingResDTO resDTO = meetingso.updateBPMAction(reqDTO);
 
