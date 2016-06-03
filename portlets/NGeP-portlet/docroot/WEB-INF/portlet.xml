@@ -8331,7 +8331,7 @@
 	
 	<portlet>
 		<portlet-name>scSupplierInvitation</portlet-name>
-		<display-name>Supplier Invitation</display-name>
+		<display-name>Pending Response For Direct Purchase / Quoatation / Tender</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -8345,8 +8345,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Supplier Invitation</title>
-			<short-title>NewJSFPortlet</short-title>
+			<title>Pending Response For Direct Purchase / Quoatation / Tender</title>
+			<short-title>Pending Response For Direct Purchase / Quoatation / Tender</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
