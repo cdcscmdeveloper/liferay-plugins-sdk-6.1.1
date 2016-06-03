@@ -452,6 +452,26 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
+			if(null != getManagedBean().getButtonVal() ||getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				if(hasGovernmentUserRole()){
+					//remarks
+					IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+					List<String> docTypes = new ArrayList<String>();
+					List<Long> docIds = new ArrayList<Long>();
+					FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+					docTypes.add(getManagedBean().getFulfilmentOrder().getDocType());
+					docTypes.add(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getDocType());
+					docIds.add(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+					docIds.add(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+					
+					reqDTO.setDocIds(docIds);
+					reqDTO.setDocTypes(docTypes);
+					
+					FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveRemarks(reqDTO);
+					flBB.initializeRemark(getManagedBean().getFulfilmentOrder().getFlWorkflowStatus(), resDTO.getRemarkList());
+				}
+				
+			}
 		}
 		
 	}
