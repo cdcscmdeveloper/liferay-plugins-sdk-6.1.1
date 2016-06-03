@@ -343,9 +343,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), deliveryOrder.getSupplierDoRef()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 						
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null, message+ messageView+"<a href='#' onclick='generateReportURL(\""+deliveryOrder.getDeliveryOrderNo()+ "\");'>"+"Delivery Order"+"</a>"));
-						
-						
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null, message+" "+messageView+"<a href='#' onclick='generateReportURL(\""+deliveryOrder.getDeliveryOrderNo()+ "\");'>"+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER)+"</a>"));
 					}
 				}
 			} else {
