@@ -40,7 +40,7 @@
 					</c:if>
 					<c:if
 						test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' or evaluationBackingBean.managedBean.committeeType eq 'TEC'))}">
-						<p:menuitem value="#{lbl['lbl.sc.summary']}"
+						<p:menuitem value="#{lbl['lbl.sc.summary']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
 							update="@form" />
