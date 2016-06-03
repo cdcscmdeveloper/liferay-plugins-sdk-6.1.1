@@ -11,13 +11,19 @@
 	<ui:define name="resourceSection">
 		<h:panelGroup rendered="#{backingBean.managedBean.supplierUser}">
 			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				if(emptyText.parentNode != null) {
+					emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.mof.acc.appl']}";
+				}
+				
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.mof.reg.appl']}");
+						"#{lbl['lbl.sm.newMofAppln']}");
 				
 				$('#portlet_DirectMofRegistration_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
-					"#{lbl['lbl.sm.mof.acc.appl']}");
+					"#{lbl['lbl.sm.newMofAppln']}");
 			</script>
 		</h:panelGroup>
 	</ui:define>
