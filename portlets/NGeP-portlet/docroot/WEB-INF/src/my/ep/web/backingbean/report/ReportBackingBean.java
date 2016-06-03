@@ -16793,7 +16793,9 @@ public class ReportBackingBean extends
 						.getReportValue()
 						.trim()
 						.equalsIgnoreCase(
-								ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))) {
+								ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL)|| getManagedBean()
+								.getReportValue().trim()
+								.equalsIgnoreCase(ReportConst.SC_S1_LOA_RPT_VAL))) {
 			// if(this.getScProcessRptQuotationNo() != null){
 			match = pattern.matcher(this.getScProcessRptQuotationNo());
 			// }
@@ -16815,7 +16817,9 @@ public class ReportBackingBean extends
 							.getReportValue()
 							.trim()
 							.equalsIgnoreCase(
-									ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))) {
+									ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL) || getManagedBean()
+									.getReportValue().trim()
+									.equalsIgnoreCase(ReportConst.SC_S1_LOA_RPT_VAL))) {
 				retrieveSimpleQuoteNo();
 			} else {
 				getQuotationNumber();
