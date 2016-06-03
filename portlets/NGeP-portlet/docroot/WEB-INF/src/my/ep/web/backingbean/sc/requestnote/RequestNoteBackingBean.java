@@ -244,15 +244,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     try {
     	
     	parseRequestNote(requestNote, outcome);
-	    
-    	// remarks
-    	finalizeRemarks(requestNote.getRemarks());
     	
 	    setUserDetails(requestNote);
 	    requestNoteReqDTO.setRequestNote(requestNote);
 	    FacesScopes face = new FacesScopes();
 	    requestNoteReqDTO.setPmUser(face.getUserSessionBean());
 	    requestNoteReqDTO.setRoleCode(getUserRoleCode());
+	    
+	    // update workflow and remarks
+	 	updateWorkFlowAndRemarks(requestNote);
+	 	
+		// finalize remarks
+    	finalizeRemarks(requestNote.getRemarks());
 	    
 	    // reRecommend
 	    requestNoteReqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
@@ -327,7 +330,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setRequestNote(requestNote);
 		boolean itemSearchBackBtn = Boolean.TRUE;	
 		getManagedBean().setAutoUpdate(true);
-		getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());
+		if(requestNote.getCurrentStatus() != null ){
+			getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());	
+		}
+		
 		getManagedBean().setTitleChecker(true);
 		List<ScRequestNoteDtl>  requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
@@ -1759,26 +1765,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setRequestNote(requestNote);
 
 		if(requestNote.isBrandNew()){
-			ScRNWorkFlowStatus scWorkFlowStatus = null;
-			if(CollectionUtils.isEmpty(requestNote.getWorkFlowStatuses())){
-				// WorkFlow Status 
-				List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
-				scWorkFlowStatus = new ScRNWorkFlowStatus();
-				PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-				getCurrentStatus(currentStatus);
-				scWorkFlowStatus.setCurrent(Boolean.TRUE);
-				scWorkFlowStatus.setPmStatus(currentStatus);
-				scWorkFlowStatus.setRequestNote(requestNote);
-				workFlowStatuses.add(scWorkFlowStatus);
-				requestNote.setWorkFlowStatuses(workFlowStatuses);
-			}
-			if(CollectionUtils.isEmpty(requestNote.getRemarks())){
-				requestNote.setRemarks(initializeRemarks(
-						requestNote,
-						scWorkFlowStatus,
-						requestNote.getRemarks(),
-						ScRequestNoteRemark.class));
-			}
+			// update workflow and remarks
+			updateWorkFlowAndRemarks(requestNote);
 		}
 
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
@@ -2574,15 +2562,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		try {
 			if(scRequestNote.getCurrentStatus() == null){
 				// WorkFlow Status 
-				List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
-				ScRNWorkFlowStatus scWorkFlowStatus = new ScRNWorkFlowStatus();
-				PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-				getCurrentStatus(currentStatus);
-				scWorkFlowStatus.setCurrent(Boolean.TRUE);
-				scWorkFlowStatus.setPmStatus(currentStatus);
-				scWorkFlowStatus.setRequestNote(scRequestNote);
-				workFlowStatuses.add(scWorkFlowStatus);
-				scRequestNote.setWorkFlowStatuses(workFlowStatuses);
+				updateWorkFlowAndRemarks(scRequestNote);
 			}
 
 		} finally {
@@ -3580,6 +3560,44 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			mofNo = mofAccountResDTO.getMofAccount().getMofNo();
 		}
 		return mofNo;
+	}
+	
+	/**
+	 * Update work flow and remarks.
+	 *
+	 * @param requestNote the request note
+	 */
+	private void updateWorkFlowAndRemarks(ScRequestNote requestNote){
+		// remarks and workflow status
+		ScRNWorkFlowStatus scWorkFlowStatus = null;
+		if(CollectionUtils.isEmpty(requestNote.getWorkFlowStatuses())){
+			List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
+			scWorkFlowStatus = new ScRNWorkFlowStatus();
+			PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+			getCurrentStatus(currentStatus);
+			scWorkFlowStatus.setCurrent(Boolean.TRUE);
+			scWorkFlowStatus.setPmStatus(currentStatus);
+			scWorkFlowStatus.setRequestNote(requestNote);
+			workFlowStatuses.add(scWorkFlowStatus);
+			requestNote.setWorkFlowStatuses(workFlowStatuses);
+
+		} else{
+			scWorkFlowStatus = requestNote.getWorkFlowStatuses().get(0);
+		}
+		
+		if(CollectionUtils.isEmpty(requestNote.getRemarks())){
+			requestNote.setRemarks(initializeRemarks(
+					requestNote,
+					scWorkFlowStatus,
+					requestNote.getRemarks(),
+					ScRequestNoteRemark.class));
+		} else{
+			for (ScRequestNoteRemark scSQRemark : requestNote.getRemarks()) {
+				if(null == scSQRemark.getScWorkFlowStatus()){
+					scSQRemark.setScWorkFlowStatus(scWorkFlowStatus);
+				}
+			}
+		}
 	}
 	
 	/**
