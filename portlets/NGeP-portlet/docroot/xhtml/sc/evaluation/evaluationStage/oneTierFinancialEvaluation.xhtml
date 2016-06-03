@@ -23,7 +23,7 @@
 
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.financial.summary']}"
+						<p:menuitem value="#{lbl['lbl.sc.eva.financial.summary']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveOneTierFinancialSupplierSummary}"
 							update="@form" />
@@ -33,7 +33,7 @@
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
 
 
-						<p:menuitem value="#{lbl['lbl.sc.eva.recommendation.summary']}"
+						<p:menuitem value="#{lbl['lbl.sc.eva.recommendation.summary']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveOneTierRecommendationSupplierSummary}"
 							update="@form" />
