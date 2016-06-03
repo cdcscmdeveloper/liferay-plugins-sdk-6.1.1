@@ -22,7 +22,7 @@
 <cc:implementation>	
 	<c:choose>
 		<c:when test="#{!empty cc.attrs.header}">
-			<p:panel id="#{cc.id}Pnl" header="#{cc.attrs.header}" toggleable="true">
+			<p:panel header="#{cc.attrs.header}" toggleable="true">
 				<ui:include src="/xhtml/sc/common/remarkAndAttachmentContent.xhtml" />
 			</p:panel>
 		</c:when>
