@@ -1918,6 +1918,8 @@ public class QTDetailBackingBean extends
 				
 			} else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
 					.equalsIgnoreCase(taskName)) {
+				validateFCSecretaryDtl(qt.getFinalizationCommitte(), qt.getFinalizationSecratery());
+				
 				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								ICommitteSO.class);
@@ -3341,6 +3343,33 @@ public class QTDetailBackingBean extends
 			getManagedBean().getQt().setFinalizationSecratery(new PmUser());
 		}
 	}
+	
+	/**
+	 * Change FC secretary user dropdown.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	public void changeFCSecretaryUser(AjaxBehaviorEvent event) {
+		debugLogger("changeFCSecretaryUser");
+		Long userId = (Long) event.getComponent().getAttributes().get("value");
+		if (userId != null) {
+			IUserSO userSO = null;
+			try {
+				userSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				
+				UserReqDTO resDTO = new UserReqDTO();
+				resDTO.setUserId(userId);
+				PmUser fcSecretaryUser = userSO.retrieveUserByUserId(resDTO)
+						.getPmUser();
+				
+				getManagedBean().getQt().setFinalizationSecratery(fcSecretaryUser);
+			} finally {
+				userSO = null;
+			}
+		}
+	}
 
 	/**
 	 * Retrieve pm user secratry dtl.
@@ -4115,31 +4144,13 @@ public class QTDetailBackingBean extends
 
 				List<ScQtApproverSettings> approverSettings = approval
 						.getApproverSettings();
+				PmParameter fcCommTypeCode = null;
+				PmUser approver = null;
 				if (null != approverSettings && !approverSettings.isEmpty()) {
-					PmParameter fcCommTypeCode = approverSettings.get(0).getCommitteeType();
-					if (fcCommTypeCode == null || fcCommTypeCode.getParameterId() == null) {
-						throw new EpException(
-								MessageConst.ERROR_100022,
-								new String[] { ResourceBundleUtils
-										.getMessage(
-												"lbl.sc.finalization.committee",
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes()
-														.getUserLocale()) });
-					}
-
-					PmUser approver = approverSettings.get(0).getPmUser();
-					if (approver == null || approver.getUserId() == null) {
-						throw new EpException(
-								MessageConst.ERROR_100022,
-								new String[] { ResourceBundleUtils
-										.getMessage(
-												"lbl.sc.secretary.name",
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes()
-														.getUserLocale()) });
-					}
+					fcCommTypeCode = approverSettings.get(0).getCommitteeType();
+					approver = approverSettings.get(0).getPmUser();
 				}
+				validateFCSecretaryDtl(fcCommTypeCode, approver);
 
 				List<ScQtApproval> scQtApprovals = new ArrayList<ScQtApproval>();
 
@@ -4222,6 +4233,30 @@ public class QTDetailBackingBean extends
 			detailSO = null;
 		}
 
+	}
+	
+	private void validateFCSecretaryDtl(PmParameter fcCommTypeCode, PmUser fcSecretary) {
+		if (fcCommTypeCode == null || fcCommTypeCode.getParameterId() == null) {
+			throw new EpException(
+					MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils
+							.getMessage(
+									"lbl.sc.finalization.committee",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes()
+											.getUserLocale()) });
+		}
+
+		if (fcSecretary == null || fcSecretary.getUserId() == null) {
+			throw new EpException(
+					MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils
+							.getMessage(
+									"lbl.sc.secretary.name",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes()
+											.getUserLocale()) });
+		}
 	}
 
 	/**
