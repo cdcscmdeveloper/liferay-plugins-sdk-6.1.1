@@ -91,9 +91,9 @@
 							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}"
 								itemValue="2" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
-							<p:ajax event="change"
+							<p:ajax event="change"  
 								listener="#{categoryBackingBean.updateCategoryLevel()}"
-								update="catSearch"/>
+								update="catSearch,searchCategory"/>
 						</p:selectOneMenu></td>
 				</tr>
 
