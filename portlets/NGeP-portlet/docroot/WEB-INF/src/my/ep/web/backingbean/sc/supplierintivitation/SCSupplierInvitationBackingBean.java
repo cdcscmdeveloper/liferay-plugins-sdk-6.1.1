@@ -185,6 +185,12 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 						.append(SourcingConstants.NAV_PAGE_SUPPLIER_RESPONSE_SIMPLE_QUOTE)
 						.append(id);
 
+			} else if(QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(statusId)){
+				url.append(
+						EpPropertiesUtils.getInstance().getProperty(
+								EpPropertiesConst.PORTAL_APPLICATION_URL))
+						.append(SourcingConstants.NAV_PAGE_BSV_REGISTRATION)
+						.append(id);
 			}
 		
 		return url.toString();
