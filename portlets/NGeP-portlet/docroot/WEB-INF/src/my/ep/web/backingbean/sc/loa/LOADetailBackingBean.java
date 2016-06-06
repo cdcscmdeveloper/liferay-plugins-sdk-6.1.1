@@ -631,11 +631,6 @@ public class LOADetailBackingBean extends
 		if(scLoa.getScLoiLoaItems() != null && scLoa.getScLoiLoaItems().size()>0){
 			scLoa.setLoaAmt(calcTotalAmount(scLoa.getScLoiLoaItems()));
 		}
-
-		// calculate performance bond amt for S2
-		if (!ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
-			scLoa = calcBondAmount(scLoa,false);
-		}
 		
         //Supplier overall contract amount
 		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
@@ -730,12 +725,19 @@ public class LOADetailBackingBean extends
 				scLoa.getCurrentStatus(),
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
 
+		
+		checkPerformanceBondMandatory();
+		checkAgreementMandatory();
+
+		// calculate performance bond amt and amount in words for S2
+		if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
+			scLoa = calcBondAmount(scLoa,false);
+		}
+		
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 		}
-		checkPerformanceBondMandatory();
-		checkAgreementMandatory();
 		
 		// clauses title
 		getClausesTitle(null);
