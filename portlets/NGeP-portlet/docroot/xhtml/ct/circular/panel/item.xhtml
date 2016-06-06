@@ -301,12 +301,29 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				                var="panelZoneVar" selectionMode="single" widgetVar="panelZoneObj"
 				                selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
 									    <ac:paginator for="zoneGeneralDataTable" />
-									    <p:ajax event="rowSelect" update=":form:itemSupplier, :form:deleteZoneBtn"   listener="#{panelBackingBean.onRowSelect}"
+									    <p:ajax event="rowSelect" update=":form:itemSupplier"   
 											process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 										<p:ajax event="rowUnselect" process="@this"	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 											update=":form:itemSupplier">
 											<f:setPropertyActionListener value="#{null}" target="#{panelBackingBean.managedBean.selectedPanelZone}" />
 										</p:ajax>
+										
+										  <p:column  style="width:2%" 
+				      	         	           rendered="#{!panelBackingBean.managedBean.viewContract}">
+				      		                  <f:facet name="header">
+							                          <p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.selectAll}">
+								                            <p:ajax partialSubmit="true" process="@this"
+									                            update=":form:zoneGeneralDataTable,:form:deleteZoneBtn" listener="#{panelBackingBean.selectAllPanelZone}" />
+							                         </p:selectBooleanCheckbox>
+						                      </f:facet>
+		           
+		                                    <p:selectBooleanCheckbox 
+		                                          value="#{panelZoneVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                          <p:ajax event="change"
+		           		                                update=":form:zoneGeneralDataTable,:form:deleteZoneBtn" listener="#{panelBackingBean.selectPanelZoneCheckboxSelect}"></p:ajax>
+			                                     </p:selectBooleanCheckbox>     
+				      		                </p:column>
+				
 										<p:column style="width:60%" styleClass="column-align-center" >
 				    	                   <f:facet name="header">
 				    	                       <h:outputText value="#{lbl['lbl.ct.location']}" styleClass="required"/>
@@ -351,7 +368,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 		           <div class="ppRightBtn">
 				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:zoneGeneralDataTable,:form:itemSupplier, :form:deleteZoneBtn"
-				       process="@all" actionListener="#{panelBackingBean.deletePanelZone()}" onclick="delZoneDlg.hide();"/>
+				       process="@all" actionListener="#{panelBackingBean.deleteTableRow('ZONE')}" onclick="delZoneDlg.hide();"/>
 					 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delZoneDlg.hide();" type="button" />
 				   </div>
         </p:confirmDialog>
@@ -365,7 +382,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					<td width="70%"><p:inputText id="zoneName" style="width:300px;" disabled="#{panelBackingBean.managedBean.viewContract}"
 							value="#{panelBackingBean.managedBean.zoneName}"  
 							label="#{lbl['lbl.ct.zone.name']}"
-						    maxlength="20"></p:inputText> 
+						    maxlength="20">
+						    <p:ajax event="change" process="@this" update=":form:okBtnId"></p:ajax>
+						    </p:inputText> 
 					</td>
 				</tr>
 				<tr>
@@ -378,6 +397,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 								var="location"
 								selection="#{panelBackingBean.managedBean.selectedGeneralTreeNodes}"
 								selectionMode="checkbox">
+							<p:ajax event="select" listener="#{panelBackingBean.onNodeSelect}" update=":form:okBtnId"/>
+								<p:ajax event="unselect" listener="#{panelBackingBean.onNodeSelect1}" update=":form:okBtnId"/>
 								<p:treeNode type="state">
 									<h:outputText value="#{location.stateId.stateName}" />
 								</p:treeNode>
@@ -392,14 +413,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		
 		<div align="right">
 		<p:spacer height="10"/>
-		<p:commandButton value="#{lbl['lbl.btn.ok']}"  process="@all"
+		<p:commandButton id="okBtnId" value="#{lbl['lbl.btn.ok']}"  process="@all"
 			update=":form:zonePopupGeneral, :form:itemZone"
+			disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 			rendered="#{!panelBackingBean.managedBean.viewContract}"
 			action="#{panelBackingBean.updateZoneGeneralLocation}">
 		</p:commandButton>
 		
 		<p:commandButton
-			value="#{lbl['lbl.btn.cancel']}" onclick="ZoneGeneral.hide();"  />
+			value="#{lbl['lbl.btn.close']}" onclick="ZoneGeneral.hide();"  />
 	</div>
 	</p:panel>
 	   </p:dialog>
