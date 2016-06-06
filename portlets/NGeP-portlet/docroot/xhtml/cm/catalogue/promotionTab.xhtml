@@ -46,7 +46,7 @@
 			<p:column>
 				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
-					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					
 					</p:calendar>
 
@@ -54,7 +54,7 @@
 			<p:column>
 				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
-					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					
 					</p:calendar>
 
