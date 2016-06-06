@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.supplierintivitation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -18,7 +20,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.sc.supplierintivitation.ISCSupplierInvitationSO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
@@ -26,7 +27,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.supplierintivitation.ScSupplierInvitationReqDTO;
 import my.ep.dto.sc.supplierintivitation.ScSupplierInvitationResDTO;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -36,6 +36,11 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 /**
  * @author Hemanth Katta
@@ -68,6 +73,20 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 			invitationTypesMap.put(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE,
 					getLabelName(SQ_LABEL_KEY));
 			this.getManagedBean().setInvitationTypeMap(invitationTypesMap);
+		}
+		if (this.getManagedBean().getUrlMap() == null) {
+			Map<Long, String> urlMap = new LinkedHashMap<Long, String>();
+			urlMap.put(QTStatusConst.QT_PROPOSAL_PREPARATION,
+					SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL);
+			urlMap.put(QTStatusConst.QT_BRIEFING_SITE_VISIT,
+					SourcingConstants.NAV_PAGE_BSV_REGISTRATION);
+			urlMap.put(QTStatusConst.SF_PENDING_BIDDING,
+					SourcingConstants.NAV_PAGE_ONLINE_BIDDING
+							+ SourcingConstants.NAV_PARAM_BID_SCHEDULE_ID
+							+ SourcingConstants.NAV_PARAM_SEPARATOR);
+			urlMap.put(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE,
+					SourcingConstants.NAV_PAGE_SUPPLIER_RESPONSE_SIMPLE_QUOTE);
+			this.getManagedBean().setUrlMap(urlMap);
 		}
 	}
 	
@@ -151,50 +170,41 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 
 	
 	/**
-	 * Construct the URL based on status id
+	 * Get the URL based on status id
 	 * 
 	 * @param statusId
 	 * @param id
 	 * @return url string
 	 */
-	public String getNavigationUrl(Long statusId,Long id){
+	public void getNavigationUrl(Long statusId,Long id){
 		
-		StringBuilder url = new StringBuilder();
-			if (QTStatusConst.SF_PENDING_BIDDING.equals(statusId)) {
-
-				url.append(
-						EpPropertiesUtils.getInstance().getProperty(
-								EpPropertiesConst.PORTAL_APPLICATION_URL))
-						.append(SourcingConstants.NAV_PAGE_ONLINE_BIDDING)
-						.append(SourcingConstants.NAV_PARAM_BID_SCHEDULE_ID)
-						.append(SourcingConstants.NAV_PARAM_SEPARATOR)
-						.append(id);
-			} else if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(statusId)) {
-
-				url.append(
-						EpPropertiesUtils.getInstance().getProperty(
-								EpPropertiesConst.PORTAL_APPLICATION_URL))
-						.append(SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL)
-						.append(id);
-			} else if (DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE
-					.equals(statusId)) {
-
-				url.append(
-						EpPropertiesUtils.getInstance().getProperty(
-								EpPropertiesConst.PORTAL_APPLICATION_URL))
-						.append(SourcingConstants.NAV_PAGE_SUPPLIER_RESPONSE_SIMPLE_QUOTE)
-						.append(id);
-
-			} else if(QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(statusId)){
-				url.append(
-						EpPropertiesUtils.getInstance().getProperty(
-								EpPropertiesConst.PORTAL_APPLICATION_URL))
-						.append(SourcingConstants.NAV_PAGE_BSV_REGISTRATION)
-						.append(id);
-			}
+		log.info("getNavigationUrl");
 		
-		return url.toString();
-		
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
+				.getRequestScope(WebKeys.THEME_DISPLAY);
+		String commonUrl = null;
+		try {
+			String url = this.getManagedBean().getUrlMap().get(statusId);
+			commonUrl = themeDisplay.getURLCurrent().substring(
+					0,
+					themeDisplay.getURLCurrent().indexOf(
+							themeDisplay.getLayout().getGroup()
+									.getFriendlyURL())
+							+ themeDisplay.getLayout().getGroup()
+									.getFriendlyURL().length());
+
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			externalContext.redirect(commonUrl + "/" + url+id);
+		} catch (IOException e) {
+			log.error(e);
+		} catch (PortalException e) {
+			log.error(e);
+		} catch (SystemException e) {
+			log.error(e);
+		}
+			
 	}
 	
 	/**

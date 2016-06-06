@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 <ui:define name="contentSection">
-
+	
 		<table>
 			<TR>
 				<td style="width: 20%; white-space: nowrap;"><p:outputLabel
@@ -32,11 +32,17 @@
 			 style="width:100%" var="supplierInviteList" rows="10" rowIndexVar="rowIndex">
 			<ac:paginator for="scSuppInviteTblId" />
 			
+			<ui:param name="statusId" value="#{supplierInviteList[4]}"></ui:param>
+	        <ui:param name="labelVlaue" value="#{scSupplirInvitationdBB.labelValue(statusId)}" />
+	        
 			<p:column headerText="#{lbl['lbl.sc.no']}" style="text-align:center">
 				<h:outputText value="#{rowIndex+1}." />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.title']}" style="text-align:center">
+			<p:commandLink
+					action="#{scSupplirInvitationdBB.getNavigationUrl(statusId,supplierInviteList[0])}">
 				<h:outputText value="#{supplierInviteList[1]}" style="float:left;"/>
+			</p:commandLink>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.start.date']}" style="text-align:center">
@@ -52,12 +58,7 @@
 			</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.invitation.type']}" style="text-align:center">
-			<ui:param name="statusId" value="#{supplierInviteList[4]}"></ui:param>
-			<ui:param name="labelVlaue" value="#{scSupplirInvitationdBB.labelValue(statusId)}" />
-				<h:outputLink
-					value="#{scSupplirInvitationdBB.getNavigationUrl(statusId,supplierInviteList[0])}">
-					<h:outputText value="#{labelVlaue}" />
-				</h:outputLink>
+			<h:outputText value="#{labelVlaue}" />
 		</p:column>
 
 	</p:dataTable>
