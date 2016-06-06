@@ -1,26 +1,41 @@
 package my.ep.web.backingbean.sc.bidding;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.sc.bidding.IBiddingSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.BidStatusConst;
+import my.ep.constant.sc.SourcingConstants;
+import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.bidding.BiddingListManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Bidding List Backing Bean
@@ -107,11 +122,83 @@ public class BiddingListBackingBean extends
 		return items;
 	}
 
-	
-	public String navigateToBidManagementAction(ScBidSchedule scheduledBid){
-		BiddingBackingBean biddingBB = new BiddingBackingBean();
-		biddingBB.getManagedBean().setScheduledBid(scheduledBid);
-		biddingBB.bidManagementAction(scheduledBid);
-		return "bidManagementForPTJPortlet.xhtml?faces-redirect=true";
+	public void navigateToBidManagementAction(ScBidSchedule scheduledBid)
+			throws PortalException, SystemException, IOException {
+		this.getManagedBean().setSelectedBidSchedule(scheduledBid);
+		 navigateUsingExternalContext(scheduledBid);
+		//return getNavigationURL(scheduledBid);
+	}
+
+	private String getNavigationURL(ScBidSchedule scheduledBid) {
+		StringBuilder url = new StringBuilder();
+
+		url.append(
+				EpPropertiesUtils.getInstance().getProperty(
+						EpPropertiesConst.PORTAL_APPLICATION_URL))
+				.append(SourcingConstants.NAV_PAGE_VIEW_BIDDING)
+				.append(SourcingConstants.NAV_PARAM_BID_SCHEDULE_ID)
+				.append(SourcingConstants.NAV_PARAM_SEPARATOR)
+				.append(scheduledBid.getBidScheduleId());
+		return url.toString();
+	}
+
+	private void navigateUsingExternalContext(ScBidSchedule scheduledBid)
+			throws PortalException, SystemException, IOException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay) new FacesScopes()
+				.getRequestScope(WebKeys.THEME_DISPLAY);
+		String commonUrl = themeDisplay.getURLCurrent().substring(
+				0,
+				themeDisplay.getURLCurrent().indexOf(
+						themeDisplay.getLayout().getGroup().getFriendlyURL())
+						+ themeDisplay.getLayout().getGroup().getFriendlyURL()
+								.length());
+
+		System.out.println("$$$$$$$$$$$ commonUrl" + commonUrl);
+
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		externalContext.redirect(commonUrl + "/"
+				+ SourcingConstants.NAV_PAGE_VIEW_BIDDING
+				+ SourcingConstants.NAV_PARAM_BID_SCHEDULE_ID
+				+ SourcingConstants.NAV_PARAM_SEPARATOR
+				+ scheduledBid.getBidScheduleId());
+	}
+
+	public void viewBiddingPreRender() {
+		IBiddingSO biddingSO = null;
+		try {
+			HttpServletRequest servletRequest = PortalUtil
+					.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil
+					.getOriginalServletRequest(servletRequest);
+			String bidScheduleId = originalServletRequest
+					.getParameter(SourcingConstants.NAV_PARAM_BID_SCHEDULE_ID);
+			BiddingBackingBean biddingBB = new BiddingBackingBean();
+			ScBidSchedule selecteedBidSchedule = null;
+			if (this.getManagedBean().getSelectedBidSchedule() != null) {
+				selecteedBidSchedule = this.getManagedBean()
+						.getSelectedBidSchedule();
+
+			} else {
+				biddingSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+				BiddingReqDTO reqDTO = new BiddingReqDTO();
+				reqDTO.setBidScheduleId(Long.parseLong(bidScheduleId));
+				selecteedBidSchedule = biddingSO
+						.retrieveBidScheduleById(reqDTO).getScBidSchedule();
+			}
+			biddingBB.getManagedBean().setScheduledBid(selecteedBidSchedule);
+			biddingBB.bidManagementAction(selecteedBidSchedule);
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"bidManagementForPTJPortlet.xhtml?faces-redirect=true");
+
+		} finally {
+			biddingSO = null;
+		}
 	}
 }
