@@ -52,6 +52,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 	private static final String SQ_LABEL_KEY = "lbl.sc.sq";
 	private static final String QT_LABEL_KEY = "lbl.sc.quotation.tender";
 	private static final String ALL_LABEL_KEY = "lbl.txt.all";
+	private static final String BSV_LABEL_KEY = "lbl.sc.qt.briefing.sv";
 	
 	@PostConstruct
 	private void init() {
@@ -61,8 +62,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 			Map<Long, String> invitationTypesMap = new LinkedHashMap<Long, String>();
 			invitationTypesMap.put(1L, getLabelName(ALL_LABEL_KEY));
 			invitationTypesMap.put(QTStatusConst.QT_PROPOSAL_PREPARATION,getLabelName(QT_LABEL_KEY));
-			invitationTypesMap.put(QTStatusConst.QT_BRIEFING_SITE_VISIT,
-					getStatusDescById(QTStatusConst.QT_BRIEFING_SITE_VISIT));
+			invitationTypesMap.put(QTStatusConst.QT_BRIEFING_SITE_VISIT,getLabelName(BSV_LABEL_KEY));
 			invitationTypesMap.put(QTStatusConst.SF_PENDING_BIDDING,
 					getLabelName(BIDDING_LABEL_KEY));
 			invitationTypesMap.put(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE,
@@ -214,7 +214,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				.equals(statusId)) {
 			labelValue = getLabelName(SQ_LABEL_KEY);
 		} else if (QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(statusId)) {
-			labelValue = getStatusDescById(statusId);
+			labelValue = getLabelName(BSV_LABEL_KEY);;
 		}
 		return labelValue;
 	}
