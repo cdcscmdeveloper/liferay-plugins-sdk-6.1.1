@@ -10220,6 +10220,7 @@ public class SpecificationBackingBean extends
 					}
 				}
 				specReqDTO.setScQt(scQt);
+				specReqDTO.setZonesDeleteOrSave(this.getManagedBean().isZoneSpecUpdate());
 				specSO.validateSpecCommitteGeneralInfo(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
