@@ -198,7 +198,7 @@
 				<h:outputLabel value="*" styleClass="mandatory" />
 				<h:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" />
 				<p:password binding="#{pin}" id="password" />
-				<p:commandButton id="signButtonId" value="Sign" onstart="DigiSign();" />
+				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="DigiSign();" />
 				
 			</h:panelGrid>
 			<c:if test="#{not empty cc.getValueExpression('postCancelAction')} ">
