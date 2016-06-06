@@ -49,7 +49,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{price.startDate}" showOn="button"
+				<p:calendar value="#{price.startDate}" showOn="button" navigator="true"
 					mindate="#{price.parentPrice.startDate}"
 					maxdate="#{price.parentPrice.endDate}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
@@ -72,7 +72,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{price.endDate}" showOn="button"
+				<p:calendar value="#{price.endDate}" showOn="button" navigator="true"
 					mindate="#{price.parentPrice.startDate}"
 					maxdate="#{price.parentPrice.endDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
