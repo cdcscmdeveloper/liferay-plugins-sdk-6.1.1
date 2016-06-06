@@ -43,6 +43,7 @@ public class BiddingListManagedBean extends BaseManagedBean {
 	private List<Long> statusIdList;
 	private Date searchBiddingDateTo;
 	private List<ScBidSchedule> scheduledBidList;
+	private ScBidSchedule selectedBidSchedule;
 
 	/**
 	 * Default Constructor
@@ -58,7 +59,6 @@ public class BiddingListManagedBean extends BaseManagedBean {
 	public void searchForScheduledBids() {
 		searchDataModel.reloadData();
 	}
-
 
 	/**
 	 * @return the scheduledBidList
@@ -111,14 +111,12 @@ public class BiddingListManagedBean extends BaseManagedBean {
 	public Date getSearchBiddingDateTo() {
 		return searchBiddingDateTo;
 	}
-	
-	
 
 	/**
 	 * @return the statusIdList
 	 */
 	public List<Long> getStatusIdList() {
-		if(this.statusIdList == null || this.statusIdList.size() != 0){
+		if (this.statusIdList == null || this.statusIdList.size() != 0) {
 			this.statusIdList = new ArrayList<Long>();
 			this.statusIdList.add(BidStatusConst.BID_PENDING_BIDDING);
 			this.statusIdList.add(BidStatusConst.BID_IN_PROGRESS);
@@ -128,7 +126,8 @@ public class BiddingListManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param statusIdList the statusIdList to set
+	 * @param statusIdList
+	 *            the statusIdList to set
 	 */
 	public void setStatusIdList(List<Long> statusIdList) {
 		this.statusIdList = statusIdList;
@@ -140,6 +139,21 @@ public class BiddingListManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchBiddingDateTo(Date searchBiddingDateTo) {
 		this.searchBiddingDateTo = searchBiddingDateTo;
+	}
+	
+
+	/**
+	 * @return the selectedBidSchedule
+	 */
+	public ScBidSchedule getSelectedBidSchedule() {
+		return selectedBidSchedule;
+	}
+
+	/**
+	 * @param selectedBidSchedule the selectedBidSchedule to set
+	 */
+	public void setSelectedBidSchedule(ScBidSchedule selectedBidSchedule) {
+		this.selectedBidSchedule = selectedBidSchedule;
 	}
 
 	/**
@@ -179,7 +193,7 @@ public class BiddingListManagedBean extends BaseManagedBean {
 						ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 
 				// should be like bid start from today to bid end to date
-				if ( getSearchBiddingDateTo() != null) {
+				if (getSearchBiddingDateTo() != null) {
 
 					SearchFilterBean bean = new SearchFilterBean();
 					bean.setSearchField("startDate");
@@ -190,11 +204,12 @@ public class BiddingListManagedBean extends BaseManagedBean {
 							getSearchBiddingDateTo());
 					bean.setSearchValue(betweenVal);
 					bidSchSearchBean.getDataFilterBeans().add(bean);
-				}else{
+				} else {
 					bidSchSearchBean.getDataFilterBeans().add(
 							new SearchFilterBean("startDate",
-									SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-									DateUtils.getCurrentDateWithoutTime()));
+									SearchOperator.OPERATOR_GREATER_EQUAL
+											.value(), DateUtils
+											.getCurrentDateWithoutTime()));
 				}
 
 				if (selectedStatusDesc != null && !selectedStatusDesc.equals(0)) {
@@ -202,7 +217,8 @@ public class BiddingListManagedBean extends BaseManagedBean {
 							new SearchFilterBean("pmStatus.statusId",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getSelectedStatusDesc()));
-				}else if(getStatusIdList() != null && !getStatusIdList().isEmpty()){
+				} else if (getStatusIdList() != null
+						&& !getStatusIdList().isEmpty()) {
 					bidSchSearchBean.getDataFilterBeans().add(
 							new SearchFilterBean("pmStatus.statusId",
 									SearchOperator.OPERATOR_IN.value(),
