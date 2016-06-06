@@ -210,7 +210,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || 
 				(getManagedBean().getProcessName()!=null && getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME))){	
-				reqDTO.setPmUser(getManagedBean().getPmUser());
 				resDTO = receivedNoteSO.receiveNoteModification(reqDTO);
 			} else {
 				if(getManagedBean().getPmDigiSign() !=null){
