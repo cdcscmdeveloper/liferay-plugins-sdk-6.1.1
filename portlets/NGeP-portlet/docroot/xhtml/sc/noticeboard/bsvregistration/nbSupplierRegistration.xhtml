@@ -12,6 +12,9 @@
 	<ui:define name="contentSection">
 	<!-- 	<ac:title value="#{lbl['lbl.sc.notice.board.self.registration']}" /> -->
 		<div class="clear"></div>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:messages id="supplierReg" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" />
 		<h:panelGrid style="width:100%;"
@@ -28,7 +31,8 @@
 						disabled="#{!noticeBoardBackingBean.managedBean.validMofNo}"
 						action="#{noticeBoardBackingBean.registerSupplierForBSV}"
 						style="float:right;" process="@all" update="@all"
-						rendered="#{noticeBoardBackingBean.managedBean.renderRegisterBtn}" />
+						rendered="#{noticeBoardBackingBean.managedBean.renderRegisterBtn}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				</h:panelGroup>
 				</p:column>
 			</p:row>
