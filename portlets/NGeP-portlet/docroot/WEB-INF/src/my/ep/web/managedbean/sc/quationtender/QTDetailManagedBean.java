@@ -49,6 +49,7 @@ import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -1336,6 +1337,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The supplier address. */
 	private SmAddress supplierAddress;
+	
+	/** The sourcing supplier address */
+	private ScAddress scSupplierAddress;
 
 	/** The supplier contact. */
 	private String supplierContact;
@@ -5315,7 +5319,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSupplierAddress(SmAddress supplierAddress) {
 		this.supplierAddress = supplierAddress;
 	}
+	
+	/**
+	 * @return the scSupplierAddress
+	 */
+	public ScAddress getScSupplierAddress() {
+		return scSupplierAddress;
+	}
 
+	/**
+	 * @param scSupplierAddress the scSupplierAddress to set
+	 */
+	public void setScSupplierAddress(ScAddress scSupplierAddress) {
+		this.scSupplierAddress = scSupplierAddress;
+	}
+	
 	/**
 	 * Gets the sm personnels list.
 	 * 
