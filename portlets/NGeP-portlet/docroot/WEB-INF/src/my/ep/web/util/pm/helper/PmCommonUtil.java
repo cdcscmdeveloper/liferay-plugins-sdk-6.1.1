@@ -1841,6 +1841,16 @@ public class PmCommonUtil {
 								.getUserLocale());
 	}
 	
+	public static PmCountry retrievePmCountryById(Long countryId) {
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryId(countryId);
+		CountryResDTO resDTO = reqSO.retrieveCountryById(reqDTO);
+
+		return resDTO.getPmCountry();
+	}
+	
 	
 	
 }
