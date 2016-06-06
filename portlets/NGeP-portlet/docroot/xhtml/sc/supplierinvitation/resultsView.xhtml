@@ -54,22 +54,10 @@
 		<p:column headerText="#{lbl['lbl.sc.invitation.type']}" style="text-align:center">
 			<ui:param name="statusId" value="#{supplierInviteList[4]}"></ui:param>
 			<ui:param name="labelVlaue" value="#{scSupplirInvitationdBB.labelValue(statusId)}" />
-				
-			<ui:fragment
-				rendered="#{QTStatusConst.QT_BRIEFING_SITE_VISIT eq statusId}">
-				<p:commandLink action="#{noticeBoardBackingBean.preRenderBsvRegistration}"
-					value="#{labelVlaue}" process="@this" partialSubmit="true">
-					<f:param name="qtId" value="#{supplierInviteList[0]}"></f:param>
-				</p:commandLink>
-			</ui:fragment>
-			<ui:fragment
-				rendered="#{QTStatusConst.QT_BRIEFING_SITE_VISIT ne statusId}">
 				<h:outputLink
 					value="#{scSupplirInvitationdBB.getNavigationUrl(statusId,supplierInviteList[0])}">
 					<h:outputText value="#{labelVlaue}" />
 				</h:outputLink>
-			</ui:fragment>
-
 		</p:column>
 
 	</p:dataTable>
