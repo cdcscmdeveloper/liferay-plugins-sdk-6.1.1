@@ -35,7 +35,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.SelectEvent;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DualListModel;
@@ -1095,6 +1096,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	public void addPanelSupplier(List<SmSupplier> supplierList) { //101
 		log.info("PanelBackingBean.addPanelSupplier()");
+		getManagedBean().setButtonHideActiveDel(true);
+		getManagedBean().setButtonHidePanelItemDel(true);
 		try {
 			if (supplierList != null) {
 				List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
@@ -1305,7 +1308,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public List<SelectItem> populateBankAccountList(SmSupplier smSupplier, int index) {		
 		 List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
-		 populateBankAccountList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+		 List<SelectItem> addAccountList = new ArrayList<SelectItem>();
+		 int counter = 0;
 		 ISupplierSearchSO supplierSearchSO = null;
 	     SupplierSearchReqDTO supplierReqDTO = null;
 	     SupplierSearchResDTO supplierResDTO = null;
@@ -1316,6 +1320,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	     if (supplierResDTO.getSmSupplierBankList() != null) {
 		    for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
 			      if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			    	     counter++;
 			    	     String account = smSupplierBank.getAccountNo();
 					     if (smSupplierBank.getPmFinancialOrg() != null 
 							   && smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
@@ -1328,7 +1333,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			       }
 		      }
 	     }
-		return populateBankAccountList;
+	     
+	     if(counter >= 2 || counter == 0){
+	    	 addAccountList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));	
+	     }
+	     addAccountList.addAll(populateBankAccountList);
+		return addAccountList;
 	}
 	
 	/**
@@ -1502,7 +1512,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	public void deletePanelZone(){
 		this.getManagedBean().getSelectedPanelItems().getCtPanelZones().remove(getManagedBean().getSelectedPanelZone());
-		this.getManagedBean().setSelectedPanelZone(null);
+		this.getManagedBean().setSelectedPanelZone(null); 
 		getManagedBean().setButtonHideActiveDel(true);
 	}
 
@@ -1874,7 +1884,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void showGeneralZoneLocationPopup() {
 
 		try{
-			
+			getManagedBean().setButtonHideActiveDel(true);
 			Long locationLevel = this.getManagedBean().getSelectedPanelItems().getLocationLevelId().getParameterId();
 
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
@@ -1949,6 +1959,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	  **/
 	public void updateZoneGeneralLocation() {
 		
+		getManagedBean().setButtonHideActiveDel(true);
 		if(getManagedBean().getZoneName() == null || getManagedBean().getZoneName() == ""){
 			throw new EpException(MessageConst.ERROR_755002);
 		}
@@ -2027,8 +2038,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		this.getManagedBean().setIndex(i);
 		this.getManagedBean().setEditZone(true);
 		this.getManagedBean().setZoneName(zoneLocation.getName());
-
-		
+        getManagedBean().setButtonHideActiveDel(true);
 	}
 	
 	/**
@@ -2733,7 +2743,19 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
    		  					            }
    						        }
     					  } getManagedBean().setSelectAll(false);
+    			
+    			 } else if(tableType.equalsIgnoreCase("ZONE")){
+    				     Iterator<CtPanelZone> zoneIterator = getManagedBean().getSelectedPanelItems().getCtPanelZones().iterator();
+  				         while(zoneIterator.hasNext()){
+  				        	   CtPanelZone  ctPanelZones = zoneIterator.next();
+  					           if(ctPanelZones.isSelectedCheckBox()){
+  					        	    zoneIterator.remove();
+  					          }
+  				        } 
+  				       getManagedBean().setSelectedPanelZone(null);
+  				       getManagedBean().setSelectAll(false);
     			 }
+    			 
     			 getManagedBean().setButtonHideActiveDel(true);
     			 getManagedBean().setButtonHidePanelItemDel(true);
     		} catch (Exception e) {
@@ -2792,6 +2814,39 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
         		}	
          }
     	
+    	public void selectAllPanelZone(AjaxBehaviorEvent e) {
+    		
+    			        for (CtPanelZone ctPanelZones : getManagedBean().getSelectedPanelItems().getCtPanelZones()) {
+    			          if (getManagedBean().isSelectAll()) {
+    			        	  ctPanelZones.setSelectedCheckBox(true);
+    		               }else {
+    		            	   ctPanelZones.setSelectedCheckBox(false);
+    		              }
+    	           }
+  
+    	 if((boolean) e.getComponent().getAttributes().get("value")){
+    		 getManagedBean().setButtonHideActiveDel(false);
+    	 }else{
+    		 getManagedBean().setButtonHideActiveDel(true);
+    	 }		
+    }
+	
+	public void selectPanelZoneCheckboxSelect(AjaxBehaviorEvent e){
+    	getManagedBean().setSelectAll(false);
+      	    for (CtPanelZone ctPanelZones : getManagedBean().getSelectedPanelItems().getCtPanelZones()) {
+        		if(ctPanelZones.isSelectedCheckBox()){
+        			getManagedBean().setButtonHideActiveDel(false);
+        			return;
+        		}
+        	}
+    	
+		  if((boolean) e.getComponent().getAttributes().get("value")){
+			  getManagedBean().setButtonHideActiveDel(false);
+    		}else{
+    			getManagedBean().setButtonHideActiveDel(true);
+    		}	
+     }
+    	
     	public void selectAllDeleteCheckboxSelect(AjaxBehaviorEvent e){
     		getManagedBean().setSelectAll(false);
         	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelCircularReq().getCtCancelCircularList()){
@@ -2807,10 +2862,6 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
     		}	
     	}
 	public void onToggleSelect(ToggleSelectEvent event) {
-		getManagedBean().setButtonHideActiveDel(false);
-	}
-	
-	public void onRowSelect(SelectEvent event) {
 		getManagedBean().setButtonHideActiveDel(false);
 	}
  
@@ -2838,4 +2889,19 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
 			getManagedBean().getCircularVer().setPid(false);
 		}
     }
+    
+    public void onNodeSelect(NodeSelectEvent event) {
+        getManagedBean().setButtonHideActiveDel(false);
+    }  
+    
+    public void onNodeSelect1(NodeUnselectEvent event) {
+    	getManagedBean().setButtonHideActiveDel(true);
+        if (getManagedBean().getSelectedGeneralTreeNodes().length > 0) {
+				getManagedBean().setButtonHideActiveDel(false);
+		}
+    	
+        TreeNode treeNode = event.getTreeNode();
+        TreeNode parentTreeNode = treeNode.getParent();
+        parentTreeNode.setSelected(false);
+    }  
 }
