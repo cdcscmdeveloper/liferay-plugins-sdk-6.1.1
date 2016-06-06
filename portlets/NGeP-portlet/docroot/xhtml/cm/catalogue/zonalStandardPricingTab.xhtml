@@ -64,7 +64,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{standard.startDate}" showOn="button" size="10"
+				<p:calendar value="#{standard.startDate}" showOn="button" size="10" navigator="true"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					disabled="#{standard.standardDisabled}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
@@ -81,7 +81,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{standard.endDate}" showOn="button" size="10"
+				<p:calendar value="#{standard.endDate}" showOn="button" size="10" navigator="true"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					disabled="#{standard.standardDisabled}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
