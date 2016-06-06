@@ -34,6 +34,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td style="width:35%;"><p:selectOneMenu id="orgState" required="true"
 						label="#{lbl['lbl.pm.address.state']}"
+						styleClass="ppDropDownWidthM"
 						value="#{organisationBackingBean.managedBean.selectedStateId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -72,7 +73,7 @@
 				<td><p:selectOneMenu id="orgDivision"
 						disabled="#{not organisationBackingBean.managedBean.officeAddress.pmState.adoptDivision}"
 						required="#{organisationBackingBean.managedBean.officeAddress.pmState.adoptDivision}"
-						styleClass="ppDropDownWidthL"
+						styleClass="ppDropDownWidthM"
 						label="#{lbl['lbl.pm.address.division']}"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmDivision.divisionId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -96,6 +97,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="orgDistrict" required="true"
 						label="#{lbl['lbl.pm.address.district']}"
+						styleClass="ppDropDownWidthM"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmDistrict.districtId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -119,6 +121,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="orgCity" required="true"						
 						label="#{lbl['lbl.pm.address.city']}"
+						styleClass="ppDropDownWidthM"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmCity.cityId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />

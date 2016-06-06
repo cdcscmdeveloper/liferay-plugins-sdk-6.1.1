@@ -76,6 +76,10 @@
 			</tr>
 		</table>
 	</p:panel>
+	<ui:fragment
+		rendered="#{ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType or organisationBackingBean.managedBean.orgType eq 'FJA' or organisationBackingBean.managedBean.orgType eq 'FPP'}">
+		<ui:include src="/xhtml/pm/organisation/orgControlProfile.xhtml" />
+	</ui:fragment>
 	<p:panel header="#{lbl['lbl.pm.header.general.org.profile']}"
 		id="orgproflieId" styleClass="sampleDetails" toggleable="true">
 		<table>
@@ -114,18 +118,19 @@
 				
 			</tr>
 			<tr>
-				<td><h:outputLabel
+				<td rowspan="2" style="vertical-align:top;"><h:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgName']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				
-						<td><p:inputText id="orgName" 
+						<td rowspan="2"><p:inputTextarea  id="orgName" 
+								styleClass="ppDisplayTextL"
 								disabled="#{(ParameterConst.orgTypeMinistry eq organisationBackingBean.managedBean.orgType and not organisationBackingBean.managedBean.orgProfile.brandNew) 
 										or ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType 
 										or ParameterConst.orgTypeJabatan eq organisationBackingBean.managedBean.orgType 
 										or ParameterConst.orgTypePegawaiPengawal eq organisationBackingBean.managedBean.orgType}"
 								label="#{lbl['lbl.pm.organisation.orgName']}"
 								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}"
-								required="#{!empty param['disableValidation']}" size="35" styleClass="ppDisplayTextL"
+								required="#{!empty param['disableValidation']}" rows="3" cols="36"
 								maxlength="255" /></td>
 						<td><p:message id="orgNameMsg" for="orgName" display="icon" /></td>	
 						
@@ -167,6 +172,16 @@
 			<ui:fragment
 				rendered="#{ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType }">
 			<tr>
+				<td colspan="3">
+				</td>
+				<td><h:outputLabel
+							value="#{lbl['lbl.pm.org.bpk']}" /></td>
+				<td><p:selectBooleanCheckbox id="isBpkChkBoxId"
+							value="#{organisationBackingBean.managedBean.orgProfile.bpk}">
+					<p:ajax update="@form" listener="#{organisationBackingBean.bpkChangeListener}"/>
+				</p:selectBooleanCheckbox></td>
+			</tr>
+			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.reg.no']}" /> </td>
 				<td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
@@ -182,19 +197,31 @@
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.gst.reg.no']}"
 						value="#{lbl['lbl.pm.org.gst.na']}"
-						size="45" styleClass="ppDisplayTextL"
+						size="35" styleClass="ppDisplayTextL"
 						/>
-				</ui:fragment>				
+				</ui:fragment>
+				<ac:iconTooltip value="#{lbl['lbl.pm.org.gst.reg.no.tooltip']}" />	
 				</td>
-				<td><p:message id="gstRegNoIdMsg" for="gstRegNoId" display="icon" /></td>
-				<td><ac:iconTooltip value="#{lbl['lbl.pm.org.gst.reg.no.tooltip']}" /></td>
+				<td><p:message id="gstRegNoIdMsg" for="gstRegNoId" display="icon" />	
+				</td>
+				<td></td>
 				<td width="2%"></td>
 				<td><h:outputLabel
-							value="#{lbl['lbl.pm.org.bpk']}" /></td>
-				<td><p:selectBooleanCheckbox id="isBpkChkBoxId"
-							value="#{organisationBackingBean.managedBean.orgProfile.bpk}">
-					<p:ajax update="@form" listener="#{organisationBackingBean.bpkChangeListener}"/>
-				</p:selectBooleanCheckbox></td>
+						value="#{lbl['lbl.pm.org.registration.zone']}" /> </td>
+				<td>
+					<p:selectOneMenu id="somRegZoneId" disabled="#{not organisationBackingBean.managedBean.orgProfile.bpk}"
+							 label="#{lbl['lbl.pm.org.registration.zone']}"
+							 required="true"
+							 styleClass="ppDropDownWidthM"
+							 value="#{organisationBackingBean.managedBean.orgProfile.pmZone.zoneId}">
+							 <f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+						   <f:selectItems var="zone"
+								value="#{organisationBackingBean.managedBean.zoneList}"
+								itemLabel="#{zone.zoneName}" itemValue="#{zone.zoneId}" />
+
+					</p:selectOneMenu>	
+				</td>
 			
 			</tr>
 			<tr>
@@ -218,6 +245,7 @@
 						label="#{lbl['lbl.pm.org.gst.eff.date']}"
 						value=" "
 						size="35" 
+						styleClass="ppDisplayTextL"
 						/>
 				</ui:fragment>
 				<ac:iconTooltip value="#{lbl['lbl.pm.org.gst.eff.date.tooltip']}" />
@@ -225,18 +253,14 @@
 				<td colspan="2"></td>
 				<td width="2%"></td>
 				<td><h:outputLabel
-						value="#{lbl['lbl.pm.org.registration.zone']}" /> </td>
+						value="#{lbl['lbl.pm.org.auth.type']}" /></td>
 				<td>
-					<p:selectOneMenu id="somRegZoneId" disabled="#{not organisationBackingBean.managedBean.orgProfile.bpk}"
-							 label="#{lbl['lbl.pm.org.registration.zone']}"
-							 required="true"
-							 value="#{organisationBackingBean.managedBean.orgProfile.pmZone.zoneId}">
-							 <f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-									itemValue="#{null}" />
-						   <f:selectItems var="zone"
-								value="#{organisationBackingBean.managedBean.zoneList}"
-								itemLabel="#{zone.zoneName}" itemValue="#{zone.zoneId}" />
-
+					<p:selectOneMenu id="somAuthTypeId" 
+							styleClass="ppDropDownWidthM"
+							 label="#{lbl['lbl.pm.org.auth.type']}"
+							 value="#{organisationBackingBean.managedBean.orgProfile.groupOrgType}">
+							<f:selectItems value="#{organisationBackingBean.getAuthTypeList()}"/>		
+								<p:ajax event="change" update="@form" process="@this" />					
 					</p:selectOneMenu>	
 				</td>
 			</tr>
@@ -259,21 +283,10 @@
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.gst.end.date']}"
 						value=" "
-						size="25" styleClass="ppDisplayTextL"
+						size="35" styleClass="ppDisplayTextL"
 						/></td>
 				</ui:fragment>
-				<td colspan="2"></td>
-				<td width="2%"></td>
-				<td><h:outputLabel
-						value="#{lbl['lbl.pm.org.auth.type']}" /></td>
-				<td>
-					<p:selectOneMenu id="somAuthTypeId" 
-							 label="#{lbl['lbl.pm.org.auth.type']}"
-							 value="#{organisationBackingBean.managedBean.orgProfile.groupOrgType}">
-							<f:selectItems value="#{organisationBackingBean.getAuthTypeList()}"/>		
-								<p:ajax event="change" update="@form" process="@this" />					
-					</p:selectOneMenu>	
-				</td>
+				<td colspan="4"></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.declare.date']}" /> </td>			
@@ -281,11 +294,18 @@
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.gst.declare.date']}"
 						value="#{organisationBackingBean.managedBean.gstSupplier.gstDeclaredDate}"
-						size="25" styleClass="ppDisplayTextL">
+						size="35" styleClass="ppDisplayTextL">
 						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText></td>				
 				<td></td>
 			</tr>
+			</ui:fragment>
+			<ui:fragment
+					rendered="#{ParameterConst.orgTypePtj ne organisationBackingBean.managedBean.orgType }">
+					<tr>
+						<td>
+						</td>
+					</tr>
 			</ui:fragment>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.organisation.status']}" />
@@ -309,10 +329,6 @@
 			</tr>
 		</table>
 	</p:panel>
-	<ui:fragment
-		rendered="#{ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType or organisationBackingBean.managedBean.orgType eq 'FJA' or organisationBackingBean.managedBean.orgType eq 'FPP'}">
-		<ui:include src="/xhtml/pm/organisation/orgControlProfile.xhtml" />
-	</ui:fragment>
 	<p:panel header="#{lbl['lbl.pm.header.general.org.address']}"
 		toggleable="true">
 		<p:tabView id="addressTabs">
