@@ -1,8 +1,6 @@
 package my.ep.web.util.sm.helper;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -166,7 +164,6 @@ import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -176,7 +173,6 @@ import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -8008,19 +8004,23 @@ public class SmApplicationUtil {
 	public static String getCurrRegStatusDescBySmAppl(SmAppl appl) {
 		String retVal = StringUtils.EMPTY;
 		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (appl.getSmSupplier().getSmAppl().getPmRegStatus() != null
-				&& appl.getSmSupplier().getSmAppl().getPmRegStatus()
-						.getPmStatus() != null
-				&& !EntityHelper.isCollectionEmpty(appl.getSmSupplier()
-						.getSmAppl().getPmRegStatus().getPmStatus()
-						.getPmStatusDescs())) {
-			for (PmStatusDesc sd : appl.getSmSupplier().getSmAppl()
-					.getPmRegStatus().getPmStatus().getPmStatusDescs()) {
-				if (language.equals(sd.getLanguageCode())) {
-					retVal = sd.getStatusName();
-					break;
+		try {
+			if (appl.getSmSupplier().getSmAppl().getPmRegStatus() != null
+					&& appl.getSmSupplier().getSmAppl().getPmRegStatus()
+							.getPmStatus() != null
+					&& !EntityHelper.isCollectionEmpty(appl.getSmSupplier()
+							.getSmAppl().getPmRegStatus().getPmStatus()
+							.getPmStatusDescs())) {
+				for (PmStatusDesc sd : appl.getSmSupplier().getSmAppl()
+						.getPmRegStatus().getPmStatus().getPmStatusDescs()) {
+					if (language.equals(sd.getLanguageCode())) {
+						retVal = sd.getStatusName();
+						break;
+					}
 				}
 			}
+		} catch (Exception e) {
+
 		}
 		return retVal;
 	}
