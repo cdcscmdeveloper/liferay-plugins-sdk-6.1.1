@@ -3183,6 +3183,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			catalogueSO.updateSupplierItem(reqDTO);
 
+			this.getManagedBean().setRefreshDraftSuppItemFlag(false);
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 
 			facesContext.addMessage(
