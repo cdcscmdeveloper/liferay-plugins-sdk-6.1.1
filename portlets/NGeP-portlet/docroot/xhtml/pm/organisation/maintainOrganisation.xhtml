@@ -10,6 +10,68 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
+		<style>
+			.ppDisplayTextL {
+				width: 300px !important;
+			}
+			
+			.ppDisplayTextM {
+				width: 200px !important;
+			}
+			
+			.ppDisplayTextS {
+				width: 100px !important;
+			}
+			
+			.ppDisplayTextXS{
+				width: 60px !important;
+			}
+			.ppDisplayCalS input {
+				width: 100px !important;
+			}
+			.ppDisplayCalM input {
+				width: 180px !important;
+			}
+			
+			.ppDisplayCalXS input{
+				width: 62px !important;
+			}
+			
+			.ui-selectonemenu.ppDropDownWidthM {
+				width: 210px !important;
+			}
+			.ui-selectonemenu.ppDropDownWidthM label{
+				width: 210px !important;
+			}
+			.ui-selectonemenu.ppDropDownWidthL label{
+				width: 310px !important;
+			}
+			.ui-selectonemenu.ppDropDownWidthL{
+				width: 310px !important;
+			}
+			.ui-selectonemenu.ppDropDownWidthXL label{
+				width: 450px !important;
+			}
+			.ui-selectonemenu.ppDropDownWidthXL{
+				width: 450px !important;
+			}
+			  .ui-selectonemenu-label{
+			  		max-width:100% !important;
+                    width:100% !important;
+                }
+			.ui-selectonemenu.ppDropDownWidthS {
+				width: 110px !important;
+			}
+			.ui-selectonemenu.ppDropDownWidthS label{
+				width: 110px !important;
+			}
+			.ui-selectonemenu.ppDropDownWidthXS{
+				width: 60px !important;
+			}
+			.ui-selectonemenu.ppDropDownWidthXS label{
+				width: 60px !important;
+			}
+		</style>
 		<p:messages id="orgMessages" showDetail="true" showSummary="false" autoUpdate="#{organisationBackingBean.managedBean.showParentMsg}"
 			closable="true" severity="error,info"></p:messages>
 		<p:blockUI block=":form" widgetVar="blockWidget">
