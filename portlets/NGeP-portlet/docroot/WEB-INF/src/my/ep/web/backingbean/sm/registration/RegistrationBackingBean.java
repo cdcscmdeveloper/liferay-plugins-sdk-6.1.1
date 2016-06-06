@@ -410,6 +410,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSuppOwner.setIdentificationTypeId(identificationType.getParameterId());
 			smSuppOwner.setOwnerName(smAppl.getSmCompanyBasic().getCompanyName());
 			smSuppOwner.setIdentificationNo(smSupp.getRegNo());
+			smSuppOwner.setNationality(indNationality);
 			smPersonnel.setName(smAppl.getSmCompanyBasic().getCompanyName());
 //			smPersonnel.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
 			smPersonnel.setIdentificationTypeId(identificationType.getParameterId());
