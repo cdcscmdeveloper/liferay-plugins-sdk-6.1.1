@@ -44,13 +44,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<h:outputText value="#{lbl['lbl.pp.procurement.desc']}" />
 					    </f:facet>
 				    </p:column>
-			     	<p:column width="15%">
+			     	<p:column width="12%">
 					    <f:facet name="header">
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pp.category']}" />
 					    </f:facet>
 				    </p:column>
-			     	<p:column width="14%">
+			     	<p:column width="12%">
 					    <f:facet name="header">
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pp.procurement.method']}" />
@@ -60,6 +60,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					    <f:facet name="header">
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pp.invitation.date']}" />
+					     	&#160; <p:graphicImage id="giOthersOrg"
+								value="/css/images/design/tooltips.png" /> 
+					<p:tooltip id="ttOthersOrg" for="giOthersOrg">
+							<h:outputText escape="false" value="#{lbl['lbl.pp.invitation.date.tooltip']}"  />
+					</p:tooltip>&#160;
 					    </f:facet>
 				    </p:column>
 			     	<p:column width="13%">
@@ -68,7 +73,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<h:outputText value="#{lbl['lbl.pp.estimated.amount']}" />
 					    </f:facet>
 				    </p:column>			      
-			     	<p:column  width="4%" rendered="#{pPlanBackingBean.managedBean.modeReview}">
+			     	<p:column  width="5%" rendered="#{pPlanBackingBean.managedBean.modeReview}">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
 					    </f:facet>
