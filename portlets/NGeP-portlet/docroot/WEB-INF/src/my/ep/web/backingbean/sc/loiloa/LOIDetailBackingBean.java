@@ -2521,10 +2521,7 @@ public class LOIDetailBackingBean extends
 	 */
 	private AwardSupplierReqDTO parseMultipleLoiDtls(boolean isSubmit) {
 		Long statusId  = getManagedBean().getCurrentStatusId();
-		// TODO To be removed - merge supplier finalization method doc types to cater old QTs
 		if (QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION
-				.equals(statusId) ||
-			QTStatusConst.MLI_PENDING_NEGOTIATION
 				.equals(statusId)) {
 
 			List<TplSpecZoneDtl> zoneDeDtls = getManagedBean().getMultiLOIZoneDetails();
@@ -3655,10 +3652,7 @@ public class LOIDetailBackingBean extends
 		debugLogger("downloadReport");
 		ScLoiReportAttachment scLoiReportAttachment = scLoiReport
 				.getScLoiReportAttachment();
-		// TODO To be removed - merge supplier finalization method doc types to cater old QTs
 		if (QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION
-				.equals(getManagedBean().getCurrentStatusId()) ||
-			QTStatusConst.MLI_PENDING_NEGOTIATION
 				.equals(getManagedBean().getCurrentStatusId())
 							|| scLoiReportAttachment == null) {
 			scLoiReportAttachment = generateDocumentAttachment(scLoiReport);
