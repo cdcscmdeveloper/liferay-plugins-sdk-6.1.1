@@ -184,18 +184,42 @@
 				<table class="ppTwoTable">
 					<tr>
 						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.nationality']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></th>
+						<td><p:selectOneMenu styleClass="ppDropDownWidthL"
+								id="somNationality"
+								disabled="#{isSupplierOrgType}"
+								required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.pm.profiles.userdetails.nationality']}"
+								value="#{profileManagementBackingBean.managedBean.selectedUser.pmCountry.countryId}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItems
+									value="#{profileManagementBackingBean.getCountryList()}"
+									var="countrylist" itemLabel="#{countrylist.countryName}"
+									itemValue="#{countrylist.countryId}" />
+									<p:ajax event="change" listener="#{profileManagementBackingBean.resetIdType()}"
+										partialSubmit="true" process="@this" update="@this,somIdType,itIdentityNo,itLoginId" />
+							</p:selectOneMenu>&#160;
+							<p:message id="somNationalityMsg" for="somNationality"
+								display="icon" />
+						</td>
+						
+					</tr>
+					<tr>
+						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.idtype']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
 						<td colspan="2" width="80%"><p:selectOneMenu styleClass="ppDropDownWidthL"
 								id="somIdType" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.idtype']}"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew or (profileManagementBackingBean.managedBean.selectedUser.brandNew and profileManagementBackingBean.isMYCountry())}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterCode}">
 								<f:selectItems
 									value="#{profileManagementBackingBean.getIdentityTypeList()}" />
 
 								<p:ajax event="change"
-									listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
+									listener="#{profileManagementBackingBean.resetIcAndLoginId()}"
 									partialSubmit="true" process="@this" update="@form" />
 							</p:selectOneMenu>&#160;
 							<p:message id="somIdTypeMsg" for="somIdType" display="icon" />
@@ -217,8 +241,8 @@
 											partialSubmit="true" process="@this" update="@this,somIdType,itLoginId,somSalutation,itUserName,somNationality"/>
 									</p:inputText>
 								</c:when>
-
 								<c:otherwise>
+
 									<p:inputText id="itIdentityNo" styleClass="icTextL"
 										required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
@@ -249,15 +273,23 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
-						<ui:remove><td width="40%"><p:inputText styleClass="ppDisplayTextL" id="itLoginId"
-								maxlength="15" 
+						<td width="40%"><p:inputText styleClass="ppDisplayTextL" id="itLoginId"
+								maxlength="18" 
 								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
 								required="#{!empty param['disableValidation']}"
 								disabled="true"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.loginId}">								
 							</p:inputText> 
+							&#160; 
+								<p:graphicImage id="giLoginId"
+								value="/css/images/design/tooltips.png" /> <p:tooltip
+								for="giLoginId"  id="ttLoginId"
+								value="#{lbl['lbl.pm.profiles.userdetails.loginid.tooltip']}"
+								showEffect="fade" hideEffect="fade" /> &#160;
+								<p:message id="itLoginIdMsg" for="itLoginId"
+								display="icon" />
 						</td>
-						</ui:remove>
+						<ui:remove>
 						<td width="40%"><p:inputText styleClass="ppDisplayTextL" id="itLoginId"
 								maxlength="75" converter="toLowerCaseConverter"
 								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
@@ -271,6 +303,7 @@
 							</p:inputText> 
 							<p:message id="itLoginIdMsg" for="itLoginId" display="icon" />
 						</td>
+						</ui:remove>
 						<td rowspan="7">
 							<p:outputPanel id="opPortrait"
 								rendered="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}">
@@ -330,7 +363,7 @@
 								<f:validateRegex pattern="^([\S]+[\s\S]{1,80})?$" />
 								<p:ajax event="blur"
 									partialSubmit="true" process="@this" update="@this" />
-							</p:inputText> &#160;<p:graphicImage id="giUserUsername"
+							</p:inputText> &#160; <p:graphicImage id="giUserUsername"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giUserUsername"
 								value="#{lbl['lbl.pm.profiles.userdetails.username.tooltip']}"
@@ -341,33 +374,6 @@
 						</td>
 						
 					</tr>
-
-
-					<tr>
-						<th width="20%"><p:outputLabel
-								value="#{lbl['lbl.pm.profiles.userdetails.nationality']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></th>
-						<td><p:selectOneMenu styleClass="ppDropDownWidthL"
-								id="somNationality"
-								disabled="#{isSupplierOrgType}"
-								required="#{!empty param['disableValidation']}"
-								label="#{lbl['lbl.pm.profiles.userdetails.nationality']}"
-								value="#{profileManagementBackingBean.managedBean.selectedUser.pmCountry.countryId}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-									itemValue="#{null}" />
-								<f:selectItems
-									value="#{profileManagementBackingBean.getCountryList()}"
-									var="countrylist" itemLabel="#{countrylist.countryName}"
-									itemValue="#{countrylist.countryId}" />
-									<p:ajax event="change"
-										partialSubmit="true" process="@this" update="@this" />
-							</p:selectOneMenu>&#160;
-							<p:message id="somNationalityMsg" for="somNationality"
-								display="icon" />
-						</td>
-						
-					</tr>
-
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.designation']}" /> <p:outputLabel
