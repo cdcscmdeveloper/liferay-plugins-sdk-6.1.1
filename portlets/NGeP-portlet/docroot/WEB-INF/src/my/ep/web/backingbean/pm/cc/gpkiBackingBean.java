@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.cc;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -28,7 +29,7 @@ import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "gpkiBackingBean")
 @SessionScoped
-public class gpkiBackingBean {
+public class gpkiBackingBean implements Serializable {
 
 	/**
 	 * 
