@@ -111,7 +111,7 @@ runScript: function(src,callback,failedcallback){
  * @returns {undefined}
  */
 start : function (message){
-   if($('.modal').length < 1)	{
+  /* if($('.modal').length < 1)	{
 		var $div = $('<div/>').appendTo('body');
 		$div.attr('class', 'modal');
     }
@@ -125,15 +125,15 @@ start : function (message){
     }
     else {    
         $(".modal > p").html(message);
-    }
+    }*/
 },
 /*
  * Hides loading bar
  * @returns {undefined}
  */
 end: function(){
-    $("body").removeClass("loading");
-    $('.modal').hide();
+   /* $("body").removeClass("loading");
+    $('.modal').hide();*/
 },
 
 alert: function(message){
