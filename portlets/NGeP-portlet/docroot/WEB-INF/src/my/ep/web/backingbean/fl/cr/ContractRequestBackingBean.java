@@ -2089,7 +2089,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							oriItemAddr.setOrderedQty(BigDecimal.ZERO);
 							flItemAddr.setOrderedQty(BigDecimal.ZERO);
 							throw new EpException(MessageConst.ERROR_745056);
-						} else if (ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){ 
+						} else if (ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode()) && getManagedBean().getFlRequest().getScPurchaseInDefault() == null){ 
 							reqDTO.setContractZoneId(itemResDTO.getContractZoneId());
 							// Validation on service quantity with zone
 							itemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
