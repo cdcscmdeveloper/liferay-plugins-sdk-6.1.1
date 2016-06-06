@@ -52,7 +52,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{zPromotion.startDate}" showOn="button"
+				<p:calendar value="#{zPromotion.startDate}" showOn="button" navigator="true"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}" size="10"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup"
@@ -68,7 +68,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{zPromotion.endDate}" showOn="button" size="10"
+				<p:calendar value="#{zPromotion.endDate}" showOn="button" size="10" navigator="true"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup"
