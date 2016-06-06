@@ -89,7 +89,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{tier.startDate}" size="8" showOn="button"
+				<p:calendar value="#{tier.startDate}" size="8" showOn="button" navigator="true"
 					rendered="#{tier.showFlag}"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
@@ -115,7 +115,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{tier.endDate}" size="8" showOn="button"
+				<p:calendar value="#{tier.endDate}" size="8" showOn="button" navigator="true"
 					rendered="#{tier.showFlag}"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
