@@ -23,6 +23,7 @@ public class SCSupplierInvitationManagedBean extends BaseManagedBean{
 	
 	private Long selectedInvitationType;
 	private Map<Long,String> invitationTypeMap;
+	private Map<Long,String> urlMap;
 
 	/**
 	 * @return the selectedInvitationType
@@ -50,6 +51,20 @@ public class SCSupplierInvitationManagedBean extends BaseManagedBean{
 	 */
 	public void setInvitationTypeMap(Map<Long, String> invitationTypeMap) {
 		this.invitationTypeMap = invitationTypeMap;
+	}
+
+	/**
+	 * @return the urlMap
+	 */
+	public Map<Long, String> getUrlMap() {
+		return urlMap;
+	}
+
+	/**
+	 * @param urlMap the urlMap to set
+	 */
+	public void setUrlMap(Map<Long, String> urlMap) {
+		this.urlMap = urlMap;
 	}
 	
 }
