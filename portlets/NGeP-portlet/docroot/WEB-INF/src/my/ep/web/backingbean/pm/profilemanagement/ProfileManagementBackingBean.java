@@ -4667,7 +4667,7 @@ public class ProfileManagementBackingBean extends
 	}
 	public void checkIdentificationNumber() {
 		System.out.println(".............checkIdentificationNumber...........");
-		//getManagedBean().getSelectedUser().setLoginId(null);
+		getManagedBean().getSelectedUser().setLoginId(null);
 		this.getManagedBean().getSelectedUser().setHasActiveOrg(false);
 		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
 		if (getManagedBean().getSelectedUser().getIdentificationNo() != null
@@ -4779,8 +4779,18 @@ public class ProfileManagementBackingBean extends
 			} finally {
 				userSO = null;
 			}
+			
+			if(ParameterConst.IDENTIFICATION_TYPES_IC.equals(getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode())){
+				getManagedBean().getSelectedUser().setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
+			}else{
+				PmCountry country  = PmCommonUtil.retrievePmCountryById(getManagedBean().getSelectedUser().getPmCountry().getCountryId());
+				StringBuilder sb = new StringBuilder();
+				sb.append(getManagedBean().getSelectedUser().getIdentificationNo().trim());
+				sb.append(country.getCountryCode());
+				getManagedBean().getSelectedUser().setLoginId(sb.toString());
+			}
 
-			//getManagedBean().getSelectedUser().setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
+			
 		}
 	}
 
@@ -5615,5 +5625,31 @@ public class ProfileManagementBackingBean extends
 		}
 		return isEmpty;
 	}
-
+	
+	public boolean isMYCountry(){
+		boolean isMy = false;
+		if(getManagedBean().getSelectedUser() != null &&
+				getManagedBean().getSelectedUser().getPmCountry() !=null 
+				&& getManagedBean().getSelectedUser().getPmCountry().getCountryId() != null){
+			PmCountry country  = PmCommonUtil.retrievePmCountryById(getManagedBean().getSelectedUser().getPmCountry().getCountryId());
+			if(CommonConstants.DEFAULT_COUNTRY_CODE.equals(country.getCountryCode())){
+				isMy = true;
+			}
+		}
+		return isMy;
+	}
+	
+	public void resetIdType(){
+		PmParameter identityType = new PmParameter();
+		identityType
+				.setParameterCode(ProfileManagementConst.DEFAULT_IDENTIFY_TYPE);
+		getManagedBean().getSelectedUser().setIdentificationCode(identityType);
+		getManagedBean().getSelectedUser().setIdentificationNo(null);
+		getManagedBean().getSelectedUser().setLoginId(null);
+	}
+	
+	public void resetIcAndLoginId(){
+		getManagedBean().getSelectedUser().setIdentificationNo(null);
+		getManagedBean().getSelectedUser().setLoginId(null);
+	}
 }
