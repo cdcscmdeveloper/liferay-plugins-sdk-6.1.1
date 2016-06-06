@@ -1735,9 +1735,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 
 		SuppFinalizationReqDTO reqDTO = preSubmitValidation();
-		// TODO To be removed - merge supplier finalization method doc types to cater old QTs
-		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) || 
-				QTStatusConst.DA_PENDING_SIGN_OFF.equals(currentStatusId)) {
+		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId)) {
 			if (CollectionUtils.isNotEmpty(
 					this.getManagedBean().getCommitteeList())) {
 				int totalMembersEndorsed = 0;
