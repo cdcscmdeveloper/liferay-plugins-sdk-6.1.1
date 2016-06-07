@@ -136,7 +136,7 @@ public class PmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_JOB_COMMON_CRONEXPRESSION));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_UPDATE_EXPIRED_ACCESS));
 
 		// Send Access Application Reminder
 		EpSchedulerHelper
@@ -149,7 +149,7 @@ public class PmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_JOB_COMMON_CRONEXPRESSION));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_SEND_REMINDER_ACCESS));
 
 		// Reset Pm RuleConfig Map
 		EpSchedulerHelper
@@ -161,7 +161,7 @@ public class PmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_JOB_COMMON_CRONEXPRESSION));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_PM_RESET_CONFIG_RULES_MAP));
 
 	}
 }
