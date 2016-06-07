@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-	<p:panel toggleable="true">
+	<p:panel id="financialMainScCommitteeCheckList" toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.spec.finance.check.list']}" />
 			<ac:iconTooltip
@@ -41,21 +41,21 @@
 					<p:selectBooleanCheckbox disabled="true"
 						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="financeProposaltwo"
+							update="@([id$=financeProposaltwo]),@([id$=deleteFinancialChecklist])"
 							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					rendered="#{stageTwofunctional.manditory !='true' and stageTwofunctional.definationType.parameterCode ne 'TS'}">
-					<p:ajax partialSubmit="true" process="@this" update="@this"
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
 					disabled="true"
 					rendered="#{stageTwofunctional.manditory ==true and stageTwofunctional.definationType.parameterCode ne 'TS' }">
-					<p:ajax partialSubmit="true" process="@this" update="@this"
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
 				</p:selectBooleanCheckbox>
 
@@ -63,7 +63,7 @@
 					disabled="true"
 					rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode eq 'TS'}">
 
-					<p:ajax partialSubmit="true" process="@this" update="@this"
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteFinancialChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -308,8 +308,8 @@
 				update="@all,financeProposaltwo" />
 
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
-				disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing" id="deleteFinancialChecklist"
+				disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"
 				process="@this" partialSubmit="true"
 				oncomplete="financialCheckListDeletePopUp.show();"
 				update="@([id$=#{financialCheckListDeleteId}])">
@@ -330,7 +330,7 @@
 			okAction="specificationBackingBean.deleteFinancialCheckList"
 			title="#{lbl['lbl.sc.spec.finance.check.list']}"
 			content="#{lbl['lbl.sc.dialog.confirm.message']}"
-			update="@([id$=financeProposaltwo])" />
+			update="@([id$=financialMainScCommitteeCheckList])" />
 		<ui:include src="financialCheckListStandardCheckList.xhtml" />
 	</p:panel>
 </ui:composition>

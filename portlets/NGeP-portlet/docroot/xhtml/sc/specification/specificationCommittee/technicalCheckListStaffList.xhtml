@@ -138,7 +138,7 @@
 									actionListener="#{specificationBackingBean.addScoring(20)}" />
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+									disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(scoringList)}"
 									process="@this" partialSubmit="true"
 									oncomplete="technicalStaffListDeletePopUp.show();"
 									update="@([id$=#{technicalEmployeeStaffListDeleteId}])">
@@ -154,7 +154,7 @@
 								okAction="specificationBackingBean.deleteCheckListScoreContrats"
 								title="#{lbl['lbl.sc.spec.tech.staff.list']}"
 								content="#{lbl['lbl.sc.dialog.confirm.message']}"
-								update="@([id$=#{scoringPnlId}])" />
+								update="@([id$=technicalStaffListScoring])" />
 						</h:panelGroup>
 					</h:panelGroup>
 
