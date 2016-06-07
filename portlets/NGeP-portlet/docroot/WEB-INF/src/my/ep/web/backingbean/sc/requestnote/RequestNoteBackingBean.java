@@ -2318,7 +2318,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("supplierListener");
 		// lov changes 
 		ScRequestSupplierItem scRequestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
-			
+			boolean isPriceTypeFound = Boolean.TRUE;
 			if(priceTypeId != null && priceTypeId > 0){
 				if(scRequestSupplierItem !=null 
 						&& scRequestSupplierItem.getSupplierItemPrices() != null 
@@ -2330,6 +2330,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							if(requestNoteDtl.getTplSpecZoneDtl().getSpecZoneId().equals(scSupplierItemPrice.getTplSpecZone().getSpecZoneId())){
 								scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
 								requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
+								isPriceTypeFound = Boolean.FALSE;
 								break;
 							}
 						}else {
@@ -2338,6 +2339,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
 									scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
 									requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
+									isPriceTypeFound = Boolean.FALSE;
 									break;
 								}
 							}
@@ -2345,8 +2347,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					}
 				}
 			}  else{
+				requestNoteDtl.setPriceType(new PmParameter());
 				scRequestSupplierItem.setSupplierItemPrice(null);
 			}
+			
+			if(isPriceTypeFound){
+				requestNoteDtl.setPriceType(null);
+				scRequestSupplierItem.setSupplierItemPrice(null);
+			}
+			
 			// selected rec.supplier
 			requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
 			// procurement Type Category
