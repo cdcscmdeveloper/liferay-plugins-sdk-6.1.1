@@ -432,7 +432,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		                		boolean isValidApprover = false;
 		                		while (sourceIt.hasNext()) {
 		                			PmUser user = sourceIt.next();
-		                			if (user.getUserId() == approverUser.getUserId()) {
+		                			if (user!=null && approverUser!=null && (user.getUserId() == approverUser.getUserId())) {
 		                				sourceIt.remove();
 		                				isValidApprover = true;
 		                				break;
