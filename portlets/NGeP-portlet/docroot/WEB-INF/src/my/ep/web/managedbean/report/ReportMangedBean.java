@@ -21,6 +21,8 @@ import javax.faces.model.SelectItem;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -125,6 +127,12 @@ public class ReportMangedBean extends BaseManagedBean {
 
 	/** The selected org profile. */
 	private PmOrgProfile selectedOrgProfile;
+	
+	/** The selected pm role desc. */
+	private PmRoleDesc selectedPmRoleDesc;
+	
+	/** The selected pm user. */
+	private PmUser selectedPmUser;
 	
 	/** The selected item. */
 	private CmItem selectedItem;
@@ -330,6 +338,25 @@ public class ReportMangedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected pm user.
+	 * 
+	 * @return the selectedPmUser
+	 */
+	public PmUser getSelectedPmUser() {
+		return selectedPmUser;
+	}
+
+	/**
+	 * Sets the selected pm user.
+	 * 
+	 * @param selectedPmUser
+	 *            the selectedPmUser to set
+	 */
+	public void setSelectedPmUser(PmUser selectedPmUser) {
+		this.selectedPmUser = selectedPmUser;
+	}
+
+	/**
 	 * Gets the search operator value.
 	 * 
 	 * @return the searchOperatorValue
@@ -421,6 +448,25 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
+	}
+
+	/**
+	 * Gets the selected pm role desc.
+	 * 
+	 * @return the selectedPmRoleDesc
+	 */
+	public PmRoleDesc getSelectedPmRoleDesc() {
+		return selectedPmRoleDesc;
+	}
+
+	/**
+	 * Sets the selected pm role desc.
+	 * 
+	 * @param selectedPmRoleDesc
+	 *            the selectedPmRoleDesc to set
+	 */
+	public void setSelectedPmRoleDesc(PmRoleDesc selectedPmRoleDesc) {
+		this.selectedPmRoleDesc = selectedPmRoleDesc;
 	}
 
 	/**

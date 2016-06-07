@@ -24,22 +24,24 @@
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
-						</c:if>
-						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmBusinessRegNoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.businessregnoscreen']}" />
-							<p:inputText value="#{reportBackingBean.pmBusinessRegNo}"
-								style="width:290px;">
-							</p:inputText>
-						</c:if>
+						</c:if>						
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmFinancialOrgNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.financialOrgNamescreen']}" />
-							<p:inputText value="#{reportBackingBean.pmFinancialOrgName}"
+							<ac:lov id="pmFinOrgName" style="width:265px;"
+								lovId="PM_ORG_PROFILE_FFC_REPORT" size="40" update="@form"
+								headerText="#{lbl['lbl.rpt.orgCode']}" readonly="true"
+								value="#{reportBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.finOrgName}"
+								postUpdateListener="#{reportBackingBean.onFinaOrgNameChangeForLOV()}"
+								saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
+						</c:if>
+                        <c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmBusinessRegNoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.businessregnoscreen']}" />
+							<p:inputText value="#{reportBackingBean.pmBusinessRegNo}" readonly="true"
 								style="width:290px;">
 							</p:inputText>
 						</c:if>
-
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryOrgCategoryTypeView}">
 							<p:column>
@@ -217,33 +219,36 @@
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
+						
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmIdentificationNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.identificationNo']}" />
-							<p:inputText maxlength="30"
-								value="#{reportBackingBean.pmIdentificationNo}"
-								style="width:290px;">
-								<p:ajax  process="@this" partialSubmit="true"  listener="#{reportBackingBean.onChangePmListOfProfileFields}"  update="@form" />
-							</p:inputText>
+							<ac:lov id="pmIdntificationNo" style="width:265px;"
+								lovId="PM_USER_ID_REPORT" size="38" update="@form"
+								headerText="#{lbl['lbl.rpt.identificationNo']}" readonly="true"
+								value="#{reportBackingBean.managedBean.selectedPmUser.identificationNo}"
+								postUpdateListener="#{reportBackingBean.onChangePmListOfProfileFields()}"
+								saveObject="reportBackingBean.managedBean.selectedPmUser" />
 						</c:if>
-
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmUserNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.username']}" />
-							<p:inputText maxlength="100"
+							<p:inputText maxlength="100" readonly="true"
 								value="#{reportBackingBean.pmUserName}" style="width:290px;">
-								<p:ajax  process="@this" partialSubmit="true" listener="#{reportBackingBean.onChangePmListOfProfileFields}" update="@form" />
+								<p:ajax  process="@this" partialSubmit="true"  update="@form" />
 							</p:inputText>
 						</c:if>
 
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmRoleCodeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.roleCode']}" />
-							<p:inputText maxlength="100"
-								value="#{reportBackingBean.pmRoleCode}" style="width:290px;">
-								<p:ajax event="change" process="@this" partialSubmit="true" listener="#{reportBackingBean.onChangePmListOfProfileFields}" update="@form" />
-							</p:inputText>
-						</c:if>
+							<ac:lov id="pmOrgCode" style="width:265px;"
+								lovId="PM_ROLE_DESC_REPORT" size="38" update="@form"
+								headerText="#{lbl['lbl.rpt.roleCode']}" readonly="true"
+								value="#{reportBackingBean.managedBean.selectedPmRoleDesc.pmRole.roleCode}"
+								postUpdateListener="#{reportBackingBean.onRoleCodeChangeForLOV()}"
+								saveObject="reportBackingBean.managedBean.selectedPmRoleDesc" />
+						</c:if>	
 
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmStatusView}">
