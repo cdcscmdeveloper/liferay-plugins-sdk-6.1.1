@@ -1599,4 +1599,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return commonDownload(finalFilePath, displayFileName);
 	}
 
+	
+	public <ENTITY_CLASS extends BaseEntity> boolean deleteselectedList(
+			List<ENTITY_CLASS> list) {
+		if (list != null) {
+			for (ENTITY_CLASS entity : list) {
+				if(entity.isSelected()){
+					return false;
+				}
+				
+			}
+		}
+		return true;
+	}
 }
