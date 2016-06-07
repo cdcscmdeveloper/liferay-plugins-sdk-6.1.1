@@ -31,18 +31,18 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.document.title']}" /></td>
-					<td colspan="3"><p:inputText size="99"
+					<td colspan="3"><p:inputText style="width: 750px;"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentTitle}"></p:inputText></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.document.no']}" /></td>
-					<td><p:inputText size="30"
+					<td><p:inputText size="35"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentNo}"></p:inputText></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
-					<td><p:calendar showOn="button" size="30"
+					<td><p:calendar showOn="button" size="35"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentFromDuration}">
 							<p:ajax event="dateSelect" update="toDate" />
@@ -50,7 +50,7 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
 					<td><p:calendar showOn="button" size="20"
-							mindate="#{simpleQuoteBackingBean.managedBean.searchFromCreatedDate}"
+							mindate="#{directPurchaseBackingBean.managedBean.searchDocumentFromDuration}"
 							id="toDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentToDuration}">
 						</p:calendar></td>
@@ -73,7 +73,7 @@
 					action="#{directPurchaseBackingBean.reset}" update=":form" />
 			</div>
 		</p:panel>
-		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}"
+		<p:panel id="resultPanel" header="#{lbl['lbl.sc.result']}"
 			toggleable="true">
 
 			<p:dataTable id="scDocumentTableID" lazy="true"
