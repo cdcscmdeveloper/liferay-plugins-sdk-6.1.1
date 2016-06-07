@@ -1949,4 +1949,77 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="PM_USER_ID_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="userId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.user.UserDAO" />
+		<property name="searchMethod" value="retrieveUserLoList" />
+		<property name="columns">
+			<list>				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="identificationNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.icNo" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="userName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.search.name" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+     <bean id="PM_ROLE_DESC_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="roleDescId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.role.RoleDescDAO" />
+		<property name="searchMethod" value="retrieveDataRoleDescList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmRole.roleCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.profiles.search.rolecode" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="roleName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.profiles.search.rolename" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+    <bean id="PM_ORG_PROFILE_FFC_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveFactoryingOrgProfileList" />
+		<property name="columns">
+			<list>				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmFinancialOrg.finOrgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.fl.pm.org.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmFinancialOrg.bizRegNumber" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.txt.business.reg.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
 </beans>
