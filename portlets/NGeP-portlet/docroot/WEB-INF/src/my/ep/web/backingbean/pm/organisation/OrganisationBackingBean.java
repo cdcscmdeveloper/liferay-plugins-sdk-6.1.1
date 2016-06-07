@@ -2586,6 +2586,8 @@ public class OrganisationBackingBean extends
 			if (orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks() != null
 					&& !orgProfile.getSmSupplier().getSmAppl()
 							.getSmSupplierBanks().isEmpty()) {
+				this.getManagedBean().setSmSupplierBanks(
+						new ArrayList<SmSupplierBank>());				
 				for (SmSupplierBank supplierBank : orgProfile
 						.getSmSupplier().getSmAppl().getSmSupplierBanks()) {
 					if (supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
@@ -2603,6 +2605,7 @@ public class OrganisationBackingBean extends
 			if (orgProfile.getSmSupplier().getSmAppl().getSmPersonnels() != null
 					&& !orgProfile.getSmSupplier().getSmAppl()
 							.getSmPersonnels().isEmpty()) {
+				this.getManagedBean().setSmPersonnels(new ArrayList<SmPersonnel>());
 				for (SmPersonnel personnel : orgProfile.getSmSupplier()
 						.getSmAppl().getSmPersonnels()) {
 					if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
