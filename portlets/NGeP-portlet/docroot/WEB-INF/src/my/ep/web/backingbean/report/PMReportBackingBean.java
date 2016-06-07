@@ -41,6 +41,8 @@ public class PMReportBackingBean extends
 		switch (getManagedBean().getReportValue().trim()) {
 
 		case ReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL:
+			rptGenBean.setGenerateButton(false);
+			rptGenBean.setConditionGenerateButton(true);
 			rptGenBean.setPmServiceTypeView(true);
 			// rptGenBean.setExtraTwoColumnView(true);
 			rptGenBean.setPmStatusView(true);

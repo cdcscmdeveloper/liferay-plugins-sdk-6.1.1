@@ -21,8 +21,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItems value="#{reportBackingBean.serviceTypeList}"></f:selectItems>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.onChangServiceType()}"
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>						
 						<c:if
@@ -115,7 +115,7 @@
 												id="orgType" value="#{reportBackingBean.pmOrgType}"
 												style="width:285px;">
 												<f:selectItems value="#{reportBackingBean.itemsList}"></f:selectItems>
-												<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.changeOrgTypeValues}" update="@form" />
+												<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.changeOrgTypeValues()}" update="@form" />
 											</p:selectOneMenu></td>										
 									</tr>
 								</table>
