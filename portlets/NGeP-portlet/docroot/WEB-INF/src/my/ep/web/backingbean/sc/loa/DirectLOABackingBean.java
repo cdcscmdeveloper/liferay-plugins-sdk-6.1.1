@@ -5085,14 +5085,19 @@ public class DirectLOABackingBean extends
 					ParameterResDTO resDTO = parameterSO
 							.retrieveParameterById(reqDTO);
 					reportSchedule.setScheduleType(resDTO.getPmParameter());
-					reportSchedule.setStartMonth(monthFormat.format(schedule
-							.getFromDate()));
-					reportSchedule.setStartYear(yearFormat.format(schedule
-							.getFromDate()));
-					reportSchedule.setEndMonth(monthFormat.format(schedule
-							.getToDate()));
-					reportSchedule.setEndYear(yearFormat.format(schedule
-							.getToDate()));
+					
+					if(schedule.getFromDate() != null){
+						reportSchedule.setStartMonth(monthFormat.format(schedule
+								.getFromDate()));
+						reportSchedule.setStartYear(yearFormat.format(schedule
+								.getFromDate()));
+					}
+					if(schedule.getToDate() != null){
+						reportSchedule.setEndMonth(monthFormat.format(schedule
+								.getToDate()));
+						reportSchedule.setEndYear(yearFormat.format(schedule
+								.getToDate()));
+					}
 					reportSchedule.setScheduleNo(schedule.getScheduleNo());
 					reportSchedule.setTotalMonths(schedule.getTotalMonths());
 					scheduleReportList.add(reportSchedule);
