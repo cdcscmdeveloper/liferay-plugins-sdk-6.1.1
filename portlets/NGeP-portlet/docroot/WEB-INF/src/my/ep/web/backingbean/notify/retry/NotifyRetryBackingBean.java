@@ -153,11 +153,7 @@ public class NotifyRetryBackingBean extends
 
 		try{
 		
-			if (isSubmit) {
-				resDTO = ntfRetrySO.submitNtfRetryList(reqDTO);
-			} else {
-				resDTO = ntfRetrySO.removeNtfRetryList(reqDTO);
-			}
+			resDTO = ntfRetrySO.submitNtfRetryList(reqDTO);
 
 			debugLogger("NotifyResDTO : at least one record isSuccessful[" + resDTO.isSuccessful()+ "]");
 
