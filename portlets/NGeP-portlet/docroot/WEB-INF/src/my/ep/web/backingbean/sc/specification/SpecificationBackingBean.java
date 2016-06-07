@@ -14468,6 +14468,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setAutoUpdate(true);
 		RequestContext.getCurrentInstance().execute("addPanelItem.hide()");
 		createCircularItemSpec(selectedPanelItems);
+		this.getManagedBean().setNewTemplateSpec(true);
 		return "/xhtml/sc/boSctemplatespec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 	}
 
