@@ -33,6 +33,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -70,6 +71,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.common.CommonBackingBean;
@@ -600,7 +602,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
 			setDeliveryOrder(resDTO);
-			getManagedBean().setBackToPrevious("/xhtml/fl/dopending/doPendingTableDashBoard.xhtml");
+			getManagedBean().setBackToPrevious(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL));
 			getManagedBean().setFromDoDashboardPage(true);
 		}
 		//if taskid != null process modification or cancellation is running
