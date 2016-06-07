@@ -25,15 +25,15 @@ public class SchedulerConstants {
 	public static final String SC_FAILOVER_HANDLER_JOB = "SOURCING FAILOVER HANDLER";
 	public static final String SC_QT_PUBLISH_JOB = "PUBLISH APPROVED QT AS SCHEDULED";
 	public static final String SC_QT_PROPOSAL_CLOSE_JOB = "CLOSE PROPOSAL AS SCHEDULED";
-	//Sourcing Job description
+	// Sourcing Job description
 	public static final String SC_DAILY_JOB_DESCRIPTION = "Job run every day at 11:55 PM";
 	public static final String SC_CONTINUOUS_JOB_DESCRIPTION = "Job to run every 60 Seconds";
 	public static final String SC_UPDATE_SUPPLIERS_JOB_DESCRIPTION = "Job run every day at 11:55 PM";
-	public static final String SC_QT_CLOSED_JOB_DESCRIPTION ="Job run every day by batch";
+	public static final String SC_QT_CLOSED_JOB_DESCRIPTION = "Job run every day by batch";
 	public static final String SC_PROPOSAL_EXPIRY_JOB_DESCRIPTION = "Job run every day at 12:05 AM";
 	public static final String SC_QT_PUBLISH_JOB_DESCRIPTION = "Job to run every day at 12:00 am to publish Qt's";
 	public static final String SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION = "Job to run every  day at 12:00 am to close proposal";
-	
+
 	// Contracts Module Constants
 	// CT Job Group ID
 	public static final String CT_JOB_GROUP = "CONTRACT JOB GROUP";
@@ -47,7 +47,7 @@ public class SchedulerConstants {
 	public static final String PERFORMANCE_BOND_EXPIRATION_REMINDER = "PERFORMANCE BOND EXPIRATION REMINDER";
 	public static final String REMEDY_EXPIRATION_REMINDER = "REMEDY EXPIRATION REMINDER";
 	public static final String IMPOSED_SERVICE_TAX_REMINDER = "IMPOSED SERVICE TAX REMINDER";
-	
+
 	// CT Job Description
 	public static final String UPDATE_EXPIRED_CONTRACT_JOB_DESC = "Job run every day at 00:01 AM to expire the contract that no more effective.";
 	public static final String UPDATE_EXPIRED_FACTORING_JOB_DESC = "Job run every day at 00:01 AM to expire the factoring that no more effective.";
@@ -73,7 +73,6 @@ public class SchedulerConstants {
 	public static final String UPDATE_EXPIRED_ACCESS_APPLICATION_JOB_DESC = "Job run every day at 00:01 AM to expire the access application that no more effective.";
 	public static final String SEND_REMINDER_ACCESS_APPLICATION_JOB_DESC = "Job run every day at 00:01 AM to send reminder.";
 	public static final String RESET_CONFIG_RULES_JOB_DESC = "Job run every day at 00:01 AM to reset config rules.";
-	
 
 	// SM Module Scheduler COnstants
 
@@ -93,7 +92,7 @@ public class SchedulerConstants {
 	public static final String SM_PAYMENT_REMINDER_JOB_DESC = "Job run every day at 03:00 AM to send the payment reminder.";
 	public static final String SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC = "Job run every day at 03:30 AM to send offline supporting document reminder.";
 	public static final String SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB_DESC = "Job run every day at 1 AM to check or deactivate Basic Account";
-	
+
 	// Payment Reminder
 	public static final int PAYMENT_REMINDER_DAY = 3;
 	public static final Long STATUS_PROCESSING_PAYMENT = 20114L;
@@ -104,97 +103,59 @@ public class SchedulerConstants {
 	public static final String CERT_MODE_RENEW = "R";
 	public static final int SOFTCERT_RENEWAL_DAY = 7;
 
-	// Timer Setting
-	public static final String SM_DAILY_SOFTCERT_RENEWAL_TIMER = "0 30 02 * * ?";
-	public static final String SM_DAILY_DEL_PEND_ACTV_TIMER = "0 55 23 * * ?";
-	public static final String SM_DAILY_PAYMENT_REMINDER_TIMER = "0 00 03 * * ?";
-	public static final String SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER = "0 30 03 * * ?";
-	public static final String SM_DAILY_CHECK_BASIC_ACCOUNT_EXPIRATION_TIMER = "0 00 01 * * ?";
-
-
-//	Integration
-	
+	// Integration
 	public static final String PHIS_INTEGRATION_JOB_GROUP = "PHIS INTEGRATION JOB GROUP";
 	public static final String EPERUNDING_INTEGRATION_JOB_GROUP = "EPERUNDING INTEGRATION JOB GROUP";
 	public static final String GFMAS_INTEGRATION_JOB_GROUP = "1GFMAS INTEGRATION JOB GROUP";
-	
+
 	// EPERUNDING OUT BOUND
-	
 	public static final String EPERUNDING_CONSULTANT_PROFILE_JOB = "CONSULTANT PROFILE JOB";
-
 	public static final String EPERUNDING_ASSOCIATED_COMPANY_JOB = "ASSOCIATED COMPANY JOB";
-
 	public static final String EPERUNDING_COMPANY_OWNER_JOB = "COMPANY OWNER JOB";
-
 	public static final String EPERUNDING_EQUITY_OWNER_JOB = "EQUITY OWNER JOB";
-
 	public static final String EPERUNDING_BOARD_DIRECTOR_JOB = "BOARD OF DIRECTOR JOB";
-
 	public static final String EPERUNDING_MANAGEMENT_PERSONNEL_JOB = "MANAGEMENT PERSONNEL JOB";
-
 	public static final String EPERUNDING_AUTHORIZED_SIGNATORY_JOB = "AUTHORIZED SIGNATORY JOB";
-
 	public static final String EPERUNDING_BRANCH_COMPANY_JOB = "BRANCH_COMPANY JOB";
-
 	public static final String EPERUNDING_REGISTERED_CATEGORY_JOB = "REGISTERED CATEGORY JOB";
-
 	public static final String EPERUNDING_GOVERNMENT_PROJECT_JOB = "GOVERNMENT PROJECT JOB";
-
 	public static final String EPERUNDING_DELETED_COMAPNY_JOB = "DELETED COMAPNY JOB";
-	
-//	PHIS OUT BOUND
+
+	// PHIS OUT BOUND
 	public static final String PHIS_VOT_FUND_JOB = "MASTER DATA VOT JOB";
-	
 	public static final String PHIS_VOT_FUND_DANA_JOB = "MASTER DATA VOT DANA JOB";
-	
 	public static final String PHIS_PROGRAM_JOB = "MASTER DATA PROGRAM JOB";
-	
 	public static final String PHIS_PROJECT_JOB = "MASTER DATA PROJECT JOB";
-	
 	public static final String PHIS_KOD_JOB = "MASTER DATA KOD AKAUN JOB";
-	
 	public static final String PHIS_DELIVERY_ADDRESS_JOB = "MASTER DATA DELIVERY ADDRESS JOB";
-	
 	public static final String PHIS_PAY_EFF_NOTIFY_JOB = "PAYMENT EFFECT NOTIFICATION JOB";
-	
 	public static final String PHIS_MASTER_DATA_MATERIAL = "MATERIAL MASTER DATA JOB";
-	
 	public static final String PHIS_MASTER_DATA = "MATERIAL MASTER DATA JOB";
-	
-//	1GFMAS OUT BOUND
-	
+
+	// 1GFMAS OUT BOUND
+
 	public static final String GFMAS_SST_INFORMATION = "SST INFORMATION JOB";
-	
 	public static final String GFMAS_VENDOR_OUTBOUND = "MASTER DATA VENDOR JOB(Outbound)";
-	
 	public static final String GFMAS_VENDOR_INBOUND = "MASTER DATA VENDOR JOB(Inbound)";
-	
 	public static final String GFMAS_MASTER_DATA_MATERIAL = "MATERIAL MASTER DATA JOB";
-	
 	public static final String GFMAS_RECEIPT_INFORMATION = "RECEIPT INFORMATION JOB";
-	
 	public static final String GFMAS_ERR_RECEIPT_INFORMATION = "ERROR RECEIPT INFORMATION JOB";
-	
-//	1GFMAS IN BOUND
-	
+
+	// 1GFMAS IN BOUND
+
 	public static final String GFMAS_MASTER_DATA_INBOUND = "MASTER GL DATA JOB(Inbound)";
-	
 	public static final String GFMAS_INBOUND_RETRY = "RETRY MASTER DATA JOB(Inbound)";
-	
 	public static final String GFMAS_MASTER_DATA_ERROR = "MASTER DATA ERROR FILE JOB(Inbound)";
-	
 	public static final String GFMAS_PAYMENT_INFORMATION_INBOUND = "PAYMENT INFORMATION JOB(Inbound)";
 
 	// PHIS OUT BOUND
-	
+
 	public static final String EPERUNDING_INTEGRATION_JOB_DESC = "Job run once daily after 1 AM";
-	
 	public static final String PHIS_PM_JOB_DESC = "Job run every 5 minutes";
 	public static final String PHIS_DELIVERY_ADDRESS_JOB_DESC = "Job runs every 1 hour";
 	public static final String PHIS_CM_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
 	public static final String PHIS_FL_JOB_DESC = "Job runs every 1 hour";
 	public static final String PHIS_MASTERDATA_MATERIAL_JOB_DESC = "Job run twice daily 8 AM and 8 PM";
-
 	public static final String GFMAS_RETRY_IN_JOB_DESC = "Job run once daily 2 AM";
 	public static final String GFMAS_PM_IN_JOB_DESC = "Job run every 5 minutes";
 	public static final String GFMAS_SM_IN_JOB_DESC = "Job run every 5 minute";
@@ -209,31 +170,28 @@ public class SchedulerConstants {
 	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB = "NOTIFICATION JOB GROUP";
 	public static final String NOTIFICATION_INTEGRATION_JOB_GROUP = "NOTIFICATION INTEGRATION JOB";
 	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC = "Job run 10 AM and 10 PM";
-
 	public static final String CM_EXPIRED_ITEM_TIMER_JOB = "ITEM EXPIRED JOB";
 	public static final String CM_EXPIRED_ITEM_TIMER_JOB_GROUP = "CM JOB GROUP";
 	public static final String CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC = "Job run 12 AM";
-
 	public static final String CM_DROP_DOC_SEQ_JOB_GROUP = "DROP DOC SEQUENCE JOB";
-	
-	public static final String NTF_JOB_GROUP = "NTF JOB GROUP";
 
+	public static final String NTF_JOB_GROUP = "NTF JOB GROUP";
 	public static final String NTF_MESSAGE_BULK_INTERNAL_JOB = "NTF BULK MESSAGE JOB";
 	public static final String NTF_MESSAGE_BULK_JOB_GROUP = "NTF BULK MESSAGE JOB GROUP";
 	public static final String NTF_MESSAGE_BULK_JOB_DESC = "Ntf Bulk Job run every 1 minutes";
-	
+
 	public static final String NTF_MESSAGE_REAL_TIME_INTERNAL_JOB = "NTF REAL TIME MESSAGE JOB";
 	public static final String NTF_MESSAGE_REAL_TIME_JOB_GROUP = "NTF REAL TIME MESSAGE JOB GROUP";
 	public static final String NTF_MESSAGE_REAL_TIME_JOB_DESC = "Ntf Real Time Message Job run every 1 minutes";
-	
+
 	public static final String NTF_MESSAGE_DIRECT_EMAIL_INTERNAL_JOB = "NTF DIRECT EMAIL MESSAGE JOB";
 	public static final String NTF_MESSAGE_DIRECT_EMAIL_JOB_GROUP = "NTF DIRECT EMAIL JOB GROUP";
 	public static final String NTF_MESSAGE_DIRECT_EMAIL_JOB_DESC = "Ntf Direct Email Job run every 1 minute";
-	
+
 	public static final String NTF_EMAIL_BULK_INTERNAL_JOB = "NTF BULK EMAIL JOB";
 	public static final String NTF_EMAIL_BULK_JOB_GROUP = "NTF BULK EMAIL JOB GROUP";
 	public static final String NTF_EMAIL_BULK_JOB_DESC = "Ntf Bulk Email Job run every 60 minutes";
-	
+
 	public static final String NTF_EMAIL_REAL_TIME_INTERNAL_JOB = "NTF REAL TIME  EMAIL JOB";
 	public static final String NTF_EMAIL_REAL_TIME_JOB_GROUP = "NTF REAL TIME EMAIL JOB GROUP";
 	public static final String NTF_EMAIL_REAL_TIME_JOB_DESC = "Real Time Email Job run every 5 minutes";
