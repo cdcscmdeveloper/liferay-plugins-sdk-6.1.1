@@ -179,7 +179,13 @@
 				<td><p:selectBooleanCheckbox id="isBpkChkBoxId"
 							value="#{organisationBackingBean.managedBean.orgProfile.bpk}">
 					<p:ajax update="@form" listener="#{organisationBackingBean.bpkChangeListener}"/>
-				</p:selectBooleanCheckbox></td>
+				</p:selectBooleanCheckbox>
+				&#160;<p:graphicImage id="giBpk"
+								value="/css/images/design/tooltips.png" style="vertical-align:top;"/> <p:tooltip
+								for="giBpk" id="ttGiBpk"
+								showEffect="fade" hideEffect="fade" > 
+								#{lbl['lbl.pm.org.bpk.tooltip']}
+								</p:tooltip>	</td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.reg.no']}" /> </td>
