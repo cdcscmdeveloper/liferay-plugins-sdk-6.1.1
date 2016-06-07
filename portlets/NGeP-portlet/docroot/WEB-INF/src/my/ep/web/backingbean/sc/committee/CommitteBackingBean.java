@@ -40,6 +40,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.comparator.sc.MemberRoleComparator;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -705,6 +706,8 @@ public class CommitteBackingBean extends
 		CommitteReqDTO committeReqDTO = constructSaveCommitte();
 		committeReqDTO.setOutcome(outCome);
 		committeReqDTO.setScQtCommittee(scQtCommittee);
+		committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		committeReqDTO.setRoleCode(getCommitteeRoleCode());
 		
 		CommitteResDTO resDTO = null;
 
@@ -760,6 +763,28 @@ public class CommitteBackingBean extends
 
 		}
 		return null;
+	}
+	
+	private String getCommitteeRoleCode(){
+		return getCommitteMemberByUserId()
+				.getRoleCode();
+	}
+
+	private CommitteResDTO getCommitteMemberByUserId() {
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		ScQtCommittee scQtCommittee = getManagedBean().getQtCommittee();
+		String committeeType = scQtCommittee.getScCommittee().getCommitteeType().getParameterCode();
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setCommitteeType(committeeType);
+		
+		return committeSO.retrieveCommitteMemberByUserId(
+				committeReqDTO);
 	}
 
 	/**
@@ -1945,6 +1970,8 @@ public class CommitteBackingBean extends
 
 		}
 		memberList.addAll(tobeAddedList);
+		
+		Collections.sort(memberList, new MemberRoleComparator());
 
 		this.getManagedBean().setCommitteMembers(memberList);
 		scCommittee.setScCommitteeMembers(memberList);
