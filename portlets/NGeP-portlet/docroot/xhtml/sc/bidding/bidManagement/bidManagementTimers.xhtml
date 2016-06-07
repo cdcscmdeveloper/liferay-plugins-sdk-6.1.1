@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<h:panelGroup id="bmRemainingTimePanel"
-		rendered="#{biddingBB.managedBean.scheduledBid.pmStatus.statusId eq biddingBB.managedBean.bidInProgress}">
+		rendered="#{biddingBB.managedBean.scheduledBid.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}">
 
 		<div style="align: left">
 			<table style="width: 100%;">
@@ -45,7 +45,7 @@
 	</h:panelGroup>
 
 	<h:panelGroup id="bmPendingBiddingCountDown"
-		rendered="#{biddingBB.managedBean.scheduledBid.pmStatus.statusId eq biddingBB.managedBean.pendingBidding}">
+		rendered="#{biddingBB.managedBean.scheduledBid.pmStatus.statusId eq BidStatusConst.BID_PENDING_BIDDING}">
 
 		<div style="align: left">
 			<table style="width: 100%;">
