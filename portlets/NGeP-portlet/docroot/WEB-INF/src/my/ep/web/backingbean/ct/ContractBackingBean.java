@@ -1079,7 +1079,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */	
 	public void validateDeductionType(Long parameteId)  {
 		
-		 getManagedBean().setSelectedDeduction(null);
+		// getManagedBean().setSelectedDeduction(null);
 		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
 			    int count = 0;
 		         for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
