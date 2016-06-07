@@ -597,8 +597,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		if(orderId != null){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlOrderId(Long.parseLong(orderId));
+			reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
 			setDeliveryOrder(resDTO);
+			getManagedBean().setBackToPrevious("/xhtml/fl/dopending/doPendingTableDashBoard.xhtml");
+			getManagedBean().setFromDoPage(true);
 		}
 		//if taskid != null process modification or cancellation is running
 		if(null!=taskId && !"".equals(taskId)){
