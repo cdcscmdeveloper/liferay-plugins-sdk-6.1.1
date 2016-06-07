@@ -31,34 +31,34 @@
 			<p:column style="text-align:left;" disabledSelection="true"
 				selectionMode="multiple"
 				rendered="#{stageTwoTechnical.manditory !=true and stageTwoTechnical.definationType.parameterCode eq 'TS'}" /> -->
-
+	
 			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox disabled="true"
 						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this" disabled="true"
-							update="stageTwotechProposal"
+							update="@([id$=stageTwotechProposal]),@([id$=deleteTechnicalChecklist])"
 							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2techProposal)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
-					<p:ajax partialSubmit="true" process="@this" update="@this"
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteTechnicalChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
 					disabled="true"
 					rendered="#{stageTwoTechnical.manditory ==true and stageTwoTechnical.definationType.parameterCode ne 'TS' }">
-					<p:ajax partialSubmit="true" process="@this" update="@this"
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteTechnicalChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
 					disabled="true"
 					rendered="#{stageTwoTechnical.manditory !=true and stageTwoTechnical.definationType.parameterCode eq 'TS'}">
-					<p:ajax partialSubmit="true" process="@this" update="@this"
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteTechnicalChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -300,8 +300,8 @@
 				action="#{specificationBackingBean.addTechnicalCheckList}"
 				update="@all,stageTwotechProposal" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				styleClass="BtnSpacing"
-				disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+				styleClass="BtnSpacing" id="deleteTechnicalChecklist"
+				disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
 				process="@this" partialSubmit="true"
 				oncomplete="technicalCheckListDeletePopUp.show();"
 				update="@([id$=#{technicalCheckListDeleteId}])">
@@ -313,7 +313,7 @@
 					value="#{false}" />
 			</p:commandButton>
 
-			<p:commandButton styleClass="BtnSpacing"
+			<p:commandButton styleClass="BtnSpacing" 
 				rendered="#{specificationBackingBean.managedBean.qt.panel}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 				value="#{lbl['lbl.sc.spec.btn.add.panel.item']}" process="@this"
@@ -329,7 +329,7 @@
 			okAction="specificationBackingBean.deleteTechnicalCheckList"
 			title="#{lbl['lbl.sc.spec.tech.check.list']}"
 			content="#{lbl['lbl.sc.dialog.confirm.message']}"
-			update="@([id$=stageTwotechProposal])" />
+			update="@([id$=techCommitteeChecklist])" />
 		<ui:include src="technicalCheckListStandardCheckList.xhtml" />
 	</p:panel>
 

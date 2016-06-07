@@ -191,7 +191,7 @@
 								update="#{scoringPnlId}" />
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 								styleClass="BtnSpacing"
-								disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+								disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(scoringList)}"
 								process="@this" partialSubmit="true"
 								oncomplete="technicalNonGovCompanyExperienceNoOfContractsDeletePopUp.show();"
 								update="@([id$=#{technicalNonGovCompanyExperienceNoOfContractsId}])">
@@ -211,7 +211,7 @@
 							okAction="specificationBackingBean.deleteCheckListScoreContrats"
 							title="#{lbl['lbl.sc.spec.company.exp.fed.gov']}"
 							content="#{lbl['lbl.sc.dialog.confirm.message']}"
-							update="@([id$=#{scoringPnlId}])" />
+							update="@([id$=companyExpPrivateContracts])" />
 
 					</h:panelGroup>
 				</h:panelGroup>
@@ -294,14 +294,14 @@
 											disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 											value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
 											<p:ajax partialSubmit="true" process="@this"
-												update="#{scoringPnlId}"
+												update="#{scoringPnlId},@form"
 												listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, scoringList)}" />
 										</p:selectBooleanCheckbox>
 									</f:facet>
 									<p:selectBooleanCheckbox
 										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 										value="#{checkListScoring.selected}">
-										<p:ajax partialSubmit="true" process="@this" update="@this" />
+										<p:ajax partialSubmit="true" process="@this" update="@form" />
 									</p:selectBooleanCheckbox>
 								</p:column>
 								<p:column style="width:37%">
@@ -392,7 +392,7 @@
 								update="#{scoringPnlId}" />
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 								styleClass="BtnSpacing"
-								disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+								disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(scoringList)}"
 								process="@this" partialSubmit="true"
 								oncomplete="technicalNonGovCompanyExperienceNoOfYearsDeletePopUp.show();"
 								update="@([id$=#{technicaNonlGovCompanyExperienceNoOfYearsDeleteId}])">
@@ -412,7 +412,7 @@
 							okAction="specificationBackingBean.deleteCheckListScoreYears"
 							title="#{lbl['lbl.sc.spec.company.exp.fed.gov']}"
 							content="#{lbl['lbl.sc.dialog.confirm.message']}"
-							update="@([id$=#{scoringPnlId}])" />
+							update="@([id$=techcompanyExpPrivateNumbersOfYears])" />
 					</h:panelGroup>
 
 				</h:panelGroup>

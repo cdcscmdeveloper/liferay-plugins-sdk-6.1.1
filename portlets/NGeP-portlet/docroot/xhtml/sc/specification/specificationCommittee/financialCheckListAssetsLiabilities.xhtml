@@ -146,7 +146,7 @@
 									update="#{scoringPnlId}" />
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+									disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(scoringList)}"
 									process="@this" partialSubmit="true"
 									oncomplete="financialAssetLiabilityDeletePopUp.show();"
 									update="@([id$=#{financialAssetsLiabilityDeleteId}])">
@@ -165,7 +165,7 @@
 								okAction="specificationBackingBean.deleteCheckListScoreContrats"
 								title="#{lbl['lbl.sc.assest.liabilities']}"
 								content="#{lbl['lbl.sc.dialog.confirm.message']}"
-								update="@([id$=#{scoringPnlId}])" />
+								update="@([id$=financialAssetsLiabilityScore])" />
 						</h:panelGroup>
 					</h:panelGroup>
 
@@ -252,7 +252,7 @@
 									update="#{scoringPnlId}" />
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+									disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(scoringList)}"
 									process="@this" partialSubmit="true"
 									oncomplete="financialAssetLiabilityCurrentRatioDeletePopUp.show();"
 									update="@([id$=#{financialAssetsLiabilityCurrentRatioDeleteId}])">
@@ -272,7 +272,7 @@
 								okAction="specificationBackingBean.deleteCheckListScoreYears"
 								title="#{lbl['lbl.sc.spec.asset.score.current.ratio']}"
 								content="#{lbl['lbl.sc.dialog.confirm.message']}"
-								update="@([id$=#{scoringPnlId}])" />
+								update="@([id$=financialAssetsLiabilitycurrentRatioScoring])" />
 						</h:panelGroup>
 					</h:panelGroup>
 
