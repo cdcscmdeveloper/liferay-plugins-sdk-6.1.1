@@ -287,8 +287,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 						// If FRN approved
-						if(resDTO.getPmStatus()!=null && (resDTO.getPmStatus().getStatusId()==FulfilmentStatusConst.FN_ACKNOWLEDGED || 
-								resDTO.getPmStatus().getStatusId()==FulfilmentStatusConst.FN_PENDING_CANCEL_SUBMISSION)) {
+						if(resDTO.getPmStatus()!=null && (resDTO.getPmStatus().getStatusId().longValue()==FulfilmentStatusConst.FN_ACKNOWLEDGED.longValue() || 
+								resDTO.getPmStatus().getStatusId().longValue()==FulfilmentStatusConst.FN_PENDING_CANCEL_SUBMISSION.longValue())) {
 							messageId = MessageConst.INFO_745016;
 						} else {
 							messageId = MessageConst.INFO_700007;
