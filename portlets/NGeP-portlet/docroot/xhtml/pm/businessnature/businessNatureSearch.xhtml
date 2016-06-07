@@ -19,8 +19,8 @@
 						value="#{businessNatureBackingBean.managedBean.categoryLvl}">
 						<f:selectItems
 							value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}" />
-						<p:ajax event="change"
-							update="businessNatureSearch" />
+						<p:ajax event="change" listener="#{businessNatureBackingBean.updateBusinessCategoryLevel()}"
+							update="businessNatureSearch,businessNatureDataModel" />
 					</p:selectOneMenu></td>
 			</tr>
 
