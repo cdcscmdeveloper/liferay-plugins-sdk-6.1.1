@@ -422,7 +422,13 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 									if(!resDTO.isFlag()) {
 										docsearchResult.setCancelAction(false);
 									}
-								}								
+								}
+								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DELIVERY_ORDER)) {
+									// Check respective FRN is it Awaiting 1GFMAS or Pending Cancellation Submission
+									if(flDocumentSO.isRelatedDocumentInProgress(docsearchResult.getDocType(), docsearchResult.getDocId())) {
+										docsearchResult.setCancelAction(false);
+									}
+								}
 							}
 							if(isStopFulfilment){
 								docsearchResult.setStopFulfilmentAction(true);
