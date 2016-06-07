@@ -3057,8 +3057,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	public void updateCategoryLevel() {
 		log.info("getManagedBean().getPmCategoryLevel() "
 				+ getManagedBean().getPmCategoryLevel());	
-		//load the category data based on selection categroy level
-		searchCategory.reloadData();
+		//reset the Category data based on selection categroy level		
+		searchCategory.updatePagingResults(null);
 		
 	}
 
