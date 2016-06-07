@@ -239,33 +239,40 @@
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
 										size="23" maxlength="12"
-										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.newicno']} - #{lbl['lbl.pm.profiles.invalidIcNo']}">
+										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} - #{lbl['lbl.pm.profiles.invalidIcNo']}">
 										<f:validateRegex pattern="[0-9]{12}" />
 										<p:ajax event="change"
 											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
 											partialSubmit="true" process="@this" update="@this,somIdType,itLoginId,somSalutation,itUserName,somNationality"/>
 									</p:inputText>
-								</c:when>
-								<c:otherwise>
-
-									<p:inputText id="itIdentityNo" styleClass="icTextL"
-										required="#{!empty param['disableValidation']}"
-										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
-										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
-										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
-										size="23" maxlength="15">
-										<p:ajax event="change"
-											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
-											partialSubmit="true" process="@this" update="@this,somIdType,itLoginId,somSalutation,itUserName,somNationality"/>
-									</p:inputText>
-								</c:otherwise>
-							</c:choose>
-							&#160;<p:graphicImage id="giIcNo"
+									&#160;<p:graphicImage id="giIcNo"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giIcNo" id="ttIcNo"
 								showEffect="fade" hideEffect="fade" > 
 									<p:outputLabel escape="false" value="#{lbl['lbl.pm.profiles.userdetails.idno.tooltip']}"/>
 								</p:tooltip>
+								</c:when>
+								<c:otherwise>
+									<p:inputText id="itIdentityNo" styleClass="icTextL"
+										required="#{!empty param['disableValidation']}"
+										label="#{lbl['lbl.pm.profiles.userdetails.passportno']}"
+										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
+										size="23" maxlength="15"
+										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.passportno']} - #{lbl['lbl.pm.profiles.invalidPassportNo']}">
+										<f:validateRegex pattern="[a-zA-Z0-9]{6,15}" />
+										<p:ajax event="change"
+											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
+											partialSubmit="true" process="@this" update="@this,somIdType,itLoginId,somSalutation,itUserName,somNationality"/>
+									</p:inputText>
+									&#160;<p:graphicImage id="giPassportNo"
+								value="/css/images/design/tooltips.png" /> <p:tooltip
+								for="giPassportNo" id="ttPassportNo"
+								showEffect="fade" hideEffect="fade" > 
+									<p:outputLabel escape="false" value="#{lbl['lbl.pm.profiles.userdetails.passportno.tooltip']}"/>
+								</p:tooltip>
+								</c:otherwise>
+							</c:choose>
 								<p:message id="itIdentityNoMsg" for="itIdentityNo"
 								display="icon" />
 							</div>
