@@ -170,7 +170,7 @@
 									update="#{scoringPnlId}" />
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+									disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(scoringList)}"
 									process="@this" partialSubmit="true"
 									oncomplete="financialGovCompanyExperienceDeletePopUp.show();"
 									update="@([id$=#{financialGovCompanyExperienceNoOfContractsDeleteId}])">
@@ -191,7 +191,7 @@
 								okAction="specificationBackingBean.deleteCheckListScoreContrats"
 								title="#{lbl['lbl.sc.spec.company.exp.fed.gov']}"
 								content="#{lbl['lbl.sc.dialog.confirm.message']}"
-								update="@([id$=#{scoringPnlId}])" />
+								update="@([id$=financialGovernmentContracts])" />
 						</h:panelGroup>
 					</h:panelGroup>
 

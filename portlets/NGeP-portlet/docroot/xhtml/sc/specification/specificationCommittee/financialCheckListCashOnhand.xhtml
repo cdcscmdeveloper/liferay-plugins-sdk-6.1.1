@@ -130,7 +130,7 @@
 									update="#{scoringPnlId}" />
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+									disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(scoringList)}"
 									process="@this" partialSubmit="true"
 									oncomplete="financialCashOnHabdDeletePopUp.show();"
 									update="@([id$=#{financialCashOnHandDeleteId}])">
@@ -148,7 +148,7 @@
 								okAction="specificationBackingBean.deleteCheckListScoreContrats"
 								title="#{lbl['lbl.sc.spec.cash.hand']}"
 								content="#{lbl['lbl.sc.dialog.confirm.message']}"
-								update="@([id$=#{scoringPnlId}])" />
+								update="@([id$=financialCashOnhandScore])" />
 						</h:panelGroup>
 					</h:panelGroup>
 
