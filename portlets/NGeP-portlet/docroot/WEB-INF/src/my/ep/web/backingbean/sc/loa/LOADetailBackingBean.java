@@ -726,17 +726,21 @@ public class LOADetailBackingBean extends
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
 
 		
-		checkPerformanceBondMandatory();
+		
 		checkAgreementMandatory();
 
 		// calculate performance bond amt and amount in words for S2
 		if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
+			
+			// performance bond for only S2
+			checkPerformanceBondMandatory();
+			
 			scLoa = calcBondAmount(scLoa,false);
-		}
-		
-		if (scLoa.getBondAmt() != null) {
-			getManagedBean().setBondAmountWord(
-					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+			
+			if (scLoa.getBondAmt() != null) {
+				getManagedBean().setBondAmountWord(
+						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+			}
 		}
 		
 		// clauses title
