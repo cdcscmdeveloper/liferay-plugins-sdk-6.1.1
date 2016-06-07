@@ -392,11 +392,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					<td width="70%">
 				
 						<div style="height: 370px; overflow-y: scroll;">
-							<p:tree id="treeZoneGeneralPopup"
-								value="#{panelBackingBean.managedBean.rootZoanlTree}"
-								var="location"
+							<p:tree id="treeZoneGeneralPopup" 
+								value="#{panelBackingBean.managedBean.rootZoanlTree}"  
+								var="location" 
 								selection="#{panelBackingBean.managedBean.selectedGeneralTreeNodes}"
-								selectionMode="checkbox">
+								selectionMode="checkbox" >
 							<p:ajax event="select" listener="#{panelBackingBean.onNodeSelect}" update=":form:okBtnId"/>
 								<p:ajax event="unselect" listener="#{panelBackingBean.onNodeSelect1}" update=":form:okBtnId"/>
 								<p:treeNode type="state">
