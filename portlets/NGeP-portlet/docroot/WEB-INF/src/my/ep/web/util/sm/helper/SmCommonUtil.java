@@ -3866,9 +3866,9 @@ public class SmCommonUtil {
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale());
 			if (message != null) {
-				throw new EpException("MYID: " + message);
+				throw new EpException(message + "(ERR-729999)");
 			} else {
-				throw new EpException("MYID: " + ex.getMessage());
+				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
 		}
 	}
