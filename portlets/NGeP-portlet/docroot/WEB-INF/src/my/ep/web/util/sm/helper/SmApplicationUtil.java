@@ -3786,7 +3786,7 @@ public class SmApplicationUtil {
 			descList = SmServiceLookup.getStatusSO()
 					.retrieveRegStatusList(reqDTO).getStatusDescList();
 			if (!EntityHelper.isCollectionEmpty(descList)
-					&& !StringUtils.isBlank(suppType) && suppType.equals("K")) {
+					&& !StringUtils.isBlank(suppType) && suppType.equals("J")) {
 				List<PmStatusDesc> toRemoveList = new ArrayList<PmStatusDesc>();
 				for (PmStatusDesc statDesc : descList) {
 					if (statDesc.getPmStatus() != null
