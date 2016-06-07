@@ -239,7 +239,7 @@
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
 										size="23" maxlength="12"
-										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} - #{lbl['lbl.pm.profiles.invalidIcNo']}">
+										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.newicno']} - #{lbl['lbl.pm.profiles.invalidIcNo']}">
 										<f:validateRegex pattern="[0-9]{12}" />
 										<p:ajax event="change"
 											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
@@ -255,11 +255,11 @@
 								<c:otherwise>
 									<p:inputText id="itIdentityNo" styleClass="icTextL"
 										required="#{!empty param['disableValidation']}"
-										label="#{lbl['lbl.pm.profiles.userdetails.passportno']}"
+										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
-										size="23" maxlength="15"
-										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.passportno']} - #{lbl['lbl.pm.profiles.invalidPassportNo']}">
+										size="23" maxlength="15" converter="toUpperCaseConverter"
+										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.userdetails.passportno']} - #{lbl['lbl.pm.profiles.invalidPassportNo']}">
 										<f:validateRegex pattern="[a-zA-Z0-9]{6,15}" />
 										<p:ajax event="change"
 											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
