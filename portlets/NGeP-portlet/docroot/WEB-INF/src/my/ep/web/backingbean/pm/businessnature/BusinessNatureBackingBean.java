@@ -87,6 +87,10 @@ public class BusinessNatureBackingBean extends
 		return "/xhtml/pm/businessnature/businessNatureMain.xhtml?faces-redirect=true";
 
 	}
+	
+	public void updateBusinessCategoryLevel(){
+		businessNatureDataModel.updatePagingResults(null);
+	}
 
 	/**
 	 * reset search for Business Nature
