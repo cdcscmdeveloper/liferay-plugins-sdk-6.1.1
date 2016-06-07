@@ -458,9 +458,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				
 				getManagedBean().setChargeLineItemRoot(null);
 				getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
-//				if(getManagedBean().getInvoice().getAp59Status()==null || getManagedBean().getInvoice().getAp59Status().getStatusId().longValue()!=FulfilmentStatusConst.AP59_PENDING_AP59_DECISION.longValue()) { 
-//					getManagedBean().setOutComes(outcome);
-//				}
+				if(getManagedBean().getInvoice().getAp59Status()!=null && getManagedBean().getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION.longValue()) { 
+					getManagedBean().setOutComes(new String[0]);
+				}
 				
 				if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
 					getFactoringDtl(); 
