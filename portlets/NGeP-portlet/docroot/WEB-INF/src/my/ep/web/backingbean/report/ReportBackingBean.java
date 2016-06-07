@@ -176,6 +176,7 @@ public class ReportBackingBean extends
 	/** The report list. */
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
 
+	/** The report mod list. */
 	private List<Object[]> reportModList = new ArrayList<Object[]>();
 
 	/** The report category list. */
@@ -2893,6 +2894,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the report mod list.
+	 * 
 	 * @return the reportModList
 	 */
 	public List<Object[]> getReportModList() {
@@ -2900,6 +2903,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Sets the report mod list.
+	 * 
 	 * @param reportModList
 	 *            the reportModList to set
 	 */
@@ -9933,6 +9938,11 @@ public class ReportBackingBean extends
 
 	}
 
+	/**
+	 * Gets the cat dropdown status list.
+	 * 
+	 * @return the cat dropdown status list
+	 */
 	private void getCatDropdownStatusList() {
 		if (StringUtils.isNotEmpty(this.getSmState())) {
 			this.setMainCatValueReqd(true);
@@ -13082,6 +13092,9 @@ public class ReportBackingBean extends
 		return scYearList;
 	}
 
+	/**
+	 * On change list of code values for lovs.
+	 */
 	public void onChangeListOfCodeValuesForLovs() {
 		if (this.getReportValue().equalsIgnoreCase(
 				ReportConst.LST_ITM_CODE_RPT_VAL)) {
@@ -13111,6 +13124,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change org category type.
+	 */
 	public void changeOrgCategoryType() {
 		if (StringUtils.isNotEmpty(this.getPmOrgCategory())
 				&& StringUtils.isNotEmpty(this.getPmOrgType())) {
@@ -13120,6 +13136,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Check pm status value.
+	 */
 	public void checkPmStatusValue() {
 		if ( this.getManagedBean()
 				.getReportCode()
@@ -13136,6 +13155,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change org type values.
+	 */
 	public void changeOrgTypeValues() {
 		if (this.getManagedBean().getReportCode()
 				.equalsIgnoreCase(ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
@@ -13155,6 +13177,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * On company name change for lov.
+	 */
 	public void onCompanyNameChangeForLOV() {
 		if (this.getManagedBean().getSelectedOrgProfile() != null
 				&& this.getManagedBean().getSelectedOrgProfile()
@@ -13181,6 +13206,9 @@ public class ReportBackingBean extends
 		 */
 	}
 
+	/**
+	 * On supplier name change for lov.
+	 */
 	public void onSupplierNameChangeForLOV() {
 		if (this.getManagedBean().getSelectedOrgProfile() != null
 				&& this.getManagedBean().getSelectedOrgProfile()
@@ -13191,6 +13219,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * On supplier name change for ctlov.
+	 */
 	public void onSupplierNameChangeForCTLOV() {
 		if (this.getManagedBean().getSelectedOrgProfile() != null
 				&& this.getManagedBean().getSelectedOrgProfile()
@@ -13201,6 +13232,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * On supplier name change for fllov.
+	 */
 	public void onSupplierNameChangeForFLLOV() {
 		if (this.getManagedBean().getSelectedOrgProfile() != null
 				&& this.getManagedBean().getSelectedOrgProfile()
@@ -13211,6 +13245,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change application no.
+	 */
 	public void changeApplicationNo() {
 		if (StringUtils.isNotEmpty(this.getSmApplicationNo())
 				&& StringUtils.isNotEmpty(this.getSmCompanyName())
@@ -13224,6 +13261,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change svo user.
+	 */
 	public void changeSVOUser() {
 		if (StringUtils.isNotEmpty(this.getSmSVOUser())
 				&& StringUtils.isNotEmpty(this.getSmCompanyName())
@@ -13237,6 +13277,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change state.
+	 */
 	public void changeState() {
 		if (this.getSmState() != null && this.getSmCompanyName() != null
 				&& this.getSmSVOUser() != null
@@ -13249,6 +13292,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change district.
+	 */
 	public void changeDistrict() {
 		if (StringUtils.isNotEmpty(this.getSmDistrict())
 				&& StringUtils.isNotEmpty(this.getSmCompanyName())
@@ -13262,6 +13308,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * On org code change for lov.
+	 */
 	public void onOrgCodeChangeForLOV() {
 
 		if (this.getManagedBean().getReportCode()
@@ -13275,7 +13324,55 @@ public class ReportBackingBean extends
 			getOrCodeAndOrgNameWithStatus();
 		}
 	}
+	
+	/**
+	 * On fina org name change for lov.
+	 */
+	public void onFinaOrgNameChangeForLOV() {
 
+		if (this.getManagedBean()
+				.getReportCode()
+				.equalsIgnoreCase(
+						ReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL)) {
+			if (this.getManagedBean().getSelectedOrgProfile() != null
+					&& this.getManagedBean().getSelectedOrgProfile()
+							.getPmFinancialOrg() != null) {
+				this.setPmFinancialOrgName(this.getManagedBean()
+						.getSelectedOrgProfile().getPmFinancialOrg()
+						.getFinOrgName());
+				this.setPmBusinessRegNo(this.getManagedBean()
+						.getSelectedOrgProfile().getPmFinancialOrg()
+						.getBizRegNumber());
+			}
+		}
+	}
+		
+	/**
+	 * On role code change for lov.
+	 */
+	public void onRoleCodeChangeForLOV() {
+
+		if (this.getManagedBean().getReportCode()
+				.equalsIgnoreCase(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
+			if (this.getManagedBean().getSelectedPmRoleDesc() != null
+					&& this.getManagedBean().getSelectedPmRoleDesc()
+							.getPmRole() != null) {
+				this.setPmRoleCode(this.getManagedBean()
+						.getSelectedPmRoleDesc().getPmRole().getRoleCode());
+			}
+		}
+		if (StringUtils.isNotEmpty(this.getPmIdentificationNo())
+				|| StringUtils.isNotEmpty(this.getPmUserName())
+				|| StringUtils.isNotEmpty(this.getPmRoleCode())) {
+			this.setValuesEmpty(false);
+		} else {
+			this.setValuesEmpty(true);
+		}
+	}
+
+	/**
+	 * Change reg payment type and receipt date.
+	 */
 	public void changeRegPaymentTypeAndReceiptDate() {
 		if ((CollectionUtils.isNotEmpty(this.getSmMofRegistrationFeeList())
 				|| CollectionUtils.isNotEmpty(this.getSmProcessingFeeList()) || CollectionUtils
@@ -13287,6 +13384,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change mof reg no from and to.
+	 */
 	public void changeMOFRegNoFromAndTo() {
 		if (StringUtils.isNotEmpty(this.getSmMofRegNoFrom())
 				&& StringUtils.isNotEmpty(getSmMofRegNoTo())) {
@@ -13296,6 +13396,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change gst register status.
+	 */
 	public void changeGSTRegisterStatus() {
 		if (StringUtils.isNotEmpty(this.getSmGSTRegisteredStatus())
 				&& (this.getFromDate() != null && this.getToDate() != null)) {
@@ -13305,6 +13408,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change expected sv from date.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void changeExpectedSVFromDate(SelectEvent event) {
 		/*
 		 * this.setFromDate((Date) event.getObject()); if (this.getFromDate() !=
@@ -13321,6 +13430,12 @@ public class ReportBackingBean extends
 		 */
 	}
 
+	/**
+	 * Change expected sv to date.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void changeExpectedSVToDate(SelectEvent event) {
 		/*
 		 * this.setToDate((Date) event.getObject()); if (this.getFromDate() !=
@@ -13334,6 +13449,12 @@ public class ReportBackingBean extends
 		 */
 	}
 
+	/**
+	 * Change virtual certificate from date.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void changeVirtualCertificateFromDate(SelectEvent event) {
 		this.setFromDate((Date) event.getObject());
 		if (this.getFromDate() != null && this.getToDate() != null) {
@@ -13348,6 +13469,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change virtual certificate to date.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void changeVirtualCertificateToDate(SelectEvent event) {
 		this.setToDate((Date) event.getObject());
 		if (this.getFromDate() != null && this.getToDate() != null) {
@@ -13362,6 +13489,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change gst effective from date.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void changeGSTEffectiveFromDate(SelectEvent event) {
 		this.setFromDate((Date) event.getObject());
 		if ((this.getFromDate() != null && this.getToDate() != null)
@@ -13377,6 +13510,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change gst effective to date.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void changeGSTEffectiveToDate(SelectEvent event) {
 		this.setToDate((Date) event.getObject());
 		if ((this.getFromDate() != null && this.getToDate() != null)
@@ -13392,6 +13531,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change receipt from date.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void changeReceiptFromDate(SelectEvent event) {
 		this.setFromDate((Date) event.getObject());
 		if ((this.getFromDate() != null && this.getToDate() != null)
@@ -13411,6 +13556,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change receipt to date.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void changeReceiptToDate(SelectEvent event) {
 		this.setToDate((Date) event.getObject());
 		if ((this.getFromDate() != null && this.getToDate() != null)
@@ -13431,6 +13582,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change expiry from date.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void changeExpiryFromDate(SelectEvent event) {
 		this.setFromDate((Date) event.getObject());
 		if (this.getFromDate() != null && this.getToDate() != null) {
@@ -13445,6 +13602,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Change expiry to date.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void changeExpiryToDate(SelectEvent event) {
 		this.setToDate((Date) event.getObject());
 		if (this.getFromDate() != null && this.getToDate() != null) {
@@ -13459,6 +13622,11 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the or code and org name.
+	 * 
+	 * @return the or code and org name
+	 */
 	private void getOrCodeAndOrgName() {
 		if (this.getManagedBean().getSelectedOrgProfile() != null
 				&& this.getManagedBean().getSelectedOrgProfile()
@@ -13470,6 +13638,11 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the or code and org name with status.
+	 * 
+	 * @return the or code and org name with status
+	 */
 	private void getOrCodeAndOrgNameWithStatus() {
 		if (this.getManagedBean().getSelectedOrgProfile() != null
 				&& this.getManagedBean().getSelectedOrgProfile()
@@ -13488,6 +13661,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * On mandatory org name change for lov.
+	 */
 	public void onMandatoryOrgNameChangeForLOV() {
 		if (this.getManagedBean().getSelectedOrgProfile() != null
 				&& this.getManagedBean().getSelectedOrgProfile()
@@ -13506,6 +13682,9 @@ public class ReportBackingBean extends
 	}
 
 	
+	/**
+	 * On non mandatory org name change for profile lov.
+	 */
 	public void onNonMandatoryOrgNameChangeForProfileLOV() {
 		if (this.getManagedBean().getSelectedOrgProfile() != null
 				&& this.getManagedBean().getSelectedOrgProfile()
@@ -13528,7 +13707,17 @@ public class ReportBackingBean extends
 	}
 	
 	
-	public void onChangePmListOfProfileFields() {		
+	/**
+	 * On change pm list of profile fields.
+	 */
+	public void onChangePmListOfProfileFields() {
+		
+		if (this.getManagedBean().getSelectedPmUser() != null) {
+			
+			this.setPmIdentificationNo(this.getManagedBean().getSelectedPmUser().getIdentificationNo());
+			this.setPmUserName(this.getManagedBean().getSelectedPmUser().getUserName());
+		}
+		
 		if (StringUtils.isNotEmpty(this.getPmIdentificationNo())
 				|| StringUtils.isNotEmpty(this.getPmUserName())
 				|| StringUtils.isNotEmpty(this.getPmRoleCode()) ) {
@@ -13538,6 +13727,9 @@ public class ReportBackingBean extends
 		}
 	}
 	
+	/**
+	 * On change pm user name.
+	 */
 	public void onChangePmUserName() {		
 		if (StringUtils.isNotEmpty(this.getPmUserName())) {
 			this.setValuesEmpty(false);
@@ -13546,6 +13738,9 @@ public class ReportBackingBean extends
 		}
 	}
 	
+	/**
+	 * On change pm role code.
+	 */
 	public void onChangePmRoleCode() {		
 		if (StringUtils.isNotEmpty(this.getPmRoleCode())) {
 			this.setValuesEmpty(false);
@@ -13554,6 +13749,9 @@ public class ReportBackingBean extends
 		}
 	}
 	
+	/**
+	 * On item code change for lov.
+	 */
 	public void onItemCodeChangeForLOV() {
 		if (this.getManagedBean().getSelectedItem() != null) {
 			this.setPmItemCode(this.getManagedBean().getSelectedItem()
@@ -13565,6 +13763,9 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * On change values for lo vs.
+	 */
 	public void onChangeValuesForLOVs() {
 
 		/*
@@ -17233,8 +17434,10 @@ public class ReportBackingBean extends
 			this.setPmItemName(null);
 			this.setPmItemCode(null);
 			this.setPmCompanyName(null);
+			this.getManagedBean().setSelectedPmUser(new PmUser());
 			this.setPmIdentificationNo(null);
 			this.setPmUserName(null);
+			this.getManagedBean().setSelectedPmRoleDesc(new PmRoleDesc());
 			this.setPmRoleCode(null);
 			this.setPmContractNo(null);
 			this.setPmPhysicalContractNo(null);
@@ -17261,6 +17464,9 @@ public class ReportBackingBean extends
 
 	}
 
+	/**
+	 * Check lovs and default dates.
+	 */
 	private void checkLovsAndDefaultDates() {
 		if ((this.getModuleValue().equalsIgnoreCase(
 				ModuleCodeConst.PROCUREMENT_PLAN) || this.getModuleValue()
@@ -18031,6 +18237,15 @@ public class ReportBackingBean extends
 		return itemsList;
 	}
 
+	/**
+	 * Gets the all org type list.
+	 * 
+	 * @param federalItems
+	 *            the federal items
+	 * @param otherItems
+	 *            the other items
+	 * @return the all org type list
+	 */
 	private SelectItem[] getAllOrgTypeList(SelectItem[] federalItems,
 			SelectItem[] otherItems) {
 		ISearchBean<PmParameterDesc> searchBean1;
