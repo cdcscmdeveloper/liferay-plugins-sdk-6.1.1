@@ -4,8 +4,9 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
+import my.ep.constant.EpPropertiesConst;
 import my.ep.factory.EpLogger;
-import my.ep.util.EpPropertiesUtils;
+import my.ep.util.SchedulerPropertiesUtils;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.cm.CmDropSequenceJob;
@@ -19,46 +20,67 @@ import org.quartz.JobKey;
 
 public class CmSchedulerServlet extends HttpServlet {
 	private static final long serialVersionUID = 8691110272078406918L;
-	public static Logger log = EpLogger
-			.getLogger(CmSchedulerServlet.class);
+	public static Logger log = EpLogger.getLogger(CmSchedulerServlet.class);
 
 	public void init(ServletConfig config) throws ServletException {
 
 		// PHIS CM Out bound Continuous job
-		
-		EpSchedulerHelper.scheduleJob(new JobKey(
-				SchedulerConstants.PHIS_MASTER_DATA,
-				SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-				MasterDataMaterialJob.class, SchedulerConstants.PHIS_CM_JOB_DESC,
-				EpPropertiesUtils.getInstance().getProperty("phis.cm.outbound"));
-		
-		EpSchedulerHelper.scheduleJob(new JobKey(
-				SchedulerConstants.PHIS_MASTER_DATA_MATERIAL,
-				SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-				MasterDataMaterialInformationJob.class, SchedulerConstants.PHIS_MASTERDATA_MATERIAL_JOB_DESC,
-				EpPropertiesUtils.getInstance().getProperty("phis.cm.outbound"));
-		
-		// 1GFMAS Master Data Material Information job
-		EpSchedulerHelper.scheduleJob(new JobKey(
-				SchedulerConstants.GFMAS_MASTER_DATA_MATERIAL,
-				SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-				MaterialMasterDataInformationJob.class, SchedulerConstants.GFMAS_MASTERDATA_MATERIAL_JOB_DESC,
-				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound1"));
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(SchedulerConstants.PHIS_MASTER_DATA,
+								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
+						MasterDataMaterialJob.class,
+						SchedulerConstants.PHIS_CM_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CM_PHIS_CM_OUTBOUND));
 
-		///CM Expired Item
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(
+								SchedulerConstants.PHIS_MASTER_DATA_MATERIAL,
+								SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
+						MasterDataMaterialInformationJob.class,
+						SchedulerConstants.PHIS_MASTERDATA_MATERIAL_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CM_PHIS_CM_OUTBOUND));
+
+		// 1GFMAS Master Data Material Information job
+		//TODO is this cm or sm integration job
+		EpSchedulerHelper.scheduleJob(
+				new JobKey(SchedulerConstants.GFMAS_MASTER_DATA_MATERIAL,
+						SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+				MaterialMasterDataInformationJob.class,
+				SchedulerConstants.GFMAS_MASTERDATA_MATERIAL_JOB_DESC,
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_1GFMAS_SM_OUTBOUND1));
+
+		// /CM Expired Item
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB,
 				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB_GROUP),
-				CmUpdateExpiredItemJob.class, SchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
-				SchedulerConstants.CM_EXPIRED_ITEM_TIMER);
+				CmUpdateExpiredItemJob.class,
+				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CM_EXPIRED_ITEM));
 
-		
-		///CM Drop Doc Sequence
+		// /CM Drop Doc Sequence
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB,
 				SchedulerConstants.CM_DROP_DOC_SEQ_JOB_GROUP),
-				CmDropSequenceJob.class, SchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
-				SchedulerConstants.CM_EXPIRED_ITEM_TIMER);
-		
+				CmDropSequenceJob.class,
+				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CM_EXPIRED_ITEM));
+
 	}
 }
