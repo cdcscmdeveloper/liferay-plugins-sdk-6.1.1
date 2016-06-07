@@ -197,17 +197,12 @@
 						rendered="#{isEditableStatus}" /></td>
 				<td colspan="3"><p:inputText id="sqTitle"
 						value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}"
-						rendered="#{!isDocTypeQuotation}" size="106" required="true"
+						size="106" required="true"
 						label="#{lbl['lbl.sc.title']}"
 						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
 						maxlength="100" /> <p:message id="sqTitleMsg" for="sqTitle"
-						display="icon" /> <p:inputText id="qtTitle"
-						value="#{lOADetailBackingBean.managedBean.scLoa.scQt.qtTitle}"
-						rendered="#{isDocTypeQuotation}" size="106" required="true"
-						label="#{lbl['lbl.sc.title']}"
-						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
-						maxlength="100" /> <p:message id="qtTitleMsg" for="qtTitle"
-						display="icon" /></td>
+						display="icon" />
+					</td>
 			</tr>
 
 			<tr>
