@@ -7953,7 +7953,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/directpurchase/directPurchaseSearch.xhtml</value>
+			<value>/xhtml/sc/directpurchase/preRenderDirectPurchaseSearch.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
