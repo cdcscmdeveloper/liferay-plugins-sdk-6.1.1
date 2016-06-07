@@ -329,7 +329,8 @@ public class LocationSingleton {
 	 * @param locClass
 	 * @return
 	 */
-	public <LOCATION_CLASS> TreeNode buildLocationPopupTree(Long countryId, List<PmState> listStates, List<PmDistrict> listDistricts, String locationLevelCode, Class<CtPanelZoneDtl> locClass) {
+	public <LOCATION_CLASS> TreeNode buildLocationPopupTree(Long countryId, List<PmState> listStates,
+			 List<PmDistrict> listDistricts, String locationLevelCode, Class<CtPanelZoneDtl> locClass, boolean view) {
 		// build tree
 		TreeNode rootLocationTree = new DefaultTreeNode("root", null);
 					
@@ -390,7 +391,6 @@ public class LocationSingleton {
 						stateNode.setSelected(Boolean.TRUE);
 					}
 				}
-				
 			}
 		} catch (InstantiationException e) {
 			throw new EpException(e.getMessage());

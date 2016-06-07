@@ -1891,7 +1891,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterId().equals(locationLevel)) {
 			         getManagedBean().setRootZoanlTree(LocationSingleton.getInstance().buildLocationPopupTree(
-		                getCountryId(), null, null,paramDesc.getPmParameter().getParameterCode(),CtPanelZoneDtl.class));
+		                getCountryId(), null, null,paramDesc.getPmParameter().getParameterCode(),CtPanelZoneDtl.class, getManagedBean().isViewContract()));
 			   }
 			}
 			    this.getManagedBean().setZoneName(null);
@@ -2025,12 +2025,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		   getManagedBean().setRootZoanlTree(
 				LocationSingleton.getInstance().buildLocationPopupTree(getCountryId(),
 						states, districts,ParameterConst.LOCATION_LEVEL_DISTRICT,
-						CtPanelZoneDtl.class));
+						CtPanelZoneDtl.class, getManagedBean().isViewContract()));
 		}else{
 			getManagedBean().setRootZoanlTree(
 					LocationSingleton.getInstance().buildLocationPopupTree(getCountryId(),
 							states, districts,ParameterConst.LOCATION_LEVEL_STATE,
-							CtPanelZoneDtl.class));
+							CtPanelZoneDtl.class, getManagedBean().isViewContract()));
 		}
 
 		int i = index;
