@@ -3785,6 +3785,20 @@ public class SmApplicationUtil {
 		} else {
 			descList = SmServiceLookup.getStatusSO()
 					.retrieveRegStatusList(reqDTO).getStatusDescList();
+			if (!EntityHelper.isCollectionEmpty(descList)
+					&& !StringUtils.isBlank(suppType) && suppType.equals("K")) {
+				List<PmStatusDesc> toRemoveList = new ArrayList<PmStatusDesc>();
+				for (PmStatusDesc statDesc : descList) {
+					if (statDesc.getPmStatus() != null
+							&& statDesc.getPmStatus().getPmRegStatus() != null
+							&& statDesc.getPmStatus().getPmRegStatus()
+									.isBumiAppl()) {
+						toRemoveList.add(statDesc);
+					}
+				}
+				EntityHelper.compareAndRemoveEntityFromList(toRemoveList,
+						descList, "statusDescId");
+			}
 		}
 		return descList;
 	}
