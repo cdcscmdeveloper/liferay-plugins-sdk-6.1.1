@@ -1391,6 +1391,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outCome);
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setRoleCode(getCommitteeRoleCode());
 			
 			MeetingResDTO resDTO = meetingSO.submitFinalizationCommitteeMeeting(reqDTO);
 			String qtNo = getManagedBean().getScQt().getQtNo();
@@ -1402,6 +1404,28 @@ public class SupplierFinalizationMeetingBackingBean extends
 		} finally {
 			meetingSO = null;
 		}
+	}
+	
+	private String getCommitteeRoleCode(){
+		return getCommitteMemberByUserId()
+				.getRoleCode();
+	}
+
+	private CommitteResDTO getCommitteMemberByUserId() {
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		String committeeType = this.getManagedBean()
+				.getCommitteeType();
+		ICommitteSO committeSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setCommitteeType(committeeType);
+		
+		return committeSO.retrieveCommitteMemberByUserId(
+				committeReqDTO);
 	}
 	
 	private MeetingReqDTO meetingDtlsInfo(){
