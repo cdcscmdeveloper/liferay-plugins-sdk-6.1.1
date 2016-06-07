@@ -64,7 +64,22 @@ import org.springframework.util.CollectionUtils;
 @RequestScoped
 public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPurchaseManagedBean> {
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
+	
+	/** The direct purchase search page nav. */
+	private String DIRECT_PURCHASE_SEARCH_PAGE_NAV = "directPurchaseSearch";
+	
 
+	public void preRenderDirectPurchaseSearch() {
+		debugLogger("preRenderDirectPurchaseSearch");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		// reset search info
+		reset();
+		
+		fc.getApplication()
+		.getNavigationHandler()
+		.handleNavigation(fc, null, DIRECT_PURCHASE_SEARCH_PAGE_NAV);
+	}
 	/**
 	 * Gets the document type.
 	 *
