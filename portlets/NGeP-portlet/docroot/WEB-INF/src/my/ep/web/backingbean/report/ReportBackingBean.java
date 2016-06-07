@@ -13140,19 +13140,24 @@ public class ReportBackingBean extends
 	 * Check pm status value.
 	 */
 	public void checkPmStatusValue() {
-		if ( this.getManagedBean()
+		if (this.getManagedBean()
 				.getReportCode()
 				.equalsIgnoreCase(
-						ReportConst.PM_LIST_OF_PROFILES_RPT_VAL) || this.getManagedBean()
-				.getReportCode()
-				.equalsIgnoreCase(
-						ReportConst.PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL)  ) {
+						ReportConst.PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL)) {
 			if (StringUtils.isNotEmpty(this.getPmStatus())) {
 				this.setValuesEmpty(false);
 			} else {
 				this.setValuesEmpty(true);
 			}
-		}
+		} else if(this.getManagedBean().getReportCode()
+				.equalsIgnoreCase(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
+		
+			chkValuesForPmListOfProfiles();
+			
+		}else if(this.getManagedBean().getReportCode()
+				.equalsIgnoreCase(ReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL)) {
+			    chkValuesForPmFinanceIns();
+	         }
 	}
 
 	/**
@@ -13169,11 +13174,8 @@ public class ReportBackingBean extends
 			}
 		} else if (this.getManagedBean().getReportCode()
 				.equalsIgnoreCase(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
-			if (StringUtils.isNotEmpty(this.getPmOrgType())) {
-				this.setValuesEmpty(false);
-			} else {
-				this.setValuesEmpty(true);
-			}
+                      
+			            chkValuesForPmListOfProfiles();
 		}
 	}
 
@@ -13281,10 +13283,11 @@ public class ReportBackingBean extends
 	 * Change state.
 	 */
 	public void changeState() {
-		if (this.getSmState() != null && this.getSmCompanyName() != null
-				&& this.getSmSVOUser() != null
-				&& this.getSmApplicationNo() != null
-				&& this.getSmDistrict() != null
+		if (StringUtils.isNotEmpty(this.getSmState())
+				&& StringUtils.isNotEmpty(this.getSmCompanyName())
+				&& StringUtils.isNotEmpty(this.getSmSVOUser())
+				&& StringUtils.isNotEmpty(this.getSmApplicationNo())
+				&& StringUtils.isNotEmpty(this.getSmDistrict())
 				&& (this.getFromDate() != null && this.getToDate() != null)) {
 			this.setValuesEmpty(false);
 		} else {
@@ -13343,6 +13346,9 @@ public class ReportBackingBean extends
 				this.setPmBusinessRegNo(this.getManagedBean()
 						.getSelectedOrgProfile().getPmFinancialOrg()
 						.getBizRegNumber());
+				
+				chkValuesForPmFinanceIns();
+				
 			}
 		}
 	}
@@ -13361,13 +13367,7 @@ public class ReportBackingBean extends
 						.getSelectedPmRoleDesc().getPmRole().getRoleCode());
 			}
 		}
-		if (StringUtils.isNotEmpty(this.getPmIdentificationNo())
-				|| StringUtils.isNotEmpty(this.getPmUserName())
-				|| StringUtils.isNotEmpty(this.getPmRoleCode())) {
-			this.setValuesEmpty(false);
-		} else {
-			this.setValuesEmpty(true);
-		}
+             chkValuesForPmListOfProfiles();
 	}
 
 	/**
@@ -13694,6 +13694,10 @@ public class ReportBackingBean extends
 			this.setPmOrgName(this.getManagedBean().getSelectedOrgProfile()
 					.getPmOrgValidity().getOrgName());
 		}
+		chkValuesForPmListOfProfiles();
+	}
+
+	private void chkValuesForPmListOfProfiles() {
 		if (StringUtils.isNotEmpty(this.getPmOrgName())
 				|| StringUtils.isNotEmpty(this.getPmOrgType()) 
 				|| StringUtils.isNotEmpty(this.getPmIdentificationNo())
@@ -13707,6 +13711,17 @@ public class ReportBackingBean extends
 	}
 	
 	
+	private void chkValuesForPmFinanceIns() {
+		if (StringUtils.isNotEmpty(this.getPmServiceType())
+				|| StringUtils.isNotEmpty(this.getPmFinancialOrgName()) 
+				|| StringUtils.isNotEmpty(this.getPmBusinessRegNo())				
+				|| StringUtils.isNotEmpty(this.getPmStatus())) {
+			this.setValuesEmpty(false);
+		} else {
+			this.setValuesEmpty(true);
+		}
+	}
+	
 	/**
 	 * On change pm list of profile fields.
 	 */
@@ -13716,16 +13731,15 @@ public class ReportBackingBean extends
 			
 			this.setPmIdentificationNo(this.getManagedBean().getSelectedPmUser().getIdentificationNo());
 			this.setPmUserName(this.getManagedBean().getSelectedPmUser().getUserName());
-		}
-		
-		if (StringUtils.isNotEmpty(this.getPmIdentificationNo())
-				|| StringUtils.isNotEmpty(this.getPmUserName())
-				|| StringUtils.isNotEmpty(this.getPmRoleCode()) ) {
-			this.setValuesEmpty(false);
-		} else {
-			this.setValuesEmpty(true);
-		}
+		}		
+            chkValuesForPmListOfProfiles();
 	}
+	
+	
+	public void onChangServiceType() {		
+			chkValuesForPmFinanceIns();
+	}
+	
 	
 	/**
 	 * On change pm user name.
@@ -14225,6 +14239,20 @@ public class ReportBackingBean extends
 									ReportConst.PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL)) {
 						if (StringUtils.isBlank(this.getPmOrgCode())
 								&& StringUtils.isBlank(this.getPmOrgName())
+								&& StringUtils.isBlank(this.getPmStatus())) {
+							throw new EpException(
+									MessageConst.ERROR_REPORT_780003);
+						}
+					} else if (this
+							.getManagedBean()
+							.getReportCode()
+							.equalsIgnoreCase(
+									ReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL)) {
+						if (StringUtils.isBlank(this.getPmServiceType())
+								&& StringUtils.isBlank(this
+										.getPmFinancialOrgName())
+								&& StringUtils.isBlank(this
+										.getPmBusinessRegNo())
 								&& StringUtils.isBlank(this.getPmStatus())) {
 							throw new EpException(
 									MessageConst.ERROR_REPORT_780003);
@@ -17177,7 +17205,7 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean()
 					.setCmExtentionMeasurmentView(false);
 			getManagedBean().getRptGenBean().setCmExtentionColourView(false);
-			this.getManagedBean().setSelectedOrgProfile(new PmOrgProfile());
+			this.getManagedBean().setSelectedOrgProfile(null);
 			this.setFromDate(null);
 			this.setToDate(null);
 			this.setScQuotationId(null);
@@ -17193,7 +17221,7 @@ public class ReportBackingBean extends
 			// this.setCmUnspscTitle(null);
 			this.setCmCompanyName(null);
 			// to clear the CompanyName value while page loading
-			this.getManagedBean().setSelectedOrgProfile(new PmOrgProfile());
+			this.getManagedBean().setSelectedOrgProfile(null);
 			this.setCmRegistrationType(null);
 			this.setCmItemCategory(null);
 			this.setCmItemName(null);
@@ -17430,14 +17458,14 @@ public class ReportBackingBean extends
 			this.setPmOrgName(null);
 			this.setPmOrgCode(null);
 			// to clear the item code and item name values
-			this.getManagedBean().setSelectedItem(new CmItem());
+			this.getManagedBean().setSelectedItem(null);
 			this.setPmItemName(null);
 			this.setPmItemCode(null);
 			this.setPmCompanyName(null);
-			this.getManagedBean().setSelectedPmUser(new PmUser());
+			this.getManagedBean().setSelectedPmUser(null);
 			this.setPmIdentificationNo(null);
 			this.setPmUserName(null);
-			this.getManagedBean().setSelectedPmRoleDesc(new PmRoleDesc());
+			this.getManagedBean().setSelectedPmRoleDesc(null);
 			this.setPmRoleCode(null);
 			this.setPmContractNo(null);
 			this.setPmPhysicalContractNo(null);
