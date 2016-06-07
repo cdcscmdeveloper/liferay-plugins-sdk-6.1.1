@@ -4,7 +4,9 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
+import my.ep.constant.EpPropertiesConst;
 import my.ep.factory.EpLogger;
+import my.ep.util.SchedulerPropertiesUtils;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.ct.CtActivateAgencyItemJob;
@@ -39,7 +41,10 @@ public class CtSchedulerServlet extends HttpServlet {
 				SchedulerConstants.CT_JOB_GROUP),
 				CtExpireContractJob.class,
 				SchedulerConstants.UPDATE_EXPIRED_CONTRACT_JOB_DESC,
-				SchedulerConstants.TRIGGER_TIME);
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_JOB_COMMON_CRONEXPRESSION));
 		
 		// Expire the factoring that no more effective. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
@@ -47,7 +52,10 @@ public class CtSchedulerServlet extends HttpServlet {
 				SchedulerConstants.CT_JOB_GROUP),
 				CtExpireFactoringJob.class,
 				SchedulerConstants.UPDATE_EXPIRED_FACTORING_JOB_DESC,
-				SchedulerConstants.TRIGGER_TIME);
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_JOB_COMMON_CRONEXPRESSION));
 		
 		// Expire the circular that no more effective. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
@@ -55,7 +63,10 @@ public class CtSchedulerServlet extends HttpServlet {
 				SchedulerConstants.CT_JOB_GROUP),
 				CtExpireCircularJob.class,
 				SchedulerConstants.UPDATE_EXPIRED_CIRCULAR_JOB_DESC,
-				SchedulerConstants.TRIGGER_TIME);
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_JOB_COMMON_CRONEXPRESSION));
 		
 		// Activate the suspended agency and item.
 		EpSchedulerHelper.scheduleJob(new JobKey(
@@ -63,7 +74,10 @@ public class CtSchedulerServlet extends HttpServlet {
 				SchedulerConstants.CT_JOB_GROUP),
 				CtActivateAgencyItemJob.class,
 				SchedulerConstants.UPDATE_SUSPENDED_AGENCY_ITEM_JOB_DESC,
-				SchedulerConstants.TRIGGER_TIME);
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_JOB_COMMON_CRONEXPRESSION));
 		
 		// Send Contract Notification to contract admin and selected approvers. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
@@ -71,7 +85,10 @@ public class CtSchedulerServlet extends HttpServlet {
 				SchedulerConstants.CT_JOB_GROUP),
 				CtContractNotificationJob.class,
 				SchedulerConstants.CONTRACT_EXPIRATION_REMINDER_JOB_DESC,
-				SchedulerConstants.TRIGGER_TIME);
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_JOB_COMMON_CRONEXPRESSION));
 		
 		// Send Agreement Completion Notification to contract admin and selected approvers. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
@@ -79,7 +96,10 @@ public class CtSchedulerServlet extends HttpServlet {
 				SchedulerConstants.CT_JOB_GROUP),
 				CtAgreementNotificationJob.class,
 				SchedulerConstants.AGREEMENT_EXPIRATION_REMINDER_JOB_DESC,
-				SchedulerConstants.TRIGGER_TIME);
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_JOB_COMMON_CRONEXPRESSION));
 		
 		// Send Performance Bond Notification to contract admin and selected approvers. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
@@ -87,7 +107,10 @@ public class CtSchedulerServlet extends HttpServlet {
 				SchedulerConstants.CT_JOB_GROUP),
 				CtPBNotificationJob.class,
 				SchedulerConstants.PERFORMANCE_BOND_EXPIRATION_REMINDER_JOB_DESC,
-				SchedulerConstants.TRIGGER_TIME);
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_JOB_COMMON_CRONEXPRESSION));
 		
 		// Send Remedy Notification to contract admin and selected approvers. 
 		EpSchedulerHelper.scheduleJob(new JobKey(
@@ -95,7 +118,10 @@ public class CtSchedulerServlet extends HttpServlet {
 				SchedulerConstants.CT_JOB_GROUP),
 				CtRemedyNotificationJob.class,
 				SchedulerConstants.REMEDY_EXPIRATION_REMINDER_JOB_DESC,
-				SchedulerConstants.TRIGGER_TIME);
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_JOB_COMMON_CRONEXPRESSION));
 		
 		// Send Imposed Service Tax Notification to contract admin.
 		EpSchedulerHelper.scheduleJob(new JobKey(
@@ -103,6 +129,9 @@ public class CtSchedulerServlet extends HttpServlet {
 				SchedulerConstants.CT_JOB_GROUP),
 				CtImposedServiceTaxNotificationJob.class,
 				SchedulerConstants.IMPOSED_SERVICE_TAX_REMINDER_JOB_DESC,
-				SchedulerConstants.TRIGGER_TIME);
+				SchedulerPropertiesUtils
+				.getInstance()
+				.getProperty(
+						EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_CT_JOB_COMMON_CRONEXPRESSION));
 	}
 }
