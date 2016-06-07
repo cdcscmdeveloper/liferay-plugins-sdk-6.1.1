@@ -79,7 +79,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -775,7 +774,7 @@ public class CommitteBackingBean extends
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
 		ScQtCommittee scQtCommittee = getManagedBean().getQtCommittee();
 		String committeeType = scQtCommittee.getScCommittee().getCommitteeType().getParameterCode();
-		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+		ICommitteSO committeSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
@@ -2281,7 +2280,7 @@ public class CommitteBackingBean extends
 	 */
 	public void preRenderView() {
 		Object payLoad = getBpmTaskDetails(Object.class, null);
-		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+		ICommitteSO committeSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						ICommitteSO.class);
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
