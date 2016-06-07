@@ -601,7 +601,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
 			setDeliveryOrder(resDTO);
 			getManagedBean().setBackToPrevious("/xhtml/fl/dopending/doPendingTableDashBoard.xhtml");
-			getManagedBean().setFromDoPage(true);
+			getManagedBean().setFromDoDashboardPage(true);
 		}
 		//if taskid != null process modification or cancellation is running
 		if(null!=taskId && !"".equals(taskId)){
@@ -688,6 +688,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.fl.doc.maintenance",ResourceBundleUtils.BUNDLE_COMMON_LABELS,getFacesScopes().getUserLocale());
 		if(getManagedBean().isModificationCancel()) {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.fl.doc.maintenance",ResourceBundleUtils.BUNDLE_COMMON_LABELS,getFacesScopes().getUserLocale());
+		}
+		if(getManagedBean().isFromDoDashboardPage()){
+			portletTitle = ResourceBundleUtils.getMessage("lbl.bpm.pending.delivery.list",ResourceBundleUtils.BUNDLE_COMMON_LABELS,getFacesScopes().getUserLocale());
 		}
 		return portletTitle;
 	}

@@ -154,6 +154,9 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	/** The from page url. */
 	private boolean fromDoPage;
 	
+	/** The from page url. */
+	private boolean fromDoDashboardPage;
+	
 	//gpki signing
 	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
@@ -1229,6 +1232,14 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 
 	public void setFromDoPage(boolean fromDoPage) {
 		this.fromDoPage = fromDoPage;
+	}
+
+	public boolean isFromDoDashboardPage() {
+		return fromDoDashboardPage;
+	}
+
+	public void setFromDoDashboardPage(boolean fromDoDashboardPage) {
+		this.fromDoDashboardPage = fromDoDashboardPage;
 	}
 	
 }
