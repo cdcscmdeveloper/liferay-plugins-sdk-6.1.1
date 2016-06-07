@@ -57,7 +57,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
 					<td><p:inputText size="31" styleClass="ppRightBtn"
-					        required="true"
+					        required="#{requestNoteBackingBean.managedBean.required}"
 							label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId"
 							validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}">
