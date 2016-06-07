@@ -286,37 +286,32 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						messageId = MessageConst.INFO_700004;
 						docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-						messageId = MessageConst.INFO_700007;
-						//messagePrefix = "Cancellation for ";
-						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
+						// If FRN approved
+						if(resDTO.getPmStatus()!=null && (resDTO.getPmStatus().getStatusId()==FulfilmentStatusConst.FN_ACKNOWLEDGED || 
+								resDTO.getPmStatus().getStatusId()==FulfilmentStatusConst.FN_PENDING_CANCEL_SUBMISSION)) {
+							messageId = MessageConst.INFO_745016;
+						} else {
+							messageId = MessageConst.INFO_700007;
+							messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
+						}
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 						messageId = MessageConst.INFO_700008;
-						//messagePrefix = "Cancellation for ";
 						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 						messageId = MessageConst.INFO_700011;
-						//messagePrefix = "Update for ";
 						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.update.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
 						messageId = MessageConst.INFO_700043;
-						//messagePrefix = "Update for ";
 						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.update.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
-					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) && (resDTO.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_INVOICE) || resDTO.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_INVOICE))) {
-						messageId = MessageConst.INFO_745016;
-						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
-					}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) && (!resDTO.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_INVOICE) || !resDTO.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_INVOICE))) {
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 						messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
-						messageId = MessageConst.INFO_700005;
+						messageId = MessageConst.INFO_700018;
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
-					}
-					else {	
-						/*if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-							messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
-						}*/
+					} else {	
 						messageId = MessageConst.INFO_700005;
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					}
