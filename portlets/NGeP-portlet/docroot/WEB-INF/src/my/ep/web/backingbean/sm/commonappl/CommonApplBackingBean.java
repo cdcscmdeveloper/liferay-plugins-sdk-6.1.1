@@ -589,6 +589,9 @@ public class CommonApplBackingBean extends
 			smApplBB.getManagedBean().setTaskId(taskId);
 			smApplBB.getManagedBean().setClaimTask(isClaim);
 			smApplBB.getManagedBean().setBpmTaskName(resDTO.getTaskName());
+			
+			smApplBB.getManagedBean().setPayLoad(srcObj);
+			
 			SmAttachmentResDTO attResDto = new SmAttachmentResDTO();
 			attResDto = retriveSmAttachmentByDocIdAndType(smApplBB
 					.getManagedBean().getSmAppl().getApplId(), smApplBB
@@ -626,10 +629,11 @@ public class CommonApplBackingBean extends
 			smApplBB.getManagedBean().setPoUser(true);
 			smApplBB.getManagedBean().setSupplierUser(false);
 			smApplBB.getManagedBean().setApproverUser(false);
-			if (srcObj.getSupplierList() != null) {
+			/*if (srcObj.getSupplierList() != null) {
 				smApplBB.getManagedBean().setSupplierToPOList(
 						srcObj.getSupplierList());
-			}
+			}*/
+			smApplBB.getManagedBean().setPayLoad(srcObj);
 			SmRemaksResDTO remResDTO = getRemarksByDoc(
 					ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL,
 					appl.getApplId());
