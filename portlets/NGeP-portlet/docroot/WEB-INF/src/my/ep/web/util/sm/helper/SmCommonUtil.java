@@ -2690,8 +2690,8 @@ public class SmCommonUtil {
 				strParams.append(paramName + "="
 						+ httpServletRequest.getParameter(paramName));
 				strParams.append("&");
-				log.info(paramName + " - "
-						+ httpServletRequest.getParameter(paramName));
+				/*log.info(paramName + " - "
+						+ httpServletRequest.getParameter(paramName));*/
 			}
 		}
 		strParams.append("treq=1");
@@ -3829,12 +3829,17 @@ public class SmCommonUtil {
 	 * @param postCode
 	 */
 	public void verifyWithMyIdentity(String name, String identificationNo,
-			String postCode) {
+			String postCode, String type) {
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
 				"sm", IMyIdentitySO.class);
-
-		reqDTO.setType("Online");
+		
+		if(type != null && type.equalsIgnoreCase(SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN)){
+			reqDTO.setType(SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+		}else{
+			reqDTO.setType(SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+		}
+		
 		reqDTO.setNewIcNo(identificationNo);
 		reqDTO.setPostCode(postCode);
 		reqDTO.setName(name);
