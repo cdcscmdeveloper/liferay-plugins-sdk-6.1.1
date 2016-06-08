@@ -37,6 +37,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DualListModel;
@@ -1056,6 +1057,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	public void panelItemSpecDlg(CtPanelItem panelItem) {
 		getManagedBean().setSelectedItemForSpec(panelItem);
+		getManagedBean().setAutoUpdate(false);
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
 	
@@ -1069,7 +1071,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CtPanelItemSpec itemSpec = new CtPanelItemSpec();
 			itemSpec.setCtPanelItem(getManagedBean().getSelectedItemForSpec());
 	        getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs().add(itemSpec);
-		} catch (Exception e) {
+	   	} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
@@ -1079,15 +1081,20 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method used to delete list of panel item specification
 	 * from panel circular creation
 	 */
-	public void deletePanelItemSpec(){
-		log.info("PanelBackingBean.deletePanelitemSpec()");
-		try {
-			getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs().removeAll(getManagedBean().getSelectedPanelItemSpecs());
-			getManagedBean().setButtonHideActiveDel(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+	public void onClose(){ 
+		
+		if(getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs() != null 
+				&& getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs().size()> 0){
+			for(CtPanelItemSpec  itemSpec: getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs()){
+				if(itemSpec.getSpecification() == null || itemSpec.getSpecification().trim().isEmpty()){
+					 throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.specification", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+			}
 		}
+		RequestContext.getCurrentInstance().execute("itemSpecDlg.hide()");
+		getManagedBean().setAutoUpdate(true);
 	}
 	
 	/**
@@ -2701,7 +2708,7 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
     					 }
     				 }
     				 getManagedBean().setCtCircularPidReasons(null);
-    				 getManagedBean().setSelectAll(false);
+    			
     			 } else if(tableType.equalsIgnoreCase("PERSON")){
     				 Iterator<CtContactPerson> contactPersonIterator = getManagedBean().getCircularVer().getCtContactPersons().iterator();
   				     while(contactPersonIterator.hasNext()){
@@ -2711,7 +2718,7 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
   					    }
   				    } 
   				     getManagedBean().setSelectedContactPersons(null);
-  				   getManagedBean().setSelectAll(false);
+    		
     			 } else if(tableType.equalsIgnoreCase("CANCEL")){
     				 Iterator<CtCancelCircular> ctCancelCirculars = getManagedBean().getCircularVer().getCtCancelCircularList().iterator();
   				     while(ctCancelCirculars.hasNext()){
@@ -2720,10 +2727,10 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
   					    	ctCancelCirculars.remove();
   					    }
   				    } 
-  				   getManagedBean().setSelectAll(false);
   				   if(getManagedBean().getCancelledCircularList() != null && getManagedBean().getCancelledCircularList().size() == 0){
 					    getManagedBean().setCancelledCircularList(null);
 				    }
+    			
     			 } else if(tableType.equalsIgnoreCase("SUPPLIER")){
     			
     						if(this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelZone() != null) {
@@ -2742,8 +2749,8 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
    		  					    	         ctPanelSupplierIterator.remove();
    		  					            }
    						        }
-    					  } getManagedBean().setSelectAll(false);
-    			
+    					  }
+    						
     			 } else if(tableType.equalsIgnoreCase("ZONE")){
     				     Iterator<CtPanelZone> zoneIterator = getManagedBean().getSelectedPanelItems().getCtPanelZones().iterator();
   				         while(zoneIterator.hasNext()){
@@ -2753,9 +2760,18 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
   					          }
   				        } 
   				       getManagedBean().setSelectedPanelZone(null);
-  				       getManagedBean().setSelectAll(false);
-    			 }
+  				   
+    			 }else if(tableType.equalsIgnoreCase("SPEC")){
+				     Iterator<CtPanelItemSpec> itemSpecsIterator = getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs().iterator();
+				         while(itemSpecsIterator.hasNext()){
+				        	 CtPanelItemSpec  ctPanelItemSpecs = itemSpecsIterator.next();
+					           if(ctPanelItemSpecs.isSelectedCheckBox()){
+					        	   itemSpecsIterator.remove();
+					          }
+				        } 
+			     }
     			 
+    			 getManagedBean().setSelectAll(false);
     			 getManagedBean().setButtonHideActiveDel(true);
     			 getManagedBean().setButtonHidePanelItemDel(true);
     		} catch (Exception e) {
@@ -2789,6 +2805,8 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
 	    		 getManagedBean().setButtonHidePanelItemDel(true);
 	    	 }		
         }
+    	
+    
     	
     	public void selectSupplierCheckboxSelect(AjaxBehaviorEvent e){
         	getManagedBean().setSelectAll(false);
@@ -2861,6 +2879,40 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
     			getManagedBean().setButtonHideActiveDel(true);
     		}	
     	}
+    	
+	   public void selectAllSpecificItem(AjaxBehaviorEvent e) {
+    		
+    		        for (CtPanelItemSpec ctPanelItemSpecs : getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs()) {
+    			          if (getManagedBean().isSelectAll()) {
+    			        	  ctPanelItemSpecs.setSelectedCheckBox(true);
+    		               }else {
+    		            	   ctPanelItemSpecs.setSelectedCheckBox(false);
+    		              }
+    	           }
+		    		
+		    	 if((boolean) e.getComponent().getAttributes().get("value")){
+		    		 getManagedBean().setButtonHideActiveDel(false);
+		    	 }else{
+		    		 getManagedBean().setButtonHideActiveDel(true);
+		    	 }		
+        }
+    	
+    	public void selectSpecificCheckBoxSelect(AjaxBehaviorEvent e){
+        	getManagedBean().setSelectAll(false);
+       	    for (CtPanelItemSpec ctPanelItemSpecs : getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs()) {
+            		if(ctPanelItemSpecs.isSelectedCheckBox()){
+            			 getManagedBean().setButtonHideActiveDel(false);
+            			return;
+            		}
+            	}
+        	
+    		  if((boolean) e.getComponent().getAttributes().get("value")){
+    			  getManagedBean().setButtonHideActiveDel(false);
+        		}else{
+        			 getManagedBean().setButtonHideActiveDel(true);
+        		}	
+         }
+    	
 	public void onToggleSelect(ToggleSelectEvent event) {
 		getManagedBean().setButtonHideActiveDel(false);
 	}
@@ -2868,6 +2920,10 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
     public void onRowUnselect(UnselectEvent event) {
     	getManagedBean().setButtonHideActiveDel(true);
     }
+    
+    public void onRowSelect(SelectEvent event) {
+		getManagedBean().setButtonHideActiveDel(false);
+	}
     
     public void selectAllDltDlgChkBoxSelect(AjaxBehaviorEvent e){
 		getManagedBean().setSelectAll(false);
