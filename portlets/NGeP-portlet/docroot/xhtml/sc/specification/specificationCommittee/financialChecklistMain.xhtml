@@ -300,7 +300,7 @@
 				process="@this" partialSubmit="true"
 				oncomplete="stageTwoFinance.show();"
 				actionListener="#{specificationBackingBean.retriveFinancialStandardCheckList}"
-				update="stageTwoFinPopup" />
+				update="@([id$=financialChecklistPopup])" />
 			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 				disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 				process="@this,financeProposaltwo" partialSubmit="true"

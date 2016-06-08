@@ -284,7 +284,7 @@
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				process="@this" oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
-				update="compilencestageTwo" />
+				update="@([id$=specCommitteeTechnicalChecklist])" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
 				rendered="#{!specificationBackingBean.managedBean.qt.panel}"
 				process="@this" styleClass="BtnSpacing"
@@ -318,7 +318,7 @@
 				disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 				value="#{lbl['lbl.sc.spec.btn.add.panel.item']}" process="@this"
 				actionListener="#{specificationBackingBean.circularListSelect(specificationBackingBean.managedBean.qt.circularVer)}"
-				oncomplete="addPanelItem.show();" update="@([id$=circularPanel])" />
+				oncomplete="addPanelItem.show();" update="@([id$=circularpanelItemsSelectionPopUp])" />
 
 		</div>
 		<ui:param name="technicalCheckListDeleteId"
