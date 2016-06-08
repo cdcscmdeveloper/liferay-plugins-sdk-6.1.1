@@ -7846,25 +7846,11 @@ public class SmApplicationBackingBean extends
 		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
 		reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", IReviewApplicationSO.class);
-		reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
-		reqDTO.setApplNo(this.getManagedBean().getSmAppl().getApplNo());
 		reqDTO.setOutcome(res);
-		reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setLocation(getManagedBean().getSmAppl().getSmCompanyBasic()
-				.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
-				.getStateName().toUpperCase());
 		reqDTO.setSmAppl(getManagedBean().getSmAppl());
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-		if (getManagedBean().getSupplierToPOList() != null) {
-			log.info("**** LIST of supp from BPM earlier task *******"
-					+ getManagedBean().getSupplierToPOList().size());
-			reqDTO.setUserList(getManagedBean().getSupplierToPOList());
-		} else {
-			log.info("***** NO SUPPLIER LIST FROM BPM TO DECISION ***** ");
-			reqDTO.setUserList(new ArrayList<String>());
-		}
-
+		reqDTO.setBpmPojo(getManagedBean().getPayLoad());
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
 
 		res = res.equals("REJECT") ? SmCommonUtil.getMessage(
