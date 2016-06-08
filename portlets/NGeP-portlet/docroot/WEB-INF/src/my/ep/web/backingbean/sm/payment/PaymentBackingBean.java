@@ -432,11 +432,24 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 		log.info("*******responsePreRender*******");
 		SmAppl appl = null;
+		String paymentTaskId = null;
+		Object paymentBpmPojo = null;
 		
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		HttpSession session = httpServletRequest.getSession();
+		
+		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
+		paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
+		appl = (SmAppl)session.getAttribute("smAppl");
+		this.getManagedBean().setTaskId(paymentTaskId);
+		this.getManagedBean().setBpmPojo(paymentBpmPojo);
+		session.removeAttribute("paymentBpmTaskId");
+		session.removeAttribute("paymentBpmPojo");
+		
+		log.info("paymentTaskId>>>>>>>" + paymentTaskId);
+		log.info("paymentBpmPojo>>>>>>>" + paymentBpmPojo);
 
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
@@ -454,20 +467,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest
 				.getParameter("error_desc") : null;
 
-		String paymentTaskId = null;
-		Object paymentBpmPojo = null;
-
-		//Log for testing httpsession
-		//getPaymentHttpSession();
-		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
-		paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
-		appl = (SmAppl)session.getAttribute("smAppl");
-		
-		this.getManagedBean().setTaskId(paymentTaskId);
-		this.getManagedBean().setBpmPojo(paymentBpmPojo);
-		
-		session.removeAttribute("paymentBpmTaskId");
-		session.removeAttribute("paymentBpmPojo");
 		
 		log.info("orderId: " + orderId);
 		log.info("tranID: " + tranID);
