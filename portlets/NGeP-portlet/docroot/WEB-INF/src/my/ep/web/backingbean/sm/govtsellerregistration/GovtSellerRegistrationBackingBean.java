@@ -1122,7 +1122,7 @@ public class GovtSellerRegistrationBackingBean extends
 		// validate IC with MyIdentity
 		SmCommonUtil.getInstance().verifyWithMyIdentity(personnel.getName(),
 				personnel.getIdentificationNo(),
-				getManagedBean().getSmPermenantAdd().getPostcode());
+				getManagedBean().getSmPermenantAdd().getPostcode(),null);
 
 		// check if icNo already assign as supplier
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
