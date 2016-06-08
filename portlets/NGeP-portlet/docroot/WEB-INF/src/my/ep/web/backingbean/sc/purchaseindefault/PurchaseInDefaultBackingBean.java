@@ -201,6 +201,19 @@ public class PurchaseInDefaultBackingBean extends
 					.getPanelSupplierByPanelItem(purchaseInDefaultReqDTO);
 			CtPanelItem ctPanelItem = resDTO.getCtPanelItem();
 			if (ctPanelItem != null) {
+				//validation for non codify contract item
+				if(ctPanelItem.getScRequestItem() == null ||
+						(ctPanelItem.getScRequestItem() != null && 
+								ctPanelItem.getScRequestItem().getCmItem() == null)) {
+					Locale userLocale = new FacesScopes().getUserLocale();
+					String message = MessageUtils.getMessage(MessageConst.ERROR_760405,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									message));
+				}
 				// check panel item zone or not
 				if (ctPanelItem.getCtPanelZones() != null
 						&& ctPanelItem.getCtPanelZones().size() > 0) {
