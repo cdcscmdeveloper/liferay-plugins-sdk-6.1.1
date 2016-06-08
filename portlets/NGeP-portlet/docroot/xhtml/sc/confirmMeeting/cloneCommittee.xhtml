@@ -200,7 +200,11 @@
 						rowKey="#{committeeMember.committeeMemberId}">
 						<ac:paginator for="cloneCommittee" />
 
-
+  <p:ajax event="rowSelect" update="@([id$=evaluationConfirmmeetingCloneCommitteeokBtnId])" />
+			      <p:ajax event="rowUnselect" update="@([id$=evaluationConfirmmeetingCloneCommitteeokBtnId])" />
+			     <p:ajax event="rowSelectCheckbox" update="@([id$=evaluationConfirmmeetingCloneCommitteeokBtnId])" />
+			     <p:ajax event="rowUnselectCheckbox" update="@([id$=evaluationConfirmmeetingCloneCommitteeokBtnId])" />
+			     <p:ajax event="toggleSelect" update="@([id$=evaluationConfirmmeetingCloneCommitteeokBtnId])" />
 						<p:column selectionMode="multiple"
 							styleClass="td-check-box-spacing"></p:column>
 						<p:column style="width:25%;white-space: normal;"
@@ -253,6 +257,8 @@
 							actionListener="#{evaluationMeetingBackingBean.closeListener}"
 							style="float:right;" onclick="screen2.hide();" />
 						<p:commandButton value="#{lbl['lbl.btn.ok']}" process="@this,evaluationCloneCommitteeMeetingIds"
+						id="evaluationConfirmmeetingCloneCommitteeokBtnId"
+						disabled="#{empty evaluationMeetingBackingBean.managedBean.cloneCommitteMemebersSelect}"
 							styleClass="BtnSpacing" partialSubmit="true"
 							actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
 							oncomplete="prepareCommittee.paginator.endLink.click();"
