@@ -37,7 +37,7 @@
 	</div>
 	<ui:include src="evaluationMeetingHeader.xhtml"></ui:include>
 
-	<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
+	<p:panel id="evaluationConfirmmeetingId" header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
 
 		<p:dataTable var="meeting" id="evaluationmeetingDetails"
 			widgetVar="meetingDtls" rows="10"
@@ -53,12 +53,12 @@
 					<p:selectBooleanCheckbox
 						value="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="evaluationmeetingDetails"
+							update="@form"
 							listener="#{evaluationMeetingBackingBean.selectAll(evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll, evaluationMeetingBackingBean.managedBean.scQtMeetings)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{meeting.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@form" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column style="width:25%">
@@ -99,6 +99,8 @@
 				oncomplete="meetingDtls.paginator.endLink.click();"
 				update="evaluationmeetingDetails" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+			disabled="#{evaluationMeetingBackingBean.deleteselectedList(evaluationMeetingBackingBean.managedBean.scQtMeetings)}"
+			id="evaluationmeetingDeletionId"
 			styleClass="BtnSpacing"
 				partialSubmit="true"
 				oncomplete="confirmMeetingDtlsDeletePopUp.show();"
@@ -116,12 +118,12 @@
 			okAction="evaluationMeetingBackingBean.deleteMeetingDtls"
 			title="#{lbl['lbl.sc.meeting.details']}"
 			content="#{lbl['lbl.sc.dialog.confirm.meeting.dtls']}"
-			update="@([id$=evaluationmeetingDetails])" />
+			update="@([id$=evaluationConfirmmeetingId])" />
 
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.committee.member.list']}"
+	<p:panel id="evaluationConfirmMeetingCommitteemembersListPanel" header="#{lbl['lbl.sc.committee.member.list']}"
 		toggleable="true">
 
 		<h:outputText styleClass="instruction"
@@ -142,7 +144,7 @@
 					<p:selectBooleanCheckbox disabled="true"
 						value="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="evaluationpreparecommittee"
+							update="@form"
 							listener="#{evaluationMeetingBackingBean.selectAll(evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll, evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
@@ -154,7 +156,7 @@
 
 				<p:selectBooleanCheckbox value="#{committeeMember.selected}"
 					rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@form" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column style="width:29%;white-space: normal;"
@@ -226,16 +228,17 @@
 			styleClass="BtnSpacing"
 				partialSubmit="true" oncomplete="screen2.show();"
 				actionListener="#{evaluationMeetingBackingBean.addCloneCommittee}"
-				update="@([id$=#{cloneid}])" />
+				update="@([id$=cloneid])" />
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
 			styleClass="BtnSpacing"
 				partialSubmit="true"
 				actionListener="#{evaluationMeetingBackingBean.addCommitteeDetails}"
-				update="@([id$=#{newspecificationcommitteeid}])"
+				update="@([id$=newspecificationcommitteeid])"
 				oncomplete="newspecificationcommittee.show();" />
 
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+			disabled="#{evaluationMeetingBackingBean.deleteselectedList(evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}"
 			styleClass="BtnSpacing"
 				partialSubmit="true"
 				oncomplete="confirmMeetingCommitteemembersDeletePopUp.show();"
@@ -254,7 +257,7 @@
 			okAction="evaluationMeetingBackingBean.deleteCommitteemembersDtls"
 			title="#{lbl['lbl.sc.committee.member.list']}"
 			content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
-			update="@([id$=evaluationpreparecommittee])" />
+			update="@([id$=evaluationConfirmMeetingCommitteemembersListPanel])" />
 
 
 	</p:panel>

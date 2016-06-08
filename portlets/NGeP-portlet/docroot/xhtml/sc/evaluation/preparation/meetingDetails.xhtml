@@ -11,7 +11,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
+	<p:panel id="evaluationPreparationMeetingDtlsId" header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.meeting.details.instruction']}" escape="false" />
 
@@ -31,14 +31,14 @@
 						disabled="#{evaluationBackingBean.managedBean.readOnly}"
 						value="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="evaluationmeetingDetails"
+							update="@form"
 							listener="#{evaluationBackingBean.selectEvaluationMeetingAll(evaluationBackingBean.managedBean.templateSpecBean.selectAll, evaluationBackingBean.managedBean.scQtMeetings)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					value="#{meeting.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@form" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.meeting.date']}"
@@ -95,8 +95,8 @@
 					label="#{lbl['lbl.sc.status']}"
 					value="#{meeting.meetingStatusStr}">
 					<f:selectItems
-						value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'MS')}" />
-					<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.changeMeetingStatus(meeting)}"/>
+						value="#{evaluationBackingBean.getStatusDropdownValues('SC', 'MS')}" />
+					<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{evaluationBackingBean.changeMeetingStatus(meeting)}"/>
 				</p:selectOneMenu>
 
 			</p:column>
@@ -122,7 +122,7 @@
 				action="#{evaluationBackingBean.addMeetingAction}"
 				update="evaluationmeetingDetails" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
-				disabled="#{evaluationBackingBean.managedBean.readOnly}"
+				disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.deleteselectedList(evaluationBackingBean.managedBean.scQtMeetings)}"
 				process="@this" partialSubmit="true"
 				oncomplete="evaluationMeetingDtlsDeletePopUp.show();"
 				update="@([id$=#{evaluationmeetingdtlsDeleteId}])">
@@ -139,7 +139,7 @@
 			okAction="evaluationBackingBean.deleteMeetingDtls"
 			title="#{lbl['lbl.sc.meeting.details']}"
 			content="#{lbl['lbl.sc.dialog.confirm.meeting.dtls']}"
-			update="@([id$=evaluationmeetingDetails])" />
+			update="@([id$=evaluationPreparationMeetingDtlsId])" />
 
 	</p:panel>
 
