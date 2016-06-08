@@ -6,27 +6,44 @@ import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /*
  * @author P Ganga prasad
+ * @author Venkat Chanumolu
  */
+//Review this based on the requirement
+@DisallowConcurrentExecution
 public class UpdateGovernmentInfoJob implements Job {
 
 	public static Logger log = EpLogger
 			.getLogger(UpdateGovernmentInfoJob.class);
 
-	public static ICRMServiceSO crmServiceSO = EpEjbBusinessDelegate
-			.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
-					ICRMServiceSO.class);
-
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
+		ICRMServiceSO crmServiceSO = null;
+
 		log.info("UpdateGovernmentInfoJob start");
-		crmServiceSO.updateSupplierInfoService();
+
+		try {
+
+			crmServiceSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.INTEGRATION,
+							ICRMServiceSO.class);
+			crmServiceSO.updateSupplierInfoService();
+
+			// please add resDTO to log better
+
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			// error handling follows here
+		} finally {
+			crmServiceSO = null;
+		}
 
 		log.info("UpdateGovernmentInfoJob End");
 
