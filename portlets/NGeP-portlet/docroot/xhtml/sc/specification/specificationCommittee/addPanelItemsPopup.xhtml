@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog widgetVar="addPanelItem" modal="true" width="950"
+	<p:dialog widgetVar="addPanelItem" modal="true" width="950" id="circularpanelItemsSelectionPopUp"
 		height="600" position="top"
 		header="#{lbl['lbl.sc.spec.create.specification']}">
 
@@ -15,11 +15,10 @@
 			closable="true" showSummary="false" severity="error, info" />
 
 
-		<h:panelGroup id="circularPanel">
-			<h:panelGroup>
+	
+			
 				<ui:include src="searchCircularPanel.xhtml"></ui:include>
-			</h:panelGroup>
-		</h:panelGroup>
-
+			
+		
 	</p:dialog>
 </ui:composition>

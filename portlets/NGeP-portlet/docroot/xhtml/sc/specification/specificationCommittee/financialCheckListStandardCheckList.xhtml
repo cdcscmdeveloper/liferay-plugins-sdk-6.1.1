@@ -22,6 +22,11 @@
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{compilance.documentId}" rowIndexVar="index">
 				<ac:paginator for="stageTwoFinPopup"></ac:paginator>
+					<p:ajax event="rowSelect" update="@([id$=specCommitteeFinacialDocumentStandardChecklist])" />
+			<p:ajax event="rowUnselect" update="@([id$=specCommitteeFinacialDocumentStandardChecklist])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=specCommitteeFinacialDocumentStandardChecklist])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=specCommitteeFinacialDocumentStandardChecklist])" />
+			<p:ajax event="toggleSelect" update="@([id$=specCommitteeFinacialDocumentStandardChecklist])" />
 				<p:column selectionMode="multiple"
 					styleClass="td-check-box-spacing" />
 				<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}">
@@ -29,19 +34,22 @@
 				</p:column>
 			</p:dataTable>
 
-		</h:panelGroup>
+		
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				styleClass="BtnSpacing"
 				actionListener="#{specificationBackingBean.cancelPopup}"
 				style="float:right;" onclick="stageTwoFinance.hide();"></p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;" id="specCommitteeFinacialDocumentStandardChecklist"
+			disabled="#{empty specificationBackingBean.managedBean.stageTwoFinComplianceSelect}"
 				process="@all" partialSubmit="true" styleClass="BtnSpacing"
 				action="#{specificationBackingBean.addFinancialComplianceList}"
 				update="financeProposaltwo"></p:commandButton>
 		</div>
+		</h:panelGroup>
 		<p:ajax event="close"
 			listener="#{specificationBackingBean.closeListener}" />
+			
 	</p:dialog>
 </ui:composition>
