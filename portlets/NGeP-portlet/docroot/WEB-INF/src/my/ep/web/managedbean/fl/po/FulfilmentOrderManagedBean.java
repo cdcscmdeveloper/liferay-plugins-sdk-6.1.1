@@ -210,7 +210,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
     private List<PmUser> approverList;
     private boolean gfmasError=false;
 	private String gfmasErrorContent;
-	private String docStatusDesc;
+	private Long docStatusId;
 	private List<Long> statusIds;
     
     private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
@@ -1258,14 +1258,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.gfmasErrorContent = gfmasErrorContent;
 	}
 
-	public String getDocStatusDesc() {
-		return docStatusDesc;
-	}
-
-	public void setDocStatusDesc(String docStatusDesc) {
-		this.docStatusDesc = docStatusDesc;
-	}
-
 	public List<Long> getStatusIds() {
 		if(statusIds == null){
 			statusIds = new ArrayList<Long>();
@@ -1298,6 +1290,14 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	public void setOrderSummaryOrderedAmtGrandTotal(
 			BigDecimal orderSummaryOrderedAmtGrandTotal) {
 		this.orderSummaryOrderedAmtGrandTotal = orderSummaryOrderedAmtGrandTotal;
+	}
+
+	public Long getDocStatusId() {
+		return docStatusId;
+	}
+
+	public void setDocStatusId(Long docStatusId) {
+		this.docStatusId = docStatusId;
 	}
 
 }
