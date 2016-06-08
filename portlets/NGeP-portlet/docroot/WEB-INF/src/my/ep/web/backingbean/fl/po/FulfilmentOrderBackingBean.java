@@ -1307,16 +1307,16 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @param e the e
 	 */
 	public void getSelectedDocStatusDesc(AjaxBehaviorEvent e) {
-		String id = (String) e.getComponent().getAttributes().get("value");
+		Long id = (Long) e.getComponent().getAttributes().get("value");
 
 		if(id!=null) {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			getManagedBean().getStatusIds().clear();
-			if(id.equals("Pending Partial Fulfilment")){
+			if(id.equals(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL)){
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_PARTIAL_FL);
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
-			}else if(id.equals("Pending Fulfilment")){
+			}else if(id.equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)){
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_FULFILMENT);
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
 			}
@@ -1333,22 +1333,22 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @param e the e
 	 */
 	public void getSelectedFlDocStatusDesc(AjaxBehaviorEvent e) {
-		String id = (String) e.getComponent().getAttributes().get("value");
+		Long id = (Long) e.getComponent().getAttributes().get("value");
 
 		if(id!=null) {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			getManagedBean().getStatusIds().clear();
-			if(id.equals("Pending Partial Fulfilment")){
+			if(id.equals(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL)){
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_PARTIAL_FL);
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
-			}else if(id.equals("Pending Fulfilment")){
+			}else if(id.equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)){
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_FULFILMENT);
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
-			}else if(id.equals("Pending Invoice")){
+			}else if(id.equals(FulfilmentStatusConst.PO_PENDING_INVOICE)){
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_INVOICE);
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_INVOICE);
-			}else if(id.equals("Pending Supplier Acknowledgement")){
+			}else if(id.equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)){
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_SUPPLIER_ACKNOWLEDGEMENT);
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT);
 			}
@@ -1371,17 +1371,25 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		FacesScopes face = new FacesScopes();
 
 		try {
+			List<Long> statusIds = new ArrayList<Long>();
+			statusIds.add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
+			statusIds.add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
+			
 			List<String> statusDescs = new ArrayList<String>();
-			statusDescs.add("Pending Partial Fulfilment");
-			statusDescs.add("Pending Fulfilment");
-
+			Map<String, Long> statusMap = new HashMap<String, Long>();
+			for(Long statusId : statusIds){
+				if(statusMap.get(statusId) == null){
+					statusMap.put(getStatusDescById(statusId), statusId);
+					statusDescs.add(getStatusDescById(statusId));
+				}
+			}
 			items = new SelectItem[statusDescs.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
 			for (String statusDesc : statusDescs) {
-				items[i++] = new SelectItem(statusDesc);
+				items[i++] = new SelectItem(statusMap.get(statusDesc),statusDesc);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1407,18 +1415,26 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 
 		try {
 			List<String> statusDescs = new ArrayList<String>();
-			statusDescs.add("Pending Partial Fulfilment");
-			statusDescs.add("Pending Fulfilment");
-			statusDescs.add("Pending Invoice");
-			statusDescs.add("Pending Supplier Acknowledgement");
-
+			List<Long> statusIds = new ArrayList<Long>();
+			statusIds.add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
+			statusIds.add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
+			statusIds.add(FulfilmentStatusConst.PO_PENDING_INVOICE);
+			statusIds.add(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT);
+			
+			Map<String, Long> statusMap = new HashMap<String, Long>();
+			for(Long statusId : statusIds){
+				if(statusMap.get(statusId) == null){
+					statusMap.put(getStatusDescById(statusId), statusId);
+					statusDescs.add(getStatusDescById(statusId));
+				}
+			}
 			items = new SelectItem[statusDescs.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
 			for (String statusDesc : statusDescs) {
-				items[i++] = new SelectItem(statusDesc);
+				items[i++] = new SelectItem(statusMap.get(statusDesc),statusDesc);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
