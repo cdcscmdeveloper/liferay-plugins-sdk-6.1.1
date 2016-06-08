@@ -10,19 +10,7 @@
 		toggleable="true">
 
 		<table>
-			<!-- <tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.circular.no']}"></h:outputLabel></td>
-				<td><p:inputText maxlength="60" style="margin-bottom:5px;"
-						value="#{specificationBackingBean.managedBean.ctSearchBean.cirCularNo}"
-						size="100" /></td>
-			</tr>
-			<tr>
-				<td style="width: 20%"><h:outputLabel
-						value="#{lbl['lbl.sc.circular.name']}"></h:outputLabel></td>
-				<td><p:inputText style="margin-bottom:5px;" maxlength="500"
-						size="100"
-						value="#{specificationBackingBean.managedBean.ctSearchBean.circularName}" /></td>
-			</tr> -->
+			
 			<tr>
 				<td style="width: 20%"><h:outputLabel
 						value="#{lbl['lbl.sc.item.name']}"></h:outputLabel></td>
@@ -48,86 +36,10 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.circular.list']}" toggleable="true">
+	<p:panel id="circularPanelItemListIds" header="#{lbl['lbl.sc.spec.circular.list']}" toggleable="true">
 
 
-		<!-- <p:dataTable id="circularList" var="circular" style="width:100%"
-			value="#{specificationBackingBean.searchCircular}" rows="10"
-			rowKey="#{circular.circularVerId}" rowIndexVar="index" lazy="true"
-			selection="#{specificationBackingBean.managedBean.circularVer}">
-			<ac:paginator for="circularList"></ac:paginator>
-			<p:ajax event="rowSelectRadio" process="@this" partialSubmit="true"
-				listener="#{specificationBackingBean.circularListSelect(specificationBackingBean.managedBean.circularVer)}"
-				update=":form:panelItemGroupList"></p:ajax>
-			<p:columnGroup>
-				<p:row>
-
-					<p:column headerText="#{lbl['lbl.sc.circular.no']}"
-						style="width:15%;white-space: normal;">
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.circular.name']}"
-						style="width:30%;white-space: normal;">
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.spec.circular.type']}"
-						style="width:10%">
-
-					</p:column>
-
-
-
-					<p:column headerText="#{lbl['lbl.sc.effective.date']}"
-						style="width:10%">
-
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.exp.date']}" style="width:15%">
-
-					</p:column>
-
-					<p:column style="width:5%;text-align: center;">
-
-					</p:column>
-
-				</p:row>
-			</p:columnGroup>
-
-			<p:column headerText="#{lbl['lbl.sc.circular.no']}"
-				style="width:15%;white-space: normal;">
-				<h:outputText value="#{circular.circularNo}"
-					style="text-align:right;" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.circular.name']}"
-				style="width:30%;white-space: normal;">
-				<h:outputText value="#{circular.name}"></h:outputText>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.spec.circular.type']}"
-				style="width:15%">
-				<h:outputText
-					value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, circular.docType)}"></h:outputText>
-			</p:column>
-
-
-			<p:column headerText="#{lbl['lbl.sc.effective.date']}"
-				style="width:10%">
-				<h:outputText value="#{circular.startDate}">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</h:outputText>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.exp.date']}" style="width:10%">
-				<h:outputText value="#{circular.endDate}">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</h:outputText>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.selection']}"
-				selectionMode="single" style="width:5%;text-align: center;"
-				disabledSelection="#{specificationBackingBean.circularDateComparision(circular.endDate)}"></p:column>
-		</p:dataTable> -->
+		
 
 
 		<h:panelGroup id="panelItemGroupList">
@@ -146,53 +58,12 @@
 					rowKey="#{panelItem}">
 
 					<ac:paginator for="panelItemList"></ac:paginator>
-					<!-- <p:ajax event="rowSelectRadio" process="@this" partialSubmit="true"
-						listener="#{specificationBackingBean.panelItemSelect}"></p:ajax> -->
-					<!-- 	<p:columnGroup>
-						<p:row>
-
-
-							<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
-								style="width:20%;white-space: normal;">
-
-							</p:column>
-
-							<p:column headerText="#{lbl['lbl.sc.specification']}"
-								style="width:15%;white-space: normal;">
-
-							</p:column>
-							<p:column headerText="#{lbl['lbl.sc.spec.panel.item.category']}"
-								style="width:10%">
-
-							</p:column>
-
-							<p:column headerText="#{lbl['lbl.sc.spec.panel.coverage']}"
-								style="width:5%">
-
-							</p:column>
-
-							<p:column headerText="#{lbl['lbl.sc.uom']}" style="width:15%">
-
-							</p:column>
-
-							<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
-								style="width:15%">
-
-							</p:column>
-
-							<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
-								style="width:18%">
-
-							</p:column>
-
-							<p:column>
-
-							</p:column>
-
-						</p:row>
-					</p:columnGroup>
- -->
-
+					<p:ajax event="rowSelect" update="@([id$=specCommitteeTechnicalPanelItemListId])" />
+			<p:ajax event="rowUnselect" update="@([id$=specCommitteeTechnicalPanelItemListId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=specCommitteeTechnicalPanelItemListId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=specCommitteeTechnicalPanelItemListId])" />
+			<p:ajax event="toggleSelect" update="@([id$=specCommitteeTechnicalPanelItemListId])" />
+				
 					<p:column selectionMode="multiple"
 						styleClass="td-check-box-spacing">
 						<!-- <p:ajax partialSubmit="true" process="@this" 
@@ -263,7 +134,8 @@
 				styleClass="BtnSpacing"
 				actionListener="#{specificationBackingBean.cancelPopup}"
 				style="float:right;" onclick="addPanelItem.hide();"></p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;" id="specCommitteeTechnicalPanelItemListId"
+			disabled="#{empty specificationBackingBean.managedBean.selectCtPanelItem}"
 				process="@all" partialSubmit="true" styleClass="BtnSpacing"
 				action="#{specificationBackingBean.addPanelItemsToTemplateSpec}"></p:commandButton>
 		</div>
