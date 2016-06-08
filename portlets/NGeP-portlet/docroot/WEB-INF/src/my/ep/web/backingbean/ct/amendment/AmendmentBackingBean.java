@@ -98,6 +98,7 @@ import my.ep.persistence.entity.ct.dtl.CtPidReason;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
+import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
@@ -1157,15 +1158,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     		}
 	        	 
 	     		// Validation for Deduction
-	     		if(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null && ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+	     		if(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
+	     				&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
 	     			  for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
 	     				   if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
 	     					   throw new EpException(MessageConst.ERROR_100022, 
 	     								new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.type", 
 	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	     				   }
-	     			  }
+	     				  ctBackingBean.validateDeductionType(deduction.getDeductionType().getParameterId());
+						   if(deduction.getCtDeductionClauses() != null && deduction.getCtDeductionClauses().size() > 0){
+						   for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
+								  if(ctDeductionClauses.getClauseDescription().isEmpty()){
+									  throw new EpException(MessageConst.ERROR_100022, 
+												new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.clause.desc", 
+														ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+								  }
+							  }
+						   }
+					  }  
 	     		}
+	     		
 	     		// Validation for zone
 	     		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 	     			ctBackingBean.getZoneObjDetails();
