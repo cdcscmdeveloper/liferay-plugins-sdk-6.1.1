@@ -269,7 +269,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//log.info("-----------Owner ID Type---------" + suppOwner.getIdentificationType().getParameterCode());
 		//log.info("-----------Owner ID---------" + suppOwner.getIdentificationNo());
 		
-		this.validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
+		validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
+		SmCommonUtil.getInstance().verifyWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
+				null, SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
 		
 		if(this.getManagedBean().getSmPersonnel().getPmCountry().isBrandNew()){
 			PmCountry nationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -431,7 +433,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		//validate IC with MyIdentity
 		if(personnelIDType.getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
-			SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), this.getManagedBean().getSmPermenantAdd().getPostcode());
+			SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
+					this.getManagedBean().getSmPermenantAdd().getPostcode(), null);
 		}
 		
 		/*String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
