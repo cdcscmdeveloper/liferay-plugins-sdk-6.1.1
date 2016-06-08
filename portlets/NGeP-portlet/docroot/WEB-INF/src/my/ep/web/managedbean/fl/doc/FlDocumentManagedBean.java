@@ -754,6 +754,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			if(isFlFulfilmentRecevingOfficer() || isAcknowledgeOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
 			}
 			if(isFlFulfilmentPaymentOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
@@ -776,6 +777,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			if(isFlFulfilmentRecevingOfficer() || isAcknowledgeOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
 			}
 			if(isFlFulfilmentPaymentOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);

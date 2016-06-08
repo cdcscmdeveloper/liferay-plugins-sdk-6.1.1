@@ -1105,6 +1105,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())) {
 				this.getManagedBean().setPtj(orgProfile);
 				this.getManagedBean().setMinistry(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
