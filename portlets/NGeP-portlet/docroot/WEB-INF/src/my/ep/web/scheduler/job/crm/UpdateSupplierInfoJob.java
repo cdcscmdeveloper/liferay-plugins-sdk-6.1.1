@@ -21,9 +21,6 @@ public class UpdateSupplierInfoJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(UpdateSupplierInfoJob.class);
 
-	ICRMServiceSO crmServiceSO = EpEjbBusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.INTEGRATION, ICRMServiceSO.class);
-
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
