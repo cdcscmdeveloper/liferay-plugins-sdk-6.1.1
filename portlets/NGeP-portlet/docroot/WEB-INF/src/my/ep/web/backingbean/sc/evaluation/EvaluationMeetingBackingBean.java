@@ -366,7 +366,7 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setCommitteMember(committeeMember);
 		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 		getSelectionTypes();
-		searchExistingUser.reloadData();
+		searchExistingUser.resetData();
 
 	}
 
@@ -859,7 +859,8 @@ public class EvaluationMeetingBackingBean extends
 				new QtnTenderSearchBean());
 		this.getManagedBean().setCloneCommitteMemebers(
 				new ArrayList<ScCommitteeMember>());
-		searchQuotatioTender.reloadData();
+		this.getManagedBean().setCloneCommitteMemebersSelect(new ArrayList<ScCommitteeMember>());
+		searchQuotatioTender.resetData();
 	}
 
 	/**
