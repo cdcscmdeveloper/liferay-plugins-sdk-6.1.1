@@ -92,6 +92,7 @@
 			        <h:panelGrid columns="3">
 			            <p:selectBooleanCheckbox  disabled="#{panelBackingBean.managedBean.viewContract}"
 			                  value="#{panelBackingBean.managedBean.circularVer.directNego}" style="text-align:top;"  > 
+			                   <p:ajax process="@this"></p:ajax>
 			             </p:selectBooleanCheckbox>
 			             <p:spacer width="2" />	
 			  	         <h:outputText value="#{lbl['lbl.ct.panel.dn']}"  />
@@ -110,6 +111,7 @@
 			                <h:panelGrid columns="3">
 		         	       <p:selectBooleanCheckbox disabled="#{panelBackingBean.managedBean.viewContract}"
 		         	           value="#{panelBackingBean.managedBean.circularVer.qt}" style="text-align:top;">
+		         	           <p:ajax process="@this"></p:ajax>
 				           </p:selectBooleanCheckbox>
 			               <p:spacer width="2" />	
 			  	          <h:outputText value="#{lbl['lbl.ct.panel.qt']}"  />   
