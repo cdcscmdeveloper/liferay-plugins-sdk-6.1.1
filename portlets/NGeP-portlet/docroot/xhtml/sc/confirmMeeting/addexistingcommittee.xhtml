@@ -9,10 +9,10 @@
 
 	<h:panelGroup id="newspecificationcommitteeid">
 
-		<p:dialog position="top"
+		<p:dialog position="top" 
 			header="New #{evaluationMeetingBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, 
 											evaluationMeetingBackingBean.managedBean.committeeType)}"
-			dynamic="true" widgetVar="newspecificationcommittee" modal="true"
+			 widgetVar="newspecificationcommittee" modal="true"
 			styleClass="scAddMember" width="950" height="600">
 
 			<h:panelGroup id="addexistingNewId">
@@ -54,6 +54,7 @@
 									<td />
 								</tr>
 							</table>
+							
 							<div class="ppRightBtn">
 
 
@@ -81,7 +82,11 @@
 								rowIndexVar="index">
 
 								<ac:paginator for="existingcommitteesearch" />
-
+                   <p:ajax event="rowSelect" update="@([id$=evaluationAddCommitteeDeleteBtnId])" />
+			      <p:ajax event="rowUnselect" update="@([id$=evaluationAddCommitteeDeleteBtnId])" />
+			     <p:ajax event="rowSelectCheckbox" update="@([id$=evaluationAddCommitteeDeleteBtnId])" />
+			     <p:ajax event="rowUnselectCheckbox" update="@([id$=evaluationAddCommitteeDeleteBtnId])" />
+			     <p:ajax event="toggleSelect" update="@([id$=evaluationAddCommitteeDeleteBtnId])" />
 								<p:column selectionMode="multiple"
 									styleClass="td-check-box-spacing" />
 
@@ -136,6 +141,8 @@
 								process="@this" oncomplete="newspecificationcommittee.hide();" />
 
 							<p:commandButton value="#{lbl['lbl.btn.ok']}"
+							id="evaluationAddCommitteeDeleteBtnId"
+							disabled="#{empty evaluationMeetingBackingBean.managedBean.selectedPmUser}"
 								style="float:right;" styleClass="BtnSpacing"
 								oncomplete="prepareCommittee.paginator.endLink.click();"
 								update="evaluationpreparecommittee,addexistingNewId"
