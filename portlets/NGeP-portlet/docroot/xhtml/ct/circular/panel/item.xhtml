@@ -233,6 +233,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
        
         <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.item.specification.list']}" 
 	   		styleClass="pop_up_top" modal="true" width="700" height="450">
+	   		<p:messages id="itemSpecMsg" showSummary="false" 
+			   showDetail="true"   autoUpdate="true" cosable="true" />
 	   		<h:panelGrid columns="1">
 	    		<p:outputLabel value="#{lbl['lbl.ct.item.name']}" >: #{panelBackingBean.managedBean.selectedItemForSpec.itemName}</p:outputLabel>
 	     	</h:panelGrid>
@@ -240,19 +242,26 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	     	<p:dataTable id="itemSpecDt" var="data" value="#{panelBackingBean.managedBean.selectedItemForSpec.ctPanelItemSpecs}"
 				rowKey="#{data}" rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedPanelItemSpecs}" widgetVar="panelItemSpecObj">
 				<ac:paginator for="itemSpecDt" />
-				  <p:ajax event="toggleSelect" 
-			                listener="#{panelBackingBean.onToggleSelect}" update=":form:itemSpecificDelBtn" />
-			                     <p:ajax event="rowSelect"
-                                       listener="#{panelBackingBean.onRowSelect}" update=":form:itemSpecificDelBtn" />
-			                      <p:ajax event="rowSelectCheckbox" 
-			                             listener="#{panelBackingBean.onRowSelect}" update=":form:itemSpecificDelBtn" />
-                                  <p:ajax event="rowUnselectCheckbox" 
-                                         listener="#{panelBackingBean.onRowUnselect}" update=":form:itemSpecificDelBtn" />
-				<p:column selectionMode="multiple" style="width:3%" 
-					rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				<p:column  style="width:2%" 
+				      	         	 rendered="#{!panelBackingBean.managedBean.viewContract}">
+				      		        <f:facet name="header">
+							            <p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.selectAll}">
+								             <p:ajax partialSubmit="true" process="@this"
+									             update=":form:itemSpecDt,:form:itemSpecificDelBtn" listener="#{panelBackingBean.selectAllSpecificItem}" />
+							            </p:selectBooleanCheckbox>
+						          </f:facet>
+		           
+		                          <p:selectBooleanCheckbox 
+		                               value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		               <p:ajax event="change" partialSubmit="true" process="@this"
+		           		                    update=":form:itemSpecDt,:form:itemSpecificDelBtn" listener="#{panelBackingBean.selectSpecificCheckBoxSelect}"></p:ajax>
+			                     </p:selectBooleanCheckbox>     
+				      		</p:column>
 				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:40%;" styleClass="column-align-center" >
 					<p:inputTextarea value="#{data.specification}" maxlength="1000" rows="3" style="width:98%;" autoResize="false"
-						disabled="#{panelBackingBean.managedBean.viewContract}" />
+						disabled="#{panelBackingBean.managedBean.viewContract}" required="true" label="#{lbl['lbl.ct.specification']}">
+						<p:ajax process="@this"></p:ajax>
+						</p:inputTextarea>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.description']}" style="width:40%;" styleClass="column-align-center" >
 					<p:inputTextarea value="#{data.description}" maxlength="1000" rows="3" style="width:98%;" autoResize="false"
@@ -266,7 +275,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				<p:commandButton id="itemSpecificDelBtn" value="#{lbl['lbl.ct.delete']}" process="@this"  partialSubmit="true"
 				     disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}" 
 				     onsuccess="delPanelItemSpecDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>				
-				<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="itemSpecDlg.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.close']}"  action="#{panelBackingBean.onClose()}" process="@all"  />
 			</div>
    		</p:dialog>
    		
@@ -274,7 +283,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 		           <div class="ppRightBtn">
 				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:itemSpecDt, :form:itemSpecificDelBtn"
-				       process="@this" partialSubmit="true" actionListener="#{panelBackingBean.deletePanelItemSpec()}" oncomplete="delPanelItemSpecDlg.hide();"/>
+				       process="@this" partialSubmit="true" actionListener="#{panelBackingBean.deleteTableRow('SPEC')}" oncomplete="delPanelItemSpecDlg.hide();"/>
 					 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delPanelItemSpecDlg.hide();" type="button" />
 				   </div>
         </p:confirmDialog>
