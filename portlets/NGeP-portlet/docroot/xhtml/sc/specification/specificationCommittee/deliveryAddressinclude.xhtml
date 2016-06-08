@@ -25,13 +25,13 @@
 					<p:selectBooleanCheckbox
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
-						<p:ajax partialSubmit="true" process="@this" update="pjtDelivered"
+						<p:ajax partialSubmit="true" process="@this" update="pjtDelivered,@form"
 							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, deliveryList)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{delivery.selected}"
 					disabled="#{specificationBackingBean.managedBean.readOnly}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@form" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -60,7 +60,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			styleClass="BtnSpacing"
 				process="@this,pjtDelivered" partialSubmit="true"
-				disabled="#{specificationBackingBean.managedBean.readOnly}"
+				disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.deleteselectedList(deliveryList)}"
 				oncomplete="deliveryAddressDeletePopUp.show();"
 				update="@([id$=#{deliveryAddressDeleteId}])">
 				<f:setPropertyActionListener
