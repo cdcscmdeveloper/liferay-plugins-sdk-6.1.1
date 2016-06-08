@@ -17,7 +17,7 @@
 	
 	<h:panelGroup id="groupPaneId">
 	      
-	      <p:panel rendered="#{panelBackingBean.managedBean.circularVer.pid}"
+	      <p:panel rendered="#{panelBackingBean.managedBean.circularVer.pid}" 
 	                id="purchaseInDefault"  header="#{lbl['lbl.ct.pid.panel.name']}" toggleable="true" toggleSpeed="500" >
 	                <p:dataTable id="pidTableId" var="pidObj" widgetVar="PidReasonObj"
 	                        value="#{panelBackingBean.managedBean.circularVer.ctCircularPidReason}" 
@@ -84,7 +84,7 @@
 		            </div>
                </p:confirmDialog>
 	      </p:panel>
-	      
+	   </h:panelGroup>
 	      <p:panel id="contactPerson" 
 	           header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" >
 		             <p:dataTable id="contactPersonDt" var="data" rowKey="#{data}" 
@@ -307,6 +307,5 @@
 				</td>
 			</tr>
 		</table>
-	</p:panel>	
-	</h:panelGroup>
+	</p:panel>
 </ui:composition>
