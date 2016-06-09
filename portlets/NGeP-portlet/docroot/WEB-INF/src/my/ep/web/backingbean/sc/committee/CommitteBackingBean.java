@@ -815,10 +815,15 @@ public class CommitteBackingBean extends
 							deletedCommitteeMember)) {
 					ScCommitteeMember committeeMember = committeeMembers.get(
 										committeeMembers.indexOf(deletedCommitteeMember));
+					deletedCommitteeMember.setMemberRole(
+								committeeMember.getMemberRole());
+					deletedCommitteeMember.setMemberRoleId(
+								committeeMember.getMemberRole().getParameterId());
 					deletedCommitteeMember.setRepresentativeType(
 								committeeMember.getRepresentativeType());
 					if (deletedCommitteeMember.getRepresentativeType() != null) {
-						deletedCommitteeMember.setRepresentativeTypeId(deletedCommitteeMember.getRepresentativeType().getParameterId());
+						deletedCommitteeMember.setRepresentativeTypeId(
+								deletedCommitteeMember.getRepresentativeType().getParameterId());
 					}
 					toBeAddedMembers.add(deletedCommitteeMember);
 				}
