@@ -107,7 +107,7 @@
   </servlet-mapping>
 	
 	<!-- Quartz Startup Config -->
-	<!-- <context-param>
+	 <!--  <context-param>
 		<param-name>quartz:shutdown-on-unload</param-name>
 		<param-value>true</param-value>
 	</context-param>
@@ -118,41 +118,47 @@
 	<context-param>
 		<param-name>quartz:start-on-load</param-name>
 		<param-value>true</param-value>
-	</context-param> -->
+	</context-param>  -->
 	
 	<!-- Used to initialize Quartz Scheduler Factory -->
-	<!-- <listener>
+	 <!--  <listener>
 		<listener-class>org.quartz.ee.servlet.QuartzInitializerListener</listener-class>
-	</listener> -->
+	</listener> --> 
 	
 	<!-- Use to initialize Quartz Jobs from Servlet -->
-	<!-- <servlet>
+	<!--  <servlet>
 		<servlet-name>ScSchedulerJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.sc.ScSchedulerServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
-	<servlet>
+	
+	 <servlet>
 		<servlet-name>CmSchedulerJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.cm.CmSchedulerServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
+	
 	<servlet>
 		<servlet-name>PmSchedulerJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.pm.PmSchedulerServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
-	</servlet> -->
-	<!-- <servlet>
+	</servlet> 
+	
+	 <servlet>
 		<servlet-name>SmBatchJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.sm.SmSchedulerServlet</servlet-class>
 		<load-on-startup>4</load-on-startup>
-	</servlet> -->
-	<!--
+	</servlet> 
+	
 	<servlet>
 		<servlet-name>CtSchedulerJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.ct.CtSchedulerServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
-	</servlet>
-	-->
-	
+	</servlet>  
+	<servlet>
+		<servlet-name>FLSchedulerServlet</servlet-name>
+		<servlet-class>my.ep.web.scheduler.servlet.fl.FLSchedulerServlet</servlet-class>
+		<load-on-startup>4</load-on-startup>
+	</servlet>	-->
 	
 </web-app>
