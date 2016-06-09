@@ -129,19 +129,7 @@ public class BiddingListBackingBean extends
 		//return getNavigationURL(scheduledBid);
 	}
 
-	private String getNavigationURL(ScBidSchedule scheduledBid) {
-		StringBuilder url = new StringBuilder();
-
-		url.append(
-				EpPropertiesUtils.getInstance().getProperty(
-						EpPropertiesConst.PORTAL_APPLICATION_URL))
-				.append(SourcingConstants.NAV_PAGE_VIEW_BIDDING)
-				.append(SourcingConstants.NAV_PARAM_BID_SCHEDULE_ID)
-				.append(SourcingConstants.NAV_PARAM_SEPARATOR)
-				.append(scheduledBid.getBidScheduleId());
-		return url.toString();
-	}
-
+	
 	private void navigateUsingExternalContext(ScBidSchedule scheduledBid)
 			throws PortalException, SystemException, IOException {
 
