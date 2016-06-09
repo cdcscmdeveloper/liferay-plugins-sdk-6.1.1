@@ -431,7 +431,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		                		Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();	
 		                		boolean isValidApprover = false;
 		                		while (sourceIt.hasNext()) {
+		                			log.info("#9975 #9976 Testing");
 		                			PmUser user = sourceIt.next();
+		                			log.info("user : "+user+"; approverUser: "+approverUser);
 		                			if (user!=null && approverUser!=null && (user.getUserId() == approverUser.getUserId())) {
 		                				sourceIt.remove();
 		                				isValidApprover = true;
