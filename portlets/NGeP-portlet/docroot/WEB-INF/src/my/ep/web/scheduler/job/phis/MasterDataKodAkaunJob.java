@@ -6,13 +6,17 @@ import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /*
  * @author P Ganga prasad
+ * @author Venkat Chanumolu
  */
+//Review this based on the requirement
+@DisallowConcurrentExecution
 public class MasterDataKodAkaunJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(MasterDataKodAkaunJob.class);
@@ -21,10 +25,20 @@ public class MasterDataKodAkaunJob implements Job {
 			throws JobExecutionException {
 
 		log.info("MasterDataKodAkaunJob start");
-		IPHISServiceSO  phisServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
-						IPHISServiceSO.class);
-		phisServiceSO.glAccount();
+		IPHISServiceSO phisServiceSO = null;
+		try {
+			phisServiceSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.INTEGRATION,
+							IPHISServiceSO.class);
+			phisServiceSO.glAccount();
+			// please add resDTO to log better
+
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			// error handling follows here
+		} finally {
+			phisServiceSO = null;
+		}
 		log.info("MasterDataKodAkaunJob end");
 
 	}

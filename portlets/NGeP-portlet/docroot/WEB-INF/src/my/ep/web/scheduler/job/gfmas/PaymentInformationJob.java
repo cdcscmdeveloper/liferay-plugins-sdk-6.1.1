@@ -6,28 +6,38 @@ import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+
 /*
  * @author P Ganga prasad
+ * @author Venkat Chanumolu
  */
+
+//Review this based on the requirement
+@DisallowConcurrentExecution
 public class PaymentInformationJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(PaymentInformationJob.class);
 
-	public static IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
-						IGfmasServiceSO.class);
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("PaymentInformationJob start");
+		IGfmasServiceSO gfmasServiceSO = null;
 		try {
+			gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.INTEGRATION,
+							IGfmasServiceSO.class);
 			gfmasServiceSO.paymentGfmasInbound();
-		} catch(Exception e) {
-			log.info("PaymentInformationJob :"+e.getMessage());
+		} catch (Exception e) {
+			log.info("PaymentInformationJob :" + e.getMessage());
+		}
+		finally {
+			gfmasServiceSO = null;
 		}
 		log.info("PaymentInformationJob end");
 
