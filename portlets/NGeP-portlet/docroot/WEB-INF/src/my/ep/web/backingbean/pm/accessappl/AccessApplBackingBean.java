@@ -91,6 +91,7 @@ public class AccessApplBackingBean extends
 			.getLogger(AccessApplBackingBean.class);
 	
 	private static final String ACCESS_APPL_MAIN_PAGE ="/xhtml/pm/accessappl/accessApplicationMain.xhtml";
+	private static final String ACCESS_APPL_TNC ="/xhtml/pm/accessappl/accessApplicationTnc.xhtml";
 	
 	/**
 	 * Pre Loading
@@ -99,11 +100,16 @@ public class AccessApplBackingBean extends
 	public void preLoading() {
 		log.info("preLoading");
 		renewSesionObject();
-		initialAccessApplication();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, ACCESS_APPL_MAIN_PAGE);
+				.handleNavigation(fc, null, ACCESS_APPL_TNC);
 	}
+	
+	public String proceedToMainPage(){
+		initialAccessApplication();
+		return ACCESS_APPL_MAIN_PAGE;
+	}
+		
 	
 	/**
 	 * Pre render View
