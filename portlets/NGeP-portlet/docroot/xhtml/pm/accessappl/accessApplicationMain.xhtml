@@ -45,7 +45,7 @@
 				toggleable="true" id="declPnl">
 				<p:selectBooleanCheckbox id="isDeclChkBox"
 					value="#{accessApplBackingBean.managedBean.declarationChecked}">
-					<p:ajax update="@this,btnProceed"  />
+					<p:ajax update="@this,:form:accessApplBttnOp"  />
 				</p:selectBooleanCheckbox>
 				<h:outputText escape="false" style="margin-left:5px;"
 					value="#{lbl['lbl.pm.access.app.declaration.desc']}" />	
