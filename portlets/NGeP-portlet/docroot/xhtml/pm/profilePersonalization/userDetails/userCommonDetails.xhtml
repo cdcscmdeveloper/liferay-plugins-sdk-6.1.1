@@ -25,11 +25,7 @@
          
       </style>
       <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="true" escape="false"/>
-      <ui:param name="orgName" value="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ? 
-         profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName
-         : ParameterConst.orgTypeFactoring eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ?
-         profilePersonalizationBackingBean.managedBean.currentProfile.pmFinancialOrg.finOrgName
-         : profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />
+      
       <p:outputPanel id="opUserCommonDet" rendered="#{not profilePersonalizationBackingBean.tempSupplierRole}">
       	<div id="opUserCommonDetDiv">
          <table class="ppTwoTable" style="margin:10px 15px">
@@ -38,7 +34,17 @@
                   <p:graphicImage value="/css/images/design/icon-organization.png" title="#{lbl['lbl.pm.access.app.org']}" />
                </td>
                <td style="width:400px;">
-                  <h:outputText style="white-space:normal;" value="#{orgName}" />
+						<c:choose>
+					    <c:when test="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode}">
+					    	<h:outputText style="white-space:normal;" value="#{profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName}" />
+					    </c:when>
+					    <c:when test="#{ParameterConst.orgTypeFactoring eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode}">
+					        <h:outputText style="white-space:normal;" value="#{profilePersonalizationBackingBean.managedBean.currentProfile.pmFinancialOrg.finOrgName}" />
+					     </c:when>
+					    <c:otherwise>
+					    	 <h:outputText style="white-space:normal;" value="#{profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />
+					    </c:otherwise>
+					</c:choose>	
                </td>
                <td rowspan="4" style="vertical-align:top;">
                   <table>
