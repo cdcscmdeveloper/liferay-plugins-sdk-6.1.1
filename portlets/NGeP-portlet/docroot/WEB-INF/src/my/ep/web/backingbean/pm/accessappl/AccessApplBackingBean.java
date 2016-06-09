@@ -107,7 +107,7 @@ public class AccessApplBackingBean extends
 	
 	public String proceedToMainPage(){
 		initialAccessApplication();
-		return ACCESS_APPL_MAIN_PAGE;
+		return "/xhtml/pm/accessappl/accessApplicationMain.xhtml?faces-redirect=true";
 	}
 		
 	
