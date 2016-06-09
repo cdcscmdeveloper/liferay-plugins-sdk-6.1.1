@@ -560,7 +560,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    	if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 		    		messageId = MessageConst.INFO_700011;
 		    	} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
-				    messageId = MessageConst.INFO_700045;
+				    messageId = MessageConst.INFO_700011;
 			    } else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				    messageId = MessageConst.INFO_700008;
 			    }
