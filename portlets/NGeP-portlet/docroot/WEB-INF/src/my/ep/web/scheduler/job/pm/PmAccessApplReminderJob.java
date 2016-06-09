@@ -37,7 +37,10 @@ public class PmAccessApplReminderJob implements Job {
 			schedulerSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IPmSchedulerSO.class);			
 			schedulerSO.sendAccessApplicationReminder();
-		} finally {
+		} catch(Exception e){
+			log.error(e.getLocalizedMessage());
+		}
+		finally {
 			schedulerSO = null;
 		}
 	}
