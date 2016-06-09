@@ -87,6 +87,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:inputText id="itBusinessCategory" styleClass="ppDisplayTextM" maxlength="255"
+						style="width:435px;"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.businessCategory}"
 						disabled="true" />
 					&#160;
@@ -117,7 +118,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:selectOneMenu id="somGlp" styleClass="ppDropDownWidthM" 
-						label="#{lbl['lbl.pm.suppdoc.certified.body']}" 
+						label="#{lbl['lbl.pm.suppdoc.certified.body']}" style="width:435px;"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.glpCertBodyId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 						<f:selectItems  value="#{supportDocBackingBean.retrieveGlpList()}"  
