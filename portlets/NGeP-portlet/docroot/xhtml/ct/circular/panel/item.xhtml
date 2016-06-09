@@ -8,7 +8,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc">
 <p:panel id="itemId" header="#{lbl['lbl.ct.panel.item']}" toggleable="true" toggleSpeed="500">
 		<div>
+		          <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.panel.item']}" escape="false"/><br/>
 		          <h:panelGrid width="100%">
+		          
 		          <p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
 		                    selectionMode="single" rowKey="#{panelItemsVar}" selection="#{panelBackingBean.managedBean.selectedPanelItems}"
 		                     rowIndexVar="index" widgetVar="panelItemObj">
@@ -67,7 +69,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 								         
 								          <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 										     <div  align="left">
-										       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="8" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
+										       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="20" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
 													value="#{panelItemsVar.ctPanelItemGroup.groupName}" conditionField="recordStatus^1" 
 													saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].ctPanelItemGroup">
 										       </ac:lov>
@@ -111,13 +113,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					                   </p:commandLink>
                                   </p:column>
 			  
-			                      <p:column styleClass="column-align-center" style="width:12%;">
+			                      <p:column styleClass="column-align-center" style="width:12%;white-space:pre-line">
 				  	                    <f:facet name="header" >
 						                    <h:outputText value="#{lbl['lbl.ct.uom']}" style="float:left;white-space:pre-line" styleClass="required"  />
 	                            	    </f:facet>
 	               	 
 	               	                    <c:if test="#{!panelBackingBean.managedBean.viewContract}">
-			                                  <ac:lov id="uomLovId" lovId="PM_UOM" size="5" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
+			                                  <ac:lov id="uomLovId" lovId="PM_UOM" size="15" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
 				                                   value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1" 
 				                                   saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
 			                                 </ac:lov>
@@ -306,6 +308,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						</table>
 		  
 				      <p:spacer height="20" />
+				       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.panel.zone']}" escape="false"/><br/>
 				     <p:dataTable id="zoneGeneralDataTable" value="#{panelBackingBean.managedBean.selectedPanelItems.ctPanelZones}" 
 				                var="panelZoneVar" selectionMode="single" widgetVar="panelZoneObj"
 				                selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
