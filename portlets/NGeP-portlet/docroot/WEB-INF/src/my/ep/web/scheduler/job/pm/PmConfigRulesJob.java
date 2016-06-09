@@ -21,22 +21,24 @@ import org.quartz.JobExecutionException;
  * 
  */
 /*
- * This is a cronjob and is responsible for clear Config Rules Map
- * This can have only one instance and executes only once.
+ * This is a cronjob and is responsible for clear Config Rules Map This can have
+ * only one instance and executes only once.
  */
 @DisallowConcurrentExecution
 public class PmConfigRulesJob implements Job {
-	
+
 	public static Logger log = EpLogger.getLogger(PmConfigRulesJob.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		
+
 		IPmSchedulerSO schedulerSO = null;
 		try {
 			schedulerSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IPmSchedulerSO.class);			
+					ModuleCodeConst.PROFILE_MANAGEMENT, IPmSchedulerSO.class);
 			schedulerSO.resetRulesConfigMap();
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
 		} finally {
 			schedulerSO = null;
 		}

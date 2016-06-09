@@ -21,22 +21,25 @@ import org.quartz.JobExecutionException;
  * 
  */
 /*
- * This is a cronjob and is responsible for update access application workflow status if the access application expired (7days)
- * This can have only one instance and executes only once.
+ * This is a cronjob and is responsible for update access application workflow
+ * status if the access application expired (7days) This can have only one
+ * instance and executes only once.
  */
 @DisallowConcurrentExecution
 public class PmAccessApplJob implements Job {
-	
+
 	public static Logger log = EpLogger.getLogger(PmAccessApplJob.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		
+
 		IPmSchedulerSO schedulerSO = null;
 		try {
 			schedulerSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IPmSchedulerSO.class);			
+					ModuleCodeConst.PROFILE_MANAGEMENT, IPmSchedulerSO.class);
 			schedulerSO.updateExpiredPendingActivationAccessAppl();
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
 		} finally {
 			schedulerSO = null;
 		}
