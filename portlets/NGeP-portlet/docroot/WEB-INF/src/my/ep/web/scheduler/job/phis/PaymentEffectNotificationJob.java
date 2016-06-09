@@ -6,13 +6,17 @@ import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /*
  * @author P Ganga prasad
+ * @author Venkat Chanumolu
  */
+//Review this based on the requirement
+@DisallowConcurrentExecution
 public class PaymentEffectNotificationJob implements Job {
 
 	public static Logger log = EpLogger
@@ -22,10 +26,18 @@ public class PaymentEffectNotificationJob implements Job {
 			throws JobExecutionException {
 
 		log.info("PaymentEffectNotificationJob start");
-		IPHISServiceSO  phisServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
-						IPHISServiceSO.class);
-		phisServiceSO.paymentEffectNotification();
+		IPHISServiceSO phisServiceSO = null;
+		try {
+			phisServiceSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.INTEGRATION,
+							IPHISServiceSO.class);
+			phisServiceSO.paymentEffectNotification();
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			// error handling follows here
+		} finally {
+			phisServiceSO = null;
+		}
 		log.info("PaymentEffectNotificationJob end");
 
 	}

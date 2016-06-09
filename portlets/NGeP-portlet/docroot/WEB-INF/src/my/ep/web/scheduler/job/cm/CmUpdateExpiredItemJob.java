@@ -17,9 +17,9 @@ import org.quartz.JobExecutionException;
 
 @DisallowConcurrentExecution
 public class CmUpdateExpiredItemJob implements Job {
-	
+
 	public static Logger log = EpLogger.getLogger(CmUpdateExpiredItemJob.class);
-	
+
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -29,16 +29,22 @@ public class CmUpdateExpiredItemJob implements Job {
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		
-	  
-		ICatalogueSO reqSO = (ICatalogueSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
-						ICatalogueSO.class);
-		
-		
-		reqSO.updateExpiredItem();
-		
-		
+
+		ICatalogueSO reqSO = null;
+		try {
+			reqSO = (ICatalogueSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+							ICatalogueSO.class);
+			reqSO.updateExpiredItem();
+			// please add resDTO to log better
+
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			// error handling follows here
+		} finally {
+			reqSO = null;
+		}
+
 	}
 
 }
