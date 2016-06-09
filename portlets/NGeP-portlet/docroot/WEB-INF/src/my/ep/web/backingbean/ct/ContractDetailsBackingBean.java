@@ -421,9 +421,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				    // Retrieve Approver List Information
 				   	if (!ctBB.getManagedBean().isViewContract()
 							|| (ctBB.getManagedBean().isViewContract() && this.isContractAdmin())) {
-						getManagedBean().getApproverModel().setSource(
-								getAvailableApproverList(ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode(),
-										getManagedBean().getUserMap()));
+				   		if(this.isContractAdmin()) {
+							getManagedBean().getApproverModel().setSource(
+									getAvailableApproverList(ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode(),
+											getManagedBean().getUserMap()));
+				   		}
 						if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
 							getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 		                	List<PmUser> invalidApproverList = new ArrayList<PmUser>();
