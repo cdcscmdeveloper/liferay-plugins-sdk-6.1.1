@@ -33,8 +33,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<p:inputText style="display:none" id="hiddenGtNonAllocAmtB" styleClass="hiddenGtNonAllocAmtB" value="#{pPlanBackingBean.managedBean.epTotalNonEpAllocB}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
-
-	   	<p:dataTable id="dtExpenditurePlanB" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+		<div id="bGlAccErrMsgDiv" style="display:none;">
+			<p:messages id="bGlAccMsg" showDetail="true" autoUpdate="false" closable="true" showSummary="false" escape="false"/>
+		</div>
+	
+		<p:dataTable id="dtExpenditurePlanB" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsB}"
 		     rowIndexVar="index" rowKey="#{epItem}">
 			<ac:paginator for="dtExpenditurePlanB" />
@@ -113,10 +116,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</p:column>
 	        <p:column style="white-space:nowrap;">
 	        
-	       		<ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" update=":form:dtExpenditurePlanB" 
+	       		<ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" 
+	       			update=":form:dtExpenditurePlanB :form:bGlAccMsg" 
    					disabled="#{!epItem.brandNew}"
 			    	required="#{!empty param['disableValidation']}"
 	            	readonly="true" 
+	            	postUpdateListenerWithIndex="pPlanBackingBean.validateEpItemBLov"
 					headerText="#{lbl['lbl.pp.goso.code']}"
 					value="#{epItem.pmGlAccount.glAccCode}" 
 					saveObject="pPlanBackingBean.managedBean.epItemsB[#{index}].pmGlAccount"

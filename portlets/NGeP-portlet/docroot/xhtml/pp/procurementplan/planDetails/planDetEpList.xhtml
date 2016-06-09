@@ -7,7 +7,56 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc"
 >
-	
+	<script type="text/javascript">		
+		function showbLovMsg(){
+			$("[id$='bGlAccErrMsgDiv']").css("display", "block");
+		}
+		
+		function hidebLovMsg(){
+			$("[id$='bGlAccErrMsgDiv']").css("display", "none");
+		}
+		
+		function showhLovMsg(){
+			$("[id$='hGlAccErrMsgDiv']").css("display", "block");
+		}
+		
+		function hidehLovMsg(){
+			$("[id$='hGlAccErrMsgDiv']").css("display", "none");
+		}
+		
+		function showpLovMsg(){
+			$("[id$='pGlAccErrMsgDiv']").css("display", "block");
+		}
+		
+		function hidepLovMsg(){
+			$("[id$='pGlAccErrMsgDiv']").css("display", "none");
+		}
+		
+		function showsLovMsg(){
+			$("[id$='sGlAccErrMsgDiv']").css("display", "block");
+		}
+		
+		function hidesLovMsg(){
+			$("[id$='sGlAccErrMsgDiv']").css("display", "none");
+		}
+		
+		function showtLovMsg(){
+			$("[id$='tGlAccErrMsgDiv']").css("display", "block");
+		}
+		
+		function hidetLovMsg(){
+			$("[id$='tGlAccErrMsgDiv']").css("display", "none");
+		}
+		
+		function showLovMsg(){
+			$("[id$='GlAccErrMsgDiv']").css("display", "block");
+		}
+		
+		function hideLovMsg(){
+			$("[id$='GlAccErrMsgDiv']").css("display", "none");
+		}
+			
+ 	</script>
 	<p:outputPanel id="opPlanEpOverview">
 		<!-- B -->
 		<ui:include src="planDetEpB.xhtml"/>
