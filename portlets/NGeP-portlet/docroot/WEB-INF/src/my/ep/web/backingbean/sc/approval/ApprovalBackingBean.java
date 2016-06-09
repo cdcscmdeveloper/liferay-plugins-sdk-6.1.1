@@ -473,14 +473,6 @@ public class ApprovalBackingBean extends
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagPublication());
 			if (CollectionUtils.isNotEmpty(paramTypes)) {
-				// temporary for exiting bpm payload which store as PTJ.
-				if (paramTypes.contains(ParameterConst.APPROVAL_CATEGORY_PTJ)) {
-					List<String> paramTypes2 = new ArrayList<String>();
-					paramTypes2.add(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL);
-					paramTypes2.addAll(paramTypes);
-					paramTypes = paramTypes2;
-				}
-				
 				this.getManagedBean().setApprovalType(paramTypes.get(0));
 			}
 			
