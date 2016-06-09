@@ -6,13 +6,17 @@ import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /*
  * @author P Ganga prasad
+ * @author Venkat Chanumolu
  */
+//Review this based on the requirement
+@DisallowConcurrentExecution
 public class GovernmentProjectJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(GovernmentProjectJob.class);
@@ -21,10 +25,20 @@ public class GovernmentProjectJob implements Job {
 			throws JobExecutionException {
 
 		log.info("GovernmentProjectJob start");
-		IEperundingServiceSO eperundingServiceSO = EpEjbBusinessDelegate
-				.getInstance().getServiceObject(ModuleCodeConst.INTEGRATION,
-						IEperundingServiceSO.class);
-		eperundingServiceSO.createGovernmentProject();
+		IEperundingServiceSO eperundingServiceSO = null;
+		try {
+			eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.INTEGRATION,
+							IEperundingServiceSO.class);
+			eperundingServiceSO.createGovernmentProject();
+			// please add resDTO to log better
+
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			// error handling follows here
+		} finally {
+			eperundingServiceSO = null;
+		}
 		log.info("GovernmentProjectJob end");
 
 	}
