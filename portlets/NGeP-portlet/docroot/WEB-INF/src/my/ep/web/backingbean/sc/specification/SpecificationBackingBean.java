@@ -9706,6 +9706,10 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
 
 		}
+		if (null != this.getManagedBean().getQt().getFulfilmentType()) {
+			this.getManagedBean().setFulfilmentType(
+					this.getManagedBean().getQt().getFulfilmentType().getParameterCode());
+		}
 		this.getManagedBean().setLoginRoleType("SC");
 		fc.getApplication()
 				.getNavigationHandler()
