@@ -16,23 +16,22 @@ import org.quartz.JobExecutionException;
 public class ReceiptInformationJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(ReceiptInformationJob.class);
-	
-	public static IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
-						IGfmasServiceSO.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-
 		log.info("ReceiptInformationJob start");
+		IGfmasServiceSO gfmasServiceSO = null;
 		try {
-			
-		gfmasServiceSO.receiptInformationGfmasOutbound();
+			gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.INTEGRATION,
+							IGfmasServiceSO.class);
+			gfmasServiceSO.receiptInformationGfmasOutbound();
 		} catch (Exception e) {
-			log.info("ReceiptInformationJob :"+e.getMessage());
+			log.info("ReceiptInformationJob :" + e.getMessage());
+		} finally {
+			gfmasServiceSO = null;
 		}
 		log.info("ReceiptInformationJob end");
 
 	}
-
 }
