@@ -113,6 +113,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -242,11 +243,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
 			CtRemark remark = new CtRemark();
-			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			PmUser pmUser = facesScopes.getUserSessionBean();
+			remark.setCreatedBy(pmUser.getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUser(facesScopes.getUserSessionBean());
+			remark.setCreatedUser(pmUser);
 			getManagedBean().setRemarkList(remarkList);
 			getManagedBean().getRemarkList().add(0, remark);
 		} else {
