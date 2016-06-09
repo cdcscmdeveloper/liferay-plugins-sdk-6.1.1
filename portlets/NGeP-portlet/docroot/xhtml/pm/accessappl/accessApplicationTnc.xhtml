@@ -8,9 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
 	
-		<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-		</p:blockUI>	
+		
 		<p:panel header="#{lbl['lbl.pm.access.app.tnc.header']}"
 			toggleable="true" id="tncPnl">
 			<p:scrollPanel style="height:300px;border:0;" mode="native">
@@ -41,8 +39,7 @@
 		</p:panel>
 		
 		<div align="right">
-			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" 
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"
 			disabled="#{not accessApplBackingBean.managedBean.tncChecked}" 
 				action="#{accessApplBackingBean.proceedToMainPage}" />
 		</div>
