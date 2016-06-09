@@ -58,13 +58,10 @@
 				process="@this, meetingAttDtlTbl" partialSubmit="true"
 				update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])"
 				onsuccess="dlgPerformDel.show();"
-				rendered="#{(suppFinalizationBackingBean.managedBean.meetingAttendanceList ne null) and 
-								(suppFinalizationBackingBean.managedBean.meetingAttendanceList.size() gt 0) 
-									and isSecretaryUser}"
-				disabled="#{(suppFinalizationBackingBean.managedBean.selectedMeetingAttList eq null) or 
-								(suppFinalizationBackingBean.managedBean.selectedMeetingAttList.size() eq 0)}" />
+				disabled="#{(empty suppFinalizationBackingBean.managedBean.meetingAttendanceList) or 
+								(empty suppFinalizationBackingBean.managedBean.selectedMeetingAttList) or 
+									!isSecretaryUser}" />
 		</div>
-
 
 		<!-- Dialog to prompt the user before deleting attendance records -->
 		<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel"
