@@ -76,13 +76,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private Long selectedBidScheduleId;
 	private String recommendTypeItem = ParameterConst.RECOMMEND_TYPE_ITEM;
 	private String recommendTypePackage = ParameterConst.RECOMMEND_TYPE_PACKAGE;
-
-	private Long pendingBidding = BidStatusConst.BID_PENDING_BIDDING;
-	private Long bidInProgress = BidStatusConst.BID_IN_PROGRESS;
-	private Long bidPaused = BidStatusConst.BID_PAUSED;
-	private Long bidCancelled = BidStatusConst.BID_CANCELLED;
-	private Long bidCompleted = BidStatusConst.BID_COMPLETED;
-
+	
 	private boolean isBidPaused = false;
 
 	private BigDecimal itemStartPriceTotal;
@@ -1187,41 +1181,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		this.remainingSeconds = remainingSeconds;
 	}
 
-	/**
-	 * @return the pendingBidding
-	 */
-	public Long getPendingBidding() {
-		return pendingBidding;
-	}
-
-	/**
-	 * @return the bidInProgress
-	 */
-	public Long getBidInProgress() {
-		return bidInProgress;
-	}
-
-	/**
-	 * @return the bidPaused
-	 */
-	public Long getBidPaused() {
-		return bidPaused;
-	}
-
-	/**
-	 * @return the bidCancelled
-	 */
-	public Long getBidCancelled() {
-		return bidCancelled;
-	}
-
-	/**
-	 * @return the bidCompleted
-	 */
-	public Long getBidCompleted() {
-		return bidCompleted;
-	}
-
+	
 	/**
 	 * @param tplSpecHelper
 	 *            the tplSpecHelper to set
