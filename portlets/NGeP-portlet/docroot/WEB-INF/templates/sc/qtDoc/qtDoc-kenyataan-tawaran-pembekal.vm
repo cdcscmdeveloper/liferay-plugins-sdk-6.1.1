@@ -6,7 +6,7 @@
 }
 @page { 
 	@bottom-center { 
-		content:element(footer)
+		content: "Page " counter(page) " / " counter(pages);
 	}
 }
 .table2 {
