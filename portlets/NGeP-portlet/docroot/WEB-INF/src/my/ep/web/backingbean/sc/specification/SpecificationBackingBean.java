@@ -8596,6 +8596,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setCircularType(circular.getDocType());
 				this.getManagedBean().setPanelItemList(
 						resDTO.getPanelItemList());
+				this.getManagedBean().setSelectCtPanelItem(new ArrayList<CtPanelItem>());
 				this.getManagedBean().setAutoUpdate(false);
 			}
 
