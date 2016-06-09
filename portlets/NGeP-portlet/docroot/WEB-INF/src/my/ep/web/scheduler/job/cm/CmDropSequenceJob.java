@@ -17,9 +17,9 @@ import org.quartz.JobExecutionException;
 
 @DisallowConcurrentExecution
 public class CmDropSequenceJob implements Job {
-	
+
 	public static Logger log = EpLogger.getLogger(CmDropSequenceJob.class);
-	
+
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -29,16 +29,21 @@ public class CmDropSequenceJob implements Job {
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		
-	  
-		ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
-						ICodificationSO.class);
-		
-		
-		reqSO.dropSequenceNo();
-		
-		
-	}
 
+		ICodificationSO reqSO = null;
+		try {
+			reqSO = (ICodificationSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.CATALOGUE_MANAGEMENT,
+							ICodificationSO.class);
+			reqSO.dropSequenceNo();
+			// please add resDTO to log better
+
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			// error handling follows here
+		} finally {
+			reqSO = null;
+		}
+	}
 }
