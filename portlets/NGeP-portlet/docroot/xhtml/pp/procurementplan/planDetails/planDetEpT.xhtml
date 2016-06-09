@@ -33,7 +33,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<p:inputText style="display:none" id="hiddenGtNonAllocAmtT" styleClass="hiddenGtNonAllocAmtT" value="#{pPlanBackingBean.managedBean.epTotalNonEpAllocT}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
-
+		<div id="tGlAccErrMsgDiv" style="display:none;">
+			<p:messages id="tGlAccMsg" showDetail="true" autoUpdate="false" closable="true" showSummary="false" escape="false"/>
+		</div>
 	   	<p:dataTable id="dtExpenditurePlanT" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsT}"
 		     rowIndexVar="index" rowKey="#{epItem}">
@@ -113,11 +115,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</p:column>
 	        <p:column style="white-space:nowrap;">
 	        
-	       		<ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" update=":form:dtExpenditurePlanT" 
+	       		<ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" 
+	       			update=":form:dtExpenditurePlanT :form:tGlAccMsg" 
    					disabled="#{!epItem.brandNew}"
 			    	required="#{!empty param['disableValidation']}"
 	            	readonly="true" 
 					headerText="#{lbl['lbl.pp.goso.code']}"
+					postUpdateListenerWithIndex="pPlanBackingBean.validateEpItemTLov"
 					value="#{epItem.pmGlAccount.glAccCode}" 
 					saveObject="pPlanBackingBean.managedBean.epItemsT[#{index}].pmGlAccount"
 					conditionField="recordStatus^1" 

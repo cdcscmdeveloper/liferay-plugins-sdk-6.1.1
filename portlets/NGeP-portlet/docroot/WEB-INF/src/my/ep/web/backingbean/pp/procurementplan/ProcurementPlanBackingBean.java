@@ -29,6 +29,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -42,6 +43,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
+import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.exception.EpException;
@@ -52,6 +55,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -65,6 +69,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -2133,7 +2138,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void addEpItemDet(String paramCode){
 		log.info("addEpItemDet");
-
+		RequestContext.getCurrentInstance().execute("hideLovMsg();");
 		validateEpItem(paramCode); // disabled this if no validation required at this stage
 		PpExpenditureItem epItem = new PpExpenditureItem();
 		epItem.setPmGlAccount(new PmGlAccount());
@@ -3819,6 +3824,61 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}
 		return label;
+	}
+	
+	public void validateEpItemBLov(BaseEntity entity,int index){
+		PmGlAccount glAcc = (PmGlAccount) entity;
+		List<PpExpenditureItem> epItems = this.getManagedBean().getEpItemsB();
+		validateEpItems(epItems, glAcc,index,"b");
+	}
+	
+	public void validateEpItemHLov(BaseEntity entity,int index){
+		PmGlAccount glAcc = (PmGlAccount) entity;
+		List<PpExpenditureItem> epItems = this.getManagedBean().getEpItemsH();
+		validateEpItems(epItems, glAcc,index,"h");
+	}
+	
+	public void validateEpItemPLov(BaseEntity entity,int index){
+		PmGlAccount glAcc = (PmGlAccount) entity;
+		List<PpExpenditureItem> epItems = this.getManagedBean().getEpItemsP();
+		validateEpItems(epItems, glAcc,index,"p");
+	}
+	
+	public void validateEpItemSLov(BaseEntity entity,int index){
+		PmGlAccount glAcc = (PmGlAccount) entity;
+		List<PpExpenditureItem> epItems = this.getManagedBean().getEpItemsS();
+		validateEpItems(epItems, glAcc,index,"s");
+	}
+	
+	public void validateEpItemTLov(BaseEntity entity,int index){
+		PmGlAccount glAcc = (PmGlAccount) entity;
+		List<PpExpenditureItem> epItems = this.getManagedBean().getEpItemsT();
+		validateEpItems(epItems, glAcc,index,"t");
+	}
+	
+	private void validateEpItems(List<PpExpenditureItem> epItems,PmGlAccount glAccount,int index,String type){
+		if(!epItems.isEmpty()){
+			List <Long> soIds = new ArrayList<Long>();
+			for(PpExpenditureItem epItem: epItems){
+				if(DbValueConst.RECORD_STATUS_ACTIVE ==epItem.getRecordStatusFlg()){					
+					soIds.add(epItem.getPmGlAccount().getGlAccountId());
+				}
+			}
+			if(!soIds.isEmpty()){
+				if(!validationUniqueIds(soIds)){	
+					RequestContext.getCurrentInstance().execute("show"+type+"LovMsg();");
+					String duplicateCode = glAccount.getGlAccCode() + " " +glAccount.getDescription();
+					epItems.get(index).setPmGlAccount(new PmGlAccount());
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(MessageConst.INFO_721223,
+											new String[] { duplicateCode }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));				
+				}else{
+					RequestContext.getCurrentInstance().execute("hide"+type+"LovMsg();");
+				}
+			}
+		}
 	}
 
 }
