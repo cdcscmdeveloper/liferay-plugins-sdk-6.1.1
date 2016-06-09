@@ -18,10 +18,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column headerText="#{lbl['lbl.pm.display.priority']}"  style="width:10%; white-space:normal;">
 	            #{document.displaySeq}
 	        </p:column>
-           <p:column style="width:10%;" headerText="#{lbl['lbl.pm.supplier.zone']}" > 
-		    	<h:outputText value="#{document.pmZone.zoneName}" rendered="#{document.docCategoryCode.parameterCode == ParameterConst.documentCategorySupplierDocument and !empty document.pmZone}" />
-		    	<h:outputText value="#{lbl['lbl.pm.supplier.zone.all']}" rendered="#{document.docCategoryCode.parameterCode == ParameterConst.documentCategorySupplierDocument and empty document.pmZone}" />
-	        </p:column>  
+           <p:column style="width:10%;" headerText="#{lbl['lbl.pm.supplier.type']}" > 
+		    	<h:outputText value="#{supportDocBackingBean.getParameterDesc(document.supplierType)}" rendered="#{not empty document.supplierType}"/>
+		    	<h:outputText value="#{lbl['lbl.pm.support.doc.contractor.consultant']}" rendered="#{empty document.supplierType}"/>
+	        </p:column> 
 	        <p:column style="width:10%;" headerText="#{lbl['lbl.pm.restriction']}">  
 	            #{(document.byCompType or document.byAppType or document.byCategory or document.byProcureCat or document.byCertBody) ? lbl['lbl.btn.yes'] : lbl['lbl.btn.no'] }
 	        </p:column> 
