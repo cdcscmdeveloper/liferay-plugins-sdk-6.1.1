@@ -12,7 +12,7 @@
 		<h:panelGroup id="pnlid">
 			<p:messages id="clonemessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" severity="error, info" />
-			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.btn.search']}"
+			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.btn.search']}" style="text-align:left;"
 				toggleable="true">
 				<table style="width: 100%;">
 					<tr>
@@ -121,8 +121,9 @@
 						resetValues="true" partialSubmit="true" process="@this" />
 				</div>
 			</p:panel>
-			<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.qtn.list']}" style="text-align:left;" toggleable="true">
 				<p:dataTable id="clonesearchCommitteid"
+				        style="text-align:left;"
 					value="#{qTCommitteBackingBean.managedBean.cloneSearchQTDataModel}"
 					selection="#{qTCommitteBackingBean.managedBean.selectedCloneTender}"
 					rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
@@ -179,6 +180,7 @@
 					#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
 				</ui:fragment>
 				<p:dataTable id="cloneappointMentcommitteeListId"
+				style="text-align:left;"
 					value="#{qTCommitteBackingBean.managedBean.cloneCommitteMemebers}"
 					var="committeeMember" rowKey="#{committeeMember}"
 					selection="#{qTCommitteBackingBean.managedBean.selectedCommitteMemebers}"
