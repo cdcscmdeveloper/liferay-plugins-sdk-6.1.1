@@ -217,7 +217,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(requestNoteResDTO.getRequestNoteDetail() != null){
 			ScRequestNote requestNote = requestNoteResDTO.getRequestNoteDetail();
 			retrieveRequestNoteDetails(requestNote, null, Boolean.FALSE);
-			getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());	
+			if(requestNote.getCurrentStatus() != null) {
+				getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());	
+			}
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
@@ -1764,10 +1766,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		getManagedBean().setRequestNote(requestNote);
 
-		if(requestNote.isBrandNew()){
-			// update workflow and remarks
-			updateWorkFlowAndRemarks(requestNote);
-		}
+		requestNote.setRemarks(initializeRemarks(
+				requestNote,
+				null,
+				requestNote.getRemarks(),
+				ScRequestNoteRemark.class));
+		
+		// update workflow and remarks
+		updateWorkFlowAndRemarks(requestNote);
 
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		fulfilmentTypeEvent(scRequestNoteDtl);
@@ -1776,7 +1782,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		//clear the selected price type
 		getManagedBean().setPriceType("");
-
 		// request note counter
 		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
 		
@@ -2319,7 +2324,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// lov changes 
 		ScRequestSupplierItem scRequestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 			boolean isPriceTypeFound = Boolean.TRUE;
-			if(priceTypeId != null && priceTypeId > 0){
+			//if(priceTypeId != null && priceTypeId > 0){
 				if(scRequestSupplierItem !=null 
 						&& scRequestSupplierItem.getSupplierItemPrices() != null 
 					    && scRequestSupplierItem.getSupplierItemPrices().size()>0){
@@ -2346,14 +2351,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						}
 					}
 				}
-			}  else{
-				requestNoteDtl.setPriceType(new PmParameter());
-				scRequestSupplierItem.setSupplierItemPrice(null);
-			}
+			//}  else{
+				//requestNoteDtl.setPriceType(new PmParameter());
+				//scRequestSupplierItem.setSupplierItemPrice(null);
+			//}
 			
 			if(isPriceTypeFound){
-				requestNoteDtl.setPriceType(null);
-				scRequestSupplierItem.setSupplierItemPrice(null);
+				//requestNoteDtl.setPriceType(null);
+				//scRequestSupplierItem.setSupplierItemPrice(null);
 			}
 			
 			// selected rec.supplier
@@ -3578,8 +3583,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void updateWorkFlowAndRemarks(ScRequestNote requestNote){
 		// remarks and workflow status
-		ScRNWorkFlowStatus scWorkFlowStatus = null;
-		if(CollectionUtils.isEmpty(requestNote.getWorkFlowStatuses())){
+		if(requestNote.isBrandNew()){
+			ScRNWorkFlowStatus scWorkFlowStatus = null;
 			List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
 			scWorkFlowStatus = new ScRNWorkFlowStatus();
 			PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
@@ -3589,24 +3594,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			scWorkFlowStatus.setRequestNote(requestNote);
 			workFlowStatuses.add(scWorkFlowStatus);
 			requestNote.setWorkFlowStatuses(workFlowStatuses);
-
-		} else{
-			scWorkFlowStatus = requestNote.getWorkFlowStatuses().get(0);
-		}
-		
-		if(CollectionUtils.isEmpty(requestNote.getRemarks())){
-			requestNote.setRemarks(initializeRemarks(
-					requestNote,
-					scWorkFlowStatus,
-					requestNote.getRemarks(),
-					ScRequestNoteRemark.class));
-		} else{
-			for (ScRequestNoteRemark scSQRemark : requestNote.getRemarks()) {
-				if(null == scSQRemark.getScWorkFlowStatus()){
-					scSQRemark.setScWorkFlowStatus(scWorkFlowStatus);
+			// To avoid workflow status reset to null when got error during direct submit without save.
+			List<ScRequestNoteRemark> remarks = requestNote.getRemarks();
+			if (CollectionUtils.isNotEmpty(remarks)) {
+				for (ScRequestNoteRemark remark : remarks) {
+					remark.setScWorkFlowStatus(scWorkFlowStatus);
 				}
 			}
-		}
+		}	
 	}
 	
 	/**

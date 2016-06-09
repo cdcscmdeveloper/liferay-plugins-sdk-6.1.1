@@ -708,11 +708,13 @@ public class SimpleQuoteBackingBean extends
 		if(null == scQuote.getMultipleQuote()){
 			scQuote.setMultipleQuote(Boolean.FALSE);	
 		}
+		
+		// Initializing Remarks
+		scQuote.setRemarks(initializeRemarks(scQuote, null,
+				scQuote.getRemarks(), ScSQRemark.class));
 
 		// WorkFlow Status should be set In the save
-		if (scQuote.isBrandNew()) {
-			updateWorkFlowAndRemarks(scQuote);
-		}
+		updateWorkFlowAndRemarks(scQuote);
 		
 		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
@@ -5449,15 +5451,15 @@ public class SimpleQuoteBackingBean extends
 						IOrgProfileSO.class);
 
 		scQuote.setMultipleQuote(Boolean.FALSE);
-		// WorkFlow Status should be set In the save
-		if (scQuote.isBrandNew()) {
-			updateWorkFlowAndRemarks(scQuote);
-		}
 		
+		// Initializing Remarks
+		scQuote.setRemarks(initializeRemarks(scQuote, null,
+				scQuote.getRemarks(), ScSQRemark.class));
+		
+		// WorkFlow Status should be set In the save
+		updateWorkFlowAndRemarks(scQuote);
 
 		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
-		this.getManagedBean().setScQuote(scQuote);
-
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// zone location level by default - district
 		if (getManagedBean().getLocationLevel() == null) {
@@ -6508,8 +6510,8 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private void updateWorkFlowAndRemarks(ScQuote scQuote){
 		// remarks and workflow status
-		ScSQWorkFlowStatus scWorkFlowStatus = null;
-		if(CollectionUtils.isEmpty(scQuote.getWorkflowStatuses())){
+		if(scQuote.isBrandNew()){
+			ScSQWorkFlowStatus scWorkFlowStatus = null;
 			List<ScSQWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScSQWorkFlowStatus>();
 			scWorkFlowStatus = new ScSQWorkFlowStatus();
 			PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
@@ -6519,20 +6521,12 @@ public class SimpleQuoteBackingBean extends
 			scWorkFlowStatus.setQuote(scQuote);
 			workFlowStatuses.add(scWorkFlowStatus);
 			scQuote.setWorkflowStatuses(workFlowStatuses);
-		} else{
-			scWorkFlowStatus = scQuote.getWorkflowStatuses().get(0);
-		}
-		
-		if(CollectionUtils.isEmpty(scQuote.getRemarks())){
-			scQuote.setRemarks(initializeRemarks(
-					scQuote,
-					scWorkFlowStatus,
-					scQuote.getRemarks(),
-					ScSQRemark.class));
-		} else{
-			for (ScSQRemark scSQRemark : scQuote.getRemarks()) {
-				if(null == scSQRemark.getScWorkFlowStatus()){
-					scSQRemark.setScWorkFlowStatus(scWorkFlowStatus);
+			
+			// To avoid workflow status reset to null when got error during direct submit without save.
+			List<ScSQRemark> remarks = scQuote.getRemarks();
+			if (CollectionUtils.isNotEmpty(remarks)) {
+				for (ScSQRemark remark : remarks) {
+					remark.setScWorkFlowStatus(scWorkFlowStatus);
 				}
 			}
 		}
