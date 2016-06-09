@@ -1,13 +1,19 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ac="http://ac.my/jsf/composite/cc"	
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:outputPanel id="opTnc" rendered="#{isBrandNew}">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+	
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>	
 		<p:panel header="#{lbl['lbl.pm.access.app.tnc.header']}"
 			toggleable="true" id="tncPnl">
+			<p:scrollPanel style="height:300px;border:0;" mode="native">
 			<h:outputText escape="false"
 				value="#{lbl['lbl.pm.access.app.tnc.desc']}" />
 			<h:outputText escape="false"
@@ -26,21 +32,19 @@
 				value="#{lbl['lbl.pm.access.app.tnc.desc6']}" />
 			<p:selectBooleanCheckbox id="isTncChkBox"
 				value="#{accessApplBackingBean.managedBean.tncChecked}">
-				<p:ajax update="@this,:form:accessApplBttnOp" />
+				<p:ajax update="@this,btnProceed" />
 			</p:selectBooleanCheckbox>
 			<h:outputText escape="false" style="margin-left:5px;"
 				value="#{lbl['lbl.pm.access.app.tnc.agree']}" />
-
+			</p:scrollPanel>
+			<br />
 		</p:panel>
-		<p:panel header="#{lbl['lbl.pm.access.app.declaration']}"
-			toggleable="true" id="declPnl">
-			<p:selectBooleanCheckbox id="isDeclChkBox"
-				value="#{accessApplBackingBean.managedBean.declarationChecked}">
-				<p:ajax update="@this,:form:accessApplBttnOp"  />
-			</p:selectBooleanCheckbox>
-			<h:outputText escape="false" style="margin-left:5px;"
-				value="#{lbl['lbl.pm.access.app.declaration.desc']}" />
-
-		</p:panel>
-	</p:outputPanel>
+		
+		<div align="right">
+			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" 
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			disabled="#{not accessApplBackingBean.managedBean.tncChecked}" 
+				action="#{accessApplBackingBean.proceedToMainPage}" />
+		</div>
+		</ui:define>
 </ui:composition>

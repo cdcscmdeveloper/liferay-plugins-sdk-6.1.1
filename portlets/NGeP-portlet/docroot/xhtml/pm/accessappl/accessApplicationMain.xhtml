@@ -39,8 +39,18 @@
 		<!-- Supporting Document Panel Section -->
 		<ui:include src="/xhtml/pm/accessappl/accessApplicationSuppDoc.xhtml"/>
 		
-		<!-- T n C Panel Section -->
-		<ui:include src="/xhtml/pm/accessappl/accessApplicationTnc.xhtml"/>
+		<!-- Declaration Section -->
+		<p:outputPanel id="opDeclaration" rendered="#{isBrandNew}">
+			<p:panel header="#{lbl['lbl.pm.access.app.declaration']}"
+				toggleable="true" id="declPnl">
+				<p:selectBooleanCheckbox id="isDeclChkBox"
+					value="#{accessApplBackingBean.managedBean.declarationChecked}">
+					<p:ajax update="@this,btnProceed"  />
+				</p:selectBooleanCheckbox>
+				<h:outputText escape="false" style="margin-left:5px;"
+					value="#{lbl['lbl.pm.access.app.declaration.desc']}" />	
+			</p:panel>
+		</p:outputPanel>
 		
 		<!-- Approval Info Panel Section -->
 		<ui:include src="/xhtml/pm/accessappl/accessApplicationApprovalInfo.xhtml"/>
