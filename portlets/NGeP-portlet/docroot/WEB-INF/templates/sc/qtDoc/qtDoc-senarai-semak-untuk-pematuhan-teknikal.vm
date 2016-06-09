@@ -1,6 +1,14 @@
 <html>
 <head>
 	<style>
+		@page {
+	size: A4 portrait;
+}
+@page { 
+	@bottom-center { 
+		content: "Page " counter(page) " / " counter(pages);
+	}
+}
 		.ui-content {
 			border: 0px solid #f4f4f4 !important;
 			background: #ffffff !important;

@@ -2,7 +2,7 @@
 <head>
 	<style>
 		@page { size: A4 portrait;}
-		@page { @bottom-center { content: element(footer) }}
+		@page { @bottom-center { content: "Page " counter(page) " / " counter(pages); }}
 				
 		.footer {
 			display: block; text-align: center;
