@@ -115,11 +115,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  
 			                      <p:column styleClass="column-align-center" style="width:12%;white-space:pre-line">
 				  	                    <f:facet name="header" >
-						                    <h:outputText value="#{lbl['lbl.ct.uom']}" style="float:left;white-space:pre-line" styleClass="required"  />
+						                    <h:outputText value="#{lbl['lbl.ct.uom']}"  styleClass="required"  />
 	                            	    </f:facet>
 	               	 
 	               	                    <c:if test="#{!panelBackingBean.managedBean.viewContract}">
-			                                  <ac:lov id="uomLovId" lovId="PM_UOM" size="15" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
+			                                  <ac:lov id="uomLovId" lovId="PM_UOM" size="10" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
 				                                   value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1" 
 				                                   saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
 			                                 </ac:lov>
@@ -488,7 +488,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				              <f:facet name="header">
 				                  <h:outputText value="#{lbl['lbl.ct.bank.account.name']}" />
 				              </f:facet>
-				               <p:selectOneMenu id="accountId" style="width:300px;margin-bottom: 5px;"
+				               <p:selectOneMenu id="accountId" style="width:380px;margin-bottom: 5px;"
 						           value="#{supVar.bankAccountNo}" rendered="#{!panelBackingBean.managedBean.viewContract}">
 						           <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier, index)}" />
 						          <p:ajax event="change" process="@form"
