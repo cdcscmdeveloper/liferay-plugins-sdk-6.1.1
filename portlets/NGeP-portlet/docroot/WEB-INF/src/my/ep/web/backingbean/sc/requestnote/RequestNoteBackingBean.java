@@ -2323,62 +2323,54 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("supplierListener");
 		// lov changes 
 		ScRequestSupplierItem scRequestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
-			boolean isPriceTypeFound = Boolean.TRUE;
-			//if(priceTypeId != null && priceTypeId > 0){
-				if(scRequestSupplierItem !=null 
-						&& scRequestSupplierItem.getSupplierItemPrices() != null 
-					    && scRequestSupplierItem.getSupplierItemPrices().size()>0){
+		boolean isPriceTypeFound = Boolean.TRUE;
+		if(priceTypeId != null && priceTypeId > 0){
+			if(scRequestSupplierItem !=null 
+					&& scRequestSupplierItem.getSupplierItemPrices() != null 
+					&& scRequestSupplierItem.getSupplierItemPrices().size()>0){
 
-					for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
-						// zonal item price  
-						if(requestNoteDtl.getTplSpecZoneDtl() != null){
-							if(requestNoteDtl.getTplSpecZoneDtl().getSpecZoneId().equals(scSupplierItemPrice.getTplSpecZone().getSpecZoneId())){
-								scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
-								requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
-								isPriceTypeFound = Boolean.FALSE;
-								break;
-							}
-						}else {
-							// non zonal item price 
-							if(scSupplierItemPrice.getPriceType() != null){
-								if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
-									scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
-									requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
-									isPriceTypeFound = Boolean.FALSE;
-									break;
-								}
-							}
+				for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
+					// non zonal item price 
+					if(scSupplierItemPrice.getPriceType() != null){
+						if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
+							scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
+							requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
+							isPriceTypeFound = Boolean.FALSE;
+							break;
 						}
 					}
 				}
-			//}  else{
-				//requestNoteDtl.setPriceType(new PmParameter());
-				//scRequestSupplierItem.setSupplierItemPrice(null);
-			//}
-			
-			if(isPriceTypeFound){
-				//requestNoteDtl.setPriceType(null);
-				//scRequestSupplierItem.setSupplierItemPrice(null);
+			} else{
+				isPriceTypeFound = Boolean.FALSE;	
 			}
-			
-			// selected rec.supplier
-			requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
-			// procurement Type Category
-			if(procTypeCatId != null && procTypeCatId > 0){
-				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-				parameterReqDTO.setParameterId(procTypeCatId);
-				PmParameter procTypeCategory = getParameterSO().retrieveParameterById(parameterReqDTO).getPmParameter();
-				requestNoteDtl.setProcurementTypeCategory(procTypeCategory);
-				requestNoteDtl.setProcTypeCategoryId(procTypeCategory.getParameterId());
-			}
-			
-			// prepared by
-			if(assignedUserId != null && assignedUserId >0){
-				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setUserId(assignedUserId);
-				UserResDTO resDTO = getUserSO().retrieveUserByUserId(reqDTO);
-				requestNoteDtl.setAssignedUser(resDTO.getPmUser());	
-			}
+		} else{
+			requestNoteDtl.setPriceType(new PmParameter());
+			scRequestSupplierItem.setSupplierItemPrice(null);
+		}
+
+		if(isPriceTypeFound){
+			requestNoteDtl.setPriceType(new PmParameter());
+			scRequestSupplierItem.setSupplierItemPrice(null);
+		}
+
+		// selected rec.supplier
+		requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
+		// procurement Type Category
+		if(procTypeCatId != null && procTypeCatId > 0){
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterId(procTypeCatId);
+			PmParameter procTypeCategory = getParameterSO().retrieveParameterById(parameterReqDTO).getPmParameter();
+			requestNoteDtl.setProcurementTypeCategory(procTypeCategory);
+			requestNoteDtl.setProcTypeCategoryId(procTypeCategory.getParameterId());
+		}
+
+		// prepared by
+		if(assignedUserId != null && assignedUserId >0){
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(assignedUserId);
+			UserResDTO resDTO = getUserSO().retrieveUserByUserId(reqDTO);
+			requestNoteDtl.setAssignedUser(resDTO.getPmUser());	
+		}
 	}
 	
 	/**
@@ -2393,26 +2385,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestSupplierItem scRequestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 
 		if(priceTypeId != null && priceTypeId > 0){
-			if(scRequestSupplierItem != null && scRequestSupplierItem.getSupplierItemPrices() != null 
+			if(scRequestSupplierItem !=null 
+					&& scRequestSupplierItem.getSupplierItemPrices() != null 
 					&& scRequestSupplierItem.getSupplierItemPrices().size()>0){
+
 				for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
-					// zonal item price  
-					if(requestNoteDtl.getTplSpecZoneDtl() != null){
-						if(requestNoteDtl.getTplSpecZoneDtl().getSpecZoneId().equals(scSupplierItemPrice.getTplSpecZone().getSpecZoneId())){
+					// non zonal item price 
+					if(scSupplierItemPrice.getPriceType() != null){
+						if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
 							scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
 							requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
 							break;
-						}
-					}else {
-						// non zonal item price 
-						if(scSupplierItemPrice.getPriceType() != null){
-							if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
-								scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
-								PmParameter priceType = scSupplierItemPrice.getPriceType();
-								requestNoteDtl.setPriceType(priceType);
-								requestNoteDtl.setPriceTypeId(priceType.getParameterId());
-								break;
-							}
 						}
 					}
 				}
