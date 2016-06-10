@@ -14,7 +14,7 @@
 			<tr>
 				<td style="width: 20%"><h:outputLabel
 						value="#{lbl['lbl.sc.item.name']}"></h:outputLabel></td>
-				<td><p:inputText maxlength="100"
+				<td><p:inputText maxlength="100" onkeypress="if (event.keyCode == 13) { specificationCommitteePanelCircularitemsSearch.jq.click(); return false; }"
 						value="#{specificationBackingBean.managedBean.ctSearchBean.itemName}"
 						size="100" /></td>
 			</tr>
@@ -22,7 +22,7 @@
 		</table>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.search']}"
-				styleClass="BtnSpacing"
+				styleClass="BtnSpacing" widgetVar="specificationCommitteePanelCircularitemsSearch"
 				action="#{specificationBackingBean.searchCircularList}"
 				update="panelItemGroupList" />
 			<p:commandButton value="#{lbl['lbl.btn.reset']}"
