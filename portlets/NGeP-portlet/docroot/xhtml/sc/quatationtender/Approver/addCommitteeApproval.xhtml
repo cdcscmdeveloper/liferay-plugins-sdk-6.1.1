@@ -19,7 +19,7 @@
 				<table>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
-						<td colspan="3"><p:inputText
+						<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { quotationTndrApproverCommitteeAddSearch.jq.click(); return false; }"
 								value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.name}"
 								size="64" /></td>
 					</tr>
@@ -35,13 +35,14 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" /></td>
-						<td colspan="3"><p:inputText
+						<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { quotationTndrApproverCommitteeAddSearch.jq.click(); return false; }"
 								value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.identificationNo}"
 								size="30" /></td>
 					</tr>
 				</table>
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
+					widgetVar="quotationTndrApproverCommitteeAddSearch"
 						action="#{qTCommitteBackingBean.searchUserAction}"
 						update="existingcommitteeapproversearchid"
 						process="@this, userSearchPnl" />
