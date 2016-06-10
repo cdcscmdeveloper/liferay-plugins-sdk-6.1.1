@@ -10,6 +10,18 @@
    <p:panel id="profCertDetailsPanel" header="#{lbl['lbl.pm.search.title']}" toggleable="true">
 				
 	<table style="width:100%;">
+		 <tr>
+		<td><p:outputLabel value="#{lbl['lbl.pm.search.profcert']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+	  	<td style="padding: 5px 0px;">
+	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.professionalBody}" />
+	  		<h:outputText value="#{lbl['lbl.pm.pc.profBody']}" />&#160;&#160;&#160;
+	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}" >
+	  			<p:ajax event="change" process="@this" partialSubmit="true" update="@this,:form:profCertDetailsPanel" />
+	  		</p:selectBooleanCheckbox>
+	  		<h:outputText value="#{lbl['lbl.pm.pc.certBody']}" /></td>	  	
+	  </tr>
+		
 	  <tr>	  	
 		<td style="width:14%;"><p:outputLabel value="#{lbl['lbl.pm.search.codes']}" />
 			</td>
@@ -18,7 +30,7 @@
 		</td>
 	  </tr>	
 	  <tr>	
-		<td><p:outputLabel value="#{lbl['lbl.pm.search.name']}" />
+		<td><p:outputLabel value="#{lbl['lbl.pm.pc.certifiedby']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputText value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyName}" 
 			size="40" maxlength="255" style="width: 375px;"
@@ -26,22 +38,17 @@
 		</td>
 	  </tr>
 	  <tr>
-		<td><p:outputLabel value="#{lbl['lbl.pm.search.desc']}" />
-			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputTextarea row="40" cols="80" value="#{profcertifiedbodyBackingBean.managedBean.certBody.description}" 
+		<td><p:outputLabel value="#{lbl['lbl.pm.pc.certname']}" />
+			<h:panelGroup  id="certnameMandatoryId" rendered="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}">
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</h:panelGroup>
+			</td>
+		<td><p:inputTextarea row="40" cols="80" 
+			value="#{profcertifiedbodyBackingBean.managedBean.certBody.description}" 
 			 maxlength="255" style="width: 375px;"/></td>
 	  </tr>  
 	  <tr>
-		<td><p:outputLabel value="#{lbl['lbl.pm.search.profcert']}" />
-			<p:outputLabel value="*" styleClass="mandatory" /></td>
-	  	<td style="padding: 5px 0px;">
-	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.professionalBody}" />
-	  		<h:outputText value="#{lbl['lbl.pm.pc.profBody']}" />&#160;&#160;&#160;
-	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}" />
-	  		<h:outputText value="#{lbl['lbl.pm.pc.certBody']}" /></td>	  	
-	  </tr>
-	  <tr>
-		<td><p:outputLabel value="#{lbl['lbl.pm.pc.glp']}" />
+		<td style="width:14%;"><p:outputLabel value="#{lbl['lbl.pm.pc.glp']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 	  	<td>      
 	  		<p:selectOneRadio id="centraloptions" value="#{profcertifiedbodyBackingBean.managedBean.certBody.glp}">  

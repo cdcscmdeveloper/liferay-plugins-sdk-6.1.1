@@ -294,7 +294,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.search.name") });
 		}	
 		
-		if(StringUtils.isBlank(certBody.getDescription())){
+		if(certBody.isCertifiedBody() && StringUtils.isBlank(certBody.getDescription())){
 			throw new EpException(MessageConst.ERROR_768001,
 					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.search.desc") });
 		}
