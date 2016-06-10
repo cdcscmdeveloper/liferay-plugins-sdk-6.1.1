@@ -291,12 +291,12 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		
 		if(StringUtils.isBlank(certBody.getBodyName())){
 			throw new EpException(MessageConst.ERROR_768000,
-					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.search.name") });
+					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.pc.certifiedby") });
 		}	
 		
 		if(certBody.isCertifiedBody() && StringUtils.isBlank(certBody.getDescription())){
 			throw new EpException(MessageConst.ERROR_768001,
-					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.search.desc") });
+					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.pc.certname") });
 		}
 		
 		if(!certBody.isCertifiedBody()&&!certBody.isProfessionalBody()){

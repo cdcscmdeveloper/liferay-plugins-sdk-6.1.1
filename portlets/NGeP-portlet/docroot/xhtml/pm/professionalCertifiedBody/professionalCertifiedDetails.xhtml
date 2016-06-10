@@ -34,7 +34,9 @@
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputText value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyName}" 
 			size="40" maxlength="255" style="width: 375px;"
-			disabled="#{!profcertifiedbodyBackingBean.managedBean.certBody.brandNew}"/>
+			disabled="#{!profcertifiedbodyBackingBean.managedBean.certBody.brandNew}">
+				<p:ajax event="blur" process="@this" partialSubmit="true" update="@this" />
+			</p:inputText>
 		</td>
 	  </tr>
 	  <tr>
@@ -45,7 +47,9 @@
 			</td>
 		<td><p:inputTextarea row="40" cols="80" 
 			value="#{profcertifiedbodyBackingBean.managedBean.certBody.description}" 
-			 maxlength="255" style="width: 375px;"/></td>
+			 maxlength="255" style="width: 375px;">
+			 	<p:ajax event="blur" process="@this" partialSubmit="true" update="@this" />
+			 </p:inputTextarea></td>
 	  </tr>  
 	  <tr>
 		<td style="width:14%;"><p:outputLabel value="#{lbl['lbl.pm.pc.glp']}" />
