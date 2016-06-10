@@ -23,7 +23,7 @@
 					<td style="width: 180px;"><p:outputLabel
 							value="#{lbl['lbl.sc.standard.template']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneRadio
+					<td><p:selectOneRadio 
 							required="#{specificationBackingBean.managedBean.required}"
 							label="#{lbl['lbl.sc.standard.template']}"
 							id="committeetempSpecStandardTemplate"
@@ -100,7 +100,7 @@
 						<tr>
 							<td valign="top"><h:outputLabel
 									value="#{lbl['lbl.tpl.spec.title']}"></h:outputLabel></td>
-							<td colspan="3"><p:inputText
+							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { specCommitteeTemplateSpecSearch.jq.click(); return false; }"
 									style="width:670px; margin-bottom:5px;" maxlength="100"
 									value="#{specificationBackingBean.managedBean.specName}" /></td>
 						</tr>
@@ -108,7 +108,7 @@
 						<tr>
 							<td valign="top"><p:outputLabel
 									value="#{lbl['lbl.sc.title']}" /></td>
-							<td colspan="3"><p:inputText
+							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { specCommitteeTemplateSpecSearch.jq.click(); return false; }"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtTitle}"
 									style="width:670px;" maxlength="100" /></td>
 						</tr>
@@ -116,7 +116,7 @@
 						<tr>
 							<td><h:outputLabel value="#{lbl['lbl.sc.qtn.no']}"></h:outputLabel></td>
 							<td><p:inputText style="width:210px; margin-bottom:5px;"
-									maxlength="21"
+									maxlength="21" onkeypress="if (event.keyCode == 13) { specCommitteeTemplateSpecSearch.jq.click(); return false; }"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtNo}" /></td>
 
 							<td><h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
@@ -132,14 +132,14 @@
 						<tr>
 							<td><h:outputLabel
 									value="#{lbl['lbl.sc.created.date.from']}" /></td>
-							<td><p:calendar
+							<td><p:calendar onkeypress="if (event.keyCode == 13) { specCommitteeTemplateSpecSearch.jq.click(); return false; }"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
 									id="crdateFrom" showOn="button" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<p:ajax event="dateSelect" update="crdateTo" />
 								</p:calendar></td>
 							<td><h:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
-							<td><p:calendar id="crdateTo" showOn="button"
+							<td><p:calendar id="crdateTo" showOn="button" onkeypress="if (event.keyCode == 13) { specCommitteeTemplateSpecSearch.jq.click(); return false; }"
 									label="#{lbl['lbl.sc.created.date.to']}"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toCreatedDate}"
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
@@ -153,14 +153,14 @@
 
 						<tr>
 							<td><h:outputLabel value="#{lbl['lbl.sc.pbldtfrom']}" /></td>
-							<td><p:calendar
+							<td><p:calendar onkeypress="if (event.keyCode == 13) { specCommitteeTemplateSpecSearch.jq.click(); return false; }"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}"
 									id="pbdateFrom" showOn="button" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<p:ajax event="dateSelect" update="pbdateTo" />
 								</p:calendar></td>
 							<td><h:outputLabel value="#{lbl['lbl.sc.pbldtto']}" /></td>
-							<td><p:calendar id="pbdateTo" showOn="button"
+							<td><p:calendar id="pbdateTo" showOn="button" onkeypress="if (event.keyCode == 13) { specCommitteeTemplateSpecSearch.jq.click(); return false; }"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toPublishDate}"
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}"
 									readonlyInput="true"
@@ -173,14 +173,14 @@
 
 						<tr>
 							<td><h:outputLabel value="#{lbl['lbl.sc.clsdtfrom']}" /></td>
-							<td><p:calendar
+							<td><p:calendar onkeypress="if (event.keyCode == 13) { specCommitteeTemplateSpecSearch.jq.click(); return false; }"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}"
 									id="cldateFrom" showOn="button" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<p:ajax event="dateSelect" update="cldateTo" />
 								</p:calendar></td>
 							<td><h:outputLabel value="#{lbl['lbl.sc.clsdtto']}" /></td>
-							<td><p:calendar id="cldateTo" showOn="button"
+							<td><p:calendar id="cldateTo" showOn="button" onkeypress="if (event.keyCode == 13) { specCommitteeTemplateSpecSearch.jq.click(); return false; }"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toClosingDate}"
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}"
 									readonlyInput="true"
@@ -216,6 +216,7 @@
 			</h:panelGroup>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
+				widgetVar="specCommitteeTemplateSpecSearch"
 					styleClass="BtnSpacing"
 					action="#{specificationBackingBean.searchTemplateSpecAction}"
 					process="@this commiteeCreationSpec"
