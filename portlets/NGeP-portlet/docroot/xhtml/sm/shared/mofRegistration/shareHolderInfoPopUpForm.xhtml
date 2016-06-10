@@ -915,6 +915,13 @@
 		</p:dialog>
 		<p:panel header="#{lbl['lbl.sm.profBody.profBody']}" toggleable="true"
 			id="equiShrPfBdyPan">
+			
+			<f:facet name="header">
+				<h:outputText value="*" styleClass="mandatory" 
+				rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}"/>
+				<h:outputText value="#{lbl['lbl.sm.profBody.profBody']}" />
+			</f:facet>
+		
 			<p:dataTable var="profBean" widgetVar="suppPrsnProfBdyDtWidVar"
 				value="#{backingBean.managedBean.selectedShareHolder.smAssociationBodies}"
 				selection="#{backingBean.managedBean.selectedShrHldrProfBodies}"
