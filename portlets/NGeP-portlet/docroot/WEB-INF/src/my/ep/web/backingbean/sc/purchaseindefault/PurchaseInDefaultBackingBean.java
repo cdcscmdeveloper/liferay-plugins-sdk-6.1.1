@@ -589,7 +589,7 @@ public class PurchaseInDefaultBackingBean extends
 										.getPurchaseInDefaultNo(), Boolean.TRUE);
 					} else if (DPStatusConstants.PID_PENDING_APPROVAL
 							.equals(statusId)) {
-						successMessage(MessageConst.INFO_700007,
+						successMessage(MessageConst.INFO_700065,
 								ParameterTypeConst.DOCUMENT_TYPES,
 								ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
 								getManagedBean().getPurchaseInDefault()
