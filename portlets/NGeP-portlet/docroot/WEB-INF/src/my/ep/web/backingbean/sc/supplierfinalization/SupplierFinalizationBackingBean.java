@@ -5143,6 +5143,7 @@ public class SupplierFinalizationBackingBean extends
 					continue;
 				}
 				if (isItemized) {
+					scQtRecommend.setSelected(false);
 					scQtRecommend.setCancelled(false);
 				}
 				
