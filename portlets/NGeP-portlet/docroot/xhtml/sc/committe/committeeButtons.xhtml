@@ -15,11 +15,13 @@
 					rendered="#{empty qTDetailBB.managedBean.taskId}" />
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{committeBackingBean.updateCommitteDetails(null)}"
-					process="@all" rendered="#{isCommitteeRecordStatusActive}" />
+					process="@all" rendered="#{isCommitteeRecordStatusActive}" 
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				<ui:repeat var="bpmAction" value="#{committeBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-							action="#{committeBackingBean.updateCommitteDetails(bpmAction)}" />
+					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+							action="#{committeBackingBean.updateCommitteDetails(bpmAction)}" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				</ui:repeat>
 			</td>
 		</tr>
