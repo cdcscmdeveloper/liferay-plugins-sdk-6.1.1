@@ -1,6 +1,8 @@
 <html>
 <head>
 	<style>
+	    @page { size: A4 portrait;}
+		@page { @bottom-center { content: "Page " counter(page) " / " counter(pages); }}
 		.header {
 			color: #fff; 
 			font-family:'Arial', sans-serif;
