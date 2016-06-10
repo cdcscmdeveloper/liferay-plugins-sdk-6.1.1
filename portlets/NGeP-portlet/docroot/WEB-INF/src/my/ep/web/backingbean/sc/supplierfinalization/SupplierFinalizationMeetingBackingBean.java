@@ -1583,6 +1583,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			String committeeType = getManagedBean().getCommitteeType();
 			suppFinalReqDTO.setCommitteeType(committeeType);
 			suppFinalReqDTO.setScQtCommittee(reqDTO.getScQtCommitte());
+			suppFinalReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			qtSuppFinalizationSO.validateCoordinateMeeting(suppFinalReqDTO);
 			
 			isValidationSuccessful = true;
