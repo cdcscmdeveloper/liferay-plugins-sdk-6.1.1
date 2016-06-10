@@ -18,7 +18,7 @@
 					<table>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
-							<td colspan="3"><p:inputText
+							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { supplierFinalizationConfirmMeetingAddSearch.jq.click(); return false; }"
 									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.name}"
 									size="64" /></td>
 						</tr>
@@ -35,13 +35,14 @@
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sc.identification.no']}" /></td>
-							<td colspan="3"><p:inputText
+							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { supplierFinalizationConfirmMeetingAddSearch.jq.click(); return false; }"
 									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.identificationNo}"
 									size="30" /></td>
 						</tr>
 					</table>
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
+						widgetVar="supplierFinalizationConfirmMeetingAddSearch"
 							action="#{suppFinalMeetingBackingBean.searchUserAction}"
 							update="existingMemberTbl" process="@parent, memberPanel" />
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
