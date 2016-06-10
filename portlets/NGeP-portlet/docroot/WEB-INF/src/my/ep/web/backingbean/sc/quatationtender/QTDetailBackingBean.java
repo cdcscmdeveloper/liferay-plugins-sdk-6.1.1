@@ -3504,6 +3504,7 @@ public class QTDetailBackingBean extends
 			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 			committeReqDTO.setScQt(reqDTO.getQtdetail());
 			committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
+			committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			committeSO.validateAppointCommitteDtls(committeReqDTO);
 			// reqDTO = prepareQTInfo();
 			resDTO = detailSO.saveQTDtl(reqDTO);

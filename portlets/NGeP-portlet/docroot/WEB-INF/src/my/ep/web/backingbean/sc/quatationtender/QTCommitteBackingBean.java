@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -1882,6 +1883,7 @@ public class QTCommitteBackingBean extends
 		reqDTO.setScCommittee(committe);
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		reqDTO.setUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		committeSO.validateCommitteDtls(reqDTO);
 
 	}
@@ -2042,6 +2044,7 @@ public class QTCommitteBackingBean extends
 							.getScCommitteeMembers())) {
 					
 						String committeeType = committee.getCommitteeType().getParameterCode();
+						retrieveCommitteeDescription(committeeType,new FacesScopes().getUserLocale());
 						isChairpersonRequired(committee.getScCommitteeMembers(),committeeType);
 						isSecretaryRequired(committee.getScCommitteeMembers(),committeeType);
 						isAtleastOneMemebersReq(committee.getScCommitteeMembers());
@@ -2241,5 +2244,23 @@ public class QTCommitteBackingBean extends
 			isEnableCheckboxes = !renderECOrTECButton(committeStatus, commType);
 		}
 		return isEnableCheckboxes;
+	}
+	
+	private String retrieveCommitteeDescription(String committeeType,Locale locale){
+		IParameterSO parameterSo =  EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO paramReqDTO=new ParameterReqDTO();
+		paramReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+		paramReqDTO.setParameterCode(committeeType);
+		if(null!=locale){
+		paramReqDTO.setLanguageCode(locale.getLanguage());
+		}
+		ParameterResDTO resDto=parameterSo.retrieveParameterDescListByType(paramReqDTO);
+		if(CollectionUtils.isNotEmpty(resDto.getParameterDescList())){
+			for(PmParameterDesc paramDesc:resDto.getParameterDescList()){
+				committeeType=	paramDesc.getCodeName();
+			}
+		}
+		return committeeType;
 	}
 }
