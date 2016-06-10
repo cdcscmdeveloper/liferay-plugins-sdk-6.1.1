@@ -136,14 +136,16 @@
 								<p:graphicImage value="/css/images/design/ico-action.png" title="#{lbl['lbl.quartz.execute.job']}" />
 							</p:commandLink>
 						</p:outputPanel>
-						&#160;
-						<p:commandLink id="updateActionId"
-							partialSubmit="true"
-							process="@this" action="#{schedulerManagerBB.onUpdateJob(jobBean)}"
-							update=":#{p:component('addJobDialog')}" onstart="blockWidget.show()"
-							oncomplete="blockWidget.hide()">
-							<p:graphicImage value="/css/images/design/action.png" title="#{lbl['lbl.quartz.update.job']}" />
-						</p:commandLink>
+						<ui:remove>
+							&#160;
+							<p:commandLink id="updateActionId"
+								partialSubmit="true"
+								process="@this" action="#{schedulerManagerBB.onUpdateJob(jobBean)}"
+								update=":#{p:component('addJobDialog')}" onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()">
+								<p:graphicImage value="/css/images/design/action.png" title="#{lbl['lbl.quartz.update.job']}" />
+							</p:commandLink>
+						</ui:remove>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{empty jobBean.trigger}">
 						<h:outputText value="#{lbl['lbl.quartz.action.not.available']}" />
