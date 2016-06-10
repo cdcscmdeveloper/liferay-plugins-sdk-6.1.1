@@ -207,6 +207,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setFrnCancellationProcess(getManagedBean().isFrnCancellationProcess());
 			reqDTO.setLastFRNTaxInv(getManagedBean().isLastFRNTaxInv());
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+				if(getManagedBean().getApproverList() == null || getManagedBean().getApproverList().isEmpty()){
+					getAcknowledgeOfficer();
+				}
+			}
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || 
 				(getManagedBean().getProcessName()!=null && getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME))){	
@@ -1397,6 +1402,29 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	private boolean checkTaxInvoice(Long reqId){
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		return fulfilmentSO.checkTaxInvoice(reqId);
+	}
+	
+	private void getAcknowledgeOfficer(){
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+		reqDTO.setRoleCode(RoleCode.ACKNOWLEDGE_OFFICER.value());
+		UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+		getManagedBean().setPmUserList(resDTO.getUserList());
+		
+		List<PmUser> orderApproverList = new ArrayList<PmUser>();
+		List<PmUser> pendingApproverList = new ArrayList<PmUser>();
+		for(PmUser user : getManagedBean().getPmUserList()){
+			if(getManagedBean().getUserLoginId().equals(user.getUserId())){
+				orderApproverList.add(user);
+			} else if (orderApproverList.size() > 0) {
+				orderApproverList.add(user);
+			} else if (orderApproverList.size() == 0) {
+				pendingApproverList.add(user);
+			}
+		}
+		orderApproverList.addAll(pendingApproverList);
+		getManagedBean().getApproverList().addAll(orderApproverList);
 	}
 		
 }
