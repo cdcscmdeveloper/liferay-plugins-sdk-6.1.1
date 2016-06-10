@@ -54,7 +54,7 @@ public class EpSchedulerHelper {
 			Class<? extends Job> jobClass, String jobDetailDesc,
 			String cronExpression) {
 		addAndScheduleNewJob(jobKey, jobClass, jobDetailDesc, cronExpression);
-		// updateScheduledJob(jobKey, jobDetailDesc, cronExpression, jobClass);
+		updateScheduledJob(jobKey, jobDetailDesc, cronExpression, jobClass);
 	}
 
 	/**
@@ -433,32 +433,41 @@ public class EpSchedulerHelper {
 			throws SchedulerException {
 
 		// define the job and tie it to our QTPublishJob class
-		JobDetail job = JobBuilder.newJob(QTPublishJob.class)
-				.withIdentity("QT Publish Job"+qt.getQtNo(), "QtPublishingJobGroup")
+		JobDetail job = JobBuilder
+				.newJob(QTPublishJob.class)
+				.withIdentity("QT Publish Job" + qt.getQtNo(),
+						"QtPublishingJobGroup")
 				.usingJobData("qtId", qt.getQtId()).build();
 		// define a simple trigger that runs at specific time (publish time)
-		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
-				.withIdentity("QT Publish Job"+qt.getQtNo(), "QtPublishingJobGroup")
+		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder
+				.newTrigger()
+				.withIdentity("QT Publish Job" + qt.getQtNo(),
+						"QtPublishingJobGroup")
 				.startAt(qt.getPublishDate())
-				.forJob("QT Publish Job"+qt.getQtNo(), "QtPublishingJobGroup")
+				.forJob("QT Publish Job" + qt.getQtNo(), "QtPublishingJobGroup")
 				.build();
 
 		// Tell quartz to schedule the job using our trigger
 		getScheduler().scheduleJob(job, trigger);
 	}
+
 	public static void scheduleSimpleQTClosingJob(ScQt qt)
 			throws SchedulerException {
 
 		// define the job and tie it to our QTPublishJob class
-		JobDetail job = JobBuilder.newJob(QTProposalCloseJob.class)
-				.withIdentity("QT Proposal Close Job"+qt.getQtNo(), "QtPublishingJobGroup")
+		JobDetail job = JobBuilder
+				.newJob(QTProposalCloseJob.class)
+				.withIdentity("QT Proposal Close Job" + qt.getQtNo(),
+						"QtPublishingJobGroup")
 				.usingJobData("qtId", qt.getQtId()).build();
 		// define a simple trigger that runs at specific time (closing time)
-		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
-				.withIdentity("QT Proposal Close Job"+qt.getQtNo(), "QtPublishingJobGroup")
+		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder
+				.newTrigger()
+				.withIdentity("QT Proposal Close Job" + qt.getQtNo(),
+						"QtPublishingJobGroup")
 				.startAt(qt.getClosingDate())
-				.forJob("QT Proposal Close Job"+qt.getQtNo(), "QtPublishingJobGroup")
-				.build();
+				.forJob("QT Proposal Close Job" + qt.getQtNo(),
+						"QtPublishingJobGroup").build();
 
 		// Tell quartz to schedule the job using our trigger
 		getScheduler().scheduleJob(job, trigger);
