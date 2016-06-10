@@ -9,7 +9,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"/>
+		</p:blockUI>
+		
 		<ui:include src="clonecommitteescreen.xhtml" />
 
 		<p:messages id="specmessages" showDetail="true" autoUpdate="#{committeBackingBean.managedBean.autoUpdate}"
