@@ -54,6 +54,7 @@
 			<portlet id="pmFinancialOrg"></portlet>	
 			<portlet id="pmOrganisation"></portlet>	
 			<portlet id="pmEducationField"></portlet>	
+			<portlet id="listOfStates"></portlet>
 			<portlet id="tempUserSearch"></portlet>	
 		    <portlet id="pmUOM"></portlet>	
 			<portlet id="pmBusinessNature"></portlet>	

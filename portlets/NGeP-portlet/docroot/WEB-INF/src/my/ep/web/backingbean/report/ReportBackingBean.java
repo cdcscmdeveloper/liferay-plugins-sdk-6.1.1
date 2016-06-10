@@ -17732,7 +17732,7 @@ public class ReportBackingBean extends
 	public void getScLOAReports() {
 
 		log.info("ReportBackingBean-getLOAReports");
-		if (this.getScLOAIdNo() != null && !(this.getScLOAIdNo() == "")
+		if (StringUtils.isNotEmpty(this.getScLOAIdNo())
 				&& this.getScLOAIdNo().startsWith(ReportConst.LA_VALUE)) {
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
