@@ -17,7 +17,7 @@
 						value="#{scSupplirInvitationdBB.managedBean.selectedInvitationType}"
 						style="width: 250px; margin-bottom: 5px;">
 						<f:selectItems
-							value="#{scSupplirInvitationdBB.managedBean.invitationTypeMap.entrySet()}" var="typeMap" itemValue="#{typeMap.key}" 
+							value="#{scSupplirInvitationdBB.getInvitationTypes().entrySet()}" var="typeMap" itemValue="#{typeMap.key}" 
 							itemLabel="#{typeMap.value}"/>
 						<p:ajax event="change" update="scSuppInviteTblId"
 							listener="#{scSupplirInvitationdBB.searchSelectedInvitationType}" partialSubmit="true" process="@this" />
@@ -33,7 +33,7 @@
 			<ac:paginator for="scSuppInviteTblId" />
 			
 			<ui:param name="statusId" value="#{supplierInviteList[4]}"></ui:param>
-	        <ui:param name="labelVlaue" value="#{scSupplirInvitationdBB.labelValue(statusId)}" />
+	        <ui:param name="labelVlaue" value="#{scSupplirInvitationdBB.labelValue(statusId,supplierInviteList[5])}" />
 	        
 			<p:column headerText="#{lbl['lbl.sc.no']}" style="text-align:center">
 				<h:outputText value="#{rowIndex+1}." />
