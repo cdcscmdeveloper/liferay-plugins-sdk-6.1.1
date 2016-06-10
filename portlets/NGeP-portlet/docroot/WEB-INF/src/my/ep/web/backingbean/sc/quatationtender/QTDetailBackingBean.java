@@ -1912,6 +1912,7 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
 				committeReqDTO.setRoleCode(getUserRoleCode());
 				committeReqDTO.setScQt(qt);
+				committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
