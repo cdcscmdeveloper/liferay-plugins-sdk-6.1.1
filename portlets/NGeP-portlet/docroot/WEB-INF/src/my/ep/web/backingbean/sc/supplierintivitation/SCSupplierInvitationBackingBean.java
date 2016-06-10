@@ -113,20 +113,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				reqDTO.setStatusId(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 			} else if(QTStatusConst.QT_PROPOSAL_PREPARATION.equals(selectedInvitationType)){
 				// QT Proposal
-				
-				List<Long> qtStatusIds = new ArrayList<Long>();
-				qtStatusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("qtStatus.STATUS_ID",
-								SearchOperator.OPERATOR_IN.value(), qtStatusIds));
-				
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("qt.CLOSING_DATE",
-								SearchOperator.OPERATOR_GREATER_EQUAL.value(),new Date()));
-				
-				searchBean.getSortColumns().add(
-						new SearchOrderBean(
-								"to_char(qt.PUBLISH_DATE,'yyyy-MM-dd')", false));
+				reqDTO.setStatusId(QTStatusConst.QT_PROPOSAL_PREPARATION);
 				
 			} else if(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE.equals(selectedInvitationType)){
 				// Simple Quote
