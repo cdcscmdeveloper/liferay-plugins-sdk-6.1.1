@@ -19,7 +19,7 @@
 					<tr>
 						<td valign="top"><p:outputLabel
 								value="#{lbl['lbl.sc.title']}" /></td>
-						<td colspan="3"><p:inputText
+						<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { quotationTndrCloneDocumentsSearch.jq.click(); return false; }"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtTitle}"
 								style="width:98%;" maxlength="100" /></td>
 					</tr>
@@ -27,7 +27,7 @@
 						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.sc.qtn.no']}" /></td>
 						<td style="width: 285px;"><p:inputText size="35"
-								maxlength="21"
+								maxlength="21" onkeypress="if (event.keyCode == 13) { quotationTndrCloneDocumentsSearch.jq.click(); return false; }"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtNo}" /></td>
 						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.sc.procurement.mode']}" /></td>
@@ -40,7 +40,7 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
-						<td><p:calendar id="crdateFrm" showOn="button"
+						<td><p:calendar id="crdateFrm" showOn="button" onkeypress="if (event.keyCode == 13) { quotationTndrCloneDocumentsSearch.jq.click(); return false; }"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
 								size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -48,7 +48,7 @@
 								<p:ajax event="dateSelect" update="createdtTo" />
 							</p:calendar></td>
 						<td><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
-						<td><p:calendar id="createdtTo" showOn="button"
+						<td><p:calendar id="createdtTo" showOn="button" onkeypress="if (event.keyCode == 13) { quotationTndrCloneDocumentsSearch.jq.click(); return false; }"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toCreatedDate}"
 								mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
 								size="29" readonlyInput="true"
@@ -61,7 +61,7 @@
 					</tr>
 					<tr>
 						<td><h:outputLabel value="#{lbl['lbl.sc.pbldtfrom']}" /></td>
-						<td><p:calendar
+						<td><p:calendar onkeypress="if (event.keyCode == 13) { quotationTndrCloneDocumentsSearch.jq.click(); return false; }"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromPublishDate}"
 								id="pbdateFrom" showOn="button" size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -69,7 +69,7 @@
 								<p:ajax event="dateSelect" update="pbdateTo" />
 							</p:calendar></td>
 						<td><h:outputLabel value="#{lbl['lbl.sc.pbldtto']}" /></td>
-						<td><p:calendar id="pbdateTo" showOn="button"
+						<td><p:calendar id="pbdateTo" showOn="button" onkeypress="if (event.keyCode == 13) { quotationTndrCloneDocumentsSearch.jq.click(); return false; }"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toPublishDate}"
 								mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromPublishDate}"
 								size="29" readonlyInput="true"
@@ -82,7 +82,7 @@
 					</tr>
 					<tr>
 						<td><h:outputLabel value="#{lbl['lbl.sc.clsdtfrom']}" /></td>
-						<td><p:calendar
+						<td><p:calendar onkeypress="if (event.keyCode == 13) { quotationTndrCloneDocumentsSearch.jq.click(); return false; }"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromClosingDate}"
 								id="cldateFrom" showOn="button" size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -90,7 +90,7 @@
 								<p:ajax event="dateSelect" update="cldateTo" />
 							</p:calendar></td>
 						<td><h:outputLabel value="#{lbl['lbl.sc.clsdtto']}" /></td>
-						<td><p:calendar id="cldateTo" showOn="button"
+						<td><p:calendar id="cldateTo" showOn="button" onkeypress="if (event.keyCode == 13) { quotationTndrCloneDocumentsSearch.jq.click(); return false; }"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toClosingDate}"
 								mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromClosingDate}"
 								size="29" readonlyInput="true"
@@ -114,6 +114,7 @@
 				</table>
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
+					widgetVar="quotationTndrCloneDocumentsSearch"
 						action="#{qTDocumentsBackingBean.cloneSearchDocumentAction}"
 						update="documentPnlId" process="@parent" />
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
