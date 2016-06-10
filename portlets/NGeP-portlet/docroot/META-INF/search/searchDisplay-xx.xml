@@ -645,14 +645,24 @@
 
 		<property name="daoClass"
 			value="my.ep.persistence.dao.pm.common.businessnature.BusinessNatureDAO" />
+		<property name="searchMethod" value="retrieveBusinessNatureList" />
 		<property name="columns">
 			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="sectionCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.businessnature.lvl1.section" />
+					<property name="searchable" value="false" />
+				</bean>
+				
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="levelCode" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sc.code" />
 				</bean>
+				
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="levelName" />
 					<property name="bundleFile"
