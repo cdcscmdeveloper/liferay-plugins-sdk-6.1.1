@@ -25,9 +25,9 @@
 			<h:outputText value="#{cc.attrs.label}" style="vertical-align:top !important;"/>&#160;&#160;
 			<p:graphicImage value="/css/images/design/icon-edit.png" rendered="#{cc.attrs.suppEdit or cc.attrs.poEdit or cc.attrs.appEdit}" 
 				style="vertical-align:top !important;" />&#160;
-			<h:outputText value="S" rendered="#{cc.attrs.suppEdit}" title="#{lbl['tt.sm.edit.by.supp']}" />
-			<h:outputText value="P" rendered="#{cc.attrs.poEdit}" title="#{lbl['tt.sm.edit.by.po']}" />
-			<h:outputText value="A" rendered="#{cc.attrs.appEdit}" title="#{lbl['tt.sm.edit.by.app']}" />
+			<h:outputText value="S" rendered="#{cc.attrs.suppEdit}" title="#{lbl['tt.sm.edit.by.supp']}" style="color:red !important;"/>
+			<h:outputText value="P" rendered="#{cc.attrs.poEdit}" title="#{lbl['tt.sm.edit.by.po']}" style="color:red !important;"/>
+			<h:outputText value="A" rendered="#{cc.attrs.appEdit}" title="#{lbl['tt.sm.edit.by.app']}" style="color:red !important;"/>
 		</p:commandLink>
 	</cc:implementation>
 
