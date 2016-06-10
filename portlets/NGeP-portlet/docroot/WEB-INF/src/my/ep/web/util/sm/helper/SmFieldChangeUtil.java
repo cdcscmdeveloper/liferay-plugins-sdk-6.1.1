@@ -5,7 +5,6 @@ import java.util.List;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.helper.EntityHelper;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
@@ -216,7 +215,7 @@ public class SmFieldChangeUtil {
 		SmPersonnel latestPersonnel = (SmPersonnel) EntityHelper
 				.getEntityByMultiplePropertiesFromList(currPersonnel,
 						latestAppl.getSmPersonnels(),
-						new String[] { "identificationNo" }, null,null);
+						new String[] { "identificationNo" }, null, null);
 		// personnel
 		setCurrPersonnel(currPersonnel, latestPersonnel);
 
@@ -327,10 +326,10 @@ public class SmFieldChangeUtil {
 						.getPmRace().getRaceId()
 						.compareTo(latestPersonnel.getPmRace().getRaceId()) != 0)) {
 			currPersonnel.setChangedFieldStatus("U");
-		} else if (isHasDifferences(latestPersonnel, currPersonnel,
-				new String[] { "personnelId", "dirOrHghrMngmt", "roleName",
-						"prevEpRole", "softcertValidityDate", "softcertNo",
-						"disableStaff", "disableSemiProf",
+		} else if (SmCommonUtil.isHasDifferences(latestPersonnel,
+				currPersonnel, new String[] { "personnelId", "dirOrHghrMngmt",
+						"roleName", "prevEpRole", "softcertValidityDate",
+						"softcertNo", "disableStaff", "disableSemiProf",
 						"prevApprovedDirector", "prevApprovedEquityOwner",
 						"disableRowSelection", "freeSoftCert",
 						"softcertRejectReason", "pmCountry", "pmUser",
@@ -399,7 +398,7 @@ public class SmFieldChangeUtil {
 									new String[] { "regNo" }, null, null);
 					if (latestBody != null
 							&& latestBody.getAssociationBodyId() != null) {
-						if (isHasDifferences(latestBody, currBody,
+						if (SmCommonUtil.isHasDifferences(latestBody, currBody,
 								new String[] { "associationBodyId",
 										"smPersonnel", "pmCertBody" })) {
 							if (StringUtils.isBlank(currPersonnel
@@ -474,11 +473,11 @@ public class SmFieldChangeUtil {
 					SmRelatedCompany latestRelComp = (SmRelatedCompany) EntityHelper
 							.getEntityByMultiplePropertiesFromList(currRelComp,
 									latestPersonnel.getSmRelatedCompanies(),
-									new String[] { "regNo" }, null,null);
+									new String[] { "regNo" }, null, null);
 					if (latestRelComp != null
 							&& latestRelComp.getRelatedCompanyId() != null) {
-						if (isHasDifferences(latestRelComp, currRelComp,
-								new String[] { "relatedCompanyId",
+						if (SmCommonUtil.isHasDifferences(latestRelComp,
+								currRelComp, new String[] { "relatedCompanyId",
 										"smPersonnel" })) {
 							if (StringUtils.isBlank(currPersonnel
 									.getChangedFieldStatus())) {
@@ -553,11 +552,12 @@ public class SmFieldChangeUtil {
 							.getEntityByMultiplePropertiesFromList(currExp,
 									latestPersonnel.getSmStaffExperiences(),
 									new String[] { "companyName", "toYear" },
-									null,null);
+									null, null);
 					if (latestExp != null
 							&& latestExp.getStaffExperienceId() != null) {
-						if (isHasDifferences(latestExp, currExp, new String[] {
-								"staffExperienceId", "smPersonnel" })) {
+						if (SmCommonUtil.isHasDifferences(latestExp, currExp,
+								new String[] { "staffExperienceId",
+										"smPersonnel" })) {
 							if (StringUtils.isBlank(currPersonnel
 									.getChangedFieldStatus())) {
 								currPersonnel.setChangedFieldStatus("U");
@@ -629,13 +629,13 @@ public class SmFieldChangeUtil {
 							.getEntityByMultiplePropertiesFromList(currAcad,
 									latestPersonnel.getSmStaffAcademics(),
 									null, new String[] { "pmEduField",
-											"pmEduLevel" },null);
+											"pmEduLevel" }, null);
 					if (latestAcad != null
 							&& latestAcad.getStaffAcademicId() != null) {
-						if (isHasDifferences(latestAcad, currAcad,
+						if (SmCommonUtil.isHasDifferences(latestAcad, currAcad,
 								new String[] { "staffAcademicId",
-										"smPersonnel",
-										"pmEduField", "pmEduLevel" })) {
+										"smPersonnel", "pmEduField",
+										"pmEduLevel" })) {
 							if (StringUtils.isBlank(currPersonnel
 									.getChangedFieldStatus())) {
 								currPersonnel.setChangedFieldStatus("U");
@@ -685,11 +685,11 @@ public class SmFieldChangeUtil {
 					SmPersonnelAddress latestAddr = (SmPersonnelAddress) EntityHelper
 							.getEntityByMultiplePropertiesFromList(currAddr,
 									latestPersonnel.getSmPersonnelAddresses(),
-									new String[] { "addressType" }, null,null);
+									new String[] { "addressType" }, null, null);
 					if (latestAddr != null) {
 						if (latestAddr.getSmAddress() != null
 								&& currAddr.getSmAddress() != null
-								&& isAddressHasDifferences(
+								&& SmCommonUtil.isAddressHasDifferences(
 										latestAddr.getSmAddress(),
 										currAddr.getSmAddress())) {
 							currPersonnel.setChangedFieldStatus("U");
@@ -740,13 +740,14 @@ public class SmFieldChangeUtil {
 								|| latestAssocCompany.getAssociateCompanyId() == null) {
 							currAssocCompany.setChangedFieldStatus("N");
 						} else {
-							if (isAddressHasDifferences(
+							if (SmCommonUtil.isAddressHasDifferences(
 									latestAssocCompany.getSmAddress(),
 									currAssocCompany.getSmAddress())
-									|| isHasDifferences(
-											latestAssocCompany,
-											currAssocCompany,
-											new String[] { "associateCompanyId" })) {
+									|| SmCommonUtil
+											.isHasDifferences(
+													latestAssocCompany,
+													currAssocCompany,
+													new String[] { "associateCompanyId" })) {
 								currAssocCompany.setChangedFieldStatus("U");
 							}
 						}
@@ -795,7 +796,8 @@ public class SmFieldChangeUtil {
 								|| latestCompExp.getCompanyExperienceId() == null) {
 							currCompExp.setChangedFieldStatus("N");
 						} else {
-							if (isHasDifferences(latestCompExp, currCompExp,
+							if (SmCommonUtil.isHasDifferences(latestCompExp,
+									currCompExp,
 									new String[] { "companyExperienceId" })) {
 								currCompExp.setChangedFieldStatus("U");
 							}
@@ -842,11 +844,12 @@ public class SmFieldChangeUtil {
 								|| latestBank.getSupplierBankId() == null) {
 							currBank.setChangedFieldStatus("N");
 						} else {
-							if (isAddressHasDifferences(
+							if (SmCommonUtil.isAddressHasDifferences(
 									latestBank.getSmAddress(),
 									currBank.getSmAddress())
-									|| isHasDifferences(latestBank, currBank,
-											new String[] { "supplierBankId",
+									|| SmCommonUtil.isHasDifferences(
+											latestBank, currBank, new String[] {
+													"supplierBankId",
 													"smSupplierBranch",
 													"pmFinancialOrg" })) {
 								currBank.setChangedFieldStatus("U");
@@ -908,12 +911,12 @@ public class SmFieldChangeUtil {
 								|| latestBranch.getSupplierBranchId() == null) {
 							currBranch.setChangedFieldStatus("N");
 						} else {
-							if (isAddressHasDifferences(
+							if (SmCommonUtil.isAddressHasDifferences(
 									latestBranch.getSmAddress(),
 									currBranch.getSmAddress())
-									|| isHasDifferences(latestBranch,
-											currBranch, new String[] {
-													"supplierBranchId",
+									|| SmCommonUtil.isHasDifferences(
+											latestBranch, currBranch,
+											new String[] { "supplierBranchId",
 													"smPersonnel",
 													"contactPersonId" })) {
 								currBranch.setChangedFieldStatus("U");
@@ -969,15 +972,16 @@ public class SmFieldChangeUtil {
 								.getEntityByMultiplePropertiesFromList(
 										currEquityCompany,
 										latestAppl.getSmEquityCompanies(),
-										new String[] { "regNo" }, null,null);
+										new String[] { "regNo" }, null, null);
 						if (latestEquityCompany == null
 								|| latestEquityCompany.getEquityCompanyId() == null) {
 							currEquityCompany.setChangedFieldStatus("N");
 						} else {
-							if (isAddressHasDifferences(
+							if (SmCommonUtil.isAddressHasDifferences(
 									latestEquityCompany.getSmAddress(),
 									currEquityCompany.getSmAddress())
-									|| isHasDifferences(latestEquityCompany,
+									|| SmCommonUtil.isHasDifferences(
+											latestEquityCompany,
 											currEquityCompany,
 											new String[] { "equityCompanyId" })) {
 								currEquityCompany.setChangedFieldStatus("U");
@@ -1020,13 +1024,13 @@ public class SmFieldChangeUtil {
 										currCert,
 										latestAppl.getSmSupplierCerts(),
 										new String[] { "certTypeId", "certName" },
-										new String[] { "pmCertBody" },null);
+										new String[] { "pmCertBody" }, null);
 						if (latestCert == null
 								|| latestCert.getSupplierCertId() == null) {
 							currCert.setChangedFieldStatus("N");
 						} else {
-							if (isHasDifferences(latestCert, currCert,
-									new String[] { "supplierCertId",
+							if (SmCommonUtil.isHasDifferences(latestCert,
+									currCert, new String[] { "supplierCertId",
 											"pmCertBody" })) {
 								currCert.setChangedFieldStatus("U");
 							} else if (latestCert.getPmCertBody() != null
@@ -1079,14 +1083,16 @@ public class SmFieldChangeUtil {
 						currBody.setChangedFieldStatus("N");
 					} else {
 						latestBody = (SmAssociationBody) EntityHelper
-								.getEntityByMultiplePropertiesFromList(currBody,
+								.getEntityByMultiplePropertiesFromList(
+										currBody,
 										latestAppl.getSmAssociationBodies(),
-										new String[] { "regNo" }, null,null);
+										new String[] { "regNo" }, null, null);
 						if (latestBody == null
 								|| latestBody.getAssociationBodyId() == null) {
 							currBody.setChangedFieldStatus("N");
 						} else {
-							if (isHasDifferences(latestBody, currBody,
+							if (SmCommonUtil.isHasDifferences(latestBody,
+									currBody,
 									new String[] { "associationBodyId" })) {
 								currBody.setChangedFieldStatus("U");
 							}
@@ -1199,7 +1205,7 @@ public class SmFieldChangeUtil {
 				latestCompExpCat = (SmCompanyExperienceCat) EntityHelper
 						.getEntityByMultiplePropertiesFromList(currExpCat,
 								latestcurrCompExp.getSmCompanyExperienceCats(),
-								null, new String[] { "pmCategoryL3" },null);
+								null, new String[] { "pmCategoryL3" }, null);
 				if (latestCompExpCat == null) {
 					currCompExp.setChangedFieldStatus("U");
 					currExpCat.setChangedFieldStatus("N");
@@ -1258,78 +1264,6 @@ public class SmFieldChangeUtil {
 			}
 		}
 		return retVal;
-	}
-
-	/**
-	 * Check if current address has different compare with latest address
-	 * 
-	 * @param SmAddress
-	 *            latest
-	 * @param SmAddress
-	 *            current
-	 * @return boolean
-	 */
-	private static boolean isAddressHasDifferences(SmAddress latest,
-			SmAddress current) {
-		boolean retVal = false;
-		if ((latest == null && current != null)
-				|| (latest != null && current == null)) {
-			retVal = true;
-		} else if (isHasDifferences(latest, current, new String[] {
-				"countryId", "stateId", "districtId", "cityId", "addressId",
-				"pmCountry", "pmState", "pmCity", "pmDistrict" })) {
-			retVal = true;
-		} else {
-			if ((latest.getPmCountry() != null && current.getPmCountry() == null)
-					|| (latest.getPmCountry() == null && current.getPmCountry() != null)
-					|| (latest.getPmCountry() != null
-							&& current.getPmCountry() != null && latest
-							.getPmCountry().getCountryId()
-							.compareTo(current.getPmCountry().getCountryId()) != 0)) {
-				retVal = true;
-			} else if ((latest.getPmState() != null && current.getPmState() == null)
-					|| (latest.getPmState() == null && current.getPmState() != null)
-					|| (latest.getPmState() != null
-							&& current.getPmState() != null && latest
-							.getPmState().getStateId()
-							.compareTo(current.getPmState().getStateId()) != 0)) {
-				retVal = true;
-			} else if ((latest.getPmCity() != null && current.getPmCity() == null)
-					|| (latest.getPmCity() == null && current.getPmCity() != null)
-					|| (latest.getPmCity() != null
-							&& current.getPmCity() != null && latest
-							.getPmCity().getCityId()
-							.compareTo(current.getPmCity().getCityId()) != 0)) {
-				retVal = true;
-			} else if ((latest.getPmDistrict() != null && current
-					.getPmDistrict() == null)
-					|| (latest.getPmDistrict() == null && current
-							.getPmDistrict() != null)
-					|| (latest.getPmDistrict() != null
-							&& current.getPmDistrict() != null && latest
-							.getPmDistrict().getDistrictId()
-							.compareTo(current.getPmDistrict().getDistrictId()) != 0)) {
-				retVal = true;
-			}
-		}
-		return retVal;
-	}
-
-	/**
-	 * Check if latest object has difference compare with latest object
-	 * 
-	 * @param Object
-	 *            latest
-	 * @param Object
-	 *            current
-	 * @param String
-	 *            [] excludeProps
-	 * @return boolean
-	 */
-	private static boolean isHasDifferences(Object latest, Object current,
-			String[] excludeProps) {
-		return SmCommonUtil.isSmObjectPropsDifference(latest, current,
-				excludeProps);
 	}
 
 	/**
