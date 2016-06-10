@@ -708,6 +708,12 @@ public class CommitteBackingBean extends
 		committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		committeReqDTO.setRoleCode(getCommitteeRoleCode());
 		
+		String qtNo = getManagedBean().getQt().getQtNo();
+		String committeeTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+										ParameterTypeConst.SC_COMMITTEE_TYPE, 
+										scQtCommittee.getScCommittee()
+										.getCommitteeType().getParameterCode());
+		
 		CommitteResDTO resDTO = null;
 
 		try {
@@ -730,11 +736,9 @@ public class CommitteBackingBean extends
 													.getMessage(
 															MessageConst.INFO_700005,
 															new String[] {
-																	"Committe",
-																	"" },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+																qtNo + " - ", committeeTypeDesc},
+																MessageUtils.BUNDLE_COMMON_MESSAGES,
+																new FacesScopes().getUserLocale())));
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					// renewSesionObject();
@@ -750,11 +754,9 @@ public class CommitteBackingBean extends
 													.getMessage(
 															MessageConst.INFO_700004,
 															new String[] {
-																	"Committe",
-																	"" },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+																qtNo + " - ", committeeTypeDesc},
+																MessageUtils.BUNDLE_COMMON_MESSAGES,
+																new FacesScopes().getUserLocale())));
 
 				}
 			}
@@ -2326,6 +2328,9 @@ public class CommitteBackingBean extends
 			SelectItem[] pbaItems = getDropdownValues(representitiveType);
 			this.getManagedBean().setRepresentativesTypeslist(
 					Arrays.asList(pbaItems));
+			
+			this.getManagedBean().setCommitteeQTDataModel(
+					new committeeQTPagingDataModel("qtDetailsId", getManagedBean().getScCommittee()));
 		}
 
 		FacesContext fc = FacesContext.getCurrentInstance();
