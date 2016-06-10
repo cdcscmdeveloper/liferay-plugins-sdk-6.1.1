@@ -5,7 +5,8 @@
 	size: A4 portrait;
 }
 
-@page { @bottom-center { content:element(footer)
+@page { size: A4 portrait;}
+@page { @bottom-center { content: "Page " counter(page) " / " counter(pages); }}
 	
 }
 
