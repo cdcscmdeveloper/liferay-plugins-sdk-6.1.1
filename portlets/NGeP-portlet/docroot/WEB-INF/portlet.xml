@@ -6293,7 +6293,39 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>		
-	
+	<portlet>
+		<portlet-name>listOfStates</portlet-name>
+		<display-name>List of States</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/pm/listofstates/statesPreRender.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>List of States</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 	<portlet>
 		<portlet-name>pmCategory</portlet-name>
 		<display-name>Category Code</display-name>
@@ -7953,7 +7985,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/directpurchase/preRenderDirectPurchaseSearch.xhtml</value>
+			<value>/xhtml/sc/directpurchase/directPurchaseSearch.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -8378,39 +8410,6 @@
 		<portlet-info>
 			<title>Pending Response For Direct Purchase / Quotation / Tender</title>
 			<short-title>Pending Response For Direct Purchase / Quotation / Tender</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	<portlet>
-		<portlet-name>passwordcipher</portlet-name>
-		<display-name>PasswordCipher</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/common/passwordcipher.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>PassworCipher</title>
-			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
