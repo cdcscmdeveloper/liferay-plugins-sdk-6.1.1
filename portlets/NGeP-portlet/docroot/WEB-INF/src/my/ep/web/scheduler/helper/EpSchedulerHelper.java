@@ -287,8 +287,7 @@ public class EpSchedulerHelper {
 
 						// update job description or job class
 						if ((!oldJob.getDescription().equals(jobDetailDesc) || !oldJob
-								.getJobClass().equals(jobClass))
-								&& !isJobRunningNow(jobKey)) {
+								.getJobClass().equals(jobClass))) {
 
 							JobDetail newJob = JobBuilder.newJob(jobClass)
 									.withIdentity(jobKey)
