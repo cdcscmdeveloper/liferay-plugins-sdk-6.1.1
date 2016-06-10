@@ -1929,7 +1929,6 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setPayLoad(payLoad);
 				committeReqDTO.setOutcome(outcome);
 				committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
-				committeReqDTO.setRoleCode(getUserRoleCode());
 				committeReqDTO.setScQt(qt);
 				committeResDto = committeSO
 						.updateFinalizateSecrataryTask(committeReqDTO);
