@@ -238,6 +238,7 @@
 			<portlet id="DirectMofRegistration"></portlet>
 			<portlet id="SvcTasklist"></portlet>
 			<portlet id="assignedTaskSearch"></portlet>
+			<portlet id="passwordcipher"></portlet>
 		</category>
 
 		<category name="Template">
