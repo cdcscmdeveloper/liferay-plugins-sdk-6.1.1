@@ -5,6 +5,7 @@ package my.ep.web.backingbean.sc.supplierintivitation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.sc.supplierintivitation.ISCSupplierInvitationSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
@@ -56,25 +58,16 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 	private static final String BIDDING_LABEL_KEY = "lbl.sc.bidding";
 	private static final String SQ_LABEL_KEY = "lbl.sc.sq";
 	private static final String QT_LABEL_KEY = "lbl.sc.quotation.tender";
+	private static final String QUOTATION_LABEL_KEY = "lbl.sc.quotation";
+	private static final String TENDER_LABEL_KEY = "lbl.sc.tender";
 	private static final String ALL_LABEL_KEY = "lbl.txt.all";
 	private static final String BSV_LABEL_KEY = "lbl.sc.qt.briefing.sv";
 	
 	@PostConstruct
 	private void init() {
 		
-		if (this.getManagedBean().getInvitationTypeMap() == null) {
-			
-			Map<Long, String> invitationTypesMap = new LinkedHashMap<Long, String>();
-			invitationTypesMap.put(1L, getLabelName(ALL_LABEL_KEY));
-			invitationTypesMap.put(QTStatusConst.QT_PROPOSAL_PREPARATION,getLabelName(QT_LABEL_KEY));
-			invitationTypesMap.put(QTStatusConst.QT_BRIEFING_SITE_VISIT,getLabelName(BSV_LABEL_KEY));
-			invitationTypesMap.put(QTStatusConst.SF_PENDING_BIDDING,
-					getLabelName(BIDDING_LABEL_KEY));
-			invitationTypesMap.put(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE,
-					getLabelName(SQ_LABEL_KEY));
-			this.getManagedBean().setInvitationTypeMap(invitationTypesMap);
-		}
 		if (this.getManagedBean().getUrlMap() == null) {
+			
 			Map<Long, String> urlMap = new LinkedHashMap<Long, String>();
 			urlMap.put(QTStatusConst.QT_PROPOSAL_PREPARATION,
 					SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL);
@@ -113,55 +106,78 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 			}
 			
 			Long selectedInvitationType = getManagedBean().getSelectedInvitationType();
+			ScSupplierInvitationReqDTO reqDTO = new ScSupplierInvitationReqDTO();
+			// BSV
 			if(QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(selectedInvitationType)){
-				List<Long> qtStatusIds = new ArrayList<Long>();
-				qtStatusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("qtStatus.STATUS_ID",
-								SearchOperator.OPERATOR_IN.value(), qtStatusIds));
-				sortOrder(searchBean,false);
 				
+				reqDTO.setStatusId(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 			} else if(QTStatusConst.QT_PROPOSAL_PREPARATION.equals(selectedInvitationType)){
+				// QT Proposal
+				
 				List<Long> qtStatusIds = new ArrayList<Long>();
 				qtStatusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("qtStatus.STATUS_ID",
 								SearchOperator.OPERATOR_IN.value(), qtStatusIds));
-				sortOrder(searchBean,false);
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("qt.CLOSING_DATE",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),new Date()));
+				
+				searchBean.getSortColumns().add(
+						new SearchOrderBean(
+								"to_char(qt.PUBLISH_DATE,'yyyy-MM-dd')", false));
 				
 			} else if(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE.equals(selectedInvitationType)){
+				// Simple Quote
+				
 				List<Long> sqStatusIds = new ArrayList<Long>();
 				sqStatusIds.add(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE);
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("sqStatus.STATUS_ID",
 								SearchOperator.OPERATOR_IN.value(), sqStatusIds));
-				sortOrder(searchBean,true);
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("quote.END_DATE",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),new Date()));
+				
+				searchBean.getSortColumns().add(
+						new SearchOrderBean(
+								"to_char(quote.CREATED_DATE,'yyyy-MM-dd')", false));
 				
 			} else if(QTStatusConst.SF_PENDING_BIDDING.equals(selectedInvitationType)){
+				// Bidding
+				
 				List<Long> bidStatusIds = new ArrayList<Long>();
 				bidStatusIds.add(QTStatusConst.SF_PENDING_BIDDING);
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("bidStatus.STATUS_ID",
 								SearchOperator.OPERATOR_IN.value(), bidStatusIds));
-				sortOrder(searchBean,false);
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("bidschedule.END_DATE",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),new Date()));
+								
+				searchBean.getSortColumns().add(
+						new SearchOrderBean(
+								"to_char(bidschedule.START_DATE,'yyyy-MM-dd')", false));
+				
 			}
 			
-			ISCSupplierInvitationSO dashBoardSO = null;
+			ISCSupplierInvitationSO invitationSO = null;
 			ScSupplierInvitationResDTO resDTO = new ScSupplierInvitationResDTO();
 			try {
-				dashBoardSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								ISCSupplierInvitationSO.class);
+				invitationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ISCSupplierInvitationSO.class);
 				Long userId = new FacesScopes().getUserSessionBean().getUserId();
 				if(userId != null){
-					ScSupplierInvitationReqDTO reqDTO = new ScSupplierInvitationReqDTO();
 					reqDTO.setUserId(userId);
 					reqDTO.setSearchBean(searchBean);
-					 resDTO = dashBoardSO.retrieveSupplierInviteQtsByUserId(reqDTO);
+					resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
 				}
 				
 			} finally{
-				dashBoardSO = null;
+				invitationSO = null;
 			}
 			
 			return resDTO.getSupplierInvitationList();
@@ -183,20 +199,20 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 		FacesScopes facesScope = new FacesScopes();
 		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
 				.getRequestScope(WebKeys.THEME_DISPLAY);
-		String commonUrl = null;
 		try {
-			String url = this.getManagedBean().getUrlMap().get(statusId);
-			commonUrl = themeDisplay.getURLCurrent().substring(
-					0,
-					themeDisplay.getURLCurrent().indexOf(
-							themeDisplay.getLayout().getGroup()
-									.getFriendlyURL())
-							+ themeDisplay.getLayout().getGroup()
-									.getFriendlyURL().length());
-
+			
+			String currentURL = themeDisplay.getURLCurrent();
+			String friendlyURL = themeDisplay.getLayout().getGroup().getFriendlyURL();
+			String commonUrl = currentURL.substring(0,currentURL.indexOf(
+					friendlyURL)+ friendlyURL.length());
+			String screenUrl = this.getManagedBean().getUrlMap().get(statusId);
+			StringBuilder navigationUrl = new StringBuilder();
+			navigationUrl.append(commonUrl).append("/")
+			         .append(screenUrl).append(id);
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
-			externalContext.redirect(commonUrl + "/" + url+id);
+			externalContext.redirect(navigationUrl.toString());
+			log.info("getNavigationUrl =="+navigationUrl.toString());
 		} catch (IOException e) {
 			log.error(e);
 		} catch (PortalException e) {
@@ -213,13 +229,17 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 	 * @param statusId
 	 * @return label labelValue
 	 */
-	public String labelValue(Long statusId) {
+	public String labelValue(Long statusId,String ProcurementMode) {
 		
 		String labelValue = "";
 		if (QTStatusConst.SF_PENDING_BIDDING.equals(statusId)) {
 			labelValue = getLabelName(BIDDING_LABEL_KEY);
 		} else if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(statusId)) {
-			labelValue = getLabelName(QT_LABEL_KEY);
+			if(ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(ProcurementMode)){
+				labelValue = getLabelName(TENDER_LABEL_KEY);
+			}else{
+				labelValue = getLabelName(QUOTATION_LABEL_KEY);
+			}
 		} else if (DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE
 				.equals(statusId)) {
 			labelValue = getLabelName(SQ_LABEL_KEY);
@@ -237,19 +257,23 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				new FacesScopes().getUserLocale());
 	}
 	
-	private void sortOrder(ISearchBean<Object[]> searchBean,
-			boolean isSimplequote) {
-
-		if (isSimplequote) {
-			searchBean.getSortColumns().add(
-					new SearchOrderBean(
-							"to_char(quote.CREATED_DATE,'yyyy-MM-dd')", false));
-		} else {
-			searchBean.getSortColumns().add(
-					new SearchOrderBean(
-							"to_char(qt.CREATED_DATE,'yyyy-MM-dd')", false));
-		}
-
+	/**
+	 * Set the InvitationTypes dropdown values
+	 * 
+	 * @return invitationTypesMap
+	 */
+	public Map<Long, String> getInvitationTypes(){
+			
+			Map<Long, String> invitationTypesMap = new LinkedHashMap<Long, String>();
+			invitationTypesMap.put(1L, getLabelName(ALL_LABEL_KEY));
+			invitationTypesMap.put(QTStatusConst.QT_PROPOSAL_PREPARATION,getLabelName(QT_LABEL_KEY));
+			invitationTypesMap.put(QTStatusConst.QT_BRIEFING_SITE_VISIT,getLabelName(BSV_LABEL_KEY));
+			invitationTypesMap.put(QTStatusConst.SF_PENDING_BIDDING,
+					getLabelName(BIDDING_LABEL_KEY));
+			invitationTypesMap.put(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE,
+					getLabelName(SQ_LABEL_KEY));
+			
+			return invitationTypesMap;
 	}
 	
 	public void searchSelectedInvitationType() {
