@@ -17,25 +17,26 @@
 			<tr>
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.sc.supplier.name']}" /></td>
-				<td colspan="3"><p:inputText
+				<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { supplierQualificationCriteriaRestrictedTndrSearch.jq.click(); return false; }"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierSearchBean.supplierName}"
 						size="30" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mofno']}" /></td>
-				<td colspan="3"><p:inputText
+				<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { supplierQualificationCriteriaRestrictedTndrSearch.jq.click(); return false; }"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierSearchBean.mofAccountNo}"
 						size="30" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.paidup']}" /></td>
-				<td colspan="3"><p:inputText
+				<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { supplierQualificationCriteriaRestrictedTndrSearch.jq.click(); return false; }"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierSearchBean.minPaidUpCapital}"
 						size="30" /></td>
 			</tr>
 		</table>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.search']}"
+			widgetVar="supplierQualificationCriteriaRestrictedTndrSearch"
 				styleClass="apply_button" id="restrictSupplier"
 				action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction}"
 				update="restrictedsupplierPnl" process="@this, searchrestrictedsupp" />
