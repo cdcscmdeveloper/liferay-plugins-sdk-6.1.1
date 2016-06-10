@@ -56,10 +56,10 @@ public class ProfileManagementSearchManagedBean extends BaseManagedBean {
 		log.info("fillRequestDTO - Start");
 		ProfileManagementSearchBean pmSearchBean = this.getProfileManagSearchBean();
 
-		if (pmSearchBean.getSelectedOrgProfile() != null) {
-			log.info("..pmSearchBean.getSelectedOrgProfile().getOrgProfileId()="
-					+ pmSearchBean.getSelectedOrgProfile().getOrgProfileId());
-			applReqDTO.setOrgProfileId(pmSearchBean.getSelectedOrgProfile().getOrgProfileId());	
+		if (getSelectedOrgProfile() != null) {
+			log.info("..getSelectedOrgProfile().getOrgProfileId()="
+					+ getSelectedOrgProfile().getOrgProfileId());
+			applReqDTO.setOrgProfileId(getSelectedOrgProfile().getOrgProfileId());	
 		}
 
 		if (this.getSelectedOrgType() != null) {
