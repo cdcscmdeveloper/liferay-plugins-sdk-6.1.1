@@ -123,7 +123,7 @@
 						value="*" styleClass="mandatory" /></td>
 				
 						<td rowspan="2"><p:inputTextarea  id="orgName" 
-								styleClass="ppDisplayTextL"
+								styleClass="ppDisplayTextL" onchange="this.value = this.value.trim()"
 								disabled="#{(ParameterConst.orgTypeMinistry eq organisationBackingBean.managedBean.orgType and not organisationBackingBean.managedBean.orgProfile.brandNew) 
 										or ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType 
 										or ParameterConst.orgTypeJabatan eq organisationBackingBean.managedBean.orgType 
