@@ -1077,6 +1077,12 @@ public class SmApplicationBackingBean extends
 			}
 		}
 
+		// set previous application to compare based on role
+		SmSideMenuIconUtil.setPrevApplByRole(getManagedBean());
+
+		// set section editor VO
+		SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), true);
+
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
@@ -1805,7 +1811,7 @@ public class SmApplicationBackingBean extends
 					&& (buttonType
 							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_BUTTON_TYPE_PREV)
 							|| buttonType
-									.equalsIgnoreCase(SupplierManagementConst.SM_APPL_BUTTON_TYPE_SAME)
+									.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)
 							|| currentTab > outputTab || currentTab == outputTab)) {
 				valid = SmApplicationUtil.validateCategoryOtherDesc(true,
 						getManagedBean(), currentTab);
@@ -4984,6 +4990,9 @@ public class SmApplicationBackingBean extends
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
 		} finally {
 			retriveLatestApplAfterUpdate("", "");
+
+			// set section editor VO after update
+			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false);
 		}
 	}
 
