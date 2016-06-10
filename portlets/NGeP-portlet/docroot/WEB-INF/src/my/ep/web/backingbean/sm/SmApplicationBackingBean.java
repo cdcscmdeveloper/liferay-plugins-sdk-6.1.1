@@ -4880,6 +4880,16 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+				&& getManagedBean().getSelectedShareHolder().isEquityOwner()
+				&& (EntityHelper.isCollectionEmpty(getManagedBean()
+						.getSelectedShareHolder().getSmAssociationBodies()))) {
+
+			validShrHldr = false;
+			throw new EpException(SmCommonUtil.getMessage(
+					"lbl.sm.profbody.required.atleast.one", null));
+		}
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
 				&& (getManagedBean().getSelectedShareHolder()
 						.getSmStaffAcademics() == null || getManagedBean()
 						.getSelectedShareHolder().getSmStaffAcademics()
