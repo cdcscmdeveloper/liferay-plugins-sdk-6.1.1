@@ -1930,6 +1930,7 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setPayLoad(payLoad);
 				committeReqDTO.setOutcome(outcome);
 				committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
+				committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				committeReqDTO.setScQt(qt);
 				committeResDto = committeSO
 						.updateFinalizateSecrataryTask(committeReqDTO);
