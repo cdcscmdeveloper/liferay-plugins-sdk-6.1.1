@@ -724,6 +724,7 @@ public class ApprovalBackingBean extends
 				committeReqDTO
 						.setPmUser(new FacesScopes().getUserSessionBean());
 				committeReqDTO.setRoleCode(getUserRoleCode());
+				committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				finalizeRemarks(this.getManagedBean().getScQtApproval()
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
@@ -754,6 +755,7 @@ public class ApprovalBackingBean extends
 				qtReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+				qtReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				IQTDetailSO detailSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTDetailSO.class);
