@@ -30,10 +30,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 								       </p:selectBooleanCheckbox>
 							      </p:column>
 								 
-								  <p:column style="white-space:pre-line;width:8%;" styleClass="column-align-center" >
+								  <p:column style="white-space:normal;width:8%;" styleClass="column-align-center" >
 								       <f:facet name="header">
 											<h:outputText id="coverageId" value="#{lbl['lbl.ct.panel.coverage']}" styleClass="required"/>
-						               		<ac:iconTooltip for="coverageId"   value="#{lbl['lbl.ct.tooltip.panel.coverage']}" />
+						               		<ac:iconTooltip   value="#{lbl['lbl.ct.tooltip.panel.coverage']}" />
 						               </f:facet>
 						             
 						                <c:if test="#{!panelBackingBean.managedBean.viewContract}">
@@ -96,10 +96,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 							             </c:if>
 				                   </p:column>
               
-                                   <p:column style="width:16%;white-space:pre-line" styleClass="column-align-center">
+                                   <p:column style="width:16%;white-space:normal;" styleClass="column-align-center">
                                        <f:facet name="header">
 			                               <h:outputText value="#{lbl['lbl.ct.item.name']}" styleClass="required" />
-			                        		<ac:iconTooltip for="coverageId"   value="#{lbl['lbl.ct.tooltip.panel.item.name']}" />
+			                        		<ac:iconTooltip   value="#{lbl['lbl.ct.tooltip.panel.item.name']}" />
 						               </f:facet>
 			                       
 			               
@@ -123,7 +123,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	                            	    </f:facet>
 	               	 
 	               	                    <c:if test="#{!panelBackingBean.managedBean.viewContract}">
-			                                  <ac:lov id="uomLovId" lovId="PM_UOM" size="10" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
+			                                  <ac:lov id="uomLovId" lovId="PM_UOM" size="7" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
 				                                   value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1" 
 				                                   saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
 			                                 </ac:lov>
