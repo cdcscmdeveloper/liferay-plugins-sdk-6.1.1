@@ -15,19 +15,25 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.supplierintivitation.ISCSupplierInvitationSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.supplierintivitation.ScSupplierInvitationReqDTO;
 import my.ep.dto.sc.supplierintivitation.ScSupplierInvitationResDTO;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -57,7 +63,6 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 	private static final String RESULT_PAGE = "/xhtml/sc/supplierinvitation/resultsView.xhtml";
 	private static final String BIDDING_LABEL_KEY = "lbl.sc.bidding";
 	private static final String SQ_LABEL_KEY = "lbl.sc.sq";
-	private static final String QT_LABEL_KEY = "lbl.sc.quotation.tender";
 	private static final String QUOTATION_LABEL_KEY = "lbl.sc.quotation";
 	private static final String TENDER_LABEL_KEY = "lbl.sc.tender";
 	private static final String ALL_LABEL_KEY = "lbl.txt.all";
@@ -105,17 +110,28 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				log.debug("pageChangeListener");
 			}
 			
-			Long selectedInvitationType = getManagedBean().getSelectedInvitationType();
+			String selectedInvitationType = getManagedBean().getSelectedInvitationType();
+			String invitationType = null;
+			if(selectedInvitationType != null){
+				PmParameter parameter = retrieveParameterById(Long.valueOf(selectedInvitationType));
+				if(parameter != null){
+					invitationType	= parameter.getParameterCode();
+				}
+			}
 			ScSupplierInvitationReqDTO reqDTO = new ScSupplierInvitationReqDTO();
 			// BSV
-			if(QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(selectedInvitationType)){
+			if(SourcingConstants.SIT_BRIEFING_SITE_VISIT.equals(invitationType)){
 				
 				reqDTO.setStatusId(QTStatusConst.QT_BRIEFING_SITE_VISIT);
-			} else if(QTStatusConst.QT_PROPOSAL_PREPARATION.equals(selectedInvitationType)){
+			} else if(SourcingConstants.SIT_QUOTATION.equals(invitationType)||
+					SourcingConstants.SIT_TENDER.equals(invitationType)){
+				
+				PmParameter parameter = getParameterByTypeAndCode(
+						ParameterTypeConst.SC_PROCUREMENT_MODE,invitationType);
 				// QT Proposal
 				reqDTO.setStatusId(QTStatusConst.QT_PROPOSAL_PREPARATION);
-				
-			} else if(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE.equals(selectedInvitationType)){
+				reqDTO.setParameterId(parameter != null?parameter.getParameterId():null);
+			} else if(SourcingConstants.SIT_SIMPLE_QUOTE.equals(invitationType)){
 				// Simple Quote
 				
 				List<Long> sqStatusIds = new ArrayList<Long>();
@@ -132,7 +148,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 						new SearchOrderBean(
 								"to_char(quote.CREATED_DATE,'yyyy-MM-dd')", false));
 				
-			} else if(QTStatusConst.SF_PENDING_BIDDING.equals(selectedInvitationType)){
+			} else if(SourcingConstants.SIT_BIDDING.equals(invitationType)){
 				// Bidding
 				
 				List<Long> bidStatusIds = new ArrayList<Long>();
@@ -249,18 +265,14 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 	 * 
 	 * @return invitationTypesMap
 	 */
-	public Map<Long, String> getInvitationTypes(){
-			
-			Map<Long, String> invitationTypesMap = new LinkedHashMap<Long, String>();
-			invitationTypesMap.put(1L, getLabelName(ALL_LABEL_KEY));
-			invitationTypesMap.put(QTStatusConst.QT_PROPOSAL_PREPARATION,getLabelName(QT_LABEL_KEY));
-			invitationTypesMap.put(QTStatusConst.QT_BRIEFING_SITE_VISIT,getLabelName(BSV_LABEL_KEY));
-			invitationTypesMap.put(QTStatusConst.SF_PENDING_BIDDING,
-					getLabelName(BIDDING_LABEL_KEY));
-			invitationTypesMap.put(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE,
-					getLabelName(SQ_LABEL_KEY));
-			
-			return invitationTypesMap;
+	public SelectItem[] getInvitationTypes(){
+		
+		SelectItem[] invitationTypes = getDropdownValues(ParameterTypeConst.SUPPLIER_INVITATION_TYPES);
+		
+			if(invitationTypes != null && invitationTypes.length > 0){
+				invitationTypes[0] = new SelectItem(1L,getLabelName(ALL_LABEL_KEY));
+			}
+			return invitationTypes;
 	}
 	
 	public void searchSelectedInvitationType() {
@@ -282,5 +294,21 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 		this.supplierInvitationModel = supplierInvitationModel;
 	}
 	
+	private PmParameter retrieveParameterById(Long parameterId) {
+
+		IParameterSO parameterSO = null;
+		ParameterResDTO resDTO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			resDTO = parameterSO.retrieveParameterById(reqDTO);
+		} finally {
+			parameterSO = null;
+		}
+
+		return resDTO != null ? resDTO.getPmParameter() : null;
+	}
 
 }
