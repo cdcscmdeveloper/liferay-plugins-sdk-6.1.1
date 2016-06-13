@@ -21,38 +21,23 @@ public class SCSupplierInvitationManagedBean extends BaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
 	
-	private Long selectedInvitationType;
-	private Map<Long,String> invitationTypeMap;
+	private String selectedInvitationType;
 	private Map<Long,String> urlMap;
 
 	/**
 	 * @return the selectedInvitationType
 	 */
-	public Long getSelectedInvitationType() {
+	public String getSelectedInvitationType() {
 		return selectedInvitationType;
 	}
 
 	/**
 	 * @param selectedInvitationType the selectedInvitationType to set
 	 */
-	public void setSelectedInvitationType(Long selectedInvitationType) {
+	public void setSelectedInvitationType(String selectedInvitationType) {
 		this.selectedInvitationType = selectedInvitationType;
 	}
 	
-	/**
-	 * @return the invitationTypeMap
-	 */
-	public Map<Long, String> getInvitationTypeMap() {
-		return invitationTypeMap;
-	}
-
-	/**
-	 * @param invitationTypeMap the invitationTypeMap to set
-	 */
-	public void setInvitationTypeMap(Map<Long, String> invitationTypeMap) {
-		this.invitationTypeMap = invitationTypeMap;
-	}
-
 	/**
 	 * @return the urlMap
 	 */
