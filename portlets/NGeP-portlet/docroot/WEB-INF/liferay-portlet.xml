@@ -2015,6 +2015,16 @@
 		<css-class-wrapper>pmListOfStates-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>listOfDivision</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pmListOfDivision-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>TaskSummary</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
