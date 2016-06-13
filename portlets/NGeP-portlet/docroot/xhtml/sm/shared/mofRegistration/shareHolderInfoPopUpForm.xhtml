@@ -918,7 +918,7 @@
 			
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" 
-				rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}"/>
+				rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 				<h:outputText value="#{lbl['lbl.sm.profBody.profBody']}" />
 			</f:facet>
 		
