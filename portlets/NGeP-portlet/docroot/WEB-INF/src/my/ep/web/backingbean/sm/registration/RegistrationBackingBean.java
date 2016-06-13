@@ -2158,6 +2158,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String returnToTermAndCondition(){
+		getManagedBean().setCaptchaAnswer(null);
+		getManagedBean().setAgreeTC(false);
 		return termAndCondition;
 
 	}
