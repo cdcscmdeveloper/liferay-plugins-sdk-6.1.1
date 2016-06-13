@@ -40,7 +40,7 @@
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
 					navigator="true" value="#{circularBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />								
 				<h:outputLabel value="#{lbl['lbl.ct.status']}" />
-				<p:selectOneMenu id="status" value="#{circularBackingBean.managedBean.searchStatusId}" style="width:440px;">
+				<p:selectOneMenu id="status" value="#{circularBackingBean.managedBean.searchStatusId}" style="width:450px;">
 					<f:selectItems value="#{circularBackingBean.getStatusDropdown()}" />
 				</p:selectOneMenu>
 			</h:panelGrid>		
