@@ -131,44 +131,43 @@
 							<c:if test="#{isFFCOrgType}">
 							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_FFC" size="40" 
 							    	required="true" 
+							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					            	update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
-					            	readonly="true" disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
+					            	disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"									
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmFinancialOrg.finOrgName}" 
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" 
-									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />
-									
+									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />									
 							</c:if>
 							<c:if test="#{isSupplierOrgType}">
 							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="40" 
 							    	required="true" 
+							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					            	update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
-					            	readonly="true" disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
+					            	disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.smSupplier.companyName}" 
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" 
-									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />
-									
+									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />									
 							</c:if>
 							<c:if test="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode and ParameterConst.orgTypeSupplier ne profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode}">
 							   <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="40"
 												required="true"
+												label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 												update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
-												readonly="true"
 												disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 												headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 												value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
 												saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 												conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}"
-												postUpdateListener="profileManagementBackingBean.changeOrgUnit"  />
-											
+												postUpdateListener="profileManagementBackingBean.changeOrgUnit"  />										
 							</c:if>
-							<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />
+							
 							</div>
 							</td>
 					</tr>
@@ -376,7 +375,7 @@
 									partialSubmit="true" process="@this" update="@this" />
 							</p:inputText> &#160; <p:graphicImage id="giUserUsername"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
-								for="giUserUsername"
+								for="giUserUsername" id="ttUserUsername"
 								value="#{lbl['lbl.pm.profiles.userdetails.username.tooltip']}"
 								showEffect="fade" hideEffect="fade" /> &#160;
 							<p:message
@@ -395,6 +394,11 @@
 								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.designation']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.designation}" />
+								 &#160; <p:graphicImage id="giDesignation"
+								value="/css/images/design/tooltips.png" /> <p:tooltip
+								for="giDesignation" id="ttDesignation"
+								value="#{lbl['lbl.pm.profiles.userdetails.designation.tooltip']}"
+								showEffect="fade" hideEffect="fade" /> &#160;
 								<p:message id="itDesignationMsg" for="itDesignation"
 									display="icon" />
 						</td>

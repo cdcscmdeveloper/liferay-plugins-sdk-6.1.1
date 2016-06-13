@@ -4774,21 +4774,24 @@ public class ProfileManagementBackingBean extends
 			    	 if(resDTO1.isSupplierPersonnel()){
 			    		 throw new EpException(MessageConst.ERROR_770214,
 									new String[] {getManagedBean().getSelectedUser().getIdentificationNo()});
-				 }
+			    	 }
+			    	 
+			    	 // new user org / user record
+			    	 if(ParameterConst.IDENTIFICATION_TYPES_IC.equals(getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode())){
+							getManagedBean().getSelectedUser().setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
+					}else{
+						PmCountry country  = PmCommonUtil.retrievePmCountryById(getManagedBean().getSelectedUser().getPmCountry().getCountryId());
+						StringBuilder sb = new StringBuilder();
+						sb.append(getManagedBean().getSelectedUser().getIdentificationNo().trim());
+						sb.append(country.getCountryCode());
+						getManagedBean().getSelectedUser().setLoginId(sb.toString());
+					}
 			 	}
 			} finally {
 				userSO = null;
 			}
 			
-			if(ParameterConst.IDENTIFICATION_TYPES_IC.equals(getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode())){
-				getManagedBean().getSelectedUser().setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
-			}else{
-				PmCountry country  = PmCommonUtil.retrievePmCountryById(getManagedBean().getSelectedUser().getPmCountry().getCountryId());
-				StringBuilder sb = new StringBuilder();
-				sb.append(getManagedBean().getSelectedUser().getIdentificationNo().trim());
-				sb.append(country.getCountryCode());
-				getManagedBean().getSelectedUser().setLoginId(sb.toString());
-			}
+			
 
 			
 		}
