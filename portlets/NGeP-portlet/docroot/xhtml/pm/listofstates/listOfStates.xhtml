@@ -13,13 +13,13 @@
 			var="statesObj" rows="10" rowIndexVar="index"
 			value="#{statesBackingBean.managedBean.listOfStates}">
 			<ac:paginator for="listOfStatesTableID" />
-			<p:column>
+			<p:column style="width:5%;">
 				<f:facet name="header">
 			    #{lbl['lbl.pm.state.seq.no']}
 			  </f:facet> 
 			#{index+1}
 		</p:column>
-			<p:column>
+			<p:column style="width:12%;">
 				<f:facet name="header">
 			    #{lbl['lbl.pm.state.code']}
 			  </f:facet> 
