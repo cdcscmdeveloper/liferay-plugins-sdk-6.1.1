@@ -8,12 +8,12 @@
 
 
 	<p:panel styleClass="scMemberDtl" id="scmemberInfoDtls">
-		<table style="width: 50%">
+		<table style="width: 58%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 				<td><p:inputText
 						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}"
-						size="30" readonly="true" disabled="true" /></td>
+						size="50" readonly="true" disabled="true" /></td>
 				<td style="width: 20px"><p:selectBooleanCheckbox
 						value="#{committe.approvalReq}"
 						disabled="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee or !isCommitteeInfoEditable or qTDetailBB.managedBean.taskName == 'Assign EC/OC Committee'}">
