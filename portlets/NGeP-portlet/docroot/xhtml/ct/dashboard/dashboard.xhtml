@@ -28,7 +28,7 @@
 			           <p:column headerText="#{lbl['lbl.ct.contract.no']}"  styleClass="column-align-center">
 				                   <h:outputText value="#{data1.contractNo}" style="text-align:left; float:left;" />
 				       </p:column> 
-				       <p:column headerText="#{lbl['lbl.ct.contract.title']}" styleClass="column-align-center" >
+				       <p:column headerText="#{lbl['lbl.ct.contract.title']}" styleClass="column-align-center" style="white-space:normal;" >
 				             	<h:outputText value="#{data1.contractName}"  style="text-align:left; float:left;" />
 				       </p:column> 
 				       <p:column  headerText="#{lbl['lbl.ct.contract.start']}" styleClass="column-align-center">
@@ -41,7 +41,7 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 				       </p:column>
-				         <p:column  headerText="#{lbl['lbl.ct.name.supplier']}" styleClass="column-align-center" >
+				         <p:column  headerText="#{lbl['lbl.ct.name.supplier']}" styleClass="column-align-center" style="white-space:normal;" >
 				            	<h:outputText value="#{data1.smSupplier.companyName}" style="text-align:left; float:left;" />
 				       </p:column>
 	            </p:dataTable>
