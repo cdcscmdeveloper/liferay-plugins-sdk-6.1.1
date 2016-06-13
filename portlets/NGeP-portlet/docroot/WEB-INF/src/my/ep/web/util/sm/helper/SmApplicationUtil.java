@@ -1481,7 +1481,6 @@ public class SmApplicationUtil {
 		int directorCount = 0;
 		int profCount = 0;
 		int semiProfCount = 0;
-		String qual = "";
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 
 			if (per.isDirector()) {
@@ -1499,96 +1498,43 @@ public class SmApplicationUtil {
 			}
 			if (appl.getSupplierType().equalsIgnoreCase(
 					SupplierManagementConst.STYPE_CONSULTANT)) {
-				if (per.isClerical() && per.getEpfNo() != null
-						&& per.getEpfNo() != "") {
-					for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
-						qual = "";
-						if (aca.getPmEduLevel() != null
-								&& aca.getPmEduLevel().getLevelCode() != null) {
-							qual = aca.getPmEduLevel().getLevelCode();
-							Long stfQual = Long.parseLong(qual);
-							if (stfQual
-									.compareTo(SupplierManagementConst.SUPPLIER_EDU_LEVEL_MIN_FOR_STF) >= 0) {
-								staffCount = staffCount + 1;
-								break;
-							}
-						}
-					}
+				if (per.isClerical() && !StringUtils.isBlank(per.getEpfNo())) {
+					staffCount = staffCount + 1;
 
-				} else if (per.isProf() && per.getEpfNo() != null
-						&& per.getEpfNo() != "") {
-					for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
-						qual = "";
-						if (aca.getPmEduLevel() != null
-								&& aca.getPmEduLevel().getLevelCode() != null) {
-							qual = aca.getPmEduLevel().getLevelCode();
-							Long prfQual = Long.parseLong(qual);
-							if (prfQual
-									.compareTo(SupplierManagementConst.SUPPLIER_EDU_LEVEL_MIN_FOR_PRFSNL) >= 0) {
-								profCount = profCount + 1;
-								break;
-							}
-						}
-					}
+				} else if (per.isProf() && !StringUtils.isBlank(per.getEpfNo())) {
+					profCount = profCount + 1;
 
-				} else if (per.isSemiProf() && per.getEpfNo() != null
-						&& per.getEpfNo() != "") {
-					for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
-						qual = "";
-						if (aca.getPmEduLevel() != null
-								&& aca.getPmEduLevel().getLevelCode() != null) {
-							qual = aca.getPmEduLevel().getLevelCode();
-							Long semiPrfQual = Long.parseLong(qual);
-							if (semiPrfQual
-									.compareTo(SupplierManagementConst.SUPPLIER_EDU_LEVEL_MIN_FOR_SEMIPRF) >= 0) {
-								semiProfCount = semiProfCount + 1;
-								break;
-							}
-						}
-					}
+				} else if (per.isSemiProf()
+						&& !StringUtils.isBlank(per.getEpfNo())) {
+					semiProfCount = semiProfCount + 1;
 				}
 			}
 
 		}
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
+			StringBuilder errMsg = new StringBuilder();
 			if (semiProfCount < 1) {
-				validSave = false;
-				setNavigationBackToCurrentPage(currentTab, managedBean);
-				throw new EpException(MessageConst.ERROR_722510, new String[] {
-						ResourceBundleUtils.getMessage(
-								"lbl.sm.professional.semi",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								locale),
-						ResourceBundleUtils.getMessage(
-								"lbl.sm.personnel.diploma",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								locale) });
+				errMsg.append(SmCommonUtil.getMessage(
+						"lbl.sm.person.semi.prof.cont.epf.req", null));
+				errMsg.append("<br />");
 			}
 			if (profCount < 1) {
-				validSave = false;
-				setNavigationBackToCurrentPage(currentTab, managedBean);
-				throw new EpException(MessageConst.ERROR_722510, new String[] {
-						ResourceBundleUtils.getMessage("lbl.sm.professional",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								locale),
-						ResourceBundleUtils.getMessage(
-								"lbl.sm.personnel.bachelor.degree",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								locale) });
+				errMsg.append(SmCommonUtil.getMessage(
+						"lbl.sm.person.prof.cont.epf.req", null));
+				errMsg.append("<br />");
 			}
 			if (staffCount < 1) {
+				errMsg.append(SmCommonUtil.getMessage(
+						"lbl.sm.person.clerk.cont.epf.req", null));
+				errMsg.append("<br />");
+			}
+			if (errMsg != null && errMsg.length() > 0) {
 				validSave = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
-				throw new EpException(MessageConst.ERROR_722510, new String[] {
-						ResourceBundleUtils.getMessage(
-								"lbl.sm.personnel.comprole.clerical.staff",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								locale),
-						ResourceBundleUtils.getMessage(
-								"lbl.sm.personnel.spm.equivlnt",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								locale) });
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_ERROR, null, errMsg.toString()));
 			}
 		}
 		if (appl.getSupplierType().equalsIgnoreCase(
