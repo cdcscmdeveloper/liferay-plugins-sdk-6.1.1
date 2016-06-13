@@ -7967,7 +7967,13 @@ public class SmApplicationBackingBean extends
 					|| res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_VISIT_AFTER_APPROVE)) {
 				// SmApplicationUtil.siteVisitDataUpdate(getManagedBean());
 				SmApplicationUtil.setSiteVisitData(getManagedBean());
-				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
+				if (!StringUtils.isBlank(getManagedBean().getPoSiteVisitType())
+						&& getManagedBean().getPoSiteVisitType().equals("A")) {
+					setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED
+							+ "");
+				} else {
+					setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
+				}
 				reqDTO.setSvTask(getManagedBean().getSvTask());
 				reqDTO.setSvTaskList(getManagedBean().getSvTaskList());
 				actionDesc = SupplierManagementConst.PO_RECOM_SITE_VISIT;
