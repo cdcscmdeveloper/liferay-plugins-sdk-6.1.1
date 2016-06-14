@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.category.code.list']}" toggleable="true">
+	<p:panel id="supplierQualificationCriteriaRestrictedTndrPanelCategoryCodes" header="#{lbl['lbl.sc.category.code.list']}" toggleable="true">
 
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.category.code.list.instruction']}"
@@ -19,7 +19,11 @@
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{cateGory}">
-
+            <p:ajax event="rowSelect" update="@([id$=supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId])" />
 			<p:column selectionMode="multiple" style="width:1%"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
 
@@ -56,6 +60,8 @@
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			id="supplierQualificationCriteriaNonpanelRestrictedTndrDeleteCategoryBtnId"
+			disabled="#{empty qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
 				styleClass="BtnSpacing" process="@this, restrictedPnlId"
 				partialSubmit="true"
 				oncomplete="supplierOpencategoryDeletePopUp.show();"
@@ -69,10 +75,10 @@
 			okAction="qTSupplierQulCriteriaBackingBean.deleteCategoryCodes"
 			width="33%" height="100" title="#{lbl['lbl.sc.category.code']}"
 			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
-			update="@([id$=restrictedPnlId])" />
+			update="@([id$=supplierQualificationCriteriaRestrictedTndrPanelCategoryCodes])" />
 		<ac:categoryCodePopup
 			okAction="qTSupplierQulCriteriaBackingBean.addNewCategoryAction"
-			update="@([id$=restrictedPnlId])" />
+			update="@([id$=supplierQualificationCriteriaRestrictedTndrPanelCategoryCodes])" />
 	</p:panel>
 
 

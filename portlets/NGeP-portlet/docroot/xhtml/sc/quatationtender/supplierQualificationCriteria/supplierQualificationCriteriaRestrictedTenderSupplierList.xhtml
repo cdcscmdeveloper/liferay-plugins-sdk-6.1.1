@@ -24,7 +24,11 @@
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedQtSupplierList}">
 
 			<ac:paginator for="suppliersTbl" />
-
+  <p:ajax event="rowSelect" update="@([id$=RestrictedTndrSuppliersDeleteBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=RestrictedTndrSuppliersDeleteBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=RestrictedTndrSuppliersDeleteBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=RestrictedTndrSuppliersDeleteBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=RestrictedTndrSuppliersDeleteBtnId])" />
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
@@ -78,6 +82,8 @@
 						action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierPopupAction}"
 						update="suppPopup" oncomplete="suppdlg.show();" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
+					id="RestrictedTndrSuppliersDeleteBtnId"
+					disabled="#{empty qTSupplierQulCriteriaBackingBean.managedBean.selectedQtSupplierList}"
 						process="@this, supplierlist" partialSubmit="true"
 						oncomplete="restrictedSupplierDeletePopUp.show();"
 						update="@([id$=#{restrictedSupplierDeleteId}])" />
