@@ -188,7 +188,11 @@
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					styleClass="cloneResults"
 					rowIndexVar="index">
-					
+					<p:ajax event="rowSelect" update="@([id$=commiteeappoinmentCloneOkBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=commiteeappoinmentCloneOkBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=commiteeappoinmentCloneOkBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=commiteeappoinmentCloneOkBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=commiteeappoinmentCloneOkBtnId])" />
 					<p:column selectionMode="multiple" style="width:2%" />
 
 					<p:column headerText="#{lbl['lbl.sc.name']}">
@@ -231,7 +235,8 @@
 					</p:column>
 				</p:dataTable>
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing" id="commiteeappoinmentCloneOkBtnId"
+					disabled="#{empty qTCommitteBackingBean.managedBean.selectedCommitteMemebers}"
 						action="#{qTCommitteBackingBean.addCloneCommitteeMembersApprovalsAction}"
 						update="@(.scMemberDtl)" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" styleClass="BtnSpacing"
