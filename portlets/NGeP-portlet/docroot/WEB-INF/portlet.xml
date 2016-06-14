@@ -6327,8 +6327,8 @@
 		</security-role-ref>
 	</portlet>	
 	<portlet>
-		<portlet-name>listOfDivision</portlet-name>
-		<display-name>List of Division</display-name>
+		<portlet-name>listOfDivisions</portlet-name>
+		<display-name>List of Divisions</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -6342,7 +6342,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>List of Division</title>
+			<title>List of Divisions</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
