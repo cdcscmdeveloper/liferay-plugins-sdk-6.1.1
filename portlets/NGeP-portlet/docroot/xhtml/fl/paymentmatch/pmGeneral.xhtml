@@ -65,17 +65,17 @@
 		<table>
 			<tr>
 				<td style="width:150px;"><p:outputLabel value="#{lbl['lbl.fl.dan.no']}" /></td>
-				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo}"
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo}" immediate="true"
 						 action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeDebitAdjustmentNote)}" rendered="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo !=null}"/>
 					<h:outputText value="#{lbl['lbl.fl.supp.na']}" rendered="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo ==null}"/>  </td>
 				<td style="width:390px;"><p:outputLabel value="#{lbl['lbl.fl.can.no']}" /></td>
-				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo}"
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo}" immediate="true"
 						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeCreditAdjustmentNote)}" rendered="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo !=null}"/>
 						 <h:outputText value="#{lbl['lbl.fl.supp.na']}" rendered="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo ==null}"/></td>		 	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}" /></td>
-				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.stopInstrNo}"
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.stopInstrNo}" immediate="true"
 						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeStopDelivery)}" rendered="#{paymentMatchBackingBean.managedBean.stopInstrNo !=null}"/>
 						<h:outputText value="#{lbl['lbl.fl.supp.na']}" rendered="#{paymentMatchBackingBean.managedBean.stopInstrNo ==null}"/> 
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.stop.inst.no']}"/> </td>		
@@ -107,13 +107,13 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.do.supp.do.no']}"
 				style="white-space:normal;text-align:center;">
-				<p:commandLink value="#{delOrder.supplierDoRef}" style="float:left;"
+				<p:commandLink value="#{delOrder.supplierDoRef}" style="float:left;" immediate="true"
 					rendered="#{delOrder.recordStatusFlg==1}" 
 					action="#{paymentMatchBackingBean.navigateDelOrder(delOrder)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.frn.no']}" style="text-align:center;">
 				<p:commandLink style="float:left;"
-					value="#{delOrder.fulfilmentNote.fulfilmentNoteNo}"
+					value="#{delOrder.fulfilmentNote.fulfilmentNoteNo}" immediate="true"
 					rendered="#{delOrder.fulfilmentNote.recordStatusFlg==1}"
 					action="#{paymentMatchBackingBean.navigateFulfilmentNote(delOrder)}" />
 			</p:column>
