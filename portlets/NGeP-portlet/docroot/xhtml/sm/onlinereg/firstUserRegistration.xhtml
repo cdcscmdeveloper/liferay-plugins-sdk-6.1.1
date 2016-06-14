@@ -175,6 +175,7 @@
 								value="#{registrationBackingBean.managedBean.countryLs}"
 								itemLabel="#{counLs.countryName}"
 								itemValue="#{counLs.countryId}" />
+							<p:ajax event="change" listener="#{registrationBackingBean.personnelNationalityOnChange}" update="cmbUsrIdenType,txtIdNumber,pnlFirstUserIdenType" />
 						</p:selectOneMenu>
 						<p:selectOneMenu disabled="true" value="" rendered="#{registrationBackingBean.managedBean.sameAsOwner}"
 							style="width: 207px;margin-bottom: 5px;">
@@ -234,7 +235,8 @@
 					</td>
 					<td class="tdContent">
 						<p:selectOneMenu id="cmbUsrIdenType" required="#{!empty param['disableValidation']}" rendered="#{!registrationBackingBean.managedBean.sameAsOwner}"
-								label="#{lbl['lbl.sm.identificationtype']}" value="#{registrationBackingBean.managedBean.smPersonnel.identificationTypeId}">
+								label="#{lbl['lbl.sm.identificationtype']}" value="#{registrationBackingBean.managedBean.smPersonnel.identificationTypeId}" 
+								disabled="true">
 								<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
 								<p:ajax event="change" update="txtIdNumber,pnlFirstUserIdenType"
 									listener="#{registrationBackingBean.personnelIdTypeChange}" />
