@@ -7026,7 +7026,8 @@ public class SpecificationBackingBean extends
 					.getScheduleList();
 
 			// int year = Calendar.getInstance().get(Calendar.YEAR);
-
+		int value=	 this.getManagedBean().getTotalFrequency()!=null? this.getManagedBean().getTotalFrequency():0;
+		this.getManagedBean().setTotalFrequency(value);
 			for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
 
 				ScQtSchedule schedule = new ScQtSchedule();
@@ -7238,7 +7239,10 @@ public class SpecificationBackingBean extends
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 			List<ScQtProgressivePayment> payments = this.getManagedBean()
 					.getProgressivePaymentList();
-
+			int value=	 this.getManagedBean()
+					.getTotalProgressivePayment()!=null? this.getManagedBean()
+							.getTotalProgressivePayment():0;
+			this.getManagedBean().setTotalProgressivePayment(value);
 			for (int j = 0; j < this.getManagedBean()
 					.getTotalProgressivePayment(); j++) {
 
