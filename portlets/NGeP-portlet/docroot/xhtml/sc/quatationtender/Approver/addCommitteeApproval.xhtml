@@ -62,6 +62,12 @@
 					rowIndexVar="index">
 
 					<ac:paginator for="existingcommitteeapproversearchid" />
+					
+					<p:ajax event="rowSelect" update="@([id$=committeeApproverAddOkBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=committeeApproverAddOkBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=committeeApproverAddOkBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=committeeApproverAddOkBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=committeeApproverAddOkBtnId])" />
 
 					<p:column selectionMode="multiple" style="width:2%" />
 
@@ -202,6 +208,7 @@
 		</c:if>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
+			id="committeeApproverAddOkBtnId" disabled="#{empty qTCommitteBackingBean.managedBean.selectedPmUser}"
 				action="#{qTCommitteBackingBean.okCommitteeAction}"
 				update="@(.scMemberDtl)" />
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
