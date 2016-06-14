@@ -3,71 +3,115 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:tabMenu activeIndex="#{backingBean.managedBean.tabActiveIndex}"
 		styleClass="sidemenu">
-
-		<p:menuitem value="#{lbl['lbl.sm.companyStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'0')}"
-			action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
-			update=":form" />
-		<p:menuitem value="#{lbl['lbl.sm.branchStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'1')}"
-			action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
-			update=":form" />
-		<p:menuitem value="#{lbl['lbl.sm.personStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'2')}"
-			action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
-			update=":form" />
-		<p:menuitem value="#{lbl['lbl.sm.capitalStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'3')}"
-			action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
-			update=":form" />
-		<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'4')}"
-			action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
-			update=":form" />
+		
+		<p:menuitem>
+			<ac:smApplMenuItem
+				backingBean = "#{backingBean}"
+				suppEdit="#{backingBean.managedBean.editVO.suppEditCompBasic}"
+				poEdit="#{backingBean.managedBean.editVO.poEditCompBasic}"
+				appEdit="#{backingBean.managedBean.editVO.appEditCompBasic}"
+				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC}" 
+				tabNo="0" label="#{lbl['lbl.sm.companyStepLbl']}"/>
+		</p:menuitem>
+		
+		<p:menuitem>
+			<ac:smApplMenuItem
+				backingBean = "#{backingBean}"
+				suppEdit="#{backingBean.managedBean.editVO.suppEditAssocProj}"
+				poEdit="#{backingBean.managedBean.editVO.poEditAssocProj}"
+				appEdit="#{backingBean.managedBean.editVO.appEditAssocProj}"
+				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH}" 
+				tabNo="1" label="#{lbl['lbl.sm.branchStepLbl']}" />
+		</p:menuitem>
+		
+		<p:menuitem>
+			<ac:smApplMenuItem
+				backingBean = "#{backingBean}"
+				suppEdit="#{backingBean.managedBean.editVO.suppEditPersonnel}"
+				poEdit="#{backingBean.managedBean.editVO.poEditPersonnel}"
+				appEdit="#{backingBean.managedBean.editVO.appEditPersonnel}"
+				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL}" 
+				tabNo="2" label="#{lbl['lbl.sm.personStepLbl']}" />
+		</p:menuitem>
+		
+		<p:menuitem>
+			<ac:smApplMenuItem
+				backingBean = "#{backingBean}"
+				suppEdit="#{backingBean.managedBean.editVO.suppEditEquity}"
+				poEdit="#{backingBean.managedBean.editVO.poEditEquity}"
+				appEdit="#{backingBean.managedBean.editVO.appEditEquity}"
+				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}" 
+				tabNo="3" label="#{lbl['lbl.sm.capitalStepLbl']}"/>
+		</p:menuitem>
+		
+		<p:menuitem>
+			<ac:smApplMenuItem
+				backingBean = "#{backingBean}"
+				suppEdit="#{backingBean.managedBean.editVO.suppEditBank}"
+				poEdit="#{backingBean.managedBean.editVO.poEditBank}"
+				appEdit="#{backingBean.managedBean.editVO.appEditBank}"
+				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK}" 
+				tabNo="4" label="#{lbl['lbl.sm.bankStepLbl']}"/>
+		</p:menuitem>
 		
 		<c:choose>
 			<c:when test="#{backingBean.managedBean.supplierUser}">
-				<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
-					action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-					update=":form" />
+				<p:menuitem>
+					<ac:smApplMenuItem
+						backingBean = "#{backingBean}"
+						suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+						poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+						appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+						section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
+						tabNo="5" label="#{lbl['lbl.sm.docsReviewLbl']}" />
+				</p:menuitem>
 			</c:when>
 			<c:otherwise>
-				<p:menuitem value="#{lbl['lbl.sm.catCodeStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5',SupplierManagementConst.SM_APPL_BUTTON_TYPE_SAME)}"
-					action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
-					update=":form" />
+			
+				<ac:smApplMenuItem
+					backingBean = "#{backingBean}"
+					suppEdit="#{backingBean.managedBean.editVO.suppEditCategory}"
+					poEdit="#{backingBean.managedBean.editVO.poEditCategory}"
+					appEdit="#{backingBean.managedBean.editVO.appEditCategory}"
+					section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY}" 
+					tabNo="5" label="#{lbl['lbl.sm.catCodeStepLbl']}" />
 				
 				<c:choose>
 					<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
-						<p:menuitem value="#{lbl['lbl.sm.factoryStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
-							action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
-							update=":form" />
-		
-						<p:menuitem value="#{lbl['lbl.sm.equipmentStepLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-							action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
-							update=":form" />
-							
-						<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
-							action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-							update=":form" />
+						<p:menuitem>
+							<ac:smApplMenuItem
+								backingBean = "#{backingBean}"
+								suppEdit="#{backingBean.managedBean.editVO.suppEditFacility}"
+								poEdit="#{backingBean.managedBean.editVO.poEditFacility}"
+								appEdit="#{backingBean.managedBean.editVO.appEditFacility}"
+								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY}" 
+								tabNo="6" label="#{lbl['lbl.sm.factoryStepLbl']}" />
+						</p:menuitem>
+						
+						<p:menuitem>
+							<ac:smApplMenuItem
+								backingBean = "#{backingBean}"
+								suppEdit="#{backingBean.managedBean.editVO.suppEditEquipment}"
+								poEdit="#{backingBean.managedBean.editVO.poEditEquipment}"
+								appEdit="#{backingBean.managedBean.editVO.appEditEquipment}"
+								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP}" 
+								tabNo="7" label="#{lbl['lbl.sm.equipmentStepLbl']}" />
+						</p:menuitem>
+						
+						<p:menuitem>
+							<ac:smApplMenuItem
+								backingBean = "#{backingBean}"
+								suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+								poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+								appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
+								tabNo="8" label="#{lbl['lbl.sm.docsReviewLbl']}" />
+						</p:menuitem>
 							
 						<c:choose>
 							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
@@ -115,11 +159,15 @@
 						 </c:choose>
 					</c:when>
 					<c:otherwise>
-						<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}" icon="#{backingBean.getStepIcon(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
-							action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-							update=":form" />
+						<p:menuitem>
+							<ac:smApplMenuItem
+								backingBean = "#{backingBean}"
+								suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+								poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+								appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
+								tabNo="6" label="#{lbl['lbl.sm.docsReviewLbl']}" />
+						</p:menuitem>
 							
 						<c:choose>
 							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">

@@ -112,6 +112,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean viewApplicationHistory;
 	private boolean overLappedCategoryExists;
 	private boolean displaySearchPage;
+	private boolean serializedFileExist;
 	private String overLappedCategoryMsg;
 	private String selectedCertType;
 	private String selectedBankAccountPurpose;
@@ -1227,6 +1228,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setCurrRegStatus(String currRegStatus) {
 		this.currRegStatus = currRegStatus;
+	}
+
+	public boolean isSerializedFileExist() {
+		return serializedFileExist;
+	}
+
+	public void setSerializedFileExist(boolean serializedFileExist) {
+		this.serializedFileExist = serializedFileExist;
 	}
 
 }
