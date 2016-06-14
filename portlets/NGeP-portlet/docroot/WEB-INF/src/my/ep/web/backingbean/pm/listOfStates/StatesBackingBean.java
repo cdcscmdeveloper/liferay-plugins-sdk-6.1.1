@@ -66,8 +66,7 @@ public class StatesBackingBean extends BaseBackingBean<StatesManagedBean> {
 			List<PmState> result = listOfStatesSO.retrieveListOfStates();
 			this.getManagedBean().setListOfStates(result);
 
-			System.out
-					.println("...........List Of States........result.size()="
+			log.info("...List Of States...size()="
 							+ result.size());
 
 			FacesContext fc = FacesContext.getCurrentInstance();
