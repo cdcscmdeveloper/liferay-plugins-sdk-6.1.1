@@ -188,7 +188,11 @@
 					selection="#{qTDocumentsBackingBean.managedBean.selectedCloneScQtDocReports}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					styleClass="cloneResults,cloneDocumentList">
-
+              <p:ajax event="rowSelect" update="@([id$=quotationTndrCloneDocumentsPopupOkBtnid])" />
+			<p:ajax event="rowUnselect" update="@([id$=quotationTndrCloneDocumentsPopupOkBtnid])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=quotationTndrCloneDocumentsPopupOkBtnid])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=quotationTndrCloneDocumentsPopupOkBtnid])" />
+			<p:ajax event="toggleSelect" update="@([id$=quotationTndrCloneDocumentsPopupOkBtnid])" />
 					<p:column selectionMode="multiple" style="width:2%" />
 
 					<p:column headerText="#{lbl['lbl.sc.document']}">
@@ -196,7 +200,8 @@
 					</p:column>
 				</p:dataTable>
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" id="quotationTndrCloneDocumentsPopupOkBtnid"
+					disabled="#{empty qTDocumentsBackingBean.managedBean.selectedCloneScQtDocReports}"
 						action="#{qTDocumentsBackingBean.addDocumentCloneAction}"
 						oncomplete="documentWidget.paginator.endLink.click();"
 						process="@this, documentPnlId" update="doctbl, documentPnlId"
