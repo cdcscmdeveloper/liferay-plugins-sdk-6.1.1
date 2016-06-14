@@ -452,8 +452,7 @@ public class ProfileManagementBackingBean extends
 		getManagedBean().setLazy(false);
 		this.resetUserProfileSearchBean();
 		this.retrieveOrgTypeMap();
-		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
-		retrieveOrgTypeAndOrgName();
+		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -471,6 +470,7 @@ public class ProfileManagementBackingBean extends
 		this.getManagedBean().setSelectedRoleDesc(null);
 		getManagedBean().setLazy(false);
 		userOrgDataModel = new UserProfilePagingDataModel();
+		retrieveOrgTypeAndOrgName();
 	}
 
 	/**

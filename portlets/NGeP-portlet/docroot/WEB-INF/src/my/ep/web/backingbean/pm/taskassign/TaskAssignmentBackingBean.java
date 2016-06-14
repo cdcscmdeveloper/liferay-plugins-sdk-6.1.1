@@ -116,9 +116,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	
 	public void preLoading() throws EpException{
 		log.info("preLoading");
-		this.resetTaskAssignSearchBean();
 		this.getManagedBean().setOrgProfileRequired(true);
-		this.setCurrentActiveOrg();
+		this.resetTaskAssignSearchBean();	
 		this.generateAdditionalFilter();
 		this.retrieveOrgTypeMap();
 		
@@ -210,6 +209,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		log.info("resetTaskAssignSearchBean");
 		this.getManagedBean().setTaskAssignmentSearchBean(new TaskAssignmentSearchBean());
 		this.getManagedBean().getTaskAssignmentSearchBean().setExcludeUser(getFacesScopes().getUserSessionBean());
+		this.setCurrentActiveOrg();
 	}
 	
 	/**
@@ -1165,6 +1165,12 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setUserIds(users);
 				
+				// get ups related roles only for UPS_ADMIN
+				if(getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())){
+					userReqDTO.setRoleCodes(
+							new ArrayList<String>(Arrays.asList(ProfileManagementConst.UPS_ROLES)));					
+				}
+				
 				List<PmUserRole> userRoles = ( userSO
 						.retrieveUserRoleListByUserIdsAndRoleCodes(userReqDTO))
 						.getUserRoleList();	
@@ -1334,6 +1340,29 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		}
 		
 		return roleList;
+	}
+	
+	public String constructUserConditionFields(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");
+		sb.append(getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId());
+		sb.append("|userId^");
+		sb.append(getManagedBean().getTaskAssignmentSearchBean().getExcludeUser().getUserId());
+		sb.append("^2");
+		sb.append("|recordStatus^1");
+		if(getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())){
+			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
+			String roleCode = null;
+			for(int i = 0 ; i< ProfileManagementConst.UPS_ROLES.length ; i++){
+				roleCode = ProfileManagementConst.UPS_ROLES[i];
+				sb.append(roleCode);
+				if(i != ProfileManagementConst.UPS_ROLES.length - 1){
+					sb.append(",");
+				}			
+			}			
+			sb.append("^9");
+		}
+		return sb.toString();
 	}
 		
 }
