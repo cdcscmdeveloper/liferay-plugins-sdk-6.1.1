@@ -924,6 +924,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_760121);
 		}
+		getManagedBean()
+		.setSelectedQtSupplierList(null);
 	}
 
 	/**
