@@ -398,7 +398,7 @@
 			</table>
 		</p:panel>
 	</c:if>
-	<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
+	<p:panel header="#{lbl['lbl.sc.contact.person.details']}" id="quotationTndermainPersonContactsdtlsPanel"
 		toggleable="true">
 		<p:dataTable var="contactpersondetails" id="cpersondetailsid"
 			value="#{qTScheduleDetailBackingBean.managedBean.scQtContactPersons}"
@@ -406,11 +406,16 @@
 			styleClass="contactdetails" rowKey="#{contactpersondetails}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowIndexVar="rowIndex" rows="10">
-
+				<ac:paginator for="cpersondetailsid" />
+            <p:ajax event="rowSelect" update="@([id$=quotationTndrPersonContactDtlsDeleteBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=quotationTndrPersonContactDtlsDeleteBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=quotationTndrPersonContactDtlsDeleteBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=quotationTndrPersonContactDtlsDeleteBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=quotationTndrPersonContactDtlsDeleteBtnId])" />
 			<p:column selectionMode="multiple" style="width:2%"
 				disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 
-			<ac:paginator for="cpersondetailsid" />
+		
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:inputText value="#{contactpersondetails.name}"
@@ -443,7 +448,8 @@
 				process="@this, cpersondetailsid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addContactPerson}"
 				update="cpersondetailsid" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" id="quotationTndrPersonContactDtlsDeleteBtnId"
+			disabled="#{empty qTScheduleDetailBackingBean.managedBean.selectedContactPersons}"
 				styleClass="BtnSpacing" process="@this, cpersondetailsid"
 				partialSubmit="true" oncomplete="contactPersonDeletePopUp.show();"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
@@ -456,20 +462,26 @@
 			width="35%" height="100"
 			title="#{lbl['lbl.sc.contact.person.details']}"
 			content="#{lbl['lbl.sc.dialog.confirm.contact.person.dtls']}"
-			update="@([id$=cpersondetailsid])" />
+			update="@([id$=quotationTndermainPersonContactsdtlsPanel])" />
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.qt.desk.officer.admin']}"
+	<p:panel header="#{lbl['lbl.sc.qt.desk.officer.admin']}" id="quotationTndrMainDeskOfficerAdminAssistantPanel"
 		toggleable="true">
 		<p:dataTable id="doaaid" var="deskofficeradmin"
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{deskofficeradmin}" rowIndexVar="rowIndex" rows="10">
-
+			
+			<ac:paginator for="doaaid" />
+<p:ajax event="rowSelect" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:column selectionMode="multiple" style="width:2%"
 				disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 
-			<ac:paginator for="doaaid" />
+			
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<p:selectOneMenu value="#{deskofficeradmin.user.userId}"
@@ -493,6 +505,7 @@
 				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
 				update="doaaid" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			id="quotationTndrDeskOfficerAdminAssistantDeleteBtnId" disabled="#{empty qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
 				styleClass="BtnSpacing" process="@this, doaaid" partialSubmit="true"
 				oncomplete="doaaDeletePopUp.show()"
 				update="@([id$=#{doaaDeleteId}])"
@@ -504,6 +517,6 @@
 			width="40%" height="100"
 			title="#{lbl['lbl.sc.qt.desk.officer.admin']}"
 			content="#{lbl['lbl.sc.dialog.confirm.doaa.dtls']}"
-			update="@([id$=doaaid])" />
+			update="@([id$=quotationTndrMainDeskOfficerAdminAssistantPanel])" />
 	</p:panel>
 </ui:composition>

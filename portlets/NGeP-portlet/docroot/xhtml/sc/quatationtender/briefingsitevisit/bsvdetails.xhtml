@@ -29,6 +29,11 @@
 			selection="#{bsvdtlbean.selectedBriefingDtls}">
 
 			<ac:paginator for="briefingdtlid" />
+			<p:ajax event="rowSelect" update="@form" />
+			<p:ajax event="rowUnselect" update="@form" />
+			<p:ajax event="rowSelectCheckbox" update="@form" />
+			<p:ajax event="rowUnselectCheckbox" update="@form" />
+			<p:ajax event="toggleSelect" update="@form" />
 			<p:column selectionMode="multiple" style="width:2%"
 				rendered="#{isBSVEnabled}" />
 			<p:column headerText="#{lbl['lbl.sc.description']}"
@@ -105,6 +110,7 @@
 				oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			disabled="#{empty bsvdtlbean.selectedBriefingDtls}"
 				process="@this, briefingdtlid"
 				partialSubmit="true"
 				oncomplete="#{briefingDelPopUp}.show();"
@@ -118,7 +124,7 @@
 			width="37%" height="100"
 			title="#{lbl['lbl.sc.briefing.dtls']}"
 			content="#{lbl['lbl.sc.dialog.confirm.briefing.details.dtls']}"
-			update="@([id$=briefingdtlid])" >
+			update="@form" >
 		</ac:confirmationPopup>
 	</p:panel>
 
@@ -134,6 +140,11 @@
 					rowKey="#{sitevisitdtls}" rowIndexVar="rowIndex" editable="true">
 
 					<ac:paginator for="sitevisitdtlid" />
+					<p:ajax event="rowSelect" update="@form" />
+			<p:ajax event="rowUnselect" update="@form" />
+			<p:ajax event="rowSelectCheckbox" update="@form" />
+			<p:ajax event="rowUnselectCheckbox" update="@form" />
+			<p:ajax event="toggleSelect" update="@form" />
 					<p:column selectionMode="multiple" style="width:2%"
 						rendered="#{isBSVEnabled}" />
 
@@ -204,6 +215,7 @@
 						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					disabled="#{empty bsvdtlbean.selectedSiteVisitDtls}"
 						process="@this, sitevisitdtlid" partialSubmit="true"
 						oncomplete="#{siteVisitDelPopUp}.show();"
 						rendered="#{isBSVEnabled}"
@@ -215,7 +227,7 @@
 					width="35%" height="100"
 					title="#{lbl['lbl.sc.site.visit.dtls']}"
 					content="#{lbl['lbl.sc.dialog.confirm.sitevisit.details.dtls']}"
-					update="@([id$=sitevisitdtlid])" >
+					update="@form" >
 				</ac:confirmationPopup>
 				<!--  commentd by VidyasagarReddy  -->
 				<!-- <h:panelGroup id="panelGrpId" rendered="#{bsvdtlbean.sitevisitList.size() ge 2}">

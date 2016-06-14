@@ -326,6 +326,7 @@ public class QTScheduleDetailBackingBean extends
 				contactPersonsList.remove(scQtContactPerson);
 			}
 		}
+		this.getManagedBean().setSelectedContactPersons(null);
 	}
 
 	/**
@@ -400,6 +401,8 @@ public class QTScheduleDetailBackingBean extends
 				contactList.remove(contactPerson);
 			}
 		}
+		this.getManagedBean()
+		.setSelectedpmuserContactpersonList(null);
 	}
 
 	/**
