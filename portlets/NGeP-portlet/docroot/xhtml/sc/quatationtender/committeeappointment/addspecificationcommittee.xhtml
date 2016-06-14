@@ -59,7 +59,7 @@
 					lazy="true" style="width : 100%;" rows="10"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					styleClass="existingCommitteeResults"
-					rowIndexVar="index">
+					rowIndexVar="rowIndex">
 
 					<ac:paginator for="existingcommitteesearchid" />
                     <p:ajax event="rowSelect" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
@@ -95,7 +95,7 @@
 					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-							<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+							<ac:iconTooltip id="pnpTT#{rowIndex}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 						</f:facet>
 						<h:outputText
 							value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
