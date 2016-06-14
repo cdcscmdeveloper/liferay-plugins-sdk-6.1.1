@@ -461,7 +461,7 @@ public class PurchaseInDefaultBackingBean extends
 			}
 			
 			if (isQuantityCheckNeeded) {
-				if (checkQty > 0) {
+				if (checkQty >= 0) {
 					throw new EpException(
 							MessageConst.ERROR_760203,
 							new String[] {
