@@ -196,6 +196,7 @@ public class QTDetailBackingBean extends
 	 */
 	public QTDetailBackingBean() {
 		log.info("inside constructor");
+		log.info("@@@@@@@@@ Managed Bean @@@@@@@@@ = "+this.getManagedBean());
 
 	}
 
@@ -410,7 +411,11 @@ public class QTDetailBackingBean extends
 	 * Method to save the QT details.
 	 */
 	public void saveQtDetailsAction() {
-		debugLogger("saveQtDetailsAction");
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		String qtNo = (scQt != null && scQt.getQtNo() != null) ? scQt.getQtNo()
+				: "New QT Creating";
+		debugLogger("start of saveQtDetailsAction,@qtNo = "+qtNo);
 		this.getManagedBean().setSaveFlow(true);
 		try {
 			validateQtDetails();
@@ -434,10 +439,11 @@ public class QTDetailBackingBean extends
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()
 															.getUserLocale())));
+			debugLogger("end of saveQtDetailsAction,@qtNo = "+this.getManagedBean().getQt().getQtNo());
 		} finally {
 
 		}
-
+		
 	}
 
 	/**
@@ -446,6 +452,10 @@ public class QTDetailBackingBean extends
 	 * @return the string
 	 */
 	public String submitQTDetailsAction() {
+		
+		ScQt qt = this.getManagedBean().getQt();
+		debugLogger("start of submitQTDetailsAction, @qtNo = "+qt.getQtNo());
+		
 		this.getManagedBean().setSaveFlow(false);
 		IQTDetailSO detailSO;
 		try {
@@ -488,6 +498,7 @@ public class QTDetailBackingBean extends
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
+				debugLogger("end of submitQTDetailsAction, @qtNo = "+scQt.getQtNo());
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
@@ -1334,7 +1345,9 @@ public class QTDetailBackingBean extends
 	 * Retrieve briefing sitevisit tab dtl.
 	 */
 	public void retrieveBriefingSitevisitTabDtl() {
-		debugLogger("retrieveBriefingSitevisitTabDtl");
+		
+		ScQt qt = this.getManagedBean().getQt();
+		debugLogger("retrieveBriefingSitevisitTabDtl, @qtNo = "+qt.getQtNo());
 
 		if (this.getManagedBean().getBsvDtlBean() == null
 				&& this.getManagedBean().getBriefingZoneBean().isEmpty()) {
@@ -1347,7 +1360,7 @@ public class QTDetailBackingBean extends
 						.getLanguage();
 				BriefingReqDTO reqDTO = new BriefingReqDTO();
 				// reqDTO.setQtId(getManagedBean().getQt().getQtId());
-				reqDTO.setScQt(this.getManagedBean().getQt());
+				reqDTO.setScQt(qt);
 				reqDTO.setLanguageCode(languageCode);
 				BriefingResDTO resDTO = qTBriefingSO
 						.retrieveBriefingSiteVisitDtl(reqDTO);
@@ -1445,8 +1458,10 @@ public class QTDetailBackingBean extends
 	 *            the is approval req
 	 */
 	public void retrieveCommitteeAppointmentTabDtl(boolean isApprovalReq, boolean isReformCommitteeReq) {
-		debugLogger("retrieveCommitteeAppointmentTabDtl");
+		
 		ScQt scQt = this.getManagedBean().getQt();
+		debugLogger("retrieveCommitteeAppointmentTabDtl,@qtNo = "+scQt.getQtNo());
+		
 		Long currentStatus = scQt.getQtStatus().getStatusId();
 		this.getManagedBean().setCurrentStatusId(currentStatus);
 		if (null == this.getManagedBean().getQt().getFinalizationCommitte()) {
@@ -1701,6 +1716,8 @@ public class QTDetailBackingBean extends
 	public void preRenderView() {
 		try {
 			renewSesionObject();
+			debugLogger("preRenderView,@Managed Bean is = "+ this.getManagedBean());
+			
 			Long qtId = null;
 			Object payLoad = getBpmTaskDetails(Object.class, null);
 			String taskName = this.getManagedBean().getTaskName();
@@ -1817,9 +1834,11 @@ public class QTDetailBackingBean extends
 	 * @return the string
 	 */
 	public String updateBpmTask(String outcome) {
-		debugLogger("updateBpmTask");
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		debugLogger("updateBpmTask,@qtNo = "+scQt.getQtNo());
 
-		updateApprovalDetails(this.getManagedBean().getQt());
+		updateApprovalDetails(scQt);
 		retrieveApprovalTabDtl();
 
 		// Code will be called if user didn't visit the supplier qualification
@@ -1967,7 +1986,7 @@ public class QTDetailBackingBean extends
 					|| (null != qtResDTO && qtResDTO.isSuccessful())) {
 
 				renewSesionObject();
-
+				
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -1986,6 +2005,7 @@ public class QTDetailBackingBean extends
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
+				debugLogger("end of updateBpmTask, @qtNo = "+scQt.getQtNo());
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
@@ -2009,7 +2029,9 @@ public class QTDetailBackingBean extends
 	 * Retrieve approval tab dtl.
 	 */
 	public void retrieveApprovalTabDtl() {
-		debugLogger("retrieveApprovalTabDtl");
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		debugLogger("retrieveApprovalTabDtl, @qtNo"+scQt.getQtNo());
 		// Added by Fara on 03092014 - Fix for Approval tab if user dint visit
 		// the Committee Appointment tab
 		List<TabBean> tabList = this.getManagedBean()
@@ -2024,7 +2046,7 @@ public class QTDetailBackingBean extends
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
-			ScQt scQt = this.getManagedBean().getQt();
+			
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			QuationTenderResDTO resDTO = null;
@@ -2222,9 +2244,10 @@ public class QTDetailBackingBean extends
 	 * Retrieve supp qualification tab dtl.
 	 */
 	public void retrieveSuppQualificationTabDtl() {
-		debugLogger("retrieveSuppQualificationTabDtl");
 		
 		ScQt scQt = this.getManagedBean().getQt();
+		debugLogger("retrieveSuppQualificationTabDtl, @qtNo="+scQt.getQtNo());
+		
 		if (!scQt.isBrandNew() && scQt.isZonal() && scQt.isPanel()) {
 			retrieveQuationTenderDetails(scQt.getQtId());
 		}
@@ -2558,14 +2581,16 @@ public class QTDetailBackingBean extends
 	 * Retrieve deduction payment tab dtl.
 	 */
 	public void retrieveDeductionPaymentTabDtl() {
-		debugLogger("retrieveDeductionPaymentTabDtl");
+		
+		ScQt scQt = getManagedBean().getQt();
+		debugLogger("retrieveDeductionPaymentTabDtl,@qtNo = "+scQt.getQtNo());
 		if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setQtId(getManagedBean().getQt().getQtId());
+				reqDTO.setQtId(scQt.getQtId());
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> deductionList = resDTO
@@ -2616,7 +2641,9 @@ public class QTDetailBackingBean extends
 	 * Retrieve activities tab dtl.
 	 */
 	public void retrieveActivitiesTabDtl() {
-		debugLogger("retrieveActivitiesTabDtl");
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		debugLogger("retrieveActivitiesTabDtl, @qtNo = "+scQt.getQtNo());
 		IQTDetailSO detailSO;
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2624,7 +2651,7 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			// reqDTO.setQtId(getManagedBean().getQt().getQtId());
-			reqDTO.setQtdetail(this.getManagedBean().getQt());
+			reqDTO.setQtdetail(scQt);
 			QuationTenderResDTO resDTO = detailSO.retrieveQTActivities(reqDTO);
 			if (resDTO.isSuccessful()) {
 				this.getManagedBean().setQtActivityBeans(
@@ -2907,10 +2934,12 @@ public class QTDetailBackingBean extends
 	 *            the doc type
 	 */
 	public void retrieveQuationTenderDetails(Long qtId) {
-		debugLogger("retrieveQuationTenderDetails");
+		
+		debugLogger("retrieveQuationTenderDetails, @qtId"+qtId);
 		if (null != qtId) {
 			// this.getManagedBean().setActiveIndex(0);
 			IQTDetailSO QtDetailsSO;
+			String qtNo = null;
 			try {
 				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -2921,7 +2950,7 @@ public class QTDetailBackingBean extends
 				tenderReqDTO.setBdgDtlsReq(true);
 				QuationTenderResDTO tenderResDTO = null;
 				ScQt scQt = this.getManagedBean().getQt();
-
+                 qtNo = scQt!= null?scQt.getQtNo():null;
 				if (null == scQt
 						|| (scQt.isZonal()
 						/* && !scQt.isPanel() */
@@ -2932,6 +2961,7 @@ public class QTDetailBackingBean extends
 					if (tenderResDTO.getQtDetail() != null) {
 						scQt = tenderResDTO.getQtDetail();
 						getManagedBean().setQt(scQt);
+						qtNo = scQt.getQtNo();
 						Long currentStatus = this.getManagedBean().getQt()
 								.getQtStatus().getStatusId();
 						this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -2990,6 +3020,7 @@ public class QTDetailBackingBean extends
 			} finally {
 				QtDetailsSO = null;
 			}
+			debugLogger("end of retrieveQuationTenderDetails method,@qtNo = "+qtNo);
 		}
 	}
 	
@@ -3449,6 +3480,7 @@ public class QTDetailBackingBean extends
 	 * Validate qt details.
 	 */
 	public void validateQtDetails() {
+		
 		debugLogger("validateQtDetails");
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
