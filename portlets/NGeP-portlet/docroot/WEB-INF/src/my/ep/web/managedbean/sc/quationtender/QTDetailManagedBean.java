@@ -981,7 +981,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int totalFrequency;
 
 	/** The total progressive payment. */
-	private int totalProgressivePayment;
+	private int totalProgressivePayment=0;
 
 	
 
