@@ -51,14 +51,14 @@
 					styleClass="tasklist_title1" />
 				<f:setPropertyActionListener
 					target="#{scRemarkAndAttachmentBackingBean.selectedComponentId}"
-					value="#{cc.attrs.id}#{rowIndex}" />
+					value="#{cc.attrs.id}#{cc.attrs.rowIndex}" />
 				<cc:insertChildren />
 			</p:commandLink>
 		</h:panelGroup>
 	</h:panelGroup>
 		
 	<c:if test="#{!cc.attrs.readonly}">
-		<p:remoteCommand name="#{cc.attrs.id}#{rowIndex}deleteSelAttachment"
+		<p:remoteCommand name="#{cc.attrs.id}#{cc.attrs.rowIndex}deleteSelAttachment"
 			partialSubmit="true" process="@this" update="@([id$=#{cc.attrs.id}])"
 			action="#{scRemarkAndAttachmentBackingBean.deleteSingleAttachmentAction(cc.attrs.attachment, cc.attrs.deleteFileUploadListener, cc.attrs.popupWidgetVar)}">
 			<c:if test="#{empty cc.attrs.deleteFileUploadListener}">
