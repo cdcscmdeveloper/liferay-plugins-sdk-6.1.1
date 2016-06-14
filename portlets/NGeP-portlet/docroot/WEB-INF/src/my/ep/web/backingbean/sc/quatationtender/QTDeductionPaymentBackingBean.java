@@ -219,6 +219,7 @@ public class QTDeductionPaymentBackingBean extends
 		}
 		this.getManagedBean().setScQtDeductionList(deductionList);
 		this.getManagedBean().setRemoveDeductions(removeDeductionList);
+		this.getManagedBean().setSelectedScQtDeduction(null);
 	}
 	
 	/**
