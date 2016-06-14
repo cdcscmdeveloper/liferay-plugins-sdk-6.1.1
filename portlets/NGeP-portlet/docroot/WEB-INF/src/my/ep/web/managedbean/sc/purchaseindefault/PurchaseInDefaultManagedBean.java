@@ -137,6 +137,9 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	
     /** The pid justifications. */
     private List<PmReasonDesc> pidJustifications;
+    
+    /** The Approved by. */
+    private PmUser approvedBy;
 
 	/**
 	 * Instantiates a new purchase in default managed bean.
@@ -702,4 +705,19 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	public void setPidJustifications(List<PmReasonDesc> pidJustifications) {
 		this.pidJustifications = pidJustifications;
 	}
+
+	/**
+	 * @return the approvedBy
+	 */
+	public PmUser getApprovedBy() {
+		return approvedBy;
+	}
+
+	/**
+	 * @param approvedBy the approvedBy to set
+	 */
+	public void setApprovedBy(PmUser approvedBy) {
+		this.approvedBy = approvedBy;
+	}
+	
 }

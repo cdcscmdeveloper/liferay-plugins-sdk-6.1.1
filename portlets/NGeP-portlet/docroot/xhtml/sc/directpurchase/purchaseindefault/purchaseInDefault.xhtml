@@ -495,4 +495,15 @@
 			</tr>
 		</table>
 	</p:panel>
+	
+	<p:panel id="approvedById" toggleable="true" toggleSpeed="500" header="#{lbl['lbl.sc.approved.by']}">
+		<table style="width: 100%">
+		    <tr>
+				<td style="width: 218px"><h:outputLabel value="#{lbl['lbl.sc.approved.by']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{purchaseInDefaultBackingBean.managedBean.approvedBy.userName}"
+						size="51" /></td>
+			</tr>
+		</table>
+	</p:panel>
 </ui:composition>
