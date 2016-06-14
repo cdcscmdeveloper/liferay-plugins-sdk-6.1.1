@@ -348,6 +348,7 @@ public class QTDocumentsBackingBean extends
 		getManagedBean().getCloneDocumentSearchBean().setToCreatedDate(null);
 		getManagedBean().getCloneDocumentSearchBean().setQtStatus(null);
 		getManagedBean().setCloneScQtDocReports(null);
+		getManagedBean().setSelectedCloneScQtDocReports(null);
 	}
 
 	/**
