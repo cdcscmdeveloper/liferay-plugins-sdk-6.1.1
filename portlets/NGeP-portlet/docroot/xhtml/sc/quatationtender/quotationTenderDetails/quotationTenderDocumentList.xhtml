@@ -21,7 +21,7 @@
 			
 			<p:column style="width:2%">
 				<f:facet name="header">
-					<p:selectBooleanCheckbox id="selAllChk" value="#{qTDocumentsBackingBean.selectAll}">
+					<p:selectBooleanCheckbox id="selAllChk" value="#{qTDocumentsBackingBean.selectAll}" disabled="true">
 						<p:ajax partialSubmit="true" process="@this" update="doctbl" listener="#{qTDocumentsBackingBean.selectAll(qTDocumentsBackingBean.selectAll, qTDocumentsBackingBean.managedBean.scQtDocReportList)}"/>
 					</p:selectBooleanCheckbox>
 				</f:facet>
@@ -34,7 +34,7 @@
 
 				<p:selectBooleanCheckbox value="#{scQtDocReport.selected}"
 					rendered="#{scQtDocReport.definationType.parameterCode eq 'UP'}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@form" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -102,6 +102,7 @@
 				oncomplete="documentWidget.paginator.endLink.click();"
 				update="doctbl" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
+			disabled="#{qTDocumentsBackingBean.deleteselectedList(qTDocumentsBackingBean.managedBean.scQtDocReportList)}"
 				process="@this, doctbl" partialSubmit="true"
 				update="@([id$=#{documentDeleteId}])"
 				oncomplete="documentDeletePopUp.show();"

@@ -62,6 +62,7 @@
 				oncomplete="deductPaymentTblWidget.paginator.endLink.click();"
 				update="deductPaymentTblId" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
+			disabled="#{empty qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
 				process="@this, deductPaymentTblId" partialSubmit="true"
 				oncomplete="deductionPayDeletePopUp.show();"
@@ -89,12 +90,12 @@
 					<f:facet name="header">
 						<p:selectBooleanCheckbox id="selectAllDeductionClauseId"
 							value="#{qTDeductionPaymentBackingBean.flag}">
-							<p:ajax partialSubmit="true" process="@form" update="deductClauseTbl"
+							<p:ajax partialSubmit="true" process="@form" update="@([id$=clausePnl])"
 								listener="#{qTDeductionPaymentBackingBean.selectAllDeductionClause}"/>
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{scQtDeductionClause.selected}">
-							<p:ajax partialSubmit="true" process="@this" update="deductClauseTbl" />
+							<p:ajax partialSubmit="true" process="@this" update="@([id$=clausePnl])"/>
 					</p:selectBooleanCheckbox>
 				</p:column>		
 				
@@ -128,6 +129,7 @@
 						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
 						update="deductClauseTbl" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
+					disabled="#{qTDetailBB.deleteselectedList(qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses)}"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						oncomplete="deductionClauseDeletePopUp.show();"
