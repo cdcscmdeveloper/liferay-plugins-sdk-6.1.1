@@ -1645,7 +1645,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							getManagedBean().getApplicationNoParam().length())
 					.equals("APP") ? "APP" : "SUP";
 
-			if (!SmCommonUtil.isSerFileExist(applNo, serType)) {
+			getManagedBean().setSerializedFileExist(
+					SmCommonUtil.isSerFileExist(applNo, serType));
+
+			if (!getManagedBean().isSerializedFileExist()) {
 				if (getManagedBean().isViewSupplierProfile()) {
 					if (smApplFromSuppProfile != null) {
 						SmCommonUtil.createSerFile(smApplFromSuppProfile,
@@ -2112,37 +2115,47 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	private SmCompanyBasic getCompanyBasicByRevNo() {
 		SmCompanyBasic activeCompanyBasic = new SmCompanyBasic();
-		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
-		List<SmCompanyBasic> compBasicList = SmServiceLookup
-				.getMofRegistrationSO().retrieveSmCompanyBasicByApplId(reqDTO)
-				.getCompanyBasicList();
 
-		if (compBasicList != null && !compBasicList.isEmpty()) {
-			if (getManagedBean().isViewApplicationHistory()) {
-				// role supplier user load from rev 1
-				if (getManagedBean().isSupplierUser()) {
-					activeCompanyBasic = SmCommonUtil.getCompanyBasicByRevNo(
-							compBasicList, 1);
-				}
-				// role approver load from rev 2
-				else {
+		// if from serialized file, directly take the company basic
+		if (getManagedBean().getSmAppl() != null
+				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
+				&& getManagedBean().isSerializedFileExist()) {
+			activeCompanyBasic = getManagedBean().getSmAppl()
+					.getSmCompanyBasic();
+		} else {
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+			List<SmCompanyBasic> compBasicList = SmServiceLookup
+					.getMofRegistrationSO()
+					.retrieveSmCompanyBasicByApplId(reqDTO)
+					.getCompanyBasicList();
+
+			if (compBasicList != null && !compBasicList.isEmpty()) {
+				if (getManagedBean().isViewApplicationHistory()) {
+					// role supplier user load from rev 1
+					if (getManagedBean().isSupplierUser()) {
+						activeCompanyBasic = SmCommonUtil
+								.getCompanyBasicByRevNo(compBasicList, 1);
+					}
+					// role approver load from rev 2
+					else {
+						activeCompanyBasic = SmCommonUtil
+								.getCompanyBasicByRevNo(compBasicList, 2);
+					}
+				} else {
+					// for supplier profile load from rev 2
 					activeCompanyBasic = SmCommonUtil.getCompanyBasicByRevNo(
 							compBasicList, 2);
 				}
-			} else {
-				// for supplier profile load from rev 2
-				activeCompanyBasic = SmCommonUtil.getCompanyBasicByRevNo(
-						compBasicList, 2);
+
 			}
 
-		}
-
-		if (activeCompanyBasic.getTotalMember() != null
-				&& activeCompanyBasic.getTotalMember().compareTo(
-						BigDecimal.ZERO) != 0) {
-			activeCompanyBasic.setTotalMember(activeCompanyBasic
-					.getTotalMember().setScale(0, BigDecimal.ROUND_DOWN));
+			if (activeCompanyBasic.getTotalMember() != null
+					&& activeCompanyBasic.getTotalMember().compareTo(
+							BigDecimal.ZERO) != 0) {
+				activeCompanyBasic.setTotalMember(activeCompanyBasic
+						.getTotalMember().setScale(0, BigDecimal.ROUND_DOWN));
+			}
 		}
 
 		return activeCompanyBasic;
