@@ -390,10 +390,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			this.getManagedBean().setBillMobile(pmUser.getMobileFull());
 			this.getManagedBean().setBillEmail(pmUser.getEmail());
 			
-			//Max 86 Characters
-			String compName = getManagedBean().getSmAppl().getSmSupplier().getCompanyName();
-			String trCompanyName = compName.length() > 86 ? compName.substring(0, 86) : compName;
-			String billType = getBillName(pyBill.getBillType(), trCompanyName, pyBill.getBillNo());
+			String billType = getBillName(pyBill.getBillType(), getManagedBean().getSmAppl().getSmSupplier().getCompanyName(), pyBill.getBillNo());
 			this.getManagedBean().setBillName(billType != null ? billType : getManagedBean().getSmAppl().getSmSupplier().getCompanyName());
 			this.getManagedBean().setBillDesc(getManagedBean().getNewPyBillDtlLs().get(0).getItemDesc());
 			// this.getManagedBean().
@@ -1149,12 +1146,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		String billName = null;
 		
 		if(billType != null){
+			//supplierName - Max length 86 
+			String trunSuppName = supplierName.length() > 86 ? supplierName.substring(0, 86) : supplierName;
+			
 			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
-				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.proccessing", new String[]{supplierName,docNo});
+				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.proccessing", new String[]{trunSuppName,docNo});
 			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)){
-				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.registration", new String[]{supplierName,docNo});
+				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.registration", new String[]{trunSuppName,docNo});
 			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
-				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.softcert", new String[]{supplierName,docNo});
+				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.softcert", new String[]{trunSuppName,docNo});
 			}
 		}
 		return billName;
