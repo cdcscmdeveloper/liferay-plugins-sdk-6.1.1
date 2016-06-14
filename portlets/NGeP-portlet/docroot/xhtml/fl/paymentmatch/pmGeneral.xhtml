@@ -146,7 +146,7 @@
 				<td ><p:outputLabel
 						value="#{lbl['lbl.fl.invoice.no']}" /></td>
 				<td>
-						<p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}"
+						<p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}" immediate="true"
 						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeInvoice)}" ></p:commandLink>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.invoice.no']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
