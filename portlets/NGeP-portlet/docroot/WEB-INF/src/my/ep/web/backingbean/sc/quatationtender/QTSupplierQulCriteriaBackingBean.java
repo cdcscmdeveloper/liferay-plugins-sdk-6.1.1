@@ -309,6 +309,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 			openList.remove(category);
 			removeList.add(category);
 		}
+		this.getManagedBean()
+		.setSelectedCategoryList(null);
 		this.getManagedBean().getQt().setScQtCategorys(openList);
 		this.getManagedBean().setTobeRemoveCategoryCodes(removeList);
 	}
