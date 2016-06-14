@@ -167,6 +167,10 @@ public class PurchaseInDefaultBackingBean extends
 			purchaseInDefaultReqDTO.setContractItemId(vCmSupplierItem.getDocId());
 			PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.getContractItemByContractItemId(purchaseInDefaultReqDTO);
 			CtContractItem contractItem = resDTO.getCtContractItem();
+			
+			// approved by
+			getManagedBean().setApprovedBy(resDTO.getApprovedBy());
+			
 			if (contractItem != null) {
 				//validation for non codify contract item
 				if(contractItem.getScRequestItem() == null ||
@@ -200,6 +204,10 @@ public class PurchaseInDefaultBackingBean extends
 			PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO
 					.getPanelSupplierByPanelItem(purchaseInDefaultReqDTO);
 			CtPanelItem ctPanelItem = resDTO.getCtPanelItem();
+			
+			// approved by
+			getManagedBean().setApprovedBy(resDTO.getApprovedBy());
+			
 			if (ctPanelItem != null) {
 				//validation for non codify contract item
 				if(ctPanelItem.getScRequestItem() == null ||
