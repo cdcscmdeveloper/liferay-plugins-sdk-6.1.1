@@ -18,7 +18,6 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.states.IListOfStatesSO;
 import my.ep.constant.MessageConst;
@@ -259,13 +258,11 @@ public class DivisionBackingBean extends BaseBackingBean<DivisionManagedBean> {
 							IListOfStatesSO.class);
 
 			result = listOfStatesSO.retrieveListOfStates();
-			this.getManagedBean().setListOfStates(result);
-
-			System.out
-					.println("...........List Of States........result.size()="
-							+ result.size());
-			log.info("...........List Of States........result.size()="
+			//this.getManagedBean().setListOfStates(result);
+			
+			log.info("...List Of States.size()....="
 					+ result.size());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

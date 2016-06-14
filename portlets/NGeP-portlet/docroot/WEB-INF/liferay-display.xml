@@ -56,6 +56,8 @@
 			<portlet id="pmEducationField"></portlet>	
 			<portlet id="listOfStates"></portlet>
 			<portlet id="listOfDivisions"></portlet>
+			<portlet id="listOfDistricts"></portlet>
+			<portlet id="listOfCityOrTown"></portlet>			
 			<portlet id="tempUserSearch"></portlet>	
 		    <portlet id="pmUOM"></portlet>	
 			<portlet id="pmBusinessNature"></portlet>	
