@@ -25,7 +25,7 @@
 			value="#{lbl['lbl.btn.add']}" process="@this"
 			actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
 			oncomplete="newspecificationcommittee.show();"
-			update="@([id$=cloneid])" />
+			update="@([id$=newcommitteeapproverid])" />
 		<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			styleClass="BtnSpacing"
 			disabled="#{approvalBackingBean.managedBean.readOnly}"
