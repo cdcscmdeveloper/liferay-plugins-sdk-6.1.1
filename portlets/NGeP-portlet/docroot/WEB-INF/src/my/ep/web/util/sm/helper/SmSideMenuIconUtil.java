@@ -88,6 +88,36 @@ public class SmSideMenuIconUtil {
 				}
 			}
 		} else if (sectionType
+				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
+			if (bean.isPoUser()) {
+				bean.getEditVO().setSuppEditPersonnel(false);
+				bean.getEditVO().setPoEditPersonnel(false);
+				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
+						bean.getSupplierAppl())) {
+					bean.getEditVO().setSuppEditPersonnel(true);
+				}
+				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
+						bean.getSmAppl())) {
+					bean.getEditVO().setPoEditPersonnel(true);
+				}
+			} else if (bean.isApproverUser()) {
+				bean.getEditVO().setSuppEditPersonnel(false);
+				bean.getEditVO().setPoEditPersonnel(false);
+				bean.getEditVO().setAppEditPersonnel(false);
+				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
+						bean.getSupplierAppl())) {
+					bean.getEditVO().setSuppEditPersonnel(true);
+				}
+				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
+						bean.getPoAppl())) {
+					bean.getEditVO().setPoEditPersonnel(true);
+				}
+				if (step3PersonnelHasDifference(false, bean.getPoAppl(),
+						bean.getSmAppl())) {
+					bean.getEditVO().setAppEditPersonnel(true);
+				}
+			}
+		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditEquity(false);
@@ -443,7 +473,7 @@ public class SmSideMenuIconUtil {
 				retVal = EntityHelper.hasDiffBetweenList(
 						applPrev.getSmStaffTotals(),
 						applCurr.getSmStaffTotals(),
-						new String[] { "staffCategory" }, null);
+						new String[] { "staffCategory" }, null, null);
 			} else if (!retVal
 					&& !EntityHelper.isCollectionEmpty(applPrev
 							.getSmFacilities())) {
@@ -471,7 +501,7 @@ public class SmSideMenuIconUtil {
 						applPrev.getSmSupplierCerts(),
 						applCurr.getSmSupplierCerts(), new String[] {
 								"certTypeId", "certName" },
-						new String[] { "pmCertBody" });
+						new String[] { "pmCertBody" }, null);
 
 			} else if (!retVal
 					&& !EntityHelper.isCollectionEmpty(applPrev
@@ -513,9 +543,10 @@ public class SmSideMenuIconUtil {
 			} else {
 				searchParam = new String[] { "associateCompanyId" };
 			}
-			retVal = EntityHelper.hasDiffBetweenList(
-					applPrev.getSmAssociateCompanies(),
-					applCurr.getSmAssociateCompanies(), searchParam, null);
+			retVal = EntityHelper
+					.hasDiffBetweenList(applPrev.getSmAssociateCompanies(),
+							applCurr.getSmAssociateCompanies(), searchParam,
+							null, null);
 
 			// company experience
 			if (!retVal) {
@@ -526,7 +557,8 @@ public class SmSideMenuIconUtil {
 				}
 				retVal = EntityHelper.hasDiffBetweenList(
 						applPrev.getSmCompanyExperiences(),
-						applCurr.getSmCompanyExperiences(), searchParam, null);
+						applCurr.getSmCompanyExperiences(), searchParam, null,
+						null);
 
 				if (!retVal) {
 					SmCompanyExperience prevExp = null;
@@ -541,19 +573,149 @@ public class SmSideMenuIconUtil {
 											currExp,
 											applPrev.getSmCompanyExperiences(),
 											searchParam, null, null);
-							if (prevExp == null) {
-								retVal = true;
+							retVal = EntityHelper.isObjectDifference(prevExp,
+									currExp, null);
+							if (retVal) {
 								break;
 							}
 							retVal = EntityHelper.hasDiffBetweenList(
 									prevExp.getSmCompanyExperienceCats(),
 									currExp.getSmCompanyExperienceCats(), null,
-									new String[] { "pmCategoryL3" });
+									new String[] { "pmCategoryL3" },
+									new String[] { "smCompanyExperience" });
 						}
 					}
 				}
 			}
 		}
+		return retVal;
+	}
+
+	private static boolean step3PersonnelHasDifference(boolean isSupplier,
+			SmAppl applPrev, SmAppl applCurr) {
+		boolean retVal = false;
+		String[] excludeProps = new String[] { "smPersonnel" };
+		String[] primitive = null;
+		String[] nonPrimitive = null;
+
+		if (applPrev != null && applCurr != null) {
+
+			// smPersonnel
+			if (!EntityHelper.isCollectionEmpty(applPrev.getSmPersonnels())
+					&& !EntityHelper.isCollectionEmpty(applCurr
+							.getSmPersonnels())) {
+				if (isSupplier) {
+					primitive = new String[] { "identificationNo" };
+				} else {
+					primitive = new String[] { "personnelId" };
+				}
+				SmPersonnel prevPersonnel = null;
+				for (SmPersonnel currPersonnel : applCurr.getSmPersonnels()) {
+					prevPersonnel = (SmPersonnel) EntityHelper
+							.getEntityByMultiplePropertiesFromList(
+									currPersonnel, applPrev.getSmPersonnels(),
+									primitive, null, null);
+					retVal = EntityHelper.isObjectDifference(prevPersonnel,
+							currPersonnel, new String[] { "shareAmt",
+									"sharePercentage" });
+					if (retVal) {
+						break;
+					}
+
+					// smPersonnel address
+					if (isSupplier) {
+						primitive = new String[] { "addressType" };
+					} else {
+						primitive = new String[] { "personnelAddressId" };
+					}
+					retVal = EntityHelper.hasDiffBetweenList(
+							prevPersonnel.getSmPersonnelAddresses(),
+							currPersonnel.getSmPersonnelAddresses(), primitive,
+							null, excludeProps);
+
+					if (retVal) {
+						break;
+					}
+
+					// smStaffExperience
+					if (isSupplier) {
+						primitive = new String[] { "companyName", "fromYear",
+								"toYear" };
+					} else {
+						primitive = new String[] { "staffExperienceId" };
+					}
+					retVal = EntityHelper.hasDiffBetweenList(
+							prevPersonnel.getSmStaffExperiences(),
+							currPersonnel.getSmStaffExperiences(), primitive,
+							null, excludeProps);
+
+					if (retVal) {
+						break;
+					}
+
+					// smRelatedCompany
+					if (isSupplier) {
+						primitive = new String[] { "regNo" };
+					} else {
+						primitive = new String[] { "relatedCompanyId" };
+					}
+					retVal = EntityHelper.hasDiffBetweenList(
+							prevPersonnel.getSmRelatedCompanies(),
+							currPersonnel.getSmRelatedCompanies(), primitive,
+							null, excludeProps);
+
+					if (retVal) {
+						break;
+					}
+
+					// smAssociationBody
+					if (isSupplier) {
+						primitive = new String[] { "regNo", "expDate" };
+						nonPrimitive = new String[] { "pmCertBody" };
+					} else {
+						primitive = new String[] { "associationBodyId" };
+					}
+					retVal = EntityHelper.hasDiffBetweenList(
+							prevPersonnel.getSmAssociationBodies(),
+							currPersonnel.getSmAssociationBodies(), primitive,
+							nonPrimitive, excludeProps);
+
+					if (retVal) {
+						break;
+					}
+
+					// smStaffAcademics
+					if (isSupplier) {
+						nonPrimitive = new String[] { "pmEduField",
+								"pmEduLevel" };
+					} else {
+						primitive = new String[] { "staffAcademicId" };
+					}
+					retVal = EntityHelper.hasDiffBetweenList(
+							prevPersonnel.getSmStaffAcademics(),
+							currPersonnel.getSmStaffAcademics(), null,
+							nonPrimitive, excludeProps);
+
+					if (retVal) {
+						break;
+					}
+				}
+			}
+
+			// smSupplierBranch
+			if (!retVal) {
+				if (isSupplier) {
+					primitive = new String[] { "branchCode" };
+				} else {
+					primitive = new String[] { "supplierBranchId" };
+				}
+				retVal = EntityHelper
+						.hasDiffBetweenList(applPrev.getSmSupplierBranches(),
+								applCurr.getSmSupplierBranches(), primitive,
+								null, null);
+			}
+		}
+
 		return retVal;
 	}
 
@@ -659,7 +821,8 @@ public class SmSideMenuIconUtil {
 				}
 				retVal = EntityHelper.hasDiffBetweenList(
 						applPrev.getSmEquityCompanies(),
-						applCurr.getSmEquityCompanies(), searchParam, null);
+						applCurr.getSmEquityCompanies(), searchParam, null,
+						null);
 			}
 		}
 
@@ -682,7 +845,7 @@ public class SmSideMenuIconUtil {
 				}
 				retVal = EntityHelper.hasDiffBetweenList(
 						applPrev.getSmSupplierBanks(),
-						applCurr.getSmSupplierBanks(), searchParam, null);
+						applCurr.getSmSupplierBanks(), searchParam, null, null);
 
 				if (!retVal) {
 					SmSupplierBank prevBank = null;
@@ -697,8 +860,9 @@ public class SmSideMenuIconUtil {
 											currBank,
 											applPrev.getSmSupplierBanks(),
 											searchParam, null, null);
-							if (prevBank == null) {
-								retVal = true;
+							retVal = EntityHelper.isObjectDifference(prevBank,
+									currBank, null);
+							if (retVal) {
 								break;
 							}
 
@@ -706,7 +870,8 @@ public class SmSideMenuIconUtil {
 							retVal = EntityHelper.hasDiffBetweenList(
 									prevBank.getSmChequeSignatories(),
 									currBank.getSmChequeSignatories(), null,
-									new String[] { "smPersonnel" });
+									new String[] { "smPersonnel" },
+									new String[] { "smSupplierBank" });
 						}
 					}
 				}
@@ -728,9 +893,10 @@ public class SmSideMenuIconUtil {
 			} else {
 				searchParam = new String[] { "supplierCategoryId" };
 			}
-			retVal = EntityHelper.hasDiffBetweenList(
-					applPrev.getSmSupplierCategories(),
-					applCurr.getSmSupplierCategories(), null, searchParam);
+			retVal = EntityHelper
+					.hasDiffBetweenList(applPrev.getSmSupplierCategories(),
+							applCurr.getSmSupplierCategories(), null,
+							searchParam, null);
 		}
 		return retVal;
 	}
@@ -780,7 +946,7 @@ public class SmSideMenuIconUtil {
 				searchParam = new String[] { "facilityId" };
 			}
 			retVal = EntityHelper.hasDiffBetweenList(prevFacList, currFacList,
-					searchParam, null);
+					searchParam, null, null);
 		}
 
 		return retVal;
@@ -797,12 +963,12 @@ public class SmSideMenuIconUtil {
 						applPrev.getSmMachineDtls(),
 						applCurr.getSmMachineDtls(), new String[] {
 								"brandName", "machineFunction" },
-						new String[] { "categoryType" });
+						new String[] { "categoryType" }, null);
 			} else {
 				retVal = EntityHelper.hasDiffBetweenList(
 						applPrev.getSmMachineDtls(),
 						applCurr.getSmMachineDtls(),
-						new String[] { "machineDtlId" }, null);
+						new String[] { "machineDtlId" }, null, null);
 			}
 
 			// Traveling software
@@ -811,18 +977,18 @@ public class SmSideMenuIconUtil {
 					retVal = EntityHelper.hasDiffBetweenList(
 							applPrev.getSmSupplierSystems(),
 							applCurr.getSmSupplierSystems(), null,
-							new String[] { "system" });
+							new String[] { "system" }, null);
 					if (!retVal) {
 						retVal = EntityHelper.hasDiffBetweenList(
 								applPrev.getSmSupplierSystems(),
 								applCurr.getSmSupplierSystems(),
-								new String[] { "systemName" }, null);
+								new String[] { "systemName" }, null, null);
 					}
 				} else {
 					retVal = EntityHelper.hasDiffBetweenList(
 							applPrev.getSmSupplierSystems(),
 							applCurr.getSmSupplierSystems(),
-							new String[] { "supplierSystemId" }, null);
+							new String[] { "supplierSystemId" }, null, null);
 				}
 			}
 		}
@@ -840,7 +1006,7 @@ public class SmSideMenuIconUtil {
 				retVal = EntityHelper.hasDiffBetweenList(
 						applPrev.getSmApplSupportDocs(),
 						applCurr.getSmApplSupportDocs(),
-						new String[] { "applSupportDocId" }, null);
+						new String[] { "applSupportDocId" }, null, null);
 			}
 		}
 
