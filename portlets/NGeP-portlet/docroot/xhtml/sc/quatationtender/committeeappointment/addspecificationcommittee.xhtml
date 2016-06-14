@@ -62,7 +62,11 @@
 					rowIndexVar="index">
 
 					<ac:paginator for="existingcommitteesearchid" />
-
+                    <p:ajax event="rowSelect" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=committeeAppointmentAddSpecificationBtnId])" />
 					<p:column selectionMode="multiple" style="width:2%" />
 
 					<p:column headerText="#{lbl['lbl.sc.name']}">
@@ -202,7 +206,8 @@
 			</p:panel>
 		</c:if>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing" id="committeeAppointmentAddSpecificationBtnId"
+			disabled="#{empty qTCommitteBackingBean.managedBean.selectedPmUser}"
 				action="#{qTCommitteBackingBean.okCommitteeAction}"
 				update="@(.scMemberDtl)" />
 
