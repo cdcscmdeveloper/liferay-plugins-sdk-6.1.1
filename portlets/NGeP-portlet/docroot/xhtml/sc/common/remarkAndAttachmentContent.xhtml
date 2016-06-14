@@ -124,11 +124,28 @@
 		</tr>
 	</table>
 
-	<c:if test="#{cc.attrs.showAttachment and !cc.attrs.readonly}">
-		<ac:confirmationPopup id="delAttPopupId" widget="delAttPopup"
-			okAction="scRemarkAndAttachmentBackingBean.deleteAttachmentAction"
-			width="33%" height="100" title="#{lbl['lbl.sc.supporting.document']}"
-			content="#{lbl['lbl.ct.dialog.delete.attachment.msg']}"
-			update="@([id$=attachmentTbId])" />
+	<c:if test="#{cc.attrs.showAttachment and !cc.attrs.readonly}">			
+		<p:dialog id="delAttPopupId" widgetVar="delAttPopup"
+			header="#{lbl['lbl.sc.supporting.document']}" resizable="false"
+			width="33%" height="100"
+			closable="false" modal="true">
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.ct.dialog.delete.attachment.msg']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				 <p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+					partialSubmit="true"
+					action="#{cofirmationPopUpBackingBean.okAction('scRemarkAndAttachmentBackingBean.deleteAttachmentAction')}"
+					oncomplete="#{cc.attrs.widgetVar}delAttPopup.hide();" 
+					update="@([id$=attachmentTbId])" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
+					oncomplete="#{cc.attrs.widgetVar}delAttPopup.hide();" />
+			</div>
+		</p:dialog>
 	</c:if>
 </ui:composition>
