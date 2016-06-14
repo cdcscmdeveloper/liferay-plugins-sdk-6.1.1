@@ -4163,8 +4163,11 @@ public class LOADetailBackingBean extends
 		Comparator<ScLoiLoaItem> comparator = new Comparator<ScLoiLoaItem>() {
 			@Override
 			public int compare(ScLoiLoaItem o1, ScLoiLoaItem o2) {
-				return new CompareToBuilder().append(o1.getTplSpecTierQty().getFromQty(),
-						o2.getTplSpecTierQty().getFromQty()).toComparison();
+				if(o1.getTplSpecTierQty() != null && o2.getTplSpecTierQty() != null){
+					return new CompareToBuilder().append(o1.getTplSpecTierQty().getFromQty(),
+							o2.getTplSpecTierQty().getFromQty()).toComparison();
+				}
+				return 0;
 			}
 		};
 		 ScLoiLoaItem  scLoiLoaItem = Collections.min(items, comparator);
