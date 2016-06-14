@@ -224,9 +224,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 					facesContext, "#{" + managedBeanName + "}",
 					managedBeanClazz);
 
-			if (log.isDebugEnabled()) {
-				log.debug("managedBean:" + managedBean);
-			}
+			log.info("managedBean:" + managedBean);
 		}
 
 		return managedBean;
