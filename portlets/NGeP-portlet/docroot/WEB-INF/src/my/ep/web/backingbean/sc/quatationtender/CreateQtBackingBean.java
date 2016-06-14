@@ -133,8 +133,7 @@ public class CreateQtBackingBean extends
 	 */
 	public CreateQtBackingBean() {
 		log.info("inside constructor");
-		
-		log.info("@@@@@@@@@"+this.getManagedBean());
+		log.info("@@@@@@@@@ Managed Bean @@@@@@@@@ = "+this.getManagedBean());
 
 	}
 
@@ -264,9 +263,9 @@ public class CreateQtBackingBean extends
 	
 	public void preCreateQuotationTenderRenderView() {
 		
-		debugLogger("preCreateQuotationTenderRenderView");
-
 		super.renewSesionObject();
+		debugLogger("preCreateQuotationTenderRenderView,@Managed Bean is " + this.getManagedBean());
+		
 		this.getManagedBean().setEditable(false);
 		this.getManagedBean().setCreateQt(true);
 		this.getManagedBean().setOutComes(
@@ -563,6 +562,8 @@ public class CreateQtBackingBean extends
  *            (ScQt scQt)
  */
 public void setProcurementMode(ScQt scQt, BigDecimal amount) {
+	
+	debugLogger("setProcurementMode,@qtNo = "+scQt.getQtNo());
 	IParameterSO parameterSo = null;
 	try {
 		parameterSo = BusinessDelegate.getInstance().getServiceObject(
@@ -605,7 +606,8 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		ParameterResDTO parameterResDTO = parameterSo
 				.retrieveParameterByTypeAndCode(parameterReqDTO);
 		scQt.setProcurementMode(parameterResDTO.getPmParameter());
-
+		
+		debugLogger("setProcurementMode, @procurementMode = "+scQt.getProcurementMode());
 		if (estimatedAmount == null) {
 			// QT Type
 			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);	
@@ -677,6 +679,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 	 */
 	public void populateEvaluationTypes(ScQt scQt, BigDecimal estimatedAmount) {
 		
+		debugLogger("populateEvaluationTypes,@qtNo = "+scQt.getQtNo());
 		if (isOneTierThresHold(estimatedAmount)) {
 
 			List<SelectItem> itemList = new ArrayList<SelectItem>();
