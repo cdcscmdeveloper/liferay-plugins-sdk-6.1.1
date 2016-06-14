@@ -412,6 +412,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 					}
+					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_CANCEL});
 				}else{
 					FLContractOrderDataType crDataType = (FLContractOrderDataType)obj;
 					flReqDTO.setFlOrderId(crDataType.getOrderDetails().getOrderId());
@@ -539,6 +540,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 					}
+					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_CANCEL});
 				}else{
 					FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
 					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
