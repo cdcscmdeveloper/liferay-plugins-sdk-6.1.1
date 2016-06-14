@@ -187,7 +187,7 @@
 					selection="#{qTCommitteBackingBean.managedBean.selectedCommitteMemebers}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					styleClass="cloneResults"
-					rowIndexVar="index">
+					rowIndexVar="rowIndex">
 					<p:ajax event="rowSelect" update="@([id$=commiteeappoinmentCloneOkBtnId])" />
 			<p:ajax event="rowUnselect" update="@([id$=commiteeappoinmentCloneOkBtnId])" />
 			<p:ajax event="rowSelectCheckbox" update="@([id$=commiteeappoinmentCloneOkBtnId])" />
@@ -222,7 +222,7 @@
 					<p:column style="width : 7%;">
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-							<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+							<ac:iconTooltip id="pnpTT#{rowIndex}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 						</f:facet>
 						<h:outputText
 							value="#{lbl[committeeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
