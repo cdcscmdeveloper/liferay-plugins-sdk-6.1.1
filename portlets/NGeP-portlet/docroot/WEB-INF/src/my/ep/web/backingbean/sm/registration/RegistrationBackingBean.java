@@ -160,6 +160,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().setSmSuppOwner(new SmSupplierOwner());
 			getManagedBean().getSmSuppOwner().setNationality(new PmCountry());
 			//this.getManagedBean().setSmSuppBanks(new ArrayList<SmSupplierBank>());
+			ownerNationalityOnChange();
 
 			SmAppl smAppl = this.getManagedBean().getSmAppl();
 			smAppl.setSmCompanyBasic(new SmCompanyBasic());
@@ -273,10 +274,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmCommonUtil.getInstance().verifyWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
 				null, SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
 		
-		if(this.getManagedBean().getSmPersonnel().getPmCountry().isBrandNew()){
-			PmCountry nationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-			this.getManagedBean().getSmPersonnel().setPmCountry(nationality);
-		}
+		personnelNationalityOnChange();
 		
 		//set all business network to false, if do not meet the criterias
 		SmCompanyBasic compBasic = this.getManagedBean().getSmAppl().getSmCompanyBasic();
@@ -2411,23 +2409,55 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void ownerNationalityOnChange(){
 		SmSupplierOwner owner = getManagedBean().getSmSuppOwner();
 		Long countryId = owner.getNationality().getCountryId();
-		
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+	
 		if(countryId != null){
 			PmCountry country = SmCommonUtil.retrievePmCountryById(countryId);
 			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
-				ParameterReqDTO reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
-				PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
-				owner.setIdentificationTypeId(identObj.getParameterId());
-				owner.setIdentificationType(identObj);
-				getManagedBean().setMyOwner(true);
 			}else{
-				getManagedBean().setMyOwner(false);
+				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
 			}
 		}else{
-			getManagedBean().setMyOwner(false);
+			PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			owner.setNationality(defaultNationality);
+			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+			reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
 		}
+		
+		//owner.setNationality(country);
+		PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
+		owner.setIdentificationTypeId(identObj.getParameterId());
+		owner.setIdentificationType(identObj);
+	}
+
+	public void personnelNationalityOnChange(){
+		SmPersonnel personnel = getManagedBean().getSmPersonnel();
+		Long countryId = personnel.getPmCountry().getCountryId();
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+	
+		if(countryId != null){
+			PmCountry country = SmCommonUtil.retrievePmCountryById(countryId);
+			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+			}else{
+				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+			}
+		}else{
+			PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			personnel.setPmCountry(defaultNationality);
+			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+			reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+		}
+		
+		//owner.setNationality(country);
+		PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
+		personnel.setIdentificationTypeId(identObj.getParameterId());
+		personnel.setIdentificationType(identObj);
 	}
 }
 
