@@ -978,10 +978,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtProgressivePayment> progressivePaymentList;
 
 	/** The total frequency. */
-	private int totalFrequency;
+	private Integer totalFrequency=0;
 
 	/** The total progressive payment. */
-	private int totalProgressivePayment=0;
+	private Integer totalProgressivePayment=0;
 
 	
 
@@ -8556,21 +8556,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.progressivePaymentList = progressivePaymentList;
 	}
 
-	public int getTotalFrequency() {
-		return totalFrequency;
-	}
-
-	public void setTotalFrequency(int totalFrequency) {
-		this.totalFrequency = totalFrequency;
-	}
-
-	public int getTotalProgressivePayment() {
-		return totalProgressivePayment;
-	}
-
-	public void setTotalProgressivePayment(int totalProgressivePayment) {
-		this.totalProgressivePayment = totalProgressivePayment;
-	}
+	
 
 
 
@@ -8714,6 +8700,34 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setOtherCriteriaType(int otherCriteriaType) {
 		this.otherCriteriaType = otherCriteriaType;
+	}
+
+	/**
+	 * @return the totalFrequency
+	 */
+	public Integer getTotalFrequency() {
+		return totalFrequency;
+	}
+
+	/**
+	 * @param totalFrequency the totalFrequency to set
+	 */
+	public void setTotalFrequency(Integer totalFrequency) {
+		this.totalFrequency = totalFrequency;
+	}
+
+	/**
+	 * @return the totalProgressivePayment
+	 */
+	public Integer getTotalProgressivePayment() {
+		return totalProgressivePayment;
+	}
+
+	/**
+	 * @param totalProgressivePayment the totalProgressivePayment to set
+	 */
+	public void setTotalProgressivePayment(Integer totalProgressivePayment) {
+		this.totalProgressivePayment = totalProgressivePayment;
 	}
 
 }
