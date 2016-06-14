@@ -56,7 +56,11 @@
 			rows="10">
 			<ui:param name="mof" value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccountFromSmSupplier(smSupplier)}" />
 			<ac:paginator for="ressupplier" />
-
+            <p:ajax event="rowSelect" update="@([id$=RestrictedTndrSupplierListPopUpOkBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=RestrictedTndrSupplierListPopUpOkBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=RestrictedTndrSupplierListPopUpOkBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=RestrictedTndrSupplierListPopUpOkBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=RestrictedTndrSupplierListPopUpOkBtnId])" />
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
@@ -90,7 +94,8 @@
 		</p:dataTable>
 		
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing" id="RestrictedTndrSupplierListPopUpOkBtnId"
+			disabled="#{empty qTSupplierQulCriteriaBackingBean.managedBean.selectedSupplierList}"
 				action="#{qTSupplierQulCriteriaBackingBean.addRestrictedToSupplierListAction}"
 				update="supplierlist" />
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" styleClass="BtnSpacing"
