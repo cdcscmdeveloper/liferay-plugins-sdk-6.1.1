@@ -390,7 +390,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			this.getManagedBean().setBillMobile(pmUser.getMobileFull());
 			this.getManagedBean().setBillEmail(pmUser.getEmail());
 			
-			String billType = getBillName(pyBill.getBillType(), getManagedBean().getSmAppl().getSmSupplier().getCompanyName(), pyBill.getBillNo());
+			//Max 86 Characters
+			String compName = getManagedBean().getSmAppl().getSmSupplier().getCompanyName();
+			String trCompanyName = compName.length() > 86 ? compName.substring(0, 86) : compName;
+			String billType = getBillName(pyBill.getBillType(), trCompanyName, pyBill.getBillNo());
 			this.getManagedBean().setBillName(billType != null ? billType : getManagedBean().getSmAppl().getSmSupplier().getCompanyName());
 			this.getManagedBean().setBillDesc(getManagedBean().getNewPyBillDtlLs().get(0).getItemDesc());
 			// this.getManagedBean().
