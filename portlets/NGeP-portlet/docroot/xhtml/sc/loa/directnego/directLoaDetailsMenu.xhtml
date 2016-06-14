@@ -12,15 +12,8 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-			<tr>
-				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
-				</td>
-				<td colspan="3"><p:inputText size="35"
-						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
+		   <tr>
+			    <td width="21%"><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
 				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER" label="#{lbl['lbl.sc.supplier.name']}" 
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
@@ -29,6 +22,14 @@
 						conditionField="recordStatus^1|smMofAccounts.recordStatus^1" readonly="true" size="106"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 						update="@form" required="true" /></td>
+			</tr>
+			
+			<tr>
+				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
+				</td>
+				<td colspan="3"><p:inputText size="35"
+						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
+						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
