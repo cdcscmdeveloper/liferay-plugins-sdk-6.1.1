@@ -2025,6 +2025,26 @@
 		<css-class-wrapper>pmListOfDivisions-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>listOfDistricts</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pmListOfDistricts-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>listOfCityOrTown</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pmListOfCityOrTown-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
 		<portlet-name>TaskSummary</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
