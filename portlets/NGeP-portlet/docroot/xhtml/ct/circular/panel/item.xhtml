@@ -360,7 +360,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 								              </c:if>
                                     </p:column>
 					
-					               <p:column headerText="#{lbl['lbl.ct.action']}" style="width:20%" styleClass="column-align-center" >
+					               <p:column headerText="#{lbl['lbl.ct.action']}" style="width:20%" styleClass="column-align-center">
 					                   <p:commandLink
 						                   actionListener="#{panelBackingBean.editPanelZoneLocation(panelZoneVar,index)}"
 						                   process="@this" update=":form:ZoneGeneral"
@@ -368,6 +368,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						                <p:graphicImage value="/css/images/design/ico-viewnedit.png" />
 					                 </p:commandLink>
 					            </p:column>
+					            
 			
 			         </p:dataTable>
 		           
@@ -408,9 +409,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					<td width="70%">
 				
 						<div style="height: 370px; overflow-y: scroll;">
-							<p:tree id="treeZoneGeneralPopup" 
+							<p:tree id="treeZoneGeneralPopup"  style="height: 368px;"
 								value="#{panelBackingBean.managedBean.rootZoanlTree}"  
-								var="location" 
+								var="location"  
 								selection="#{panelBackingBean.managedBean.selectedGeneralTreeNodes}"
 								selectionMode="checkbox" >
 							<p:ajax event="select" listener="#{panelBackingBean.onNodeSelect}" update=":form:okBtnId"/>
@@ -441,6 +442,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	</div>
 	</p:panel>
 	   </p:dialog>
+	   
        </p:outputPanel>
 		<p:spacer height="40" />
 		<p:outputPanel id="itemSupplier" >
