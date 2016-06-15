@@ -3542,6 +3542,7 @@ public class QTDetailBackingBean extends
 			committeReqDTO.setScQt(reqDTO.getQtdetail());
 			committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
 			committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			committeReqDTO.setSaveFlow(true);
 			committeSO.validateAppointCommitteDtls(committeReqDTO);
 			// reqDTO = prepareQTInfo();
 			resDTO = detailSO.saveQTDtl(reqDTO);
@@ -3581,6 +3582,15 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveBriefingSitevisitTabDtl();
+			} else if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(currentStatus)){
+				// save scQt info onclick of Activites tab
+				detailSO.validateateQTDetails(reqDTO);
+				resDTO = detailSO.saveQTDtl(reqDTO);
+				renewSesionObject();
+				this.getManagedBean().setTaskName(taskName);
+				retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId());
+				retrieveActivitiesTabDtl();
+				setAmmendMentBean(resDTO.getAmendMentBean());
 			}
 			break;
 		case 5:
