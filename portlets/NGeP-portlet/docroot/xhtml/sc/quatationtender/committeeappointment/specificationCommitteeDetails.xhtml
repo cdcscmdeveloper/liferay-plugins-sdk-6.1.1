@@ -31,7 +31,11 @@
 			rowIndexVar="index" rowKey="#{specificationcommittee}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{selectedCommittee}">
-
+            <p:ajax event="rowSelect" update="@form" />
+			<p:ajax event="rowUnselect" update="@form" />
+			<p:ajax event="rowSelectCheckbox" update="@form" />
+			<p:ajax event="rowUnselectCheckbox" update="@form" />
+			<p:ajax event="toggleSelect" update="@form" />
 			<p:column selectionMode="multiple" style="width:2%"
 				rendered="#{isEnablChkBoxes}" />
 
