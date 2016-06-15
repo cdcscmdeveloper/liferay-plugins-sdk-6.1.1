@@ -480,18 +480,18 @@ public class SPDetailBackingBean extends
 	 */
 	public String saveFinancialNonGovCompanyExpAction(boolean isCompleted) {
 		debugLogger("saveFinancialNonGovCompanyExpAction");
-
+		List<ScQtPRPExperience> experiences = this.getManagedBean()
+				.getScQtPRPExperiences();
+		List<List<EncryptDataBean>> encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
 		IQTProposalSO proposalSO = null;
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
 					scQtProposalChecklist);
-
 			CriteriaValue contractAmountVal = new CriteriaValue(
 					SourcingConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV,
 					this.getManagedBean().getTotalContractAmount());
@@ -502,9 +502,6 @@ public class SPDetailBackingBean extends
 
 			scQtProposalChecklist.setSubmitted(isCompleted);
 			// Added to set null which is the data will be encrypted and save .
-			List<ScQtPRPExperience> experiences = this.getManagedBean()
-					.getScQtPRPExperiences();
-			List<List<EncryptDataBean>> encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
 			for (ScQtPRPExperience experience : experiences) {
 				List<EncryptDataBean> experienceBeanList = new ArrayList<EncryptDataBean>();
 				if (experience.getEffectiveDate() != null) {
@@ -599,11 +596,70 @@ public class SPDetailBackingBean extends
 						isCompleted);
 			}
 
+		} catch (Exception e) {
+			handleSaveResetAfterExceptionForFinNonGovExp(experiences,
+					encryptExpriencList);
+			throw new EpException(e.getMessage());
 		} finally {
 			proposalSO = null;
 		}
 
 		return null;
+	}
+
+	private void handleSaveResetAfterExceptionForTechNonGovExp(
+			List<ScQtPRPExperience> experiences,
+			List<List<EncryptDataBean>> encryptExpriencList) {
+		try {
+			int size = experiences.size();
+			if (size >= 1 && encryptExpriencList.size() == size) {
+				for (int i = 0; i < size; i++) {
+					List<EncryptDataBean> experienceEncryptBeans = encryptExpriencList
+							.get(i);
+					if (experienceEncryptBeans.size() == 2) {
+						experiences.get(i).setEffectiveDate(
+								DateUtils.convertStringToDate("dd-MMM-yyyy",
+										experienceEncryptBeans.get(0)
+												.getValue()));
+						experiences.get(i).setExpiryDate(
+								DateUtils.convertStringToDate("dd-MMM-yyyy",
+										experienceEncryptBeans.get(1)
+												.getValue()));
+					}
+				}
+			}
+		} catch (Exception e) {
+
+		}
+	}
+
+	private void handleSaveResetAfterExceptionForFinNonGovExp(
+			List<ScQtPRPExperience> experiences,
+			List<List<EncryptDataBean>> encryptExpriencList) {
+		try {
+			int size = experiences.size();
+			if (size >= 1 && encryptExpriencList.size() == size) {
+				for (int i = 0; i < size; i++) {
+					List<EncryptDataBean> experienceEncryptBeans = encryptExpriencList
+							.get(i);
+					if (experienceEncryptBeans.size() == 3) {
+						experiences.get(i).setEffectiveDate(
+								DateUtils.convertStringToDate("dd-MMM-yyyy",
+										experienceEncryptBeans.get(0)
+												.getValue()));
+						experiences.get(i).setExpiryDate(
+								DateUtils.convertStringToDate("dd-MMM-yyyy",
+										experienceEncryptBeans.get(1)
+												.getValue()));
+						experiences.get(i).setContractAmt(
+								new BigDecimal(experienceEncryptBeans.get(1)
+										.getValue()));
+					}
+				}
+			}
+		} catch (Exception e) {
+
+		}
 	}
 
 	/**
@@ -1027,6 +1083,10 @@ public class SPDetailBackingBean extends
 	public String saveTechNonGovCompanyExpAction(boolean isCompleted) {
 		debugLogger("saveTechNonGovCompanyExpAction");
 		validateContractNo();
+
+		// initial save list is empty
+		List<ScQtPRPExperience> experiencesTosave = new ArrayList<ScQtPRPExperience>();
+		List<List<EncryptDataBean>> encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
 		IQTProposalSO proposalSO = null;
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1035,11 +1095,10 @@ public class SPDetailBackingBean extends
 
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
-
-			int index = getManagedBean().getTecCheckDetailsList().indexOf(
-					scQtProposalChecklist);
 			List<ScQtPRPExperience> experiences = this.getManagedBean()
 					.getScQtPRPExperiences();
+			int index = getManagedBean().getTecCheckDetailsList().indexOf(
+					scQtProposalChecklist);
 
 			MathContext mc = new MathContext(4);
 			CriteriaValue totalContractsVal = new CriteriaValue(
@@ -1049,11 +1108,7 @@ public class SPDetailBackingBean extends
 					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV,
 					BigDecimal.valueOf(getManagedBean().getTotalYears())
 							.divide(BigDecimal.valueOf(12), mc));
-
 			scQtProposalChecklist.setSubmitted(isCompleted);
-
-			// initial save list is empty
-			List<ScQtPRPExperience> experiencesTosave = new ArrayList<ScQtPRPExperience>();
 
 			for (ScQtPRPExperience prpExperience : experiences) {
 				// previously saved records ignored
@@ -1064,7 +1119,6 @@ public class SPDetailBackingBean extends
 				}
 			}
 			// Added to set null which is the data will be encrypted and save .
-			List<List<EncryptDataBean>> encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
 			if (CollectionUtils.isNotEmpty(experiencesTosave)) {
 				for (ScQtPRPExperience experience : experiencesTosave) {
 					List<EncryptDataBean> experienceBeanList = new ArrayList<EncryptDataBean>();
@@ -1142,6 +1196,10 @@ public class SPDetailBackingBean extends
 						isCompleted);
 			}
 
+		} catch (Exception e) {
+			handleSaveResetAfterExceptionForTechNonGovExp(experiencesTosave,
+					encryptExpriencList);
+			throw new EpException(e.getMessage());
 		} finally {
 			proposalSO = null;
 		}
