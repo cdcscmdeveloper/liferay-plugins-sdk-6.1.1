@@ -1633,11 +1633,13 @@ public class LOADetailBackingBean extends
 		context.put("bondReq", scLoa.isBondReq());
 
 		String bondAmt = "";
+		String bondAmtText = "";
 		if (scLoa.getBondAmt() != null) {
 			bondAmt = amountDF.format(scLoa.getBondAmt());
+			bondAmtText = NumberWordUtil.convert(scLoa.getBondAmt().toString());
 		}
 		context.put("bondAmt", bondAmt);
-		
+		context.put("bondAmtText", bondAmtText);
 
 		String bondPercentage = "";
 		String bondPercentageText = "";
@@ -1658,13 +1660,6 @@ public class LOADetailBackingBean extends
 		} 
 		context.put("bondExpDate", bondExpDate); 
 
-		/*
-		 * String bondResDueDays = ""; if (scLoa.getBondResDueDate() != null) {
-		 * bondResDueDays =
-		 * DateUtils.getDaysDifference(DateUtils.getCurrentDate(),
-		 * scLoa.getBondResDueDate()) + ""; }
-		 */
-
 		// bond response due days  - 30
 		context.put("bondResDueDays", 30);
 
@@ -1684,20 +1679,17 @@ public class LOADetailBackingBean extends
 		
 
 		String LoaSigner = "";
+		String loaSignerDesig = "";
 		if(getManagedBean().getContractSignerUser() != null){
-			if(getManagedBean().getContractSignerUser().getUserName() != null && !getManagedBean().getContractSignerUser().getUserName().isEmpty()){
-				LoaSigner = getManagedBean().getContractSignerUser().getUserName();
+			PmUser contractSigner = getManagedBean().getContractSignerUser();
+			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
+				LoaSigner = contractSigner.getUserName();
 			}
 		}
 		context.put("loaSigner", LoaSigner);	
-
-		String loaSignerDesig = "";
-		if(getManagedBean().getContractSignerUser().getUserName() != null && !getManagedBean().getContractSignerUser().getUserName().isEmpty()){
-			loaSignerDesig = scLoa.getLoaSignerDesig();
-
-			 if(StringUtils.isNotEmpty(loaSignerDesig) && loaSignerDesig.length()>86){
-				loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
-			}
+		loaSignerDesig = scLoa.getLoaSignerDesig();
+		 if(StringUtils.isNotEmpty(loaSignerDesig) && loaSignerDesig.length()>86){
+			loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
 		}
 		context.put("loaSignerDesignation", loaSignerDesig);
 		// Supplier user details

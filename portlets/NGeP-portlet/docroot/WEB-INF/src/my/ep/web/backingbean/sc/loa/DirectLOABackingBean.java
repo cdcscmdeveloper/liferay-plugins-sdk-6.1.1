@@ -4776,25 +4776,33 @@ public class DirectLOABackingBean extends
 		context.put("bondReq", scLoa.isBondReq());
 
 		String bondAmt = "";
+		String bondAmtText = "";
 		if (scLoa.getBondAmt() != null) {
 			bondAmt = amountDF.format(scLoa.getBondAmt());
+			bondAmtText = NumberWordUtil.convert(scLoa.getBondAmt().toString());
 		}
 		context.put("bondAmt", bondAmt);
-		context.put("bondAmtText", bondAmt);
-
+		context.put("bondAmtText", bondAmtText);
+	
 		String bondPercentage = "";
+		String bondPercentageText = "";
 		if (scLoa.getBondPercentage() != null) {
 			bondPercentage = percentageDF.format(scLoa.getBondPercentage());
+			bondPercentageText  = NumberWordUtil.convert(scLoa.getBondPercentage().toString());
 		}
 		context.put("bondPercentage", bondPercentage);
-		context.put("bondExpDate", ""); // TODO
-
-		/*
-		 * String bondResDueDays = ""; if (scLoa.getBondResDueDate() != null) {
-		 * bondResDueDays =
-		 * DateUtils.getDaysDifference(DateUtils.getCurrentDate(),
-		 * scLoa.getBondResDueDate()) + ""; }
-		 */
+		context.put("bondPercentageText", bondPercentageText); 
+		
+		
+		String bondExpDate = "";
+		//bond exp date should be one year after the end of the contract period
+		if(scLoa.getContractExpDate() != null){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(scLoa.getContractExpDate());
+			cal.add(Calendar.YEAR, 1); //add one year
+			bondExpDate = getLocalizeDate(cal.getTime(), myLocale);
+		} 
+		context.put("bondExpDate", bondExpDate); 
 
 		// bond response due days - 30
 		context.put("bondResDueDays", 30);
@@ -4814,15 +4822,20 @@ public class DirectLOABackingBean extends
 		}
 		context.put("contractEffDate", contractEffDate);
 
-		String loaSigner = "";
+		String LoaSigner = "";
 		String loaSignerDesig = "";
-		if (null != scLoa.getContractSigner()) {
-			loaSigner = scLoa.getContractSigner().getUserName();
-			loaSignerDesig = scLoa.getLoaSignerDesig();
-
+		if(getManagedBean().getContractSignerUser() != null){
+			PmUser contractSigner = getManagedBean().getContractSignerUser();
+			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
+				LoaSigner = contractSigner.getUserName();
+			}
 		}
-		context.put("loaSigner", loaSigner);
-
+		context.put("loaSigner", LoaSigner);
+		
+		loaSignerDesig = scLoa.getLoaSignerDesig();
+		 if(StringUtils.isNotEmpty(loaSignerDesig) && loaSignerDesig.length()>86){
+			loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
+		}
 		context.put("loaSignerDesignation", loaSignerDesig);
 
 		// Supplier user details
@@ -6386,4 +6399,30 @@ public class DirectLOABackingBean extends
 		getManagedBean().setMinistryConditionField(criteria.toString());
 	}
 
+	/**
+	 * Localize date.
+	 *
+	 * @param date the date
+	 * @param locale the locale
+	 * @return the string
+	 */
+	private static String getLocalizeDate(Date date, Locale locale) { 
+		String DEFAULT_DATE_FORMAT_WITH_MONTH_NAME = "dd MMMM yyyy";
+	    SimpleDateFormat localDateFormate = new SimpleDateFormat(DEFAULT_DATE_FORMAT_WITH_MONTH_NAME, locale);       
+	    
+	    return localDateFormate.format(date);
+	}
+	private static String splitLongLengthString(String text, int split){
+		StringBuilder sb = new StringBuilder();
+		String[] array = text.split("(?<=\\G.{" + split + "})");
+		int counter=1;
+		for (String string : array) {
+			sb.append(string);
+			if(array.length != counter){
+				sb.append("<br />");
+				++counter;
+			}
+		}
+		return sb.toString();
+	}
 }
