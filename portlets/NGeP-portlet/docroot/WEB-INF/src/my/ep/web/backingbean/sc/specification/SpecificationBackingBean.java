@@ -6528,10 +6528,20 @@ public class SpecificationBackingBean extends
 									.getZoneName())) {
 						List<ScQtDeliveryLoc> delLoc = deliverybean
 								.getDeliveryLocList();
+						List<Long> addressTypes=new ArrayList<Long>();
 						if (delLoc == null) {
 							delLoc = new ArrayList<ScQtDeliveryLoc>();
 						}
+                       else{
+							
+							for(ScQtDeliveryLoc loc:delLoc){
+								addressTypes.add(loc.getPmAddressType().getAddressTypeId());
+							}
+						}
 						for (PmAddressType addressType : deliveryList) {
+							if(addressTypes.contains(addressType.getAddressTypeId())){
+								throw new EpException(MessageConst.ERROR_7604010);
+							}
 							ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
 							ScAddress deliveryAddress = populateDeliveryAddress(addressType);
 							loc.setScDeliveryAddress(deliveryAddress);
@@ -6573,10 +6583,20 @@ public class SpecificationBackingBean extends
 									.getPanelZone().getName())) {
 						List<ScQtDeliveryLoc> delLoc = deliverybean
 								.getDeliveryLocList();
+						List<Long> addressTypes=new ArrayList<Long>();
 						if (delLoc == null) {
 							delLoc = new ArrayList<ScQtDeliveryLoc>();
 						}
+						else{
+							
+							for(ScQtDeliveryLoc loc:delLoc){
+								addressTypes.add(loc.getPmAddressType().getAddressTypeId());
+							}
+						}
 						for (PmAddressType addressType : deliveryList) {
+							if(addressTypes.contains(addressType.getAddressTypeId())){
+								throw new EpException(MessageConst.ERROR_7604010);
+							}
 							ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
 							ScAddress deliveryAddress = populateDeliveryAddress(addressType);
 							loc.setScDeliveryAddress(deliveryAddress);
@@ -6610,10 +6630,21 @@ public class SpecificationBackingBean extends
 							.getManagedBean().getQt().isPanel() == false)) {
 				List<ScQtDeliveryLoc> nonZone = this.getManagedBean()
 						.getDeliveryNonZoneList();
+				List<Long> addressTypes=new ArrayList<Long>();
 				if (nonZone == null) {
 					nonZone = new ArrayList<ScQtDeliveryLoc>();
 				}
+				
+				else{
+					
+					for(ScQtDeliveryLoc loc:nonZone){
+						addressTypes.add(loc.getPmAddressType().getAddressTypeId());
+					}
+				}
 				for (PmAddressType addressType : deliveryList) {
+					if(addressTypes.contains(addressType.getAddressTypeId())){
+						throw new EpException(MessageConst.ERROR_7604010);
+					}
 					ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
 					ScAddress deliveryAddress = populateDeliveryAddress(addressType);
 					loc.setScDeliveryAddress(deliveryAddress);
