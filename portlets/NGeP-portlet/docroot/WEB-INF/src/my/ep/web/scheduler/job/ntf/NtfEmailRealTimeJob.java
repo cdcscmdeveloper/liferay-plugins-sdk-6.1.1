@@ -23,13 +23,19 @@ public class NtfEmailRealTimeJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		
-		INtfEmailRealTimeSchedulerSO iNtfEmailRealTimeSchedulerSO
-		= EpEjbBusinessDelegate.getInstance()
-		.getServiceObject(ModuleCodeConst.NTF_SCH,
-				INtfEmailRealTimeSchedulerSO.class);
+		try{
+			
+			INtfEmailRealTimeSchedulerSO iNtfEmailRealTimeSchedulerSO
+			= EpEjbBusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.NTF_SCH,
+					INtfEmailRealTimeSchedulerSO.class);
+			
+			iNtfEmailRealTimeSchedulerSO.retrieveDb();
+			iNtfEmailRealTimeSchedulerSO.sendEmail();
+			iNtfEmailRealTimeSchedulerSO.updateDb();
 		
-		iNtfEmailRealTimeSchedulerSO.retrieveDb();
-		iNtfEmailRealTimeSchedulerSO.sendEmail();
-		iNtfEmailRealTimeSchedulerSO.updateDb();
+		}catch(Exception ex){
+			log.error(ex);
+		}
 	}
 }

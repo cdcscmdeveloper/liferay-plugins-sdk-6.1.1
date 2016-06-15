@@ -22,15 +22,21 @@ public class NtfEmailBulkJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		
-		INtfEmailBulkSchedulerSO iNtfEmailBulkSchedulerSO
-		= EpEjbBusinessDelegate.getInstance()
-		.getServiceObject(ModuleCodeConst.NTF_SCH,
-				INtfEmailBulkSchedulerSO.class);
+		try{
 		
-		for(int i = 0; i<3; i++){
-			iNtfEmailBulkSchedulerSO.retrieveDb();
-			iNtfEmailBulkSchedulerSO.sendEmail();
-			iNtfEmailBulkSchedulerSO.updateDb();
+			INtfEmailBulkSchedulerSO iNtfEmailBulkSchedulerSO
+			= EpEjbBusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.NTF_SCH,
+					INtfEmailBulkSchedulerSO.class);
+			
+			for(int i = 0; i<3; i++){
+				iNtfEmailBulkSchedulerSO.retrieveDb();
+				iNtfEmailBulkSchedulerSO.sendEmail();
+				iNtfEmailBulkSchedulerSO.updateDb();
+			}
+		
+		}catch(Exception ex){
+			log.error(ex);
 		}
 		
 	}

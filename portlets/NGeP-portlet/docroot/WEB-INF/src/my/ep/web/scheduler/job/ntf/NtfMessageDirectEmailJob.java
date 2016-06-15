@@ -22,13 +22,19 @@ public class NtfMessageDirectEmailJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		
-		INtfMessageDirectEmailSchedulerSO iNtfMessageDirectEmailSchedulerSO
-		= EpEjbBusinessDelegate.getInstance()
-		.getServiceObject(ModuleCodeConst.NTF_SCH,
-				INtfMessageDirectEmailSchedulerSO.class);
+		try{
+			
+			INtfMessageDirectEmailSchedulerSO iNtfMessageDirectEmailSchedulerSO
+			= EpEjbBusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.NTF_SCH,
+					INtfMessageDirectEmailSchedulerSO.class);
+			
+			iNtfMessageDirectEmailSchedulerSO.retrieveDb();
+			iNtfMessageDirectEmailSchedulerSO.sendNotification();
+			iNtfMessageDirectEmailSchedulerSO.updateDb();
 		
-		iNtfMessageDirectEmailSchedulerSO.retrieveDb();
-		iNtfMessageDirectEmailSchedulerSO.sendNotification();
-		iNtfMessageDirectEmailSchedulerSO.updateDb();
+		} catch (Exception ex){
+			log.error(ex);
+		}
 	}
 }

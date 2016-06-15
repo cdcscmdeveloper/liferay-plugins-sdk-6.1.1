@@ -21,14 +21,20 @@ public class NtfMessageRealTimelJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		
-		INtfMessageRealTimeSchedulerSO iNtfMessageRealTimeSchedulerSO
-		= EpEjbBusinessDelegate.getInstance()
-		.getServiceObject(ModuleCodeConst.NTF_SCH,
-				INtfMessageRealTimeSchedulerSO.class);
+		try{
 		
-		iNtfMessageRealTimeSchedulerSO.retrieveDb();
-		iNtfMessageRealTimeSchedulerSO.sendNotification();
-		iNtfMessageRealTimeSchedulerSO.updateDb();
+			INtfMessageRealTimeSchedulerSO iNtfMessageRealTimeSchedulerSO
+			= EpEjbBusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.NTF_SCH,
+					INtfMessageRealTimeSchedulerSO.class);
+			
+			iNtfMessageRealTimeSchedulerSO.retrieveDb();
+			iNtfMessageRealTimeSchedulerSO.sendNotification();
+			iNtfMessageRealTimeSchedulerSO.updateDb();
+		
+		} catch (Exception ex){
+			log.error(ex);
+		}
 	}
 
 }
