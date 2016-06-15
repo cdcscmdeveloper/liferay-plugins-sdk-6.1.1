@@ -6540,7 +6540,7 @@ public class SpecificationBackingBean extends
 						}
 						for (PmAddressType addressType : deliveryList) {
 							if(addressTypes.contains(addressType.getAddressTypeId())){
-								throw new EpException(MessageConst.ERROR_7604010);
+								throw new EpException(MessageConst.ERROR_760410);
 							}
 							ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
 							ScAddress deliveryAddress = populateDeliveryAddress(addressType);
@@ -6595,7 +6595,7 @@ public class SpecificationBackingBean extends
 						}
 						for (PmAddressType addressType : deliveryList) {
 							if(addressTypes.contains(addressType.getAddressTypeId())){
-								throw new EpException(MessageConst.ERROR_7604010);
+								throw new EpException(MessageConst.ERROR_760410);
 							}
 							ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
 							ScAddress deliveryAddress = populateDeliveryAddress(addressType);
@@ -6643,7 +6643,7 @@ public class SpecificationBackingBean extends
 				}
 				for (PmAddressType addressType : deliveryList) {
 					if(addressTypes.contains(addressType.getAddressTypeId())){
-						throw new EpException(MessageConst.ERROR_7604010);
+						throw new EpException(MessageConst.ERROR_760410);
 					}
 					ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
 					ScAddress deliveryAddress = populateDeliveryAddress(addressType);
