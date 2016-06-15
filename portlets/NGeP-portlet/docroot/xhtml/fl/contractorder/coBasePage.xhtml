@@ -107,7 +107,7 @@
 							<f:setPropertyActionListener
 								target="#{flOrderBB.managedBean.selectedTabIndex}" value="0" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.fl.menu.order.summary']}" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.order.summary']}" update="@form" actionListener="#{flOrderBB.onTabChange(1)}">
 							<f:setPropertyActionListener
 								target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
 						</p:menuitem>
