@@ -10,6 +10,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
@@ -474,9 +475,9 @@ public class SmSideMenuIconUtil {
 						applPrev.getSmStaffTotals(),
 						applCurr.getSmStaffTotals(),
 						new String[] { "staffCategory" }, null, null);
-			} else if (!retVal
-					&& !EntityHelper.isCollectionEmpty(applPrev
-							.getSmFacilities())) {
+			}
+
+			if (!retVal) {
 				// HQ
 				SmFacility hqCurr = null;
 				for (SmFacility hqPrev : applPrev.getSmFacilities()) {
@@ -495,7 +496,9 @@ public class SmSideMenuIconUtil {
 						break;
 					}
 				}
-			} else if (!retVal) {
+			}
+
+			if (!retVal) {
 				// Certificate
 				retVal = EntityHelper.hasDiffBetweenList(
 						applPrev.getSmSupplierCerts(),
@@ -503,7 +506,9 @@ public class SmSideMenuIconUtil {
 								"certTypeId", "certName" },
 						new String[] { "pmCertBody" }, null);
 
-			} else if (!retVal
+			}
+
+			if (!retVal
 					&& !EntityHelper.isCollectionEmpty(applPrev
 							.getSmAssociationBodies())) {
 				// Professional Body
@@ -604,13 +609,17 @@ public class SmSideMenuIconUtil {
 			if (!EntityHelper.isCollectionEmpty(applPrev.getSmPersonnels())
 					&& !EntityHelper.isCollectionEmpty(applCurr
 							.getSmPersonnels())) {
-				if (isSupplier) {
-					primitive = new String[] { "identificationNo" };
-				} else {
-					primitive = new String[] { "personnelId" };
-				}
+
 				SmPersonnel prevPersonnel = null;
 				for (SmPersonnel currPersonnel : applCurr.getSmPersonnels()) {
+
+					// smPersonnel
+					if (isSupplier) {
+						primitive = new String[] { "identificationNo" };
+					} else {
+						primitive = new String[] { "personnelId" };
+					}
+
 					prevPersonnel = (SmPersonnel) EntityHelper
 							.getEntityByMultiplePropertiesFromList(
 									currPersonnel, applPrev.getSmPersonnels(),
@@ -709,10 +718,10 @@ public class SmSideMenuIconUtil {
 				} else {
 					primitive = new String[] { "supplierBranchId" };
 				}
-				retVal = EntityHelper
-						.hasDiffBetweenList(applPrev.getSmSupplierBranches(),
-								applCurr.getSmSupplierBranches(), primitive,
-								null, null);
+				retVal = EntityHelper.hasDiffBetweenList(
+						applPrev.getSmSupplierBranches(),
+						applCurr.getSmSupplierBranches(), primitive, null,
+						new String[] { "contactPersonId" });
 			}
 		}
 
@@ -866,12 +875,21 @@ public class SmSideMenuIconUtil {
 								break;
 							}
 
-							// smChequeSignatories
+							// smSupplierBranchBanks
 							retVal = EntityHelper.hasDiffBetweenList(
-									prevBank.getSmChequeSignatories(),
-									currBank.getSmChequeSignatories(), null,
-									new String[] { "smPersonnel" },
+									prevBank.getSmSupplierBranchBanks(),
+									currBank.getSmSupplierBranchBanks(), null,
+									new String[] { "smSupplierBranch" },
 									new String[] { "smSupplierBank" });
+
+							// smChequeSignatories
+							if (!retVal) {
+								retVal = EntityHelper.hasDiffBetweenList(
+										prevBank.getSmChequeSignatories(),
+										currBank.getSmChequeSignatories(),
+										null, new String[] { "smPersonnel" },
+										new String[] { "smSupplierBank" });
+							}
 						}
 					}
 				}
@@ -885,18 +903,24 @@ public class SmSideMenuIconUtil {
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
-			String[] searchParam = null;
 
 			// smSupplierCategory
 			if (isSupplier) {
-				searchParam = new String[] { "pmCategoryL3" };
+				retVal = EntityHelper.hasDiffBetweenList(
+						applPrev.getSmSupplierCategories(),
+						applCurr.getSmSupplierCategories(), null,
+						new String[] { "pmCategoryL3" }, null);
 			} else {
-				searchParam = new String[] { "supplierCategoryId" };
+				retVal = EntityHelper.hasDiffBetweenList(
+						applPrev.getSmSupplierCategories(),
+						applCurr.getSmSupplierCategories(),
+						new String[] { "supplierCategoryId" }, null,
+						new String[] { "prevApprDecFlg", "apprvrDecFlg",
+								"poDecFlg", "approvedByPo", "prevApprovedByPo",
+								"prevPoDecFlg", "poRemarks", "approverRemarks",
+								"prevPoRemarks", "prevApproverRemarks",
+								"approvedDate" });
 			}
-			retVal = EntityHelper
-					.hasDiffBetweenList(applPrev.getSmSupplierCategories(),
-							applCurr.getSmSupplierCategories(), null,
-							searchParam, null);
 		}
 		return retVal;
 	}
@@ -1001,12 +1025,34 @@ public class SmSideMenuIconUtil {
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
-			// only do for po and approver
+			// only do for po and approver (check if got change in doc files
+			// attachment only)
 			if (!isSupplier) {
-				retVal = EntityHelper.hasDiffBetweenList(
-						applPrev.getSmApplSupportDocs(),
-						applCurr.getSmApplSupportDocs(),
-						new String[] { "applSupportDocId" }, null, null);
+				SmApplSupportDoc prevDoc = null;
+				if (!EntityHelper.isCollectionEmpty(applPrev
+						.getSmApplSupportDocs())
+						&& !EntityHelper.isCollectionEmpty(applCurr
+								.getSmApplSupportDocs())) {
+					for (SmApplSupportDoc currDoc : applCurr
+							.getSmApplSupportDocs()) {
+						prevDoc = (SmApplSupportDoc) EntityHelper
+								.getEntityByMultiplePropertiesFromList(currDoc,
+										applPrev.getSmApplSupportDocs(),
+										new String[] { "applSupportDocId" },
+										null, null);
+
+						if (prevDoc == null) {
+							retVal = true;
+							break;
+						}
+
+						// docfiles
+						retVal = EntityHelper.hasDiffBetweenList(
+								prevDoc.getSmApplDocFiles(),
+								currDoc.getSmApplDocFiles(),
+								new String[] { "applDocFileId" }, null, null);
+					}
+				}
 			}
 		}
 
