@@ -434,7 +434,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			update=":form:zonePopupGeneral, :form:itemZone"
 			disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 			rendered="#{!panelBackingBean.managedBean.viewContract}"
-			action="#{panelBackingBean.updateZoneGeneralLocation}">
+			action="#{panelBackingBean.updateZoneGeneralLocation}"
+			oncomplete="panelZoneObj.paginator.endLink.click();">
 		</p:commandButton>
 		
 		<p:commandButton
@@ -451,7 +452,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<div style="clear:both" />
 		<h:panelGroup rendered="#{(panelBackingBean.managedBean.selectedPanelItems != null and panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone) or
 		       (panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone)}">
-		    	<p:dataTable id="itemSupplierDt" var="supVar" rowIndexVar="index"
+		    	<p:dataTable id="itemSupplierDt" var="supVar" rowIndexVar="index" widgetVar="itemSupplierWidget"
 			          value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
 		              selection="#{panelBackingBean.managedBean.selectedPanelSuppliers}" rowKey="#{supVar}" >
 			          <ac:paginator for="itemSupplierDt" />

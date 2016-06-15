@@ -184,7 +184,7 @@
 	
 	       <p:panel id="exemptedOrgPnl" header="#{lbl['lbl.ct.panel.exempted.ministry']}" toggleable="true" toggleSpeed="500">
 		  
-		   <p:dataTable id="exemptedOrgDt" var="exemptedOrgsVar"  rowIndexVar="index" 
+		   <p:dataTable id="exemptedOrgDt" var="exemptedOrgsVar"  rowIndexVar="index" widgetVar="exemptedOrgsWidget" 
 		           value="#{centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs}"
 		 	       rowKey="#{exemptedOrgsVar}"  selection="#{centralContractBackingBean.selectedExemptedOrgs}">
 			            <ac:paginator for="exemptedOrgDt" />
@@ -350,7 +350,8 @@
 			            <div class="ppRightBtn">
 				              <p:commandButton id="exmptedPopUpButton"  process="@form" update=":form:exemptedOrgDt,:form:exemptedMsgId" 
 				                      disabled="#{centralContractBackingBean.managedBean.buttonHideActiveDel}"
-				                     value="#{lbl['lbl.btn.select']}"   action="#{centralContractBackingBean.addExemtedOrgDetails()}">
+				                     value="#{lbl['lbl.btn.select']}"   action="#{centralContractBackingBean.addExemtedOrgDetails()}"
+				                     oncomplete="exemptedOrgsWidget.paginator.endLink.click();">
 				              </p:commandButton>
 				               <p:commandButton id="closeButId" value="#{lbl['lbl.btn.cancel']}"  onclick="dlgExemptedMinistry.hide();"  type="button" />
                        </div>
@@ -361,7 +362,8 @@
 	<p:panel id="cancelCircularPnl" header="#{lbl['lbl.ct.panel.related.cancelled.circular']}" toggleable="true" toggleSpeed="500">
 		<p:dataTable id="cancelCircularDt" var="cancelCircularVar" rowKey="#{cancelCircularVar}" rowIndexVar="index" 
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCancelCircularList}"
-			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}" >
+			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}"
+			widgetVar="cancelCircularWidget" >
 			<ac:paginator for="cancelCircularDt" />
 			<p:column  style="width:5%; text-align:center;" 
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}">
@@ -440,7 +442,8 @@
 				<p:commandButton id="popUpSlectButtonId" value="#{lbl['lbl.btn.ok']}"  process="cancelCircularDlg" 
 					action="#{centralContractBackingBean.addCancelledCircular}"
 					disabled="#{centralContractBackingBean.managedBean.buttonHideActiveDel}"
-					update="cancelCircularDt" onclick="cancelCircularDlg.hide();" />
+					update="cancelCircularDt" onclick="cancelCircularDlg.hide();"
+					oncomplete="cancelCircularWidget.paginator.endLink.click();"/>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 				     type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
 			</div>			
