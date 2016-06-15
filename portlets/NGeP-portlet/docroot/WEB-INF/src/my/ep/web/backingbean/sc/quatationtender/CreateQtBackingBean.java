@@ -183,7 +183,7 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setCircularExpDate(circular.getEndDate());
 			this.getManagedBean().setCircularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
-			getManagedBean().setQt(scQt);
+			
 			if(null!=scQt.getItemGroup() && null!=scQt.getItemGroup().getPanelItemGroupId()){
 			deleteTemplateSpecs(getManagedBean().getQt());
 			}
@@ -218,7 +218,6 @@ public class CreateQtBackingBean extends
 
 		if (!isPanel) {
 			if (scQt.isBrandNew() == false) {
-				this.getManagedBean().setQt(scQt);
 				RequestContext.getCurrentInstance().execute(
 						"panelApprovalDlgs.show()");
 
@@ -226,19 +225,16 @@ public class CreateQtBackingBean extends
 				scQt.setCircularVer(null);
 				scQt.setPanelItemId(null);
 				scQt.setItemGroup(null);
-				this.getManagedBean().setQt(scQt);
 				setDataNull();
 			}
 		} else {
 			if (scQt.isBrandNew() == false) {
-				this.getManagedBean().setQt(scQt);
 				circularListSelect(new CtCircularVer());
 				RequestContext.getCurrentInstance().execute(
 						"panelApprovalDlgs.show()");
 			} else {
 				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 				scQt.setOpenFor(null);
-				this.getManagedBean().setQt(scQt);
 				circularListSelect(new CtCircularVer());
 				setDataNull();
 			}
@@ -440,7 +436,6 @@ public class CreateQtBackingBean extends
 		}
 
 		scQt.setScQtSupplierCriteria(supplierCriteria);
-		this.getManagedBean().setQt(scQt);
 	}
 	
 	private void updateTechnicalAndFinacialSpecStatusZoneLocationChange(
