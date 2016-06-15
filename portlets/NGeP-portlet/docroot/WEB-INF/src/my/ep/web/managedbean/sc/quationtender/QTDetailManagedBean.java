@@ -1555,7 +1555,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The selected flag. */
 	private boolean selectedFlag;
 	
-	
+	/** The panel item list. */
+	private List<CtPanelItem> searchPanelItemList;
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -8728,6 +8729,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setTotalProgressivePayment(Integer totalProgressivePayment) {
 		this.totalProgressivePayment = totalProgressivePayment;
+	}
+
+	/**
+	 * @return the searchPanelItemList
+	 */
+	public List<CtPanelItem> getSearchPanelItemList() {
+		return searchPanelItemList;
+	}
+
+	/**
+	 * @param searchPanelItemList the searchPanelItemList to set
+	 */
+	public void setSearchPanelItemList(List<CtPanelItem> searchPanelItemList) {
+		this.searchPanelItemList = searchPanelItemList;
 	}
 
 }
