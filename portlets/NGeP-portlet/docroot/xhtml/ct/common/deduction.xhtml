@@ -13,7 +13,7 @@
 	   	   </f:facet>
 		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.deduction']}" escape="false"/><br/><br/>
 		   
-		   <p:dataTable id="tableDeduction" var="datas" 
+		   <p:dataTable id="tableDeduction" var="datas" widgetVar="tableDeductionObj"
 		         value="#{ctBackingBean.managedBean.contractVer.ctDeductions}" rowKey="#{datas}" 
 		         selectionMode="single" selection="#{ctBackingBean.managedBean.selectedDeduction}">	
 		         	<ac:paginator for="tableDeduction" />
@@ -75,7 +75,8 @@
 		   <div class="ppRightBtn">
                     <p:commandButton id="addDeductionBtn" value="#{lbl['lbl.btn.add']}" 
                        disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-                       process="@this"  partialSubmit="true" action="#{ctBackingBean.addDeduction()}" update=":form:tableDeduction"/>
+                       process="@form"  partialSubmit="true" action="#{ctBackingBean.addDeduction()}" update="tableDeduction"
+                       oncomplete="tableDeductionObj.paginator.endLink.click();"/>
 		  	        <p:commandButton id="delDeductionBtn" value="#{lbl['lbl.ct.delete']}" process="@this" partialSubmit="true"
 		  	            disabled="#{ctBackingBean.managedBean.buttonHideDedActive or ctBackingBean.managedBean.disableAmendDetails}"  onsuccess="dlgDeduction.show()"/>
 		  	</div>
@@ -91,7 +92,7 @@
 	       <p:outputPanel id="clauseDescp">  
 	                <h:panelGroup rendered="#{ctBackingBean.managedBean.selectedDeduction != null}">
 	                      <p:spacer height="20"/>
-     	                  <p:dataTable id="tableClause" var="data" 
+     	                  <p:dataTable id="tableClause" var="data" widgetVar="tableClauseWidget"
      	                         value="#{ctBackingBean.managedBean.selectedDeduction.ctDeductionClauses}"  
         	                      selection="#{ctBackingBean.selectedDeductionClauses}"  rowKey="#{data}"> 
                                    <ac:paginator for="tableClause" />   
@@ -130,7 +131,8 @@
 	        	                
 	        	                <p:commandButton id="addDeductionClauseBtn" value="#{lbl['lbl.btn.add']}" process="@form" 
 	        	                    disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-	        	                    action="#{ctBackingBean.addDeductionClause()}" update=":form:tableClause">
+	        	                    action="#{ctBackingBean.addDeductionClause()}" update=":form:tableClause"
+	        	                    oncomplete="tableClauseWidget.paginator.endLink.click();">
 	        	                  	<p:tooltip for="addDeductionClauseBtn">
 								    	<h:outputText value="#{lbl['lbl.ct.tooltip.add.clause']}" escape="false" />
 									</p:tooltip>
