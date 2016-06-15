@@ -1360,4 +1360,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		}
 		getManagedBean().setTextBeforeSign(sb.toString());
 	}
+	
+	/**
+	 * Gets the current date.
+	 *
+	 * @return the current date
+	 */
+	public Date getCurrentDate() {
+		return new Date();
+	}
 }

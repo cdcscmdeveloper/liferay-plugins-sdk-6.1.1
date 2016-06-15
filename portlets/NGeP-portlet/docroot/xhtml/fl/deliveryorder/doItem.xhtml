@@ -59,10 +59,10 @@
 				<p:calendar mode="popup" readonlyInput="true"
 						showOn="button" size="10"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						mindate="#{doDelAddress.startDate}" 
+						maxdate="#{createDOBackingBean.getCurrentDate()}"
 						disabled="#{createDOBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						value="#{doDelAddress.flTempDoAddr.estDeliveryDate}">
-					</p:calendar>
+					</p:calendar><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.exp.del.date']}"/>
 			</p:column>
 			<p:column style="white-space:normal;" headerText="#{lbl['lbl.fl.del.delivery.ord.no']}">
 				<h:outputText value="*" styleClass="mandatory" />

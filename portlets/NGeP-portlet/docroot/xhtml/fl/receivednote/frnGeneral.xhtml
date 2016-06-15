@@ -113,7 +113,6 @@
 						readonlyInput="true"
 						size="10"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.receivedDate}"
-						mindate="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.createdDate}"
 						maxdate="#{receivedNoteBackingBean.getCurrentDate()}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<p:ajax event="dateSelect" listener="#{receivedNoteBackingBean.reCalculateGstUnitPrice(receivedNoteBackingBean.managedBean.fulfilmentNote)}" 
@@ -129,7 +128,7 @@
 					<p:inputText size="10" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.estDeliveryDate}">
 					<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</p:inputText>
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.exp.del.date']}"/>
 				</td>
 			</tr>
 			<tr>
