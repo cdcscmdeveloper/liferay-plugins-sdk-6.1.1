@@ -359,6 +359,41 @@ public class LocationSingleton {
 			}
 			
 			for (PmState state : allStates) {
+				
+				if(view){
+					TreeNode stateNode= null;
+					if(ParameterConst.LOCATION_LEVEL_STATE.equals(locationLevelCode)){
+						if (stateIds.contains(state.getStateId())) {
+							CtPanelZoneDtl locCriteria = locClass.newInstance();
+							locCriteria.setStateId(state);
+							stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);
+							stateNode.setSelectable(false);
+						}
+					}if(ParameterConst.LOCATION_LEVEL_DISTRICT.equals(locationLevelCode)){
+						for (PmDistrict district : state.getPmDistricts()) {
+							if(district.getPmDivision() == null){
+								// build district tree
+								if (districtIds.contains(district.getDistrictId())) {
+									if(stateNode == null){
+										CtPanelZoneDtl locCriteria = locClass.newInstance();
+										locCriteria.setStateId(state);
+										stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);
+										stateNode.setSelectable(false);
+									}
+									CtPanelZoneDtl criteria = locClass.newInstance();
+									criteria.setDistrictId(district);
+									TreeNode districtNode = new DefaultTreeNode("district",criteria, stateNode);
+									districtNode.setSelectable(false);
+								}
+							}
+						}
+						if (stateIds.contains(state.getStateId())) {
+							stateNode.setSelectable(false);
+						}
+					}
+				}else {
+				
+				
 				//LocationDTO stateLocation = new LocationDTO(state);
 				//System.out.println("======display state name==="+state.getStateName());
 				CtPanelZoneDtl locCriteria = locClass.newInstance();
@@ -391,6 +426,7 @@ public class LocationSingleton {
 						stateNode.setSelected(Boolean.TRUE);
 					}
 				}
+			}
 			}
 		} catch (InstantiationException e) {
 			throw new EpException(e.getMessage());
