@@ -8598,7 +8598,7 @@ public class SpecificationBackingBean extends
 				// this.getManagedBean().setCircularNo(circular.getCircularNo());
 				// this.getManagedBean().setCircularName(circular.getName());
 				this.getManagedBean().setCircularType(circular.getDocType());
-				this.getManagedBean().setPanelItemList(
+				this.getManagedBean().setSearchPanelItemList(
 						resDTO.getPanelItemList());
 				this.getManagedBean().setSelectCtPanelItem(new ArrayList<CtPanelItem>());
 				this.getManagedBean().setAutoUpdate(false);
@@ -13767,6 +13767,7 @@ public class SpecificationBackingBean extends
 
 	public void cancelPopup() {
 		this.getManagedBean().setAutoUpdate(true);
+		this.getManagedBean().setSelectCtPanelItem(null);
 
 	}
 
