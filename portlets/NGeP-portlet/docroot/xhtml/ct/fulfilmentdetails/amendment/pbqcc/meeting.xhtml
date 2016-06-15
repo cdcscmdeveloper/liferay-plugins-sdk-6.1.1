@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="meetingPanel" header="#{lbl['lbl.ct.menu.meeting']}" toggleable="true"  toggleSpeed="500">
            <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
-           <p:dataTable id="meetingTable" var="ctMeetingsVar" 
+           <p:dataTable id="meetingTable" var="ctMeetingsVar" widgetVar="meetingTableWidget"
                 value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctMeetings}"
                 selection="#{amendmentBackingBean.selectedMeetingUser}" rowKey="#{ctMeetingsVar}">
                 <ac:paginator for="meetingTable" />
@@ -53,7 +53,8 @@
             <div class="ppRightBtn"> 
 		       <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
 		          action="#{amendmentBackingBean.addPbQccMeetingDetails}"  update="meetingTable"
-		          rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>
+		          rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"
+		          oncomplete="meetingTableWidget.paginator.endLink.click();" />
 		       <p:commandButton id="meetingDelBtn" value="#{lbl['lbl.ct.delete']}"  process="@this"  partialSubmit="true"
 		          onsuccess="dlgMeetingDetails.show();" update="meetingTable" disabled="#{ctBackingBean.managedBean.buttonHideActive}"
 		          rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>

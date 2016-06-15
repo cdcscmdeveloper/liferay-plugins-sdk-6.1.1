@@ -25,7 +25,7 @@
 	   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 		</h:panelGrid>
-		 <p:dataTable id="tableBond" var="varBond" rowIndexVar="index"
+		 <p:dataTable id="tableBond" var="varBond" rowIndexVar="index" widgetVar="tableBondWidget"
 			  value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"  rowKey="#{rowKeyObj}">
 					  <ac:paginator for="tableBond" />
 					 <p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract}">
@@ -125,7 +125,8 @@
 				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this" 
 				  rendered="#{!ctBackingBean.managedBean.viewContract
 				  	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeAmendmentWithoutSupplement}" 
-				     action="#{ctBackingBean.addBondDetails}" update=":form:tableBond" partialSubmit="true">
+				     action="#{ctBackingBean.addBondDetails}" update=":form:tableBond" partialSubmit="true"
+				     oncomplete="tableBondWidget.paginator.endLink.click();">
 					<p:tooltip for="addPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
 					</p:tooltip>

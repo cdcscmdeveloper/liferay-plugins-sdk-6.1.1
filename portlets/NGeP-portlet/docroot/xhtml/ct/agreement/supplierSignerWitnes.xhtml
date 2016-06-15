@@ -15,8 +15,8 @@
 			      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.signer']}" />
 		      </h:panelGrid>
         
-              <p:dataTable id="agSupplierSigner" var="signSupplierVar" 
-                   value="#{agreementBackingBean.managedBean.ctSupplierSigner}" widgetVar="supSignerObj"
+              <p:dataTable id="agSupplierSigner" var="signSupplierVar" widgetVar="agSupplierSignerWidget"
+                   value="#{agreementBackingBean.managedBean.ctSupplierSigner}"
                    selection="#{agreementBackingBean.managedBean.selectedSupplierSigner}" rowKey="#{signSupplierVar}">
                    <ac:paginator for="agSupplierSigner"/>
 			        <p:column  style="width:5%;text-align:center">
@@ -65,7 +65,8 @@
 		    </h:panelGrid>
 		    <div class="ppRightBtn"> 
 		       <p:commandButton id="addSupplierSignerBtn" value="#{lbl['lbl.btn.add']}" 
-		           process="@form" action="#{agreementBackingBean.addSupplierSigner()}" update=":form:agSupplierSigner">
+		           process="@form" action="#{agreementBackingBean.addSupplierSigner()}" update=":form:agSupplierSigner"
+		           oncomplete="agSupplierSignerWidget.paginator.endLink.click();">
 		    	   <p:tooltip for="addSupplierSignerBtn">
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.signer']}" escape="false" />
 				   </p:tooltip>
@@ -96,10 +97,10 @@
 			         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.witness']}" />
 		          </h:panelGrid>
        
-                  <p:dataTable id="supplierWitnesTable" var="supplierWitnessVar" 
-                       value="#{agreementBackingBean.managedBean.ctSupplierWitness}" widgetVar="supWitnessObj"
+                  <p:dataTable id="supplierWitnesTable" var="supplierWitnessVar" widgetVar="supplierWitnesWidget"
+                       value="#{agreementBackingBean.managedBean.ctSupplierWitness}"
                        selection="#{agreementBackingBean.managedBean.selectedSupplierWitnes}" rowKey="#{supplierWitnessVar}">
-                       <ac:paginator for="witnessSign"/>
+                       <ac:paginator for="supplierWitnesTable"/>
                         <p:column  style="width:5%;text-align:center">
 				                   <f:facet name="header">
 							             <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.selectAll}">
@@ -131,7 +132,8 @@
               <div class="ppRightBtn"> 
 		            <p:commandButton id="addSupplierWitnessBtn" value="#{lbl['lbl.btn.add']}" 
 		                 process="@form" 
-		                 action="#{agreementBackingBean.addSupplierWitness(2)}" update=":form:supplierWitnesTable">
+		                 action="#{agreementBackingBean.addSupplierWitness(2)}" update=":form:supplierWitnesTable"
+		                 oncomplete="supplierWitnesWidget.paginator.endLink.click();">
 		    	        <p:tooltip for="addSupplierWitnessBtn">
 				             <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.witness']}" escape="false" />
 				        </p:tooltip>

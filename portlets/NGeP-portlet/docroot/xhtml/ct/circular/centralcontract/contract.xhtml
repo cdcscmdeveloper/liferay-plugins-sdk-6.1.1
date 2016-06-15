@@ -8,7 +8,7 @@
 	<p:panel id="contractListPnl" header="#{lbl['lbl.ct.contract.list']}" toggleable="true" toggleSpeed="500">
 		 <div>
 	      <h:panelGrid style="width:100%">
-		   <p:dataTable id="centralContractDt" var="circularContractsVar" rowIndexVar="index"
+		   <p:dataTable id="centralContractDt" var="circularContractsVar" rowIndexVar="index" widgetVar="centralContractWidget" 
 			   value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" selectionMode="single" 
 			   selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{circularContractsVar}">
 			        <ac:paginator for="centralContractDt" />
@@ -418,7 +418,8 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" id="addCtListId"
 					    disabled="#{centralContractBackingBean.managedBean.buttonHideActiveDel}"
-						process="contractDlg" action="#{centralContractBackingBean.addSelectedContract}" update="centralContractDt"/>
+						process="contractDlg" action="#{centralContractBackingBean.addSelectedContract}" update="centralContractDt"
+						oncomplete="centralContractWidget.paginator.endLink.click();" />
 					<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="contractDlg.hide();" />
 				</div>
 	    	</p:dialog>
