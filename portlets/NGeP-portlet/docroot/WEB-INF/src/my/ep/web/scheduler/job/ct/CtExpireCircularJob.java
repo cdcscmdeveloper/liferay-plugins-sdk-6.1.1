@@ -39,6 +39,8 @@ public class CtExpireCircularJob implements Job {
 			schedulerSO = (ICtSchedulerSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, ICtSchedulerSO.class);			
 			schedulerSO.updateExpiredCircular();
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
 		} finally {
 			schedulerSO = null;
 		}
