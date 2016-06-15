@@ -1795,7 +1795,7 @@ public class QTCommitteBackingBean extends
 
 		TabBean bean = this.getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
-				.getCommittemembers();
+				.getExtraDeleteComitteeSelection();
 		if (CollectionUtils.isEmpty(selectedList)) {
 			throw new EpException(MessageConst.ERROR_760146);
 		}
@@ -1837,6 +1837,7 @@ public class QTCommitteBackingBean extends
 
 		this.getManagedBean().setToBeDelCommitteMemebers(committeeMembers);
 		this.getManagedBean().setCommitteMember(null);
+		this.getManagedBean().setExtraDeleteComitteeSelection(null);
 
 	}
 
