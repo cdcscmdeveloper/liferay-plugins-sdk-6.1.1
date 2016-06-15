@@ -20,7 +20,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -388,30 +387,37 @@ public class CommitteBackingBean extends
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 		return items;
 	}
-
+	
 	/**
-	 * Inits the.
+	 * Gets the search committee data model.
+	 * 
+	 * @return the search committee data model
 	 */
-	@PostConstruct
-	private void init() {
+	public IPagingDataModel<ScQtCommittee> getSearchQTDataModel() {
 		IPagingDataModel<ScQtCommittee> searchQTDataModel = getManagedBean()
 				.getSearchQTDataModel();
-
 		if (searchQTDataModel == null) {
-			this.getManagedBean().setSearchQTDataModel(
-					new QTPagingDataModel("searchQTs", getManagedBean()
-							.getQtnTenderSearchBean()));
+			searchQTDataModel = new QTPagingDataModel("searchQTs", getManagedBean()
+					.getQtnTenderSearchBean());
+			getManagedBean().setSearchQTDataModel(searchQTDataModel);
 		}
-
+		return searchQTDataModel;
+	}
+	
+	/**
+	 * Gets the clone search qt data model.
+	 * 
+	 * @return the clone search qt data model
+	 */
+	public IPagingDataModel<ScQt> getCloneSearchQTDataModel() {
 		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
 				.getCloneSearchQTDataModel();
 		if (cloneSearchQTDataModel == null) {
-			this.getManagedBean().setCloneSearchQTDataModel(
-					new CloneQTPagingDataModel("clonesearchCommitteid",
-							getManagedBean().getCloneQtnTenderSearchBean()));
+			cloneSearchQTDataModel = new CloneQTPagingDataModel("clonesearchCommitteid",
+					getManagedBean().getCloneQtnTenderSearchBean());
+			getManagedBean().setCloneSearchQTDataModel(cloneSearchQTDataModel);
 		}
-
-		
+		return cloneSearchQTDataModel;
 	}
 	
 	private class committeeQTPagingDataModel extends PagingDataModel<ScQtCommittee> {
