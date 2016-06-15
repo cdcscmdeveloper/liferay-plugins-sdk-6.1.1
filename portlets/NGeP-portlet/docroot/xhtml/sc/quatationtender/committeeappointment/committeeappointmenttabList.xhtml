@@ -52,10 +52,12 @@
 					update="@(.scAddMember)" />
 	
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				disabled="#{empty qTDetailBB.managedBean.committemembers}"
 					process="@this, specificationcommitteeid" partialSubmit="true" styleClass="BtnSpacing"
 					oncomplete="committeeAppointmentDeletePopUp.show();"
-					update="@([id$=#{committeeAppointmentDeleteId}],[id$=#{scmemberInfoDtls}])"
-					rendered="#{isCommitteeInfoEditable}" />
+					update="@([id$=#{committeeAppointmentDeleteId}])"
+					rendered="#{isCommitteeInfoEditable}" >
+					</p:commandButton>
 				
 				<c:if test="#{isQTStatusChecklistAndAfter}">
 					<ui:param name="isRender" value="#{qTCommitteBackingBean.renderECOrTECButton(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"></ui:param>
@@ -82,7 +84,7 @@
 				width="40%" height="100"
 				title="#{lbl['lbl.sc.qt.committee.appointment']}"
 				content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
-				update="@([id$=specificationcommitteeid])" />
+				update="@form" />
  		</c:otherwise>
  	</c:choose>
 </ui:composition>
