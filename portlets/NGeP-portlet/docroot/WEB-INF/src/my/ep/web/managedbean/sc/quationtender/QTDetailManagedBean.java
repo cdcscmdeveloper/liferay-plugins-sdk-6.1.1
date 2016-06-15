@@ -1557,6 +1557,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The panel item list. */
 	private List<CtPanelItem> searchPanelItemList;
+	private List<ScCommitteeMember> extraDeleteComitteeSelection;
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -8743,6 +8744,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchPanelItemList(List<CtPanelItem> searchPanelItemList) {
 		this.searchPanelItemList = searchPanelItemList;
+	}
+
+	/**
+	 * @return the extraDeleteComitteeSelection
+	 */
+	public List<ScCommitteeMember> getExtraDeleteComitteeSelection() {
+		return extraDeleteComitteeSelection;
+	}
+
+	/**
+	 * @param extraDeleteComitteeSelection the extraDeleteComitteeSelection to set
+	 */
+	public void setExtraDeleteComitteeSelection(
+			List<ScCommitteeMember> extraDeleteComitteeSelection) {
+		this.extraDeleteComitteeSelection = extraDeleteComitteeSelection;
 	}
 
 }
