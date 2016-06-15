@@ -2373,11 +2373,11 @@ public class QTDetailBackingBean extends
 				}
 			} else {
 
-				if (CollectionUtils.isEmpty(this.getManagedBean()
-						.getPanelItemList())) {
+				if(CollectionUtils.isNotEmpty(tenderResDTO.getPanelItems())){
 					this.getManagedBean().setPanelItemList(
 							tenderResDTO.getPanelItems());
 				}
+				
 				if (null != this.getManagedBean().getQt().getCircularVer()) {
 					this.getManagedBean().setCircularExpDate(
 							this.getManagedBean().getQt().getCircularVer()
