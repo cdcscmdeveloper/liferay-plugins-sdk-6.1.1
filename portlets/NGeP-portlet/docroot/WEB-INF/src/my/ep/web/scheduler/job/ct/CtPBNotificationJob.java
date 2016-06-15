@@ -40,6 +40,8 @@ public class CtPBNotificationJob implements Job {
 			schedulerSO = (ICtSchedulerSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, ICtSchedulerSO.class);			
 			schedulerSO.sendPerformanceBondNotification();
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
 		} finally {
 			schedulerSO = null;
 		}

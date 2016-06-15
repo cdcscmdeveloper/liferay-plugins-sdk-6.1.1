@@ -59,8 +59,7 @@ public class CtImposedServiceTaxNotificationJob implements Job {
 				schedulerSO.sendImposedServiceTaxNotification();
 			}			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage());
 		} finally {
 			schedulerSO = null;
 		}

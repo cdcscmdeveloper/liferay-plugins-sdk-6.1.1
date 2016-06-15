@@ -40,6 +40,8 @@ public class CtExpireContractJob implements Job {
 			schedulerSO = (ICtSchedulerSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, ICtSchedulerSO.class);			
 			schedulerSO.updateExpiredContract();
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
 		} finally {
 			schedulerSO = null;
 		}
