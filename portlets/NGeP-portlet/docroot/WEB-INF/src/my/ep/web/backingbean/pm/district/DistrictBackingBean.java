@@ -316,8 +316,9 @@ public class DistrictBackingBean extends BaseBackingBean<DistrictManagedBean> {
 
 		PmState pmState = statesMap.get(this.getManagedBean()
 				.getDistrictSearchBean().getStateCode());
-
-		this.getManagedBean().setAdoptDivision(pmState.getAdoptDivision());
+		if (pmState != null) {
+			this.getManagedBean().setAdoptDivision(pmState.getAdoptDivision());
+		}
 
 	}
 
