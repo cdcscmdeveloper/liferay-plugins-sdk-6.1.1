@@ -482,7 +482,7 @@
 								style="width: 205px;margin-bottom: 5px;">
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
-								<p:ajax event="change" process="@this" partialSubmit="true"
+								<p:ajax event="change" process="@this" partialSubmit="true" update="@form"
 									listener="#{createQtBB.fulfilmentChange}"></p:ajax>
 							</p:selectOneMenu>
 							<p:message id="fulfilType" for="fulfilId" display="icon" />
