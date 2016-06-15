@@ -19,7 +19,7 @@
 		<br/>
 		<p:spacer height="10" />
 		<p:outputPanel id="cancelCircularList">
-		<p:dataTable id="cancelCcrDt" var="data" 
+		<p:dataTable id="cancelCcrDt" var="data" widgetVar="cancelCcrObj"
 			  value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}" rowKey="#{data}">
 			  <ac:paginator for="cancelCcrDt" />
 			   <p:column 
@@ -86,7 +86,8 @@
 					<div class="ppRightBtn"> 
 						<p:commandButton id="checkBoxId"  value="#{lbl['lbl.btn.select']}" process="@form" action="#{panelBackingBean.selectActiveCirculars()}"
 							update="cancelCcrDt cancelCcrPnl" onclick="activeCircularDlg.hide();" 
-							disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"/>
+							disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
+							oncomplete="cancelCcrObj.paginator.endLink.click();" />
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}" type="button" ajax="false" onclick="activeCircularDlg.hide();" />
 					</div>
 				</f:facet>

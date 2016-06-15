@@ -128,8 +128,8 @@
 					    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.witness']}" />
 		 	       </h:panelGrid>
                   
-                   <p:dataTable id="AgWitnessTable" var="signAgWitnessVar"
-                        value="#{agreementBackingBean.managedBean.ctSignAgencyWitness}" widgetVar="AgWitnessObj" 
+                   <p:dataTable id="AgWitnessTable" var="signAgWitnessVar" widgetVar="agWitnessTableWidget"
+                        value="#{agreementBackingBean.managedBean.ctSignAgencyWitness}"
 	                    selection="#{agreementBackingBean.managedBean.selectedAgencyWitnes}" rowKey="#{signAgWitnessVar}">
 		                <ac:paginator for="AgWitnessTable"/>
 		             
@@ -167,7 +167,8 @@
              <div class="ppRightBtn"> 
 		       <p:commandButton id="addAgencyWitnessBtn" value="#{lbl['lbl.btn.add']}" 
 		            action="#{agreementBackingBean.addAgencyWitnes(2)}" 
-		           process="@form"  update=":form:AgWitnessTable">
+		           process="@form"  update=":form:AgWitnessTable"
+		           oncomplete="agWitnessTableWidget.paginator.endLink.click();">
 		           <p:tooltip for="addAgencyWitnessBtn">
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.witness']}" escape="false" />
 			       </p:tooltip>
@@ -190,7 +191,7 @@
 		                 </div>
                    </p:confirmDialog>
          
-           <p:dialog id="dialogAgencySigner"  header="Add Agency Signer" 
+           <p:dialog id="dialogAgencySigner"  header="#{lbl['lbl.ct.add.agency.signer']}" 
                   widgetVar="dlgAgencySigner"  styleClass="pop_up_top" modal="true" width="600" height="200">
 			    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.signer']}" escape="false"/><br/><br/>
 		      <h:panelGroup  id="agencyiesSingner">

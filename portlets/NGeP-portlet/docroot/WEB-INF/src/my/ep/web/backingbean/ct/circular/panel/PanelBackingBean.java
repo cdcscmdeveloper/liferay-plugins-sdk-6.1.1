@@ -552,18 +552,22 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICircularSO.class);
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				if(getManagedBean().getCancelCircularReq().getCtCancelCircularList().size()==0) {
-					throw new EpException(MessageConst.ERROR_100023, new String[]{"Circular(s) to be cancel"});
+					throw new EpException(MessageConst.ERROR_100023, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.panel.circular.to.cancel", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				
 				if(getManagedBean().getApproverModel().getTarget().size()==0 && (isPanelAdmin() || isCentralContractAdmin())) {
-					    throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
+						throw new EpException(MessageConst.ERROR_750010);
 				    }
 			    }
 			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				String remark = getManagedBean().getRemarkList().get(0).getRemark();
 	 			if((remark == null || remark.length() == 0)) {
-	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+	 				throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	 			}
 			}
 						
@@ -621,8 +625,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				 if(!getManagedBean().getCircularVer().isDirectPurchase() 
 					  && getManagedBean().getCircularVer().isDirectNego() && getManagedBean().getCircularVer().isQt()){
 					 getManagedBean().setSelectedTabIndex(0);
-					 throw new EpException(MessageConst.ERROR_100022,  
-							 new String[]{"Direct Nego, Direct Purchase or Quotation Tender checkbox"});
+					 throw new EpException(MessageConst.ERROR_755019);
 				 }
 			}
 			
@@ -1160,6 +1163,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					panelSupplierList.add(panelSupplier);
 				}
 				ctPanelSuppliers.addAll(panelSupplierList);
+				
+				RequestContext.getCurrentInstance().execute(
+						"itemSupplierWidget.paginator.endLink.click()");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

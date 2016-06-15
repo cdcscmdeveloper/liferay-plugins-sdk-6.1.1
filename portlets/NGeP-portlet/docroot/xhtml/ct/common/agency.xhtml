@@ -15,7 +15,8 @@
        <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
 	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>	   
 	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false"/><br/><br/>
-       <p:dataTable id="tableAgencyDetails" var="agencyData"  value="#{ctBackingBean.managedBean.contractVer.ctAgencies}" 
+       <p:dataTable id="tableAgencyDetails" var="agencyData"  widgetVar="tableAgencyWidget"
+       		value="#{ctBackingBean.managedBean.contractVer.ctAgencies}" 
   			selectionMode="single" rowKey="#{agencyData}" selection="#{ctBackingBean.managedBean.selectedAgency}" 
   			rowIndexVar="indexVar" >
             <ac:paginator for="tableAgencyDetails"/>
@@ -171,7 +172,7 @@
 	        <h:panelGroup  style="width:100%" rendered="#{ctBackingBean.managedBean.selectedAgency != null}">	     
 	           	<div style="clear:both" />
 	           	<p:spacer height="20"/>
-	           	<p:dataTable id="deliveryAddressTbl" var="deliveryAddress" 
+	           	<p:dataTable id="deliveryAddressTbl" var="deliveryAddress" widgetVar="deliveryAddressTblWidget"
 	           		value="#{ctBackingBean.managedBean.selectedAgency.ctAgencyAddresses}"
 					rowKey="#{deliveryAddress}" selection="#{ctBackingBean.managedBean.selectedListOfAddress}">
 					<ac:paginator for="deliveryAddressTbl"/>
@@ -298,7 +299,8 @@
 				<p:commandButton id="agySlectBtnId"  value="#{lbl['lbl.btn.select']}" process="@form" 
 				update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
 				    action="#{ctBackingBean.addAgencyDetails()}" onclick="dlgAgency.hide();"
-				    disabled="#{ctBackingBean.managedBean.buttonHideActive}"/>
+				    disabled="#{ctBackingBean.managedBean.buttonHideActive}"
+				    oncomplete="tableAgencyWidget.paginator.endLink.click();" />
 				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgAgency.hide();" />
            </div>
           </p:panel>

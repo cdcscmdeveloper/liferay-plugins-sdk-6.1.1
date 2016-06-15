@@ -166,7 +166,7 @@
 		 </h:panelGrid>
          <p:spacer height="15"/>
          <h:panelGrid style="width:100%">
-		   <p:dataTable id="terminationReason" var="data" 
+		   <p:dataTable id="terminationReason" var="data" widgetVar="terminationReasonWidget"
 		             value="#{terminationBackingBean.managedBean.contractVer.ctTermination.ctTerminationReasons}" 
 			         dynamic="true" rowKey="#{data}" selection="#{terminationBackingBean.selectedTerminationReasonsList}">
 			               <ac:paginator for="terminationReason" />
@@ -210,7 +210,8 @@
 		      <div class="ppRightBtn"> 
 		             <p:commandButton value="#{lbl['lbl.btn.add']}"  
 		      	            rendered="#{!terminationBackingBean.managedBean.viewContract}" partialSubmit="true"
-		                    action="#{terminationBackingBean.addTerminateReason()}" update="terminationReason" process="@form" />
+		                    action="#{terminationBackingBean.addTerminateReason()}" update="terminationReason" process="@form"
+		                    oncomplete="terminationReasonWidget.paginator.endLink.click();" />
 		                    <p:spacer width="2"/>
 		              <p:commandButton id="terReasonDelBtn" value="#{lbl['lbl.ct.delete']}"  process="@this" partialSubmit="true"
 		                      disabled="#{terminationBackingBean.managedBean.buttonHideActive}"

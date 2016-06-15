@@ -183,7 +183,7 @@
 	
 	<p:panel id="cancelCircularPnl" 
 	      header="#{lbl['lbl.ct.panel.related.cancelled.circular']}" toggleable="true" toggleSpeed="500">
-		    <p:dataTable id="cancelCircularDt" var="data" 
+		    <p:dataTable id="cancelCircularDt" var="data" widgetVar="cancelCircularWidget"
 			        value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}" rowKey="#{data}"
 			         rowIndexVar="index" >
 			               <ac:paginator for="cancelCircularDt" />		
@@ -259,7 +259,8 @@
 			<div class="ppRightBtn"> 
 				<p:commandButton id="popUpSelectButtonId" value="#{lbl['lbl.btn.select']}"  process="cancelCircularDlg" 
 					action="#{panelBackingBean.addCancelledCircular}" disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
-					update="cancelCircularDt" onclick="cancelCircularDlg.hide();" />
+					update="cancelCircularDt" onclick="cancelCircularDlg.hide();"
+					oncomplete="cancelCircularWidget.paginator.endLink.click();" />
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"  type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
 			</div>			
 	</p:dialog>
