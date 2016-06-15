@@ -3,6 +3,7 @@ package my.ep.web.backingbean.ct.dashboard;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -18,32 +19,34 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.ct.dashboard.ContractDashboardManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 @ManagedBean(name="contractDashboardBackingBean")
 @ViewScoped
 public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashboardManagedBean>{
 
-	private IPagingDataModel<CtContract> ctDashboardDataModel = new ctDashboardPagingDataModel();
+	private IPagingDataModel<CtContract> ctDashboardDataModel  = new ctDashboardPagingDataModel();
 	public ContractDashboardBackingBean(){
-		
+	}
+	
+	@PostConstruct
+	public void init(){
+		ctDashboardDataModel.reloadData();
 	}
 	
 	public SelectItem[] getCtExpiryDaysMenu() {		
 			SelectItem[] items = null;
 			
 			try {
-			  	items = new SelectItem[3];
-			    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+			  	items = new SelectItem[2];
+			   /* items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		    	 items[1] = new SelectItem(new Long(1), "less than 30 days");
-		    	 items[2] = new SelectItem(new Long(2), "between 90 to 120 days");
+	*/	    	 items[0] = new SelectItem(new Long(1), "less than 30 days");
+		    	 items[1] = new SelectItem(new Long(2), "between 90 to 120 days");
 			} catch (Exception e) {
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -70,7 +73,7 @@ public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashbo
 			private static final long serialVersionUID = 1L;
 
 			public ctDashboardPagingDataModel() {
-				super("tblCtExpId", false);
+				super("tblCtExpId", true);
 			}
 			
 			/*
@@ -95,11 +98,11 @@ public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashbo
 						    } 
 					} else {
 					
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.ctContractValue.expDate",SearchOperator.OPERATOR_LESS.value(), addDays(new Date(), 120)));		
-				    searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.ctContractValue.expDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), new Date()));	
-				
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.ctContractValue.expDate",SearchOperator.OPERATOR_LESS.value(), addDays(new Date(), 30)));		
+				     	searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.ctContractValue.expDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), new Date()));	
+			
 					}
-
+					
 					contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 					ContractReqDTO reqDTO = new ContractReqDTO();
