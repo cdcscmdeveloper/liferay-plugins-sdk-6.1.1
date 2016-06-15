@@ -658,7 +658,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		if (this.getManagedBean().getSmAppl().getSmSupplierBanks() == null) {
 			this.getManagedBean().getSmAppl().setSmSupplierBanks(new ArrayList<SmSupplierBank>());
-		}		
+		}
+		
+		checkMaxBankAccount();
+		
 		SmSupplierBank smSuppBank = new SmSupplierBank();
 		smSuppBank.setPmFinancialOrg(new PmFinancialOrg());
 		smSuppBank.setSmAppl(this.getManagedBean().getSmAppl());
@@ -2459,6 +2462,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		personnel.setIdentificationTypeId(identObj.getParameterId());
 		personnel.setIdentificationType(identObj);
 	}
+
+	private void checkMaxBankAccount(){
+		int maxPaymentBank = SmServiceLookup.getSmRuleSO().retrieveMaxPaymentBank().getMaxPaymentBank();
+		
+		if(getManagedBean().getSmAppl().getSmSupplierBanks().size() >= maxPaymentBank){
+			throw new EpException(MessageConst.ERROR_721049,new String[]{String.valueOf(maxPaymentBank)});
+		}
+	}
+	
 }
 
 
