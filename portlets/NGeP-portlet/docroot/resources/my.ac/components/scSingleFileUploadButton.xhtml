@@ -24,7 +24,7 @@
 			icon="ui-icon-upload"
 			partialSubmit="true" process="@this" update="@([id$=#{cc.attrs.popupWidgetVar}Id])"
 			oncomplete="#{cc.attrs.popupWidgetVar}.show();return false;"
-			disabled="#{readonly}"
+			disabled="#{cc.attrs.readonly}"
 			rendered="#{empty cc.attrs.attachment}">
 			<cc:insertChildren />
 		</p:commandButton>
