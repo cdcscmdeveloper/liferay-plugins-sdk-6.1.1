@@ -53,6 +53,7 @@ import org.primefaces.model.StreamedContent;
 
 /**
  * Supplier Proposal Managed Bean
+ * 
  * @author Viswanath
  * @author Venkat Chanumolu
  */
@@ -197,7 +198,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
-	
+
 	private String encryptionKey;
 
 	/**
@@ -1141,9 +1142,10 @@ public class SPDetailManagedBean extends BaseManagedBean {
 				&& !this.getScQtPRPExperiences().isEmpty()) {
 			List<Date> effectiveDates = new ArrayList<Date>();
 			List<Date> expiryDates = new ArrayList<Date>();
-			
-			if(this.getScQtPRPExperiences().size() >=1 ){
-				for (ScQtPRPExperience experience : this.getScQtPRPExperiences()) {
+
+			if (this.getScQtPRPExperiences().size() >= 1) {
+				for (ScQtPRPExperience experience : this
+						.getScQtPRPExperiences()) {
 					if (experience.getEffectiveDate() != null
 							&& experience.getExpiryDate() != null) {
 						effectiveDates.add(experience.getEffectiveDate());
@@ -1152,16 +1154,17 @@ public class SPDetailManagedBean extends BaseManagedBean {
 				}
 				Date minEffectiveDate = getMinEffectiveDate(effectiveDates);
 				Date maxExpiryDate = getMaxExpiryDate(expiryDates);
-				this.totalYears = numberOfMonthsBetweenTwoDates(minEffectiveDate,
-						maxExpiryDate);
-			}else{
+				this.totalYears = numberOfMonthsBetweenTwoDates(
+						minEffectiveDate, maxExpiryDate);
+			} else {
 				this.totalYears = 0;
 			}
-			
+
 			effectiveDates = null;
 			expiryDates = null;
+		} else {
+			this.totalYears = 0;
 		}
-
 		return totalYears;
 	}
 
@@ -1678,7 +1681,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param encryptionKey the encryptionKey to set
+	 * @param encryptionKey
+	 *            the encryptionKey to set
 	 */
 	public void setEncryptionKey(String encryptionKey) {
 		this.encryptionKey = encryptionKey;
