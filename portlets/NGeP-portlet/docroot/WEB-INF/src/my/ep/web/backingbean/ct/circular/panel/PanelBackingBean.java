@@ -2048,6 +2048,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
         getManagedBean().setButtonHideActiveDel(true);
 	}
 	
+
 	/**
 	   *   Method to set zone status active
 	   *   Return string vaule 1
