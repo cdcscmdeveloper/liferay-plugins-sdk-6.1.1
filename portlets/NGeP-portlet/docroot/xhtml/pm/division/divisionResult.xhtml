@@ -14,7 +14,7 @@
 			var="divisionList" rowIndexVar="index" lazy="true">
 			<ac:paginator for="division" />
 
-			<p:column headerText="#{lbl['lbl.pm.state.seq.no']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+			<p:column headerText="#{lbl['lbl.pm.state.seq.no']}" style="width:5%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{index+1}" />
 			</p:column>
 						
@@ -22,7 +22,7 @@
 				<h:outputText value="#{divisionList.pmState.stateName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.division.code']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+			<p:column headerText="#{lbl['lbl.pm.division.code']}" style="width:7%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{divisionList.divisionCode}" />
 			</p:column>
 			
