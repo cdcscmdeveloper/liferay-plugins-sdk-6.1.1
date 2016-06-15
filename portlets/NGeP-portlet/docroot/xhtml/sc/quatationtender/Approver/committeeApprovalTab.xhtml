@@ -28,10 +28,13 @@
 			update="@([id$=newcommitteeapproverid])" />
 		<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			styleClass="BtnSpacing"
-			disabled="#{approvalBackingBean.managedBean.readOnly}"
+			disabled="#{approvalBackingBean.managedBean.readOnly or empty qTDetailBB.managedBean.committemembers}"
 			process="@this, committeeapprovalId" partialSubmit="true"
 			oncomplete="committeeApprovalDeletePopUp.show();"
-			update="@([id$=#{committeeApprovalDeleteId}])" />
+			update="@([id$=#{committeeApprovalDeleteId}])" >
+			<f:setPropertyActionListener target="#{qTCommitteBackingBean.managedBean.extraDeleteComitteeSelection}" value="#{qTDetailBB.managedBean.committemembers}"></f:setPropertyActionListener>
+			<f:setPropertyActionListener target="#{qTDetailBB.managedBean.committemembers}" value="#{null}"></f:setPropertyActionListener>
+			</p:commandButton>
 	</div>
 	<ui:param name="committeeApprovalDeleteId"
 		value="committeeApprovalDeleteId" />
@@ -41,7 +44,7 @@
 		width="40%" height="100"
 		title="#{lbl['lbl.sc.qt.committee.appointment']}"
 		content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
-		update="@([id$=committeeapprovalId])" />
+		update="@form" />
 
 	<ui:include src="addCommitteeApproval.xhtml" />
 	<ui:include src="/xhtml/sc/quatationtender/committeeappointment/cloneDetails.xhtml" />

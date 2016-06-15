@@ -57,6 +57,8 @@
 					oncomplete="committeeAppointmentDeletePopUp.show();"
 					update="@([id$=#{committeeAppointmentDeleteId}])"
 					rendered="#{isCommitteeInfoEditable}" >
+					<f:setPropertyActionListener target="#{qTCommitteBackingBean.managedBean.extraDeleteComitteeSelection}" value="#{qTDetailBB.managedBean.committemembers}"></f:setPropertyActionListener>
+						<f:setPropertyActionListener target="#{qTDetailBB.managedBean.committemembers}" value="#{null}"></f:setPropertyActionListener>
 					</p:commandButton>
 				
 				<c:if test="#{isQTStatusChecklistAndAfter}">
