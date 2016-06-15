@@ -1543,6 +1543,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				ctAgencyAddress.addAll(agencyAddressList);
 			}
 			getManagedBean().setButtonHideActive(true);
+			
+			RequestContext.getCurrentInstance().execute(
+					"deliveryAddressTblWidget.paginator.endLink.click()");
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
