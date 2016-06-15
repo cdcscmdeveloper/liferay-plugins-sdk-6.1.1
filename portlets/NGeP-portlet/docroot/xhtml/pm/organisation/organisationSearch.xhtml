@@ -12,16 +12,33 @@
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.org.category']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></th>
-				<td><p:selectOneRadio styleClass="commonLabel" value="#{organisationBackingBean.managedBean.searchOrgCategory}">
-						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="#{organisationBackingBean.federalGovt}"/>
-						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="#{organisationBackingBean.others}"/>
-						<p:ajax process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-							event="change" partialSubmit="true" update="orgSearchPanel,:form:searchOrganisation" listener ="#{organisationBackingBean.resetOrganisationSearchBean()}"/>
-					</p:selectOneRadio>&#160; <p:graphicImage id="giOthersOrg" style="margin-top:8px;"
+				<td><p:selectOneRadio id="sorSearchOrgTypeId" layout="custom"
+						styleClass="commonLabel" 
+						value="#{organisationBackingBean.managedBean.searchOrgCategory}">
+						<f:selectItem 
+							itemLabel="#{lbl['lbl.pm.org.federal.government']}" 
+							itemValue="#{organisationBackingBean.federalGovt}"/>
+						<f:selectItem 
+							itemLabel="#{lbl['lbl.pm.org.others']}" 
+							itemValue="#{organisationBackingBean.others}"/>
+						<p:ajax process="@this,orgCategoryMaintainPG" 
+							onstart="blockWidget.show()" 
+							oncomplete="blockWidget.hide()" 
+							event="change" partialSubmit="true" 
+							update="orgSearchPanel,:form:searchOrganisation" 
+							listener ="#{organisationBackingBean.resetOrganisationSearchBean()}"/>
+					</p:selectOneRadio>
+					<h:panelGrid id="orgCategoryMaintainPG" columns="7">
+					    <p:radioButton id="sorSearchGovn" for="sorSearchOrgTypeId" itemIndex="0" />
+					    <h:outputLabel styleClass="commonLabel" for="sorMaintainFederalGovn" value="#{lbl['lbl.pm.org.federal.government']}" />			       
+					    <p:radioButton id="sorSearchOthers" for="sorSearchOrgTypeId" itemIndex="1" />
+					    <h:outputLabel styleClass="commonLabel" for="sorMaintainOthers" value="#{lbl['lbl.pm.org.others']}" />	
+					     &#160; <p:graphicImage id="giOthersOrg" style="vertical-align:top;"
 								value="/css/images/design/tooltips.png" /> 
 					<p:tooltip id="ttOthersOrg" for="giOthersOrg">
 							<h:outputText escape="false" value="#{lbl['lbl.pm.org.others.tooltip']}"  />
-					</p:tooltip>&#160;</td>
+					</p:tooltip>          
+			       	</h:panelGrid> </td>
 				<th></th>
 				<td>&#160;</td>
 			</tr>
