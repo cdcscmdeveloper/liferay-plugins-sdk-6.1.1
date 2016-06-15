@@ -36,15 +36,18 @@
 								value="#{directLOABackingBean.managedBean.outComes}">
 								<ui:param name="buttonLabel"
 									value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+									
 								<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
+								<ui:param name="isCancel" value="#{bpmAction == 'CANCEL'}" />
+								<ui:param name="isCancelNReject" value="#{isReject || isCancel}" />
 
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onstart="blockWidget.show();"
 									rendered="#{!isPendingVerification}"
 									oncomplete="blockWidget.hide();"
 									action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
-									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-									update="#{isReject ? '@this' : '@form'}" />
+									partialSubmit="true" process="#{isCancelNReject ? '@this' : '@form'}"
+									update="#{isCancelNReject ? '@this' : '@form'}" />
 
 
 								<p:commandButton value="#{lbl['lbl.btn.verify']}"
