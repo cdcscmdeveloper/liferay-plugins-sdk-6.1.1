@@ -381,6 +381,18 @@ public class QTCommitteBackingBean extends
 				bean.setSearchValue(qtNumber);
 				searchFilterBean.add(bean);
 			}
+			
+			if (StringUtils.isBlank(qtNumber)) {
+				if(null!=this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getQtNo() ){
+				List<String> qtNo=new ArrayList<String>	();
+				qtNo.add(this.getManagedBean().getQt().getQtNo());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.QT_NUMBER);
+				bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
+				bean.setSearchValue(qtNo);
+				searchFilterBean.add(bean);
+				}
+			}
 			String procurementMode = cloneQtnTenderSearchBean
 					.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
