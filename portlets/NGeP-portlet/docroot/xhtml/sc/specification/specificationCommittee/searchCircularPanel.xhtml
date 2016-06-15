@@ -52,7 +52,7 @@
 
 				<p:dataTable id="panelItemList" var="panelItem" rowIndexVar="index"
 					style="width:100%" rows="10"
-					value="#{specificationBackingBean.managedBean.panelItemList}"
+					value="#{specificationBackingBean.managedBean.searchPanelItemList}"
 					selection="#{specificationBackingBean.managedBean.selectCtPanelItem}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{panelItem}">
