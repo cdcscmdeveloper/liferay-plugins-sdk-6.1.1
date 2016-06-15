@@ -589,7 +589,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		
 		Date today = new Date();
 		if(getManagedBean().getFulfilmentNote().getReceivedDate().after(today)){
-			throw new EpException("ERR-740012");
+			throw new EpException(MessageConst.ERROR_740012);
 		}
 		
 		FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();	
