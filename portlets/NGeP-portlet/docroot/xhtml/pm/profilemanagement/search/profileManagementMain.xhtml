@@ -11,7 +11,7 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 	
 	<ui:define name="contentSection">
 		<!-- Validation Message -->
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false" />
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>

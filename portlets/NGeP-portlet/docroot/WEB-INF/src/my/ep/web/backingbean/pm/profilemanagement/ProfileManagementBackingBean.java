@@ -447,6 +447,12 @@ public class ProfileManagementBackingBean extends
 	 */
 	public void preLoadingUserProfile() {
 		logger.info("preLoadingUserProfile");
+		PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+				FacesMessage.SEVERITY_INFO,
+				MessageConst.INFO_770049,
+				new String[] { "Test123", 
+						"Test234"
+				});
 		this.setCurrentActiveOrg();
 		this.getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
 		getManagedBean().setLazy(false);
@@ -527,6 +533,7 @@ public class ProfileManagementBackingBean extends
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
 		getManagedBean().setSearchRoleName(null);
 		getManagedBean().setSelectedRoleSearchOption(null);
+		getManagedBean().setPmUserExist(false);
 		logger.info("selectedOrg=" + selectedOrg);
 		if (selectedOrg != null) {
 			logger.info("selectedOrg.getUserOrgId()="
@@ -694,6 +701,9 @@ public class ProfileManagementBackingBean extends
 			// load user
 			PmUser pmUser = PmCommonUtil.retrieveUserById(id, true);
 			if (pmUser != null) {
+				//if pm user exist (previously created)
+				getManagedBean().setPmUserExist(true);
+				
 				pmUser.setIdentificationCode(pmUser.getIdentificationCode() == null ? new PmParameter()
 						: pmUser.getIdentificationCode());
 				pmUser.setSalutationCode(pmUser.getSalutationCode() == null ? new PmSalutation()
@@ -711,7 +721,8 @@ public class ProfileManagementBackingBean extends
 				this.getManagedBean().setPmUserOriginal(
 						(PmUser) pmUser.cloneEntity());
 				this.getManagedBean().setPmUserOrgOriginal(
-						(PmUserOrg) pmUserOrg.cloneEntity());
+						(PmUserOrg) pmUserOrg.cloneEntity());				
+			
 				
 			}
 
@@ -4208,39 +4219,32 @@ public class ProfileManagementBackingBean extends
 									.getRemarks(), resDTO.getRemarks()));
 				} else {
 					if (isNewUser) {
-						FacesContext
-								.getCurrentInstance()
-								.addMessage(
-										null,
-										new FacesMessage(
-												FacesMessage.SEVERITY_INFO,
-												null,
-												MessageUtils
-														.getMessage(
-																MessageConst.INFO_770049,
-																new String[] { resDTO
-																		.getPmUser()
-																		.getLoginId() },
-																MessageUtils.BUNDLE_COMMON_MESSAGES,
-																new FacesScopes()
-																		.getUserLocale())));
+							PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+									FacesMessage.SEVERITY_INFO,
+									MessageConst.INFO_770049,
+									new String[] { resDTO
+											.getPmUser().getUserName(), 
+											resDTO
+											.getPmUser().getIdentificationNo()
+									});
 					} else {
-						FacesContext
-								.getCurrentInstance()
-								.addMessage(
-										null,
-										new FacesMessage(
-												FacesMessage.SEVERITY_INFO,
-												null,
-												MessageUtils
-														.getMessage(
-																MessageConst.INFO_770050,
-																new String[] { resDTO
-																		.getPmUser()
-																		.getLoginId() },
-																MessageUtils.BUNDLE_COMMON_MESSAGES,
-																new FacesScopes()
-																		.getUserLocale())));
+						if(getManagedBean().isPmUserExist()){
+							PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+									FacesMessage.SEVERITY_INFO,
+									MessageConst.INFO_770052,
+									new String[] { resDTO
+											.getPmUser().getUserName(), 
+											resDTO
+											.getPmUser().getIdentificationNo()
+									});
+						}else{
+							PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+									FacesMessage.SEVERITY_INFO,
+									MessageConst.INFO_770050,
+									new String[] { resDTO
+											.getPmUser()
+											.getLoginId() });
+						}
 					}
 				}
 				//
@@ -4777,6 +4781,7 @@ public class ProfileManagementBackingBean extends
 			    	 }
 			    	 
 			    	 // new user org / user record
+			    	 getManagedBean().setPmUserExist(false);
 			    	 if(ParameterConst.IDENTIFICATION_TYPES_IC.equals(getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode())){
 							getManagedBean().getSelectedUser().setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
 					}else{

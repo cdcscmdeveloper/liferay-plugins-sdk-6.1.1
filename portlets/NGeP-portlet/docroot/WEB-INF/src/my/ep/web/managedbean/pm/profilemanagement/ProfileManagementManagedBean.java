@@ -81,6 +81,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private PmAddressType selectedDeleteReceivingAddr;
 	private String searchRoleName;
 	private Integer selectedRoleSearchOption;
+	private boolean isPmUserExist = false;
 	
 	public PmUser getPmUserOriginal() {
 		return pmUserOriginal;
@@ -605,8 +606,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setSelectedRoleSearchOption(Integer selectedRoleSearchOption) {
 		this.selectedRoleSearchOption = selectedRoleSearchOption;
 	}
-	
-
+	/**
+	 * @return the isPmUserExist
+	 */
+	public boolean isPmUserExist() {
+		return isPmUserExist;
+	}
+	/**
+	 * @param isPmUserExist the isPmUserExist to set
+	 */
+	public void setPmUserExist(boolean isPmUserExist) {
+		this.isPmUserExist = isPmUserExist;
+	}
 
 }	
 	
