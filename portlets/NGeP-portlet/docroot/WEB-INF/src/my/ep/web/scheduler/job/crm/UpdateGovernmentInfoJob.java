@@ -34,7 +34,7 @@ public class UpdateGovernmentInfoJob implements Job {
 			crmServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							ICRMServiceSO.class);
-			crmServiceSO.updateSupplierInfoService();
+			crmServiceSO.updateGovernmentInfoService();
 
 			// please add resDTO to log better
 
