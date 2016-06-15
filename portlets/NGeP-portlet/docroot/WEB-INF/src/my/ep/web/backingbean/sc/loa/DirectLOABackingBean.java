@@ -4248,6 +4248,7 @@ public class DirectLOABackingBean extends
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
+		Long statusId = getManagedBean().getScLoa().getPmStatus().getStatusId().longValue();
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 			if (isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -4256,10 +4257,10 @@ public class DirectLOABackingBean extends
 			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 
 		} else {
-			if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(this
-					.getManagedBean().getScLoa().getPmStatus().getStatusId())) {
-				submitAction();
-
+			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+				if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
+					submitAction();
+				}
 			} else {
 				updateBPMTask(outcome, null);
 			}
@@ -4369,11 +4370,14 @@ public class DirectLOABackingBean extends
 							.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700009;
 					}
+					
 				} else if (QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
 					messageCode = MessageConst.INFO_700026;
+					
 				} else if (QTStatusConst.LOA_PENDING_CONTRACT_SIGNING
 						.equals(statusId)) {
 					messageCode = MessageConst.INFO_700026;
+					
 				} else if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(statusId)) {
 					if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
@@ -4382,14 +4386,20 @@ public class DirectLOABackingBean extends
 							.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700008;
 					}
+					
 				} else if (QTStatusConst.LOA_PENDING_VERIFICATION
 						.equals(statusId)) {
 					messageCode = MessageConst.INFO_700001;
+					
+				}else if (QTStatusConst.LOA_PENDING_SUBMISSION
+						.equals(statusId)) {
+					if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
+						messageCode = MessageConst.INFO_700010;
+					}
 				}
 				successMessage(messageCode, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 						scLoa.getLoaNo(), Boolean.TRUE);
-
 			}
 
 		} finally {
