@@ -26,13 +26,19 @@ public class NtfMessageBulkJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		
-		INtfMessageBulkSchedulerSO iNtfMessageBulkSchedulerSO
-		= EpEjbBusinessDelegate.getInstance()
-		.getServiceObject(ModuleCodeConst.NTF_SCH,
-				INtfMessageBulkSchedulerSO.class);
-		
-		iNtfMessageBulkSchedulerSO.retrieveDb();
-		iNtfMessageBulkSchedulerSO.sendNotification();
-		iNtfMessageBulkSchedulerSO.updateDb();
+		try{
+			
+			INtfMessageBulkSchedulerSO iNtfMessageBulkSchedulerSO
+			= EpEjbBusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.NTF_SCH,
+					INtfMessageBulkSchedulerSO.class);
+			
+			iNtfMessageBulkSchedulerSO.retrieveDb();
+			iNtfMessageBulkSchedulerSO.sendNotification();
+			iNtfMessageBulkSchedulerSO.updateDb();
+			
+		} catch (Exception ex){
+			log.error(ex);
+		}
 	}
 }
