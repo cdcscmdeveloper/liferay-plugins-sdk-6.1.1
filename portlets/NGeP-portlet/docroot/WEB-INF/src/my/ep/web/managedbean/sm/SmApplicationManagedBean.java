@@ -387,6 +387,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showWorkShopPanel;
 	private boolean showPersonnelViewOnly;
 	private boolean showTravelSoftwarePanel;
+	private boolean showMachineryEquipmentPanel;
 	private boolean disabledShareholderPersonnelNameAndNationality;
 	private boolean alreadyBusinessSpecialCatcode;
 	private String businessOfficeCatCodeMsg;
@@ -569,7 +570,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 						.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
 		// defaultAddr.getPmCountry().setCountryId(1l);
 		defaultAddr.setPmState(new PmState());
-		
+
 		editVO = new SmSectionEditorVO();
 
 		selectedCategories = new ArrayList<SmSupplierCategory>();
@@ -3527,5 +3528,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setOverLappedCategoryRemarks(String overLappedCategoryRemarks) {
 		this.overLappedCategoryRemarks = overLappedCategoryRemarks;
+	}
+
+	public boolean isShowMachineryEquipmentPanel() {
+		return showMachineryEquipmentPanel;
+	}
+
+	public void setShowMachineryEquipmentPanel(
+			boolean showMachineryEquipmentPanel) {
+		this.showMachineryEquipmentPanel = showMachineryEquipmentPanel;
 	}
 }

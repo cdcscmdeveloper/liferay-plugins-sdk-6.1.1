@@ -140,7 +140,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
-import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -5166,7 +5165,8 @@ public class SmApplicationUtil {
 								.getParameterId() != null
 						&& cat.getRecordStatusFlg() != null
 						&& cat.getRecordStatusFlg().compareTo(
-								SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+								SupplierManagementConst.PENDING_ACT_STATUS) == 0
+						&& !isCategoryRejected(cat)) {
 					String facType = "";
 					if (cat.getPmCategoryL3().getFacilityType() != null) {
 						facType = cat.getPmCategoryL3().getFacilityType();
@@ -5207,7 +5207,8 @@ public class SmApplicationUtil {
 							.getParameterId() != null
 					&& cat.getRecordStatusFlg() != null
 					&& cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0
+					&& !isCategoryRejected(cat)) {
 				String catType = "";
 				if (cat.getPmCategoryL3().getCategoryTypeCode() != null) {
 					catType = cat.getPmCategoryL3().getCategoryTypeCode()
@@ -5237,7 +5238,7 @@ public class SmApplicationUtil {
 					.getBasicCompanyFacility().getFacilityType());
 			removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl());
 			removeTravellingSoftwareIfNotApplicable(bean);
-			removeEquipmentIfNotApplicable(bean.getSmAppl());
+			removeEquipmentIfNotApplicable(bean);
 		}
 	}
 
@@ -5261,7 +5262,8 @@ public class SmApplicationUtil {
 							SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
 							.getRecordStatusFlg()
 							.compareTo(
-									SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)) {
+									SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+					&& !isCategoryRejected(cat)) {
 				String catType = "";
 				if (cat.getPmCategoryL3().getCategoryTypeCode() != null) {
 					catType = cat.getPmCategoryL3().getCategoryTypeCode()
@@ -5290,35 +5292,46 @@ public class SmApplicationUtil {
 	 * @param SmAppl
 	 *            appl
 	 */
-	public void removeEquipmentIfNotApplicable(SmAppl appl) {
-		List<String> pendingApproveCatTypeList = new ArrayList<String>();
-		if (appl.getApplCategoryType() != null
-				&& appl.getApplCategoryType().equals("N")) {
-			appl.setSmManufacturingDtls(new ArrayList<SmManufacturingDtl>());
+	public void removeEquipmentIfNotApplicable(SmApplicationManagedBean bean) {
+		SmAppl appl = bean.getSmAppl();
+		bean.setShowMachineryEquipmentPanel(true);
+
+		// if category select items in machinery is empty, dont show machinery
+		// panel
+		if (EntityHelper.isCollectionEmpty(getSelectedCategoryTypeItems(appl))) {
 			appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
-		}
-		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
-			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.PENDING_ACT_STATUS) == 0
-						|| cat.getRecordStatusFlg()
-								.compareTo(
-										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
-					pendingApproveCatTypeList.add(cat.getPmCategoryL3()
-							.getCategoryTypeCode().getParameterCode());
-				}
+			bean.setShowMachineryEquipmentPanel(false);
+		} else {
+			List<String> pendingApproveCatTypeList = new ArrayList<String>();
+			if (appl.getApplCategoryType() != null
+					&& appl.getApplCategoryType().equals("N")) {
+				appl.setSmManufacturingDtls(new ArrayList<SmManufacturingDtl>());
+				appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
 			}
-			if (!EntityHelper.isCollectionEmpty(appl.getSmMachineDtls())) {
-				for (Iterator<SmMachineDtl> macIt = appl.getSmMachineDtls()
-						.iterator(); macIt.hasNext();) {
-					SmMachineDtl mac = macIt.next();
-					if (mac.getCategoryType() != null
-							&& mac.getCategoryType().getParameterId() != null
-							&& (EntityHelper
-									.isCollectionEmpty(pendingApproveCatTypeList) || !pendingApproveCatTypeList
-									.contains(mac.getCategoryType()
-											.getParameterCode()))) {
-						macIt.remove();
+			if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+				for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+					if ((cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
+							.getRecordStatusFlg()
+							.compareTo(
+									SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+							&& !isCategoryRejected(cat)) {
+						pendingApproveCatTypeList.add(cat.getPmCategoryL3()
+								.getCategoryTypeCode().getParameterCode());
+					}
+				}
+				if (!EntityHelper.isCollectionEmpty(appl.getSmMachineDtls())) {
+					for (Iterator<SmMachineDtl> macIt = appl.getSmMachineDtls()
+							.iterator(); macIt.hasNext();) {
+						SmMachineDtl mac = macIt.next();
+						if (mac.getCategoryType() != null
+								&& mac.getCategoryType().getParameterId() != null
+								&& (EntityHelper
+										.isCollectionEmpty(pendingApproveCatTypeList) || !pendingApproveCatTypeList
+										.contains(mac.getCategoryType()
+												.getParameterCode()))) {
+							macIt.remove();
+						}
 					}
 				}
 			}
@@ -5337,11 +5350,12 @@ public class SmApplicationUtil {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (StringUtils.isNotBlank(cat.getPmCategoryL3()
 						.getFacilityType())) {
-					if (cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0
-							|| cat.getRecordStatusFlg()
-									.compareTo(
-											SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+					if ((cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
+							.getRecordStatusFlg()
+							.compareTo(
+									SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+							&& !isCategoryRejected(cat)) {
 						catTypeList
 								.add(cat.getPmCategoryL3().getFacilityType());
 					}
@@ -5394,6 +5408,15 @@ public class SmApplicationUtil {
 					}
 				}
 			}
+		}
+	}
+
+	private static boolean isCategoryRejected(SmSupplierCategory cat) {
+		if ((cat.getPoDecFlg() != null && cat.getPoDecFlg() == 0)
+				|| (cat.getApprvrDecFlg() != null && cat.getApprvrDecFlg() == 0)) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -7535,7 +7558,8 @@ public class SmApplicationUtil {
 								.contains(
 										cat.getPmCategoryL3()
 												.getCategoryTypeCode()
-												.getParameterCode())) {
+												.getParameterCode())
+						&& !isCategoryRejected(cat)) {
 					SelectItem catType = (SelectItem) EntityHelper
 							.getEntityBySinglePropertyFromList(cat
 									.getPmCategoryL3().getCategoryTypeCode()
@@ -7634,29 +7658,36 @@ public class SmApplicationUtil {
 					categoryTypeDesc = desc != null ? desc.getCodeName()
 							: categoryTypeDesc;
 
-					if (EntityHelper.isCollectionEmpty(appl.getSmMachineDtls())) {
-						valid = false;
-						if (currentTab != -1) {
-							setNavigationBackToCurrentPage(currentTab, bean);
-						}
-						throw new EpException(MessageConst.ERROR_722631,
-								new String[] { categoryTypeDesc });
-					} else {
-						SmMachineDtl mac = (SmMachineDtl) EntityHelper
-								.getEntityBySinglePropertyFromList(
-										cat.getPmCategoryL3()
-												.getCategoryTypeCode()
-												.getParameterId(),
-										appl.getSmMachineDtls(), "categoryType");
-						if (mac == null) {
+					if (bean.isShowMachineryEquipmentPanel()) {
+						if (EntityHelper.isCollectionEmpty(appl
+								.getSmMachineDtls())) {
 							valid = false;
 							if (currentTab != -1) {
 								setNavigationBackToCurrentPage(currentTab, bean);
 							}
 							throw new EpException(MessageConst.ERROR_722631,
 									new String[] { categoryTypeDesc });
+						} else {
+							SmMachineDtl mac = (SmMachineDtl) EntityHelper
+									.getEntityBySinglePropertyFromList(cat
+											.getPmCategoryL3()
+											.getCategoryTypeCode()
+											.getParameterId(),
+											appl.getSmMachineDtls(),
+											"categoryType");
+							if (mac == null) {
+								valid = false;
+								if (currentTab != -1) {
+									setNavigationBackToCurrentPage(currentTab,
+											bean);
+								}
+								throw new EpException(
+										MessageConst.ERROR_722631,
+										new String[] { categoryTypeDesc });
+							}
 						}
 					}
+
 				}
 			}
 		}
