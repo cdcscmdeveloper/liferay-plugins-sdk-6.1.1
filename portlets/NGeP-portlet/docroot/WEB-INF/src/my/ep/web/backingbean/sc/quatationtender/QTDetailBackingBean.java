@@ -218,25 +218,38 @@ public class QTDetailBackingBean extends
 	 */
 	@PostConstruct
 	private void init() {
-		if (this.getManagedBean().getQt() == null) {
-			this.getManagedBean().setQt(new ScQt());
-		}
-		if (this.getManagedBean().getQt().getPmOrgProfile() == null) {
-			this.getManagedBean().getQt().setPmOrgProfile(new PmOrgProfile());
-		}
-		// handlePTJName();
-		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
-				.getSearchQTDataModel();
-		if (searchQTDataModel == null) {
-			getManagedBean().setSearchQTDataModel(
-					new QTPagingDataModel("searchQTs", getManagedBean()
-							.getQtnTenderSearchBean()));
-		}
-
 		if (null == this.getManagedBean().getMinistryProfile()
 				&& null == this.getManagedBean().getPtjProfile()) {
 			getDefaultPtjAndMinistryValues();
 		}
+	}
+	
+	/**
+	 * Gets the search qt data model.
+	 * 
+	 * @return the search qt data model
+	 */
+	public IPagingDataModel<ScQt> getSearchQTDataModel() {
+		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
+				.getSearchQTDataModel();
+		if (searchQTDataModel == null) {
+			searchQTDataModel = new QTPagingDataModel("searchQTs", getManagedBean()
+					.getQtnTenderSearchBean());
+			getManagedBean().setSearchQTDataModel(searchQTDataModel);
+		}
+		return searchQTDataModel;
+	}
+	
+	private void renewQTSesionObject() {
+		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
+				.getSearchQTDataModel();
+		QtnTenderSearchBean qtnTenderSearchBean = getManagedBean()
+				.getQtnTenderSearchBean();
+		
+		super.renewSesionObject();
+		
+		getManagedBean().setSearchQTDataModel(searchQTDataModel);
+		getManagedBean().setQtnTenderSearchBean(qtnTenderSearchBean);
 	}
 
 	/**
@@ -596,7 +609,7 @@ public class QTDetailBackingBean extends
 	 * @return maintanacepage
 	 */
 	public String editQuationTenderDetails(ScQt scQt, boolean viewQT) {
-		renewQTDetails();
+		renewQTSesionObject();
 		this.getManagedBean().setDeskOfficer(viewQT);
 		this.getManagedBean().setMaintanceFlow(true);
 		IQTDetailSO detailSO;
@@ -708,15 +721,6 @@ public class QTDetailBackingBean extends
 			detailSO = null;
 		}
 		return REDIRECT_PAGE;
-	}
-
-	private void renewQTDetails() {
-		QtnTenderSearchBean qtnTenderSearchBean = getManagedBean()
-				.getQtnTenderSearchBean();
-
-		super.renewSesionObject();
-
-		getManagedBean().setQtnTenderSearchBean(qtnTenderSearchBean);
 	}
 
 	/**
@@ -3516,7 +3520,7 @@ public class QTDetailBackingBean extends
 		case 0:
 			detailSO.validateateQTDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
-			renewSesionObject();
+			renewQTSesionObject();
 			this.getManagedBean().setTaskName(taskName);
 			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId());
 			setAmmendMentBean(resDTO.getAmendMentBean());
@@ -3524,7 +3528,7 @@ public class QTDetailBackingBean extends
 		case 1:
 			detailSO.validateSupplierQualificationDtls(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
-			renewSesionObject();
+			renewQTSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			retrieveSuppQualificationTabDtl();
@@ -3544,7 +3548,7 @@ public class QTDetailBackingBean extends
 
 			int committeeTabIndex = this.getManagedBean()
 					.getSelectedCommitteeTabIndex();
-			renewSesionObject();
+			renewQTSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setSelectedTabIndex(subTabIndex);
 			// this.getManagedBean().setActiveIndex(0);
@@ -3562,7 +3566,7 @@ public class QTDetailBackingBean extends
 			detailSO.validateApprovalDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			int selectedApprovalTabIndex = this.getManagedBean().getSelectedApprovalTabIndex();
-			renewSesionObject();
+			renewQTSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			setAmmendMentBean(resDTO.getAmendMentBean());
@@ -3573,7 +3577,7 @@ public class QTDetailBackingBean extends
 			if (isinvokeValidations(getManagedBean().getQt())) {
 				detailSO.validateBsvDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
-				renewSesionObject();
+				renewQTSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveBriefingSitevisitTabDtl();
@@ -3583,7 +3587,7 @@ public class QTDetailBackingBean extends
 			if (isinvokeValidations(getManagedBean().getQt())) {
 				detailSO.validateScheduleDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
-				renewSesionObject();
+				renewQTSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
@@ -3594,7 +3598,7 @@ public class QTDetailBackingBean extends
 			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
 				detailSO.validateDeductionDtls(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
-				renewSesionObject();
+				renewQTSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
@@ -3604,7 +3608,7 @@ public class QTDetailBackingBean extends
 		case 7:
 			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
 				resDTO = detailSO.saveQTDtl(reqDTO);
-				renewSesionObject();
+				renewQTSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
@@ -3619,7 +3623,7 @@ public class QTDetailBackingBean extends
 				reqDTO.getQtdetail().setFCApproval(true);
 				detailSO.validateApprovalDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
-				renewSesionObject();
+				renewQTSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
