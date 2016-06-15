@@ -1072,8 +1072,12 @@ public class SPDetailManagedBean extends BaseManagedBean {
 			}
 			Date minEffectiveDate = getMinEffectiveDate(effectiveDates);
 			Date maxExpiryDate = getMaxExpiryDate(expiryDates);
-			this.noOfYears = numberOfMonthsBetweenTwoDates(minEffectiveDate,
-					maxExpiryDate);
+			if(minEffectiveDate != null && maxExpiryDate != null){
+				this.noOfYears = numberOfMonthsBetweenTwoDates(minEffectiveDate,
+						maxExpiryDate);
+			}else{
+				this.noOfYears = 0;
+			}
 			effectiveDates = null;
 			expiryDates = null;
 		}
@@ -1154,8 +1158,12 @@ public class SPDetailManagedBean extends BaseManagedBean {
 				}
 				Date minEffectiveDate = getMinEffectiveDate(effectiveDates);
 				Date maxExpiryDate = getMaxExpiryDate(expiryDates);
-				this.totalYears = numberOfMonthsBetweenTwoDates(
-						minEffectiveDate, maxExpiryDate);
+				if (minEffectiveDate != null && maxExpiryDate != null) {
+					this.totalYears = numberOfMonthsBetweenTwoDates(
+							minEffectiveDate, maxExpiryDate);
+				} else {
+					this.totalYears = 0;
+				}
 			} else {
 				this.totalYears = 0;
 			}
@@ -1633,11 +1641,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	private Date getMinEffectiveDate(List<Date> effectiveDates) {
-		Date minEffectiveDate = effectiveDates.remove(0);
-		if (!effectiveDates.isEmpty()) {
-			for (Date date : effectiveDates) {
-				if (date.before(minEffectiveDate)) {
-					minEffectiveDate = date;
+		Date minEffectiveDate = null;
+		if (effectiveDates != null && !effectiveDates.isEmpty()) {
+			minEffectiveDate = effectiveDates.remove(0);
+			if (!effectiveDates.isEmpty()) {
+				for (Date date : effectiveDates) {
+					if (date.before(minEffectiveDate)) {
+						minEffectiveDate = date;
+					}
 				}
 			}
 		}
@@ -1645,11 +1656,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	private Date getMaxExpiryDate(List<Date> expiryDates) {
-		Date maxExpiryDate = expiryDates.remove(0);
-		if (!expiryDates.isEmpty()) {
-			for (Date date : expiryDates) {
-				if (date.after(maxExpiryDate)) {
-					maxExpiryDate = date;
+		Date maxExpiryDate = null;
+		if (expiryDates != null && !expiryDates.isEmpty()) {
+			maxExpiryDate = expiryDates.remove(0);
+			if (!expiryDates.isEmpty()) {
+				for (Date date : expiryDates) {
+					if (date.after(maxExpiryDate)) {
+						maxExpiryDate = date;
+					}
 				}
 			}
 		}
