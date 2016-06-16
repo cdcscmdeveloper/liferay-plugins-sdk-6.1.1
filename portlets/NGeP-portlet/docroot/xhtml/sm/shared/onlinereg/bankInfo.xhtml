@@ -47,11 +47,13 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true" process="@this,bankInfoId"
-				action="#{registrationBackingBean.addSupplierBank}"
-				update="bankInfoId" />
+				action="#{registrationBackingBean.addSupplierBank}" id="addBnkBtnId"
+				disabled="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks and 
+				registrationBackingBean.managedBean.smAppl.smSupplierBanks.size() eq SupplierManagementConst.MAX_PAYMENT_BANK}"
+				update="deleteBnkBtnId,bankInfoId,@this" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"  partialSubmit="true" process="@this,bankInfoId"
-				action="#{registrationBackingBean.removeSupplierBank}" 
-				update="bankInfoId" />
+				action="#{registrationBackingBean.removeSupplierBank}" disabled="#{empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
+				update="bankInfoId,addBnkBtnId,@this" id="deleteBnkBtnId"/>
 		</div>
 	</p:panel>
 </ui:composition>
