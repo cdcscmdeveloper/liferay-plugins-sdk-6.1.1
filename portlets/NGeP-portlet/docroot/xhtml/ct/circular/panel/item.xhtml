@@ -408,8 +408,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					<td width="25%" valign="top"><p:outputLabel value="#{lbl['lbl.ct.location']}" styleClass="required" /></td>
 					<td width="70%">
 				
-						<div style="height: 370px; overflow-y: scroll;">
-							<p:tree id="treeZoneGeneralPopup"  style="height: 368px;"
+							<p:tree id="treeZoneGeneralPopup"  style="height: 370px;"
 								value="#{panelBackingBean.managedBean.rootZoanlTree}"  
 								var="location"  
 								selection="#{panelBackingBean.managedBean.selectedGeneralTreeNodes}"
@@ -423,7 +422,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 									<h:outputText value="#{location.districtId.districtName}" />
 								</p:treeNode>
 							</p:tree>
-						</div></td>
+						</td>
 				</tr>
 			</table>
 		
