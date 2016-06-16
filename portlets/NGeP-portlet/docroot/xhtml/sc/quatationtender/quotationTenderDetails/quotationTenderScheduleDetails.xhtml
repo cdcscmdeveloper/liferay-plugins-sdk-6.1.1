@@ -32,7 +32,7 @@
 										</c:when>
 										<c:when test="#{isPublishDateEnable}">
 											<p:calendar label="#{lbl['lbl.sc.publish.date']}"
-												mindate="#{qTScheduleDetailBackingBean.managedBean.today}"
+												mindate="#{qTScheduleDetailBackingBean.handlePublishDate()}"
 												value="#{qTScheduleDetailBackingBean.managedBean.qt.newPublishDate}"
 												id="noticePublish" 
 												readonlyInput="true"
