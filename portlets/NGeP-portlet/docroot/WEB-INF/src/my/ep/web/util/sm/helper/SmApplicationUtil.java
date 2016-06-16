@@ -3267,12 +3267,14 @@ public class SmApplicationUtil {
 			List<PmCertBody> pmCertBodyList = new ArrayList<PmCertBody>();
 			PmCertBody otherTypeCertBody = null;
 			for (PmCertBody certBody : resDTO.getCertBodyList()) {
-				if (certBody.getBodyName() != null
-						&& (certBody.getBodyName().contains("LAIN-LAIN") || certBody
-								.getBodyName().contains("OTHERS"))) {
-					otherTypeCertBody = certBody;
-				} else {
-					pmCertBodyList.add(certBody);
+				if (certBody.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					if (certBody.getBodyName() != null
+							&& (certBody.getBodyName().contains("LAIN-LAIN") || certBody
+									.getBodyName().contains("OTHERS"))) {
+						otherTypeCertBody = certBody;
+					} else {
+						pmCertBodyList.add(certBody);
+					}
 				}
 			}
 			if (otherTypeCertBody != null) {
