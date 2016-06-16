@@ -98,9 +98,7 @@ public class ContinuousBidSchedulerJob implements Job {
 							+ currentSchedule.getEndDate().equals(
 									getCompareTime()));
 					if (currentSchedule.getPmStatus().getStatusId()
-							.equals(BidStatusConst.BID_IN_PROGRESS)
-							|| currentSchedule.getPmStatus().getStatusId()
-									.equals(BidStatusConst.BID_PAUSED)) {
+							.equals(BidStatusConst.BID_IN_PROGRESS)) {
 						currentSchedule.setPmStatus(getPmStatusByStatusId(BidStatusConst.BID_COMPLETED));
 						reqDTO.setScBidSchedule(currentSchedule);
 						resDTO = biddingSO

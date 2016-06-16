@@ -3,7 +3,9 @@ package my.ep.web.scheduler.job.sc;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
+import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -36,8 +38,19 @@ public class ProposalValidityExpiaryJob implements Job {
 			qtProposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			qtProposalSO.proposalValidityExpiary(reqDTO);
+			ProposalResDTO resDTO = qtProposalSO
+					.proposalValidityExpiary(reqDTO);
+			if (resDTO.isSuccessful()) {
+				log.info("%$%$%$ ProposalValidityExpiaryJob job executed successfully @"
+						+ DateUtils.getCurrentDate());
+			}else{
+				log.info("%$%$%$ ProposalValidityExpiaryJob job execution failed @"
+						+ DateUtils.getCurrentDate());
+			}
 
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			//TODO need to define error handling scenarios
 		} finally {
 			qtProposalSO = null;
 		}
