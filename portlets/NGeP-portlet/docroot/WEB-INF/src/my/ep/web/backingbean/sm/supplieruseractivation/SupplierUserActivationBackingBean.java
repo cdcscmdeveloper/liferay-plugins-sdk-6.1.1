@@ -426,8 +426,12 @@ public class SupplierUserActivationBackingBean extends
 	
 	//redirect to invalid activation page
 	private void redirectToInvalidActivationPage(FacesContext fc) {
-		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-				SmCommonUtil.getMessage("lbl.sm.activation.invalid", null)));
+		fc.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.activation.invalid",
+								new String[] { SmRuleHelper.getInstance()
+										.getEmailActivationDays() + "" })));
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
