@@ -791,15 +791,12 @@ public class TemplateSpecHelper {
 	 */
 	public TplSpecAnswer createNewSpecAnswer(TemplateSpecBean templateSpecBean, TplSpecQuestion specQuestion, TplSpecZoneDtl specZoneDtl,
 			TplSpecTierQty specTierQty) {
-		TplSpecAnswer newSpecAnswer = null;
+		
 		TplSpecZoneQty tplSpecZoneQty = null;
-		if(specQuestion.getTplSpecAnswers() != null  && specQuestion.getTplSpecAnswers().size()>0){
-			newSpecAnswer = specQuestion.getTplSpecAnswers().get(0);
-		} else{
-			newSpecAnswer = new TplSpecAnswer();
-			newSpecAnswer.setTplSpecQuestion(specQuestion);
-			newSpecAnswer.setTplSpecTierQty(specTierQty);
-		}
+		TplSpecAnswer newSpecAnswer = new TplSpecAnswer();
+		
+		newSpecAnswer.setTplSpecQuestion(specQuestion);
+		newSpecAnswer.setTplSpecTierQty(specTierQty);
 		
 		if (specZoneDtl != null && templateSpecBean.getSpecMaster().isQtyByZone()) {
 			// Get TplSpecZoneQty by zone.
@@ -817,15 +814,14 @@ public class TemplateSpecHelper {
 			newSpecAnswer.setTplSpecZoneQty(tplSpecZoneQty);	
 		}
 		
-		if(newSpecAnswer.isBrandNew()){
-			setUserDetails(newSpecAnswer);
-			
-			TplSpecSuppAnswer newSpecSuppAnswer = new TplSpecSuppAnswer();
-			newSpecSuppAnswer.setSmSupplier(templateSpecBean.getSupplier());
-			newSpecSuppAnswer.setTplSpecZoneDtl(specZoneDtl);
-			newSpecAnswer.setTplSpecSuppAnswer(newSpecSuppAnswer);
-			setUserDetails(newSpecSuppAnswer);
-		}
+		setUserDetails(newSpecAnswer);
+		
+		TplSpecSuppAnswer newSpecSuppAnswer = new TplSpecSuppAnswer();
+		newSpecSuppAnswer.setSmSupplier(templateSpecBean.getSupplier());
+		newSpecSuppAnswer.setTplSpecZoneDtl(specZoneDtl);
+		newSpecAnswer.setTplSpecSuppAnswer(newSpecSuppAnswer);
+		setUserDetails(newSpecSuppAnswer);
+		
 		return newSpecAnswer;
 	}
 	

@@ -1354,19 +1354,48 @@ public class TemplateSpecBackingBean extends
 	private void populateTierSpecAnswers(TemplateSpecBean templateSpecBean,
 			TplSpecQuestion specQuestion, TplSpecZoneDtl specZoneDtl,
 			List<TplSpecAnswer> specAnswers) {
+		boolean isSpecQtyExists = Boolean.TRUE;
+
+		// add existing answers
+		if(specQuestion.getTplSpecAnswers() != null && specQuestion.getTplSpecAnswers().size()>0){
+			specAnswers.addAll(specQuestion.getTplSpecAnswers());
+		}
+
 		if (specQuestion.getTplSpecTierQties() != null) {
 			TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 
 			for (TplSpecTierQty specTierQty : specQuestion
 					.getTplSpecTierQties()) {
-				TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(
-						templateSpecBean, specQuestion, specZoneDtl,
-						specTierQty);
 
-				specAnswers.add(specAnswer);
+				if(null == specQuestion.getTplSpecAnswers()){
+					isSpecQtyExists = Boolean.FALSE;
+					
+				} else{
+					isSpecQtyExists = checkSpecAnswersBySpecTierQty(specTierQty, specAnswers);
+				}
+				if(!isSpecQtyExists){
+					TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(
+							templateSpecBean, specQuestion, specZoneDtl,
+							specTierQty);
+					specAnswers.add(specAnswer);
+				} 
 			}
 		}
 	}
+
+	private boolean checkSpecAnswersBySpecTierQty(TplSpecTierQty specTierQty,
+			List<TplSpecAnswer> specAnswers) {
+		boolean isSpecQtyFound = Boolean.FALSE;	
+		if (specAnswers != null) {
+			for (TplSpecAnswer specAnswer : specAnswers) {
+				if(specAnswer.getTplSpecTierQty() != null && specAnswer.getTplSpecTierQty().equals(specTierQty)){
+					isSpecQtyFound = Boolean.TRUE;
+				}
+			}
+		}
+		return isSpecQtyFound;
+	}
+
 
 	/**
 	 * Add new Tier Quantity action
