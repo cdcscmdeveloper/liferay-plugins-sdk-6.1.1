@@ -522,5 +522,15 @@ public class DateUtils {
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * @return current hour value
+	 */
+	public static int getCurrentHours() {
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		return calendar.get(Calendar.HOUR_OF_DAY);
+	}
 
 }
