@@ -1,4 +1,5 @@
 
+
 package my.ep.web.scheduler.servlet.ntf;
 
 import javax.servlet.ServletConfig;
@@ -29,7 +30,7 @@ public class NtfSchedulerServlet extends HttpServlet {
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.NTF_MESSAGE_BULK_INTERNAL_JOB,
-								SchedulerConstants.NTF_MESSAGE_BULK_INTERNAL_JOB),
+								SchedulerConstants.NTF_MESSAGE_BULK_JOB_GROUP),
 						NtfMessageBulkJob.class,
 						SchedulerConstants.NTF_MESSAGE_BULK_JOB_DESC,
 						SchedulerPropertiesUtils
