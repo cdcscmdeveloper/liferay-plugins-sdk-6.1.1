@@ -153,8 +153,9 @@
 					update="@this, zoneGeneralDataTable,zonePopupGeneral"
 					action="#{directLOABackingBean.updateZoneGeneralLocation}">
 				</p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					style="float:right;" onclick="ZoneGeneral.hide();" />
+				
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
+					style="float:right;" action="#{directLOABackingBean.cancelZonePopUp}" />
 			</div>
 
 		</p:dialog>
