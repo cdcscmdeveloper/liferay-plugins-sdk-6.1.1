@@ -2547,4 +2547,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return scAddress;
 	}
+	
+	/**
+	 * if exceeds 12 PM,next day else today 
+	 *  
+	 * @return Date
+	 */
+	public Date handlePublishDate() {
+		
+		int hour = DateUtils.getCurrentHours();
+		Date today = new Date();
+		return hour >= 12 ? DateUtils.addDays(today, 1) : today;
+	}
 }
