@@ -1270,7 +1270,7 @@ public class PurchaseInDefaultBackingBean extends
 					}
 				}
 			}
-
+			debugLogger("viewMarketResearch - item code" + itemCode);
 			paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);
 
 			// if(scPurchaseInDefault.isBrandNew()) {
