@@ -11,7 +11,7 @@
 		          selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedScLoaReports}" rowKey="#{loaReportVar}">
 					         <p:ajax event="rowSelect" update=":form:delLoaContentBtn" />
 						    <p:column headerText="#{lbl['lbl.ct.contents']}" style="width:50%;" styleClass="column-align-center">
-						    <p:outputLabel value="#{loaReportVar.title}" style="float:left;" rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}" />
+						    <h:outputText value="#{loaReportVar.title}" style="float:left;" rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}" />
 							<p:inputText value="#{loaReportVar.title}" style="width:90%;" maxlength="1000"  
 							    disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
 							rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}"/>
@@ -21,7 +21,7 @@
 								<h:outputText value="#{lbl['lbl.ct.type']}"/>
 						        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.content.type']}"/>
 						  	</f:facet>
-							<p:outputLabel style="float:left;"
+							<h:outputText style="float:left;"
 								value="#{amendmentBackingBean.getParameterDesc(loaReportVar.definationType)}" />
 						 </p:column>
 						 <p:column headerText="#{lbl['lbl.btn.upload']}" styleClass="column-align-center" style="width:20%;">
