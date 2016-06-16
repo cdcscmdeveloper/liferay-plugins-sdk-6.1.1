@@ -6435,4 +6435,14 @@ public class DirectLOABackingBean extends
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * Cancel zone pop up.
+	 */
+	public void cancelZonePopUp() {
+		log.info("cancelZonePopUp");
+		RequestContext.getCurrentInstance().execute("ZoneGeneral.hide();");
+		// zone required validation
+		getManagedBean().setRequired(Boolean.FALSE);
+	}
 }
