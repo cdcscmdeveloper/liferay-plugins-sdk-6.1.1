@@ -257,7 +257,7 @@ public class DivisionBackingBean extends BaseBackingBean<DivisionManagedBean> {
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IListOfStatesSO.class);
 
-			result = listOfStatesSO.retrieveListOfStates();
+			result = listOfStatesSO.retrieveStateListByAdoption();
 			//this.getManagedBean().setListOfStates(result);
 			
 			log.info("...List Of States.size()....="
