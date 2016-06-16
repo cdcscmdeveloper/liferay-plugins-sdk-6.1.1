@@ -589,7 +589,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			}
 			
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-				if (getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+				if (getManagedBean().getRemarkList().get(0).getRemark()==null ||  
+					getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
