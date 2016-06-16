@@ -377,14 +377,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public <ATTACHMENT extends ScAttachment> File downloadFile(
 			ATTACHMENT scAttachment) throws IOException {
+		File file = null;
 		if (scAttachment != null
 				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
-
-			return downloadFile(getActualFilePath(scAttachment),
-					scAttachment.getFileName());
+		try {
+				file = downloadFile(getActualFilePath(scAttachment),
+						scAttachment.getFileName());
+			} catch (FileNotFoundException exception) {
+				// Separate the file name from absolute path
+				String splitMsg[] = StringUtils.split(exception.getMessage(),
+						SourcingConstants.BACK_SLASH);
+				int size = splitMsg.length;
+				String filePath = Arrays.toString(splitMsg);
+				if (size > 1) {
+					filePath = splitMsg[size - 1];
+				}
+				throw new EpException(MessageConst.ERROR_760411,
+						new String[] { StringUtils.replace(filePath,
+								SourcingConstants.FILE_EXCEPTION_MSG, " ") });
+						
+			}
 		} else {
-			throw new EpException("Attachment not found.");
+			throw new EpException(MessageConst.ERROR_760412);
 		}
+		return file;
 	}
 
 	/**
