@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="#{lbl['lbl.pm.header.general.org.control']}"
+	<p:panel id="orgControlProfilePnlId" header="#{lbl['lbl.pm.header.general.org.control']}"
 		toggleable="true">
 		<h:panelGrid columns="2" rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">				
 			<h:outputLabel value="#{lbl['lbl.pm.org.ministryName']}"></h:outputLabel>
