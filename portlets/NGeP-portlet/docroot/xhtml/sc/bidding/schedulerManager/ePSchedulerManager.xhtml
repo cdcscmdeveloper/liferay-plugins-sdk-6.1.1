@@ -164,14 +164,16 @@
 		</p:panel>
 		
 		<br />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-				process="@this" partialSubmit="true" onstart="blockWidget.show()"
-				oncomplete="blockWidget.hide()" 
-				action="#{schedulerManagerBB.onAddJob()}"
-				update="@form" />
-		</div>
-		<br />
+		<ui:remove>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					process="@this" partialSubmit="true" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" 
+					action="#{schedulerManagerBB.onAddJob()}"
+					update="@form" />
+			</div>
+			<br />
+		</ui:remove>
 					
 		<p:panel id="biddingListPanel" header="#{lbl['lbl.sc.bidding.list']}"
 			toggleable="true">
