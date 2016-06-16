@@ -26,7 +26,7 @@
 						styleClass="mandatory" /></td>
 				<td><p:calendar label="#{lbl['lbl.sc.publish.date']}"
 						disabled="#{approvalBackingBean.managedBean.readOnly}"
-						mindate="#{approvalBackingBean.managedBean.today}"
+						mindate="#{approvalBackingBean.handlePublishDate()}"
 						value="#{approvalBackingBean.managedBean.qt.newPublishDate}"
 						id="noticePublish" required="true"
 						maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
