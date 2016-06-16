@@ -38,6 +38,9 @@ public class InviteSuppliersJob implements Job {
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTOsbSO.class);
 		QTOsbReqDTO osbReqDTO = new QTOsbReqDTO();
 		 osbSO.updateSupplierForPublishedQT(osbReqDTO);
+		}catch(Exception e){
+			log.error(e.getLocalizedMessage());
+			//TODO need to add error handling scenarios
 		}finally{
 			
 		}
