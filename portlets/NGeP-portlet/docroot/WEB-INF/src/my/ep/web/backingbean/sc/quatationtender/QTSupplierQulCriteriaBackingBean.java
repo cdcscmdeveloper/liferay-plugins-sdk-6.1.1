@@ -248,10 +248,17 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param message the message
 	 */
 	private void debugLogger(Object message) {
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		if(scQt != null){
+			message += " @qtNo = "+scQt.getQtNo();
+		}
 		if (log.isDebugEnabled()) {
 			log.debug(message);
+		}else {
+			log.info(message);
 		}
-		log.info(message);
+		
 	}
 
 	/**
