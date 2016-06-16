@@ -38,6 +38,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.type.aut.SearchOperator;
@@ -71,10 +72,17 @@ public class QTDeductionPaymentBackingBean extends
 	 * @param message the message
 	 */
 	private void debugLogger(Object message) {
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		if(scQt != null){
+			message += " @qtNo = "+scQt.getQtNo();
+		}
 		if (log.isDebugEnabled()) {
 			log.debug(message);
+		}else{
+			log.info(message);
 		}
-		log.info(message);
+		
 	}
 	
 	/** The flag. */
