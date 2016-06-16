@@ -1225,6 +1225,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				|| getManagedBean().getCtContract().getQuotationTender().getQtId() == null) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_758001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+			return;
 		}
 		
 		 IAgreementSO agreementSO = null;
