@@ -76,7 +76,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -124,10 +123,17 @@ public class QTCommitteBackingBean extends
 	 *            the message
 	 */
 	private void debugLogger(Object message) {
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		if(scQt != null){
+			message += " @qtNo = "+scQt.getQtNo();
+		}
 		if (logger.isDebugEnabled()) {
 			logger.debug(message);
+		}else{
+			logger.info(message);
 		}
-		logger.info(message);
+		
 	}
 
 	/**
