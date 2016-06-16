@@ -6443,6 +6443,6 @@ public class DirectLOABackingBean extends
 		log.info("cancelZonePopUp");
 		RequestContext.getCurrentInstance().execute("ZoneGeneral.hide();");
 		// zone required validation
-		getManagedBean().setRequired(Boolean.FALSE);
+		getManagedBean().setZoneLocation(Boolean.FALSE);
 	}
 }
