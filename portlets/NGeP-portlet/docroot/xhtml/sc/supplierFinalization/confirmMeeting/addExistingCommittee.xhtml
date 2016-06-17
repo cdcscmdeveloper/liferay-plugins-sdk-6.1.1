@@ -62,7 +62,11 @@
 						rowIndexVar="index">
 
 						<ac:paginator for="existingMemberTbl" />
-
+                <p:ajax event="rowSelect" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
 						<p:column selectionMode="multiple" style="width:2%" />
 
 						<p:column headerText="#{lbl['lbl.sc.name']}">
@@ -99,6 +103,8 @@
 		</h:panelGroup>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}"
+			id="supplierFinalizationMeetingAddOnBtnId"
+			disabled="#{empty suppFinalMeetingBackingBean.managedBean.selectedPmUsers}"
 				process="@this, userSearch" update=":form:memberListTbl"
 				actionListener="#{suppFinalMeetingBackingBean.committeeOkAction}" />
 
