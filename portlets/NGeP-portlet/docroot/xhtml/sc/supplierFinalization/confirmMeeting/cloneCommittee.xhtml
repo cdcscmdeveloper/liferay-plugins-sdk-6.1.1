@@ -186,7 +186,11 @@
 				rowKey="#{committeeMember.committeeMemberId}"
 				rowIndexVar="index">
 				<ac:paginator for="cloneCommitteeTbl" />
-
+            <p:ajax event="rowSelect" update="@([id$=committeeDtlPanel])" />
+			<p:ajax event="rowUnselect" update="@([id$=committeeDtlPanel])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=committeeDtlPanel])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=committeeDtlPanel])" />
+			<p:ajax event="toggleSelect" update="@([id$=committeeDtlPanel])" />
 				<p:column selectionMode="multiple" style="width:2%"></p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.name']}">
@@ -228,13 +232,13 @@
 					onclick="cloneMemberWidgetVar.hide();" />
 				
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+				disabled="#{empty suppFinalMeetingBackingBean.managedBean.cloneCommitteMembersSelect}"
 					style="float:right;"
 					process="@this,committeeDtlPanel" 
 					partialSubmit="true"
 					actionListener="#{suppFinalMeetingBackingBean.cloneAction}"
 					onclick="committeeMemberWidVar.hide();"
-					oncomplete="committeeMemberWidVar.paginator.endLink.click();"
-					update="memberListTbl" />
+					 update="@([id$=memberListTbl])" />
 			</div>
 		</p:panel>
 	</p:dialog>
