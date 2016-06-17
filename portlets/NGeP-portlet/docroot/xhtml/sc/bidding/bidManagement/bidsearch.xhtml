@@ -175,7 +175,7 @@
 				</p:commandLink>
 
 				<p:commandLink id="pauseButton"
-					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.bidInProgress}"
+					rendered="#{bid.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.bidPausePopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
@@ -187,7 +187,7 @@
 				</p:commandLink>
 
 				<p:commandLink id="cancelButton" onmouseover="Cancel"
-					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.pendingBidding}"
+					rendered="#{bid.pmStatus.statusId eq BidStatusConst.BID_PENDING_BIDDING}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.bidCancelPopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
@@ -199,7 +199,7 @@
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
 				<p:commandLink id="resumeButton"
-					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.bidPaused}"
+					rendered="#{bid.pmStatus.statusId eq BidStatusConst.BID_PAUSED}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.reScheduleOrReBidPopUpAction(bid)}"
 					update="@([id$=rescheduleRebidPopUp])"
@@ -209,7 +209,7 @@
 						title="#{lbl['lbl.sc.resume.bid']}" />
 				</p:commandLink>
 				<p:commandLink id="rescheduleButton"
-					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.bidRescheduled}"
+					rendered="#{bid.pmStatus.statusId eq BidStatusConst.BID_RESCHEDULE_BIDDING}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.reScheduleOrReBidPopUpAction(bid)}"
 					update="@([id$=rescheduleRebidPopUp])"

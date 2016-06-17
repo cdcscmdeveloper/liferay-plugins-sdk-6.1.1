@@ -62,6 +62,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private String duration;
 	private String newBidDuration;
 	private ScBidAction bidAction;
+	private ScBidAction lastBidAction;
 	private Date mindate;
 	private Date maxdate;
 	private String actionType;
@@ -1137,6 +1138,20 @@ public class BiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setRemainingTimeForTimers(Long remainingTimeForTimers) {
 		this.remainingTimeForTimers = remainingTimeForTimers;
+	}
+
+	/**
+	 * @return the lastBidAction
+	 */
+	public ScBidAction getLastBidAction() {
+		return lastBidAction;
+	}
+
+	/**
+	 * @param lastBidAction the lastBidAction to set
+	 */
+	public void setLastBidAction(ScBidAction lastBidAction) {
+		this.lastBidAction = lastBidAction;
 	}
 	
 	
