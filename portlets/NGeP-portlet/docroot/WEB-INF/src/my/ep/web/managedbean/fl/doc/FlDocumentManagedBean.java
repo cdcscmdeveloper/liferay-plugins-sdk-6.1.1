@@ -340,6 +340,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 					}
 				} 
 				reqDTO.setUserRoleList(getUserRoles());
+				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
 				FlDocumentResDTO resDTO = flDocumentSO.searchFulfilmentDoc(reqDTO);
