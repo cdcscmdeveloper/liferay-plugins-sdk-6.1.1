@@ -9,7 +9,7 @@
     <p:panel id="deductionId" toggleable="true"  toggleSpeed="500">
     	   <f:facet name="header">
 			    <h:outputText value="#{lbl['lbl.ct.panel.deduction']}"/>
-			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.dtls']}"/>
+			    <ac:iconTooltip id="tooltipPanelTypeId" value="#{lbl['lbl.ct.tooltip.deduction.dtls']}"/>
 	   	   </f:facet>
 		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.deduction']}" escape="false"/><br/><br/>
 		   
@@ -37,7 +37,7 @@
 		            <p:column style="width:650px;" id="updateColumn"  styleClass="column-align-center">
 		        	     <f:facet name="header">
 			                  <h:outputText value="#{lbl['lbl.ct.deduction.type']}" styleClass="required"/>
-	               		      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.type']}"/>
+	               		      <ac:iconTooltip id="tooltipDedTypeId" value="#{lbl['lbl.ct.tooltip.deduction.type']}"/>
 	           		     </f:facet>
 	           		   
 	           		     <p:selectOneMenu value="#{datas.deductionType.parameterId}" style="width:170px;float:left;text-align:left;"
@@ -116,7 +116,7 @@
                                     <p:column style="white-space:normal;width:98%;">
 			                         	  <f:facet name="header">
 						                        <h:outputText value="#{lbl['lbl.ct.deduction.clause.desc']}"/>
-				               	          	   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
+				               	          	   <ac:iconTooltip id="toolTipClauseid" value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
 				               	          </f:facet>
                                           <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="4" style="width:97%;" autoResize="false"
                                                disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" styleClass="ui-inputtextarea">
