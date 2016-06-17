@@ -3099,13 +3099,13 @@ public class SmApplicationUtil {
 					}
 					if (applicationType
 							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-//						if (diffDays > 90) {
-//							result = true;
-//							throw new EpException(MessageConst.ERROR_722501);
-//						} else if (diffDays < -365) {
-//							result = true;
-//							throw new EpException(MessageConst.ERROR_722502);
-//						}
+						if (diffDays > 90) {
+							result = true;
+							throw new EpException(MessageConst.ERROR_722501);
+						} else if (diffDays < -365) {
+							result = true;
+							throw new EpException(MessageConst.ERROR_722502);
+						}
 					} else if (applicationType
 							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 							&& (diffDays >= 0 && diffDays < 90)) {

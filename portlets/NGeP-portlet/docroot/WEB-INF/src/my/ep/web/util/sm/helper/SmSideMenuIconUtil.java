@@ -12,11 +12,14 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
@@ -876,19 +879,15 @@ public class SmSideMenuIconUtil {
 							}
 
 							// smSupplierBranchBanks
-							retVal = EntityHelper.hasDiffBetweenList(
+							retVal = isSupplierBranchBankHasDifference(
 									prevBank.getSmSupplierBranchBanks(),
-									currBank.getSmSupplierBranchBanks(), null,
-									new String[] { "smSupplierBranch" },
-									new String[] { "smSupplierBank" });
+									currBank.getSmSupplierBranchBanks());
 
 							// smChequeSignatories
 							if (!retVal) {
-								retVal = EntityHelper.hasDiffBetweenList(
+								retVal = isChequeSignatoriesHasDifference(
 										prevBank.getSmChequeSignatories(),
-										currBank.getSmChequeSignatories(),
-										null, new String[] { "smPersonnel" },
-										new String[] { "smSupplierBank" });
+										currBank.getSmChequeSignatories());
 							}
 						}
 					}
@@ -1075,6 +1074,106 @@ public class SmSideMenuIconUtil {
 			}
 		} catch (Exception ex) {
 
+		}
+		return retVal;
+	}
+
+	private static boolean isSupplierBranchBankHasDifference(
+			List<SmSupplierBranchBank> prevBranchBanks,
+			List<SmSupplierBranchBank> currBranchBanks) {
+		boolean retVal = false;
+
+		if (EntityHelper.isCollectionEmpty(prevBranchBanks)
+				&& !EntityHelper.isCollectionEmpty(currBranchBanks)) {
+			retVal = true;
+		} else if (!retVal && !EntityHelper.isCollectionEmpty(prevBranchBanks)
+				&& EntityHelper.isCollectionEmpty(currBranchBanks)) {
+			retVal = true;
+		} else if (!retVal && !EntityHelper.isCollectionEmpty(prevBranchBanks)
+				&& !EntityHelper.isCollectionEmpty(currBranchBanks)) {
+
+			// check if current exist in previous
+			for (SmSupplierBranchBank currBrBank : currBranchBanks) {
+				if (getSmSupplierBranchBank(prevBranchBanks,
+						currBrBank.getSmSupplierBranch()) == null) {
+					retVal = true;
+					break;
+				}
+			}
+			// check if previous exist in current
+			for (SmSupplierBranchBank prevBrBank : prevBranchBanks) {
+				if (getSmSupplierBranchBank(currBranchBanks,
+						prevBrBank.getSmSupplierBranch()) == null) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	private static boolean isChequeSignatoriesHasDifference(
+			List<SmChequeSignatory> prevChequeSignatories,
+			List<SmChequeSignatory> currChequeSignatories) {
+		boolean retVal = false;
+
+		if (EntityHelper.isCollectionEmpty(prevChequeSignatories)
+				&& !EntityHelper.isCollectionEmpty(currChequeSignatories)) {
+			retVal = true;
+		} else if (!retVal
+				&& !EntityHelper.isCollectionEmpty(prevChequeSignatories)
+				&& EntityHelper.isCollectionEmpty(currChequeSignatories)) {
+			retVal = true;
+		} else if (!retVal
+				&& !EntityHelper.isCollectionEmpty(prevChequeSignatories)
+				&& !EntityHelper.isCollectionEmpty(currChequeSignatories)) {
+
+			// check if current exist in previous
+			for (SmChequeSignatory currChq : currChequeSignatories) {
+				if (getSmChequeSignatory(prevChequeSignatories,
+						currChq.getSmPersonnel()) == null) {
+					retVal = true;
+					break;
+				}
+			}
+			// check if previous exist in current
+			for (SmChequeSignatory prevChq : prevChequeSignatories) {
+				if (getSmChequeSignatory(currChequeSignatories,
+						prevChq.getSmPersonnel()) == null) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	private static SmChequeSignatory getSmChequeSignatory(
+			List<SmChequeSignatory> chequeSignatories, SmPersonnel personnel) {
+		SmChequeSignatory retVal = null;
+		for (SmChequeSignatory chqTmp : chequeSignatories) {
+			if (chqTmp.getSmPersonnel() != null
+					&& personnel != null
+					&& chqTmp.getSmPersonnel().getIdentificationNo()
+							.equals(personnel.getIdentificationNo())) {
+				retVal = chqTmp;
+				break;
+			}
+		}
+		return retVal;
+	}
+
+	private static SmSupplierBranchBank getSmSupplierBranchBank(
+			List<SmSupplierBranchBank> branchBanks, SmSupplierBranch branch) {
+		SmSupplierBranchBank retVal = null;
+		for (SmSupplierBranchBank brBankTmp : branchBanks) {
+			if (brBankTmp.getSmSupplierBranch() != null
+					&& branch != null
+					&& brBankTmp.getSmSupplierBranch().getBranchCode()
+							.equals(branch.getBranchCode())) {
+				retVal = brBankTmp;
+				break;
+			}
 		}
 		return retVal;
 	}
