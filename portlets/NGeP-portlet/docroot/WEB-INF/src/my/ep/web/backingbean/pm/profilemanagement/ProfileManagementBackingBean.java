@@ -5660,4 +5660,10 @@ public class ProfileManagementBackingBean extends
 		getManagedBean().getSelectedUser().setIdentificationNo(null);
 		getManagedBean().getSelectedUser().setLoginId(null);
 	}
+	
+	public void selectPtjAction(PmOrgProfile orgProfile){
+		getManagedBean().setSelectedOrgProfile(orgProfile);
+		this.getManagedBean().getUserProfileSearchBean()
+			.setSelectedOrgProfileId(orgProfile.getOrgProfileId());
+	}
 }
