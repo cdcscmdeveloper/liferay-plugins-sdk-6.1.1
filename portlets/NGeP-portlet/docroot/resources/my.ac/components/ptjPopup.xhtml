@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+<cc:interface>
+	<cc:attribute name="okAction" required="false" default="" />
+	<cc:attribute name="update" required="false" default="@this" />
+	<cc:attribute name="id" required="true" />
+</cc:interface>
+
+<cc:implementation>
+	<p:dialog id="ptjPopup"
+		header="#{lbl['lbl.pm.org.ptj.search']}"
+		widgetVar="ptjPopup" modal="true" width="680" position="top">
+
+		<p:messages id="ptjPopupMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false"  />
+
+		<h:panelGroup id="orgProfilePnlGrp">
+			<p:panel id="orgProfilePnlId" header="#{lbl['lbl.pm.header.general.org.search']}" toggleable="true"  >
+              <h:panelGrid columns="3" id="orgProfilePg">
+                 <p:selectOneMenu for="somMin"  disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptj.search.ministry']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="somMinistry"
+                      value="#{organisationSearchBackingBean.managedBean.ministryProfileId}" >
+            	   <f:selectItems value="#{organisationSearchBackingBean.getMinistryDropdown()}"/>
+            	   <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somJabatan,:form:#{cc.attrs.id}:searcbBtnId" />
+                 </p:selectOneMenu>
+                 <p:selectOneMenu id="somJab" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptj.search.jabatan']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="somJabatan"
+                      value="#{organisationSearchBackingBean.managedBean.jabatanProfileId}" >
+            	   <f:selectItems value="#{organisationSearchBackingBean.getJabatanDropdown()}"/>
+            	    <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
+                 </p:selectOneMenu>
+                 <p:selectOneMenu for="somPtjCodeName" 
+                    value="#{organisationSearchBackingBean.managedBean.ptjCodeName}" >
+                       <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptjCode']}" itemValue="#{ProfileManagementConst.ptjCode}"/>
+            	      <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptjName']}" itemValue="#{ProfileManagementConst.ptjName}"/>
+            	      <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
+                 </p:selectOneMenu>
+				 <p:spacer height="1"/>
+                 <p:inputText id="itPtjCodeValue" 
+                 	onkeypress="if (event.keyCode == 13) { ptjSearchBtnWV.jq.click(); return false; }"
+                     value="#{organisationSearchBackingBean.managedBean.ptjCodeNameSearchValues}" >
+                     <p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/></p:inputText>
+			  </h:panelGrid>
+			  	<div class="ppRightBtn">
+       		         <p:commandButton id="searcbBtnId" 
+       		         	widgetVar="ptjSearchBtnWV" value="#{lbl['lbl.btn.search']}" update=":form:#{cc.attrs.id}:dtOrgProfile"  
+       		            action="#{organisationSearchBackingBean.searchOrgProfiles}" process="@this" 
+       		            disabled="#{organisationSearchBackingBean.managedBean.ministryProfileId == null}"/> 
+			         
+		       </div>
+		       </p:panel>
+		       <p:panel id="orgProfileResultPnlId" header="#{lbl['lbl.pm.organisation.result']}" 
+					toggleable="true">
+					<h:panelGroup id="resultPanel" style="width:100%;">
+					<p:dataTable id="dtOrgProfile" var="orgProfile" rows="10"
+						value="#{organisationSearchBackingBean.orgProfileDataModel}"
+						selection="#{organisationSearchBackingBean.managedBean.selectedPtj}"
+						selectionMode="single"
+						rowIndexVar="index" lazy="true">
+						<ac:paginator for="dtOrgProfile"></ac:paginator>
+						<p:ajax event="rowUnselect" update="dtOrgProfile" process="@this" partialSubmit="true"/>
+						<p:ajax event="rowSelect" update="dtOrgProfile" process="@this" partialSubmit="true"/>
+						<p:ajax event="toggleSelect" update="dtOrgProfile" process="@this" partialSubmit="true"/>
+						<p:column headerText="#{lbl['lbl.pm.organisation.orgCode']}"
+							style="width :15%">
+							<h:outputText value="#{orgProfile.pmOrgValidity.orgCode}" />
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.pm.organisation.orgName']}"
+							style="width :60%">
+							<h:outputText value="#{orgProfile.pmOrgValidity.orgName}" />
+						</p:column>
+					</p:dataTable>
+					</h:panelGroup>
+					<table style="width: 100%;">
+				<tr>
+					<TD style="text-align: right;"><p:commandButton id="slbtn"
+							value="#{lbl['lbl.btn.select']}" partialSubmit="true"
+							action="#{organisationSearchBackingBean.okAction(cc.attrs.okAction)}"
+							process="@this" update="#{cc.attrs.update}" styleClass="BtnSpacing" /> 
+						<p:commandButton
+							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
+							process="@this" update="@this"
+							oncomplete="ptjPopup.hide()"  styleClass="BtnSpacing" /></TD>
+				</tr>
+			</table>
+				</p:panel>
+		</h:panelGroup>
+		
+		</p:dialog>
+</cc:implementation>
+</ui:composition>
