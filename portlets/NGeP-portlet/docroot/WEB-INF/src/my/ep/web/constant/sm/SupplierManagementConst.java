@@ -465,7 +465,7 @@ public class SupplierManagementConst {
 	public static final String SM_MYIDENTITY_STATUS_CODE_VALID = "70018";
 	public static final String SM_MYIDENTITY_SEVERITY_SUCC = "SUCC";
 	public static final String MY_IDENTITY_TYPE_COMPLAIN = "Complain";
-	public static final String MY_IDENTITY_TYPE_ONLINE = "Online"; 
+	public static final String MY_IDENTITY_TYPE_ONLINE = "Online";
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
@@ -581,12 +581,12 @@ public class SupplierManagementConst {
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_ALL = "C";
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_BEFORE = "B";
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_AFTER = "A";
-	
+
 	public static final String OFFLINE_SUPP_DOC_CHECKLIST_PREFIX = "_SUPP_DOC_CHECKLIST.pdf";
 	public static final String DECLARE_SUPP_DOC_PREFIX = "_DECLARATION.pdf";
 	public static final String BANK_VERIFICATION_FORM_PREFIX = "_PENANDATANGAN_CEK.pdf";
-	
-	public static final int MAX_PAYMENT_BANK = SmRuleHelper.getInstance().getMaxPaymentBankForEachBranch();
+
+	public static final int MAX_PAYMENT_BANK = 35;
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
@@ -1065,9 +1065,9 @@ public class SupplierManagementConst {
 	public String getSiteVisitAssignmentTypeAfter() {
 		return SITE_VISIT_ASSIGNMENT_TYPE_AFTER;
 	}
-	
+
 	public int getMAX_PAYMENT_BANK() {
-		return MAX_PAYMENT_BANK;
+		return SmRuleHelper.getInstance().getMaxPaymentBankForEachBranch();
 	}
 
 }
