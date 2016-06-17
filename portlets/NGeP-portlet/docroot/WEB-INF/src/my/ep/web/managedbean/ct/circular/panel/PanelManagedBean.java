@@ -80,7 +80,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	
 	private CtCircular circular;
 	private CtCircularVer circularVer;
-	private CtCancelCircular selectedCancelCircular;
 	private CtCancelCircularReq cancelCircularReq;
 	private CtPanelItem selectedPanelItems;
 	private CtPanelItem selectedItemForSpec;
@@ -88,10 +87,10 @@ public class PanelManagedBean extends BaseManagedBean {
 	private List <CtPanelSupplier> selectedPanelSuppliers;
 	private List<CtContactPerson> selectedContactPersons;
 	private List<CtPanelItemSpec> selectedPanelItemSpecs;
-	private List<CtCancelCircular> selectedCancelCirculars;
 	private List<CtCancelCircular> cancelledCircularList;
 	private List<CtCircularVer> circularVerList;
 	private List<CtCancelCircular> selectedCancelledCircularList;
+	private List<CtCancelCircular> selectedCancelCircular;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtPanelSupplier> panelSupplierList;
@@ -141,18 +140,18 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setCircularVer(CtCircularVer circularVer) {
 		this.circularVer = circularVer;
 	}
-
-	/**
-	 * @return the selectedCancelCircular
-	 */
-	public CtCancelCircular getSelectedCancelCircular() {
+	
+	
+	
+	public List<CtCancelCircular> getSelectedCancelCircular() {
 		return selectedCancelCircular;
 	}
 
 	/**
 	 * @param selectedCancelCircular the selectedCancelCircular to set
 	 */
-	public void setSelectedCancelCircular(CtCancelCircular selectedCancelCircular) {
+	public void setSelectedCancelCircular(
+			List<CtCancelCircular> selectedCancelCircular) {
 		this.selectedCancelCircular = selectedCancelCircular;
 	}
 	
@@ -377,21 +376,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setSelectedContactPersons(List<CtContactPerson> selectedContactPersons) {
 		this.selectedContactPersons = selectedContactPersons;
 	}
-
-	/**
-	 * @return the selectedCancelCirculars
-	 */
-	public List<CtCancelCircular> getSelectedCancelCirculars() {
-		return selectedCancelCirculars;
-	}
-
-	/**
-	 * @param selectedCancelCirculars the selectedCancelCirculars to set
-	 */
-	public void setSelectedCancelCirculars(List<CtCancelCircular> selectedCancelCirculars) {
-		this.selectedCancelCirculars = selectedCancelCirculars;
-	}
-
+	
 	/**
 	 * @return the cancelledCircularList
 	 */
@@ -918,4 +903,5 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setButtonHidePanelItemDel(boolean buttonHidePanelItemDel) {
 		this.buttonHidePanelItemDel = buttonHidePanelItemDel;
 	}
+
 }
