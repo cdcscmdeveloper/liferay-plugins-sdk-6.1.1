@@ -332,18 +332,20 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		flAddress.setPhoneNo(supplierBranch.getPhoneNo());
 		flAddress.setPhoneArea(supplierBranch.getPhoneArea());
 		flAddress.setPhoneCountry(supplierBranch.getPhoneCountry());
+		if(supplierBranch.getSmPersonnel() != null){
+			flAddress.setContactEmail(supplierBranch.getSmPersonnel().getEmail());
+			flAddress.setContactFaxNo(supplierBranch.getSmPersonnel().getFaxNo());
+			flAddress.setContactMobileNo(supplierBranch.getSmPersonnel().getMobileNo());
+			flAddress.setContactPerson(supplierBranch.getSmPersonnel().getName());
+			flAddress.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
+			flAddress.setContactFaxArea(supplierBranch.getSmPersonnel().getFaxArea());
+			flAddress.setContactFaxCountry(supplierBranch.getSmPersonnel().getFaxCountry());
+			flAddress.setContactMobileArea(supplierBranch.getSmPersonnel().getMobileArea());
+			flAddress.setContactMobileCountry(supplierBranch.getSmPersonnel().getMobileCountry());
+			flAddress.setContactPhoneArea(supplierBranch.getSmPersonnel().getPhoneArea());
+			flAddress.setContactPhoneCountry(supplierBranch.getSmPersonnel().getPhoneCountry());
+		}
 		
-		flAddress.setContactEmail(supplierBranch.getSmPersonnel().getEmail());
-		flAddress.setContactFaxNo(supplierBranch.getSmPersonnel().getFaxNo());
-		flAddress.setContactMobileNo(supplierBranch.getSmPersonnel().getMobileNo());
-		flAddress.setContactPerson(supplierBranch.getSmPersonnel().getName());
-		flAddress.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
-		flAddress.setContactFaxArea(supplierBranch.getSmPersonnel().getFaxArea());
-		flAddress.setContactFaxCountry(supplierBranch.getSmPersonnel().getFaxCountry());
-		flAddress.setContactMobileArea(supplierBranch.getSmPersonnel().getMobileArea());
-		flAddress.setContactMobileCountry(supplierBranch.getSmPersonnel().getMobileCountry());
-		flAddress.setContactPhoneArea(supplierBranch.getSmPersonnel().getPhoneArea());
-		flAddress.setContactPhoneCountry(supplierBranch.getSmPersonnel().getPhoneCountry());
 		
 		supplierDtl.setBranchName(supplierBranch.getBranchName());
 		supplierDtl.setBranchCode(supplierBranch.getBranchCode());
@@ -648,4 +650,5 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 		return null;
 	}
+	
 }
