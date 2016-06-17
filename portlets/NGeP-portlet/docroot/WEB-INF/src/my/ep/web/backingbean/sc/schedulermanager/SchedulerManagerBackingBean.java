@@ -101,6 +101,8 @@ public class SchedulerManagerBackingBean extends
 								EpSchedulerHelper
 										.getCronExpressionByJobKey(jobKey));
 						jobVO.setJobClassName(job.getJobClass().getName());
+						jobVO.setJobClassSimpleName(job.getJobClass()
+								.getSimpleName());
 						jobVO.setJobGroup(jobKey.getGroup());
 						jobVO.setJobName(jobKey.getName());
 						constructCronExpression(jobVO);

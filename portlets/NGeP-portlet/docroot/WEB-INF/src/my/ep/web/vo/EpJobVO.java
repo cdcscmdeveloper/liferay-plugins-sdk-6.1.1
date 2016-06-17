@@ -21,6 +21,7 @@ public class EpJobVO implements Serializable {
 	private String state;
 	private String description;
 	private String jobClassName;
+	private String jobClassSimpleName;
 	private String cronSec;
 	private String cronMin;
 	private String cronHr;
@@ -183,6 +184,14 @@ public class EpJobVO implements Serializable {
 
 	public void setCronExpression(String cronExpression) {
 		this.cronExpression = cronExpression;
+	}
+
+	public String getJobClassSimpleName() {
+		return jobClassSimpleName;
+	}
+
+	public void setJobClassSimpleName(String jobClassSimpleName) {
+		this.jobClassSimpleName = jobClassSimpleName;
 	}
 
 }
