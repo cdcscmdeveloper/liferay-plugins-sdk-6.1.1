@@ -646,11 +646,14 @@ public class SupplierFinalizationBackingBean extends
 	public void deleteMeetingAttendanceDetails() {
 		try {
 			List<ScQtMeetingAttendance> selectedMeetingAttdList 
-					= getManagedBean().getSelectedMeetingAttList();			
+					= getManagedBean().getSelectedMeetingAttList();	
+			if(null==selectedMeetingAttdList){
+				selectedMeetingAttdList=new ArrayList<ScQtMeetingAttendance>();
+			}
 			List<ScQtMeetingAttendance> meetingAttendanceList 
 					= getManagedBean().getMeetingAttendanceList();
 			if (CollectionUtils.isNotEmpty(
-						selectedMeetingAttdList)) {
+					meetingAttendanceList)) {
 				List<ScQtMeetingAttendance> deletedMeetingAttendanceList 
 						= this.getManagedBean().getDeletedMeetingAttendanceList();
 				if (deletedMeetingAttendanceList == null) {
@@ -660,11 +663,14 @@ public class SupplierFinalizationBackingBean extends
 							deletedMeetingAttendanceList);			
 				}
 				for (ScQtMeetingAttendance meetingAttendance
-									: selectedMeetingAttdList) {
+									: meetingAttendanceList) {
+					if(meetingAttendance.isSelected()){
+						selectedMeetingAttdList.add(meetingAttendance);
 					if (!meetingAttendance.isBrandNew()) {
 						meetingAttendance.setDeleted(true);
 						deletedMeetingAttendanceList
 								.add(meetingAttendance);
+					}
 					}
 				}
 			}			
