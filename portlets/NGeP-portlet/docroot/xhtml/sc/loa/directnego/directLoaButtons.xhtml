@@ -26,7 +26,7 @@
 						<c:when
 							test="#{isEditableStatus and empty directLOABackingBean.managedBean.taskId}">
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
-								action="#{directLOABackingBean.updateBpmTaskAction('null')}"
+								action="#{directLOABackingBean.submitAction}"
 								process="@form" update="@form" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" />
 						</c:when>
