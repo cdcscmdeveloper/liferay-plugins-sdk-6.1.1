@@ -1354,26 +1354,29 @@ public class TemplateSpecBackingBean extends
 	private void populateTierSpecAnswers(TemplateSpecBean templateSpecBean,
 			TplSpecQuestion specQuestion, TplSpecZoneDtl specZoneDtl,
 			List<TplSpecAnswer> specAnswers) {
-		boolean isSpecQtyExists = Boolean.TRUE;
-
-		// add existing answers
-		if(specQuestion.getTplSpecAnswers() != null && specQuestion.getTplSpecAnswers().size()>0){
+		boolean isCreateNewSpecAnswers = Boolean.FALSE;
+		List<Long> existingSpecTierQties = null;
+		if(specQuestion.getTplSpecAnswers()!= null && specQuestion.getTplSpecAnswers().size()>0){
 			specAnswers.addAll(specQuestion.getTplSpecAnswers());
+			existingSpecTierQties = getSpecTierQtiesBySpecAnswers(specQuestion);
 		}
-
 		if (specQuestion.getTplSpecTierQties() != null) {
 			TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 
-			for (TplSpecTierQty specTierQty : specQuestion
-					.getTplSpecTierQties()) {
-
+			for (TplSpecTierQty specTierQty : specQuestion.getTplSpecTierQties()) {
 				if(null == specQuestion.getTplSpecAnswers()){
-					isSpecQtyExists = Boolean.FALSE;
-					
-				} else{
-					isSpecQtyExists = checkSpecAnswersBySpecTierQty(specTierQty, specAnswers);
+					isCreateNewSpecAnswers = Boolean.TRUE;
+
+				} else {
+
+					if(existingSpecTierQties != null && !existingSpecTierQties.contains(specTierQty.getSpecTierQtyId())){
+						isCreateNewSpecAnswers = Boolean.TRUE;
+					} else{
+						isCreateNewSpecAnswers = Boolean.FALSE;
+					}
 				}
-				if(!isSpecQtyExists){
+
+				if(isCreateNewSpecAnswers){
 					TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(
 							templateSpecBean, specQuestion, specZoneDtl,
 							specTierQty);
@@ -1383,17 +1386,17 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 
-	private boolean checkSpecAnswersBySpecTierQty(TplSpecTierQty specTierQty,
-			List<TplSpecAnswer> specAnswers) {
-		boolean isSpecQtyFound = Boolean.FALSE;	
-		if (specAnswers != null) {
-			for (TplSpecAnswer specAnswer : specAnswers) {
-				if(specAnswer.getTplSpecTierQty() != null && specAnswer.getTplSpecTierQty().equals(specTierQty)){
-					isSpecQtyFound = Boolean.TRUE;
+	private List<Long> getSpecTierQtiesBySpecAnswers(
+			TplSpecQuestion specQuestion) {
+		List<Long> existingSpecTierQties = new ArrayList<Long>();
+		if (specQuestion != null && specQuestion.getTplSpecAnswers() != null) {
+			for (TplSpecAnswer specAnswer : specQuestion.getTplSpecAnswers()) {
+				if(specAnswer.getTplSpecTierQty() != null){
+					existingSpecTierQties.add(specAnswer.getTplSpecTierQty().getSpecTierQtyId());
 				}
 			}
 		}
-		return isSpecQtyFound;
+		return existingSpecTierQties;
 	}
 
 
