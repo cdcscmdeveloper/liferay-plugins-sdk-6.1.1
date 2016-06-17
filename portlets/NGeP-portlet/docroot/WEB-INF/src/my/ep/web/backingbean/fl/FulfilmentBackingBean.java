@@ -199,7 +199,12 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 	 * <p>Read the index from managed bean and delete.
 	 */
 	public void deleteAttachmentAction() {
+		FlAttachment attachment =  this.getManagedBean().getAttachmentList().get(this.getManagedBean().getAttachedFileIndex());
+		if(attachment.getAttachmentId() != null){
+			this.getManagedBean().getDeleteAttachments().add(attachment);
+		}
 		this.getManagedBean().getAttachmentList().remove(this.getManagedBean().getAttachedFileIndex());
+		
 		RequestContext.getCurrentInstance().execute("delFileDlg.hide()");
 	}
 

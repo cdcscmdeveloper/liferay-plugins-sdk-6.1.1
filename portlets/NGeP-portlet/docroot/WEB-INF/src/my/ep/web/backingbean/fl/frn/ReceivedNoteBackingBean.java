@@ -185,6 +185,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			if(getManagedBean().getSelectedAckOfficer()==null) {
 				setSelectedAckOfficer();
@@ -417,6 +418,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				}
 				getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.renewSesionObject();
 				flBB.getManagedBean().setHideRemarks(false);
 				if(getManagedBean().getFulfilmentRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());

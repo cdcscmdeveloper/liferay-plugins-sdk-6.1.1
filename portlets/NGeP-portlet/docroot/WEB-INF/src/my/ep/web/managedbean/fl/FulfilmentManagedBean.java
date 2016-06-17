@@ -53,6 +53,8 @@ public class FulfilmentManagedBean extends BaseManagedBean {
 	/** The attached file index. */
 	private int attachedFileIndex;
 	
+	private List<FlAttachment> deleteAttachments;
+	
 	/**
 	 * Instantiates a new fulfilment managed bean.
 	 */
@@ -208,6 +210,17 @@ public class FulfilmentManagedBean extends BaseManagedBean {
 	 */
 	public void setHideRemarks(boolean hideRemarks) {
 		this.hideRemarks = hideRemarks;
+	}
+
+	public List<FlAttachment> getDeleteAttachments() {
+		if(deleteAttachments==null) {
+			deleteAttachments = new ArrayList<FlAttachment>();
+		}
+		return deleteAttachments;
+	}
+
+	public void setDeleteAttachments(List<FlAttachment> deleteAttachments) {
+		this.deleteAttachments = deleteAttachments;
 	}
 	
 }

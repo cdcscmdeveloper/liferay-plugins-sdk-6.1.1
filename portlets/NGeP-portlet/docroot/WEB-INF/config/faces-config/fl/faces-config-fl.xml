@@ -69,5 +69,11 @@
 		<managed-bean-class>my.ep.constant.fl.FulfilmentStatusConst</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<description>Fulfilment Constants</description>
+		<managed-bean-name>FulfilmentConst</managed-bean-name>
+		<managed-bean-class>my.ep.constant.fl.FulfilmentConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 </faces-config>
 
