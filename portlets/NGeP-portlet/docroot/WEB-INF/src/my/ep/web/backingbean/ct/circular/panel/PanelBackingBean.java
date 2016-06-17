@@ -155,7 +155,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * This method will initialize the button and approver list.
 	 */
 	public PanelBackingBean(){
-		 
+		
 	    /*Execute first time retrieve from maintenance*/
 		if(getManagedBean().getOutComes()==null) {
 				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
@@ -1426,11 +1426,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method used to display type of circular for user selection
 	 * to cancel cancel of circular
 	 */
+	
 	public void addCancelCircularListener() {
 		log.info("PanelBackingBean.addCancelCircularListener()");
 		CircularReqDTO reqDTO = null;
 		try {
-				if(getManagedBean().getCancelledCircularList() == null || getManagedBean().getCancelledCircularList().size() == 0){
+				if(getManagedBean().getCancelledCircularList().size() == 0){
 			        reqDTO = new CircularReqDTO();
 				    ISearchBean<CtCancelCircular> searchBean = new SearchBean<CtCancelCircular>();
 				    searchBean.getDataFilterBeans().add(new SearchFilterBean("circularVer.ctCircular.circularType", 
@@ -1439,14 +1440,29 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 				CircularResDTO resDTO = circularSO.searchCancelledCircular(reqDTO);
-				if(resDTO.isSuccessful()) {
+				if(resDTO.isSuccessful() && resDTO.getCancelCircularResultBean().getResultList().size() > 
+				 getManagedBean().getCircularVer().getCtCancelCircularList().size()) {
 					getManagedBean().setCancelledCircularList(resDTO.getCancelCircularResultBean().getResultList());
 				  }
-				} else{
-					for(CtCancelCircular cancelledCirculars : getManagedBean().getCancelledCircularList()){
-						cancelledCirculars.setSelectedCheckBox(false);
-					}
 				}
+			  getManagedBean().setSelectedCancelledCircularList(new ArrayList<CtCancelCircular>());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	}
+	
+	
+	/**
+	 * Method used to delete list of circular for circular list
+	 */
+	public void deleteCancelCircular(){
+		log.info("PanelBackingBean.deleteCancelCircular()");
+		try {
+			getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCircular());
+			getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCircular());		
+			getManagedBean().setSelectedCancelCircular(null);
+			//RequestContext.getCurrentInstance().update(":form:cancelCircularDtBtn");
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1459,21 +1475,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void addCancelledCircular(){
 		log.info("PanelBackingBean.addCancelledCircular()");
         try {
-        	
-        	 List<CtCancelCircular> cancelCirculars = new  ArrayList<CtCancelCircular>();
- 	        Iterator<CtCancelCircular> ctCancelCirculars = getManagedBean().getCancelledCircularList().iterator();
-			     while(ctCancelCirculars.hasNext()){
-			    	CtCancelCircular  ctCancelCircular = ctCancelCirculars.next();
-				    if(ctCancelCircular.isSelectedCheckBox()){
-				    	CtCancelCircular addedCancelCircular = new CtCancelCircular();
-		        		addedCancelCircular.setParentCircularVer(getManagedBean().getCircularVer());
-		        		addedCancelCircular.setCircularVer(ctCancelCircular.getCircularVer());
-		        		getManagedBean().getCircularVer().getCtCancelCircularList().add(addedCancelCircular);
-				    	cancelCirculars.add(ctCancelCircular);
-				    }	
-			     }
-           	getManagedBean().getCancelledCircularList().removeAll(cancelCirculars);
-  
+        	for(CtCancelCircular cancelCircular : getManagedBean().getSelectedCancelledCircularList()) {
+//        		cancelCircular.setCancelCircularId(null);
+//        		cancelCircular.setCtCancelCircularReq(null);
+        		CtCancelCircular addedCancelCircular = new CtCancelCircular();
+        		addedCancelCircular.setParentCircularVer(getManagedBean().getCircularVer());
+        		addedCancelCircular.setCircularVer(cancelCircular.getCircularVer());
+        		getManagedBean().getCircularVer().getCtCancelCircularList().add(addedCancelCircular);
+        	}
+//        	getManagedBean().getCircularVer().getCtCancelCircularList().addAll(getManagedBean().getSelectedCancelledCircularList());
+        	getManagedBean().getCancelledCircularList().removeAll(getManagedBean().getSelectedCancelledCircularList());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -2620,7 +2631,7 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 		}	
 	}
     
-public void selectAllCancelCircular(AjaxBehaviorEvent e) {
+/*public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 		
 		for (CtCancelCircular ctCancelCirculars : getManagedBean().getCircularVer().getCtCancelCircularList()) {
 			if (getManagedBean().isSelectAll()) {
@@ -2636,8 +2647,8 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 		 getManagedBean().setButtonHideActiveDel(true);
 	 }		
     }
-
-    public void selectCancelCheckboxSelect(AjaxBehaviorEvent e){
+*/
+    /*public void selectCancelCheckboxSelect(AjaxBehaviorEvent e){
     	getManagedBean().setSelectAll(false);
     	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCircularVer().getCtCancelCircularList()){
     		if(ctCancelCirculars.isSelectedCheckBox()){
@@ -2651,9 +2662,9 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 			getManagedBean().setButtonHideActiveDel(true);
 		}	
     }
+    */
     
-    
-public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
+/*public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
 		
 		for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelledCircularList()) {
 			if (getManagedBean().isSelectAll()) {
@@ -2683,7 +2694,7 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
 		}else{
 			getManagedBean().setButtonHideActiveDel(true);
 		}	
-    }
+    }*/
     
     public void selectAllDeleteDlgCircular(AjaxBehaviorEvent e) {
     	
@@ -2921,14 +2932,24 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
          }
     	
 	public void onToggleSelect(ToggleSelectEvent event) {
-		getManagedBean().setButtonHideActiveDel(false);
+		if(getManagedBean().getSelectedCancelledCircularList() != null
+				 || getManagedBean().getSelectedCancelledCircularList().size() > 0)
+		 getManagedBean().setButtonHideActiveDel(false);
+	}
+	
+	public void onToggleUnSelect() {
+		 getManagedBean().setButtonHideActiveDel(true);
 	}
  
     public void onRowUnselect(UnselectEvent event) {
+    	if(getManagedBean().getSelectedCancelledCircularList() == null
+				 || getManagedBean().getSelectedCancelledCircularList().size() == 0)
     	getManagedBean().setButtonHideActiveDel(true);
     }
     
     public void onRowSelect(SelectEvent event) {
+    	if(getManagedBean().getSelectedCancelledCircularList() != null
+				 || getManagedBean().getSelectedCancelledCircularList().size() > 0)
 		getManagedBean().setButtonHideActiveDel(false);
 	}
     
@@ -2967,4 +2988,11 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
         TreeNode parentTreeNode = treeNode.getParent();
         parentTreeNode.setSelected(false);
     }  
+    
+    public boolean isDisabled(){
+    	if(getManagedBean().getSelectedCancelledCircularList() == null
+    			|| getManagedBean().getSelectedCancelledCircularList().size() == 0)
+    		return true;
+    	return false;
+    }
 }
