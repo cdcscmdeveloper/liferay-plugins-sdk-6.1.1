@@ -644,9 +644,9 @@ public class QTDetailBackingBean extends
 			if(selectedScQt.getFulfilmentType()==null){
 				selectedScQt.setFulfilmentType(new PmParameter());
 			}
-			if(selectedScQt.getProcurementMode()==null){
-				selectedScQt.setProcurementMode(new PmParameter());
-			}
+			if(selectedScQt.getPmProcurementCategory()==null){
+				selectedScQt.setPmProcurementCategory(new PmParameter());
+			}	
 			this.getManagedBean().getCtContract()
 					.setContractNo(selectedScQt.getExistingContractNo());
 			
