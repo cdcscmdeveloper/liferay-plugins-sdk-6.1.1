@@ -1356,8 +1356,11 @@ public class TemplateSpecBackingBean extends
 			List<TplSpecAnswer> specAnswers) {
 		boolean isCreateNewSpecAnswers = Boolean.FALSE;
 		List<Long> existingSpecTierQties = null;
+		
 		if(specQuestion.getTplSpecAnswers()!= null && specQuestion.getTplSpecAnswers().size()>0){
-			specAnswers.addAll(specQuestion.getTplSpecAnswers());
+			if(specAnswers.isEmpty()){
+				specAnswers.addAll(specQuestion.getTplSpecAnswers());
+			}
 			existingSpecTierQties = getSpecTierQtiesBySpecAnswers(specQuestion);
 		}
 		if (specQuestion.getTplSpecTierQties() != null) {
@@ -1368,7 +1371,6 @@ public class TemplateSpecBackingBean extends
 					isCreateNewSpecAnswers = Boolean.TRUE;
 
 				} else {
-
 					if(existingSpecTierQties != null && !existingSpecTierQties.contains(specTierQty.getSpecTierQtyId())){
 						isCreateNewSpecAnswers = Boolean.TRUE;
 					} else{
