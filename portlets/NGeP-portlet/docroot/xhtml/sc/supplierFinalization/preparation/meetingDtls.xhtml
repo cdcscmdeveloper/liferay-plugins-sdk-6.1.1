@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
+	<p:panel id="supplierFinalizationMeetingPreparationPnlId" header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
 		<p:dataTable id="meetingDtlTbl" var="meetingDtl"
 			value="#{suppFinalizationBackingBean.managedBean.meetingList}"
 			rows="10" rowKey="#{meetingDtl}" rowIndexVar="rowIndex"
@@ -25,7 +25,7 @@
 						disabled="#{suppFinalizationBackingBean.managedBean.hasPreviousMeeting}">
 
 						<p:ajax partialSubmit="true" process="@this"
-							update="meetingDtlTbl"
+							update="@([id$=supplierFinalizationMeetingPreparationPnlId])"
 							listener="#{suppFinalizationBackingBean.selectAll(
 															suppFinalizationBackingBean.managedBean.selectAllMeetings, 
 															suppFinalizationBackingBean.managedBean.meetingList)}" />
@@ -33,7 +33,7 @@
 				</f:facet>
 				<p:selectBooleanCheckbox id="selectMeeting"
 					value="#{meetingDtl.selected}" disabled="#{disableMeeting}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierFinalizationMeetingPreparationPnlId])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -102,32 +102,26 @@
 				update="meetingDtlTbl"
 				rendered="#{isSecretaryUser}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				onsuccess="dlgPerformDel.show();" update="meetingDtlTbl"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this,meetingDtlTbl" partialSubmit="true"
+			disabled="#{suppFinalizationBackingBean.deleteselectedList(suppFinalizationBackingBean.managedBean.meetingList)}"
+				oncomplete="dlgPerformDel.show();" update="@([id$=#{supplierFinalizationPreparationMeetingDeleteId}])"
 				rendered="#{isSecretaryUser}" />
 
 		</div>
+		
+		<ui:param
+							name="supplierFinalizationPreparationMeetingDeleteId"
+							value="supplierFinalizationPreparationMeetingDeleteId"></ui:param>
 
-		<!-- Dialog to prompt the user before deleting attendance records -->
-		<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel"
-			styleClass="screen-title" resizable="false" modal="true" width="330">
-			<h:panelGrid columns="3">
-				<p:graphicImage
-					value="#{CommonUIConstant.imagePathUptoDesign}/exclamation.png"
-					styleClass="ui-icon-complain"></p:graphicImage>
-				<p:spacer width="10" />
-				<div class="confirmation-message-box" style="font-size: 11px;">#{lbl['lbl.sc.dialog.confirm.message']}</div>
-			</h:panelGrid>
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					update="@this, meetingDtlTbl" process="@this, meetingDtlTbl"
-					actionListener="#{suppFinalizationBackingBean.deleteMeetingDetails()}"
-					onclick="dlgPerformDel.hide();">
-				</p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="dlgPerformDel.hide();" type="button" />
-			</div>
-		</p:dialog>
+						<ac:confirmationPopup
+							id="#{supplierFinalizationPreparationMeetingDeleteId}"
+							widget="dlgPerformDel" width="450" height="100"
+							okAction="suppFinalizationBackingBean.deleteMeetingDetails"
+							title="#{lbl['lbl.sc.meeting.details']}"
+							content="#{lbl['lbl.sc.dialog.confirm.message']}"
+							update="@([id$=supplierFinalizationMeetingPreparationPnlId])" />
+
+		
 	</p:panel>
 	
 </ui:composition>
