@@ -1716,6 +1716,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				cmSupplierItem.setPmUom(ctContractItem.getScRequestItem().getUom());
 				cmSupplierItem.setMinOrder(Double.valueOf(ctContractItem.getMinimumOrderQty()).intValue());
 				cmSupplierItem.setSkuNumber(ctContractItem.getSku());
+				cmSupplierItem.setLeadTime(new BigDecimal(
+						String.valueOf(ctContractItem.getCtContractVer().getCtContractValue().getDeliveryTerm())));
 				getContractItemPricing(cmSupplierItem, ctContractItem);
 
 				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
