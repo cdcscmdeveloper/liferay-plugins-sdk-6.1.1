@@ -101,6 +101,7 @@ import my.ep.persistence.entity.pm.general.settings.gst.PmDesignatedArea;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -1851,6 +1852,77 @@ public class PmCommonUtil {
 		return resDTO.getPmCountry();
 	}
 	
+	 /**
+	 * The method used for generating a list of available ministry
+	 * for searching agency as selection.
+	 * 
+	 * @return the selection list of ministry
+	 */
+	public static SelectItem[] getMinistryDropdown() {		
+		SelectItem[] items = null;
+		IOrgProfileSO orgProfileSO = null;
+		try {
+		    int i = 1;
+		    orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
+		    
+		    List<PmOrgProfile> list = resDTO.getOrgProfileList();
+		    items = new SelectItem[list.size() + 1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			for (PmOrgProfile orgProfile : list) {
+			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}finally{
+			orgProfileSO = null;
+		}
+	    return items;
+	}
+	
+	/**
+	 * The method used for generating a list of available jabatan
+	 * for searching agency as selection.
+	 * 
+	 * @return the selection list of jabatan
+	 */
+	public static SelectItem[] getJabatanDropdown(Long ministryId) {		
+		SelectItem[] items = null;
+		IOrgProfileSO orgProfileSO = null;
+		
+		try {
+		    int i = 1;
+		    List<Object[]> list = new ArrayList<Object[]>();
+		    if(ministryId != null){
+		    	orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+			    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(ministryId);
+				reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				list = resDTO.getOrgProfileDDList();
+				items = new SelectItem[list.size() + 1];
+		    }else{
+		    	items = new SelectItem[1];
+		    }		   
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			
+		    for(Object[] object : list){
+			  items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}finally{
+			orgProfileSO = null;
+		}
+	    return items;
+	}
 	
 	
 }
