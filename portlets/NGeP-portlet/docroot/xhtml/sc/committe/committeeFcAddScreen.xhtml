@@ -53,7 +53,7 @@
 							process="@this" />
 					</div>
 				</p:panel>
-				<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true">
+				<p:panel id="committeeMaintenanceFinalizationResultSearch" header="#{lbl['lbl.sc.search.result']}" toggleable="true">
 					<p:dataTable id="userexistid"
 					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{committeBackingBean.managedBean.userSearchQCDataModel}"
@@ -64,7 +64,11 @@
 						rowIndexVar="index">
 
 						<ac:paginator for="userexistid" />
-
+	        <p:ajax event="rowSelect" update="@([id$=committeeMaintenanceFinalizationAddOkBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=committeeMaintenanceFinalizationAddOkBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=committeeMaintenanceFinalizationAddOkBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=committeeMaintenanceFinalizationAddOkBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=committeeMaintenanceFinalizationAddOkBtnId])" />
 						<p:column selectionMode="multiple" style="width:2%"
 							disabledSelection="#{committeeMember.memberRole.parameterCode eq 
 														ParameterConst.committeeRoleSecretary}" />
@@ -202,6 +206,8 @@
 		</h:panelGroup>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
+			id="committeeMaintenanceFinalizationAddOkBtnId"
+			disabled="#{empty committeBackingBean.managedBean.selectedPmUser}"
 				process="@this, newProfile" update="@(.committeMemberDtls)"
 				actionListener="#{committeBackingBean.okQCCommitteeAction}" />
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
