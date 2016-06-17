@@ -304,13 +304,19 @@
 			</tr>
 		</table>
 	</p:panel>
+	123=#{purchaseRequestBackingBean.managedBean.taskName}
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top"><ui:include
 						src="/xhtml/fl/shared/remark.xhtml" /></td>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/attachment.xhtml" /></td>
+				<td width="50%" valign="top">
+				<h:panelGroup rendered="#{purchaseRequestBackingBean.managedBean.taskName ne FulfilmentConst.reviewCR}">
+						<ui:include src="/xhtml/fl/shared/attachment.xhtml" />
+					</h:panelGroup> 
+					<h:panelGroup rendered="#{purchaseRequestBackingBean.managedBean.taskName eq FulfilmentConst.reviewCR}">
+						<ui:include src="/xhtml/fl/shared/attachmentAuthorize.xhtml" />
+					</h:panelGroup></td>
 			</tr>
 		</table>
 	</p:panel>

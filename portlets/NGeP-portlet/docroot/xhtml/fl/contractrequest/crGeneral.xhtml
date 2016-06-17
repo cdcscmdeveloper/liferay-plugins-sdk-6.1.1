@@ -396,8 +396,13 @@
 			<tr>
 				<td width="50%" valign="top"><ui:include
 						src="/xhtml/fl/shared/remark.xhtml" /></td>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/attachment.xhtml" /></td>
+				<td width="50%" valign="top">
+					<h:panelGroup rendered="#{contractRequestBackingBean.managedBean.taskName ne FulfilmentConst.reviewCR}">
+						<ui:include src="/xhtml/fl/shared/attachment.xhtml" />
+					</h:panelGroup> 
+					<h:panelGroup rendered="#{contractRequestBackingBean.managedBean.taskName eq FulfilmentConst.reviewCR}">
+						<ui:include src="/xhtml/fl/shared/attachmentAuthorize.xhtml" />
+					</h:panelGroup></td>
 			</tr>
 		</table>
 	</p:panel>

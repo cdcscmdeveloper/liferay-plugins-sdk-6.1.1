@@ -360,6 +360,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setToken(token);
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
@@ -994,6 +995,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if (taskId != null) {
 			renewSesionObject();
 			new ContractRequestBackingBean();
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.renewSesionObject();
 			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 					IFulfilmentRequestSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
