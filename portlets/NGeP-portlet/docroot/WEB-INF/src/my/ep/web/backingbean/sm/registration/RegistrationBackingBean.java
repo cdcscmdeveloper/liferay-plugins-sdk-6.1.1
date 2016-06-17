@@ -271,8 +271,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//log.info("-----------Owner ID---------" + suppOwner.getIdentificationNo());
 		
 		validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
-		SmCommonUtil.getInstance().verifyWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
-				null, SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+		if(suppOwner.getIdentificationType().getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
+			SmCommonUtil.getInstance().verifyWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
+					null, SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+		}
 		
 		personnelNationalityOnChange();
 		
