@@ -9,6 +9,7 @@
 	<ac:scRemarkAndAttachment
 		remarkList="#{requestNoteBackingBean.managedBean.requestNote.remarks}"
 		showAttachment="false"
+		readonly="#{requestNoteBackingBean.managedBean.viewOnly}"
 		instruction="#{isPendingApprovalStatus ? lbl['lbl.sc.requestnote.remarks.instruction'] : ''}" />
 	
 </ui:composition>
