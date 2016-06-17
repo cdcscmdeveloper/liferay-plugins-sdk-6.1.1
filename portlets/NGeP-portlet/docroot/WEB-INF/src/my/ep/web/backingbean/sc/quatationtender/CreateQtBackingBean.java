@@ -226,6 +226,14 @@ public class CreateQtBackingBean extends
 				scQt.setPanelItemId(null);
 				scQt.setItemGroup(null);
 				setDataNull();
+				// populate procurment mode values if changes as Non panel
+				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt
+						.getQtStatus().getStatusId())) {
+					BigDecimal amount = scQt.getTmpExpectedIntendedPrice();
+					if(null != amount){
+						setProcurementMode(scQt, amount);
+					}
+				}
 			}
 		} else {
 			if (scQt.isBrandNew() == false) {
