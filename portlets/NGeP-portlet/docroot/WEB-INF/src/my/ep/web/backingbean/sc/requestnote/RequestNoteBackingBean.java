@@ -3297,14 +3297,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, ReportConst.SC_ITEM_PRICING_SUM_RPT_VAL);
 			
 			if(requestNoteDtl.isBrandNew()) {
-				ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 				ScRequestItem requestItem = requestNoteDtl.getRequestItem();
 				String itemCode = StringUtils.EMPTY;
+				long uomId = 0;
 				if(requestItem != null && requestItem.getCmItem() != null) {
 					itemCode = requestItem.getCmItem().getExtensionCode();
+					uomId = requestItem.getUom().getUomId();
 				}
-				long uomId = requestSupplierItem.getCmSupplierItem().getPmUom().getUomId();
-				
 				
 				String conditionField = requestNoteDtl.getConditionField();
 				
