@@ -306,6 +306,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 */
 	public void meetingDeleteAction() {
 		try {
+			
 			List<ScQtMeeting> meetingList = getManagedBean().getScQtMeetings();
 			List<ScQtMeeting> deletedMeetingList = getManagedBean().getDeletedMeetingList();
 			if (deletedMeetingList == null){
@@ -774,23 +775,25 @@ public class SupplierFinalizationMeetingBackingBean extends
 		try {
 			List<ScCommitteeMember> currentCommitteeMemList 
 							= getManagedBean().getCommitteeMembersList();
-			List<ScCommitteeMember> selectedCommitteeMemList 
-							= getManagedBean().getSelectedCommitteeMembersList();
+		
+			List<ScCommitteeMember> localList=new ArrayList<ScCommitteeMember>();
 			
-			if (CollectionUtils.isNotEmpty(currentCommitteeMemList) && 
-					CollectionUtils.isNotEmpty(selectedCommitteeMemList)) {
-				if (currentCommitteeMemList.size() == 
-							selectedCommitteeMemList.size()) {
-					currentCommitteeMemList.clear();
-				} else {
-					for (ScCommitteeMember committeeMember 
-									: selectedCommitteeMemList) {
-						currentCommitteeMemList.remove(committeeMember);
+			if (CollectionUtils.isNotEmpty(currentCommitteeMemList)) {
+				
+				for(ScCommitteeMember committeemember:currentCommitteeMemList){
+					if(committeemember.isSelected()){
+						localList.add(committeemember);
 					}
 				}
-				prepareToDeleteCommitteeMembers(selectedCommitteeMemList);
-				getManagedBean().setSelectedCommitteeMembersList(null);
+				if(CollectionUtils.isNotEmpty(localList)){
+				
+				currentCommitteeMemList.removeAll(localList);
+				
+				}
 			}
+				prepareToDeleteCommitteeMembers(localList);
+				getManagedBean().setSelectedCommitteeMembersList(null);
+			
 		} finally {
 		}
 	}
@@ -1022,6 +1025,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		cloneSearchQTDataModel.resetData();
 		getManagedBean().setCloneSearchQTDataModel(cloneSearchQTDataModel);
 		getManagedBean().setCloneQtnTenderSearchBean(cloneQtnTenderSearchBean);
+		this.getManagedBean().setCloneCommitteMembersSelect(null);
 	}
 	
 	/**
