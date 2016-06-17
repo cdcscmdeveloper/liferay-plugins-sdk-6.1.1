@@ -35,6 +35,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -178,6 +179,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> equityShareHolders;
 	private SmPersonnleCalcVO personCalc;
 	private String businessType;
+	private SmGstSupplier smGstSupplier;
 
 	private int technicalTableRow;
 	private int financialTableRow;
@@ -1701,4 +1703,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public void setEncryptionKey(String encryptionKey) {
 		this.encryptionKey = encryptionKey;
 	}
+
+	/**
+	 * @return the smGstSupplier
+	 */
+	public SmGstSupplier getSmGstSupplier() {
+		return smGstSupplier;
+	}
+
+	/**
+	 * @param smGstSupplier the smGstSupplier to set
+	 */
+	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
+		this.smGstSupplier = smGstSupplier;
+	}
+	
+	
 }

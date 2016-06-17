@@ -29,6 +29,7 @@ import my.ep.biz.bean.sc.EncryptDataBean.EncryptColumnName;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptTableName;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -42,6 +43,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -2587,7 +2590,8 @@ public class SPDetailBackingBean extends
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			log.info("*****SmAppl Appl_Id : *****"
 					+ resDTO.getSmAppl().getApplId());
-
+			// To fetch and set Supplier GST info
+			getGSTInfo(supplierId,null);
 			// equityShareHolders for
 			List<SmPersonnel> equityShareHolders = new ArrayList<SmPersonnel>();
 
@@ -2654,6 +2658,23 @@ public class SPDetailBackingBean extends
 		}
 
 		return NAV_TO_SUPPLIER_DETAILS_PAGE;
+	}
+	
+	private void getGSTInfo(Long supplierId, Long branchId) {
+
+		ISupplierGstSO supplierGstSO = null;
+		try {
+			supplierGstSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+			SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+			gstReqDTO.setSupplierId(supplierId);
+			gstReqDTO.setBranchCode(branchId);
+			SupplierGstResDTO gstResDTO = supplierGstSO
+					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
+			this.getManagedBean().setSmGstSupplier(gstResDTO.getSmGstSupplier());
+		} finally {
+			supplierGstSO = null;
+		}
 	}
 
 	/**
