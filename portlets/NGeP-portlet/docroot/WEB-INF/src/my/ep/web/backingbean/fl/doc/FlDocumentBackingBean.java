@@ -1087,12 +1087,11 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 *
 	 */
 	private void defaultPtjAndMinistryValues() {
-		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				|| hasSupplierRole()) {
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
+			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || hasSupplierRole() ) {
 			//this.getManagedBean().setMinistry(null);
 			//this.getManagedBean().setPtj(null);
 			//this.getManagedBean().setPtjGroup(null);
-
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
