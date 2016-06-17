@@ -222,7 +222,6 @@ public class DirectLOABackingBean extends
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 			parseLOADetails(scLoa, BpmOutcomeConst.BPM_SAVE, reqDTO);
 
-			// validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
 			validateSupplierDetails(scLoa);
 			validateDeductionPaymentDtls(scLoa);
 			validateLOAReportAttachments(scLoa);
@@ -4248,7 +4247,6 @@ public class DirectLOABackingBean extends
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
-		Long statusId = getManagedBean().getScLoa().getPmStatus().getStatusId().longValue();
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 			if (isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -4256,14 +4254,8 @@ public class DirectLOABackingBean extends
 		} else if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
 			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 
-		} else {
-			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-				if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
-					submitAction();
-				}
-			} else {
-				updateBPMTask(outcome, null);
-			}
+		}  else {
+			updateBPMTask(outcome, null);
 		}
 	}
 
