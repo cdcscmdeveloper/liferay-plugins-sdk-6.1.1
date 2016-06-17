@@ -233,6 +233,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					this.getManagedBean().getBidAction()
 							.setActionType(BiddingConst.BID_ACTION_TYPE_RESUME);
 					getManagedBean().setMindate(DateUtils.getCurrentDate());
+					getManagedBean().setMaxdate(DateUtils.getCurrentDate());
 					getManagedBean().setRemainingTime(
 							remainingTimeCalculator(
 									lastBidAction.getCreatedDate(),
@@ -265,8 +266,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 		if (type.equalsIgnoreCase(BiddingConst.BID_ACTION_TYPE_RESUME)) {
 			getManagedBean().setMindate(DateUtils.getCurrentDate());
+			getManagedBean().setMaxdate(DateUtils.getCurrentDate());
 		} else {
 			getManagedBean().setMindate(getNextDate());
+			getManagedBean().setMaxdate(null);
 		}
 	}
 
