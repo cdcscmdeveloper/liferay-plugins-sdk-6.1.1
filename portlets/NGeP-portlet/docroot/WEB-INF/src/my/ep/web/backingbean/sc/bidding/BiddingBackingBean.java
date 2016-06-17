@@ -121,30 +121,6 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			getManagedBean().setStatusDescs(statusDescs);
 		}
 
-		// List<PmStatusDesc> statusDescs = getManagedBean().getStatusDescs();
-
-		/*
-		 * if (statusDescs == null || statusDescs.size() == 0) { IStatusSO
-		 * statusSO = null;
-		 * 
-		 * try { statusSO = BusinessDelegate.getInstance().getServiceObject(
-		 * ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		 * 
-		 * String languageCode = new FacesScopes().getUserLocale()
-		 * .getLanguage();
-		 * 
-		 * StatusReqDTO reqDTO = new StatusReqDTO();
-		 * reqDTO.setModuleCode(ModuleCodeConst.SUPPLIER_SELECTION
-		 * .toUpperCase()); reqDTO.setDocType(ParameterConst.DOCTYPE_BIDDING);
-		 * reqDTO.setLanguageCode(languageCode);
-		 * 
-		 * StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO); if
-		 * (resDTO.isSuccessful()) { statusDescs = resDTO.getStatusDescList();
-		 * 
-		 * getManagedBean().setStatusDescs(statusDescs); } } finally { statusSO
-		 * = null; } }
-		 */
-		// return statusDescs;
 	}
 
 	/**
@@ -199,7 +175,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			BiddingReqDTO reqDto = new BiddingReqDTO();
 
 			reqDto.setScBidAction(getManagedBean().getBidAction());
-			
+
 			reqDto.setPmUser(new FacesScopes().getUserSessionBean());
 
 			BiddingResDTO resDto = biddingSO.updateBidAction(reqDto);
@@ -241,6 +217,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					.retrieveLastBidActionByScheduleId(reqDto);
 			if (resDto.isSuccessful()) {
 				ScBidAction lastBidAction = resDto.getScBidAction();
+				this.getManagedBean().setLastBidAction(lastBidAction);
+				this.getManagedBean().setBidAction(new ScBidAction());
 				this.getManagedBean().getBidAction().setScBidSchedule(bid);
 				if (lastBidAction != null
 						&& lastBidAction.getActionType().equalsIgnoreCase(
@@ -250,10 +228,11 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 							.setActionType(
 									BiddingConst.BID_ACTION_TYPE_RESCHEDULE);
 					getManagedBean().setMindate(getNextDate());
+					getManagedBean().setNewBidDuration("");
 				} else {
 					this.getManagedBean().getBidAction()
 							.setActionType(BiddingConst.BID_ACTION_TYPE_RESUME);
-					getManagedBean().setMindate(new Date());
+					getManagedBean().setMindate(DateUtils.getCurrentDate());
 					getManagedBean().setRemainingTime(
 							remainingTimeCalculator(
 									lastBidAction.getCreatedDate(),
@@ -284,10 +263,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getManagedBean().getBidAction().setNewEndDate(null);
 		getManagedBean().setNewBidDuration("");
 
-		if (type.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING)) {
-			getManagedBean().setMindate(getNextDate());
+		if (type.equalsIgnoreCase(BiddingConst.BID_ACTION_TYPE_RESUME)) {
+			getManagedBean().setMindate(DateUtils.getCurrentDate());
 		} else {
-			getManagedBean().setMindate(new Date());
+			getManagedBean().setMindate(getNextDate());
 		}
 	}
 
@@ -312,12 +291,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				.getBidAction()
 				.getActionType()
 				.equalsIgnoreCase(
-						ParameterConst.BID_ACTION_TYPES_RESUME_BIDDING)
-				|| getManagedBean()
-						.getBidAction()
-						.getActionType()
-						.equalsIgnoreCase(
-								ParameterConst.BID_ACTION_TYPES_RESCHEDULE)) {
+						ParameterConst.BID_ACTION_TYPES_RESUME_BIDDING)) {
 
 			final long ONE_MINUTE_IN_MILLIS = 60000;
 
@@ -329,24 +303,18 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					* ONE_MINUTE_IN_MILLIS);
 
 			getManagedBean().getBidAction().setNewEndDate(newEndDate);
-			// getManagedBean().setNewBidDuration(durationCalculator(startDate,
-			// newEndDate));
 			getManagedBean().setNewBidDuration(getManagedBean().getDuration());
 
-		} else if (getManagedBean().getBidAction().getActionType()
-				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING)
-				|| getManagedBean()
-						.getBidAction()
-						.getActionType()
-						.equalsIgnoreCase(
-								ParameterConst.BID_ACTION_TYPES_RESCHEDULE)) {
-
+		} else {
 			getManagedBean().getBidAction().setNewEndDate(null);
-			getManagedBean().setMindate(startDate);
-			Calendar c = Calendar.getInstance();
-			c.setTime(startDate);
-			c.add(Calendar.HOUR, 2);
-			getManagedBean().setMaxdate(c.getTime());
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime(startDate);
+			c1.add(Calendar.HOUR, 1);
+			getManagedBean().setMindate(c1.getTime());
+			Calendar c2 = Calendar.getInstance();
+			c2.setTime(startDate);
+			c2.add(Calendar.HOUR, 2);
+			getManagedBean().setMaxdate(c2.getTime());
 		}
 	}
 
@@ -943,10 +911,12 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		return items;
 	}
 
-	public void pollListener(){
+	public void pollListener() {
 		bidManagementAction(this.getManagedBean().getScheduledBid());
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "bidManagementMain.xhtml?faces-redirect=true");	
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						"bidManagementMain.xhtml?faces-redirect=true");
 	}
 }
