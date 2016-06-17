@@ -207,10 +207,17 @@ public class QTDetailBackingBean extends
 	 *            the message
 	 */
 	private void debugLogger(Object message) {
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		if(scQt!= null){
+			message += " @qtNo = "+scQt.getQtNo();
+		}
 		if (log.isDebugEnabled()) {
 			log.debug(message);
+		}else{
+			log.info(message);
 		}
-		log.info(message);
+		
 	}
 
 	/**
@@ -425,10 +432,7 @@ public class QTDetailBackingBean extends
 	 */
 	public void saveQtDetailsAction() {
 		
-		ScQt scQt = this.getManagedBean().getQt();
-		String qtNo = (scQt != null && scQt.getQtNo() != null) ? scQt.getQtNo()
-				: "New QT Creating";
-		debugLogger("start of saveQtDetailsAction,@qtNo = "+qtNo);
+		debugLogger("start of saveQtDetailsAction");
 		this.getManagedBean().setSaveFlow(true);
 		try {
 			validateQtDetails();
@@ -452,7 +456,7 @@ public class QTDetailBackingBean extends
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()
 															.getUserLocale())));
-			debugLogger("end of saveQtDetailsAction,@qtNo = "+this.getManagedBean().getQt().getQtNo());
+			debugLogger("end of saveQtDetailsAction");
 		} finally {
 
 		}
@@ -466,8 +470,7 @@ public class QTDetailBackingBean extends
 	 */
 	public String submitQTDetailsAction() {
 		
-		ScQt qt = this.getManagedBean().getQt();
-		debugLogger("start of submitQTDetailsAction, @qtNo = "+qt.getQtNo());
+		debugLogger("start of submitQTDetailsAction");
 		
 		this.getManagedBean().setSaveFlow(false);
 		IQTDetailSO detailSO;
@@ -511,7 +514,7 @@ public class QTDetailBackingBean extends
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
-				debugLogger("end of submitQTDetailsAction, @qtNo = "+scQt.getQtNo());
+				debugLogger("end of submitQTDetailsAction");
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
@@ -609,7 +612,10 @@ public class QTDetailBackingBean extends
 	 * @return maintanacepage
 	 */
 	public String editQuationTenderDetails(ScQt scQt, boolean viewQT) {
+		
+		debugLogger("start editQuationTenderDetails");
 		renewQTSesionObject();
+		debugLogger("editQuationTenderDetails, @Managedbean = "+ this.getManagedBean());
 		this.getManagedBean().setDeskOfficer(viewQT);
 		this.getManagedBean().setMaintanceFlow(true);
 		IQTDetailSO detailSO;
@@ -637,6 +643,9 @@ public class QTDetailBackingBean extends
 			}
 			if(selectedScQt.getFulfilmentType()==null){
 				selectedScQt.setFulfilmentType(new PmParameter());
+			}
+			if(selectedScQt.getProcurementMode()==null){
+				selectedScQt.setProcurementMode(new PmParameter());
 			}
 			this.getManagedBean().getCtContract()
 					.setContractNo(selectedScQt.getExistingContractNo());
@@ -717,6 +726,7 @@ public class QTDetailBackingBean extends
 					.getCurrentStatusId())) {
 				this.getManagedBean().setCreateQt(true);
 			}
+			debugLogger("end of editQuationTenderDetails");
 					} finally {
 			detailSO = null;
 		}
@@ -1351,7 +1361,7 @@ public class QTDetailBackingBean extends
 	public void retrieveBriefingSitevisitTabDtl() {
 		
 		ScQt qt = this.getManagedBean().getQt();
-		debugLogger("retrieveBriefingSitevisitTabDtl, @qtNo = "+qt.getQtNo());
+		debugLogger("retrieveBriefingSitevisitTabDtl");
 
 		if (this.getManagedBean().getBsvDtlBean() == null
 				&& this.getManagedBean().getBriefingZoneBean().isEmpty()) {
@@ -1464,7 +1474,7 @@ public class QTDetailBackingBean extends
 	public void retrieveCommitteeAppointmentTabDtl(boolean isApprovalReq, boolean isReformCommitteeReq) {
 		
 		ScQt scQt = this.getManagedBean().getQt();
-		debugLogger("retrieveCommitteeAppointmentTabDtl,@qtNo = "+scQt.getQtNo());
+		debugLogger("retrieveCommitteeAppointmentTabDtl");
 		
 		Long currentStatus = scQt.getQtStatus().getStatusId();
 		this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -1720,7 +1730,7 @@ public class QTDetailBackingBean extends
 	public void preRenderView() {
 		try {
 			renewSesionObject();
-			debugLogger("preRenderView,@Managed Bean is = "+ this.getManagedBean());
+			debugLogger("preRenderView, @Managedbean = "+ this.getManagedBean());
 			
 			Long qtId = null;
 			Object payLoad = getBpmTaskDetails(Object.class, null);
@@ -1840,7 +1850,7 @@ public class QTDetailBackingBean extends
 	public String updateBpmTask(String outcome) {
 		
 		ScQt scQt = this.getManagedBean().getQt();
-		debugLogger("updateBpmTask,@qtNo = "+scQt.getQtNo());
+		debugLogger("updateBpmTask");
 
 		updateApprovalDetails(scQt);
 		retrieveApprovalTabDtl();
@@ -2009,7 +2019,7 @@ public class QTDetailBackingBean extends
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
-				debugLogger("end of updateBpmTask, @qtNo = "+scQt.getQtNo());
+				debugLogger("end of updateBpmTask");
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
@@ -2035,7 +2045,7 @@ public class QTDetailBackingBean extends
 	public void retrieveApprovalTabDtl() {
 		
 		ScQt scQt = this.getManagedBean().getQt();
-		debugLogger("retrieveApprovalTabDtl, @qtNo"+scQt.getQtNo());
+		debugLogger("retrieveApprovalTabDtl");
 		// Added by Fara on 03092014 - Fix for Approval tab if user dint visit
 		// the Committee Appointment tab
 		List<TabBean> tabList = this.getManagedBean()
@@ -2250,7 +2260,7 @@ public class QTDetailBackingBean extends
 	public void retrieveSuppQualificationTabDtl() {
 		
 		ScQt scQt = this.getManagedBean().getQt();
-		debugLogger("retrieveSuppQualificationTabDtl, @qtNo="+scQt.getQtNo());
+		debugLogger("retrieveSuppQualificationTabDtl");
 		
 		if (!scQt.isBrandNew() && scQt.isZonal() && scQt.isPanel()) {
 			retrieveQuationTenderDetails(scQt.getQtId());
@@ -2587,7 +2597,7 @@ public class QTDetailBackingBean extends
 	public void retrieveDeductionPaymentTabDtl() {
 		
 		ScQt scQt = getManagedBean().getQt();
-		debugLogger("retrieveDeductionPaymentTabDtl,@qtNo = "+scQt.getQtNo());
+		debugLogger("retrieveDeductionPaymentTabDtl");
 		if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
 			IQTDetailSO detailSO;
 			try {
@@ -2647,7 +2657,7 @@ public class QTDetailBackingBean extends
 	public void retrieveActivitiesTabDtl() {
 		
 		ScQt scQt = this.getManagedBean().getQt();
-		debugLogger("retrieveActivitiesTabDtl, @qtNo = "+scQt.getQtNo());
+		debugLogger("retrieveActivitiesTabDtl");
 		IQTDetailSO detailSO;
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -3024,7 +3034,7 @@ public class QTDetailBackingBean extends
 			} finally {
 				QtDetailsSO = null;
 			}
-			debugLogger("end of retrieveQuationTenderDetails method,@qtNo = "+qtNo);
+			debugLogger("end of retrieveQuationTenderDetails");
 		}
 	}
 	
