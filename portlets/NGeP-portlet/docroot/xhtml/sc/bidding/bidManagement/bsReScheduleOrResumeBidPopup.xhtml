@@ -78,7 +78,7 @@
 						required="true" size="14"
 						value="#{biddingBB.managedBean.bidAction.newStartDate}"
 						label="#{lbl['lbl.sc.new.bidding.start']}" showOn="button"
-						mindate="#{biddingBB.managedBean.mindate}" 
+						mindate="#{biddingBB.managedBean.mindate}" maxdate="#{biddingBB.managedBean.maxdate}"
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 						<p:ajax event="dateSelect" process="@this" partialSubmit="true"
 							listener="#{biddingBB.resumeBidNewStartDateSelectListener}"
