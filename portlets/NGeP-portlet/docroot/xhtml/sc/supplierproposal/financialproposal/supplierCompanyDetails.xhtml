@@ -95,6 +95,28 @@
 			</tr>
 		</table>
 	</p:panel>
+	<p:panel header="#{lbl['lbl.sm.gst.info']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.gstNo']}" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30"
+						value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplier ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplier.gstRegNo : lbl['lbl.sm.no.available']}" /></td>
+			</tr>
+			<tr>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.sm.gst.effdate']}" /></td>
+				<td colspan="3"><p:inputText disabled="true" readonly="true"
+						size="30"
+						value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplier ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplier.gstEffDate : lbl['lbl.sm.no.available']}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+				<td colspan="3"><p:inputText disabled="true" readonly="true"
+						size="30"
+						value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplier ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplier.gstEndDate : lbl['lbl.sm.no.available']}" /></td>
+			</tr>
+		</table>
+	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.spec.office.facility.type']}"
 		toggleable="true">
