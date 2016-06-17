@@ -3298,7 +3298,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			if(requestNoteDtl.isBrandNew()) {
 				ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
-				String itemCode = requestSupplierItem.getRequestNoteItem().getCmItem().getExtensionCode();
+				ScRequestItem requestItem = requestNoteDtl.getRequestItem();
+				String itemCode = StringUtils.EMPTY;
+				if(requestItem != null && requestItem.getCmItem() != null) {
+					itemCode = requestItem.getCmItem().getExtensionCode();
+				}
 				long uomId = requestSupplierItem.getCmSupplierItem().getPmUom().getUomId();
 				
 				
