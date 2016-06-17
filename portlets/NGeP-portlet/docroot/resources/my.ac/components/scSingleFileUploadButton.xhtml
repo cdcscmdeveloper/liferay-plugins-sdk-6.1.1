@@ -57,14 +57,15 @@
 		</h:panelGroup>
 	</h:panelGroup>
 		
-	<c:if test="#{!cc.attrs.readonly}">
-		<p:remoteCommand name="#{cc.attrs.id}#{cc.attrs.rowIndex}deleteSelAttachment"
+	
+	<p:remoteCommand name="#{cc.attrs.id}#{cc.attrs.rowIndex}deleteSelAttachment"
 			partialSubmit="true" process="@this" update="@([id$=#{cc.attrs.id}])"
-			action="#{scRemarkAndAttachmentBackingBean.deleteSingleAttachmentAction(cc.attrs.attachment, cc.attrs.deleteFileUploadListener, cc.attrs.popupWidgetVar)}">
+			action="#{scRemarkAndAttachmentBackingBean.deleteSingleAttachmentAction(cc.attrs.attachment, cc.attrs.deleteFileUploadListener, cc.attrs.popupWidgetVar)}"
+			rendered="#{!cc.attrs.readonly}">
 			<c:if test="#{empty cc.attrs.deleteFileUploadListener}">
 				<f:setPropertyActionListener target="#{cc.attrs.attachment}" value="#{null}" />
 			</c:if>
-		</p:remoteCommand>
-	</c:if>
+	</p:remoteCommand>
+	
 </cc:implementation>
 </ui:composition>
