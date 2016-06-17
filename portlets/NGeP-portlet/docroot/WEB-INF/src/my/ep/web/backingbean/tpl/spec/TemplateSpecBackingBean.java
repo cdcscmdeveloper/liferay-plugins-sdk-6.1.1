@@ -1351,56 +1351,35 @@ public class TemplateSpecBackingBean extends
 			
 	}
 
+	/**
+	 * Populate tier spec answers.
+	 *
+	 * @param templateSpecBean the template spec bean
+	 * @param specQuestion the spec question
+	 * @param specZoneDtl the spec zone dtl
+	 * @param specAnswers the spec answers
+	 */
 	private void populateTierSpecAnswers(TemplateSpecBean templateSpecBean,
 			TplSpecQuestion specQuestion, TplSpecZoneDtl specZoneDtl,
 			List<TplSpecAnswer> specAnswers) {
-		boolean isCreateNewSpecAnswers = Boolean.FALSE;
-		List<Long> existingSpecTierQties = null;
-		
-		if(specQuestion.getTplSpecAnswers()!= null && specQuestion.getTplSpecAnswers().size()>0){
-			if(specAnswers.isEmpty()){
-				specAnswers.addAll(specQuestion.getTplSpecAnswers());
-			}
-			existingSpecTierQties = getSpecTierQtiesBySpecAnswers(specQuestion);
-		}
-		if (specQuestion.getTplSpecTierQties() != null) {
-			TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 
-			for (TplSpecTierQty specTierQty : specQuestion.getTplSpecTierQties()) {
-				if(null == specQuestion.getTplSpecAnswers()){
-					isCreateNewSpecAnswers = Boolean.TRUE;
+		if(null == specQuestion.getTplSpecAnswers()){
+			if (specQuestion.getTplSpecTierQties() != null) {
+				TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 
-				} else {
-					if(existingSpecTierQties != null && !existingSpecTierQties.contains(specTierQty.getSpecTierQtyId())){
-						isCreateNewSpecAnswers = Boolean.TRUE;
-					} else{
-						isCreateNewSpecAnswers = Boolean.FALSE;
-					}
-				}
-
-				if(isCreateNewSpecAnswers){
+				for (TplSpecTierQty specTierQty : specQuestion.getTplSpecTierQties()) {
 					TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(
 							templateSpecBean, specQuestion, specZoneDtl,
 							specTierQty);
 					specAnswers.add(specAnswer);
-				} 
-			}
-		}
-	}
-
-	private List<Long> getSpecTierQtiesBySpecAnswers(
-			TplSpecQuestion specQuestion) {
-		List<Long> existingSpecTierQties = new ArrayList<Long>();
-		if (specQuestion != null && specQuestion.getTplSpecAnswers() != null) {
-			for (TplSpecAnswer specAnswer : specQuestion.getTplSpecAnswers()) {
-				if(specAnswer.getTplSpecTierQty() != null){
-					existingSpecTierQties.add(specAnswer.getTplSpecTierQty().getSpecTierQtyId());
 				}
 			}
+		} else{
+			if(specAnswers.isEmpty()){
+				specAnswers.addAll(specQuestion.getTplSpecAnswers());
+			}
 		}
-		return existingSpecTierQties;
 	}
-
 
 	/**
 	 * Add new Tier Quantity action
