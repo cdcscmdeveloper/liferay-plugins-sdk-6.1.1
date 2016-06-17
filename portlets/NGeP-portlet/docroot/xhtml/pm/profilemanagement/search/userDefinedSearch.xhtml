@@ -40,7 +40,7 @@
 						<f:selectItems
 							value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
 							<p:ajax event="change" listener="#{profileManagementBackingBean.clearOrgNameAndRoleLovSearchFields()}" 
-				     		update=":form:opDefinedSearch"/> 
+				     			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"  update=":form:opDefinedSearch"/> 
 					</p:selectOneMenu>
 					<p:selectOneMenu id="somOtherOrgType" disabled="#{profileManagementBackingBean.managedBean.disabledOrgFields}"
 							rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.others}" 
@@ -49,7 +49,7 @@
 						<f:selectItems
 							value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
 							<p:ajax event="change" listener="#{profileManagementBackingBean.clearOrgNameAndRoleLovSearchFields()}" 
-				     		update=":form:opDefinedSearch"/> 
+				     			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"  update=":form:opDefinedSearch"/> 
 					</p:selectOneMenu>
 					</p:outputPanel></td>
 			
@@ -57,8 +57,7 @@
 			<tr>
 					
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"/></th>
-							
-				<td>
+			<td>
 				<p:outputPanel id="opFfcOrgCode" rendered="#{ParameterConst.orgTypeFactoring eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
 				    <ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="60" 
 		            	update=":form:opDefinedSearch" 
@@ -81,7 +80,26 @@
 						conditionField="#{profileManagementBackingBean.constructConditionFields()}" />
 						<p:message id="lovSupOrgMsg" for="lovSupOrg" display="icon" />
 				</p:outputPanel>
-				<p:outputPanel id="opOrgCode" rendered="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode and ParameterConst.orgTypeSupplier ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
+				<p:outputPanel id="opPtjOrgCode" 
+					rendered="#{ParameterConst.orgTypePtj eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
+				<p:inputText 
+						size="60"
+						id="itSelectedPtj" 
+						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
+						readonly="true"
+						/>
+					&#160;	
+					<p:commandLink id="ptjSearchCL" partialSubmit="true"
+						process="@this" update=":form:orgProfileCcId:ptjPopup"
+						action="#{organisationSearchBackingBean.renewSesionObject}"
+						oncomplete="ptjPopup.show();" >
+						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+					</p:commandLink>
+					</p:outputPanel>
+				<p:outputPanel id="opOrgCode" 
+					rendered="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode 
+							and ParameterConst.orgTypeSupplier ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode
+							and ParameterConst.orgTypePtj ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
 				   <ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="60" 
 			        	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 		            	update=":form:opDefinedSearch" readonly="true"
@@ -124,7 +142,7 @@
 						size="27"
 						id="itSelectedRoleDesc" 
 						value="#{not empty(profileManagementBackingBean.managedBean.selectedRoleDesc) ? profileManagementBackingBean.managedBean.selectedRoleDesc.roleName :''}" 
-						disabled="true"
+						readonly="true"
 						/>
 					&#160;	
 					<p:commandLink id="roleSearchCL" partialSubmit="true"
@@ -188,6 +206,10 @@
 			</tr>
 		</table>
 		  <ac:lovPopup />
+		  <ac:ptjPopup 
+		  	id="orgProfileCcId"
+		  	okAction="profileManagementBackingBean.selectPtjAction"
+		  	update=":form:opDefinedSearch"  />
 		  	<ui:include src="/xhtml/pm/profilemanagement/common/roleSearchPopUp.xhtml" />
  	</p:outputPanel>
 </ui:composition>
