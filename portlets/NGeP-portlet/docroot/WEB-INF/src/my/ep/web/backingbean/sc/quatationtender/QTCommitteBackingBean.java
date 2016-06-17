@@ -584,8 +584,9 @@ public class QTCommitteBackingBean extends
 		debugLogger("addCloneCommitteeMembersApprovalsAction");
 
 		int committeTabIndex = this.getManagedBean().getSelectedTabIndex();
-		TabBean selectedCommitteTabBean = this.getManagedBean()
-				.getScCommitteeMemberTabList().get(committeTabIndex);
+		List<TabBean> scCommitteeMemberTabList = this.getManagedBean().getScCommitteeMemberTabList();
+		if(CollectionUtils.isNotEmpty(scCommitteeMemberTabList)){
+		TabBean selectedCommitteTabBean = scCommitteeMemberTabList.get(committeTabIndex);
 		ScCommittee scCommittee = selectedCommitteTabBean.getScQtCommittee()
 				.getScCommittee();
 		List<ScCommitteeMember> memberList = scCommittee
@@ -646,7 +647,7 @@ public class QTCommitteBackingBean extends
 		Collections.sort(memberList,new MemberRoleComparator());
 		scCommittee.setScCommitteeMembers(memberList);
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
-
+		}
 		// Clone Committee Approval validation
 		RequestContext.getCurrentInstance().execute("screen2.hide()");
 		this.getManagedBean().setAutoUpdate(true);
@@ -931,9 +932,11 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
 		getManagedBean().setCloneCommitteMemebers(null);
 		getManagedBean().setSelectedCommitteMemebers(null);
-		String commType = committee.getScCommittee().getCommitteeType()
-				.getParameterCode();
-		this.getManagedBean().setCommType(commType);
+		if(committee != null && committee.getScCommittee() != null){
+			String commType = committee.getScCommittee().getCommitteeType()
+					.getParameterCode();
+			this.getManagedBean().setCommType(commType);
+		}
 		log.info("Committee Type : " + getManagedBean().getCommType());
 		RequestContext.getCurrentInstance().execute("screen2.show()");
 		getManagedBean().setAutoUpdate(false);
@@ -1230,8 +1233,9 @@ public class QTCommitteBackingBean extends
 
 		UserReqDTO userReqDTO = new UserReqDTO();
 		int committeTabIndex = this.getManagedBean().getSelectedTabIndex();
-		TabBean selectedCommitteTabBean = this.getManagedBean()
-				.getScCommitteeMemberTabList().get(committeTabIndex);
+		List<TabBean> scCommitteeMemberTabList	= this.getManagedBean().getScCommitteeMemberTabList();
+		if(CollectionUtils.isNotEmpty(scCommitteeMemberTabList)){
+		TabBean selectedCommitteTabBean = scCommitteeMemberTabList.get(committeTabIndex);
 		ScCommittee scCommittee = selectedCommitteTabBean.getScQtCommittee()
 				.getScCommittee();
 		ScQt scQt = this.getManagedBean().getQt();
@@ -1591,7 +1595,7 @@ public class QTCommitteBackingBean extends
 		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
 		Collections.sort(scCommittee.getScCommitteeMembers());
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
-
+		}
 		// Specification Committee validation
 		RequestContext.getCurrentInstance().execute(
 				"newspecificationcommittee.hide()");
