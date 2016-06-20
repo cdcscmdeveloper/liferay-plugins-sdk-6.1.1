@@ -6,7 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="#{committeBackingBean.managedBean.headerTitle}"
+	<p:panel id="committMaintenanceFcSelectionpanel" header="#{committeBackingBean.managedBean.headerTitle}"
 		toggleable="true" styleClass="committeMemberDtls">
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.view.history']}" styleClass="BtnSpacing"
@@ -17,24 +17,23 @@
 			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}"
 			var="committeemember" rowIndexVar="index" editable="true" rows="10">
 
-			<p:ajax event="rowSelect"
+		<!-- 	<p:ajax event="rowSelect"
 				listener="#{committeBackingBean.selectMemberEvent}"
-				update="@([id$=memberListTbl])" />
+				update="@([id$=memberListTbl])" /> -->
 
 			<p:column style="width:2%"
 				rendered="#{isCommitteeRecordStatusActive}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllMemChk" disabled="true"
 						value="#{committeBackingBean.managedBean.selectAllMembers}">
-						<p:ajax partialSubmit="true" process="@this" update="fcMembersId"
-							listener="#{committeBackingBean.selectAllMembers(
-											committeBackingBean.managedBean.selectAllMembers)}" />
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=committMaintenanceFcSelectionpanel])"
+							listener="#{committeBackingBean.selectAll(
+											committeBackingBean.managedBean.selectAllMembers,committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox id="selectMember" value="#{committeemember.selected}" 
 						disabled="#{committeemember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
-					<p:ajax partialSubmit="true" process="@this" update="@this"
-						listener="#{committeBackingBean.selectMemberEvent(committeemember)}" />
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=committMaintenanceFcSelectionpanel])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -93,6 +92,7 @@
 				oncomplete="screen3.show();" update="@(.addQCMember)"
 				rendered="#{isCommitteeRecordStatusActive}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			disabled="#{committeBackingBean.deleteselectedList(committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers)}"
 				styleClass="BtnSpacing" process="@this, fcMembersId"
 				partialSubmit="true" oncomplete="fcCommitteeDeletePopUp.show();"
 				update="@([id$=#{fcCommitteeDeleteId}])"
@@ -104,7 +104,7 @@
 			okAction="committeBackingBean.deleteCommitteeAction" width="45%"
 			height="100" title="#{committeBackingBean.managedBean.headerTitle}"
 			content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
-			update="@([id$=fcMembersId])" />
+			update="@([id$=committMaintenanceFcSelectionpanel])" />
 	</p:panel>
 	<ui:include src="committeeQuotationTenderList.xhtml" />
 </ui:composition>
