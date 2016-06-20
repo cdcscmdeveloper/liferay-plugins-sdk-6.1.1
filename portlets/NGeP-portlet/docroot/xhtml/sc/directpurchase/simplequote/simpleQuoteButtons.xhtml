@@ -9,9 +9,12 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 
+	<ui:param name="isReQuote"
+		value="#{simpleQuoteBackingBean.managedBean.scQuote.parentQuoteId eq null}" />
+
 	<p:dialog id="quoteSubmitConform" widgetVar="sqConformDlg"
-		header="#{lbl['lbl.sc.confirmation']}" resizable="false"
-		width="600" closable="false" modal="true">
+		header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="600"
+		closable="false" modal="true">
 
 		<p:blockUI block="conformDlgId" trigger="yesButton">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -26,8 +29,7 @@
 								value="#{simpleQuoteBackingBean.managedBean.pidExpiryMessage}" />
 							<br />
 							<br />
-						</ui:fragment>
-						<h:outputText
+						</ui:fragment> <h:outputText
 							value="#{simpleQuoteBackingBean.managedBean.promptMessage}" /></td>
 				</tr>
 			</table>
@@ -37,8 +39,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					id="yesButton"
 					rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
-					onstart="sqConformDlg.show();"
-					oncomplete="sqConformDlg.hide();"
+					onstart="sqConformDlg.show();" oncomplete="sqConformDlg.hide();"
 					actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
@@ -107,7 +108,7 @@
 
 			<p:commandButton immediate="true" id="backButton"
 				value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
-				process="@this" style="float:left;" rendered="#{isEditable}"
+				process="@this" style="float:left;" rendered="#{isEditable and isReQuote}"
 				action="#{simpleQuoteBackingBean.backToPrevious}"
 				title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 			</p:commandButton>
