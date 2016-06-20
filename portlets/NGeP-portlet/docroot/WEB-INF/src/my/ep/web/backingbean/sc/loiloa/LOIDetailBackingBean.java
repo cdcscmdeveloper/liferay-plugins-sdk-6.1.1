@@ -884,13 +884,14 @@ public class LOIDetailBackingBean extends
 			/*reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setSupplierId(scLoiLoa.getSmSupplier().getSupplierId());
 			reqDTO.setDocId(scLoiLoa.getDocId());*/
-			getLoiLoaListTitle(scLoiLoa.getSmSupplier());
+			getLoiLoaListTitle(scLoiLoa);
+
 			/*reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 			reqDTO.setViewSupplierLoiLoa(true);
 			reqDTO.setAwardType(getManagedBean().getDocType());
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(
 					reqDTO);*/
-			
+
 			List<Long> loiLoaList = new ArrayList<Long>();
 			loiLoaList.add(scLoiLoa.getLoiLoaId());
 			reqDTO.setLoiLoaIds(loiLoaList);
@@ -3409,13 +3410,14 @@ public class LOIDetailBackingBean extends
 	 *            the deduction
 	 * @return the clauses title
 	 */
-	private void getLoiLoaListTitle(SmSupplier smSupplier) {
+	private void getLoiLoaListTitle(ScLoiLoa scLoiLoa) {
 		StringBuilder title = new StringBuilder();
 		title.append("Title");
 		title.append(":");
 		title.append(" ");
-		if (smSupplier != null) {
-			title.append(smSupplier.getCompanyName());
+		
+		if(scLoiLoa != null && scLoiLoa.getSmSupplier() != null){
+			title.append(scLoiLoa.getSmSupplier().getCompanyName());
 			title.append(">");
 			title.append(" ");
 		}
