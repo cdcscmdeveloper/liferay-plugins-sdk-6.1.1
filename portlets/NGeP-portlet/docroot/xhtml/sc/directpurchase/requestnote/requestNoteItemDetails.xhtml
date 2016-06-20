@@ -297,7 +297,7 @@
 				onclick="applyAllPopUpSQ.show();"/>
 
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" disabled="#{isViewOnly}"
 				rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
 				partialSubmit="true" onclick="deleteConformDlg.show();" />
 		</div>
