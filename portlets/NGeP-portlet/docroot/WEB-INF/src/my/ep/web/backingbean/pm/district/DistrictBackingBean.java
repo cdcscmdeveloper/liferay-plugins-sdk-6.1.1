@@ -29,6 +29,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.states.IListOfStatesSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.exception.EpException;
@@ -189,11 +190,7 @@ public class DistrictBackingBean extends BaseBackingBean<DistrictManagedBean> {
 							SearchOperator.OPERATOR_EQUALS.value(),
 							districtSearchBean.getDivisionName().toUpperCase(),
 							true));
-
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmDivision.recordStatusFlg",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							DbValueConst.RECORD_STATUS_ACTIVE));
+			
 		}
 
 		if (StringUtils.isNotBlank(districtSearchBean.getDistrictName())) {
@@ -204,12 +201,23 @@ public class DistrictBackingBean extends BaseBackingBean<DistrictManagedBean> {
 							districtSearchBean.getDistrictName().toUpperCase(),
 							true));
 		}
-
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmState.pmCountry.countryCode",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						CommonConstants.DEFAULT_COUNTRY_CODE,
+						true));			
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmDivision.recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						DbValueConst.RECORD_STATUS_ACTIVE));
+		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("recordStatusFlg",
 						SearchOperator.OPERATOR_EQUALS.value(),
-						DbValueConst.RECORD_STATUS_ACTIVE));
-
+						DbValueConst.RECORD_STATUS_ACTIVE));		
+		
 		return searchBean;
 	}
 
