@@ -1534,24 +1534,30 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 		List<ScCommitteeMember> committeeMemberList = this.getManagedBean()
 				.getQtCommittee().getScCommittee().getScCommitteeMembers();
-		List<ScCommitteeMember> selectedList = this.getManagedBean()
+		/*List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getSelectedCommitteMemebers();
 		if (CollectionUtils.isEmpty(selectedList)) {
 			throw new EpException(MessageConst.ERROR_760146);
-		}
-		
-		if (toBeDelCommitteMemebers == null) {
+		}*/
+		List<ScCommitteeMember> deleteList=new ArrayList<ScCommitteeMember>();
+		if (null==toBeDelCommitteMemebers) {
 			toBeDelCommitteMemebers = new ArrayList<ScCommitteeMember>();
 			this.getManagedBean().setToBeDelCommitteMemebers(toBeDelCommitteMemebers);	
 		}
 		
-		for (int i = 0; i < selectedList.size(); i++) {
-			committeeMemberList.remove(selectedList.get(i));
-			selectedList.get(i).setDeleted(true);
+		for (int i = 0; i < committeeMemberList.size(); i++) {
+			if(committeeMemberList.get(i).isSelected()){
+			//committeeMemberList.remove(committeeMemberList.get(i));
+				committeeMemberList.get(i).setDeleted(true);
+				deleteList.add(committeeMemberList.get(i));
+			}
+		}
+		if(CollectionUtils.isNotEmpty(deleteList)){
+			committeeMemberList.removeAll(deleteList);
 		}
 		this.getManagedBean().setSelectedCommitteMemebers(null);
 		
-		toBeDelCommitteMemebers.addAll(selectedList);
+		toBeDelCommitteMemebers.addAll(deleteList);
 	}
 
 	/**
