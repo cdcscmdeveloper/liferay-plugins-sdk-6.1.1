@@ -429,8 +429,11 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 */
 	public void responsePreRender() throws NoSuchMethodException,SecurityException, IllegalAccessException,
 		IllegalArgumentException, InvocationTargetException {
-
-		log.info("*******responsePreRender*******");
+		
+		int counter = getManagedBean().getCounter();
+		getManagedBean().setCounter(counter +1);
+		
+		log.info("*******responsePreRender*******" + getManagedBean().getCounter());
 		SmAppl appl = null;
 		String paymentTaskId = null;
 		Object paymentBpmPojo = null;
@@ -443,10 +446,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
 		paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
 		appl = (SmAppl)session.getAttribute("smAppl");
-		this.getManagedBean().setTaskId(paymentTaskId);
-		this.getManagedBean().setBpmPojo(paymentBpmPojo);
-		session.removeAttribute("paymentBpmTaskId");
-		session.removeAttribute("paymentBpmPojo");
+/*		this.getManagedBean().setTaskId(paymentTaskId);
+		this.getManagedBean().setBpmPojo(paymentBpmPojo);*/
 		
 		log.info("paymentTaskId>>>>>>>" + paymentTaskId);
 		log.info("paymentBpmPojo>>>>>>>" + paymentBpmPojo);
@@ -621,10 +622,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					paymentType = SupplierManagementConst.SOFTCERT_PAYMENT;
 				}
 				pymtReqDTO.setPaymentType(paymentType);
-
-				PaymentResDTO pymtResDTO = reqSO.paymentFrontEndUpdate(pymtReqDTO);
+				PaymentResDTO pymtResDTO = null;
+				
+				if(getManagedBean().getCounter() == 1){
+					pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				}
+				
 				log.info("******ResponsePreRender - After Update******");
-				if(pymtResDTO.isSuccessful()){
+				if(pymtResDTO != null && pymtResDTO.isSuccessful()){
 					//to auto generate mof cert
 					/*if(pyPayment.getPyBill().getBillType().
 							equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE) && validPayment){
@@ -653,7 +658,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		} else {
 			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null);
 		}
-		
+		session.removeAttribute("paymentBpmTaskId");
+		session.removeAttribute("paymentBpmPojo");
 		this.renewSesionObject();
 
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -911,7 +917,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			log.info("Debug payment>>>>>");
 			
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
-
+		
 			showPaymentResponse(status, ordId, null);
 			this.renewSesionObject();
 			
