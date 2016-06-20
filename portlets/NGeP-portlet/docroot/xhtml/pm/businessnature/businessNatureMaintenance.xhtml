@@ -12,52 +12,7 @@
 			closable="true" showSummary="true"></p:messages>
 		<ui:include
 			src="/xhtml/pm/businessnature/businessNatureNavButton.xhtml" />
-		
-		<p:panel header="#{lbl['lbl.pm.category.level']}" id="categoryLevel"
-			toggleable="true">
-			<table style="width: 100%;">
-				<tr>
-					<td style="width: 10%;"><p:outputLabel
-							value="#{lbl['lbl.pm.bn.level']}" /> <p:outputLabel value="*"
-							styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="busLv"
-							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel}"
-							disabled="true">
-							<f:selectItems
-								value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}"></f:selectItems>
-							<p:ajax event="change" update="@form" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText style="text-transform:uppercase"
-							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.levelCode}"
-							disabled="#{!businessNatureBackingBean.managedBean.brandNew}"
-							size="30" maxlength="10" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.pm.bn.name']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputTextarea row="40"
-							cols="60"
-							disabled="#{!businessNatureBackingBean.managedBean.brandNew}"
-							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.levelName}"
-						     maxlength="500" /></td>
-				</tr>				
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.pm.profiles.search.status']}" /></td>
-					<td><p:selectOneMenu id="statusBusiness"						
-							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.recordStatusFlg}"
-							disabled="#{businessNatureBackingBean.managedBean.brandNew}">
-							<f:selectItems
-								value="#{businessNatureBackingBean.getBusinessNatureStatus()}"></f:selectItems>
-						</p:selectOneMenu></td>
-				</tr>
-			</table>
-		</p:panel>
-
+			
 		<p:panel header="#{lbl['lbl.pm.parent.category']}" id="parentCategory"
 			toggleable="true"
 			rendered="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel &gt; '10'}">
@@ -187,6 +142,51 @@
 				</table>	
 			</c:if>
 		</p:panel>
+		<p:panel header="#{lbl['lbl.pm.category.level']}" id="categoryLevel"
+			toggleable="true">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 10%;"><p:outputLabel
+							value="#{lbl['lbl.pm.bn.level']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="busLv"
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel}"
+							disabled="true">
+							<f:selectItems
+								value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}"></f:selectItems>
+							<p:ajax event="change" update="@form" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText style="text-transform:uppercase"
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.levelCode}"
+							disabled="#{!businessNatureBackingBean.managedBean.brandNew}"
+							size="30" maxlength="10" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.bn.name']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputTextarea row="40"
+							cols="60"
+							disabled="#{!businessNatureBackingBean.managedBean.brandNew}"
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.levelName}"
+						     maxlength="500" /></td>
+				</tr>				
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.profiles.search.status']}" /></td>
+					<td><p:selectOneMenu id="statusBusiness"						
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.recordStatusFlg}"
+							disabled="#{businessNatureBackingBean.managedBean.brandNew}">
+							<f:selectItems
+								value="#{businessNatureBackingBean.getBusinessNatureStatus()}"></f:selectItems>
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+		</p:panel>
+		
 		<c:if test="#{!businessNatureBackingBean.managedBean.newcategory}">
 			<p:panel header="#{lbl['lbl.pm.detail.category']}"
 				id="detailCategory" toggleable="true"
