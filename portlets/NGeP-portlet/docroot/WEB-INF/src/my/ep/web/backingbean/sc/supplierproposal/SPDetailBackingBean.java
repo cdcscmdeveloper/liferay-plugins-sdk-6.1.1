@@ -2961,35 +2961,40 @@ public class SPDetailBackingBean extends
 		debugLogger("deleteNonFederalGovtExperience");
 		List<ScQtPRPExperience> experienceList = this.getManagedBean()
 				.getScQtPRPExperiences();
-		List<ScQtPRPExperience> selectedExperienceList = this.getManagedBean()
-				.getSelectedPRPExperiences();
+		
 		List<ScQtPRPExperience> tobeDeletedExperiences = getManagedBean()
 				.getDeletedPRPExperiences();
-		if (selectedExperienceList == null
+		/*if (selectedExperienceList == null
 				|| selectedExperienceList.size() == 0) {
 			throw new EpException(MessageConst.ERROR_760331);
-		}
-
-		if (experienceList != null && selectedExperienceList != null) {
+		}*/
+List<ScQtPRPExperience> deleteList=new ArrayList<ScQtPRPExperience>();
+		if (experienceList != null ) {
 
 			if (tobeDeletedExperiences == null) {
 				tobeDeletedExperiences = new ArrayList<ScQtPRPExperience>();
 			}
-			for (ScQtPRPExperience scQtPRPExperience : selectedExperienceList) {
+			for (ScQtPRPExperience scQtPRPExperience : experienceList) {
+				if(scQtPRPExperience.isSelected()){
 
 				if (scQtPRPExperience.getQtPrpExperienceId() != null
 						&& scQtPRPExperience.getQtPrpExperienceId() != 0) {
 					tobeDeletedExperiences.add(scQtPRPExperience);
 				}
-				// experienceList.remove(selectedExperienceList.get(i));
-				Iterator<ScQtPRPExperience> itr = experienceList.iterator();
+				deleteList.add(scQtPRPExperience);
+				}
+				
+				/*Iterator<ScQtPRPExperience> itr = experienceList.iterator();
 				while (itr.hasNext()) {
 					ScQtPRPExperience localQtPRPExperience = itr.next();
 					if (localQtPRPExperience.equals(scQtPRPExperience)) {
 						itr.remove();
 						break;
 					}
-				}
+				}*/
+			}
+			if(CollectionUtils.isNotEmpty(deleteList)){
+			experienceList.removeAll(deleteList);
 			}
 		}
 
@@ -3042,33 +3047,34 @@ public class SPDetailBackingBean extends
 		debugLogger("deleteCreditFacilities");
 		List<ScQtPRPCreditFacility> creditFacilitiesList = getManagedBean()
 				.getScQtPRPCreditFacilities();
-		List<ScQtPRPCreditFacility> selectedCreditFacilitiesList = this
-				.getManagedBean().getSelectedPRPCreditFacilities();
+	/*	List<ScQtPRPCreditFacility> selectedCreditFacilitiesList = this
+				.getManagedBean().getSelectedPRPCreditFacilities();*/
 
 		List<ScQtPRPCreditFacility> toDeleteCreditFacilitiesList = getManagedBean()
 				.getToBeDeletedCreditFacilities();
 
-		if (selectedCreditFacilitiesList == null
+		/*if (selectedCreditFacilitiesList == null
 				|| selectedCreditFacilitiesList.size() == 0) {
 			throw new EpException(MessageConst.ERROR_760331);
-		}
+		}*/
 
-		if (selectedCreditFacilitiesList != null
-				&& creditFacilitiesList != null) {
-
+		if (creditFacilitiesList != null) {
+List<ScQtPRPCreditFacility> deleteFacilityList=new ArrayList<ScQtPRPCreditFacility>();
 			if (toDeleteCreditFacilitiesList == null) {
 
 				toDeleteCreditFacilitiesList = new ArrayList<ScQtPRPCreditFacility>();
 			}
 
-			for (ScQtPRPCreditFacility facility : selectedCreditFacilitiesList) {
-
+			for (ScQtPRPCreditFacility facility : creditFacilitiesList) {
+                if(facility.isSelected()){
 				if (facility.getCreditFacilityId() != null
 						&& facility.getCreditFacilityId() != 0) {
 					toDeleteCreditFacilitiesList.add(facility);
 				}
+				deleteFacilityList.add(facility);
+                }
 
-				Iterator<ScQtPRPCreditFacility> itr = creditFacilitiesList
+				/*Iterator<ScQtPRPCreditFacility> itr = creditFacilitiesList
 						.iterator();
 				while (itr.hasNext()) {
 					ScQtPRPCreditFacility localQtPRPCreditFacility = itr.next();
@@ -3076,11 +3082,13 @@ public class SPDetailBackingBean extends
 						itr.remove();
 						break;
 					}
-				}
+				}*/
 
 			}
+			creditFacilitiesList.removeAll(deleteFacilityList);
 			getManagedBean().setToBeDeletedCreditFacilities(
 					toDeleteCreditFacilitiesList);
+			deleteFacilityList=null;
 		}
 		getManagedBean().setScQtPRPCreditFacilities(creditFacilitiesList);
 		getManagedBean().setSelectedPRPCreditFacilities(null);
