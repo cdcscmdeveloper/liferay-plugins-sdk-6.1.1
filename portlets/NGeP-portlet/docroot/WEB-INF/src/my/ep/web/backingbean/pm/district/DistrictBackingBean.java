@@ -117,7 +117,8 @@ public class DistrictBackingBean extends BaseBackingBean<DistrictManagedBean> {
 	public void resetDistrictSearchBean() {
 
 		debugLogger("resetDistrictSearchBean");
-		this.getManagedBean().setLazy(false);
+		this.getManagedBean().setLazy(false);	
+		this.getManagedBean().setAdoptDivision(false);
 		this.getManagedBean().setDistrictSearchBean(new DistrictSearchBean());
 		searchDistrict = new SearchDistrictPagingDataModel();
 
