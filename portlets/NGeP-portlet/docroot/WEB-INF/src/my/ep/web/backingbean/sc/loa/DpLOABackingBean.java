@@ -9,21 +9,21 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
-import my.ep.persistence.entity.sc.directpurchase.ScQuote;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
-import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.DpLOAManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -170,46 +170,35 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 	 */	
 	public String updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
-		IPurchaseRequestSO purchaseRequestSO = null;
-		purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IPurchaseRequestSO.class);
-		Long userId = new FacesScopes().getUserSessionBean().getUserId();
-		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
-		PurchaseRequestReqDTO   requestReqDTO = new PurchaseRequestReqDTO();
-		ScRequestNote requestNote  = getManagedBean().getScRequestNote();
-		requestReqDTO.setAssignedTo(userId);
-		requestReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
 
-		if(BpmOutcomeConst.BPM_RERECOMMEND.equalsIgnoreCase(outcome)){
-			RequestNoteBackingBean requestNoteBackingBean  = new RequestNoteBackingBean();
-			PurchaseRequestResDTO resDTO = purchaseRequestSO.reRecommendRejectedItems(requestReqDTO);
-			ScRequestNote scRequestNote  = resDTO.getRequestNoteDetail();
+		IQTAwardSO qtAwardSO = null;
 
-			if(scRequestNote != null){
-				requestNoteBackingBean.renewSesionObject();
-				requestNoteBackingBean.getManagedBean().setRequestNote(scRequestNote);
-				requestNoteBackingBean.getManagedBean().setEndLoaTaskId(getManagedBean().getTaskId());
-				requestNoteBackingBean.getManagedBean().setEndLoaToken(token);
-				requestNoteBackingBean.getManagedBean().setEndLoaOutcome(outcome);
-				requestNoteBackingBean.getManagedBean().setEndLoaRN(requestNote);
-				requestNoteBackingBean.reRecommend(scRequestNote);
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			String requestNoteNo = getManagedBean().getScRequestNote().getRequestNoteNo();
+			boolean isSuccessful = qtAwardSO.updateBPMTask(
+					requestNoteNo,
+					getManagedBean().getSourceId(),
+					new FacesScopes().getBPMAuthenticationCtxToken(),
+					getManagedBean().getTaskId(), outcome);
+
+			if (isSuccessful) {
+				boolean isAcknowledgeRequired = Boolean.TRUE;
+				if(BpmOutcomeConst.BPM_RERECOMMEND.equalsIgnoreCase(outcome)){
+					successMessage(MessageConst.INFO_700059, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_REQUEST_NOTE,
+							requestNoteNo, isAcknowledgeRequired);
+				}
+				if(BpmOutcomeConst.BPM_REQUOTE.equalsIgnoreCase(outcome)){
+					successMessage(MessageConst.INFO_700058, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
+							getManagedBean().getScRequestNote().getQuote().getQuoteNo(), isAcknowledgeRequired);
+				}
+				renewSesionObject();
 			}
-		}
-
-		if(BpmOutcomeConst.BPM_REQUOTE.equalsIgnoreCase(outcome)){
-			SimpleQuoteBackingBean simpleQuoteBackingBean = new SimpleQuoteBackingBean();
-			PurchaseRequestResDTO resDTO =  purchaseRequestSO.reQuoteRejectedItems(requestReqDTO);
-			ScQuote scQuote  = resDTO.getScQuote();
-
-			if(scQuote != null){
-				simpleQuoteBackingBean.renewSesionObject();
-				simpleQuoteBackingBean.getManagedBean().setScQuote(scQuote);
-				simpleQuoteBackingBean.getManagedBean().setEndLoaTaskId(getManagedBean().getTaskId());
-				simpleQuoteBackingBean.getManagedBean().setEndLoaToken(token);
-				simpleQuoteBackingBean.getManagedBean().setEndLoaOutcome(outcome);
-				simpleQuoteBackingBean.getManagedBean().setEndLoaRN(requestNote);
-				simpleQuoteBackingBean.reQuote(scQuote);
-			}
+		} finally {
+			qtAwardSO = null;
 		}
 
 		return null;
