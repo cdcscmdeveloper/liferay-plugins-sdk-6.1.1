@@ -25,7 +25,7 @@
 		<ui:param name="isPendingRevisionStatus"
 			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevision}" />
 		<ui:param name="isPendingApprovalStatus"
-			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval}" />
+			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevisionApproval}" />
 		<ui:param name="isViewOnly"
 			value="#{requestNoteBackingBean.managedBean.viewOnly}" />
 
