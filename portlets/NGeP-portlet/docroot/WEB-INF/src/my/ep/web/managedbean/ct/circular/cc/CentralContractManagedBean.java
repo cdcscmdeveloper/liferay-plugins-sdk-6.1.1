@@ -86,9 +86,9 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private CtCircularItem selectedCircularItem;
 	private CtContractZone selectedZoneItems;
 	private List<CtContract> contractList;
-	private List<CtContract> selectedContractList;
 	private List<CtContactPerson> selectedContactPersons;
 	private List<CtExemptedOrg> selectedExemptedOrgs;
+	private List<PmOrgProfile> selectedOrgsProfile;
 	private List<CtCancelCircular> selectedCancelCirculars;
 	private List<CtCancelCircular> cancelledCircularList;
 	private List<CtCancelCircular> selectedCancelledCircularList;	
@@ -277,21 +277,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.selectedCancelCirculars = selectedCancelCirculars;
 	}
 	
-	/**
-	 * @return the selectedContractList
-	 */
-	public List<CtContract> getSelectedContractList() {
-		return selectedContractList;
-	}
-	
-	/**
-	 * @param selectedContractList the selectedContractList to set
-	 */
-	public void setSelectedContractList(List<CtContract> selectedContractList) {
-		this.selectedContractList = selectedContractList;
-	}
-	
-	/**
+		/**
 	 * @return the selectedCancelledCircularList
 	 */
 	public List<CtCancelCircular> getSelectedCancelledCircularList() {
@@ -798,4 +784,16 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
 	}
+
+	public List<PmOrgProfile> getSelectedOrgsProfile() {
+		return selectedOrgsProfile;
+	}
+
+	public void setSelectedOrgsProfile(List<PmOrgProfile> selectedOrgsProfile) {
+		this.selectedOrgsProfile = selectedOrgsProfile;
+	}
+
+	
+
+	
 }
