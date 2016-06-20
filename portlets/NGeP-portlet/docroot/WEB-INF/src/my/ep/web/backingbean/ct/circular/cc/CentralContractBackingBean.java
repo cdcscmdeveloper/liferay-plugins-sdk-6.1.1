@@ -147,7 +147,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	private ContractBackingBean ctBB = null;
 	//private PmOrgProfile[] selectedPmOrgProfile;
-	private CtExemptedOrg[] selectedExemptedOrgs;
+//	private CtExemptedOrg[] selectedExemptedOrgs;
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	private IPagingDataModel<PmOrgProfile> exemptedOrgDataModel = new ExemptedOrgDataModel();	
 
@@ -1096,6 +1096,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void deleteExemptedOrg(){
 		try {
 			getManagedBean().getCircularVer().getCtExemptedOrgs().removeAll(getManagedBean().getSelectedExemptedOrgs());
+			getManagedBean().setSelectedExemptedOrgs(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1505,46 +1506,42 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		 * generate a new record in central circular
 		 */
 		public void addExemtedOrgDetails() {
-			
-			   getManagedBean().setAutoUpdate(true);
+		
 			  List<CtExemptedOrg>  orgList = new ArrayList<CtExemptedOrg>();
-			  Iterator<PmOrgProfile> itrPmOrgProfile = getExemptedOrgDataModel().getList().iterator();
-			  while(itrPmOrgProfile.hasNext()){
-					PmOrgProfile pmObj = itrPmOrgProfile.next();
-					if(pmObj.isSelectedCheckBox()){
+			  for (PmOrgProfile orgProfile  : this.getManagedBean().getSelectedOrgsProfile()) {
 						 	//Remove if already exist, avoid duplicate
 						  	for (CtExemptedOrg exmptOrg : this.getManagedBean().getCircularVer().getCtExemptedOrgs()) {
-						  		if (exmptOrg.getOrgProfile().getOrgProfileId().equals(pmObj.getOrgProfileId())) {
+						  		if (exmptOrg.getOrgProfile().getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
 						  			throw new EpException(MessageConst.INFO_758000, new String[]{exmptOrg.getOrgProfile().getOrgName()}); 
 						  		}
 						  	}
 			  	
 						  	CtExemptedOrg org = new CtExemptedOrg();
-					    	org.setOrgProfile(pmObj);
-							org.setOrgTypeCode(pmObj.getOrgTypeCode().getParameterCode());
+					    	org.setOrgProfile(orgProfile);
+							org.setOrgTypeCode(orgProfile.getOrgTypeCode().getParameterCode());
 							getManagedBean().setExmptedMinistryDD(false);
 							orgList.add(org);
 		            }
-			  }
+			  
 		      if (orgList.size()>0) {
 				this.getManagedBean().getCircularVer().getCtExemptedOrgs().addAll(orgList);
 			 }
 		
 			  getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 			  getManagedBean().setPtjCodeNameSearchValues(null);
+			  getManagedBean().setAutoUpdate(true);
+			  exemptedOrgDataModel.resetData();
+			  this.getManagedBean().setSelectedOrgsProfile(null);
 			  RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.hide()");
+		}
+		
+		public void autoUpdate(){
+             getManagedBean().setAutoUpdate(true);
 		}
 	
 		public void clickExemptedOrgBtn() {
+			  getManagedBean().setAutoUpdate(false);
 			  getExemptedOrgDataModel().resetData();
-		}
-
-		public CtExemptedOrg[] getSelectedExemptedOrgs() {
-			return selectedExemptedOrgs;
-		}
-
-		public void setSelectedExemptedOrgs(CtExemptedOrg[] selectedExemptedOrgs) {
-			this.selectedExemptedOrgs = selectedExemptedOrgs;
 		}
 	
 		/**
@@ -1947,6 +1944,51 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     			getManagedBean().setButtonHideActiveDel(true);
     		}	
         }
+        
+        /**
+    	 * This method used to
+    	 *  delete old record from datatable
+    	 */
+    	public void deletePidPurchase(){
+    		try {
+    			getManagedBean().getCircularVer().getCtCircularPidReason().removeAll(getManagedBean().getCtCircularPidReasons());
+    			getManagedBean().setCtCircularPidReasons(null);
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+    		}
+    	}
+    	
+    	/**
+    	 * Method used to delete list of contract person details
+    	 * from panel circular creation
+    	 */
+    	public void deleteContactPerson(){
+    		log.info("PanelBackingBean.deleteContactPerson()");
+    		try {
+    			getManagedBean().getCircularVer().getCtContactPersons().removeAll(getManagedBean().getSelectedContactPersons());
+    			getManagedBean().setSelectedContactPersons(null);
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+    		}
+    	}
+    	
+    	/**
+    	 * Method used to delete list of circular for circular list
+    	 */
+    	public void deleteCancelCircular(){
+    		log.info("PanelBackingBean.deleteCancelCircular()");
+    		try {
+    			getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCirculars());
+    			getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCirculars());		
+    			getManagedBean().setSelectedCancelCirculars(null);
+    			//RequestContext.getCurrentInstance().update(":form:cancelCircularDtBtn");
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+    		}
+    	}
         
 		/**
 	     * Method to set boolean value for checkbox 
