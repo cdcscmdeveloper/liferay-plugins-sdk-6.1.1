@@ -40,6 +40,8 @@ public class PaymentManagedBean extends BaseManagedBean{
 	private Long appId;
 	private String docNo;
 	
+	private int counter;
+	
 	/**
 	 * @return the orderId
 	 */
@@ -275,5 +277,10 @@ public class PaymentManagedBean extends BaseManagedBean{
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
 	}
-
+	public int getCounter() {
+		return counter;
+	}
+	public void setCounter(int counter) {
+		this.counter = counter;
+	}
 }
