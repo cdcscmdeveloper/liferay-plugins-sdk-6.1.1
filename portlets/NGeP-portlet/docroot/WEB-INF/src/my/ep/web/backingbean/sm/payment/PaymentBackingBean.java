@@ -429,9 +429,11 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 */
 	public void responsePreRender() throws NoSuchMethodException,SecurityException, IllegalAccessException,
 		IllegalArgumentException, InvocationTargetException {
-		
+		int localCounter;
 		int counter = getManagedBean().getCounter();
 		getManagedBean().setCounter(counter +1);
+		
+		localCounter = getManagedBean().getCounter();
 		
 		log.info("*******responsePreRender*******" + getManagedBean().getCounter());
 		SmAppl appl = null;
@@ -451,6 +453,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		
 		log.info("paymentTaskId>>>>>>>" + paymentTaskId);
 		log.info("paymentBpmPojo>>>>>>>" + paymentBpmPojo);
+		log.info("localCounter>>>>>>"  + localCounter);
 
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
@@ -624,7 +627,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				pymtReqDTO.setPaymentType(paymentType);
 				PaymentResDTO pymtResDTO = null;
 				
-				if(getManagedBean().getCounter() == 1){
+				if(localCounter == 1){
+					log.info(">>>>>counter equal to 1<<<<<<" + getManagedBean().getCounter());
 					pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				}
 				
