@@ -4251,7 +4251,10 @@ public class DirectLOABackingBean extends
 		} else if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
 			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 
-		}  else {
+		} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			submitAction();
+		}
+		else {
 			updateBPMTask(outcome, null);
 		}
 	}
