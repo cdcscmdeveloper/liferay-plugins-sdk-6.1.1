@@ -90,6 +90,7 @@
 						/>
 					&#160;	
 					<p:commandLink id="ptjSearchCL" partialSubmit="true"
+						disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 						process="@this" update=":form:orgProfileCcId:ptjPopup"
 						action="#{organisationSearchBackingBean.renewSesionObject}"
 						oncomplete="ptjPopup.show();" >
