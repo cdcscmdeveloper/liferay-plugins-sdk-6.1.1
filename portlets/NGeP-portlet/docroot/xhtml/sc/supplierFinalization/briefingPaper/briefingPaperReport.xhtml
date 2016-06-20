@@ -26,107 +26,48 @@
 				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(report.definationType)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%; white-space:normal; text-align: center;">
-				<p:commandButton id="download" 
-					icon="ui-icon-download" 
-					style="background-color:transparent !important; border:0px none;"
-					ajax="false"
-					action="#{suppFinalizationBackingBean.downloadReport(report)}"
-					rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload 
-														? !empty report.scQtFinalizationReportAttachment.fileName : true}" />
-														
-				<ui:fragment rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
-					<p:commandLink immediate="true" 
-						rendered="#{isSecretaryUser and report.selected and 
-										report.docCategory eq ParameterConst.documentCategoryEndorsementReport and 
-											!empty report.scQtFinalizationReportAttachment.fileName}" update="reportTbl">
-						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
-							styleClass="tasklist_title1" />
+			<p:column headerText="#{lbl['lbl.sc.action']}"
+					  style="width:15%; white-space:normal; text-align: center;">
 
-						<f:setPropertyActionListener target="#{report.scQtFinalizationReportAttachment}" value="#{null}" />
-					</p:commandLink>
+				<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
+					popupWidgetVar="briefingReportAttWidget"
+					attachment="#{report.scQtFinalizationReportAttachment}"
+					readonly="#{!(isSecretaryUser and report.selected)}"
+					rowIndex="#{rowIndex}">
 
-					<p:commandButton oncomplete="reportAttachmentPopupDlg.show();"
-						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true" process="@this"
-						rendered="#{empty report.scQtFinalizationReportAttachment.fileName}"
-						update="@([id$=reportAttachmentPopup])">
-						<f:setPropertyActionListener
-							target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}"
-							value="#{report}" />
-						<f:setPropertyActionListener value="KTR"
-							target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
-					</p:commandButton>
-				</ui:fragment>														
+					<f:setPropertyActionListener for="actionEvent" value="#{report}"
+						target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}" />
+
+					<f:setPropertyActionListener for="actionEvent" value="KTR"
+						target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
+
+				</ac:scSingleFileUploadButton>
 			</p:column>
 		</p:dataTable>
 		
 		<div class="ppRightBtn BtnSpacing">
-			<p:commandButton  value="#{lbl['lbl.btn.download.all']}"
+			<p:commandButton value="#{lbl['lbl.btn.download.all']}"
 				action="#{suppFinalizationBackingBean.downloadAllReports}" 
 				ajax="false" rendered="#{!readOnlyTask}" />
 		</div>
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.sc.briefing.paper']}" toggleable="true">
+	
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td class="TableFieldLeft" width="24%">
-				<h:outputLabel value="#{lbl['lbl.txt.attachment']}" />
-			</td>
-			<td class="TableFieldRight">
-				<p:commandButton oncomplete="attachmentPopupDlg.show();return false;" 
-					partialSubmit="true" process="@this" update="@([id$=attachmentPopup])" 
-					value="#{lbl['lbl.txt.attach.file']}" 
-					rendered="#{isSecretaryUser or 
-									isBPKTaskAndClaimed}">
-				</p:commandButton>
-			</td>
-		</tr>
-		<tr>
-			<td />
-			<td>
-				<h:panelGroup id="attachFilesPanel">
-					<table border="0" cellspacing="0" cellpadding="0" width="100%">
-					<tr>
-						<td width="5%" rowspan="2">
-							<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/#{suppFinalizationBackingBean.determineIcon(
-									suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment)}"
-								height="30" width="30"
-								rendered="#{!empty suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment}" />
-						</td>
-						<td width="5"></td>
-						<td>
-							<h:outputText value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment.createdUser.userName}" />
-							<c:if test="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment ne null}">
-								, 
-							</c:if>
-							<h:outputText value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment.createdDate}">
-								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-							</h:outputText>
-						</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>
-							<h:commandLink value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment.fileName}"
-								styleClass="blue_font"
-								action="#{suppFinalizationBackingBean.downloadFile(suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment)}" />
-							<p:spacer width="5px" />
-							<p:commandLink
-								immediate="true"
-								rendered="#{!empty suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment and 
-											isSecretaryUser}"
-								update="attachFilesPanel">
-								<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png" styleClass="tasklist_title1" />
-									
-								<f:setPropertyActionListener target="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment}" value="#{null}" />
-							</p:commandLink>
-						</td>
-					</tr>
-					</table>
-				</h:panelGroup>
-			</td>
-		</tr>
+			<tr>
+				<td class="TableFieldLeft" width="24%">
+					<h:outputLabel value="#{lbl['lbl.txt.attachment']}" />
+				</td>
+				<td class="TableFieldRight">
+						
+					<ac:scSingleFileUploadButton id="briefingPaperUploadBtnId" 
+						popupWidgetVar="briefingPaperAttWidget"
+						attachment="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment}"
+						readonly="#{!(isSecretaryUser or isBPKTaskAndClaimed)}"/>								
+																				
+				</td>
+			</tr>
 		</table>
 	</p:panel>
 	
