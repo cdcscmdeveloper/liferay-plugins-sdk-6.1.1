@@ -1071,8 +1071,7 @@ public class DirectLOABackingBean extends
 					scLoa.setSupplierFaxNo(supplierBranch.getFaxFull());
 					
 					// Get gst info
-					SupplierGstResDTO resDTO = getGSTInfo(supplierId,
-							supplierBranch.getSupplierBranchId());
+					SupplierGstResDTO resDTO = getGSTInfo(supplierId,supplierBranch.getBranchCode());
 					setGSTInfo(resDTO, scLoa);
 					break;
 				}
@@ -5884,7 +5883,7 @@ public class DirectLOABackingBean extends
 
 	}
 
-	private SupplierGstResDTO getGSTInfo(Long supplierId, Long branchId) {
+	private SupplierGstResDTO getGSTInfo(Long supplierId, Long branchCode) {
 
 		ISupplierGstSO supplierGstSO = null;
 		try {
@@ -5892,7 +5891,7 @@ public class DirectLOABackingBean extends
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
 			SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
 			gstReqDTO.setSupplierId(supplierId);
-			gstReqDTO.setBranchCode(branchId);
+			gstReqDTO.setBranchCode(branchCode);
 			SupplierGstResDTO gstResDTO = supplierGstSO
 					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
 			return gstResDTO;
