@@ -1037,7 +1037,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		log.info("PanelBackingBean.deleteContactPerson()");
 		try {
 			getManagedBean().getCircularVer().getCtContactPersons().removeAll(getManagedBean().getSelectedContactPersons());
-			getManagedBean().setButtonHideActiveDel(true);
+			getManagedBean().setSelectedContactPersons(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1368,7 +1368,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				this.getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().removeAll(this.getManagedBean().getSelectedPanelSuppliers());
 			}
 			
-			getManagedBean().setButtonHideActiveDel(true);
+			getManagedBean().setSelectedPanelSuppliers(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -2476,7 +2476,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void deletePidPurchase(){
 		try {
 			getManagedBean().getCircularVer().getCtCircularPidReason().removeAll(getManagedBean().getCtCircularPidReasons());
-			getManagedBean().setButtonHideActiveDel(true);
+			getManagedBean().setCtCircularPidReasons(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
