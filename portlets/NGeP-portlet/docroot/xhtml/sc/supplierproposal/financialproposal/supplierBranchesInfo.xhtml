@@ -46,31 +46,37 @@
 				<h:outputText style="float : left;" value="#{companyBranch.faxNo}"></h:outputText>
 			</p:column>
 		</p:dataTable>
-	</p:panel>
-	<p:panel id="branchGSTInfo" header="#{lbl['lbl.sc.gst.branch.info']}"
-		toggleable="true">
-		<h:panelGroup
-			rendered="#{supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch ne null}">
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.gstNo']}" /></td>
-					<td><p:inputText disabled="true" readonly="true" size="30"
-							value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch.gstRegNo : lbl['lbl.sm.no.available']}" /></td>
-				</tr>
-				<tr>
-					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sm.gst.effdate']}" /></td>
-					<td colspan="3"><p:inputText disabled="true" readonly="true"
-							size="30"
-							value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch.gstEffDate : lbl['lbl.sm.no.available']}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
-					<td colspan="3"><p:inputText disabled="true" readonly="true"
-							size="30"
-							value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch.gstEndDate : lbl['lbl.sm.no.available']}" /></td>
-				</tr>
-			</table>
-		</h:panelGroup>
+		<h:panelGrid id="branchGSTInfo"
+			rendered="#{supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch ne null}"
+			style="width : 100%">
+			<br />
+			<ui:fragment
+				rendered="#{supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch ne null}">
+					#{supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch.branchName} > #{lbl['lbl.sc.gst.branch.info']}
+				</ui:fragment>
+			<h:panelGroup
+				rendered="#{supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch ne null}">
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.gstNo']}" /></td>
+						<td><p:inputText disabled="true" readonly="true" size="30"
+								value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch.gstRegNo : lbl['lbl.sm.no.available']}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 200px;"><p:outputLabel
+								value="#{lbl['lbl.sm.gst.effdate']}" /></td>
+						<td colspan="3"><p:inputText disabled="true" readonly="true"
+								size="30"
+								value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch.gstEffDate : lbl['lbl.sm.no.available']}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+						<td colspan="3"><p:inputText disabled="true" readonly="true"
+								size="30"
+								value="#{(supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch ne null) ? supplierProposalDetailBackingBean.managedBean.smGstSupplierBranch.gstEndDate : lbl['lbl.sm.no.available']}" /></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+		</h:panelGrid>
 	</p:panel>
 </ui:composition>

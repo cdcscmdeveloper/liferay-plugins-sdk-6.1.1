@@ -38,6 +38,7 @@ import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
@@ -175,6 +176,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private List<TechnicalStaffBean> smPersonnelList;
 	private SmFacility smCompanyBasic;
 	private List<SmFacility> supplierFacilities;
+	private SmSupplierBank selectedBank;
 	private List<SmChequeSignatory> smChequeSignatories;
 	private List<SmPersonnel> equityShareHolders;
 	private SmPersonnleCalcVO personCalc;
@@ -1731,6 +1733,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSmGstSupplierBranch(SmGstSupplier smGstSupplierBranch) {
 		this.smGstSupplierBranch = smGstSupplierBranch;
+	}
+
+	/**
+	 * @return the selectedBank
+	 */
+	public SmSupplierBank getSelectedBank() {
+		return selectedBank;
+	}
+
+	/**
+	 * @param selectedBank the selectedBank to set
+	 */
+	public void setSelectedBank(SmSupplierBank selectedBank) {
+		this.selectedBank = selectedBank;
 	}
 
 }
