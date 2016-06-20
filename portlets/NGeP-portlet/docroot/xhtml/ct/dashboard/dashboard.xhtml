@@ -21,15 +21,15 @@
 			                      process="@this" partialSubmit="true" listener="#{contractDashboardBackingBean.filterCtExpDetails}"/>  
 	            </p:selectOneMenu>
            </h:panelGrid>
-           <p:spacer height="5"/>
-           <h:panelGrid style="width:850px;">
+           <p:spacer height="2"/>
 	           <p:dataTable id="tblCtExpId" value="#{contractDashboardBackingBean.ctDashboardDataModel}"
-					var="data1" lazy="true" rowIndexVar="index" rowKey="#{data1}" rows="5">
+					var="data1" lazy="true" rowIndexVar="index" rowKey="#{data1}" width="100%"  rows="5">
 						<ac:paginator for="tblCtExpId" />
 			           <p:column headerText="#{lbl['lbl.ct.contract.no']}"  styleClass="column-align-center">
 				                   <h:outputText value="#{data1.contractNo}" style="text-align:left; float:left;" />
 				       </p:column> 
-				       <p:column headerText="#{lbl['lbl.ct.contract.title']}" styleClass="column-align-center" style="white-space:normal;" >
+				       <p:column headerText="#{lbl['lbl.ct.contract.title']}" styleClass="column-align-center"
+				                   style="white-space:normal;" >
 				             	<h:outputText value="#{data1.contractName}"  style="text-align:left; float:left;" />
 				       </p:column> 
 				       <p:column  headerText="#{lbl['lbl.ct.contract.start']}" styleClass="column-align-center">
@@ -37,16 +37,16 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 				       </p:column>
-				        <p:column  headerText="#{lbl['lbl.ct.contract.end']}"  styleClass="column-align-center">
+				        <p:column  headerText="#{lbl['lbl.ct.contract.end']}"  styleClass="column-align-center" >
 				           <h:outputText value="#{data1.latestContractVer.ctContractValue.expDate}" style="text-align:left; float:left;">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 				       </p:column>
-				         <p:column  headerText="#{lbl['lbl.ct.name.supplier']}" styleClass="column-align-center" style="white-space:normal;" >
+				         <p:column  headerText="#{lbl['lbl.ct.name.supplier']}" styleClass="column-align-center" 
+				                 style="white-space:normal;" >
 				            	<h:outputText value="#{data1.smSupplier.companyName}" style="text-align:left; float:left;" />
 				       </p:column>
 	            </p:dataTable>
-	            </h:panelGrid>
          </p:panel>
      </ui:define>
 </ui:composition>
