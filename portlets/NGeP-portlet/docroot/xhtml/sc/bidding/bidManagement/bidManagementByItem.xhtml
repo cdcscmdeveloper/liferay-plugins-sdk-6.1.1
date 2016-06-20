@@ -49,97 +49,100 @@
 				</h:outputText>
 			</p:column>
 		</p:dataTable>
+		<br />
+		<ui:fragment
+			rendered="#{biddingBB.managedBean.scheduledBid.scBidItems ne null}">
+					#{biddingBB.managedBean.selectedBidItem.scRequestItem.itemName} > #{lbl['lbl.sc.bid.summary']}
+				</ui:fragment>
 
-	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.bid.summary']}" toggleable="true"
-		rendered="#{!empty biddingBB.managedBean.selectedBidItem}">
-		<h:panelGroup id="itemPriceLineChartPanel">
-			<div align="center">
+		<h:panelGrid
+			rendered="#{!empty biddingBB.managedBean.selectedBidItem}" style="width : 100%">
+			<h:panelGroup id="itemPriceLineChartPanel">
+				<div align="center">
 
-				<h4>
-					<B>#{lbl['lbl.sc.bidding.statistic.graph']}</B>
-				</h4>
+					<h4>
+						<B>#{lbl['lbl.sc.bidding.statistic.graph']}</B>
+					</h4>
 
-			</div>
+				</div>
 
-			<div>
+				<div>
 
-				<p:lineChart id="lineChartBMBI" animate="true"
-					yaxisLabel="#{lbl['lbl.sc.bid.price']}"
-					xaxisLabel="#{lbl['lbl.sc.bid.time']}"
-					value="#{biddingBB.managedBean.itemPriceLinearModel}"
-					legendPosition="e" style="height:300px;" />
-			</div>
-		</h:panelGroup>
-
-		<c:if test="#{biddingBB.managedBean.remainingTimeForTimers ne 0}">
-			<ui:include src="bidManagementTimers.xhtml"></ui:include>
-		</c:if>
-
-		<h:panelGroup id="itemizedSupplierPricesPanel">
-			<p:dataTable id="rankingList" rowIndexVar="index" rows="10"
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{biddingBB.managedBean.bidPriceItems}" var="bidPriceItem">
-				<ac:paginator for="rankingList"></ac:paginator>
-				<p:column headerText="#{lbl['lbl.sc.ranking']}"
-					style=" align : center; width : 14%">
-					<h:outputText id="itemRankVBI" value="#{bidPriceItem.ranking}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-					style="align : center; width : 14%">
-					<h:outputText id="supplierCodeVBI"
-						value="#{bidPriceItem.supplier.supplierId}" />
-				</p:column>
-				<p:column style="align : center; width : 14%"
-					headerText="#{lbl['lbl.sc.bumiputra.status']}">
-					<h:outputText id="isBumiVBI"
-						value="#{(bidPriceItem.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
-				</p:column>
-				<p:column style="align : center; width : 14%"
-					headerText="#{lbl['lbl.sc.starting.price']}">
-					<h:outputText id="itemStartPriceVBI" style="float : right"
-						value="#{biddingBB.itemizedStartPriceTotal(bidPriceItem)}">
-					</h:outputText>
-				</p:column>
-				<p:column style=" align : center; width : 14%">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.last.bid.price']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.last.bid.price.tooltip']}" />
-					</f:facet>
-					<div style="align: right">
-						<p:commandLink id="bidPriceVBI"
-							rendered="#{!((bidPriceItem.startingPrice - bidPriceItem.bidPrice) == 0)}"
-							value="#{bidPriceItem.bidPriceTotal}" style="float : right"
-							oncomplete="priceHistory.show();"
-							action="#{biddingBB.historyPricePopupAction(bidPriceItem)}"
-							update="@([id$=historyPricePopupPanel])">
-						</p:commandLink>
-					</div>
-
-				</p:column>
-				<p:column style=" align : center; width : 15%"
-					headerText="#{lbl['lbl.sc.difference.rm']}">
-					<h:outputText id="differenceVBI" style="float : right"
-						rendered="#{bidPriceItem.bumi and biddingBB.managedBean.nonBumiAvail and (biddingBB.managedBean.lowestNonBumiOfferedPrice lt bidPriceItem.bidPriceTotal)}"
-						value="#{biddingBB.managedBean.lowestNonBumiOfferedPrice - bidPriceItem.bidPriceTotal}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-				</p:column>
-				<p:column style=" align : center; width : 15%"
-					headerText="#{lbl['lbl.sc.cost.saving']}">
-					<h:outputText id="savingVBI" style="float : right"
-						value="#{biddingBB.managedBean.selectedBidItem.estimatedCost - bidPriceItem.bidPriceTotal}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-				</p:column>
-
-			</p:dataTable>
+					<p:lineChart id="lineChartBMBI" animate="true"
+						yaxisLabel="#{lbl['lbl.sc.bid.price']}"
+						xaxisLabel="#{lbl['lbl.sc.bid.time']}"
+						value="#{biddingBB.managedBean.itemPriceLinearModel}"
+						legendPosition="e" style="height:300px;" />
+				</div>
 			</h:panelGroup>
-	</p:panel>
-	
 
+			<c:if test="#{biddingBB.managedBean.remainingTimeForTimers ne 0}">
+				<ui:include src="bidManagementTimers.xhtml"></ui:include>
+			</c:if>
+
+			<h:panelGroup id="itemizedSupplierPricesPanel">
+				<p:dataTable id="rankingList" rowIndexVar="index" rows="10"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{biddingBB.managedBean.bidPriceItems}" var="bidPriceItem">
+					<ac:paginator for="rankingList"></ac:paginator>
+					<p:column headerText="#{lbl['lbl.sc.ranking']}"
+						style=" align : center; width : 14%">
+						<h:outputText id="itemRankVBI" value="#{bidPriceItem.ranking}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+						style="align : center; width : 14%">
+						<h:outputText id="supplierCodeVBI"
+							value="#{bidPriceItem.supplier.supplierId}" />
+					</p:column>
+					<p:column style="align : center; width : 14%"
+						headerText="#{lbl['lbl.sc.bumiputra.status']}">
+						<h:outputText id="isBumiVBI"
+							value="#{(bidPriceItem.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
+					</p:column>
+					<p:column style="align : center; width : 14%"
+						headerText="#{lbl['lbl.sc.starting.price']}">
+						<h:outputText id="itemStartPriceVBI" style="float : right"
+							value="#{biddingBB.itemizedStartPriceTotal(bidPriceItem)}">
+						</h:outputText>
+					</p:column>
+					<p:column style=" align : center; width : 14%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.last.bid.price']}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.last.bid.price.tooltip']}" />
+						</f:facet>
+						<div style="align: right">
+							<p:commandLink id="bidPriceVBI"
+								rendered="#{!((bidPriceItem.startingPrice - bidPriceItem.bidPrice) == 0)}"
+								value="#{bidPriceItem.bidPriceTotal}" style="float : right"
+								oncomplete="priceHistory.show();"
+								action="#{biddingBB.historyPricePopupAction(bidPriceItem)}"
+								update="@([id$=historyPricePopupPanel])">
+							</p:commandLink>
+						</div>
+
+					</p:column>
+					<p:column style=" align : center; width : 15%"
+						headerText="#{lbl['lbl.sc.difference.rm']}">
+						<h:outputText id="differenceVBI" style="float : right"
+							rendered="#{bidPriceItem.bumi and biddingBB.managedBean.nonBumiAvail and (biddingBB.managedBean.lowestNonBumiOfferedPrice lt bidPriceItem.bidPriceTotal)}"
+							value="#{biddingBB.managedBean.lowestNonBumiOfferedPrice - bidPriceItem.bidPriceTotal}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column style=" align : center; width : 15%"
+						headerText="#{lbl['lbl.sc.cost.saving']}">
+						<h:outputText id="savingVBI" style="float : right"
+							value="#{biddingBB.managedBean.selectedBidItem.estimatedCost - bidPriceItem.bidPriceTotal}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</h:panelGroup>
+		</h:panelGrid>
+	</p:panel>
 	<h:panelGrid id="historyPricePopupPanel">
 		<p:dialog rendered="#{biddingBB.managedBean.rendered}"
 			header="#{lbl['lbl.sc.history.price']}" widgetVar="priceHistory"
