@@ -379,6 +379,14 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			BiddingResDTO resDTO = biddingSO.updateBidAction(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("resume Or Rebid Or Reschedule Action successful");
+				if (this.getManagedBean().getBidAction().getActionType()
+						.equals(BiddingConst.BID_ACTION_TYPE_RESUME)) {
+					Date pausedDate = this.getManagedBean().getLastBidAction()
+							.getCreatedDate();
+					Date resumedDate = this.getManagedBean().getBidAction()
+							.getNewStartDate();
+				}
+
 			}
 
 		}
@@ -493,7 +501,9 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 		if (nonBumiPriceList != null && nonBumiPriceList.size() != 0) {
 			getManagedBean().setNonBumiAvail(true);
-			Collections.sort(nonBumiPriceList);
+			if(nonBumiPriceList.size()>1){
+				Collections.sort(nonBumiPriceList);
+			}
 			if (nonBumiPriceList.get(0) != null) {
 				getManagedBean().setLowestNonBumiOfferedPrice(
 						nonBumiPriceList.get(0));
@@ -507,25 +517,29 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		for (BidPackageBean scBidPackage : getManagedBean().getBidPackages()) {
 			listForCustomSort.add(scBidPackage);
 		}
-		// to sort list for line Graph
-		Collections.sort(listForCustomSort, new Comparator<BidPackageBean>() {
-			public int compare(BidPackageBean bidPackage1,
-					BidPackageBean bidPackage2) {
+		
+		if(listForCustomSort.size()>1){
+			// to sort list for line Graph
+			Collections.sort(listForCustomSort, new Comparator<BidPackageBean>() {
+				public int compare(BidPackageBean bidPackage1,
+						BidPackageBean bidPackage2) {
 
-				if (bidPackage1.getLastBidDate().after(
-						bidPackage2.getLastBidDate())) {
-					return 1;
-				} else if (bidPackage1.getLastBidDate().before(
-						bidPackage2.getLastBidDate())) {
-					return -1;
-				} else if (bidPackage1.getLastBidDate().equals(
-						bidPackage2.getLastBidDate())) {
+					if (bidPackage1.getLastBidDate().after(
+							bidPackage2.getLastBidDate())) {
+						return 1;
+					} else if (bidPackage1.getLastBidDate().before(
+							bidPackage2.getLastBidDate())) {
+						return -1;
+					} else if (bidPackage1.getLastBidDate().equals(
+							bidPackage2.getLastBidDate())) {
+						return 0;
+					}
 					return 0;
-				}
-				return 0;
 
-			}
-		});
+				}
+			});
+		}
+		
 		createBidPackagePriceLinearModel(listForCustomSort);
 
 		listForCustomSort = null;
@@ -569,31 +583,31 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			for (BidItemBean bidItemBean : getManagedBean().getBidPriceItems()) {
 				listForCustomSort.add(bidItemBean);
 			}
-			Collections.sort(listForCustomSort, new Comparator<BidItemBean>() {
-				public int compare(BidItemBean bidPrice1, BidItemBean bidPrice2) {
+			if(listForCustomSort.size()>1){
+				Collections.sort(listForCustomSort, new Comparator<BidItemBean>() {
+					public int compare(BidItemBean bidPrice1, BidItemBean bidPrice2) {
 
-					if (bidPrice1.getLastBidDate() != null
-							&& bidPrice2.getLastBidDate() != null
-							&& bidPrice1.getLastBidDate().after(
-									bidPrice2.getLastBidDate())) {
-						return 1;
-					} else if (bidPrice1.getLastBidDate() != null
-							&& bidPrice2.getLastBidDate() != null
-							&& bidPrice1.getLastBidDate().before(
-									bidPrice2.getLastBidDate())) {
-						return -1;
-					} else if (bidPrice1.getLastBidDate() != null
-							&& bidPrice2.getLastBidDate() != null
-							&& bidPrice1.getLastBidDate().equals(
-									bidPrice2.getLastBidDate())) {
+						if (bidPrice1.getLastBidDate() != null
+								&& bidPrice2.getLastBidDate() != null
+								&& bidPrice1.getLastBidDate().after(
+										bidPrice2.getLastBidDate())) {
+							return 1;
+						} else if (bidPrice1.getLastBidDate() != null
+								&& bidPrice2.getLastBidDate() != null
+								&& bidPrice1.getLastBidDate().before(
+										bidPrice2.getLastBidDate())) {
+							return -1;
+						} else if (bidPrice1.getLastBidDate() != null
+								&& bidPrice2.getLastBidDate() != null
+								&& bidPrice1.getLastBidDate().equals(
+										bidPrice2.getLastBidDate())) {
+							return 0;
+						}
 						return 0;
 					}
-					return 0;
-				}
-			});
-
+				});
+			}
 			createBidItemPriceLinearModel(listForCustomSort);
-
 			listForCustomSort = null;
 		}
 	}
@@ -758,7 +772,9 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					if (nonBumiPriceList != null
 							&& nonBumiPriceList.size() != 0) {
 						getManagedBean().setNonBumiAvail(true);
-						Collections.sort(nonBumiPriceList);
+						if (nonBumiPriceList.size() > 1) {
+							Collections.sort(nonBumiPriceList);
+						}
 						if (nonBumiPriceList.get(0) != null) {
 							getManagedBean().setLowestNonBumiOfferedPrice(
 									nonBumiPriceList.get(0));
@@ -820,7 +836,9 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		for (ScBidPrice scBidPrice : getManagedBean().getBidHistoryPriceList()) {
 			customSortBidPrices.add(scBidPrice);
 		}
-		Collections.reverse(customSortBidPrices);
+		if (customSortBidPrices.size() > 1) {
+			Collections.reverse(customSortBidPrices);
+		}
 		createHistoryPriceLinearModel(customSortBidPrices);
 		getManagedBean().setRendered(true);
 
