@@ -323,8 +323,6 @@ public class DirectLOABackingBean extends
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 
 			parseLOADetails(scLoa, outcome, reqDTO);
-			
-			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 
 			validateSupplierDetails(scLoa);
 			validateLOAReportAttachments(scLoa);
