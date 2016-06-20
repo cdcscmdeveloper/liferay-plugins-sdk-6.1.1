@@ -7,7 +7,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
-	
+		<p:blockUI id="tncBlockWidget" block=":form" widgetVar="tncBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>	
 		
 		<p:panel header="#{lbl['lbl.pm.access.app.tnc.header']}"
 			toggleable="true" id="tncPnl">
@@ -28,18 +30,20 @@
 				value="#{lbl['lbl.pm.access.app.tnc.desc5.list']}" />
 			<h:outputText escape="false"
 				value="#{lbl['lbl.pm.access.app.tnc.desc6']}" />
-			<p:selectBooleanCheckbox id="isTncChkBox"
+			
+			</p:scrollPanel>
+		</p:panel>
+		<br />
+		<p:selectBooleanCheckbox id="isTncChkBox"
 				value="#{accessApplBackingBean.managedBean.tncChecked}">
 				<p:ajax update="@this,btnProceed" />
-			</p:selectBooleanCheckbox>
-			<h:outputText escape="false" style="margin-left:5px;"
+		</p:selectBooleanCheckbox>
+		<h:outputText escape="false" style="margin-left:5px;"
 				value="#{lbl['lbl.pm.access.app.tnc.agree']}" />
-			</p:scrollPanel>
-			<br />
-		</p:panel>
-		
+			
 		<div align="right">
 			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"
+				onstart="tncBlockWidget.show()" oncomplete="tncBlockWidget.hide()"
 			disabled="#{not accessApplBackingBean.managedBean.tncChecked}" 
 				action="#{accessApplBackingBean.proceedToMainPage}" />
 		</div>
