@@ -248,11 +248,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		}
 		
-//		if(checkExistingBusinessRegNo()){
-//			throw new EpException(MessageConst.ERROR_721003);
-//
-//		}
+		SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
 		checkExistingBusinessRegNo();
+		
+		if(checkSupplierOwnerIndividualAcc(suppOwner.getIdentificationType().getParameterCode(),suppOwner.getIdentificationNo(),
+				my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)){
+			throw new EpException(MessageConst.ERROR_721050);
+		}
 		validateBankInfo(this.getManagedBean().getSmAppl().getSmSupplierBanks());
 
 		//check the professional body if supplier type is consultant
@@ -266,7 +268,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 
-		SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
+		
 		//log.info("-----------Owner ID Type---------" + suppOwner.getIdentificationType().getParameterCode());
 		//log.info("-----------Owner ID---------" + suppOwner.getIdentificationNo());
 		
@@ -378,6 +380,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//check business registration no with supplier Type;
 			checkExistingBusinessRegNo();
 		}else{
+			//check whether identification code already registered any business type
+			if(checkSupplierOwnerIndividualAcc(smSuppOwner.getIdentificationType().getParameterCode(),
+					smSupp.getRegNo(),null)){
+				throw new EpException(MessageConst.ERROR_721050);
+			}
+			
 			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
 			PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
 			
@@ -2473,6 +2481,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	private boolean checkSupplierOwnerIndividualAcc(String identificationType, String identificationNo, String businessType){
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		reqDTO.setIdentificationType(identificationType);
+		reqDTO.setIdentificationNo(identificationNo);
+		
+		if(businessType != null){
+			reqDTO.setBusinessType(businessType);
+		}
+		
+		IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
+		RegistrationResDTO resDTO = reqSO.retrieveActiveSupplierByOwnerIDAndBusType(reqDTO);
+		
+		if(resDTO.getSmSuppliers().size() > 0){
+			return true;
+		}
+		
+		return false;
+	}
 }
 
 
