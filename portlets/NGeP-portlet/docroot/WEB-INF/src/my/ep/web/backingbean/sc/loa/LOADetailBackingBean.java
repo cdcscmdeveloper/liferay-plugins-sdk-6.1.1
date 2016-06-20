@@ -2201,7 +2201,7 @@ public class LOADetailBackingBean extends
 					
 					// Get Gst info based on branch
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
-					SupplierGstResDTO resDTO = getGSTInfo(supplierId,supplierBranch.getSupplierBranchId());
+					SupplierGstResDTO resDTO = getGSTInfo(supplierId,supplierBranch.getBranchCode());
 					setGSTInfo(resDTO,scLoa);
 					break;
 				}
@@ -4960,7 +4960,7 @@ public class LOADetailBackingBean extends
 
 	}
 	
-	private SupplierGstResDTO getGSTInfo(Long supplierId, Long branchId) {
+	private SupplierGstResDTO getGSTInfo(Long supplierId, Long branchCode) {
 		
 		ISupplierGstSO supplierGstSO = null;
 		try {
@@ -4968,7 +4968,7 @@ public class LOADetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
 			SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
 			gstReqDTO.setSupplierId(supplierId);
-			gstReqDTO.setBranchCode(branchId);
+			gstReqDTO.setBranchCode(branchCode);
 			SupplierGstResDTO gstResDTO = supplierGstSO
 					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
 			return gstResDTO;
