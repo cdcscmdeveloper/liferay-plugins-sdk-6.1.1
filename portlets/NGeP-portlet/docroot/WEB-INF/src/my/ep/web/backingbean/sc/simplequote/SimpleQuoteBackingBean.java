@@ -1871,161 +1871,15 @@ public class SimpleQuoteBackingBean extends
 		// duration calc
 		calculateDuration(scQuote);
 		procurementTypeEvent();
+		
+		// re quote 
+		if(scQuote.getParentQuoteId() != null){
+			getManagedBean().setPanelItemFlag(Boolean.FALSE);
+			getManagedBean().setNewableFlag(Boolean.FALSE);
+			getManagedBean().setRemovableFlag(Boolean.FALSE);
+		}
 	}
-
-	/**
-	 * Reload simple quote.
-	 * 
-	 * @param scQuote
-	 *            the sc quote
-	 */
-	public void reQuote(ScQuote scQuote) {
-		// start date as current date
-		Date currentDate = new Date();
-		scQuote.setStartDate(currentDate);
-		scQuote.setEndDate(null);
-		getManagedBean().setCurrentStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
-		preRenderScQuote(scQuote);
-		/*TemplateSpecBean productTplSpecBean = getManagedBean()
-				.getProductTemplateSpecBean();
-		TemplateSpecBean serviceTplSpecBean = getManagedBean()
-				.getServiceTemplateSpecBean();
-
-		CtPanelItem quotePanelItem = getTopPanelItem();
-		
-		// start date as current date
-		Date currentDate = new Date();
-		scQuote.setStartDate(currentDate);
-		scQuote.setEndDate(null);
-
-		if (scQuote.getCurrentStatus() == null) {
-			List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
-			ScSQWorkFlowStatus scWorkFlowStatus = new ScSQWorkFlowStatus();
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
-			StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(
-					statusReqDTO);
-			getCurrentStatus(statusResDTO.getPmStatus());
-			scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
-			scWorkFlowStatus.setQuote(scQuote);
-			scWorkFlowStatus.setCurrent(Boolean.TRUE);
-			workFlowStatuses.add(scWorkFlowStatus);
-			scQuote.setWorkflowStatuses(workFlowStatuses);
-
-		} else {
-			getCurrentStatus(scQuote.getCurrentStatus().getPmStatus());
-		}
-
-		// service and product
-		if (scQuote.getQuoteDocs() != null) {
-			for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
-				TplSpecMaster specMaster = scQuoteDoc.getSpecMaster();
-				if (ParameterConst.SQ_ITEM_LIST_PRODUCT
-						.equalsIgnoreCase(specMaster.getItemTypeCode()
-								.getParameterCode())) {
-					if (specMaster.getTplSpecQuestions() == null) {
-						specMaster
-								.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
-					}
-					productTplSpecBean.setSpecMaster(specMaster);
-					getManagedBean().setProductTemplateSpecBean(
-							productTplSpecBean);
-					// service Tpl Spe
-				} else if (ParameterConst.SQ_ITEM_LIST_SERVICE
-						.equalsIgnoreCase(specMaster.getItemTypeCode()
-								.getParameterCode())) {
-
-					if (specMaster.getTplSpecQuestions() == null) {
-						specMaster
-								.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
-					}
-					serviceTplSpecBean.setSpecMaster(specMaster);
-					getManagedBean().setServiceTemplateSpecBean(
-							serviceTplSpecBean);
-				}
-			}
-		}
-
-		if (scQuote.getProcurementType() != null) {
-			getManagedBean()
-					.setProcurementTypes(
-							getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
-		}
-
-		if (scQuote.getRequestNotes() != null
-				&& scQuote.getRequestNotes().size() > 0) {
-			getManagedBean().setRequestNote(scQuote.getRequestNotes().get(0));
-		}
-
-		// business nature details
-		if (scQuote.getBusinessNatureCriterias() != null
-				&& scQuote.getBusinessNatureCriterias().size() > 0) {
-			getManagedBean().setByBusinessNature(Boolean.TRUE);
-			getManagedBean().setBusinessNatureCriterias(
-					scQuote.getBusinessNatureCriterias());
-		}
-
-		if (scQuote.getScQuoteSuppliers() != null
-				&& scQuote.getScQuoteSuppliers().size() > 0) {
-			// panel supplier
-			if (quotePanelItem != null) {
-				getManagedBean().setPanelSuppliers(
-						scQuote.getScQuoteSuppliers());
-
-			} else {
-				if (scQuote.getProcurementType() != null
-						&& scQuote.getProcurementType().getParameterCode()
-								.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-
-					// govt supplers
-					getManagedBean().setGovtSellers(
-							scQuote.getScQuoteSuppliers());
-
-				} else { // supplier list
-					getManagedBean().setSupplierList(
-							scQuote.getScQuoteSuppliers());
-				}
-			}
-		}
-
-		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
-		// zone location level by default - district
-		if (getManagedBean().getLocationLevel() == null) {
-			getManagedBean().setLocationLevel(
-					ParameterConst.LOCATION_LEVEL_DISTRICT);
-		}
-		// supplier location level by default - district
-		if (getManagedBean().getSupplierLocLevel() == null) {
-			getManagedBean().setSupplierLocLevel(
-					ParameterConst.LOCATION_LEVEL_DISTRICT);
-		}
-
-		// to get country id
-		CountryReqDTO reqDTO = new CountryReqDTO();
-		reqDTO.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
-		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
-		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
-		getManagedBean().setDefaultCountryId(
-				resDTO.getPmCountry().getCountryId());
-
-		getSupplierListCriteria();
-
-		// Initializing Remarks
-		scQuote.setRemarks(initializeRemarks(scQuote, null,
-				scQuote.getRemarks(), ScSQRemark.class));
-
-		getManagedBean().setScQuote(scQuote);
-		procurementTypeEvent();*/
-		
-		// to get ptj locality by default
-//		ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
-	}
+	
 
 	/**
 	 * submit simple quote details. submit - save data into database and BPM
@@ -4610,6 +4464,14 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setBusinessNatureCriterias(
 					scQuote.getBusinessNatureCriterias());
 		}
+		
+		// re quote 
+		if(scQuote.getParentQuoteId() != null){
+			getManagedBean().setPanelItemFlag(Boolean.FALSE);
+			getManagedBean().setNewableFlag(Boolean.FALSE);
+			getManagedBean().setRemovableFlag(Boolean.FALSE);
+		}
+		
 /*
 		if (scQuote.getScQuoteSuppliers() != null
 				&& scQuote.getScQuoteSuppliers().size() > 0) {
