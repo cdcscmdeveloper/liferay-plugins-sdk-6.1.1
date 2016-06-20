@@ -727,7 +727,6 @@ public class SPDetailBackingBean extends
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
-			
 			List<TplSpecAnswer> answers = null;
 
 			if (getManagedBean().getQt().isZonal()) {
@@ -774,10 +773,10 @@ public class SPDetailBackingBean extends
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(getManagedBean().getQt());
 			proposalResDTO = proposalSO.saveSpecDetails(proposalReqDTO);
-		} catch(Exception e){
+		} catch (Exception e) {
 			scQtProposalChecklist.setSubmitted(false);
 			throw new EpException(e.getMessage());
-		}finally {
+		} finally {
 			proposalSO = null;
 		}
 		return proposalResDTO;
@@ -794,17 +793,16 @@ public class SPDetailBackingBean extends
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
-			
 			List<TplSpecAnswer> answers = getManagedBean()
 					.getTemplateSpecBean().getSpecAnswerList();
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(this.getManagedBean().getQt());
 			proposalResDTO = proposalSO.saveSpecDetails(proposalReqDTO);
-		} catch(Exception e){
+		} catch (Exception e) {
 			scQtProposalChecklist.setSubmitted(false);
 			throw new EpException(e.getMessage());
-		}finally {
+		} finally {
 			proposalSO = null;
 		}
 		return proposalResDTO;
@@ -1087,7 +1085,7 @@ public class SPDetailBackingBean extends
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			
+
 			CriteriaValue totalEmployeeVal = new CriteriaValue(
 					SourcingConstants.CRITERIA_TYPE_TOTAL_EMPLOYEE,
 					BigDecimal.valueOf(getManagedBean().getScQtPRPEmployee()
@@ -1159,7 +1157,7 @@ public class SPDetailBackingBean extends
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			
+
 			List<ScQtPRPExperience> experiences = this.getManagedBean()
 					.getScQtPRPExperiences();
 			int index = getManagedBean().getTecCheckDetailsList().indexOf(
@@ -2593,7 +2591,8 @@ public class SPDetailBackingBean extends
 			log.info("*****SmAppl Appl_Id : *****"
 					+ resDTO.getSmAppl().getApplId());
 			// To fetch and set Supplier GST info
-			this.getManagedBean().setSmGstSupplier(getGSTInfo(supplierId,null));
+			this.getManagedBean()
+					.setSmGstSupplier(getGSTInfo(supplierId, null));
 			// equityShareHolders for
 			List<SmPersonnel> equityShareHolders = new ArrayList<SmPersonnel>();
 
@@ -2640,9 +2639,26 @@ public class SPDetailBackingBean extends
 			}
 
 			// To set data for bankinfo tab
-			getManagedBean().setSmChequeSignatories(
-					getManagedBean().getSmAppl().getSmSupplierBanks().get(0)
-							.getSmChequeSignatories());
+			if (getManagedBean().getSmAppl().getSmSupplierBanks() != null
+					&& !getManagedBean().getSmAppl().getSmSupplierBanks()
+							.isEmpty()) {
+				getManagedBean().setSelectedBank(
+						getManagedBean().getSmAppl().getSmSupplierBanks()
+								.get(0));
+				getManagedBean().setSmChequeSignatories(
+						getManagedBean().getSmAppl().getSmSupplierBanks()
+								.get(0).getSmChequeSignatories());
+			}
+
+			// TO set first branch
+			if (this.getManagedBean().getSmAppl().getSmSupplierBranches() != null
+					&& !this.getManagedBean().getSmAppl()
+							.getSmSupplierBranches().isEmpty()) {
+				this.getManagedBean().setSmGstSupplierBranch(
+						getGSTInfo(this.getManagedBean().getSupplierId(), this
+								.getManagedBean().getSmAppl()
+								.getSmSupplierBranches().get(0).getBranchCode()));
+			}
 
 			// staffInformation();
 			log.info("Paid up capital : "
@@ -2661,9 +2677,9 @@ public class SPDetailBackingBean extends
 
 		return NAV_TO_SUPPLIER_DETAILS_PAGE;
 	}
-	
+
 	private SmGstSupplier getGSTInfo(Long supplierId, Long branchId) {
-		SmGstSupplier smGstSupplier =  null;
+		SmGstSupplier smGstSupplier = null;
 		ISupplierGstSO supplierGstSO = null;
 		try {
 			supplierGstSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2961,40 +2977,39 @@ public class SPDetailBackingBean extends
 		debugLogger("deleteNonFederalGovtExperience");
 		List<ScQtPRPExperience> experienceList = this.getManagedBean()
 				.getScQtPRPExperiences();
-		
+
 		List<ScQtPRPExperience> tobeDeletedExperiences = getManagedBean()
 				.getDeletedPRPExperiences();
-		/*if (selectedExperienceList == null
-				|| selectedExperienceList.size() == 0) {
-			throw new EpException(MessageConst.ERROR_760331);
-		}*/
-List<ScQtPRPExperience> deleteList=new ArrayList<ScQtPRPExperience>();
-		if (experienceList != null ) {
+		/*
+		 * if (selectedExperienceList == null || selectedExperienceList.size()
+		 * == 0) { throw new EpException(MessageConst.ERROR_760331); }
+		 */
+		List<ScQtPRPExperience> deleteList = new ArrayList<ScQtPRPExperience>();
+		if (experienceList != null) {
 
 			if (tobeDeletedExperiences == null) {
 				tobeDeletedExperiences = new ArrayList<ScQtPRPExperience>();
 			}
 			for (ScQtPRPExperience scQtPRPExperience : experienceList) {
-				if(scQtPRPExperience.isSelected()){
+				if (scQtPRPExperience.isSelected()) {
 
-				if (scQtPRPExperience.getQtPrpExperienceId() != null
-						&& scQtPRPExperience.getQtPrpExperienceId() != 0) {
-					tobeDeletedExperiences.add(scQtPRPExperience);
-				}
-				deleteList.add(scQtPRPExperience);
-				}
-				
-				/*Iterator<ScQtPRPExperience> itr = experienceList.iterator();
-				while (itr.hasNext()) {
-					ScQtPRPExperience localQtPRPExperience = itr.next();
-					if (localQtPRPExperience.equals(scQtPRPExperience)) {
-						itr.remove();
-						break;
+					if (scQtPRPExperience.getQtPrpExperienceId() != null
+							&& scQtPRPExperience.getQtPrpExperienceId() != 0) {
+						tobeDeletedExperiences.add(scQtPRPExperience);
 					}
-				}*/
+					deleteList.add(scQtPRPExperience);
+				}
+
+				/*
+				 * Iterator<ScQtPRPExperience> itr = experienceList.iterator();
+				 * while (itr.hasNext()) { ScQtPRPExperience
+				 * localQtPRPExperience = itr.next(); if
+				 * (localQtPRPExperience.equals(scQtPRPExperience)) {
+				 * itr.remove(); break; } }
+				 */
 			}
-			if(CollectionUtils.isNotEmpty(deleteList)){
-			experienceList.removeAll(deleteList);
+			if (CollectionUtils.isNotEmpty(deleteList)) {
+				experienceList.removeAll(deleteList);
 			}
 		}
 
@@ -3047,48 +3062,49 @@ List<ScQtPRPExperience> deleteList=new ArrayList<ScQtPRPExperience>();
 		debugLogger("deleteCreditFacilities");
 		List<ScQtPRPCreditFacility> creditFacilitiesList = getManagedBean()
 				.getScQtPRPCreditFacilities();
-	/*	List<ScQtPRPCreditFacility> selectedCreditFacilitiesList = this
-				.getManagedBean().getSelectedPRPCreditFacilities();*/
+		/*
+		 * List<ScQtPRPCreditFacility> selectedCreditFacilitiesList = this
+		 * .getManagedBean().getSelectedPRPCreditFacilities();
+		 */
 
 		List<ScQtPRPCreditFacility> toDeleteCreditFacilitiesList = getManagedBean()
 				.getToBeDeletedCreditFacilities();
 
-		/*if (selectedCreditFacilitiesList == null
-				|| selectedCreditFacilitiesList.size() == 0) {
-			throw new EpException(MessageConst.ERROR_760331);
-		}*/
+		/*
+		 * if (selectedCreditFacilitiesList == null ||
+		 * selectedCreditFacilitiesList.size() == 0) { throw new
+		 * EpException(MessageConst.ERROR_760331); }
+		 */
 
 		if (creditFacilitiesList != null) {
-List<ScQtPRPCreditFacility> deleteFacilityList=new ArrayList<ScQtPRPCreditFacility>();
+			List<ScQtPRPCreditFacility> deleteFacilityList = new ArrayList<ScQtPRPCreditFacility>();
 			if (toDeleteCreditFacilitiesList == null) {
 
 				toDeleteCreditFacilitiesList = new ArrayList<ScQtPRPCreditFacility>();
 			}
 
 			for (ScQtPRPCreditFacility facility : creditFacilitiesList) {
-                if(facility.isSelected()){
-				if (facility.getCreditFacilityId() != null
-						&& facility.getCreditFacilityId() != 0) {
-					toDeleteCreditFacilitiesList.add(facility);
-				}
-				deleteFacilityList.add(facility);
-                }
-
-				/*Iterator<ScQtPRPCreditFacility> itr = creditFacilitiesList
-						.iterator();
-				while (itr.hasNext()) {
-					ScQtPRPCreditFacility localQtPRPCreditFacility = itr.next();
-					if (localQtPRPCreditFacility.equals(facility)) {
-						itr.remove();
-						break;
+				if (facility.isSelected()) {
+					if (facility.getCreditFacilityId() != null
+							&& facility.getCreditFacilityId() != 0) {
+						toDeleteCreditFacilitiesList.add(facility);
 					}
-				}*/
+					deleteFacilityList.add(facility);
+				}
+
+				/*
+				 * Iterator<ScQtPRPCreditFacility> itr = creditFacilitiesList
+				 * .iterator(); while (itr.hasNext()) { ScQtPRPCreditFacility
+				 * localQtPRPCreditFacility = itr.next(); if
+				 * (localQtPRPCreditFacility.equals(facility)) { itr.remove();
+				 * break; } }
+				 */
 
 			}
 			creditFacilitiesList.removeAll(deleteFacilityList);
 			getManagedBean().setToBeDeletedCreditFacilities(
 					toDeleteCreditFacilitiesList);
-			deleteFacilityList=null;
+			deleteFacilityList = null;
 		}
 		getManagedBean().setScQtPRPCreditFacilities(creditFacilitiesList);
 		getManagedBean().setSelectedPRPCreditFacilities(null);
@@ -3598,20 +3614,23 @@ List<ScQtPRPCreditFacility> deleteFacilityList=new ArrayList<ScQtPRPCreditFacili
 	 */
 	public void onRowSelectionListener(SelectEvent event) {
 		SmSupplierBank bank = (SmSupplierBank) event.getObject();
+		this.getManagedBean().setSelectedBank(bank);
 		getManagedBean().setSmChequeSignatories(bank.getSmChequeSignatories());
 
 	}
+
 	/**
 	 * listener method for branch row selection events
 	 * 
 	 * @param event
 	 */
 	public void onBranchRowSelectionListener(SelectEvent event) {
-		SmSupplierBranch smSupplierBranch = (SmSupplierBranch) event.getObject();
-		this.getManagedBean().setSmGstSupplierBranch(getGSTInfo(getManagedBean().getSupplierId(), smSupplierBranch.getBranchCode()));
+		SmSupplierBranch smSupplierBranch = (SmSupplierBranch) event
+				.getObject();
+		this.getManagedBean().setSmGstSupplierBranch(
+				getGSTInfo(getManagedBean().getSupplierId(),
+						smSupplierBranch.getBranchCode()));
 	}
-	
-	
 
 	/**
 	 * listener method for multi boolean check box selection events
