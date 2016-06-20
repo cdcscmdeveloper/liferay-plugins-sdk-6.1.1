@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,6 +67,7 @@ import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -82,6 +84,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -825,7 +828,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			if (resDTO.isSuccessful()) {
 				log.info("resDTO.getCategoryL1().getPmCategoryL2s().size() = "
 						+ resDTO.getCategoryL1().getPmCategoryL2s().size());
-
+				this.sortPmCategoryL2List(resDTO.getCategoryL1().getPmCategoryL2s());
 				this.getManagedBean().setCatLevel("1");
 				PmCategoryL1 oldCategoryL1 = (PmCategoryL1) BeanUtils
 						.cloneBean(resDTO.getCategoryL1());
@@ -951,6 +954,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				this.getManagedBean().setPmCategoryL2(resDTO.getCategoryL2());
 				this.getManagedBean().setPmCategoryL1(
 						resDTO.getCategoryL2().getPmCategoryL1());
+				
+				this.sortPmCategoryL3List(resDTO.getCategoryL2().getPmCategoryL3s());
 				PmCategoryL2 oldCategoryL2 = (PmCategoryL2) BeanUtils
 						.cloneBean(resDTO.getCategoryL2());
 				this.getManagedBean().setOldCategoryL2(oldCategoryL2);
@@ -3945,5 +3950,37 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		}
 		return amountDF;
+	}
+	
+	/**
+	 * Sort PmCategoryL2 List
+	 *
+	 * @param pmCategoryL2s the pm category l2 list
+	 */
+	private void sortPmCategoryL2List(List<PmCategoryL2> pmCategoryL2s) {
+		Comparator<PmCategoryL2> comparator = new Comparator<PmCategoryL2>() {
+			@Override
+			public int compare(PmCategoryL2 o1, PmCategoryL2 o2) {
+				return new CompareToBuilder().append(o1.getCategoryL2Code(),
+						o2.getCategoryL2Code()).toComparison();
+			}
+		};
+		Collections.sort(pmCategoryL2s, comparator);
+	}
+	
+	/**
+	 * Sort PmCategoryL3 List
+	 *
+	 * @param pmCategoryL3s the pm category l3 list
+	 */
+	private void sortPmCategoryL3List(List<PmCategoryL3> pmCategoryL3s) {
+		Comparator<PmCategoryL3> comparator = new Comparator<PmCategoryL3>() {
+			@Override
+			public int compare(PmCategoryL3 o1, PmCategoryL3 o2) {
+				return new CompareToBuilder().append(o1.getCategoryL3Code(),
+						o2.getCategoryL3Code()).toComparison();
+			}
+		};
+		Collections.sort(pmCategoryL3s, comparator);
 	}
 }
