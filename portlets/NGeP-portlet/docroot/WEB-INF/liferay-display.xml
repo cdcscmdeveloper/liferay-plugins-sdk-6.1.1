@@ -221,6 +221,7 @@
 		
 		<category name="GfMas">
 			<portlet id="ptjGfmasInbound"></portlet>
+			<portlet id="gfmasSearch"></portlet>
 		</category>
 
 
