@@ -180,7 +180,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private SmPersonnleCalcVO personCalc;
 	private String businessType;
 	private SmGstSupplier smGstSupplier;
-
+	private SmGstSupplier smGstSupplierBranch;
 	private int technicalTableRow;
 	private int financialTableRow;
 
@@ -1074,10 +1074,10 @@ public class SPDetailManagedBean extends BaseManagedBean {
 			}
 			Date minEffectiveDate = getMinEffectiveDate(effectiveDates);
 			Date maxExpiryDate = getMaxExpiryDate(expiryDates);
-			if(minEffectiveDate != null && maxExpiryDate != null){
-				this.noOfYears = numberOfMonthsBetweenTwoDates(minEffectiveDate,
-						maxExpiryDate);
-			}else{
+			if (minEffectiveDate != null && maxExpiryDate != null) {
+				this.noOfYears = numberOfMonthsBetweenTwoDates(
+						minEffectiveDate, maxExpiryDate);
+			} else {
 				this.noOfYears = 0;
 			}
 			effectiveDates = null;
@@ -1712,11 +1712,25 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smGstSupplier the smGstSupplier to set
+	 * @param smGstSupplier
+	 *            the smGstSupplier to set
 	 */
 	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
 		this.smGstSupplier = smGstSupplier;
 	}
-	
-	
+
+	/**
+	 * @return the smGstSupplierBranch
+	 */
+	public SmGstSupplier getSmGstSupplierBranch() {
+		return smGstSupplierBranch;
+	}
+
+	/**
+	 * @param smGstSupplierBranch the smGstSupplierBranch to set
+	 */
+	public void setSmGstSupplierBranch(SmGstSupplier smGstSupplierBranch) {
+		this.smGstSupplierBranch = smGstSupplierBranch;
+	}
+
 }

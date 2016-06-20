@@ -76,10 +76,12 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -2591,7 +2593,7 @@ public class SPDetailBackingBean extends
 			log.info("*****SmAppl Appl_Id : *****"
 					+ resDTO.getSmAppl().getApplId());
 			// To fetch and set Supplier GST info
-			getGSTInfo(supplierId,null);
+			this.getManagedBean().setSmGstSupplier(getGSTInfo(supplierId,null));
 			// equityShareHolders for
 			List<SmPersonnel> equityShareHolders = new ArrayList<SmPersonnel>();
 
@@ -2660,8 +2662,8 @@ public class SPDetailBackingBean extends
 		return NAV_TO_SUPPLIER_DETAILS_PAGE;
 	}
 	
-	private void getGSTInfo(Long supplierId, Long branchId) {
-
+	private SmGstSupplier getGSTInfo(Long supplierId, Long branchId) {
+		SmGstSupplier smGstSupplier =  null;
 		ISupplierGstSO supplierGstSO = null;
 		try {
 			supplierGstSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2671,10 +2673,11 @@ public class SPDetailBackingBean extends
 			gstReqDTO.setBranchCode(branchId);
 			SupplierGstResDTO gstResDTO = supplierGstSO
 					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
-			this.getManagedBean().setSmGstSupplier(gstResDTO.getSmGstSupplier());
+			smGstSupplier = gstResDTO.getSmGstSupplier();
 		} finally {
 			supplierGstSO = null;
 		}
+		return smGstSupplier;
 	}
 
 	/**
@@ -3590,6 +3593,17 @@ public class SPDetailBackingBean extends
 		getManagedBean().setSmChequeSignatories(bank.getSmChequeSignatories());
 
 	}
+	/**
+	 * listener method for branch row selection events
+	 * 
+	 * @param event
+	 */
+	public void onBranchRowSelectionListener(SelectEvent event) {
+		SmSupplierBranch smSupplierBranch = (SmSupplierBranch) event.getObject();
+		this.getManagedBean().setSmGstSupplierBranch(getGSTInfo(getManagedBean().getSupplierId(), smSupplierBranch.getBranchCode()));
+	}
+	
+	
 
 	/**
 	 * listener method for multi boolean check box selection events
