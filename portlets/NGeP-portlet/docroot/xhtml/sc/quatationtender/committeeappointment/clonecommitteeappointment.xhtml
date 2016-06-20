@@ -182,8 +182,9 @@
 					selection="#{qTCommitteBackingBean.managedBean.selectSearchcommitteeNode}"
 					selectionMode="checkbox"
 					rowIndexVar="index">
-
-					<p:ajax event="unselect"
+                    	<p:ajax event="select" update="@([id$=cloneCommitteeTreeBtnOnId])"
+						listener="#{qTCommitteBackingBean.onNodeselect}" />
+					<p:ajax event="unselect" update="@([id$=cloneCommitteeTreeBtnOnId])"
 						listener="#{qTCommitteBackingBean.onNodeUnselect}" />
 
 					<p:column headerText="#{lbl['lbl.sc.name']}" style="width:260px;">
@@ -238,6 +239,7 @@
 				</p:treeTable>
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
+					id="cloneCommitteeTreeBtnOnId" disabled="#{qTCommitteBackingBean.cloneCommitteeBtnDisable()}"
 						action="#{qTCommitteBackingBean.addCloneDtlToTabs(false)}"
 						update="@(.scMemberDtl) pnlid" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" styleClass="BtnSpacing"
