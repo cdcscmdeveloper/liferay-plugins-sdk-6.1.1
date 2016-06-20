@@ -14,14 +14,14 @@
 			<p:column selectionMode="multiple" style="width:2%"  
 			rendered="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}"  />
 
-			<p:column>
+			<p:column style="width : 50% !important;">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.bankname']}
 				</f:facet>
 			
 				<p:selectOneMenu id="bankNameId" value="#{bankInfo.pmFinancialOrg.financialOrgId}"
-					style="width: 210px;margin-bottom: 5px;">
+					style="width: 80% !important;margin-bottom: 5px !important;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{registrationBackingBean.managedBean.financialOrgLs}"
@@ -29,7 +29,7 @@
 						itemLabel="#{finOrg.finOrgName}" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column>
+			<p:column style="width : 50% !important;">
 			
 				<f:facet name="header">
 					#{lbl['lbl.sm.bankaccnumber']}

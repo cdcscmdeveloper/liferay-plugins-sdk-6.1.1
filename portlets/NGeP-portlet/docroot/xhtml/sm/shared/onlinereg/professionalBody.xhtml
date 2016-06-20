@@ -13,13 +13,14 @@
 			selection="#{registrationBackingBean.managedBean.selectedAssociationBodies}" rowKey="#{suppAssocBody}">
 			<p:column selectionMode="multiple" style="width:2%" />
 
-			<p:column>
+			<p:column style="width : 30% !important;">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.profBody.profBody']}
 				</f:facet>
 				
 				<p:selectOneMenu id="profBodyName" value="#{suppAssocBody.pmCertBody.certBodyId}" 
+					style="width: 90% !important;margin-bottom: 5px !important;"
 					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.profBody.profBody']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemDisabled="#{profBody.certBodyId == null}" />	
 					<f:selectItems value="#{registrationBackingBean.managedBean.profCertBodyLs}"
