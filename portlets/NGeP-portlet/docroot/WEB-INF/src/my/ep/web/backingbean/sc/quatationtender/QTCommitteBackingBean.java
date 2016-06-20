@@ -96,6 +96,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -900,6 +901,7 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
 		RequestContext.getCurrentInstance().execute("screen2.show()");
 		getManagedBean().setAutoUpdate(false);
+		 getManagedBean().setSelectSearchcommitteeNode(new TreeNode[0]);
 	}
 
 	/**
@@ -1929,6 +1931,43 @@ public class QTCommitteBackingBean extends
 		}
 
 	}
+	
+	/**
+	 * On node select.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	public void onNodeselect(NodeSelectEvent event) {
+		TreeNodeBean<?> nodeBean = (TreeNodeBean<?>) event.getTreeNode().getData();
+		if ("committee".equalsIgnoreCase(nodeBean.getType())) {
+			List<TreeNode> childNodes = event.getTreeNode().getChildren();
+			for (int i = 0; i < childNodes.size(); i++) {
+				childNodes.get(i).setSelected(true);
+			}
+		} else {
+			event.getTreeNode().setSelected(true);
+		}
+
+	}
+
+	/**
+	 * based on treenode selection button enable/disable.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	 public boolean cloneCommitteeBtnDisable(){
+		 TreeNode[] treeNodes = getManagedBean().getSelectSearchcommitteeNode();
+			if (null != treeNodes && treeNodes.length > 0) {
+				for (int nodes = 0; nodes < treeNodes.length; nodes++) {
+					if(treeNodes[nodes].isSelected()){
+						return false;
+					}
+				}
+			}
+				return true;
+	 }
 
 	/**
 	 * Checks if is committe info editable.
