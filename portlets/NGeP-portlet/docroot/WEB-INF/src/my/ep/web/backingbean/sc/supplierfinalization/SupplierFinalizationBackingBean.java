@@ -2290,8 +2290,8 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalizationReport report = new ScQtFinalizationReport();
 		report.setTitle(reportTitle);
 		report.setScQtFinalization(scQtFinalization);
-		report.setScQtFinalizationReportAttachment(
-					new ScQtFinalizationReportAttachment());
+//		report.setScQtFinalizationReportAttachment(
+//					new ScQtFinalizationReportAttachment());
 		report.setSelected(true);
 		
 		IParameterSO parameterSO = null;

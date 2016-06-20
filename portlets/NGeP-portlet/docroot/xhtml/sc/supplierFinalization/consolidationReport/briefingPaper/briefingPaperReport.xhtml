@@ -31,39 +31,20 @@
 								report.docCategory eq ParameterConst.documentCategoryEndorsementReport}" />
 			</p:column>
 			
-			<p:column style="width:20%; white-space:normal;" headerText="#{lbl['lbl.sc.upload']}">
-				<ui:fragment rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
-					<h:commandLink value="#{report.scQtFinalizationReportAttachment.fileName}" styleClass="blue_font"
-								   action="#{consolidationReportBackingBean.downloadFile(
-													report.scQtFinalizationReportAttachment)}" />
-					<p:commandLink immediate="true" rendered="#{!empty report.scQtFinalizationReportAttachment.fileName and
-						report.docCategory ne ParameterConst.documentCategoryEndorsementReport}" update="reportTbl">
-						
-						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
-							styleClass="tasklist_title1" />
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:30%; white-space:normal; text-align:center;">
+				<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
+					popupWidgetVar="briefingReportAttWidget"
+					attachment="#{report.scQtFinalizationReportAttachment}" 
+					readonly="#{!empty report.pmDocument or 
+					  				report.docCategory eq ParameterConst.documentCategoryEndorsementReport}" 
+					rowIndex="#{rowIndex}">
 
-						<f:setPropertyActionListener target="#{report.scQtFinalizationReportAttachment}" value="#{null}" />
-					</p:commandLink>
+					<f:setPropertyActionListener for="actionEvent" value="#{report}"
+						target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}" />
 
-					<p:commandButton oncomplete="attachmentPopupDlg.show();"
-						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true" process="@this"
-						rendered="#{empty report.scQtFinalizationReportAttachment.fileName}"
-						update="@([id$=attachmentPopup])">
-						<f:setPropertyActionListener
-							target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}"
-							value="#{report}" />
-						<f:setPropertyActionListener value="KTR"
-							target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
-					</p:commandButton>
-				</ui:fragment>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%; text-align:center;">
-				<p:commandButton id="download" icon="ui-icon-download" 
-					style="background-color:transparent !important; border:0px none;"
-					ajax="false" action="#{consolidationReportBackingBean.downloadReport(report)}"
-					rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload 
-											? !empty report.scQtFinalizationReportAttachment.fileName : true}" />
+					<f:setPropertyActionListener for="actionEvent" value="KTR"
+						target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
+				</ac:scSingleFileUploadButton>
 			</p:column>
 		</p:dataTable>
 		

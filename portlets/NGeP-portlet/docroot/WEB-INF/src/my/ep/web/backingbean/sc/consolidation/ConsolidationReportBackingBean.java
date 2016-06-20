@@ -273,8 +273,8 @@ public class ConsolidationReportBackingBean extends
 
 		ScQtFinalizationReport report = new ScQtFinalizationReport();
 		report.setScQtFinalization(scQtFinalization);
-		report.setScQtFinalizationReportAttachment(
-					new ScQtFinalizationReportAttachment());
+//		report.setScQtFinalizationReportAttachment(
+//					new ScQtFinalizationReportAttachment());
 
 		IParameterSO parameterSO = null;
 		try {
