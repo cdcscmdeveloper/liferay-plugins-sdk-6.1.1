@@ -137,29 +137,29 @@
 		
 	           <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.fd']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'FD')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabCentralValue('FD')}" update=":form" />
 	
 	      	<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.zone']}"  onstart="blockWidget.show()" 
 		    oncomplete="blockWidget.hide()" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.zonalPricing}"
-			actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'ZO')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabCentralValue('ZO')}" update=":form" />
 		
 		    <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'IT')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabCentralValue('IT')}" update=":form" />
 		
 		   <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.factoring']}"
 			    onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			    rendered="#{ctBackingBean.managedBean.contractVer.ctContract.factored and contractDetailsBackingBean.checkFactoringExpiryDate()}"
-			    actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'FT')}" update=":form" />
+			    actionListener="#{contractDetailsBackingBean.setTabCentralValue('FT')}" update=":form" />
 		
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.adv.payment.tracking']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}"
-			actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'PY')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabCentralValue('PY')}" update=":form" />
 		 
 	      <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'SE')}" update=":form" />
+			actionListener="#{contractDetailsBackingBean.setTabCentralValue('SE')}" update=":form" />
 		</p:tabMenu>
 		</p:outputPanel>
 		
