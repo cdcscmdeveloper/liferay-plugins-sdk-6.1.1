@@ -1078,8 +1078,18 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 	 */
 	public void selectZoneTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
-
+		List<TreeNode> childNodes = event.getTreeNode().getChildren();
+		if(null!=childNodes && childNodes.size()>0){
+			
+		for (int i = 0; i < childNodes.size(); i++) {
+			childNodes.get(i).setSelected(true);
+			
+		}
+		}else{
+			
 		selectedTreeNode.setSelected(true);
+		
+		}
 	}
 
 	/**
@@ -1090,8 +1100,17 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 	 */
 	public void unSelectZoneTreeNode(NodeUnselectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
-
+		List<TreeNode> childNodes = event.getTreeNode().getChildren();
+		if(null!=childNodes && childNodes.size()>0){
+			
+		for (int i = 0; i < childNodes.size(); i++) {
+			childNodes.get(i).setSelected(false);
+			
+		}
+		}else{
+			
 		selectedTreeNode.setSelected(false);
+		}
 	}
 
 	/**
@@ -1294,7 +1313,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		TplSpecZoneDtl zoneDtl = null;
 		// zone details
 		if (getManagedBean().isSelectedFlag()) {
-			throw new EpException(MessageConst.ERROR_760146);
+			//throw new EpException(MessageConst.ERROR_760146);
 		}
 		if (!rootTrees.isEmpty()) {
 			getManagedBean()
@@ -2563,4 +2582,59 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 
 		updateProposalValidityDate(scQt);
 	}
+	
+	
+	/**
+	 * based on treenode selection button enable/disable.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	 public boolean zoneLocationDeleteBtnDisable(){
+		List<TreeNode> list = getManagedBean().getZoneGeneralTrees();
+		
+		if (CollectionUtils.isNotEmpty(list) ) {
+			for (TreeNode node : list) {
+				for (TreeNode childNode : node.getChildren()) {
+					if (childNode.getChildCount() > 0) {
+						
+						for (TreeNode state : childNode.getChildren()) {
+							
+							if(state.isSelected()){
+								return false;
+							}
+							for(TreeNode district : state.getChildren()){
+								
+								if(district.getChildCount()>0){
+									for(TreeNode division : district.getChildren()){
+										if(division.isSelected()){
+											return false;
+										}
+										if(division.getChildCount()>0){
+											for(TreeNode anotherDistrict : district.getChildren()){
+												if(anotherDistrict.isSelected()){
+													return false;
+												}
+										}
+									}
+								}
+								}else{
+								if(district.isSelected()){
+									return false;
+								}
+								}
+							}
+						}
+					}else{
+					if(childNode.isSelected()){
+						return false;
+					}
+					}
+				}
+			}
+		} else {
+			return true;
+		}
+	return true;
+	 }
 }
