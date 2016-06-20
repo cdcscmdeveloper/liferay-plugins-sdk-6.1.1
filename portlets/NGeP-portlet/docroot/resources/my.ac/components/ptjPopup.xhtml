@@ -24,32 +24,32 @@
 		<h:panelGroup id="orgProfilePnlGrp">
 			<p:panel id="orgProfilePnlId" header="#{lbl['lbl.pm.header.general.org.search']}" toggleable="true"  >
               <h:panelGrid columns="3" id="orgProfilePg">
-                 <p:selectOneMenu for="somMin"  disabled="true" >
+                 <p:selectOneMenu for="somMin"  disabled="true" style="width:150px" >
             	    <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptj.search.ministry']}" itemValue=""/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
-                 <p:selectOneMenu id="somMinistry"
+                 <p:selectOneMenu id="somMinistry" style="width:300px"
                       value="#{organisationSearchBackingBean.managedBean.ministryProfileId}" >
             	   <f:selectItems value="#{organisationSearchBackingBean.getMinistryDropdown()}"/>
             	   <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somJabatan,:form:#{cc.attrs.id}:searcbBtnId" />
                  </p:selectOneMenu>
-                 <p:selectOneMenu id="somJab" disabled="true" >
+                 <p:selectOneMenu id="somJab" disabled="true" style="width:150px">
             	    <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptj.search.jabatan']}" itemValue=""/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
-                 <p:selectOneMenu id="somJabatan"
+                 <p:selectOneMenu id="somJabatan" style="width:300px"
                       value="#{organisationSearchBackingBean.managedBean.jabatanProfileId}" >
             	   <f:selectItems value="#{organisationSearchBackingBean.getJabatanDropdown()}"/>
             	    <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
                  </p:selectOneMenu>
-                 <p:selectOneMenu for="somPtjCodeName" 
+                 <p:selectOneMenu for="somPtjCodeName"  style="width:150px"
                     value="#{organisationSearchBackingBean.managedBean.ptjCodeName}" >
                        <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptjCode']}" itemValue="#{ProfileManagementConst.ptjCode}"/>
             	      <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptjName']}" itemValue="#{ProfileManagementConst.ptjName}"/>
             	      <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
-                 <p:inputText id="itPtjCodeValue" 
+                 <p:inputText id="itPtjCodeValue"  style="width:300px"
                  	onkeypress="if (event.keyCode == 13) { ptjSearchBtnWV.jq.click(); return false; }"
                      value="#{organisationSearchBackingBean.managedBean.ptjCodeNameSearchValues}" >
                      <p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/></p:inputText>
