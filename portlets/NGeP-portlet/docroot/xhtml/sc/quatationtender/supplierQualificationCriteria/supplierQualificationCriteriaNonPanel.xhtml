@@ -81,7 +81,7 @@
 	<ui:param name="isQuotationThresHold"
 		value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation}" />
 
-	<p:panel toggleable="true">
+	<p:panel toggleable="true" id="supplierQualificationCriterialocationPaidUpcapitalPanel">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
 			<ac:iconTooltip
@@ -161,9 +161,9 @@
 						</f:facet>
 						<p:tree value="#{zoneTree}" var="location"
 							selectionMode="checkbox">
-							<p:ajax event="select"
+							<p:ajax event="select" update="@([id$=supplierQualificationcriteriaNonpanelDelBtnId])"
 								listener="#{qTSupplierQulCriteriaBackingBean.selectLocationTreeNode}" />
-							<p:ajax event="unselect"
+							<p:ajax event="unselect" update="@([id$=supplierQualificationcriteriaNonpanelDelBtnId])"
 								listener="#{qTSupplierQulCriteriaBackingBean.unSelectLocationTreeNode}" />
 							<p:treeNode type="state">
 								<h:outputText value="#{location.pmState.stateName}" />
@@ -210,7 +210,8 @@
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 						update="@([id$=zonePopupPanel])"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}" />
-					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" id="supplierQualificationcriteriaNonpanelDelBtnId"
+					disabled="#{qTSupplierQulCriteriaBackingBean.checkLocationDeleteButtonDisable()}"
 						process="@this,zoneLocationDataTable" partialSubmit="true"
 						oncomplete="supplierNonZoneDeletePopUp.show();"
 						update="@([id$=#{supplierNonZoneDeleteId}])" />
@@ -223,7 +224,7 @@
 					width="400" height="100"
 					title="#{lbl['lbl.sc.location.list.paidup.capital']}"
 					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
-					update="@([id$=zoneLocationDataTable])" />
+					update="@([id$=supplierQualificationCriterialocationPaidUpcapitalPanel])" />
 
 				<p:dialog header="#{lbl['lbl.sc.add.location']}"
 					widgetVar="ZoneLocation" modal="true" position="top" height="65%">
