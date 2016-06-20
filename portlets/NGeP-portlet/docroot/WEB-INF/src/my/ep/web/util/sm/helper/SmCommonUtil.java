@@ -2690,8 +2690,10 @@ public class SmCommonUtil {
 				strParams.append(paramName + "="
 						+ httpServletRequest.getParameter(paramName));
 				strParams.append("&");
-				/*log.info(paramName + " - "
-						+ httpServletRequest.getParameter(paramName));*/
+				/*
+				 * log.info(paramName + " - " +
+				 * httpServletRequest.getParameter(paramName));
+				 */
 			}
 		}
 		strParams.append("treq=1");
@@ -3833,13 +3835,14 @@ public class SmCommonUtil {
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
 				"sm", IMyIdentitySO.class);
-		
-		if(type != null && type.equalsIgnoreCase(SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN)){
+
+		if (type != null
+				&& type.equalsIgnoreCase(SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN)) {
 			reqDTO.setType(SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
-		}else{
+		} else {
 			reqDTO.setType(SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
 		}
-		
+
 		reqDTO.setNewIcNo(identificationNo);
 		reqDTO.setPostCode(postCode);
 		reqDTO.setName(name);
@@ -3899,6 +3902,27 @@ public class SmCommonUtil {
 						StringUtils.EMPTY);
 				per.setIdentificationTypeId(passport.getParameterId());
 				per.setIdentificationType(passport);
+			}
+		}
+	}
+
+	/**
+	 * Validate if GST registration no. entered already exist
+	 * 
+	 * @param String
+	 *            bussRegNo
+	 * @param String
+	 *            gstRegNo
+	 */
+	public static void validateAddGstRegNo(String bussRegNo, String gstRegNo) {
+		if (!StringUtils.isBlank(gstRegNo)) {
+			SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
+			reqDTO.setBussRegNo(bussRegNo);
+			reqDTO.setGstRegNo(gstRegNo);
+			if (SmServiceLookup.getSupplierGstSO()
+					.checkIsGstRegNoAlreadyExist(reqDTO)
+					.isGstRegNoAlreadyExist()) {
+				throw new EpException(MessageConst.ERROR_722641);
 			}
 		}
 	}
@@ -3995,7 +4019,7 @@ public class SmCommonUtil {
 
 		return new DefaultStreamedContent(stream, "application/pdf");
 	}
-	
+
 	/**
 	 * Check if current address has different compare with latest address
 	 * 
@@ -4105,7 +4129,7 @@ public class SmCommonUtil {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Check if latest object has difference compare with latest object
 	 * 
@@ -4119,8 +4143,7 @@ public class SmCommonUtil {
 	 */
 	public static boolean isHasDifferences(Object latest, Object current,
 			String[] excludeProps) {
-		return isSmObjectPropsDifference(latest, current,
-				excludeProps);
+		return isSmObjectPropsDifference(latest, current, excludeProps);
 	}
 
 }
