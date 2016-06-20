@@ -33,14 +33,13 @@
 					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="@([id$=technongovtid])"
-							listener="#{supplierProposalDetailBackingBean.selectAll}" />
+							update="@([id$=nonFedExpPanel])"
+							listener="#{supplierProposalDetailBackingBean.selectAll(supplierProposalDetailBackingBean.managedBean.selectedAll,supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
-					value="#{supplierProposalDetailBackingBean.managedBean.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@this"
-						listener="#{supplierProposalDetailBackingBean.selected(rowIndex)}" />
+					value="#{technongovt.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=nonFedExpPanel])"/>
 				</p:selectBooleanCheckbox>
 
 			</p:column>
@@ -192,9 +191,13 @@
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				partialSubmit="true" process="@this" styleClass="BtnSpacing"
+				disabled="#{supplierProposalDetailBackingBean.deleteselectedList(supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences)}"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				oncomplete="techNonFedDelete.show();"
-				update="@([id$=nonFedExpPanel])" />
+				update="@([id$=nonFedExpPanel])" >
+				<f:setPropertyActionListener target="#{supplierProposalDetailBackingBean.managedBean.selectedAll}" value="#{false}"></f:setPropertyActionListener>
+				
+				</p:commandButton>
 
 			<ui:param name="techNonFedDeleteId" value="techNonFedDeleteId"></ui:param>
 

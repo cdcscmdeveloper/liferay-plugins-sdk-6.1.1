@@ -25,15 +25,14 @@
 					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="creditfaciitiesid"
-							listener="#{supplierProposalDetailBackingBean.selectAllCreditFacilities}" />
+							update="@([id$=creditFacilitiesPanel])"
+							listener="#{supplierProposalDetailBackingBean.selectAll(supplierProposalDetailBackingBean.managedBean.selectedAll,supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 
 				<p:selectBooleanCheckbox
-					value="#{supplierProposalDetailBackingBean.managedBean.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@this"
-						listener="#{supplierProposalDetailBackingBean.selectedCreditFacility(rowIndex)}" />
+					value="#{creditfacilities.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=creditFacilitiesPanel])"/>
 				</p:selectBooleanCheckbox>
 
 			</p:column>
@@ -171,10 +170,13 @@
 				update="@([id$=creditFacilitiesPanel])" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+			disabled="#{supplierProposalDetailBackingBean.deleteselectedList(supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities)}"
 				partialSubmit="true" styleClass="BtnSpacing"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				oncomplete="finCreditFacilityDelete.show();"
-				update="@([id$=finCreditFacilityDeleteId])" />
+				update="@([id$=finCreditFacilityDeleteId])" >
+				<f:setPropertyActionListener target="#{supplierProposalDetailBackingBean.managedBean.selectedAll}" value="#{false}"></f:setPropertyActionListener>
+				</p:commandButton>
 
 			<ui:param name="finCreditFacilityDeleteId"
 				value="finCreditFacilityDeleteId"></ui:param>
