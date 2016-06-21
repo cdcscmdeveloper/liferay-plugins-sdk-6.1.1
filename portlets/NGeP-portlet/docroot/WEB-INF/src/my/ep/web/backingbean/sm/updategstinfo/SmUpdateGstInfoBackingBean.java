@@ -221,6 +221,7 @@ public class SmUpdateGstInfoBackingBean extends
 	 * contract approver on the gst declaration
 	 */
 	public void declareGst() {
+
 		List<SmGstSupplier> supplierGstList = new ArrayList<SmGstSupplier>();
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getHqGstSupplier());
@@ -523,8 +524,12 @@ public class SmUpdateGstInfoBackingBean extends
 	 * Validate gst registration no, effective date and end date entered
 	 */
 	private void validateDeclare() {
-		StringBuilder sb = new StringBuilder();
 		SmGstSupplier gst = getManagedBean().getHqGstSupplier();
+
+		// validate HQ GST reg no. uniqueness
+		SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
+				.getSmSupplier().getRegNo(), gst.getGstRegNo());
+
 		if (gst.getGstEndDate() != null
 				&& gst.getGstEffDate().compareTo(gst.getGstEndDate()) > 0) {
 			throw new EpException(MessageConst.ERROR_721044);
@@ -533,16 +538,22 @@ public class SmUpdateGstInfoBackingBean extends
 						.getGstRegNumLength()) {
 			throw new EpException(MessageConst.ERROR_721027);
 		}
-		validateBranch(sb);
+		validateBranch();
 	}
 
 	/**
 	 * Validate branch gst registration no, effective date and end date entered
 	 */
-	private void validateBranch(StringBuilder sb) {
+	private void validateBranch() {
 		if (getManagedBean().getBranches() != null) {
 			for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
 				if (brVO.getGst() != null && brVO.getGst().getIsCurrent()) {
+
+					// validate HQ Branch reg no. uniqueness
+					SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
+							.getSmSupplier().getRegNo(), brVO.getGst()
+							.getGstRegNo());
+
 					if (StringUtils.isNotBlank(brVO.getGst().getGstRegNo())
 							&& brVO.getGst().getGstRegNo().length() != SmRuleHelper
 									.getInstance().getGstRegNumLength()) {
