@@ -1064,6 +1064,9 @@ public class SpecificationBackingBean extends
 			TplSpecMaster specMaster = new TplSpecMaster();
 			String itemName="";
 			String panelCoverage="";
+			if(CollectionUtils.isEmpty(this.getManagedBean().getPanelItemList())){
+			this.getManagedBean().setPanelItemList(panelItems);
+			}
 			if(panelItems.size()==1){
 				CtPanelItem item=panelItems.get(0);
 				if(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC.equals(item.getItemCategoryId().getParameterCode())){
@@ -1078,7 +1081,6 @@ public class SpecificationBackingBean extends
 					description=description.concat("-");
 					itemName=description.concat(item.getItemName());
 					panelCoverage=item.getPanelCoverageId().getParameterCode();
-					//locationLevel=item.getLocationLevelId().getParameterCode();
 					checkPanelItemIsZonalOrNonzonal(panelCoverage,item);
 				
 					
@@ -8291,7 +8293,7 @@ public class SpecificationBackingBean extends
 			List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
 
 			if (CollectionUtils.isNotEmpty(panelItemList)) {
-
+               log.info("panel Item Name"+panelItemList.get(0));
 				reqDTO.setPanelItem(panelItemList.get(0));
 				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
 			}
