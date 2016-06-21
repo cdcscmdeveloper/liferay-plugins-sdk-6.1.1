@@ -251,6 +251,10 @@ public class GovtSellerRegistrationBackingBean extends
 	public void validateGstRegNo() {
 		String gstNo = this.getManagedBean().getSmGstSupplier().getGstRegNo();
 		this.getManagedBean().getSmGstSupplier().setIsCurrent(true);
+
+		SmCommonUtil.validateGstRegNoUniqueness(getManagedBean().getSmSupp()
+				.getRegNo(), gstNo);
+
 		if (gstNo != null && gstNo.length() > 0) {
 			if (!SmCommonUtil.validateGstRegNo(gstNo)) {
 				this.getManagedBean().setGstFlag(false);
@@ -1122,7 +1126,7 @@ public class GovtSellerRegistrationBackingBean extends
 		// validate IC with MyIdentity
 		SmCommonUtil.getInstance().verifyWithMyIdentity(personnel.getName(),
 				personnel.getIdentificationNo(),
-				getManagedBean().getSmPermenantAdd().getPostcode(),null);
+				getManagedBean().getSmPermenantAdd().getPostcode(), null);
 
 		// check if icNo already assign as supplier
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
