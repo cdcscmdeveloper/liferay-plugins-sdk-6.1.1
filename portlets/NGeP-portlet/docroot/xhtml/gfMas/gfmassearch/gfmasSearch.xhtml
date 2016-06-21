@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel id="gfMasPanel" header="#{lbl['lbl.gfmas.search']}"
+		toggleable="true">
+
+		<table class="ppTwoTable">
+		
+			<tr>
+				<td width="16%"><p:outputLabel
+						value="#{lbl['lbl.gfmas.interface.log.id']}"></p:outputLabel></td>
+				<td width="35%"><p:inputText
+						value="#{gfMasBackingBean.managedBean.interfaceLogId}"
+						id="logId" size="44" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			
+			<tr>
+				<td width="16%"><p:outputLabel
+						value="#{lbl['lbl.gfmas.service.code']}"></p:outputLabel></td>
+				<td width="35%"><p:inputText
+						value="#{gfMasBackingBean.managedBean.serviceCode}"
+						id="serviceCode" size="44" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<td width="20%"><h:outputLabel
+						value="#{lbl['lbl.gfmas.process.id']}"></h:outputLabel></td>
+				<td width="35%"><p:inputText
+						value="#{gfMasBackingBean.managedBean.processId}" id="processId"
+						size="44" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<td width="20%"><h:outputLabel
+						value="#{lbl['lbl.gfmas.direction']}"></h:outputLabel></td>				
+				<td width="35%"><p:inputText
+						value="#{gfMasBackingBean.managedBean.direction}" id="direction"
+						size="44" /></td>				
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<!-- <tr>
+				<td width="20%"><h:outputLabel
+						value="#{lbl['lbl.gfmas.createdDate']}"></h:outputLabel></td>				
+				<td width="35%"><p:calendar
+						label="#{lbl['lbl.gfmas.createdDate']}" id="createdDate"
+						showOn="button" navigator="true" display="inline"
+						readonlyInput="true" size="25"
+						value="#{gfMasBackingBean.managedBean.createdDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						partialSubmit="true" process="@form">
+					</p:calendar></td>				
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr> -->
+			<tr>
+				<td colspan="5" width="100%">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}"
+							action="#{gfMasBackingBean.searchGfMas}"
+							update=":form:gfMasResult" />
+						&#160;
+						<p:commandButton value="#{lbl['lbl.btn.reset']}"
+							action="#{gfMasBackingBean.resetGfMasSearchBean}" process="@this"
+							update=":form:gfMasPanel, :form:gfMasResult" />
+					</div>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>
