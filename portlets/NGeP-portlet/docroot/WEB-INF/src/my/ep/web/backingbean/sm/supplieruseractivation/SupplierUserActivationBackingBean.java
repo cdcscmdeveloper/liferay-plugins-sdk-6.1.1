@@ -83,6 +83,9 @@ public class SupplierUserActivationBackingBean extends
 		SmSupplier supplierProfile = null;
 		IPersonnelSO personnelSO = null;
 		
+		String errMsg = SmCommonUtil.getMessage(
+				"lbl.sm.activation.invalid.link.activated", null);
+		
 		try {
 			personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm",IPersonnelSO.class);
 			
@@ -128,6 +131,9 @@ public class SupplierUserActivationBackingBean extends
 					log.info("****VALID - Expired******");
 					// redirect & display activation expired
 					this.getManagedBean().setValidActivation(false);
+					errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
+							new String[] { SmRuleHelper.getInstance()
+							.getEmailActivationDays() + "" });
 				}
 			} else {
 				// redirect & display invalid activation
@@ -138,11 +144,10 @@ public class SupplierUserActivationBackingBean extends
 		} else {
 			// redirect & display invalid activation
 			this.getManagedBean().setValidActivation(false);
-			log.info("****Activation - no personnel/supplierProfile ******");
 		}
 		
 		log.info("****Activation - no personnel/supplierProfile ******");
-		redirectToInvalidActivationPage(fc);
+		redirectToInvalidActivationPage(fc,errMsg);
 	}
 	
 	public String activateSupplierUser() {
@@ -425,13 +430,10 @@ public class SupplierUserActivationBackingBean extends
 	}
 	
 	//redirect to invalid activation page
-	private void redirectToInvalidActivationPage(FacesContext fc) {
+	private void redirectToInvalidActivationPage(FacesContext fc,String errMsg) {
 		fc.addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-						SmCommonUtil.getMessage("lbl.sm.activation.invalid",
-								new String[] { SmRuleHelper.getInstance()
-										.getEmailActivationDays() + "" })));
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,errMsg));
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
