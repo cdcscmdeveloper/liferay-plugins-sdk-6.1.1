@@ -2223,7 +2223,7 @@ public class SupplierFinalizationBackingBean extends
 													if (report1.getChangedDate().getTime() == 
 															report2.getChangedDate().getTime()) {
 														return 0;
-													} else if (report1.getChangedDate().getTime() ==
+													} else if (report1.getChangedDate().getTime() >
 															report2.getChangedDate().getTime()) {
 														return 1;
 													} else {
