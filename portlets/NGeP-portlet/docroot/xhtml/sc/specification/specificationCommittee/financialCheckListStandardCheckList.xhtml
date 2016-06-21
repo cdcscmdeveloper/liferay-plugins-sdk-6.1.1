@@ -29,7 +29,7 @@
 			<p:ajax event="toggleSelect" update="@([id$=specCommitteeFinacialDocumentStandardChecklist])" />
 				<p:column selectionMode="multiple"
 					styleClass="td-check-box-spacing" />
-				<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}" style="white-space: normal;">
 					<h:outputText value="#{compilance.docName}"></h:outputText>
 				</p:column>
 			</p:dataTable>
