@@ -29,7 +29,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -43,8 +42,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
-import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
-import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.exception.EpException;
@@ -53,9 +50,9 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -69,7 +66,6 @@ import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
-import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -89,6 +85,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.pp.common.PpCommonUtil;
 
@@ -1967,21 +1964,50 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					loadPlanDetails(resDTO.getPlan().getPlanId(), true);
 				}
 				
+				String nextRole = null;
 				String messageId = MessageConst.INFO_700005;
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				if(BpmOutcomeConst.BPM_SUBMIT.equals(action)){
+					if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+						messageId = MessageConst.INFO_730031;
+						nextRole = RoleCode.PLAN_APPROVER.value();
+					}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+						messageId = MessageConst.INFO_730031;
+						nextRole = RoleCode.PLAN_VERF_OFFICER.value();
+						if(ppPlan.getCurrentStatus()!= null 
+								&& ppPlan.getCurrentStatus().getPmStatus() != null 
+								&& ProcurementPlanConst.PPP_PENDING_REVISION
+								.equals(ppPlan.getCurrentStatus().getPmStatus().getStatusId())){
+								messageId = MessageConst.INFO_730031;
+								nextRole = resDTO.getPreviousActionedRoleCode();						}
+					}
+				}else if(BpmOutcomeConst.BPM_REVISE.equals(action)){
+					messageId = MessageConst.INFO_730032;
+					nextRole = RoleCode.PLAN_OFFICER.value();
+				}else if(BpmOutcomeConst.BPM_VERIFY.equals(action)){
+					messageId = MessageConst.INFO_730031;
+					nextRole = RoleCode.PLAN_APPROVER.value();
+				}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					messageId = MessageConst.INFO_700009;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-					messageId = MessageConst.INFO_700008;
-				}
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType), resDTO.getPlan().getPlanNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				} 
 				
+//				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+//					messageId = MessageConst.INFO_700008;
+//				}
+				
+				if(StringUtils.isNotBlank(nextRole)){
+					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType), resDTO.getPlan().getPlanNo(),roleDesc.getRoleName()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}else{
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType), resDTO.getPlan().getPlanNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
 				
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
 						|| (StringUtils.isBlank(this.getManagedBean().getTaskId()) 
