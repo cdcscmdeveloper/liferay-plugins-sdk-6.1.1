@@ -69,7 +69,7 @@
 							<td><p:selectOneMenu id="sampleDivison"
 									value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDivision.divisionId}"
 									style="width: 218px;margin-bottom: 5px;"
-									disabled="#{!qTScheduleDetailBackingBean.managedBean.stateCode}">
+									disabled="#{!qTScheduleDetailBackingBean.managedBean.state}">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="divisionList"
 										value="#{qTScheduleDetailBackingBean.managedBean.divisionList}"
