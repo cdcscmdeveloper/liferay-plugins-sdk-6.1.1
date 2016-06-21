@@ -50,9 +50,9 @@
 
 		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 			style="float:right;"
-			rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}"
-			action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(requestNoteBackingBean.managedBean.dpObj)}"
-			immediate="true" />
+			action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId)}"
+			immediate="true" 
+			rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}" />
 	</div>
 	<h:panelGroup
 		rendered="#{!isViewOnly}">
