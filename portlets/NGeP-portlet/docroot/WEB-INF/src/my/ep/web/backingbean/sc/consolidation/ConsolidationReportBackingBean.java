@@ -314,6 +314,45 @@ public class ConsolidationReportBackingBean extends
 	}
 	
 	/**
+	 * Rowselect event to select Supplier Finalization Report under Briefing Paper tab
+	 * 
+	 * @param ScQtFinalizationReport
+	 *            the ScQtFinalizationReport to set
+	 */
+	public void selectReportEvent(SelectEvent event) {
+		debugLogger("selectReportEvent - Row Select");
+
+		ScQtFinalizationReport report = (ScQtFinalizationReport) event.getObject();
+		report.setSelected(true);
+		
+		selectReportEvent(report);
+	}		
+	
+	/**
+	 * Checkbox event to select Supplier Finalization Report under Briefing Paper tab
+	 * 
+	 * @param ScQtFinalizationReport
+	 *            the ScQtFinalizationReport to set
+	 */
+	public void selectReportEvent(ScQtFinalizationReport report) {
+		debugLogger("selectReportEvent - Checkbox select");
+
+		List<ScQtFinalizationReport> selectedFinalizationReports
+					= getManagedBean().getSelectedFinalizationReports();
+		if (selectedFinalizationReports == null) {
+			selectedFinalizationReports 
+					= new ArrayList<ScQtFinalizationReport>();
+			getManagedBean().setSelectedFinalizationReports(
+								selectedFinalizationReports);
+		}
+		if (report.isSelected()) {
+			selectedFinalizationReports.add(report);
+		} else {
+			selectedFinalizationReports.remove(report);
+		}
+	}	
+	
+	/**
 	 * Handle file upload.
 	 * 
 	 * @param event
@@ -698,7 +737,7 @@ public class ConsolidationReportBackingBean extends
 											if (report1.getChangedDate().getTime() == 
 													report2.getChangedDate().getTime()) {
 												return 0;
-											} else if (report1.getChangedDate().getTime() == 
+											} else if (report1.getChangedDate().getTime() > 
 													report2.getChangedDate().getTime()) {
 												return 1;
 											} else {
@@ -906,6 +945,20 @@ public class ConsolidationReportBackingBean extends
 					= scQtFinalization.getScQtRecommendsByZone();
 		Map<Long,List<ScQtEvaluationResultDtl>> qualifiedSuppliersByZonalPackage 
 					= getManagedBean().getQualifiedSupppliersByZone();
+		
+		if (CollectionUtils.isNotEmpty(
+				scQtFinalization.getScQtFinalizationReports())) {
+			for (ScQtFinalizationReport report 
+						: scQtFinalization.getScQtFinalizationReports()) {
+				if (report.getScQtFinalizationReportAttachment() == null && 
+						ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+							.equals(report.getDefinationType().getParameterCode())) {
+					navigateToBriefingPaperTab();
+					throw new EpException(MessageConst.ERROR_760415, 
+										  new String[] { report.getTitle() });
+				}
+			}
+		}
 		
 		if (isZonal) {
 			for (TplSpecZoneDtl specZoneDtl 
