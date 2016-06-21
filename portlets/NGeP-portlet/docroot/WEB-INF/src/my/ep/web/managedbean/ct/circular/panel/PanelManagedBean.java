@@ -25,6 +25,7 @@ import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
@@ -84,6 +85,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtPanelItem selectedPanelItems;
 	private CtPanelItem selectedItemForSpec;
 	private CtPanelZone selectedPanelZone;
+	private CtPanelItemGroup ctPanelItemGroup;
 	private List <CtPanelSupplier> selectedPanelSuppliers;
 	private List<CtContactPerson> selectedContactPersons;
 	private List<CtPanelItemSpec> selectedPanelItemSpecs;
@@ -904,4 +906,20 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.buttonHidePanelItemDel = buttonHidePanelItemDel;
 	}
 
+	/**
+	 * @return the ctPanelItemGroup
+	 */
+	public CtPanelItemGroup getCtPanelItemGroup() {
+		if (ctPanelItemGroup == null) {
+			ctPanelItemGroup = new CtPanelItemGroup();
+		}
+		return ctPanelItemGroup;
+	}
+
+	/**
+	 * @param ctPanelItemGroup the ctPanelItemGroup to set
+	 */
+	public void setCtPanelItemGroup(CtPanelItemGroup ctPanelItemGroup) {
+		this.ctPanelItemGroup = ctPanelItemGroup;
+	}
 }

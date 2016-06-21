@@ -50,6 +50,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
+import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -71,6 +72,8 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
+import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
+import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -99,6 +102,7 @@ import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
@@ -125,6 +129,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
@@ -2995,4 +3000,68 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
     		return true;
     	return false;
     }
+    
+    /**
+	 * The method used to initiate panel item group
+	 */
+    public void addPanelItemGroup() {
+    	CtPanelItemGroup panelItemGroup= new CtPanelItemGroup();
+    	panelItemGroup.setRecordStatusFlg(1);
+    	getManagedBean().setCtPanelItemGroup(panelItemGroup);
+	    getManagedBean().setAutoUpdate(Boolean.FALSE);
+    	RequestContext.getCurrentInstance().execute("addItemGroupDlg.show()");
+	}
+	
+	/**
+	 * The method used to create panel group item list
+	 */
+	public void createPanelItemGroup(){
+		CtPanelItemGroup panelGroup= getManagedBean().getCtPanelItemGroup();
+		
+		if (StringUtils.isEmpty(panelGroup.getGroupName())) {
+			FacesContext.getCurrentInstance().addMessage("itemGroupMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+	    			MessageUtils.getMessage(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.panel.group.name", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())},
+	    					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));			
+			return;
+		}
+		 
+	    if (panelGroup.isBrandNew() && isExistPanelGroupItem(panelGroup.getGroupName())) {
+	    	FacesContext.getCurrentInstance().addMessage("itemGroupMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+	    			MessageUtils.getMessage(MessageConst.ERROR_750032, new String[] {panelGroup.getGroupName()},
+	    					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+	    	return;
+	   	}
+	   
+	   PanelGroupItemReqDTO reqDTO = new PanelGroupItemReqDTO();
+	   reqDTO.setCtPanelItemGroup(panelGroup);
+	   IPanelGroupItemSO panelGroupItemSO = (IPanelGroupItemSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
+			   ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelGroupItemSO.class);
+	
+	   PanelGroupItemResDTO resDTO = panelGroupItemSO.saveOrUpdatePanelGroupItemDtls(reqDTO);
+	   if (resDTO.isSuccessful()) {			   		   
+		   FacesContext.getCurrentInstance().addMessage("itemGroupMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+				   MessageUtils.getMessage(MessageConst.INFO_758002, new String[] { resDTO.getCtPanelItemGroup().getGroupName()},
+						   MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+		   return;
+		}
+	}
+	
+	/**
+	 * The method used to validate panel item group 
+	 * @return boolean value
+	 */
+	 private boolean isExistPanelGroupItem(String groupItemName) {
+		 IPanelGroupItemSO panelGroupItemSO = (IPanelGroupItemSO) BusinessDelegate.getInstance().getServiceObject(
+				 ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelGroupItemSO.class);
+		 PanelGroupItemReqDTO reqDTO = new PanelGroupItemReqDTO();
+		 reqDTO.setGroupItemName(groupItemName);
+		 PanelGroupItemResDTO resDTO = panelGroupItemSO.retrievePanelGroupItemByGroupName(reqDTO);
+	
+		 if (resDTO.getCtPanelItemGroup() != null) {
+			 return true;
+		 } else {
+			 return false;
+		 }
+	 }
 }
