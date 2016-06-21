@@ -171,7 +171,6 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
-import com.augtech.kmc.client.handler.IServiceHandler;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -3914,7 +3913,8 @@ public class SmCommonUtil {
 	 * @param String
 	 *            gstRegNo
 	 */
-	public static void validateAddGstRegNo(String bussRegNo, String gstRegNo) {
+	public static void validateGstRegNoUniqueness(String bussRegNo,
+			String gstRegNo) {
 		if (!StringUtils.isBlank(gstRegNo)) {
 			SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
 			reqDTO.setBussRegNo(bussRegNo);
@@ -3922,7 +3922,8 @@ public class SmCommonUtil {
 			if (SmServiceLookup.getSupplierGstSO()
 					.checkIsGstRegNoAlreadyExist(reqDTO)
 					.isGstRegNoAlreadyExist()) {
-				throw new EpException(MessageConst.ERROR_722641);
+				throw new EpException(MessageConst.ERROR_722641,
+						new String[] { gstRegNo });
 			}
 		}
 	}
