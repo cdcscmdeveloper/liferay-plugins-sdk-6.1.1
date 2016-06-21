@@ -805,8 +805,8 @@ public class EvaluationMeetingBackingBean extends
 			if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getQt().getEvaluationType())) {
 				retriveExistOtherCommittee();
-				checkCommitteeMembersExistOtherCommittees(this.getManagedBean()
-						.getOtherCommitteeMembersList(), scQtCommitteeActivity);
+//				checkCommitteeMembersExistOtherCommittees(this.getManagedBean()
+//						.getOtherCommitteeMembersList(), scQtCommitteeActivity);
 			}
 
 			if (scQtCommitteeActivity != null
@@ -1773,32 +1773,33 @@ public class EvaluationMeetingBackingBean extends
 	}
 
 	// check existing committeemebers in otherCommittee in TEC,OC,FEC
-	private void checkCommitteeMembersExistOtherCommittees(
-			List<ScCommitteeMember> otherCommitteemembers,
-			List<ScCommitteeMember> existingCommitteemembers) {
-		if (null != otherCommitteemembers && !otherCommitteemembers.isEmpty()
-				&& null != existingCommitteemembers
-				&& !existingCommitteemembers.isEmpty()) {
-			for (ScCommitteeMember currentCommitteeMember : existingCommitteemembers) {
-				for (ScCommitteeMember otherCommitteeMember : otherCommitteemembers) {
-					if (otherCommitteeMember.getIcPassport().equalsIgnoreCase(
-							currentCommitteeMember.getIcPassport())) {
-						throw new EpException(
-								MessageConst.ERROR_760272,
-								new String[] {
-										currentCommitteeMember.getMemberName(),
-										this.getManagedBean()
-												.getCheckOtherCommitteeType(),
-										this.getManagedBean()
-												.getCheckOtherCommitteeTypes() });
-					}
-
-				}
-
-			}
-		}
-
-	}
+	// Commented as the code for committee validation already exists in CommitteValidator class
+//	private void checkCommitteeMembersExistOtherCommittees(
+//			List<ScCommitteeMember> otherCommitteemembers,
+//			List<ScCommitteeMember> existingCommitteemembers) {
+//		if (null != otherCommitteemembers && !otherCommitteemembers.isEmpty()
+//				&& null != existingCommitteemembers
+//				&& !existingCommitteemembers.isEmpty()) {
+//			for (ScCommitteeMember currentCommitteeMember : existingCommitteemembers) {
+//				for (ScCommitteeMember otherCommitteeMember : otherCommitteemembers) {
+//					if (otherCommitteeMember.getIcPassport().equalsIgnoreCase(
+//							currentCommitteeMember.getIcPassport())) {
+//						throw new EpException(
+//								MessageConst.ERROR_760272,
+//								new String[] {
+//										currentCommitteeMember.getMemberName(),
+//										this.getManagedBean()
+//												.getCheckOtherCommitteeType(),
+//										this.getManagedBean()
+//												.getCheckOtherCommitteeTypes() });
+//					}
+//
+//				}
+//
+//			}
+//		}
+//
+//	}
 
 	/**
 	 * Close listener.close popup
