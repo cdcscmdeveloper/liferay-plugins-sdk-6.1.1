@@ -2521,7 +2521,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public Date handlePublishDate() {
 		
 		int hour = DateUtils.getCurrentHours();
-		Date today = new Date();
+		Date today = DateUtils.getCurrentDateWithoutTime();
 		return hour >= 12 ? DateUtils.addDays(today, 1) : today;
 	}
 }
