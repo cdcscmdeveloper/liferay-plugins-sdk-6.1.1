@@ -376,13 +376,13 @@
 				</tr>
 			</table>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.sc.apply']}"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					style="margin-top: 10px;" partialSubmit="true"
 					process="@this applyAll" onsuccess="applyAllPopUp.hide();"
 					action="#{requestNoteBackingBean.applyForRequestNote}"
 					update="@([id$=requestListDataTable])" />
 
-				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
 					update="@form" process="@this"
 					action="#{requestNoteBackingBean.cancelApplyAllItemsPopup}" />
 			</div>
@@ -412,13 +412,13 @@
 			</table>
 
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.sc.apply']}"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					style="margin-top: 10px;" partialSubmit="true"
 					process="@this applyAllSQ" onsuccess="applyAllPopUpSQ.hide();"
 					action="#{requestNoteBackingBean.applyForRequestNote}"
 					update="@([id$=requestListDataTable])" />
 
-				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
 					update="@form" process="@this" onclick="applyAllPopUpSQ.hide();" />
 			</div>
 		</p:panel>
