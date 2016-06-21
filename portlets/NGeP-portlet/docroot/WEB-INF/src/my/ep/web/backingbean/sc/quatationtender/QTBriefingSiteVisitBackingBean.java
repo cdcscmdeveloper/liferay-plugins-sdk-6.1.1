@@ -740,8 +740,9 @@ public class QTBriefingSiteVisitBackingBean extends
 	public void cancelBriefingList() {
 		debugLogger("cancelBriefingList");
 		this.getManagedBean().setQtBriefing(null);
-		RequestContext.getCurrentInstance().execute("addbsvdtls.hide();");
 		getManagedBean().setRequired(Boolean.FALSE);
+		RequestContext.getCurrentInstance().execute("addbsvdtls.hide();");
+		
 	}
 
 	/**
