@@ -2382,7 +2382,7 @@ public class QTDetailBackingBean extends
 					}
 				}
 			} else {
-
+				this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
 				if(CollectionUtils.isNotEmpty(tenderResDTO.getPanelItems())){
 					this.getManagedBean().setPanelItemList(
 							tenderResDTO.getPanelItems());
