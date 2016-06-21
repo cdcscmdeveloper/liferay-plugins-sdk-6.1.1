@@ -10,15 +10,17 @@
  */
 package my.ep.web.backingbean.integration.interfacegfmas;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.common.batch.IDIInterfaceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -28,6 +30,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.DIInterfaceLog;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ProcessCodeType;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -37,6 +40,7 @@ import my.ep.web.managedbean.intergration.interfacegfmas.GfMasManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import org.apache.commons.lang3.StringUtils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -116,41 +120,89 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 */
 	private ISearchBean<DIInterfaceLog> getSearchBeanData(
 			ISearchBean<DIInterfaceLog> searchBean) {
-
+		log.info("getSearchBeanData");
 		if (this.getManagedBean().getInterfaceLogId() != null) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("logId",
 							SearchOperator.OPERATOR_EQUALS.value(), this
 									.getManagedBean().getInterfaceLogId()));
 		}
-
-		if (StringUtils.isNotBlank(this.getManagedBean().getServiceCode())) {
-
+		if (StringUtils.isNotEmpty(this.getManagedBean().getServiceCode())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("serviceCode",
 							SearchOperator.OPERATOR_EQUALS.value(), this
 									.getManagedBean().getServiceCode()
 									.toUpperCase(), true));
 		}
-
-		if (StringUtils.isNotBlank(this.getManagedBean().getProcessId())) {
-
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("processId",
-							SearchOperator.OPERATOR_EQUALS.value(), this
-									.getManagedBean().getProcessId()
-									.toUpperCase(), true));
-		}
-
-		if (StringUtils.isNotBlank(this.getManagedBean().getDirection())) {
-
+		/*
+		 * if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
+		 * searchBean.getDataFilterBeans().add( new
+		 * SearchFilterBean("processId", SearchOperator.OPERATOR_EQUALS.value(),
+		 * this .getManagedBean().getProcessId() .toUpperCase(), true)); }
+		 */
+		if (StringUtils.isNotEmpty(this.getManagedBean().getDirection())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("direction",
 							SearchOperator.OPERATOR_EQUALS.value(), this
 									.getManagedBean().getDirection()
 									.toUpperCase(), true));
-		}		
+		}
 
+		List<ProcessCodeType> listOfProcessCodes = new ArrayList<ProcessCodeType>();
+
+		listOfProcessCodes.add(ProcessCodeType.GLBAC);
+		listOfProcessCodes.add(ProcessCodeType.GLSEG);
+		listOfProcessCodes.add(ProcessCodeType.GLVOT);
+		listOfProcessCodes.add(ProcessCodeType.GLDNA);
+		listOfProcessCodes.add(ProcessCodeType.GLPRG);
+		listOfProcessCodes.add(ProcessCodeType.GLPRJ);
+		listOfProcessCodes.add(ProcessCodeType.GLGLC);
+		listOfProcessCodes.add(ProcessCodeType.GLPCG);
+		listOfProcessCodes.add(ProcessCodeType.GLPTJ);
+		listOfProcessCodes.add(ProcessCodeType.CMBNK);
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processId", SearchOperator.OPERATOR_IN
+						.value(), listOfProcessCodes));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("targetSystem",
+						SearchOperator.OPERATOR_EQUALS.value(), "ePerolehan",
+						true));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchMultiFilterBean(new SearchFilterBean("fileName",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(), null),
+						new SearchFilterBean("fileName",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								"N/A", SearchCondition.CONDITION_AND.value())));
+
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("fileName",
+						SearchOperator.OPERATOR_NOT_LIKE.value(), ".txt", true));
+
+		if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
+			searchBean.getDataFilterBeans()
+					.add(new SearchMultiFilterBean(new SearchFilterBean(
+							"fileName", SearchOperator.OPERATOR_NOT_LIKE
+									.value(), ".txt"), new SearchFilterBean(
+							"fileName", SearchOperator.OPERATOR_LIKE.value(),
+							"1000"
+									+ this.getManagedBean().getProcessId()
+											.toUpperCase() + "40000120",
+							SearchCondition.CONDITION_AND.value())));
+		} /*else {
+			for (int i = 0; i < listOfProcessCodes.size(); i++) {
+
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("fileName",
+								SearchOperator.OPERATOR_LIKE.value(), "1000"
+										+ listOfProcessCodes.get(i)
+										+ "40000120", true));
+			}
+
+		}*/
 		return searchBean;
 	}
 
@@ -231,7 +283,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * @return the string
 	 */
 	public String goToGfMasProcessMaintaincePage(DIInterfaceLog interfaceLog) {
-
+		log.info("In goToGfMasProcessMaintaincePage");
 		IDIInterfaceSO gfMasSO = (IDIInterfaceSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -271,7 +323,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 */
 	private String getChildProcessScreen(DIInterfaceLog interfaceLog,
 			InterfaceLogResDto interfaceGfMasResDto) {
-
+		log.info("In getChildProcessScreen");
 		switch (ProcessCodeType.valueOf(interfaceLog.getProcessId())) {
 
 		case GLPRG:
@@ -339,7 +391,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * @return the string
 	 */
 	public String redirectGfMasSearch() {
-
+		log.info("In redirectGfMasSearch");
 		return "/xhtml/gfMas/gfmassearch/gfmasSearchMain.xhtml?faces-redirect=true";
 
 	}
@@ -361,5 +413,38 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 */
 	public void setSearchGfMas(IPagingDataModel<DIInterfaceLog> searchGfMas) {
 		this.searchGfMas = searchGfMas;
+	}
+
+	/**
+	 * Gets the process codelist.
+	 * 
+	 * @return the process codelist
+	 */
+	public List<SelectItem> getProcessCodelist() {
+		log.info("In getProcessCodelist");
+
+		List<ProcessCodeType> list = new ArrayList<ProcessCodeType>();
+
+		List<SelectItem> processCodeValues = new ArrayList<SelectItem>();
+
+		list.add(ProcessCodeType.GLBAC);
+		list.add(ProcessCodeType.GLSEG);
+		list.add(ProcessCodeType.GLVOT);
+		list.add(ProcessCodeType.GLDNA);
+		list.add(ProcessCodeType.GLPRG);
+		list.add(ProcessCodeType.GLPRJ);
+		list.add(ProcessCodeType.GLGLC);
+		list.add(ProcessCodeType.GLPCG);
+		list.add(ProcessCodeType.GLPTJ);
+		list.add(ProcessCodeType.CMBNK);
+
+		for (int i = 0; i < list.size(); i++) {
+			SelectItem selectItem = new SelectItem();
+			selectItem.setValue(list.get(0));
+			selectItem.setLabel(list.get(0).toString());
+			processCodeValues.add(selectItem);
+		}
+
+		return processCodeValues;
 	}
 }
