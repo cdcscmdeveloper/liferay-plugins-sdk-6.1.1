@@ -7467,9 +7467,6 @@ public class SmApplicationBackingBean extends
 			reqDTO.setUserList(useList);
 			log.info("******* Save as draft User List to BPM Size *******"
 					+ reqDTO.getUserList());
-			if (reqDTO.getOutcome().equals("")) {
-				reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			}
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
@@ -7484,10 +7481,13 @@ public class SmApplicationBackingBean extends
 			reqDTO.setBranchGst(getManagedBean().getSelectedBranch().getGst());
 			reqDTO.setSameAsHq(getManagedBean().getSelectedBranch()
 					.isSameAsHq());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			log.info(">>>>>>>>TASK ID BEFORE:" + getManagedBean().getTaskId()
+					+ "<<<<<<<<");
 			resDTO = regSo.initiateSmApplSaveAsDraftTask(reqDTO);
-			if (StringUtils.isBlank(getManagedBean().getTaskId())) {
-				getManagedBean().setTaskId(resDTO.getTaskId());
-			}
+			getManagedBean().setTaskId(resDTO.getTaskId());
+			log.info(">>>>>>>>TASK ID AFTER:" + getManagedBean().getTaskId()
+					+ "<<<<<<<<");
 			if (resDTO != null) {
 				log.info("******* From SO ******** " + resDTO.isBpmSuccess());
 				valid = resDTO.isBpmSuccess();

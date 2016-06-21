@@ -2097,16 +2097,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	/**
 	 * Validate gst no and format
 	 */
-	public void validateGstRegNo(){
+	public void validateGstRegNo() {
 		String gstNo = this.getManagedBean().getSmGstSupplier().getGstRegNo();
-		if(gstNo != null && gstNo.length() > 0){
-			if(!SmCommonUtil.validateGstRegNo(gstNo)){
+
+		// Validate GST reg no. uniqueness
+		SmCommonUtil.validateGstRegNoUniqueness(getManagedBean().getSmSupp()
+				.getRegNo(), gstNo);
+
+		if (gstNo != null && gstNo.length() > 0) {
+			if (!SmCommonUtil.validateGstRegNo(gstNo)) {
 				this.getManagedBean().setGstFlag(false);
 				throw new EpException(MessageConst.ERROR_721027);
-			}else{
+			} else {
 				this.getManagedBean().setGstFlag(true);
 			}
-		}else{
+		} else {
 			deleteGst(this.getManagedBean().getSmGstSupplier());
 			this.getManagedBean().setGstFlag(false);
 		}
