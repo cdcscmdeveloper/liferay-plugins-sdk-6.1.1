@@ -34,6 +34,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -41,6 +42,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -49,6 +51,7 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -68,6 +71,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
@@ -86,6 +90,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -1868,5 +1873,40 @@ public class QTSupplierQulCriteriaBackingBean extends
 			return true;
 		}
 		return true;
+	}
+	
+	/**
+	 * Get maximum no of supplier for restricted tender
+	 * 
+	 * @return the maximum no of supplier for restricted tender
+	 */
+	public BigDecimal getNoOfSupplierForRestrictedTender() {
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.QT_RT_MINIMUM_NUMBER_SUPPLIER);
+			
+			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
+					.getRuleValueList();
+
+			if (configRuleValues != null && configRuleValues.size() > 0) {
+				PmConfigRuleValue configRuleValue = configRuleValues.get(0);
+				
+				if (configRuleValue != null && configRuleValue.getFromValue() != null && configRuleValue.getToValue() != null) {
+					return configRuleValue.getToValue();
+				}
+				
+			} else {
+				log.warn("Rule " + RuleTypeConst.QT_RT_MINIMUM_NUMBER_SUPPLIER + " is not found.");
+			}
+
+		} finally {
+			ruleSO = null;
+		}
+		
+		return BigDecimal.valueOf(0);
 	}
 }
