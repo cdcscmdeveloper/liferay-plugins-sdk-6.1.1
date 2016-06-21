@@ -1607,7 +1607,7 @@ public class LOADetailBackingBean extends
 
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
-			s1ors2 = "tender/ sebut";
+			s1ors2 = "tender / sebut";
 
 			if (scQt != null && scQt.getProcurementMode() != null) {
 				ParameterReqDTO reqDTO = new ParameterReqDTO();
