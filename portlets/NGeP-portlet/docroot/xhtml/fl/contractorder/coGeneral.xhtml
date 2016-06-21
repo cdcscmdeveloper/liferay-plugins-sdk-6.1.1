@@ -33,27 +33,27 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:483px;" 
+				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgCode} #{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.prepared.for.ptj']}"/></td>
 						
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:483px;" 
+				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgCode} #{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:483px;" 
+				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgCode} #{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
 				<td><p:inputText size="8" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeCode}"/> <p:spacer
-						width="5" /> <p:inputText size="50" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeName}" />
+						width="5" /> <p:inputText size="60" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeName}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acc.office']}"/></td>
 			</tr>
 		</table>
