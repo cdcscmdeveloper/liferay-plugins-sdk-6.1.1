@@ -184,6 +184,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		 </div>
 	  <h:panelGroup id="delUpdateButtonId">
 	   <div class="ppRightBtn">
+	   	 <p:commandButton id="addItemGroupBtn" value="#{lbl['lbl.ct.add.item.group']}"  process="@this"
+					     action="#{panelBackingBean.addPanelItemGroup}" update="addItemGroupDlg"
+					     rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 	 	 <ac:lov id="loaBulkSupId" lovId="SM_SUPPLIER"  
 	 	                disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 						postUpdateListener="panelBackingBean.addBulkPanelSupplier"
@@ -204,6 +207,28 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			              rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 	 </div>
 	  </h:panelGroup>
+	  <p:dialog id="addItemGroupDlg" header="#{lbl['lbl.ct.add.item.group']}" styleClass="pop_up_top"
+		widgetVar="addItemGroupDlg"  modal="true" width="500" height="150">  
+		<p:messages id="itemGroupMsg" showSummary="false" showDetail="true" autoUpdate="true" cosable="true" severity="error, info" />
+ 			<table style="width:100%;">
+		  	<tr>
+		  		<td><p:outputLabel value="#{lbl['lbl.ct.panel.group.name']}" styleClass="required"  /></td>
+				<td><p:inputText id="groupName" value="#{panelBackingBean.managedBean.ctPanelItemGroup.groupName}" 
+					size="50" maxlength="50" />
+		  		</td>
+		  	</tr>
+		   	<tr> 
+				<td><p:outputLabel value="#{lbl['lbl.ct.panel.group.status']}" styleClass="required" /></td>
+	     		<td><p:inputText id="groupStatus" value="#{lbl['lbl.ct.active']}" disabled="true" size="50" />
+	     		</td>				
+		   	</tr>
+			</table>			
+			<div class="ppRightBtn">
+		     	<p:commandButton id="btnAddItemGroupDlg" value="#{lbl['lbl.btn.add']}" 
+		     		actionListener="#{panelBackingBean.createPanelItemGroup()}" />
+			 	<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="addItemGroupDlg.hide();" type="button" />
+		   	</div>
+        </p:dialog>
 	    <p:dialog id="bulkUpdateDlg" header="#{lbl['lbl.ct.bulk.update']}" styleClass="pop_up_top"
 		    widgetVar="bulkUpdateDlg"  modal="true" width="300" height="120">  
             <h:panelGrid columns="3">
