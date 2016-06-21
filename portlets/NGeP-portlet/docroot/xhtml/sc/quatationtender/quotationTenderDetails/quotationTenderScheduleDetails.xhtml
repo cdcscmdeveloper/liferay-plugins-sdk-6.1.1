@@ -302,7 +302,7 @@
 					<td><p:selectOneMenu id="sampleDivison1"
 							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDivision.divisionId}"
 							style="width: 249px;margin-bottom: 5px;"
-							disabled="#{!qTScheduleDetailBackingBean.managedBean.stateCode or qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}">
+							disabled="#{!qTScheduleDetailBackingBean.managedBean.state or qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="divisionList"
 								value="#{qTScheduleDetailBackingBean.managedBean.divisionList}"
