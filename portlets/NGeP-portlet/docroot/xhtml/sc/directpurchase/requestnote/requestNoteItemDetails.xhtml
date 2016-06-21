@@ -12,8 +12,12 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
 		</f:facet>
-		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.requestnote.instruction']}" />
+		<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+			value="#{lbl['lbl.sc.submit.instruction']}" />
+
+		<h:outputText styleClass="instruction" rendered="#{isPendingApprovalStatus}"
+			value="#{lbl['lbl.sc.requestnote.approver.instruction']}" />
+			
 		<ac:lovPopup />
 
 		<h:panelGrid width="100%" id="itemDtlId">
