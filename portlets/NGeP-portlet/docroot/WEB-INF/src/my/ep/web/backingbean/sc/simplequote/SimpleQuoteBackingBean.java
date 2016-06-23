@@ -1553,7 +1553,8 @@ public class SimpleQuoteBackingBean extends
 		TemplateSpecBean serviceTplSpecBean = getManagedBean()
 				.getServiceTemplateSpecBean();
 		int checkQty = 0;
-		if (productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null
+		if (productTplSpecBean.getSpecMaster() != null && 
+				productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null
 				&& productTplSpecBean.getSpecMaster().getTplSpecQuestions()
 						.size() > 0) {
 
@@ -1583,7 +1584,8 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 
-		if (serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null
+		if (serviceTplSpecBean.getSpecMaster() != null
+				&& serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null
 				&& serviceTplSpecBean.getSpecMaster().getTplSpecQuestions()
 						.size() > 0) {
 
@@ -2047,8 +2049,12 @@ public class SimpleQuoteBackingBean extends
 			if (suppliers != null && !suppliers.isEmpty()) {
 				quote.setScQuoteSuppliers(suppliers);
 			}
-
-			finalizeRemarks(quote.getRemarks());
+			
+			// remarks
+			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+				finalizeRemarks(quote.getRemarks());
+			}
+			
 			quote.setWorkflowStatuses(null);
 			// To avoid insert workflow status when direct submit without save.
 			if (quote.isBrandNew()) {
@@ -4402,17 +4408,15 @@ public class SimpleQuoteBackingBean extends
 			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 			templateSpecBackingBean.getManagedBean().setPidSQ(Boolean.FALSE);
 		}
-
-		Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
-		Long purchaseInDefaultId = null;
+		
 		if (directPurchaseDataType.getPidId() != null) {
-			purchaseInDefaultId = Long.valueOf(directPurchaseDataType
-					.getPidId());
 			getPurchaseInDefaultExpiredMessage(getManagedBean().getCurrentStatusId());
 		}
+		if (directPurchaseDataType.getPidApprover() != null) {
+			getManagedBean().setPidApprovers(directPurchaseDataType.getPidApprover());
+		}
 
-		getManagedBean().setPidApprovers(directPurchaseDataType.getPidApprover());
-
+		Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
 		quoteReqDTO.setQuoteId(quoteId);
 		quoteReqDTO.setFetchSubEntity(true);
 		QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtl((quoteReqDTO));
