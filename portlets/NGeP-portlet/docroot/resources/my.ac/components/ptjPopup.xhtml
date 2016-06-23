@@ -10,6 +10,7 @@
 <cc:interface>
 	<cc:attribute name="okAction" required="false" default="" />
 	<cc:attribute name="update" required="false" default="@this" />
+	<cc:attribute name="orgTypeParamCode" required="true" />
 	<cc:attribute name="id" required="true" />
 </cc:interface>
 
@@ -24,32 +25,32 @@
 		<h:panelGroup id="orgProfilePnlGrp">
 			<p:panel id="orgProfilePnlId" header="#{lbl['lbl.pm.header.general.org.search']}" toggleable="true"  >
               <h:panelGrid columns="3" id="orgProfilePg">
-                 <p:selectOneMenu for="somMin"  disabled="true" style="width:150px" >
-            	    <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptj.search.ministry']}" itemValue=""/>
-                 </p:selectOneMenu>
+                 <p:inputText id="itMin"  readonly="true" style="width:180px" 
+                	 value="#{lbl['lbl.pm.org.ptj.search.ministry']}"/>
                  <p:spacer height="1"/>
-                 <p:selectOneMenu id="somMinistry" style="width:300px"
+                 <p:selectOneMenu id="somMinistry" style="width:400px"
                       value="#{organisationSearchBackingBean.managedBean.ministryProfileId}" >
             	   <f:selectItems value="#{organisationSearchBackingBean.getMinistryDropdown()}"/>
             	   <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somJabatan,:form:#{cc.attrs.id}:searcbBtnId" />
                  </p:selectOneMenu>
-                 <p:selectOneMenu id="somJab" disabled="true" style="width:150px">
-            	    <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptj.search.jabatan']}" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu id="somJabatan" style="width:300px"
+                 <p:inputText id="somJab" readonly="true" style="width:180px"
+                 	rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}" 
+                 	value="#{lbl['lbl.pm.org.ptj.search.jabatan']}"/>
+                 <p:spacer height="1" rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"/>
+                 <p:selectOneMenu id="somJabatan" style="width:400px"
+                 	  rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"
                       value="#{organisationSearchBackingBean.managedBean.jabatanProfileId}" >
             	   <f:selectItems value="#{organisationSearchBackingBean.getJabatanDropdown()}"/>
             	    <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
                  </p:selectOneMenu>
-                 <p:selectOneMenu for="somPtjCodeName"  style="width:150px"
+                 <p:selectOneMenu for="somPtjCodeName"  style="width:180px"
                     value="#{organisationSearchBackingBean.managedBean.ptjCodeName}" >
-                       <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptjCode']}" itemValue="#{ProfileManagementConst.ptjCode}"/>
-            	      <f:selectItem itemLabel="#{lbl['lbl.pm.org.ptjName']}" itemValue="#{ProfileManagementConst.ptjName}"/>
+                      <f:selectItems
+							value="#{organisationSearchBackingBean.getPtjOrKptjDropDown(cc.attrs.orgTypeParamCode)}" />
             	      <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
-                 <p:inputText id="itPtjCodeValue"  style="width:300px"
+                 <p:inputText id="itPtjCodeValue"  style="width:400px"
                  	onkeypress="if (event.keyCode == 13) { ptjSearchBtnWV.jq.click(); return false; }"
                      value="#{organisationSearchBackingBean.managedBean.ptjCodeNameSearchValues}" >
                      <p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/></p:inputText>
@@ -57,8 +58,7 @@
 			  	<div class="ppRightBtn">
        		         <p:commandButton id="searcbBtnId" 
        		         	widgetVar="ptjSearchBtnWV" value="#{lbl['lbl.btn.search']}" update=":form:#{cc.attrs.id}:dtOrgProfile"  
-       		            action="#{organisationSearchBackingBean.searchOrgProfiles}" process="@this" 
-       		            disabled="#{organisationSearchBackingBean.managedBean.ministryProfileId == null}"/> 
+       		            action="#{organisationSearchBackingBean.searchOrgProfiles(cc.attrs.orgTypeParamCode)}" process="@this" /> 
 			         
 		       </div>
 		       </p:panel>
