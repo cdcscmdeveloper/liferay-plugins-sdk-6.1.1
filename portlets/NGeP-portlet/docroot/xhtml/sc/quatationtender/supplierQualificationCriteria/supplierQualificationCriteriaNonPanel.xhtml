@@ -51,7 +51,7 @@
 			</p:column>
 
 		</p:dataTable>
-		<c:if test="#{!categoryCodeReadonly}">
+		<c:if test="#{!categoryCodeReadonly and !specCommitteeReadOnly}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
 					styleClass="BtnSpacing" process="@this, openPnlId"
