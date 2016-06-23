@@ -8916,7 +8916,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			else{
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_715054,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_715054, new String[]{supplierItem.getItemName()},
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 			}
