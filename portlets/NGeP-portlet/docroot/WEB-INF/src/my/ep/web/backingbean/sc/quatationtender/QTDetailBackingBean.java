@@ -4942,6 +4942,30 @@ public class QTDetailBackingBean extends
 	}
 	
 	/**
+	 * is Allow QT Publish button
+	 * 
+	 * @param scQt
+	 * 		the ScQt instance
+	 * 
+	 * @return
+	 */
+	public boolean isAllowQTPublishBtn(ScQt scQt) {
+		if (scQt != null && 
+				scQt.getQtStatus() != null && 
+						scQt.getQtStatus().getStatusId() != null &&
+				QTStatusConst.QT_PENDING_PUBLICATION.equals(scQt.getQtStatus().getStatusId())) {
+			String isAllowQTPublishBtn = EpPropertiesUtils.getInstance()
+					.getProperty(EpPropertiesConst.SC_SHOW_BUTTON_CLOSEQT);
+			
+			if (StringUtils.isNotBlank(isAllowQTPublishBtn)) {
+				return Boolean.valueOf(isAllowQTPublishBtn);
+			}
+		}		
+		
+		return false;
+	}
+	
+	/**
 	 * Trigger to close the supplier prepare proposal.
 	 * 
 	 * @param qtId
@@ -4991,4 +5015,54 @@ public class QTDetailBackingBean extends
 			qtProposalSO = null;
 		}
 	}
+	
+	/**
+	 * Trigger to publish Quotation / Tender
+	 * 
+	 * @param qtId
+	 * 		the quotation / tender id
+	 */
+	public void publishQT(ScQt scQt) {
+		log.info("loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
+		
+		IQTProposalSO qtProposalSO = null;
+		try {
+			qtProposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setManualPublish(true);
+			
+			boolean isUpdateSucessful = qtProposalSO.updateProposalWorkFlowStatus(reqDTO)
+				.isSuccessful();
+			
+			boolean isSucessful = false;
+			if(isUpdateSucessful){
+				try {
+					log.info("call simple scheduler if QT is publishing today.");
+					EpSchedulerHelper.scheduleSimplePublishingJob(scQt);
+				} catch (SchedulerException e) {
+					e.printStackTrace();
+					log.error(e.getMessage());
+				}
+			}
+			if (isSucessful) {
+				qtProposalSO.closeProposal(reqDTO);
+				
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
+								null,
+								"QT Closed Sucessfully."
+				));
+			}
+
+		} finally {
+			qtProposalSO = null;
+		}
+	}
+	
+	
 }
