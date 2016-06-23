@@ -5044,6 +5044,7 @@ public class QTDetailBackingBean extends
 				try {
 					log.info("call simple scheduler if QT is publishing today.");
 					EpSchedulerHelper.scheduleSimplePublishingJob(scQt);
+					isSucessful = true;
 				} catch (SchedulerException e) {
 					e.printStackTrace();
 					log.error(e.getMessage());
