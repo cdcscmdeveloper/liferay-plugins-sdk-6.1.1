@@ -21,7 +21,7 @@
 		</p:selectOneMenu>
 		<p:spacer height="2px"></p:spacer>
 		<p:dataTable value="#{flOrderBB.managedBean.pendingDoDataModel}" lazy="true"
-			var="pending" id="flPendingDoListDt" rowIndexVar="rowIndex" width="100%" rows="10">
+			var="pending" id="flPendingDoListDt" rowIndexVar="rowIndex" width="100%" rows="5">
 			<ac:paginator for="flPendingDoListDt" />
 			<p:column headerText="#{lbl['lbl.fl.dopending.order.number']}" style="text-align:center">
 				<h:outputText value="#{pending.docNo}" style="float:left;"/>
