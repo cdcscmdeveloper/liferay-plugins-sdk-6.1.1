@@ -39,6 +39,7 @@ import my.ep.web.managedbean.sc.bidding.ScheduleBiddingManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -151,8 +152,6 @@ public class ScheduleBiddingBackingBean extends
 			this.getManagedBean().setScBidContactPersonList(contactList);
 			log.info(" **** ScBidContactPersonList Size *** "
 					+ getManagedBean().getScBidContactPersonList().size());
-			getManagedBean().getMultiSelectContact().clear();
-			getManagedBean().setSelectedBidContact(false);
 			getManagedBean().setSelectedAllBidContacts(false);
 		}
 
@@ -188,30 +187,33 @@ public class ScheduleBiddingBackingBean extends
 	 */
 	public void deleteContactDetails() {
 		try {
-
 			List<ScBidContactPerson> contactList = getManagedBean()
 					.getScBidContactPersonList();
-			List<ScBidContactPerson> multiSelectContacts = getManagedBean()
-					.getMultiSelectContact();
-			if (contactList != null && multiSelectContacts != null) {
-				log.info(" **** contact list *** " + contactList.size());
-				log.info(" **** multiSelectContacts *** "
-						+ multiSelectContacts.size());
-				if (contactList.size() == multiSelectContacts.size()) {
-					contactList.clear();
-				} else {
-					for (ScBidContactPerson contact : multiSelectContacts) {
-						contactList.remove(contact);
-					}
+			List<ScBidContactPerson> toDeleteContacts = new ArrayList<ScBidContactPerson>();
+			for (ScBidContactPerson contact : contactList) {
+				if (contact.isSelected()) {
+					toDeleteContacts.add(contact);
 				}
 			}
-			getManagedBean().getMultiSelectContact().clear();
-			getManagedBean().setSelectedBidContact(false);
+			if (CollectionUtils.isNotEmpty(toDeleteContacts)) {
+				contactList.removeAll(toDeleteContacts);
+			}
 			getManagedBean().setSelectedAllBidContacts(false);
-
 		} catch (Exception e) {
 
 		}
+	}
+
+	public void zonalRowBidSelectListener() {
+		ScBidSchedule selectedZonalBid = this.getManagedBean()
+				.getRowSelectedBid();
+		if (selectedZonalBid.getScBidItems() != null
+				&& !selectedZonalBid.getScBidItems().isEmpty()) {
+			this.getManagedBean().setSelectedBidItem(
+					selectedZonalBid.getScBidItems().get(0));
+			retrieveParticipantsListAction();
+		}
+
 	}
 
 	/**
@@ -223,31 +225,33 @@ public class ScheduleBiddingBackingBean extends
 	public void retrieveParticipantsListAction() {
 		ScBidItem bidItem = this.getManagedBean().getSelectedBidItem();
 		IQTSuppFinalizationSO suppFinalizationSO = null;
+		if (bidItem != null) {
+			try {
+				suppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);
+				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 
-		try {
-			suppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
-			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+				reqDTO.setRequestItemId(bidItem.getScRequestItem()
+						.getRequestNoteItemId());
+				reqDTO.setFinalizationId(getManagedBean().getScQtFinalization()
+						.getFinalizationId());
+				if (getManagedBean().getScQt().isZonal()) {
+					reqDTO.setSpecZoneId(getManagedBean().getRowSelectedBid()
+							.getTplSpecZoneDtl().getSpecZoneId());
+				}
+				SuppFinalizationResDTO resDTO = suppFinalizationSO
+						.retrieveRecommendDtlList(reqDTO);
 
-			reqDTO.setRequestItemId(bidItem.getScRequestItem()
-					.getRequestNoteItemId());
-			reqDTO.setFinalizationId(getManagedBean().getScQtFinalization()
-					.getFinalizationId());
-			if (getManagedBean().getScQt().isZonal()) {
-				reqDTO.setSpecZoneId(getManagedBean().getRowSelectedBid()
-						.getTplSpecZoneDtl().getSpecZoneId());
+				if (resDTO.isSuccessful()) {
+					getManagedBean().setBidParticipants(
+							resDTO.getScQtRecommendDtlList());
+				}
+			} finally {
+				suppFinalizationSO = null;
 			}
-			SuppFinalizationResDTO resDTO = suppFinalizationSO
-					.retrieveRecommendDtlList(reqDTO);
-
-			if (resDTO.isSuccessful()) {
-				getManagedBean().setBidParticipants(
-						resDTO.getScQtRecommendDtlList());
-			}
-		} finally {
-			suppFinalizationSO = null;
 		}
+
 	}
 
 	/**
@@ -304,6 +308,7 @@ public class ScheduleBiddingBackingBean extends
 							resDTO.getBidSchedules().get(0).getScBidItems()
 									.get(0));
 				}
+				retrieveParticipantsListAction();
 			}
 		}
 
@@ -606,48 +611,6 @@ public class ScheduleBiddingBackingBean extends
 
 		}
 
-	}
-
-	/**
-	 * Listener method to select all bid contacts
-	 */
-	public void selectAllBidContacts() {
-		if (getManagedBean().isSelectedAllBidContacts()) {
-			getManagedBean().setSelectedBidContact(true);
-			List<ScBidContactPerson> multiSelectContact = getManagedBean()
-					.getMultiSelectContact();
-			multiSelectContact.clear();
-			for (ScBidContactPerson contactPerson : getManagedBean()
-					.getScBidContactPersonList()) {
-				multiSelectContact.add(contactPerson);
-			}
-			getManagedBean().setMultiSelectContact(multiSelectContact);
-		} else {
-			getManagedBean().getMultiSelectContact().clear();
-		}
-	}
-
-	/**
-	 * Listener method to select bid contact
-	 */
-
-	public void selectBidContact(int index) {
-
-		List<ScBidContactPerson> multiSelectContact = getManagedBean()
-				.getMultiSelectContact();
-
-		if (getManagedBean().isSelectedBidContact()) {
-			multiSelectContact.add(getManagedBean().getScBidContactPersonList()
-					.get(index));
-		} else {
-			if (multiSelectContact != null
-					&& multiSelectContact.contains(getManagedBean()
-							.getScBidContactPersonList().get(index))) {
-				multiSelectContact.remove(getManagedBean()
-						.getScBidContactPersonList().get(index));
-			}
-		}
-		getManagedBean().setMultiSelectContact(multiSelectContact);
 	}
 
 	/**

@@ -75,31 +75,7 @@
 		<c:if test="#{isQtZonalAndRecommendTypeAny}">
 			<ui:include src="scheduleBidByZone.xhtml"></ui:include>
 		</c:if>
-
-		<p:panel id="qualifiedSupplierPanel" toggleable="true"
-			header="#{lbl['lbl.sc.participant.list']}">
-
-			<p:dataTable id="participantList" rows="10"
-			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{scheduleBiddingBB.managedBean.bidParticipants}"
-				var="bidParticipant">
-				<ac:paginator for="participantList"></ac:paginator>
-				<p:column headerText="#{lbl['lbl.sc.supplier.name']}"
-					style="width : 65%">
-					<h:outputText id="companyNamePopUp"
-						value="#{bidParticipant.supplier.companyName}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.offered.price']}"
-					style="width : 35%">
-					<h:outputText id="offerPricePopUp"
-						value="#{bidParticipant.scQtProposalItem.offerPrice}"
-						style="text-align:right;">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-				</p:column>
-			</p:dataTable>
-		</p:panel>
+		
 
 		<p:panel id="contactDetailsPanelMain" toggleable="true">
 			<f:facet name="header">
@@ -109,7 +85,7 @@
 			</f:facet>
 
 			<p:dataTable var="contact" id="contactPersonDetails" Var="contact"
-			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{scheduleBiddingBB.managedBean.scBidContactPersonList}"
 				rowIndexVar="index" rows="10" rowKey="#{contact.bidContactPersonId}">
 				<ac:paginator for="contactPersonDetails" />
@@ -118,14 +94,14 @@
 						<p:selectBooleanCheckbox id="multiSelectContactCB"
 							value="#{scheduleBiddingBB.managedBean.selectedAllBidContacts}">
 							<p:ajax partialSubmit="true" process="@this"
-								update="@([id$=contactPersonDetails])"
-								listener="#{scheduleBiddingBB.selectAllBidContacts}" />
+								update="@([id$=contactDetailsPanelMain])"
+								listener="#{scheduleBiddingBB.selectAll(scheduleBiddingBB.managedBean.selectedAllBidContacts,scheduleBiddingBB.managedBean.scBidContactPersonList)}"/>
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox id="selectCOntactCB"
-						value="#{scheduleBiddingBB.managedBean.selectedBidContact}">
-						<p:ajax partialSubmit="true" process="@this" update="@this"
-							listener="#{scheduleBiddingBB.selectBidContact(index)}" />
+						value="#{contact.selected}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=contactDetailsPanelMain])" />
 					</p:selectBooleanCheckbox>
 				</p:column>
 
@@ -153,9 +129,6 @@
 				</p:column>
 
 			</p:dataTable>
-
-			<p:spacer height="10"></p:spacer>
-
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.add']}" id="addContact"
 					process="@this,contactPersonDetails" partialSubmit="true"
@@ -164,6 +137,7 @@
 
 				<p:commandButton id="deleteContact" value="#{lbl['lbl.btn.delete']}"
 					immediate="true" process="@this,contactPersonDetails"
+					disabled="#{scheduleBiddingBB.deleteselectedList(scheduleBiddingBB.managedBean.scBidContactPersonList)}"
 					partialSubmit="true" oncomplete="contactPersonDelete.show();"
 					update="@([id$=contactPersonDeleteId])" />
 
