@@ -5,7 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-	
 	<p:panel id="pc" header="#{lbl['lbl.ct.panel.panel.circular']}" toggleable="true" toggleSpeed="500" widgetVar="panelpc">
 		<h:panelGroup rendered="#{panelBackingBean.managedBean.circular.latestCircularVer == null or panelBackingBean.managedBean.viewContract}">
 			<ui:include src="createCircularDetail.xhtml" />
@@ -19,15 +18,15 @@
 	      
 	      <p:panel rendered="#{panelBackingBean.managedBean.circularVer.pid}" 
 	                id="purchaseInDefault"  header="#{lbl['lbl.ct.pid.panel.name']}" toggleable="true" toggleSpeed="500" >
-	                <p:dataTable id="pidTableId" var="pidObj" widgetVar="PidReasonObj"
-	                        value="#{panelBackingBean.managedBean.circularVer.ctCircularPidReason}" 
+	                <p:dataTable id="pidTableId" var="pidObj" widgetVar="PidReasonObj" 
+	                        value="#{panelBackingBean.managedBean.circularVer.ctCircularPidReason}" selectionMode="checkbox"
 	                        rowKey="#{pidObj}" selection="#{panelBackingBean.managedBean.ctCircularPidReasons}">
 				                  <ac:paginator for="pidTableId" />
 				                   <p:ajax event="toggleSelect"  update=":form:pidTableId,:form:delPidPanelBtn" />
                                   <p:ajax event="rowSelect" update=":form:pidTableId,:form:delPidPanelBtn" />
 			                      <p:ajax event="rowSelectCheckbox"  update=":form:pidTableId,:form:delPidPanelBtn" />
                                   <p:ajax event="rowUnselectCheckbox"  update=":form:pidTableId,:form:delPidPanelBtn" />
-                                  <p:column selectionMode="multiple" style="width:3%" 
+                                  <p:column  selectionMode="multiple" style="width:3%" 
 				                         rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 				             
 				                 <p:column style="width:50%;" 
