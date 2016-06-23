@@ -1060,7 +1060,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				
 			} 
 			setFulfilmentRequestField(resDTO);
-			getManagedBean().setPmPriceType(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
+			if(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().size()>0) {
+				getManagedBean().setPmPriceType(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
+			}
 			
 			if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
 				getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
@@ -1165,7 +1167,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().getFlRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
 				updateDeliveryDate();
 			}
-			getManagedBean().setPmPriceType(contractResDTO.getContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
+			if(contractResDTO.getContract().getLatestContractVer().getCtContractItems().size()>0) {
+				getManagedBean().setPmPriceType(contractResDTO.getContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
+			}
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
@@ -4842,7 +4846,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 //			getManagedBean().setSubmitButtonStatus(false);
 			getManagedBean().setFlDocId(flReqId);
 //			getManagedBean().setFlDocMaintain(true);
-			getManagedBean().setPmPriceType(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
+			if(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().size()>0) {
+				getManagedBean().setPmPriceType(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
+			}
 			setFulfilmentRequestField(resDTO);
 			for(CtAgency agency : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
 				if(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE || 
