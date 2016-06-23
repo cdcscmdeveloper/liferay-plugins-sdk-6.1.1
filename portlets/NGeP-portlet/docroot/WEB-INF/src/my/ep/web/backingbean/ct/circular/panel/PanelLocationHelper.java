@@ -8,6 +8,7 @@ import java.util.List;
 
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 
 public class PanelLocationHelper {
@@ -27,6 +28,17 @@ public class PanelLocationHelper {
 		for(CtPanelZoneDtl locationDTO: locationDTOs){
 			if(locationDTO.getDistrictId() != null){
 				results.add(locationDTO.getDistrictId());
+			}
+		}
+		return results;
+	}
+	
+	public static <LOCATION_CLASS> List<PmDivision> getDivisionFromLocationDTO(
+			List<CtPanelZoneDtl> locationDTOs) {
+		List<PmDivision> results = new ArrayList<PmDivision>();
+		for (CtPanelZoneDtl locationDTO : locationDTOs) {
+			if (locationDTO.getDivisionId() != null) {
+				results.add(locationDTO.getDivisionId());
 			}
 		}
 		return results;
