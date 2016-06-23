@@ -3,28 +3,33 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-	<div>
-
-		<p:dataTable id="participantList"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<h:panelGrid id="qualifiedSupplierPanel" style="width : 100%">
+		<br />
+		<ui:fragment
+			rendered="#{scheduleBiddingBB.managedBean.selectedBidItem ne null}">
+					#{scheduleBiddingBB.managedBean.selectedBidItem.scRequestItem.itemName} > #{lbl['lbl.sc.participant.list']}
+				</ui:fragment>
+		<p:dataTable id="participantList" rows="10"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{scheduleBiddingBB.managedBean.bidParticipants}"
 			var="bidParticipant">
-			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
-				<h:outputText id="companyNamePopUp" value="#{bidParticipant.supplier.companyName}"/>
+			<ac:paginator for="participantList"></ac:paginator>
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}"
+				style="width : 65%">
+				<h:outputText id="companyNamePopUp"
+					value="#{bidParticipant.supplier.companyName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.offered.price']}" style="text-align:right;">
-				<h:outputText id="offerPricePopUp" value="#{bidParticipant.scQtProposalItem.offerPrice}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
+				style="width : 35%">
+				<h:outputText id="offerPricePopUp"
+					value="#{bidParticipant.scQtProposalItem.offerPrice}"
+					style="text-align:right;">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 		</p:dataTable>
-
-	</div>
-	<p:spacer height="5" ></p:spacer>
-	<div align="right">
-		<p:commandButton id="closePopup" value="#{lbl['lbl.btn.close']}" process="@this" partialSubmit="true"
-			onclick="participants.hide();" />
-	</div>
+	</h:panelGrid>
 </ui:composition>

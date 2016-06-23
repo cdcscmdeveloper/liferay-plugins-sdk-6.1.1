@@ -73,7 +73,7 @@
 			value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].scBidItems}">
 			<p:ajax event="rowSelect" 
 				listener="#{scheduleBiddingBB.retrieveParticipantsListAction}" 
-				  update="@([id$=participantList])" />
+				  update="@([id$=qualifiedSupplierPanel])" />
 			<ac:paginator for="bidScheduleByPackage"></ac:paginator>
 
 			<p:column style="white-space : normal; width : 25%;">
@@ -119,8 +119,8 @@
 						maxIntegerDigits="14" />
 				</p:inputText>
 			</p:column>
-
 		</p:dataTable>
+		<ui:include src="scheduleBidParticipantList.xhtml"></ui:include>
 	</p:panel>
 
 </ui:composition>
