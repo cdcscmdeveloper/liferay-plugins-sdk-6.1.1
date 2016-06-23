@@ -1306,4 +1306,12 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		System.out.println(id);
 	}
 	
+	/**
+	 * Show function type if user have both ptj & supplier role
+	 * @return boolean
+	 */
+	public boolean showFunctionType() {
+		return hasSupplierRole() && hasGovernmentUserRole();
+	}
+	
 }
