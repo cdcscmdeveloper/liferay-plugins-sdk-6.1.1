@@ -23,13 +23,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -95,7 +88,6 @@ import my.ep.type.pm.GSFType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
@@ -106,12 +98,18 @@ import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.paymentmatch.PaymentMatchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
+
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -1208,9 +1206,14 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setOutcome(outcome);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());				
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			if(paymentAdvice.getDescription() == null){
-				throw new EpException(MessageConst.ERROR_100022, new String[]{
-						ResourceBundleUtils.getMessage("lbl.fl.payment.match.payment.desc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			if(paymentAdvice.getDescription() == null || paymentAdvice.getDescription().trim().isEmpty()){
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+					paymentAdvice.setDescription(" ");
+				}else{
+					throw new EpException(MessageConst.ERROR_100022, new String[]{
+							ResourceBundleUtils.getMessage("lbl.fl.payment.match.payment.desc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				}
+					
 			}
 			validateDuplicateDeduction(outcome);
 			validateDeductionAmt();
