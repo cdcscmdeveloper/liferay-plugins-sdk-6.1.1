@@ -3287,12 +3287,12 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateCompanyExperienceToSmAppl() {
-		if (getManagedBean().getSelectedCompanyExperience()
-				.getSmCompanyExperienceCats() == null
-				|| (getManagedBean().getSelectedCompanyExperience()
-						.getSmCompanyExperienceCats() != null && getManagedBean()
-						.getSelectedCompanyExperience()
-						.getSmCompanyExperienceCats().isEmpty())) {
+		if (EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedCompanyExperience().getSmCompanyExperienceCats())
+				&& (getManagedBean().getSelectedCompanyExperience()
+						.getContractValue() != null && getManagedBean()
+						.getSelectedCompanyExperience().getContractValue()
+						.compareTo(new BigDecimal(20000)) >= 1)) {
 			throw new EpException(MessageConst.ERROR_722550);
 		}
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
@@ -3401,6 +3401,12 @@ public class SmApplicationBackingBean extends
 		cat.setPmCategoryL3(catL3);
 		cat.setSmCompanyExperience(getManagedBean()
 				.getSelectedCompanyExperience());
+		if (EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedCompanyExperience().getSmCompanyExperienceCats())) {
+			getManagedBean().getSelectedCompanyExperience()
+					.setSmCompanyExperienceCats(
+							new ArrayList<SmCompanyExperienceCat>());
+		}
 		getManagedBean().getSelectedCompanyExperience()
 				.getSmCompanyExperienceCats().add(cat);
 		getManagedBean().setSelected(false);
@@ -3447,7 +3453,11 @@ public class SmApplicationBackingBean extends
 	public void deleteSelectedCategoryFromCompanyExperience(
 			SmCompanyExperience exp) {
 		if (getManagedBean().getSelectedCompExpCats().size() == exp
-				.getSmCompanyExperienceCats().size()) {
+				.getSmCompanyExperienceCats().size()
+				&& (getManagedBean().getSelectedCompanyExperience()
+						.getContractValue() != null && getManagedBean()
+						.getSelectedCompanyExperience().getContractValue()
+						.compareTo(new BigDecimal(20000)) >= 0)) {
 			throw new EpException(MessageConst.ERROR_722549);
 		}
 		if (getManagedBean().getSelectedCompExpCats().size() > 0) {
@@ -3479,18 +3489,20 @@ public class SmApplicationBackingBean extends
 		}
 		exp.setConsultantFee(new BigDecimal(0));
 		exp.setContractValue(new BigDecimal(0));
-		List<SmCompanyExperienceCat> expCatList = new ArrayList<SmCompanyExperienceCat>();
-		SmCompanyExperienceCat cat = new SmCompanyExperienceCat();
-		cat.setPmCategoryL1(new PmCategoryL1());
-		PmCategoryL2 catL2 = new PmCategoryL2();
-		catL2.setPmCategoryL2s(new ArrayList<PmCategoryL2>());
-		cat.setPmCategoryL2(catL2);
-		PmCategoryL3 catL3 = new PmCategoryL3();
-		catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>());
-		cat.setPmCategoryL3(catL3);
-		cat.setSmCompanyExperience(exp);
-		expCatList.add(cat);
-		exp.setSmCompanyExperienceCats(expCatList);
+
+		// List<SmCompanyExperienceCat> expCatList = new
+		// ArrayList<SmCompanyExperienceCat>();
+		// SmCompanyExperienceCat cat = new SmCompanyExperienceCat();
+		// cat.setPmCategoryL1(new PmCategoryL1());
+		// PmCategoryL2 catL2 = new PmCategoryL2();
+		// catL2.setPmCategoryL2s(new ArrayList<PmCategoryL2>());
+		// cat.setPmCategoryL2(catL2);
+		// PmCategoryL3 catL3 = new PmCategoryL3();
+		// catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>());
+		// cat.setPmCategoryL3(catL3);
+		// cat.setSmCompanyExperience(exp);
+		// expCatList.add(cat);
+		// exp.setSmCompanyExperienceCats(expCatList);
 
 		getManagedBean().setSelectedCompanyExperience(exp);
 		getManagedBean()
