@@ -1285,9 +1285,10 @@ public class QTDocumentsBackingBean extends
 			ScAttachment attachment, ScQt qt, String docDefinitionKey,
 			ScQtDocReport scQtDocReport) throws Exception {
 		debugLogger("generateSkopPerkhidmatanPdfFromVelocity");
-		ScQtDocReportAttachment docReportAttachment = new ScQtDocReportAttachment();
+	
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
+		ScQtDocReportAttachment docReportAttachment = null;
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -1328,7 +1329,9 @@ public class QTDocumentsBackingBean extends
 									attachment = qtCheckList
 											.getScQtCheckListAttachment();
 								}
-								if (attachment != null) {
+								if (attachment != null && attachment
+										.getFileName() != null) {
+									 docReportAttachment = new ScQtDocReportAttachment();
 									docReportAttachment
 											.setScQtDocReport(scQtDocReport);
 									docReportAttachment.setFileName(attachment
