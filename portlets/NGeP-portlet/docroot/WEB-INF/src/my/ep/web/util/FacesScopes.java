@@ -1,5 +1,6 @@
 package my.ep.web.util;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -43,7 +44,12 @@ import com.liferay.portal.util.PortalUtil;
  * 
  * @created 25.03.2008
  */
-public class FacesScopes {
+public class FacesScopes implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger.getLogger(FacesScopes.class);
 
 	public static final String SESS_USER_SESSION_BEAN = "USER_SESSION_BEAN";
