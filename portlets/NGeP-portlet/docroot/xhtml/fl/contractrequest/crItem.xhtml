@@ -726,7 +726,7 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton  value="#{lbl['lbl.btn.add']}"
 				action="#{contractRequestBackingBean.updateContractedItemDt}"
-				oncomplete="addItems.hide();" update="itemDataTable"
+				oncomplete="addItems.hide();" update="itemDataTable,messages"
 				process="@this,itemListResultDt">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
