@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.components.gmap;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -16,7 +17,12 @@ import org.primefaces.model.map.Marker;
 
 @ManagedBean(name="gmapBackingBean")
 @ViewScoped
-public class GMapBackingBean {
+public class GMapBackingBean implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private static Logger log = Logger.getLogger(GMapBackingBean.class);
 	
