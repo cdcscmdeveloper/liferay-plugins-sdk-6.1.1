@@ -12,11 +12,13 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -75,7 +77,9 @@ public class OrgProfileSearchBackingBean extends
 				if (StringUtils.isNotBlank(getManagedBean().getPtjCodeName())
 						&& (StringUtils.isNotBlank(getManagedBean().getPtjCodeNameSearchValues()))) {
 					if (getManagedBean().getPtjCodeName().equalsIgnoreCase(
-							ProfileManagementConst.PTJ_CODE)) {
+							ProfileManagementConst.PTJ_CODE) || 
+							getManagedBean().getPtjCodeName().equalsIgnoreCase(
+									ProfileManagementConst.KPTJ_CODE )) {
 						SearchFilterBean filterBean = new SearchFilterBean(
 								"pmOrgValidity.orgCode",
 								SearchOperator.OPERATOR_LIKE.value(),
@@ -84,7 +88,10 @@ public class OrgProfileSearchBackingBean extends
 						searchBean.getDataFilterBeans().add(filterBean);
 
 					} else if (getManagedBean().getPtjCodeName()
-							.equalsIgnoreCase(ProfileManagementConst.PTJ_NAME)) {
+							.equalsIgnoreCase(ProfileManagementConst.PTJ_NAME
+									) || 
+									getManagedBean().getPtjCodeName().equalsIgnoreCase(
+											ProfileManagementConst.KPTJ_NAME )) {
 						SearchFilterBean filterBean = new SearchFilterBean(
 								"pmOrgValidity.orgName",
 								SearchOperator.OPERATOR_LIKE.value(),
@@ -93,14 +100,19 @@ public class OrgProfileSearchBackingBean extends
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
 				}
-
+				
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
-				
 				reqDTO.setOrgProfileSearchBean(searchBean);
-				OrgProfileResDTO resDTO = orgProfileSO.retrievePtjListByParents(reqDTO);
+				OrgProfileResDTO resDTO = null;
+				if(ParameterConst.ORG_TYPE_PTJ.equals(getManagedBean().getOrgType())){
+					resDTO = orgProfileSO.retrievePtjListByParents(reqDTO);
+				}else if(ParameterConst.ORG_TYPE_PTJ_GROUP.equals(getManagedBean().getOrgType())){
+					resDTO = orgProfileSO.retrieveKPtjListByParents(reqDTO);
+				}
+				
 				if (resDTO.isSuccessful()) {
 					return resDTO.getOrgProfileResultBean();
 				}
@@ -111,7 +123,8 @@ public class OrgProfileSearchBackingBean extends
 		}
 	}
 	
-	public void searchOrgProfiles(){
+	public void searchOrgProfiles(String orgType){
+		getManagedBean().setOrgType(orgType);
 		getOrgProfileDataModel().reloadData();
 	}
 	
@@ -138,13 +151,36 @@ public class OrgProfileSearchBackingBean extends
 	                .createMethodExpression(FacesContext.getCurrentInstance(),
 	                		methodActionStr, null,
 	                        new Class[] { PmOrgProfile.class });
-			
-			methodExp.invoke(
+			if(getManagedBean().getSelectedPtj() != null){
+				methodExp.invoke(
 					FacesContext.getCurrentInstance().getELContext(), 
 					new Object[]{getManagedBean().getSelectedPtj()});
+			}
+			
 			
 			RequestContext.getCurrentInstance().execute("ptjPopup.hide();");
 		}
+	}
+	
+	public static SelectItem[] getPtjOrKptjDropDown(String orgType) {
+		SelectItem[] items = new SelectItem[2];
+		if(ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)){
+			items[0] = new SelectItem(ProfileManagementConst.KPTJ_CODE, ResourceBundleUtils.getMessage(
+					"lbl.pm.org.kptjCode", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(ProfileManagementConst.KPTJ_NAME, ResourceBundleUtils.getMessage(
+					"lbl.pm.org.kptjName", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}else if(ParameterConst.ORG_TYPE_PTJ.equals(orgType)){
+			items[0] = new SelectItem(ProfileManagementConst.PTJ_CODE, ResourceBundleUtils.getMessage(
+					"lbl.pm.org.ptjCode", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(ProfileManagementConst.PTJ_NAME, ResourceBundleUtils.getMessage(
+					"lbl.pm.org.ptjName", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}
+		
+		return items;
 	}
 	
 }
