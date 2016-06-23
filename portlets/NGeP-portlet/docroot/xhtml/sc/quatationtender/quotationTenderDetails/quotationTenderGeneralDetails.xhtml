@@ -252,7 +252,7 @@
 
 				<td><c:choose>
 						<c:when
-							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_QT_TYPE) and !scQt.panel}">
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_QT_TYPE) and !scQt.panel and !specCommitteeReadOnly}">
 							<table>
 								<tr>
 									<td><p:selectOneRadio required="#{isRequire}"
@@ -278,7 +278,7 @@
 						value="*" styleClass="mandatory" rendered="#{!scQt.panel}" /></td>
 				<td><c:choose>
 						<c:when
-							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_OPEN_FOR) and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel}">
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_OPEN_FOR) and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel and !specCommitteeReadOnly}">
 							<table>
 								<tr>
 									<td><p:selectOneRadio required="#{isRequire}" id="openFor"
