@@ -15,16 +15,16 @@
 
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
 
-		<p:panel header="#{lbl['lbl.gfmas.process.info']}" id="childVotPage"
+		<p:panel header="#{lbl['lbl.gfmas.vot.info']}" id="childVotPage"
 			toggleable="true">
 			<p:dataTable id="gfMasVotId" var="pmInterfaceVot" rows="10"
-				rowIndexVar="index" rowKey="pmInterfaceVot"
+				rowIndexVar="index" rowKey="#{pmInterfaceVot}"
 				selection="#{gfMasBackingBean.managedBean.selectedVotList}"
 				value="#{gfMasBackingBean.managedBean.listOfVot}">
 
 				<ac:paginator for="gfMasVotId"></ac:paginator>
 
-				<p:column selectionMode="multiple" style="width:5%" />
+				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfaceVot.processStatus eq '1'}" />
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfaceVot.diInterfaceLog.logId}" />
