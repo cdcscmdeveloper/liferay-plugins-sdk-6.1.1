@@ -38,7 +38,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private ScQt scQt;
 	private ScQtFinalization scQtFinalization;
 	private List<ScBidContactPerson> scBidContactPersonList;
-	private List<ScBidContactPerson> multiSelectContact;
 	private List<ScBidItem> bidItemList;
 	private List<ScBidItem> selectedBidItemList;
 	private ScBid scBid;
@@ -53,7 +52,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private List<Integer> selectedIndexes;
 
 	private boolean selectedAllBidContacts;
-	private boolean selectedBidContact;
 
 	private ScBidItem selectedBidItem;
 	private ScBidSchedule rowSelectedBid;
@@ -272,25 +270,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		this.scQt = scQt;
 	}
 
-	/**
-	 * @return the multiSelectContact
-	 */
-	public List<ScBidContactPerson> getMultiSelectContact() {
-		if (multiSelectContact == null) {
-			multiSelectContact = new ArrayList<ScBidContactPerson>();
-		}
-
-		return multiSelectContact;
-	}
-
-	/**
-	 * @param multiSelectContact
-	 *            the multiSelectContact to set
-	 */
-	public void setMultiSelectContact(
-			List<ScBidContactPerson> multiSelectContact) {
-		this.multiSelectContact = multiSelectContact;
-	}
 
 	/**
 	 * @return the scBidContactPersonList
@@ -373,20 +352,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		this.selectedAllBidContacts = selectedAllBidContacts;
 	}
 
-	/**
-	 * @return the selectedBidContact
-	 */
-	public boolean isSelectedBidContact() {
-		return selectedBidContact;
-	}
-
-	/**
-	 * @param selectedBidContact
-	 *            the selectedBidContact to set
-	 */
-	public void setSelectedBidContact(boolean selectedBidContact) {
-		this.selectedBidContact = selectedBidContact;
-	}
 
 	/**
 	 * @return the selectedBidItem
