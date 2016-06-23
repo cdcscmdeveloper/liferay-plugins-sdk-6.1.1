@@ -17,6 +17,7 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	private String ptjCodeNameSearchValues;
 	private PmOrgProfile selectedPtj;
 	private IPagingDataModel<PmOrgProfile> orgProfileDataModel;
+	private String orgType;
 	
 	public OrgProfileSearchManagedBean() {
 
@@ -104,5 +105,19 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	 */
 	public void setOrgProfileDataModel(IPagingDataModel<PmOrgProfile> orgProfileDataModel) {
 		this.orgProfileDataModel = orgProfileDataModel;
+	}
+
+	/**
+	 * @return the orgType
+	 */
+	public String getOrgType() {
+		return orgType;
+	}
+
+	/**
+	 * @param orgType the orgType to set
+	 */
+	public void setOrgType(String orgType) {
+		this.orgType = orgType;
 	}
 }
