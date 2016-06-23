@@ -22,6 +22,8 @@ import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 // TODO: Auto-generated Javadoc
 
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
@@ -72,7 +74,9 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
@@ -1272,6 +1276,34 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			condition = condition + "|orgProfileId^"+kumpulanPtjList+"^9";
 		}
 		return condition;
+	}
+
+	
+	/**
+	 * Get the function type. PTJ or Supplier
+	 * 
+	 * @return the function type
+	 */
+	public SelectItem[] getFunctionType() {
+		List<String> typeList = new ArrayList<String>();
+		typeList.add(ParameterConst.ORG_TYPE_PTJ);
+		typeList.add(ParameterConst.ORG_TYPE_SUPPLIER);
+
+		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), typeList));
+
+		return getRadioButtonCodeValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+	}
+	
+	/**
+	 * On function type changed
+	 * 
+	 * @param e
+	 */
+	public void onFunctionTypeChange(AjaxBehaviorEvent e) {
+		String id = (String) e.getComponent().getAttributes().get("value");
+		System.out.println(id);
 	}
 	
 }
