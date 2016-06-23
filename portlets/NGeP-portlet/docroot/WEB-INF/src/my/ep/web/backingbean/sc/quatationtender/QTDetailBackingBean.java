@@ -4971,13 +4971,15 @@ public class QTDetailBackingBean extends
 	 * @param qtId
 	 * 		the quotation / tender id
 	 */
-	public void closeProposal(Long qtId) {
+	public void closeProposal(ScQt scQt) {
 		log.info("loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
 		
 		IQTProposalSO qtProposalSO = null;
 		try {
 			qtProposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			
+			Long qtId = scQt.getQtId();
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(qtId);
@@ -5007,7 +5009,7 @@ public class QTDetailBackingBean extends
 						new FacesMessage(
 								FacesMessage.SEVERITY_INFO,
 								null,
-								"QT Closed Sucessfully."
+								"QT " + scQt.getQtNo() + " Closed Sucessfully."
 				));
 			}
 
@@ -5048,17 +5050,14 @@ public class QTDetailBackingBean extends
 				}
 			}
 			if (isSucessful) {
-				qtProposalSO.closeProposal(reqDTO);
-				
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(
 								FacesMessage.SEVERITY_INFO,
 								null,
-								"QT Closed Sucessfully."
+								"QT " + scQt.getQtNo() + " publish Sucessfully."
 				));
 			}
-
 		} finally {
 			qtProposalSO = null;
 		}
