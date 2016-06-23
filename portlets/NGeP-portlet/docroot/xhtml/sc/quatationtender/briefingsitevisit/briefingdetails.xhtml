@@ -44,7 +44,7 @@
 								label="#{lbl['lbl.sc.date.time']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
-								showOn="button" readonlyInput="true" /> <p:message
+								showOn="button" readonlyInput="true" minHour="#{DateUtils.getCurrentHours()}" /> <p:message
 								id="briefdateMsg" for="briefdate" display="icon" /></td>
 					</tr>
 					<tr>
