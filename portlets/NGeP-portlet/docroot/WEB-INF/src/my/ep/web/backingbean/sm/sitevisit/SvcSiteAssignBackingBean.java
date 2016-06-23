@@ -132,14 +132,20 @@ public class SvcSiteAssignBackingBean extends
 			reqDTO.setToken(token);
 			reqDTO.setBpmSupplierList(bpmSupplierList);
 			reqDTO.setSvoNames(svoNames);
-
 			
+
 			System.out.println("<<<<<reqDTO.setSmAppl>>>>" + reqDTO.getSmAppl().getApplNo());
 			System.out.println("<<<<<reqDTO.setSmAppl>>>>" + reqDTO.getSmAppl().getApplId());
 			
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			log.info("******submitSiteVisitAssignment - getSmSupplier******" + pmUser.getUserId());
 			
+			//set the username to msg
+			StringBuilder userNameStr = new StringBuilder();
+			for(String svoName : svoNames){
+				userNameStr.append("<li>" + svoName + "</li>");
+			}
+		
 			reqDTO.setLogKey(new LogKey(pmUser.getUserId()));
 			SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
 			
@@ -147,7 +153,7 @@ public class SvcSiteAssignBackingBean extends
 				log.info("Submission is success>>>>>>>>"); 
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-				MessageUtils.getMessage(MessageConst.INFO_721201,new String[] {getManagedBean().getSmAppl().getApplNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				MessageUtils.getMessage(MessageConst.INFO_721201,new String[] {getManagedBean().getSmAppl().getApplNo(),userNameStr.toString()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				renewSesionObject();
 				return SVC_ACK_PAGE;
 			} else {
