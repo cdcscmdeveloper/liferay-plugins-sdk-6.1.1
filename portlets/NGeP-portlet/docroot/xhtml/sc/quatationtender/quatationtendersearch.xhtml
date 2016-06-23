@@ -220,8 +220,14 @@
 						<p:commandLink id="closeQTIcon" action="#{qTDetailBB.closeProposal(scQt.qtId)}"
 							style="margin-right:20px;" partialSubmit="true" process="@this"
 							rendered="#{qTDetailBB.isAllowQTClosedBtn(scQt)}">
-							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-play.png" styleClass="tasklist_title1"
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-termination.png" styleClass="tasklist_title1"
 								title="click close QT" />
+						</p:commandLink>
+						<p:commandLink id="publishQTIcon" action="#{qTDetailBB.publishQT(scQt)}"
+							style="margin-right:20px;" partialSubmit="true" process="@this"
+							rendered="#{qTDetailBB.isAllowQTPublishBtn(scQt)}">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-play.png" styleClass="tasklist_title1"
+								title="click Start QT" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
