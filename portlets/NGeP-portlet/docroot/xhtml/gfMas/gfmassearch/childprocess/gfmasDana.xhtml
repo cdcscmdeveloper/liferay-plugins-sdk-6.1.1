@@ -9,24 +9,29 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		
+
 		<p:messages id="gfMasDanaChild" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
-		
+
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
 
 		<p:panel header="#{lbl['lbl.gfmas.process.info']}" id="childPage"
-			toggleable="true">			
+			toggleable="true">
 			<p:dataTable id="gfMasDanaId" var="pmInterfacceDana" rows="10"
+				rowIndexVar="index"
+				selection="#{gfMasBackingBean.managedBean.selectedDanaList}"
+				rowKey="pmInterfacceDana"
 				value="#{gfMasBackingBean.managedBean.listOfDana}">
 
 				<ac:paginator for="gfMasDanaId"></ac:paginator>
-				
+
+				<p:column selectionMode="multiple" style="width:5%" />
+
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfacceDana.dIInterfaceLog.logId}" />
-				</p:column>			
+				</p:column>
 
-                <p:column headerText="#{lbl['lbl.gfmas.financial.year']}">
+				<p:column headerText="#{lbl['lbl.gfmas.financial.year']}">
 					<h:outputText value="#{pmInterfacceDana.financialYear}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.dana.code']}">
@@ -36,13 +41,18 @@
 				<p:column headerText="#{lbl['lbl.gfmas.dana.desc']}">
 					<h:outputText value="#{pmInterfacceDana.danaDesc}" />
 				</p:column>
-				
+
 				<p:column headerText="#{lbl['lbl.gfmas.code.status']}">
 					<h:outputText value="#{pmInterfacceDana.codeStatus}" />
 				</p:column>
-				
+
 				<p:column headerText="#{lbl['lbl.gfmas.process.status']}">
-					<h:outputText value="#{pmInterfacceDana.processStatus}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
+						rendered="#{pmInterfacceDana.processStatus==0}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
+						rendered="#{pmInterfacceDana.processStatus==1}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.fail']}"
+						rendered="#{pmInterfacceDana.processStatus==2}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.pm.search.status']}"

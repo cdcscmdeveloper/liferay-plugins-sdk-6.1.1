@@ -33,9 +33,18 @@
 			<tr>
 				<td width="20%"><h:outputLabel
 						value="#{lbl['lbl.gfmas.process.id']}"></h:outputLabel></td>
-				<td width="35%"><p:inputText
-						value="#{gfMasBackingBean.managedBean.processId}" id="processId"
-						size="44" /></td>
+				<td width="35%"><p:selectOneMenu id="processId"
+								value="#{gfMasBackingBean.managedBean.processId}"
+								style="width:297px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems
+									value="#{gfMasBackingBean.getProcessCodelist()}"></f:selectItems>
+								<p:ajax event="change"
+									listener="#{gfMasBackingBean.changeProcessCode}"
+									partialSubmit="true" update="@([id$=Msg])" />
+							</p:selectOneMenu>						
+						</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
