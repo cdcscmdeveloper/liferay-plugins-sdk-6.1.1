@@ -2051,7 +2051,7 @@ public class SimpleQuoteBackingBean extends
 			}
 			
 			// remarks
-			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+			if(!BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 				finalizeRemarks(quote.getRemarks());
 			}
 			
