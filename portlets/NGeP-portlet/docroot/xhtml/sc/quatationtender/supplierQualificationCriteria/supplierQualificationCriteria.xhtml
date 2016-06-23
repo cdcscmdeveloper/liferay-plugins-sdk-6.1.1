@@ -8,6 +8,8 @@
 	<ui:param name="suppQualificationReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
 	<ui:param name="locCoverageReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_LOCATION_COVERAGE)}" />
 	<ui:param name="categoryCodeReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
+<ui:param name="specCommitteeReadOnly"
+		value="#{createQtBB.managedBean.readOnly}" />
 	
 	<h:panelGroup id="suppQualPG">
 		<c:if
