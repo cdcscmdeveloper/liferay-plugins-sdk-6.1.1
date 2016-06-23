@@ -96,14 +96,15 @@
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}" id="addCatcodeExpId"
 				action="#{backingBean.assignCategoryForCompExperience(backingBean.managedBean.selectedCompanyExperience)}"
-				update=":form:tt:suppExpCatCodesDtWidVar" partialSubmit="true"
+				update=":form:tt:suppExpCatCodesDtWidVar,deleteCatcodeExpId" partialSubmit="true"
 				process=":form:tt:compExpCatPanHdr" />
 
-			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deleteCatcodeExpId"
+				disabled="#{empty backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}"
 				action="#{backingBean.deleteSelectedCategoryFromCompanyExperience(backingBean.managedBean.selectedCompanyExperience)}"
-				update=":form:tt:suppExpCatCodesDtWidVar" partialSubmit="true"
+				update=":form:tt:suppExpCatCodesDtWidVar,@this" partialSubmit="true"
 				process="@this" />
 
 		</div>
