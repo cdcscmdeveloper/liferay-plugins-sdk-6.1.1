@@ -15,7 +15,7 @@
 
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
 
-		<p:panel header="#{lbl['lbl.gfmas.process.info']}"
+		<p:panel header="#{lbl['lbl.gfmas.agoffice.info']}"
 			id="childAgOfficePage" toggleable="true">
 			<p:dataTable id="gfMasAgOfficeId" var="pmInterfaceAgOffice"
 				rowIndexVar="index" rows="10"
@@ -25,7 +25,7 @@
 
 				<ac:paginator for="gfMasAgOfficeId"></ac:paginator>
 
-				<p:column selectionMode="multiple" style="width:5%" />
+				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfaceAgOffice.processStatus eq '1'}"   />
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfaceAgOffice.diInterfaceLog.logId}" />

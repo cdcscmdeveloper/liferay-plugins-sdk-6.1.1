@@ -11,10 +11,12 @@
 package my.ep.web.backingbean.integration.interfacegfmas;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import my.ep.biz.bean.search.ISearchBean;
@@ -29,6 +31,7 @@ import my.ep.dto.pm.common.interfaceptj.InterfaceLogResDto;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.DIInterfaceLog;
+import my.ep.persistence.entity.pm.integration.PmInterfaceProgAct;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -180,12 +183,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 								"N/A", SearchCondition.CONDITION_AND.value())));
 
 		if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
-			
+
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("fileName",
 							SearchOperator.OPERATOR_LIKE.value(), "1000"
 									+ this.getManagedBean().getProcessId()
-											.toUpperCase() + "40000120"));
+											.toUpperCase() + "400001"));
 		}
 		return searchBean;
 	}
@@ -380,10 +383,70 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 	}
 
-	public String redirectProcess() {
+	public String processAllVendors() {
 
+		log.info("processAllVendors");
+
+		if (this.getManagedBean().getSelectedProgActList() != null) {
+			log.info("***************ProgActList***SIZE******************>>"
+					+ this.getManagedBean().getSelectedProgActList().size());
+			this.getManagedBean().setSelectedProgActList(null);
+		} else if (this.getManagedBean().getSelectedProjectList() != null) {
+			log.info("************ProjectList******SIZE******************>>"
+					+ this.getManagedBean().getSelectedProjectList().size());
+			this.getManagedBean().setSelectedProjectList(null);
+		} else if (this.getManagedBean().getSelectedAgOfficeList() != null) {
+			log.info("***********AgOfficeList*******SIZE******************>>"
+					+ this.getManagedBean().getSelectedAgOfficeList().size());
+			this.getManagedBean().setSelectedAgOfficeList(null);
+		} else if (this.getManagedBean().getSelectedBankList() != null) {
+			log.info("************BankList******SIZE******************>>"
+					+ this.getManagedBean().getSelectedBankList().size());
+			this.getManagedBean().setSelectedBankList(null);
+		} else if (this.getManagedBean().getSelectedGlAcntList() != null) {
+			log.info("***********GlAcntList*******SIZE******************>>"
+					+ this.getManagedBean().getSelectedGlAcntList().size());
+			this.getManagedBean().setSelectedGlAcntList(null);
+		} else if (this.getManagedBean().getSelectedKptjList() != null) {
+			log.info("************KptjList******SIZE******************>>"
+					+ this.getManagedBean().getSelectedKptjList().size());
+			this.getManagedBean().setSelectedKptjList(null);
+		} else if (this.getManagedBean().getSelectedPtjList() != null) {
+			log.info("************PtjList******SIZE******************>>"
+					+ this.getManagedBean().getSelectedPtjList().size());
+			this.getManagedBean().setSelectedPtjList(null);
+		} else if (this.getManagedBean().getSelectedDanaList() != null) {
+			log.info("***********DanaList*******SIZE******************>>"
+					+ this.getManagedBean().getSelectedDanaList().size());
+			this.getManagedBean().setSelectedDanaList(null);
+		} else if (this.getManagedBean().getSelectedPpList() != null) {
+			log.info("************PpList******SIZE******************>>"
+					+ this.getManagedBean().getSelectedPpList().size());
+			this.getManagedBean().setSelectedPpList(null);
+		} else if (this.getManagedBean().getSelectedVotList() != null) {
+			log.info("***********VotList*******SIZE******************>>"
+					+ this.getManagedBean().getSelectedVotList().size());
+			this.getManagedBean().setSelectedVotList(null);
+		}
 		return null;
+	}
 
+	public void userActionProcess(AjaxBehaviorEvent e) {
+
+		if (this.getManagedBean().getSelectedProgActList() != null) {
+			Iterator<PmInterfaceProgAct> iterator = this.getManagedBean()
+					.getSelectedProgActList().iterator();
+			while (iterator.hasNext()) {
+				PmInterfaceProgAct pmInterfaceProgAct = iterator.next();
+				if (pmInterfaceProgAct.getPrgActCode() != null
+						&& pmInterfaceProgAct.getProcessStatus() != null
+						&& pmInterfaceProgAct.getProcessStatus().equals("1"))
+					;
+				{
+					iterator.remove();
+				}
+			}
+		}
 	}
 
 	/**

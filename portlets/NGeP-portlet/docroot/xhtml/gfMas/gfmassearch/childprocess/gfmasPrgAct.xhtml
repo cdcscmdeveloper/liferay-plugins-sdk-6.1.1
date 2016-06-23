@@ -15,17 +15,20 @@
 
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
 
-		<p:panel header="#{lbl['lbl.gfmas.process.info']}"
+		<p:panel header="#{lbl['lbl.gfmas.prg.act.info']}"
 			id="childPrjActPage" toggleable="true">
 			<p:dataTable id="gfMasPrgActId" var="pmInterfacePrgAct" rows="10"
-				rowIndexVar="index" rowKey="pmInterfacePrgAct"
+				rowIndexVar="index" rowKey="#{pmInterfacePrgAct}"
 				selection="#{gfMasBackingBean.managedBean.selectedProgActList}"
 				value="#{gfMasBackingBean.managedBean.listOfPrgAct}">
-
-				<ac:paginator for="gfMasPrgActId"></ac:paginator>
-
-				<p:column selectionMode="multiple" style="width:5%" />
-
+				
+				<ac:paginator for="gfMasPrgActId"></ac:paginator>				
+				
+				<p:column selectionMode="multiple" style="width:5%"
+					disabledSelection="#{pmInterfacePrgAct.processStatus eq '1'}" />
+				
+				<p:ajax event="rowSelectCheckbox"></p:ajax>
+				
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfacePrgAct.diInterfaceLog.logId}" />
 				</p:column>
