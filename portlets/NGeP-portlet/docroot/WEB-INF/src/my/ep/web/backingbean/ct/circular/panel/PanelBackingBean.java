@@ -110,6 +110,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
@@ -1920,7 +1921,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterId().equals(locationLevel)) {
 			         getManagedBean().setRootZoanlTree(LocationSingleton.getInstance().buildLocationPopupTree(
-		                getCountryId(), null, null,paramDesc.getPmParameter().getParameterCode(),CtPanelZoneDtl.class, getManagedBean().isViewContract()));
+		                getCountryId(), null, null,null,paramDesc.getPmParameter().getParameterCode(),CtPanelZoneDtl.class, getManagedBean().isViewContract()));
 			   }
 			}
 			    this.getManagedBean().setZoneName(null);
@@ -1998,6 +1999,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			for (TreeNode treeNode : getManagedBean().getSelectedGeneralTreeNodes()) {
 
 				if (!treeNode.getParent().isSelected()) {
+					treeNode.getParent().getParent();
 					List<CtPanelZoneDtl> locationDTO = getZoneLocations(treeNode);
 					allNodes.addAll(locationDTO);
 				}
@@ -2048,17 +2050,18 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void editPanelZoneLocation(CtPanelZone zoneLocation,int index) {
 
 		List<PmState> states = PanelLocationHelper.getStateFromLocationDTO(zoneLocation.getPanelZoneDtls());
+		List<PmDivision> division = PanelLocationHelper.getDivisionFromLocationDTO(zoneLocation.getPanelZoneDtls());
 		List<PmDistrict> districts = PanelLocationHelper.getDistrictFromLocationDTO(zoneLocation.getPanelZoneDtls());
 		
 		if(districts  != null && districts.size() > 0){
 		   getManagedBean().setRootZoanlTree(
 				LocationSingleton.getInstance().buildLocationPopupTree(getCountryId(),
-						states, districts,ParameterConst.LOCATION_LEVEL_DISTRICT,
+						states, districts,division,ParameterConst.LOCATION_LEVEL_DISTRICT,
 						CtPanelZoneDtl.class, getManagedBean().isViewContract()));
 		}else{
 			getManagedBean().setRootZoanlTree(
 					LocationSingleton.getInstance().buildLocationPopupTree(getCountryId(),
-							states, districts,ParameterConst.LOCATION_LEVEL_STATE,
+							states, districts,division,ParameterConst.LOCATION_LEVEL_STATE,
 							CtPanelZoneDtl.class, getManagedBean().isViewContract()));
 		}
 

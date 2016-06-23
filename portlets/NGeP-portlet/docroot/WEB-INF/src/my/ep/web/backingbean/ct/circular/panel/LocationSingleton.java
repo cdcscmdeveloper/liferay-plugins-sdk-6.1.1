@@ -66,63 +66,57 @@ public class LocationSingleton {
 	}
 
 	public List<PmState> initialStatesForCountry(Long countryId) {
-		// initialization for country with countryId
-		
-		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
 
 		StateReqDTO stateReqDTO = new StateReqDTO();
 		stateReqDTO.setCountryId(countryId);
-		List<PmState> listStates = stateSO.retriveStateDivCityListByCountryId(stateReqDTO).getStateList();
+		List<PmState> listStates = stateSO.retriveStateDivCityListByCountryId(
+				stateReqDTO).getStateList();
+
 		for (PmState pmState : listStates) {
-			
-		
-			/*Map<PmDivision, List<PmDistrict>>	uniqueDivisionDistrict	=	getUniqueDivisionDistricts(pmState.getPmDistricts());
-			
-			Set<PmDivision>	divisionKeySet	=	uniqueDivisionDistrict.keySet();
-			if(divisionKeySet != null && !divisionKeySet.isEmpty()){
-				for(PmDivision division: divisionKeySet){
-					
-					division.setPmDistricts(uniqueDivisionDistrict.get(division));
+
+			Map<PmDivision, List<PmDistrict>> uniqueDivisionDistrict = getUniqueDivisionDistricts(pmState
+					.getPmDistricts());
+
+			Set<PmDivision> divisionKeySet = uniqueDivisionDistrict.keySet();
+			if (divisionKeySet != null && !divisionKeySet.isEmpty()) {
+				for (PmDivision division : divisionKeySet) {
+
+					division.setPmDistricts(uniqueDivisionDistrict
+							.get(division));
 				}
 				pmState.setPmDivisions(new ArrayList<PmDivision>(divisionKeySet));
-			}else{
+			} else {
 				pmState.setPmDivisions(null);
-			}*/
-			//update the relationship for the parent
-			if(pmState.getPmDistricts() != null && !pmState.getPmDistricts().isEmpty()){
-				for(PmDistrict district: pmState.getPmDistricts()){
-					district.setPmState(pmState);
-					
-					/*if(district.getPmCities() != null && !district.getPmCities().isEmpty()){
-						
-						for(PmCity city: district.getPmCities()){
-							
-							city.setPmDistrict(district);
-						}
-					}*/
-				}
 			}
-			/*if(pmState.getPmDivisions() != null && !pmState.getPmDivisions().isEmpty()){
-				for(PmDivision division: pmState.getPmDivisions()){
-					division.setPmState(pmState);
-					if(division.getPmDistricts() != null && !division.getPmDistricts().isEmpty()){
-						for(PmDistrict district: division.getPmDistricts()){
-							district.setPmState(pmState);
-							if(district.getPmCities() != null && !district.getPmCities().isEmpty()){
-								for(PmCity city: district.getPmCities()){
-									city.setPmDistrict(district);
-									
-								}
-							}
-						}
-					}
-				}
-			}*/
 		}
 		mapStates.put(countryId, listStates);
+
 		return listStates;
 	}
 
+	private Map<PmDivision, List<PmDistrict>> getUniqueDivisionDistricts(
+			List<PmDistrict> pmDistricts) {
+
+		Map<PmDivision, List<PmDistrict>> results = new HashMap<PmDivision, List<PmDistrict>>();
+		for (PmDistrict district : pmDistricts) {
+
+			if (district.getPmDivision() != null) {
+				if (results.get(district.getPmDivision()) != null) {
+					results.get(district.getPmDivision()).add(district);
+
+				} else {
+					List<PmDistrict> districts = new ArrayList<PmDistrict>();
+					districts.add(district);
+
+					results.put(district.getPmDivision(), districts);
+				}
+			}
+		}
+		return results;
+	}
 	
 	/**
 	 * 
@@ -330,7 +324,7 @@ public class LocationSingleton {
 	 * @return
 	 */
 	public <LOCATION_CLASS> TreeNode buildLocationPopupTree(Long countryId, List<PmState> listStates,
-			 List<PmDistrict> listDistricts, String locationLevelCode, Class<CtPanelZoneDtl> locClass, boolean view) {
+			 List<PmDistrict> listDistricts, List<PmDivision> listDivisions, String locationLevelCode, Class<CtPanelZoneDtl> locClass, boolean view) {
 		// build tree
 		TreeNode rootLocationTree = new DefaultTreeNode("root", null);
 					
@@ -338,7 +332,7 @@ public class LocationSingleton {
 			List<PmState> allStates = mapStates.get(countryId);
 			Set<Long> stateIds = new HashSet<Long>();
 			Set<Long> districtIds = new HashSet<Long>();
-			
+			Set<Long> divisionIds = new HashSet<Long>();
 			// get list Id for all state, district, division, city
 			if (listStates != null && listStates.size() > 0) {
 				
@@ -350,6 +344,13 @@ public class LocationSingleton {
 				
 				for (PmDistrict district : listDistricts) {
 					districtIds.add(district.getDistrictId());
+				}
+			}
+			
+			if (listDivisions != null && listDivisions.size() > 0) {
+
+				for (PmDivision division : listDivisions) {
+					divisionIds.add(division.getDivisionId());
 				}
 			}
 	
@@ -370,6 +371,37 @@ public class LocationSingleton {
 							stateNode.setSelectable(false);
 						}
 					}if(ParameterConst.LOCATION_LEVEL_DISTRICT.equals(locationLevelCode)){
+						if (state.getPmDivisions() != null && !state.getPmDivisions().isEmpty() && "13".equalsIgnoreCase(state.getStateCode())) {
+							
+							for (PmDivision division : state.getPmDivisions()) {
+								TreeNode divisionNode = null;
+									       
+								// build division tree
+								for (PmDistrict district : division.getPmDistricts()) {
+									if (districtIds.contains(district.getDistrictId())) {
+										if(stateNode == null){
+								             CtPanelZoneDtl locCriteria = locClass.newInstance();
+								             locCriteria.setStateId(state);
+								             stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);
+								             stateNode.setSelectable(false);
+							           }
+							
+							          CtPanelZoneDtl lodivcriteria  = locClass.newInstance();
+					                  lodivcriteria.setDivisionId(division);
+							         divisionNode = new DefaultTreeNode("division", lodivcriteria,stateNode);
+							         
+							          CtPanelZoneDtl lodivcriteria1  = locClass.newInstance();
+										   lodivcriteria1.setDistrictId(district);
+									       TreeNode districtNode = new DefaultTreeNode("district",lodivcriteria1, divisionNode);
+										   districtNode.setSelectable(false);
+									}
+								}
+								   if (divisionIds.contains(division.getDivisionId())) {
+									   divisionNode.setSelectable(false);
+								   }
+							}
+						} else {
+						
 						for (PmDistrict district : state.getPmDistricts()) {
 							if(district.getPmDivision() == null){
 								// build district tree
@@ -386,6 +418,7 @@ public class LocationSingleton {
 									districtNode.setSelectable(false);
 								}
 							}
+						}
 						}
 						if (stateIds.contains(state.getStateId())) {
 							stateNode.setSelectable(false);
@@ -404,31 +437,58 @@ public class LocationSingleton {
 						stateNode.setSelected(Boolean.TRUE);
 					}
 				}
+				
 				// build state tree
 			
 				if(ParameterConst.LOCATION_LEVEL_DISTRICT.equals(locationLevelCode)){
 					
+					
+					if (state.getPmDivisions() != null && !state.getPmDivisions().isEmpty() && "13".equalsIgnoreCase(state.getStateCode())) {
+
+						for (PmDivision division : state.getPmDivisions()) {
+							   CtPanelZoneDtl lodivcriteria  = locClass.newInstance();
+					           lodivcriteria.setDivisionId(division);
+							  TreeNode divisionNode = new DefaultTreeNode("division", lodivcriteria,stateNode);
+							// build division tree
+							for (PmDistrict district : division.getPmDistricts()) {
+								// LocationDTO districtLocation = new
+								// LocationDTO(district);
+								   CtPanelZoneDtl lodivcriteria1  = locClass.newInstance();
+								   lodivcriteria1.setDistrictId(district);
+								TreeNode districtNode = new DefaultTreeNode("district",lodivcriteria1, divisionNode);
+								// build district tree
+								
+								if (districtIds.contains(district.getDistrictId())) {
+									districtNode.setSelected(Boolean.TRUE);
+								}
+							}
+							if (divisionIds.contains(division.getDivisionId())) {
+								divisionNode.setSelected(Boolean.TRUE);
+							}
+						}
+					} else {
+					
 					for (PmDistrict district : state.getPmDistricts()) {
 						if(district.getPmDivision() == null){
-							
-					
-							
 							CtPanelZoneDtl criteria = locClass.newInstance();
 							criteria.setDistrictId(district);
-							TreeNode districtNode = new DefaultTreeNode("district",criteria, stateNode);
+							 TreeNode districtNode =  null;
+						      districtNode = new DefaultTreeNode("district",criteria, stateNode);
 							// build district tree
 							if (districtIds.contains(district.getDistrictId())) {
 								districtNode.setSelected(Boolean.TRUE);
 							}
-						}
 					}
 					if (stateIds.contains(state.getStateId())) {
 						stateNode.setSelected(Boolean.TRUE);
 					}
 				}
 			}
-			}
-		} catch (InstantiationException e) {
+	      }
+	    }
+		} 
+		}	
+			catch (InstantiationException e) {
 			throw new EpException(e.getMessage());
 		} catch (IllegalAccessException e) {
 			throw new EpException(e.getMessage());
