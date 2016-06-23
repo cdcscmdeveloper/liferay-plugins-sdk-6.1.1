@@ -2533,7 +2533,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		if(getManagedBean().getCircularVer().getCtCircularPidReason().size() > 0){
 			int counter = 0;
 			  for(CtCircularPidReason  ctCircularPidReasons : getManagedBean().getCircularVer().getCtCircularPidReason()){
-				     if(ctCircularPidReasons.getPmReason() != null 
+				     if(ctCircularPidReasons.getPmReason() != null && ctCircularPidReasons.getPmReason().getReasonId() != null
 				    		 && ctCircularPidReasons.getPmReason().getReasonId().equals(resonId)){
 				    	 counter++;
 				    	 if(!PidPurchaseTypeOther(resonId) && counter == 2){
