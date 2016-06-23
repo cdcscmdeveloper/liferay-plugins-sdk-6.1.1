@@ -122,7 +122,8 @@ public class QTFiledMapper {
 				new String[] { 
 						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
-						QTFieldConst.FILED_QT_PUBLISH_PERIOD, }),
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_BSVDETAILS, }),
 		
 		
 		// QT_PENDING_RESCHEDULE_PUBLICATION
