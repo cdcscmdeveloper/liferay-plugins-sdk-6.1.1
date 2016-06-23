@@ -15,16 +15,16 @@
 
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
 
-		<p:panel header="#{lbl['lbl.gfmas.process.info']}" id="childPTJPage"
+		<p:panel header="#{lbl['lbl.gfmas.ptj.info']}" id="childPTJPage"
 			toggleable="true">
 			<p:dataTable id="gfMasPTJId" var="pmInterfacePTJ" rows="10"
-				rowIndexVar="index" rowKey="pmInterfacePTJ"
+				rowIndexVar="index" rowKey="#{pmInterfacePTJ}"
 				selection="#{gfMasBackingBean.managedBean.selectedPtjList}"
 				value="#{gfMasBackingBean.managedBean.listOfPTJ}">
 
 				<ac:paginator for="gfMasPTJId"></ac:paginator>
 
-				<p:column selectionMode="multiple" style="width:5%" />
+				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfacePTJ.processStatus eq '1'}" />
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfacePTJ.diInterfaceLog.logId}" />

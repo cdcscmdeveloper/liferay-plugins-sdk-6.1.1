@@ -15,17 +15,17 @@
 
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
 
-		<p:panel header="#{lbl['lbl.gfmas.process.info']}" id="childPage"
+		<p:panel header="#{lbl['lbl.gfmas.dana.info']}" id="childPage"
 			toggleable="true">
 			<p:dataTable id="gfMasDanaId" var="pmInterfacceDana" rows="10"
 				rowIndexVar="index"
 				selection="#{gfMasBackingBean.managedBean.selectedDanaList}"
-				rowKey="pmInterfacceDana"
+				rowKey="#{pmInterfacceDana}"
 				value="#{gfMasBackingBean.managedBean.listOfDana}">
 
 				<ac:paginator for="gfMasDanaId"></ac:paginator>
 
-				<p:column selectionMode="multiple" style="width:5%" />
+				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfacceDana.processStatus eq '1'}" />
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfacceDana.dIInterfaceLog.logId}" />
