@@ -78,6 +78,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	/** The search type. */
 	private String searchType = "D"; // Define or Advanced
 	
+	/** The search Function Type - PTJ or Supplier */
+	private String searchFunctionType;
+	
 	/** The search order type. */
 	private String searchOrderType; 
 	
@@ -1740,6 +1743,14 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setTaxable(boolean isTaxable) {
 		this.isTaxable = isTaxable;
+	}
+
+	public String getSearchFunctionType() {
+		return searchFunctionType;
+	}
+
+	public void setSearchFunctionType(String searchFunctionType) {
+		this.searchFunctionType = searchFunctionType;
 	}
 
 }
