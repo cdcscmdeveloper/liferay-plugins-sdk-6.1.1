@@ -1500,8 +1500,6 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 			reqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
 
-			ScPurchaseInDefault pid = quote.getPurchaseInDefault();
-
 			QuoteResDTO quoteResDTO = null;
 			if (outcome.isEmpty()) {
 				quoteResDTO = getQuoteSO().saveQuoteDtl(reqDTO);
@@ -1516,7 +1514,6 @@ public class SimpleQuoteBackingBean extends
 					reqDTO.setQuoteId(scQuote.getQuoteId());
 					reqDTO.setFetchSubEntity(true);
 					scQuote = getQuoteSO().getQuoteDtl(reqDTO).getQuoteBidDtl();
-					scQuote.setPurchaseInDefault(pid);
 					// quoteResDTO = getQuoteSO().getQuoteDtl((reqDTO));
 					getManagedBean().setOutComes(outcomes);
 					getManagedBean().setTaskId(taskId);
@@ -1528,7 +1525,7 @@ public class SimpleQuoteBackingBean extends
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,scQuote.getQuoteNo(), Boolean.FALSE);
 
 				} else {
-					successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
+					successMessage(MessageConst.INFO_700024, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE, scQuote.getQuoteNo(), Boolean.TRUE);
 					// clear SQ data
 					super.renewSesionObject();
@@ -4476,20 +4473,6 @@ public class SimpleQuoteBackingBean extends
 			cal.set(Calendar.MILLISECOND, 0);
 			startDate = cal.getTime();
 			scQuote.setStartDate(startDate);
-		}
-
-		// panel item
-		if (purchaseInDefaultId != null) {
-			// check is panel item from PID task
-			IPurchaseInDefaultSO pidSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IPurchaseInDefaultSO.class);
-
-			PurchaseInDefaultReqDTO pidReqDTO = new PurchaseInDefaultReqDTO();
-			pidReqDTO.setPurchaseInDefaultId(purchaseInDefaultId);
-			ScPurchaseInDefault pid = pidSO.getPurchaseInDefault(pidReqDTO)
-					.getPurchaseInDefaultDtl();
-			scQuote.setPurchaseInDefault(pid);
 		}
 
 		// page navigation to simple quote
