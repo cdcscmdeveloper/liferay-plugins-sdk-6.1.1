@@ -17,7 +17,7 @@
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgType']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu style="width:300px;"
 						id="somAccessApplOrgType" 
 						disabled="#{not isBrandNew}"
 						required="#{!empty param['disableValidation']}"
@@ -28,7 +28,8 @@
 						<p:ajax event="change"
 							listener="#{accessApplBackingBean.changeOrgType()}"
 							update=":form:lovOrg:lovOrg,@this" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu>
+					<p:message for="somAccessApplOrgType" id="somAccessApplOrgTypeMsg" display="icon" /></td>
 				<td></td>
 			</tr>
 			<tr>
@@ -36,10 +37,10 @@
 						value="#{lbl['lbl.pm.organisation.orgName']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><ac:lov id="lovOrg"
-						lovId="PM_ORG_PROFILE" size="40" 
+						lovId="PM_ORG_PROFILE" size="53" 
 						required="#{!empty param['disableValidation']}" 
 						update="@form"
-						readonly="true"
+						label="#{lbl['lbl.pm.organisation.orgName']}"
 						disabled="#{empty accessApplBackingBean.managedBean.selectedOrgType or not isBrandNew}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{accessApplBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}"

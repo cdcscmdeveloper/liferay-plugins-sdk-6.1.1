@@ -17,6 +17,7 @@ import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.persistence.entity.BaseEntity;
@@ -355,5 +356,4 @@ public class ProfileManagementSearchBackingBean extends
 		}
 
 	}
-
 }
