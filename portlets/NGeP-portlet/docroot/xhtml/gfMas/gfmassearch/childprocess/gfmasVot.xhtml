@@ -9,27 +9,31 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		
+
 		<p:messages id="gfMasVotChild" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
-		
+
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
 
 		<p:panel header="#{lbl['lbl.gfmas.process.info']}" id="childVotPage"
-			toggleable="true">			
+			toggleable="true">
 			<p:dataTable id="gfMasVotId" var="pmInterfaceVot" rows="10"
+				rowIndexVar="index" rowKey="pmInterfaceVot"
+				selection="#{gfMasBackingBean.managedBean.selectedVotList}"
 				value="#{gfMasBackingBean.managedBean.listOfVot}">
 
 				<ac:paginator for="gfMasVotId"></ac:paginator>
-				
+
+				<p:column selectionMode="multiple" style="width:5%" />
+
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
-					<h:outputText value="#{pmInterfaceVot.dIInterfaceLog.logId}" />
+					<h:outputText value="#{pmInterfaceVot.diInterfaceLog.logId}" />
 				</p:column>
-              
-                <p:column headerText="#{lbl['lbl.gfmas.financial.year']}">
+
+				<p:column headerText="#{lbl['lbl.gfmas.financial.year']}">
 					<h:outputText value="#{pmInterfaceVot.financialYear}" />
 				</p:column>
-			
+
 				<p:column headerText="#{lbl['lbl.gfmas.vot.code']}">
 					<h:outputText value="#{pmInterfaceVot.votCode}" />
 				</p:column>
@@ -37,13 +41,17 @@
 				<p:column headerText="#{lbl['lbl.gfmas.vot.desc']}">
 					<h:outputText value="#{pmInterfaceVot.votDesc}" />
 				</p:column>
-				
+
 				<p:column headerText="#{lbl['lbl.gfmas.code.status']}">
 					<h:outputText value="#{pmInterfaceVot.codeStatus}" />
 				</p:column>
-				
 				<p:column headerText="#{lbl['lbl.gfmas.process.status']}">
-					<h:outputText value="#{pmInterfaceVot.processStatus}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
+						rendered="#{pmInterfaceVot.processStatus==0}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
+						rendered="#{pmInterfaceVot.processStatus==1}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.fail']}"
+						rendered="#{pmInterfaceVot.processStatus==2}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.pm.search.status']}"
