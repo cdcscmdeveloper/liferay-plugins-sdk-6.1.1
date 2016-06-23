@@ -50,6 +50,8 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.pm.profiledata.PMProfileDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -100,6 +102,7 @@ public class AccessApplBackingBean extends
 	public void preLoading() {
 		log.info("preLoading");
 		renewSesionObject();
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, ACCESS_APPL_TNC);
@@ -221,6 +224,9 @@ public class AccessApplBackingBean extends
 	
 	private void initialAccessApplication(){
 		PmAccessAppl accessAppl = new PmAccessAppl();
+		PmOrgProfile orgProfile = new PmOrgProfile();
+		orgProfile.setPmOrgValidity(new PmOrgValidity());
+		accessAppl.setOrgProfile(orgProfile);
 		PmSalutation salutation = new PmSalutation();
 		accessAppl.setSalutationCode(salutation);
 		accessAppl.setPmCountry(PmCommonUtil.retrieveCountryByCountryCode(

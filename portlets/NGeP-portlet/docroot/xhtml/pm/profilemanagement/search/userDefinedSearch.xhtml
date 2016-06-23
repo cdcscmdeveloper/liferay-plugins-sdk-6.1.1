@@ -81,7 +81,8 @@
 						<p:message id="lovSupOrgMsg" for="lovSupOrg" display="icon" />
 				</p:outputPanel>
 				<p:outputPanel id="opPtjOrgCode" 
-					rendered="#{ParameterConst.orgTypePtj eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
+					rendered="#{ParameterConst.orgTypePtj eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode or 
+					ParameterConst.orgTypePtjGroup eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
 				<p:inputText 
 						size="60"
 						id="itSelectedPtj" 
@@ -100,7 +101,8 @@
 				<p:outputPanel id="opOrgCode" 
 					rendered="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode 
 							and ParameterConst.orgTypeSupplier ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode
-							and ParameterConst.orgTypePtj ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
+							and ParameterConst.orgTypePtj ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode
+							and ParameterConst.orgTypePtjGroup ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
 				   <ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="60" 
 			        	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 		            	update=":form:opDefinedSearch" readonly="true"
@@ -209,6 +211,7 @@
 		  <ac:lovPopup />
 		  <ac:ptjPopup 
 		  	id="orgProfileCcId"
+		  	orgTypeParamCode="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}"
 		  	okAction="profileManagementBackingBean.selectPtjAction"
 		  	update=":form:opDefinedSearch"  />
 		  	<ui:include src="/xhtml/pm/profilemanagement/common/roleSearchPopUp.xhtml" />
