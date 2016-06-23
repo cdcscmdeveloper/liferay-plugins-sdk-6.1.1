@@ -65,7 +65,7 @@
 			<td style="vertical-align: bottom;"><p:commandLink
 					value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
 					rendered="#{simpleQuoteBackingBean.managedBean.trackingDairyView}"
-					action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(simpleQuoteBackingBean.managedBean.dpObj)}"
+					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeSimpleQuote, simpleQuoteBackingBean.managedBean.scQuote.quoteId)}"
 					immediate="true" /></td>
 
 		</tr>
@@ -134,8 +134,8 @@
 					</p:commandButton>
 				</h:panelGroup>
 				<h:panelGroup rendered="#{bpmAction eq 'CANCEL'}">
-					<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
-						update="@form" styleClass="ui-button"
+					<p:commandButton value="#{lbl[buttonLabel]}" process="@this"
+						update="@this" styleClass="ui-button"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(bpmAction)}" />
 				</h:panelGroup>
