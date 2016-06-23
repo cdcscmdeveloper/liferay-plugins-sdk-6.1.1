@@ -165,10 +165,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				new SearchFilterBean("processId", SearchOperator.OPERATOR_IN
 						.value(), listOfProcessCodes));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("targetSystem",
-						SearchOperator.OPERATOR_EQUALS.value(), "ePerolehan",
-						true));
+		searchBean.getDataFilterBeans()
+				.add(new SearchMultiFilterBean(new SearchFilterBean(
+						"targetSystem", SearchOperator.OPERATOR_EQUALS.value(),
+						"ePerolehan"), new SearchFilterBean("fileName",
+						SearchOperator.OPERATOR_NOT_LIKE.value(), ".txt",
+						SearchCondition.CONDITION_AND.value())));
 
 		searchBean.getDataFilterBeans().add(
 				new SearchMultiFilterBean(new SearchFilterBean("fileName",
@@ -177,32 +179,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 								SearchOperator.OPERATOR_NOT_EQUALS.value(),
 								"N/A", SearchCondition.CONDITION_AND.value())));
 
-		searchBean
-				.getDataFilterBeans()
-				.add(new SearchFilterBean("fileName",
-						SearchOperator.OPERATOR_NOT_LIKE.value(), ".txt", true));
-
 		if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
-			searchBean.getDataFilterBeans()
-					.add(new SearchMultiFilterBean(new SearchFilterBean(
-							"fileName", SearchOperator.OPERATOR_NOT_LIKE
-									.value(), ".txt"), new SearchFilterBean(
-							"fileName", SearchOperator.OPERATOR_LIKE.value(),
-							"1000"
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("fileName",
+							SearchOperator.OPERATOR_LIKE.value(), "1000"
 									+ this.getManagedBean().getProcessId()
-											.toUpperCase() + "40000120",
-							SearchCondition.CONDITION_AND.value())));
-		} /*else {
-			for (int i = 0; i < listOfProcessCodes.size(); i++) {
-
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("fileName",
-								SearchOperator.OPERATOR_LIKE.value(), "1000"
-										+ listOfProcessCodes.get(i)
-										+ "40000120", true));
-			}
-
-		}*/
+											.toUpperCase() + "40000120"));
+		}
 		return searchBean;
 	}
 
@@ -396,6 +380,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 	}
 
+	public String redirectProcess() {
+
+		return null;
+
+	}
+
 	/**
 	 * Gets the search gf mas.
 	 * 
@@ -413,6 +403,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 */
 	public void setSearchGfMas(IPagingDataModel<DIInterfaceLog> searchGfMas) {
 		this.searchGfMas = searchGfMas;
+	}
+
+	public void changeProcessCode() {
+		if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
+			this.getManagedBean().getProcessId();
+		}
 	}
 
 	/**
@@ -440,8 +436,8 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 		for (int i = 0; i < list.size(); i++) {
 			SelectItem selectItem = new SelectItem();
-			selectItem.setValue(list.get(0));
-			selectItem.setLabel(list.get(0).toString());
+			selectItem.setValue(list.get(i));
+			selectItem.setLabel(list.get(i).toString());
 			processCodeValues.add(selectItem);
 		}
 

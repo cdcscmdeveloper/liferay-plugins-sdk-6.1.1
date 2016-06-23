@@ -9,23 +9,28 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		
+
 		<p:messages id="gfMasBankChild" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
-		
+
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
 
 		<p:panel header="#{lbl['lbl.gfmas.process.info']}" id="childBankPage"
-			toggleable="true">			
+			toggleable="true">
 			<p:dataTable id="gfMasBankId" var="pmInterfaceBank" rows="10"
+				rowIndexVar="index"
+				selection="#{gfMasBackingBean.managedBean.selectedBankList}"
+				rowKey="pmInterfaceBank"
 				value="#{gfMasBackingBean.managedBean.listOfBank}">
 
 				<ac:paginator for="gfMasBankId"></ac:paginator>
-				
+
+				<p:column selectionMode="multiple" style="width:5%" />
+
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfaceBank.dIInterfaceLog.logId}" />
 				</p:column>
-               
+
 				<p:column headerText="#{lbl['lbl.gfmas.bank.code']}">
 					<h:outputText value="#{pmInterfaceBank.bankCode}" />
 				</p:column>
@@ -33,13 +38,19 @@
 				<p:column headerText="#{lbl['lbl.gfmas.bank.desc']}">
 					<h:outputText value="#{pmInterfaceBank.bankName}" />
 				</p:column>
-				
+
 				<p:column headerText="#{lbl['lbl.gfmas.bank.action']}">
 					<h:outputText value="#{pmInterfaceBank.action}" />
 				</p:column>
-				
+
 				<p:column headerText="#{lbl['lbl.gfmas.process.status']}">
-					<h:outputText value="#{pmInterfaceBank.processStatus}" />
+
+					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
+						rendered="#{pmInterfaceBank.processStatus==0}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
+						rendered="#{pmInterfaceBank.processStatus==1}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.fail']}"
+						rendered="#{pmInterfaceBank.processStatus==2}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.pm.search.status']}"

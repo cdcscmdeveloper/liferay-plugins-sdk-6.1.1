@@ -62,146 +62,6 @@ public class GfMasManagedBean extends BaseManagedBean {
 	/** The d i interface log. */
 	private DIInterfaceLog dIInterfaceLog;
 	
-	/**
-	 * @return the listOfPrgAct
-	 */
-	public List<PmInterfaceProgAct> getListOfPrgAct() {
-		return listOfPrgAct;
-	}
-
-	/**
-	 * @param listOfPrgAct the listOfPrgAct to set
-	 */
-	public void setListOfPrgAct(List<PmInterfaceProgAct> listOfPrgAct) {
-		this.listOfPrgAct = listOfPrgAct;
-	}
-
-	/**
-	 * @return the listOfAgOffice
-	 */
-	public List<PmInterfaceAgOff> getListOfAgOffice() {
-		return listOfAgOffice;
-	}
-
-	/**
-	 * @param listOfAgOffice the listOfAgOffice to set
-	 */
-	public void setListOfAgOffice(List<PmInterfaceAgOff> listOfAgOffice) {
-		this.listOfAgOffice = listOfAgOffice;
-	}
-
-	/**
-	 * @return the listOfBank
-	 */
-	public List<PmInterfaceBank> getListOfBank() {
-		return listOfBank;
-	}
-
-	/**
-	 * @param listOfBank the listOfBank to set
-	 */
-	public void setListOfBank(List<PmInterfaceBank> listOfBank) {
-		this.listOfBank = listOfBank;
-	}
-
-	/**
-	 * @return the listOfDana
-	 */
-	public List<PmInterfaceDana> getListOfDana() {
-		return listOfDana;
-	}
-
-	/**
-	 * @param listOfDana the listOfDana to set
-	 */
-	public void setListOfDana(List<PmInterfaceDana> listOfDana) {
-		this.listOfDana = listOfDana;
-	}
-
-	/**
-	 * @return the listOfGlAccount
-	 */
-	public List<PmInterfaceGlAccount> getListOfGlAccount() {
-		return listOfGlAccount;
-	}
-
-	/**
-	 * @param listOfGlAccount the listOfGlAccount to set
-	 */
-	public void setListOfGlAccount(List<PmInterfaceGlAccount> listOfGlAccount) {
-		this.listOfGlAccount = listOfGlAccount;
-	}
-
-	/**
-	 * @return the listOfKPTJ
-	 */
-	public List<PmInterfaceKptj> getListOfKPTJ() {
-		return listOfKPTJ;
-	}
-
-	/**
-	 * @param listOfKPTJ the listOfKPTJ to set
-	 */
-	public void setListOfKPTJ(List<PmInterfaceKptj> listOfKPTJ) {
-		this.listOfKPTJ = listOfKPTJ;
-	}
-
-	/**
-	 * @return the listOfProjectt
-	 */
-	public List<PmInterfaceProject> getListOfProjectt() {
-		return listOfProjectt;
-	}
-
-	/**
-	 * @param listOfProjectt the listOfProjectt to set
-	 */
-	public void setListOfProjectt(List<PmInterfaceProject> listOfProjectt) {
-		this.listOfProjectt = listOfProjectt;
-	}
-
-	/**
-	 * @return the listOfPTJ
-	 */
-	public List<PmInterfacePtj> getListOfPTJ() {
-		return listOfPTJ;
-	}
-
-	/**
-	 * @param listOfPTJ the listOfPTJ to set
-	 */
-	public void setListOfPTJ(List<PmInterfacePtj> listOfPTJ) {
-		this.listOfPTJ = listOfPTJ;
-	}
-
-	/**
-	 * @return the listOfVot
-	 */
-	public List<PmInterfaceVot> getListOfVot() {
-		return listOfVot;
-	}
-
-	/**
-	 * @param listOfVot the listOfVot to set
-	 */
-	public void setListOfVot(List<PmInterfaceVot> listOfVot) {
-		this.listOfVot = listOfVot;
-	}
-
-	/**
-	 * @return the listOfPP
-	 */
-	public List<PmInterfacePP> getListOfPP() {
-		return listOfPP;
-	}
-
-	/**
-	 * @param listOfPP the listOfPP to set
-	 */
-	public void setListOfPP(List<PmInterfacePP> listOfPP) {
-		this.listOfPP = listOfPP;
-	}
-
 	/** The list of prg act. */
 	private List<PmInterfaceProgAct> listOfPrgAct;
 	
@@ -230,7 +90,432 @@ public class GfMasManagedBean extends BaseManagedBean {
 	private List<PmInterfaceVot> listOfVot;
 	
 	/** The list of pp. */
-	private List<PmInterfacePP> listOfPP;
+	private List<PmInterfacePP> listOfPP;	
+	
+  
+    /** The selected prog act list. */
+    private List<PmInterfaceProgAct> selectedProgActList;
+	
+
+	/** The selected ag office list. */
+	private List<PmInterfaceAgOff> selectedAgOfficeList;
+	
+
+	/** The selected bank list. */
+	private List<PmInterfaceBank> selectedBankList;
+	
+	
+	/** The selected dana list. */
+	private List<PmInterfaceDana> selectedDanaList;
+	
+	
+	/** The selected gl acnt list. */
+	private List<PmInterfaceGlAccount> selectedGlAcntList;
+	
+	
+	/** The selected kptj list. */
+	private List<PmInterfaceKptj> selectedKptjList;
+	
+	
+
+	/** The selected project list. */
+	private List<PmInterfaceProject> selectedProjectList;
+	
+	
+	/** The selected ptj list. */
+	private List<PmInterfacePtj> selectedPtjList;
+	
+	
+	/** The selected vot list. */
+	private List<PmInterfaceVot> selectedVotList;
+	
+	
+	/** The selected pp list. */
+	private List<PmInterfacePP> selectedPpList;
+	
+	
+	/**
+	 * Gets the list of prg act.
+	 * 
+	 * @return the listOfPrgAct
+	 */
+	public List<PmInterfaceProgAct> getListOfPrgAct() {
+		return listOfPrgAct;
+	}
+
+	/**
+	 * Sets the list of prg act.
+	 * 
+	 * @param listOfPrgAct
+	 *            the listOfPrgAct to set
+	 */
+	public void setListOfPrgAct(List<PmInterfaceProgAct> listOfPrgAct) {
+		this.listOfPrgAct = listOfPrgAct;
+	}
+
+	/**
+	 * Gets the list of ag office.
+	 * 
+	 * @return the listOfAgOffice
+	 */
+	public List<PmInterfaceAgOff> getListOfAgOffice() {
+		return listOfAgOffice;
+	}
+
+	/**
+	 * Sets the list of ag office.
+	 * 
+	 * @param listOfAgOffice
+	 *            the listOfAgOffice to set
+	 */
+	public void setListOfAgOffice(List<PmInterfaceAgOff> listOfAgOffice) {
+		this.listOfAgOffice = listOfAgOffice;
+	}
+
+	/**
+	 * Gets the list of bank.
+	 * 
+	 * @return the listOfBank
+	 */
+	public List<PmInterfaceBank> getListOfBank() {
+		return listOfBank;
+	}
+
+	/**
+	 * Sets the list of bank.
+	 * 
+	 * @param listOfBank
+	 *            the listOfBank to set
+	 */
+	public void setListOfBank(List<PmInterfaceBank> listOfBank) {
+		this.listOfBank = listOfBank;
+	}
+
+	/**
+	 * Gets the list of dana.
+	 * 
+	 * @return the listOfDana
+	 */
+	public List<PmInterfaceDana> getListOfDana() {
+		return listOfDana;
+	}
+
+	/**
+	 * Sets the list of dana.
+	 * 
+	 * @param listOfDana
+	 *            the listOfDana to set
+	 */
+	public void setListOfDana(List<PmInterfaceDana> listOfDana) {
+		this.listOfDana = listOfDana;
+	}
+
+	/**
+	 * Gets the list of gl account.
+	 * 
+	 * @return the listOfGlAccount
+	 */
+	public List<PmInterfaceGlAccount> getListOfGlAccount() {
+		return listOfGlAccount;
+	}
+
+	/**
+	 * Sets the list of gl account.
+	 * 
+	 * @param listOfGlAccount
+	 *            the listOfGlAccount to set
+	 */
+	public void setListOfGlAccount(List<PmInterfaceGlAccount> listOfGlAccount) {
+		this.listOfGlAccount = listOfGlAccount;
+	}
+
+	/**
+	 * Gets the list of kptj.
+	 * 
+	 * @return the listOfKPTJ
+	 */
+	public List<PmInterfaceKptj> getListOfKPTJ() {
+		return listOfKPTJ;
+	}
+
+	/**
+	 * Sets the list of kptj.
+	 * 
+	 * @param listOfKPTJ
+	 *            the listOfKPTJ to set
+	 */
+	public void setListOfKPTJ(List<PmInterfaceKptj> listOfKPTJ) {
+		this.listOfKPTJ = listOfKPTJ;
+	}
+
+	/**
+	 * Gets the list of projectt.
+	 * 
+	 * @return the listOfProjectt
+	 */
+	public List<PmInterfaceProject> getListOfProjectt() {
+		return listOfProjectt;
+	}
+
+	/**
+	 * Sets the list of projectt.
+	 * 
+	 * @param listOfProjectt
+	 *            the listOfProjectt to set
+	 */
+	public void setListOfProjectt(List<PmInterfaceProject> listOfProjectt) {
+		this.listOfProjectt = listOfProjectt;
+	}
+
+	/**
+	 * Gets the list of ptj.
+	 * 
+	 * @return the listOfPTJ
+	 */
+	public List<PmInterfacePtj> getListOfPTJ() {
+		return listOfPTJ;
+	}
+
+	/**
+	 * Gets the selected prog act list.
+	 * 
+	 * @return the selectedProgActList
+	 */
+	public List<PmInterfaceProgAct> getSelectedProgActList() {
+		return selectedProgActList;
+	}
+
+	/**
+	 * Sets the selected prog act list.
+	 * 
+	 * @param selectedProgActList
+	 *            the selectedProgActList to set
+	 */
+	public void setSelectedProgActList(List<PmInterfaceProgAct> selectedProgActList) {
+		this.selectedProgActList = selectedProgActList;
+	}
+
+	/**
+	 * Sets the list of ptj.
+	 * 
+	 * @param listOfPTJ
+	 *            the listOfPTJ to set
+	 */
+	public void setListOfPTJ(List<PmInterfacePtj> listOfPTJ) {
+		this.listOfPTJ = listOfPTJ;
+	}
+
+	/**
+	 * Gets the list of vot.
+	 * 
+	 * @return the listOfVot
+	 */
+	public List<PmInterfaceVot> getListOfVot() {
+		return listOfVot;
+	}
+
+	/**
+	 * Sets the list of vot.
+	 * 
+	 * @param listOfVot
+	 *            the listOfVot to set
+	 */
+	public void setListOfVot(List<PmInterfaceVot> listOfVot) {
+		this.listOfVot = listOfVot;
+	}
+
+	/**
+	 * Gets the list of pp.
+	 * 
+	 * @return the listOfPP
+	 */
+	public List<PmInterfacePP> getListOfPP() {
+		return listOfPP;
+	}
+
+
+	/**
+	 * Gets the selected project list.
+	 * 
+	 * @return the selectedProjectList
+	 */
+	public List<PmInterfaceProject> getSelectedProjectList() {
+		return selectedProjectList;
+	}
+
+	/**
+	 * Sets the selected project list.
+	 * 
+	 * @param selectedProjectList
+	 *            the selectedProjectList to set
+	 */
+	public void setSelectedProjectList(List<PmInterfaceProject> selectedProjectList) {
+		this.selectedProjectList = selectedProjectList;
+	}
+
+	/**
+	 * Gets the selected ag office list.
+	 * 
+	 * @return the selectedAgOfficeList
+	 */
+	public List<PmInterfaceAgOff> getSelectedAgOfficeList() {
+		return selectedAgOfficeList;
+	}
+
+	/**
+	 * Sets the selected ag office list.
+	 * 
+	 * @param selectedAgOfficeList
+	 *            the selectedAgOfficeList to set
+	 */
+	public void setSelectedAgOfficeList(List<PmInterfaceAgOff> selectedAgOfficeList) {
+		this.selectedAgOfficeList = selectedAgOfficeList;
+	}
+
+	/**
+	 * Gets the selected bank list.
+	 * 
+	 * @return the selectedBankList
+	 */
+	public List<PmInterfaceBank> getSelectedBankList() {
+		return selectedBankList;
+	}
+
+	/**
+	 * Sets the selected bank list.
+	 * 
+	 * @param selectedBankList
+	 *            the selectedBankList to set
+	 */
+	public void setSelectedBankList(List<PmInterfaceBank> selectedBankList) {
+		this.selectedBankList = selectedBankList;
+	}
+
+	/**
+	 * Gets the selected dana list.
+	 * 
+	 * @return the selectedDanaList
+	 */
+	public List<PmInterfaceDana> getSelectedDanaList() {
+		return selectedDanaList;
+	}
+
+	/**
+	 * Sets the selected dana list.
+	 * 
+	 * @param selectedDanaList
+	 *            the selectedDanaList to set
+	 */
+	public void setSelectedDanaList(List<PmInterfaceDana> selectedDanaList) {
+		this.selectedDanaList = selectedDanaList;
+	}
+
+	/**
+	 * Gets the selected gl acnt list.
+	 * 
+	 * @return the selectedGlAcntList
+	 */
+	public List<PmInterfaceGlAccount> getSelectedGlAcntList() {
+		return selectedGlAcntList;
+	}
+
+	/**
+	 * Sets the selected gl acnt list.
+	 * 
+	 * @param selectedGlAcntList
+	 *            the selectedGlAcntList to set
+	 */
+	public void setSelectedGlAcntList(List<PmInterfaceGlAccount> selectedGlAcntList) {
+		this.selectedGlAcntList = selectedGlAcntList;
+	}
+
+	/**
+	 * Gets the selected kptj list.
+	 * 
+	 * @return the selectedKptjList
+	 */
+	public List<PmInterfaceKptj> getSelectedKptjList() {
+		return selectedKptjList;
+	}
+
+	/**
+	 * Sets the selected kptj list.
+	 * 
+	 * @param selectedKptjList
+	 *            the selectedKptjList to set
+	 */
+	public void setSelectedKptjList(List<PmInterfaceKptj> selectedKptjList) {
+		this.selectedKptjList = selectedKptjList;
+	}
+
+	
+	/**
+	 * Gets the selected ptj list.
+	 * 
+	 * @return the selectedPtjList
+	 */
+	public List<PmInterfacePtj> getSelectedPtjList() {
+		return selectedPtjList;
+	}
+
+	/**
+	 * Sets the selected ptj list.
+	 * 
+	 * @param selectedPtjList
+	 *            the selectedPtjList to set
+	 */
+	public void setSelectedPtjList(List<PmInterfacePtj> selectedPtjList) {
+		this.selectedPtjList = selectedPtjList;
+	}
+
+	/**
+	 * Gets the selected vot list.
+	 * 
+	 * @return the selectedVotList
+	 */
+	public List<PmInterfaceVot> getSelectedVotList() {
+		return selectedVotList;
+	}
+
+	/**
+	 * Sets the selected vot list.
+	 * 
+	 * @param selectedVotList
+	 *            the selectedVotList to set
+	 */
+	public void setSelectedVotList(List<PmInterfaceVot> selectedVotList) {
+		this.selectedVotList = selectedVotList;
+	}
+
+	/**
+	 * Gets the selected pp list.
+	 * 
+	 * @return the selectedPpList
+	 */
+	public List<PmInterfacePP> getSelectedPpList() {
+		return selectedPpList;
+	}
+
+	/**
+	 * Sets the selected pp list.
+	 * 
+	 * @param selectedPpList
+	 *            the selectedPpList to set
+	 */
+	public void setSelectedPpList(List<PmInterfacePP> selectedPpList) {
+		this.selectedPpList = selectedPpList;
+	}
+
+	/**
+	 * Sets the list of pp.
+	 * 
+	 * @param listOfPP
+	 *            the listOfPP to set
+	 */
+	public void setListOfPP(List<PmInterfacePP> listOfPP) {
+		this.listOfPP = listOfPP;
+	}
+
 	
 	
 

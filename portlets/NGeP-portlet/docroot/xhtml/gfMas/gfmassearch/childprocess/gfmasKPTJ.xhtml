@@ -18,12 +18,16 @@
 		<p:panel header="#{lbl['lbl.gfmas.process.info']}" id="childKPTJPage"
 			toggleable="true">			
 			<p:dataTable id="gfMasKPTJId" var="pmInterfaceKPTJ" rows="10"
+			    rowIndexVar="index" rowKey="pmInterfaceKPTJ"
+			    selection="#{gfMasBackingBean.managedBean.selectedKptjList}"
 				value="#{gfMasBackingBean.managedBean.listOfKPTJ}">
 
 				<ac:paginator for="gfMasKPTJId"></ac:paginator>
 				
+				<p:column selectionMode="multiple" style="width:5%" />				
+				
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
-					<h:outputText value="#{pmInterfaceKPTJ.dIInterfaceLog.logId}" />
+					<h:outputText value="#{pmInterfaceKPTJ.diInterfaceLog.logId}" />
 				</p:column>			
 
                 <p:column headerText="#{lbl['lbl.gfmas.financial.year']}">
@@ -42,7 +46,13 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.gfmas.process.status']}">
-					<h:outputText value="#{pmInterfaceKPTJ.processStatus}" />
+				
+					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
+						rendered="#{pmInterfaceKPTJ.processStatus==0}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
+						rendered="#{pmInterfaceKPTJ.processStatus==1}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.fail']}"
+						rendered="#{pmInterfaceKPTJ.processStatus==2}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.pm.search.status']}"
