@@ -508,6 +508,25 @@
 	<p:panel header="#{lbl['lbl.sm.person.shrDtls']}" toggleable="true"
 		id="shareAmtPanel"
 		rendered="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
+		
+		<script>
+			$(function(){
+			    // Self-executing recursive animation
+			    (function pulse(){
+			        $('#blinkShareAmount').delay(1000).fadeOut('slow').delay(50).fadeIn('slow',pulse);
+			    })();
+			});
+		</script>
+		
+		<table style="width: 100%">
+			<tr>
+				<td>
+					<span id="blinkShareAmount"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.enter.share.instr']}" /></span>
+					<span style="opacity: 0.0;"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.enter.share.instr']}" /></span>
+				</td>
+			</tr>
+		</table>
+				
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 13%;"><p:outputLabel
