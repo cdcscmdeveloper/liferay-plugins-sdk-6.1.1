@@ -160,9 +160,9 @@
 					value="#{lbl['lbl.sm.suppDoc.document.hdrCpyRmrks']}"
 					style="float: left;white-space: normal;" />
 
-				<h:outputText value="#{table.smApplDocFiles[0].fileName}"
-					style="float: left;white-space: normal;"
-					rendered="#{!table.pmDocument.hardCopyReq}" />
+				<p:commandLink ajax="false" value="#{table.smApplDocFiles[0].fileName}" rendered="#{not empty table.smApplDocFiles and !table.pmDocument.hardCopyReq}">
+						<p:fileDownload value="#{backingBean.commonDownload(table.smApplDocFiles[0].filePath,table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].fileName)}" />
+				</p:commandLink>
 
 
 			</p:column>
