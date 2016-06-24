@@ -470,8 +470,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				}
 				
 				// Order by categoryName
-				searchBean.getSortColumns().add(
-						new SearchOrderBean("categoryName"));
+//				searchBean.getSortColumns().add(
+//						new SearchOrderBean("categoryName"));
 
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 				reqDTO.setSearchBean(searchBean);
