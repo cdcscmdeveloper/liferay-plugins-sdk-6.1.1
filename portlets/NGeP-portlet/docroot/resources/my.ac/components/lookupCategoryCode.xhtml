@@ -26,7 +26,7 @@
 	<p:dialog id="catCodePopup"
 		header="#{lbl['lbl.pm.select.category']}"
 		widgetVar="catCodePopup" modal="true" position="top"
-		width="800px" 
+		width="80%" height="80%" 
 		onShow="resetAllFields();">
 
 		<p:messages id="catCodePopupMsg" showDetail="true" autoUpdate="true"
@@ -106,6 +106,12 @@
 					<td width="80%">
 						<p:inputText id="catCode" value="#{categoryCodeSearchBackingBean.managedBean.categoryCode}" 
 							size="35" maxlength="100" />
+						&#160; <p:graphicImage id="catCodettImg"
+						value="/css/images/design/tooltips.png" />
+						<p:tooltip id="catCodett" for="catCodettImg">
+							<p:outputLabel escape="false"
+								value="#{lbl['tt.sm.catcode.search']}" />
+						</p:tooltip>&#160;
 						<p:message id="catCodeMsg" for="catCode" display="icon" />
 					</td>
 				</tr>
