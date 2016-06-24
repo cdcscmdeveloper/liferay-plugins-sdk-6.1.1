@@ -11,10 +11,7 @@
 	<ui:insert name="resourceSection" />
 	<!--  	<h:outputScript library="my.ac/js" name="cc.js" />-->
 	<script>
-		function extendLiferaySession() {
-			Liferay.Session.extend();
-		}
-		
+	
 		 function limitTextArea(element, limit) { 
        	  var total = 0;
        	  var value = 0;
@@ -31,6 +28,24 @@
 				timeOut=setTimeout('scrollToTop()',10);
 			}
 			else clearTimeout(timeOut);
+		}
+		
+		function addonchange(uploadId) {
+			$('input[id$=' + uploadId + '_input]').get(0).onchange = function(){
+				if($('.template-' + uploadId).length >= 1) {
+					$('input[id$=' + uploadId + '_input]').get(0).disabled=true;
+					doggleChooseButton(uploadId);
+				}
+				addonchange(uploadId);
+			};
+		}
+	
+		function doggleChooseButton(uploadId) {
+			$('.cancel').get($('.cancel').length-1).childNodes[0].onclick = function(){
+				if($('.template-' + uploadId).length == 1) {
+					$('input[id$=' + uploadId + '_input]').get(0).disabled=false;
+				}
+			}
 		}
 
 	</script>
