@@ -5027,23 +5027,22 @@ public class QTDetailBackingBean extends
 	public void publishQT(ScQt scQt) {
 		log.info("loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
 		
-		IQTProposalSO qtProposalSO = null;
+		IQTDetailSO qtDetailSO = null;
 		try {
-			qtProposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			reqDTO.setManualPublish(true);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			scQt.setPublishDate(new Date());
+			reqDTO.setQtdetail(scQt);
 			
-			boolean isUpdateSucessful = qtProposalSO.updateProposalWorkFlowStatus(reqDTO)
-				.isSuccessful();
+			QuationTenderResDTO resDTO = qtDetailSO.saveQTDtl(reqDTO);
+			scQt = resDTO.getQtDetail();
 			
 			boolean isSucessful = false;
-			if(isUpdateSucessful){
+			if(resDTO.isSuccessful()){
 				try {
 					log.info("call simple scheduler if QT is publishing today.");
-					scQt.setPublishDate(new Date());
 					EpSchedulerHelper.scheduleSimplePublishingJob(scQt);
 					isSucessful = true;
 				} catch (SchedulerException e) {
@@ -5061,7 +5060,7 @@ public class QTDetailBackingBean extends
 				));
 			}
 		} finally {
-			qtProposalSO = null;
+			qtDetailSO = null;
 		}
 	}
 	
