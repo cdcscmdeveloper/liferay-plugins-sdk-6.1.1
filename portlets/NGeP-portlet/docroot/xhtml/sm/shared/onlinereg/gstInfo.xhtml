@@ -89,17 +89,24 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
+
+
+	<script type="text/javascript">
 	
+
+		
+	</script>
 	<p:dialog id="uploadDlg" widgetVar="uploadDlg" appendToBody="false" resizable="false" width="700px"
-		height="350" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+		height="350" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" onShow="addonchange('upload');">
 		<p:fileUpload style="display:inline;" multiple="false" fileUploadListener="#{registrationBackingBean.handleFileUpload}"
 			mode="basic" id="upload" fileLimit="1" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="dtGstDocId"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			oncomplete="uploadDlg.hide();return false;" 
 			uploadLabel="#{lbl['lbl.btn.upload.all']}"  
-			label="#{lbl['lbl.btn.choose']}" 
-			cancelLabel="#{lbl['lbl.btn.remove.all']}" >
+			label="#{lbl['lbl.btn.choose']}" widgetVar="uploadWV"
+			showButtons="false"
+			cancelLabel="#{lbl['lbl.btn.remove.all']}">
 		</p:fileUpload>
 	</p:dialog>
 	
