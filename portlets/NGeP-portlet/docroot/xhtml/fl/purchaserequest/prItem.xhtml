@@ -282,9 +282,10 @@
 							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></td>
 					<td><p:message for="address1" display="icon" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td> 
 					<td><p:selectOneMenu id="manDivison"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmDivision.divisionId}"
+							disabled="#{purchaseRequestBackingBean.managedBean.divisionDisplay}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="divisionList"

@@ -514,6 +514,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean pidValidityExpired = false;
 	private List<PmUserGroupUser> approverGroupUserList;
 	
+	private boolean divisionDisplay = true;
+	
 	private Long ministryProfileId;
 	private Long jabatanProfileId;
 	private String ptjCodeName;
@@ -3374,6 +3376,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setOrderSummaryOrderedAmtGrandTotal(
 			BigDecimal orderSummaryOrderedAmtGrandTotal) {
 		this.orderSummaryOrderedAmtGrandTotal = orderSummaryOrderedAmtGrandTotal;
+	}
+
+	/**
+	 * @return the divisionDisplay
+	 */
+	public boolean isDivisionDisplay() {
+		return divisionDisplay;
+	}
+
+	/**
+	 * @param divisionDisplay the divisionDisplay to set
+	 */
+	public void setDivisionDisplay(boolean divisionDisplay) {
+		this.divisionDisplay = divisionDisplay;
 	}
 
 }

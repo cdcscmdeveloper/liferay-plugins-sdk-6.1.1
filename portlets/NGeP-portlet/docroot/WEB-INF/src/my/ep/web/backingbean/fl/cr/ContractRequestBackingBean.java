@@ -2363,13 +2363,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
 		DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
 		getManagedBean().setDivisionList(resDTO.getDivisionList());
-		
+		getManagedBean().setDivisionDisplay(true);
 		if(resDTO.getDivisionList().size()==0) {
 			DistrictReqDTO districtReqDTO = new DistrictReqDTO();
 			districtReqDTO.setStateId(stateId);
 			IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 			DistrictResDTO districtResDTO = districtSO.retriveDistrictListByStateID(districtReqDTO);
 			getManagedBean().setDistrictList(districtResDTO.getDistrictList());			
+		}else{
+			getManagedBean().setDivisionDisplay(false);
 		}
 	}
 	
