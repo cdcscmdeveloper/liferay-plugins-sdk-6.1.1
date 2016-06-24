@@ -151,7 +151,12 @@ public class AccessApplBackingBean extends
 				if(accessAppl.getOrgProfile() !=null){
 					getManagedBean().setSelectedOrgProfile(accessAppl.getOrgProfile());
 					getManagedBean().setSelectedOrgType(accessAppl.getOrgProfile().getOrgTypeCode().getParameterId());
-				}			
+				}
+				if(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL.equals(accessAppl.getCurrentStatus().longValue())){
+					accessAppl.setDocType(ParameterConst.DOCTYPE_COMPANY_PROFILE);
+				}else if(ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.equals(accessAppl.getCurrentStatus().longValue())){
+					accessAppl.setDocType(ParameterConst.DOCTYPE_MARKET_RESEARCH);
+				}
 				
 			}
 		}catch(Exception e){

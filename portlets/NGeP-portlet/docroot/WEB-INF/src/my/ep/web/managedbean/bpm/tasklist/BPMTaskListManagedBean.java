@@ -10,18 +10,26 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ProfileManagementStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.pm.access.application.AccessApplReqDTO;
+import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmAccessAppl;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -299,8 +307,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	}
 
-	private MofRegistrationResDTO retriveCompanyNameByApplicationId(long applId) {
 
+	private MofRegistrationResDTO retriveCompanyNameByApplicationId(long applId) {
 		IMofRegistrationSO mofRegistrationSO = null;
 
 		try {
@@ -444,6 +452,22 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   
 						        worklistItemVO.setTitle(sb.toString());
 						       }
+						       
+						       if(worklistItemVO.getTitle().startsWith("lbl.pm")) {
+						    	   String[] sArr = worklistItemVO.getTitle().split(",");
+						    	   StringBuilder sb = new StringBuilder();
+						    	   if(ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(worklistItemVO.getDocType())){
+						    		   sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.mr.title", 
+							    			   new String[]{sArr[1],sArr[2]},
+							    			   ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+						    		   worklistItemVO.setTitle(sb.toString());
+						    	   }else if(ParameterConst.DOCTYPE_COMPANY_PROFILE.equalsIgnoreCase(worklistItemVO.getDocType())){
+						    		   sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.cp.title", 
+							    			   new String[]{sArr[1],sArr[2]},
+							    			   ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+						    		   worklistItemVO.setTitle(sb.toString());
+						    	   }
+						       }
 						}
 					}
 					
@@ -584,8 +608,30 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						        worklistItemVO.setTitle(sb.toString());
 						       }
 						       
-						       
-						       
+						       if(worklistItemVO.getTitle().startsWith("lbl.pm")) {
+						    	   AccessApplResDTO accessApplResDTO = 
+						    			   retrieveAccessApplByDocId(worklistItemVO.getDocId());
+						    	   if(accessApplResDTO.isSuccessful() && 
+						    			   accessApplResDTO.getAccessAppl() != null){
+						    		  
+							    	   StringBuilder sb = new StringBuilder();
+							    	   if(ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(worklistItemVO.getDocType())){
+							    		   sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.mr.title", 
+								    			   new String[]{ accessApplResDTO.getAccessAppl().getApplicantName(),
+							    				   		accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName()},
+								    			   ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+							    		   worklistItemVO.setTitle(sb.toString());
+							    	   }else if(ParameterConst.DOCTYPE_COMPANY_PROFILE.equalsIgnoreCase(worklistItemVO.getDocType())){
+							    		   sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.cp.title", 
+								    			   new String[]{accessApplResDTO.getAccessAppl().getApplicantName(),
+							    				   		accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName()},
+								    			   ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+							    		   worklistItemVO.setTitle(sb.toString());
+							    	   }
+						    	   }
+						    	   
+						    	   
+						       }
 						}
 					}
 					
@@ -712,7 +758,27 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	}
 	
 	
-	
+	private AccessApplResDTO retrieveAccessApplByDocId(Integer docId){
+		IAccessApplSO accessApplSO = null;
+		try{
+			accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IAccessApplSO.class);
+			
+			AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+			reqDTO.setAccessApplId(Long.valueOf(docId));
+			AccessApplResDTO resDTO = accessApplSO.retrieveAccessApplById(reqDTO);
+			if(resDTO.isSuccessful()){
+				return resDTO;
+				
+			}
+		}catch(Exception e){
+			throw new EpException(e.getMessage());
+		}finally{
+			accessApplSO = null;
+		}
+		return null;
+	}
 	
 	
 
