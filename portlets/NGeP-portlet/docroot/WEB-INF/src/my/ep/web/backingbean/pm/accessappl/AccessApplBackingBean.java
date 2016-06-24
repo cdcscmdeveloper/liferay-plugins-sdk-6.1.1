@@ -231,6 +231,7 @@ public class AccessApplBackingBean extends
 		PmAccessAppl accessAppl = new PmAccessAppl();
 		PmOrgProfile orgProfile = new PmOrgProfile();
 		orgProfile.setPmOrgValidity(new PmOrgValidity());
+		getManagedBean().setSelectedOrgProfile(orgProfile);
 		accessAppl.setOrgProfile(orgProfile);
 		PmSalutation salutation = new PmSalutation();
 		accessAppl.setSalutationCode(salutation);
