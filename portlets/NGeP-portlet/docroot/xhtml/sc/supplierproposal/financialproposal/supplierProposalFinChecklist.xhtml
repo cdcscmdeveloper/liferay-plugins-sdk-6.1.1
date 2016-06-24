@@ -80,7 +80,13 @@
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{((financeList.scQtCheckList.definationType.parameterCode eq 'UP'  and financeList.scQtCheckList.action.parameterCode eq 'O') or (financeList.scQtCheckList.definationType.parameterCode eq 'NA'))}">
-					<ac:scSingleFileUploadButton id="fcUploadBtn" popupWidgetVar="checklistUploadDlg"
+					<h:commandLink
+						value="#{financeList.scQtCheckList.scQtCheckListAttachment.fileName}"
+						styleClass="blue_font" immediate="true"
+						action="#{supplierProposalDetailBackingBean.downloadFile(financeList.scQtCheckList.scQtCheckListAttachment)}"
+						rendered="#{(!empty financeList.scQtCheckList.scQtCheckListAttachment) and (empty financeList.scQtProposalChecklistAttachment)}" />
+					<br/>
+					 <ac:scSingleFileUploadButton id="fcUploadBtn" popupWidgetVar="checklistUploadDlg"
 						attachment="#{financeList.scQtProposalChecklistAttachment}"
 						encrypted="true" encryptionKey="#{supplierProposalDetailBackingBean.encryptionKey}"
 						readonly="#{supplierProposalDetailBackingBean.managedBean.closed}"
@@ -89,7 +95,7 @@
 						<f:setPropertyActionListener for="actionEvent"
 							value="#{financeList}"
 							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
-					</ac:scSingleFileUploadButton>
+					</ac:scSingleFileUploadButton> 
 				</ui:fragment>
 
 				<ui:fragment
