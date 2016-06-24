@@ -5036,11 +5036,9 @@ public class QTDetailBackingBean extends
 			scQt.setPublishDate(new Date());
 			reqDTO.setQtdetail(scQt);
 			
-			QuationTenderResDTO resDTO = qtDetailSO.saveQTDtl(reqDTO);
-			scQt = resDTO.getQtDetail();
+			boolean isSucessful = qtDetailSO.updateQTPublishDate(reqDTO).isSuccessful();
 			
-			boolean isSucessful = false;
-			if(resDTO.isSuccessful()){
+			if(isSucessful){
 				try {
 					log.info("call simple scheduler if QT is publishing today.");
 					EpSchedulerHelper.scheduleSimplePublishingJob(scQt);
