@@ -3889,8 +3889,9 @@ public class SpecificationBackingBean extends
 				list.setScQtCheckListAttachment(null);
 
 			}
-			this.getManagedBean().getScQtCheckSt2techProposal()
-					.set(index, list);
+			checkList.set(index, list);
+			this.getManagedBean().setScQtCheckSt2techProposal(checkList);
+					
 		} finally {
 			parameterSo = null;
 		}
@@ -3969,8 +3970,9 @@ public class SpecificationBackingBean extends
 				list.setAction(docDefTypeResDTO.getPmParameter());
 				list.setScQtCheckListAttachment(null);
 			}
-			this.getManagedBean().getScQtCheckSt2financeProposalList()
-					.set(index, list);
+			checkList.set(index, list);
+			this.getManagedBean().setScQtCheckSt2financeProposalList(checkList);
+					
 		} finally {
 			parameterSo = null;
 		}
