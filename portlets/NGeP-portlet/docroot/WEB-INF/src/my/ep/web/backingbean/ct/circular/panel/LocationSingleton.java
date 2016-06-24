@@ -374,8 +374,7 @@ public class LocationSingleton {
 						if (state.getPmDivisions() != null && !state.getPmDivisions().isEmpty() && "13".equalsIgnoreCase(state.getStateCode())) {
 							
 							for (PmDivision division : state.getPmDivisions()) {
-								TreeNode divisionNode = null;
-									       
+								TreeNode divisionNode = null;      
 								// build division tree
 								for (PmDistrict district : division.getPmDistricts()) {
 									if (districtIds.contains(district.getDistrictId())) {
@@ -385,20 +384,18 @@ public class LocationSingleton {
 								             stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);
 								             stateNode.setSelectable(false);
 							           }
-							
-							          CtPanelZoneDtl lodivcriteria  = locClass.newInstance();
-					                  lodivcriteria.setDivisionId(division);
-							         divisionNode = new DefaultTreeNode("division", lodivcriteria,stateNode);
-							         
+							          if(divisionNode == null){
+							                   CtPanelZoneDtl lodivcriteria  = locClass.newInstance();
+					                           lodivcriteria.setDivisionId(division);
+							                   divisionNode = new DefaultTreeNode("division", lodivcriteria,stateNode);
+							                   divisionNode.setSelectable(false);
+							          }
 							          CtPanelZoneDtl lodivcriteria1  = locClass.newInstance();
 										   lodivcriteria1.setDistrictId(district);
 									       TreeNode districtNode = new DefaultTreeNode("district",lodivcriteria1, divisionNode);
 										   districtNode.setSelectable(false);
 									}
 								}
-								   if (divisionIds.contains(division.getDivisionId())) {
-									   divisionNode.setSelectable(false);
-								   }
 							}
 						} else {
 						
