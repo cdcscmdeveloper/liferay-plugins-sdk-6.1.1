@@ -299,6 +299,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
 	
+	private boolean divisionDisplay = true;
+	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
 	
@@ -2793,6 +2795,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setBpmApproverList(List<Long> bpmApproverList) {
 		this.bpmApproverList = bpmApproverList;
+	}
+
+	/**
+	 * @return the divisionDisplay
+	 */
+	public boolean isDivisionDisplay() {
+		return divisionDisplay;
+	}
+
+	/**
+	 * @param divisionDisplay the divisionDisplay to set
+	 */
+	public void setDivisionDisplay(boolean divisionDisplay) {
+		this.divisionDisplay = divisionDisplay;
 	}
 
 }
