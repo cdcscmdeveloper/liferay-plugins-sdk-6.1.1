@@ -6,6 +6,22 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+<!-- 
+	<ui:fragment
+		rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeBusinessOwner}">
+
+		<ui:param name="committe"
+			value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+
+		<ui:include src="businessOwnerCommittee.xhtml" />
+
+	</ui:fragment>
+ -->
+ 
+ <ui:param name="committe" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+			
+ 	<ui:param name="isCommitteeInfoEditable" value="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
+ 	<ui:param name="isEnablChkBoxes" value="#{!qTCommitteBackingBean.isEnableCheckboxes(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
 
  	<c:choose>
  		<c:when test="#{qTDetailBB.managedBean.selectedTabBean.tabType eq SourcingConstants.committeTypeFinalization}">
