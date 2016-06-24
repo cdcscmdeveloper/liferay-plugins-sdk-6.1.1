@@ -9,10 +9,13 @@
 	<ac:scSingleFileUploadPopup widgetVar="scChecklistUploadDlg"
 		fileUploadListener="specificationBackingBean.checkListFileUpload"
 		readonly="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
-		update="@form" />
+		update="@([id$=uploadtech],[id$=technicalSpecificationStatus])" />
 
 
-
+<ac:scSingleFileUploadPopup widgetVar="scFinancialChecklistUploadDlg"
+		fileUploadListener="specificationBackingBean.checkListFileUpload"
+		readonly="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+		update="@([id$=uploadFinance],[id$=financialChecklistSpecificationStatus])" />
 
 
 	<ac:scSingleFileUploadPopup widgetVar="technicalUserScoringSchema"
