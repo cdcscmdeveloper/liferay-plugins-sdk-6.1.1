@@ -454,19 +454,28 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 						       
 						       if(worklistItemVO.getTitle().startsWith("lbl.pm")) {
-						    	   String[] sArr = worklistItemVO.getTitle().split(",");
-						    	   StringBuilder sb = new StringBuilder();
-						    	   if(ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(worklistItemVO.getDocType())){
-						    		   sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.mr.title", 
-							    			   new String[]{sArr[1],sArr[2]},
-							    			   ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-						    		   worklistItemVO.setTitle(sb.toString());
-						    	   }else if(ParameterConst.DOCTYPE_COMPANY_PROFILE.equalsIgnoreCase(worklistItemVO.getDocType())){
-						    		   sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.cp.title", 
-							    			   new String[]{sArr[1],sArr[2]},
-							    			   ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-						    		   worklistItemVO.setTitle(sb.toString());
+						    	   AccessApplResDTO accessApplResDTO = 
+						    			   retrieveAccessApplByDocId(worklistItemVO.getDocId());
+						    	   if(accessApplResDTO.isSuccessful() && 
+						    			   accessApplResDTO.getAccessAppl() != null){
+						    		  
+							    	   StringBuilder sb = new StringBuilder();
+							    	   if(ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(worklistItemVO.getDocType())){
+							    		   sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.mr.title", 
+								    			   new String[]{ accessApplResDTO.getAccessAppl().getApplicantName(),
+							    				   		accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName()},
+								    			   ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+							    		   worklistItemVO.setTitle(sb.toString());
+							    	   }else if(ParameterConst.DOCTYPE_COMPANY_PROFILE.equalsIgnoreCase(worklistItemVO.getDocType())){
+							    		   sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.cp.title", 
+								    			   new String[]{accessApplResDTO.getAccessAppl().getApplicantName(),
+							    				   		accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName()},
+								    			   ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+							    		   worklistItemVO.setTitle(sb.toString());
+							    	   }
 						    	   }
+						    	   
+						    	   
 						       }
 						}
 					}
