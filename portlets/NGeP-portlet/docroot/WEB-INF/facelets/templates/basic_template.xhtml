@@ -32,7 +32,7 @@
 		
 		function addonchange(uploadId) {
 			$('input[id$=' + uploadId + '_input]').get(0).onchange = function(){
-				if($('.template-' + uploadId).length >= 1) {
+				if($('.template-upload').length >= 1) {
 					$('input[id$=' + uploadId + '_input]').get(0).disabled=true;
 					doggleChooseButton(uploadId);
 				}
@@ -42,7 +42,7 @@
 	
 		function doggleChooseButton(uploadId) {
 			$('.cancel').get($('.cancel').length-1).childNodes[0].onclick = function(){
-				if($('.template-' + uploadId).length == 1) {
+				if($('.template-upload').length == 1) {
 					$('input[id$=' + uploadId + '_input]').get(0).disabled=false;
 				}
 			}
