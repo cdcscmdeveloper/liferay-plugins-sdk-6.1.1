@@ -5043,6 +5043,7 @@ public class QTDetailBackingBean extends
 			if(isUpdateSucessful){
 				try {
 					log.info("call simple scheduler if QT is publishing today.");
+					scQt.setPublishDate(new Date());
 					EpSchedulerHelper.scheduleSimplePublishingJob(scQt);
 					isSucessful = true;
 				} catch (SchedulerException e) {
