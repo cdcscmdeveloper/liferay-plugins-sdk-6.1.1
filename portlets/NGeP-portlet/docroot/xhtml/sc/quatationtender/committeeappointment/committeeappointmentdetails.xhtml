@@ -32,16 +32,8 @@
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.tec.fec.instruction']}" escape="false" rendered="#{isQtScheduleAndDoc and evaluationType eq 2}"/>
 		<BR/>	
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.instruction']}" escape="false" />
-
-			<ui:param name="committe"
-				value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
-			<ui:param name="isCommitteeInfoEditable"
-				value="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
-			<ui:param name="isEnablChkBoxes"
-				value="#{!qTCommitteBackingBean.isEnableCheckboxes(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.clone']}"
-					rendered="#{isCommitteeInfoEditable}"
+				<p:commandButton value="#{lbl['lbl.btn.clone']}" rendered="#{!qTCommitteBackingBean.isEnableCloneButton()}"
 					action="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
 					update="@all"
 					title="#{lbl['lbl.sc.qt.committee.btn.clone.tooltip']}" />
