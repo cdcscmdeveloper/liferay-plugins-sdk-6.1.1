@@ -4939,6 +4939,26 @@ public class SmApplicationBackingBean extends
 
 		getManagedBean().getSelectedShareHolder().setSmAppl(
 				getManagedBean().getSmAppl());
+
+		// set bumi flag
+		if (getManagedBean().getSelectedShareHolder().getBumiFlgTrans() == null) {
+			getManagedBean().getSelectedShareHolder().setBumiFlg(0);
+		} else {
+			getManagedBean().getSelectedShareHolder()
+					.setBumiFlg(
+							getManagedBean().getSelectedShareHolder()
+									.getBumiFlgTrans());
+		}
+
+		// set muslim flg
+		if (getManagedBean().getSelectedShareHolder().getMuslimFlgTrans() == null) {
+			getManagedBean().getSelectedShareHolder().setMuslimFlg(0);
+		} else {
+			getManagedBean().getSelectedShareHolder().setMuslimFlg(
+					getManagedBean().getSelectedShareHolder()
+							.getMuslimFlgTrans());
+		}
+
 		if (validShrHldr) {
 			if (getManagedBean().getSelectedShareHolder().getPmRace() != null
 					&& getManagedBean().getSelectedShareHolder().getPmRace()
@@ -5153,6 +5173,8 @@ public class SmApplicationBackingBean extends
 	 *            - SmPersonnel object
 	 */
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
+		shareHolderBean.setBumiFlgTrans(shareHolderBean.getBumiFlg());
+		shareHolderBean.setMuslimFlgTrans(shareHolderBean.getMuslimFlg());
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			validatePaidCaptialAmt(false);
