@@ -233,8 +233,8 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:center;width:154px">
-					<p:inputText value="#{item.orderedQty}" size="14" id="orderedQty" label="#{lbl['lbl.fl.ordered.qty']}"
+				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:center;width:148px">
+					<p:inputText value="#{item.orderedQty}" size="13" id="orderedQty" label="#{lbl['lbl.fl.ordered.qty']}"
 						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView)}"
 						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" style="text-align:right" styleClass="colFloatLeft" 
 						onkeypress="if (event.keyCode == 13) { return false; }">
@@ -255,11 +255,11 @@
 					<p:message for="orderedQty" display="icon" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:center">
-					<p:inputText id="subTotalTxt" size="15" style="text-align:right" styleClass="colFloatRight" 
+					<h:outputText id="subTotalTxt" size="5" style="text-align:right" styleClass="colFloatRight" 
 						value="#{item.orderedAmt}" disabled="true">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText>
+					</h:outputText>
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px"></p:spacer>
@@ -351,6 +351,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
 					<td><p:selectOneMenu id="manDivison"
 							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.pmDivision.divisionId}"
+							disabled="#{contractRequestBackingBean.managedBean.divisionDisplay}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="divisionList"
