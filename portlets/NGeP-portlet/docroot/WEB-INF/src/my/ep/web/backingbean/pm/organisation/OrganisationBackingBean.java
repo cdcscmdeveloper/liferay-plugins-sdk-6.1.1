@@ -2233,6 +2233,9 @@ public class OrganisationBackingBean extends
 			if(!validateGstRegNo(gstSupplier)){
 				throw new EpException(MessageConst.ERROR_775117);
 			}
+		}else{
+			gstSupplier.setGstEffDate(null);
+			gstSupplier.setGstEndDate(null);
 		}
 	}
 	
