@@ -309,7 +309,9 @@ public class AccessApplBackingBean extends
 		log.info("changeResOrgType");
 
 		if (this.getManagedBean().getSelectedOrgProfile() != null) {
-			getManagedBean().setSelectedOrgProfile(null);
+			PmOrgProfile orgProfile = new PmOrgProfile();
+			orgProfile.setPmOrgValidity(new PmOrgValidity());
+			getManagedBean().setSelectedOrgProfile(orgProfile);
 		}
 
 	}

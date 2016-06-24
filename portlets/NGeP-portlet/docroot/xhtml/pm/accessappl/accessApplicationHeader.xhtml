@@ -12,13 +12,19 @@
 					<td width="6%">
 						<p:outputLabel value="#{lbl['lbl.pm.access.app.app.no']}" />  
 					</td>
-					<td class="header-info-text" width="30%">
+					<td class="header-info-text" width="20%">
 						#{accessApplBackingBean.managedBean.accessAppl.applNo}
+					</td>
+					<td width="6%">
+						<p:outputLabel value="#{lbl['lbl.pm.application.type']}" />  
+					</td>
+					<td class="header-info-text" width="20%">
+						#{accessApplBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,accessApplBackingBean.managedBean.accessAppl.docType)}
 					</td>
 					<td width="8%">
 						<p:outputLabel value="#{lbl['lbl.pm.access.app.app.date']}" />
 					</td>
-					<td class="header-info-text" width="33%">
+					<td class="header-info-text" width="20%">
 					<h:outputText value="#{accessApplBackingBean.managedBean.accessAppl.createdDate}" >
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
