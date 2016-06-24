@@ -23,7 +23,9 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.batch.IDIInterfaceSO;
+import my.ep.biz.service.pm.common.notify.INotifySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogReqDto;
@@ -31,6 +33,7 @@ import my.ep.dto.pm.common.interfaceptj.InterfaceLogResDto;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.DIInterfaceLog;
+import my.ep.persistence.entity.pm.integration.PmInterfaceAgOff;
 import my.ep.persistence.entity.pm.integration.PmInterfaceProgAct;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
@@ -396,9 +399,22 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 					+ this.getManagedBean().getSelectedProjectList().size());
 			this.getManagedBean().setSelectedProjectList(null);
 		} else if (this.getManagedBean().getSelectedAgOfficeList() != null) {
+			
 			log.info("***********AgOfficeList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedAgOfficeList().size());
+			
+			IAgOfficeSO reqSO = (IAgOfficeSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAgOfficeSO.class);
+
+			List<PmInterfaceAgOff> list = this.getManagedBean().getSelectedAgOfficeList();
+			
+			for(int i = 0; i<list.size(); i++){
+				PmInterfaceAgOff pmInterfaceAgOff = list.get(i);
+				reqSO.execute(pmInterfaceAgOff);
+			}
+			
 			this.getManagedBean().setSelectedAgOfficeList(null);
+			
 		} else if (this.getManagedBean().getSelectedBankList() != null) {
 			log.info("************BankList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedBankList().size());
