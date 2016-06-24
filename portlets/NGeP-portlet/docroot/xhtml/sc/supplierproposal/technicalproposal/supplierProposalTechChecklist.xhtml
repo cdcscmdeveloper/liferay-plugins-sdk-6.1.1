@@ -81,14 +81,22 @@
 
 				<ui:fragment
 					rendered="#{((techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'O') or (techList.scQtCheckList.definationType.parameterCode eq 'NA'))}">
-					<ac:scSingleFileUploadButton id="tcUploadBtn" popupWidgetVar="checklistUploadDlg"
+
+					<h:commandLink
+						value="#{techList.scQtCheckList.scQtCheckListAttachment.fileName}"
+						styleClass="blue_font" immediate="true"
+						action="#{supplierProposalDetailBackingBean.downloadFile(techList.scQtCheckList.scQtCheckListAttachment)}"
+						rendered="#{(!empty techList.scQtCheckList.scQtCheckListAttachment) and (empty techList.scQtProposalChecklistAttachment)}" />
+					<br />
+					<ac:scSingleFileUploadButton id="tcUploadBtn"
+						popupWidgetVar="checklistUploadDlg"
 						attachment="#{techList.scQtProposalChecklistAttachment}"
-						encrypted="true" encryptionKey="#{supplierProposalDetailBackingBean.encryptionKey}"
+						encrypted="true"
+						encryptionKey="#{supplierProposalDetailBackingBean.encryptionKey}"
 						readonly="#{supplierProposalDetailBackingBean.managedBean.closed}"
 						rowIndex="#{rowIndex}"
 						deleteFileUploadListener="supplierProposalDetailBackingBean.deleteProposalChecklistAttachmentAction">
-						<f:setPropertyActionListener for="actionEvent" 
-							value="#{techList}"
+						<f:setPropertyActionListener for="actionEvent" value="#{techList}"
 							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
 					</ac:scSingleFileUploadButton>
 				</ui:fragment>
