@@ -2327,7 +2327,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				return DateUtils.addDays(ctAmendment.getAmendmentEffDate(), 1);
 			}
 		} else {
-			return currentDate;
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getEffDate().equals(currentDate)) {
+				return DateUtils.addDays(currentDate, 1);
+			} else {
+				return currentDate;
+			}
 		}
 	}
 	
