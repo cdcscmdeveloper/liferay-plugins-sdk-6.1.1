@@ -112,6 +112,13 @@
 						<ui:include src="/xhtml/sm/shared/postsupplierregistration/softCertMsg.xhtml" />
 				</c:if>
 			</p:outputPanel>
+			
+			<!-- BPM Expired -->
+			<c:if test="#{!empty postSupplierRegBB.managedBean.currentStatusId}">
+				<p:outputPanel rendered="#{postSupplierRegBB.managedBean.currentStatusId == SupplierManagementConst.pmStatusRejectedBySys}">
+					#{lbl['lbl.sm.basic.task.expired']}
+				</p:outputPanel>
+			</c:if>
 			</c:if>
 		</p:outputPanel>
 	</ui:define>
