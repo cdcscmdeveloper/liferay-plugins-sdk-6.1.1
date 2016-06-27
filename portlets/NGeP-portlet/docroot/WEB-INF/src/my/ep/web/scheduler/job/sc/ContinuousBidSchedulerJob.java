@@ -15,6 +15,7 @@ import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sc.helper.SchedulerHelper;
 
@@ -41,6 +42,8 @@ public class ContinuousBidSchedulerJob implements Job {
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
+		log.info("$$$$$ inside execute of  ContinuousBidSchedulerJob @"+DateUtils.getCurrentDate());
+		
 		IBiddingSO biddingSO = null;
 		try {
 			// SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
@@ -137,7 +140,7 @@ public class ContinuousBidSchedulerJob implements Job {
 		finally {
 			biddingSO = null;
 		}
-
+		log.info("$$$$$ completed executing ContinuousBidSchedulerJob @"+DateUtils.getCurrentDate());
 	}
 
 	private Date getCompareTime() {
