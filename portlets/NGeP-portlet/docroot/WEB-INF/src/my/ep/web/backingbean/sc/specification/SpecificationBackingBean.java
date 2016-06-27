@@ -6364,9 +6364,14 @@ public class SpecificationBackingBean extends
 				localcheckList = new ArrayList<PmDocument>(
 						resDTO.getDocumentList());
 				// localcheckList.addAll(resDTO.getTechnicalCheckList());
+				
 			}
 			this.getManagedBean().setAutoUpdate(false);
+			if(CollectionUtils.isNotEmpty(localcheckList)){
+			localcheckList=checkPmDocumentsExistInMainList(localcheckList,this.getManagedBean().getScQtCheckSt2techProposal());
+			}
 			this.getManagedBean().setStageTwoTechComplianceList(localcheckList);
+			localcheckList=null;
 		} finally {
 			documentSo = null;
 		}
@@ -6887,11 +6892,16 @@ public class SpecificationBackingBean extends
 			reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST);
 
 			resDTO = documentSo.retrieveDocumentCheckList(reqDTO);
+			List<PmDocument> localDocList=new ArrayList<PmDocument>();
 			this.getManagedBean().setStageTwoFinComplianceSelect(
 					new ArrayList<PmDocument>());
 			this.getManagedBean().setAutoUpdate(false);
+			if(CollectionUtils.isNotEmpty(resDTO.getDocumentList())){
+				localDocList=checkPmDocumentsExistInMainList(resDTO.getDocumentList(),this.getManagedBean().getScQtCheckSt2financeProposalList());
+				}
 			this.getManagedBean().setStageTwoFinComplianceList(
-					resDTO.getDocumentList());
+					localDocList);
+			localDocList=null;
 		} finally {
 			documentSo = null;
 		}
@@ -14549,6 +14559,32 @@ public class SpecificationBackingBean extends
 			retriveZonesOrSuppliersByItem();
 		}
 		
+	}
+	
+	private List<PmDocument> checkPmDocumentsExistInMainList(List<PmDocument> documentList,List<ScQtCheckList> checklist){
+		List<PmDocument> LocalDocumenList=new ArrayList<PmDocument>();
+		try{
+		 if(CollectionUtils.isEmpty(checklist)){
+			 LocalDocumenList=documentList;
+		 }else{
+			 List<String> checklistTitle=new ArrayList<String>();
+			 for(ScQtCheckList checkList:checklist){
+				 if(StringUtils.isNotBlank(checkList.getTitle()) && StringUtils.isNotEmpty(checkList.getTitle())){
+					 checklistTitle.add(checkList.getTitle());
+				 }
+				}
+			 for(PmDocument document:documentList){
+				 if(!checklistTitle.contains(document.getDocName())){
+					 LocalDocumenList.add(document);
+				 }
+			 }
+			 checklistTitle=null; 
+		 }
+		}finally{
+			
+		}
+		
+		return LocalDocumenList;
 	}
 
 }
