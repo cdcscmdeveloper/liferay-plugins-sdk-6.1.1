@@ -1076,6 +1076,10 @@ public class SmApplicationBackingBean extends
 						SmCommonUtil.getDisplayDateFormat(acc.getExpDate()));
 			}
 		}
+		
+		// sort staff info
+		SmApplicationUtil.sortStaffInfo(getManagedBean().getSmAppl()
+				.getSmStaffTotals());
 
 		// set previous application to compare based on role
 		SmSideMenuIconUtil.setPrevApplByRole(getManagedBean());
@@ -5040,6 +5044,10 @@ public class SmApplicationBackingBean extends
 
 			// set section editor VO after update
 			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false);
+
+			// sort staff info after update
+			SmApplicationUtil.sortStaffInfo(getManagedBean().getSmAppl()
+					.getSmStaffTotals());
 		}
 	}
 

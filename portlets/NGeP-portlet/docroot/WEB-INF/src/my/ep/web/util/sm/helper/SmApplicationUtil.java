@@ -8035,6 +8035,40 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
+	/**
+	 * Sort staff total
+	 * 
+	 * @param List
+	 *            <SmStaffTotal> staffTotals
+	 */
+	public static void sortStaffInfo(List<SmStaffTotal> staffTotals) {
+		if (!EntityHelper.isCollectionEmpty(staffTotals)) {
+			for (SmStaffTotal tot : staffTotals) {
+				if (!StringUtils.isBlank(tot.getStaffCategory())) {
+					if (tot.getStaffCategory().equals(
+							SupplierManagementConst.STAFF_TYPE_CONTRACTOR)) {
+						tot.setSortOrder(1);
+					} else if (tot.getStaffCategory().equals(
+							SupplierManagementConst.STAFF_TYPE_PROFESSIONAL)) {
+						tot.setSortOrder(2);
+					} else if (tot.getStaffCategory().equals(
+							SupplierManagementConst.STAFF_TYPE_SEMIPROF)) {
+						tot.setSortOrder(3);
+					} else if (tot.getStaffCategory().equals(
+							SupplierManagementConst.STAFF_TYPE_CLERICAL)) {
+						tot.setSortOrder(4);
+					}
+				}
+			}
+			Collections.sort(staffTotals, new Comparator<SmStaffTotal>() {
+				@Override
+				public int compare(final SmStaffTotal s1, final SmStaffTotal s2) {
+					return s1.getSortOrder() - s2.getSortOrder();
+				}
+			});
+		}
+	}
+
 	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {
 		if (categoryCodeBbInstance == null) {
 			try {
