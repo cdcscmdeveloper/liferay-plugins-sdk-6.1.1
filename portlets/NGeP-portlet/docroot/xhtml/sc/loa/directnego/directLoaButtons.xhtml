@@ -49,8 +49,7 @@
 									partialSubmit="true" process="#{isCancelNReject ? '@this' : '@form'}"
 									update="#{isCancelNReject ? '@this' : '@form'}" />
 
-
-								<p:commandButton value="#{lbl['lbl.btn.verify']}"
+								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onstart="blockWidget.show();"
 									rendered="#{isPendingVerification}"
 									oncomplete="blockWidget.hide();"
