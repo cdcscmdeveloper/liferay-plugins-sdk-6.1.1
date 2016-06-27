@@ -333,8 +333,8 @@
 							required="true"
 							label="#{lbl['lbl.sc.purchase.in.default.valid.period']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.pidValidDays}"
-							size="43" style="text-align:right;margin-right: 5px;"
-							disabled="#{!(isPendingSubmissionStatus or isPendingVerification)}">
+							size="51" style="text-align:right;margin-right: 5px;"
+							disabled="#{isPendingSubmissionStatus)}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:message id="pidvalidDaysMsg" for="pidvalidDays" display="icon" /></td>
 				</tr>
@@ -407,7 +407,7 @@
 							validatorMessage="* Order Qty: must be a decimal number between 0.0 and 9999999999.999"
 							label="#{lbl['lbl.sc.purchase.in.default.order.qty']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}"
-							style="text-align:right;" size="43"
+							style="text-align:right;" size="51"
 							disabled="#{!isPendingSubmissionStatus}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:message id="ordqtyMsg" for="ordqty" display="icon" /></td>
