@@ -209,7 +209,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing" id="committeeAppointmentAddSpecificationBtnId"
 			disabled="#{empty qTCommitteBackingBean.managedBean.selectedPmUser}"
 				action="#{qTCommitteBackingBean.okCommitteeAction}"
-				update="@(.scMemberDtl)" />
+				update="@(.scMemberDtl,.amendButton)" />
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				styleClass="BtnSpacing"
