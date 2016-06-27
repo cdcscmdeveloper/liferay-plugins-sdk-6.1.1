@@ -154,6 +154,8 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlTempItem;
+import my.ep.persistence.entity.fl.request.VAddressTypeDeliveryAddress;
+import my.ep.persistence.entity.fl.request.VAgencyDeliveryAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -697,14 +699,21 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(getManagedBean().isAgencyAddress()) {
 			getManagedBean().setSelectedAddrTypeList(new ArrayList<PmAddressType>());
 			if(getManagedBean().getSelectedAgencyAddressList()!=null && getManagedBean().getSelectedAgencyAddressList().size()>0) {
-				for(CtAgencyAddress ctAgencyAddress : getManagedBean().getSelectedAgencyAddressList()) {
-					getManagedBean().getSelectedAddrTypeList().add(ctAgencyAddress.getAddressType());
+				for(VAgencyDeliveryAddress vAgencyDeliveryAddress : getManagedBean().getSelectedAgencyAddressList()) {
+					getManagedBean().getSelectedAddrTypeList().add(vAgencyDeliveryAddress.getPmAddressType());
 				}
 			}
 		}
-		if (null == getManagedBean().getSelectedAddrTypeList()
-				|| getManagedBean().getSelectedAddrTypeList().isEmpty()) {
-			return;
+//		if (null == getManagedBean().getSelectedAddrTypeList()
+//				|| getManagedBean().getSelectedAddrTypeList().isEmpty()) {
+//			return;
+//		}
+		if(getManagedBean().getSelectedDeliveryFullAddr() != null){
+			getManagedBean().setSelectedAddrTypeList(new ArrayList<PmAddressType>());
+			for(VAddressTypeDeliveryAddress vAddressTypeDeliveryAddress : getManagedBean().getSelectedDeliveryFullAddr()){
+				getManagedBean().getSelectedAddrTypeList().add(vAddressTypeDeliveryAddress.getPmAddressType());
+			}
+			
 		}
 		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
 		IContractZoneSO contractZoneSO = (IContractZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractZoneSO.class);
@@ -924,7 +933,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(messageId, new String[]{itemAddr.getScRequestItem().getItemName()}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));					
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			}
 			if(!itemExisted){
@@ -2822,7 +2831,59 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	}
 	//itemAddress.getScRequestItem().getRequestNoteItemId().equals(arg0)
-
+	
+	/**
+	 * Charge line apply for selected nodes.
+	 */
+	public void resetChargeLineDetails() {
+		getManagedBean().setSelectChargeLineRow(false);
+				getManagedBean().setVotFundId(null);
+				getManagedBean().setGlAccountId(null);
+				getManagedBean().setPrgActivityId(null);
+				getManagedBean().setSubSetiaId(null);
+			
+			
+			resetItemsWithChargeDrops(); // set COA to Y
+			FlFulfilmentItemAddr childItemAddress = null;
+			boolean selected=false;
+			for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
+				//code for selecting the treenode from popupmenu
+				if(!selected){
+					getManagedBean().setSelectedNode(selectedNode);
+					selected=true;
+				}
+				for(TreeNode children:selectedNode.getChildren()){
+					childItemAddress = (FlFulfilmentItemAddr)children.getData();
+					childItemAddress.setPmVotFund(null);
+					childItemAddress.setAssetInd(null);
+					childItemAddress.setPmGlAccount(null);
+					childItemAddress.setPmPrgActivity(null);
+					childItemAddress.setPmSubSetia(null);
+					childItemAddress.setVotFundDisplay(false);
+				}
+				childItemAddress = (FlFulfilmentItemAddr)selectedNode.getData();
+				
+				//Code for multiple delivery addresses based on item code
+				for (FlDeliveryAddress delAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
+					for (FlFulfilmentItemAddr itemDelAddress : delAddress.getFlFulfilmentItemAddr()) {
+						if (itemDelAddress.getScRequestItem().getRequestNoteItemId().longValue()==childItemAddress.getScRequestItem().getRequestNoteItemId().longValue()) {
+							itemDelAddress.setPmVotFund(null);
+							itemDelAddress.setAssetInd(null);
+							itemDelAddress.setPmGlAccount(null);
+							itemDelAddress.setPmPrgActivity(null);
+							itemDelAddress.setPmSubSetia(null);
+						}
+					}
+				}
+			}
+			populateChargeLineData(true);
+			onNodeSelect();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_745052, new String[]{}, 
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			
+	}
+	
 	private void updateSelectedTreeNodes() {
 		List<TreeNode> selectedNodes=new ArrayList<TreeNode>();
 		TreeNode root=getManagedBean().getChargeLineItemRoot();
@@ -2851,6 +2912,24 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					FlFulfilmentItemAddr selectedItem=(FlFulfilmentItemAddr)node.getData();
 					if(itemAddress.getScRequestItem().getRequestNoteItemId().equals(selectedItem.getScRequestItem().getRequestNoteItemId())){
 						itemAddress.setCoaValue("Y");
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	private void resetItemsWithChargeDrops() {
+		updateSelectedTreeNodes();
+		if(getManagedBean().getSelectedNodes().length==0) {
+			throw new EpException(MessageConst.ERROR_100049);
+		}
+		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
+				for(TreeNode node:getManagedBean().getSelectedNodes()){
+					FlFulfilmentItemAddr selectedItem=(FlFulfilmentItemAddr)node.getData();
+					if(itemAddress.getScRequestItem().getRequestNoteItemId().equals(selectedItem.getScRequestItem().getRequestNoteItemId())){
+						itemAddress.setCoaValue("N");
 						break;
 					}
 				}
