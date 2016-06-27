@@ -93,22 +93,23 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<ac:lov id="agencyAddressId" lovId="CT_AGENCY_ADDRESS"
+			<ac:lov id="agencyAddressId" lovId="FL_AGENCY_ADDRESS"
 						postUpdateListener="contractRequestBackingBean.updateDeliveryAddrDt"
 						headerText="#{lbl['lbl.ct.delivery.address']}" 
 						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
 						selectionMode="multiple"
 						saveObject="contractRequestBackingBean.managedBean.selectedAgencyAddressList"
-						conditionField="recordStatus^1|ctAgency.ctContractVer.contractVerId^#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.contractVerId}|ctAgency.orgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
+						conditionField="CONTRACT_VER_ID^#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.contractVerId}|ORG_PROFILE_ID^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup"
 						rendered="#{contractRequestBackingBean.managedBean.agencyAddress and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"/>
-			<ac:lov id="addressTypeId" lovId="PM_ADDRESS_TYPE_FL"
+			
+						<ac:lov id="addressTypeId" lovId="DELIVERY_FULL_ADDRESS_FL"
 						postUpdateListener="contractRequestBackingBean.updateDeliveryAddrDt"
 						headerText="#{lbl['lbl.ct.delivery.address']}" 
 						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
-						selectionMode="multiple" 
-						saveObject="contractRequestBackingBean.managedBean.selectedAddrTypeList"
-						conditionField="recordStatus^1|addressType^#{contractRequestBackingBean.getDeliveryAddressType()}|pmOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
+						selectionMode="multiple"
+						saveObject="contractRequestBackingBean.managedBean.selectedDeliveryFullAddr"
+						conditionField="ORG_PROFILE_ID^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup"
 						rendered="#{!contractRequestBackingBean.managedBean.agencyAddress and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"/>
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" 

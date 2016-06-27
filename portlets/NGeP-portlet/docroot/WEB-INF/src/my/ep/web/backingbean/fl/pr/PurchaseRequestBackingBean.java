@@ -115,6 +115,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.fl.request.VAddressTypeDeliveryAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -571,9 +572,16 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * Sorts delivery addresses based on the address.
 	 */
 	public void updateDeliveryAddrDt(List<BaseEntity> entity) {
-		if (null == getManagedBean().getSelectedPmDelAddrList()
-				|| getManagedBean().getSelectedPmDelAddrList().isEmpty()) {
-			return;
+//		if (null == getManagedBean().getSelectedPmDelAddrList()
+//				|| getManagedBean().getSelectedPmDelAddrList().isEmpty()) {
+//			return;
+//		}
+		if(getManagedBean().getSelectedDeliveryFullAddr() != null){
+			getManagedBean().setSelectedPmDelAddrList(new ArrayList<PmAddressType>());
+			for(VAddressTypeDeliveryAddress vAddressTypeDeliveryAddress : getManagedBean().getSelectedDeliveryFullAddr()){
+				getManagedBean().getSelectedPmDelAddrList().add(vAddressTypeDeliveryAddress.getPmAddressType());
+			}
+			
 		}
 		FlDeliveryAddress deliveryAddr = null;
 		//int i = 0;
