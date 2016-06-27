@@ -5034,7 +5034,7 @@ public class QTDetailBackingBean extends
 		try {
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-
+			log.info("qtId: " + scQt.getQtId());
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
 			QuationTenderResDTO resDTO = qtDetailSO.updateQTPublishDate(reqDTO);
