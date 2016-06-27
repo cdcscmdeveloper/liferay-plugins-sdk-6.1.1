@@ -5036,19 +5036,20 @@ public class QTDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			scQt.setPublishDate(new Date());
-			reqDTO.setQtdetail(scQt);
-			
-			boolean isSucessful = qtDetailSO.updateQTPublishDate(reqDTO).isSuccessful();
-			
+			reqDTO.setQtId(scQt.getQtId());
+			QuationTenderResDTO resDTO = qtDetailSO.updateQTPublishDate(reqDTO);
+			boolean isSucessful = resDTO.isSuccessful();
 			if(isSucessful){
-				try {
-					log.info("call simple scheduler if QT is publishing today.");
-					EpSchedulerHelper.scheduleSimplePublishingJob(scQt);
-					isSucessful = true;
-				} catch (SchedulerException e) {
-					e.printStackTrace();
-					log.error(e.getMessage());
+				scQt = resDTO.getQtDetail();
+				if(scQt != null) {
+					try {
+						log.info("call simple scheduler if QT is publishing today.");
+						EpSchedulerHelper.scheduleSimplePublishingJob(scQt);
+						isSucessful = true;
+					} catch (SchedulerException e) {
+						e.printStackTrace();
+						log.error(e.getMessage());
+					}	
 				}
 			}
 			if (isSucessful) {
@@ -5058,7 +5059,7 @@ public class QTDetailBackingBean extends
 								FacesMessage.SEVERITY_INFO,
 								null,
 								"QT " + scQt.getQtNo() + " publish Sucessfully."
-				));
+								));
 			}
 		} finally {
 			qtDetailSO = null;
