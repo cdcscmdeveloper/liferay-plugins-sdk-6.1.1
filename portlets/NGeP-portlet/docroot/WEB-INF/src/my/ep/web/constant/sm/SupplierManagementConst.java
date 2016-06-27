@@ -437,6 +437,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_REVIEW_CANCELLATION = 20301;
 	public static final long PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED = 20117;
 	public static final long PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED = 20116;
+	public static final long PM_STATUS_REJECTED_BY_SYS = 20118L;
 
 	public static final String SM_APPL_PAGE_TYPE_BASIC = "BASICINFO";
 	public static final String SM_APPL_PAGE_TYPE_BRANCH = "BRANCHINFO";
@@ -1064,6 +1065,10 @@ public class SupplierManagementConst {
 
 	public String getSiteVisitAssignmentTypeAfter() {
 		return SITE_VISIT_ASSIGNMENT_TYPE_AFTER;
+	}
+	
+	public long getPmStatusRejectedBySys() {
+		return PM_STATUS_REJECTED_BY_SYS;
 	}
 
 	public int getMAX_PAYMENT_BANK() {
