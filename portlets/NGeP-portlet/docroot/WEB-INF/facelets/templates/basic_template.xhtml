@@ -30,22 +30,30 @@
 			else clearTimeout(timeOut);
 		}
 		
-		function addonchange(uploadId) {
-			$('input[id$=' + uploadId + '_input]').get(0).onchange = function(){
-				if($('.template-upload').length >= 1) {
-					$('input[id$=' + uploadId + '_input]').get(0).disabled=true;
-					doggleChooseButton(uploadId);
-				}
-				addonchange(uploadId);
-			};
+		function singleUploadListener(upload_widget) {
+			addChooseOnchange(upload_widget);
 		}
-	
-		function doggleChooseButton(uploadId) {
-			$('.cancel').get($('.cancel').length-1).childNodes[0].onclick = function(){
-				if($('.template-upload').length == 1) {
-					$('input[id$=' + uploadId + '_input]').get(0).disabled=false;
-				}
+		
+		function addChooseOnchange(upload_widget) {
+			if(upload_widget.buttonBar.find('input[type=file]').get(0).type == 'file') {
+				upload_widget.buttonBar.find('input[type=file]').change(function() {
+					var files = upload_widget.uploadContent.find('.files .template-upload');
+					if (files.length >= 1) {
+						upload_widget.buttonBar.find('input[type=file]').get(0).disabled=true;
+						doggleChooseButton(upload_widget);
+					}
+					addChooseOnchange(upload_widget);
+				});
 			}
+		}
+		
+		function doggleChooseButton(upload_widget) {
+			upload_widget.uploadContent.find('.cancel').get(0).onclick = function(){
+				var files = upload_widget.uploadContent.find('.files .template-upload');
+				if (files.length == 1) {
+					upload_widget.buttonBar.find('input[type=file]').get(0).disabled=false;
+				}
+			}		
 		}
 
 	</script>
