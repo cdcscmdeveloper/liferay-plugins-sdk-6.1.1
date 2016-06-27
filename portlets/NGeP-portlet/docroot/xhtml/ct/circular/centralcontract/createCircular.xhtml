@@ -24,7 +24,7 @@
 	                       rowKey="#{pidObj}" selection="#{centralContractBackingBean.managedBean.ctCircularPidReasons}">
 				                 <ac:paginator for="pidTableId" />
 				                  <p:ajax event="toggleSelect"  update=":form:pidTableId,:form:delPidBtn" />
-                                  <p:ajax event="rowSelect" update=":form:pidTableId,:form:delPidBtn" />
+                                  <p:ajax event="rowSelect" update=":form:delPidBtn" />
 			                      <p:ajax event="rowSelectCheckbox"  update=":form:pidTableId,:form:delPidBtn" />
                                   <p:ajax event="rowUnselectCheckbox"  update=":form:pidTableId,:form:delPidBtn" />
                                   <p:column selectionMode="multiple" style="width:3%" 
@@ -35,7 +35,7 @@
 		                                <c:if test="#{!centralContractBackingBean.managedBean.viewContract}">  
 		                                    <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" 
 		                                             disabled="#{centralContractBackingBean.managedBean.viewContract}" style="width:360px;float:left;text-align:left;">
-			                                             <f:selectItems value="#{centralContractBackingBean.getDropdownPidCodeValues(pidObj.pmReason.reasonId)}" />
+			                                             <f:selectItems value="#{centralContractBackingBean.getDropdownPidCodeValues()}" />
 			                                             <p:ajax event="change" partialSubmit="true" update=":form:pidTableId"
 			                                                 process="@this" listener="#{centralContractBackingBean.validatePidReason(pidObj.pmReason.reasonId)}"></p:ajax>
 			                               </p:selectOneMenu>
