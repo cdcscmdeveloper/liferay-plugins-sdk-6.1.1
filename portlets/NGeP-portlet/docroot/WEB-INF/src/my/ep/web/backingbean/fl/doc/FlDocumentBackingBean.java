@@ -1092,7 +1092,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 */
 	private void defaultPtjAndMinistryValues() {
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
-			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || hasSupplierRole() ) {
+			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())) {
 			//this.getManagedBean().setMinistry(null);
 			//this.getManagedBean().setPtj(null);
 			//this.getManagedBean().setPtjGroup(null);
@@ -1237,10 +1237,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	public boolean disablePtjGroupLov() {
 		return (hasGovernmentUserRole() || getManagedBean().getMinistry() == null );
 	}
-	
-	public boolean disableAllLov() {
-		return (!hasGovernmentUserRole() && hasSupplierRole());
-	}
 
 	/**
 	 * Get PTJ group condition for construct the LOV listing
@@ -1297,21 +1293,23 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	}
 	
 	/**
-	 * On function type changed
-	 * 
-	 * @param e
-	 */
-	public void onFunctionTypeChange(AjaxBehaviorEvent e) {
-		String id = (String) e.getComponent().getAttributes().get("value");
-		System.out.println(id);
-	}
-	
-	/**
 	 * Show function type if user have both ptj & supplier role
 	 * @return boolean
 	 */
 	public boolean showFunctionType() {
-		return hasSupplierRole() && hasGovernmentUserRole();
+		if(hasSupplierRole() && hasGovernmentUserRole()) {
+			if(getManagedBean().getSearchFunctionType()==null) {
+				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+			}
+			return true;
+		} else {
+			if(hasSupplierRole()) {
+				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_SUPPLIER);
+			} else {
+				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
+			}
+			return false;
+		}
 	}
 	
 }
