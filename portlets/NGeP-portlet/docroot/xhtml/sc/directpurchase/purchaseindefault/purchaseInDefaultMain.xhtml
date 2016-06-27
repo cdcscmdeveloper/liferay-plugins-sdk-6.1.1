@@ -43,7 +43,7 @@
 						 <p:commandLink
 							value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.trackingDairyView}"
-							action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(purchaseInDefaultBackingBean.managedBean.dpObj)}"
+							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypePurchaseInDefault, purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultId)}"
 							immediate="true" /> 
 							
 						<p:commandButton
