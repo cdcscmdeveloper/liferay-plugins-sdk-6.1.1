@@ -27,13 +27,13 @@
 					<p:selectBooleanCheckbox id="selectAllItemsByItem"
 						value="#{scheduleBiddingBB.managedBean.selectedAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="@([id$=bidScheduleByItem])"
-							listener="#{scheduleBiddingBB.selectAll}" />
+							update="@([id$=scheduleByItemPanel])"
+							listener="#{scheduleBiddingBB.selectAll(scheduleBiddingBB.managedBean.selectedAll,scheduleBiddingBB.managedBean.bidItemList)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox id="selectItemByItem"
-					value="#{scheduleBiddingBB.managedBean.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@this"
+					value="#{bidItem.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=scheduleByItemPanel])"
 						listener="#{scheduleBiddingBB.selected(index)}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -126,8 +126,6 @@
 				</p:inputText>
 			</p:column>
 		</p:dataTable>
-
-		<p:spacer height="5"></p:spacer>
 		<div align="left">
 
 			<table style="align: left">
@@ -170,11 +168,11 @@
 						</p:calendar></td>
 
 					<TD><p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
-							id="applyDates"
+							id="applyDates" disabled="#{scheduleBiddingBB.deleteselectedList(scheduleBiddingBB.managedBean.bidItemList)}"
 							process="@this,multiSelectStartDateByItem,multiSelectEndDateByItem"
 							partialSubmit="true" style="float:center;"
 							action="#{scheduleBiddingBB.applyBidDates}"
-							update="@([id$=bidScheduleByItem])"
+							update="@([id$=scheduleByItemPanel])"
 							title="#{lbl['lbl.sc.bidding.item.btn.apply.to.all.tooltip']}" /></TD>
 
 				</tr>
