@@ -25,7 +25,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.batch.IDIInterfaceSO;
-import my.ep.biz.service.pm.common.notify.INotifySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogReqDto;
@@ -128,6 +127,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			ISearchBean<DIInterfaceLog> searchBean) {
 		log.info("getSearchBeanData");
 		if (this.getManagedBean().getInterfaceLogId() != null) {
+
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("logId",
 							SearchOperator.OPERATOR_EQUALS.value(), this
@@ -185,16 +185,75 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 								SearchOperator.OPERATOR_NOT_EQUALS.value(),
 								"N/A", SearchCondition.CONDITION_AND.value())));
 
-		if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
+		// this search criteria used to get the parent records with mapping of
+		// all NULL child records
+		SearchFilterBean progAcctgFilterBean = new SearchFilterBean(
+				"pmInterfaceProgAct.diInterfaceLog",
+				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
 
+		SearchFilterBean projectFilterBean = new SearchFilterBean(
+				"pmInterfaceProject.dIInterfaceLog",
+				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
+
+		SearchFilterBean glAcntFilterBean = new SearchFilterBean(
+				"pmInterfaceGlAccount.dIInterfaceLog",
+				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
+
+		SearchFilterBean agOffFilterBean = new SearchFilterBean(
+				"pmInterfaceAgOff.diInterfaceLog",
+				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
+
+		SearchFilterBean bankFilterBean = new SearchFilterBean(
+				"pmInterfaceBank.dIInterfaceLog",
+				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
+
+		SearchFilterBean kptjFilterBean = new SearchFilterBean(
+				"pmInterfaceKptj.diInterfaceLog",
+				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
+
+		SearchFilterBean ptjFilterBean = new SearchFilterBean(
+				"pmInterfacePtj.diInterfaceLog",
+				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
+
+		SearchFilterBean ppFilterBean = new SearchFilterBean(
+				"pmInterfacePP.dIInterfaceLog",
+				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
+
+		SearchFilterBean votFilterBean = new SearchFilterBean(
+				"pmInterfaceVot.diInterfaceLog",
+				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
+
+		SearchFilterBean danaFilterBean = new SearchFilterBean(
+				"pmInterfaceDana.dIInterfaceLog",
+				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null,
+				SearchCondition.CONDITION_OR.value());
+
+		searchBean.getDataFilterBeans().add(
+			             	new SearchMultiFilterBean(progAcctgFilterBean,SearchCondition.CONDITION_AND.value(),
+			                  new SearchMultiFilterBean(projectFilterBean,SearchCondition.CONDITION_OR.value(),
+			                	new SearchMultiFilterBean(glAcntFilterBean,SearchCondition.CONDITION_OR.value(),
+				                 new SearchMultiFilterBean(agOffFilterBean,SearchCondition.CONDITION_OR.value(),
+				                  new SearchMultiFilterBean(bankFilterBean,SearchCondition.CONDITION_OR.value(),
+				                   new SearchMultiFilterBean(kptjFilterBean,SearchCondition.CONDITION_OR.value(),
+				                    new SearchMultiFilterBean(ptjFilterBean,SearchCondition.CONDITION_OR.value(),
+			                     	 new SearchMultiFilterBean(ppFilterBean,SearchCondition.CONDITION_OR.value(),
+			                     	  new SearchMultiFilterBean(votFilterBean,SearchCondition.CONDITION_OR.value(),
+				                       danaFilterBean))))))))));
+
+		if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("fileName",
-							SearchOperator.OPERATOR_LIKE.value(), "1000"
+					new SearchMultiFilterBean(new SearchFilterBean("processId",
+							SearchOperator.OPERATOR_EQUALS.value(), this
+									.getManagedBean().getProcessId()
+									.toUpperCase()), new SearchFilterBean(
+							"fileName", SearchOperator.OPERATOR_LIKE.value(),
+							"1000"
 									+ this.getManagedBean().getProcessId()
-											.toUpperCase() + "400001"));
+											.toUpperCase() + "400001")));
 		}
 		return searchBean;
 	}
+
 
 	/**
 	 * The Class SearchGfMasPagingDataModel.
