@@ -32,7 +32,19 @@
 		</style>
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
-			<h:panelGroup id="orgSearch" rendered="#{!flDocumentBackingBean.disableAllLov()}">
+			<table>
+				<tr>
+					<td style="width: 190px;"/>
+					<td>
+						<p:selectOneRadio value="#{flDocumentBackingBean.managedBean.searchFunctionType}" 
+							rendered="#{flDocumentBackingBean.showFunctionType()}" >
+							<f:selectItems value="#{flDocumentBackingBean.getFunctionType()}" />
+							<p:ajax event="change" update=":form" />
+						</p:selectOneRadio>
+					</td>
+				</tr>
+			</table>
+			<h:panelGroup id="orgSearch" rendered="#{flDocumentBackingBean.managedBean.searchFunctionType==ParameterConst.orgTypePtj}">
 			<table>
 				<tr>
 					<td style="width: 190px;">

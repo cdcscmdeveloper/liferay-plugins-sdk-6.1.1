@@ -257,6 +257,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				searchBean.setUseEntityClass(true);
 				reqDTO.setSearchBean(searchBean);
 				
+				if(getSearchFunctionType()!=null) {
+					reqDTO.setFunctionType(getSearchFunctionType());
+				}
 				reqDTO.setOrderType(getSearchOrderType());
 				if(getSearchOrderNo()!=null && getSearchOrderNo()!="") {
 					reqDTO.setOrderNo(getSearchOrderNo());
