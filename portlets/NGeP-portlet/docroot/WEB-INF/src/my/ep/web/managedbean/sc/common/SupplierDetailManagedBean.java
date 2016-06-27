@@ -6,6 +6,7 @@ package my.ep.web.managedbean.sc.common;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -23,8 +24,10 @@ public class SupplierDetailManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private SmSupplier smSupplier;
 	private String mofNo;
+	private String supplierName;
+	private SmAppl smAppl;
+	private SmSupplier smSupplier;
 	private SmGstSupplier smGstSupplier;
 
 	public SupplierDetailManagedBean() {
@@ -58,6 +61,36 @@ public class SupplierDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setMofNo(String mofNo) {
 		this.mofNo = mofNo;
+	}
+
+	/**
+	 * @return the supplierName
+	 */
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+	/**
+	 * @param supplierName
+	 *            the supplierName to set
+	 */
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+
+	/**
+	 * @return the smAppl
+	 */
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	/**
+	 * @param smAppl
+	 *          the smAppl to set
+	 */
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
 	}
 
 	/**
