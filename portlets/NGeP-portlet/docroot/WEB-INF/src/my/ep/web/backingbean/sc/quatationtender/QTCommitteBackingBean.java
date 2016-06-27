@@ -841,6 +841,7 @@ public class QTCommitteBackingBean extends
 				tabs.get(i).getMembers().clear();
 			}
 		}
+		setQtMaintencesChanges();
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
@@ -1091,6 +1092,7 @@ public class QTCommitteBackingBean extends
 					this.getManagedBean().setSelectedTabIndex(i);
 					this.getManagedBean().setSelectedTabBean(tabBean);
 					this.getManagedBean().setCommittemembers(null);
+					setQtMaintencesChanges();
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -1193,6 +1195,7 @@ public class QTCommitteBackingBean extends
 					this.getManagedBean().setSelectedTabIndex(i);
 					this.getManagedBean().setSelectedTabBean(tabBean);
 					this.getManagedBean().setCommitteMember(null);
+					setQtMaintencesChanges();
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -1598,6 +1601,7 @@ public class QTCommitteBackingBean extends
 		Collections.sort(scCommittee.getScCommitteeMembers());
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 		}
+		setQtMaintencesChanges();
 		// Specification Committee validation
 		RequestContext.getCurrentInstance().execute(
 				"newspecificationcommittee.hide()");
@@ -1862,6 +1866,7 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().setToBeDelCommitteMemebers(committeeMembers);
 		this.getManagedBean().setCommitteMember(null);
 		this.getManagedBean().setExtraDeleteComitteeSelection(null);
+		setQtMaintencesChanges();
 
 	}
 
@@ -1997,13 +2002,9 @@ public class QTCommitteBackingBean extends
 
 					return true;
 				}
-			} else if (isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_CLOSED)) {
+			} else if (!isEligibleStatusForBtns(currentStatusId)) {
 				return true;
-			} else if (isMaintenanceEligibleStatus(currentStatusId)) {
-							
-				return true;
-			}
-			 
+			} 
 			if (!getManagedBean().isDeskOfficer()) {
 				return true;
 			}
@@ -2053,41 +2054,25 @@ public class QTCommitteBackingBean extends
 	 * @return true, if is FC editable
 	 */
 	public boolean isFCEditable() {
+		
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
-
-		if (!isQTStatusGreaterThanOrEquals(currentQtStatus, QTStatusConst.QT_EVALUATION_PROPOSAL) || !this.getManagedBean().isMaintanceFlow()) {
-			return true;
-		} 
-
+		if (this.getManagedBean().isMaintanceFlow()) {
+			if (isQTStatusInBetween(currentQtStatus,
+					QTStatusConst.QT_PENDING_PB_APPROVAL,
+					QTStatusConst.QT_EVALUATION_PROPOSAL)
+					&& !QTStatusConst.QT_CLOSED.equals(currentQtStatus)) {
+				return this.getManagedBean().isDeskOfficer();
+			} 
+		}else {
+			return isQTStatusGreaterThanOrEquals(currentQtStatus,
+					QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) ? this
+					.getManagedBean().isDeskOfficer() : false;
+		}
 		return false;
 	}
 
-	public boolean isEnableCloneButton() {
-		
-		Long currentSatatusId = this.getManagedBean().getCurrentStatusId();
-		if (isMaintenanceEligibleStatus(currentSatatusId)) {
-			return true;
-		} else {
-			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(currentSatatusId)
-					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentSatatusId))
-					&& !SCProcessNameConst.REVISE_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getTaskName())) {
-				return true;
-			} else if (isQTStatusAfterScheduleDoc(this.getManagedBean().getCurrentStatusId())
-					&& !SCProcessNameConst.REVISE_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getTaskName())
-					&& !SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getTaskName())) {
-				return true;
-			}
-		}
-		
-		return !getManagedBean().isDeskOfficer();
-	}
+	
 
 	/**
 	 * Method to check wheter committe is formed with at least one chairperson
@@ -2236,10 +2221,7 @@ public class QTCommitteBackingBean extends
 
 		if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 				.equalsIgnoreCase(commType)
-				&& isQTStatusInBetween(this.getManagedBean()
-						.getCurrentStatusId(),
-						QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-						QTStatusConst.QT_PROPOSAL_PREPARATION)
+				&& isEligibleStatusForBtns(committeStatus)
 				&& this.getManagedBean().isDeskOfficer()) {
 			isRenderBtn = true;
 			ScQt scQt = this.getManagedBean().getQt();
@@ -2291,11 +2273,11 @@ public class QTCommitteBackingBean extends
 		return isPresent;
 	}
 	
-	private boolean isMaintenanceEligibleStatus(Long statusId) {
+	private boolean isEligibleStatusForBtns(Long statusId) {
 
-		return (this.getManagedBean().isMaintanceFlow() && 
-				(isMaintancePendingChklistStatus() || QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL
-				.equals(statusId)));
+		return (isQTStatusInBetween(statusId,
+				QTStatusConst.QT_PENDING_PB_APPROVAL,
+				QTStatusConst.QT_PROPOSAL_PREPARATION));
 
 	}
 	
@@ -2325,4 +2307,10 @@ public class QTCommitteBackingBean extends
 		}
 		return committeeType;
 	}
+	
+	private void setQtMaintencesChanges() {
+		this.getManagedBean().setChangesOnQTMaintenance(
+				this.getManagedBean().isMaintanceFlow());
+	}
+	
 }
