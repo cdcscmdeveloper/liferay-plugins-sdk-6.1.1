@@ -5,6 +5,26 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<script>
+	jQuery(document).ready(function () {
+	    jQuery(document).ready(function () {
+		if($("input[id$=':form:sorSearchOrgTypeId:0']").is(':disabled')){
+			 console.log("0");
+			 $("input[id$=':form:sorSearchOrgTypeId:1']").prop('checked', true);
+			 $("input[id$=':form:sorSearchOrgTypeId:1']").change();
+		}else if($("input[id$=':form:sorSearchOrgTypeId:1']").is(':disabled')){
+			 console.log("1");
+			 $("input[id$=':form:sorSearchOrgTypeId:0']").prop('checked', true);
+			 $("input[id$=':form:sorSearchOrgTypeId:0']").change();
+		}else{
+			$("input[id$=':form:sorSearchOrgTypeId:0']").prop('checked', true);
+			$("input[id$=':form:sorSearchOrgTypeId:0']").change();
+		}
+	    });
+	});
+		
+	</script>
+	
 	<p:panel id="orgSearchPanel"
 		header="#{lbl['lbl.pm.search.rejection.reason']}" toggleable="true">
 		<table class="ppTwoTable">
@@ -13,7 +33,7 @@
 						value="#{lbl['lbl.pm.org.category']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneRadio id="sorSearchOrgTypeId" layout="custom"
-						styleClass="commonLabel" 
+						styleClass="commonLabel" widgetVar="myCheckbox"
 						value="#{organisationBackingBean.managedBean.searchOrgCategory}">
 						<f:selectItem 
 							itemLabel="#{lbl['lbl.pm.org.federal.government']}" 
