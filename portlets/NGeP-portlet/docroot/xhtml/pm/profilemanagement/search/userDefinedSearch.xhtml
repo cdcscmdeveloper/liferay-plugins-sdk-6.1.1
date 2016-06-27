@@ -93,7 +93,7 @@
 					<p:commandLink id="ptjSearchCL" partialSubmit="true"
 						disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 						process="@this" update=":form:orgProfileCcId:ptjPopup"
-						action="#{organisationSearchBackingBean.renewSesionObject}"
+						action="#{organisationSearchBackingBean.initPtjPopup}"
 						oncomplete="ptjPopup.show();" >
 						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
 					</p:commandLink>

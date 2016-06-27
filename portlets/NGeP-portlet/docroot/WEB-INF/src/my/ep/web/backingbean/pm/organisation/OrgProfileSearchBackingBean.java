@@ -2,7 +2,7 @@ package my.ep.web.backingbean.pm.organisation;
 
 import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
@@ -11,7 +11,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -32,7 +31,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "organisationSearchBackingBean")
-@RequestScoped
+@ViewScoped
 public class OrgProfileSearchBackingBean extends
 		BaseBackingBean<OrgProfileSearchManagedBean> {
 	private static Logger log = Logger
@@ -45,6 +44,11 @@ public class OrgProfileSearchBackingBean extends
 	public SelectItem[] getJabatanDropdown() {
 		return PmCommonUtil.getJabatanDropdown(getManagedBean()
 				.getMinistryProfileId());
+	}
+	
+	public void initPtjPopup(){
+		this.renewSesionObject();
+		this.getManagedBean().setPtjCodeName(ProfileManagementConst.PTJ_CODE);
 	}
 
 	private class OrgProfileDataModel extends PagingDataModel<PmOrgProfile> {
@@ -73,39 +77,14 @@ public class OrgProfileSearchBackingBean extends
 				if(getManagedBean().getJabatanProfileId() != null){
 					reqDTO.setJabatanId(getManagedBean().getJabatanProfileId());
 				}
-				
-				if (StringUtils.isNotBlank(getManagedBean().getPtjCodeName())
-						&& (StringUtils.isNotBlank(getManagedBean().getPtjCodeNameSearchValues()))) {
-					if (getManagedBean().getPtjCodeName().equalsIgnoreCase(
-							ProfileManagementConst.PTJ_CODE) || 
-							getManagedBean().getPtjCodeName().equalsIgnoreCase(
-									ProfileManagementConst.KPTJ_CODE )) {
-						SearchFilterBean filterBean = new SearchFilterBean(
-								"pmOrgValidity.orgCode",
-								SearchOperator.OPERATOR_LIKE.value(),
-								getManagedBean().getPtjCodeNameSearchValues());
-						filterBean.setCaseInsensitive(true);
-						searchBean.getDataFilterBeans().add(filterBean);
-
-					} else if (getManagedBean().getPtjCodeName()
-							.equalsIgnoreCase(ProfileManagementConst.PTJ_NAME
-									) || 
-									getManagedBean().getPtjCodeName().equalsIgnoreCase(
-											ProfileManagementConst.KPTJ_NAME )) {
-						SearchFilterBean filterBean = new SearchFilterBean(
-								"pmOrgValidity.orgName",
-								SearchOperator.OPERATOR_LIKE.value(),
-								getManagedBean().getPtjCodeNameSearchValues());
-						filterBean.setCaseInsensitive(true);
-						searchBean.getDataFilterBeans().add(filterBean);
-					}
-				}
+				ISearchBean<PmOrgProfile> searchBeanData = getSearchBeanData(searchBean);
+			
 				
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
-				reqDTO.setOrgProfileSearchBean(searchBean);
+				reqDTO.setOrgProfileSearchBean(searchBeanData);
 				OrgProfileResDTO resDTO = null;
 				if(ParameterConst.ORG_TYPE_PTJ.equals(getManagedBean().getOrgType())){
 					resDTO = orgProfileSO.retrievePtjListByParents(reqDTO);
@@ -181,6 +160,37 @@ public class OrgProfileSearchBackingBean extends
 		}
 		
 		return items;
+	}
+	
+	private ISearchBean<PmOrgProfile> getSearchBeanData(ISearchBean<PmOrgProfile> searchBean){
+		log.info("getSearchBeanData");
+		if (StringUtils.isNotBlank(getManagedBean().getPtjCodeName())
+				&& (StringUtils.isNotBlank(getManagedBean().getPtjCodeNameSearchValues()))) {
+			if (getManagedBean().getPtjCodeName().equalsIgnoreCase(
+					ProfileManagementConst.PTJ_CODE) || 
+					getManagedBean().getPtjCodeName().equalsIgnoreCase(
+							ProfileManagementConst.KPTJ_CODE )) {
+				SearchFilterBean filterBean = new SearchFilterBean(
+						"pmOrgValidity.orgCode",
+						SearchOperator.OPERATOR_LIKE.value(),
+						getManagedBean().getPtjCodeNameSearchValues());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+
+			} else if (getManagedBean().getPtjCodeName()
+					.equalsIgnoreCase(ProfileManagementConst.PTJ_NAME
+							) || 
+							getManagedBean().getPtjCodeName().equalsIgnoreCase(
+									ProfileManagementConst.KPTJ_NAME )) {
+				SearchFilterBean filterBean = new SearchFilterBean(
+						"pmOrgValidity.orgName",
+						SearchOperator.OPERATOR_LIKE.value(),
+						getManagedBean().getPtjCodeNameSearchValues());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+			}
+		}
+		return searchBean;
 	}
 	
 }
