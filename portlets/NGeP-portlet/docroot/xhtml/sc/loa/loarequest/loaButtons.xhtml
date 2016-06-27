@@ -22,7 +22,7 @@
 
 				<td style="vertical-align: bottom;"><p:commandLink
 						value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
-						action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(lOADetailBackingBean.managedBean.dpObj)}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeLetterOfAward, lOADetailBackingBean.managedBean.scLoa.loaId)}"
 						immediate="true" /></td>
 			</tr>
 		</table>
@@ -66,7 +66,7 @@
 								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 								update="#{isReject ? '@this' : '@form'}" />
 
-							<p:commandButton value="#{lbl['lbl.btn.verify']}"
+							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onstart="blockWidget.show();"
 								rendered="#{isPendingVerification and validityDaysExpiredQt}"
 								oncomplete="blockWidget.hide();"
