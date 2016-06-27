@@ -107,27 +107,26 @@ public class ScheduleBiddingBackingBean extends
 	 * Method to apply dates to all the selected items in the data table
 	 */
 	public void applyBidDates() {
-
-		if (getManagedBean().getSelectedIndexes() != null
-				&& getManagedBean().getSelectedIndexes().size() > 0) {
-
-			Date startDate = getManagedBean().getRowSelectedBid()
-					.getStartDate();
-			Date endDate = getManagedBean().getRowSelectedBid().getEndDate();
+		Date startDate = getManagedBean().getRowSelectedBid().getStartDate();
+		Date endDate = getManagedBean().getRowSelectedBid().getEndDate();
+		if (startDate != null && endDate != null) {
 			String duration = getManagedBean().getRowSelectedBid()
 					.getDuration();
-			for (Integer index : getManagedBean().getSelectedIndexes()) {
-				getManagedBean().getBidItemList().get(index).getScBidSchedule()
-						.setStartDate(startDate);
-				getManagedBean().getBidItemList().get(index).getScBidSchedule()
-						.setEndDate(endDate);
-				getManagedBean().getBidItemList().get(index).getScBidSchedule()
-						.setDuration(duration);
+			List<ScBidItem> bidItemList = this.getManagedBean()
+					.getBidItemList();
+			int size = bidItemList.size();
+			for (int i = 0; i < size; i++) {
+				if (bidItemList.get(i).isSelected()) {
+					bidItemList.get(i).getScBidSchedule().setStartDate(startDate);
+					bidItemList.get(i).getScBidSchedule().setEndDate(endDate);
+					bidItemList.get(i).getScBidSchedule().setDuration(duration);
+					bidItemList.get(i).setSelected(false);
+				}
 			}
+			getManagedBean().setSelectedAll(false);
+			getManagedBean().getRowSelectedBid().setStartDate(null);
+			getManagedBean().getRowSelectedBid().setEndDate(null);
 		}
-		getManagedBean().getSelectedIndexes().clear();
-		getManagedBean().setSelectedAll(false);
-		getManagedBean().setSelected(false);
 
 	}
 
