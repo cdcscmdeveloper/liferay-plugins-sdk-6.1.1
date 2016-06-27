@@ -97,7 +97,7 @@
 		
 	</script>
 	<p:dialog id="uploadDlg" widgetVar="uploadDlg" appendToBody="false" resizable="false" width="700px"
-		height="350" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" onShow="addonchange('upload');">
+		height="350" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" onShow="singleUploadListener(uploadWV);">
 		<p:fileUpload style="display:inline;" multiple="false" fileUploadListener="#{registrationBackingBean.handleFileUpload}"
 			mode="basic" id="upload" fileLimit="1" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="dtGstDocId"
