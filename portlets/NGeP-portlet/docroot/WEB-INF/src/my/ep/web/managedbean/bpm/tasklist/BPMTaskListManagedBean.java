@@ -455,7 +455,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       
 						       if(worklistItemVO.getTitle().startsWith("lbl.pm")) {
 						    	   AccessApplResDTO accessApplResDTO = 
-						    			   retrieveAccessApplByDocId(worklistItemVO.getDocId());
+						    			   retrieveAccessApplByDocNo(worklistItemVO.getDocNumber());
 						    	   if(accessApplResDTO.isSuccessful() && 
 						    			   accessApplResDTO.getAccessAppl() != null){
 						    		  
@@ -619,7 +619,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       
 						       if(worklistItemVO.getTitle().startsWith("lbl.pm")) {
 						    	   AccessApplResDTO accessApplResDTO = 
-						    			   retrieveAccessApplByDocId(worklistItemVO.getDocId());
+						    			   retrieveAccessApplByDocNo(worklistItemVO.getDocNumber());
 						    	   if(accessApplResDTO.isSuccessful() && 
 						    			   accessApplResDTO.getAccessAppl() != null){
 						    		  
@@ -767,7 +767,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	}
 	
 	
-	private AccessApplResDTO retrieveAccessApplByDocId(Integer docId){
+	private AccessApplResDTO retrieveAccessApplByDocNo(String docNo){
 		IAccessApplSO accessApplSO = null;
 		try{
 			accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
@@ -775,8 +775,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							IAccessApplSO.class);
 			
 			AccessApplReqDTO reqDTO = new AccessApplReqDTO();
-			reqDTO.setAccessApplId(Long.valueOf(docId));
-			AccessApplResDTO resDTO = accessApplSO.retrieveAccessApplById(reqDTO);
+			reqDTO.setDocNo(docNo);
+			AccessApplResDTO resDTO = accessApplSO.retrieveAccessApplByApplNo(reqDTO);
 			if(resDTO.isSuccessful()){
 				return resDTO;
 				
