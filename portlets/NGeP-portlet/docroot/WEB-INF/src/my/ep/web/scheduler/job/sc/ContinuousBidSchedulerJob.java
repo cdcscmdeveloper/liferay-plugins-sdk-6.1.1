@@ -42,7 +42,6 @@ public class ContinuousBidSchedulerJob implements Job {
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		log.info("$$$$$ inside execute of  ContinuousBidSchedulerJob @"+DateUtils.getCurrentDate());
 		
 		IBiddingSO biddingSO = null;
 		try {
@@ -140,7 +139,6 @@ public class ContinuousBidSchedulerJob implements Job {
 		finally {
 			biddingSO = null;
 		}
-		log.info("$$$$$ completed executing ContinuousBidSchedulerJob @"+DateUtils.getCurrentDate());
 	}
 
 	private Date getCompareTime() {
