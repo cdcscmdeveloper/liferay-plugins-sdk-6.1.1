@@ -1044,6 +1044,10 @@ public class PurchaseInDefaultBackingBean extends
 				.getPurchaseInDefault(purchaseInDefaultReqDTO);
 		ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO
 				.getPurchaseInDefaultDtl();
+		
+		// approved by
+		getManagedBean().setApprovedBy(purchaseInDefaultResDTO.getApprovedBy());
+		
 		// contract item
 		if (purchaseInDefault.getContractedItem() != null) {
 			/*
@@ -1127,6 +1131,9 @@ public class PurchaseInDefaultBackingBean extends
 			PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
 			ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
 
+			// approved by
+			getManagedBean().setApprovedBy(purchaseInDefaultResDTO.getApprovedBy());
+			
 			if(purchaseInDefault != null){
 				// contract item 
 				if(purchaseInDefault.getContractedItem() != null){
