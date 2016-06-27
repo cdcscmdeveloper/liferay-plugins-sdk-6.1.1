@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.fl.po;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -100,8 +101,9 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  */
 @ManagedBean(name="flOrderBB")
 @ViewScoped
-public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<FulfilmentOrderManagedBean>{
+public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<FulfilmentOrderManagedBean> implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private static final String NAV_TO_CREATE_DO = "createDo";
 	private static final String NAV_CR = "/xhtml/fl/contractrequest/crBasePage.xhtml";
 	private static final String NAV_PR = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
