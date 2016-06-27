@@ -15,6 +15,17 @@
 </cc:interface>
 
 <cc:implementation>
+	<style>
+		.ui-selectonemenu-label.ptjPopupSomWidth{
+			max-width:400% !important;
+	      }
+		.ui-selectonemenu.ptjPopupSomWidth {
+			width: 400px !important;
+		}
+		.ui-selectonemenu.ptjPopupSomWidth label{
+			width: 400px !important;
+		}
+	</style>
 	<p:dialog id="ptjPopup"
 		header="#{lbl['lbl.pm.org.ptj.search']}"
 		widgetVar="ptjPopup" modal="true" width="680" position="top">
@@ -28,7 +39,7 @@
                  <p:inputText id="itMin"  readonly="true" style="width:180px" 
                 	 value="#{lbl['lbl.pm.org.ptj.search.ministry']}"/>
                  <p:spacer height="1"/>
-                 <p:selectOneMenu id="somMinistry" style="width:400px"
+                 <p:selectOneMenu id="somMinistry" styleClass="ptjPopupSomWidth"
                       value="#{organisationSearchBackingBean.managedBean.ministryProfileId}" >
             	   <f:selectItems value="#{organisationSearchBackingBean.getMinistryDropdown()}"/>
             	   <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somJabatan,:form:#{cc.attrs.id}:searcbBtnId" />
@@ -37,7 +48,7 @@
                  	rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}" 
                  	value="#{lbl['lbl.pm.org.ptj.search.jabatan']}"/>
                  <p:spacer height="1" rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"/>
-                 <p:selectOneMenu id="somJabatan" style="width:400px"
+                 <p:selectOneMenu id="somJabatan" styleClass="ptjPopupSomWidth"
                  	  rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"
                       value="#{organisationSearchBackingBean.managedBean.jabatanProfileId}" >
             	   <f:selectItems value="#{organisationSearchBackingBean.getJabatanDropdown()}"/>
