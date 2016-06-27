@@ -19,11 +19,11 @@
 	      <p:panel rendered="#{panelBackingBean.managedBean.circularVer.pid}" 
 	                id="purchaseInDefault"  header="#{lbl['lbl.ct.pid.panel.name']}" toggleable="true" toggleSpeed="500" >
 	                <p:dataTable id="pidTableId" var="pidObj" widgetVar="PidReasonObj" 
-	                        value="#{panelBackingBean.managedBean.circularVer.ctCircularPidReason}" selectionMode="checkbox"
+	                        value="#{panelBackingBean.managedBean.circularVer.ctCircularPidReason}" 
 	                        rowKey="#{pidObj}" selection="#{panelBackingBean.managedBean.ctCircularPidReasons}">
 				                  <ac:paginator for="pidTableId" />
 				                   <p:ajax event="toggleSelect"  update=":form:pidTableId,:form:delPidPanelBtn" />
-                                  <p:ajax event="rowSelect" update=":form:pidTableId,:form:delPidPanelBtn" />
+                                  <p:ajax event="rowSelect" update=":form:delPidPanelBtn" />
 			                      <p:ajax event="rowSelectCheckbox"  update=":form:pidTableId,:form:delPidPanelBtn" />
                                   <p:ajax event="rowUnselectCheckbox"  update=":form:pidTableId,:form:delPidPanelBtn" />
                                   <p:column  selectionMode="multiple" style="width:3%" 
@@ -31,17 +31,15 @@
 				             
 				                 <p:column style="width:50%;" 
 				                         headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
-				                       <c:if test="#{!panelBackingBean.managedBean.viewContract}">
-		                                 <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" style="width:360px;float:left;text-align:left;">
-			                                     <f:selectItems value="#{panelBackingBean.getDropdownPidCodeValues(pidObj.pmReason.reasonId)}" />
+		                                 <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" style="width:360px;float:left;text-align:left;"
+		                                   rendered="#{!panelBackingBean.managedBean.viewContract}">
+			                                     <f:selectItems value="#{panelBackingBean.getDropdownPidCodeValues()}" />
 			                                            <p:ajax event="change" partialSubmit="true" process="@this"
 			                                                  update="pidTableId" listener="#{panelBackingBean.validatePidReason(pidObj.pmReason.reasonId)}"></p:ajax>
 			                             </p:selectOneMenu>
-			                             </c:if>
-			                               <c:if test="#{panelBackingBean.managedBean.viewContract}">
-			                                     <h:outputText value="#{panelBackingBean.getReasonDesc(pidObj.pmReason)}" style="float:left;"/>
-			                                </c:if>
-			                   </p:column> 
+			                                 <h:outputText value="#{panelBackingBean.getReasonDesc(pidObj.pmReason)}" 
+			                                            style="float:left;"  rendered="#{panelBackingBean.managedBean.viewContract}"/>
+			                       </p:column> 
 		              
 		                        <p:column  headerText="#{lbl['lbl.ct.pid.reason.desc']}" 
 		                             id="updatePidPurchase"  styleClass="column-align-center" style="width:45%;">
