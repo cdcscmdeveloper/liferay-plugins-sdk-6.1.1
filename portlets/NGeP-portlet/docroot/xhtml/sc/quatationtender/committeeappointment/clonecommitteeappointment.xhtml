@@ -241,7 +241,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
 					id="cloneCommitteeTreeBtnOnId" disabled="#{qTCommitteBackingBean.cloneCommitteeBtnDisable()}"
 						action="#{qTCommitteBackingBean.addCloneDtlToTabs(false)}"
-						update="@(.scMemberDtl) pnlid" />
+						update="@(.scMemberDtl,.amendButton) pnlid" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" styleClass="BtnSpacing"
 						onclick="screen2.hide();" update="@(.scMemberDtl)" />
 				</div>

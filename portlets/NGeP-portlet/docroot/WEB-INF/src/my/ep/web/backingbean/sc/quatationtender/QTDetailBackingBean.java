@@ -3399,6 +3399,7 @@ public class QTDetailBackingBean extends
 	public void changeFCSecretaryUser(AjaxBehaviorEvent event) {
 		debugLogger("changeFCSecretaryUser");
 		Long userId = (Long) event.getComponent().getAttributes().get("value");
+		this.getManagedBean().setChangesOnQTMaintenance(false);
 		if (userId != null) {
 			IUserSO userSO = null;
 			try {
@@ -3411,6 +3412,8 @@ public class QTDetailBackingBean extends
 						.getPmUser();
 				
 				getManagedBean().getQt().setFinalizationSecratery(fcSecretaryUser);
+				this.getManagedBean().setChangesOnQTMaintenance(
+						this.getManagedBean().isMaintanceFlow());
 			} finally {
 				userSO = null;
 			}
