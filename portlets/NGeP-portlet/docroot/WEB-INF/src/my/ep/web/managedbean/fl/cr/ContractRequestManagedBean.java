@@ -14,6 +14,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.model.TreeNode;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.ct.IContractSO;
@@ -28,7 +30,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
-import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -38,6 +39,8 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
+import my.ep.persistence.entity.fl.request.VAddressTypeDeliveryAddress;
+import my.ep.persistence.entity.fl.request.VAgencyDeliveryAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -62,8 +65,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.primefaces.model.TreeNode;
-
 /**
  * Managed Bean for Create Contract Order
  * 
@@ -82,7 +83,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<PmAddressType> addressTypesList; 
 	private List<PmAddressType> selectedPmAddrTypeList;
 	private List<PmAddressType> selectedAddrTypeList;
-	private List<CtAgencyAddress> selectedAgencyAddressList;
+	private List<VAgencyDeliveryAddress> selectedAgencyAddressList;
 	private List<CtContractItem> contractedItemList;
 	private List<CtContractItem> selectedContractedItemList;
 	private List<VCtActiveContract> activeContractList; 
@@ -98,6 +99,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<Long> approverList;
 	private List<PmUserGroupUser> approverGroupUserList;
 	private List<Long> bpmApproverList;
+	private List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private PmOrgProfile pmOrgProfile;
@@ -2479,12 +2481,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.agencyAddress = agencyAddress;
 	}
 
-	public List<CtAgencyAddress> getSelectedAgencyAddressList() {
+	public List<VAgencyDeliveryAddress> getSelectedAgencyAddressList() {
 		return selectedAgencyAddressList;
 	}
 
 	public void setSelectedAgencyAddressList(
-			List<CtAgencyAddress> selectedAgencyAddressList) {
+			List<VAgencyDeliveryAddress> selectedAgencyAddressList) {
 		this.selectedAgencyAddressList = selectedAgencyAddressList;
 	}
 
@@ -2809,6 +2811,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setDivisionDisplay(boolean divisionDisplay) {
 		this.divisionDisplay = divisionDisplay;
+	}
+
+	public List<VAddressTypeDeliveryAddress> getSelectedDeliveryFullAddr() {
+		return selectedDeliveryFullAddr;
+	}
+
+	public void setSelectedDeliveryFullAddr(List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr) {
+		this.selectedDeliveryFullAddr = selectedDeliveryFullAddr;
 	}
 
 }

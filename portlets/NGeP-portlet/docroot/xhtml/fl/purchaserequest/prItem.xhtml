@@ -77,13 +77,13 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<ac:lov id="addressTypeId" lovId="PM_ADDRESS_TYPE_FL"
+			<ac:lov id="addressTypeId" lovId="DELIVERY_FULL_ADDRESS_FL"
 						postUpdateListener="purchaseRequestBackingBean.updateDeliveryAddrDt"
 						headerText="#{lbl['lbl.ct.delivery.address']}" 
 						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
 						selectionMode="multiple" 
-						saveObject="purchaseRequestBackingBean.managedBean.selectedPmDelAddrList"
-						conditionField="recordStatus^1|addressType^#{purchaseRequestBackingBean.getDeliveryAddressType()}|pmOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}"
+						saveObject="purchaseRequestBackingBean.managedBean.selectedDeliveryFullAddr"
+						conditionField="ORG_PROFILE_ID^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup"
 						rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 						/>
