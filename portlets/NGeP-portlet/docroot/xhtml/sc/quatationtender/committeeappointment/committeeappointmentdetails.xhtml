@@ -10,9 +10,12 @@
     <ui:param name="statusId" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId}" />
 	<ui:param name="isQtScheduleAndDoc" value="#{statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}"/>
 	<ui:param name="evaluationType" value="#{qTDetailBB.managedBean.qt.evaluationType}"/>
-		
+	<ui:param name="committe" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+	<ui:param name="isCommitteeInfoEditable"
+			value="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
+	<ui:param name="isEnablChkBoxes" value="#{!qTCommitteBackingBean.isEnableCheckboxes(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />	
 	<p:panel header="#{lbl['lbl.sc.qt.committee.appointment']}" toggleable="true">
-
+	
 		<c:if test="#{isQTStatusChecklistAndAfter}">
 			<table style="width: 100%">
 				<tr>
@@ -33,7 +36,8 @@
 		<BR/>	
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.instruction']}" escape="false" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.clone']}" rendered="#{!qTCommitteBackingBean.isEnableCloneButton()}"
+				<p:commandButton value="#{lbl['lbl.btn.clone']}"
+					rendered="#{isCommitteeInfoEditable and qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization}"
 					action="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
 					update="@all"
 					title="#{lbl['lbl.sc.qt.committee.btn.clone.tooltip']}" />
