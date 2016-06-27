@@ -14,7 +14,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.jaxb.fl.common.user.FLUserDataType;
+import org.primefaces.model.TreeNode;
+
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -22,6 +23,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.fl.request.VAddressTypeDeliveryAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -46,8 +48,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.web.backingbean.fl.pr.FLSupplierItemVO;
 import my.ep.web.managedbean.BaseManagedBean;
-
-import org.primefaces.model.TreeNode;
 
 /**
  * Managed Bean for Create Purchase Order.
@@ -182,6 +182,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	/** The contract list. */
 	private List <CtContract> contractList;
+	private List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr;
 	
 	/** The selected row flg. */
 	private boolean selectedRowFlg;
@@ -3390,6 +3391,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setDivisionDisplay(boolean divisionDisplay) {
 		this.divisionDisplay = divisionDisplay;
+	}
+
+	public List<VAddressTypeDeliveryAddress> getSelectedDeliveryFullAddr() {
+		return selectedDeliveryFullAddr;
+	}
+
+	public void setSelectedDeliveryFullAddr(List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr) {
+		this.selectedDeliveryFullAddr = selectedDeliveryFullAddr;
 	}
 
 }
