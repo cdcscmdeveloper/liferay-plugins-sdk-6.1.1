@@ -140,12 +140,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									.getManagedBean().getServiceCode()
 									.toUpperCase(), true));
 		}
-		/*
-		 * if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
-		 * searchBean.getDataFilterBeans().add( new
-		 * SearchFilterBean("processId", SearchOperator.OPERATOR_EQUALS.value(),
-		 * this .getManagedBean().getProcessId() .toUpperCase(), true)); }
-		 */
+		
 		if (StringUtils.isNotEmpty(this.getManagedBean().getDirection())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("direction",
@@ -440,11 +435,29 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * @return the string
 	 */
 	public String redirectGfMasSearch() {
+		
 		log.info("In redirectGfMasSearch");
+		
+		this.getManagedBean().setSelectedProgActList(null);
+		this.getManagedBean().setSelectedProjectList(null);
+		this.getManagedBean().setSelectedBankList(null);
+		this.getManagedBean().setSelectedGlAcntList(null);
+		this.getManagedBean().setSelectedKptjList(null);
+		this.getManagedBean().setSelectedAgOfficeList(null);
+		this.getManagedBean().setSelectedPtjList(null);
+		this.getManagedBean().setSelectedDanaList(null);
+		this.getManagedBean().setSelectedPpList(null);
+		this.getManagedBean().setSelectedVotList(null);
+		
 		return "/xhtml/gfMas/gfmassearch/gfmasSearchMain.xhtml?faces-redirect=true";
 
 	}
 
+	/**
+	 * Process all vendors.
+	 * 
+	 * @return the string
+	 */
 	public String processAllVendors() {
 
 		log.info("processAllVendors");
@@ -452,56 +465,46 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		if (this.getManagedBean().getSelectedProgActList() != null) {
 			log.info("***************ProgActList***SIZE******************>>"
 					+ this.getManagedBean().getSelectedProgActList().size());
-			this.getManagedBean().setSelectedProgActList(null);
 		} else if (this.getManagedBean().getSelectedProjectList() != null) {
 			log.info("************ProjectList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedProjectList().size());
-			this.getManagedBean().setSelectedProjectList(null);
 		} else if (this.getManagedBean().getSelectedAgOfficeList() != null) {
-			
+
 			log.info("***********AgOfficeList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedAgOfficeList().size());
-			
-			IAgOfficeSO reqSO = (IAgOfficeSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAgOfficeSO.class);
 
-			List<PmInterfaceAgOff> list = this.getManagedBean().getSelectedAgOfficeList();
-			
-			for(int i = 0; i<list.size(); i++){
+			IAgOfficeSO reqSO = (IAgOfficeSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IAgOfficeSO.class);
+
+			List<PmInterfaceAgOff> list = this.getManagedBean()
+					.getSelectedAgOfficeList();
+
+			for (int i = 0; i < list.size(); i++) {
 				PmInterfaceAgOff pmInterfaceAgOff = list.get(i);
 				reqSO.execute(pmInterfaceAgOff);
 			}
-			
-			this.getManagedBean().setSelectedAgOfficeList(null);
-			
 		} else if (this.getManagedBean().getSelectedBankList() != null) {
 			log.info("************BankList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedBankList().size());
-			this.getManagedBean().setSelectedBankList(null);
 		} else if (this.getManagedBean().getSelectedGlAcntList() != null) {
 			log.info("***********GlAcntList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedGlAcntList().size());
-			this.getManagedBean().setSelectedGlAcntList(null);
 		} else if (this.getManagedBean().getSelectedKptjList() != null) {
 			log.info("************KptjList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedKptjList().size());
-			this.getManagedBean().setSelectedKptjList(null);
 		} else if (this.getManagedBean().getSelectedPtjList() != null) {
 			log.info("************PtjList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedPtjList().size());
-			this.getManagedBean().setSelectedPtjList(null);
 		} else if (this.getManagedBean().getSelectedDanaList() != null) {
 			log.info("***********DanaList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedDanaList().size());
-			this.getManagedBean().setSelectedDanaList(null);
 		} else if (this.getManagedBean().getSelectedPpList() != null) {
 			log.info("************PpList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedPpList().size());
-			this.getManagedBean().setSelectedPpList(null);
 		} else if (this.getManagedBean().getSelectedVotList() != null) {
 			log.info("***********VotList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedVotList().size());
-			this.getManagedBean().setSelectedVotList(null);
 		}
 		return null;
 	}
