@@ -10,6 +10,12 @@
 	<ui:define name="resourceSection">
 	
 		<script>
+			var emptyText = document.createTextNode("");
+			$('#breadcrumbs').find('.last').append(emptyText);
+			if(emptyText.parentNode != null) {
+				emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.update.mof.details']}";
+			}	
+		
 			$('#portlet_smUpdateMofDetails_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
 					"#{lbl['lbl.sm.update.mof.details']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
@@ -17,6 +23,12 @@
 		
 		<h:panelGroup rendered="#{backingBean.managedBean.supplierUser}">
 			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				if(emptyText.parentNode != null) {
+					emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.update.mof.details']}";
+				}
+			
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
 						"#{lbl['lbl.sm.update.mof.details']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
@@ -26,6 +38,12 @@
 		<h:panelGroup
 			rendered="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and backingBean.managedBean.smAppl.resubmit}">
 			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				if(emptyText.parentNode != null) {
+					emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.review.resubmitApplication']}";
+				}
+				
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
 						"#{lbl['lbl.sm.review.resubmitApplication']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
@@ -35,6 +53,12 @@
 		<h:panelGroup
 			rendered="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and !backingBean.managedBean.smAppl.resubmit}">
 			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				if(emptyText.parentNode != null) {
+					emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.review.application']}";
+				}
+			
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
 						"#{lbl['lbl.sm.review.application']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
