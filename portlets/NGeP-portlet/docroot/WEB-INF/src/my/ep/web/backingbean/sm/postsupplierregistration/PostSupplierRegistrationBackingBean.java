@@ -124,6 +124,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
 				//desc = this.getStatusDescById(workFlowStatus.getPmStatus().getStatusId());
 				this.getManagedBean().setStatusDesc(getStatusDescById(workFlowStatus.getPmStatus().getStatusId()));
+				getManagedBean().setCurrentStatusId(workFlowStatus.getPmStatus().getStatusId());
 				showHyperlink(workFlowStatus.getPmStatus().getStatusId());
 				path = TASK_LIST_PATH;
 
@@ -381,7 +382,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			getManagedBean().setHyperlink(true);
 			break;
 			
-			
 		case 20101 : //Pending Supporting Document Verification
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
@@ -435,6 +435,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		case 20111 : //Pending Site Visit Assignment - Before Approval
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
+			break;
+		
+		case 20118 : //Sistem Rejected
+			getManagedBean().setFlowStatus(1);
+			getManagedBean().setHyperlink(true);
 			break;
 			
 		default :
