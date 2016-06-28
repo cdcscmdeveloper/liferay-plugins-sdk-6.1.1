@@ -16,18 +16,17 @@
 
 <cc:implementation>
 	<style>
-		.ui-selectonemenu-label.ptjPopupSomWidth{
-			max-width:400% !important;
-	      }
+		
 		.ui-selectonemenu.ptjPopupSomWidth {
 			width: 400px !important;
 		}
 		.ui-selectonemenu.ptjPopupSomWidth label{
 			width: 400px !important;
+			max-width:400% !important;
 		}
 	</style>
 	<p:dialog id="ptjPopup"
-		header="#{lbl['lbl.pm.org.ptj.search']}"
+		header="#{lbl['lbl.lov.listing']} -  #{organisationSearchBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, cc.attrs.orgTypeParamCode)}"
 		widgetVar="ptjPopup" modal="true" width="680" position="top">
 
 		<p:messages id="ptjPopupMsg" showDetail="true" autoUpdate="true"
@@ -36,7 +35,7 @@
 		<h:panelGroup id="orgProfilePnlGrp">
 			<p:panel id="orgProfilePnlId" header="#{lbl['lbl.pm.header.general.org.search']}" toggleable="true"  >
               <h:panelGrid columns="3" id="orgProfilePg">
-                 <p:inputText id="itMin"  readonly="true" style="width:180px" 
+                 <p:inputText id="itMin"  readonly="true" style="width:170px" 
                 	 value="#{lbl['lbl.pm.org.ptj.search.ministry']}"/>
                  <p:spacer height="1"/>
                  <p:selectOneMenu id="somMinistry" styleClass="ptjPopupSomWidth"
@@ -44,7 +43,7 @@
             	   <f:selectItems value="#{organisationSearchBackingBean.getMinistryDropdown()}"/>
             	   <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somJabatan,:form:#{cc.attrs.id}:searcbBtnId" />
                  </p:selectOneMenu>
-                 <p:inputText id="somJab" readonly="true" style="width:180px"
+                 <p:inputText id="somJab" readonly="true" style="width:170px"
                  	rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}" 
                  	value="#{lbl['lbl.pm.org.ptj.search.jabatan']}"/>
                  <p:spacer height="1" rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"/>
@@ -61,7 +60,7 @@
             	      <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
-                 <p:inputText id="itPtjCodeValue"  style="width:400px"
+                 <p:inputText id="itPtjCodeValue"  style="width:418px"
                  	onkeypress="if (event.keyCode == 13) { ptjSearchBtnWV.jq.click(); return false; }"
                      value="#{organisationSearchBackingBean.managedBean.ptjCodeNameSearchValues}" >
                      <p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/></p:inputText>
