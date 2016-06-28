@@ -38,16 +38,15 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="secretary"
-								value="#{fcaApprovalTab.approverCommittes}"
-								itemLabel="#{secretary.parameterCode}"
-								itemValue="#{secretary.parameterId}" />
+								value="#{fcaApprovalTab.fcTypes}"/>
+								
 							<p:ajax event="change" update="commTypes" process="@this"
 								listener="#{qTDetailBB.changePbSecretaryCommType(approverSettings)}"
 								partialSubmit="true" />
 						</p:selectOneMenu>
 					</c:when>
 					<c:otherwise>
-						#{approverSettings.committeeType.parameterCode}
+						#{qTDetailBB.getParameterDesc(approverSettings.committeeType,null)}
 					</c:otherwise>
 				</c:choose>
 			</p:column>
