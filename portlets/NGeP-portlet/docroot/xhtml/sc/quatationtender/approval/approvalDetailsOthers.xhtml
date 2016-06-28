@@ -33,7 +33,8 @@
 						value="#{approvalBackingBean.getStatusDropdownValues()}"
 						itemLabel="#{app.codeName}"
 						itemValue="#{app.pmParameter.parameterId}" />
-					<p:ajax event="change" partialSubmit="true" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+					listener="#{createQtBB.otherApprovalStatus(otherrequestdetails)}"/>
 				</p:selectOneMenu>
 				<p:message id="decisiontypeidMsg" for="decisiontypeid"
 					display="icon" />
@@ -67,7 +68,6 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.remark']}" />
 				</f:facet>
 				<p:inputTextarea id="remarkid"
