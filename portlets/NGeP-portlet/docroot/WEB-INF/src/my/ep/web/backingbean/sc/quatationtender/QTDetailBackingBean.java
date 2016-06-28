@@ -492,6 +492,7 @@ public class QTDetailBackingBean extends
 			quationTenderReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			quationTenderReqDTO.setUserLocale(facesScopes.getUserLocale());
+			quationTenderReqDTO.getQtdetail().setOtherApproval(true);
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
@@ -2158,6 +2159,12 @@ public class QTDetailBackingBean extends
 							} else {
 								for (ScQtApproverSettings approverSettings : approvalSettings) {
 									approverSettings.setScQtApproval(qtApproval);
+									PmParameter finalizationCommitee = scQt.getFinalizationCommitte();
+									if(finalizationCommitee!= null && 
+											finalizationCommitee.getParameterCode().
+											equalsIgnoreCase(approverSettings.getCommitteeType().getParameterCode())){
+										approverSettings.setPmUser(scQt.getFinalizationSecratery());
+									}
 								}
 							}
 							tabBeans.add(new TabBean(titleName,
