@@ -62,11 +62,11 @@
 							styleClass="ui-button"  value="#{lbl['lbl.btn.save']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							update="@form"  
-							action="#{createDOBackingBean.createDeliveryOrder('SAVE')}" /> 
+							action="#{createDOBackingBean.createDeliveryOrder(BpmOutcomeConstant.bpmSave)}" /> 
 						<p:commandButton update="spkiPopUp, @form"
 							styleClass="ui-button"  value="#{lbl['lbl.btn.submit']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							action="#{createDOBackingBean.signingAction('SUBMIT')}" />
+							action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmSubmit)}" />
 					</td>
 				</h:panelGroup>
 				<h:panelGroup
