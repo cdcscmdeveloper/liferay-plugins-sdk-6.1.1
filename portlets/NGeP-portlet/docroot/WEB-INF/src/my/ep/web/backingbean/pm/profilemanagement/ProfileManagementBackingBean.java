@@ -447,12 +447,6 @@ public class ProfileManagementBackingBean extends
 	 */
 	public void preLoadingUserProfile() {
 		logger.info("preLoadingUserProfile");
-		PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
-				FacesMessage.SEVERITY_INFO,
-				MessageConst.INFO_770049,
-				new String[] { "Test123", 
-						"Test234"
-				});
 		this.setCurrentActiveOrg();
 		this.getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
 		getManagedBean().setLazy(false);
