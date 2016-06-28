@@ -2426,6 +2426,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setOutcome(outcome);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
@@ -2495,6 +2496,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
@@ -2593,6 +2595,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		    resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
