@@ -1022,11 +1022,6 @@ public class QTDetailBackingBean extends
 		if (null != deductionList && !deductionList.isEmpty()) {
 			for (ScQtDeduction deduction : deductionList) {
 				deduction.setScQt(this.getManagedBean().getQt());
-				if (null == deduction.getDeductionType().getParameterCode()) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "Deduction Type" });
-
-				}
 			}
 			scQt.setScQtDeductions(deductionList);
 		 }
@@ -1989,6 +1984,7 @@ public class QTDetailBackingBean extends
 				qtReqDTO.setPmUser(facesScope.getUserSessionBean());
 				qtReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
 				qtReqDTO.setRoleCode(getUserRoleCode());
+				qtReqDTO.setUserLocale(facesScope.getUserLocale());
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				String approvalCategory = ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT;
