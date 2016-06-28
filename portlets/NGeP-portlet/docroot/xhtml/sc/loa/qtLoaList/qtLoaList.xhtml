@@ -106,7 +106,8 @@
 								rendered="#{loiloa.status.statusId ne QTStatusConst.LOA_PENDING_SUBMISSION}"
 								action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}"
 								process="@this">
-
+								<f:setPropertyActionListener value="true"
+									target="#{lOADetailBackingBean.managedBean.readOnly}" />
 								<p:graphicImage value="/css/images/design/document.png" />
 								<p:spacer width="5"></p:spacer>
 							</p:commandLink>

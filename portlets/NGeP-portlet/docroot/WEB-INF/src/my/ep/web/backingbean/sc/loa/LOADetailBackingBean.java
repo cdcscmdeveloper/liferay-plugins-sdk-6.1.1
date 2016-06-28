@@ -4248,6 +4248,7 @@ public class LOADetailBackingBean extends
 		}
 		
 		getManagedBean().setEditFlag(Boolean.FALSE);
+		getManagedBean().setReadOnly(Boolean.FALSE);
 		getManagedBean().setSelectedTabIndex(0);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
@@ -4551,47 +4552,6 @@ public class LOADetailBackingBean extends
 				.handleNavigation(fc, null, QTConstants.LOA_PAGE);
 
 	}
-
-	/**
-	 * Retrieve org profile by org type.
-	 *
-	 * @param ortType the ort type
-	 * @return the pm org profile
-	 */
-	private PmOrgProfile retrieveOrgProfileByOrgType(String ortType){
-		PmOrgProfile pmOrgProfile = null;
-		OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-		profileReqDTO.setOrgType(ortType);
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-		OrgProfileResDTO orgProfileResDTO = orgProfileSO
-				.retrieveOrgProfileListByOrgType(profileReqDTO);
-		if(orgProfileResDTO.getOrgProfileList() != null && orgProfileResDTO.getOrgProfileList().size()>0){
-			pmOrgProfile =  orgProfileResDTO.getOrgProfileList().get(0);
-		}
-		return pmOrgProfile;
-	}
-	
-	/**
-	 * Retrieve org profile by org profile id.
-	 *
-	 * @param ortType the ort type
-	 * @return the pm org profile
-	 */
-	private PmOrgProfile retrieveOrgProfileByOrgProfileId(Long orgProfileId){
-		PmOrgProfile pmOrgProfile = null;
-		OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-		profileReqDTO.setOrgProfileId(orgProfileId);
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-		OrgProfileResDTO orgProfileResDTO = orgProfileSO
-				.retrieveOrgProfileDtlByProfileId(profileReqDTO);
-		if(orgProfileResDTO.getPmOrgProfile() != null){
-			pmOrgProfile =  orgProfileResDTO.getPmOrgProfile();
-		}
-		return pmOrgProfile;
-	}
-	
 	
 	/**
 	 * Filter skop kerja dan perkhidmatan repo.
