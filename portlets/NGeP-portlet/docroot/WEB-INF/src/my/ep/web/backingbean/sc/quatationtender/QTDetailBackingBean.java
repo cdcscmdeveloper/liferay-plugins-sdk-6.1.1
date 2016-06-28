@@ -1588,9 +1588,11 @@ public class QTDetailBackingBean extends
 				PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
 				if (fcSecretaryCode == null
 						|| fcSecretaryCode.getParameterId() == null) {
-					List<PmParameter> fcSecretaries = retrieveFinalizationCommitteeType();
-					if (fcSecretaries != null && fcSecretaries.size() > 0) {
-						fcSecretaryCode = fcSecretaries.get(0);
+					SelectItem[] fcSecretaries = retrieveFinalizationCommitteeType();
+					if (fcSecretaries != null && fcSecretaries.length > 0) {
+						fcSecretaryCode = retrieveParameterById(Long
+								.valueOf(fcSecretaries[0].getValue().toString()));
+						;
 					} else {
 						fcSecretaryCode = null;
 					}
@@ -1669,11 +1671,11 @@ public class QTDetailBackingBean extends
 	 * 
 	 * @return the list
 	 */
-	public List<PmParameter> retrieveFinalizationCommitteeType() {
+	public SelectItem[] retrieveFinalizationCommitteeType() {
+		
 		ScQt scQt = getManagedBean().getQt();
-		List<PmParameter> finalizationSecratary = getManagedBean()
-				.getFinalizationSecratary();
-
+		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
+				
 		if (finalizationSecratary == null) {
 			ICommitteSO committeSO;
 			try {
@@ -1685,10 +1687,19 @@ public class QTDetailBackingBean extends
 				CommitteResDTO resDTO = committeSO
 						.retrieveFinalizationCommitteeType(reqDTO);
 
-				finalizationSecratary = resDTO.getFinalizationSecratry();
+				List<PmParameter> finalizationCommTypes = resDTO.getFinalizationSecratry();
+				if(CollectionUtils.isNotEmpty(finalizationCommTypes)){
+					finalizationSecratary = new SelectItem[finalizationCommTypes.size()];
+					for(int i=0;i<finalizationCommTypes.size();i++){
+						String commTypeDesc = getParameterDesc(
+								finalizationCommTypes.get(i),new FacesScopes().getUserLocale());
+						finalizationSecratary[i] = new SelectItem(
+								finalizationCommTypes.get(i).getParameterId(),commTypeDesc);
+					}
+					getManagedBean().setFinalizationSecratary(finalizationSecratary);
+				}
 
-				getManagedBean()
-						.setFinalizationSecratary(finalizationSecratary);
+				
 			} finally {
 				committeSO = null;
 			}
@@ -3548,16 +3559,7 @@ public class QTDetailBackingBean extends
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			break;
 		case 2:
-			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							ICommitteSO.class);
-			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-			committeReqDTO.setScQt(reqDTO.getQtdetail());
-			committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
-			committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			committeReqDTO.setSaveFlow(true);
-			committeSO.validateAppointCommitteDtls(committeReqDTO);
-			// reqDTO = prepareQTInfo();
+			// Skip the validation for committee while save - 10266
 			resDTO = detailSO.saveQTDtl(reqDTO);
 
 			int committeeTabIndex = this.getManagedBean()
