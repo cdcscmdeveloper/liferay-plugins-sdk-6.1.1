@@ -957,31 +957,14 @@ public class SmApplicationUtil {
 		}
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
-			int profStfCnt = 0;
-			int semiPrfCnt = 0;
-			int clrCnt = 0;
-			for (SmStaffTotal stfTl : appl.getSmStaffTotals()) {
-				if (stfTl.getTotalBumi().compareTo(new BigDecimal(0)) > 0
-						|| stfTl.getTotalForeigner().compareTo(
-								new BigDecimal(0)) > 0
-						|| stfTl.getTotalNonBumi().compareTo(new BigDecimal(0)) > 0) {
-					if (stfTl.getStaffCategory().equalsIgnoreCase(
-							SupplierManagementConst.STAFF_TYPE_PROFESSIONAL)) {
-						profStfCnt = profStfCnt + 1;
-					} else if (stfTl.getStaffCategory().equalsIgnoreCase(
-							SupplierManagementConst.STAFF_TYPE_SEMIPROF)) {
-						semiPrfCnt = semiPrfCnt + 1;
-					} else if (stfTl.getStaffCategory().equalsIgnoreCase(
-							SupplierManagementConst.STAFF_TYPE_CLERICAL)) {
-						clrCnt = clrCnt + 1;
-					}
-				}
-			}
-			if ((clrCnt == 0 || semiPrfCnt == 0 || profStfCnt == 0)
+			String staffInfoValMsg = getStaffInfoValidateMsg(appl
+					.getSmStaffTotals());
+			if (!StringUtils.isBlank(staffInfoValMsg)
 					&& !appl.getApplType().equalsIgnoreCase("C")) {
 				validSave = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
-				throw new EpException(MessageConst.ERROR_722557);
+				throw new EpException(MessageConst.ERROR_722557,
+						new String[] { staffInfoValMsg });
 			}
 			if (managedBean.getSmAppl().getSmAssociationBodies() == null
 					|| managedBean.getSmAppl().getSmAssociationBodies()
@@ -8067,6 +8050,49 @@ public class SmApplicationUtil {
 				}
 			});
 		}
+	}
+
+	/**
+	 * Construct staff info validation message
+	 * 
+	 * @param List
+	 *            <SmStaffTotal> staffTotals
+	 * @return String
+	 */
+	public static String getStaffInfoValidateMsg(List<SmStaffTotal> staffTotals) {
+		StringBuilder sb = new StringBuilder();
+		if (!EntityHelper.isCollectionEmpty(staffTotals)) {
+			int count = 1;
+			for (SmStaffTotal tot : staffTotals) {
+				if ((tot.getTotalBumi() == null || tot.getTotalBumi()
+						.compareTo(BigDecimal.ZERO) == 0)
+						&& (tot.getTotalNonBumi() == null || tot
+								.getTotalNonBumi().compareTo(BigDecimal.ZERO) == 0)
+						&& (tot.getTotalForeigner() == null || tot
+								.getTotalForeigner().compareTo(BigDecimal.ZERO) == 0)) {
+					if (!StringUtils.isBlank(tot.getStaffCategory())) {
+						if (tot.getStaffCategory()
+								.equals(SupplierManagementConst.STAFF_TYPE_PROFESSIONAL)) {
+							sb.append(SmCommonUtil.getMessage(
+									"lbl.sm.staffinfo.prof",
+									new String[] { count + ". " }));
+
+						} else if (tot.getStaffCategory().equals(
+								SupplierManagementConst.STAFF_TYPE_SEMIPROF)) {
+							sb.append(SmCommonUtil.getMessage(
+									"lbl.sm.staffinfo.semipro",
+									new String[] { count + ". " }));
+						} else {
+							sb.append(SmCommonUtil.getMessage(
+									"lbl.sm.staffinfo.clerk",
+									new String[] { count + ". " }));
+						}
+						count++;
+					}
+				}
+			}
+		}
+		return sb.length() > 0 ? sb.toString() : StringUtils.EMPTY;
 	}
 
 	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {
