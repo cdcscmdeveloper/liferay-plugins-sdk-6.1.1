@@ -257,6 +257,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	/** The selected items. */
 	private VCmSupplierItem[] selectedItems;
+	
+	/** The selected items. */
+	private VCmSupplierItem selectedItem;
 
 	/** The selected ids. */
 	private Map<Long, Boolean> selectedIds = new HashMap<Long, Boolean>();
@@ -3873,6 +3876,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneTrees(List<TreeNode> zoneTrees) {
 		this.zoneTrees = zoneTrees;
+	}
+
+	public VCmSupplierItem getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(VCmSupplierItem selectedItem) {
+		this.selectedItem = selectedItem;
 	}
 
 	

@@ -8768,14 +8768,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * @param index
 	 *            (int index(mandatory))
 	 */
-	public void deleteContractRequestItem(int index) {
-
-		VCmSupplierItem supplierItemView = this.getManagedBean()
-				.getCtRequestList().get(index);
-
-		this.getManagedBean().getTempMap().remove(supplierItemView.getDocId());
-
-		this.getManagedBean().getCtRequestList().remove(supplierItemView);
+	public void deleteContractRequestItem() {
+		this.getManagedBean().getCtRequestList().remove(getManagedBean().getSelectedItem());
+		this.getManagedBean().getTempMap().remove(getManagedBean().getSelectedItem().getDocId());
 
 	}
 
