@@ -52,21 +52,32 @@
 					style="white-space: normal;">
 					#{scPurchaseRequest.requestNoteDtls[0].requestItem.tplSpecQuestion.clDurationMonth}
 				</p:column>
-				
 
 				<p:column headerText="#{lbl['lbl.sc.status']}"
 					style="width:15%">
 					<h:outputText value="#{dpLOABackingBean.getStatusDescById(scPurchaseRequest.scLoa.pmStatus.statusId)}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.action']}"
-					style="width:10%">
-					<p:commandButton  icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
+					<p:commandButton icon="ui-icon-add"
+						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 						action="#{lOADetailBackingBean.editLOAAction(scPurchaseRequest.scLoa)}"
 						rendered="#{scPurchaseRequest.scLoa.brandNew}" />
-					<p:commandButton  icon="ui-icon-edit" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+
+					<p:commandButton icon="ui-icon-edit"
+						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 						action="#{lOADetailBackingBean.editLOAAction(scPurchaseRequest.scLoa)}"
-						rendered="#{!scPurchaseRequest.scLoa.brandNew}" />
+						rendered="#{!scPurchaseRequest.scLoa.brandNew and scPurchaseRequest.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}" />
+
+					<p:commandLink
+						rendered="#{!scPurchaseRequest.scLoa.brandNew and scPurchaseRequest.scLoa.pmStatus.statusId ne QTStatusConst.LOA_PENDING_SUBMISSION}"
+						action="#{lOADetailBackingBean.editLOAAction(scPurchaseRequest.scLoa)}"
+						process="@this">
+						<f:setPropertyActionListener value="true"
+							target="#{lOADetailBackingBean.managedBean.readOnly}" />
+						<p:graphicImage value="/css/images/design/document.png" />
+						<p:spacer width="5"></p:spacer>
+					</p:commandLink>
 				</p:column>
 
 			</p:dataTable>
