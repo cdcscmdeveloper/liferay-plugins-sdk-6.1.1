@@ -22,21 +22,33 @@
 	                        value="#{panelBackingBean.managedBean.circularVer.ctCircularPidReason}" 
 	                        rowKey="#{pidObj}" selection="#{panelBackingBean.managedBean.ctCircularPidReasons}">
 				                  <ac:paginator for="pidTableId" />
-				                   <p:ajax event="toggleSelect"  update=":form:pidTableId,:form:delPidPanelBtn" />
-                                  <p:ajax event="rowSelect" update=":form:delPidPanelBtn" />
-			                      <p:ajax event="rowSelectCheckbox"  update=":form:pidTableId,:form:delPidPanelBtn" />
-                                  <p:ajax event="rowUnselectCheckbox"  update=":form:pidTableId,:form:delPidPanelBtn" />
-                                  <p:column  selectionMode="multiple" style="width:3%" 
-				                         rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				                    <p:column 
+				                      style="width:5%;text-align:center" rendered="#{!panelBackingBean.managedBean.viewContract}">
+				                          <f:facet name="header">
+							                <p:selectBooleanCheckbox id="checkBoxAll" value="#{panelBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									               update=":form:pidTableId,:form:delPidPanelBtn" listener="#{panelBackingBean.selectAllPidReason}" />
+							               </p:selectBooleanCheckbox>
+						                  </f:facet>
+		           
+		                                 <p:selectBooleanCheckbox 
+		                                     value="#{pidObj.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                        update=":form:delPidPanelBtn,:form:pidTableId" listener="#{panelBackingBean.selectOnePidCheckboxSelect}"></p:ajax>
+			                             </p:selectBooleanCheckbox>
+			                      </p:column>
 				             
-				                 <p:column style="width:50%;" 
-				                         headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
-		                                 <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" style="width:360px;float:left;text-align:left;"
-		                                   rendered="#{!panelBackingBean.managedBean.viewContract}">
+				                 <p:column style="width:50%;" rendered="#{!panelBackingBean.managedBean.viewContract}"
+				                         headerText="#{lbl['lbl.ct.pid.reason']}"  styleClass="column-align-center">
+		                                 <p:selectOneMenu value="#{pidObj.pmReason.reasonId}"
+		                                  style="width:360px;float:left;text-align:left;" >
 			                                     <f:selectItems value="#{panelBackingBean.getDropdownPidCodeValues()}" />
 			                                            <p:ajax event="change" partialSubmit="true" process="@this"
 			                                                  update="pidTableId" listener="#{panelBackingBean.validatePidReason(pidObj.pmReason.reasonId)}"></p:ajax>
 			                             </p:selectOneMenu>
+			                            </p:column>
+			                         <p:column style="width:50%;" rendered="#{panelBackingBean.managedBean.viewContract}"
+				                         headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
 			                                 <h:outputText value="#{panelBackingBean.getReasonDesc(pidObj.pmReason)}" 
 			                                            style="float:left;"  rendered="#{panelBackingBean.managedBean.viewContract}"/>
 			                       </p:column> 
@@ -59,8 +71,7 @@
 				            partialSubmit="true" action="#{panelBackingBean.addPurchaseInDefault()}" update="pidTableId" 
 				            oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>	
 				     <p:commandButton id="delPidPanelBtn"  value="#{lbl['lbl.ct.delete']}" process="@this"  
-				           partialSubmit="true"  disabled="#{panelBackingBean.managedBean.ctCircularPidReasons.size() == 0 
-				           or panelBackingBean.managedBean.ctCircularPidReasons.size() == ''  or panelBackingBean.managedBean.ctCircularPidReasons == null}"
+				           partialSubmit="true"   disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 			              onsuccess="delPidPurchaseDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>			
 		        </div>
 		        
@@ -68,7 +79,7 @@
 		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                      <div class="ppRightBtn">
 		                <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:pidTableId,:form:delPidPanelBtn"
-		                    process="@all" actionListener="#{panelBackingBean.deletePidPurchase()}" onclick="delPidPurchaseDlg.hide();"/>
+		                    process="@all" actionListener="#{panelBackingBean.deleteTableRow('PID')}" onclick="delPidPurchaseDlg.hide();"/>
 			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delPidPurchaseDlg.hide();" type="button" />
 		            </div>
                </p:confirmDialog>
