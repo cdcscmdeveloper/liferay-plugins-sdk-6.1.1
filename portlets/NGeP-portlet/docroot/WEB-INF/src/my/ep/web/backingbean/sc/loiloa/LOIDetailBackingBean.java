@@ -1899,6 +1899,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setPendingloiloas(pendingloiloas);
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
 
@@ -2121,6 +2122,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setPendingloiloas(pendingloiloas);
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
 
@@ -2209,6 +2211,7 @@ public class LOIDetailBackingBean extends
 			awardSupplierReqDTO.setPmUser(new FacesScopes()
 					.getUserSessionBean());
 			awardSupplierReqDTO.setRoleCode(getUserRoleCode());
+			awardSupplierReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 
 			// spki
 			if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
