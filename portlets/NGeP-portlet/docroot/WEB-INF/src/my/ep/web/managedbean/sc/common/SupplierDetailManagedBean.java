@@ -29,7 +29,8 @@ public class SupplierDetailManagedBean extends BaseManagedBean {
 	private SmAppl smAppl;
 	private SmSupplier smSupplier;
 	private SmGstSupplier smGstSupplier;
-
+	private boolean hasQtProposal;
+	
 	public SupplierDetailManagedBean() {
 	}
 
@@ -106,6 +107,21 @@ public class SupplierDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
 		this.smGstSupplier = smGstSupplier;
+	}
+
+	/**
+	 * @return the hasQtProposal
+	 */
+	public boolean isHasQtProposal() {
+		return hasQtProposal;
+	}
+
+	/**
+	 * @param hasQtProposal
+	 *            the hasQtProposal to set
+	 */
+	public void setHasQtProposal(boolean hasQtProposal) {
+		this.hasQtProposal = hasQtProposal;
 	}
 
 }

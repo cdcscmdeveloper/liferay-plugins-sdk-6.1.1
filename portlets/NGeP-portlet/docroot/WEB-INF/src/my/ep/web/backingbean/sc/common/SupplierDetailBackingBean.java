@@ -14,6 +14,7 @@ import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -48,7 +49,11 @@ public class SupplierDetailBackingBean extends
 		debugLogger("setSmSupplier");
 		ISupplierGstSO supplierGstSo = null;
 		SmSupplier selectedSupplier = getManagedBean().getSmSupplier();
-
+		boolean hasQtProposal = this.getManagedBean().isHasQtProposal();
+		
+		if (!hasQtProposal) {
+			reset();
+		}
 		if (smSupplier != null
 				&& (selectedSupplier == null || smSupplier.getSupplierId()
 						.longValue() != selectedSupplier.getSupplierId()
@@ -61,15 +66,23 @@ public class SupplierDetailBackingBean extends
 
 				QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
 				reqDTO.setSupplierId(smSupplier.getSupplierId());
+				reqDTO.setSmAppl(getManagedBean().getSmAppl());
 
 				QTSupplierResDTO resDTO = qtSupplierSO
 						.retrieveSupplierDtlById(reqDTO);
 
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
-				if (resDTO.getSmMofAccount() != null) {
+				if (getManagedBean().getMofNo() == null && 
+							resDTO.getSmMofAccount() != null) {
 					getManagedBean().setMofNo(
 							resDTO.getSmMofAccount().getMofNo());
 				}
+				if (getManagedBean().getSupplierName() == null) {
+					getManagedBean().setSupplierName(
+									 smSupplier.getCompanyName());
+				}
+				getManagedBean().setSmAppl(resDTO.getSmAppl());
+				
 				supplierGstSo = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 								ISupplierGstSO.class);
@@ -84,7 +97,6 @@ public class SupplierDetailBackingBean extends
 						&& null != supplierGstresDTO.getSmGstSupplier()) {
 					this.getManagedBean().setSmGstSupplier(
 							supplierGstresDTO.getSmGstSupplier());
-
 				} else {
 					this.getManagedBean().setSmGstSupplier(new SmGstSupplier());
 				}
@@ -98,5 +110,36 @@ public class SupplierDetailBackingBean extends
 		} else {
 			log.info("show supplier details from session.");
 		}
+		this.getManagedBean().setHasQtProposal(false);
 	}
+	
+	public void setScQtProposal(ScQtProposal scQtProposal) {
+		debugLogger("setScQtProposal");
+
+		reset();
+		
+		if (scQtProposal != null) {
+			this.getManagedBean().setHasQtProposal(true);
+			this.getManagedBean().setMofNo(
+						scQtProposal.getMofNo());			
+			this.getManagedBean().setSupplierName(
+						scQtProposal.getSupplierName());
+			
+			if (this.getManagedBean().getSmAppl() == null) {
+				this.getManagedBean().setSmAppl(
+							scQtProposal.getSmAppl());
+			}
+			
+			setSmSupplier(scQtProposal.getScQtSupplier().getSmSupplier());
+		} else {
+			log.warn("scQtProposal is null.");
+		}
+	}
+	
+	private void reset() {
+		this.getManagedBean().setMofNo(null);
+		this.getManagedBean().setSmAppl(null);
+		this.getManagedBean().setSupplierName(null);
+	}
+	
 }
