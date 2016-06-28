@@ -1404,6 +1404,16 @@
 		<css-class-wrapper>pm-ProfileManagement-search-portlet</css-class-wrapper>
 	</portlet>	
 	<portlet>
+		<portlet-name>pmResendAccessApplicationActivation</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pm-resendaccessAppl-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
 		<portlet-name>pmUserGroupSearch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
