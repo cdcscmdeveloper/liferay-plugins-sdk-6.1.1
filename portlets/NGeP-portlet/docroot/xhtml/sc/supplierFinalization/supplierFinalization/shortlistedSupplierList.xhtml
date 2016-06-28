@@ -111,8 +111,8 @@
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
 								   process="@this" update="@([id$=suppDetailsPopupId])" 
 								   style="float:right;">
-						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
-												   	 target="#{supplierDetailBackingBean.smSupplier}" />
+						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal}"
+												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 				</p:column>
@@ -247,9 +247,9 @@
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
 								   process="@this" update="@([id$=suppDetailsPopupId])" 
 								   style="float:right;">
-						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
-												   	 target="#{supplierDetailBackingBean.smSupplier}" />
-						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
+						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal}"
+												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
+						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />						
 					</p:commandLink>
 				</p:column>
 	
@@ -411,8 +411,8 @@
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
 								   process="@this" update="@([id$=suppDetailsPopupId])" 
 								   style="float:right;">
-						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
-												   	 target="#{supplierDetailBackingBean.smSupplier}" />
+						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal}"
+												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 				</p:column>
