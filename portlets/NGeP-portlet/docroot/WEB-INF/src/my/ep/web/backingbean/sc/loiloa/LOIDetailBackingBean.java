@@ -878,20 +878,11 @@ public class LOIDetailBackingBean extends
 	 *            the event
 	 */
 	public void onRowRecSupplierAction(SelectEvent event) {
+		debugLogger("onRowRecSupplierAction");
 		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			/*reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
-			reqDTO.setSupplierId(scLoiLoa.getSmSupplier().getSupplierId());
-			reqDTO.setDocId(scLoiLoa.getDocId());*/
 			getLoiLoaListTitle(scLoiLoa);
-
-			/*reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
-			reqDTO.setViewSupplierLoiLoa(true);
-			reqDTO.setAwardType(getManagedBean().getDocType());
-			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(
-					reqDTO);*/
-
 			List<Long> loiLoaList = new ArrayList<Long>();
 			loiLoaList.add(scLoiLoa.getLoiLoaId());
 			reqDTO.setLoiLoaIds(loiLoaList);
