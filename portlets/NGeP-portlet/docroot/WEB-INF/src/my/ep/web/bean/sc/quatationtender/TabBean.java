@@ -12,6 +12,8 @@ package my.ep.web.bean.sc.quatationtender;
 
 import java.util.List;
 
+import javax.faces.model.SelectItem;
+
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
@@ -53,6 +55,8 @@ public class TabBean {
 
 	/** The members. */
 	private List<ScCommitteeMember> members;
+	
+	private SelectItem[] fcTypes;
 
 	/**
 	 * Instantiates a new tab bean.
@@ -98,6 +102,23 @@ public class TabBean {
 		this.tabType = tabType;
 		this.scQtApproval = scQtApproval;
 		this.approverCommittes = approverSetting;
+
+	}
+	
+	/**
+	 * Instantiates a new tab bean.
+	 *
+	 * @param titleName the title name
+	 * @param tabType	the tab type
+	 * @param scQtApproval the sc qt approval
+	 * @param SelectItem the fcTypes
+	 */
+	public TabBean(String titleName, String tabType, ScQtApproval scQtApproval,
+			SelectItem[] fcTypes) {
+		this.titleName = titleName;
+		this.tabType = tabType;
+		this.scQtApproval = scQtApproval;
+		this.fcTypes = fcTypes;
 
 	}
 
@@ -259,6 +280,20 @@ public class TabBean {
 	 */
 	public void setApproverCommittes(List<PmParameter> approverCommittes) {
 		this.approverCommittes = approverCommittes;
+	}
+
+	/**
+	 * @return the fcTypes
+	 */
+	public SelectItem[] getFcTypes() {
+		return fcTypes;
+	}
+
+	/**
+	 * @param fcTypes the fcTypes to set
+	 */
+	public void setFcTypes(SelectItem[] fcTypes) {
+		this.fcTypes = fcTypes;
 	}
 
 }
