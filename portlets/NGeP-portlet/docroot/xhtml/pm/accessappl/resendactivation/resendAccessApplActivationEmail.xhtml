@@ -59,7 +59,8 @@
 					label="#{lbl['lbl.pm.access.app.email']}"
 					required="true"
 					value="#{accessApplResendActivationBB.email}"
-					size="40" >
+					maxlength="255"
+					size="53" >
 					<f:validateRegex
 					pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 				</p:inputText>
@@ -74,7 +75,7 @@
 					label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 					required="true" maxlength="15"
 					value="#{accessApplResendActivationBB.identificationNo}"
-					size="35"  />
+					size="53"  />
 			</td>
 		</tr>
 	</table>
