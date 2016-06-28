@@ -83,7 +83,7 @@
 						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
 						selectionMode="multiple" 
 						saveObject="purchaseRequestBackingBean.managedBean.selectedDeliveryFullAddr"
-						conditionField="ORG_PROFILE_ID^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
+						conditionField="ORG_PROFILE_ID^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup"
 						rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 						/>
