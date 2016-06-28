@@ -1581,7 +1581,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 			if (!stateList.isEmpty()) {
-				condition += "|STATUS_ID^" + stateList + "^" + SearchOperator.OPERATOR_IN.value();
+				condition += "|STATE_ID^" + stateList + "^" + SearchOperator.OPERATOR_IN.value();
 			}
 			if (!districtList.isEmpty()) {
 				condition += "|DISTRICT_ID^" + districtList + "^" + SearchOperator.OPERATOR_IN.value();
