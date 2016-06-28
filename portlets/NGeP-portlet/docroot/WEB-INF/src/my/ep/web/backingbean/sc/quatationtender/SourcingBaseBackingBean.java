@@ -46,6 +46,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -67,6 +68,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
@@ -2523,5 +2526,33 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		int hour = DateUtils.getCurrentHours();
 		Date today = DateUtils.getCurrentDateWithoutTime();
 		return hour >= 12 ? DateUtils.addDays(today, 1) : today;
+	}
+	
+	/**
+	 * Fetch PmParameter based on parameter Id
+	 * 
+	 * @param parameterId
+	 * @return PmParameter
+	 */
+	public PmParameter retrieveParameterById(Long parameterId){
+		
+		PmParameter pmParameter = null;
+		if (parameterId != null) {
+			IParameterSO parameterSO = null;
+			try {
+				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterId(parameterId);
+				parameterSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				ParameterResDTO parameterResDTO = parameterSO
+						.retrieveParameterById(parameterReqDTO);
+				pmParameter = parameterResDTO.getPmParameter();
+			} finally {
+				parameterSO = null;
+			}
+		}
+
+		return pmParameter;
+	
 	}
 }
