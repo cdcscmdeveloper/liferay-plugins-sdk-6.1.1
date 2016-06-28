@@ -95,7 +95,7 @@
 	<ac:scRemarkAndAttachment
 		remarkList="#{lOADetailBackingBean.managedBean.scLoa.scLoaRemarks}"
 		showAttachment="false"
-		readonly="#{lOADetailBackingBean.managedBean.readOnly}" />
+		readonly="#{lOADetailBackingBean.managedBean.readOnly or isTrackingDairyView}" />
 	
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 		<p:dataTable id="apprHistTbl" var="scLoaApproval"
