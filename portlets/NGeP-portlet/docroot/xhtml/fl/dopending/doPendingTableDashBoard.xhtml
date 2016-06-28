@@ -43,7 +43,7 @@
 			</p:column>			
 			<p:column headerText="#{lbl['lbl.fl.created.date']}" style="text-align:center">
 				<h:outputText value="#{pending.createdDate}" style="float:left;">
-					<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Status" style="white-space:normal;text-align:center">
