@@ -49,7 +49,7 @@ public class AccessApplResendActivationBackingBean extends
 	private static Logger log = Logger
 			.getLogger(AccessApplResendActivationBackingBean.class);
 	
-	private static final String ACCESS_APPL_RESEND_ACTIVATION_MAIN_PAGE ="/xhtml/pm/accessappl/resendactivation/resendAccessApplActivationEmail.xhtml";
+	private static final String ACCESS_APPL_RESEND_ACTIVATION_MAIN_PAGE ="/xhtml/pm/accessappl/resendactivation/resendAccessApplActivationEmail.xhtml?faces-redirect=true";
 	private static final String ACCESS_APPL_OUTPUT_MSG = "/xhtml/pm/accessappl/outputMsg.xhtml";
 	
 	private String email;
