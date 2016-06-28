@@ -611,7 +611,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<TabBean> scCommitteeMemberTabList;
 
 	/** The finalization secratary. */
-	private List<PmParameter> finalizationSecratary;
+	private SelectItem[] finalizationSecratary;
 
 	// Existing Committee Search
 	/** The user search committee data model. */
@@ -1559,6 +1559,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<CtPanelItem> searchPanelItemList;
 	private List<ScCommitteeMember> extraDeleteComitteeSelection;
 	private boolean changesOnQTMaintenance;
+	
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -5477,7 +5478,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * 
 	 * @return the finalization secratary
 	 */
-	public List<PmParameter> getFinalizationSecratary() {
+	public SelectItem[] getFinalizationSecratary() {
 		return finalizationSecratary;
 	}
 
@@ -5487,7 +5488,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param finalizationSecratary
 	 *            the new finalization secratary
 	 */
-	public void setFinalizationSecratary(List<PmParameter> finalizationSecratary) {
+	public void setFinalizationSecratary(SelectItem[] finalizationSecratary) {
 		this.finalizationSecratary = finalizationSecratary;
 	}
 
@@ -8775,6 +8776,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setChangesOnQTMaintenance(boolean changesOnQTMaintenance) {
 		this.changesOnQTMaintenance = changesOnQTMaintenance;
 	}
-
 
 }
