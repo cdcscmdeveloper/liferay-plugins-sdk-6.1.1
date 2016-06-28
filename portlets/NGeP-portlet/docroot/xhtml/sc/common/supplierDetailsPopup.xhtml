@@ -40,7 +40,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.comp.name']}" /></td>
 				<td><p:inputText size="30"
-						value="#{supplierDetailBackingBean.managedBean.smSupplier.companyName}"
+						value="#{supplierDetailBackingBean.managedBean.supplierName}"
 						disabled="true" /></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
@@ -55,7 +55,7 @@
 				<td rowspan="4" valign="top"><p:outputLabel
 						value="#{lbl['lbl.sc.comp.address']}" /></td>
 				<td><p:inputText id="suppAddr1"
-						value="#{supplierDetailBackingBean.managedBean.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}"
 						size="30" disabled="true" /></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
@@ -68,39 +68,39 @@
 			</tr>
 			<tr>
 				<td><p:inputText id="suppAddr2"
-						value="#{supplierDetailBackingBean.managedBean.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}"
 						size="30" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.post.code']}" /></td>
 				<td><p:inputText id="suppPostcode"
-						value="#{supplierDetailBackingBean.managedBean.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
 						size="30" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:inputText id="suppAddr3"
-						value="#{supplierDetailBackingBean.managedBean.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}"
 						size="30" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.state']}" /></td>
 				<td><p:inputText id="suppState"
-						value="#{supplierDetailBackingBean.managedBean.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}"
 						size="30" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:inputText id="suppAddr4"
-						value="#{supplierDetailBackingBean.managedBean.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}"
 						size="30" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /></td>
 				<td><p:inputText id="suppCity"
-						value="#{supplierDetailBackingBean.managedBean.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}"
 						size="30" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" /></td>
 				<td><p:inputText id="suppPhoneNo" size="30"
-						value="#{supplierDetailBackingBean.managedBean.smSupplier.smAppl.smCompanyBasic.phoneFull}"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.phoneFull}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /></td>
 				<td><p:inputText id="suppFaxNo" size="30"
-						value="#{supplierDetailBackingBean.managedBean.smSupplier.smAppl.smCompanyBasic.faxFull}"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}"
 						disabled="true" /></td>
 			</tr>
 		</table>
