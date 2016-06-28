@@ -17,28 +17,17 @@
 		<p:messages id="bsvattanadance" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
 
-		
-			<p:panelGrid style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-				<p:row>
-					<p:column width="100%" style="text-align:left">
-						<p:commandButton value="#{lbl['lbl.btn.back']}"
-							style="float:left;"
-							action="#{qTBriefingSiteVisitBackingBean.briefingBackAction}" />
-					</p:column>
 
-					<p:column width="100%" style="text-align:right">
-						<p:commandButton value="#{lbl['lbl.btn.submit']}"
-							process="@form"
-							action="#{bsvAttendanceBackingBean.saveBsvRegistarionFromMaintanceFlow}"
-							onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" />
-					</p:column>
-				</p:row>
-			</p:panelGrid>
-		
-		
-			<table style="width: 100%">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				action="#{qTBriefingSiteVisitBackingBean.briefingBackAction}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@form"
+				action="#{bsvAttendanceBackingBean.saveBsvRegistarionFromMaintanceFlow}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+		</div>
+
+		<table style="width: 100%">
 				<tr>
 					<td style="width: 10%"><h:outputLabel
 							value="#{lbl['lbl.sc.briefing']}:" /></td>
