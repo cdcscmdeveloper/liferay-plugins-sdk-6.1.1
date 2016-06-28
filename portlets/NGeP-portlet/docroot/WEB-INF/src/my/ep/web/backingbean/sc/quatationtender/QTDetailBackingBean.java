@@ -2159,10 +2159,15 @@ public class QTDetailBackingBean extends
 							} else {
 								for (ScQtApproverSettings approverSettings : approvalSettings) {
 									approverSettings.setScQtApproval(qtApproval);
+									
+									// Added to populate security if Finalization committee is same as Committee Appointment
 									PmParameter finalizationCommitee = scQt.getFinalizationCommitte();
-									if(finalizationCommitee!= null && 
-											finalizationCommitee.getParameterCode().
-											equalsIgnoreCase(approverSettings.getCommitteeType().getParameterCode())){
+									PmParameter committeeSettings = approverSettings.getCommitteeType();
+									if (committeeSettings != null
+											&& finalizationCommitee != null
+											&& finalizationCommitee.getParameterId() != null
+											&& finalizationCommitee.getParameterCode()
+													.equalsIgnoreCase(committeeSettings.getParameterCode())) {
 										approverSettings.setPmUser(scQt.getFinalizationSecratery());
 									}
 								}
