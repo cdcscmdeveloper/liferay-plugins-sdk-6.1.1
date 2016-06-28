@@ -22,23 +22,17 @@
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
 
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<ui:repeat var="bpmAction"
-						value="#{qTScheduleDetailBackingBean.managedBean.outComes}">
-						<ui:param name="buttonLabel"
-							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-							styleClass="ui-button" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
-							action="#{qTScheduleDetailBackingBean.updateBpmTask(bpmAction)}" />
-					</ui:repeat>
-				</p:column>
-			</p:row>
-
-		</p:panelGrid>
+		<div class="ppRightBtn">
+			<ui:repeat var="bpmAction"
+				value="#{qTScheduleDetailBackingBean.managedBean.outComes}">
+				<ui:param name="buttonLabel"
+					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+					styleClass="ui-button" onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					action="#{qTScheduleDetailBackingBean.updateBpmTask(bpmAction)}" />
+			</ui:repeat>
+		</div>
 
 		<ui:include src="/xhtml/sc/quatationtender/Approver/requestPTJdetails.xhtml" />
 
