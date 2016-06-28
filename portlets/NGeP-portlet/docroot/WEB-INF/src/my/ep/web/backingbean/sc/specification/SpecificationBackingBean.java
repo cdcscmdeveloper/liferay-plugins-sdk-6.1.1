@@ -668,6 +668,7 @@ public class SpecificationBackingBean extends
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSpecSO.class);
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+		specReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		boolean technicalOtherCheckList = true;
 		boolean financialOtherCheckList = true;
 
@@ -8217,6 +8218,7 @@ public class SpecificationBackingBean extends
 			spReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			spReqDTO.setRoleCode(getUserRoleCode());
 			spReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+			spReqDTO.setUserLocale(facesScopes.getUserLocale());
 			IQTSpecSO specSO = getSpecSO();
 			SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
 			if (resDTO.isSuccessful()) {
@@ -10261,6 +10263,7 @@ public class SpecificationBackingBean extends
 					.getToBeRemoveProgPayments());
 			specReqDTO.setTobeRemoveCategoryCodes(this.getManagedBean().getTobeRemoveCategoryCodes());
 			specReqDTO.setToBeRemoveRestrictedSupplierList(this.getManagedBean().getToBeRemoveRestrictedSupplierList());
+			specReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			boolean isAssignedState = this.getManagedBean().isAssignedState();
 			switch (activeIndex) {
 			case 0:
@@ -11109,6 +11112,7 @@ public class SpecificationBackingBean extends
 		specReqDTO.setPrepareSpecStatus(this.getManagedBean()
 				.getCurrentStatusId());
 		specReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+		specReqDTO.setUserLocale(facesScopes.getUserLocale());
 		IQTSpecSO specSO = getSpecSO();
 
 		try {
@@ -11347,6 +11351,7 @@ public class SpecificationBackingBean extends
 		spReqDTO.setRoleCode(getUserRoleCode());
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
 				.getCurrentStatusId());
+		spReqDTO.setUserLocale(facesScopes.getUserLocale());
 		IQTSpecSO specSO = getSpecSO();
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
@@ -11390,6 +11395,7 @@ public class SpecificationBackingBean extends
 		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		FacesScopes facesScopes = new FacesScopes();
 		spReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+		spReqDTO.setUserLocale(facesScopes.getUserLocale());
 		IQTSpecSO specSO = getSpecSO();
 
 		try {
