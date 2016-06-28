@@ -11,6 +11,12 @@
 	<ui:define name="resourceSection">
 		<p:outputPanel id="paymentSummaryTitleId">
 			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				if(emptyText.parentNode != null) {
+					emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.payment.summary']}";
+				}
+				
 				$('#portlet_SoftCertPayment_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.payment.summary']}");
 				$('#portlet_MOFApplication_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.payment.summary']}");
 			</script>
@@ -53,8 +59,8 @@
 	                <p:column footerText="#{paymentBackingBean.managedBean.gstAmount}" style="text-align:left"/>
 	            </p:row>
 	            <p:row>
-	                <p:column style="text-align:right;font-weight: bold !important;font-size: 21px !important;" footerText="#{lbl['lbl.sm.payment.total.payable']} :" />
-	                <p:column footerText="#{paymentBackingBean.managedBean.totalAmount}" style="text-align:left;font-weight: bold !important;font-size: 21px !important;"/>
+	                <p:column style="text-align:right;font-weight: bold !important;" footerText="#{lbl['lbl.sm.payment.total.payable']} :" />
+	                <p:column footerText="#{paymentBackingBean.managedBean.totalAmount}" style="text-align:left;font-weight: bold !important;"/>
 	            </p:row>
 	        </p:columnGroup>
 		</p:dataTable>
