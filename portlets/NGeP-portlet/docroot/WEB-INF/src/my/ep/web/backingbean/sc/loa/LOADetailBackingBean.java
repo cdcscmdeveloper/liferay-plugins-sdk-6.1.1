@@ -2598,7 +2598,9 @@ public class LOADetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
 				String messageCode = null;
-				if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
+				if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId) || 
+						QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(statusId)) {
+					
 					if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700007;
 					} else if (BpmOutcomeConst.BPM_REJECT

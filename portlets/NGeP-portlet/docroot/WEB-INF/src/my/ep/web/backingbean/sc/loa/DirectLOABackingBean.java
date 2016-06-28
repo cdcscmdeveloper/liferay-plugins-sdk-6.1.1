@@ -4249,8 +4249,15 @@ public class DirectLOABackingBean extends
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
 		} else if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
-			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+			//gpki for only govt seller
+			if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
+			}  else {
+				// spki
+				RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+			}
+			
 		} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			submitAction();
 		}
@@ -4351,8 +4358,8 @@ public class DirectLOABackingBean extends
 				scLoa = resDTO.getLoa();
 
 				String messageCode = null;
-
-				if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
+				if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId) || 
+						QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(statusId)) {
 					if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700007;
 					} else if (BpmOutcomeConst.BPM_REJECT
