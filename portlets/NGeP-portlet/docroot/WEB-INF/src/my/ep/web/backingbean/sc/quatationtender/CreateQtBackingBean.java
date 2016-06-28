@@ -76,6 +76,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
@@ -2637,4 +2638,23 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		}
 	return true;
 	 }
+	 
+	/**
+	 * On change of drop down
+	 * 
+	 * @param approvalDetails
+	 */
+	public void otherApprovalStatus(ScQtApprovalRequest approvalDetails) {
+		
+		Long parameterId = (approvalDetails != null && approvalDetails
+				.getApproverAction() != null) ? approvalDetails
+				.getApproverAction().getParameterId() : null;
+		if (parameterId != null) {
+			approvalDetails
+					.setApproverAction(retrieveParameterById(parameterId));
+		} else {
+			approvalDetails.setApproverAction(new PmParameter());
+		}
+
+	}
 }
