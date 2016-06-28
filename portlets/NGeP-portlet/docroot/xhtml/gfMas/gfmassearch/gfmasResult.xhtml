@@ -10,47 +10,64 @@
 		toggleable="true">
 		<p:dataTable id="gfMas"
 			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-			value="#{gfMasBackingBean.searchGfMas}" rows="10"
-			var="gfMasList" rowIndexVar="index" lazy="true">
+			value="#{gfMasBackingBean.searchGfMas}" rows="10" var="gfMasList"
+			rowIndexVar="index" lazy="true">
 			<ac:paginator for="gfMas" />
-					
-		    <p:column headerText="#{lbl['lbl.pm.state.seq.no']}" style="width:5%;white-space: normal;word-wrap: break-word;">
+			
+			
+			<p:column headerText="#{lbl['lbl.pm.state.seq.no']}"
+				style="width:5%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{index+1}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+
+			<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}"
+				style="width:10%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{gfMasList.logId}" />
-			</p:column>			
-			
-			<p:column headerText="#{lbl['lbl.gfmas.service.code']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.gfmas.service.code']}"
+				style="width:10%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{gfMasList.serviceCode}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.gfmas.process.id']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+			<p:column headerText="#{lbl['lbl.gfmas.process.id']}"
+				style="width:10%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{gfMasList.processId}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.gfmas.direction']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+
+			<p:column headerText="#{lbl['lbl.gfmas.direction']}"
+				style="width:10%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{gfMasList.direction}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.gfmas.targetSystem']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+
+			<p:column headerText="#{lbl['lbl.gfmas.targetSystem']}"
+				style="width:10%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{gfMasList.targetSystem}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.gfmas.createdDate']}" style="width:10%;white-space: normal;word-wrap: break-word;">				
-				<h:outputText value="#{gfMasList.createdDate}" >
-				<f:convertDateTime
+
+			<p:column headerText="#{lbl['lbl.gfmas.createdDate']}"
+				style="width:10%;white-space: normal;word-wrap: break-word;">
+				<h:outputText value="#{gfMasList.createdDate}">
+					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
-			</p:column>	
-			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:10%;text-align:center;">
-				<p:commandLink  action="#{gfMasBackingBean.goToGfMasProcessMaintaincePage(gfMasList)}" >
-					<p:graphicImage value="/css/images/design/icon-view.png"/>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.gfmas.process.status']}"
+				style="width:10%;white-space: normal;word-wrap: break-word;">
+				<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
+					rendered="#{gfMasList.processStatus==0}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.action']}"
+				style="width:10%;text-align:center;">
+				<p:commandLink
+					action="#{gfMasBackingBean.goToGfMasProcessMaintaincePage(gfMasList)}">
+					<p:graphicImage value="/css/images/design/icon-view.png" />
 				</p:commandLink>
 			</p:column>
-			
+
 		</p:dataTable>
 	</p:panel>
-	
+
 </ui:composition>
