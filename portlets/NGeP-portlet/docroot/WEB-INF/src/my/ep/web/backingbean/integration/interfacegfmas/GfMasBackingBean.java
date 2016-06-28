@@ -11,8 +11,10 @@
 package my.ep.web.backingbean.integration.interfacegfmas;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -23,6 +25,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.batch.IDIInterfaceSO;
 import my.ep.constant.MessageConst;
@@ -45,6 +48,7 @@ import my.ep.web.managedbean.intergration.interfacegfmas.GfMasManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 // TODO: Auto-generated Javadoc
@@ -246,6 +250,11 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 									+ this.getManagedBean().getProcessId()
 											.toUpperCase() + "400001")));
 		}
+		
+		searchBean.getSortColumns().add(
+				new SearchOrderBean("createdDate", false));
+		
+		
 		return searchBean;
 	}
 
@@ -294,7 +303,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				InterfaceLogResDto resDTO = gfMasSO
 						.retrieveInterfaceLogDetaisls(gfMasReqDTO);
-
+				
 				getManagedBean().setLazy(true);
 
 				if (resDTO.isSuccessful()) {
@@ -326,7 +335,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 *            the interface log
 	 * @return the string
 	 */
-	public String goToGfMasProcessMaintaincePage(DIInterfaceLog interfaceLog) {
+	public String goToGfMasProcessMaintaincePage(DIInterfaceLog selectedProcess) {
 		log.info("In goToGfMasProcessMaintaincePage");
 		IDIInterfaceSO gfMasSO = (IDIInterfaceSO) BusinessDelegate
 				.getInstance().getServiceObject(
@@ -337,14 +346,18 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 		try {
 			InterfaceLogReqDto interfaceGfMasReqDto = new InterfaceLogReqDto();
-			interfaceGfMasReqDto.setdIInterfaceLog(interfaceLog);
-			interfaceGfMasReqDto.setLogId(interfaceLog.getLogId());
-			interfaceGfMasReqDto.setProcessId(interfaceLog.getProcessId());
+			interfaceGfMasReqDto.setdIInterfaceLog(selectedProcess);
+			interfaceGfMasReqDto.setLogId(selectedProcess.getLogId());
+			interfaceGfMasReqDto.setProcessId(selectedProcess.getProcessId());
+			
+			this.getManagedBean().setFileName(selectedProcess.getFileName());
+			
+			//getUnprocessedRecordsByPreviousDate(selectedProcess);
 
 			InterfaceLogResDto interfaceGfMasResDto = gfMasSO
 					.retrieveProcessDataForAll(interfaceGfMasReqDto);
 
-			childProcessPage = getChildProcessScreen(interfaceLog,
+			childProcessPage = getChildProcessScreen(selectedProcess,
 					interfaceGfMasResDto);
 
 		} catch (Exception e) {
@@ -355,6 +368,198 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 		return childProcessPage;
 	}
+
+	private void getUnprocessedRecordsByPreviousDate(
+			
+	DIInterfaceLog selectedProcess) {
+
+		List<DIInterfaceLog> interfaceLogParentList = searchGfMas.getList();
+
+		List<DIInterfaceLog> interfaceLogParentFilteredList = searchGfMas
+				.getList();
+
+		Map<String, List<DIInterfaceLog>> mapOfProcess = new HashMap<String, List<DIInterfaceLog>>();
+
+		/*
+		 * Collections.sort(interfaceLogParentList, new
+		 * Comparator<DIInterfaceLog>() { public int compare(DIInterfaceLog o1,
+		 * DIInterfaceLog o2) { return o1.getCreatedDate().compareTo(
+		 * o2.getCreatedDate()); } });
+		 * 
+		 * Collections.sort(interfaceLogParentList, Collections.reverseOrder());
+		 */
+
+		if (CollectionUtils.isNotEmpty(interfaceLogParentList)) {
+
+			for (DIInterfaceLog allRecords : interfaceLogParentList) {
+
+				String processId = allRecords.getProcessId();
+
+				if (!mapOfProcess.containsKey(processId)) {
+					mapOfProcess
+							.put(processId, new ArrayList<DIInterfaceLog>());
+				}
+				mapOfProcess.get(processId).add(allRecords);
+			}
+		}
+
+		interfaceLogParentFilteredList = mapOfProcess.get(selectedProcess
+				.getProcessId());
+
+		if (CollectionUtils.isNotEmpty(interfaceLogParentFilteredList)) {
+
+			for (DIInterfaceLog filteredProcessCode : interfaceLogParentFilteredList) {
+
+				if (filteredProcessCode.getProcessStatus().equals(new Long(0))) {
+
+					switch (ProcessCodeType.valueOf(filteredProcessCode
+							.getProcessId())) {
+
+					case GLPRG:
+						if (filteredProcessCode.getPmInterfaceProgAct()
+								.contains(new Long(0))
+								|| filteredProcessCode.getPmInterfaceProgAct()
+										.contains(new Long(1))) {
+							if (!filteredProcessCode.getLogId().equals(
+									selectedProcess.getLogId())) {
+								this.getManagedBean().getdIInterfaceLog()
+										.setHighLightProcess(true);
+								throw new EpException(MessageConst.ERROR_770001);
+							}
+						}
+
+					case GLBAC:
+						if (filteredProcessCode.getPmInterfaceAgOff().contains(
+								new Long(0))
+								|| filteredProcessCode.getPmInterfaceAgOff()
+										.contains(new Long(1))) {
+							if (!filteredProcessCode.getLogId().equals(
+									selectedProcess.getLogId())) {
+								this.getManagedBean().getdIInterfaceLog()
+										.setHighLightProcess(true);
+								throw new EpException(MessageConst.ERROR_770002);
+							}
+						}
+
+					case GLSEG:
+						if (filteredProcessCode.getPmInterfacePP()
+								.contains(new Long(0))
+								|| filteredProcessCode.getPmInterfacePP()
+										.contains(new Long(1))) {
+							if (!filteredProcessCode.getLogId().equals(
+									selectedProcess.getLogId())) {
+								this.getManagedBean().getdIInterfaceLog()
+										.setHighLightProcess(true);
+								throw new EpException(MessageConst.ERROR_770003);
+							}
+						}
+
+					case GLVOT:
+						if (filteredProcessCode.getPmInterfaceVot().contains(
+								new Long(0))
+								|| filteredProcessCode.getPmInterfaceVot()
+										.contains(new Long(1))) {
+							if (!filteredProcessCode.getLogId().equals(
+									selectedProcess.getLogId())) {
+								this.getManagedBean().getdIInterfaceLog()
+										.setHighLightProcess(true);
+								throw new EpException(MessageConst.ERROR_770004);
+							}
+						}
+
+					case GLDNA:
+						if (filteredProcessCode.getPmInterfaceDana().contains(
+								new Long(0))
+								|| filteredProcessCode.getPmInterfaceDana()
+										.contains(new Long(1))) {
+							if (!filteredProcessCode.getLogId().equals(
+									selectedProcess.getLogId())) {
+								this.getManagedBean().getdIInterfaceLog()
+										.setHighLightProcess(true);
+								throw new EpException(MessageConst.ERROR_770005);
+							}
+						}
+
+					case GLPRJ:
+						if (filteredProcessCode.getPmInterfaceProject()
+								.contains(new Long(0))
+								|| filteredProcessCode.getPmInterfaceProgAct()
+										.contains(new Long(1))) {
+							if (!filteredProcessCode.getLogId().equals(
+									selectedProcess.getLogId())) {
+								this.getManagedBean().getdIInterfaceLog()
+										.setHighLightProcess(true);
+								throw new EpException(MessageConst.ERROR_770012);
+							}
+						}
+
+					case GLGLC:
+						if (filteredProcessCode.getPmInterfaceGlAccount()
+								.contains(new Long(0))
+								|| filteredProcessCode
+										.getPmInterfaceGlAccount()
+										.contains(new Long(1))) {
+							if (!filteredProcessCode.getLogId().equals(
+									selectedProcess.getLogId())) {
+								this.getManagedBean().getdIInterfaceLog()
+										.setHighLightProcess(true);
+								throw new EpException(MessageConst.ERROR_770011);
+							}
+						}
+
+					case GLPCG:
+						if (filteredProcessCode.getPmInterfaceKptj().contains(
+								new Long(0))
+								|| filteredProcessCode.getPmInterfaceKptj()
+										.contains(new Long(1))) {
+							if (!filteredProcessCode.getLogId().equals(
+									selectedProcess.getLogId())) {
+								this.getManagedBean().getdIInterfaceLog()
+										.setHighLightProcess(true);
+								throw new EpException(MessageConst.ERROR_770008);
+							}
+						}
+
+					case GLPTJ:
+						if (filteredProcessCode.getPmInterfacePtj().contains(
+								new Long(0))
+								|| filteredProcessCode.getPmInterfacePtj()
+										.contains(new Long(1))) {
+							if (!filteredProcessCode.getLogId().equals(
+									selectedProcess.getLogId())) {
+								this.getManagedBean().getdIInterfaceLog()
+										.setHighLightProcess(true);
+								throw new EpException(MessageConst.ERROR_770009);
+							}
+						}
+
+					case CMBNK:
+						if (filteredProcessCode.getPmInterfaceBank().contains(
+								new Long(0))
+								|| filteredProcessCode.getPmInterfaceBank()
+										.contains(new Long(1))) {
+							if (!filteredProcessCode.getLogId().equals(
+									selectedProcess.getLogId())) {
+								this.getManagedBean().getdIInterfaceLog()
+										.setHighLightProcess(true);
+								throw new EpException(MessageConst.ERROR_770010);
+							}
+						}
+
+					default: {
+
+						log.info("unknown child page \t"
+								+ filteredProcessCode.getProcessId());
+
+					}
+					}
+				}
+			}
+
+		}
+
+	}
+
 
 	/**
 	 * Gets the child process screen.

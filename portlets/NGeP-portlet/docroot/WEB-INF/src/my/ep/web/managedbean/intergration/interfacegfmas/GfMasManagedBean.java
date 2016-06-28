@@ -55,9 +55,13 @@ public class GfMasManagedBean extends BaseManagedBean {
     
     /** The created date. */
     private Date createdDate;
+    
+    private String fileName;
 
 	/** The is lazy. */
 	private boolean isLazy;	
+	
+	private boolean disable;
 	
 	/** The d i interface log. */
 	private DIInterfaceLog dIInterfaceLog;
@@ -198,6 +202,34 @@ public class GfMasManagedBean extends BaseManagedBean {
 	 */
 	public List<PmInterfaceDana> getListOfDana() {
 		return listOfDana;
+	}
+
+	/**
+	 * @return the fileName
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	/**
+	 * @param fileName the fileName to set
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	/**
+	 * @return the disable
+	 */
+	public boolean isDisable() {
+		return disable;
+	}
+
+	/**
+	 * @param disable the disable to set
+	 */
+	public void setDisable(boolean disable) {
+		this.disable = disable;
 	}
 
 	/**
