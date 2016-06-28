@@ -75,9 +75,10 @@
 							</p:column>
 
 				<p:column headerText="#{lbl['lbl.cm.action']}" width="2%">
-					<p:commandLink
-						action="#{catalogueBackingBean.deleteContractRequestItem(rowIndex)}"
+					<p:commandLink 
+						onsuccess="delItemDlg.show()" process="@this"
 						update=":form:contractRequestId,:form:navigateCR">
+						<f:setPropertyActionListener value="#{contractObj}" target="#{catalogueBackingBean.managedBean.selectedItem}" />
 						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 					</p:commandLink>
 				</p:column>
@@ -85,6 +86,22 @@
 
 			</p:dataTable>
 
+		<p:confirmDialog message="#{lbl['lbl.msg.confirm.delete']}"
+			severity="alert" widgetVar="delItemDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+					partialSubmit="true" 
+					update=":form:contractRequestId,:form:navigateCR"
+					action="#{catalogueBackingBean.deleteContractRequestItem()}"
+					oncomplete="delItemDlg.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					partialSubmit="true"
+					update=":form:contractRequestId,:form:navigateCR"
+					
+					onclick="delItemDlg.hide();" />	
+			</div>
+		</p:confirmDialog>	
 
 
 
