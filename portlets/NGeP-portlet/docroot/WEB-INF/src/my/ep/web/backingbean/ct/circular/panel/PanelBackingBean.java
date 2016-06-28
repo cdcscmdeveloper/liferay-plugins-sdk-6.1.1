@@ -40,6 +40,7 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
+import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -3067,4 +3068,9 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 			 return false;
 		 }
 	 }
+	 
+	 public void onPageChange(PageEvent event){
+		 System.out.println("////101//////////" +event.getPage());
+	 }
+	 
 }
