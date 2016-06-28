@@ -138,6 +138,9 @@ public class SupplierUserActivationBackingBean extends
 			} else {
 				// redirect & display invalid activation
 				this.getManagedBean().setValidActivation(false);
+				errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
+						new String[] { SmRuleHelper.getInstance()
+						.getEmailActivationDays() + "" });
 				
 				log.info("****Hash String is not match******");
 			}
