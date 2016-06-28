@@ -67,8 +67,8 @@
 										title="#{lbl['lbl.sc.view.companyinfo']}"
 										style="vertical-align:middle" />
 									<f:setPropertyActionListener
-										value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
-										target="#{supplierDetailBackingBean.smSupplier}" />
+										value="#{supplierDtl.qtEvaluationResult.scQtProposal}"
+										target="#{supplierDetailBackingBean.scQtProposal}" />
 									<h:outputText value="#{supplierDtl.qtEvaluationResult.scQtProposal.supplierNo}" />
 								</p:commandLink>									
 							</p:column>
@@ -166,8 +166,8 @@
 												title="#{lbl['lbl.sc.view.companyinfo']}"
 												style="vertical-align:middle" />
 											<f:setPropertyActionListener
-												value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
-												target="#{supplierDetailBackingBean.smSupplier}" />
+												value="#{recommendedSuppl.qtEvaluationResult.scQtProposal}"
+												target="#{supplierDetailBackingBean.scQtProposal}" />
 											<h:outputText value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.supplierNo}" />
 										</p:commandLink>
 										<br />
@@ -187,8 +187,8 @@
 												title="#{lbl['lbl.sc.view.companyinfo']}"
 												style="vertical-align:middle" />
 											<f:setPropertyActionListener
-												value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
-												target="#{supplierDetailBackingBean.smSupplier}" />
+												value="#{recommendedSuppl.qtEvaluationResult.scQtProposal}"
+												target="#{supplierDetailBackingBean.scQtProposal}" />
 											<h:outputText
 												value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.supplierNo}" />
 										</p:commandLink>
