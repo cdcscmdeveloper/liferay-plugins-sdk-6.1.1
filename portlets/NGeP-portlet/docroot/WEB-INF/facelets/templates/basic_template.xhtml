@@ -37,7 +37,8 @@
 		function addChooseOnchange(upload_widget) {
 			if(upload_widget.buttonBar.find('input[type=file]').get(0).type == 'file') {
 				upload_widget.buttonBar.find('input[type=file]').change(function() {
-					var files = upload_widget.uploadContent.find('.files .template-upload');
+					//var files = upload_widget.uploadContent.find('.files .template-upload');
+					var files = upload_widget.uploadContent.find('.files tr:not(.ui-state-error)');
 					if (files.length >= 1) {
 						upload_widget.buttonBar.find('input[type=file]').get(0).disabled=true;
 						doggleChooseButton(upload_widget);
@@ -49,7 +50,8 @@
 		
 		function doggleChooseButton(upload_widget) {
 			upload_widget.uploadContent.find('.cancel').get(0).onclick = function(){
-				var files = upload_widget.uploadContent.find('.files .template-upload');
+				//var files = upload_widget.uploadContent.find('.files .template-upload');
+				var files = upload_widget.uploadContent.find('.files tr:not(.ui-state-error)');
 				if (files.length == 1) {
 					upload_widget.buttonBar.find('input[type=file]').get(0).disabled=false;
 				}
