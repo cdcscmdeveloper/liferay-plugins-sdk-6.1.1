@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
@@ -49,7 +50,8 @@ public class AccessApplResendActivationBackingBean extends
 			.getLogger(AccessApplResendActivationBackingBean.class);
 	
 	private static final String ACCESS_APPL_RESEND_ACTIVATION_MAIN_PAGE ="/xhtml/pm/accessappl/resendactivation/resendAccessApplActivationEmail.xhtml";
-		
+	private static final String ACCESS_APPL_OUTPUT_MSG = "/xhtml/pm/accessappl/outputMsg.xhtml";
+	
 	private String email;
 	private String companyName;
 	private String identificationNo;
@@ -111,6 +113,10 @@ public class AccessApplResendActivationBackingBean extends
 		return items;
 	}
 	
+	/**
+	 * The method used for construct org lov condition fields.
+	 * 
+	 */
 	public String constructConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterId^");
@@ -119,6 +125,10 @@ public class AccessApplResendActivationBackingBean extends
 		return sb.toString();
 	}
 
+	/**
+	 * The method used for cater ajax change event for org type select one menu
+	 * 
+	 */
 	public void changeOrgType() {
 		log.info("changeResOrgType");
 		PmOrgProfile orgProfile = new PmOrgProfile();
@@ -126,6 +136,10 @@ public class AccessApplResendActivationBackingBean extends
 		setSelectedOrgProfile(orgProfile);
 	}
 	
+	/**
+	 * The method used for request to resend access appl activation email
+	 * 
+	 */
 	public void resendAccessApplActivationEmail(){
 		log.info("resendAccessApplActivationEmail");
 		IAccessApplSO accessApplSO = null;		
@@ -137,12 +151,36 @@ public class AccessApplResendActivationBackingBean extends
 			reqDTO.setEmail(getEmail());
 			reqDTO.setIdentificationNo(getIdentificationNo());
 			reqDTO.setOrgProfileId(getSelectedOrgProfile().getOrgProfileId());
-			reqDTO.setPortalBaseUrl(PmCommonUtil.getBasePortalUrl());
 			AccessApplResDTO resDTO = 
 					accessApplSO.retrievePendingActivationAccessApplByIcNoAndOrgProfileId(reqDTO);
-			if(resDTO.isSuccessful()){
-				
+			if(resDTO.isSuccessful() && resDTO.getAccessAppl() != null){
+				reqDTO = new AccessApplReqDTO();
+				PmAccessAppl accessApp = resDTO.getAccessAppl();
+				reqDTO.setAccessAppl(accessApp);
+				reqDTO.setPortalBaseUrl(PmCommonUtil.getBasePortalUrl());
+				resDTO = 
+						accessApplSO.resendPendingActivationAccessAppl(reqDTO);
+				if(resDTO.isSuccessful()){
+					PmCommonUtil.redirectToPage(
+							ACCESS_APPL_OUTPUT_MSG,
+							MessageConst.INFO_776040,new String[] {accessApp.getEmail() });
+				}else{
+					log.info("****Failed resending Activation Email******");
+					PmCommonUtil.redirectToPage(
+							ACCESS_APPL_OUTPUT_MSG,
+							MessageConst.ERROR_721018,null);
+				}
+			}else{
+				log.info("****Invalid Access Appl******");
+				PmCommonUtil.redirectToPage(
+						ACCESS_APPL_OUTPUT_MSG,
+						MessageConst.ERROR_721018,null);
 			}
+		} catch (Exception ex) {
+			PmCommonUtil.redirectToPage(
+					ACCESS_APPL_OUTPUT_MSG,
+					MessageConst.ERROR_721018,null);
+			ex.printStackTrace();
 		}finally{
 			accessApplSO = null;
 		}
