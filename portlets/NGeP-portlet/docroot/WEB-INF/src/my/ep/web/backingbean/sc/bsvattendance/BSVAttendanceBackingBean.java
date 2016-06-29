@@ -416,6 +416,7 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setToBeDeletedRegistations(this.getManagedBean()
 					.getToBeDeletedRegistartions());
 			BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO);
+			this.getManagedBean().setSelectedbriefRegistrationEnableDisable(null);
 			if (SourcingConstants.COMPLETE.equalsIgnoreCase(flowType)) {
 				String previousPage = this.getManagedBean().getPreviousPage();
 				Long qtId = this.getManagedBean().getScQt().getQtId();
@@ -573,6 +574,7 @@ public class BSVAttendanceBackingBean extends
 	public String backBtn() {
 
 		log.info("** Back Button **");
+		this.getManagedBean().setSelectedbriefRegistrationEnableDisable(null);
 		retrieveBriefingSiteVisitList(this.getManagedBean().getScQt().getQtId());
 		return this.getManagedBean().getPreviousPage()
 				+ "?faces-redirect=true";
@@ -590,7 +592,7 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().setScQtBriefingAttendance(null);
 		ScQtBsvRegistration briefingRegistration = (ScQtBsvRegistration) event
 				.getObject();
-
+this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistration);
 		getAttandanceDtlsBySelectedRegistartion(briefingRegistration);
 		setSlectedHeaderName(briefingRegistration.getSupplier()
 				.getCompanyName().concat("  ").concat(">"));
@@ -640,6 +642,7 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().setBriefingAttendanceList(null);
 		this.getManagedBean().getSelectedbriefRegistration()
 				.setBsvAttendance(null);
+		this.getManagedBean().setSelectedbriefRegistrationEnableDisable(null);
 
 	}
 
