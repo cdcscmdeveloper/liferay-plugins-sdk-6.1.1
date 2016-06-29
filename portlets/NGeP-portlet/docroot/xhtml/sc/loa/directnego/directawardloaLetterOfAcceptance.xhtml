@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}"
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}" id="directLoaLetterOfAcceptancePanel"
 		toggleable="true">
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -20,16 +20,16 @@
 			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllNegoLoc"
-					disabled="#{directLOABackingBean.managedBean.readOnly}"
+					disabled="true"
 						value="#{directLOABackingBean.flag}"
 						rendered="#{isEditableStatus}">
-						<p:ajax partialSubmit="true" process="@this" update="contentsTbl"
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=directLoaLetterOfAcceptancePanel])"
 							listener="#{directLOABackingBean.selectAllDocuments}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{scLoaReport.selected}"
 					disabled="#{!empty scLoaReport.pmDocument or directLOABackingBean.managedBean.readOnly}">
-					<p:ajax partialSubmit="true" process="@this" update="contentsTbl" />
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=directLoaLetterOfAcceptancePanel])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -107,7 +107,7 @@
 				update="contentsTbl" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			disabled="#{directLOABackingBean.managedBean.readOnly}"
+			disabled="#{directLOABackingBean.managedBean.readOnly or directLOABackingBean.deleteselectedList(directLOABackingBean.managedBean.scLoa.scLoaReports)}"
 				rendered="#{isEditableStatus}" process="@this, contentsTbl"
 				partialSubmit="true" oncomplete="loaReportDeletePopUp.show();"
 				update="@([id$=#{loaReportDeleteId}])" />
@@ -122,7 +122,7 @@
 
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.supporting.document']}"
+	<p:panel header="#{lbl['lbl.sc.supporting.document']}" id="directLoaSupportingPanelId"
 		rendered="#{!isSupplierAckStatus}" toggleable="true">
 		<p:dataTable id="suppDocTbl" var="scLoaSuppDoc"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -138,13 +138,13 @@
 					disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.suppDocFlag}"
 						rendered="#{isEditableStatus}">
-						<p:ajax partialSubmit="true" process="@this" update="suppDocTbl"
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=directLoaSupportingPanelId])"
 							listener="#{directLOABackingBean.selectAllSuppDocuments}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{scLoaSuppDoc.selected}"
 					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
-					<p:ajax partialSubmit="true" process="@this" update="suppDocTbl" />
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=directLoaSupportingPanelId])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 			
@@ -188,7 +188,7 @@
 				update="suppDocTbl" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			disabled="#{directLOABackingBean.managedBean.readOnly}"
+			disabled="#{directLOABackingBean.managedBean.readOnly or directLOABackingBean.deleteselectedList(directLOABackingBean.managedBean.scLoa.scLoaSupportingDocs)}"
 				rendered="#{isEditableStatus}" process="@this, suppDocTbl"
 				partialSubmit="true" oncomplete="supporingDocDeletePopUp.show();"
 				update="@([id$=#{supporingDocDeleteId}])" />

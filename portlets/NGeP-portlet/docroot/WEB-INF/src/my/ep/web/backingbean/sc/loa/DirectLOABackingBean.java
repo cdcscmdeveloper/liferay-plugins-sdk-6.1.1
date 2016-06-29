@@ -921,6 +921,8 @@ public class DirectLOABackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_760158);
 		}
+		getManagedBean()
+		.setSelectedDeductionClauses(null);
 	}
 	
 	/**
