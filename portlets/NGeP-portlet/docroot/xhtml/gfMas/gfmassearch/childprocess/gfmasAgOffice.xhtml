@@ -22,7 +22,22 @@
 				selection="#{gfMasBackingBean.managedBean.selectedAgOfficeList}"
 				rowKey="#{pmInterfaceAgOffice}"
 				value="#{gfMasBackingBean.managedBean.listOfAgOffice}">
-
+               
+                <p:ajax event="rowSelect" 
+					update=":form:prcessIdButton,:form:gfMasAgOfficeId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowUnselect" 
+					update=":form:prcessIdButton,:form:gfMasAgOfficeId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowSelectCheckbox" 
+					update=":form:prcessIdButton,:form:gfMasAgOfficeId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowUnselectCheckbox" 
+					update=":form:prcessIdButton,:form:gfMasAgOfficeId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="toggleSelect"
+					update=":form:prcessIdButton,:form:gfMasAgOfficeId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<ac:paginator for="gfMasAgOfficeId"></ac:paginator>
 
 				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfaceAgOffice.processStatus eq '1'}"   />

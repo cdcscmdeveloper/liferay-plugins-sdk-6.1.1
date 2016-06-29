@@ -17,7 +17,7 @@
 				<div align="right" style="width: 100%">
 					<p:commandButton id="prcessIdButton"
 						value="#{lbl['lbl.gfmas.process']}"
-						style="float:right;width:80px;"
+						style="float:right;width:80px;" disabled="#{!gfMasBackingBean.managedBean.processButtonStatus}"
 						action="#{gfMasBackingBean.processAllVendors}"/>
 				</div>
 			</td>		

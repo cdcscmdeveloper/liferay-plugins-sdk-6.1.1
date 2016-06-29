@@ -21,7 +21,22 @@
 				rowIndexVar="index" rowKey="#{pmInterfacePP}"
 				selection="#{gfMasBackingBean.managedBean.selectedPpList}"
 				value="#{gfMasBackingBean.managedBean.listOfPP}">
-
+                
+                <p:ajax event="rowSelect" 
+					update=":form:prcessIdButton,:form:gfMasPPId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowUnselect" 
+					update=":form:prcessIdButton,:form:gfMasPPId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowSelectCheckbox" 
+					update=":form:prcessIdButton,:form:gfMasPPId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowUnselectCheckbox" 
+					update=":form:prcessIdButton,:form:gfMasPPId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="toggleSelect"
+					update=":form:prcessIdButton,:form:gfMasPPId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<ac:paginator for="gfMasPPId"></ac:paginator>
 
 				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfacePP.processStatus eq '1'}" />
