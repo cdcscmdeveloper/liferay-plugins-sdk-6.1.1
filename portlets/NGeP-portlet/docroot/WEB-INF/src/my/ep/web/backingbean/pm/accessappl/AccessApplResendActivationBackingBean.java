@@ -163,7 +163,7 @@ public class AccessApplResendActivationBackingBean extends
 				if(resDTO.isSuccessful()){
 					PmCommonUtil.redirectToPage(
 							ACCESS_APPL_OUTPUT_MSG,
-							MessageConst.INFO_776040,new String[] {accessApp.getEmail() });
+							MessageConst.INFO_776040,new String[] {getEmail() });
 				}else{
 					log.info("****Failed resending Activation Email******");
 					PmCommonUtil.redirectToPage(
