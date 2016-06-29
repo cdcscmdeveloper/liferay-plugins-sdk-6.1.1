@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}"
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}" id="loaletterOfAcceptancePanelIds"
 		toggleable="true">
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget"
 			var="scLoaReport"
@@ -18,15 +18,15 @@
 			<p:column style="width:2%" >
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllNegoLoc"
-					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+					disabled="true"
 						value="#{lOIDetailBackingBean.flag}"
 						rendered="#{isEditableStatus}">
-						<p:ajax partialSubmit="true" process="@this" update="contentsTbl"
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=loaletterOfAcceptancePanelIds])"
 							listener="#{lOADetailBackingBean.selectAllDocuments}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{scLoaReport.selected}" disabled="#{!empty scLoaReport.pmDocument or lOADetailBackingBean.managedBean.readOnly}">
-					<p:ajax partialSubmit="true" process="@this" update="contentsTbl" />
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=loaletterOfAcceptancePanelIds])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -102,7 +102,7 @@
 					update="contentsTbl" />
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly or lOADetailBackingBean.deleteselectedList(lOADetailBackingBean.managedBean.scLoa.scLoaReports)}"
 					process="@this, contentsTbl" partialSubmit="true"
 					oncomplete="loaReportDeletePopUp.show();"
 					update="@([id$=#{loaReportDeleteId}])" />
