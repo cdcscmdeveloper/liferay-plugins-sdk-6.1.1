@@ -27,9 +27,12 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.document.IDocumentSO;
@@ -186,6 +189,37 @@ public class SmApplicationBackingBean extends
 	 */
 	public SmApplicationBackingBean() {
 		SmCommonUtil.setMDCUserId();
+	}
+
+	/**
+	 * Custom validation for required field
+	 * 
+	 * @param FacesContext
+	 *            facesContext
+	 * @param UIComponent
+	 *            uiComponent
+	 * @param Object
+	 *            value
+	 */
+	public void validateRequiredField(FacesContext facesContext,
+			UIComponent uiComponent, Object value) {
+		Map<String, String> params = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap();
+		if (!params.containsKey("validate")) {
+			return;
+		}
+		String labelNameVal = (String) uiComponent.getAttributes().get(
+				"labelName");
+		UIInput component = (UIInput) uiComponent;
+
+		if (!StringUtils.isBlank(labelNameVal)
+				&& (component == null || component.getValue() == null || StringUtils
+						.isBlank(component.getValue().toString()))) {
+			throw new ValidatorException(new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, "Required filed error",
+					SmCommonUtil.getMessage("lbl.sm.required.msg",
+							new String[] { labelNameVal })));
+		}
 	}
 
 	/**
