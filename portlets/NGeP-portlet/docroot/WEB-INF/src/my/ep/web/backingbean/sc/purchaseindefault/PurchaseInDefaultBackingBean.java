@@ -1241,8 +1241,8 @@ public class PurchaseInDefaultBackingBean extends
 	public void viewMarketResearch(ScPurchaseInDefault scPurchaseInDefault)
 			throws IOException {
 		debugLogger("viewMarketResearch");
-		ScRequestItem requestItem = null;
 		String itemCode = "";
+		Long requestItemId = null;
 
 		if (scPurchaseInDefault != null) {
 			FacesScopes facesScopes = new FacesScopes();
@@ -1259,27 +1259,25 @@ public class PurchaseInDefaultBackingBean extends
 							.getItemCode();
 
 				}
-
+				paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);
+				debugLogger("viewMarketResearch - item code" + itemCode);
 			} else {
 				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 1 + "");
-				if (scPurchaseInDefault.getPanelItem() != null) {
-					requestItem = scPurchaseInDefault.getPanelItem()
-							.getScRequestItem();
-					if (requestItem.getCmItem() != null) {
-						itemCode = requestItem.getCmItem().getExtensionCode();
-					}
+				if (scPurchaseInDefault.getPanelItem() != null &&
+						scPurchaseInDefault.getPanelItem()
+						.getScRequestItem() != null) {
+					requestItemId = scPurchaseInDefault.getPanelItem()
+							.getScRequestItem().getRequestNoteItemId();
 
-				} else if (scPurchaseInDefault.getContractedItem() != null) {
-					requestItem = scPurchaseInDefault.getContractedItem()
-							.getScRequestItem();
-					if (requestItem.getCmItem() != null) {
-						itemCode = requestItem.getCmItem().getExtensionCode();
-					}
+				} else if (scPurchaseInDefault.getContractedItem() != null &&
+						scPurchaseInDefault.getContractedItem()
+						.getScRequestItem() != null) {
+					requestItemId = scPurchaseInDefault.getContractedItem()
+							.getScRequestItem().getRequestNoteItemId();
 				}
+				debugLogger("viewMarketResearch - request item id" + requestItemId);
+				paramMap.put(ReportConst.PARAM_REQUEST_ITEM_ID, requestItemId + "");
 			}
-			debugLogger("viewMarketResearch - item code" + itemCode);
-			paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);
-
 			// if(scPurchaseInDefault.isBrandNew()) {
 			/*
 			 * VCmSupplierItem vCmSupplierItem =
