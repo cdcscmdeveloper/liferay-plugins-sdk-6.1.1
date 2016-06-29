@@ -101,7 +101,6 @@
 			<portlet id="scSpecificationBusinessOwner" />
 			<portlet id="scSpecificationCommittee" />
 			<portlet id="scNoticeBoard" />
-			<portlet id="scProposal" />
 			<portlet id="scLoiList" />
 			<portlet id="scLoiReview" />
 			<portlet id="scLoiSupplierResponse" />
@@ -133,7 +132,6 @@
             <portlet id="scSupplierFinalizationMeetingConfirmation"/>
 			<portlet id="scSupplierFinalization"/>
 			<portlet id="scSupplierFinalizationEndorsement"/>
-            <portlet id="BiddingList" />
             <portlet id="SpecCommitteMaintanance"></portlet>
             <portlet id="QTApproval"></portlet>
             <portlet id="BusinessOwner"></portlet>
