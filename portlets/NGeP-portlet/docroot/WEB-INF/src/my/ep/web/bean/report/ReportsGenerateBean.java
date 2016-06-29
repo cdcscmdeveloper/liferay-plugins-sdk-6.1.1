@@ -125,6 +125,8 @@ public class ReportsGenerateBean {
 
 	/** The instruction info view. */
 	private boolean instructionInfoView = false;
+	
+	private boolean dpInstructionInfoView = false;
 
 	/** The cm madatory indicator view. */
 	private boolean cmMadatoryIndicatorView = false;
@@ -5175,6 +5177,20 @@ public class ReportsGenerateBean {
 	 */
 	public String getCtCircularNoVar() {
 		return ctCircularNoVar;
+	}
+
+	/**
+	 * @return the dpInstructionInfoView
+	 */
+	public boolean isDpInstructionInfoView() {
+		return dpInstructionInfoView;
+	}
+
+	/**
+	 * @param dpInstructionInfoView the dpInstructionInfoView to set
+	 */
+	public void setDpInstructionInfoView(boolean dpInstructionInfoView) {
+		this.dpInstructionInfoView = dpInstructionInfoView;
 	}
 
 	/**
