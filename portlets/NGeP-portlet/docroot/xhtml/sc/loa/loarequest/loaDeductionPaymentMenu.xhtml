@@ -77,7 +77,7 @@
 					oncomplete="deductTblWidget.paginator.endLink.click();"
 					update="deductTbl" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+					disabled="#{lOADetailBackingBean.managedBean.readOnly or null eq lOADetailBackingBean.managedBean.selectedScQtDeduction}"
 					process="@this, deductTbl" partialSubmit="true"
 					oncomplete="deductionPayDeletePopUp.show();"
 					update="@([id$=#{deductionPayDeleteId}])" />
@@ -111,7 +111,7 @@
 							value="#{lOIDetailBackingBean.flag}"
 							rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
 							<p:ajax partialSubmit="true" process="@this"
-								update="deductClauseTbl"
+								update="@([id$=clausePnl])"
 								listener="#{lOADetailBackingBean.selectAllClauses}"></p:ajax>
 						</p:selectBooleanCheckbox>
 					</f:facet>
@@ -120,7 +120,7 @@
 						value="#{scQtDeductionClause.selected}"
 						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="deductClauseTbl" />
+							update="@([id$=clausePnl])" />
 					</p:selectBooleanCheckbox>
 				</p:column>
 
@@ -161,7 +161,7 @@
 						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
 						update="deductClauseTbl" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+						disabled="#{lOADetailBackingBean.managedBean.readOnly or lOADetailBackingBean.deleteselectedList(lOADetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses)}"
 						process="@this" partialSubmit="true"
 						oncomplete="deductionClauseDeletePopUp.show();"
 						update="@([id$=#{deductionClauseDeleteId}])" />
