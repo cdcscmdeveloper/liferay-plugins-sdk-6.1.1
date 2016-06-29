@@ -2821,6 +2821,8 @@ public class LOIDetailBackingBean extends
 		} else {
 			throw new EpException("Please select atleast one record");
 		}
+		getManagedBean()
+		.setSelectedMeetingAttList(null);
 	}
 
 	/**
@@ -3455,6 +3457,7 @@ public class LOIDetailBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_760158);
 		}
+		getManagedBean().setSelectedScQtDeduction(null);
 	}
 
 	/**
@@ -3492,6 +3495,8 @@ public class LOIDetailBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_760158);
 		}
+		getManagedBean()
+		.setSelectedDeductionClauses(null);
 	}
 
 	/**
@@ -3625,15 +3630,27 @@ public class LOIDetailBackingBean extends
 	 * Delete loi report.
 	 */
 	public void deleteLoiReport() {
-		ScLoi scLoi = getManagedBean().getRecommendedLoi();
-		List<ScLoiReport> selectedScLoiReports = getManagedBean()
+		List<ScLoiReport> loiReportList = getManagedBean().getRecommendedLoi().getScLoiReports();
+		List<ScLoiReport> localReportList=new ArrayList<ScLoiReport>();
+		if(CollectionUtils.isNotEmpty(loiReportList)){
+			for(ScLoiReport loiReport:loiReportList){
+				if(loiReport.isSelected()){
+					localReportList.add(loiReport);
+				}
+			}
+			loiReportList.removeAll(localReportList);
+		}
+		/*List<ScLoiReport> selectedScLoiReports = getManagedBean()
 				.getSelectedScLoiReports();
 
 		if (selectedScLoiReports != null && selectedScLoiReports.size() > 0) {
 			deleteRowsAction(scLoi.getScLoiReports(), selectedScLoiReports);
 		} else {
 			throw new EpException(MessageConst.ERROR_760158);
-		}
+		}*/
+		 getManagedBean().getRecommendedLoi().setScLoiReports(loiReportList);
+		getManagedBean()
+		.setSelectedScLoiReports(null);
 	}
 
 	/**
@@ -5304,6 +5321,20 @@ public class LOIDetailBackingBean extends
 			this.empty = empty;
 		}
 		
+	}
+	
+	
+	public  boolean deletebuttonNegotationResultDisable(
+			List<ScLoiTerm> list) {
+		if (list != null) {
+			for (ScLoiTerm entity : list) {
+				if(entity.isSelectedTerm()){
+					return false;
+				}
+				
+			}
+		}
+		return true;
 	}
 
 }

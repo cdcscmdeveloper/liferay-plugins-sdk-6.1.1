@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel toggleable="true">
+	<p:panel id="loiNegotationDetailsPanel" toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.loiloa.nego.loc']}" />
 			<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.nego.loc.tooltip']}" />
@@ -22,12 +22,12 @@
 					<p:selectBooleanCheckbox id="selectAllNegoLoc"
 						value="#{lOIDetailBackingBean.flag}"
 						rendered="#{isEditableStatus}">
-						<p:ajax partialSubmit="true" process="@this" update="negoloctbl"
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=loiNegotationDetailsPanel])"
 							listener="#{lOIDetailBackingBean.selectAllNegoLocations}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{negoloc.selected}">
-						<p:ajax partialSubmit="true" process="@this" update="negoloctbl" />
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=loiNegotationDetailsPanel])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 			
@@ -71,7 +71,7 @@
 				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
+			disabled="#{lOIDetailBackingBean.managedBean.readOnly or lOIDetailBackingBean.deleteselectedList(lOIDetailBackingBean.managedBean.scLoi.scNegoLocations)}"
 				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 				process="@this negoloctbl" partialSubmit="true"
 				oncomplete="negoLocationDeletePopUp.show();"
@@ -99,13 +99,13 @@
 					<p:selectBooleanCheckbox id="selAllChk"
 						value="#{lOIDetailBackingBean.flag}"
 						rendered="#{isEditableStatus}">
-						<p:ajax partialSubmit="true" process="@this" update="negoTermstbl"
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=negoTermId])"
 							listener="#{lOIDetailBackingBean.selectAll}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{negoTerm.selectedTerm}"
 					disabled="#{!empty negoTerm.pmTerm}">
-					<p:ajax partialSubmit="true" process="@this" update="@form"
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=negoTermId])"
 						listener="#{lOIDetailBackingBean.negoTermPriceEvent()}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -168,7 +168,7 @@
 				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
+			disabled="#{lOIDetailBackingBean.managedBean.readOnly or lOIDetailBackingBean.deletebuttonNegotationResultDisable(lOIDetailBackingBean.managedBean.scLoi.scNegoTerms)}"
 				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 				process="@this negoTermstbl" partialSubmit="true"
 				oncomplete="negoTermDeletePopUp.show();"
