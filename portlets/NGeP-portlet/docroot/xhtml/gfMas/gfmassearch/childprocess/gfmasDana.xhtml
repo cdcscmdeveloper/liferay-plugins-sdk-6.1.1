@@ -22,7 +22,22 @@
 				selection="#{gfMasBackingBean.managedBean.selectedDanaList}"
 				rowKey="#{pmInterfacceDana}"
 				value="#{gfMasBackingBean.managedBean.listOfDana}">
-
+              
+               <p:ajax event="rowSelect" 
+					update=":form:prcessIdButton,:form:gfMasDanaId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowUnselect" 
+					update=":form:prcessIdButton,:form:gfMasDanaId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowSelectCheckbox" 
+					update=":form:prcessIdButton,:form:gfMasDanaId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowUnselectCheckbox" 
+					update=":form:prcessIdButton,:form:gfMasDanaId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="toggleSelect"
+					update=":form:prcessIdButton,:form:gfMasDanaId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<ac:paginator for="gfMasDanaId"></ac:paginator>
 
 				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfacceDana.processStatus eq '1'}" />

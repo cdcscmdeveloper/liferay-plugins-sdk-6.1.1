@@ -9796,6 +9796,8 @@ public class ReportBackingBean extends
 								|| this.getReportValue().equals(
 										ReportConst.SM_THRESHOLD)
 								|| this.getReportValue().equals(
+										ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL)
+								|| this.getReportValue().equals(
 										ReportConst.SM_LST_MONTH_WISE_RPT_VAL)
 								|| this.getReportValue()
 										.equals(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL)
@@ -14920,8 +14922,22 @@ public class ReportBackingBean extends
 			if (StringUtils.isNotEmpty(getManagedBean().getReportValue())
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
+
 				checkSMYearNMonthDefference();
-			}
+
+				if (StringUtils.isNotEmpty(this.getSmZone())
+						|| StringUtils.isEmpty(this.getSmZone())) {
+					if (StringUtils.isNotEmpty(this.getSmZone())) {
+						rptGenBean
+								.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
+										+ this.getSmZone());
+					} else {
+						rptGenBean
+								.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
+										+ ReportConst.EMPTY_VAL);
+					}
+				}
+			}	
 			if (StringUtils.isNotEmpty(this.getSmCreatedFromYear())) {
 				rptGenBean
 						.setSmMandatoryCreatedFromYearVar(ReportConst.AMP_SM_YEAR_FROM_EQ
@@ -14979,6 +14995,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getSmFromMonthVar()
 						+ rptGenBean.getSmToMonthVar()
+						+ rptGenBean.getZoneTotVar()
 						+ rptGenBean.getUserIdVar());
 
 			} else {

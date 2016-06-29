@@ -169,6 +169,8 @@ public class SMReportBackingBean extends
 			break;
 		case ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL:			
 			rptGenBean.setSmTotalNoOfYearlyARView(true);
+			rptGenBean.setSmCommonZoneView(true);
+			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 			rptGenBean.generateCommonMonthList(rptGenBean.getStrLanguage());
 			//rptGenBean.generateCommonMonthList(rptGenBean.getStrLanguage());
 			rptGenBean.generateCommonYearList();

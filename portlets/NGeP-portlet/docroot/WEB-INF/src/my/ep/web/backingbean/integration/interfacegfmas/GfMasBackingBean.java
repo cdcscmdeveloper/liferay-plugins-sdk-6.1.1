@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -25,7 +27,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
-import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.batch.IDIInterfaceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -77,6 +78,8 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 	/** The search gf mas. */
 	private IPagingDataModel<DIInterfaceLog> searchGfMas = new SearchGfMasPagingDataModel();
+	
+	
 
 	/**
 	 * Instantiates a new gf mas backing bean.
@@ -176,6 +179,10 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("processId", SearchOperator.OPERATOR_IN
 						.value(), listOfProcessCodes));
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_EQUALS
+						.value(), new Long(0)));
 
 		searchBean.getDataFilterBeans()
 				.add(new SearchMultiFilterBean(new SearchFilterBean(
@@ -338,8 +345,8 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	/**
 	 * Go to gf mas process maintaince page.
 	 * 
-	 * @param interfaceLog
-	 *            the interface log
+	 * @param selectedProcess
+	 *            the selected process
 	 * @return the string
 	 */
 	public String goToGfMasProcessMaintaincePage(DIInterfaceLog selectedProcess) {
@@ -377,6 +384,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		return childProcessPage;
 	}
 	
+	/**
+	 * Gets the interface prog act process status.
+	 * 
+	 * @param log
+	 *            the log
+	 * @return the interface prog act process status
+	 */
 	private boolean getInterfaceProgActProcessStatus(DIInterfaceLog log) {
 
 		boolean childProcessStatus = false;
@@ -399,6 +413,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		return childProcessStatus;
 	}
 	
+	/**
+	 * Gets the interface project process status.
+	 * 
+	 * @param log
+	 *            the log
+	 * @return the interface project process status
+	 */
 	private boolean getInterfaceProjectProcessStatus(DIInterfaceLog log) {
 
 		boolean childProcessStatus = false;
@@ -421,6 +442,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		return childProcessStatus;
 	}
 	
+	/**
+	 * Gets the interface ptj process status.
+	 * 
+	 * @param log
+	 *            the log
+	 * @return the interface ptj process status
+	 */
 	private boolean getInterfacePtjProcessStatus(DIInterfaceLog log) {
 
 		boolean childProcessStatus = false;
@@ -443,6 +471,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		return childProcessStatus;
 	}
 	
+	/**
+	 * Gets the interface kptj process status.
+	 * 
+	 * @param log
+	 *            the log
+	 * @return the interface kptj process status
+	 */
 	private boolean getInterfaceKptjProcessStatus(DIInterfaceLog log) {
 
 		boolean childProcessStatus = false;
@@ -465,6 +500,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		return childProcessStatus;
 	}
 	
+	/**
+	 * Gets the interface ag office process status.
+	 * 
+	 * @param log
+	 *            the log
+	 * @return the interface ag office process status
+	 */
 	private boolean getInterfaceAgOfficeProcessStatus(DIInterfaceLog log) {
 
 		boolean childProcessStatus = false;
@@ -487,6 +529,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		return childProcessStatus;
 	}
 	
+	/**
+	 * Gets the interface pp process status.
+	 * 
+	 * @param log
+	 *            the log
+	 * @return the interface pp process status
+	 */
 	private boolean getInterfacePpProcessStatus(DIInterfaceLog log) {
 
 		boolean childProcessStatus = false;
@@ -510,6 +559,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	}
 	
 	
+	/**
+	 * Gets the interface vot process status.
+	 * 
+	 * @param log
+	 *            the log
+	 * @return the interface vot process status
+	 */
 	private boolean getInterfaceVotProcessStatus(DIInterfaceLog log) {
 
 		boolean childProcessStatus = false;
@@ -532,6 +588,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		return childProcessStatus;
 	}
 	
+	/**
+	 * Gets the interface bank process status.
+	 * 
+	 * @param log
+	 *            the log
+	 * @return the interface bank process status
+	 */
 	private boolean getInterfaceBankProcessStatus(DIInterfaceLog log) {
 
 		boolean childProcessStatus = false;
@@ -554,6 +617,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		return childProcessStatus;
 	}
 	
+	/**
+	 * Gets the interface gl acnt process status.
+	 * 
+	 * @param log
+	 *            the log
+	 * @return the interface gl acnt process status
+	 */
 	private boolean getInterfaceGlAcntProcessStatus(DIInterfaceLog log) {
 
 		boolean childProcessStatus = false;
@@ -577,6 +647,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	}
 	
 	
+	/**
+	 * Gets the interface dana process status.
+	 * 
+	 * @param log
+	 *            the log
+	 * @return the interface dana process status
+	 */
 	private boolean getInterfaceDanaProcessStatus(DIInterfaceLog log) {
 
 		boolean childProcessStatus = false;
@@ -599,6 +676,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		return childProcessStatus;
 	}
 
+	/**
+	 * Gets the unprocessed records by previous date.
+	 * 
+	 * @param selectedProcess
+	 *            the selected process
+	 * @return the unprocessed records by previous date
+	 */
 	private void getUnprocessedRecordsByPreviousDate(
 			
 	DIInterfaceLog selectedProcess) {
@@ -653,7 +737,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			for (DIInterfaceLog filteredProcessCode : interfaceLogParentFilteredList) {
 
-				if (filteredProcessCode.getProcessStatus().equals(new Long(0))) {
+				if (filteredProcessCode.getProcessStatus()!=null && filteredProcessCode.getProcessStatus().equals(new Long(0))) {
 
 					switch (ProcessCodeType.valueOf(filteredProcessCode
 							.getProcessId())) {
@@ -743,6 +827,20 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 	}
 
+	/**
+	 * Show error msg.
+	 * 
+	 * @param selectedProcess
+	 *            the selected process
+	 * @param logId
+	 *            the log id
+	 * @param processId
+	 *            the process id
+	 * @param createdDate
+	 *            the created date
+	 * @param filteredProcessCode
+	 *            the filtered process code
+	 */
 	private void showErrorMsg(DIInterfaceLog selectedProcess, String logId,
 			String processId, String createdDate,
 			DIInterfaceLog filteredProcessCode) {
@@ -769,6 +867,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private String getChildProcessScreen(DIInterfaceLog interfaceLog,
 			InterfaceLogResDto interfaceGfMasResDto) {
 		log.info("In getChildProcessScreen");
+		
 		switch (ProcessCodeType.valueOf(interfaceLog.getProcessId())) {
 
 		case GLPRG:
@@ -849,6 +948,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		this.getManagedBean().setSelectedDanaList(null);
 		this.getManagedBean().setSelectedPpList(null);
 		this.getManagedBean().setSelectedVotList(null);
+		this.getManagedBean().setProcessButtonStatus(false);
 		
 		return "/xhtml/gfMas/gfmassearch/gfmasSearchMain.xhtml?faces-redirect=true";
 
@@ -862,6 +962,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	public String processAllVendors() {
 
 		log.info("processAllVendors");
+		String returnUrl = null;
 
 		if (this.getManagedBean().getSelectedProgActList() != null) {
 			log.info("***************ProgActList***SIZE******************>>"
@@ -907,25 +1008,62 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			log.info("***********VotList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedVotList().size());
 		}
-		return null;
+		returnUrl = NAV_TO_MAIN;
+		if (getSelectedAllProcessListStatus()) {
+			returnUrl = NAV_TO_MAIN;
+			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+					FacesMessage.SEVERITY_INFO, MessageConst.INFO_780002, null);
+		} 
+		return returnUrl;
 	}
 
-	public void userActionProcess(AjaxBehaviorEvent e) {
+	/**
+	 * Gets the selected all process list.
+	 * 
+	 * @return the selected all process list
+	 */
+	private boolean getSelectedAllProcessListStatus() {
 
-		if (this.getManagedBean().getSelectedProgActList() != null) {
-			Iterator<PmInterfaceProgAct> iterator = this.getManagedBean()
-					.getSelectedProgActList().iterator();
-			while (iterator.hasNext()) {
-				PmInterfaceProgAct pmInterfaceProgAct = iterator.next();
-				if (pmInterfaceProgAct.getPrgActCode() != null
-						&& pmInterfaceProgAct.getProcessStatus() != null
-						&& pmInterfaceProgAct.getProcessStatus().equals("1"))
-					;
-				{
-					iterator.remove();
-				}
-			}
+		this.getManagedBean().setProcessButtonStatus(false);
+
+		if (CollectionUtils.isNotEmpty(this.getManagedBean()
+				.getSelectedProgActList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedProjectList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedAgOfficeList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedBankList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedGlAcntList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedKptjList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedPpList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedDanaList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedPtjList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedVotList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
 		}
+		return this.getManagedBean().isProcessButtonStatus();
+	}
+	
+	/**
+	 * Row select event.
+	 * 
+	 * @param e
+	 *            the e
+	 */
+	public void rowSelectEvent(AjaxBehaviorEvent e) {
+
+		getSelectedAllProcessListStatus();
+
 	}
 
 	/**
@@ -947,6 +1085,9 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		this.searchGfMas = searchGfMas;
 	}
 
+	/**
+	 * Change process code.
+	 */
 	public void changeProcessCode() {
 		if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
 			this.getManagedBean().getProcessId();
