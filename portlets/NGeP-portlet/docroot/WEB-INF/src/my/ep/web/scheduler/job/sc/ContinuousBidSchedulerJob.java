@@ -42,21 +42,17 @@ public class ContinuousBidSchedulerJob implements Job {
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		
 		IBiddingSO biddingSO = null;
 		try {
-			// SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
 			List<Long> localBidScheduleIdList = SchedulerHelper
 					.getJobBidScheduleIdList();
-
 			List<Long> toDeleteIdList = null;
-
+			int failedBidSchedulesCount = 0;
+			BiddingReqDTO reqDTO = new BiddingReqDTO();
 			for (int i = 0; i < localBidScheduleIdList.size(); i++) {
 
 				biddingSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
-
-				BiddingReqDTO reqDTO = new BiddingReqDTO();
 				reqDTO.setBidScheduleId(localBidScheduleIdList.get(i));
 				BiddingResDTO resDTO = biddingSO
 						.retrieveBidScheduleById(reqDTO);
@@ -66,7 +62,8 @@ public class ContinuousBidSchedulerJob implements Job {
 					if (currentSchedule.getPmStatus().getStatusId()
 							.equals(BidStatusConst.BID_PENDING_BIDDING)) {
 
-						currentSchedule.setPmStatus(getPmStatusByStatusId(BidStatusConst.BID_IN_PROGRESS));
+						currentSchedule
+								.setPmStatus(getPmStatusByStatusId(BidStatusConst.BID_IN_PROGRESS));
 						reqDTO.setScBidSchedule(currentSchedule);
 						resDTO = biddingSO
 								.updateSchedulerJobBidSchedule(reqDTO);
@@ -90,7 +87,6 @@ public class ContinuousBidSchedulerJob implements Job {
 
 				} else if (currentSchedule.getEndDate()
 						.equals(getCompareTime())) {
-					// TODO check what if paused bid is not resumed
 					debugLogger("currentScheduleId : "
 							+ currentSchedule.getBidScheduleId());
 					debugLogger("currentScheduleEndDate : "
@@ -101,7 +97,8 @@ public class ContinuousBidSchedulerJob implements Job {
 									getCompareTime()));
 					if (currentSchedule.getPmStatus().getStatusId()
 							.equals(BidStatusConst.BID_IN_PROGRESS)) {
-						currentSchedule.setPmStatus(getPmStatusByStatusId(BidStatusConst.BID_COMPLETED));
+						currentSchedule
+								.setPmStatus(getPmStatusByStatusId(BidStatusConst.BID_COMPLETED));
 						reqDTO.setScBidSchedule(currentSchedule);
 						resDTO = biddingSO
 								.updateSchedulerJobBidSchedule(reqDTO);
@@ -122,6 +119,25 @@ public class ContinuousBidSchedulerJob implements Job {
 
 					}
 
+				} else if (currentSchedule.getStartDate().before(
+						getCompareTime())
+						|| currentSchedule.getEndDate()
+								.equals(getCompareTime())) {
+					
+					if(currentSchedule.getPmStatus().getStatusId()
+							.equals(BidStatusConst.BID_PENDING_BIDDING) || currentSchedule.getPmStatus().getStatusId()
+							.equals(BidStatusConst.BID_IN_PROGRESS)){
+						 failedBidSchedulesCount++;
+						 if (toDeleteIdList == null) {
+								toDeleteIdList = new ArrayList<Long>();
+								toDeleteIdList.add(currentSchedule
+										.getBidScheduleId());
+							} else {
+								toDeleteIdList.add(currentSchedule
+										.getBidScheduleId());
+							}
+					}
+
 				}
 
 			}
@@ -131,8 +147,15 @@ public class ContinuousBidSchedulerJob implements Job {
 				}
 				toDeleteIdList = null;
 			}
+			
+			if(failedBidSchedulesCount > 0){
+				 biddingSO
+					.retrieveAndUpdateFailoverBidSchedules(reqDTO);
+			}
 
-		}catch(Exception e){
+		} catch (Exception e) {
+			/*JobExecutionException jobException = new JobExecutionException();
+			jobException.refireImmediately();*/
 			log.error(e);
 		}
 
@@ -153,8 +176,8 @@ public class ContinuousBidSchedulerJob implements Job {
 	 * Get PmStatus by status id
 	 * 
 	 * @param statusId
-	 * 		the status id
-	 * @return	the PmStatus instance
+	 *            the status id
+	 * @return the PmStatus instance
 	 */
 	private PmStatus getPmStatusByStatusId(Long statusId) {
 		if (statusId != null) {
@@ -162,18 +185,16 @@ public class ContinuousBidSchedulerJob implements Job {
 			try {
 				statusSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-				
+
 				StatusReqDTO reqDTO = new StatusReqDTO();
 				reqDTO.setStatusId(statusId);
-				return statusSO
-						.retrieveStatusByStatusId(reqDTO)
-						.getPmStatus();
+				return statusSO.retrieveStatusByStatusId(reqDTO).getPmStatus();
 
 			} finally {
 				statusSO = null;
-			}	
+			}
 		}
-		
+
 		return null;
 	}
 }
