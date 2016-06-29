@@ -582,15 +582,17 @@
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
 							<h:outputText value="#{person.identificationNo}" />
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}"
-							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
-							<h:outputText value="#{lbl['lbl.txt.yes']}"
-								rendered="#{person.equityOwner}" />
-							<h:outputText value="#{lbl['lbl.txt.no']}"
-								rendered="#{!person.equityOwner}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}"
+						<ui:remove>
+							<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}"
+								disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+								or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
+								<h:outputText value="#{lbl['lbl.txt.yes']}"
+									rendered="#{person.equityOwner}" />
+								<h:outputText value="#{lbl['lbl.txt.no']}"
+									rendered="#{!person.equityOwner}" />
+							</p:column>
+						</ui:remove>
+						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}" style="white-space: normal !important;width : 10% !important;"
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
 							<h:outputText value="#{lbl['lbl.txt.yes']}"
@@ -599,27 +601,40 @@
 								rendered="#{person.authorizedFlg eq '0'}" />
 						</p:column>
 						<p:column rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR}"
-							headerText="#{lbl['lbl.sm.person.composition.certStatus']}"
+							headerText="#{lbl['lbl.sm.person.composition.certStatus']}" style="white-space: normal !important;width : 10% !important;"
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
 							<ac:smSoftcertStatus personnel="#{person}"  />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}"
-							style="white-space: normal;"
+							style="white-space: normal !important;width : 10% !important;"
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
 							<h:outputText value="#{person.roleName}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}"
-							style="white-space: normal;"
+							style="white-space: normal !important;width : 10% !important;"
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
 							<ac:smRoleDesc backingBean="#{backingBean}" roleCode="#{person.epRole}" />
 							<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 								rendered="#{person.contractSignerFlg eq 1 and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
 						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.academic.qualification']}"
+							style="white-space: normal !important;width : 10% !important;"
+							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
+							<p:commandLink onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()"
+								action="#{backingBean.invokePersonnelDialog(person,'acadInfoDlg')}"
+								process="@this" rendered="#{not empty person.smStaffAcademics}"
+								partialSubmit="true" update=":form" style="padding-right:5px;" >
+									<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+							</p:commandLink>
+							<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty person.smStaffAcademics}"/>
+						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.myIdResp']}"
-							style="white-space: normal;" rendered="#{!backingBean.managedBean.supplierUser}"
+							style="white-space: normal !important;width : 10% !important;" rendered="#{!backingBean.managedBean.supplierUser}"
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
 							<p:commandLink onstart="blockWidget.show()"
@@ -724,5 +739,44 @@
 			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="deleteAuthPersConfirmDialog.hide();" />
 		</div>
 	</p:confirmDialog>
+	
+	<p:dialog width="500px" height="200px" closable="true"
+		header="#{lbl['lbl.sm.staff.academic.details']}" id="acadInfoDlg"
+		widgetVar="acadInfoDlg" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+		
+		<p:dataTable id="acadInfodt" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{backingBean.managedBean.selectedShareHolder.smStaffAcademics}"
+			var="aq" widgetVar="acadInfoDtWidVar"
+			rowIndexVar="rowIndex" rowKey="#{aq}">
+			<ac:paginator for="acadInfodt" />
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.spec.contrat.year']}" />
+				</f:facet>
+				<h:outputText value="#{aq.year}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.institute']}" />
+				</f:facet>
+				<h:outputText value="#{aq.instituteName}" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.education.field']}" />
+				</f:facet>
+				<h:outputText value="#{aq.pmEduField.fieldName}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.major.in']}" />
+				</f:facet>
+				<h:outputText value="#{aq.fieldMajor}" />
+			</p:column>
+		</p:dataTable>
+		
+	</p:dialog>
 
 </ui:composition>

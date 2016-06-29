@@ -1076,7 +1076,7 @@ public class SmApplicationBackingBean extends
 						SmCommonUtil.getDisplayDateFormat(acc.getExpDate()));
 			}
 		}
-		
+
 		// sort staff info
 		SmApplicationUtil.sortStaffInfo(getManagedBean().getSmAppl()
 				.getSmStaffTotals());
@@ -6779,9 +6779,29 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	/**
+	 * Invoke myidentity dialog
+	 * 
+	 * @param SmPersonnel
+	 *            per
+	 */
 	public void viewMyIdentityResponse(SmPersonnel per) {
 		getManagedBean().setSelectedShareHolder(per);
 		RequestContext.getCurrentInstance().execute("myIdentityDlg.show()");
+	}
+
+	/**
+	 * Invoke personnel dialog
+	 * 
+	 * @param SmPersonnel
+	 *            per
+	 * @param String
+	 *            dialogWidgetVar
+	 */
+	public void invokePersonnelDialog(SmPersonnel per, String dialogWidgetVar) {
+		getManagedBean().setSelectedShareHolder(per);
+		RequestContext.getCurrentInstance()
+				.execute(dialogWidgetVar + ".show()");
 	}
 
 	/**
