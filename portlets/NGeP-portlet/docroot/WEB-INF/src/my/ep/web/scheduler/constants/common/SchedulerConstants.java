@@ -24,11 +24,12 @@ public class SchedulerConstants {
 	public static final String SC_FAILOVER_HANDLER_JOB = "SOURCING FAILOVER HANDLER";
 	public static final String SC_QT_PUBLISH_JOB = "PUBLISH APPROVED QT AS SCHEDULED";
 	public static final String SC_QT_PROPOSAL_CLOSE_JOB = "CLOSE PROPOSAL AS SCHEDULED";
-	public static final String QT_PROPOSAL_CLOSE_SIMPLE_JOB = "QT PROPSAL CLOSE SIMPLE JOB FOR QT:"; 
-	public static final String QT_PROPOSAL_CLOSE_SIMPLE_JOB_GROUP  = "QT PROPOSAL CLOSE SIMPLE JOB GROUP";
-	public static final String QT_PUBLISH_SIMPLE_JOB = "QT PUBLISH SIMPLE JOB FOR QT:"; 
-	public static final String QT_PUBLISH_SIMPLE_JOB_GROUP  = "QT PUBLISH SIMPLE JOB GROUP";
-	
+	public static final String QT_PROPOSAL_CLOSE_SIMPLE_JOB = "QT PROPSAL CLOSE SIMPLE JOB FOR QT:";
+	public static final String QT_PROPOSAL_CLOSE_SIMPLE_JOB_GROUP = "QT PROPOSAL CLOSE SIMPLE JOB GROUP";
+	public static final String QT_PUBLISH_SIMPLE_JOB = "QT PUBLISH SIMPLE JOB FOR QT:";
+	public static final String QT_PUBLISH_SIMPLE_JOB_GROUP = "QT PUBLISH SIMPLE JOB GROUP";
+	public static final String QT_PUBLISH_CLOSE_JOB_DATA = "qtId";
+
 	// Sourcing Job description
 	public static final String SC_DAILY_JOB_DESCRIPTION = "Job to run daily at 11:55 PM";
 	public static final String SC_CONTINUOUS_JOB_DESCRIPTION = "Job to run every 60 Seconds";
