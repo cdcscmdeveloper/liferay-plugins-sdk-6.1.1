@@ -48,21 +48,13 @@
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.sc.instruction']}" escape="false" rendered="#{statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}"/>
 		
 		<p:remoteCommand name="committeTabChangeAction" update="@form" partialSubmit="true" process="@form" action="#{qTDetailBB.committeTabChangeAction}" />
-			
+		
 		<p:tabMenu id="committeTabMenu"
-			activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}">
-			<c:forEach var="tabBean" varStatus="status"
-				items="#{qTDetailBB.managedBean.menuModel.contents}">
-				<p:menuitem value="#{tabBean.value}"
-					action="#{qTDetailBB.committeTabChangeAction(status.index)}" 
-					partialSubmit="true"
-					update="@form"
-					process="@form" />
-			</c:forEach>
-		</p:tabMenu>
+			activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}"
+			model="#{qTDetailBB.managedBean.menuModel}" />
 			
 		<ui:include src="committeeappointmenttabList.xhtml" />
-		222
+		
 		
 	</p:panel>
 	<c:if test="#{qTDetailBB.managedBean.committeeAppointmentRemark}">
