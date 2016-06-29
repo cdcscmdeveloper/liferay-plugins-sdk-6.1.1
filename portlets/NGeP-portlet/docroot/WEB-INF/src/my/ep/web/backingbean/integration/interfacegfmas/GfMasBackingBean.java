@@ -874,17 +874,17 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			log.info("***********AgOfficeList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedAgOfficeList().size());
 
-			IAgOfficeSO reqSO = (IAgOfficeSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IAgOfficeSO.class);
-
-			List<PmInterfaceAgOff> list = this.getManagedBean()
-					.getSelectedAgOfficeList();
-
-			for (int i = 0; i < list.size(); i++) {
-				PmInterfaceAgOff pmInterfaceAgOff = list.get(i);
-				reqSO.execute(pmInterfaceAgOff);
-			}
+//			IAgOfficeSO reqSO = (IAgOfficeSO) BusinessDelegate.getInstance()
+//					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+//							IAgOfficeSO.class);
+//
+//			List<PmInterfaceAgOff> list = this.getManagedBean()
+//					.getSelectedAgOfficeList();
+//
+//			for (int i = 0; i < list.size(); i++) {
+//				PmInterfaceAgOff pmInterfaceAgOff = list.get(i);
+//				//reqSO.execute(pmInterfaceAgOff);
+//			}
 		} else if (this.getManagedBean().getSelectedBankList() != null) {
 			log.info("************BankList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedBankList().size());
