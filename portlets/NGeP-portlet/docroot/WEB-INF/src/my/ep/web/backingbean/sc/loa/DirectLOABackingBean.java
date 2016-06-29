@@ -2486,8 +2486,18 @@ public class DirectLOABackingBean extends
 	 */
 	public void selectZoneTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
-
+		List<TreeNode> childNodes = event.getTreeNode().getChildren();
+		if(null!=childNodes && childNodes.size()>0){
+			
+		for (int i = 0; i < childNodes.size(); i++) {
+			childNodes.get(i).setSelected(true);
+			
+		}
+		}else{
+			
 		selectedTreeNode.setSelected(true);
+		
+		}
 	}
 
 	/**
@@ -2498,8 +2508,17 @@ public class DirectLOABackingBean extends
 	 */
 	public void unSelectZoneTreeNode(NodeUnselectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
-
+		List<TreeNode> childNodes = event.getTreeNode().getChildren();
+		if(null!=childNodes && childNodes.size()>0){
+			
+		for (int i = 0; i < childNodes.size(); i++) {
+			childNodes.get(i).setSelected(false);
+			
+		}
+		}else{
+			
 		selectedTreeNode.setSelected(false);
+		}
 	}
 
 	/**
@@ -6446,4 +6465,59 @@ public class DirectLOABackingBean extends
 		// zone required validation
 		getManagedBean().setZoneLocation(Boolean.FALSE);
 	}
+	
+	
+	/**
+	 * based on treenode selection button enable/disable.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	 public boolean zoneLocationDeleteBtnDisable(){
+		List<TreeNode> list = getManagedBean().getZoneTrees();
+		
+		if (CollectionUtils.isNotEmpty(list) ) {
+			for (TreeNode node : list) {
+				for (TreeNode childNode : node.getChildren()) {
+					if (childNode.getChildCount() > 0) {
+						
+						for (TreeNode state : childNode.getChildren()) {
+							
+							if(state.isSelected()){
+								return false;
+							}
+							for(TreeNode district : state.getChildren()){
+								
+								if(district.getChildCount()>0){
+									for(TreeNode division : district.getChildren()){
+										if(division.isSelected()){
+											return false;
+										}
+										if(division.getChildCount()>0){
+											for(TreeNode anotherDistrict : district.getChildren()){
+												if(anotherDistrict.isSelected()){
+													return false;
+												}
+										}
+									}
+								}
+								}else{
+								if(district.isSelected()){
+									return false;
+								}
+								}
+							}
+						}
+					}else{
+					if(childNode.isSelected()){
+						return false;
+					}
+					}
+				}
+			}
+		} else {
+			return true;
+		}
+	return true;
+	 }
 }
