@@ -557,6 +557,15 @@ width:32.5%;
 												</tr>
 											</c:if>
 											<c:if
+												test="#{reportBackingBean.managedBean.rptGenBean.dpInstructionInfoView}">
+												<tr>
+													<td width="100%"><h:outputText
+															styleClass="instruction"
+															style="float:left;margin-left:20px;"
+															value="#{lbl['lbl.instruction.dpatleast']}" /></td>
+												</tr>
+											</c:if>
+											<c:if
 												test="#{reportBackingBean.managedBean.rptGenBean.cmMadatoryIndicatorView}">
 												<tr>
 													<td width="100%"><h:outputText
