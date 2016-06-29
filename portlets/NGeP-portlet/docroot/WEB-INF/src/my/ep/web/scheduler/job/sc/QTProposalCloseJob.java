@@ -21,6 +21,7 @@ import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -60,7 +61,7 @@ public class QTProposalCloseJob implements Job {
 		debugLogger("Start execute ");
 
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-		Long qtId = dataMap.getLong("qtId");
+		Long qtId = dataMap.getLong(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA);
 
 		try {
 			if (proposalSO == null) {
