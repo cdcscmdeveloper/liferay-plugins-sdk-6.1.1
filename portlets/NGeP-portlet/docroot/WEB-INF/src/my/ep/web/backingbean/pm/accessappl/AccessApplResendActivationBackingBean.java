@@ -148,7 +148,6 @@ public class AccessApplResendActivationBackingBean extends
 			accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IAccessApplSO.class);
-			reqDTO.setEmail(getEmail());
 			reqDTO.setIdentificationNo(getIdentificationNo());
 			reqDTO.setOrgProfileId(getSelectedOrgProfile().getOrgProfileId());
 			AccessApplResDTO resDTO = 
@@ -158,6 +157,7 @@ public class AccessApplResendActivationBackingBean extends
 				PmAccessAppl accessApp = resDTO.getAccessAppl();
 				reqDTO.setAccessAppl(accessApp);
 				reqDTO.setPortalBaseUrl(PmCommonUtil.getBasePortalUrl());
+				reqDTO.setEmail(getEmail());
 				resDTO = 
 						accessApplSO.resendPendingActivationAccessAppl(reqDTO);
 				if(resDTO.isSuccessful()){
