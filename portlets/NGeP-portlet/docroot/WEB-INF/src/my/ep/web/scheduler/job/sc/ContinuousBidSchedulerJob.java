@@ -122,7 +122,7 @@ public class ContinuousBidSchedulerJob implements Job {
 				} else if (currentSchedule.getStartDate().before(
 						getCompareTime())
 						|| currentSchedule.getEndDate()
-								.equals(getCompareTime())) {
+								.before(getCompareTime())) {
 					
 					if(currentSchedule.getPmStatus().getStatusId()
 							.equals(BidStatusConst.BID_PENDING_BIDDING) || currentSchedule.getPmStatus().getStatusId()
