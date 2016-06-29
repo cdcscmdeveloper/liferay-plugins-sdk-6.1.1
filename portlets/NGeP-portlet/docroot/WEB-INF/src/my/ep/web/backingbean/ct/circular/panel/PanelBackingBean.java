@@ -2648,7 +2648,7 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 		}	
 	}
     
-/*public void selectAllCancelCircular(AjaxBehaviorEvent e) {
+public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 		
 		for (CtCancelCircular ctCancelCirculars : getManagedBean().getCircularVer().getCtCancelCircularList()) {
 			if (getManagedBean().isSelectAll()) {
@@ -2664,8 +2664,8 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 		 getManagedBean().setButtonHideActiveDel(true);
 	 }		
     }
-*/
-    /*public void selectCancelCheckboxSelect(AjaxBehaviorEvent e){
+
+    public void selectCancelCheckboxSelect(AjaxBehaviorEvent e){
     	getManagedBean().setSelectAll(false);
     	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCircularVer().getCtCancelCircularList()){
     		if(ctCancelCirculars.isSelectedCheckBox()){
@@ -2679,7 +2679,7 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 			getManagedBean().setButtonHideActiveDel(true);
 		}	
     }
-    */
+    
     
 /*public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
 		
@@ -2762,7 +2762,7 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
   					    	ctCancelCirculars.remove();
   					    }
   				    } 
-  				   if(getManagedBean().getCancelledCircularList() != null && getManagedBean().getCancelledCircularList().size() == 0){
+  				   if(getManagedBean().getCancelledCircularList() != null || getManagedBean().getCancelledCircularList().size() > 0){
 					    getManagedBean().setCancelledCircularList(null);
 				    }
     			
