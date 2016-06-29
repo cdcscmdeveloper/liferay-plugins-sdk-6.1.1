@@ -23,6 +23,21 @@
 				rowKey="#{pmInterfaceGlAcnt}"
 				value="#{gfMasBackingBean.managedBean.listOfGlAccount}">
 				
+				  <p:ajax event="rowSelect" 
+					update=":form:prcessIdButton,:form:gfMasGlAcntId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowUnselect" 
+					update=":form:prcessIdButton,:form:gfMasGlAcntId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowSelectCheckbox" 
+					update=":form:prcessIdButton,:form:gfMasGlAcntId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowUnselectCheckbox" 
+					update=":form:prcessIdButton,:form:gfMasGlAcntId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="toggleSelect"
+					update=":form:prcessIdButton,:form:gfMasGlAcntId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<ac:paginator for="gfMasGlAcntId"></ac:paginator>
 				
 				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfaceGlAcnt.processStatus eq '1'}" />			
@@ -51,8 +66,6 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.gfmas.process.status']}">
-					<h:outputText value="#{pmInterfaceGlAcnt.processStatus}" />
-
 					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
 						rendered="#{pmInterfaceGlAcnt.processStatus==0}" />
 					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"

@@ -21,7 +21,21 @@
 				rowIndexVar="index" rowKey="#{pmInterfaceProject}"
 				selection="#{gfMasBackingBean.managedBean.selectedProjectList}"
 				value="#{gfMasBackingBean.managedBean.listOfProjectt}">
-
+                <p:ajax event="rowSelect" 
+					update=":form:prcessIdButton,:form:gfMasProjectId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowUnselect" 
+					update=":form:prcessIdButton,:form:gfMasProjectId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowSelectCheckbox" 
+					update=":form:prcessIdButton,:form:gfMasProjectId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="rowUnselectCheckbox" 
+					update=":form:prcessIdButton,:form:gfMasProjectId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				<p:ajax event="toggleSelect"
+					update=":form:prcessIdButton,:form:gfMasProjectId"					
+					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<ac:paginator for="gfMasProjectId"></ac:paginator>
 
 				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfaceProject.processStatus eq '1'}" />

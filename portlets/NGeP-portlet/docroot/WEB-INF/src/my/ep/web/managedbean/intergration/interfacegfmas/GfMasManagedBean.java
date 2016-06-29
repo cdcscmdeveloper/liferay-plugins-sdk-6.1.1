@@ -57,16 +57,22 @@ public class GfMasManagedBean extends BaseManagedBean {
     /** The created date. */
     private Date createdDate;
     
+    /** The file name. */
     private String fileName;
 
 	/** The is lazy. */
 	private boolean isLazy;	
 	
+	/** The disable. */
 	private boolean disable;
+	
+	/** The process button status. */
+	private boolean processButtonStatus;
 	
 	/** The d i interface log. */
 	private DIInterfaceLog dIInterfaceLog;
 	
+	/** The map of process. */
 	private Map<String, List<DIInterfaceLog>> mapOfProcess;
 	
 	/** The list of prg act. */
@@ -208,6 +214,27 @@ public class GfMasManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is process button status.
+	 * 
+	 * @return the processButtonStatus
+	 */
+	public boolean isProcessButtonStatus() {
+		return processButtonStatus;
+	}
+
+	/**
+	 * Sets the process button status.
+	 * 
+	 * @param processButtonStatus
+	 *            the processButtonStatus to set
+	 */
+	public void setProcessButtonStatus(boolean processButtonStatus) {
+		this.processButtonStatus = processButtonStatus;
+	}
+
+	/**
+	 * Gets the map of process.
+	 * 
 	 * @return the mapOfProcess
 	 */
 	public Map<String, List<DIInterfaceLog>> getMapOfProcess() {
@@ -218,13 +245,18 @@ public class GfMasManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param mapOfProcess the mapOfProcess to set
+	 * Sets the map of process.
+	 * 
+	 * @param mapOfProcess
+	 *            the mapOfProcess to set
 	 */
 	public void setMapOfProcess(Map<String, List<DIInterfaceLog>> mapOfProcess) {
 		this.mapOfProcess = mapOfProcess;
 	}
 
 	/**
+	 * Gets the file name.
+	 * 
 	 * @return the fileName
 	 */
 	public String getFileName() {
@@ -232,13 +264,18 @@ public class GfMasManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param fileName the fileName to set
+	 * Sets the file name.
+	 * 
+	 * @param fileName
+	 *            the fileName to set
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
 
 	/**
+	 * Checks if is disable.
+	 * 
 	 * @return the disable
 	 */
 	public boolean isDisable() {
@@ -246,7 +283,10 @@ public class GfMasManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param disable the disable to set
+	 * Sets the disable.
+	 * 
+	 * @param disable
+	 *            the disable to set
 	 */
 	public void setDisable(boolean disable) {
 		this.disable = disable;
