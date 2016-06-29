@@ -11,7 +11,6 @@
 package my.ep.web.backingbean.integration.interfacegfmas;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,15 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.DIInterfaceLog;
 import my.ep.persistence.entity.pm.integration.PmInterfaceAgOff;
+import my.ep.persistence.entity.pm.integration.PmInterfaceBank;
+import my.ep.persistence.entity.pm.integration.PmInterfaceDana;
+import my.ep.persistence.entity.pm.integration.PmInterfaceGlAccount;
+import my.ep.persistence.entity.pm.integration.PmInterfaceKptj;
+import my.ep.persistence.entity.pm.integration.PmInterfacePP;
 import my.ep.persistence.entity.pm.integration.PmInterfaceProgAct;
+import my.ep.persistence.entity.pm.integration.PmInterfaceProject;
+import my.ep.persistence.entity.pm.integration.PmInterfacePtj;
+import my.ep.persistence.entity.pm.integration.PmInterfaceVot;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -252,7 +259,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 		
 		searchBean.getSortColumns().add(
-				new SearchOrderBean("createdDate", false));
+				new SearchOrderBean("createdDate", true));
 		
 		
 		return searchBean;
@@ -343,6 +350,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 						IDIInterfaceSO.class);
 
 		String childProcessPage = null;
+		this.getManagedBean().setMapOfProcess(null);
 
 		try {
 			InterfaceLogReqDto interfaceGfMasReqDto = new InterfaceLogReqDto();
@@ -352,7 +360,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			
 			this.getManagedBean().setFileName(selectedProcess.getFileName());
 			
-			//getUnprocessedRecordsByPreviousDate(selectedProcess);
+			getUnprocessedRecordsByPreviousDate(selectedProcess);
 
 			InterfaceLogResDto interfaceGfMasResDto = gfMasSO
 					.retrieveProcessDataForAll(interfaceGfMasReqDto);
@@ -360,13 +368,235 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			childProcessPage = getChildProcessScreen(selectedProcess,
 					interfaceGfMasResDto);
 
-		} catch (Exception e) {
+		} /*catch (Exception e) {
 			e.printStackTrace();
-		} finally {
+		}*/ finally {
 			gfMasSO = null;
 		}
 
 		return childProcessPage;
+	}
+	
+	private boolean getInterfaceProgActProcessStatus(DIInterfaceLog log) {
+
+		boolean childProcessStatus = false;
+		
+		List<PmInterfaceProgAct> progActList=log.getPmInterfaceProgAct();
+		
+		for (int i = 0; progActList.size() > 0; i++) {
+
+			if (progActList.get(i).getProcessStatus()
+					.equals(new Long(0))
+					||progActList.get(i).getProcessStatus()
+							.equals(new Long(1))) {
+				childProcessStatus = true;
+				break;
+			} else {
+				childProcessStatus = false;
+			}
+
+		}
+		return childProcessStatus;
+	}
+	
+	private boolean getInterfaceProjectProcessStatus(DIInterfaceLog log) {
+
+		boolean childProcessStatus = false;
+		
+		List<PmInterfaceProject> projectList=log.getPmInterfaceProject();
+		
+		for (int i = 0; projectList.size() > 0; i++) {
+
+			if (projectList.get(i).getProcessStatus()
+					.equals(new Long(0))
+					|| projectList.get(i).getProcessStatus()
+							.equals(new Long(1))) {
+				childProcessStatus = true;
+				break;
+			} else {
+				childProcessStatus = false;
+			}
+
+		}
+		return childProcessStatus;
+	}
+	
+	private boolean getInterfacePtjProcessStatus(DIInterfaceLog log) {
+
+		boolean childProcessStatus = false;
+		
+		List<PmInterfacePtj> ptjList=log.getPmInterfacePtj();
+		
+		for (int i = 0; ptjList.size() > 0; i++) {
+
+			if (ptjList.get(i).getProcessStatus()
+					.equals(new Long(0))
+					|| ptjList.get(i).getProcessStatus()
+							.equals(new Long(1))) {
+				childProcessStatus = true;
+				break;
+			} else {
+				childProcessStatus = false;
+			}
+
+		}
+		return childProcessStatus;
+	}
+	
+	private boolean getInterfaceKptjProcessStatus(DIInterfaceLog log) {
+
+		boolean childProcessStatus = false;
+		
+		List<PmInterfaceKptj> kptjList=log.getPmInterfaceKptj();
+		
+		for (int i = 0; kptjList.size() > 0; i++) {
+
+			if (kptjList.get(i).getProcessStatus()
+					.equals(new Long(0))
+					|| kptjList.get(i).getProcessStatus()
+							.equals(new Long(1))) {
+				childProcessStatus = true;
+				break;
+			} else {
+				childProcessStatus = false;
+			}
+
+		}
+		return childProcessStatus;
+	}
+	
+	private boolean getInterfaceAgOfficeProcessStatus(DIInterfaceLog log) {
+
+		boolean childProcessStatus = false;
+		
+		List<PmInterfaceAgOff> agOffList=log.getPmInterfaceAgOff();
+		
+		for (int i = 0; agOffList.size() > 0; i++) {
+
+			if (agOffList.get(i).getProcessStatus()
+					.equals(new Long(0))
+					|| agOffList.get(i).getProcessStatus()
+							.equals(new Long(1))) {
+				childProcessStatus = true;
+				break;
+			} else {
+				childProcessStatus = false;
+			}
+
+		}
+		return childProcessStatus;
+	}
+	
+	private boolean getInterfacePpProcessStatus(DIInterfaceLog log) {
+
+		boolean childProcessStatus = false;
+		
+		List<PmInterfacePP> ppList=log.getPmInterfacePP();
+		
+		for (int i = 0; ppList.size() > 0; i++) {
+
+			if (ppList.get(i).getProcessStatus()
+					.equals(new Long(0))
+					|| ppList.get(i).getProcessStatus()
+							.equals(new Long(1))) {
+				childProcessStatus = true;
+				break;
+			} else {
+				childProcessStatus = false;
+			}
+
+		}
+		return childProcessStatus;
+	}
+	
+	
+	private boolean getInterfaceVotProcessStatus(DIInterfaceLog log) {
+
+		boolean childProcessStatus = false;
+		
+		List<PmInterfaceVot> votList=log.getPmInterfaceVot();
+		
+		for (int i = 0; votList.size() > 0; i++) {
+
+			if (votList.get(i).getProcessStatus()
+					.equals(new Long(0))
+					|| votList.get(i).getProcessStatus()
+							.equals(new Long(1))) {
+				childProcessStatus = true;
+				break;
+			} else {
+				childProcessStatus = false;
+			}
+
+		}
+		return childProcessStatus;
+	}
+	
+	private boolean getInterfaceBankProcessStatus(DIInterfaceLog log) {
+
+		boolean childProcessStatus = false;
+		
+		List<PmInterfaceBank> bankList=log.getPmInterfaceBank();
+		
+		for (int i = 0; bankList.size() > 0; i++) {
+
+			if (bankList.get(i).getProcessStatus()
+					.equals(new Long(0))
+					|| bankList.get(i).getProcessStatus()
+							.equals(new Long(1))) {
+				childProcessStatus = true;
+				break;
+			} else {
+				childProcessStatus = false;
+			}
+
+		}
+		return childProcessStatus;
+	}
+	
+	private boolean getInterfaceGlAcntProcessStatus(DIInterfaceLog log) {
+
+		boolean childProcessStatus = false;
+		
+		List<PmInterfaceGlAccount> glAcntList=log.getPmInterfaceGlAccount();
+		
+		for (int i = 0; glAcntList.size() > 0; i++) {
+
+			if (glAcntList.get(i).getProcessStatus()
+					.equals(new Long(0))
+					|| glAcntList.get(i).getProcessStatus()
+							.equals(new Long(1))) {
+				childProcessStatus = true;
+				break;
+			} else {
+				childProcessStatus = false;
+			}
+
+		}
+		return childProcessStatus;
+	}
+	
+	
+	private boolean getInterfaceDanaProcessStatus(DIInterfaceLog log) {
+
+		boolean childProcessStatus = false;
+		
+		List<PmInterfaceDana> danaList=log.getPmInterfaceDana();
+		
+		for (int i = 0; danaList.size() > 0; i++) {
+
+			if (danaList.get(i).getProcessStatus()
+					.equals(new Long(0))
+					|| danaList.get(i).getProcessStatus()
+							.equals(new Long(1))) {
+				childProcessStatus = true;
+				break;
+			} else {
+				childProcessStatus = false;
+			}
+
+		}
+		return childProcessStatus;
 	}
 
 	private void getUnprocessedRecordsByPreviousDate(
@@ -375,10 +605,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 		List<DIInterfaceLog> interfaceLogParentList = searchGfMas.getList();
 
-		List<DIInterfaceLog> interfaceLogParentFilteredList = searchGfMas
-				.getList();
+		List<DIInterfaceLog> interfaceLogParentFilteredList = null;
 
-		Map<String, List<DIInterfaceLog>> mapOfProcess = new HashMap<String, List<DIInterfaceLog>>();
+		// Map<String, List<DIInterfaceLog>> mapOfProcess = new HashMap<String,
+		// List<DIInterfaceLog>>();
+		Map<String, List<DIInterfaceLog>> mapOfProcess = this.getManagedBean()
+				.getMapOfProcess();
 
 		/*
 		 * Collections.sort(interfaceLogParentList, new
@@ -406,6 +638,17 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		interfaceLogParentFilteredList = mapOfProcess.get(selectedProcess
 				.getProcessId());
 
+		String logId = this.getManagedBean().getMapOfProcess()
+				.get(selectedProcess.getProcessId()).get(0).getLogId()
+				.toString();
+
+		String processId = this.getManagedBean().getMapOfProcess()
+				.get(selectedProcess.getProcessId()).get(0).getProcessId();
+
+		String createdDate = this.getManagedBean().getMapOfProcess()
+				.get(selectedProcess.getProcessId()).get(0).getCreatedDate()
+				.toString();
+
 		if (CollectionUtils.isNotEmpty(interfaceLogParentFilteredList)) {
 
 			for (DIInterfaceLog filteredProcessCode : interfaceLogParentFilteredList) {
@@ -416,148 +659,101 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 							.getProcessId())) {
 
 					case GLPRG:
-						if (filteredProcessCode.getPmInterfaceProgAct()
-								.contains(new Long(0))
-								|| filteredProcessCode.getPmInterfaceProgAct()
-										.contains(new Long(1))) {
-							if (!filteredProcessCode.getLogId().equals(
-									selectedProcess.getLogId())) {
-								this.getManagedBean().getdIInterfaceLog()
-										.setHighLightProcess(true);
-								throw new EpException(MessageConst.ERROR_770001);
-							}
+						if (getInterfaceProgActProcessStatus(filteredProcessCode)) {
+							showErrorMsg(selectedProcess, logId, processId,
+									createdDate, filteredProcessCode);
 						}
+						// break;
 
 					case GLBAC:
-						if (filteredProcessCode.getPmInterfaceAgOff().contains(
-								new Long(0))
-								|| filteredProcessCode.getPmInterfaceAgOff()
-										.contains(new Long(1))) {
-							if (!filteredProcessCode.getLogId().equals(
-									selectedProcess.getLogId())) {
-								this.getManagedBean().getdIInterfaceLog()
-										.setHighLightProcess(true);
-								throw new EpException(MessageConst.ERROR_770002);
-							}
+						if (getInterfaceAgOfficeProcessStatus(filteredProcessCode)) {
+							showErrorMsg(selectedProcess, logId, processId,
+									createdDate, filteredProcessCode);
 						}
+						// break;
 
 					case GLSEG:
-						if (filteredProcessCode.getPmInterfacePP()
-								.contains(new Long(0))
-								|| filteredProcessCode.getPmInterfacePP()
-										.contains(new Long(1))) {
-							if (!filteredProcessCode.getLogId().equals(
-									selectedProcess.getLogId())) {
-								this.getManagedBean().getdIInterfaceLog()
-										.setHighLightProcess(true);
-								throw new EpException(MessageConst.ERROR_770003);
-							}
+						if (getInterfacePpProcessStatus(filteredProcessCode)) {
+							showErrorMsg(selectedProcess, logId, processId,
+									createdDate, filteredProcessCode);
 						}
+						// break;
 
 					case GLVOT:
-						if (filteredProcessCode.getPmInterfaceVot().contains(
-								new Long(0))
-								|| filteredProcessCode.getPmInterfaceVot()
-										.contains(new Long(1))) {
-							if (!filteredProcessCode.getLogId().equals(
-									selectedProcess.getLogId())) {
-								this.getManagedBean().getdIInterfaceLog()
-										.setHighLightProcess(true);
-								throw new EpException(MessageConst.ERROR_770004);
-							}
+						if (getInterfaceVotProcessStatus(filteredProcessCode)) {
+							showErrorMsg(selectedProcess, logId, processId,
+									createdDate, filteredProcessCode);
 						}
-
+						// break;
 					case GLDNA:
-						if (filteredProcessCode.getPmInterfaceDana().contains(
-								new Long(0))
-								|| filteredProcessCode.getPmInterfaceDana()
-										.contains(new Long(1))) {
-							if (!filteredProcessCode.getLogId().equals(
-									selectedProcess.getLogId())) {
-								this.getManagedBean().getdIInterfaceLog()
-										.setHighLightProcess(true);
-								throw new EpException(MessageConst.ERROR_770005);
-							}
+						if (getInterfaceDanaProcessStatus(filteredProcessCode)) {
+							showErrorMsg(selectedProcess, logId, processId,
+									createdDate, filteredProcessCode);
 						}
+						break;
 
 					case GLPRJ:
-						if (filteredProcessCode.getPmInterfaceProject()
-								.contains(new Long(0))
-								|| filteredProcessCode.getPmInterfaceProgAct()
-										.contains(new Long(1))) {
-							if (!filteredProcessCode.getLogId().equals(
-									selectedProcess.getLogId())) {
-								this.getManagedBean().getdIInterfaceLog()
-										.setHighLightProcess(true);
-								throw new EpException(MessageConst.ERROR_770012);
-							}
+						if (getInterfaceProjectProcessStatus(filteredProcessCode)) {
+							showErrorMsg(selectedProcess, logId, processId,
+									createdDate, filteredProcessCode);
 						}
+						// break;
 
 					case GLGLC:
-						if (filteredProcessCode.getPmInterfaceGlAccount()
-								.contains(new Long(0))
-								|| filteredProcessCode
-										.getPmInterfaceGlAccount()
-										.contains(new Long(1))) {
-							if (!filteredProcessCode.getLogId().equals(
-									selectedProcess.getLogId())) {
-								this.getManagedBean().getdIInterfaceLog()
-										.setHighLightProcess(true);
-								throw new EpException(MessageConst.ERROR_770011);
-							}
+						if (getInterfaceGlAcntProcessStatus(filteredProcessCode)) {
+							showErrorMsg(selectedProcess, logId, processId,
+									createdDate, filteredProcessCode);
 						}
+						break;
 
 					case GLPCG:
-						if (filteredProcessCode.getPmInterfaceKptj().contains(
-								new Long(0))
-								|| filteredProcessCode.getPmInterfaceKptj()
-										.contains(new Long(1))) {
-							if (!filteredProcessCode.getLogId().equals(
-									selectedProcess.getLogId())) {
-								this.getManagedBean().getdIInterfaceLog()
-										.setHighLightProcess(true);
-								throw new EpException(MessageConst.ERROR_770008);
-							}
+						if (getInterfaceKptjProcessStatus(filteredProcessCode)) {
+							showErrorMsg(selectedProcess, logId, processId,
+									createdDate, filteredProcessCode);
 						}
+						// break;
 
 					case GLPTJ:
-						if (filteredProcessCode.getPmInterfacePtj().contains(
-								new Long(0))
-								|| filteredProcessCode.getPmInterfacePtj()
-										.contains(new Long(1))) {
-							if (!filteredProcessCode.getLogId().equals(
-									selectedProcess.getLogId())) {
-								this.getManagedBean().getdIInterfaceLog()
-										.setHighLightProcess(true);
-								throw new EpException(MessageConst.ERROR_770009);
-							}
+						if (getInterfacePtjProcessStatus(filteredProcessCode)) {
+							showErrorMsg(selectedProcess, logId, processId,
+									createdDate, filteredProcessCode);
 						}
+						// break;
 
 					case CMBNK:
-						if (filteredProcessCode.getPmInterfaceBank().contains(
-								new Long(0))
-								|| filteredProcessCode.getPmInterfaceBank()
-										.contains(new Long(1))) {
-							if (!filteredProcessCode.getLogId().equals(
-									selectedProcess.getLogId())) {
-								this.getManagedBean().getdIInterfaceLog()
-										.setHighLightProcess(true);
-								throw new EpException(MessageConst.ERROR_770010);
-							}
+						if (getInterfaceBankProcessStatus(filteredProcessCode)) {
+							showErrorMsg(selectedProcess, logId, processId,
+									createdDate, filteredProcessCode);
 						}
+						// break;
 
-					default: {
-
-						log.info("unknown child page \t"
-								+ filteredProcessCode.getProcessId());
-
-					}
+						/*
+						 * default: {
+						 * 
+						 * log.info("unknown Process \t" +
+						 * filteredProcessCode.getProcessId());
+						 * 
+						 * }
+						 */
 					}
 				}
 			}
 
 		}
 
+	}
+
+	private void showErrorMsg(DIInterfaceLog selectedProcess, String logId,
+			String processId, String createdDate,
+			DIInterfaceLog filteredProcessCode) {
+
+		if (!selectedProcess.getLogId().equals(filteredProcessCode.getLogId())) {
+			if (!(selectedProcess.getCreatedDate().compareTo(
+					filteredProcessCode.getCreatedDate())<0)) {
+				throw new EpException(MessageConst.ERROR_780001, new String[] {
+						processId,logId,createdDate });
+			}
+		}
 	}
 
 

@@ -11,8 +11,9 @@
 package my.ep.web.managedbean.intergration.interfacegfmas;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.pm.common.DIInterfaceLog;
@@ -65,6 +66,8 @@ public class GfMasManagedBean extends BaseManagedBean {
 	
 	/** The d i interface log. */
 	private DIInterfaceLog dIInterfaceLog;
+	
+	private Map<String, List<DIInterfaceLog>> mapOfProcess;
 	
 	/** The list of prg act. */
 	private List<PmInterfaceProgAct> listOfPrgAct;
@@ -202,6 +205,23 @@ public class GfMasManagedBean extends BaseManagedBean {
 	 */
 	public List<PmInterfaceDana> getListOfDana() {
 		return listOfDana;
+	}
+
+	/**
+	 * @return the mapOfProcess
+	 */
+	public Map<String, List<DIInterfaceLog>> getMapOfProcess() {
+		if (mapOfProcess == null) {
+			mapOfProcess = new HashMap<String, List<DIInterfaceLog>>();
+		}
+		return mapOfProcess;
+	}
+
+	/**
+	 * @param mapOfProcess the mapOfProcess to set
+	 */
+	public void setMapOfProcess(Map<String, List<DIInterfaceLog>> mapOfProcess) {
+		this.mapOfProcess = mapOfProcess;
 	}
 
 	/**
