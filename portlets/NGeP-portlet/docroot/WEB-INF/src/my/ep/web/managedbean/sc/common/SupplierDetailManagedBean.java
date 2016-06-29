@@ -26,6 +26,7 @@ public class SupplierDetailManagedBean extends BaseManagedBean {
 
 	private String mofNo;
 	private String supplierName;
+	private Long smApplId;
 	private SmAppl smAppl;
 	private SmSupplier smSupplier;
 	private SmGstSupplier smGstSupplier;
@@ -80,6 +81,21 @@ public class SupplierDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the smApplId
+	 */
+	public Long getSmApplId() {
+		return smApplId;
+	}
+
+	/**
+	 * @param smApplId
+	 *            the smApplId to set
+	 */
+	public void setSmApplId(Long smApplId) {
+		this.smApplId = smApplId;
+	}
+
+	/**
 	 * @return the smAppl
 	 */
 	public SmAppl getSmAppl() {
@@ -88,7 +104,7 @@ public class SupplierDetailManagedBean extends BaseManagedBean {
 
 	/**
 	 * @param smAppl
-	 *          the smAppl to set
+	 *            the smAppl to set
 	 */
 	public void setSmAppl(SmAppl smAppl) {
 		this.smAppl = smAppl;
