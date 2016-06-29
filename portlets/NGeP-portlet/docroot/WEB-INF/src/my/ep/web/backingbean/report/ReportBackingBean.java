@@ -10625,7 +10625,12 @@ public class ReportBackingBean extends
 				this.getManagedBean().getRptGenBean()
 						.setInstructionInfoView(true);
 
-			} else {
+			} else if (this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.DIRECT_PURCHASE)) {
+				this.getManagedBean().getRptGenBean()
+						.setDpInstructionInfoView(true);
+			}
+			else {
 				this.getManagedBean().getRptGenBean()
 						.setCmMadatoryIndicatorView(false);
 				this.getManagedBean().getRptGenBean()
