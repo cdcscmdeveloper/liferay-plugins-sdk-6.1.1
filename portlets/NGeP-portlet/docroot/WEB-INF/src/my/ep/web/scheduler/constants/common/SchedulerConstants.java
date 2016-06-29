@@ -17,22 +17,25 @@ public class SchedulerConstants {
 	public static final String SC_JOB_GROUP = "SOURCING JOB GROUP";
 
 	// Sourcing Job Key Id
-	public static final String SC_CONTINOUS_JOB = "CONTINUOUS STATUS CHECK";
-	public static final String SC_DAILY_JOB = "BIDS FETCH ";
+	public static final String SC_CONTINOUS_JOB = "CONTINUOUS BID SCHEDULE STATUS CHECK";
+	public static final String SC_DAILY_JOB = "BIDS FETCH DAILY JOB";
 	public static final String SC_UPDATE_SUPPLIERS_JOB = "UPDATE SUPPLIERS ";
-	public static final String SC_QT_CLOSED_JOB = "QT_CLOSED";
-	public static final String SC_QT_PROPOSAL_VALIDITY_EXPIRY = "QT_PROPOSAL_VALIDITY_EXPIRY";
+	public static final String SC_QT_PROPOSAL_VALIDITY_EXPIRY = "QT PROPOSAL VALIDITY EXPIRY";
 	public static final String SC_FAILOVER_HANDLER_JOB = "SOURCING FAILOVER HANDLER";
 	public static final String SC_QT_PUBLISH_JOB = "PUBLISH APPROVED QT AS SCHEDULED";
 	public static final String SC_QT_PROPOSAL_CLOSE_JOB = "CLOSE PROPOSAL AS SCHEDULED";
+	public static final String QT_PROPOSAL_CLOSE_SIMPLE_JOB = "QT PROPSAL CLOSE SIMPLE JOB FOR QT:"; 
+	public static final String QT_PROPOSAL_CLOSE_SIMPLE_JOB_GROUP  = "QT PROPOSAL CLOSE SIMPLE JOB GROUP";
+	public static final String QT_PUBLISH_SIMPLE_JOB = "QT PUBLISH SIMPLE JOB FOR QT:"; 
+	public static final String QT_PUBLISH_SIMPLE_JOB_GROUP  = "QT PUBLISH SIMPLE JOB GROUP";
+	
 	// Sourcing Job description
-	public static final String SC_DAILY_JOB_DESCRIPTION = "Job run every day at 11:55 PM";
+	public static final String SC_DAILY_JOB_DESCRIPTION = "Job to run daily at 11:55 PM";
 	public static final String SC_CONTINUOUS_JOB_DESCRIPTION = "Job to run every 60 Seconds";
-	public static final String SC_UPDATE_SUPPLIERS_JOB_DESCRIPTION = "Job run every day at 11:55 PM";
-	public static final String SC_QT_CLOSED_JOB_DESCRIPTION = "Job run every day by batch";
-	public static final String SC_PROPOSAL_EXPIRY_JOB_DESCRIPTION = "Job run every day at 12:05 AM";
-	public static final String SC_QT_PUBLISH_JOB_DESCRIPTION = "Job to run every day at 12:00 am to publish Qt's";
-	public static final String SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION = "Job to run every  day at 12:00 am to close proposal";
+	public static final String SC_UPDATE_SUPPLIERS_JOB_DESCRIPTION = "Job to run daily at 11:55 PM to update qualified/disqualified suppliers";
+	public static final String SC_PROPOSAL_EXPIRY_JOB_DESCRIPTION = "Job to run daily at 12:05 AM";
+	public static final String SC_QT_PUBLISH_JOB_DESCRIPTION = "Job to run daily at 12:00 am to publish Qt's";
+	public static final String SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION = "Job to run daily at 12:00 am to close proposal";
 
 	// Contracts Module Constants
 	// CT Job Group ID
