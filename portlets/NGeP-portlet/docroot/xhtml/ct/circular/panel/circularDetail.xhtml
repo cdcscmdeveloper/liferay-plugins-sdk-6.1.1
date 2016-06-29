@@ -91,13 +91,21 @@
 		                    value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}" rowIndexVar="index" 
 			                selection="#{panelBackingBean.managedBean.selectedContactPersons}" widgetVar="contactPersonObj">
 			                     <ac:paginator for="contactPersonDt" />
-			                      <p:ajax event="toggleSelect"  update=":form:contactPersonDt,:form:ctPersonDelBtn" />
-                                  <p:ajax event="rowSelect" update=":form:contactPersonDt,:form:ctPersonDelBtn" />
-			                      <p:ajax event="rowSelectCheckbox"  update=":form:contactPersonDt,:form:ctPersonDelBtn" />
-                                  <p:ajax event="rowUnselectCheckbox"  update=":form:contactPersonDt,:form:ctPersonDelBtn" />
-                                  <p:column selectionMode="multiple" style="width:3%" 
-				                         rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			                     <p:column style="width:20%;" styleClass="column-align-center" >
+			                     <p:column 
+			                           style="width:3%" rendered="#{!panelBackingBean.managedBean.viewContract}">
+			                            <f:facet name="header">
+							               <p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.selectAll}">
+								             <p:ajax partialSubmit="true" process="@this"
+									            update=":form:contactPersonDt,:form:ctPersonDelBtn" listener="#{panelBackingBean.selectAllPerson}" />
+							               </p:selectBooleanCheckbox>
+						                </f:facet>
+		           
+		                                 <p:selectBooleanCheckbox
+		                                   value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                       <p:ajax event="change" update=":form:ctPersonDelBtn, :form:contactPersonDt" 
+		           		                       listener="#{panelBackingBean.selectOnePersonCheckboxSelect}"></p:ajax>
+			                             </p:selectBooleanCheckbox>
+			                           </p:column>         <p:column style="width:20%;" styleClass="column-align-center" >
 			                             <f:facet name="header">
 			                                  <h:outputText value="#{lbl['lbl.ct.contact.person.name']}" styleClass="required"/>
 			                            </f:facet>
@@ -157,8 +165,7 @@
 				          oncomplete="contactPersonObj.paginator.endLink.click();" 
 				          rendered="#{!panelBackingBean.managedBean.viewContract}" partialSubmit="true" />
 			         <p:commandButton id="ctPersonDelBtn"  value="#{lbl['lbl.ct.delete']}" process="@this"  
-			              partialSubmit="true"  disabled="#{panelBackingBean.managedBean.selectedContactPersons.size() == 0 or 
-			              panelBackingBean.managedBean.selectedContactPersons.size() == '' or panelBackingBean.managedBean.selectedContactPersons.size() == null}"
+			              partialSubmit="true"  disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 			             onsuccess="delCtPersonDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>						
 		      </div>
 		   
@@ -166,7 +173,7 @@
 		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                      <div class="ppRightBtn">
 		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:contactPerson"
-		                     process="@all" actionListener="#{panelBackingBean.deleteContactPerson()}" onclick="delCtPersonDlg.hide();"/>
+		                     process="@all" actionListener="#{panelBackingBean.deleteTableRow('PERSON')}" onclick="delCtPersonDlg.hide();"/>
 			             <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delCtPersonDlg.hide();" type="button" />
 		             </div>
              </p:confirmDialog>	
@@ -178,13 +185,21 @@
 			        value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}" rowKey="#{data}"
 			         rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedCancelCircular}">
 			               <ac:paginator for="cancelCircularDt" />		
-			               <p:ajax event="toggleSelect"  update=":form:cancelCircularDt,:form:cancelCircularDtBtn" />
-                           <p:ajax event="rowSelect" update=":form:cancelCircularDt,:form:cancelCircularDtBtn" />
-			               <p:ajax event="rowSelectCheckbox"  update=":form:cancelCircularDt,:form:cancelCircularDtBtn" />
-                          <p:ajax event="rowUnselectCheckbox"  update=":form:cancelCircularDt,:form:cancelCircularDtBtn" />
-                          <p:column selectionMode="multiple" style="width:3%" 
-				            rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			                  <p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
+			                <p:column  style="width:3%" 
+				                    rendered="#{!panelBackingBean.managedBean.viewContract}">
+				                <f:facet name="header">
+							      <p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.selectAll}">
+								     <p:ajax partialSubmit="true" process="@this"
+									      update=":form:cancelCircularDt,:form:cancelCircularDtBtn" listener="#{panelBackingBean.selectAllCancelCircular}" />
+							      </p:selectBooleanCheckbox>
+						       </f:facet>
+		           
+		                        <p:selectBooleanCheckbox 
+		                             value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		               <p:ajax event="change"
+		           		                  update=":form:cancelCircularDt,:form:cancelCircularDtBtn" listener="#{panelBackingBean.selectCancelCheckboxSelect}"></p:ajax>
+			                     </p:selectBooleanCheckbox>     
+				              </p:column>        <p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
 				                     <h:outputText value="#{data.circularVer.circularNo}"  style="float:left;"/>
 			                  </p:column>
 			
@@ -197,15 +212,14 @@
 		                   <p:commandButton value="#{lbl['lbl.btn.add']}"  oncomplete="cancelCircularDlg.show();" update="cancelledCclDt, :form:popUpSelectButtonId"
 				                 actionListener="#{panelBackingBean.addCancelCircularListener()}"  rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 			               <p:commandButton id="cancelCircularDtBtn"  value="#{lbl['lbl.ct.delete']}"  
-			                      process="@this" partialSubmit="true"  disabled="#{panelBackingBean.managedBean.selectedCancelCircular.size() == 0 
-			                      or panelBackingBean.managedBean.selectedCancelCircular == null or panelBackingBean.managedBean.selectedCancelCircular.size() == ''}"
+			                      process="@this" partialSubmit="true"  disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 				                  rendered="#{!panelBackingBean.managedBean.viewContract}" onsuccess="cancelCircularDltDlg.show()"/>				
 		           </div>	
 		           
 		               <p:confirmDialog id="cancelCircularDlt" widgetVar="cancelCircularDltDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
 		                   severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                            <div class="ppRightBtn">
-		                       <p:commandButton value="#{lbl['lbl.btn.yes']}"   action="#{panelBackingBean.deleteCancelCircular()}" process="@this"
+		                       <p:commandButton value="#{lbl['lbl.btn.yes']}"   action="#{panelBackingBean.deleteTableRow('CANCEL')}" process="@this"
 		                         update=":form:cancelCircularDt, :form:cancelCircularDtBtn" partialSubmit="true"  oncomplete="cancelCircularDltDlg.hide();"/>
 			                   <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="cancelCircularDltDlg.hide();" />
 		                   </div>
