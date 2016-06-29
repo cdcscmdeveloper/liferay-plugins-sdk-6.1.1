@@ -175,7 +175,11 @@
 				selection="#{lOIDetailBackingBean.managedBean.selectedMeetingAttList}">
 
 				<ac:paginator for="meetingAttDtlTbl" />
-
+                <p:ajax event="rowSelect" update="@([id$=meetingAttDetailsId])" />
+			<p:ajax event="rowUnselect" update="@([id$=meetingAttDetailsId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=meetingAttDetailsId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=meetingAttDetailsId])" />
+			<p:ajax event="toggleSelect" update="@([id$=meetingAttDetailsId])" />
 				<p:column selectionMode="multiple" style="width:2%"
 					rendered="#{isPendingNegotiationStatus}" />
 
@@ -202,7 +206,7 @@
 					update="meetingAttDtlTbl" rendered="#{isPendingNegotiationStatus}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
+					disabled="#{lOIDetailBackingBean.managedBean.readOnly or empty lOIDetailBackingBean.managedBean.selectedMeetingAttList}"
 					process="@this, meetingAttDtlTbl" partialSubmit="true"
 					rendered="#{isPendingNegotiationStatus}"
 					oncomplete="alsoPresentDeletePopUp.show();"
@@ -214,7 +218,7 @@
 				okAction="lOIDetailBackingBean.deleteMeetingAttendance" width="400"
 				height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 				content="#{lbl['lbl.msg.confirm.delete']}"
-				update=":form:meetingAttDetailsId" />
+				 update="@([id$=meetingAttDetailsId])" />
 
 		</p:panel>
 	</p:panel>

@@ -18,7 +18,11 @@
 			selection="#{lOIDetailBackingBean.managedBean.selectedScLoiSuppDocs}">
 
 			<ac:paginator for="suppDocTbl" />
-
+           <p:ajax event="rowSelect" update="@([id$=loiAfterNegotationDeleteBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=loiAfterNegotationDeleteBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=loiAfterNegotationDeleteBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=loiAfterNegotationDeleteBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=loiAfterNegotationDeleteBtnId])" />
 			<p:column selectionMode="multiple" style="width:2%"
 				rendered="#{isEditableStatus}" />
 
@@ -54,8 +58,8 @@
 				oncomplete="suppDocTblWidget.paginator.endLink.click();"
 				update="suppDocTbl" rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" id="loiAfterNegotationDeleteBtnId"
+			disabled="#{lOIDetailBackingBean.managedBean.readOnly or empty lOIDetailBackingBean.managedBean.selectedScLoiSuppDocs}"
 				process="@this, suppDocTbl" partialSubmit="true"
 				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 				oncomplete="supporingDocDeletePopUp.show();"
