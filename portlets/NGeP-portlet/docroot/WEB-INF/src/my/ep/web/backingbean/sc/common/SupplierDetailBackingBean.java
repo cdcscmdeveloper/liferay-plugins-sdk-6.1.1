@@ -51,13 +51,14 @@ public class SupplierDetailBackingBean extends
 		SmSupplier selectedSupplier = getManagedBean().getSmSupplier();
 		boolean hasQtProposal = this.getManagedBean().isHasQtProposal();
 		
-		if (!hasQtProposal) {
-			reset();
-		}
 		if (smSupplier != null
 				&& (selectedSupplier == null || smSupplier.getSupplierId()
 						.longValue() != selectedSupplier.getSupplierId()
 						.longValue())) {
+			if (!hasQtProposal) {
+				reset();
+			}
+			
 			IQTSupplierSO qtSupplierSO = null;
 			try {
 				qtSupplierSO = BusinessDelegate.getInstance()
@@ -66,7 +67,7 @@ public class SupplierDetailBackingBean extends
 
 				QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
 				reqDTO.setSupplierId(smSupplier.getSupplierId());
-				reqDTO.setSmAppl(getManagedBean().getSmAppl());
+				reqDTO.setSmApplId(getManagedBean().getSmApplId());
 
 				QTSupplierResDTO resDTO = qtSupplierSO
 						.retrieveSupplierDtlById(reqDTO);
@@ -116,29 +117,29 @@ public class SupplierDetailBackingBean extends
 	public void setScQtProposal(ScQtProposal scQtProposal) {
 		debugLogger("setScQtProposal");
 
-		reset();
-		
-		if (scQtProposal != null) {
-			this.getManagedBean().setHasQtProposal(true);
+		this.getManagedBean().setHasQtProposal(true);
+		SmSupplier selectedSupplier = getManagedBean().getSmSupplier();
+		if (scQtProposal != null
+				&& (selectedSupplier == null || 
+						scQtProposal.getScQtSupplier().getSmSupplier().getSupplierId()
+							.longValue() != selectedSupplier.getSupplierId().longValue())) {
+			
 			this.getManagedBean().setMofNo(
 						scQtProposal.getMofNo());			
 			this.getManagedBean().setSupplierName(
 						scQtProposal.getSupplierName());
-			
-			if (this.getManagedBean().getSmAppl() == null) {
-				this.getManagedBean().setSmAppl(
-							scQtProposal.getSmAppl());
-			}
+			this.getManagedBean().setSmApplId(
+					scQtProposal.getSmAppl().getApplId());
 			
 			setSmSupplier(scQtProposal.getScQtSupplier().getSmSupplier());
-		} else {
+		} else if (scQtProposal == null) {
 			log.warn("scQtProposal is null.");
 		}
 	}
 	
-	private void reset() {
+	public void reset() {
 		this.getManagedBean().setMofNo(null);
-		this.getManagedBean().setSmAppl(null);
+		this.getManagedBean().setSmApplId(null);
 		this.getManagedBean().setSupplierName(null);
 	}
 	
