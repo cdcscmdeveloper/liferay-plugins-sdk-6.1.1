@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.zone.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.zone.details']}" id="directLoaZoneLocationsPanel" toggleable="true">
 		<table width="100%">
 			<tr>
 				<td width="20%"><p:outputLabel
@@ -41,9 +41,9 @@
 					</f:facet>
 					<p:tree value="#{zoneTree}" var="location" selectionMode="checkbox"
 						style="width:85%;">
-						<p:ajax event="select"
+						<p:ajax event="select" update="@([id$=directLoaZoneLocationDeleteBtnId])"
 							listener="#{directLOABackingBean.selectZoneTreeNode}" />
-						<p:ajax event="unselect"
+						<p:ajax event="unselect" update="@([id$=directLoaZoneLocationDeleteBtnId])"
 							listener="#{directLOABackingBean.unSelectZoneTreeNode}" />
 
 						<p:treeNode type="zone">
@@ -78,8 +78,8 @@
 			disabled="#{directLOABackingBean.managedBean.readOnly}"
 				rendered="#{isEditableStatus}" update="@([id$=zonePopupGeneral])"
 				actionListener="#{directLOABackingBean.showGeneralZonesPopup}" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
-			disabled="#{directLOABackingBean.managedBean.readOnly}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" id="directLoaZoneLocationDeleteBtnId"
+			disabled="#{directLOABackingBean.managedBean.readOnly or directLOABackingBean.zoneLocationDeleteBtnDisable()}"
 				partialSubmit="true" oncomplete="zonesNonpanelDeletePopUp.show();"
 				update="@([id$=#{zonesNonpanelDeleteId}])"
 				rendered="#{isEditableStatus}" />
@@ -90,7 +90,7 @@
 			okAction="directLOABackingBean.deleteTreeNode" width="400"
 			height="200" title="#{lbl['lbl.sc.qt.zone.location.info']}"
 			content="#{lbl['lbl.sc.dialog.confirm.zones.delete']}"
-			update="@([id$=zoneGeneralDataTable],[id$=#{productAndServiceId}])" />
+			update="@([id$=zoneGeneralDataTable],[id$=#{productAndServiceId}],[id$=directLoaZoneLocationsPanel])" />
 
 		<p:dialog id="dlgId" header="#{lbl['lbl.sc.add.location']}"
 			widgetVar="ZoneGeneral" modal="true" width="520" closable="false"
