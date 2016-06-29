@@ -83,7 +83,7 @@
 						<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 							value="#{specificationcommittee.memberRoleId}"
 							style="width: 130px;margin-bottom: 5px;">
-							<p:ajax event="change" partialSubmit="true" process="@this"
+							<p:ajax event="change" partialSubmit="true" process="@this" update="@this, @(.amendButton)"
 								listener="#{qTCommitteBackingBean.roleChangedListener(specificationcommittee)}" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
