@@ -2313,4 +2313,16 @@ public class QTCommitteBackingBean extends
 				this.getManagedBean().isMaintanceFlow());
 	}
 	
+	/*
+	 * Role Changed Listener and Update Maintenance Changes Flag.
+	 * 
+	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#
+	 * roleChangedListener(my.ep.persistence.entity.sc.quationtender.ScCommitteeMember)
+	 */
+	@Override
+	public void roleChangedListener(ScCommitteeMember member) {
+		super.roleChangedListener(member);
+		
+		setQtMaintencesChanges();
+	}
 }
