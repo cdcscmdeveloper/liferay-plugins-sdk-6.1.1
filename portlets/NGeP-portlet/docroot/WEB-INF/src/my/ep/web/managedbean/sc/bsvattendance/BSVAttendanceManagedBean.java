@@ -58,7 +58,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private List<CtPanelSupplier> ctZoneSupplierList;
 	private List<SmMofAccount> mofAccountsList;
 	private List<ScQtSupplier> restrictedSupplierList;
-	
+	private ScQtBsvRegistration selectedbriefRegistrationEnableDisable; 
 	/**
 	 * @return the briefingRegistrationList
 	 */
@@ -336,6 +336,21 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	 */
 	public void setRestrictedSupplierList(List<ScQtSupplier> restrictedSupplierList) {
 		this.restrictedSupplierList = restrictedSupplierList;
+	}
+
+	/**
+	 * @return the selectedbriefRegistrationEnableDisable
+	 */
+	public ScQtBsvRegistration getSelectedbriefRegistrationEnableDisable() {
+		return selectedbriefRegistrationEnableDisable;
+	}
+
+	/**
+	 * @param selectedbriefRegistrationEnableDisable the selectedbriefRegistrationEnableDisable to set
+	 */
+	public void setSelectedbriefRegistrationEnableDisable(
+			ScQtBsvRegistration selectedbriefRegistrationEnableDisable) {
+		this.selectedbriefRegistrationEnableDisable = selectedbriefRegistrationEnableDisable;
 	}
 	
 }
