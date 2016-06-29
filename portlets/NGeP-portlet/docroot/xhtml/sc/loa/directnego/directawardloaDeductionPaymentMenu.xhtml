@@ -17,8 +17,8 @@
 			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex"
 			selectionMode="single">
 
-			<p:ajax event="rowSelect" update=":form:deductionPayId" />
-			<p:ajax event="rowUnselect" update=":form:deductionPayId" />
+			<p:ajax event="rowSelect" update="@([id$=deductionPayId])" />
+			<p:ajax event="rowUnselect" update="@([id$=deductionPayId])" />
 
 			<ac:paginator for="deductTbl" />
 
@@ -76,7 +76,7 @@
 					oncomplete="deductTblWidget.paginator.endLink.click();"
 					update="deductTbl" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				disabled="#{directLOABackingBean.managedBean.readOnly}"
+				disabled="#{directLOABackingBean.managedBean.readOnly or null eq directLOABackingBean.managedBean.selectedScQtDeduction}"
 					process="@this, deductTbl"
 					oncomplete="deductionPayDeletePopUp.show();"
 					update="@([id$=#{deductionPayDeleteId}])" />
@@ -103,7 +103,11 @@
 				rowKey="#{scQtDeductionClause}" rowIndexVar="rowIndex">
 
 				<ac:paginator for="deductClauseTbl" />
-
+	         <p:ajax event="rowSelect" update="@([id$=clausePnl])" />
+			<p:ajax event="rowUnselect" update="@([id$=clausePnl])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=clausePnl])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=clausePnl])" />
+			<p:ajax event="toggleSelect" update="@([id$=clausePnl])" />
 				<p:column selectionMode="multiple" style="width:2%"
 					rendered="#{isEditableStatus}" />
 
@@ -145,7 +149,7 @@
 						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
 						update="deductClauseTbl" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					disabled="#{directLOABackingBean.managedBean.readOnly}"
+					disabled="#{directLOABackingBean.managedBean.readOnly or empty directLOABackingBean.managedBean.selectedDeductionClauses}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						oncomplete="deductionClauseDeletePopUp.show();"
 						update="@([id$=#{deductionClauseDeleteId}])" />
