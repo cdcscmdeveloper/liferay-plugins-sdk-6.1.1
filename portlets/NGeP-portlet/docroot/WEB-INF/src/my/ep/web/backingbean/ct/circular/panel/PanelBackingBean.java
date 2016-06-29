@@ -3076,9 +3076,4 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 			 return false;
 		 }
 	 }
-	 
-	 public void onPageChange(PageEvent event){
-		 getManagedBean().setCurrentPage(event.getPage());
-	 }
-	 
 }
