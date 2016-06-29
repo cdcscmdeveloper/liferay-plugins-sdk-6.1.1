@@ -193,7 +193,7 @@
 				#{evaluationMeetingBackingBean.managedBean.cloneSelectQt.qtNo}>#{lbl['lbl.sc.committee.details']}
 				</ui:fragment>
 
-					<p:dataTable id="cloneCommittee" var="committeeMember" rows="10" rowIndexVar="rowIndex"
+					<p:dataTable id="cloneCommittee" var="committeeMember" rows="10" rowIndexVar="index"
 					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebers}"
 						selection="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebersSelect}"
@@ -234,7 +234,7 @@
 						<p:column style="width:5%;">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-								<ac:iconTooltip id="pnpTT#{rowIndex}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+								<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 							</f:facet>
 							<h:outputText
 								value="#{lbl[committeeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
