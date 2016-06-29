@@ -645,8 +645,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 						supplierCodes.containsKey(supplierId)) {
 					ScQtEvaluationResultDtl shortlistedSupplier 
 												= supplierCodes.get(supplierId);
-					packageBean.setSupplierCode(shortlistedSupplier.getQtEvaluationResult()
-							.getScQtProposal().getSupplierNo());
+					packageBean.setScQtProposal(shortlistedSupplier
+							.getQtEvaluationResult().getScQtProposal());
 					packageBean.setShortlistedSupplier(shortlistedSupplier);
 				}
 				if (supplierId.equals(awardedSupplierId)) {
@@ -863,8 +863,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 								supplierCodes.containsKey(smSupplier.getSupplierId())) {
 							ScQtEvaluationResultDtl shortlistedSupplier 
 											= supplierCodes.get(smSupplier.getSupplierId());
-							itemBean.setSupplierCode(shortlistedSupplier.getQtEvaluationResult()
-										.getScQtProposal().getSupplierNo());
+							itemBean.setScQtProposal(shortlistedSupplier
+									.getQtEvaluationResult().getScQtProposal());
 							itemBean.setShortlistedSupplier(shortlistedSupplier);
 						}
 						if (smSupplier.getSupplierId().equals(awardedSupplierId)) {
@@ -1322,7 +1322,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * 				the packageItem corresponding to which price is shown in popup
 	 */
 	public void supplierItemPricePopupAction(BidPackageBean packageItem) {
-		getManagedBean().setSupplierCode(packageItem.getSupplierCode());
+		getManagedBean().setSupplierCode(
+				packageItem.getScQtProposal().getSupplierNo());
 
 		IBiddingSO biddingSO = null;
 

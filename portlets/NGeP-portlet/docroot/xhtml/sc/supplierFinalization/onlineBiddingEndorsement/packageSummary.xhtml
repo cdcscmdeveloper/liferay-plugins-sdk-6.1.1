@@ -34,9 +34,9 @@
 				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
 							   process="@this" update="@([id$=suppDetailsPopupId])" 
 							   style="float:right;">
-					<f:setPropertyActionListener value="#{price.scBidSupplier.smSupplier}"
-							target="#{supplierDetailBackingBean.smSupplier}" />
-					<h:outputText value="#{price.supplierCode}" />
+					<f:setPropertyActionListener value="#{price.scQtProposal}"
+							target="#{supplierDetailBackingBean.scQtProposal}" />
+					<h:outputText value="#{price.scQtProposal.supplierNo}" />
 				</p:commandLink>
 			</p:column>			
 			
