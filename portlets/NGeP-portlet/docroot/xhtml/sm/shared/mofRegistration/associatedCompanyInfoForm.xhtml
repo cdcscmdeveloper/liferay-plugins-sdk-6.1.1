@@ -141,8 +141,6 @@
 		widgetVar="assocDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 		
-		<ui:param name="asc" value="#{backingBean.managedBean.selectedAssocCompany}" />
-		
 		<p:outputPanel layout="block" id="assocBlockPanel">
 			<p:messages id="suppAssocCompMessage" showSummary="false"
 				showDetail="true" autoUpdate="true" closable="true" />
@@ -152,15 +150,13 @@
 							value="#{lbl['lbl.sm.assocCmpny.companyName']} " /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText maxlength="100"
-							required="#{backingBean.managedBean.valueReqd and (not empty asc.regNo or not empty asc.mofNo 
-							or not empty asc.smAddress.address1 or not empty asc.smAddress.address2 or not empty asc.smAddress.address3 
-							or not empty asc.smAddress.address4 or not empty asc.smAddress.stateId or not empty asc.smAddress.districtId 
-							or not empty asc.smAddress.cityId or not empty asc.smAddress.postcode or not empty asc.phoneNo or not empty asc.faxNo)}"
 							label="#{lbl['lbl.sm.assocCmpny.companyName']}"
-							id="asocCompCmpName"
+							id="asocCompCmpName" validator="#{backingBean.validateRequiredField}"
 							value="#{backingBean.managedBean.selectedAssocCompany.companyName}"
 							size="35" >
-								<p:ajax event="blur" process="@this" update="@this" partialSubmit="true" />
+								<p:ajax event="blur" process="@this" update="@this"/>
+								<f:attribute name="labelName" value="#{lbl['lbl.sm.assocCmpny.companyName']}" />
+								<f:attribute name="validate" value="N" />
 							</p:inputText>
 							<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges 
@@ -175,16 +171,14 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.regNo']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText
-							required="#{backingBean.managedBean.valueReqd and (not empty asc.companyName or not empty asc.mofNo 
-							or not empty asc.smAddress.address1 or not empty asc.smAddress.address2 or not empty asc.smAddress.address3 
-							or not empty asc.smAddress.address4 or not empty asc.smAddress.stateId or not empty asc.smAddress.districtId 
-							or not empty asc.smAddress.cityId or not empty asc.smAddress.postcode or not empty asc.phoneNo or not empty asc.faxNo)}"
+					<td><p:inputText validator="#{backingBean.validateRequiredField}"
 							label=" #{lbl['lbl.sm.assocCmpny.regNo']}" id="asocRegNo"
 							value="#{backingBean.managedBean.selectedAssocCompany.regNo}"
 							size="35" maxlength="20" >
-							<p:ajax event="blur" process="@this" update="assocBlockPanel" partialSubmit="true"
+							<p:ajax event="blur" process="@this" update="assocBlockPanel" partialSubmit="true" immediate="true"
 								listener="#{backingBean.onBlurSetAssociateCompany(backingBean.managedBean.selectedAssocCompany)}"/>
+							<f:attribute name="labelName" value="#{lbl['lbl.sm.assocCmpny.regNo']}" />
+							<f:attribute name="validate" value="N" />
 						</p:inputText> 
 						<p:graphicImage id="asocRegNoImg"
 							value="/css/images/design/tooltips.png" 
@@ -458,7 +452,9 @@
 					action="#{backingBean.addOrUpdateAssocToSmAppl}"
 					onclick="assocBlockWidget.show();" oncomplete="assocBlockWidget.hide();"
 					partialSubmit="true" process="asDisp"
-					update=":form:tt:asoc, @([id$=Msg]),:#{p:component('delAssocBtnId')}" />
+					update=":form:tt:asoc, @([id$=Msg]),:#{p:component('delAssocBtnId')}" >
+					<f:param name="validate" value="true" />
+				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.cancelAssocCompanyFuntion}" />
