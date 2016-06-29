@@ -238,6 +238,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		   try {
 			          circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			          resDTO= circularSO.retrieveCircularVerById(reqDTO);
+                      for(CtPanelItem panelItem: resDTO.getCircularVer().getCtPanelItems()){
+			        	  if(panelItem.getItemType() == null){
+			        		  panelItem.setItemType(new PmParameter());
+			        	  }
+			        	  if(panelItem.getPmUom() == null){
+			        		  panelItem.setPmUom(new PmUom());
+			        	  }
+			          }
 		              getManagedBean().setCircularVer(resDTO.getCircularVer());
 		              getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 		
@@ -708,7 +716,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			
-			} else {
+			} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			
 				for (CtPanelItem panelItem: getManagedBean().getCircularVer().getCtPanelItems()) {
 					
@@ -2554,7 +2562,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 public void selectAllPidReason(AjaxBehaviorEvent e) {
 		
 		for (CtCircularPidReason ctCircularPidReasons : getManagedBean().getCircularVer().getCtCircularPidReason()) {
-			if (getManagedBean().isSelectAll()) {
+			if (getManagedBean().isSelectAll() ) {	   
 				ctCircularPidReasons.setSelectedCheckBox(true);
 		       }else {
 		    	   ctCircularPidReasons.setSelectedCheckBox(false);
@@ -3070,7 +3078,7 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 	 }
 	 
 	 public void onPageChange(PageEvent event){
-		 System.out.println("////101//////////" +event.getPage());
+		 getManagedBean().setCurrentPage(event.getPage());
 	 }
 	 
 }
