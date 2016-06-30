@@ -1909,6 +1909,76 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	}
 	
 	/**
+	 * Charge line apply for selected nodes.
+	 */
+	public void resetChargeLineDetails() {
+		getManagedBean().setSelectChargeLineRow(false);
+				getManagedBean().setVotFundId(null);
+				getManagedBean().setGlAccountId(null);
+				getManagedBean().setPrgActivityId(null);
+				getManagedBean().setSubSetiaId(null);
+			
+			
+			resetItemsWithChargeDrops(); // set COA to Y
+			FlFulfilmentItemAddr childItemAddress = null;
+			boolean selected=false;
+			for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
+				//code for selecting the treenode from popupmenu
+				if(!selected){
+					getManagedBean().setSelectedNode(selectedNode);
+					selected=true;
+				}
+				for(TreeNode children:selectedNode.getChildren()){
+					childItemAddress = (FlFulfilmentItemAddr)children.getData();
+					childItemAddress.setPmVotFund(null);
+					childItemAddress.setAssetInd(null);
+					childItemAddress.setPmGlAccount(null);
+					childItemAddress.setPmPrgActivity(null);
+					childItemAddress.setPmSubSetia(null);
+					childItemAddress.setVotFundDisplay(false);
+				}
+				childItemAddress = (FlFulfilmentItemAddr)selectedNode.getData();
+				
+				//Code for multiple delivery addresses based on item code
+				for (FlDeliveryAddress delAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+					for (FlFulfilmentItemAddr itemDelAddress : delAddress.getFlFulfilmentItemAddr()) {
+						if (itemDelAddress.getScRequestItem().getRequestNoteItemId().longValue()==childItemAddress.getScRequestItem().getRequestNoteItemId().longValue()) {
+							itemDelAddress.setPmVotFund(null);
+							itemDelAddress.setAssetInd(null);
+							itemDelAddress.setPmGlAccount(null);
+							itemDelAddress.setPmPrgActivity(null);
+							itemDelAddress.setPmSubSetia(null);
+						}
+					}
+				}
+			}
+			populateChargeLineData(true);
+			onNodeSelect();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_745079, new String[]{}, 
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			
+	}
+	
+	private void resetItemsWithChargeDrops() {
+		updateSelectedTreeNodes();
+		if(getManagedBean().getSelectedNodes().length==0) {
+			throw new EpException(MessageConst.ERROR_100049);
+		}
+		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
+				for(TreeNode node:getManagedBean().getSelectedNodes()){
+					FlFulfilmentItemAddr selectedItem=(FlFulfilmentItemAddr)node.getData();
+					if(itemAddress.getScRequestItem().getRequestNoteItemId().equals(selectedItem.getScRequestItem().getRequestNoteItemId())){
+						itemAddress.setCoaValue("N");
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	/**
 	 *    call this method  as user click on charge line summary menu or click on charge line update button.
 	 * 
 	 *<p> Populate charge line data.
