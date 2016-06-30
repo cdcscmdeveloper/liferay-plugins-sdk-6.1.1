@@ -293,7 +293,16 @@
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
 						rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
-						action="#{purchaseRequestBackingBean.chargeLineApply}" /></td>
+						action="#{purchaseRequestBackingBean.chargeLineApply}" />
+						<p:commandButton
+						title="#{lbl['lbl.btn.reset']}"
+						value="#{lbl['lbl.btn.reset']}" ajax='true'
+						styleClass="ui-button" process="@this,chargeAss"
+						update="chargeLineTbl,chargeAss,chargeLineSection"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
+						rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
+						action="#{purchaseRequestBackingBean.resetChargeLineDetails}" /></td>
 			</tr>
 		</table>
 		</h:panelGroup>
