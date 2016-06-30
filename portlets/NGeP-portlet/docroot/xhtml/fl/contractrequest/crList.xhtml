@@ -94,24 +94,34 @@
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.tooltip.active.contract.mof']}"/>
 		<p:spacer height="2px"></p:spacer>
 		<h:panelGroup id="searchContractPanel">
-			<p:outputLabel value="#{lbl['lbl.fl.search.contract.list']}" />
-			<p:selectOneMenu value="#{contractRequestBackingBean.managedBean.searchContractListDD}"
-				style="width: 314px;">
-				<f:selectItems value="#{contractRequestBackingBean.getSearchContractCriteriaList()}" />
-				<p:ajax event="change" update="searchContractPanel,searchContractCriteria,searchTypesDD"
-					listener="#{contractRequestBackingBean.getSelectedContractCriteriaDesc}" />
-			</p:selectOneMenu>
-			<p:inputText id="searchContractCriteria" size="28" value="#{contractRequestBackingBean.managedBean.searchContractCriteria}"
-						rendered="#{!contractRequestBackingBean.managedBean.types}"></p:inputText>
-			
-			<p:selectOneMenu id="searchTypesDD" value="#{contractRequestBackingBean.managedBean.searchTypesDD}"
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.search.contract.list']}" /></td>
+					<td><p:selectOneMenu
+							value="#{contractRequestBackingBean.managedBean.searchContractListDD}"
+							style="width: 314px;">
+							<f:selectItems value="#{contractRequestBackingBean.getSearchContractCriteriaList()}" />
+							<p:ajax event="change"
+								update="searchContractPanel,searchContractCriteria,searchTypesDD"
+								listener="#{contractRequestBackingBean.getSelectedContractCriteriaDesc}" />
+						</p:selectOneMenu></td>
+						<p:spacer height="2px"></p:spacer>
+					<td><p:inputText id="searchContractCriteria" size="28"
+							value="#{contractRequestBackingBean.managedBean.searchContractCriteria}"
+							rendered="#{!contractRequestBackingBean.managedBean.types}"></p:inputText>
+						<p:selectOneMenu id="searchTypesDD"
+							value="#{contractRequestBackingBean.managedBean.searchTypesDD}"
 							rendered="#{contractRequestBackingBean.managedBean.types}"
-				style="width: 314px;">
-				<f:selectItems value="#{contractRequestBackingBean.getSearchTypeList()}" />
-			</p:selectOneMenu>
-			<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{contractRequestBackingBean.searchContract}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					update="ctListDt" />
+							style="width: 200px;">
+							<f:selectItems value="#{contractRequestBackingBean.getSearchTypeList()}" />
+						</p:selectOneMenu></td>
+					<td><p:commandButton value="#{lbl['lbl.btn.search']}"
+							action="#{contractRequestBackingBean.searchContract}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="ctListDt" /></td>
+
+				</tr>
+			</table>
 		</h:panelGroup>
 		<p:spacer height="2px"></p:spacer>	
 		<p:dataTable id="ctListDt" var="vCtActiveContract" lazy="true" rows="10" rowIndexVar="rowIndex" styleClass="ctlisttree"
