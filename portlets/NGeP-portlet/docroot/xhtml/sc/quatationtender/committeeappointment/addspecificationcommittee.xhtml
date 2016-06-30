@@ -95,7 +95,12 @@
 					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-							<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+							<!-- Temporary fix for duplicate id using ac:iconTooltip -->
+							&#160;
+							<p:graphicImage id="pnpTT#{index}Img" value="/css/images/design/ico-tooltips.png" />
+							<p:tooltip id="pnpTT#{index}tt" for="pnpTT#{index}Img">
+								<p:outputLabel escape="false" value="#{lbl['lbl.sc.pnp.tooltip']}"  />
+							</p:tooltip>
 						</f:facet>
 						<h:outputText
 							value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
