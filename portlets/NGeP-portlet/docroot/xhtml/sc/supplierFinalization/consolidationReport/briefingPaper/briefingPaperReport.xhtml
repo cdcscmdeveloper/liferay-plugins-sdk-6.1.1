@@ -23,7 +23,7 @@
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk"  disabled="true" />
 				</f:facet>
-				<p:selectBooleanCheckbox id="selectMeeting" value="#{report.selected}" 
+				<p:selectBooleanCheckbox value="#{report.selected}" 
 						disabled="#{!empty report.pmDocument or 
 						  				report.docCategory eq ParameterConst.documentCategoryEndorsementReport}">
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=reportPanel])"  
