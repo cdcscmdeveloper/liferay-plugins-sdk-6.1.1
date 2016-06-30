@@ -558,122 +558,125 @@ public class CreateQtBackingBean extends
 	}
 
 
-/**
- * Sets the procurement mode.based on Estimated price set Procuremnt
- * Mode(Quotation/Tender).
- * 
- * @param scQt
- *            (ScQt scQt)
- */
-public void setProcurementMode(ScQt scQt, BigDecimal amount) {
-	
-	debugLogger("setProcurementMode,@qtNo = "+scQt.getQtNo());
-	IParameterSO parameterSo = null;
-	try {
-		parameterSo = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	/**
+	 * Sets the procurement mode.based on Estimated price set Procuremnt
+	 * Mode(Quotation/Tender).
+	 * 
+	 * @param scQt
+	 *            (ScQt scQt)
+	 */
+	public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 
-		BigDecimal estimatedAmount = scQt.getEstimatedAmount();
-		boolean isQuotationThresHold = isQuotationThresHold(amount);
-		ScQtSupplierCriteria scQtSupplierCriteria = scQt
-				.getScQtSupplierCriteria();
-		String qtType = scQt.getQtType();
-		
-		// Intended Price
-		if (scQt.isPanel()) {
-			BigDecimal panelThreshold = getPanelThresholdAmount();
-			
-			if (null == amount || (amount.compareTo(panelThreshold) <= 0)) {
-				throw new EpException(MessageConst.ERROR_760380,
-						new String[] { SourcingConstants.DF_AMOUNT.format(panelThreshold) });
-			}
-		} else {
-			BigDecimal prThreshold = getPRThresholdAmount();
-			
-			if (null == amount || (amount.compareTo(prThreshold) <= 0)) {
-				throw new EpException(MessageConst.ERROR_760024,
-						new String[] { SourcingConstants.DF_AMOUNT.format(prThreshold) });
-			}
-		}
+		debugLogger("setProcurementMode,@qtNo = " + scQt.getQtNo());
+		IParameterSO parameterSo = null;
+		try {
+			parameterSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 
-		// Procurement Mode
-		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-		parameterReqDTO
-				.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
-		if (isQuotationThresHold) {
-			parameterReqDTO
-					.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
-		} else {
-			parameterReqDTO
-					.setParameterCode(ParameterConst.PROCUREMENT_MODE_TENDER);
-		}
-		ParameterResDTO parameterResDTO = parameterSo
-				.retrieveParameterByTypeAndCode(parameterReqDTO);
-		scQt.setProcurementMode(parameterResDTO.getPmParameter());
-		
-		debugLogger("setProcurementMode, @procurementMode = "+scQt.getProcurementMode());
-		if (estimatedAmount == null) {
-			// QT Type
-			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);	
-			
-			// Open For
-			if (isQuotationThresHold
-					&& isOpenForBumiputraThresHold(amount)) {
-				scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+			BigDecimal estimatedAmount = scQt.getEstimatedAmount();
+			boolean isQuotationThresHold = isQuotationThresHold(amount);
+			boolean isPanel = scQt.isPanel();
+			ScQtSupplierCriteria scQtSupplierCriteria = scQt
+					.getScQtSupplierCriteria();
+			String qtType = scQt.getQtType();
+
+			// Intended Price
+			if (isPanel) {
+				BigDecimal panelThreshold = getPanelThresholdAmount();
+
+				if (null == amount || (amount.compareTo(panelThreshold) <= 0)) {
+					throw new EpException(MessageConst.ERROR_760380,
+							new String[] { SourcingConstants.DF_AMOUNT
+									.format(panelThreshold) });
+				}
 			} else {
-				scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
-			}
+				BigDecimal prThreshold = getPRThresholdAmount();
 
-			// Evaluation Type
-			if (isQuotationThresHold
-					&& isOneTierThresHold(amount)) {
-				scQt.setEvaluationType(null);
-
-				populateEvaluationTypes(scQt, amount);
-			}			
-		} else {
-			if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
-					.equalsIgnoreCase(qtType)) {
-				// Open For - Restricted Tender
-				updateRestrictedTenderOpenFor(scQt);
-			}
-		}
-
-		// All State
-		if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(qtType)) {
-			if (null != scQtSupplierCriteria) {
-				if (!isQuotationThresHold
-						&& getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR) {
-
-					scQtSupplierCriteria.setAllState(true);
-
-				} else {
-					if (null == scQtSupplierCriteria.getLocationLevel()) {
-						scQtSupplierCriteria
-								.setLocationLevel(new PmParameter());
-					}
-
-					scQtSupplierCriteria.setAllState(false);
+				if (null == amount || (amount.compareTo(prThreshold) <= 0)) {
+					throw new EpException(MessageConst.ERROR_760024,
+							new String[] { SourcingConstants.DF_AMOUNT
+									.format(prThreshold) });
 				}
 			}
-		}
 
-		// Reset zones details
-		if (null != scQtSupplierCriteria
-				&& ((scQtSupplierCriteria.isAllState() && ParameterConst.QUOTATION_TENDER_TYPE_OPEN
-						.equalsIgnoreCase(qtType)) || ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
-						.equalsIgnoreCase(qtType))) {
-			if (null != getManagedBean().getExistingSupplierLocationList()) {
-				this.getManagedBean().setSupplierLocationList(
-						getManagedBean().getExistingSupplierLocationList());
-				getManagedBean().setExistingSupplierLocationList(null);
-				getManagedBean().setZoneTrees(null);
+			// Procurement Mode
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO
+					.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
+			if (isQuotationThresHold) {
+				parameterReqDTO
+						.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+			} else {
+				parameterReqDTO
+						.setParameterCode(ParameterConst.PROCUREMENT_MODE_TENDER);
 			}
+			ParameterResDTO parameterResDTO = parameterSo
+					.retrieveParameterByTypeAndCode(parameterReqDTO);
+			scQt.setProcurementMode(parameterResDTO.getPmParameter());
+
+			debugLogger("setProcurementMode, @procurementMode = "
+					+ scQt.getProcurementMode());
+			if (estimatedAmount == null) {
+				// QT Type
+				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+
+				// Open For
+				if (isQuotationThresHold && isOpenForBumiputraThresHold(amount)) {
+					scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+				} else {
+					scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+				}
+
+				// Evaluation Type
+				if (isQuotationThresHold && isOneTierThresHold(amount)) {
+					scQt.setEvaluationType(ParameterConst.EVALUATION_TYPES_ONE_TIER);
+
+					populateEvaluationTypes(scQt, amount);
+				}
+			} else {
+				if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
+						.equalsIgnoreCase(qtType)) {
+					// Open For - Restricted Tender
+					updateRestrictedTenderOpenFor(scQt);
+				}
+			}
+
+			// All State
+			if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN
+					.equalsIgnoreCase(qtType)) {
+				if (null != scQtSupplierCriteria) {
+					if (!isQuotationThresHold
+							&& getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR) {
+
+						scQtSupplierCriteria.setAllState(true);
+
+					} else {
+						if (null == scQtSupplierCriteria.getLocationLevel()) {
+							scQtSupplierCriteria
+									.setLocationLevel(new PmParameter());
+						}
+
+						scQtSupplierCriteria.setAllState(false);
+					}
+				}
+			}
+
+			// Reset zones details
+			if (null != scQtSupplierCriteria
+					&& ((scQtSupplierCriteria.isAllState() && ParameterConst.QUOTATION_TENDER_TYPE_OPEN
+							.equalsIgnoreCase(qtType)) || ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
+							.equalsIgnoreCase(qtType))) {
+				if (null != getManagedBean().getExistingSupplierLocationList()) {
+					this.getManagedBean().setSupplierLocationList(
+							getManagedBean().getExistingSupplierLocationList());
+					getManagedBean().setExistingSupplierLocationList(null);
+					getManagedBean().setZoneTrees(null);
+				}
+			}
+		} finally {
+			parameterSo = null;
 		}
-	} finally {
-		parameterSo = null;
 	}
-}
 
 	/**
 	 * Sets the evaluation type.based on Estimated Price set Evaluation Type.
@@ -697,10 +700,6 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 
 					itemList.add(new SelectItem(evaluationTypeCode, paramDesc
 							.getCodeName()));
-
-					if (scQt.getEvaluationType() == null) {
-						scQt.setEvaluationType(evaluationTypeCode);
-					}
 				}
 			}
 			this.getManagedBean().setEvaluationTypeItem(itemList);
@@ -2078,33 +2077,27 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 	 * @return navigate to busineess owner menu pages.
 	 */
 	public void panelConformationDelete() {
-		this.getManagedBean().getQt().setZonal(false);
-		this.getManagedBean().getQt().setZoneLocationLevel(null);
 		setDataNull();
 		removespecDtls();
-		if (null == this.getManagedBean().getQt().getPmProcurementCategory()) {
-			this.getManagedBean().getQt()
-					.setPmProcurementCategory(new PmParameter());
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		scQt.setZonal(false);
+		scQt.setZoneLocationLevel(null);
+		if (null == scQt.getPmProcurementCategory()) {
+			scQt.setPmProcurementCategory(new PmParameter());
 		}
-		if (null == this.getManagedBean().getQt().getZoneLocationLevel()) {
-			this.getManagedBean().getQt()
-					.setZoneLocationLevel(new PmParameter());
+		if (null == scQt.getZoneLocationLevel()) {
+			scQt.setZoneLocationLevel(new PmParameter());
 		}
-		if (null == this.getManagedBean().getQt().getProcurementTypeCatId()) {
-			this.getManagedBean().getQt()
-					.setProcurementTypeCatId(new PmParameter());
+		if (null == scQt.getProcurementTypeCatId()) {
+			scQt.setProcurementTypeCatId(new PmParameter());
 		}
-		if (this.getManagedBean().getQt().isPanel()) {
-			this.getManagedBean().getQt()
-					.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
-			this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
+		if (scQt.isPanel()) {
 			circularListSelect(new CtCircularVer());
-			if (null == this.getManagedBean().getQt().getItemGroup()) {
-				this.getManagedBean().getQt()
-						.setItemGroup(new CtPanelItemGroup());
+			if (null == scQt.getItemGroup()) {
+				scQt.setItemGroup(new CtPanelItemGroup());
 			}
 		}
-		this.getManagedBean().getQt().setZonal(false);
 		RequestContext.getCurrentInstance().execute("panelApprovalDlgs.hide()");
 	}
 	
@@ -2505,7 +2498,15 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		ScQt scQt = getManagedBean().getQt();
 		
 		if (scQt != null) {
-			List<PmConfigRuleValue> ruleValueList = getPublishingPeriodDaysRuleValues(scQt.getQtType());
+			Date publishDate = null;
+			if (scQt.getCurrentWorkFlowStatus() != null && 
+					super.isQTStatusPublished(scQt.getCurrentWorkFlowStatus().getPmStatus().getStatusId())) {
+				publishDate = scQt.getPublishDate();
+			}
+			List<PmConfigRuleValue> ruleValueList = getPublishingPeriodDaysRuleValues(
+					scQt.getQtType(),
+					scQt.isPanel(),
+					publishDate);
 			Locale locale = new FacesScopes().getUserLocale();
 			CommonUtils commonUtils = new CommonUtils();
 			DecimalFormat dformat = new DecimalFormat(commonUtils
@@ -2541,7 +2542,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		return tooltip.toString();
 	}
 
-	private List<PmConfigRuleValue> getPublishingPeriodDaysRuleValues(String qtType) {
+	private List<PmConfigRuleValue> getPublishingPeriodDaysRuleValues(String qtType, boolean isPanel, Date publishDate) {
 		IRuleSO ruleSO = null;
 
 		try {
@@ -2549,7 +2550,10 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
-			reqDTO.setRuleType(RuleTypeConst.QT_PUBLISHING_PERIOD_DAYS);
+			reqDTO.setRuleType(isPanel ? RuleTypeConst.PANEL_PUBLISHING_PERIOD_DAYS : RuleTypeConst.QT_PUBLISHING_PERIOD_DAYS);
+			/*if (publishDate != null) {
+				reqDTO.setValidityDate(publishDate);
+			}*/
 			List<PmConfigRuleValue> ruleValueList = ruleSO
 					.getRuleValuesByTypeInCurrentDate(reqDTO)
 					.getRuleValueList();
