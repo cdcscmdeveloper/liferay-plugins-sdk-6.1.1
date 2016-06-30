@@ -18,17 +18,17 @@
 			<p:ajax event="change" update="form:flPendingFlDt"
 				listener="#{flOrderBB.getSelectedFlDocStatusDesc}" />
 		</p:selectOneMenu>
-		<p:spacer height="2px"></p:spacer>
+		<p:spacer height="2px" rendered="false"></p:spacer>
 		<p:dataTable value="#{flOrderBB.managedBean.pendingFlDataModel}" lazy="true"
 			var="pending" id="flPendingFlDt" rowIndexVar="rowIndex" width="100%" rows="5">
 			<ac:paginator for="flPendingFlDt" />
-			<p:column headerText="#{lbl['lbl.fl.dopending.order.number']}" style="text-align:center">
+			<p:column headerText="#{lbl['lbl.fl.dopending.order.number']}" style="text-align:center;width:15%">
 				<h:outputText value="#{pending.docNo}" style="float:left;"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}" style="text-align:center" rendered="false">
 				<h:outputText value="#{flOrderBB.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, pending.docType)}" style="float:left;"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.title']}" style="white-space:normal;text-align:center">
+			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.title']}" style="white-space:normal;text-align:center;width:30%">
 				<p:commandLink value="#{pending.flFulfilmentRequest.title}"
 					action="#{flOrderBB.navigateToFlOrderFromDashBoard(rowIndex)}" style="text-align:left;float:left;">
 					<f:setPropertyActionListener
@@ -37,7 +37,7 @@
 						<f:param name="status" value="#{flOrderBB.getStatusDescById(pending.status.statusId)}" />
 				</p:commandLink>				
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.supp.name']}" style="white-space:normal;text-align:center">
+			<p:column headerText="#{lbl['lbl.fl.supp.name']}" style="white-space:normal;text-align:center;width:30%">
 				<h:outputText value="#{pending.flFulfilmentRequest.flSupplierDtl.supplierName}" style="text-align:left;float:left;"/>
 			</p:column>				
 			<p:column headerText="#{lbl['lbl.fl.created.date']}" style="text-align:center" rendered="false">
@@ -45,12 +45,11 @@
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Status" style="white-space:normal;text-align:center">
+			<p:column style="white-space:normal;text-align:center;width:25%">
 				<f:facet name="header">
 					#{lbl['lbl.fl.status']}
 					<p:commandButton id="addBtn" icon="ui-icon-lov" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
-						partialSubmit="true" process="@this" 
-						title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />					
+						partialSubmit="true" process="@this" />					
 					<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom" style="width:250px;">
 			            <p:menuitem value="#{lbl['lbl.txt.all']}" update=":form:flPendingFlDt" action="#{flOrderBB.onFlStatusChange(null)}">
 			            	<f:setPropertyActionListener value="#{null}" target="#{flOrderBB.managedBean.docStatusId}" />
