@@ -1077,6 +1077,8 @@ public class QTCommitteBackingBean extends
 							member1.setChangedDate(null);
 							member1.setScCommittee(tabBean.getScQtCommittee()
 									.getScCommittee());
+							// Assigned the role of chairperson as member - 10380
+							assignMemberRole(member1);
 							committeeMembersList.add(member1);
 						}
 					}
@@ -1180,6 +1182,8 @@ public class QTCommitteBackingBean extends
 							member1.setChangedDate(null);
 							member1.setScCommittee(tabBean.getScQtCommittee()
 									.getScCommittee());
+							// Assigned the role of chairperson as member - 10380
+							assignMemberRole(member1);
 							committeeMembersList.add(member1);
 						}
 					}
@@ -2325,5 +2329,27 @@ public class QTCommitteBackingBean extends
 		super.roleChangedListener(member);
 		
 		setQtMaintencesChanges();
+	}
+	
+	
+	/**
+	 * Set member role for chair person
+	 * 
+	 * @param member
+	 */
+	private void assignMemberRole(ScCommitteeMember member){
+		
+		PmParameter memberRole = member.getMemberRole();
+		if(memberRole != null && ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(
+				memberRole.getParameterCode())){
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO
+					.setParameterType(memberRole.getParameterType());
+			parameterReqDTO.setParameterCode( ParameterConst.COMMITTEE_ROLE_MEMBER);
+			ParameterResDTO resDTO= getParameterSO().retrieveParameterByTypeAndCode(parameterReqDTO);
+			if(resDTO != null && resDTO.isSuccessful()){
+				member.setMemberRole(resDTO.getPmParameter());
+			}
+		}
 	}
 }
