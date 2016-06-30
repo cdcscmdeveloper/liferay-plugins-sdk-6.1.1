@@ -810,10 +810,10 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 * @param e the e
 	 */
 	public void selectedDoctype(AjaxBehaviorEvent e) {
-		String id = (String) e.getComponent().getAttributes().get("value");
+		String docType = (String) e.getComponent().getAttributes().get("value");
 		
 		// reset everything to false
-		if(id!=null && id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+		if(docType!=null && docType.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			this.getManagedBean().setCheckDocType(true);
 		}else{
 			this.getManagedBean().setCheckDocType(false);
@@ -825,20 +825,20 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		this.getManagedBean().setCheckDoInDocType(false);
 		resetSearchCriteria();
 		
-		if(id!=null) {
+		if(docType!=null) {
 			if(getManagedBean().getSearchOrderType().equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				this.getManagedBean().setCheckDocType(true);
 			}
-			if(id.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+			if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 				this.getManagedBean().setCheckPoDocType(true);
 				getProcurementTypeList();
-			}else if(id.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
+			}else if(docType.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
 				this.getManagedBean().setCheckDoDocType(true);
-			}else if(id.equals(ParameterConst.DOCTYPE_INVOICE)){
+			}else if(docType.equals(ParameterConst.DOCTYPE_INVOICE)){
 				this.getManagedBean().setCheckInDocType(true);
 			}
 		}
-		getManagedBean().setSearchDocType(id);
+		getManagedBean().setSearchDocType(docType);
 	}
 	
 	/**

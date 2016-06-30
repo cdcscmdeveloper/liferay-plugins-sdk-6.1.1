@@ -1337,27 +1337,27 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @param e the e
 	 */
 	public void getSelectedFlDocStatusDesc(AjaxBehaviorEvent e) {
-		Long id = (Long) e.getComponent().getAttributes().get("value");
+		Long docStatus = (Long) e.getComponent().getAttributes().get("value");
 
-		if(id!=null) {
+		if(docStatus!=null) {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			getManagedBean().getStatusIds().clear();
-			if(id.equals(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL)){
+			if(docStatus.equals(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL)){
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_PARTIAL_FL);
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
-			}else if(id.equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)){
+			}else if(docStatus.equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)){
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_FULFILMENT);
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
-			}else if(id.equals(FulfilmentStatusConst.PO_PENDING_INVOICE)){
+			}else if(docStatus.equals(FulfilmentStatusConst.PO_PENDING_INVOICE)){
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_INVOICE);
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_INVOICE);
-			}else if(id.equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)){
+			}else if(docStatus.equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)){
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.CO_PENDING_SUPPLIER_ACKNOWLEDGEMENT);
 				getManagedBean().getStatusIds().add(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT);
 			}
 		}
-		if(id == null){
+		if(docStatus == null){
 			getManagedBean().getStatusIds().clear();
 		}
 		getManagedBean().getPendingFlDataModel().reloadData();
