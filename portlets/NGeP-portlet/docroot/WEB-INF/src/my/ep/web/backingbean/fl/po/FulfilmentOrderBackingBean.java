@@ -1338,7 +1338,14 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 */
 	public void getSelectedFlDocStatusDesc(AjaxBehaviorEvent e) {
 		Long docStatus = (Long) e.getComponent().getAttributes().get("value");
-
+		onFlStatusChange(docStatus);
+	}
+	
+	/**
+	 * On status changed.
+	 * @param docStatus
+	 */
+	public void onFlStatusChange(Long docStatus) {
 		if(docStatus!=null) {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
