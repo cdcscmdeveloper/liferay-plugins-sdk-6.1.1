@@ -417,8 +417,13 @@ public class AccessApplBackingBean extends
 			reqDTO.setOutcome(outcome);			
 			AccessApplResDTO resDTO = accessApplSO.saveAccessAppl(reqDTO);
 			if(resDTO.isSuccessful()){
-				if(accessAppl.isBrandNew()){
-					uploadAttachments();
+//				if(accessAppl.isBrandNew()){
+//					uploadAttachments();
+//				}
+				
+				if (this.getManagedBean().getFileEventMapper() != null
+						&& !this.getManagedBean().getFileEventMapper().isEmpty()) {
+					this.getManagedBean().getFileEventMapper().clear();
 				}
 				
 				String messageId = null;
@@ -800,10 +805,22 @@ public class AccessApplBackingBean extends
 						accessApplDoc = applDoc;
 						break;
 					}
-				}				
+				}
+					
 				if(accessApplDoc != null){
 					this.getManagedBean().getFileEventMapper()
 						.put(accessApplDoc, event);
+				}
+				
+				PmAccessApplDoc tempPmUserAttachment = null;
+				FileUploadEvent tempFileUploadEvent = null;
+				for (Map.Entry<PmAccessApplDoc, FileUploadEvent> entry : this
+						.getManagedBean().getFileEventMapper().entrySet()) {
+					tempPmUserAttachment = entry.getKey(); // PmUserAttachment
+					tempFileUploadEvent = entry.getValue(); // FileUploadEvent
+					PmCommonUtil.commonUploadFile(tempFileUploadEvent,
+							PmCommonUtil.getAttachmentPath(tempPmUserAttachment
+									.getFilePath()));
 				}
 			}
 		} catch (Exception e) {
