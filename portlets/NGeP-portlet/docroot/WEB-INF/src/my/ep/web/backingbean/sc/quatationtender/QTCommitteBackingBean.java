@@ -115,7 +115,7 @@ public class QTCommitteBackingBean extends
 
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
-			.getLogger(QTCommitteBackingBean.class);
+			.getLogger(QTCommitteBackingBean.class);	
 
 	/**
 	 * Debug logger.
@@ -2215,13 +2215,13 @@ public class QTCommitteBackingBean extends
 		return email;
 	}
 	
-	public boolean renderECOrTECButton(Long committeStatus, String commType) {
+	public boolean renderECOrTECButton(Long qtStatus, String commType) {
 
 		boolean isRenderBtn = false;
 
 		if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 				.equalsIgnoreCase(commType)
-				&& isEligibleStatusForBtns(committeStatus)
+				&& (!this.getManagedBean().isMaintanceFlow()|| isEligibleStatusForBtns(qtStatus))
 				&& this.getManagedBean().isDeskOfficer()) {
 			isRenderBtn = true;
 			ScQt scQt = this.getManagedBean().getQt();
@@ -2283,9 +2283,10 @@ public class QTCommitteBackingBean extends
 	
 	public boolean isEnableCheckboxes(Long committeStatus, String commType) {
 
-		boolean isEnableCheckboxes = isCommitteInfoEditable(committeStatus,commType);
-		if (isEnableCheckboxes) {
-			isEnableCheckboxes = !renderECOrTECButton(committeStatus, commType);
+		boolean isEnableCheckboxes = !isCommitteInfoEditable(committeStatus,commType);
+		if (!isEnableCheckboxes) {
+			isEnableCheckboxes = renderECOrTECButton(this
+					.getManagedBean().getCurrentStatusId(), commType);
 		}
 		return isEnableCheckboxes;
 	}
