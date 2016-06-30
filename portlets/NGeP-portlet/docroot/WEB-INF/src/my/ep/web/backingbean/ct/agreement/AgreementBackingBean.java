@@ -324,128 +324,129 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 */
 	private void setCtAgreementDetails(ContractAgreementResDTO resDTO) {
 		if (resDTO.getAgreement() != null) {
-				getManagedBean().setCtAgreement(resDTO.getAgreement());
-				getManagedBean().setCtContract(resDTO.getAgreement().getCtContract());
-				getManagedBean().setRemarkList(resDTO.getCtRemarks());
-				getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			getManagedBean().setCtAgreement(resDTO.getAgreement());
+			getManagedBean().setCtContract(resDTO.getAgreement().getCtContract());
+			getManagedBean().setRemarkList(resDTO.getCtRemarks());
+			getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 	
-				if (getManagedBean().getContractVer() == null) {
-					getManagedBean().setContractVer(resDTO.getCtContractVer());
-				}			
-				if (getManagedBean().getAgreementContractVer() == null) {
-						getManagedBean().setAgreementContractVer(resDTO.getAgreementContractVer());
-				}
-				if (getManagedBean().getCtContract().getFulfillmentType() == null) {
-					getManagedBean().getCtContract().setFulfillmentType(new PmParameter());
-				}
-			 	if (!getManagedBean().getCtAgencySigner().isEmpty()) {
-				 	getManagedBean().getCtAgencySigner().clear();
-			 	}
-			 	if (!getManagedBean().getCtSupplierSigner().isEmpty()) {
-			    	getManagedBean().getCtSupplierSigner().clear();
-			 	}
-			 	if (!getManagedBean().getCtSignAgencyWitness().isEmpty()) {
-			    	getManagedBean().getCtSignAgencyWitness().clear();
-			  	}
-			 	if (!getManagedBean().getCtSupplierWitness().isEmpty()) {
-					getManagedBean().getCtSupplierWitness().clear();
-			 	}
+			if (getManagedBean().getContractVer() == null) {
+				getManagedBean().setContractVer(resDTO.getCtContractVer());
+			}
+			if (getManagedBean().getAgreementContractVer() == null) {
+				getManagedBean().setAgreementContractVer(resDTO.getAgreementContractVer());
+			}
+			if (getManagedBean().getCtContract().getFulfillmentType() == null) {
+				getManagedBean().getCtContract().setFulfillmentType(new PmParameter());
+			}
+		 	if (!getManagedBean().getCtAgencySigner().isEmpty()) {
+			 	getManagedBean().getCtAgencySigner().clear();
+		 	}
+		 	if (!getManagedBean().getCtSupplierSigner().isEmpty()) {
+		    	getManagedBean().getCtSupplierSigner().clear();
+		 	}
+		 	if (!getManagedBean().getCtSignAgencyWitness().isEmpty()) {
+		    	getManagedBean().getCtSignAgencyWitness().clear();
+		  	}
+		 	if (!getManagedBean().getCtSupplierWitness().isEmpty()) {
+				getManagedBean().getCtSupplierWitness().clear();
+		 	}
 		 	
-			 	for (CtAgreementParty ctAgreementParty : getManagedBean().getCtAgreement().getCtSignParties()) {
+		 	for (CtAgreementParty ctAgreementParty : getManagedBean().getCtAgreement().getCtSignParties()) {
 		 		
-			 			if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_AGENCY_SIGNER)) {
-			 					/* If agency singer only ministry*/
-			 					if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.MINISTRY.value())){
-			 							ctAgreementParty.setMinistryName(retrieveOrgProfileByProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
-			 					} else {
-			 						ctAgreementParty.setMinistryName(retrieveMinistryByOrgProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
-			 					}
-			 			     
-			 					/* If agency singer  ministry and pengawai pengawal */
-			 					if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DEPARTMENT.value())
-			 							||ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DIVISION.value()) ){
-			 						ctAgreementParty.setPengawaiPengawalName(retrievePegawaiPengawalByOrgProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));	
-			 					} else if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.PENGAWAI_PENGAWAL.value())){
-			 						ctAgreementParty.setPengawaiPengawalName(retrieveOrgProfileByProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
-			 					}
-			 			    
-			 					/* If agency singer  jabatan */
-			 					if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DIVISION.value())){
-			 						ctAgreementParty.setJabatanName(retrieveJabatanByOrgProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
-			 					} else if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DEPARTMENT.value())) {
-			 						ctAgreementParty.setJabatanName(retrieveOrgProfileByProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
-			 					}
-			 			
-			 					/* If agency singer  ptj */
-			 					if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DIVISION.value())){
-			 						ctAgreementParty.setPtjName(ctAgreementParty.getOrgProfile().getOrgName());
-			 					}
-			 			
-			 				getManagedBean().getCtAgencySigner().add(ctAgreementParty);
-			 		
-			 			} else if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_AGENCY_WITNESS)) {
-			 					getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
-		 		
-			 			} else if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER)) {
-			 					getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
-		 		
-			 			} else {
-			 				getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
-			 			}
-			 		}
-			} else {
-				getManagedBean().setCtAgreement(new CtAgreement());
-			}
-		
-		    if (getManagedBean().getUserMap().size() == 0) {
-			    initializeApproverList();
-	     	}
-			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-			if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
-				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-				List<PmUser> invalidApproverList = new ArrayList<PmUser>();
-				for (PmUser approverUser : resDTO.getApproverList())  {
-					Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
-					boolean isValidApprover = false;
-					while (sourceIt.hasNext()) {
-						PmUser user = sourceIt.next();
-						if (user.getUserId() == approverUser.getUserId()) {
-							sourceIt.remove();
-							isValidApprover = true;
-							break;
+	 			if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_AGENCY_SIGNER)) {
+					if (ctAgreementParty.getOrgProfile() != null && ctAgreementParty.getOrgProfile().getOrgTypeCode() != null) {
+		 				/* If agency singer only ministry*/
+						if (ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.MINISTRY.value())) {
+							ctAgreementParty.setMinistryName(retrieveOrgProfileByProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
+						} else {
+							ctAgreementParty.setMinistryName(retrieveMinistryByOrgProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
 						}
+	 					/* If agency singer  ministry and pengawai pengawal */
+	 					if (ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DEPARTMENT.value())
+	 							|| ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DIVISION.value())) {
+	 						ctAgreementParty.setPengawaiPengawalName(retrievePegawaiPengawalByOrgProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));	
+	 					} else if (ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.PENGAWAI_PENGAWAL.value())) {
+	 						ctAgreementParty.setPengawaiPengawalName(retrieveOrgProfileByProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
+	 					}
+	 					/* If agency singer  jabatan */
+	 					if (ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DIVISION.value())) {
+	 						ctAgreementParty.setJabatanName(retrieveJabatanByOrgProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
+	 					} else if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DEPARTMENT.value())) {
+	 						ctAgreementParty.setJabatanName(retrieveOrgProfileByProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
+	 					}
+	 					/* If agency singer  ptj */
+	 					if (ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DIVISION.value())) {
+	 						ctAgreementParty.setPtjName(ctAgreementParty.getOrgProfile().getOrgName());
+	 					}
 					}
-					if (!isValidApprover) {
-            			invalidApproverList.add(approverUser);
-            		}
+	 				if (ctAgreementParty.getOfficer() == null) {
+	 					ctAgreementParty.setOfficer(new PmUser());
+	 				}
+	 				getManagedBean().getCtAgencySigner().add(ctAgreementParty);		 		
+	 			} else if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_AGENCY_WITNESS)) {
+ 					getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);	 		
+	 			} else if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER)) {
+ 					if (ctAgreementParty.getOfficer() == null) {
+	 					ctAgreementParty.setOfficer(new PmUser());
+	 				}
+ 					getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
+	 			} else {
+		 			getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
+	 			}
+	 		}
+		} else {
+			getManagedBean().setCtAgreement(new CtAgreement());
+		}
+		
+	    if (getManagedBean().getUserMap().size() == 0) {
+		    initializeApproverList();
+     	}
+		getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
+			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			List<PmUser> invalidApproverList = new ArrayList<PmUser>();
+			for (PmUser approverUser : resDTO.getApproverList())  {
+				Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+				boolean isValidApprover = false;
+				while (sourceIt.hasNext()) {
+					PmUser user = sourceIt.next();
+					if (user.getUserId() == approverUser.getUserId()) {
+						sourceIt.remove();
+						isValidApprover = true;
+						break;
+					}
 				}
-				if (invalidApproverList.size() > 0) {
-            		getManagedBean().getApproverModel().getTarget().removeAll(invalidApproverList);
-            	}
-			} else {
-				getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
+				if (!isValidApprover) {
+        			invalidApproverList.add(approverUser);
+        		}
 			}
+			if (invalidApproverList.size() > 0) {
+        		getManagedBean().getApproverModel().getTarget().removeAll(invalidApproverList);
+        	}
+		} else {
+			getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
+		}
 		
-			String docType = ParameterConst.DOCTYPE_AGREEMENT;
-			if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
-				docType = ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT;
-			}
+		String docType = ParameterConst.DOCTYPE_AGREEMENT;
+		if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
+			docType = ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT;
+		}
 		
-			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-				ModuleCodeConst.CONTRACT_MANAGEMENT, docType,getManagedBean().getCtContract().getContractNo()));
-			initializeRemarks();
-			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			ctBB.initializeRemarkAndAttachement(getManagedBean().getCtAgreement().getCtWorkflowStatus(),
-				getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-			if (getManagedBean().getContractVer().getCtContractValue().getGstEffDate() != null 
-				&& getManagedBean().getContractVer().getCtContractValue().getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime()) {
+		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+			ModuleCodeConst.CONTRACT_MANAGEMENT, docType,getManagedBean().getCtContract().getContractNo()));
+		initializeRemarks();
+		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+		ctBB.initializeRemarkAndAttachement(getManagedBean().getCtAgreement().getCtWorkflowStatus(),
+			getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+		if (getManagedBean().getContractVer().getCtContractValue().getGstEffDate() != null 
+			&& getManagedBean().getContractVer().getCtContractValue().getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime()) {
 			if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 				getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 			}
 			ctBB.getManagedBean().setGstCheckingGUI(true);
-	    } else {
-	    	ctBB.getManagedBean().setGstCheckingGUI(false);
-	    }
+		} else {
+			ctBB.getManagedBean().setGstCheckingGUI(false);
+		}
 	}
 	
 	/**
@@ -570,251 +571,239 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * 				    invoke base on the action
 	 */
 	private void validateAgreement(String outcome) {
-		
-			for(CtAgreementContent agContent : getManagedBean().getCtAgreement().getAgreementContents()){
-				if(agContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_USER_UPLOAD_DOC)){
-					if(agContent.getTitle() == null ||  agContent.getTitle().isEmpty()){
-				    	getManagedBean().setSelectedTabIndex(0);
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.contents", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					}
-					if(agContent.getFilePath() == null ||  agContent.getFilePath().isEmpty()){
-						getManagedBean().setSelectedTabIndex(0);
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.contents.attach", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					}
+		// Validate for Self Uploaded Agreement Content
+		for (CtAgreementContent agContent : getManagedBean().getCtAgreement().getAgreementContents()) {
+			if (agContent.getContentType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.AGREEMENT_USER_UPLOAD_DOC)){
+				//  Validate for Agreement Content Title
+				if (agContent.getTitle() == null ||  agContent.getTitle().isEmpty()) {
+					getManagedBean().setSelectedTabIndex(0);
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contents",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-			}
-			
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-				if (getManagedBean().getRemarkList().get(0).getRemark()==null ||  
-					getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+				//  Validate for Agreement Content File
+				if (agContent.getFilePath() == null ||  agContent.getFilePath().isEmpty()) {
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contents.attach", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
-		
-			if(getManagedBean().getCtAgencySigner() != null && getManagedBean().getCtAgencySigner().size() > 0) {
-			      for (CtAgreementParty agencySigner : getManagedBean().getCtAgencySigner()) {
-				      if (agencySigner.getOfficer().getUserId() == null) {
-				    	  getManagedBean().setSelectedTabIndex(1);
-					       throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer.agency", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				       }
-			      }
-		    }
-			
-			if(getManagedBean().getCtSupplierSigner() != null && getManagedBean().getCtSupplierSigner().size() > 0) {
-			      for (CtAgreementParty supplierSigner : getManagedBean().getCtSupplierSigner()) {
-				      if(supplierSigner.getOfficer().getUserId() == null) {
-				    	  getManagedBean().setSelectedTabIndex(1);
-					      throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer.supplier", 
-							  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				      }
-			     }
-		     }
-		
-			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-		       if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
-			        if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
-			        	if(getManagedBean().getAgreementContractVer().getSignedDate() == null){
-			        		getManagedBean().setSelectedTabIndex(2);
-			        		 throw new EpException(MessageConst.ERROR_100022, 
-								        new String[]{ResourceBundleUtils.getMessage("lbl.ct.signed.date", 
-										     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			        	}
-			        	if (getManagedBean().getCtAgreement().getSignedPageName() == null) {
-			        		getManagedBean().setSelectedTabIndex(2);
-				             throw new EpException(MessageConst.ERROR_100022, 
-						        new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.signed.page", 
-								     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			        	} else if (getManagedBean().getCtAgreement().getStampedPageName() == null) {
-			        		getManagedBean().setSelectedTabIndex(2);
-				             throw new EpException(MessageConst.ERROR_100022, 
-						        new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.stamped.page", 
-								     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			        	}
-			        }
-		      }
-		
-		     if (getManagedBean().getCtAgencySigner().size() == 0) {
-		    	 getManagedBean().setSelectedTabIndex(1);
-			      throw new EpException(MessageConst.ERROR_100023, 
-					  new String[]{ResourceBundleUtils.getMessage("lbl.ct.agency.signer", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		      } 
-		
-		      if (getManagedBean().getCtSignAgencyWitness().size() == 0) {
-		    	  getManagedBean().setSelectedTabIndex(1);
-			       throw new EpException(MessageConst.ERROR_100023, 
-					  new String[]{ResourceBundleUtils.getMessage("lbl.ct.agency.witness", 
-					    ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	       	 } else {	
-			     for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
-				       if (agencyWitness.getOfficerName() == null || agencyWitness.getOfficerName().isEmpty()) {
-				    	   getManagedBean().setSelectedTabIndex(1);
-					         throw new EpException(MessageConst.ERROR_100022, 
-							    new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.agency.witness", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				      
-				       } if (agencyWitness.getOfficerIc() == null || agencyWitness.getOfficerIc().isEmpty()) {
-				    	   getManagedBean().setSelectedTabIndex(1);
-					          throw new EpException(MessageConst.ERROR_100022, 
-							    new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.agency.witness", 
-								  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				    
-				       } if (agencyWitness.getOfficerPosition() == null || agencyWitness.getOfficerPosition().isEmpty()) {
-				    	   getManagedBean().setSelectedTabIndex(1);
-					          throw new EpException(MessageConst.ERROR_100022, 
-							      new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.agency.witness", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				      }
-	                checkDuplicateAgencyWitness(agencyWitness.getOfficerIc());
-			     }
-		 
-	       	 } if (getManagedBean().getCtSupplierSigner().size() == 0) {
-	       		   getManagedBean().setSelectedTabIndex(1);
-		        	throw new EpException(MessageConst.ERROR_100023, 
-					   new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.signer", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		     } 
-	       	 
-	       	 if(getManagedBean().getCtSupplierWitness().size() == 0) {
-	       		  getManagedBean().setSelectedTabIndex(1);
-		    	   throw new EpException(MessageConst.ERROR_100023,
-					   new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.witness", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		     } else {
-	    	     for(CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
-				      if(supplierWitness.getOfficerName() == null || supplierWitness.getOfficerName().isEmpty()) {
-				    	  getManagedBean().setSelectedTabIndex(1);
-					       throw new EpException(MessageConst.ERROR_100022, 
-							   new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.supplier.witness", 
-								  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				   
-				      } if(supplierWitness.getOfficerIc() == null || supplierWitness.getOfficerIc().isEmpty()) {
-				    	  getManagedBean().setSelectedTabIndex(1);
-					        throw new EpException(MessageConst.ERROR_100022, 
-							   new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.supplier.witness", 
-								  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				   
-				      } if (supplierWitness.getOfficerPosition() == null || supplierWitness.getOfficerPosition().isEmpty()) {
-				    	  getManagedBean().setSelectedTabIndex(1);
-					      throw new EpException(MessageConst.ERROR_100022, 
-							 new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.supplier.witness", 
+		}
+		// Validate for Revise's Remarks
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			if (getManagedBean().getRemarkList().get(0).getRemark() == null  
+					|| getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				      }
-				   checkDuplicateSupplierWitness(supplierWitness.getOfficerIc());
-			      }
-		       }		
-	       }
-		     if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
-				    && getManagedBean().getApproverModel().getTarget().size() == 0) {
-			        //Approver is mandatory for document submission. Please select at least one approver.
-		    	   if(getManagedBean().isUploadStampedAndSignedPage()){
-		    	          getManagedBean().setSelectedTabIndex(3);
-		    	   }else{
-		    	     getManagedBean().setSelectedTabIndex(2);
-		    	   }
-			        throw new EpException(MessageConst.ERROR_750010);
-		      }
+			}
+		}
 		
-		      // Contract Approver cannot approve the draft agreement if:-
-		      // -FD Creation still in process.
-		      if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
-				     && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_DRAFT_AGREEMENT_HT_NAME)) {			
-			         if (getManagedBean().getCtContract().getLatestContractVer() == null) { // FD creation in progress
-			        	 getManagedBean().setSelectedTabIndex(0);
-			        	 throw new EpException(MessageConst.ERROR_750041, 
-						    new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
+		if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+			// Validate for Signed & Stamped Process
+			if (getManagedBean().getTaskName() != null
+					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
+					if (getManagedBean().getAgreementContractVer().getSignedDate() == null){
+						getManagedBean().setSelectedTabIndex(2);
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.signed.date", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					if (getManagedBean().getCtAgreement().getSignedPageName() == null) {
+						getManagedBean().setSelectedTabIndex(2);
+				    	throw new EpException(MessageConst.ERROR_100022, 
+				    			new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.signed.page", 
+				    					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			     	}
+					if (getManagedBean().getCtAgreement().getStampedPageName() == null) {
+						getManagedBean().setSelectedTabIndex(2);
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.stamped.page", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			    	}
+			 	}
+			} else {
+				// Validation for Agency Signer
+				if (getManagedBean().getCtAgencySigner().size() == 0) {
+					getManagedBean().setSelectedTabIndex(1);
+					throw new EpException(MessageConst.ERROR_100023, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.agency.signer", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				if (getManagedBean().getCtAgencySigner() != null && getManagedBean().getCtAgencySigner().size() > 0) {
+					for (CtAgreementParty agencySigner : getManagedBean().getCtAgencySigner()) {
+						if (agencySigner.getOfficerIc() == null) {
+							getManagedBean().setSelectedTabIndex(1);
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer.agency", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+					}
+				}
+				// Validation for Agency Witness
+				if (getManagedBean().getCtSignAgencyWitness().size() == 0) {
+					getManagedBean().setSelectedTabIndex(1);
+					throw new EpException(MessageConst.ERROR_100023, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.agency.witness", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
+					if (agencyWitness.getOfficerName() == null || agencyWitness.getOfficerName().isEmpty()) {
+						getManagedBean().setSelectedTabIndex(1);
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.agency.witness", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					      
+					}
+					if (agencyWitness.getOfficerIc() == null || agencyWitness.getOfficerIc().isEmpty()) {
+						getManagedBean().setSelectedTabIndex(1);
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.agency.witness", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					if (agencyWitness.getOfficerPosition() == null || agencyWitness.getOfficerPosition().isEmpty()) {
+						getManagedBean().setSelectedTabIndex(1);
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.agency.witness", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
+				// Validation for Supplier Signer
+				if (getManagedBean().getCtSupplierSigner().size() == 0) {
+					getManagedBean().setSelectedTabIndex(1);
+					throw new EpException(MessageConst.ERROR_100023, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.signer", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				} 
+				if (getManagedBean().getCtSupplierSigner() != null && getManagedBean().getCtSupplierSigner().size() > 0) {
+					for (CtAgreementParty supplierSigner : getManagedBean().getCtSupplierSigner()) {
+						if (supplierSigner.getOfficerIc() == null) {
+							getManagedBean().setSelectedTabIndex(1);
+							throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer.supplier", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+					}
+				}
+				// Validation for Supplier Witness
+		    	if (getManagedBean().getCtSupplierWitness().size() == 0) {
+		    		getManagedBean().setSelectedTabIndex(1);
+		    		throw new EpException(MessageConst.ERROR_100023,
+		    				new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier.witness", 
+		    						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				for (CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
+					if (supplierWitness.getOfficerName() == null || supplierWitness.getOfficerName().isEmpty()) {
+						getManagedBean().setSelectedTabIndex(1);
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.supplier.witness", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					   
+					}
+					if (supplierWitness.getOfficerIc() == null || supplierWitness.getOfficerIc().isEmpty()) {
+						getManagedBean().setSelectedTabIndex(1);
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.supplier.witness", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					if (supplierWitness.getOfficerPosition() == null || supplierWitness.getOfficerPosition().isEmpty()) {
+						getManagedBean().setSelectedTabIndex(1);
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.supplier.witness", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
+				// Validation for duplicate IC No
+				checkDuplicateAgreementParty();
+			}
+		}
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
+			//Approver is mandatory for document submission. Please select at least one approver.
+			if (getManagedBean().isUploadStampedAndSignedPage()) {
+				getManagedBean().setSelectedTabIndex(3);
+		   	} else {
+		   		getManagedBean().setSelectedTabIndex(2);
+		  	}
+			throw new EpException(MessageConst.ERROR_750010);
+		}
+		
+		// Contract Approver cannot approve the draft agreement if:-
+		// -FD Creation still in process.
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_DRAFT_AGREEMENT_HT_NAME)) {			
+			if (getManagedBean().getCtContract().getLatestContractVer() == null) { // FD creation in progress
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_750041, 
+						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			         }		
-		       }
-		  
-		      // Contract Admin cannot submit the finalist agreement if:-
-		      // -Performance bond not complete
-		      // -FD Update/FD Creation/Change Bank process still in process. 
-		      if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
-				    && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)) {
+			}		
+		}
+		
+		// Contract Admin cannot submit the finalist agreement if:-
+		// -Performance bond not complete
+		// -FD Update/FD Creation/Change Bank process still in process. 
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)) {
 			        
-		    	    IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
-			        ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
-			        reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
-			        ContractAgreementResDTO resDTO = agreementSO.validatePendingFinalistApproval(reqDTO);
+			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
+			reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+			ContractAgreementResDTO resDTO = agreementSO.validatePendingFinalistApproval(reqDTO);
 			        
-			        if(!resDTO.isFdComplete()) {
-			        	getManagedBean().setSelectedTabIndex(0);
-				         throw new EpException(MessageConst.ERROR_750041, 
-						    new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
+			if (!resDTO.isFdComplete()) {
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_750041, 
+						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			        }			
-		     }
+			}			
+		}
 		      
-		   // Contract Approver cannot approve the final agreement if:-
-	       // -Disclaimer is not checked
-	       if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
-			     && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)) {			
-		         if (!getManagedBean().isAgreementDisclaimer()) {
-		        	 getManagedBean().setSelectedTabIndex(0);
-			         throw new EpException(MessageConst.ERROR_750042);
-		         }		
-	       }
-	   }
-	
-	/**
-	 * The method used to validate the identification no 
-	 * of agency witness, supplier signer and supplier witness.
-	 * A warning will display on screen when there is duplicated identification no.
-	 * with agency witness.
-	 *
-	 * @param  icNo  the identification no of agency witness
-	 */
-	private void checkDuplicateAgencyWitness(String icNo) {
-		if (getManagedBean().getAgencyOfficerIcNo() != null 
-				&& !getManagedBean().getAgencyOfficerIcNo().isEmpty()
-				&& getManagedBean().getAgencyOfficerIcNo().contains(icNo)) {
-			throw new EpException(MessageConst.ERROR_755005, new String[]{icNo});
-	       	
-		} else if (getManagedBean().getSupplierOfficerIcNo() != null
-				&& !getManagedBean().getSupplierOfficerIcNo().isEmpty() 
-				&& getManagedBean().getSupplierOfficerIcNo().contains(icNo)){
-			throw new EpException(MessageConst.ERROR_755009, new String[]{icNo});
-		}  else if (getManagedBean().getSupplierWitnessIcNo() != null 
-				&& !getManagedBean().getSupplierWitnessIcNo().isEmpty() 
-				&& getManagedBean().getSupplierWitnessIcNo().contains(icNo)){
-			throw new EpException(MessageConst.ERROR_755012, new String[]{icNo});
-		} 
+		// Contract Approver cannot approve the final agreement if:-
+		// -Disclaimer is not checked
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)) {			
+			if (!getManagedBean().isAgreementDisclaimer()) {
+		    	getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_750042);
+			}		
+		}
 	}
 	
 	/**
-	 * The method used to validate the identification no 
-	 * of agency witness, supplier signer and supplier witness.
-	 * A warning will display on screen when there is duplicated identification no.
-	 * with supplier witness.
+	 * The method used to check duplicated identification no of agreement parties.
+	 * A error will display on screen when there is duplicated identification no.
 	 *
-	 * @param  icNo  the identification no of supplier witness
 	 */
-	private void checkDuplicateSupplierWitness(String icNo) {		
-		if (getManagedBean().getSupplierOfficerIcNo() != null
-				&& !getManagedBean().getSupplierOfficerIcNo().isEmpty() 
-				&& getManagedBean().getSupplierOfficerIcNo().contains(icNo)) {
-			throw new EpException(MessageConst.ERROR_755009, new String[]{icNo});
-		} else if (getManagedBean().getAgencyOfficerIcNo() != null
-				&& getManagedBean().getAgencyOfficerIcNo().isEmpty() 
-				&& getManagedBean().getAgencyOfficerIcNo().contains(icNo)) {
-			throw new EpException(MessageConst.ERROR_755005, new String[]{icNo});
-		} else if (getManagedBean().getAgencyWitnessIcNo() != null 
-				&& getManagedBean().getAgencyWitnessIcNo().isEmpty() 
-				&& getManagedBean().getAgencyWitnessIcNo().contains(icNo)){
-			throw new EpException(MessageConst.ERROR_755011, new String[]{icNo});
-		}
-    }
+	private void checkDuplicateAgreementParty() {
+		List<CtAgreementParty> ctAgreementPartyList = new ArrayList<CtAgreementParty>();
+		ctAgreementPartyList.addAll(getManagedBean().getCtAgencySigner());
+		ctAgreementPartyList.addAll(getManagedBean().getCtSignAgencyWitness());
+		ctAgreementPartyList.addAll(getManagedBean().getCtSupplierSigner());
+		ctAgreementPartyList.addAll(getManagedBean().getCtSupplierWitness());
+		
+		Map<String, String> checkedAgreementPartyMap =  new HashMap<String, String>();
+		for (CtAgreementParty ctAgreementParty : ctAgreementPartyList) {
+			if (checkedAgreementPartyMap.size() > 0) {
+				if (ctAgreementParty.getOfficerIc() != null 
+						&& checkedAgreementPartyMap.containsKey(ctAgreementParty.getOfficerIc())) {
+					getManagedBean().setSelectedTabIndex(1);
+					throw new EpException(MessageConst.ERROR_755003, new String[]{
+							ctAgreementParty.getOfficerIc(),
+							getParameterDesc(ParameterTypeConst.AGREEMENT_PARTY_TYPE,
+									checkedAgreementPartyMap.get(ctAgreementParty.getOfficerIc())),
+							getParameterDesc(ParameterTypeConst.AGREEMENT_PARTY_TYPE,
+									ctAgreementParty.getAgreementPartyType().getParameterCode())});
+				}
+			}
+			checkedAgreementPartyMap.put(
+					ctAgreementParty.getOfficerIc(), ctAgreementParty.getAgreementPartyType().getParameterCode());			
+		}		
+	}
 	
 	/**
 	 * The method used to authenticate user during submit the agreement.
@@ -1004,23 +993,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 	items = new SelectItem[list.size() + 1];
 		 	items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 		 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		 	Map<Long, PmUser> agencyUserMap =  new HashMap<Long, PmUser>();
+		 	//Map<Long, PmUser> agencyUserMap =  new HashMap<Long, PmUser>();
 		 	for (PmUser pmUser : list) {
 		 		items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
-		 		agencyUserMap.put(pmUser.getUserId(),pmUser);
+		 		//agencyUserMap.put(pmUser.getUserId(),pmUser);
 		 	}
-	     
-		 	/*//Reset the agency signer ic no and designation if record didn't exist in the drop down
-		 	for (CtAgreementParty agencySigner: getManagedBean().getCtAgencySigner()) {
-		 		if (agencySigner.getOfficer() == null) {
-		 			agencySigner.setOfficer(new PmUser());
-		 		}
-		 		PmUser user = agencyUserMap.get(agencySigner.getOfficer().getUserId());
-		 		if (user == null) {
-		 			agencySigner.setOfficerIc(null);
-		 			agencySigner.setOfficerPosition(null);
-		 		}
-		 	}*/
 		} finally {
 			userSO = null;
 			reqDTO = null;
@@ -1060,6 +1037,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			             
 				//Reset the supplier  signer ic no and designation if record didn't exist in the drop down						    
 				for (CtAgreementParty supplierSigner: getManagedBean().getCtSupplierSigner()) {
+					if (supplierSigner.getOfficer() == null) {
+						supplierSigner.setOfficer(new PmUser());
+			 		}
 					SmPersonnel personnel = getManagedBean().getSupplierUserMap().get(supplierSigner.getOfficerName());
 					if (personnel == null) {
 						supplierSigner.setOfficerIc(null);
@@ -1673,114 +1653,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				getManagedBean().getSelectedAgreementContent());
 		getManagedBean().setSelectedAgreementContent(null);
 	}
-
-	/**
-	 * The method used for adding representative of signer(s)
-	 * for agency party.
-	 * A warning message will display on screen when duplicate
-	 * representative is added.
-	 */
-	public void addAgencySignerParty() {	   
-		if (!getManagedBean().isValidateWitness()) {
-			for (CtAgreementParty agreementParty  : getManagedBean().getCtAgencySigner()) {
-				if (agreementParty.getOfficer().getUserId() == null) {
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				 }
-			 }
-		     CtAgreementParty ctAgreementParty = new CtAgreementParty();
-		     ctAgreementParty.setAgreementPartyType(new PmParameter());
-		     ctAgreementParty.setAgreementPartyType(getParameterByTypeAndCode(
-		    		 ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
-	         ctAgreementParty.setOfficer(new PmUser());
-		     if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-		    	 ctAgreementParty.setOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile());
-		     }else{
-		    	 ctAgreementParty.setOrgProfile(new PmOrgProfile());
-		     }
-		     getManagedBean().getCtAgencySigner().add(ctAgreementParty);
-		} else {
-			 throw new EpException(MessageConst.ERROR_755003);
-		}
-	}
-	
-	/**
-	 * The method used for adding representative of witness(s)
-	 * for agency party.
-	 * A warning message will display on screen when duplicate
-	 * representative is added.
-	 */
-	public void addAgencyWitnes(int temp) {	
-		
-		if(getManagedBean().getCtSignAgencyWitness().size() > 0 ) { 
-		     for(CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
-			      if (agencyWitness.getOfficerName() == null || agencyWitness.getOfficerName().isEmpty()) {
-				      throw new EpException(MessageConst.ERROR_100022, 
-						   new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.agency.witness", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			    
-			      } if (agencyWitness.getOfficerIc() == null || agencyWitness.getOfficerIc().isEmpty()) {
-				         throw new EpException(MessageConst.ERROR_100022, 
-						     new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.agency.witness", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		      
-			      } if (agencyWitness.getOfficerPosition() == null || agencyWitness.getOfficerPosition().isEmpty()) {
-				           throw new EpException(MessageConst.ERROR_100022, 
-						      new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.agency.witness", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			      }
-		     }
-	     }
-		
-		getManagedBean().setValidateWitness(false);
-		getManagedBean().setAgencyOfficerIcNo(new ArrayList<String>());			
-		if (getManagedBean().getCtAgencySigner() != null && !getManagedBean().getCtAgencySigner().isEmpty()) {
-	       	for(CtAgreementParty agencySigner: getManagedBean().getCtAgencySigner()) {
-	       		getManagedBean().getAgencyOfficerIcNo().add(agencySigner.getOfficerIc());
-	       	}
-		}
-		
-		getManagedBean().setAgencyWitnessIcNo(new ArrayList<String>());
-		if (getManagedBean().getCtSignAgencyWitness() != null 
-				&& !getManagedBean().getCtSignAgencyWitness().isEmpty()) {
-			for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
-				if(getManagedBean().getAgencyOfficerIcNo() != null 
-						&& !getManagedBean().getAgencyOfficerIcNo().isEmpty()
-	       				&& getManagedBean().getAgencyOfficerIcNo().contains(agencyWitness.getOfficerIc())) {
-					getManagedBean().setValidateWitness(true);
-					throw new EpException(MessageConst.ERROR_755005, new String[]{agencyWitness.getOfficerIc()});
-				} else if (getManagedBean().getAgencyWitnessIcNo() != null 
-						&& !getManagedBean().getAgencyWitnessIcNo().isEmpty()
-       		    		&& getManagedBean().getAgencyWitnessIcNo().contains(agencyWitness.getOfficerIc())) {
-					getManagedBean().setValidateWitness(true);
-					throw new EpException(MessageConst.ERROR_755005, new String[]{agencyWitness.getOfficerIc()});
-       		    }  else if (getManagedBean().getSupplierOfficerIcNo() != null 
-       		    		&& !getManagedBean().getSupplierOfficerIcNo().isEmpty()
-       		    		&& getManagedBean().getSupplierOfficerIcNo().contains(agencyWitness.getOfficerIc())) {
-                	 getManagedBean().setValidateWitness(true);
-	                 throw new EpException(MessageConst.ERROR_755009, new String[]{agencyWitness.getOfficerIc()});
-   		        }  else if (getManagedBean().getSupplierWitnessIcNo() != null 
-   		        		&& !getManagedBean().getSupplierWitnessIcNo().isEmpty()
-   		        		&& getManagedBean().getSupplierWitnessIcNo().contains(agencyWitness.getOfficerIc())) {
-   		        	getManagedBean().setValidateWitness(true);
-   		        	throw new EpException(MessageConst.ERROR_755012, new String[]{agencyWitness.getOfficerIc()});
-       		    } else {
-       		    	getManagedBean().getAgencyWitnessIcNo().add(agencyWitness.getOfficerIc());
-	            }
-			}
-		}
-		if (!getManagedBean().isValidateWitness() && temp == 2) {			
-			CtAgreementParty ctAgreementParty = new CtAgreementParty();
-	        ctAgreementParty.setAgreementPartyType(new PmParameter());
-	        ctAgreementParty.getAgreementPartyType().setParameterId(
-	        		getParameterByTypeAndCode(ParameterTypeConst.AGREEMENT_PARTY_TYPE, 
-	        				ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId());
-	        getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
-	    }
-	}
-	
-	
 	
 	/**
 	 * The method used to generate the contract signer information once
@@ -1789,8 +1661,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * representative is selected.
 	 */
 	public void setUserValueAgency(CtAgreementParty ctParty) {
-		int counter = 0;
-		getManagedBean().setValidateWitness(false);
 		for (CtAgreementParty party : getManagedBean().getCtAgencySigner()) {
 			if (ctParty.getOfficer() == null || ctParty.getOfficer().getUserId() == null) {
 				ctParty.setOfficerIc(null);
@@ -1805,22 +1675,30 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				party.setOfficerIc(resDTO.getPmUser().getIdentificationNo());
 				party.setOfficerPosition(resDTO.getPmUser().getDesignation());
 			}
-			if( ctParty.getOfficer() != null  && ctParty.getOfficer().getUserId() != null 
-					&& ctParty.getOrgProfile().getOrgProfileId().equals(party.getOrgProfile().getOrgProfileId())
-					&& ctParty.getOfficer().getUserId().equals(party.getOfficer().getUserId())) {
-				counter++;
-				if (counter == 2) {
-					getManagedBean().setValidateWitness(true);
-					throw new EpException(MessageConst.ERROR_755003, new String[]{ctParty.getOfficerIc()});
+		}
+	}
+	
+	/**
+	 * The method used for adding representative of witness(s)
+	 * for agency party.
+	 * A warning message will display on screen when duplicate
+	 * representative is added.
+	 */
+	public void addAgencyWitnes() {
+		if (getManagedBean().getCtSignAgencyWitness().size() > 0 ) {
+			for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
+				if (StringUtils.isBlank(agencyWitness.getOfficerName())
+						&& StringUtils.isBlank(agencyWitness.getOfficerIc())
+						&& StringUtils.isBlank(agencyWitness.getOfficerPosition())) {
+					return;
 				}
-				
-			} else if(getManagedBean().getAgencyWitnessIcNo() != null && ctParty.getOfficerIc() != null
-					&& !getManagedBean().getAgencyWitnessIcNo().isEmpty()
-					&& getManagedBean().getAgencyWitnessIcNo().contains(ctParty.getOfficerIc())) {
-				getManagedBean().setValidateWitness(true);
-				throw new EpException(MessageConst.ERROR_755004, new String[]{ctParty.getOfficerIc()});
 			}
 		}
+		CtAgreementParty ctAgreementParty = new CtAgreementParty();
+        ctAgreementParty.setAgreementPartyType(
+        		getParameterByTypeAndCode(ParameterTypeConst.AGREEMENT_PARTY_TYPE, 
+        				ParameterTypeConst.AGREEMENT_AGENCY_WITNESS));
+        getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
 	}
 	
 	/**
@@ -1830,93 +1708,17 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * representative is added.
 	 */
 	public void addSupplierSigner() {
-		if (!getManagedBean().isValidateWitness()) {
-			CtAgreementParty ctAgreementParty = new CtAgreementParty();
-			ctAgreementParty.setAgreementPartyType(new PmParameter());
-			ctAgreementParty.getAgreementPartyType().setParameterId(
-					getParameterByTypeAndCode(ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER).getParameterId());
-			if (ctAgreementParty.getOfficer() == null) {
-				ctAgreementParty.setOfficer(new PmUser());
-			}
-			getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
-		} else {
-			throw new EpException(MessageConst.ERROR_755003);
+		CtAgreementParty ctAgreementParty = new CtAgreementParty();
+		ctAgreementParty.setAgreementPartyType(
+				getParameterByTypeAndCode(ParameterTypeConst.AGREEMENT_PARTY_TYPE, 
+						ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER));
+		if (ctAgreementParty.getOfficer() == null) {
+			ctAgreementParty.setOfficer(new PmUser());
 		}
+		getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
 	}
 	
-	/**
-	 * The method used for adding representative of witness(s)
-	 * for supplier party.
-	 * A warning message will display on screen when duplicate
-	 * representative is added.
-	 */
-	public void addSupplierWitness(int temp) {
-		
-		if(getManagedBean().getCtSupplierWitness().size() > 0) {
-		       for (CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
-			           if (supplierWitness.getOfficerName() == null || supplierWitness.getOfficerName().isEmpty()) {
-				            throw new EpException(MessageConst.ERROR_100022, 
-						        new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.supplier.witness", 
-								    ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			         
-			           } if (supplierWitness.getOfficerIc() == null || supplierWitness.getOfficerIc().isEmpty()) {
-				              throw new EpException(MessageConst.ERROR_100022, 
-						         new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.supplier.witness", 
-								     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			         
-			           } if (supplierWitness.getOfficerPosition() == null || supplierWitness.getOfficerPosition().isEmpty()) {
-				            throw new EpException(MessageConst.ERROR_100022, 
-						      new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.supplier.witness", 
-								 ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			           }
-		         }
-		   }
-		
-		getManagedBean().setValidateWitness(false);
-		getManagedBean().setSupplierOfficerIcNo(new ArrayList<String>());
-		if (getManagedBean().getCtSupplierSigner() != null && !getManagedBean().getCtSupplierSigner().isEmpty()) {
-			for(CtAgreementParty supplierSigner: getManagedBean().getCtSupplierSigner()) {
-				getManagedBean().getSupplierOfficerIcNo().add(supplierSigner.getOfficerIc());
-			}
-     	}
-		
-		getManagedBean().setSupplierWitnessIcNo(new ArrayList<String>());
-		if (getManagedBean().getCtSupplierWitness() != null && !getManagedBean().getCtSupplierWitness().isEmpty()) {
-			for (CtAgreementParty suplierWitness : getManagedBean().getCtSupplierWitness()) {
-				if (getManagedBean().getSupplierOfficerIcNo() != null
-						&& !getManagedBean().getSupplierOfficerIcNo().isEmpty() 
-	       	       		&& getManagedBean().getSupplierOfficerIcNo().contains(suplierWitness.getOfficerIc())) {
-					getManagedBean().setValidateWitness(true);
-					throw new EpException(MessageConst.ERROR_755009, new String[]{suplierWitness.getOfficerIc()});
-				} else if (getManagedBean().getSupplierWitnessIcNo() != null 
-						&& !getManagedBean().getSupplierWitnessIcNo().isEmpty()
-	       	        	&& getManagedBean().getSupplierWitnessIcNo().contains(suplierWitness.getOfficerIc())) {
-					getManagedBean().setValidateWitness(true);
-					throw new EpException(MessageConst.ERROR_755010, new String[]{suplierWitness.getOfficerIc()});
-				} else if (getManagedBean().getAgencyOfficerIcNo() != null 
-						&& !getManagedBean().getAgencyOfficerIcNo().isEmpty()
-	       	       		&& getManagedBean().getAgencyOfficerIcNo().contains(suplierWitness.getOfficerIc())) {
-					getManagedBean().setValidateWitness(true);
-   		       		throw new EpException(MessageConst.ERROR_755005, new String[]{suplierWitness.getOfficerIc()});
-   		       	} else if (getManagedBean().getAgencyWitnessIcNo() != null
-   		       			&& !getManagedBean().getAgencyWitnessIcNo().isEmpty()
-   		       			&& getManagedBean().getAgencyWitnessIcNo().contains(suplierWitness.getOfficerIc())) {
-	       	     	getManagedBean().setValidateWitness(true);
-	       	     	throw new EpException(MessageConst.ERROR_755011, new String[]{suplierWitness.getOfficerIc()});
-   		       	} else {
-   		       		getManagedBean().getSupplierWitnessIcNo().add(suplierWitness.getOfficerIc());
-   		       	}
-			}
-		}
-		if(!getManagedBean().isValidateWitness() && temp == 2) {
-			CtAgreementParty ctAgreementParty = new CtAgreementParty();
-			ctAgreementParty.setAgreementPartyType(new PmParameter());
-			ctAgreementParty.getAgreementPartyType().setParameterId(
-					getParameterByTypeAndCode(ParameterTypeConst.AGREEMENT_PARTY_TYPE,
-							ParameterTypeConst.AGREEMENT_SUPPLIER_WITNESS).getParameterId());
-			getManagedBean().getCtSupplierWitness().add(ctAgreementParty);	    
-		}
-	}
+
 	
 	/**
 	 * The method used to generate the contract signer information once
@@ -1926,59 +1728,42 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 */
 	public void setSupplierUserValue(CtAgreementParty ctParty) {
 		SmPersonnel personnel = getManagedBean().getSupplierUserMap().get(ctParty.getOfficerName());
-		getManagedBean().setValidateWitness(false);
+		
 		if (personnel != null) {
 			ctParty.setOfficerIc(personnel.getIdentificationNo());
 			ctParty.setOfficerPosition(personnel.getDesignation());
+			if (personnel.getPmUser() != null) {
+				ctParty.setOfficer(personnel.getPmUser());
+			}				
 		} else {
 			ctParty.setOfficerIc(null);
 			ctParty.setOfficerPosition(null);
-		}
-	
-		int counter = 0;
-		for (CtAgreementParty party : getManagedBean().getCtSupplierSigner()) {
-			if (ctParty.getOfficerName() == null) {
-			    	party.setOfficerIc(null);
-				   party.setOfficerPosition(null);
-			}
-			if (ctParty.getOfficerIc() != null && party.getOfficerIc() != null
-					&&  party.getOfficerIc().equalsIgnoreCase(ctParty.getOfficerIc())) {
-				counter++;
-				if (counter == 2) {
-					getManagedBean().setValidateWitness(true);
-					throw new EpException(MessageConst.ERROR_755007, new String[]{ctParty.getOfficerIc()});
-				}
-			} else if (getManagedBean().getSupplierOfficerIcNo() != null && ctParty.getOfficerIc() != null
-					&& !getManagedBean().getSupplierOfficerIcNo().isEmpty() && getManagedBean().getSupplierOfficerIcNo().contains(ctParty.getOfficerIc())) {
-				getManagedBean().setValidateWitness(true);
-				throw new EpException(MessageConst.ERROR_755008, new String[]{ctParty.getOfficerIc()});
-			}
+			ctParty.setOfficer(null);
 		}
 	}
 	
 	/**
-	 * The method used for validating the PTJ of agency.
-	 * A warning will display on screen when there is duplicated
-	 * agency PTJ.
-	 *
-	 * @param  index       the current index of newly added record
-	 * @param  agencyList  the list of agency that on screen
-	 * @param  ptjProfile  the ptj profile that newly added
+	 * The method used for adding representative of witness(s)
+	 * for supplier party.
+	 * A warning message will display on screen when duplicate
+	 * representative is added.
 	 */
-	public void validateDuplicateAgencyPtj(Long orgProfileId ) {
-		
-		    int counter =0;
-			for (int i = 0; i < getManagedBean().getCtAgencySigner().size(); i++) {
-				CtAgreementParty agreementParty = getManagedBean().getCtAgencySigner().get(i);
-				if (agreementParty.getOrgProfile().getOrgProfileId().equals(orgProfileId)) {
-					counter++;
-					if (counter == 2) {
-						throw new EpException(MessageConst.ERROR_755013,
-								new String[] { agreementParty.getOrgProfile().getOrgName()});
-					}
+	public void addSupplierWitness() {		
+		if (getManagedBean().getCtSupplierWitness().size() > 0) {
+			for (CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
+				if (StringUtils.isBlank(supplierWitness.getOfficerName())
+						&& StringUtils.isBlank(supplierWitness.getOfficerIc())
+						&& StringUtils.isBlank(supplierWitness.getOfficerPosition())) {
+					return;
 				}
 			}
-	 }
+		}		
+		CtAgreementParty ctAgreementParty = new CtAgreementParty();
+		ctAgreementParty.setAgreementPartyType(
+				getParameterByTypeAndCode(ParameterTypeConst.AGREEMENT_PARTY_TYPE,
+						ParameterTypeConst.AGREEMENT_SUPPLIER_WITNESS));
+		getManagedBean().getCtSupplierWitness().add(ctAgreementParty);		
+	}
 	
 	/**
 	 * The method used to check whether approver setting tab menu is required to display.

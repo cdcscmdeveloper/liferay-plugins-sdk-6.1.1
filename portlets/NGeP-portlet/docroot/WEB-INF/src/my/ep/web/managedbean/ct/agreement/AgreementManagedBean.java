@@ -55,7 +55,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private int varIndex;
 	private boolean uploadFinalAgreement;
 	private boolean uploadStampedAndSignedPage;
-	private boolean validateWitness;
 	private boolean agencySignerDropDown;
 	private boolean approveFinalAgreement = false;
 	private boolean agreementDisclaimer = false;
@@ -226,20 +225,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	 */
 	public void setUploadStampedAndSignedPage(boolean uploadStampedAndSignedPage) {
 		this.uploadStampedAndSignedPage = uploadStampedAndSignedPage;
-	}
-	
-	/**
-	 * @return the validateWitness
-	 */
-	public boolean isValidateWitness() {
-		return validateWitness;
-	}
-	
-	/**
-	 * @param validateWitness the validateWitness to set
-	 */
-	public void setValidateWitness(boolean validateWitness) {
-		this.validateWitness = validateWitness;
 	}
 
 	/**

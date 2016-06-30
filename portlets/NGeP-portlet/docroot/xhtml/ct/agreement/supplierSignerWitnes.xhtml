@@ -132,7 +132,7 @@
               <div class="ppRightBtn"> 
 		            <p:commandButton id="addSupplierWitnessBtn" value="#{lbl['lbl.btn.add']}" 
 		                 process="@form" 
-		                 action="#{agreementBackingBean.addSupplierWitness(2)}" update=":form:supplierWitnesTable"
+		                 action="#{agreementBackingBean.addSupplierWitness()}" update=":form:supplierWitnesTable"
 		                 oncomplete="supplierWitnesWidget.paginator.endLink.click();">
 		    	        <p:tooltip for="addSupplierWitnessBtn">
 				             <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.witness']}" escape="false" />
