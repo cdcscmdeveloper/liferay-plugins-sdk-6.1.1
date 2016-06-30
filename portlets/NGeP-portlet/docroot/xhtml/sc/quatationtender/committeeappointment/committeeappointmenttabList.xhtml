@@ -46,7 +46,7 @@
 					</p:commandButton>
 				
 				<c:if test="#{isQTStatusChecklistAndAfter}">
-					<ui:param name="isRender" value="#{qTCommitteBackingBean.renderECOrTECButton(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"></ui:param>
+					<ui:param name="isRender" value="#{qTCommitteBackingBean.renderECOrTECButton(statusId,committe.committeeType.parameterCode)}"></ui:param>
 					<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}" styleClass="BtnSpacing"
 						process="@this, specificationcommitteeid"
 						update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
