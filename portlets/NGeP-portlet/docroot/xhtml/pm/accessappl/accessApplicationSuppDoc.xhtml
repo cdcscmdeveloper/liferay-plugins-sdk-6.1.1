@@ -26,7 +26,7 @@
 						</p:commandLink>
 						<p:commandLink value="#{accessApplDoc.fileName}" process="@this"
 										immediate="true" ajax="false"
-										styleClass="blue_font" disabled="#{accessApplDoc.brandNew}"
+										styleClass="blue_font"
 										rendered="#{not empty accessApplDoc.fileName}" 
 										action="#{accessApplBackingBean.downloadAttachment(accessApplDoc)}" />
 		
