@@ -106,7 +106,7 @@
 								listener="#{contractRequestBackingBean.getSelectedContractCriteriaDesc}" />
 						</p:selectOneMenu></td>
 						<p:spacer height="2px"></p:spacer>
-					<td><p:inputText id="searchContractCriteria" size="28"
+					<td><p:inputText id="searchContractCriteria" size="28" disabled="#{empty contractRequestBackingBean.managedBean.searchContractListDD}"
 							value="#{contractRequestBackingBean.managedBean.searchContractCriteria}"
 							rendered="#{!contractRequestBackingBean.managedBean.types}"></p:inputText>
 						<p:selectOneMenu id="searchTypesDD"
@@ -123,7 +123,6 @@
 				</tr>
 			</table>
 		</h:panelGroup>
-		<p:spacer height="2px"></p:spacer>	
 		<p:dataTable id="ctListDt" var="vCtActiveContract" lazy="true" rows="10" rowIndexVar="rowIndex" styleClass="ctlisttree"
 			value="#{contractRequestBackingBean.managedBean.activeContractDataModel}">
 			<ac:paginator for="ctListDt" />
