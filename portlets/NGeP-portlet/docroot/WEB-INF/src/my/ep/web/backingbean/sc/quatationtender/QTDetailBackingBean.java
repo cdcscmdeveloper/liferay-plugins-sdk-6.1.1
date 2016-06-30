@@ -169,10 +169,7 @@ import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.component.menuitem.MenuItem;
-import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DualListModel;
-import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 import org.quartz.SchedulerException;
 
@@ -2069,7 +2066,6 @@ public class QTDetailBackingBean extends
 					.getTabList();
 
 			ParameterHelper parameterHelper = ParameterHelper.getInstance();
-			MenuModel menuModel = new DefaultMenuModel();
 			if (requiredApproval != null) {
 				for (ScQtApproval qtApproval : requiredApproval) {
 					qtApproval = checkIsApprovalExists(qtApproval,
@@ -2211,46 +2207,30 @@ public class QTDetailBackingBean extends
 					}
 				}
 			}
-			int approvalTabIndex = 0;
+			
 			for (TabBean approvalTabBean : tabBeans) {
-				MenuItem approvalItem = new MenuItem();
-				approvalItem.setValue(approvalTabBean.getTitleName());
-				approvalItem.setUpdate("@this");
-				approvalItem.setPartialSubmit(true);
-				approvalItem.setProcess("@this");
-				approvalItem.setTransient(true);
-				approvalItem
-						.setOncomplete("approvalTabChangeAction([ {name : 'selectedApprovalTabIndex', value : "
-								+ approvalTabIndex + "}]);");
-
 				if (ParameterConst.APPROVAL_CATEGORY_OTHERS
 						.equals(approvalTabBean.getTabType())) {
-					approvalItem.setTitle(ResourceBundleUtils.getMessage(
+					approvalTabBean.setTooltip(ResourceBundleUtils.getMessage(
 							"lbl.sc.qt.approval."
 									+ approvalTabBean.getTabType()
 											.toLowerCase() + ".tooltip",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
 				}
-
-				menuModel.addMenuItem(approvalItem);
-				approvalTabIndex++;
 			}
-			this.getManagedBean().setApprovalMenuModel(menuModel);
 
 			// Added by Fara on 03092014 - Fix for Approval tab if no data for
 			// approval
-			if (menuModel.getContents() != null
-					&& menuModel.getContents().size() > 0) {
-
+			if (CollectionUtils.isNotEmpty(tabBeans)) {
 				this.getManagedBean().setSelectedApprovalTabBean(
 						tabBeans.get(this.getManagedBean()
 								.getSelectedApprovalTabIndex()));
 				this.getManagedBean().setScQtApproval(
 						this.getManagedBean().getSelectedApprovalTabBean()
 								.getScQtApproval());
-				this.getManagedBean().setTabList(tabBeans);
 			}
+			this.getManagedBean().setTabList(tabBeans);
 		} finally {
 			detailSO = null;
 		}
@@ -3494,14 +3474,10 @@ public class QTDetailBackingBean extends
 	/**
 	 * Approval tab change action.
 	 */
-	public void approvalTabChangeAction() {
+	public void approvalTabChangeAction(int selectedApprovalTabIndex) {
 		if (log.isDebugEnabled()) {
 			log.debug("ApprovalTabChange Action");
 		}
-
-		Integer selectedApprovalTabIndex = Integer.valueOf(FacesContext
-				.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("selectedApprovalTabIndex"));
 
 		TabBean approvalTabBean = this.getManagedBean().getTabList()
 				.get(selectedApprovalTabIndex);

@@ -44,7 +44,6 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -775,9 +774,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The selected tab bean. */
 	public TabBean selectedTabBean;
-
-	/** The approval menu model. */
-	public MenuModel approvalMenuModel;
 
 	/** The selected approval tab index. */
 	public int selectedApprovalTabIndex;
@@ -5744,25 +5740,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedTabBean(TabBean selectedTabBean) {
 		this.selectedTabBean = selectedTabBean;
-	}
-
-	/**
-	 * Gets the approval menu model.
-	 * 
-	 * @return the approval menu model
-	 */
-	public MenuModel getApprovalMenuModel() {
-		return approvalMenuModel;
-	}
-
-	/**
-	 * Sets the approval menu model.
-	 * 
-	 * @param approvalMenuModel
-	 *            the new approval menu model
-	 */
-	public void setApprovalMenuModel(MenuModel approvalMenuModel) {
-		this.approvalMenuModel = approvalMenuModel;
 	}
 
 	/**
