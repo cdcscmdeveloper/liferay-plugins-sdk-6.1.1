@@ -79,11 +79,8 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultMenuModel;
-import org.primefaces.model.MenuModel;
 import org.quartz.SchedulerException;
 
 /**
@@ -449,22 +446,7 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().getQt()
 					.setScQtCommittees(qtcomSearchBean.getResultList());
 			this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
-			MenuModel menuModel = new DefaultMenuModel();
-			int zoneTabIndex = 0;
-			for (TabBean tabBean : tabBeans) {
-				MenuItem committeItem = new MenuItem();
-				committeItem.setValue(tabBean.getTitleName());
-				committeItem.setPartialSubmit(true);
-				committeItem.setProcess("@this");
-				committeItem.setUpdate("@this");
-				// committeItem.setUpdate("@form");
-				committeItem
-						.setOncomplete("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : "
-								+ zoneTabIndex + "}]);");
-				menuModel.addMenuItem(committeItem);
-				zoneTabIndex++;
-			}
-			getManagedBean().setMenuModel(menuModel);
+			
 			if (tabBeans.size() > 0) {
 				getManagedBean().setSelectedTabBean(tabBeans.get(0));
 			}

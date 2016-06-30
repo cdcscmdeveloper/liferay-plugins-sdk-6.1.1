@@ -107,7 +107,6 @@ import my.ep.web.type.sc.quationtender.CloneAll;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
-import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -764,10 +763,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The financial spec list. */
 	private List<ScQtCheckList> financialSpecList;
-
-	// Added code to move to tabmenus..
-	/** The menu model. */
-	private MenuModel menuModel;
 
 	/** The selected tab index. */
 	public int selectedTabIndex;
@@ -5683,25 +5678,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedCloneBOList(List<ScQt> selectedCloneBOList) {
 		this.selectedCloneBOList = selectedCloneBOList;
-	}
-
-	/**
-	 * Gets the menu model.
-	 * 
-	 * @return the menu model
-	 */
-	public MenuModel getMenuModel() {
-		return menuModel;
-	}
-
-	/**
-	 * Sets the menu model.
-	 * 
-	 * @param menuModel
-	 *            the new menu model
-	 */
-	public void setMenuModel(MenuModel menuModel) {
-		this.menuModel = menuModel;
 	}
 
 	/**
