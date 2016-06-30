@@ -91,7 +91,29 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.tooltip.active.contract.mof']}"/>	
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.tooltip.active.contract.mof']}"/>
+		<p:spacer height="2px"></p:spacer>
+		<h:panelGroup id="searchContractPanel">
+			<p:outputLabel value="#{lbl['lbl.fl.search.contract.list']}" />
+			<p:selectOneMenu value="#{contractRequestBackingBean.managedBean.searchContractListDD}"
+				style="width: 314px;">
+				<f:selectItems value="#{contractRequestBackingBean.getSearchContractCriteriaList()}" />
+				<p:ajax event="change" update="searchContractPanel,searchContractCriteria,searchTypesDD"
+					listener="#{contractRequestBackingBean.getSelectedContractCriteriaDesc}" />
+			</p:selectOneMenu>
+			<p:inputText id="searchContractCriteria" size="28" value="#{contractRequestBackingBean.managedBean.searchContractCriteria}"
+						rendered="#{!contractRequestBackingBean.managedBean.types}"></p:inputText>
+			
+			<p:selectOneMenu id="searchTypesDD" value="#{contractRequestBackingBean.managedBean.searchTypesDD}"
+							rendered="#{contractRequestBackingBean.managedBean.types}"
+				style="width: 314px;">
+				<f:selectItems value="#{contractRequestBackingBean.getSearchTypeList()}" />
+			</p:selectOneMenu>
+			<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{contractRequestBackingBean.searchContract}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					update="ctListDt" />
+		</h:panelGroup>
+		<p:spacer height="2px"></p:spacer>	
 		<p:dataTable id="ctListDt" var="vCtActiveContract" lazy="true" rows="10" rowIndexVar="rowIndex" styleClass="ctlisttree"
 			value="#{contractRequestBackingBean.managedBean.activeContractDataModel}">
 			<ac:paginator for="ctListDt" />
@@ -118,6 +140,9 @@
 				<h:outputText value="#{vCtActiveContract.scheduleNo == null ? vCtActiveContract.phaseNo : vCtActiveContract.scheduleNo}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.physical.treasury.circular']}" style="width:100px;white-space:normal;text-align:center">
+				<h:outputText value="#{vCtActiveContract.physicalCircularNo}" style="float:left;text-align:left;" 
+				rendered="#{vCtActiveContract.physicalCircularNo != null}"/>
+				<h:outputText value="&lt;br/&gt;" escape="false" rendered="#{vCtActiveContract.physicalNo != null}" />
 				<h:outputText value="#{vCtActiveContract.circularNo}" style="float:left;text-align:left;"/>
 			</p:column>
 			<p:column style="width:60px;white-space:normal;text-align:center">

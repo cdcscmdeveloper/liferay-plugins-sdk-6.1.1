@@ -18,6 +18,7 @@ import org.primefaces.model.TreeNode;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -58,6 +59,7 @@ import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.fl.pr.FLCtSupplierItemVO;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -130,6 +132,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
 	private CtContract selectedContract;
+	private Long searchContractListDD;
+	private String searchContractCriteria;
+	private String searchTypesDD;
+	private boolean fulfilmentTypes;
+	private boolean types;
 
 	//getSI
 	private FlShippingInstr shippingInstr;
@@ -325,6 +332,80 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		public ISearchResultBean<VCtActiveContract> pageChangeListener(ISearchBean<VCtActiveContract> searchBean) {
 			try {
 				searchBean.setUseEntityClass(true);
+				if(searchContractListDD != null){
+					if(searchContractListDD == 2){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"contract_no",
+										SearchOperator.OPERATOR_LIKE.value(), 
+										searchContractCriteria));
+					}else if(searchContractListDD == 3){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"physical_no",
+										SearchOperator.OPERATOR_LIKE.value(), 
+										searchContractCriteria));
+					}else if(searchContractListDD == 4){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"contract_name",
+										SearchOperator.OPERATOR_LIKE.value(), 
+										searchContractCriteria));
+					}else if(searchContractListDD == 5){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"physical_circular_no",
+										SearchOperator.OPERATOR_LIKE.value(), 
+										searchContractCriteria));
+					}else if(searchContractListDD == 6){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"circular_no",
+										SearchOperator.OPERATOR_LIKE.value(), 
+										searchContractCriteria));
+					}else if(searchContractListDD == 9){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"supplier_name",
+										SearchOperator.OPERATOR_LIKE.value(), 
+										searchContractCriteria));
+					}
+					
+				}
+				
+				if(searchTypesDD != null){
+					if(searchTypesDD.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"contract_type",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										searchTypesDD));
+					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"contract_type",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										searchTypesDD));
+					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"fulfilment_type",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										searchTypesDD));
+					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"fulfilment_type",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										searchTypesDD));
+					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"fulfilment_type",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										searchTypesDD));
+					}
+				}
 				
 				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				UserReqDTO userReqDTO = new UserReqDTO();
@@ -2819,6 +2900,46 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setSelectedDeliveryFullAddr(List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr) {
 		this.selectedDeliveryFullAddr = selectedDeliveryFullAddr;
+	}
+
+	public Long getSearchContractListDD() {
+		return searchContractListDD;
+	}
+
+	public void setSearchContractListDD(Long searchContractListDD) {
+		this.searchContractListDD = searchContractListDD;
+	}
+
+	public boolean isTypes() {
+		return types;
+	}
+
+	public void setTypes(boolean types) {
+		this.types = types;
+	}
+
+	public String getSearchContractCriteria() {
+		return searchContractCriteria;
+	}
+
+	public void setSearchContractCriteria(String searchContractCriteria) {
+		this.searchContractCriteria = searchContractCriteria;
+	}
+
+	public boolean isFulfilmentTypes() {
+		return fulfilmentTypes;
+	}
+
+	public void setFulfilmentTypes(boolean fulfilmentTypes) {
+		this.fulfilmentTypes = fulfilmentTypes;
+	}
+
+	public void setSearchTypesDD(String searchTypesDD) {
+		this.searchTypesDD = searchTypesDD;
+	}
+
+	public String getSearchTypesDD() {
+		return searchTypesDD;
 	}
 
 }
