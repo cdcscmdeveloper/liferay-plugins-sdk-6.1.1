@@ -134,9 +134,8 @@
 				rowIndexVar="index">
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
-					style="width : 5%;">
-					<p:outputLabel value="#{index + 1}"
-						style="float: left;white-space: normal;" />
+					style="width : 5%;text-align: center !important;">
+					<h:outputText value="#{index + 1}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 95%;">
@@ -144,11 +143,12 @@
 					<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
 					
 					<p:outputPanel rendered="#{table.pmDocument.licenseReq}">
-						<table width="100%">
+						<br /><br />
+						<table style="width: 60%;">
 							<tr>
 								<td style="border-style: none !important;">
-									<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.no']}" />
-									<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+									<h:outputText value="#{lbl['lbl.sm.suppdoc.license.no']}" style="font-weight: bold !important;"/>
+									<h:outputText value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}" style="font-weight: bold !important;"/>
 								</td>
 								<td style="border-style: none !important;">
 									<p:inputText value="#{table.licenseNo}" size="20" id="licenseNoOfflineId" required="#{table.pmDocument.mandatory}" label="#{lbl['lbl.sm.suppdoc.license.no']}" >
@@ -160,8 +160,8 @@
 							</tr>
 							<tr>
 								<td style="border-style: none !important;">
-									<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.effdate']}" />
-									<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+									<h:outputText value="#{lbl['lbl.sm.suppdoc.license.effdate']}" style="font-weight: bold !important;"/>
+									<h:outputText value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}" style="font-weight: bold !important;"/>
 								</td>
 								<td style="border-style: none !important;">
 									<p:calendar id="licenseEffDateOfflineId"
@@ -177,8 +177,8 @@
 										display="icon" />
 								</td>
 								<td style="border-style: none !important;">
-									<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.expdate']}" />
-									<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+									<h:outputText value="#{lbl['lbl.sm.suppdoc.license.expdate']}" style="font-weight: bold !important;"/>
+									<h:outputText value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}" style="font-weight: bold !important;"/>
 								</td>
 								<td style="border-style: none !important;">
 									<p:calendar id="licenseExpDateOfflineId" disabled="#{empty table.licenseEffDate}"
@@ -196,6 +196,7 @@
 								</td>
 							</tr>
 						</table>
+						<br />
 					</p:outputPanel>
 					
 				</p:column>
