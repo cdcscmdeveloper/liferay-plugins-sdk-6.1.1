@@ -85,13 +85,18 @@
 					update=":form" onstart="blockWidget.show()" 
 					oncomplete="if (!args.validationFailed) confirmDialog.show();" />
 	</div>
-	<ac:confirmationPopup id="confirmDialog"
-			widget="confirmDialog"
-			okAction="accessApplResendActivationBB.resendAccessApplActivationEmail()"
-			width="500" height="150"
-			title="#{lbl['lbl.sm.userprofile.confirmation']}"
-			content="#{lbl['lbl.sm.req.reactivation.confirmation.msg']}" 
-			update="@form" />	
+	<p:confirmDialog id="confirmDialog" closable="true"
+		message="#{lbl['lbl.sm.req.reactivation.confirmation.msg']}"
+		header="#{lbl['lbl.sm.userprofile.confirmation']}" severity="alert"
+		widgetVar="confirmDialog">
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" update="@form"
+				action="#{accessApplResendActivationBB.resendAccessApplActivationEmail()}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
+		</div>
+	</p:confirmDialog>
+	
 	<ac:lovPopup />
 	</p:panel>
 	</ui:define>
