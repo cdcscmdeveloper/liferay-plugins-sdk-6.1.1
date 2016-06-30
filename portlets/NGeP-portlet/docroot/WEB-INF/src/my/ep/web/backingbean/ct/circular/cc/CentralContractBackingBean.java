@@ -1530,8 +1530,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			  getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 			  getManagedBean().setPtjCodeNameSearchValues(null);
 			  getManagedBean().setAutoUpdate(true);
-			  exemptedOrgDataModel.resetData();
-			  this.getManagedBean().setSelectedOrgsProfile(null);
+			//  exemptedOrgDataModel.resetData();
+			  this.getManagedBean().setSelectedOrgsProfile(new ArrayList<PmOrgProfile>());
 			  RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.hide()");
 		}
 		
@@ -1706,8 +1706,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     					 }
     				 }
     				 getManagedBean().setCtCircularPidReasons(null);
-    				 getManagedBean().setSelectAll(false);
-    			
     			 } else if(tableType.equalsIgnoreCase("PERSON")){
     				 Iterator<CtContactPerson> contactPersonIterator = getManagedBean().getCircularVer().getCtContactPersons().iterator();
   				     while(contactPersonIterator.hasNext()){
@@ -1717,9 +1715,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
   					    }
   				    } 
   				     getManagedBean().setSelectedContactPersons(null);
-  				   getManagedBean().setSelectAll(false);
-    			
-    			 }else if(tableType.equalsIgnoreCase("ORG")){
+  				 }else if(tableType.equalsIgnoreCase("ORG")){
     				 Iterator<CtExemptedOrg> ctExemptedOrgs = getManagedBean().getCircularVer().getCtExemptedOrgs().iterator();
   				     while(ctExemptedOrgs.hasNext()){
   				    	CtExemptedOrg  ctExemptedOrg = ctExemptedOrgs.next();
@@ -1727,8 +1723,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
   					    	ctExemptedOrgs.remove();
   					    }
   				    } 
-    		      getManagedBean().setSelectedExemptedOrgs(null);
-    		      getManagedBean().setSelectAll(false);
     			 } else if(tableType.equalsIgnoreCase("CANCEL")){
     				 Iterator<CtCancelCircular> ctCancelCirculars = getManagedBean().getCircularVer().getCtCancelCircularList().iterator();
   				     while(ctCancelCirculars.hasNext()){
@@ -1738,11 +1732,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
   					    }
   				    } 
   				     getManagedBean().setSelectedCancelledCircularList(null);
-  				   getManagedBean().setSelectAll(false);
   				  if(getManagedBean().getCancelledCircularList() != null && getManagedBean().getCancelledCircularList().size() == 0){
   					    getManagedBean().setCancelledCircularList(null);
   				    }
     			 } 
+    			  getManagedBean().setSelectAll(false);
     			 getManagedBean().setButtonHideActiveDel(true);
     		} catch (Exception e) {
     			e.printStackTrace();
