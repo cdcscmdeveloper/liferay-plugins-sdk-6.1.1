@@ -11,7 +11,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:selectOneMenu
+		<p:selectOneMenu rendered="false"
 			value="#{flOrderBB.managedBean.docStatusId}"
 			style="width: 314px;">
 			<f:selectItems
@@ -19,14 +19,14 @@
 			<p:ajax event="change" update="form:flPendingDoListDt"
 				listener="#{flOrderBB.getSelectedDocStatusDesc}" />
 		</p:selectOneMenu>
-		<p:spacer height="2px"></p:spacer>
+		<p:spacer height="2px" rendered="false"></p:spacer>
 		<p:dataTable value="#{flOrderBB.managedBean.pendingDoDataModel}" lazy="true"
 			var="pending" id="flPendingDoListDt" rowIndexVar="rowIndex" width="100%" rows="5">
 			<ac:paginator for="flPendingDoListDt" />
 			<p:column headerText="#{lbl['lbl.fl.dopending.order.number']}" style="text-align:center">
 				<h:outputText value="#{pending.docNo}" style="float:left;"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}" style="text-align:center">
+			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}" style="text-align:center" rendered="false">
 				<h:outputText value="#{flOrderBB.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, pending.docType)}" style="float:left;"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.title']}" style="white-space:normal;text-align:center">
@@ -41,12 +41,12 @@
 			<p:column headerText="#{lbl['lbl.fl.ptj.name']}" style="white-space:normal;text-align:center">
 				<h:outputText value="#{pending.flFulfilmentRequest.preparedOrgProfile.orgName}" style="text-align:left;float:left;"/>
 			</p:column>			
-			<p:column headerText="#{lbl['lbl.fl.created.date']}" style="text-align:center">
+			<p:column headerText="#{lbl['lbl.fl.created.date']}" style="text-align:center" rendered="false">
 				<h:outputText value="#{pending.createdDate}" style="float:left;">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Status" style="white-space:normal;text-align:center">
+			<p:column headerText="Status" style="white-space:normal;text-align:center" rendered="false">
 				<h:outputText value="#{flOrderBB.getStatusDescById(pending.status.statusId)}" style="text-align:left;float:left;" />
 			</p:column>
 		</p:dataTable>
