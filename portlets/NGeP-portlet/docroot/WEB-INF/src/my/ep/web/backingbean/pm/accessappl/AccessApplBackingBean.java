@@ -421,10 +421,10 @@ public class AccessApplBackingBean extends
 //					uploadAttachments();
 //				}
 				
-				if (this.getManagedBean().getFileEventMapper() != null
-						&& !this.getManagedBean().getFileEventMapper().isEmpty()) {
-					this.getManagedBean().getFileEventMapper().clear();
-				}
+//				if (this.getManagedBean().getFileEventMapper() != null
+//						&& !this.getManagedBean().getFileEventMapper().isEmpty()) {
+//					this.getManagedBean().getFileEventMapper().clear();
+//				}
 				
 				String messageId = null;
 				PmAccessAppl savedAccessAppl = resDTO.getAccessAppl();
@@ -808,20 +808,23 @@ public class AccessApplBackingBean extends
 				}
 					
 				if(accessApplDoc != null){
-					this.getManagedBean().getFileEventMapper()
-						.put(accessApplDoc, event);
+					PmCommonUtil.commonUploadFile(event,
+							PmCommonUtil.getAttachmentPath(accessApplDoc
+									.getFilePath()));
+//					this.getManagedBean().getFileEventMapper()
+//						.put(accessApplDoc, event);
 				}
 				
-				PmAccessApplDoc tempPmUserAttachment = null;
-				FileUploadEvent tempFileUploadEvent = null;
-				for (Map.Entry<PmAccessApplDoc, FileUploadEvent> entry : this
-						.getManagedBean().getFileEventMapper().entrySet()) {
-					tempPmUserAttachment = entry.getKey(); // PmUserAttachment
-					tempFileUploadEvent = entry.getValue(); // FileUploadEvent
-					PmCommonUtil.commonUploadFile(tempFileUploadEvent,
-							PmCommonUtil.getAttachmentPath(tempPmUserAttachment
-									.getFilePath()));
-				}
+//				PmAccessApplDoc tempPmUserAttachment = null;
+//				FileUploadEvent tempFileUploadEvent = null;
+//				for (Map.Entry<PmAccessApplDoc, FileUploadEvent> entry : this
+//						.getManagedBean().getFileEventMapper().entrySet()) {
+//					tempPmUserAttachment = entry.getKey(); // PmUserAttachment
+//					tempFileUploadEvent = entry.getValue(); // FileUploadEvent
+//					PmCommonUtil.commonUploadFile(tempFileUploadEvent,
+//							PmCommonUtil.getAttachmentPath(tempPmUserAttachment
+//									.getFilePath()));
+//				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
