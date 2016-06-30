@@ -257,6 +257,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}">
 					<p:inputTextarea value="#{scLoiTerm.termDesc}" rows="2"
+					onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
 						maxlength="500" style=" margin-bottom:5px; width:92%"
 						rendered="#{scLoiTerm.brandNew and !isPendingNegotiationStatus}" />
 

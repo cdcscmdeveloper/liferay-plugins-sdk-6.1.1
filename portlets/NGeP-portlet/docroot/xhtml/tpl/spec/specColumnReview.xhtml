@@ -38,6 +38,6 @@
 		</p:commandButton>
 	</p:column>
 	<p:column style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}" rendered="#{isContentTypeReview}">
-		<p:inputTextarea style="width:188px;" value="#{question.clReviewRemark}" rows="1" maxlength="500" />
+		<p:inputTextarea style="width:188px;" value="#{question.clReviewRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" />
 	</p:column>
 </ui:composition>

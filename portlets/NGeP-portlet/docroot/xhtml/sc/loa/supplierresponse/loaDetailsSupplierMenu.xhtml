@@ -150,6 +150,7 @@
 						readonly="#{lOADetailBackingBean.managedBean.readOnly}" rows="5"
 						value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.address}"
 						style=" margin-bottom:5px; width: 266px;" required="true"
+						onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						maxlength="200" label="#{lbl['lbl.sc.address']}" /> <p:message
 						id="addressMsg" for="address" display="icon" /></td>
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />

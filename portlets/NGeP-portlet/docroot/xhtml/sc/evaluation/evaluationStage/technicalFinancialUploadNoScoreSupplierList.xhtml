@@ -43,7 +43,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
-				<p:inputTextarea rows="2" cols="40"
+				<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 					value="#{complianceTechnicalSupplier.remark}" disabled="true"></p:inputTextarea>
 			</p:column>
 		</p:dataTable>

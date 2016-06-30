@@ -47,6 +47,6 @@
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:130px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}">
-		<p:inputTextarea style="width:118px;" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" />
+		<p:inputTextarea style="width:118px;" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" />
 	</p:column>
 </ui:composition>

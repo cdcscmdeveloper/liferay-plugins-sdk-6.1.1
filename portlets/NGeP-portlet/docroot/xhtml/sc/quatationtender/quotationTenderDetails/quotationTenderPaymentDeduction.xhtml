@@ -108,6 +108,7 @@
 						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
 						<p:inputTextarea id="otherClause" value="#{scQtDeductionClause.clauseDesc}"
 							label="#{lbl['lbl.sc.deduction.clause']}" required="true"
+							onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
 							cols="140" rows="2" maxlength="500" style=" margin-bottom:5px;width :95%;" >
 							<p:ajax event="keyup" />
 						</p:inputTextarea>

@@ -114,6 +114,7 @@
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}" 
 						    required="true" id="clauseId"
 						    label="#{lbl['lbl.sc.deduction.clause']}"
+						    onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
 							rows="2" maxlength="500" style=" margin-bottom:5px; width:790px"
 							rendered="#{isEditableStatus}">
 							<p:ajax event="keyup" />
