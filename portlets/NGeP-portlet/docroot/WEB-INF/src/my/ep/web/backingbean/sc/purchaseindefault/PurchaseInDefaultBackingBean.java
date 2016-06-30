@@ -51,6 +51,7 @@ import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.circular.cc.CtCircularItem;
 import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -167,6 +168,7 @@ public class PurchaseInDefaultBackingBean extends
 			purchaseInDefaultReqDTO.setContractItemId(vCmSupplierItem.getDocId());
 			PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.getContractItemByContractItemId(purchaseInDefaultReqDTO);
 			CtContractItem contractItem = resDTO.getCtContractItem();
+			CtCircularItem circularItem = resDTO.getCtCircularItem();
 			
 			// approved by
 			getManagedBean().setApprovedBy(resDTO.getApprovedBy());
@@ -189,7 +191,10 @@ public class PurchaseInDefaultBackingBean extends
 				retriveContractSupplierGstInfomation(scPurchaseInDefault
 						.getContractedItem());
 				getManagedBean().setCheckContractItem(Boolean.TRUE);
-				
+				if(circularItem != null) {
+					scPurchaseInDefault.setCircularItem(circularItem);
+					getManagedBean().setCheckCentralContractItem(true);
+				}
 			}
 			populatePidReason(resDTO.getCtPidReasonList(), resDTO.getCircularPidReasonList());
 //			retrieveReasonDescListByCategory(Boolean.TRUE);
@@ -1067,6 +1072,10 @@ public class PurchaseInDefaultBackingBean extends
 			 */
 			retriveContractSupplierGstInfomation(purchaseInDefault.getContractedItem());
 			getManagedBean().setCheckContractItem(Boolean.TRUE);
+		}
+		
+		if(purchaseInDefault.getCircularItem() != null) {
+			getManagedBean().setCheckCentralContractItem(true);    
 		}
 		// panel item
 		if (purchaseInDefault.getPanelItem() != null) {

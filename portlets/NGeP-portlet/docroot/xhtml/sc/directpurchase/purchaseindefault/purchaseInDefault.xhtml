@@ -63,11 +63,20 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.min.qty']}" /></td>
 				<td><p:inputText disabled="true" style="text-align:right;"
+						rendered="#{!purchaseInDefaultBackingBean.managedBean.checkCentralContractItem}" 
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.minimumOrderQty}"
 						size="43">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<p:inputText disabled="true" style="text-align:right;"
+						rendered="#{purchaseInDefaultBackingBean.managedBean.checkCentralContractItem}" 
+						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.circularItem.minimumOrderQty}"
+						size="43">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>	
+				</td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.smGstSupplier.gstDeclaredDate}"
@@ -107,11 +116,20 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.max.proc.amt']}" /></td>
 				<td><p:inputText disabled="true" style="text-align:right;"
+						rendered="#{!purchaseInDefaultBackingBean.managedBean.checkCentralContractItem}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.maxProcureAmt}"
 						size="43">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<p:inputText disabled="true" style="text-align:right;"
+						rendered="#{purchaseInDefaultBackingBean.managedBean.checkCentralContractItem}"
+						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.circularItem.maxProcureAmt}"
+						size="43">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>
+				</td>
 			</tr>
 		</table>
 	</p:panel>

@@ -95,6 +95,8 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 
 	/** The check contract item. */
 	private boolean checkContractItem;
+	
+	private boolean checkCentralContractItem;
 
 	/** The title checker. */
 	private boolean titleChecker = Boolean.TRUE;
@@ -483,6 +485,20 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckContractItem(boolean checkContractItem) {
 		this.checkContractItem = checkContractItem;
+	}
+
+	/**
+	 * @return the checkCentralContractItem
+	 */
+	public boolean isCheckCentralContractItem() {
+		return checkCentralContractItem;
+	}
+
+	/**
+	 * @param checkCentralContractItem the checkCentralContractItem to set
+	 */
+	public void setCheckCentralContractItem(boolean checkCentralContractItem) {
+		this.checkCentralContractItem = checkCentralContractItem;
 	}
 
 	/**
