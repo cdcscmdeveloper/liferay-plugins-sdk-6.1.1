@@ -28,10 +28,14 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.batch.IDIInterfaceSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotDanaSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogReqDto;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogResDto;
+import my.ep.dto.pm.common.interfaceptj.InterfaceVotDanaReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceVotReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.DIInterfaceLog;
@@ -963,7 +967,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 		log.info("processAllVendors");
 		String returnUrl = null;
-
+		
 		if (this.getManagedBean().getSelectedProgActList() != null) {
 			log.info("***************ProgActList***SIZE******************>>"
 					+ this.getManagedBean().getSelectedProgActList().size());
@@ -1001,12 +1005,49 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		} else if (this.getManagedBean().getSelectedDanaList() != null) {
 			log.info("***********DanaList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedDanaList().size());
+
+			
+			IInterfaceVotDanaSO interfaceVotDanaSO = (IInterfaceVotDanaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceVotDanaSO.class);
+			
+			InterfaceVotDanaReqDTO reqDTO = new InterfaceVotDanaReqDTO();
+			
+			reqDTO.setFileName("1000GLDNA40000120160527001.GPG");
+			reqDTO.setInterfaceDanaLs(this.getManagedBean().getSelectedDanaList());
+			
+			try {
+				interfaceVotDanaSO.saveOrUpdateVotDanaList(reqDTO);
+			} catch (Exception e) {
+				System.out.println("error:"+e.getMessage());
+			}
+			
+			
+			this.getManagedBean().setSelectedDanaList(null);
+
 		} else if (this.getManagedBean().getSelectedPpList() != null) {
 			log.info("************PpList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedPpList().size());
 		} else if (this.getManagedBean().getSelectedVotList() != null) {
 			log.info("***********VotList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedVotList().size());
+
+			
+			
+			
+			IInterfaceVotSO interfacevotSO = (IInterfaceVotSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceVotSO.class);
+			
+			InterfaceVotReqDTO reqDTO = new InterfaceVotReqDTO();
+			reqDTO.setFileName("1000GLVOT40000120160527001.gpg");
+			
+			reqDTO.setInterfaceVotLs(this.getManagedBean().getSelectedVotList());
+			try {
+				interfacevotSO.saveOrUpdateVotFundList(reqDTO);
+			} catch (Exception e) {
+				
+				System.out.println("*******"+e.getMessage());
+			}
+			
+			this.getManagedBean().setSelectedVotList(null);
+
 		}
 		returnUrl = NAV_TO_MAIN;
 		if (getSelectedAllProcessListStatus()) {
