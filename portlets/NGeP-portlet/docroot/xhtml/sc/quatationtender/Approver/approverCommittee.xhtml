@@ -31,8 +31,6 @@
 		</p:panel>
 	</c:if>
 	
-	<p:remoteCommand name="committeTabChangeAction" update="@form" partialSubmit="true" process="@form" action="#{qTDetailBB.committeTabChangeAction}" />
-	
 	<p:tabMenu activeIndex="#{approvalBackingBean.managedBean.selectedCommitteeTabIndex}">
 		<c:forEach var="tabBean" varStatus="status"
 			items="#{approvalBackingBean.managedBean.scCommitteeMemberTabList}">
