@@ -111,6 +111,7 @@
 		
 		<h:panelGroup id="ansPG">
 			<p:inputTextarea id="answerText" style="width:138px;" value="#{tplSpecAnswer.answerText}" 
+			onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 				rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired and isValidationReq}" rows="1" maxlength="200"
 				label="#{lbl[answerlbl]}">
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerTextMsg" />
@@ -162,6 +163,6 @@
 		</h:outputText>
 	</p:column>
 	<p:column style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.note']}" rendered="#{!(isSpecTypeFinancial and !isSpecificationReq)}">
-		<p:inputTextarea style="width:188px;" value="#{tplSpecAnswer.answerRemark}" rows="1" maxlength="500" />
+		<p:inputTextarea style="width:188px;" value="#{tplSpecAnswer.answerRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"/>
 	</p:column>
 </ui:composition>
