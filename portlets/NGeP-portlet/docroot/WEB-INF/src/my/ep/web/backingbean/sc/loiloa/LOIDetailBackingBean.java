@@ -103,6 +103,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
@@ -907,16 +908,15 @@ public class LOIDetailBackingBean extends
 	 */
 	public void tabMenuListener(Integer selectedTabIndex) {
 		debugLogger("tabMenuListener");
+		
 		if (selectedTabIndex.equals(0)) {
 			getManagedBean().setSelectedTabIndex(0);
-
 		} else if (selectedTabIndex.equals(1)) {
 			getManagedBean().setSelectedTabIndex(1);
 		} else if (selectedTabIndex.equals(2)) {
 			getManagedBean().setSelectedTabIndex(2);
 		} else if (selectedTabIndex.equals(3)) {
 			getManagedBean().setSelectedTabIndex(3);
-
 		}
 	}
 
@@ -2549,6 +2549,23 @@ public class LOIDetailBackingBean extends
 					}
 				}				
 			}
+			
+			if (isSubmit) {
+				ScLoi scLoi = this.getManagedBean().getScLoi();
+				if (CollectionUtils.isNotEmpty(
+							scLoi.getScLoiReports())) {
+					for (ScLoiReport report 
+								: scLoi.getScLoiReports()) {
+						if (report.getScLoiReportAttachment() == null && 
+								ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+									.equals(report.getDefinationType().getParameterCode())) {
+							tabMenuListener(3);
+							throw new EpException(MessageConst.ERROR_760415, 
+												  new String[] { report.getTitle() });
+						}
+					}
+				}
+			}
 		}
 		
 		ScQtFinalization scQtFinalization = getManagedBean()
@@ -2558,6 +2575,10 @@ public class LOIDetailBackingBean extends
 		reqDTO.setScLoi(getManagedBean().getRecommendedLoi());
 		reqDTO.setScQtFinalization(scQtFinalization);
 		reqDTO.setScLois(getManagedBean().getLois());
+		reqDTO.setScLoiReports(getManagedBean()
+								.getScLoi().getScLoiReports());
+		reqDTO.setDeletedScLoiReports(getManagedBean()
+								.getDeletedScLoiReports());
 
 		// Save EC/TEC/FEC activities details.
 		List<ScQtCommitteeActivity> ecActivityList = new ArrayList<ScQtCommitteeActivity>();
@@ -3589,6 +3610,29 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
+	 * Checkbox event to select Supplier Finalization Report under Briefing Paper tab
+	 * 
+	 * @param ScQtFinalizationReport
+	 *            the ScQtFinalizationReport to set
+	 */
+	public void selectReportEvent(ScLoiReport report) {
+		debugLogger("selectReportEvent - Checkbox select");
+
+		List<ScLoiReport> selectedLoiReports
+					= getManagedBean().getSelectedScLoiReports();
+		if (selectedLoiReports == null) {
+			selectedLoiReports= new ArrayList<ScLoiReport>();
+			getManagedBean().setSelectedScLoiReports(
+								   selectedLoiReports);
+		}
+		if (report.isSelected()) {
+			selectedLoiReports.add(report);
+		} else {
+			selectedLoiReports.remove(report);
+		}
+	}	
+	
+	/**
 	 * Adds the loi report action.
 	 */
 	public void addLoiReportAction() {
@@ -3604,7 +3648,7 @@ public class LOIDetailBackingBean extends
 
 		ScLoiReport scLoiReport = new ScLoiReport();
 		scLoiReport.setScLoi(scLoi);
-		scLoiReport.setScLoiReportAttachment(new ScLoiReportAttachment());
+//		scLoiReport.setScLoiReportAttachment(new ScLoiReportAttachment());
 
 		IParameterSO parameterSO = null;
 		try {
@@ -3630,27 +3674,29 @@ public class LOIDetailBackingBean extends
 	 * Delete loi report.
 	 */
 	public void deleteLoiReport() {
-		List<ScLoiReport> loiReportList = getManagedBean().getRecommendedLoi().getScLoiReports();
-		List<ScLoiReport> localReportList=new ArrayList<ScLoiReport>();
-		if(CollectionUtils.isNotEmpty(loiReportList)){
-			for(ScLoiReport loiReport:loiReportList){
-				if(loiReport.isSelected()){
-					localReportList.add(loiReport);
-				}
-			}
-			loiReportList.removeAll(localReportList);
+		ScLoi scLoi = this.getManagedBean().getScLoi();
+		List<ScLoiReport> scLoiReports = scLoi.getScLoiReports();
+		List<ScLoiReport> selectedLoiReports
+							= getManagedBean().getSelectedScLoiReports();
+		List<ScLoiReport> deletedLoiReports
+							= getManagedBean().getDeletedScLoiReports();
+		
+		if (deletedLoiReports == null) {
+			deletedLoiReports = new ArrayList<ScLoiReport>();
+			getManagedBean().setDeletedScLoiReports(
+								   deletedLoiReports);
 		}
-		/*List<ScLoiReport> selectedScLoiReports = getManagedBean()
-				.getSelectedScLoiReports();
-
-		if (selectedScLoiReports != null && selectedScLoiReports.size() > 0) {
-			deleteRowsAction(scLoi.getScLoiReports(), selectedScLoiReports);
-		} else {
-			throw new EpException(MessageConst.ERROR_760158);
-		}*/
-		 getManagedBean().getRecommendedLoi().setScLoiReports(loiReportList);
-		getManagedBean()
-		.setSelectedScLoiReports(null);
+		
+		if (CollectionUtils.isNotEmpty(selectedLoiReports)) {
+			for (ScLoiReport loiReport 
+						: selectedLoiReports) {
+				if (!loiReport.isBrandNew()) {
+					loiReport.setDeleted(true);
+					deletedLoiReports.add(loiReport);
+				}
+				scLoiReports.remove(loiReport);
+			}
+		}
 	}
 
 	/**

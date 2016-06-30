@@ -11,9 +11,8 @@
 		<p:dataTable id="reportContentsTbl"
 			widgetVar="reportContentsTblWidget" var="scLoiReport"
 			value="#{lOIDetailBackingBean.managedBean.recommendedLoi.scLoiReports}"
-			rows="10" rowKey="#{scLoiReport}"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			selection="#{lOIDetailBackingBean.managedBean.selectedScLoiReports}">
+			rows="10" rowKey="#{scLoiReport}" rowIndexVar="rowIndex"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 
 			<ac:paginator for="reportContentsTbl" />
 				
@@ -27,66 +26,45 @@
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{scLoiReport.selected}"
 					disabled="#{lOIDetailBackingBean.managedBean.readOnly}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=multipleloiNegotationReportDeleteBtnId])" />
+					<p:ajax partialSubmit="true" process="@this" 
+							listener="#{lOIDetailBackingBean.selectReportEvent(scLoiReport)}"
+							update="@([id$=multipleloiNegotationReportDeleteBtnId])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
 				<h:inputText label="#{lbl['lbl.sc.content']}" 
-					style="width:96%" value="#{scLoiReport.title}" required="true"
+					style="width:96%" value="#{scLoiReport.title}" required="#{!scLoiReport.selected}"
 					rendered="#{empty scLoiReport.pmDocument and 
 											isPendingNegotiationStatus}">
 					<p:ajax event="change" process="@this" partialSubmit="true" />
 				</h:inputText>
 				<h:outputText value="#{scLoiReport.title}"
-					rendered="#{empty scLoiReport.pmDocument and 
-										!isPendingNegotiationStatus}" />		
+							  rendered="#{empty scLoiReport.pmDocument and 
+												!isPendingNegotiationStatus}" />		
 				<h:outputText value="#{scLoiReport.title}"
 					rendered="#{!empty scLoiReport.pmDocument}" />
 			</p:column>
 
-			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
-				<ui:fragment
-					rendered="#{scLoiReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
-					<h:commandLink value="#{scLoiReport.scLoiReportAttachment.fileName}" styleClass="blue_font"
-					disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
-								action="#{lOIDetailBackingBean.downloadFile(
-											scLoiReport.scLoiReportAttachment)}" />
-					<p:commandLink immediate="true" disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
-						rendered="#{(!empty scLoiReport.scLoiReportAttachment.fileName) and 
-											isPendingNegotiationStatus}" update="reportContentsTbl">
-						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
-							styleClass="tasklist_title1" />
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:30%; white-space:normal; text-align:center;">
+				<ac:scSingleFileUploadButton id="scLoiReportUploadBtn"
+					popupWidgetVar="loiReportAttWidget"
+					attachment="#{scLoiReport.scLoiReportAttachment}" 
+					readonly="#{!isPendingNegotiationStatus or !empty scLoiReport.pmDocument or 
+					  				scLoiReport.docCategory eq ParameterConst.documentCategoryEndorsementReport or 
+					  					lOIDetailBackingBean.managedBean.readOnly}" 
+					rowIndex="#{rowIndex}">
 
-						<f:setPropertyActionListener target="#{scLoiReport.scLoiReportAttachment}" value="#{null}" />
-					</p:commandLink>
+					<f:setPropertyActionListener for="actionEvent" value="#{scLoiReport}"
+							target="#{lOIDetailBackingBean.managedBean.selectedScLoiReport}" />
 
-					<p:commandButton oncomplete="loiAttachmentPopupDlg.show();"
-					disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
-						value="#{lbl['lbl.txt.attachment']}"
-						partialSubmit="true" process="@this"
-						rendered="#{isPendingNegotiationStatus and empty scLoiReport.scLoiReportAttachment.fileName}"
-						update="@([id$=loiAttachmentPopupId])">
-						<f:setPropertyActionListener
-							target="#{lOIDetailBackingBean.managedBean.selectedScLoiReport}"
-							value="#{scLoiReport}" />
-						<f:setPropertyActionListener
-							target="#{lOIDetailBackingBean.managedBean.attachmentDocType}"
-							value="LIR" />
-					</p:commandButton>
-				</ui:fragment>
-			</p:column>
+					<f:setPropertyActionListener for="actionEvent" value="LIR"
+							target="#{lOIDetailBackingBean.managedBean.attachmentDocType}" />
+				</ac:scSingleFileUploadButton>
+			</p:column>				
 
-			<p:column style="width:10%;text-align: center;" headerText="#{lbl['lbl.sc.action']}">
-				<p:commandButton id="download" icon="ui-icon-download"
-				disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
-					style="background-color:transparent !important; border:0px none;"
-					ajax="false"
-					action="#{lOIDetailBackingBean.downloadReport(scLoiReport)}"
-					rendered="#{scLoiReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload 
-									? !empty scLoiReport.scLoiReportAttachment.fileName : true}" />
-			</p:column>
 		</p:dataTable>
+		
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
 			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
