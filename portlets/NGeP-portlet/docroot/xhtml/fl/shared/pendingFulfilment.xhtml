@@ -25,7 +25,7 @@
 			<p:column headerText="#{lbl['lbl.fl.dopending.order.number']}" style="text-align:center">
 				<h:outputText value="#{pending.docNo}" style="float:left;"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}" style="text-align:center">
+			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}" style="text-align:center" rendered="false">
 				<h:outputText value="#{flOrderBB.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, pending.docType)}" style="float:left;"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.title']}" style="white-space:normal;text-align:center">
@@ -40,7 +40,7 @@
 			<p:column headerText="#{lbl['lbl.fl.supp.name']}" style="white-space:normal;text-align:center">
 				<h:outputText value="#{pending.flFulfilmentRequest.flSupplierDtl.supplierName}" style="text-align:left;float:left;"/>
 			</p:column>				
-			<p:column headerText="#{lbl['lbl.fl.created.date']}" style="text-align:center">
+			<p:column headerText="#{lbl['lbl.fl.created.date']}" style="text-align:center" rendered="false">
 				<h:outputText value="#{pending.createdDate}" style="float:left;">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
