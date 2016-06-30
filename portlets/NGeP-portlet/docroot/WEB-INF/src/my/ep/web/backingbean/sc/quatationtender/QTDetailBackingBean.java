@@ -1482,7 +1482,6 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().getQt()
 					.setFinalizationSecratery(new PmUser());
 		}
-		MenuModel menuModel = new DefaultMenuModel();
 		List<TabBean> committeTabs = this.getManagedBean()
 				.getScCommitteeMemberTabList();
 		Long qtId = scQt.getQtId();
@@ -1623,16 +1622,7 @@ public class QTDetailBackingBean extends
 
 		this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 
-		int zoneTabIndex = 0;
 		for (TabBean tabBean : committeTabs) {
-			MenuItem committeItem = new MenuItem();
-			committeItem.setValue(tabBean.getTitleName());
-			committeItem.setUpdate("@this");
-			committeItem.setPartialSubmit(true);
-			committeItem.setProcess("@this");
-			// Added as part of Defect fix- 7578
-			committeItem.setTransient(true);
-
 			if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean
 					.getTabType()) && tabBean.getScQtCommittee()
 					.getScCommittee().getCommitteStatus().getStatusId()
@@ -1643,16 +1633,9 @@ public class QTDetailBackingBean extends
 							&& scQt.getFinalizationCommitte().getParameterId() != null
 							&& scQt.getFinalizationSecratery() != null && scQt
 							.getFinalizationSecratery().getUserId() != null)) {
-				committeItem.setIcon("ui-icon-endorse");
+				tabBean.setIcon("ui-icon-endorse");
 			}
-
-			committeItem
-					.setOncomplete("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : "
-							+ zoneTabIndex + "}]);");
-			menuModel.addMenuItem(committeItem);
-			zoneTabIndex++;
 		}
-		this.getManagedBean().setMenuModel(menuModel);
 		if (committeTabs.size() > 0) {
 			// this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
 			this.getManagedBean().setSelectedTabBean(
