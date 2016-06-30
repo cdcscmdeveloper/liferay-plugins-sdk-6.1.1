@@ -57,6 +57,8 @@ public class TabBean {
 	private List<ScCommitteeMember> members;
 	
 	private SelectItem[] fcTypes;
+	
+	private String icon;
 
 	/**
 	 * Instantiates a new tab bean.
@@ -294,6 +296,20 @@ public class TabBean {
 	 */
 	public void setFcTypes(SelectItem[] fcTypes) {
 		this.fcTypes = fcTypes;
+	}
+
+	/**
+	 * @return the icon
+	 */
+	public String getIcon() {
+		return icon;
+	}
+
+	/**
+	 * @param icon the icon to set
+	 */
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 
 }
