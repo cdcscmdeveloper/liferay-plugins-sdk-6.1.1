@@ -85,14 +85,16 @@
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.portal.soa.ibob']}">
-										#{batchRetry.serviceModule == 'IB' ? 'Inbound' : 'Outbound'}
+										#{batchRetry.serviceModule}
 									</p:column>
 
-									<p:column headerText="#{lbl['lbl.portal.soa.statusDesc']}">
+									<p:column headerText="#{lbl['lbl.portal.soa.statusDesc']}" 
+									style="width:20%;white-space: normal;word-wrap: break-word;">
 										#{batchRetry.statusDesc}
 									</p:column>
 
-									<p:column headerText="#{lbl['lbl.portal.soa.fileName']}">
+									<p:column headerText="#{lbl['lbl.portal.soa.fileName']}"
+									style="width:20%;white-space: normal;word-wrap: break-word;">
 										#{batchRetry.fileName}
 									</p:column>
 
