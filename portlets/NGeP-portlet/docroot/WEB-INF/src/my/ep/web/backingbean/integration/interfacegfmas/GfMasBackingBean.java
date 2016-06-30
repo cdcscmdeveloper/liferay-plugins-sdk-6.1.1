@@ -1011,7 +1011,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			
 			InterfaceVotDanaReqDTO reqDTO = new InterfaceVotDanaReqDTO();
 			
-			reqDTO.setFileName("1000GLDNA40000120160527001.GPG");
+			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setInterfaceDanaLs(this.getManagedBean().getSelectedDanaList());
 			
 			try {
@@ -1036,7 +1036,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			IInterfaceVotSO interfacevotSO = (IInterfaceVotSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceVotSO.class);
 			
 			InterfaceVotReqDTO reqDTO = new InterfaceVotReqDTO();
-			reqDTO.setFileName("1000GLVOT40000120160527001.gpg");
+			reqDTO.setFileName(this.getManagedBean().getFileName());
 			
 			reqDTO.setInterfaceVotLs(this.getManagedBean().getSelectedVotList());
 			try {
