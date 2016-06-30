@@ -4063,7 +4063,7 @@ public class SmApplicationBackingBean extends
 	public void assignSelFactory(SmFacility facilityBean) {
 		log.info("******** Selected value ******"
 				+ facilityBean.getSmAddress().getAddress1());
-		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
+		setFacilityAddressSameAs(facilityBean);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_FACTORY_FACILITY_PANEL);
@@ -4173,7 +4173,7 @@ public class SmApplicationBackingBean extends
 	 *            - SmFacility object
 	 */
 	public void assignSelDockyard(SmFacility facilityBean) {
-		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
+		setFacilityAddressSameAs(facilityBean);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL);
@@ -4284,7 +4284,7 @@ public class SmApplicationBackingBean extends
 	 *            - SmFacility object
 	 */
 	public void assignSelWorkshop(SmFacility facilityBean) {
-		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
+		setFacilityAddressSameAs(facilityBean);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL);
@@ -4392,7 +4392,7 @@ public class SmApplicationBackingBean extends
 	 *            the facility bean
 	 */
 	public void assignSelStore(SmFacility facilityBean) {
-		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
+		setFacilityAddressSameAs(facilityBean);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_STORE_FACILITY_PANEL);
@@ -11198,6 +11198,27 @@ public class SmApplicationBackingBean extends
 						.getNewCatEffectiveMonth());
 			}
 			cat.setCategoryEffDate(c.getTime());
+		}
+	}
+
+	private void setFacilityAddressSameAs(SmFacility facilityBean) {
+		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
+		if (!EntityHelper.isObjectDifference(getManagedBean().getSmAppl()
+				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+				.getSmAddress(), facilityBean.getSmAddress(), new String[] {
+				"mapLatitude", "mapLongitude", "pmDivision" })) {
+			getManagedBean().setFacAddresSameAs("HQ");
+		} else if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmSupplierBranches())) {
+			for (SmSupplierBranch br : getManagedBean().getSmAppl()
+					.getSmSupplierBranches()) {
+				if (!EntityHelper.isObjectDifference(br.getSmAddress(),
+						facilityBean.getSmAddress(), new String[] {
+								"mapLatitude", "mapLongitude", "pmDivision" })) {
+					getManagedBean().setFacAddresSameAs(
+							br.getSupplierBranchId().toString());
+				}
+			}
 		}
 	}
 

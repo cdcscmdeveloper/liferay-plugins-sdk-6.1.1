@@ -50,20 +50,15 @@
 		<td>
 			<p:outputPanel id="addr1LabelId">
 				<p:outputLabel value="#{lbl['lbl.sm.address']}" /> 
-				<p:outputLabel value="*" styleClass="mandatory" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
+				<p:outputLabel value="*" styleClass="mandatory" />
 			</p:outputPanel>
 		</td>
 		<td>
 			<p:outputPanel id="addr1InputId">
-				<p:inputText maxlength="35" rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"
-					required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+				<p:inputText maxlength="35" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.address']}" id="addr1Id"
 					value="#{cc.attrs.smAddress.address1}" size="35" /> 
-				<p:message id="addr1IdMsg" for="addr1Id" showSummary="true" showDetail="false" 
-					display="icon" rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}" />
-				<p:inputText readonly="true" disabled="true" value="" size="35" 
-					rendered="#{not empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
+				<p:message id="addr1IdMsg" for="addr1Id" showSummary="true" showDetail="false" />
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -72,10 +67,7 @@
 		<td></td>
 		<td>
 			<p:outputPanel id="addr2InputId">
-				<p:inputText maxlength="35" value="#{cc.attrs.smAddress.address2}" size="35" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
-				<p:inputText readonly="true" disabled="true" value="" size="35" 
-					rendered="#{not empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
+				<p:inputText maxlength="35" value="#{cc.attrs.smAddress.address2}" size="35" />
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -83,10 +75,7 @@
 		<td></td>
 		<td>
 			<p:outputPanel id="addr3InputId">
-				<p:inputText maxlength="35" value="#{cc.attrs.smAddress.address3}" size="35" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
-				<p:inputText readonly="true" disabled="true" value="" size="35" 
-					rendered="#{not empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
+				<p:inputText maxlength="35" value="#{cc.attrs.smAddress.address3}" size="35" />
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -94,10 +83,7 @@
 		<td></td>
 		<td>
 			<p:outputPanel id="addr4InputId">
-				<p:inputText maxlength="35" value="#{cc.attrs.smAddress.address4}" size="35" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
-				<p:inputText readonly="true" disabled="true" value="" size="35" 
-					rendered="#{not empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
+				<p:inputText maxlength="35" value="#{cc.attrs.smAddress.address4}" size="35" />
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -105,8 +91,7 @@
 		<td>
 			<p:outputPanel id="countryLabelId">
 				<p:outputLabel value="#{lbl['lbl.sm.country']}" /> 
-				<p:outputLabel value="*" styleClass="mandatory" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
+				<p:outputLabel value="*" styleClass="mandatory" />
 			</p:outputPanel>
 		</td>
 		<td>
@@ -115,7 +100,6 @@
 					required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.country']}"
 					value="#{cc.attrs.smAddress.countryId}"
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"
 					style="width: 207px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
@@ -124,12 +108,7 @@
 						listener="#{cc.attrs.backingBean.onChangeCountry(cc.attrs.smAddress,cc.attrs.facilityPanel)}"
 						update="stateId,districtId,cityId,postCodeInputId" />
 				</p:selectOneMenu> 
-				<p:message id="countryIdMsg" for="countryId" showSummary="true" showDetail="false" display="icon" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
-				<p:selectOneMenu disabled="true" value="" style="width: 207px;margin-bottom: 5px;"
-					rendered="#{not empty cc.attrs.backingBean.managedBean.facAddresSameAs}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-				</p:selectOneMenu>
+				<p:message id="countryIdMsg" for="countryId" showSummary="true" showDetail="false" display="icon" />
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -138,8 +117,7 @@
 		<td>
 			<p:outputPanel id="stateLabelId">
 				<p:outputLabel value="#{lbl['lbl.sm.state']}" /> 
-				<p:outputLabel value="*" styleClass="mandatory" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
+				<p:outputLabel value="*" styleClass="mandatory" />
 			</p:outputPanel>
 		</td>
 		<td>
@@ -148,7 +126,6 @@
 					required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.state']}"
 					value="#{cc.attrs.smAddress.stateId}"
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"
 					id="stateId">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
@@ -158,12 +135,7 @@
 						update="districtId,cityId" />
 	
 				</p:selectOneMenu> 
-				<p:message id="stateIdMsg" for="stateId" showSummary="true" showDetail="false" display="icon" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
-				<p:selectOneMenu disabled="true" value="" style="width: 207px;margin-bottom: 5px;"
-					rendered="#{not empty cc.attrs.backingBean.managedBean.facAddresSameAs}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-				</p:selectOneMenu>
+				<p:message id="stateIdMsg" for="stateId" showSummary="true" showDetail="false" display="icon" />
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -172,15 +144,13 @@
 		<td>
 			<p:outputPanel id="districtLabelId">
 				<p:outputLabel value="#{lbl['lbl.sm.district']}" /> 
-				<p:outputLabel value="*" styleClass="mandatory" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
+				<p:outputLabel value="*" styleClass="mandatory" />
 			</p:outputPanel>
 		</td>
 		<td>
 			<p:outputPanel id="districtInputId">
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="districtId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"
 					label="#{lbl['lbl.sm.district']}"
 					value="#{cc.attrs.smAddress.districtId}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -190,12 +160,7 @@
 						listener="#{cc.attrs.backingBean.onChangeDistrict(cc.attrs.smAddress,cc.attrs.facilityPanel)}"
 						update="cityId" />
 				</p:selectOneMenu> 
-				<p:message id="districtIdMsg" for="districtId" showSummary="true" showDetail="false" display="icon" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
-				<p:selectOneMenu disabled="true" value="" style="width: 207px;margin-bottom: 5px;"
-					rendered="#{not empty cc.attrs.backingBean.managedBean.facAddresSameAs}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-				</p:selectOneMenu>
+				<p:message id="districtIdMsg" for="districtId" showSummary="true" showDetail="false" display="icon" />
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -203,8 +168,7 @@
 		<td>
 			<p:outputPanel id="cityLabelId">
 				<p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> 
-				<p:outputLabel value="*" styleClass="mandatory" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
+				<p:outputLabel value="*" styleClass="mandatory" />
 			</p:outputPanel>
 		</td>
 		<td>
@@ -212,7 +176,6 @@
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="cityId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.towncity']}"
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"
 					value="#{cc.attrs.smAddress.cityId}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
@@ -221,12 +184,7 @@
 						listener="#{cc.attrs.backingBean.onChangeCity(cc.attrs.smAddress,cc.attrs.facilityPanel)}"
 						update="cityId" />
 				</p:selectOneMenu> 
-				<p:message id="cityIdMsg" for="cityId" showSummary="true" showDetail="false" display="icon" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
-				<p:selectOneMenu disabled="true" value="" style="width: 207px;margin-bottom: 5px;"
-					rendered="#{not empty cc.attrs.backingBean.managedBean.facAddresSameAs}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-				</p:selectOneMenu>
+				<p:message id="cityIdMsg" for="cityId" showSummary="true" showDetail="false" display="icon" />
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -234,15 +192,13 @@
 		<td>
 			<p:outputPanel id="postCodeLabelId">
 				<p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> 
-				<p:outputLabel value="*" styleClass="mandatory" 
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
+				<p:outputLabel value="*" styleClass="mandatory" />
 			</p:outputPanel>
 		</td>
 		<td>
 			<p:outputPanel id="postCodeInputId">
 				<p:outputPanel
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs and 
-						cc.attrs.smAddress.countryId==cc.attrs.backingBean.managedBean.myCountryId}">
+					rendered="#{cc.attrs.smAddress.countryId==cc.attrs.backingBean.managedBean.myCountryId}">
 					<p:inputText maxlength="5"
 						required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.postcode']}" id="posCodeMyId"
@@ -255,8 +211,7 @@
 						showSummary="true" showDetail="false" display="icon" />
 				</p:outputPanel>
 				<p:outputPanel
-					rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs and 
-						cc.attrs.smAddress.countryId!=cc.attrs.backingBean.managedBean.myCountryId}">
+					rendered="#{cc.attrs.smAddress.countryId!=cc.attrs.backingBean.managedBean.myCountryId}">
 					<p:inputText maxlength="10"
 						required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.postcode']}" id="posCodeForeignId"
@@ -267,8 +222,6 @@
 						for="posCodeForeignId" showSummary="true"
 						showDetail="false" display="icon" />
 				</p:outputPanel>
-				<p:inputText readonly="true" disabled="true" value="" size="35" 
-					rendered="#{not empty cc.attrs.backingBean.managedBean.facAddresSameAs}"/>
 			</p:outputPanel>
 		</td>
 	</tr>
