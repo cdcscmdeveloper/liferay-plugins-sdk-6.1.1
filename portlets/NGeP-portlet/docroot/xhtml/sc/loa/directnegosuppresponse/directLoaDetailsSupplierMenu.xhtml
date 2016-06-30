@@ -163,7 +163,8 @@
 						required="true"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.phoneNo}"
 						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
-						label="#{lbl['lbl.sc.tel.no']}" /> <p:message id="phoneNoMsg"
+						label="#{lbl['lbl.sc.tel.no']}" /> 	<ac:iconTooltip
+						value="#{lbl['lbl.sc.telephone.no.tooltip ']}" /><p:message id="phoneNoMsg"
 						for="phoneNo" display="icon" /></td>
 			</tr>
 			<tr>
@@ -173,7 +174,8 @@
 				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.faxNo}"
 						maxlength="20" validator="#{webappBean.checkFaxNumber}"
-						label="#{lbl['lbl.sc.fax.no']}" /> <p:message id="faxNoMsg"
+						label="#{lbl['lbl.sc.fax.no']}" /> <ac:iconTooltip
+						value="#{lbl['lbl.sc.fax.no.tooltip']}" /> <p:message id="faxNoMsg"
 						for="faxNo" display="icon" /></td>
 			</tr>
 			<tr>
@@ -182,7 +184,8 @@
 				disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.mobileNo}"
 						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
-						label="#{lbl['lbl.sc.mobile.no']}" /> <p:message id="mobileNoMsg"
+						label="#{lbl['lbl.sc.mobile.no']}" /> <ac:iconTooltip
+						value="#{lbl['lbl.sc.mobile.no.tooltip']}" /><p:message id="mobileNoMsg"
 						for="mobileNo" display="icon" /></td>
 			</tr>
 			<tr>
