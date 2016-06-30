@@ -407,8 +407,6 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScPIDtlsPrcRptGroupView(true);
 	            break;
 	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL:
-	        	rptGenBean.setGenerateButton(false);
-	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
@@ -418,8 +416,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	}
 	    		rptGenBean.setScSupplierView(true);
 	    		rptGenBean.setScPInoView(true);
-	    		rptGenBean.setScCommonStatusView(true);
-	    		//rptGenBean.setScExtraCommonStatusView(true);
+	    		rptGenBean.setScCommonStatusView(true);	    		
 	            break;  
 	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_SUPPLIER_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
