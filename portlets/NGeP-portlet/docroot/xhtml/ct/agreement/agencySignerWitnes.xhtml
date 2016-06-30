@@ -164,7 +164,7 @@
       
              <div class="ppRightBtn"> 
 		       <p:commandButton id="addAgencyWitnessBtn" value="#{lbl['lbl.btn.add']}" 
-		            action="#{agreementBackingBean.addAgencyWitnes(2)}" 
+		            action="#{agreementBackingBean.addAgencyWitnes()}" 
 		           process="@form"  update=":form:AgWitnessTable"
 		           oncomplete="agWitnessTableWidget.paginator.endLink.click();">
 		           <p:tooltip for="addAgencyWitnessBtn">
@@ -204,7 +204,7 @@
             	   <f:selectItems value="#{agreementBackingBean.getMinistryDropdown()}"/>
             	   <p:ajax event="change"  process="@this" 
             	       listener="#{agreementBackingBean.settingMinistryListener}"
-            	       update=":form:controllingOfficer,:form:jabatan,:form:ptjId, :form:selectAgencyWitnesId" />
+            	       update=":form:controllingOfficer,:form:jabatan,:form:ptjId, :form:selectAgencySignerId" />
                  </p:selectOneMenu>
                
                   <p:selectOneMenu for="controllingOfficer"  style="width:140px" disabled="true" >
@@ -240,7 +240,7 @@
                  </p:selectOneMenu>
                 </h:panelGrid>
                  <div class="ppRightBtn">
-       		        <p:commandButton id="selectAgencyWitnesId"  value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" update=":form:AgSignerTable" 
+       		        <p:commandButton id="selectAgencySignerId"  value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" update=":form:AgSignerTable" 
 				    action="#{agreementBackingBean.addAgencySignerDetails}"  onclick="dialogAgencySigner.hide();"
 				     disabled="#{agreementBackingBean.managedBean.buttonHideActive}" />
 		       </div>
