@@ -24,14 +24,22 @@
 					</h:panelGrid></td>
 			</tr>
 		</table>
-		
-		
-		<p:remoteCommand name="approvalTabChangeAction" update="@form" partialSubmit="true" process="@form" action="#{qTDetailBB.approvalTabChangeAction}" />
 
-		<p:tabMenu
-			activeIndex="#{qTDetailBB.managedBean.selectedApprovalTabIndex}"
-			model="#{qTDetailBB.managedBean.approvalMenuModel}"
-			rendered="#{qTDetailBB.managedBean.approvalMenuModel != null}" />
+		<p:tabMenu activeIndex="#{qTDetailBB.managedBean.selectedApprovalTabIndex}"
+			rendered="#{!empty qTDetailBB.managedBean.tabList}">
+			<c:forEach var="tabBean" varStatus="status"
+				items="#{qTDetailBB.managedBean.tabList}">
+				<p:menuitem value="#{tabBean.titleName}"
+					action="#{qTDetailBB.approvalTabChangeAction(status.index)}" 
+					partialSubmit="true"
+					update="@form"
+					process="@form">
+					<c:if test="#{!empty tabBean.tooltip}">
+						<f:attribute name="title" value="#{tabBean.tooltip}" />
+					</c:if>
+				</p:menuitem>
+			</c:forEach>
+		</p:tabMenu>
 
 		<ui:fragment
 			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryBudget}">
