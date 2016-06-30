@@ -10,7 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:selectOneMenu
+		<p:selectOneMenu rendered="false"
 			value="#{flOrderBB.managedBean.docStatusId}"
 			style="width: 314px;">
 			<f:selectItems
@@ -46,6 +46,29 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Status" style="white-space:normal;text-align:center">
+				<f:facet name="header">
+					#{lbl['lbl.fl.status']}
+					<p:commandButton id="addBtn" icon="ui-icon-lov" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+						partialSubmit="true" process="@this" 
+						title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />					
+					<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom" style="width:250px;">
+			            <p:menuitem value="#{lbl['lbl.txt.all']}" update=":form:flPendingFlDt" action="#{flOrderBB.onFlStatusChange(null)}">
+			            	<f:setPropertyActionListener value="#{null}" target="#{flOrderBB.managedBean.docStatusId}" />
+			            </p:menuitem>					
+			            <p:menuitem value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.poPendingSupplierAcknowledgement)}" update=":form:flPendingFlDt" action="#{flOrderBB.onFlStatusChange(FulfilmentStatusCont.poPendingSupplierAcknowledgement)}">
+			            	<f:setPropertyActionListener value="#{FulfilmentStatusCont.poPendingSupplierAcknowledgement}" target="#{flOrderBB.managedBean.docStatusId}" />
+			            </p:menuitem>	
+			            <p:menuitem value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.poPendingFulfilment)}" update=":form:flPendingFlDt" action="#{flOrderBB.onFlStatusChange(FulfilmentStatusCont.poPendingFulfilment)}">
+			            	<f:setPropertyActionListener value="#{FulfilmentStatusCont.poPendingFulfilment}" target="#{flOrderBB.managedBean.docStatusId}" />
+			            </p:menuitem>			            					
+			            <p:menuitem value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.poPendingPartialFulfilment)}" actionListener="#{flOrderBB.onFlStatusChange(FulfilmentStatusCont.poPendingPartialFulfilment)}" update=":form:flPendingFlDt" >
+				            <f:setPropertyActionListener value="#{FulfilmentStatusCont.poPendingPartialFulfilment}" target="#{flOrderBB.managedBean.docStatusId}" />
+			            </p:menuitem>
+			            <p:menuitem value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.poPendingInvoice)}" update=":form:flPendingFlDt" action="#{flOrderBB.onFlStatusChange(FulfilmentStatusCont.poPendingInvoice)}">
+			            	<f:setPropertyActionListener value="#{FulfilmentStatusCont.poPendingInvoice}" target="#{flOrderBB.managedBean.docStatusId}" />
+			            </p:menuitem>
+					</p:menu>
+				</f:facet>
 				<h:outputText value="#{flOrderBB.getStatusDescById(pending.status.statusId)}" style="text-align:left;float:left;" />
 			</p:column>			
 		</p:dataTable>
