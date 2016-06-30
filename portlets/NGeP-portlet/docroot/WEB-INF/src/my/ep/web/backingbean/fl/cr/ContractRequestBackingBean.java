@@ -138,7 +138,6 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
-import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
@@ -4949,4 +4948,144 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "crBasePage?faces-redirect=true");
 		}
 	}
+	
+	/**
+	 * Get search contract criteria list dropdown.
+	 * 
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getSearchContractCriteriaList() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<String> contractCriteriaList = new ArrayList<String>();
+			contractCriteriaList.add(ResourceBundleUtils.getMessage(
+					"lbl.fl.physical.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			contractCriteriaList.add(ResourceBundleUtils.getMessage(
+					"lbl.fl.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			contractCriteriaList.add(ResourceBundleUtils.getMessage(
+					"lbl.fl.contract.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			contractCriteriaList.add(ResourceBundleUtils.getMessage(
+					"lbl.fl.physical.treasury.circular", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			contractCriteriaList.add(ResourceBundleUtils.getMessage(
+					"lbl.fl.doc.maintain.circular.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			contractCriteriaList.add(ResourceBundleUtils.getMessage(
+					"lbl.fl.fulfilment.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			contractCriteriaList.add(ResourceBundleUtils.getMessage(
+					"lbl.fl.contract.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			contractCriteriaList.add(ResourceBundleUtils.getMessage(
+					"lbl.fl.supp.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			
+			items = new SelectItem[contractCriteriaList.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (String contractCriteria : contractCriteriaList) {
+				items[i++] = new SelectItem(i,contractCriteria);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	/**
+	 * Get fulfilment type or contract type dropdown desc
+	 * 
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getSearchTypeList() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<String> searchTypesList = new ArrayList<String>();
+			Map<String, String> searchTypeMap = new HashMap<String, String>();
+			
+			if(getManagedBean().isFulfilmentTypes()){
+				searchTypesList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
+				searchTypesList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+				searchTypesList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+			}else{
+				searchTypesList.add(ParameterConst.CONTRACT_TYPE_CENTRAL);
+				searchTypesList.add(ParameterConst.CONTRACT_TYPE_MINISTRY);
+			}
+			if(getManagedBean().isFulfilmentTypes()){
+				for (String type : searchTypesList) {
+					if(searchTypeMap.get(ParameterTypeConst.FULFILMENT_TYPE+type) == null){
+						searchTypeMap.put(ParameterTypeConst.FULFILMENT_TYPE+type, type);
+					}
+				}
+			}else{
+				for (String type : searchTypesList) {
+					if(searchTypeMap.get(ParameterTypeConst.CONTRACT_TYPE+type) == null){
+						searchTypeMap.put(ParameterTypeConst.CONTRACT_TYPE+type, type);
+					}
+				}
+			}
+			
+			items = new SelectItem[searchTypesList.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			if(getManagedBean().isFulfilmentTypes()){
+				for (String type : searchTypesList) {
+					items[i++] = new SelectItem(searchTypeMap.get(ParameterTypeConst.FULFILMENT_TYPE+type),getParameterDesc(ParameterTypeConst.FULFILMENT_TYPE,type));
+				}
+			}else{
+				for (String type : searchTypesList) {
+					items[i++] = new SelectItem(searchTypeMap.get(ParameterTypeConst.CONTRACT_TYPE+type),getParameterDesc(ParameterTypeConst.CONTRACT_TYPE,type));
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	/**
+	 * Get selected contract criteria for fulfilment type and contract type dropdown.
+	 * 
+	 */
+	public void getSelectedContractCriteriaDesc() {
+		getManagedBean().setTypes(false);
+		if(getManagedBean().getSearchContractListDD() != null){
+			 if(getManagedBean().getSearchContractListDD() == 7 || getManagedBean().getSearchContractListDD() == 8){
+				 getManagedBean().setTypes(true);
+			 }
+			 if(getManagedBean().getSearchContractListDD() == 7){
+				 getManagedBean().setFulfilmentTypes(true);
+			 }
+			 if(getManagedBean().getSearchContractListDD() == 8){
+				 getManagedBean().setFulfilmentTypes(false);
+			 }
+		 }
+	}
+	
+	public void searchContract(){
+		
+		getManagedBean().getActiveContractDataModel().reloadData();
+	}
+	
 }
