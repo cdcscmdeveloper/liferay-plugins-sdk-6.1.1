@@ -261,6 +261,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The selected sc loi reports. */
 	private List<ScLoiReport> selectedScLoiReports;
 	
+	/** The delete sc loi reports. */
+	private List<ScLoiReport> deletedScLoiReports;	
+	
 	/** The selected sc loi report. */
 	private ScLoiReport selectedScLoiReport;
 	
@@ -1589,6 +1592,21 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedScLoiReports(List<ScLoiReport> selectedScLoiReports) {
 		this.selectedScLoiReports = selectedScLoiReports;
+	}
+
+	/**
+	 * @return the deletedScLoiReports
+	 */
+	public List<ScLoiReport> getDeletedScLoiReports() {
+		return deletedScLoiReports;
+	}
+
+	/**
+	 * @param deletedScLoiReports
+	 *            the deletedScLoiReports to set
+	 */
+	public void setDeletedScLoiReports(List<ScLoiReport> deletedScLoiReports) {
+		this.deletedScLoiReports = deletedScLoiReports;
 	}
 
 	/**
