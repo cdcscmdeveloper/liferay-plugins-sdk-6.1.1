@@ -3430,28 +3430,6 @@ public class QTDetailBackingBean extends
 			committeSO = null;
 		}
 	}
-
-	/**
-	 * Committe tab change action.
-	 */
-	public void committeTabChangeAction() {
-		if (log.isDebugEnabled()) {
-			log.debug("Committe Tab change Action");
-		}
-
-		Integer selectedCommitteeTabIndex = Integer.valueOf(FacesContext
-				.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("selectedCommitteeTabIndex"));
-
-		// this.getManagedBean().setToBeDelCommitteMemebers(null);
-		this.getManagedBean().setSelectedTabIndex(selectedCommitteeTabIndex);
-		this.getManagedBean().setSelectedCommitteeTabIndex(
-				selectedCommitteeTabIndex);
-		TabBean committeTabBean = this.getManagedBean()
-				.getScCommitteeMemberTabList().get(selectedCommitteeTabIndex);
-
-		this.getManagedBean().setSelectedTabBean(committeTabBean);
-	}
 	
 	/**
 	 * Committe tab change action.

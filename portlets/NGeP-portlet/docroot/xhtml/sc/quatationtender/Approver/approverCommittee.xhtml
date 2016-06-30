@@ -33,10 +33,15 @@
 	
 	<p:remoteCommand name="committeTabChangeAction" update="@form" partialSubmit="true" process="@form" action="#{qTDetailBB.committeTabChangeAction}" />
 	
-	<p:tabMenu
-		activeIndex="#{approvalBackingBean.managedBean.selectedCommitteeTabIndex}"
-		model="#{approvalBackingBean.managedBean.menuModel}">
-
+	<p:tabMenu activeIndex="#{approvalBackingBean.managedBean.selectedCommitteeTabIndex}">
+		<c:forEach var="tabBean" varStatus="status"
+			items="#{approvalBackingBean.managedBean.scCommitteeMemberTabList}">
+			<p:menuitem value="#{tabBean.titleName}"
+				action="#{qTDetailBB.committeTabChangeAction(status.index)}" 
+				partialSubmit="true"
+				update="@form"
+				process="@form" />
+		</c:forEach>
 	</p:tabMenu>
 	<ui:include src="committeeApprovalTab.xhtml" />
 </ui:composition>
