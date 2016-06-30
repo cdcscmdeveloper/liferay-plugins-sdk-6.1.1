@@ -11,10 +11,8 @@
 package my.ep.web.backingbean.integration.interfacegfmas;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -83,7 +81,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	/** The search gf mas. */
 	private IPagingDataModel<DIInterfaceLog> searchGfMas = new SearchGfMasPagingDataModel();
 	
-	
+	private boolean childProcessStatus = false;
 
 	/**
 	 * Instantiates a new gf mas backing bean.
@@ -370,11 +368,11 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			interfaceGfMasReqDto.setProcessId(selectedProcess.getProcessId());
 			
 			this.getManagedBean().setFileName(selectedProcess.getFileName());
-			
-			getUnprocessedRecordsByPreviousDate(selectedProcess);
 
 			InterfaceLogResDto interfaceGfMasResDto = gfMasSO
 					.retrieveProcessDataForAll(interfaceGfMasReqDto);
+			
+			getUnprocessedRecordsByPreviousDate(selectedProcess,interfaceGfMasResDto);
 
 			childProcessPage = getChildProcessScreen(selectedProcess,
 					interfaceGfMasResDto);
@@ -395,24 +393,26 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 *            the log
 	 * @return the interface prog act process status
 	 */
-	private boolean getInterfaceProgActProcessStatus(DIInterfaceLog log) {
+	private boolean getInterfaceProgActProcessStatus(InterfaceLogResDto resDTO) {
 
-		boolean childProcessStatus = false;
+		//boolean childProcessStatus = false;
 		
-		List<PmInterfaceProgAct> progActList=log.getPmInterfaceProgAct();
+		List<PmInterfaceProgAct> progActList=resDTO.getListOfPmInterfacePrgAct();
 		
-		for (int i = 0; progActList.size() > 0; i++) {
+		if (CollectionUtils.isNotEmpty(progActList)) {
+		
+			for (int i = 0; progActList.size() > 0; i++) {
 
-			if (progActList.get(i).getProcessStatus()
-					.equals(new Long(0))
-					||progActList.get(i).getProcessStatus()
-							.equals(new Long(1))) {
-				childProcessStatus = true;
-				break;
-			} else {
-				childProcessStatus = false;
+				if (progActList.get(i).getProcessStatus().equals(new Long(0))
+						|| progActList.get(i).getProcessStatus()
+								.equals(new Long(1))) {
+					childProcessStatus = true;
+					break;
+				} else {
+					childProcessStatus = false;
+				}
+
 			}
-
 		}
 		return childProcessStatus;
 	}
@@ -424,24 +424,25 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 *            the log
 	 * @return the interface project process status
 	 */
-	private boolean getInterfaceProjectProcessStatus(DIInterfaceLog log) {
+	private boolean getInterfaceProjectProcessStatus(InterfaceLogResDto resDTO) {
 
-		boolean childProcessStatus = false;
+		//boolean childProcessStatus = false;
 		
-		List<PmInterfaceProject> projectList=log.getPmInterfaceProject();
+		List<PmInterfaceProject> projectList=resDTO.getListOfPmInterfaceProject();
 		
-		for (int i = 0; projectList.size() > 0; i++) {
+		if (CollectionUtils.isNotEmpty(projectList)) {
+		
+			for (int i = 0; projectList.size() > 0; i++) {
 
-			if (projectList.get(i).getProcessStatus()
-					.equals(new Long(0))
-					|| projectList.get(i).getProcessStatus()
-							.equals(new Long(1))) {
-				childProcessStatus = true;
-				break;
-			} else {
-				childProcessStatus = false;
+				if (projectList.get(i).getProcessStatus().equals(new Long(0))
+						|| projectList.get(i).getProcessStatus()
+								.equals(new Long(1))) {
+					childProcessStatus = true;
+					break;
+				} else {
+					childProcessStatus = false;
+				}
 			}
-
 		}
 		return childProcessStatus;
 	}
@@ -453,24 +454,25 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 *            the log
 	 * @return the interface ptj process status
 	 */
-	private boolean getInterfacePtjProcessStatus(DIInterfaceLog log) {
+	private boolean getInterfacePtjProcessStatus(InterfaceLogResDto resDTO) {
 
-		boolean childProcessStatus = false;
+		//boolean childProcessStatus = false;
 		
-		List<PmInterfacePtj> ptjList=log.getPmInterfacePtj();
+		List<PmInterfacePtj> ptjList=resDTO.getListOfPmInterfacePtj();
 		
-		for (int i = 0; ptjList.size() > 0; i++) {
+		if (CollectionUtils.isNotEmpty(ptjList)) {
 
-			if (ptjList.get(i).getProcessStatus()
-					.equals(new Long(0))
-					|| ptjList.get(i).getProcessStatus()
-							.equals(new Long(1))) {
-				childProcessStatus = true;
-				break;
-			} else {
-				childProcessStatus = false;
+			for (int i = 0; ptjList.size() > 0; i++) {
+
+				if (ptjList.get(i).getProcessStatus().equals(new Long(0))
+						|| ptjList.get(i).getProcessStatus()
+								.equals(new Long(1))) {
+					childProcessStatus = true;
+					break;
+				} else {
+					childProcessStatus = false;
+				}
 			}
-
 		}
 		return childProcessStatus;
 	}
@@ -482,24 +484,25 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 *            the log
 	 * @return the interface kptj process status
 	 */
-	private boolean getInterfaceKptjProcessStatus(DIInterfaceLog log) {
+	private boolean getInterfaceKptjProcessStatus(InterfaceLogResDto resDTO) {
 
-		boolean childProcessStatus = false;
+		//boolean childProcessStatus = false;
 		
-		List<PmInterfaceKptj> kptjList=log.getPmInterfaceKptj();
+		List<PmInterfaceKptj> kptjList=resDTO.getListOfPmInterfaceKptj();
 		
-		for (int i = 0; kptjList.size() > 0; i++) {
+		if (CollectionUtils.isNotEmpty(kptjList)) {
 
-			if (kptjList.get(i).getProcessStatus()
-					.equals(new Long(0))
-					|| kptjList.get(i).getProcessStatus()
-							.equals(new Long(1))) {
-				childProcessStatus = true;
-				break;
-			} else {
-				childProcessStatus = false;
+			for (int i = 0; kptjList.size() > 0; i++) {
+
+				if (kptjList.get(i).getProcessStatus().equals(new Long(0))
+						|| kptjList.get(i).getProcessStatus()
+								.equals(new Long(1))) {
+					childProcessStatus = true;
+					break;
+				} else {
+					childProcessStatus = false;
+				}
 			}
-
 		}
 		return childProcessStatus;
 	}
@@ -511,24 +514,26 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 *            the log
 	 * @return the interface ag office process status
 	 */
-	private boolean getInterfaceAgOfficeProcessStatus(DIInterfaceLog log) {
+	private boolean getInterfaceAgOfficeProcessStatus(InterfaceLogResDto resDTO) {
 
-		boolean childProcessStatus = false;
-		
-		List<PmInterfaceAgOff> agOffList=log.getPmInterfaceAgOff();
-		
-		for (int i = 0; agOffList.size() > 0; i++) {
+		//boolean childProcessStatus = false;
 
-			if (agOffList.get(i).getProcessStatus()
-					.equals(new Long(0))
-					|| agOffList.get(i).getProcessStatus()
-							.equals(new Long(1))) {
-				childProcessStatus = true;
-				break;
-			} else {
-				childProcessStatus = false;
+		List<PmInterfaceAgOff> agOffList = resDTO
+				.getListOfPmInterfaceAgOffice();
+
+		if (CollectionUtils.isNotEmpty(agOffList)) {
+
+			for (int i = 0; agOffList.size() > 0; i++) {
+
+				if (agOffList.get(i).getProcessStatus().equals(new Long(0))
+						|| agOffList.get(i).getProcessStatus()
+								.equals(new Long(1))) {
+					childProcessStatus = true;
+					break;
+				} else {
+					childProcessStatus = false;
+				}
 			}
-
 		}
 		return childProcessStatus;
 	}
@@ -540,22 +545,23 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 *            the log
 	 * @return the interface pp process status
 	 */
-	private boolean getInterfacePpProcessStatus(DIInterfaceLog log) {
+	private boolean getInterfacePpProcessStatus(InterfaceLogResDto resDTO) {
 
-		boolean childProcessStatus = false;
+		//boolean childProcessStatus = false;
 		
-		List<PmInterfacePP> ppList=log.getPmInterfacePP();
+		List<PmInterfacePP> ppList = resDTO.getListOfPmInterfacePP();
 		
-		for (int i = 0; ppList.size() > 0; i++) {
+		if (CollectionUtils.isNotEmpty(ppList)) {
+			
+			for (int i = 0; ppList.size() > 0; i++) {
 
-			if (ppList.get(i).getProcessStatus()
-					.equals(new Long(0))
-					|| ppList.get(i).getProcessStatus()
-							.equals(new Long(1))) {
-				childProcessStatus = true;
-				break;
-			} else {
-				childProcessStatus = false;
+				if (ppList.get(i).getProcessStatus().equals(new Long(0))
+						|| ppList.get(i).getProcessStatus().equals(new Long(1))) {
+					childProcessStatus = true;
+					break;
+				} else {
+					childProcessStatus = false;
+				}
 			}
 
 		}
@@ -570,11 +576,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 *            the log
 	 * @return the interface vot process status
 	 */
-	private boolean getInterfaceVotProcessStatus(DIInterfaceLog log) {
+	private boolean getInterfaceVotProcessStatus(InterfaceLogResDto resDTO) {
 
-		boolean childProcessStatus = false;
+		//boolean childProcessStatus = false;
 		
-		List<PmInterfaceVot> votList=log.getPmInterfaceVot();
+		List<PmInterfaceVot> votList=resDTO.getListOfPmInterfaceVot();
+		
+		if (CollectionUtils.isNotEmpty(votList)) {
 		
 		for (int i = 0; votList.size() > 0; i++) {
 
@@ -587,7 +595,8 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			} else {
 				childProcessStatus = false;
 			}
-
+	    	}
+		
 		}
 		return childProcessStatus;
 	}
@@ -599,24 +608,25 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 *            the log
 	 * @return the interface bank process status
 	 */
-	private boolean getInterfaceBankProcessStatus(DIInterfaceLog log) {
+	private boolean getInterfaceBankProcessStatus(InterfaceLogResDto resDTO) {
 
-		boolean childProcessStatus = false;
+		//boolean childProcessStatus = false;
 		
-		List<PmInterfaceBank> bankList=log.getPmInterfaceBank();
+		List<PmInterfaceBank> bankList=resDTO.getListOfPmInterfaceBank();
 		
-		for (int i = 0; bankList.size() > 0; i++) {
+		if (CollectionUtils.isNotEmpty(bankList)) {
 
-			if (bankList.get(i).getProcessStatus()
-					.equals(new Long(0))
-					|| bankList.get(i).getProcessStatus()
-							.equals(new Long(1))) {
-				childProcessStatus = true;
-				break;
-			} else {
-				childProcessStatus = false;
+			for (int i = 0; bankList.size() > 0; i++) {
+
+				if (bankList.get(i).getProcessStatus().equals(new Long(0))
+						|| bankList.get(i).getProcessStatus()
+								.equals(new Long(1))) {
+					childProcessStatus = true;
+					break;
+				} else {
+					childProcessStatus = false;
+				}
 			}
-
 		}
 		return childProcessStatus;
 	}
@@ -628,24 +638,25 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 *            the log
 	 * @return the interface gl acnt process status
 	 */
-	private boolean getInterfaceGlAcntProcessStatus(DIInterfaceLog log) {
+	private boolean getInterfaceGlAcntProcessStatus(InterfaceLogResDto resDTO) {
 
-		boolean childProcessStatus = false;
+		//boolean childProcessStatus = false;
 		
-		List<PmInterfaceGlAccount> glAcntList=log.getPmInterfaceGlAccount();
+		List<PmInterfaceGlAccount> glAcntList=resDTO.getListOfPmInterfaceGlAccount();
 		
-		for (int i = 0; glAcntList.size() > 0; i++) {
+		if (CollectionUtils.isNotEmpty(glAcntList)) {
 
-			if (glAcntList.get(i).getProcessStatus()
-					.equals(new Long(0))
-					|| glAcntList.get(i).getProcessStatus()
-							.equals(new Long(1))) {
-				childProcessStatus = true;
-				break;
-			} else {
-				childProcessStatus = false;
+			for (int i = 0; glAcntList.size() > 0; i++) {
+
+				if (glAcntList.get(i).getProcessStatus().equals(new Long(0))
+						|| glAcntList.get(i).getProcessStatus()
+								.equals(new Long(1))) {
+					childProcessStatus = true;
+					break;
+				} else {
+					childProcessStatus = false;
+				}
 			}
-
 		}
 		return childProcessStatus;
 	}
@@ -658,24 +669,25 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 *            the log
 	 * @return the interface dana process status
 	 */
-	private boolean getInterfaceDanaProcessStatus(DIInterfaceLog log) {
+	private boolean getInterfaceDanaProcessStatus(InterfaceLogResDto resDTO) {
 
-		boolean childProcessStatus = false;
-		
-		List<PmInterfaceDana> danaList=log.getPmInterfaceDana();
-		
-		for (int i = 0; danaList.size() > 0; i++) {
+		//boolean childProcessStatus = false;
 
-			if (danaList.get(i).getProcessStatus()
-					.equals(new Long(0))
-					|| danaList.get(i).getProcessStatus()
-							.equals(new Long(1))) {
-				childProcessStatus = true;
-				break;
-			} else {
-				childProcessStatus = false;
+		List<PmInterfaceDana> danaList = resDTO.getListOfPmInterfaceDana();
+
+		if (CollectionUtils.isNotEmpty(danaList)) {
+
+			for (int i = 0; danaList.size() > 0; i++) {
+
+				if (danaList.get(i).getProcessStatus().equals(new Long(0))
+						|| danaList.get(i).getProcessStatus()
+								.equals(new Long(1))) {
+					childProcessStatus = true;
+					break;
+				} else {
+					childProcessStatus = false;
+				}
 			}
-
 		}
 		return childProcessStatus;
 	}
@@ -689,7 +701,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 */
 	private void getUnprocessedRecordsByPreviousDate(
 			
-	DIInterfaceLog selectedProcess) {
+	DIInterfaceLog selectedProcess,InterfaceLogResDto resDto) {
 
 		List<DIInterfaceLog> interfaceLogParentList = searchGfMas.getList();
 
@@ -747,82 +759,68 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 							.getProcessId())) {
 
 					case GLPRG:
-						if (getInterfaceProgActProcessStatus(filteredProcessCode)) {
+						if (getInterfaceProgActProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
 						}
-						// break;
+					
 
 					case GLBAC:
-						if (getInterfaceAgOfficeProcessStatus(filteredProcessCode)) {
+						if (getInterfaceAgOfficeProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
-						}
-						// break;
+						}						
 
 					case GLSEG:
-						if (getInterfacePpProcessStatus(filteredProcessCode)) {
+						if (getInterfacePpProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
 						}
-						// break;
+						
 
 					case GLVOT:
-						if (getInterfaceVotProcessStatus(filteredProcessCode)) {
+						if (getInterfaceVotProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
 						}
-						// break;
+						
 					case GLDNA:
-						if (getInterfaceDanaProcessStatus(filteredProcessCode)) {
+						if (getInterfaceDanaProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
 						}
 						break;
 
 					case GLPRJ:
-						if (getInterfaceProjectProcessStatus(filteredProcessCode)) {
+						if (getInterfaceProjectProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
-						}
-						// break;
+						}					
 
 					case GLGLC:
-						if (getInterfaceGlAcntProcessStatus(filteredProcessCode)) {
+						if (getInterfaceGlAcntProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
 						}
 						break;
 
 					case GLPCG:
-						if (getInterfaceKptjProcessStatus(filteredProcessCode)) {
+						if (getInterfaceKptjProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
-						}
-						// break;
+						}						
 
 					case GLPTJ:
-						if (getInterfacePtjProcessStatus(filteredProcessCode)) {
+						if (getInterfacePtjProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
-						}
-						// break;
+						}						
 
 					case CMBNK:
-						if (getInterfaceBankProcessStatus(filteredProcessCode)) {
+						if (getInterfaceBankProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
-						}
-						// break;
-
-						/*
-						 * default: {
-						 * 
-						 * log.info("unknown Process \t" +
-						 * filteredProcessCode.getProcessId());
-						 * 
-						 * }
-						 */
+						}						
 					}
 				}
 			}
