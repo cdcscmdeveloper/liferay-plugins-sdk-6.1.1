@@ -72,6 +72,7 @@
 				</f:facet>
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
+				onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					maxlength="255" cols="40" id="evaluationMeetingLocation"
 					required="true" label="#{lbl['lbl.sc.meeting.location']}"></p:inputTextarea>
@@ -106,6 +107,7 @@
 
 				<p:inputTextarea value="#{meeting.remark}" rows="2" cols="40"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
+					onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
 					maxlength="100" />
 
 			</p:column>

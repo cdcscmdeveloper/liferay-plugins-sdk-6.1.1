@@ -20,6 +20,7 @@
 				<TD><p:inputTextarea id="bidPauseOrCancelsupplierNotes"
 						required="true" label="#{lbl['lbl.sc.notes.to.supplier']}"
 						value="#{biddingBB.managedBean.bidAction.remark}" cols="65"
+						onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						maxLength="200" /> <p:message id="supplierNotesMsg"
 						for="bidPauseOrCancelsupplierNotes" showDetail="false"
 						display="icon" /></TD>

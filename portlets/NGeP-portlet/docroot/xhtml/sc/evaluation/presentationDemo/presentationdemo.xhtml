@@ -70,7 +70,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:30%">
-				<p:inputTextarea rows="2" cols="40" value="#{demoSupplier.remark}">
+				<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" value="#{demoSupplier.remark}">
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:inputTextarea>
 			</p:column>

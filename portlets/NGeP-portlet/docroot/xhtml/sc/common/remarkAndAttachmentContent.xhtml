@@ -41,6 +41,7 @@
 							<tr>
 								<td></td>
 								<td><p:inputTextarea cols="40" maxlength="1000"
+								onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 										value="#{scRemark.remark}"
 										rendered="#{scRemark.brandNew or scRemark.editable}"
 										disabled="#{cc.attrs.readonly}">

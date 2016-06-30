@@ -19,6 +19,7 @@
 							value="#{lbl['lbl.sc.title']}" /></td>
 					<td colspan="3"><p:inputTextarea
 							value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtTitle}"
+							onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
 							cols="115" rows="3" style=" margin-bottom:5px;width: 98%;"
 							maxlength="100" /></td>
 				</tr>

@@ -134,7 +134,7 @@
 					<h:panelGroup rendered="#{empty scQtDeductionClause.pmClause}">
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
 							disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
-							required="true" id="clauseId"
+							required="true" id="clauseId" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
 							label="#{lbl['lbl.sc.deduction.clause']}" rows="3"
 							autoResize="false" maxlength="500"
 							style=" margin-bottom:5px; width:825px">

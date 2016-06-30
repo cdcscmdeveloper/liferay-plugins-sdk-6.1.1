@@ -309,6 +309,7 @@
 						<td><p:inputTextarea maxlength="200"
 								required="true"
 								label="#{lbl['lbl.quartz.job.description']}" id="jobDescId"
+								onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 								value="#{schedulerManagerBB.managedBean.selectedJobVO.description}"
 								validatorMessage="#{lbl['lbl.quartz.job.description']} - #{lbl['lbl.sm.banktnc.length.validMsg']}"
 								cols="25">

@@ -89,7 +89,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.remarks']}"
 				style="white-space : normal;  width : 15%;">
-				<p:inputTextarea value="#{financenongovt.remark}" rows="3" cols="17"
+				<p:inputTextarea value="#{financenongovt.remark}" rows="3" cols="17" maxlength="300"
+				onkeyup="limitTextArea(this,300);" onkeydown="limitTextArea(this,300);"
 					disabled="#{statusHide}" />
 			</p:column>
 

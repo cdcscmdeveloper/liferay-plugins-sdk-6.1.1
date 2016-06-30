@@ -151,7 +151,7 @@
 						styleClass="mandatory" /></td>
 				<td rowspan="3" width="32%"><p:inputTextarea id="address"
 				disabled="#{directLOABackingBean.managedBean.readOnly}"
-						required="true" rows="5"
+						required="true" rows="5" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						value="#{directLOABackingBean.managedBean.loaSupplierWitness.address}"
 						style=" margin-bottom:5px; width: 266px;" maxlength="200"
 						label="#{lbl['lbl.sc.address']}" /> <p:message id="addressMsg"

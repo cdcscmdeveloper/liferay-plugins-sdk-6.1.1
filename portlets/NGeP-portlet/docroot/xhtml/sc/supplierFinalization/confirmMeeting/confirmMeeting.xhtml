@@ -100,6 +100,7 @@
 								</f:facet>
 								<p:inputTextarea value="#{meeting.meetingLocation}"
 									id="meetingLocation" rows="2" cols="100" maxlength="255"
+									onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
 									label="#{lbl['lbl.sc.meeting.location']}"
 									required="#{!meeting.selected}" disabled="#{disableMeeting}">
 									<p:ajax process="@this" partialSubmit="true"

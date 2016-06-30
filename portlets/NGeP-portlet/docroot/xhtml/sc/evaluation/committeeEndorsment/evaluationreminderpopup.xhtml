@@ -35,6 +35,7 @@
 				<h:outputLabel value="#{lbl['lbl.sc.message']}" />
 
 				<p:inputTextarea rows="5" cols="75" maxlength="1000"
+				onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 					value="#{evaluationBackingBean.managedBean.message}"></p:inputTextarea>
 
 			</h:panelGrid>

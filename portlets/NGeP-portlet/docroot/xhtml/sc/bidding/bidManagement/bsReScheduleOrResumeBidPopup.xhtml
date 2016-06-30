@@ -128,6 +128,7 @@
 						id="reBidOrResumeSupplierNotes" required="true"
 						value="#{biddingBB.managedBean.bidAction.remark}" rows="5"
 						label="#{lbl['lbl.sc.notes.to.supplier']}" cols="68"
+						onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						maxLength="200" /> <p:message id="reBidOrResumeSupplierNotesMsg"
 						for="reBidOrResumeSupplierNotes" showDetail="false" display="icon" />
 				</TD>
