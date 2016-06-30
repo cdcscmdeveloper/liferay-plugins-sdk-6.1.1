@@ -59,6 +59,8 @@ public class TabBean {
 	private SelectItem[] fcTypes;
 	
 	private String icon;
+	
+	private String tooltip;
 
 	/**
 	 * Instantiates a new tab bean.
@@ -310,6 +312,20 @@ public class TabBean {
 	 */
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	/**
+	 * @return the tooltip
+	 */
+	public String getTooltip() {
+		return tooltip;
+	}
+
+	/**
+	 * @param tooltip the tooltip to set
+	 */
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip;
 	}
 
 }
