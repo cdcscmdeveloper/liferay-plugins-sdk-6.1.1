@@ -4986,7 +4986,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			items = new SelectItem[contractCriteriaList.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					"lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
 			for (String contractCriteria : contractCriteriaList) {
@@ -5011,7 +5011,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public SelectItem[] getSearchTypeList() {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
-
+		getManagedBean().setSearchContractListDD(null);
 		try {
 			List<String> searchTypesList = new ArrayList<String>();
 			Map<String, String> searchTypeMap = new HashMap<String, String>();
