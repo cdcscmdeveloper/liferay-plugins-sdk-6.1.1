@@ -2041,7 +2041,6 @@ public class QTDetailBackingBean extends
 		if (CollectionUtils.isEmpty(tabList)) {
 			retrieveCommitteeAppointmentTabDtl(false, false);
 		}
-		this.getManagedBean().setSelectedApprovalTabIndex(0);
 		updateQtDtls();
 		IQTDetailSO detailSO;
 		try {
@@ -3548,9 +3547,9 @@ public class QTDetailBackingBean extends
 			renewQTSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setCurrentStatusId(currentStatus);
+			this.getManagedBean().setSelectedApprovalTabIndex(selectedApprovalTabIndex);
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			retrieveApprovalTabDtl();
-			this.getManagedBean().setSelectedApprovalTabIndex(selectedApprovalTabIndex);
 			break;
 		case 4:
 			if (isinvokeValidations(getManagedBean().getQt())) {
