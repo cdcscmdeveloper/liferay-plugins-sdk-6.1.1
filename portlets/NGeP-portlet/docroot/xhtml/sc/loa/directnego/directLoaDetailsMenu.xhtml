@@ -98,6 +98,7 @@
 						value="#{lbl['lbl.sc.address']}" /></td>
 				<td rowspan="3">
 					<p:inputTextarea id="suppAddr" label="#{lbl['lbl.sc.address']}" 
+					onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						cols="36" disabled="true" rows="5" style=" margin-bottom:5px; width: 236px" maxlength="200" 
 						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.scSupplierAddress)}"
 						required="true" /></td>
@@ -177,7 +178,7 @@
 				<td width="18%" valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputTextarea
-						id="title"
+						id="title" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.title']}" required="true" size="110"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}"

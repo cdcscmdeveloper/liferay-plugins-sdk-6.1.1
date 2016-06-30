@@ -64,7 +64,7 @@
 				style="width:35%;white-space: normal;">
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
-					<p:inputTextarea rows="2" cols="40" maxlength="200"
+					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 						id="complianceRemarksid"
 						value="#{complianceTechnicalSupplier.remark}">

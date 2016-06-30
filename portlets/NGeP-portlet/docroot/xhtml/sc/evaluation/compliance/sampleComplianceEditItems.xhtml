@@ -108,7 +108,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
-					<p:inputTextarea rows="2" cols="40" maxlength="100"
+					<p:inputTextarea rows="2" cols="40" maxlength="100" onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
 						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 						value="#{sampleItem.remark}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>

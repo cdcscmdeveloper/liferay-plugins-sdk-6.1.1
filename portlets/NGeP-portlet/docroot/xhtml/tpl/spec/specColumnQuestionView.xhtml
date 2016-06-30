@@ -20,6 +20,7 @@
 				value="#{question.clSpecDetail}"
 				rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
 				required="#{!question.selected}" rows="5" maxlength="1000"
+				onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 				label="#{lbl['lbl.tpl.spec.content.specification']}"
 				autoResize="false">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />

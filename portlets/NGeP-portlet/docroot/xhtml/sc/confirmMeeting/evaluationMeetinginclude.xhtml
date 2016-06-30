@@ -83,7 +83,7 @@
 				</f:facet>
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
-					style="width:75%;" maxlength="255"
+					style="width:75%;" maxlength="255" onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
 					label="#{lbl['lbl.sc.meeting.location']}" id="locationId"
 					required="true" cols="140"></p:inputTextarea>
 				<p:message id="meetingLocationId" for="locationId" display="icon"></p:message>

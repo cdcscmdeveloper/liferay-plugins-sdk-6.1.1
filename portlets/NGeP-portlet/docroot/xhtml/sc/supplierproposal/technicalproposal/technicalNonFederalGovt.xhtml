@@ -55,6 +55,7 @@
 					rendered="#{technongovt.brandNew eq false}" />
 				<p:inputTextarea id="clientName" value="#{technongovt.clientName}"
 					style="width : 90%;" rows="3" cols="17" maxlength="50"
+					onkeyup="limitTextArea(this,50);" onkeydown="limitTextArea(this,50);"
 					required="true" label="#{lbl['lbl.sc.spec.customer.name']}"
 					rendered="#{technongovt.brandNew eq true}">
 					<p:ajax process="@this" partialSubmit="true"
@@ -75,6 +76,7 @@
 				<p:inputTextarea id="contractTitle"
 					value="#{technongovt.contractTitle}" rows="3" cols="22"
 					style="width : 90%;" maxlength="1000" required="true"
+					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 					label="#{lbl['lbl.sc.spec.contract.title']}"
 					rendered="#{technongovt.brandNew eq true}">
 					<p:ajax process="@this" partialSubmit="true"
@@ -177,6 +179,7 @@
 					rendered="#{technongovt.brandNew eq false}" />
 				<p:inputTextarea value="#{technongovt.remark}" rows="3" cols="17"
 					style="width : 96%;" maxlength="300"
+					onkeyup="limitTextArea(this,300);" onkeydown="limitTextArea(this,300);"
 					rendered="#{technongovt.brandNew eq true}">
 					<p:ajax process="@this" partialSubmit="true" update="@this" />
 				</p:inputTextarea>

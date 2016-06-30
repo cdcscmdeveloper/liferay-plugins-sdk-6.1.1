@@ -123,7 +123,7 @@
 					<p:inputTextarea cols="#{isPendingNegotiation ? '70' : '110'}"
 					readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
 						rows="2" value="#{negoTerm.termDesc}" autoResize="false"
-						maxlength="1000"
+						maxlength="1000" onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 						rendered="#{empty negoTerm.pmTerm}" />
 				</c:if>
 
@@ -141,6 +141,7 @@
 
 				<c:if test="#{isEditableStatus and !afterNegotiation}">
 					<p:inputTextarea style="width:400px" rows="2" maxlength="255" value="#{negoTerm.negoResult}" 
+					onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
 						autoResize="false" readonly="#{lOIDetailBackingBean.managedBean.readOnly}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 					</p:inputTextarea>
