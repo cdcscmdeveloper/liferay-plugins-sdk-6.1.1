@@ -127,12 +127,13 @@
 		</h:panelGrid>
 	</h:panelGrid>
 	 <p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg"  resizable="false"
-  		modal="true" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+  		modal="true" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
+  		onShow="singleUploadListener(uploadWV);">
    		<p:ajax event="close" />
    		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
      		sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
     		fileUploadListener="#{panelBackingBean.fileUpload}"  multiple="false"
-       		allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+       		allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="uploadWV"
          	invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update="uploadCircularPg" >
       	</p:fileUpload>
       	<f:facet name="footer">
