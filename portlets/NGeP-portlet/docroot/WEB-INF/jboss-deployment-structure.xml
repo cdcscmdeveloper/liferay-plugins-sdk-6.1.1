@@ -13,7 +13,7 @@
         
         <module name="eperolehan-biz-client" />
         <module name="eperolehan-bpm-client" /> -->
-        <!-- <module name="my.ep.configuration" /> -->
+        <module name="my.ep.configuration" />
     </dependencies>  
   </deployment>  
 </jboss-deployment-structure> 
