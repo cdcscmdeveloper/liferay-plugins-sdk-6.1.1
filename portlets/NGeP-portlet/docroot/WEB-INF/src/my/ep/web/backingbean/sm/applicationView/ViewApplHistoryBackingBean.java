@@ -31,9 +31,6 @@ import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 public class ViewApplHistoryBackingBean extends
@@ -42,6 +39,27 @@ public class ViewApplHistoryBackingBean extends
 	public static VirtualCertBackingBean virtualCertInstance;
 	public static CommonApplBackingBean commonApplInstance;
 	public static PmTrackingDiaryBackingBean trackinDiaryInstance;
+
+	/**
+	 * Set tab value
+	 * 
+	 * @param int outputTab
+	 * @param String
+	 *            outputPageType
+	 */
+	public void setTabValue(int outputTab, String outputPageType) {
+		getManagedBean().setTabActiveIndex(outputTab);
+		getManagedBean().setRedirectToPersonPage(false);
+		getManagedBean().setCurrentPageType(outputPageType);
+		getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
+		if (!StringUtils.isBlank(outputPageType)
+				&& outputPageType
+						.equals(my.ep.web.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)) {
+			getManagedBean().getTrackingDiary().setTrackingDiaryParam(
+					SmTrackingDiaryConst.SM_DEFAULT_DOC_TYPE,
+					getManagedBean().getSmAppl().getApplId());
+		}
+	}
 
 	/**
 	 * Pre-render for View Application History
@@ -106,20 +124,6 @@ public class ViewApplHistoryBackingBean extends
 
 	public void redirectToResubmit() {
 		SmCommonUtil.redirectToExternalUrl(getManagedBean().getResubmitUrl());
-	}
-
-	/**
-	 * Redirect to tracking diary page
-	 */
-	public void redirectToTrackingDiary() {
-		try {
-			getTrackinDiaryInstance().redirectToTrackingDiary(
-					SmTrackingDiaryConst.SM_DEFAULT_DOC_TYPE,
-					getManagedBean().getSmAppl().getApplId());
-		} catch (PortalException | SystemException | IOException e) {
-			throw new EpException("Failed to view tracking diary:"
-					+ e.getMessage());
-		}
 	}
 
 	/**

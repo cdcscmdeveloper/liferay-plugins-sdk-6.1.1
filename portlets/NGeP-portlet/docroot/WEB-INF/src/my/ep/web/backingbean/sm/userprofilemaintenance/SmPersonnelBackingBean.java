@@ -1159,15 +1159,11 @@ public class SmPersonnelBackingBean extends
 	 * Deactivate or terminate authorized personnel
 	 */
 	public void deactivateOrTerminate() {
-		try {
-			updateUser(getManagedBean().getBasicSmPersonnel());
-			initAuthorizedPersonnels(getManagedBean().getSmSupplier());
-			getManagedBean().setDisableAddNewUser(
-					validatePersonLimit(getManagedBean().getSmSupplier()));
-			getManagedBean().setDeactivateTerminateConfirmMsg("");
-		} catch (Exception ex) {
-			throw new EpException(ex.getMessage());
-		}
+		updateUser(getManagedBean().getBasicSmPersonnel());
+		initAuthorizedPersonnels(getManagedBean().getSmSupplier());
+		getManagedBean().setDisableAddNewUser(
+				validatePersonLimit(getManagedBean().getSmSupplier()));
+		getManagedBean().setDeactivateTerminateConfirmMsg("");
 	}
 
 	/**

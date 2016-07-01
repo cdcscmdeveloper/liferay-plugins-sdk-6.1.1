@@ -47,7 +47,7 @@
 							itemLabel="#{shrOffCountry.countryName}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{backingBean.assignPersonNationality}" 
-							update="bumiLabelOutPanelId,bumiRadioOutPanelId,identTypeTtId,equiPerIdenType,equiPerDtlIdenTypePan,equiPerDtlIdenTypeLblPan"/>
+							update="muslimLabelOutPanelId,muslimRadioOutPanelId,bumiLabelOutPanelId,bumiRadioOutPanelId,identTypeTtId,equiPerIdenType,equiPerDtlIdenTypePan,equiPerDtlIdenTypeLblPan"/>
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
@@ -357,13 +357,17 @@
 						<p:outputLabel value="#{lbl['lbl.sm.person.bumi']}"
 							rendered="#{not empty backingBean.managedBean.selectedShareHolder.pmCountry 
 							and backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}" />
+						<p:outputLabel
+							rendered="#{not empty backingBean.managedBean.selectedShareHolder.pmCountry 
+							and backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}"
+							value="*" styleClass="mandatory" />
 					</p:outputPanel>
 				</td>
 				<td>
 					<p:outputPanel id="bumiRadioOutPanelId">
 						<p:selectOneRadio rendered="#{not empty backingBean.managedBean.selectedShareHolder.pmCountry 
-							and backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}"
-							value="#{backingBean.managedBean.selectedShareHolder.bumiFlgTrans}">
+							and backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}" 
+							required="true" value="#{backingBean.managedBean.selectedShareHolder.bumiFlgTrans}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 							<p:ajax event="change" partialSubmit="true" process="@this" />
@@ -377,23 +381,38 @@
 							alertValue="#{backingBean.managedBean.latestPersonnel.bumiFlg eq '1' ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"/>
 					</p:outputPanel>
 				</td>
-				<td><p:outputLabel value=" #{lbl['lbl.sm.person.religion']}"
-						title="For Malaysian Only" /></td>
-				<td colspan="3"><p:selectOneRadio
-						value="#{backingBean.managedBean.selectedShareHolder.muslimFlgTrans}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.muslim']}"
-							itemValue="1" />
-						<f:selectItem
-							itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}"
-							itemValue="0" />
-					</p:selectOneRadio>
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestPersonnel}"
-						oriValue="#{backingBean.managedBean.latestPersonnel.muslimFlg}" 
-						currValue="#{backingBean.managedBean.selectedShareHolder.muslimFlg}" 
-						alertValue="#{backingBean.managedBean.latestPersonnel.muslimFlg eq '1' ? 
-							lbl['lbl.sm.person.religion.muslim'] : lbl['lbl.sm.person.religion.non.muslim']}"/>
+				<td>
+					<p:outputPanel id="muslimLabelOutPanelId">
+						<p:outputLabel value=" #{lbl['lbl.sm.person.religion']}" 
+							rendered="#{not empty backingBean.managedBean.selectedShareHolder.pmCountry 
+							and backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}"/>
+						<p:outputLabel
+							rendered="#{not empty backingBean.managedBean.selectedShareHolder.pmCountry 
+							and backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}"
+							value="*" styleClass="mandatory" />
+					</p:outputPanel>
+				</td>
+				<td colspan="3">
+					<p:outputPanel id="muslimRadioOutPanelId">
+						<p:selectOneRadio 
+							rendered="#{not empty backingBean.managedBean.selectedShareHolder.pmCountry 
+							and backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}"
+							value="#{backingBean.managedBean.selectedShareHolder.muslimFlgTrans}" required="true">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.muslim']}"
+								itemValue="1" />
+							<f:selectItem
+								itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}"
+								itemValue="0" />
+						</p:selectOneRadio>
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.latestPersonnel and not empty backingBean.managedBean.selectedShareHolder.pmCountry 
+								and backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}"
+							oriValue="#{backingBean.managedBean.latestPersonnel.muslimFlg}" 
+							currValue="#{backingBean.managedBean.selectedShareHolder.muslimFlg}" 
+							alertValue="#{backingBean.managedBean.latestPersonnel.muslimFlg eq '1' ? 
+								lbl['lbl.sm.person.religion.muslim'] : lbl['lbl.sm.person.religion.non.muslim']}"/>
+					</p:outputPanel>
 				</td>
 			</tr>
 		</table>
