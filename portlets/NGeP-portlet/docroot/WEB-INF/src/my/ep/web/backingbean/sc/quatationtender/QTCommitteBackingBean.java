@@ -1988,22 +1988,16 @@ public class QTCommitteBackingBean extends
 	 * @return true, if is committe info editable
 	 */
 	public boolean isCommitteInfoEditable(Long committeStatus, String commType) {
-		/*
-		 * if (QTStatusConst.QT_EVALUATION_PROPOSAL.compareTo(this
-		 * .getManagedBean().getQt().getQtStatus().getStatusId()) <= 0) { return
-		 * true; }
-		 */
-		Long currentStatusId = this
-				.getManagedBean().getCurrentStatusId();
+		
+		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				
 		if (this.getManagedBean().isMaintanceFlow()) {
-			
-			 if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(currentStatusId)) {
-				if (DateUtils.getDaysDifference(new Date(), this
-						.getManagedBean().getQt().getClosingDate()) <= 7
-						&& (QTStatusConst.CMT_PENDING_SUBMISSION
-								.equals(committeStatus) || QTStatusConst.CMT_PENDING_REVISION
-								.equals(committeStatus))) {
-
+			if (isQTStatusPublished(currentStatusId)) {
+				Date closingDate = this.getManagedBean().getQt().getClosingDate();
+				if (closingDate != null
+						&& DateUtils.getDaysDifference(new Date(), closingDate) <= 7
+						&& (QTStatusConst.CMT_PENDING_SUBMISSION.equals(committeStatus) ||
+								 QTStatusConst.CMT_PENDING_REVISION.equals(committeStatus))) {
 					return true;
 				}
 			} else if (!isEligibleStatusForBtns(currentStatusId)) {
@@ -2225,7 +2219,7 @@ public class QTCommitteBackingBean extends
 
 		if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 				.equalsIgnoreCase(commType)
-				&& (!this.getManagedBean().isMaintanceFlow()|| isEligibleStatusForBtns(qtStatus))
+				&& (!this.getManagedBean().isMaintanceFlow() || isEligibleStatusForBtns(qtStatus))
 				&& this.getManagedBean().isDeskOfficer()) {
 			isRenderBtn = true;
 			ScQt scQt = this.getManagedBean().getQt();
@@ -2246,13 +2240,22 @@ public class QTCommitteBackingBean extends
 				ScQtCommittee qtCommitte = resDTO.getScQtCommittee();
 				if (qtCommitte != null && qtCommitte.getScCommittee() != null) {
 					Long committeeStatus = qtCommitte.getScCommittee().getCommitteStatus().getStatusId();
-					if ((QTStatusConst.CMT_PENDING_APPROVAL
+					Date closingDate = this.getManagedBean().getQt().getClosingDate();
+					if (this.getManagedBean().isMaintanceFlow() && 
+							closingDate != null && DateUtils.getDaysDifference(new Date(), closingDate) <= 7
+							&& (QTStatusConst.CMT_PENDING_SUBMISSION
+									.equals(committeeStatus) || QTStatusConst.CMT_PENDING_REVISION
+									.equals(committeeStatus))) {
+
+						isRenderBtn = false;
+					} else if ((QTStatusConst.CMT_PENDING_APPROVAL
 							.equals(committeeStatus) || QTStatusConst.CMT_PENDING_REVISION_APPROVAL
 							.equals(committeeStatus))) {
 						isRenderBtn = false;
 					}
+					
+					
 				}
-
 			} finally {
 				committeSO = null;
 			}
@@ -2349,6 +2352,7 @@ public class QTCommitteBackingBean extends
 			ParameterResDTO resDTO= getParameterSO().retrieveParameterByTypeAndCode(parameterReqDTO);
 			if(resDTO != null && resDTO.isSuccessful()){
 				member.setMemberRole(resDTO.getPmParameter());
+				member.setMemberRoleId(resDTO.getPmParameter().getParameterId());
 			}
 		}
 	}
