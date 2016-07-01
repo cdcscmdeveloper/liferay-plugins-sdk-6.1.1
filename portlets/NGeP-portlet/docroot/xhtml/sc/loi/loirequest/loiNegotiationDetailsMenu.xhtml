@@ -119,12 +119,15 @@
 				<c:if test="#{isEditableStatus and !afterNegotiation}">
 					<h:outputText value="#{negoTerm.termDesc}"
 						rendered="#{!empty negoTerm.pmTerm}" />
-
-					<p:inputTextarea cols="#{isPendingNegotiation ? '70' : '110'}"
-					readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
-						rows="2" value="#{negoTerm.termDesc}" autoResize="false"
-						maxlength="1000" onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+						
+					<p:inputTextarea cols="#{isPendingNegotiation ? '70' : '110'}" 
+					    label="#{lbl['lbl.sc.loiloa.nego.terms']}"
+					    id="termDescId"
+						readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
+						required="true" rows="2"
+						value="#{negoTerm.termDesc}" autoResize="false" maxlength="1000"
 						rendered="#{empty negoTerm.pmTerm}" />
+						<p:message id="termDescIdMsg" for="termDescId" display="icon" />
 				</c:if>
 
 			</p:column>
