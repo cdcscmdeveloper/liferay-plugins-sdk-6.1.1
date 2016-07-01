@@ -8,7 +8,7 @@
 	<c:choose>
 		<c:when
 			test="${bpmTasklistBackingBean.managedBean.groupTask eq 'true' and !bpmTasklistBackingBean.managedBean.claim}">
-			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
+			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" style="float:right;"
 				action="#{bpmTasklistBackingBean.claimTaskInDetailPage}"
 				update="@form">
 				<f:setPropertyActionListener target="#{readOnlyTask}" value="false" />
