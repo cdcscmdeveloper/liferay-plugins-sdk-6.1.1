@@ -9,16 +9,25 @@
 		<p:outputPanel id="branchGstInfoPanelId" rendered="#{not empty backingBean.managedBean.companyBasicGst.gstRegNo 
 			and not empty backingBean.managedBean.selectedBranch.gst}">
 			
-			<p:outputPanel rendered="#{backingBean.managedBean.supplierUser and (backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smAppl.applType eq 'R')}">
-				<table style="width: 100%">
+			<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+				<table style="width: 80%">
 					<tr><td height="15" colspan="2">&#160;</td></tr>
 					<tr>
 						<td style="border-style: none !important;float: right !important;">
-							<p:selectBooleanCheckbox value="#{backingBean.managedBean.selectedBranch.sameAsHq}">
-								<p:ajax update="branchGstInfoPanelId" event="change"
-									process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									listener="#{backingBean.copyHqGstToBranch(backingBean.managedBean.selectedBranch)}" />
-							</p:selectBooleanCheckbox>
+							<c:choose>
+								<c:when test="#{backingBean.managedBean.supplierUser 
+									and (backingBean.managedBean.smAppl.applType eq 'N' 
+									or backingBean.managedBean.smAppl.applType eq 'R')}">
+									<p:selectBooleanCheckbox value="#{backingBean.managedBean.selectedBranch.sameAsHq}">
+										<p:ajax update="branchGstInfoPanelId" event="change"
+											process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											listener="#{backingBean.copyHqGstToBranch(backingBean.managedBean.selectedBranch)}" />
+									</p:selectBooleanCheckbox>
+								</c:when>
+								<c:otherwise>
+									<p:selectBooleanCheckbox value="#{backingBean.managedBean.selectedBranch.sameAsHq}" disabled="true" />
+								</c:otherwise>
+							</c:choose>
 						</td>
 						<td valign="top" style="border-style: none !important;">
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.brnch.gstSame']}" />
@@ -29,7 +38,7 @@
 			</p:outputPanel>
 			
 			<p:outputPanel rendered="#{!backingBean.managedBean.selectedBranch.sameAsHq}">
-				<table style="width: 100%">
+				<table style="width: 80%">
 					<tr>
 						<td><u><b><h:outputText
 									value="#{lbl['lbl.sm.gst.info']} " /></b></u></td>
@@ -207,18 +216,70 @@
 			</p:outputPanel>
 			
 			<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.sameAsHq}">
-				<table style="width: 100%">
+				<table style="width: 80%">
 					<tr>
-						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" /></td>
-						<td style="border-style: none !important;"><p:inputText readonly="true" disabled="true" value="" size="40" /></td>
+						<td style="border-style: none !important;">
+							<p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" />
+						</td>
+						<td style="border-style: none !important;">
+							<c:choose>
+								<c:when test="#{backingBean.managedBean.supplierUser 
+									and (backingBean.managedBean.smAppl.applType eq 'N' 
+									or backingBean.managedBean.smAppl.applType eq 'R')}">
+									<p:inputText readonly="true" disabled="true" value="" size="40" />
+								</c:when>
+								<c:otherwise>
+									<p:inputText label="#{lbl['lbl.sm.gstNo']}"
+										value="#{backingBean.managedBean.selectedBranch.gst.gstRegNo}"
+										size="35" maxlength="12"
+										readonly="true" disabled="true" />
+								</c:otherwise>
+							</c:choose>
+						</td>
 					</tr>
 					<tr>
-						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" /></td>
-						<td style="border-style: none !important;"><p:inputText readonly="true" disabled="true" value="" size="30" /></td>
+						<td style="border-style: none !important;">
+							<p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" />
+						</td>
+						<td style="border-style: none !important;">
+							<c:choose>
+								<c:when test="#{backingBean.managedBean.supplierUser 
+									and (backingBean.managedBean.smAppl.applType eq 'N' 
+									or backingBean.managedBean.smAppl.applType eq 'R')}">
+									<p:inputText readonly="true" disabled="true" value="" size="40" />
+								</c:when>
+								<c:otherwise>
+									<p:inputText
+										value="#{backingBean.managedBean.selectedBranch.gst.gstEffDate}"
+										readonly="true" size="35">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</p:inputText>
+								</c:otherwise>
+							</c:choose>
+						</td>
 					</tr>
 					<tr>
-						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
-						<td style="border-style: none !important;"><p:inputText readonly="true" disabled="true" value="" size="30" /></td>
+						<td style="border-style: none !important;">
+							<p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" />
+						</td>
+						<td style="border-style: none !important;">
+							<c:choose>
+								<c:when test="#{backingBean.managedBean.supplierUser 
+									and (backingBean.managedBean.smAppl.applType eq 'N' 
+									or backingBean.managedBean.smAppl.applType eq 'R')}">
+									<p:inputText readonly="true" disabled="true" value="" size="40" />
+								</c:when>
+								<c:otherwise>
+									<p:inputText
+										value="#{backingBean.managedBean.selectedBranch.gst.gstEndDate}"
+										readonly="true" size="35">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</p:inputText>
+								</c:otherwise>
+							</c:choose>
+						</td>
 					</tr>
 				</table>
 			</p:outputPanel>
