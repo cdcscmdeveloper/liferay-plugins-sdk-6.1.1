@@ -24,11 +24,12 @@
 				</h:outputText>
 			</p:column>
 	        <p:column style="text-align:center;width:8%;" headerText="#{lbl['lbl.pm.action']}" >
-	          	<p:commandLink action="#{profileManagementBackingBean.downloadAttachment(attachment)}" 
-	          		immediate="true" ajax="false" rendered="#{!attachment.brandNew}">
- 					  <p:graphicImage value="/css/images/design/attach.png" />
- 				</p:commandLink>
- 				<p:commandLink partialSubmit="true"
+	        	<p:commandLink value="#{attachment.fileName}" process="@this"
+										immediate="true" ajax="false"
+										styleClass="blue_font"
+										rendered="#{!attachment.brandNew}"
+										action="#{profileManagementBackingBean.downloadAttachment(attachment)}" />
+	         <p:commandLink partialSubmit="true"
 						process="@this"
 						oncomplete="attachmentDeletePopUp.show();"
 						update="@([id$=#{attachmentDeleteId}])" >
