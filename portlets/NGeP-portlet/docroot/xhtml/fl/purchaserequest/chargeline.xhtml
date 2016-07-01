@@ -186,6 +186,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /><h:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu style="width: 150px; margin-bottom:5px;" value="#{purchaseRequestBackingBean.managedBean.assetIndId}" disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}">
+						<p:ajax update="@this"></p:ajax>
 						<f:selectItems value="#{purchaseRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
 					</p:selectOneMenu></td>
 					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
