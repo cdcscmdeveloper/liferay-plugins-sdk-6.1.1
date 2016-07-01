@@ -1091,6 +1091,10 @@ public class QTCommitteBackingBean extends
 						tabBean.getScQtCommittee().getScCommittee()
 								.setScCommitteeMembers(committeeMembersList);
 					}
+					//Sort the committee members
+					Collections.sort(tabBean.getScQtCommittee()
+							.getScCommittee().getScCommitteeMembers(),new MemberRoleComparator());
+							
 					this.getManagedBean().setSelectedTabIndex(i);
 					this.getManagedBean().setSelectedTabBean(tabBean);
 					this.getManagedBean().setCommittemembers(null);
@@ -1196,6 +1200,9 @@ public class QTCommitteBackingBean extends
 						tabBean.getScQtCommittee().getScCommittee()
 								.setScCommitteeMembers(committeeMembersList);
 					}
+					//Sort the committee members
+					Collections.sort(tabBean.getScQtCommittee()
+							.getScCommittee().getScCommitteeMembers(),new MemberRoleComparator());
 					this.getManagedBean().setSelectedTabIndex(i);
 					this.getManagedBean().setSelectedTabBean(tabBean);
 					this.getManagedBean().setCommitteMember(null);
@@ -1602,7 +1609,7 @@ public class QTCommitteBackingBean extends
 		*/}
 
 		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
-		Collections.sort(scCommittee.getScCommitteeMembers());
+		Collections.sort(scCommittee.getScCommitteeMembers(),new MemberRoleComparator());
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 		}
 		setQtMaintencesChanges();
@@ -2241,7 +2248,7 @@ public class QTCommitteBackingBean extends
 				if (qtCommitte != null && qtCommitte.getScCommittee() != null) {
 					Long committeeStatus = qtCommitte.getScCommittee().getCommitteStatus().getStatusId();
 					Date closingDate = this.getManagedBean().getQt().getClosingDate();
-					if (this.getManagedBean().isMaintanceFlow() && 
+					if (this.getManagedBean().isMaintanceFlow() && isQTStatusPublished(qtStatus) &&
 							closingDate != null && DateUtils.getDaysDifference(new Date(), closingDate) <= 7
 							&& (QTStatusConst.CMT_PENDING_SUBMISSION
 									.equals(committeeStatus) || QTStatusConst.CMT_PENDING_REVISION
