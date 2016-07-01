@@ -37,10 +37,12 @@
 	</div>
 
 	<ac:lovPopup />
-	
-	
-		<p:remoteCommand name="refreshDraftSuppItem" id="refreshDraftSuppItem" action="#{catalogueBackingBean.checkingCheckAll}" update=":form:draftSupplierItemID:selectAllCheckBoxId"></p:remoteCommand>
-	
+
+
+	<p:remoteCommand name="refreshDraftSuppItem" id="refreshDraftSuppItem"
+		action="#{catalogueBackingBean.checkingCheckAll}"
+		update=":form:draftSupplierItemID:selectAllCheckBoxId"></p:remoteCommand>
+
 
 	<p:dataTable id="draftSupplierItemID" lazy="true" style="width:100%;"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -59,7 +61,8 @@
 						update=":form:downloadLink, :form:submitLink, @(.ui-chkbox[id$=singleCheckBoxID])"></p:ajax>
 				</p:selectBooleanCheckbox>
 			</f:facet>
-			<p:selectBooleanCheckbox id="singleCheckBoxID" value="#{selectedSuppCat.selected}">
+			<p:selectBooleanCheckbox id="singleCheckBoxID"
+				value="#{selectedSuppCat.selected}">
 				<p:ajax event="change"
 					listener="#{catalogueBackingBean.cloneItemSelection(rowIndex)}"
 					update=":form:downloadLink, :form:submitLink,  @(.ui-chkbox[id$=selectAllCheckBoxId])  "></p:ajax>
@@ -86,8 +89,9 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.price']}" />
 			</f:facet>
-			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}" maxlength="18" label="#{lbl['lbl.cm.price']}"
-				size="10" style="text-align:right">
+			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}"
+				maxlength="18" label="#{lbl['lbl.cm.price']}" size="10"
+				style="text-align:right">
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
@@ -111,8 +115,8 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.start.date']}" />
 			</f:facet>
-			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}" navigator="true"
-				showOn="button" size="10"
+			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}"
+				navigator="true" showOn="button" size="10"
 				mindate="#{catalogueBackingBean.managedBean.currentDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
@@ -122,8 +126,8 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.end.date']}" />
 			</f:facet>
-			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}" navigator="true"
-				showOn="button" size="10"
+			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}"
+				navigator="true" showOn="button" size="10"
 				mindate="#{catalogueBackingBean.managedBean.currentDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
@@ -133,10 +137,12 @@
 				#{lbl['lbl.cm.action']}
 			</f:facet>
 
-			<p:commandLink title="#{lbl['lbl.cm.zm.edit']}"
-				action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
-				<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
-			</p:commandLink>
+			<h:panelGroup rendered="#{!unspscCodeBackingBean.supplierTemp}">
+				<p:commandLink title="#{lbl['lbl.cm.zm.edit']}"
+					action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
+					<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
+				</p:commandLink>
+			</h:panelGroup>
 			<p:commandLink style="margin-left: 10px;"
 				title="#{lbl['lbl.btn.delete']}" oncomplete="confirmation1.show();"
 				action="#{catalogueBackingBean.setItemToDelete(selectedSuppCat.supplierItemId)}">
@@ -156,11 +162,12 @@
 	</div>
 
 
-	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true" width="500px" onShow="singleUploadListener(fileUploadWidget);"
+	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
+		width="500px" onShow="singleUploadListener(fileUploadWidget);"
 		resizable="false" styleClass="pop_up_top">
 
 
-		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}" 
+		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}"
 			cancelLabel="#{lbl['lbl.btn.cancel']}" multiple="false"
 			uploadLabel="#{lbl['lbl.btn.upload']}" showButtons="false"
 			label="#{lbl['lbl.btn.choose']}" widgetVar="fileUploadWidget"
