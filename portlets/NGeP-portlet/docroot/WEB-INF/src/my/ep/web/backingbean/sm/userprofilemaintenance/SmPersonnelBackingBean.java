@@ -729,19 +729,31 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setMailAddCityList(null);
 		}
 		if (!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
+			getManagedBean()
+					.getBasicSmPersonnelMailingAddress()
+					.getSmAddress()
+					.setPmState(
+							SmCommonUtil.getInstance().getStateById(
+									Long.valueOf(stateId)));
 			getManagedBean().setMailAddDistrictList(
 					SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
 			getManagedBean().setMailAddCityList(null);
 		}
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
+			getManagedBean()
+					.getBasicSmPersonnelMailingAddress()
+					.getSmAddress()
+					.setPmDistrict(
+							SmCommonUtil.getInstance().getDistrictById(
+									Long.valueOf(districtId)));
 			getManagedBean().setMailAddCityList(
 					SmCommonUtil.getCityList(Long.valueOf(districtId)));
 		}
 	}
 
 	/**
-	 * Update permanent address for state,district and city list based on
-	 * dropdown selection
+	 * Update permanent address for state,district and city list based on drop
+	 * down selection
 	 * 
 	 * @param String
 	 *            countryId
@@ -759,11 +771,23 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setPermAddCityList(null);
 		}
 		if (!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
+			getManagedBean()
+					.getBasicSmPersonnelPermanentAddress()
+					.getSmAddress()
+					.setPmState(
+							SmCommonUtil.getInstance().getStateById(
+									Long.valueOf(stateId)));
 			getManagedBean().setPermAddDistrictList(
 					SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
 			getManagedBean().setPermAddCityList(null);
 		}
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
+			getManagedBean()
+					.getBasicSmPersonnelPermanentAddress()
+					.getSmAddress()
+					.setPmDistrict(
+							SmCommonUtil.getInstance().getDistrictById(
+									Long.valueOf(districtId)));
 			getManagedBean().setPermAddCityList(
 					SmCommonUtil.getCityList(Long.valueOf(districtId)));
 		}
@@ -1083,62 +1107,50 @@ public class SmPersonnelBackingBean extends
 	 * @throws Exception
 	 */
 	public void save() {
-		try {
-			if (getManagedBean().getBasicSmPersonnel() != null) {
-				SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
-						.getBasicSmPersonnel().getName(), getManagedBean()
-						.getBasicSmPersonnel().getEmail());
-			}
-			if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
-				getManagedBean().setBasicSmPersonnel(
-						saveNewUser(getManagedBean().getBasicSmPersonnel()));
+		if (getManagedBean().getBasicSmPersonnel() != null) {
+			SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
+					.getBasicSmPersonnel().getName(), getManagedBean()
+					.getBasicSmPersonnel().getEmail());
+		}
+		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
+			getManagedBean().setBasicSmPersonnel(
+					saveNewUser(getManagedBean().getBasicSmPersonnel()));
+			initAuthorizedPersonnels(getManagedBean().getSmSupplier());
+			getManagedBean().setDisableAddNewUser(
+					validatePersonLimit(getManagedBean().getSmSupplier()));
+		} else {
+			if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				updateUser(getManagedBean().getBasicSmPersonnel());
 				initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 				getManagedBean().setDisableAddNewUser(
 						validatePersonLimit(getManagedBean().getSmSupplier()));
-			} else {
-				if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+				if (!getManagedBean().isDeactivatePersonnel()) {
+					String[] params = { getManagedBean().getBasicSmPersonnel()
+							.getName() };
+					getManagedBean().setDeactivateTerminateConfirmMsg(
+							SmCommonUtil.getMessage(
+									"lbl.sm.userprofile.deactivate.personnel",
+									params));
+					RequestContext.getCurrentInstance().execute(
+							"confirmDialog.show()");
+				} else {
+					getManagedBean().getBasicSmPersonnel().setEpRole(null);
 					updateUser(getManagedBean().getBasicSmPersonnel());
 					initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 					getManagedBean().setDisableAddNewUser(
 							validatePersonLimit(getManagedBean()
 									.getSmSupplier()));
-				} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-					if (!getManagedBean().isDeactivatePersonnel()) {
-						String[] params = { getManagedBean()
-								.getBasicSmPersonnel().getName() };
-						getManagedBean()
-								.setDeactivateTerminateConfirmMsg(
-										SmCommonUtil
-												.getMessage(
-														"lbl.sm.userprofile.deactivate.personnel",
-														params));
-						RequestContext.getCurrentInstance().execute(
-								"confirmDialog.show()");
-					} else {
-						getManagedBean().getBasicSmPersonnel().setEpRole(null);
-						updateUser(getManagedBean().getBasicSmPersonnel());
-						initAuthorizedPersonnels(getManagedBean()
-								.getSmSupplier());
-						getManagedBean().setDisableAddNewUser(
-								validatePersonLimit(getManagedBean()
-										.getSmSupplier()));
-					}
-				} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_DELETED) {
-					String[] params = { getManagedBean().getBasicSmPersonnel()
-							.getName() };
-					getManagedBean().setDeactivateTerminateConfirmMsg(
-							SmCommonUtil.getMessage(
-									"lbl.sm.userprofile.terminate.personnel",
-									params));
-					RequestContext.getCurrentInstance().execute(
-							"confirmDialog.show()");
 				}
-			}
-		} catch (Exception ex) {
-			if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
-				throw new EpException(MessageConst.ERROR_722633);
-			} else {
-				throw new EpException(MessageConst.ERROR_722632);
+			} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_DELETED) {
+				String[] params = { getManagedBean().getBasicSmPersonnel()
+						.getName() };
+				getManagedBean().setDeactivateTerminateConfirmMsg(
+						SmCommonUtil.getMessage(
+								"lbl.sm.userprofile.terminate.personnel",
+								params));
+				RequestContext.getCurrentInstance().execute(
+						"confirmDialog.show()");
 			}
 		}
 	}
@@ -1166,17 +1178,21 @@ public class SmPersonnelBackingBean extends
 	 * @throws Exception
 	 */
 	public void updateUser(SmPersonnel smPersonnel) {
-		if (smPersonnel.getTitle() != null
-				&& smPersonnel.getTitle().getSalutationId() == null) {
-			smPersonnel.setTitle(null);
-		}
-		PersonnelResDTO resDTO = updatePersonnel(smPersonnel);
-		log.info("Result:" + resDTO.isSuccessful());
-		if (resDTO.isSuccessful()) {
-			SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
-					MessageConst.INFO_100002, null);
-			getManagedBean().setBasicSmPersonnel(resDTO.getSmPersonnel());
-		} else {
+		try {
+			if (smPersonnel.getTitle() != null
+					&& smPersonnel.getTitle().getSalutationId() == null) {
+				smPersonnel.setTitle(null);
+			}
+			PersonnelResDTO resDTO = updatePersonnel(smPersonnel);
+			log.info("Result:" + resDTO.isSuccessful());
+			if (resDTO.isSuccessful()) {
+				SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
+						MessageConst.INFO_100002, null);
+				getManagedBean().setBasicSmPersonnel(resDTO.getSmPersonnel());
+			} else {
+				throw new EpException(MessageConst.ERROR_722632);
+			}
+		} catch (Exception ex) {
 			throw new EpException(MessageConst.ERROR_722632);
 		}
 	}
@@ -1333,27 +1349,9 @@ public class SmPersonnelBackingBean extends
 				postCode = addr.getSmAddress().getPostcode();
 			}
 		}
-		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
-		reqDTO.setName(per.getName());
-		reqDTO.setNewIcNo(per.getIdentificationNo());
-		reqDTO.setType("Online");
-		reqDTO.setPostCode(postCode);
 
-		MyIdentityResDTO resDTO = null;
-		StringBuilder sb = new StringBuilder();
-		sb.append("MessageConst.ERROR_MYIDENTITY_");
-
-		try {
-			resDTO = SmServiceLookup.getMyIdentitySO().myIdentityVerification(
-					reqDTO);
-			if (!resDTO.getStatusCode().equalsIgnoreCase(
-					SupplierManagementConst.SM_MYIDENTITY_STATUS_CODE_VALID)) {
-				sb.append(resDTO.getStatusCode());
-				throw new EpException(sb.toString());
-			}
-		} catch (Exception e) {
-			throw new EpException(e.getMessage());
-		}
+		SmCommonUtil.getInstance().verifyWithMyIdentity(per.getName(),
+				per.getIdentificationNo(), postCode, null);
 
 	}
 
