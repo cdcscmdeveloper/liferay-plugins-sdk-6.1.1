@@ -384,13 +384,7 @@ public class PmTrackingDiaryBackingBean extends
 
 	
 	public void redirectToTrackingDiary(String docType, Long docId)  throws IOException,PortalException, SystemException{
-		System.out.println("...........redirectToTrackingDiary............");
-		System.out.println("...........docType:"+docType);
-		System.out.println("...........docId:"+docId);
-
-		//search and redirect to trackingDiaryView.xhtml
-		this.getManagedBean().setSelectedDocType(docType);
-		this.getManagedBean().setSelectedDocId(docId);
+		setTrackingDiaryParam(docType, docId);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
@@ -402,6 +396,12 @@ public class PmTrackingDiaryBackingBean extends
 
 		
 	}
+	
+	public void setTrackingDiaryParam(String docType, Long docId){
+		this.getManagedBean().setSelectedDocType(docType);
+		this.getManagedBean().setSelectedDocId(docId);
+	}
+	
 	public void onFunctionSelect() {
 		System.out.println("............onFunctionSelect..........this.getManagedBean().getFunctionType()...."+this.getManagedBean().getFunctionType());
 
