@@ -7680,6 +7680,27 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Validate added branch GST information
+	 * 
+	 * @param boolean valid
+	 * @param int currentTab
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
+	public static void validateBranchGstInformation(boolean valid,
+			int currentTab, SmApplicationManagedBean bean) {
+		SmSupplierBranch br = bean.getSelectedBranch();
+		if (bean.getCompanyBasicGst() != null) {
+			if (br.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					&& (br.getGst() == null || StringUtils.isBlank(br.getGst()
+							.getGstRegNo()))) {
+				throw new EpException(SmCommonUtil.getMessage(
+						"lbl.sm.gst.branch.req.msg", null));
+			}
+		}
+	}
+
+	/**
 	 * Get machine select items by machine detail
 	 * 
 	 * @param SmMachineDtl
