@@ -8,6 +8,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
@@ -25,6 +26,7 @@ public class ViewApplHistoryManagedBean extends
 	private SmAppl selectedApplHistory;
 	private boolean claimTask;
 	private IPagingDataModel<Object[]> smSupplierDataModel = new SmSupplierPagingDataModel();
+	private PmTrackingDiaryBackingBean trackingDiary;
 
 	public ViewApplHistoryManagedBean() {
 
@@ -108,6 +110,18 @@ public class ViewApplHistoryManagedBean extends
 
 	public void setClaimTask(boolean claimTask) {
 		this.claimTask = claimTask;
+	}
+
+	public PmTrackingDiaryBackingBean getTrackingDiary() {
+		if (trackingDiary == null) {
+			return new PmTrackingDiaryBackingBean();
+		} else {
+			return trackingDiary;
+		}
+	}
+
+	public void setTrackingDiary(PmTrackingDiaryBackingBean trackingDiary) {
+		this.trackingDiary = trackingDiary;
 	}
 
 }
