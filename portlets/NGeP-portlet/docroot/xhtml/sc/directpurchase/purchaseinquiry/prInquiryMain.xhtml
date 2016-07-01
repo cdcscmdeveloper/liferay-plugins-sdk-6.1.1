@@ -27,8 +27,16 @@
 			value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}" />
 		<ui:param name="isPendingRnCreationStatus"
 			value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq  DPStatusConstants.priPendingRnCreation}" />
+			
+			<ui:param name="readOnlyTask" value="#{purchaseInquiryBackingBean.managedBean.readOnly}" />
+				<ui:decorate
+					template="/WEB-INF/facelets/templates/claim_template.xhtml">
+					<ui:define name="outComeSection">
+						<ui:include src="/xhtml/sc/directpurchase/purchaseinquiry/prInquiryButtons.xhtml" />
+					</ui:define>
+				</ui:decorate>
 		
-		<ui:include src="/xhtml/sc/directpurchase/purchaseinquiry/prInquiryButtons.xhtml" />
+		
 		<ui:include src="/xhtml/sc/directpurchase/purchaseinquiry/prInquiryHeader.xhtml" />
 		<ui:include src="/xhtml/sc/directpurchase/purchaseinquiry/prInquiry.xhtml" />
 
