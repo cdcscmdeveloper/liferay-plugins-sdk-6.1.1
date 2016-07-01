@@ -185,22 +185,12 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /><h:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 150px; margin-bottom:5px;" value="#{contractRequestBackingBean.managedBean.assetIndId}" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}">
+					<td><p:selectOneMenu id="assetInd" style="width: 150px; margin-bottom:5px;" value="#{contractRequestBackingBean.managedBean.assetIndId}" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}">
+						<p:ajax update="@this"></p:ajax>
 						<f:selectItems value="#{contractRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
 					</p:selectOneMenu></td>
 					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
-					<td><p:selectOneMenu id="votCode1" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
-						value="#{contractRequestBackingBean.managedBean.votFundId}" rendered="false"
-						style="width: 115px; margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="votCodeList"
-							value="#{contractRequestBackingBean.managedBean.votFundList}"
-							itemLabel="#{votCodeList.votFundCode}"
-							itemValue="#{votCodeList.votFundId}" />
-							<p:ajax event="change"
-							listener="#{contractRequestBackingBean.checkVotFundDropdown}"
-							update="fundLov,pmActiveLov,projectLov,setiaCode,subSetiaCode,cpCode" />
-					</p:selectOneMenu>
+					<td>
 					<h:panelGroup styleClass="votCode2" id="votCode2">
 					<ac:lov id="pmVotCode"
 						lovId="PM_VOT" headerText="#{lbl['lbl.fl.vot']}"
