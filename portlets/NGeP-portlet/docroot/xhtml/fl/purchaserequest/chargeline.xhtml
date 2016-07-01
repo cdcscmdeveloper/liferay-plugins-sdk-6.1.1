@@ -190,18 +190,7 @@
 						<f:selectItems value="#{purchaseRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
 					</p:selectOneMenu></td>
 					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
-					<td><p:selectOneMenu id="votCode1" disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
-						value="#{purchaseRequestBackingBean.managedBean.votFundId}" rendered="false"
-						style="width: 115px; margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="votCodeList"
-							value="#{purchaseRequestBackingBean.managedBean.votFundList}"
-							itemLabel="#{votCodeList.votFundCode}"
-							itemValue="#{votCodeList.votFundId}" />
-							<p:ajax event="change"
-							listener="#{purchaseRequestBackingBean.checkVotFundDropdown}"
-							update="fundLov,pmActiveLov,projectLov,setiaCode,subSetiaCode,cpCode" />
-					</p:selectOneMenu>
+					<td>
 					<h:panelGroup styleClass="votCode2" id="votCode2">
 					<ac:lov id="pmVotCode"
 						lovId="PM_VOT" headerText="#{lbl['lbl.fl.vot']}"
