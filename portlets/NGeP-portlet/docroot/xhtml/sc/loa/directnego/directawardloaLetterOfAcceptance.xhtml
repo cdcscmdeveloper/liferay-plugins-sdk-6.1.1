@@ -6,10 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}" id="directLoaLetterOfAcceptancePanel"
-		toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}"
+		id="directLoaLetterOfAcceptancePanel" toggleable="true">
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			var="scLoaReport"
 			value="#{directLOABackingBean.managedBean.scLoa.scLoaReports}"
 			rows="10" rowKey="#{scLoaReport}"
@@ -19,38 +19,41 @@
 
 			<p:column style="width:2%">
 				<f:facet name="header">
-					<p:selectBooleanCheckbox id="selectAllNegoLoc"
-					disabled="true"
+					<p:selectBooleanCheckbox id="selectAllNegoLoc" disabled="true"
 						value="#{directLOABackingBean.flag}"
 						rendered="#{isEditableStatus}">
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=directLoaLetterOfAcceptancePanel])"
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=directLoaLetterOfAcceptancePanel])"
 							listener="#{directLOABackingBean.selectAllDocuments}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{scLoaReport.selected}"
 					disabled="#{!empty scLoaReport.pmDocument or directLOABackingBean.managedBean.readOnly}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=directLoaLetterOfAcceptancePanel])" />
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=directLoaLetterOfAcceptancePanel])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
-				<h:inputText style="width:96%" label="#{lbl['lbl.sc.content']}" 
-							 value="#{scLoaReport.title}" required="true"
-							 rendered="#{empty scLoaReport.pmDocument}">
+				<h:inputText style="width:96%" label="#{lbl['lbl.sc.content']}"
+				    id="contendId"
+					value="#{scLoaReport.title}" required="true"
+					rendered="#{empty scLoaReport.pmDocument}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
-				</h:inputText>
+				</h:inputText> 
 				<h:outputText value="#{scLoaReport.title}"
 					rendered="#{!empty scLoaReport.pmDocument}" />
+				<p:message id="contendIdMsg" for="contendId" display="icon" />
 			</p:column>
 
 			<p:column style="width:15%;text-align: center;"
 				headerText="#{lbl['lbl.sc.upload']}" disabled="#{!isEditableStatus}">
 				<ui:fragment
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
-                   <h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
-                   
+					<h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
+
 					<p:commandButton oncomplete="attachmentPopupDlg.show();"
-					disabled="#{directLOABackingBean.managedBean.readOnly}"
+						disabled="#{directLOABackingBean.managedBean.readOnly}"
 						rendered="#{isEditableStatus}"
 						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
 						process="@this" update="@([id$=attachmentPopup])">
@@ -61,14 +64,14 @@
 							target="#{directLOABackingBean.managedBean.attachmentDocType}"
 							value="LAR" />
 					</p:commandButton>
-					
+
 				</ui:fragment>
 			</p:column>
 
 			<p:column style="width:10%;text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
 				<p:commandButton id="download" icon="ui-icon-download"
-				disabled="#{directLOABackingBean.managedBean.readOnly}"
+					disabled="#{directLOABackingBean.managedBean.readOnly}"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{directLOABackingBean.downloadReport(scLoaReport)}"
@@ -78,20 +81,20 @@
 
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton rendered="#{!isPendingVerification}"
-			disabled="#{directLOABackingBean.managedBean.readOnly}"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.btn.download.all']}" ajax="false"
 				styleClass="ui-button"
 				action="#{directLOABackingBean.downloadAllReports}" />
 
 			<p:commandButton rendered="#{isPendingVerification}"
-			disabled="#{directLOABackingBean.managedBean.readOnly}"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"
 				styleClass="ui-button" update="@([id$=loaButtonsId])"
 				onclick="printBtn.jq.click();"
 				actionListener="#{directLOABackingBean.showVerifyButton()}" />
 
 			<p:commandButton rendered="#{isPendingVerification}"
-			disabled="#{directLOABackingBean.managedBean.readOnly}"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}" ajax="false"
 				partialSubmit="true" process="@form" styleClass="ui-button"
 				widgetVar="printBtn" style="display:none;"
@@ -99,7 +102,7 @@
 
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-			disabled="#{directLOABackingBean.managedBean.readOnly}"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 				rendered="#{isEditableStatus}" process="@this, contentsTbl"
 				partialSubmit="true"
 				action="#{directLOABackingBean.addLoaContentAction}"
@@ -107,7 +110,7 @@
 				update="contentsTbl" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			disabled="#{directLOABackingBean.managedBean.readOnly or directLOABackingBean.deleteselectedList(directLOABackingBean.managedBean.scLoa.scLoaReports)}"
+				disabled="#{directLOABackingBean.managedBean.readOnly or directLOABackingBean.deleteselectedList(directLOABackingBean.managedBean.scLoa.scLoaReports)}"
 				rendered="#{isEditableStatus}" process="@this, contentsTbl"
 				partialSubmit="true" oncomplete="loaReportDeletePopUp.show();"
 				update="@([id$=#{loaReportDeleteId}])" />
@@ -122,10 +125,11 @@
 
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.supporting.document']}" id="directLoaSupportingPanelId"
-		rendered="#{!isSupplierAckStatus}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.supporting.document']}"
+		id="directLoaSupportingPanelId" rendered="#{!isSupplierAckStatus}"
+		toggleable="true">
 		<p:dataTable id="suppDocTbl" var="scLoaSuppDoc"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			widgetVar="suppDocTblWidget"
 			value="#{directLOABackingBean.managedBean.scLoa.scLoaSupportingDocs}"
 			rows="10" rowKey="#{scLoaSuppDoc}"
@@ -135,36 +139,43 @@
 			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllNegoLoc"
-					disabled="#{directLOABackingBean.managedBean.readOnly}"
+						disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.suppDocFlag}"
 						rendered="#{isEditableStatus}">
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=directLoaSupportingPanelId])"
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=directLoaSupportingPanelId])"
 							listener="#{directLOABackingBean.selectAllSuppDocuments}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{scLoaSuppDoc.selected}"
 					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=directLoaSupportingPanelId])" />
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=directLoaSupportingPanelId])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.sc.document.title']}">
-				<p:inputText style="width:85%" value="#{scLoaSuppDoc.title}" disabled="#{directLOABackingBean.managedBean.readOnly}">
+				<p:inputText style="width:85%" value="#{scLoaSuppDoc.title}"
+				    id="docSuppId"
+				    required="true"
+					label="#{lbl['lbl.sc.document.title']}"
+					disabled="#{directLOABackingBean.managedBean.readOnly}">
 					<p:ajax event="keyup" />
 				</p:inputText>
+				<p:message id="docSuppIdMsg" for="docSuppId" display="icon" />
 			</p:column>
 
 			<p:column style="width:15%;text-align: center;"
 				headerText="#{lbl['lbl.sc.upload']}">
 				<ui:fragment>
 					<h:commandLink
-					disabled="#{directLOABackingBean.managedBean.readOnly}"
+						disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{scLoaSuppDoc.scLoaSupportingDocAttachment.fileName}"
 						styleClass="blue_font" immediate="true"
 						action="#{directLOABackingBean.downloadFile(scLoaSuppDoc.scLoaSupportingDocAttachment)}" />
 
 					<p:commandButton oncomplete="loaSuppAttmPopupDlg.show();"
-					disabled="#{directLOABackingBean.managedBean.readOnly}"
+						disabled="#{directLOABackingBean.managedBean.readOnly}"
 						rendered="#{isEditableStatus}"
 						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
 						process="@this" update="@([id$=loaSuppAttmPopup])">
@@ -180,7 +191,7 @@
 
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-			disabled="#{directLOABackingBean.managedBean.readOnly}"
+				disabled="#{directLOABackingBean.managedBean.readOnly}"
 				process="@this, suppDocTbl" partialSubmit="true"
 				rendered="#{isEditableStatus}"
 				action="#{directLOABackingBean.addLoaSuppDocAction}"
@@ -188,7 +199,7 @@
 				update="suppDocTbl" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			disabled="#{directLOABackingBean.managedBean.readOnly or directLOABackingBean.deleteselectedList(directLOABackingBean.managedBean.scLoa.scLoaSupportingDocs)}"
+				disabled="#{directLOABackingBean.managedBean.readOnly or directLOABackingBean.deleteselectedList(directLOABackingBean.managedBean.scLoa.scLoaSupportingDocs)}"
 				rendered="#{isEditableStatus}" process="@this, suppDocTbl"
 				partialSubmit="true" oncomplete="supporingDocDeletePopUp.show();"
 				update="@([id$=#{supporingDocDeleteId}])" />
