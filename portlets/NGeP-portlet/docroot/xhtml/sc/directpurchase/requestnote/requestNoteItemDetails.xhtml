@@ -32,13 +32,13 @@
 						<p:selectBooleanCheckbox id="selAllChk"
 							value="#{requestNoteBackingBean.flag}">
 							<p:ajax partialSubmit="true" process="@this"
-								update="requestListDataTable"
+								update="@([id$=requestNodeDeleteBtnId])"
 								listener="#{requestNoteBackingBean.selectAll}"></p:ajax>
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{requestNoteDtl.selected}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="requestListDataTable"
+							update="@([id$=requestNodeDeleteBtnId])"
 							listener="#{requestNoteBackingBean.selectSingleRow}" />
 					</p:selectBooleanCheckbox>
 				</p:column>
@@ -301,33 +301,26 @@
 				onclick="applyAllPopUpSQ.show();"/>
 
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" disabled="#{isViewOnly}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
+			disabled="#{isViewOnly or requestNoteBackingBean.deleteselectedList(requestNoteBackingBean.managedBean.requestNoteDtls)}" 
+			id="requestNodeDeleteBtnId"
 				rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
-				partialSubmit="true" onclick="deleteConformDlg.show();" />
+				partialSubmit="true" onclick="deleteConformDlg.show();" update="@([id$=#{deleteConformDlgRequestNode}])" >
+				</p:commandButton>
 		</div>
+		<ui:param name="deleteConformDlgRequestNode"
+			value="deleteConformDlgRequestNode"></ui:param>
+
+		<ac:confirmationPopup id="#{deleteConformDlgRequestNode}"
+			widget="deleteConformDlg" width="400" height="100"
+			okAction="requestNoteBackingBean.deleteRequestNoteDtl"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}"
+			update="@([id$=requestNoteItemDetails])" />
 	</p:panel>
+	
 
-	<p:dialog id="deleteConformDlg" widgetVar="deleteConformDlg"
-		header="#{lbl['lbl.msg.confirm.delete.header']}" resizable="false"
-		width="400" height="100" closable="false" modal="true">
-		<table>
-			<tr>
-				<td align="center"><h:graphicImage
-						value="/css/images/design/exclamation.png" /> <p:outputLabel
-						value="#{lbl['lbl.msg.confirm.delete']}" /></td>
-			</tr>
-		</table>
-		<div class="ppRightBtn BtnSpacing">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}"
-				update="@([id$=requestListDataTable])"
-				onsuccess="deleteConformDlg.hide();" partialSubmit="true"
-				process="@this"
-				actionListener="#{requestNoteBackingBean.deleteRequestNoteDtl}" />
-
-			<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
-				process="@this" onclick="deleteConformDlg.hide();" type="button" />
-		</div>
-	</p:dialog>
+	
 
 	<p:dialog id="applyAllItems" widgetVar="applyAllPopUp"
 		header="#{lbl['lbl.sc.request.note.apply.all.items']}" modal="true"

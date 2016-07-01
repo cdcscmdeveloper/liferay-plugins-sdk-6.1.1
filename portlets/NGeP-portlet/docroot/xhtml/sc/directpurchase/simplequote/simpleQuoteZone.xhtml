@@ -45,9 +45,9 @@
 						<p:tree value="#{zoneTree}" var="location" id="treeid"
 							selectionMode="checkbox">
 
-							<p:ajax event="select"
+							<p:ajax event="select" update="@([id$=simpleQuoteZoneDeliveryLocDeleteBtnId])"
 								listener="#{simpleQuoteBackingBean.selectZoneTreeNode}" />
-							<p:ajax event="unselect"
+							<p:ajax event="unselect" update="@([id$=simpleQuoteZoneDeliveryLocDeleteBtnId])"
 								listener="#{simpleQuoteBackingBean.unSelectZoneTreeNode}" />
 
 							<p:treeNode type="zone">
@@ -88,7 +88,8 @@
 						partialSubmit="true" oncomplete="ZoneLocation.show();"
 						actionListener="#{simpleQuoteBackingBean.showZonePopup}" />
 
-					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" id="simpleQuoteZoneDeliveryLocDeleteBtnId"
+					disabled="#{simpleQuoteBackingBean.zoneLocationDeleteBtnDisable()}"
 						process="@this, zoneLocationDataTable" partialSubmit="true"
 						oncomplete="deliveryLocationDeletePopUp.show();"
 						update="@([id$=#{deliveryLocationDeleteId}])" />
@@ -112,9 +113,9 @@
 					<p:column headerText="Location">
 						<p:tree value="#{zoneTree}" var="location"
 							selectionMode="checkbox">
-							<p:ajax event="select"
+							<p:ajax event="select" update="@([id$=simpleQuoteZonePanelDeleteBtnId])"
 								listener="#{simpleQuoteBackingBean.selectPanelItemZone}" />
-							<p:ajax event="unselect"
+							<p:ajax event="unselect" update="@([id$=simpleQuoteZonePanelDeleteBtnId])"
 								listener="#{simpleQuoteBackingBean.unSelectPanelItemZone}" />
 
 							<p:treeNode type="zone">
@@ -136,7 +137,8 @@
 			</h:panelGrid>
 			<div align="right" style="width: 100%">
 				<c:if test="#{isEditable}">
-					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" id="simpleQuoteZonePanelDeleteBtnId"
+					disabled="#{simpleQuoteBackingBean.zoneLocationDeleteBtnDisable()}"
 					    styleClass="BtnSpacing"
 						process="@this, panelzoneDataTable" partialSubmit="true"
 						oncomplete="deliveryZoneDeletePopUp.show();"
