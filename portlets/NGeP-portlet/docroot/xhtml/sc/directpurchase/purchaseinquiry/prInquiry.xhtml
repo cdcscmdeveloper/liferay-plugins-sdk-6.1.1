@@ -260,7 +260,7 @@
 				<td><p:selectOneRadio styleClass="commonLabel"
 						id="stockAvailable" style="margin-bottom: 2px;"
 						label="#{lbl['lbl.sc.price.inquiry.stock.avail']}"
-						disabled="#{!isPendingSupplierRespStatus or isTrackingDairyView}"
+						disabled="#{!isPendingSupplierRespStatus or isTrackingDairyView or readOnlyTask}"
 						value="#{purchaseInquiryBackingBean.managedBean.stockAvailable}"
 						required="#{!purchaseInquiryBackingBean.isRequisitioner()}">
 						<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.yes']}"
@@ -328,6 +328,6 @@
 
 	<ac:scRemarkAndAttachment
 		remarkList="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.remarks}"
-		readonly="#{isViewOnly}" showAttachment="false" />
+		readonly="#{isViewOnly or readOnlyTask}" showAttachment="false" />
 
 </ui:composition>
