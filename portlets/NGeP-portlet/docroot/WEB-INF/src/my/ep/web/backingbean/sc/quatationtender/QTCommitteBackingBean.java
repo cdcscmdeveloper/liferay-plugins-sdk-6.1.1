@@ -1999,14 +1999,14 @@ public class QTCommitteBackingBean extends
 		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 				
 		if (this.getManagedBean().isMaintanceFlow()) {
-			if (isQTStatusPublished(currentStatusId)) {
-				Date closingDate = this.getManagedBean().getQt().getClosingDate();
-				if (closingDate != null
-						&& DateUtils.getDaysDifference(new Date(), closingDate) <= 7
-						&& (QTStatusConst.CMT_PENDING_SUBMISSION.equals(committeStatus) ||
-								 QTStatusConst.CMT_PENDING_REVISION.equals(committeStatus))) {
-					return true;
-				}
+		
+			Date closingDate = this.getManagedBean().getQt().getClosingDate();
+			if (isQTStatusPublished(currentStatusId)
+					&& closingDate != null && DateUtils.getDaysDifference(new Date(), closingDate) <= 7
+					&& (QTStatusConst.CMT_PENDING_SUBMISSION
+							.equals(committeStatus) || QTStatusConst.CMT_PENDING_REVISION
+							.equals(committeStatus))) {
+				return true;
 			} else if (!isEligibleStatusForBtns(currentStatusId)) {
 				return true;
 			} 
