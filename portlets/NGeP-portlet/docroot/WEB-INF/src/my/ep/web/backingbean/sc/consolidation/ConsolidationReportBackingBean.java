@@ -886,6 +886,13 @@ public class ConsolidationReportBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
 		TplSpecZoneDtl selectedZone = getManagedBean().getSelectedZone();
+		
+		log.info("selectedZone : " + selectedZone);
+		log.info("ScQtFinalization : " + scQtFinalization);
+		if (scQtFinalization != null) {
+			log.info("scQtFinalization.getScQtRecommendsByZone() : " + 
+							scQtFinalization.getScQtRecommendsByZone());
+		}
 		if (selectedZone != null) {
 			getManagedBean().setItemsList(
 					scQtFinalization.getScQtRecommendsByZone()
