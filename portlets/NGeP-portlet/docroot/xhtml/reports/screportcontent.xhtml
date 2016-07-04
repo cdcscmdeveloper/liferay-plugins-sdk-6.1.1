@@ -129,8 +129,8 @@
 									itemValue="#{null}"></f:selectItem>
 
 								<f:selectItems value="#{reportBackingBean.scPtjList}"></f:selectItems>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true"  listener="#{reportBackingBean.onChangeScPtjType()}"
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -165,10 +165,9 @@
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
-
 								<f:selectItems value="#{reportBackingBean.scRequisitionerList}"></f:selectItems>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true"  listener="#{reportBackingBean.onChangeScRequisitionerType()}"
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -177,7 +176,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText value="#{reportBackingBean.scLOANo}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+								<p:ajax event="blur" partialSubmit="true" listener="#{reportBackingBean.onChangeScLOANo()}" process="@form" update="@form" />
 							</p:inputText>
 						</c:if>
 						<c:if
@@ -204,8 +203,8 @@
 									itemValue="#{1}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.singleLabel']}"
 									itemValue="#{0}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.onChangeScSimpleQuoteTypeView()}"
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -218,8 +217,8 @@
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItems
 									value="#{reportBackingBean.retrieveLOAStatusList()}"></f:selectItems>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.onChangeScSOAStatus()}"
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -251,8 +250,8 @@
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.rejectedLabel']}"
 									itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.onChangePurchaseInDefaultStatus()}"
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -268,7 +267,6 @@
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.completedLabel']}"
 									itemValue="#{lbl['lbl.rpt.Completed']}"></f:selectItem>
-
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.pendingRNCreationLabel']}"
 									itemValue="#{lbl['lbl.rpt.PendingRNCreation']}"></f:selectItem>
@@ -278,10 +276,11 @@
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.pendingSupplierResponseLabel']}"
 									itemValue="#{lbl['lbl.rpt.PendingSupplierResponse']}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.onChangeScCommonStatus()}"
+									update="@form" />
 							</p:selectOneMenu>
-						</c:if>
+						</c:if>				
+						
 						<c:if
 							test="#{scReportBackingBean.managedBean.rptGenBean.scSimpleQuoteStatusView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.status']}"
@@ -303,8 +302,8 @@
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.pendingSupplierResponseLabel']}"
 									itemValue="#{lbl['lbl.rpt.PendingSupplierResponse']}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.onChangeScSimpleQuoteStatus()}" 
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -329,8 +328,8 @@
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.rejectedLabel']}"
 									itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.onChangeScRequestNoteStatus()}" 
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 
@@ -396,7 +395,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText maxlength="40" value="#{reportBackingBean.scPIno}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+								<p:ajax event="blur" listener="#{reportBackingBean.onChangeScPiNo()}" process="@form" partialSubmit="true" update="@form" />
 							</p:inputText>
 						</c:if>
 
@@ -411,7 +410,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText value="#{reportBackingBean.scRequestQuoteNo}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+								<p:ajax event="blur" partialSubmit="true" update="@form" process="@form" listener="#{reportBackingBean.onChangeScRequestQuoteNo()}" />
 							</p:inputText>
 						</c:if>
 						<c:if
@@ -420,7 +419,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText value="#{reportBackingBean.scPIDNo}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+								<p:ajax event="blur" listener="#{reportBackingBean.onChangeScPidNo()}" process="@form" partialSubmit="true" update="@form" />
 							</p:inputText>
 						</c:if>
 						<c:if
@@ -437,8 +436,8 @@
 									itemValue="#{lbl['lbl.rpt.PANEL']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.central']}"
 									itemValue="#{lbl['lbl.rpt.CNTRL']}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" listener="#{reportBackingBean.onChangeScContractOrPKPType()}"  partialSubmit="true"
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -447,7 +446,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText value="#{reportBackingBean.scContractOrPKPNo}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+								<p:ajax event="blur"  listener="#{reportBackingBean.onChangeScContractOrPKPNo()}" process="@form" partialSubmit="true" update="@form" />
 							</p:inputText>
 						</c:if>
 						<c:if
@@ -456,7 +455,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText value="#{reportBackingBean.scContractOrPKPName}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+								<p:ajax event="blur"  listener="#{reportBackingBean.onChangeScContractOrPKPName()}" process="@form" partialSubmit="true" update="@form" />
 							</p:inputText>
 						</c:if>
 
@@ -471,13 +470,12 @@
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.gtog']}"
 									itemValue="#{lbl['lbl.rpt.gtog']}"></f:selectItem>
-
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.adhocLabel']}"
 									itemValue="#{lbl['lbl.rpt.adhoc']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.normalLabel']}"
 									itemValue="#{lbl['lbl.rpt.normal']}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true" listener="#{reportBackingBean.onChangeScProcurementType()}" 
+									update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -486,7 +484,6 @@
 								style="margin-top:5px;width:160px;" />
 							<p:selectOneMenu value="#{reportBackingBean.scPIDtlsPrcRptGroup}"
 								style="margin-top:5px;width:300px;">
-
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
 									itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
 								<f:selectItem
@@ -494,7 +491,7 @@
 									itemValue="#{lbl['lbl.rpt.PINumber']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
 									itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
+								<p:ajax event="change" partialSubmit="true" 
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>

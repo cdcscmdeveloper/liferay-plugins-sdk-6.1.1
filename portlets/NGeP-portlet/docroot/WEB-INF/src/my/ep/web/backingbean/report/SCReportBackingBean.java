@@ -6,14 +6,11 @@ package my.ep.web.backingbean.report;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
-
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -393,6 +390,8 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	}
 	            break;
 	        case ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL:
+	        	rptGenBean.setGenerateButton(false);
+	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
@@ -407,6 +406,8 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScPIDtlsPrcRptGroupView(true);
 	            break;
 	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL:
+	        	  rptGenBean.setGenerateButton(false);
+	        	  rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
@@ -455,6 +456,8 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScCommonStatusView(true);	    		
 	            break;
 	        case ReportConst.SC_LAPORAN_PURCHASE_DEFAULT_S1_RPT_VAL:
+	        	rptGenBean.setGenerateButton(false);
+	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
@@ -470,6 +473,8 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScContractOrPKPNameView(true);
 	            break;
 	        case ReportConst.SC_SUMMARY_REQUEST_NOTE_S1_RPT_VAL:
+	        	rptGenBean.setGenerateButton(false);
+	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
@@ -497,6 +502,8 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScRequestQuoteNoView(true);
 	            break;
 	        case ReportConst.SC_REQUEST_NOTE_COMPLETE_S1_RPT_VAL:
+	        	rptGenBean.setGenerateButton(false);
+	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
@@ -522,6 +529,8 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScCommonStatusView(true);	    		
 	            break;  
 	        case ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL:
+	        	rptGenBean.setGenerateButton(false);
+	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
@@ -534,7 +543,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScSimpleQuoteStatusView(true);	
 	    		rptGenBean.setScProcessRptQuotationNoView(true);
 	            break; 
-	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_REQUSNR_S1_RPT_VAL:
+	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_REQUSNR_S1_RPT_VAL:	        	
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
@@ -547,6 +556,8 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScProcessRptQuotationNoView(true);
 	            break;
 	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL:
+	        	rptGenBean.setGenerateButton(false);
+	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
@@ -574,6 +585,8 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScProcessRptQuotationNoView(true);
 	            break;
 	        case ReportConst.SC_S1_PURCHASE_DEFAULT_DTLS_RPT_VAL:
+	        	rptGenBean.setGenerateButton(false);
+	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
@@ -599,11 +612,15 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	}
 	    		rptGenBean.setScSimpleQuoteStatusView(true);	
 	    		rptGenBean.setScProcurementTypeView(true);*/
+	        	rptGenBean.setGenerateButton(false);
+	        	rptGenBean.setConditionGenerateButton(true);
 	    		rptGenBean.setScMandatoryProcessRptQuotationNoView(true);
 	    		rptGenBean.setExtraTwoColumnView(true);
 	    		//rptGenBean.setScProcessRptQuotationNoView(true);	    		
 	            break;
 	        case ReportConst.SC_S1_LOA_RPT_VAL:
+	        	rptGenBean.setGenerateButton(false);
+	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
@@ -618,6 +635,8 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScProcessRptQuotationNoView(true);
 	            break;
 		   case ReportConst.SC_S1_LOA_CONTENT_RPT_VAL:
+			    rptGenBean.setGenerateButton(false);
+	        	rptGenBean.setConditionGenerateButton(true);
 		     	rptGenBean.setScLOAContentView(true);
 
 			break;
