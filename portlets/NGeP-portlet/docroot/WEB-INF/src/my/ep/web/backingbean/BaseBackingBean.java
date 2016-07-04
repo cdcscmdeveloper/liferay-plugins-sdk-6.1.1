@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -1703,5 +1704,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Validation on amount as 1GFMAS accept NUM(11,2)
+	 * @param label
+	 * @param amount
+	 */
+	protected void validateAmount(String label, BigDecimal amount) {
+		if(amount.precision()!=13 || amount.scale()!=2) {
+			throw new EpException(MessageConst.ERROR_100039, new String[]{label,"0.00","99999999999.99"});
+		}
 	}
 }
