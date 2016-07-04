@@ -3325,55 +3325,16 @@ public class LOIDetailBackingBean extends
 	 *            the sc qt deduction
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
+		
 		debugLogger("deductionTypeChange");
-		IParameterSO parameterSO = null;
-		IClauseSO clauseSO = null;
-		try {
 			Long parameterId = scQtDeduction.getDeductionType()
 					.getParameterId();
-
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			clauseSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IClauseSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			scQtDeduction.setDeductionType(resDTO.getPmParameter());
+			scQtDeduction.setDeductionType(retrieveParameterById(parameterId));
 			validateDuplicateDeductionPay(scQtDeduction);
 			getClausesTitle(scQtDeduction);
-			ScQtDeductionClause deductionClause = null;
-			List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
-			if (!ParameterConst.DEDUCTION_TYPE_OTHERS
-					.equalsIgnoreCase(scQtDeduction.getDeductionType()
-							.getParameterCode())) {
-				ClauseReqDTO clauseReqDTO = new ClauseReqDTO();
-				clauseReqDTO.setDeductionType(scQtDeduction.getDeductionType()
-						.getParameterCode());
-				ClauseResDTO clauseResDTO = clauseSO
-						.retrieveClausesByDeductionType(clauseReqDTO);
-				if (clauseResDTO.getResultBean() != null) {
-					List<PmClause> pmClauseList = clauseResDTO.getResultBean()
-							.getResultList();
-					for (PmClause pmClause : pmClauseList) {
-						deductionClause = new ScQtDeductionClause();
-						deductionClause.setPmClause(pmClause);
-						deductionClause.setScQtDeduction(scQtDeduction);
-						deductionClause.setClauseDesc(pmClause.getClauseDesc());
-						deductionClauseList.add(deductionClause);
-					}
-					scQtDeduction.setScQtDeductionClauses(deductionClauseList);
-				} else {
-					scQtDeduction.setScQtDeductionClauses(null);
-				}
-			} else {
-				scQtDeduction.setScQtDeductionClauses(null);
-			}
-
+			scQtDeduction.setScQtDeductionClauses(null);
 			getManagedBean().setSelectedScQtDeduction(scQtDeduction);
-		} finally {
-			parameterSO = null;
-		}
+		
 	}
 
 	/**
@@ -5238,16 +5199,8 @@ public class LOIDetailBackingBean extends
 	 * @param scLoi the sc loi
 	 */
 	public void validateOthersDeductionPay(ScLoi scLoi) {
-		List<ScQtDeduction> deductions = scLoi.getScQtDeductions();
-		if (CollectionUtils.isNotEmpty(deductions)) {
-			for (ScQtDeduction deduction : deductions) {
-				if (ParameterConst.DEDUCTION_TYPE_OTHERS.equals(deduction.getDeductionType().getParameterCode())) {
-					if (CollectionUtils.isEmpty(deduction.getScQtDeductionClauses())) {
-						throw new EpException(MessageConst.ERROR_760324);
-					}
-				}
-			}
-		}
+		
+		validateDeductionPaymentDtls(scLoi.getScQtDeductions());
 	}
 	
 	/**

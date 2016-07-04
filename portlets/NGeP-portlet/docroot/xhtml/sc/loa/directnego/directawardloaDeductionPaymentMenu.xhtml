@@ -142,7 +142,7 @@
 
 			<div class="ppRightBtn BtnSpacing">
 				<h:panelGroup
-					rendered="#{!empty directLOABackingBean.managedBean.selectedScQtDeduction and directLOABackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers and isEditableStatus}">
+					rendered="#{!empty directLOABackingBean.managedBean.selectedScQtDeduction and isEditableStatus}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"
 					disabled="#{directLOABackingBean.managedBean.readOnly}"
 						process="@this, deductClauseTbl" partialSubmit="true"
