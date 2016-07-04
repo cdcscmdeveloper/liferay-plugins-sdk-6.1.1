@@ -280,7 +280,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					messageId = MessageConst.INFO_700007;
+					messageId = MessageConst.INFO_700018;
 					messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
@@ -293,15 +293,30 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.update.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					//messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
-					messageId = MessageConst.INFO_745016;
+					messageId = MessageConst.INFO_745017;
 				}
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, 
-						null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_INVOICE), resDTO.getSupplierInvoiceNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, 
-								new FacesScopes().getUserLocale())));
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{resDTO.getSupplierInvoiceNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+				}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{resDTO.getSupplierInvoiceNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+				}else{
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_INFO, 
+							null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_INVOICE), resDTO.getSupplierInvoiceNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+				}
+				
 				boolean isPendingAP59Decision = false;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
