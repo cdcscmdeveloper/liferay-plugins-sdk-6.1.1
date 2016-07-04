@@ -1323,9 +1323,10 @@ public class EvaluationBackingBean extends
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 
 			reqDTO.setCompliance(null);
+			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
 
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
-			if (null != resDTO.getCheckListResultBean().getResultList()
+			/*if (null != resDTO.getCheckListResultBean().getResultList()
 					&& !resDTO.getCheckListResultBean().getResultList()
 							.isEmpty()) {
 
@@ -1374,7 +1375,7 @@ public class EvaluationBackingBean extends
 
 				}
 
-			}
+			}*/
 
 			this.getManagedBean().setComplianceTechnicalCheckList(
 					resDTO.getCheckListResultBean().getResultList());
@@ -1434,9 +1435,10 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 			reqDTO.setCompliance(null);
+			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 
-			if (null != resDTO.getCheckListResultBean().getResultList()
+			/*if (null != resDTO.getCheckListResultBean().getResultList()
 					&& !resDTO.getCheckListResultBean().getResultList()
 							.isEmpty()) {
 				for (ScQtCheckList checkList : resDTO.getCheckListResultBean()
@@ -1461,7 +1463,7 @@ public class EvaluationBackingBean extends
 
 				}
 
-			}
+			}*/
 
 			this.getManagedBean().setCompliancefinancialCheckList(
 					resDTO.getCheckListResultBean().getResultList());
