@@ -22,21 +22,45 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu style="width: 250px;"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentType}">
-							<f:selectItems
-								value="#{directPurchaseBackingBean.getDocumentType()}" />
+							<f:selectItems 
+								value="#{directPurchaseBackingBean.managedBean.documentTypes}" />
 							<p:ajax event="change" update="searchPanel"
 								listener="#{directPurchaseBackingBean.searchStatusDesc}" />
 						</p:selectOneMenu></td>
 				</tr>
+
+				<h:panelGroup rendered="#{directPurchaseBackingBean.managedBean.government}">
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.document.title']}" /></td>
-					<td colspan="3"><p:inputText style="width: 750px;"
+					<td><p:outputLabel value="#{lbl['lbl.sc.ministry']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{directPurchaseBackingBean.managedBean.searchMinistryProfile.orgName}"
+							disabled="true" size="25" readonly="true" style="width:840px;" />
+					</td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{directPurchaseBackingBean.managedBean.searchPtjGroupProfile.orgName}"
+							disabled="true" size="25" readonly="true" style="width:840px;" />
+					</td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{directPurchaseBackingBean.managedBean.searchPtjProfile.orgName}"
+							disabled="true" size="25" readonly="true" style="width:840px;" />
+					</td>
+				</tr>
+				</h:panelGroup>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.document.title']}" /></td>
+					<td colspan="3"><p:inputText style="width: 840px;"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentTitle}"></p:inputText></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.document.no']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
 					<td><p:inputText size="35"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentNo}"></p:inputText></td>
 				</tr>
@@ -67,8 +91,7 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{directPurchaseBackingBean.search}"
-					update="resultPanel" />
+					action="#{directPurchaseBackingBean.search}" update="resultPanel" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{directPurchaseBackingBean.reset}" update=":form" />
 			</div>
@@ -77,13 +100,29 @@
 			toggleable="true">
 
 			<p:dataTable id="scDocumentTableID" lazy="true"
-			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{directPurchaseBackingBean.managedBean.dpDocumentDataModel}"
 				var="Obj" width="100%" rows="10">
 
 				<ac:paginator for="scDocumentTableID"></ac:paginator>
 
-				<p:column width="15%">
+
+				<p:column style="width:350px">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.ptj']}" />
+					</f:facet>
+					#{directPurchaseBackingBean.getOrgName(Obj[7])}
+				</p:column>
+
+
+				<p:column width="6%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.document.type']}" />
+					</f:facet>
+					#{directPurchaseBackingBean.managedBean.documentTypeDesc}
+				</p:column>
+
+				<p:column width="6%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.document.no']}" />
 					</f:facet>
@@ -97,21 +136,21 @@
 					#{Obj[5]}
 				</p:column>
 
-				<p:column width="15%">
+			<!-- 	<p:column width="6%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.created.by']}" />
 					</f:facet>
 						#{directPurchaseBackingBean.getUserName(Obj[6])}
 				</p:column>
 
-				<p:column width="15%">
+				<p:column width="6%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.created.date']}" />
 					</f:facet>
 					<ac:labelDateTime value="#{Obj[2]}" />
 				</p:column>
-
-				<p:column width="20%">
+             -->
+				<p:column width="12%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.status']}" />
 					</f:facet>
@@ -122,8 +161,7 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
 					</f:facet>
-					<p:commandLink
-						action="#{directPurchaseBackingBean.viewDoc(Obj)}">
+					<p:commandLink action="#{directPurchaseBackingBean.viewDoc(Obj)}">
 						<p:graphicImage value="/css/images/design/ico-view.png" />
 					</p:commandLink>
 				</p:column>
