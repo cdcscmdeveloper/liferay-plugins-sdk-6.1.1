@@ -46,6 +46,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -166,8 +167,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		if (log.isDebugEnabled()) {
 			log.debug("managedBeanName:" + managedBeanName);
 		}
-		
-//		new FacesScopes().extendLiferaySession();
+
+		// new FacesScopes().extendLiferaySession();
 	}
 
 	/**
@@ -287,14 +288,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			return false;
 		}
 	}
-	
-	public void claimBpmTask(){
-		try{
+
+	public void claimBpmTask() {
+		try {
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
 
-			String taskId = FacesContext.getCurrentInstance().getExternalContext()
-					.getRequestParameterMap().get("taskId");
+			String taskId = FacesContext.getCurrentInstance()
+					.getExternalContext().getRequestParameterMap()
+					.get("taskId");
 
 			FacesScopes face = new FacesScopes();
 			Object token = face.getBPMAuthenticationCtxToken();
@@ -303,19 +305,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			reqDTO.setTaskId(taskId);
 			reqDTO.setCtxToken(token);
 			bpmSO.claimTask(reqDTO);
-		}catch(Exception e){
+		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		}
 	}
-	
-	public void releaseBpmTask()  {
+
+	public void releaseBpmTask() {
 		System.out.println("**********releaseTask");
-		try{
+		try {
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
 
-			String taskId = FacesContext.getCurrentInstance().getExternalContext()
-					.getRequestParameterMap().get("taskId");
+			String taskId = FacesContext.getCurrentInstance()
+					.getExternalContext().getRequestParameterMap()
+					.get("taskId");
 
 			FacesScopes face = new FacesScopes();
 			Object token = face.getBPMAuthenticationCtxToken();
@@ -324,7 +327,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			reqDTO.setTaskId(taskId);
 			reqDTO.setCtxToken(token);
 			bpmSO.releaseTask(reqDTO);
-		}catch(Exception e){
+		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		}
 
@@ -520,20 +523,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 		return items;
 	}
-	
+
 	/**
 	 * Populate values for Reason Drop down base on reason category code
+	 * 
 	 * @param categoryCode
 	 *            the reason category code
-	 *            
+	 * 
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getReasonCodeDropdownValues(String categoryCode) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			List<PmReasonDesc> reasonDescs = ReasonHelper
-					.getInstance().getReasonDescList(categoryCode);
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance()
+					.getReasonDescList(categoryCode);
 
 			items = new SelectItem[reasonDescs.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
@@ -553,7 +557,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		return items;
 	}
-	
+
 	/**
 	 * Get reason by reason category code and reason code
 	 * 
@@ -565,7 +569,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 */
 	public PmReason getReasonByCategoryAndCode(String categoryCode,
 			String reasonCode) {
-		PmParameter reasonCategory = getParameterByTypeAndCode( 
+		PmParameter reasonCategory = getParameterByTypeAndCode(
 				ParameterTypeConst.REASON_CATEGORY, categoryCode);
 		return ReasonHelper.getInstance().getReasonByCategoryAndCode(
 				reasonCategory.getParameterId(), reasonCode);
@@ -638,14 +642,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Get Parameter description by parameter and Locale.
 	 * 
 	 * @param parameter
 	 *            the PmParameter instance.
 	 * @param locale
-	 * 			  the Locale instance.
+	 *            the Locale instance.
 	 * 
 	 * @return parameter description
 	 */
@@ -656,12 +660,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				locale = new FacesScopes().getUserLocale();
 			}
 			return ParameterHelper.getInstance().getParameterDesc(
-					parameter.getParameterType(), parameter.getParameterCode(), locale);
+					parameter.getParameterType(), parameter.getParameterCode(),
+					locale);
 		} else {
 			return null;
 		}
-	}	
-	
+	}
+
 	/**
 	 * Get reason description by reason.
 	 * 
@@ -677,7 +682,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Get reason description by reason.
 	 * 
@@ -721,22 +726,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return ParameterHelper.getInstance().getParameterByTypeAndCode(
 				parameterType, parameterCode);
 	}
-	
+
 	/**
-	 * Get parameter descs by parameter type and search bean for
-	 * dropdown.
+	 * Get parameter descs by parameter type and search bean for dropdown.
 	 * 
 	 * @param parameterType
 	 *            the parameter type
 	 * @param searchBean
 	 *            the search bean instance
-	 * @return List<PmParameterDesc> 
+	 * @return List<PmParameterDesc>
 	 */
-	public List<PmParameterDesc> getParameterDescsByTypeAndSearchBean(String parameterType,
-			ISearchBean<PmParameterDesc> searchBean) {
-	List<PmParameterDesc> parameterDescs = ParameterHelper
-			.getInstance().getParameterDescListBySearchBean(
-					parameterType, searchBean);
+	public List<PmParameterDesc> getParameterDescsByTypeAndSearchBean(
+			String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescListBySearchBean(parameterType, searchBean);
 		return parameterDescs;
 	}
 
@@ -881,7 +884,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		tempDir += "/" + path;
 
-		//String uploadDir = "";
+		// String uploadDir = "";
 
 		UploadedFile file = event.getFile();
 
@@ -934,13 +937,39 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	}
 
 	/**
+	 * Get GST sample stream content
+	 * 
+	 * @return StreamedContent
+	 */
+	public StreamedContent getGstSample() {
+		StreamedContent retVal = null;
+		try {
+			retVal = SmCommonUtil.getFileStreamContentByTypeAndPath(
+					"/sm/shared/mofRegistration/gstSample.pdf",
+					"application/pdf");
+		} catch (IOException e) {
+			throw new EpException(e.getMessage());
+		}
+		return retVal;
+	}
+
+	public void onClickGstSample(String dialogWidget) {
+		RequestContext.getCurrentInstance().execute(dialogWidget + ".show()");
+	}
+
+	/**
 	 * Success message.
-	 *
-	 * @param messageCode the message code
-	 * @param docType the doc type
-	 * @param docTypeCode the doc type code
-	 * @param docNo the doc no
-	 * @param isAcknowledgeRequired the is acknowledge required
+	 * 
+	 * @param messageCode
+	 *            the message code
+	 * @param docType
+	 *            the doc type
+	 * @param docTypeCode
+	 *            the doc type code
+	 * @param docNo
+	 *            the doc no
+	 * @param isAcknowledgeRequired
+	 *            the is acknowledge required
 	 */
 	public void successMessage(String messageCode, String docType,
 			String docTypeCode, String docNo, boolean isAcknowledgeRequired) {
@@ -952,15 +981,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 								new String[] {
 										getParameterDesc(docType, docTypeCode),
 										docNo },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-		
-		if(isAcknowledgeRequired){
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
+		if (isAcknowledgeRequired) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+					.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
 	}
+
 	public void genFile(String uploadDir, UploadedFile file) {
 
 		File dir = new File(uploadDir);
@@ -1070,15 +1100,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public String getFullAddress(PmAddress pmAddress) {
 		return AddressUtils.getFullAddress(pmAddress);
 	}
-	
+
 	public String getPpFullAddress(PpAddress ppAddress) {
 		return AddressUtils.getFullAddress(ppAddress);
 	}
-	
+
 	public String getFullAddress(CtAddress ctAddress) {
 		return AddressUtils.getFullAddress(ctAddress);
 	}
-	
+
 	public String getFullAddress(ScAddress scAddress) {
 		return AddressUtils.getFullAddress(scAddress);
 	}
@@ -1106,135 +1136,177 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		return filename;
 	}
-	
-	public String retrieveJabatanByOrgProfileId(Long orgProfileId){
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+
+	public String retrieveJabatanByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
 		OrgProfileResDTO resDTO = new OrgProfileResDTO();
 		resDTO = profileSO.retrieveJabatanByOrgProfileId(reqDTO);
 		String jabatan = "";
-		if(resDTO.getPmOrgProfile() != null){
+		if (resDTO.getPmOrgProfile() != null) {
 			jabatan = resDTO.getPmOrgProfile().getOrgName();
 		}
 		return jabatan;
 	}
-	
-	public String retrieveJabatanByOrgProfileId(Long orgProfileId, Date tranDate){
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+
+	public String retrieveJabatanByOrgProfileId(Long orgProfileId, Date tranDate) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
 		reqDTO.setCreateDate(tranDate);
 		OrgProfileResDTO resDTO = new OrgProfileResDTO();
 		resDTO = profileSO.retrieveJabatanByOrgProfileId(reqDTO);
 		String jabatan = "";
-		if(resDTO.getPmOrgProfile() != null){
+		if (resDTO.getPmOrgProfile() != null) {
 			jabatan = resDTO.getPmOrgProfile().getOrgName();
 		}
 		return jabatan;
 	}
-	
-	public String retrievePegawaiPengawalByOrgProfileId(Long orgProfileId){
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+
+	public String retrievePegawaiPengawalByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
 		OrgProfileResDTO resDTO = new OrgProfileResDTO();
 		resDTO = profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO);
 		String pagawaiPengawal = "";
-		if(resDTO.getPmOrgProfile() != null){
+		if (resDTO.getPmOrgProfile() != null) {
 			pagawaiPengawal = resDTO.getPmOrgProfile().getOrgName();
 		}
 		return pagawaiPengawal;
 	}
-	
-	public String retrievePegawaiPengawalByOrgProfileId(Long orgProfileId, Date tranDate){
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+
+	public String retrievePegawaiPengawalByOrgProfileId(Long orgProfileId,
+			Date tranDate) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
 		reqDTO.setCreateDate(tranDate);
 		OrgProfileResDTO resDTO = new OrgProfileResDTO();
 		resDTO = profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO);
 		String pagawaiPengawal = "";
-		if(resDTO.getPmOrgProfile() != null){
+		if (resDTO.getPmOrgProfile() != null) {
 			pagawaiPengawal = resDTO.getPmOrgProfile().getOrgName();
 		}
 		return pagawaiPengawal;
 	}
-	
-	public String retrieveMinistryCodeByOrgProfileId(Long orgProfileId){
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+
+	public String retrieveMinistryCodeByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
-		return profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile().getOrgCode();
+		return profileSO.retrieveMinistryByOrgProfileId(reqDTO)
+				.getPmOrgProfile().getOrgCode();
 	}
-	
-	public String retrieveMinistryByOrgProfileId(Long orgProfileId){
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+
+	public String retrieveMinistryByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
-		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile();
-		if(orgProfile!=null) {
+		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
 			return orgProfile.getOrgName();
 		} else {
-			log.info("Ministry not found : "+orgProfileId);
+			log.info("Ministry not found : " + orgProfileId);
 			return "";
 		}
 	}
-	
-	public String retrieveMinistryByOrgProfileId(Long orgProfileId, Date tranDate){
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+
+	public String retrieveMinistryByOrgProfileId(Long orgProfileId,
+			Date tranDate) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
 		reqDTO.setCreateDate(tranDate);
-		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile();
-		if(orgProfile!=null) {
+		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
 			return orgProfile.getOrgName();
 		} else {
-			log.info("Ministry not found : "+orgProfileId);
+			log.info("Ministry not found : " + orgProfileId);
 			return "";
 		}
 	}
-	
-	public PmOrgProfile retrieveMinistryOrgProfile(Long orgProfileId){
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+
+	public PmOrgProfile retrieveMinistryOrgProfile(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
-		return profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile();
+		return profileSO.retrieveMinistryByOrgProfileId(reqDTO)
+				.getPmOrgProfile();
 	}
-	
-	public PmOrgProfile retrieveJabatanOrgProfile(Long orgProfileId){
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+
+	public PmOrgProfile retrieveJabatanOrgProfile(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
-		PmOrgProfile pmOrgProfile = profileSO.retrieveJabatanByOrgProfileId(reqDTO).getPmOrgProfile();
-		if(pmOrgProfile==null) {
+		PmOrgProfile pmOrgProfile = profileSO.retrieveJabatanByOrgProfileId(
+				reqDTO).getPmOrgProfile();
+		if (pmOrgProfile == null) {
 			pmOrgProfile = new PmOrgProfile();
 			pmOrgProfile.setOrgProfileId(-1L);
 		}
 		return pmOrgProfile;
 	}
-	
-	public PmOrgProfile retrievePegawaiPegawalOrgProfile(Long orgProfileId){
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+
+	public PmOrgProfile retrievePegawaiPegawalOrgProfile(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
-		return profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO).getPmOrgProfile();
+		return profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO)
+				.getPmOrgProfile();
 	}
-	
-	public String retrievePTJByOrgProfileId(Long orgProfileId, Date tranDate){
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+
+	public String retrievePTJByOrgProfileId(Long orgProfileId, Date tranDate) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
 		reqDTO.setCreateDate(tranDate);
-		PmOrgProfile orgProfile = profileSO.retrieveOrgProfileByProfileId(reqDTO).getPmOrgProfile();
-		if(orgProfile!=null) {
+		PmOrgProfile orgProfile = profileSO.retrieveOrgProfileByProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
 			return orgProfile.getOrgName();
 		} else {
-			log.info("PTJ not found : "+orgProfileId);
+			log.info("PTJ not found : " + orgProfileId);
 			return "";
 		}
 	}
-	
+
 	/**
 	 * Get eP Role description by role code
 	 * 
@@ -1254,7 +1326,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		return retVal;
 	}
-	
+
 	/**
 	 * Get machine category type
 	 * 
@@ -1277,7 +1349,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		return retVal;
 	}
-	
+
 	/**
 	 * Populate local authority when on change business type or district
 	 * 
@@ -1297,7 +1369,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 					.getLocalAuthorityItems().get(0).getValue());
 		}
 	}
-	
+
 	/**
 	 * Get list size
 	 * 
@@ -1308,7 +1380,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public int getListSize(Collection<?> value) {
 		return value.size();
 	}
-	
+
 	/**
 	 * Download file.
 	 */
@@ -1316,20 +1388,23 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		File file = new File(filePath);
 		log.info("download file>>>>");
 		OutputStream out = null;
-		try{
-			PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-			HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-			res.setHeader( "Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" );//
-			res.setHeader( "Content-Transfer-Encoding", "binary" );
+		try {
+			PortletResponse portletResponse = (PortletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			HttpServletResponse res = com.liferay.portal.util.PortalUtil
+					.getHttpServletResponse(portletResponse);
+			res.setHeader("Content-Disposition", "attachment; filename=\""
+					+ file.getName() + "\"");//
+			res.setHeader("Content-Transfer-Encoding", "binary");
 			res.setContentType("application/octet-stream");
 			res.flushBuffer();
-			out = res.getOutputStream();   
-			if(file.getPath()!=null) {
+			out = res.getOutputStream();
+			if (file.getPath() != null) {
 				log.info("file path not null>>>>");
 				InputStream input = null;
 				try {
 					URLConnection uc = new URL(file.getPath()).openConnection();
-					input = new BufferedInputStream(uc.getInputStream()); 
+					input = new BufferedInputStream(uc.getInputStream());
 				} catch (Exception e) {
 					log.info("It's Local file>>>>");
 					// Cannot open connection, maybe local file
@@ -1337,75 +1412,82 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				}
 				byte[] buffer = new byte[4096];
 				int bytesRead;
-				while ((bytesRead = input.read( buffer )) != -1){ 
-					out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
+				while ((bytesRead = input.read(buffer)) != -1) {
+					out.write(buffer, 0, bytesRead);
+					buffer = new byte[4096];
 				}
-				input.close();			
+				input.close();
 			} else {
-				//out.write(attachment.getFileByte());
+				// out.write(attachment.getFileByte());
 			}
 
 			FacesContext.getCurrentInstance().responseComplete();
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			log.error("download exception>>>>" + ex.getMessage());
 		} finally {
 			out.flush();
-			out.close(); 
+			out.close();
 		}
 	}
-	
+
 	public StreamedContent getCaptchaTextImage() {
 		StreamedContent graphicText = null;
 		try {
-	        BufferedImage bufferedImg = new BufferedImage(100, 25, BufferedImage.TYPE_BYTE_BINARY);
-	        Graphics2D g2 = bufferedImg.createGraphics();
-	        
-	        String captchaText = RandomStringUtils.randomAlphanumeric(6);
-	        this.getManagedBean().setCaptchaText(captchaText);
-	        
-            Font font = new Font("Tahoma", Font.ITALIC, 20);
-            g2.setFont(font);
+			BufferedImage bufferedImg = new BufferedImage(100, 25,
+					BufferedImage.TYPE_BYTE_BINARY);
+			Graphics2D g2 = bufferedImg.createGraphics();
 
-	        g2.drawString(captchaText, 15, 20);
-	        ByteArrayOutputStream os = new ByteArrayOutputStream();
-	        ImageIO.write(bufferedImg, "png", os);
-	        graphicText = new DefaultStreamedContent(new ByteArrayInputStream(os.toByteArray()), "image/png"); 
-	        if(graphicText==null){
-	        	log.info(">>>>>>>>>>>>Graphic is null!!!");
-	        }else{
-	        	log.info(">>>>>>>>>>>>Graphic is not null:"+graphicText.getStream());
-	        }
-		} 
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+			String captchaText = RandomStringUtils.randomAlphanumeric(6);
+			this.getManagedBean().setCaptchaText(captchaText);
+
+			Font font = new Font("Tahoma", Font.ITALIC, 20);
+			g2.setFont(font);
+
+			g2.drawString(captchaText, 15, 20);
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			ImageIO.write(bufferedImg, "png", os);
+			graphicText = new DefaultStreamedContent(new ByteArrayInputStream(
+					os.toByteArray()), "image/png");
+			if (graphicText == null) {
+				log.info(">>>>>>>>>>>>Graphic is null!!!");
+			} else {
+				log.info(">>>>>>>>>>>>Graphic is not null:"
+						+ graphicText.getStream());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return graphicText;
 	}
-	
-	public void validateCaptcha (FacesContext context, UIComponent component, Object value) {
-		String skipValidator= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("skipValidator");
+
+	public void validateCaptcha(FacesContext context, UIComponent component,
+			Object value) {
+		String skipValidator = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("skipValidator");
 		if (skipValidator == null) {
 			String captchaAnswer = (String) value;
-			if(captchaAnswer == null || captchaAnswer.length() == 0) {
+			if (captchaAnswer == null || captchaAnswer.length() == 0) {
 				log.error("Captcha is null");
 				throw new ValidatorException(new FacesMessage(
 						FacesMessage.SEVERITY_ERROR, null,
-						SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721046, null)));
+						SmCommonUtil.getOutputMsgBundle(
+								MessageConst.ERROR_721046, null)));
 
 			}
 
-			if(captchaAnswer != null && captchaAnswer.length() > 0) {
-				if(!captchaAnswer.equals(this.getManagedBean().getCaptchaText())) {
+			if (captchaAnswer != null && captchaAnswer.length() > 0) {
+				if (!captchaAnswer.equals(this.getManagedBean()
+						.getCaptchaText())) {
 					log.error("Captcha is wrong");
 					throw new ValidatorException(new FacesMessage(
 							FacesMessage.SEVERITY_ERROR, null,
-							SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721047, null)));
+							SmCommonUtil.getOutputMsgBundle(
+									MessageConst.ERROR_721047, null)));
 				}
 			}
 		}
 	}
-	
-
 
 	/**
 	 * To get BpmTask Details.
@@ -1437,14 +1519,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
 
 			this.renewSesionObject();
-			
-			boolean isAssignedState = BpmConstants.STATE_ASSIGNED.equals(resDTO.getStatus());
+
+			boolean isAssignedState = BpmConstants.STATE_ASSIGNED.equals(resDTO
+					.getStatus());
 			Object payLoad = resDTO.getPojo();
 			BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
-			
+
 			if (null != resDTO.isGroupTask() && resDTO.isGroupTask() == true) {
-				log.info("====groupTask not null==="
-						+ resDTO.isGroupTask());
+				log.info("====groupTask not null===" + resDTO.isGroupTask());
 				Boolean claim = resDTO.isClaimed();
 				log.info("claim:" + claim);
 				if (null != claim && claim == false) {
@@ -1456,32 +1538,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				bb.getManagedBean().setTaskId(taskId);
 				bb.getManagedBean().setGroupTask(true);
 			} else {
-				log.info("====groupTask null==="
-						+ resDTO.isGroupTask());
+				log.info("====groupTask null===" + resDTO.isGroupTask());
 				this.getManagedBean().setReadOnly(false);
 				bb.getManagedBean().setClaim(true);
 				bb.getManagedBean().setGroupTask(false);
 			}
-			
+
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setAssignedState(isAssignedState);
 			if (isAssignedState) {
 				String[] outComes = null;
 				if (additionalButtons != null && additionalButtons.length > 0) {
 					int i = 0;
-					outComes = new String[additionalButtons.length + resDTO.getAction().length];
-					
+					outComes = new String[additionalButtons.length
+							+ resDTO.getAction().length];
+
 					for (String additionalButton : additionalButtons) {
 						outComes[i++] = additionalButton;
 					}
-				
+
 					for (String action : resDTO.getAction()) {
 						outComes[i++] = action;
 					}
 				} else {
 					outComes = resDTO.getAction();
-				}				
-				this.getManagedBean().setOutComes(sortOutcomes(outComes));	
+				}
+				this.getManagedBean().setOutComes(sortOutcomes(outComes));
 			}
 			this.getManagedBean().setCurrentStatusId(
 					Long.valueOf(resDTO.getDocStatus()));
@@ -1495,26 +1577,28 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			bpmSO = null;
 		}
 	}
-	
+
 	private String[] sortOutcomes(String[] outComes) {
-		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes)); 
-		
+		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
+
 		// Move 'Cancel' button to the last
-		if(bpmActions.contains(BpmOutcomeConst.BPM_CANCEL) && !bpmActions.get(bpmActions.size()-1).equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
+				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
+						BpmOutcomeConst.BPM_CANCEL)) {
 			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
 			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
 		}
-		
+
 		outComes = new String[bpmActions.size()];
 		return bpmActions.toArray(outComes);
 	}
-	
+
 	/**
 	 * Get Rule Type Description by rule type
 	 * 
 	 * @param ruleType
-	 * 		the rule type
-	 * @return	the rule type description.
+	 *            the rule type
+	 * @return the rule type description.
 	 */
 	public String getRuleTypeDesc(String ruleType) {
 		IRuleSO ruleSO = null;
@@ -1523,22 +1607,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
-			
-			reqDTO.setRuleType(ruleType);			
-			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-			
+
+			reqDTO.setRuleType(ruleType);
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale()
+					.getLanguage());
+
 			return ruleSO.getRuleDescByType(reqDTO);
 
 		} finally {
 			ruleSO = null;
 		}
 	}
-	
+
 	/**
 	 * Get year drop down
+	 * 
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getYearDropDown(){
+	public SelectItem[] getYearDropDown() {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 
@@ -1547,14 +1633,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			int currentYear = now.get(Calendar.YEAR);
 			int yearRange = CommonConstants.YEAR_RANGE;
 			int yearDiff = currentYear - yearRange;
-			
+
 			items = new SelectItem[yearRange + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
-			
-			for (int y = currentYear; y > yearDiff; y--){
+
+			for (int y = currentYear; y > yearDiff; y--) {
 				items[i++] = new SelectItem(y, String.valueOf(y));
 			}
 		} catch (Exception e) {
@@ -1566,46 +1652,54 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 
 		return items;
-		
+
 	}
-	
+
 	/**
 	 * Return the display text as N/A or T/B if it is null or empty.
+	 * 
 	 * @param text
 	 * @return displayText
 	 */
 	public Object getText(Object text) {
 		FacesScopes face = new FacesScopes();
-		if(text == null ||(text instanceof String && ((String) text).length() == 0)) {
-			return ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale());
+		if (text == null
+				|| (text instanceof String && ((String) text).length() == 0)) {
+			return ResourceBundleUtils.getMessage("lbl.txt.na",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale());
 		} else {
 			return text;
 		}
 	}
 
 	/**
-	 * File Upload 
-	 * @param String path
-	 * @param String fileName
-	 * @param String displayFileName
+	 * File Upload
+	 * 
+	 * @param String
+	 *            path
+	 * @param String
+	 *            fileName
+	 * @param String
+	 *            displayFileName
 	 * @return
 	 * @throws IOException
 	 */
-	public StreamedContent commonDownload(String path, String fileName, String displayFileName) throws IOException{
+	public StreamedContent commonDownload(String path, String fileName,
+			String displayFileName) throws IOException {
 		String finalFilePath = path + "/" + fileName;
-		
+
 		return commonDownload(finalFilePath, displayFileName);
 	}
 
-	
 	public <ENTITY_CLASS extends BaseEntity> boolean deleteselectedList(
 			List<ENTITY_CLASS> list) {
 		if (list != null) {
 			for (ENTITY_CLASS entity : list) {
-				if(entity.isSelected()){
+				if (entity.isSelected()) {
 					return false;
 				}
-				
+
 			}
 		}
 		return true;
