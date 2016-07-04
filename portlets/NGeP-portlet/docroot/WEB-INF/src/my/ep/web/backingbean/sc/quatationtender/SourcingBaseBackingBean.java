@@ -109,6 +109,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
@@ -2546,7 +2547,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 				ParameterResDTO parameterResDTO = parameterSO
 						.retrieveParameterById(parameterReqDTO);
-				pmParameter = parameterResDTO.getPmParameter();
+				if(parameterResDTO != null && parameterResDTO.isSuccessful()){
+					pmParameter = parameterResDTO.getPmParameter();
+				}
 			} finally {
 				parameterSO = null;
 			}
@@ -2554,5 +2557,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return pmParameter;
 	
+	}
+	
+	/**
+	 * Validate deduction payment dtls.
+	 * 
+	 * @param List<ScQtDeduction>
+	 *          	  the deductions
+	 *          
+	 */
+	public void validateDeductionPaymentDtls(List<ScQtDeduction> deductions) {
+		
+		if (CollectionUtils.isNotEmpty(deductions)) {
+			for (ScQtDeduction deduction : deductions) {
+				PmParameter deductionType = deduction.getDeductionType();
+				if ( null != deductionType && null == deductionType.getParameterId()) {
+					throw new EpException(MessageConst.ERROR_740035);
+				} else {
+					if (CollectionUtils.isEmpty(deduction.getScQtDeductionClauses())) {
+						throw new EpException(MessageConst.ERROR_760324,
+								new String[] { getParameterDesc(
+										deductionType.getParameterType(),
+										deductionType.getParameterCode()) });
+					}
+				}
+			}
+		}
 	}
 }
