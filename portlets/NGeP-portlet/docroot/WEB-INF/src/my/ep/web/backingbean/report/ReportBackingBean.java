@@ -82,7 +82,6 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
@@ -123,6 +122,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
 import com.liferay.portal.util.PortalUtil;
+import my.ep.type.report.EnumReportType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -9795,8 +9795,8 @@ public class ReportBackingBean extends
 										ReportConst.SM_PERSON_BRANCH_BANK)
 								|| this.getReportValue().equals(
 										ReportConst.SM_THRESHOLD)
-								|| this.getReportValue().equals(
-										ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL)
+								|| this.getReportValue()
+										.equals(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL)
 								|| this.getReportValue().equals(
 										ReportConst.SM_LST_MONTH_WISE_RPT_VAL)
 								|| this.getReportValue()
@@ -10629,8 +10629,7 @@ public class ReportBackingBean extends
 					ModuleCodeConst.DIRECT_PURCHASE)) {
 				this.getManagedBean().getRptGenBean()
 						.setDpInstructionInfoView(true);
-			}
-			else {
+			} else {
 				this.getManagedBean().getRptGenBean()
 						.setCmMadatoryIndicatorView(false);
 				this.getManagedBean().getRptGenBean()
@@ -13156,15 +13155,18 @@ public class ReportBackingBean extends
 			} else {
 				this.setValuesEmpty(true);
 			}
-		} else if(this.getManagedBean().getReportCode()
+		} else if (this.getManagedBean().getReportCode()
 				.equalsIgnoreCase(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
-		
+
 			chkValuesForPmListOfProfiles();
-			
-		}else if(this.getManagedBean().getReportCode()
-				.equalsIgnoreCase(ReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL)) {
-			    chkValuesForPmFinanceIns();
-	         }
+
+		} else if (this
+				.getManagedBean()
+				.getReportCode()
+				.equalsIgnoreCase(
+						ReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL)) {
+			chkValuesForPmFinanceIns();
+		}
 	}
 
 	/**
@@ -13181,8 +13183,8 @@ public class ReportBackingBean extends
 			}
 		} else if (this.getManagedBean().getReportCode()
 				.equalsIgnoreCase(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
-                      
-			            chkValuesForPmListOfProfiles();
+
+			chkValuesForPmListOfProfiles();
 		}
 	}
 
@@ -13199,8 +13201,8 @@ public class ReportBackingBean extends
 					.getSmSupplier().getCompanyName());
 			this.setSmCompanyName(this.getManagedBean().getSelectedOrgProfile()
 					.getSmSupplier().getCompanyName());
-			this.setSmSupplierName(this.getManagedBean().getSelectedOrgProfile()
-					.getSmSupplier().getCompanyName());
+			this.setSmSupplierName(this.getManagedBean()
+					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
 		}
 		/*
 		 * if (this.getReportValue().equalsIgnoreCase(
@@ -13224,8 +13226,127 @@ public class ReportBackingBean extends
 						.getSmSupplier() != null) {
 			this.setScSupplier(this.getManagedBean().getSelectedOrgProfile()
 					.getSmSupplier().getCompanyName());
-
 		}
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc requisitioner type.
+	 */
+	public void onChangeScRequisitionerType() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc ptj type.
+	 */
+	public void onChangeScPtjType() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc pi no.
+	 */
+	public void onChangeScPiNo() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc common status.
+	 */
+	public void onChangeScCommonStatus() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc pi dtls group.
+	 */
+	public void onChangeScPIDtlsGroup() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change purchase in default status.
+	 */
+	public void onChangePurchaseInDefaultStatus() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc pid no.
+	 */
+	public void onChangeScPidNo() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc contract or pkp type.
+	 */
+	public void onChangeScContractOrPKPType() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc contract or pkp no.
+	 */
+	public void onChangeScContractOrPKPNo() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc contract or pkp name.
+	 */
+	public void onChangeScContractOrPKPName() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc procurement type.
+	 */
+	public void onChangeScProcurementType() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc request note status.
+	 */
+	public void onChangeScRequestNoteStatus() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc request quote no.
+	 */
+	public void onChangeScRequestQuoteNo() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc simple quote status.
+	 */
+	public void onChangeScSimpleQuoteStatus() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc simple quote type view.
+	 */
+	public void onChangeScSimpleQuoteTypeView() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc loa no.
+	 */
+	public void onChangeScLOANo() {
+		getIisDPReportsStatus();
+	}
+
+	/**
+	 * On change sc soa status.
+	 */
+	public void onChangeScSOAStatus() {
+		getIisDPReportsStatus();
 	}
 
 	/**
@@ -13334,7 +13455,7 @@ public class ReportBackingBean extends
 			getOrCodeAndOrgNameWithStatus();
 		}
 	}
-	
+
 	/**
 	 * On fina org name change for lov.
 	 */
@@ -13353,13 +13474,13 @@ public class ReportBackingBean extends
 				this.setPmBusinessRegNo(this.getManagedBean()
 						.getSelectedOrgProfile().getPmFinancialOrg()
 						.getBizRegNumber());
-				
+
 				chkValuesForPmFinanceIns();
-				
+
 			}
 		}
 	}
-		
+
 	/**
 	 * On role code change for lov.
 	 */
@@ -13374,7 +13495,7 @@ public class ReportBackingBean extends
 						.getSelectedPmRoleDesc().getPmRole().getRoleCode());
 			}
 		}
-             chkValuesForPmListOfProfiles();
+		chkValuesForPmListOfProfiles();
 	}
 
 	/**
@@ -13688,7 +13809,6 @@ public class ReportBackingBean extends
 		}
 	}
 
-	
 	/**
 	 * On non mandatory org name change for profile lov.
 	 */
@@ -13704,9 +13824,12 @@ public class ReportBackingBean extends
 		chkValuesForPmListOfProfiles();
 	}
 
+	/**
+	 * Chk values for pm list of profiles.
+	 */
 	private void chkValuesForPmListOfProfiles() {
 		if (StringUtils.isNotEmpty(this.getPmOrgName())
-				|| StringUtils.isNotEmpty(this.getPmOrgType()) 
+				|| StringUtils.isNotEmpty(this.getPmOrgType())
 				|| StringUtils.isNotEmpty(this.getPmIdentificationNo())
 				|| StringUtils.isNotEmpty(this.getPmUserName())
 				|| StringUtils.isNotEmpty(this.getPmRoleCode())
@@ -13716,60 +13839,65 @@ public class ReportBackingBean extends
 			this.setValuesEmpty(true);
 		}
 	}
-	
-	
+
+	/**
+	 * Chk values for pm finance ins.
+	 */
 	private void chkValuesForPmFinanceIns() {
 		if (StringUtils.isNotEmpty(this.getPmServiceType())
-				|| StringUtils.isNotEmpty(this.getPmFinancialOrgName()) 
-				|| StringUtils.isNotEmpty(this.getPmBusinessRegNo())				
+				|| StringUtils.isNotEmpty(this.getPmFinancialOrgName())
+				|| StringUtils.isNotEmpty(this.getPmBusinessRegNo())
 				|| StringUtils.isNotEmpty(this.getPmStatus())) {
 			this.setValuesEmpty(false);
 		} else {
 			this.setValuesEmpty(true);
 		}
 	}
-	
+
 	/**
 	 * On change pm list of profile fields.
 	 */
 	public void onChangePmListOfProfileFields() {
-		
+
 		if (this.getManagedBean().getSelectedPmUser() != null) {
-			
-			this.setPmIdentificationNo(this.getManagedBean().getSelectedPmUser().getIdentificationNo());
-			this.setPmUserName(this.getManagedBean().getSelectedPmUser().getUserName());
-		}		
-            chkValuesForPmListOfProfiles();
+
+			this.setPmIdentificationNo(this.getManagedBean()
+					.getSelectedPmUser().getIdentificationNo());
+			this.setPmUserName(this.getManagedBean().getSelectedPmUser()
+					.getUserName());
+		}
+		chkValuesForPmListOfProfiles();
 	}
-	
-	
-	public void onChangServiceType() {		
-			chkValuesForPmFinanceIns();
+
+	/**
+	 * On chang service type.
+	 */
+	public void onChangServiceType() {
+		chkValuesForPmFinanceIns();
 	}
-	
-	
+
 	/**
 	 * On change pm user name.
 	 */
-	public void onChangePmUserName() {		
+	public void onChangePmUserName() {
 		if (StringUtils.isNotEmpty(this.getPmUserName())) {
 			this.setValuesEmpty(false);
 		} else {
 			this.setValuesEmpty(true);
 		}
 	}
-	
+
 	/**
 	 * On change pm role code.
 	 */
-	public void onChangePmRoleCode() {		
+	public void onChangePmRoleCode() {
 		if (StringUtils.isNotEmpty(this.getPmRoleCode())) {
 			this.setValuesEmpty(false);
 		} else {
 			this.setValuesEmpty(true);
 		}
 	}
-	
+
 	/**
 	 * On item code change for lov.
 	 */
@@ -14212,63 +14340,199 @@ public class ReportBackingBean extends
 							&& StringUtils.isNotBlank(this.getPmStatus())) {
 						this.setValuesEmpty(false);
 					}
-					if (this.getManagedBean()
-							.getReportCode()
-							.equalsIgnoreCase(
-									ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
-						if (StringUtils.isBlank(this.getPmOrgCategory())) {
-							throw new EpException(
-									MessageConst.ERROR_REPORT_780031);
+					if (StringUtils.isNotEmpty(this.getManagedBean()
+							.getReportCode())) {
+
+						switch (EnumReportType.valueOf(this.getManagedBean()
+								.getReportCode())) {
+						
+						case PM_002:
+
+							if (StringUtils.isBlank(this.getPmOrgCategory())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780031);
+							}
+							if (StringUtils.isBlank(this.getPmOrgType())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780032);
+							}
+							break;
+						case PM_003:
+							
+							if (StringUtils.isBlank(this.getPmOrgType())
+									&& StringUtils.isBlank(this.getPmOrgName())
+									&& StringUtils.isBlank(this
+											.getPmIdentificationNo())
+									&& StringUtils
+											.isBlank(this.getPmUserName())
+									&& StringUtils
+											.isBlank(this.getPmRoleCode())
+									&& StringUtils.isBlank(this.getPmStatus())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780003);
+							}
+							break;
+						case PM_004:
+							
+							if (StringUtils.isBlank(this.getPmOrgCode())
+									&& StringUtils.isBlank(this.getPmOrgName())
+									&& StringUtils.isBlank(this.getPmStatus())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780003);
+							}
+							break;
+						case PM_001:
+							
+							if (StringUtils.isBlank(this.getPmServiceType())
+									&& StringUtils.isBlank(this
+											.getPmFinancialOrgName())
+									&& StringUtils.isBlank(this
+											.getPmBusinessRegNo())
+									&& StringUtils.isBlank(this.getPmStatus())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780003);
+							}
+						default: {
+							System.out
+									.println("In generateReport unknown for PM report value"
+											+ this.getReportValue());
+							log.info("In generateReport unknown for PM report value \t"
+									+ this.getReportValue());
 						}
-						if (StringUtils.isBlank(this.getPmOrgType())) {
-							throw new EpException(
-									MessageConst.ERROR_REPORT_780032);
 						}
-					} else if (this
-							.getManagedBean()
-							.getReportCode()
-							.equalsIgnoreCase(
-									ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
-						if (StringUtils.isBlank(this.getPmOrgType())
-								&& StringUtils.isBlank(this.getPmOrgName())
-								&& StringUtils.isBlank(this.getPmIdentificationNo())
-								&& StringUtils.isBlank(this.getPmUserName())
-								&& StringUtils.isBlank(this.getPmRoleCode())
-								&& StringUtils.isBlank(this.getPmStatus())
-								) {
-							throw new EpException(
-									MessageConst.ERROR_REPORT_780003);
-						}						
-					} else if (this
-							.getManagedBean()
-							.getReportCode()
-							.equalsIgnoreCase(
-									ReportConst.PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL)) {
-						if (StringUtils.isBlank(this.getPmOrgCode())
-								&& StringUtils.isBlank(this.getPmOrgName())
-								&& StringUtils.isBlank(this.getPmStatus())) {
-							throw new EpException(
-									MessageConst.ERROR_REPORT_780003);
+					} else {
+						this.setValuesEmpty(false);
+					}
+				}
+			} else if (StringUtils.isNotEmpty(this.getModuleValue())
+					&& (this.getModuleValue()
+							.equalsIgnoreCase(ModuleCodeConst.DIRECT_PURCHASE))) {
+				if (this.isValuesEmpty()) {
+					if (StringUtils.isNotBlank(this.getScCommonStatus())) {
+						this.setValuesEmpty(false);
+					}
+					if (StringUtils.isNotEmpty(this.getReportValue())) {
+
+						switch (EnumReportType.valueOf(this.getReportValue())) {
+						case SC_050:
+						case SC_051:
+
+							if (StringUtils.isBlank(this.getScSupplier())
+									&& StringUtils.isBlank(this.getScPIno())
+									&& StringUtils.isBlank(this
+											.getScCommonStatus())
+									&& StringUtils.isBlank(this
+											.getScRequisenerId())
+									&& StringUtils.isBlank(this.getScPtj())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780003);
+							}
+						case SC_055:
+
+							if (StringUtils.isBlank(this
+									.getScPurchaseInDefaultStatus())
+									&& StringUtils.isBlank(this.getScPIDNo())
+									&& StringUtils.isBlank(this
+											.getScContractOrPKPType())
+									&& StringUtils.isBlank(this
+											.getScContractOrPKPName())
+									&& StringUtils.isBlank(this
+											.getScContractOrPKPNo())
+									&& StringUtils.isBlank(this
+											.getScRequisenerId())
+									&& StringUtils.isBlank(this.getScPtj())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780003);
+							}
+
+						case SC_067:
+
+							if (StringUtils.isBlank(this
+									.getScPurchaseInDefaultStatus())
+									&& StringUtils
+											.isBlank(this.getScSupplier())
+									&& StringUtils.isBlank(this.getScPIDNo())
+									&& StringUtils.isBlank(this
+											.getScContractOrPKPType())
+									&& StringUtils.isBlank(this
+											.getScContractOrPKPName())
+									&& StringUtils.isBlank(this
+											.getScContractOrPKPNo())
+									&& StringUtils.isBlank(this
+											.getScRequisenerId())
+									&& StringUtils.isBlank(this.getScPtj())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780003);
+							}
+						case SC_058:
+						case SC_056:
+
+							if (StringUtils.isBlank(this.getScSupplier())
+									&& StringUtils.isBlank(this
+											.getScRequestNoteStatus())
+									&& StringUtils.isBlank(this
+											.getScProcurementType())
+									&& StringUtils.isBlank(this
+											.getScRequestQuoteNo())
+									&& StringUtils.isBlank(this
+											.getScRequisenerId())
+									&& StringUtils.isBlank(this.getScPtj())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780003);
+							}
+						case SC_060:
+						case SC_062:
+
+							if (StringUtils.isBlank(this.getScSupplier())
+									&& StringUtils.isBlank(this
+											.getScProcurementType())
+									&& StringUtils.isBlank(this
+											.getScSimpleQuoteStatus())
+									&& StringUtils.isBlank(this
+											.getScProcessRptQuotationNo())
+									&& StringUtils.isBlank(this
+											.getScRequisenerId())
+									&& StringUtils.isBlank(this.getScPtj())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780003);
+							}
+						case SC_068:
+
+							if (StringUtils.isBlank(this
+									.getScProcessRptQuotationNo())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780003);
+							}
+
+						case SC_069:
+							if (StringUtils.isBlank(this.getScSupplier())
+									&& StringUtils.isBlank(this
+											.getScSimpleQuoteType())
+									&& StringUtils.isBlank(this
+											.getScSOAStatus())
+									&& StringUtils.isBlank(this
+											.getScProcessRptQuotationNo())
+									&& StringUtils.isBlank(this.getScLOANo())
+									&& StringUtils.isBlank(this
+											.getScRequisenerId())
+									&& StringUtils.isBlank(this.getScPtj())) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780003);
+							}
+						default: {
+							System.out
+									.println("In generateReport unknown report value"
+											+ this.getReportValue());
+							log.info("In generateReport unknown report value \t"
+									+ this.getReportValue());
 						}
-					} else if (this
-							.getManagedBean()
-							.getReportCode()
-							.equalsIgnoreCase(
-									ReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL)) {
-						if (StringUtils.isBlank(this.getPmServiceType())
-								&& StringUtils.isBlank(this
-										.getPmFinancialOrgName())
-								&& StringUtils.isBlank(this
-										.getPmBusinessRegNo())
-								&& StringUtils.isBlank(this.getPmStatus())) {
-							throw new EpException(
-									MessageConst.ERROR_REPORT_780003);
 						}
 					}
 				} else {
 					this.setValuesEmpty(false);
 				}
 			}
+
 			if (StringUtils.isNotEmpty(this.getModuleValue())
 					&& (this.getModuleValue()
 							.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
@@ -14316,11 +14580,13 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean().setGenerateButtonView(true);
 				// generateReportTimer();
 				// generateReportIntime();
-                 
-				
-				/*   1.TO replace '%20' as in total white spacce Of constructedParamString  
-				     2.Report Server(Linux Env) Consider white space as '%20'*/
-				
+
+				/*
+				 * 1.TO replace '%20' as in total white spacce Of
+				 * constructedParamString 2.Report Server(Linux Env) Consider
+				 * white space as '%20'
+				 */
+
 				String spaceRemovalParameter = constructedParamString
 						.replaceAll(" ", "%20");
 				if (StringUtils.isNotEmpty(strLanguage)
@@ -14332,20 +14598,19 @@ public class ReportBackingBean extends
 								.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 					fileGenerateReport(getManagedBean().getReportTitle(),
 							spaceRemovalParameter);
-				}              
- 				
-                /* if (StringUtils.isNotEmpty(strLanguage)
-						&& (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
-					fileGenerateReport(getManagedBean().getReportTitle(),
-							constructedParamString);
-				} else if (StringUtils.isNotEmpty(strLanguage)
-						&& (strLanguage
-								.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
-					fileGenerateReport(getManagedBean().getReportTitle(),
-							constructedParamString);
-				}*/
-                 
-                 
+				}
+
+				/*
+				 * if (StringUtils.isNotEmpty(strLanguage) &&
+				 * (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
+				 * fileGenerateReport(getManagedBean().getReportTitle(),
+				 * constructedParamString); } else if
+				 * (StringUtils.isNotEmpty(strLanguage) && (strLanguage
+				 * .equalsIgnoreCase(ReportConst.MALAY_LANG))) {
+				 * fileGenerateReport(getManagedBean().getReportTitle(),
+				 * constructedParamString); }
+				 */
+
 				/*
 				 * FacesContext.getCurrentInstance().getPartialViewContext().
 				 * getRenderIds().add("reportGenDialog.hide()");//execute(
@@ -14942,7 +15207,7 @@ public class ReportBackingBean extends
 										+ ReportConst.EMPTY_VAL);
 					}
 				}
-			}	
+			}
 			if (StringUtils.isNotEmpty(this.getSmCreatedFromYear())) {
 				rptGenBean
 						.setSmMandatoryCreatedFromYearVar(ReportConst.AMP_SM_YEAR_FROM_EQ
@@ -15561,7 +15826,7 @@ public class ReportBackingBean extends
 							subcategorydivision.append(ReportConst.KAMA
 									+ smSupplier.getPmCategoryL3()
 											.getCategoryL3Id());
-						}						
+						}
 						if (this.getManagedBean()
 								.getReportValue()
 								.trim()
@@ -15587,19 +15852,17 @@ public class ReportBackingBean extends
 								.getReportValue()
 								.trim()
 								.equalsIgnoreCase(
-										ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL) || this.getManagedBean()
-								.getReportValue()
-								.trim()
-								.equalsIgnoreCase(
-										ReportConst.SM_CATEGORY_OVERLAPPING_RPT_VAL)) {						
-								if (smSupplier.getPmCategoryL1()
-										.getCategoryL1Id() == null) {
-									throw new EpException(
-											MessageConst.ERROR_REPORT_780047);
-								}
-							}			
-						
-						
+										ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL)
+								|| this.getManagedBean()
+										.getReportValue()
+										.trim()
+										.equalsIgnoreCase(
+												ReportConst.SM_CATEGORY_OVERLAPPING_RPT_VAL)) {
+							if (smSupplier.getPmCategoryL1().getCategoryL1Id() == null) {
+								throw new EpException(
+										MessageConst.ERROR_REPORT_780047);
+							}
+						}
 
 						/*
 						 * else if
@@ -17017,6 +17280,7 @@ public class ReportBackingBean extends
 	 */
 	public void simpleQuoteNoValidation() {
 		log.info("ReportBackingBean-simpleQuoteNoValidation");
+		getIisDPReportsStatus();
 		if (StringUtils.isNotEmpty(this.getScProcessRptQuotationNo())) {
 			specialCharValidation();
 		}
@@ -17040,13 +17304,14 @@ public class ReportBackingBean extends
 								.getReportValue()
 								.trim()
 								.equalsIgnoreCase(
-										ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL) || getManagedBean()
-						.getReportValue()
-						.trim()
-						.equalsIgnoreCase(
-								ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL)|| getManagedBean()
-								.getReportValue().trim()
-								.equalsIgnoreCase(ReportConst.SC_S1_LOA_RPT_VAL))) {
+										ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL)
+						|| getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL) || getManagedBean()
+						.getReportValue().trim()
+						.equalsIgnoreCase(ReportConst.SC_S1_LOA_RPT_VAL))) {
 			// if(this.getScProcessRptQuotationNo() != null){
 			match = pattern.matcher(this.getScProcessRptQuotationNo());
 			// }
@@ -17064,13 +17329,14 @@ public class ReportBackingBean extends
 									.getReportValue()
 									.trim()
 									.equalsIgnoreCase(
-											ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL) || getManagedBean()
-							.getReportValue()
-							.trim()
-							.equalsIgnoreCase(
-									ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL) || getManagedBean()
-									.getReportValue().trim()
-									.equalsIgnoreCase(ReportConst.SC_S1_LOA_RPT_VAL))) {
+											ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL)
+							|| getManagedBean()
+									.getReportValue()
+									.trim()
+									.equalsIgnoreCase(
+											ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL) || getManagedBean()
+							.getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SC_S1_LOA_RPT_VAL))) {
 				retrieveSimpleQuoteNo();
 			} else {
 				getQuotationNumber();
@@ -17515,6 +17781,226 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the iis dp reports status.
+	 * 
+	 * @return the iis dp reports status
+	 */
+	private void getIisDPReportsStatus() {
+		if (StringUtils.isNotEmpty(this.getModuleValue())
+				&& (this.getModuleValue()
+						.equalsIgnoreCase(ModuleCodeConst.DIRECT_PURCHASE))) {
+
+			if (StringUtils.isNotEmpty(this.getReportValue())) {
+
+				switch (EnumReportType.valueOf(this.getReportValue())) {
+
+				case SC_050:
+				case SC_051:
+
+					if ((approverNayakTarafList.size() > 0)
+							|| ((authoriztionList != null) && (authoriztionList
+									.contains(ReportConst.RN_APPROVER)))) {
+						if (StringUtils.isNotEmpty(this.getScSupplier())
+								|| StringUtils.isNotEmpty(this.getScPIno())
+								|| StringUtils.isNotEmpty(this
+										.getScCommonStatus())
+								|| StringUtils.isNotEmpty(this
+										.getScRequisenerId())
+								|| StringUtils.isNotEmpty(this.getScPtj())) {
+							this.setValuesEmpty(false);
+						} else {
+							this.setValuesEmpty(true);
+						}
+					} else if (StringUtils.isNotEmpty(this.getScSupplier())
+							|| StringUtils.isNotEmpty(this.getScPIno())
+							|| StringUtils.isNotEmpty(this.getScCommonStatus())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_055:
+
+					if ((approverNayakTarafList.size() > 0)
+							|| ((authoriztionList != null) && (authoriztionList
+									.contains(ReportConst.RN_APPROVER)))) {
+						if (StringUtils.isNotEmpty(this
+								.getScPurchaseInDefaultStatus())
+								|| StringUtils.isNotEmpty(this.getScPIDNo())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPType())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPName())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPNo())
+								&& StringUtils.isNotEmpty(this
+										.getScRequisenerId())
+								|| StringUtils.isNotEmpty(this.getScPtj())) {
+							this.setValuesEmpty(false);
+						} else {
+							this.setValuesEmpty(true);
+						}
+					} else if (StringUtils.isNotEmpty(this
+							.getScPurchaseInDefaultStatus())
+							|| StringUtils.isNotEmpty(this.getScPIDNo())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPType())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPName())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPNo())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_067:
+
+					if ((approverNayakTarafList.size() > 0)
+
+							|| ((authoriztionList != null) && (authoriztionList
+									.contains(ReportConst.RN_APPROVER)))) {
+						if (StringUtils.isNotEmpty(this
+								.getScPurchaseInDefaultStatus())
+								|| StringUtils.isNotEmpty(this.getScSupplier())
+								|| StringUtils.isNotEmpty(this.getScPIDNo())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPType())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPName())
+								|| StringUtils.isNotEmpty(this
+										.getScContractOrPKPNo())
+								|| StringUtils.isNotEmpty(this
+										.getScRequisenerId())
+								|| StringUtils.isNotEmpty(this.getScPtj())) {
+							this.setValuesEmpty(false);
+						} else {
+							this.setValuesEmpty(true);
+						}
+					} else if (StringUtils.isNotEmpty(this
+							.getScPurchaseInDefaultStatus())
+							|| StringUtils.isNotEmpty(this.getScSupplier())
+							|| StringUtils.isNotEmpty(this.getScPIDNo())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPType())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPName())
+							|| StringUtils.isNotEmpty(this
+									.getScContractOrPKPNo())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_058:
+
+				case SC_056:
+
+					if ((approverNayakTarafList.size() > 0)
+							|| ((authoriztionList != null) && (authoriztionList
+									.contains(ReportConst.RN_APPROVER)))) {
+						if (StringUtils.isNotEmpty(this.getScSupplier())
+								|| StringUtils.isNotEmpty(this
+										.getScRequestNoteStatus())
+								|| StringUtils.isNotEmpty(this
+										.getScProcurementType())
+								|| StringUtils.isNotEmpty(this
+										.getScRequestQuoteNo())
+								|| StringUtils.isNotEmpty(this
+										.getScRequisenerId())
+								|| StringUtils.isNotEmpty(this.getScPtj())) {
+							this.setValuesEmpty(false);
+						} else {
+							this.setValuesEmpty(true);
+						}
+					} else if (StringUtils.isNotEmpty(this.getScSupplier())
+							|| StringUtils.isNotEmpty(this
+									.getScRequestNoteStatus())
+							|| StringUtils.isNotEmpty(this
+									.getScProcurementType())
+							|| StringUtils.isNotEmpty(this
+									.getScRequestQuoteNo())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_060:
+
+				case SC_062:
+
+					if ((approverNayakTarafList.size() > 0)
+							|| ((authoriztionList != null) && (authoriztionList
+									.contains(ReportConst.RN_APPROVER)))) {
+						if (StringUtils.isNotEmpty(this.getScSupplier())
+								|| StringUtils.isNotEmpty(this
+										.getScProcurementType())
+								|| StringUtils.isNotEmpty(this
+										.getScProcessRptQuotationNo())
+								|| StringUtils.isNotEmpty(this
+										.getScSimpleQuoteStatus())
+								|| StringUtils.isNotEmpty(this
+										.getScRequisenerId())
+								|| StringUtils.isNotEmpty(this.getScPtj())) {
+							this.setValuesEmpty(false);
+						} else {
+							this.setValuesEmpty(true);
+						}
+					} else if (StringUtils.isNotEmpty(this.getScSupplier())
+							|| StringUtils.isNotEmpty(this
+									.getScProcurementType())
+							|| StringUtils.isNotEmpty(this
+									.getScProcessRptQuotationNo())
+							|| StringUtils.isNotEmpty(this
+									.getScSimpleQuoteStatus())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_068:
+					if (StringUtils.isNotEmpty(this
+							.getScProcessRptQuotationNo())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				case SC_069:
+					if (StringUtils.isNotEmpty(this.getScSupplier())
+							|| StringUtils.isNotEmpty(this
+									.getScSimpleQuoteType())
+							|| StringUtils.isNotEmpty(this.getScSOAStatus())
+							|| StringUtils.isNotEmpty(this
+									.getScProcessRptQuotationNo())
+							|| StringUtils.isNotEmpty(this.getScLOANo())
+							|| StringUtils.isNotEmpty(this.getScRequisenerId())
+							|| StringUtils.isNotEmpty(this.getScPtj())) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+					break;
+
+				default: {
+					System.out
+							.println("In getIisDPReportsStatus unknown report value" + this.getReportValue());
+					log.info("In getIisDPReportsStatus unknown report value \t" + this.getReportValue());
+				}
+				}
+
+			}
+		}
+
+	}
+
+	/**
 	 * Check lovs and default dates.
 	 */
 	private void checkLovsAndDefaultDates() {
@@ -17530,10 +18016,58 @@ public class ReportBackingBean extends
 			checkEmptyValuesForLovs();
 		} else if (this.getModuleValue().equalsIgnoreCase(
 				ModuleCodeConst.SUPPLIER_SELECTION)
-				|| this.getModuleValue().equalsIgnoreCase(
-						ModuleCodeConst.DIRECT_PURCHASE)
 				&& (CollectionUtils.isNotEmpty(reportList))) {
 			getDefaultValuesFromAndToDate(this.getManagedBean().getReportCode());
+		} else if (this.getModuleValue().equalsIgnoreCase(
+				ModuleCodeConst.DIRECT_PURCHASE)
+				&& (CollectionUtils.isNotEmpty(reportList))) {
+			getDefaultValuesFromAndToDate(this.getManagedBean().getReportCode());
+			if (this.getManagedBean()
+					.getReportCode()
+					.equalsIgnoreCase(
+							ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportCode()
+							.equalsIgnoreCase(
+									ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportCode()
+							.equalsIgnoreCase(
+									ReportConst.SC_LAPORAN_PURCHASE_DEFAULT_S1_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportCode()
+							.equalsIgnoreCase(
+									ReportConst.SC_SUMMARY_REQUEST_NOTE_S1_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportCode()
+							.equalsIgnoreCase(
+									ReportConst.SC_REQUEST_NOTE_COMPLETE_S1_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportCode()
+							.equalsIgnoreCase(
+									ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportCode()
+							.equalsIgnoreCase(
+									ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportCode()
+							.equalsIgnoreCase(
+									ReportConst.SC_S1_PURCHASE_DEFAULT_DTLS_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportCode()
+							.equalsIgnoreCase(
+									ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL)
+					|| this.getManagedBean().getReportCode()
+							.equalsIgnoreCase(ReportConst.SC_S1_LOA_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportCode()
+							.equalsIgnoreCase(
+									ReportConst.SC_S1_LOA_CONTENT_RPT_VAL)) {
+
+				this.setValuesEmpty(true);
+			}
+
 		} else if ((this.getModuleValue().equalsIgnoreCase(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT) && (CollectionUtils
 				.isNotEmpty(reportList)))) {
@@ -17572,11 +18106,15 @@ public class ReportBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT) && (CollectionUtils
 				.isNotEmpty(reportList)))) {
 			getDefaultValuesFromAndToDate(this.getManagedBean().getReportCode());
-			this.setValuesEmpty(true);
+			//this.setValuesEmpty(true);
 			if (this.getManagedBean()
 					.getReportCode()
 					.equalsIgnoreCase(
-							ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)
+							ReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportCode()
+							.equalsIgnoreCase(
+									ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)
 					|| this.getManagedBean()
 							.getReportCode()
 							.equalsIgnoreCase(
@@ -17585,21 +18123,22 @@ public class ReportBackingBean extends
 							.getReportCode()
 							.equalsIgnoreCase(
 									ReportConst.PM_LIST_OF_GOVERNMENT_SELLERS_RPT_VAL)) {
-				if (StringUtils.isBlank(this.getPmOrgCategory())
+				this.setValuesEmpty(true);
+				/*if (StringUtils.isBlank(this.getPmOrgCategory())
 						|| StringUtils.isBlank(this.getPmOrgType())
 						|| StringUtils.isBlank(this.getPmOrgName())) {
 					this.setValuesEmpty(true);
 				} else {
 					this.setValuesEmpty(false);
-				}
-			} else if (this.getManagedBean().getReportCode()
+				}*/
+			}/* else if (this.getManagedBean().getReportCode()
 					.equalsIgnoreCase(ReportConst.PM_BPK_USER_PROFILE_RPT_VAL)
 					|| this.getManagedBean()
 							.getReportCode()
 							.equalsIgnoreCase(
 									ReportConst.PM_BPK_ADMIN_PROFILE_RPT_VAL)) {
 				this.setValuesEmpty(false);
-			}
+			}*/
 		} else if ((this.getModuleValue().equalsIgnoreCase(
 				ModuleCodeConst.CATALOGUE_MANAGEMENT) && (CollectionUtils
 				.isNotEmpty(reportList)))) {
@@ -17754,6 +18293,7 @@ public class ReportBackingBean extends
 	public void getScLOAReports() {
 
 		log.info("ReportBackingBean-getLOAReports");
+
 		if (StringUtils.isNotEmpty(this.getScLOAIdNo())
 				&& this.getScLOAIdNo().startsWith(ReportConst.LA_VALUE)) {
 
@@ -17899,7 +18439,21 @@ public class ReportBackingBean extends
 				loaDetailAll.downloadAllReports();
 			}
 		} else {
-			throw new EpException(MessageConst.ERROR_REPORT_780026);
+			if (StringUtils.isNotEmpty(this.getScLOAIdNo())) {
+				this.setValuesEmpty(false);
+				//throw new EpException(MessageConst.ERROR_REPORT_780026);			
+				throw new EpException(MessageConst.ERROR_REPORT_780026,new String[] {this.getScLOAIdNo()});
+			} else {
+				this.setValuesEmpty(true);
+				if (this.getReportValue()
+						.trim()
+						.equalsIgnoreCase(ReportConst.SC_S1_LOA_CONTENT_RPT_VAL)) {
+					if (StringUtils.isBlank(this.getScLOAIdNo())) {
+						throw new EpException(MessageConst.ERROR_REPORT_780003);
+					}
+				}
+			}
+
 		}
 	}
 
@@ -18807,4 +19361,4 @@ public class ReportBackingBean extends
 		return sb.toString();
 	}
 
-} 
+}
