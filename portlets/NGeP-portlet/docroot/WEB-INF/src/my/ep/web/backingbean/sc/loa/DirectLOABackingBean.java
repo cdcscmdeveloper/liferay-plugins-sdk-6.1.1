@@ -33,7 +33,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -57,8 +56,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
-import my.ep.dto.pm.common.clause.ClauseReqDTO;
-import my.ep.dto.pm.common.clause.ClauseResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -80,7 +77,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -738,63 +734,19 @@ public class DirectLOABackingBean extends
 	 *            the sc qt deduction
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
+		
 		debugLogger("deductionTypeChange");
-		IParameterSO parameterSO = null;
-		IClauseSO clauseSO = null;
-		try {
-			Long parameterId = scQtDeduction.getDeductionType()
-					.getParameterId();
-
+			Long parameterId = scQtDeduction.getDeductionType().getParameterId();
 			if (null != parameterId) {
-				parameterSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-				clauseSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IClauseSO.class);
-
-				ParameterReqDTO reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterId(parameterId);
-				ParameterResDTO resDTO = parameterSO
-						.retrieveParameterById(reqDTO);
-				scQtDeduction.setDeductionType(resDTO.getPmParameter());
+				scQtDeduction.setDeductionType(retrieveParameterById(parameterId));
 				validateDeductionPayment(scQtDeduction);
 				getClausesTitle(scQtDeduction);
-				ScQtDeductionClause deductionClause = null;
-				List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
-				if (!ParameterConst.DEDUCTION_TYPE_OTHERS
-						.equalsIgnoreCase(scQtDeduction.getDeductionType()
-								.getParameterCode())) {
-					ClauseReqDTO clauseReqDTO = new ClauseReqDTO();
-					clauseReqDTO.setDeductionType(scQtDeduction
-							.getDeductionType().getParameterCode());
-					ClauseResDTO clauseResDTO = clauseSO
-							.retrieveClausesByDeductionType(clauseReqDTO);
-					if (clauseResDTO.getResultBean() != null) {
-						List<PmClause> pmClauseList = clauseResDTO
-								.getResultBean().getResultList();
-						for (PmClause pmClause : pmClauseList) {
-							deductionClause = new ScQtDeductionClause();
-							deductionClause.setPmClause(pmClause);
-							deductionClause.setScQtDeduction(scQtDeduction);
-							deductionClause.setClauseDesc(pmClause
-									.getClauseDesc());
-							deductionClauseList.add(deductionClause);
-						}
-						scQtDeduction
-								.setScQtDeductionClauses(deductionClauseList);
-					} else {
-						scQtDeduction.setScQtDeductionClauses(null);
-					}
-				} else {
-					scQtDeduction.setScQtDeductionClauses(null);
-				}
+				scQtDeduction.setScQtDeductionClauses(null);
 				getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			} else {
 				scQtDeduction.setDeductionType(new PmParameter());
 				getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			}
-		} finally {
-			parameterSO = null;
-		}
 	}
 
 	/**
@@ -1166,21 +1118,8 @@ public class DirectLOABackingBean extends
 	 *            the sc loa
 	 */
 	private void validateDeductionPaymentDtls(ScLoa scLoa) {
-		List<ScQtDeduction> deductions = scLoa.getScQtDeductions();
-		if (CollectionUtils.isNotEmpty(deductions)) {
-			for (ScQtDeduction deduction : deductions) {
-				if (ParameterConst.DEDUCTION_TYPE_OTHERS.equals(deduction
-						.getDeductionType().getParameterCode())) {
-					if (CollectionUtils.isEmpty(deduction
-							.getScQtDeductionClauses())) {
-						throw new EpException(MessageConst.ERROR_760324);
-					}
-				}
-				if (null == deduction.getDeductionType().getParameterId()) {
-					throw new EpException(MessageConst.ERROR_740035);
-				}
-			}
-		}
+		
+		validateDeductionPaymentDtls(scLoa.getScQtDeductions());
 	}
 	
 	/**
