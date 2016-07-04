@@ -4,9 +4,11 @@
 package my.ep.web.managedbean.sc.directpurchase;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -15,15 +17,21 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile_;
+import my.ep.persistence.entity.sc.common.ScRequestItem_;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote_;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 // TODO: Auto-generated Javadoc
 
@@ -66,6 +74,26 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	
 	/** The dp document data model. */
 	private IPagingDataModel<Object[]> dpDocumentDataModel = new DocumentPagingDataModel();
+	
+	/** The document types. */
+	private List<SelectItem> documentTypes;
+	
+	
+	/** The search ministry profile. */
+	private PmOrgProfile searchMinistryProfile;
+	
+	/** The search ptj group profile. */
+	private PmOrgProfile searchPtjGroupProfile;
+	
+	/** The search ptj profile. */
+	private PmOrgProfile searchPtjProfile;
+	
+	/** The document type desc. */
+	private String documentTypeDesc;
+	
+	/** The is government. */
+	private boolean government;
+	
 
 	/**
 	 * The Class DocumentPagingDataModel.
@@ -85,13 +113,51 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				if(null == getSearchDocumentType()){ 
 					throw new EpException(MessageConst.ERROR_740023);
 				}
+				String paramPtjGroup = "";
+				String paramTitle = "";
 
 				if(getSearchDocumentType() != null && getSearchDocumentType() != "") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType", SearchOperator.OPERATOR_EQUALS.value(), getSearchDocumentType()));
-					if(getSearchDocumentType().equalsIgnoreCase("LA")) {
+					if(getSearchDocumentType().equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("MOD", SearchOperator.OPERATOR_EQUALS.value(), ModuleCodeConst.DIRECT_PURCHASE));
 					}
 				}
+				
+				if(ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSearchDocumentType())){
+					paramPtjGroup = "pmOrgProfile.orgProfileId";
+					paramTitle ="title";
+				} else if(ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSearchDocumentType())){
+					paramPtjGroup = "requestNotes.pmOrgProfile.orgProfileId";
+					paramTitle ="title";
+				} else if(ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(getSearchDocumentType())){
+					paramPtjGroup = "scRequestSupplierItems.requestNoteItem.requestNote.pmOrgProfile.orgProfileId";
+					paramTitle ="title";
+				} else if(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT.equals(getSearchDocumentType())){
+					paramPtjGroup = "pmOrgProfile.orgProfileId";
+					paramTitle ="title";
+				} else if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(getSearchDocumentType())){
+					paramPtjGroup = "scLoiLoa.pmOrgProfile.orgProfileId";
+					paramTitle ="scLoiLoa.title";
+				}
+				
+				if (getSearchPtjProfile() != null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtjGroup, SearchOperator.OPERATOR_EQUALS.value(),
+							getSearchPtjProfile().getOrgProfileId()));
+					
+				} else if (getSearchPtjGroupProfile() != null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtjGroup, SearchOperator.OPERATOR_EQUALS.value(),
+							getSearchPtjGroupProfile().getOrgProfileId()));
+				} else if (getSearchMinistryProfile() != null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtjGroup, SearchOperator.OPERATOR_EQUALS.value(),
+							getSearchMinistryProfile().getOrgProfileId()));
+				}
+				
+				if (StringUtils.isNotBlank(getSearchDocumentTitle())) {
+					SearchFilterBean filterBean = new SearchFilterBean(paramTitle, SearchOperator.OPERATOR_LIKE.value(),
+							getSearchDocumentTitle());
+					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				
 				if(getSearchDocumentNo() != null && getSearchDocumentNo() != "") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), getSearchDocumentNo()));
 				}
@@ -249,5 +315,93 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	 */
 	public void setDpObj(Object[] dpObj) {
 		this.dpObj = dpObj;
+	}
+
+	/**
+	 * Gets the document types.
+	 *
+	 * @return the document types
+	 */
+	public List<SelectItem> getDocumentTypes() {
+		return documentTypes;
+	}
+
+	/**
+	 * Sets the document types.
+	 *
+	 * @param documentTypes the new document types
+	 */
+	public void setDocumentTypes(List<SelectItem> documentTypes) {
+		this.documentTypes = documentTypes;
+	}
+	
+	/**
+	 * @return the documentTypeDesc
+	 */
+	public String getDocumentTypeDesc() {
+		return documentTypeDesc;
+	}
+
+	/**
+	 * @param documentTypeDesc the documentTypeDesc to set
+	 */
+	public void setDocumentTypeDesc(String documentTypeDesc) {
+		this.documentTypeDesc = documentTypeDesc;
+	}
+	
+	/**
+	 * @return the government
+	 */
+	public boolean isGovernment() {
+		return government;
+	}
+
+	/**
+	 * @param government the government to set
+	 */
+	public void setGovernment(boolean government) {
+		this.government = government;
+	}
+
+	/**
+	 * @return the searchMinistryProfile
+	 */
+	public PmOrgProfile getSearchMinistryProfile() {
+		return searchMinistryProfile;
+	}
+
+	/**
+	 * @param searchMinistryProfile the searchMinistryProfile to set
+	 */
+	public void setSearchMinistryProfile(PmOrgProfile searchMinistryProfile) {
+		this.searchMinistryProfile = searchMinistryProfile;
+	}
+
+	/**
+	 * @return the searchPtjGroupProfile
+	 */
+	public PmOrgProfile getSearchPtjGroupProfile() {
+		return searchPtjGroupProfile;
+	}
+
+	/**
+	 * @param searchPtjGroupProfile the searchPtjGroupProfile to set
+	 */
+	public void setSearchPtjGroupProfile(PmOrgProfile searchPtjGroupProfile) {
+		this.searchPtjGroupProfile = searchPtjGroupProfile;
+	}
+
+	/**
+	 * @return the searchPtjProfile
+	 */
+	public PmOrgProfile getSearchPtjProfile() {
+		return searchPtjProfile;
+	}
+
+	/**
+	 * @param searchPtjProfile the searchPtjProfile to set
+	 */
+	public void setSearchPtjProfile(PmOrgProfile searchPtjProfile) {
+		this.searchPtjProfile = searchPtjProfile;
 	}
 }
