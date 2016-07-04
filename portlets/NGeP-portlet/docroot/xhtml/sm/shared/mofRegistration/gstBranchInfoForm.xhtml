@@ -226,7 +226,8 @@
 								<c:when test="#{backingBean.managedBean.supplierUser 
 									and (backingBean.managedBean.smAppl.applType eq 'N' 
 									or backingBean.managedBean.smAppl.applType eq 'R')}">
-									<p:inputText readonly="true" disabled="true" value="" size="40" />
+									<p:inputText readonly="true" disabled="true" 
+										value="#{backingBean.managedBean.selectedBranch.gst.gstRegNo}" size="40" />
 								</c:when>
 								<c:otherwise>
 									<p:inputText label="#{lbl['lbl.sm.gstNo']}"
@@ -246,7 +247,11 @@
 								<c:when test="#{backingBean.managedBean.supplierUser 
 									and (backingBean.managedBean.smAppl.applType eq 'N' 
 									or backingBean.managedBean.smAppl.applType eq 'R')}">
-									<p:inputText readonly="true" disabled="true" value="" size="40" />
+									<p:inputText readonly="true" disabled="true" 
+										value="#{backingBean.managedBean.selectedBranch.gst.gstEffDate}" size="40" >
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</p:inputText>
 								</c:when>
 								<c:otherwise>
 									<p:inputText
@@ -268,7 +273,11 @@
 								<c:when test="#{backingBean.managedBean.supplierUser 
 									and (backingBean.managedBean.smAppl.applType eq 'N' 
 									or backingBean.managedBean.smAppl.applType eq 'R')}">
-									<p:inputText readonly="true" disabled="true" value="" size="40" />
+									<p:inputText readonly="true" disabled="true" 
+										value="#{backingBean.managedBean.selectedBranch.gst.gstEndDate}" size="40" >
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</p:inputText>
 								</c:when>
 								<c:otherwise>
 									<p:inputText
