@@ -199,12 +199,13 @@ public class CommonApplBackingBean extends
 			paymentBB.getManagedBean().setBpmPojo(bpmObj);
 
 			paymentBB.retrieveBillInfo();
+			paymentBB.proceedToPaymentSummary();
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/payment/portletViewMode.xhtml");
+							"/xhtml/sm/payment/paymentSummary.xhtml");
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				SMProcessNameConst.RESPOND_PO_INQUIRY)) {
 			log.info("** Respond to PO Inquiry *********"
@@ -720,12 +721,13 @@ public class CommonApplBackingBean extends
 			paymentBB.getManagedBean().setBpmPojo(bpmObj);
 
 			paymentBB.retrieveBillInfo();
+			paymentBB.proceedToPaymentSummary();
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/payment/portletViewMode.xhtml");
+							"/xhtml/sm/payment/paymentSummary.xhtml");
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				SMProcessNameConst.COMPLETE_SV_REPORT)) {
 			siteVisitTask(resDTO, taskId, isClaim);
