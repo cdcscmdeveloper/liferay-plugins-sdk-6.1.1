@@ -51,6 +51,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.portlet.PortletConfig;
+import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
@@ -4019,6 +4020,32 @@ public class SmCommonUtil {
 		ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
 
 		return new DefaultStreamedContent(stream, "application/pdf");
+	}
+
+	public static StreamedContent getFileStreamContentByTypeAndPath(
+			String path, String type) throws IOException {
+		PortletContext context = (PortletContext) FacesContext
+				.getCurrentInstance().getExternalContext().getContext();
+		String filePath = context.getRealPath("/xhtml" + path);
+		File file = new File(filePath);
+		ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
+		FileInputStream in = new FileInputStream(file);
+		byte[] buf = new byte[512];
+		int len;
+		while (true) {
+			len = in.read(buf);
+			if (len == -1) {
+				break;
+			}
+			tmpOut.write(buf, 0, len);
+		}
+		in.close();
+		tmpOut.close();
+		ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0, tmpOut.size());
+
+		ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
+
+		return new DefaultStreamedContent(stream, type);
 	}
 
 	/**
