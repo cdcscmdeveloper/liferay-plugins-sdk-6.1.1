@@ -104,8 +104,6 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.deduction.clause']}" />
 					</f:facet>
-					<ui:fragment
-						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
 						<p:inputTextarea id="otherClause" value="#{scQtDeductionClause.clauseDesc}"
 							label="#{lbl['lbl.sc.deduction.clause']}" required="true"
 							onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
@@ -113,16 +111,11 @@
 							<p:ajax event="keyup" />
 						</p:inputTextarea>
 						<p:message id="otherClauseMsg" for="otherClause" display="icon" />
-					</ui:fragment>
-					<ui:fragment
-						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode ne ParameterConst.deductionTypeOthers}">
-						<h:outputText escape="false" value="#{scQtDeductionClause.pmClause.clauseDesc}" rendered="#{!empty scQtDeductionClause.pmClause}" />
-					</ui:fragment>
 				</p:column>
 			</p:dataTable>
 			<div class="ppRightBtn">
 				<h:panelGroup
-					rendered="#{!empty qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction and qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
+					rendered="#{!empty qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
 						process="@this, deductClauseTbl" partialSubmit="true"
