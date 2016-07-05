@@ -12,7 +12,7 @@
 
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
-
+		<ac:lovPopup />
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
 			<table style="width: 100%;">
@@ -22,41 +22,54 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu style="width: 250px;"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentType}">
-							<f:selectItems 
+							<f:selectItems
 								value="#{directPurchaseBackingBean.managedBean.documentTypes}" />
 							<p:ajax event="change" update="searchPanel"
 								listener="#{directPurchaseBackingBean.searchStatusDesc}" />
 						</p:selectOneMenu></td>
 				</tr>
 
-				<h:panelGroup rendered="#{directPurchaseBackingBean.managedBean.government}">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.ministry']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{directPurchaseBackingBean.managedBean.searchMinistryProfile.orgName}"
-							disabled="true" size="25" readonly="true" style="width:840px;" />
-					</td>
-				</tr>
+				<h:panelGroup
+					rendered="#{directPurchaseBackingBean.managedBean.government}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.ministry']}" /></td>
+						<td colspan="3"><ac:lov id="searchMinistry"
+								lovId="PM_ORG_PROFILE_MINSTRY" size="148" readonly="true"
+								headerText="#{lbl['lbl.sc.ministry']}"
+								value="#{directPurchaseBackingBean.managedBean.searchMinistryProfile.orgName}"
+								postUpdateListener="directPurchaseBackingBean.resetPtjGroupProfile()"
+								update="@form"
+								saveObject="directPurchaseBackingBean.managedBean.searchMinistryProfile">
+							</ac:lov></td>
+					</tr>
 
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{directPurchaseBackingBean.managedBean.searchPtjGroupProfile.orgName}"
-							disabled="true" size="25" readonly="true" style="width:840px;" />
-					</td>
-				</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
+						<td colspan="3"><ac:lov id="searchPtjGroup"
+								lovId="PM_ORG_PROFILE_PTJ_GROUP" size="148" readonly="true"
+								headerText="#{lbl['lbl.sc.kumpulan.ptj']}"
+								value="#{directPurchaseBackingBean.managedBean.searchPtjGroupProfile.orgName}"
+								postUpdateListener="directPurchaseBackingBean.resetPtjProfile()"
+								update="@form"
+								saveObject="directPurchaseBackingBean.managedBean.searchPtjGroupProfile"
+								conditionField="#{directPurchaseBackingBean.getPTJGroupCondition()}"></ac:lov></td>
+					</tr>
 
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{directPurchaseBackingBean.managedBean.searchPtjProfile.orgName}"
-							disabled="true" size="25" readonly="true" style="width:840px;" />
-					</td>
-				</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+						<td colspan="3"><ac:lov id="searchPtj"
+								lovId="PM_ORG_PROFILE_PTJ" size="148" readonly="true"
+								headerText="#{lbl['lbl.sc.ptj']}"
+								value="#{directPurchaseBackingBean.managedBean.searchPtjProfile.orgName}"
+								saveObject="directPurchaseBackingBean.managedBean.searchPtjProfile"
+								conditionField="#{directPurchaseBackingBean.getPtjCondition()}">
+							</ac:lov></td>
+					</tr>
 				</h:panelGroup>
+
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.document.title']}" /></td>
-					<td colspan="3"><p:inputText style="width: 840px;"
+					<td colspan="3"><p:inputText size="148"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentTitle}"></p:inputText></td>
 				</tr>
 				<tr>
@@ -136,7 +149,7 @@
 					#{Obj[5]}
 				</p:column>
 
-			<!-- 	<p:column width="6%">
+				<!-- 	<p:column width="6%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.created.by']}" />
 					</f:facet>
