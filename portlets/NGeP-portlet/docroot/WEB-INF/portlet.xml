@@ -8594,7 +8594,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>passwordcipher</portlet-name>
-		<display-name>PasswordCipher</display-name>
+		<display-name>Password Cipher</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -8608,7 +8608,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>PassworCipher</title>
+			<title>Password Cipher</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
