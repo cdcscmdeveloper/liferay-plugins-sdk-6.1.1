@@ -21,7 +21,7 @@ import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.scheduler.helper.sc.ScSchedulerHelper;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -67,7 +67,7 @@ public class QTPublishSchedulingJob implements Job {
 					if(qtToPublish.getPublishDate().before(DateUtils.getCurrentDate())){
 						reSchedulePublicationForPublishFailQt(qtToPublish);
 					}else{
-						EpSchedulerHelper.scheduleSimplePublishingJob(qtToPublish);
+						ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(qtToPublish);
 					}
 				}
 			}
