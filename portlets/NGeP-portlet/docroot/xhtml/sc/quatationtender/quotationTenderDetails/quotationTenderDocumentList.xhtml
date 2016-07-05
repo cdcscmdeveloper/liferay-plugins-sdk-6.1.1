@@ -74,16 +74,15 @@
 					rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? false : true}" />
 					
 				<ui:fragment rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
-					<p:commandButton oncomplete="attachDlg1.show();"
-						value="#{lbl['lbl.txt.attachment']}" icon="iconAttachment"
-						partialSubmit="true" process="doctbl" update="@([id$=attach])">
-						<f:setPropertyActionListener target="#{qTDocumentsBackingBean.managedBean.selectedScQtDocReport}" value="#{scQtDocReport}" />
-					</p:commandButton> <br/>
-					<p:commandLink ajax="false" style="margin-left:10px;"
-						value="#{scQtDocReport.scQtDocReportAttachment.fileName}"
-						action="#{qTDocumentsBackingBean.downloadReport(scQtDocReport)}"
-						rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scQtDocReport.scQtDocReportAttachment.fileName :false}">
-					</p:commandLink>
+
+					<ac:scSingleFileUploadButton id="documentUploadBtn"
+						popupWidgetVar="documentUploadDlg"
+						attachment="#{scQtDocReport.scQtDocReportAttachment}"
+						rowIndex="#{rowIndex}">
+						<f:setPropertyActionListener for="actionEvent"
+							target="#{qTDocumentsBackingBean.managedBean.selectedScQtDocReport}"
+							value="#{scQtDocReport}" /> 
+					</ac:scSingleFileUploadButton>
 				</ui:fragment>
 			</p:column>
 		</p:dataTable>
@@ -117,4 +116,9 @@
 				height="100" title="#{lbl['lbl.sc.document.list']}"
 				content="#{lbl['lbl.sc.dialog.confirm.document.dtls']}" update="@form" />
 	</p:panel>
+	
+	<ac:scSingleFileUploadPopup widgetVar="documentUploadDlg"
+		fileUploadListener="qTDocumentsBackingBean.handleFileAttachment"
+		readonly="#{createQtBB.managedBean.readOnly}"
+		update="@([id$=documentUploadBtn])" />
 </ui:composition>
