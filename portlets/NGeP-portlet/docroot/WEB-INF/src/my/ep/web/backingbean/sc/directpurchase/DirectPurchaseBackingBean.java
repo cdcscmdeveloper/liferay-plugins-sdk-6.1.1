@@ -26,18 +26,15 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
@@ -46,7 +43,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
@@ -116,8 +112,12 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		.handleNavigation(fc, null, DIRECT_PURCHASE_SEARCH_PAGE_NAV);
 	}
 
+	
 	/**
-	 * Gets the document type.
+	 * Gets the document types.
+	 *
+	 * @param isGovernament the is governament
+	 * @return the document types
 	 */
 	private void getDocumentTypes(boolean isGovernament) {
 		List<SelectItem> items = null;
@@ -154,6 +154,12 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		getManagedBean().setDocumentTypes(items);
 	}
 
+	/**
+	 * Search status desc.
+	 *
+	 * @return the list
+	 * @throws NamingException the naming exception
+	 */
 	public List<SelectItem> searchStatusDesc() throws NamingException {
 		List<SelectItem> items = null;
 
@@ -402,63 +408,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 		log.info(message);
 	}
-
-	/**
-	 * To get userRole Code
-	 * 
-	 * @return String roleCode
-	 */
-	private String getUserRoleCodeByUserId() {
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
-		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-		List<PmRoleDesc> roleDescs = userResDTO.getRoleDescList();
-		String govtORSupplier ="";
-
-		// TODO add role Panel Circular Admin
-		List<String> govtRoleCodes = new ArrayList<String>();
-		govtRoleCodes.add(RoleCode.REQUISITIONER.value());
-		govtRoleCodes.add(RoleCode.APPROVER.value());
-		govtRoleCodes.add(RoleCode.BPK_CCA.value());
-		govtRoleCodes.add(RoleCode.MIN_CONTRACT_ADMIN.value());
-		govtRoleCodes.add(RoleCode.AUDITOR_INTERNAL.value());
-		govtRoleCodes.add(RoleCode.AUDITOR_GENERAL.value());
-		govtRoleCodes.add(RoleCode.BPK_AUDITOR.value());
-
-		List<String> suppRoleCodes = new ArrayList<String>();
-		suppRoleCodes.add(RoleCode.GOVT_SELLER.value());
-		suppRoleCodes.add(RoleCode.G2G_SUPPLIER_USER.value());
-		suppRoleCodes.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
-		suppRoleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
-		suppRoleCodes.add(RoleCode.MOF_SUPPLIER_USER.value());
-		suppRoleCodes.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
-		suppRoleCodes.add(RoleCode.BASIC_SUPPLIER_USER.value());
-
-		List<String> pmRoleCodes = new ArrayList<String>();
-		if (null != roleDescs) {
-			for (PmRoleDesc pmRoleDesc : roleDescs) {
-				pmRoleCodes.add(pmRoleDesc.getPmRole().getRoleCode());
-			}
-
-			for (String role : govtRoleCodes) {
-				if (pmRoleCodes.contains(role)) {
-					govtORSupplier= "G";
-					break;
-				}
-			}
-
-			for (String role : suppRoleCodes) {
-				if (pmRoleCodes.contains(role)) {
-					govtORSupplier= "S";
-					break;
-				}
-			}
-		}
-		return govtORSupplier;
-	}
+	
 	/**
 	 * Gets the default ptj and ministry search values based on user role.
 	 */
@@ -482,6 +432,12 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 	}
 
+	/**
+	 * Gets the org name.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the org name
+	 */
 	public String getOrgName(Long orgProfileId) {
 		String orgName="";
 
