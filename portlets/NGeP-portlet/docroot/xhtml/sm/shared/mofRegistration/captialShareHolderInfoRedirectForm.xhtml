@@ -24,7 +24,14 @@
 					<ui:include
 						src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
 					<div align="right" style="padding-top: 10px;">
-						<p:defaultCommand target="saveBtn" />
+						<!-- <p:defaultCommand target="saveBtn" /> -->
+						
+						<script type="text/javascript">
+							document.getElementById('form').onkeypress = function(){ 
+								if (event.keyCode == 13) { return false; }
+							}
+						</script>
+						
 						<p:commandButton id="saveBtn" value="#{lbl['lbl.sm.button.save']}"
 							onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{backingBean.addOrUpdateShareHolderToSmAppl}" 
