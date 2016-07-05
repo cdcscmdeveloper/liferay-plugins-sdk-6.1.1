@@ -4957,7 +4957,7 @@ public class QTDetailBackingBean extends
 					.getQtDetail();
 			scQt.setClosingDate(new Date());
 			reqDTO.setQtdetail(scQt);
-			QuationTenderResDTO resDTO = qtDetailSO.saveQTDtl(reqDTO);
+			QuationTenderResDTO resDTO = qtDetailSO.updateQTDetails(reqDTO);
 			boolean isSucessful = resDTO.isSuccessful();
 			if(isSucessful){
 				scQt = resDTO.getQtDetail();
@@ -5009,7 +5009,7 @@ public class QTDetailBackingBean extends
 					.getQtDetail();
 			scQt.setPublishDate(new Date());
 			reqDTO.setQtdetail(scQt);
-			QuationTenderResDTO resDTO = qtDetailSO.saveQTDtl(reqDTO);
+			QuationTenderResDTO resDTO = qtDetailSO.updateQTDetails(reqDTO);
 			boolean isSucessful = resDTO.isSuccessful();
 			if(isSucessful){
 				scQt = resDTO.getQtDetail();
