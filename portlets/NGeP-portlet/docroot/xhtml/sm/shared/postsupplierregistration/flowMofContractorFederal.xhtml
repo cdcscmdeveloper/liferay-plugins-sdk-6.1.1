@@ -40,13 +40,20 @@
 		<div class="flow-chart-left dmid">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
+				View Virtual Cert
+			</p>
+		</div>
+		
+		<div class="flow-chart-left dmid">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
 				#{lbl['lbl.sm.basic.catalogue.upload']}
 			</p>
 		</div>
 		
 		<div class="flow-chart-left dlast">
 			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
+				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
 				#{lbl['lbl.sm.basic.softcert.request']}
 			</p>
 		</div>
@@ -85,13 +92,21 @@
 		<div class="flow-chart-left dmid">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
+				View Virtual Cert
+			</p>
+		</div>
+		
+		
+		<div class="flow-chart-left dmid">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
 				#{lbl['lbl.sm.basic.catalogue.upload']}
 			</p>
 		</div>
 		
 		<div class="flow-chart-left dlast">
 			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
+				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
 				#{lbl['lbl.sm.basic.softcert.request']}
 			</p>
 		</div>
@@ -130,13 +145,21 @@
 		<div class="flow-chart-left dmid">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
+				View Virtual Cert
+			</p>
+		</div>
+		
+		
+		<div class="flow-chart-left dmid">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
 				#{lbl['lbl.sm.basic.catalogue.upload']}
 			</p>
 		</div>
 
 		<div class="flow-chart-left dlast">
 			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
+				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
 				#{lbl['lbl.sm.basic.softcert.request']}
 			</p>
 		</div>
@@ -178,13 +201,21 @@
 		<div class="flow-chart-left dmid">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
+				View Virtual Cert
+			</p>
+		</div>
+		
+		
+		<div class="flow-chart-left dmid">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
 				#{lbl['lbl.sm.basic.catalogue.upload']}
 			</p>
 		</div>
 
 		<div class="flow-chart-left dlast">
 			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
+				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
 				#{lbl['lbl.sm.basic.softcert.request']}
 			</p>
 		</div>
@@ -220,19 +251,27 @@
 				#{lbl['lbl.sm.basic.registration.fee']}
 			</p>
 		</div>
-
+		
+		
 		<div class="flow-chart-left mid">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
 				<p:commandLink styleClass="flowChart-Link"
-					value="#{lbl['lbl.sm.basic.catalogue.upload']}"
+					value="View Virtual Cert"
 					action="#{postSupplierRegBB.pageNavigate}" />
+			</p>
+		</div>
+		
+		<div class="flow-chart-left dmid">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
+				#{lbl['lbl.sm.basic.catalogue.upload']}
 			</p>
 		</div>
 		
 		<div class="flow-chart-left dlast">
 			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
+				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
 				#{lbl['lbl.sm.basic.softcert.request']}
 			</p>
 		</div>
@@ -272,13 +311,75 @@
 		<div class="flow-chart-left dmid">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
+				View Virtual Cert
+			</p>
+		</div>
+		
+		<div class="flow-chart-left mid">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
+				<p:commandLink styleClass="flowChart-Link" 
+					value="#{lbl['lbl.sm.basic.catalogue.upload']}"
+					action="#{postSupplierRegBB.pageNavigate}" />
+			</p>
+		</div>
+		
+		<div class="flow-chart-left dlast">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
+				#{lbl['lbl.sm.basic.softcert.request']}
+			</p>
+		</div>
+	</c:if>
+	<!-- FLOW STATUS 6 - END -->
+	
+	<!-- FLOW STATUS 7 -->
+	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 7}">
+		<div class="flow-chart-left dlst">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 1</strong><br />
+				<nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr>
+			</p>
+		</div>
+
+		<div class="flow-chart-left dmid">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 2</strong><br />
+				#{lbl['lbl.sm.basic.processing.fee']}
+			</p>
+		</div>
+
+		<div class="flow-chart-left dmid">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 3</strong><br />
+				#{lbl['lbl.sm.basic.gov.process']}
+			</p>
+		</div>
+
+		<div class="flow-chart-left dmid">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 4</strong><br />
+				#{lbl['lbl.sm.basic.registration.fee']}
+			</p>
+		</div>
+		
+		<div class="flow-chart-left dmid">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
+				View Virtual Cert
+			</p>
+		</div>
+		
+		<div class="flow-chart-left dmid">
+			<p>
+				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
 				#{lbl['lbl.sm.basic.catalogue.upload']}
 			</p>
 		</div>
 
 		<div class="flow-chart-left last">
 			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
+				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
 				<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()) or 
 					(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertIsActiveStatus())}">
 					#{lbl['lbl.sm.basic.softcert.request']}
