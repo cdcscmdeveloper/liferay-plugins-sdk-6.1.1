@@ -82,6 +82,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 
 /**
@@ -837,8 +838,9 @@ public class ApprovalBackingBean extends
 							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
 							if (DateUtils.setDefaultDateTime(closingDate).equals(todayDate) &&
 									DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
+								JobKey jobKey = ScSchedulerHelper.getInstance().getQTClosingJobKey(qt);
 								EpSchedulerHelper.deleteJobAndAssociatedTriggers(
-										ScSchedulerHelper.getInstance().getQTClosingJobKey(qt));
+										EpSchedulerHelper.getJobKey(jobKey.getName(), jobKey.getGroup()));
 							}
 						}					
 					}	
