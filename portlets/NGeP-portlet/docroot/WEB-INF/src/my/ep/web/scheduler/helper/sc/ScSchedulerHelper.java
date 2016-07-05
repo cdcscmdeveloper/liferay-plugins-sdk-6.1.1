@@ -101,8 +101,7 @@ public class ScSchedulerHelper {
 	 * @return	the JobKey
 	 */
 	public JobKey getQTPublishingJobKey(ScQt scQt) {
-		return EpSchedulerHelper.getJobKey(
-				SchedulerConstants.QT_PUBLISH_SIMPLE_JOB + scQt.getQtNo(), 
+		return new JobKey(SchedulerConstants.QT_PUBLISH_SIMPLE_JOB + scQt.getQtNo(), 
 				SchedulerConstants.QT_PUBLISH_SIMPLE_JOB_GROUP);
 	}
 	
@@ -114,8 +113,7 @@ public class ScSchedulerHelper {
 	 * @return	the JobKey
 	 */
 	public JobKey getQTClosingJobKey(ScQt scQt) {
-		return EpSchedulerHelper.getJobKey(
-				SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB + scQt.getQtNo(), 
+		return new JobKey(SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB + scQt.getQtNo(), 
 				SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB_GROUP);
 	}
 }
