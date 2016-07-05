@@ -132,14 +132,13 @@
 				<table width="100%" >
 					<tr>
 						<td width="10%"><p:outputLabel
-								value="#{lbl['lbl.pm.cal.state']}" /> <p:outputLabel value="*"
-								styleClass="mandatory" /></td>
+								value="#{lbl['lbl.pm.cal.state']}" /></td>
 						<td><p:selectOneMenu id="orgState"
 								styleClass="ppDropDownWidthL" label="#{lbl['lbl.pm.cal.state']}"
-								value="#{calendarBackingBean.managedBean.selectedState.stateId}"
+								value="#{calendarBackingBean.managedBean.selectedStateId}"
 								style="width: 275px;margin-bottom: 5px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-									itemValue="-1" />
+									itemValue="#{null}" />
 								<!--f:selectItem itemLabel="Malaysia" itemValue="0" /-->
 								<f:selectItems
 									value="#{calendarBackingBean.getStateListOfMalaysia()}"
@@ -151,9 +150,9 @@
 									update="schedule, weekend1 , weekend2" 
 									oncomplete="changeWeekEndColor()" />
 							</p:selectOneMenu> <h:inputHidden id="weekend1"
-								value="#{calendarBackingBean.managedBean.selectedState.weekend1}" />
+								value="#{calendarBackingBean.managedBean.selectedState != null ? calendarBackingBean.managedBean.selectedState.weekend1 : ''}" />
 							<h:inputHidden id="weekend2"
-								value="#{calendarBackingBean.managedBean.selectedState.weekend2}" />
+								value="#{calendarBackingBean.managedBean.selectedState != null ? calendarBackingBean.managedBean.selectedState.weekend2 : ''}" />
 						</td>
 						<td><p:message for="orgState" id="orgStateMsg" display="icon" /></td>
 					</tr>
