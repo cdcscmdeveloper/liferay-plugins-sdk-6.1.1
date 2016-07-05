@@ -1483,9 +1483,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		
 		if(checkTotalAmt.doubleValue()>contractAmount.doubleValue()) {
 			CommonUtils commonUtils = new CommonUtils();
-			commonUtils.getDisplayNumberFormat(2);
-			DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
-					CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 			throw new EpException(MessageConst.ERROR_740002, new String[]{nf.format(contractAmount).toString()});
 		}
 	}
@@ -4062,6 +4060,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						checkContractAmount(flRequest);
 					}
 				}
+				BigDecimal sumOrderedAmt = BigDecimal.ZERO;
+				for(FlDeliveryAddress delAddr: flRequest.getFlDeliveryAddresses()){
+					for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+						sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
+					}
+				}
+				validateAmount(ResourceBundleUtils.getMessage("lbl.fl.total.oredered.amt",ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()), sumOrderedAmt);
 				
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					if(getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
