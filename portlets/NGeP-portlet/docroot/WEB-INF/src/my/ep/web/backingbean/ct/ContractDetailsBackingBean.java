@@ -1913,6 +1913,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	
 	/**
+	 * The method used to retrieve proper portal name from property file.
+	 * 
+	 * @return portletTitle  the name of the portal
+     */
+	public String getViewPortletTitle() {
+		String portletTitle = null;
+		if (ctBB.getManagedBean().isViewContract()) {
+			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.view.contract",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.contract.maintenance",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		}
+		return portletTitle;
+	}
+	
+	/**
    	 * The method used to retrieve the fulfilement details base on contract expire date or current date
    	 */
 	private void retrieveFulfilmentDetails() {
