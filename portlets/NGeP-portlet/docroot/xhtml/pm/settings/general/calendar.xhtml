@@ -18,6 +18,13 @@
 			.calendarClass td.ui-widget-content{
 				border : 1px solid #dddddd !important;
 			}
+			
+			.ui-blockui{
+				z-index:1100;
+			}
+			.ui-blockui-content{
+				z-index:1200;
+			}
 		</style>
 
 		<script type="text/javascript">	
@@ -127,6 +134,9 @@
     };
 </script>
 		 <p:growl id="calendarMsg" showDetail="true" />
+		 <p:blockUI block=":form" widgetVar="blockWidget" style="z-index:1600;">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:panel id="ruleConfigId">			
 			<h:panelGroup id="calendarId">
 				<table width="100%" >
@@ -258,9 +268,11 @@
 					</table>
 					<div style="float: right;">
 							<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
 										update="eventDetails,calendarMessages" process="eventDetails"/>
-							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+							<p:commandButton id="deleteButton" value="#{lbl['lbl.btn.delete']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 										actionListener="#{calendarBackingBean.deleteEvent}"
 										update="schedule,eventDetails" process="@this"
 										rendered="#{not calendarBackingBean.managedBean.newEvent}" />
