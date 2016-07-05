@@ -43,9 +43,11 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
@@ -301,7 +303,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	}
 
 	/**
-	 * Reset.
+	 * Reset direct purchase search.
 	 */
 	public void reset(){
 		this.getManagedBean().setSearchDocNo(null);
@@ -310,6 +312,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		this.getManagedBean().setSearchDocumentTitle(null);
 		this.getManagedBean().setSearchDocumentToDuration(null);
 		this.getManagedBean().setSearchDocumentFromDuration(null);
+		getManagedBean().setSearchPtjProfile(null);
+		getManagedBean().setSearchPtjGroupProfile(null);
+		getManagedBean().setSearchPtjProfile(null);
 		this.getManagedBean().resetDocumentDataModel();
 	}
 
@@ -494,6 +499,50 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			return orgName;
 		}
 		return null;
+	}
+	
+	 /**
+   	 * Get PTJ Group condition for construct the LOV listing
+   	 * @return String
+   	 */
+   	public String getPTJGroupCondition() {
+   		String condition = OrgProfileUtil.getFromToSearchBeanParentString(
+   				OrganizationType.DEPARTMENT.value(), OrganizationType.MINISTRY.value())+"^"+
+   				this.getManagedBean().getSearchMinistryProfile().getOrgProfileId();
+   		return condition;
+   	}
+	
+	/**
+	 * Get PTJ condition for construct the LOV listing
+	 * @return String
+	 */
+	public String getPtjCondition() {
+		String condition = null;
+		
+		if (this.getManagedBean().getSearchPtjGroupProfile() != null) {
+			condition = OrgProfileUtil.getFromToSearchBeanParentString(
+	   				OrganizationType.DIVISION.value(), OrganizationType.DEPARTMENT.value())+"^"+
+	   				this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId();
+		} else {
+			condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
+				this.getManagedBean().getSearchMinistryProfile().getOrgProfileId();
+		}
+		return condition;
+	}
+	
+	/**
+	 * The method used reset PTJ/PTJ Group profile value once select the Ministry
+	 */
+	public void resetPtjGroupProfile() {
+		getManagedBean().setSearchPtjProfile(null);
+		getManagedBean().setSearchPtjGroupProfile(null);
+	}
+	
+	/**
+	 * The method used reset PTJ profile value once select the Ministry
+	 */
+	public void resetPtjProfile() {
+		getManagedBean().setSearchPtjProfile(null);
 	}
 
 }

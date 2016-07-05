@@ -26,7 +26,9 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile_;
 import my.ep.persistence.entity.sc.common.ScRequestItem_;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote_;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -113,7 +115,8 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				if(null == getSearchDocumentType()){ 
 					throw new EpException(MessageConst.ERROR_740023);
 				}
-				String paramPtjGroup = "";
+				String paramPtj = "";
+				String paramPtjGroupAndMinistry = "";
 				String paramTitle = "";
 
 				if(getSearchDocumentType() != null && getSearchDocumentType() != "") {
@@ -124,31 +127,45 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				}
 				
 				if(ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSearchDocumentType())){
-					paramPtjGroup = "pmOrgProfile.orgProfileId";
+					paramPtj = "pmOrgProfile.orgProfileId";
+					paramPtjGroupAndMinistry = "pmOrgProfile";
 					paramTitle ="title";
 				} else if(ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSearchDocumentType())){
-					paramPtjGroup = "requestNotes.pmOrgProfile.orgProfileId";
+					paramPtj = "requestNotes.pmOrgProfile.orgProfileId";
+					paramPtjGroupAndMinistry = "requestNotes.pmOrgProfile";
 					paramTitle ="title";
 				} else if(ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(getSearchDocumentType())){
-					paramPtjGroup = "scRequestSupplierItems.requestNoteItem.requestNote.pmOrgProfile.orgProfileId";
+					paramPtj = "scRequestSupplierItems.requestNoteItem.requestNote.pmOrgProfile.orgProfileId";
+					paramPtjGroupAndMinistry = "scRequestSupplierItems.requestNoteItem.requestNote.pmOrgProfile";
 					paramTitle ="title";
 				} else if(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT.equals(getSearchDocumentType())){
-					paramPtjGroup = "pmOrgProfile.orgProfileId";
+					paramPtj = "pmOrgProfile.orgProfileId";
+					paramPtjGroupAndMinistry = "pmOrgProfile";
 					paramTitle ="title";
 				} else if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(getSearchDocumentType())){
-					paramPtjGroup = "scLoiLoa.pmOrgProfile.orgProfileId";
+					paramPtj = "scLoiLoa.pmOrgProfile.orgProfileId";
+					paramPtjGroupAndMinistry = "scLoiLoa.pmOrgProfile";
 					paramTitle ="scLoiLoa.title";
 				}
 				
 				if (getSearchPtjProfile() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtjGroup, SearchOperator.OPERATOR_EQUALS.value(),
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtj, SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjProfile().getOrgProfileId()));
 					
 				} else if (getSearchPtjGroupProfile() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtjGroup, SearchOperator.OPERATOR_EQUALS.value(),
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							"paramPtjGroupAndMinistry."
+									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT
+											.value()),
+							SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjGroupProfile().getOrgProfileId()));
+					
 				} else if (getSearchMinistryProfile() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtjGroup, SearchOperator.OPERATOR_EQUALS.value(),
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							paramPtjGroupAndMinistry+"."
+									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY
+											.value()),
+							SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchMinistryProfile().getOrgProfileId()));
 				}
 				
