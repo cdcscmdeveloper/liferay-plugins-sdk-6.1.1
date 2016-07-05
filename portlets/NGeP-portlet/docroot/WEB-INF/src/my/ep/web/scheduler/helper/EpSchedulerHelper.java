@@ -6,10 +6,6 @@ import java.util.Set;
 
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
-import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.web.scheduler.constants.common.SchedulerConstants;
-import my.ep.web.scheduler.job.sc.QTProposalCloseJob;
-import my.ep.web.scheduler.job.sc.QTPublishJob;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -22,7 +18,6 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerBuilder;
@@ -427,49 +422,5 @@ public class EpSchedulerHelper {
 		}
 		return instance;
 
-	}
-
-	public static void scheduleSimplePublishingJob(ScQt qt)
-			throws SchedulerException {
-
-		// define the job and tie it to our QTPublishJob class
-		JobDetail job = JobBuilder
-				.newJob(QTPublishJob.class)
-				.withIdentity(SchedulerConstants.QT_PUBLISH_SIMPLE_JOB + qt.getQtNo(),
-						SchedulerConstants.QT_PUBLISH_SIMPLE_JOB_GROUP)
-				.usingJobData(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA, qt.getQtId()).build();
-		// define a simple trigger that runs at specific time (publish time)
-		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder
-				.newTrigger()
-				.withIdentity(SchedulerConstants.QT_PUBLISH_SIMPLE_JOB + qt.getQtNo(),
-						SchedulerConstants.QT_PUBLISH_SIMPLE_JOB_GROUP)
-				.startAt(qt.getPublishDate())
-				.forJob(SchedulerConstants.QT_PUBLISH_SIMPLE_JOB + qt.getQtNo(), SchedulerConstants.QT_PUBLISH_SIMPLE_JOB_GROUP)
-				.build();
-
-		// Tell quartz to schedule the job using our trigger
-		getScheduler().scheduleJob(job, trigger);
-	}
-
-	public static void scheduleSimpleQTClosingJob(ScQt qt)
-			throws SchedulerException {
-
-		// define the job and tie it to our QTPublishJob class
-		JobDetail job = JobBuilder
-				.newJob(QTProposalCloseJob.class)
-				.withIdentity(SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB + qt.getQtNo(),
-						SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB_GROUP)
-				.usingJobData(SchedulerConstants.QT_PUBLISH_CLOSE_JOB_DATA, qt.getQtId()).build();
-		// define a simple trigger that runs at specific time (closing time)
-		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder
-				.newTrigger()
-				.withIdentity(SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB + qt.getQtNo(),
-						SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB_GROUP)
-				.startAt(qt.getClosingDate())
-				.forJob(SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB + qt.getQtNo(),
-						SchedulerConstants.QT_PROPOSAL_CLOSE_SIMPLE_JOB_GROUP).build();
-
-		// Tell quartz to schedule the job using our trigger
-		getScheduler().scheduleJob(job, trigger);
 	}
 }

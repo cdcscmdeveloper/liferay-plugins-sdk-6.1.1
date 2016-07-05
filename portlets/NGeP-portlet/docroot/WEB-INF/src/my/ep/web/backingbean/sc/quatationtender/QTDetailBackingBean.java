@@ -158,7 +158,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
-import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.scheduler.helper.sc.ScSchedulerHelper;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -4000,24 +4000,25 @@ public class QTDetailBackingBean extends
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
 			ScQt scQt = quationTenderResDTO.getQtDetail();
+			Long currentStatusId = qtDetails.getQtStatus().getStatusId();
 			
-			if (QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION.equals(qtDetails.getQtStatus().getStatusId())) {
+			if (QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION.equals(currentStatusId)) {
 				Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
 				if (!DateUtils.isDateGreater(DateUtils.setDefaultDateTime(scQt.getPublishDate()), todayDate)) {
 					try {
 						log.info("call simple scheduler if QT is publishing today.");
-						EpSchedulerHelper.scheduleSimplePublishingJob(scQt);
+						ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
 					} catch (SchedulerException e) {
 						e.printStackTrace();
 						log.error(e.getMessage());
 					}
 				} 
-			} else if (QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE.equals(qtDetails.getQtStatus().getStatusId())) {
+			} else if (QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE.equals(currentStatusId)) {
 				Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
 				if (!DateUtils.isDateGreater(DateUtils.setDefaultDateTime(scQt.getClosingDate()), todayDate)) {
 					try {
 						log.info("call simple scheduler if QT is closing today.");
-						EpSchedulerHelper.scheduleSimpleQTClosingJob(scQt);
+						ScSchedulerHelper.getInstance().scheduleSimpleQTClosingJob(scQt);
 					} catch (SchedulerException e) {
 						e.printStackTrace();
 						log.error(e.getMessage());
@@ -5008,7 +5009,7 @@ public class QTDetailBackingBean extends
 				if(scQt != null) {
 					try {
 						log.info("call simple scheduler if QT is publishing today.");
-						EpSchedulerHelper.scheduleSimplePublishingJob(scQt);
+						ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
 						isSucessful = true;
 					} catch (SchedulerException e) {
 						e.printStackTrace();
