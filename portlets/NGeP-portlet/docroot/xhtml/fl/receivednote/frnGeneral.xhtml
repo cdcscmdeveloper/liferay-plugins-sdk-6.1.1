@@ -49,14 +49,14 @@
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.do.title']}" /></td>
-				<td><p:inputTextarea cols="30" rows="4"
+				<td><p:inputTextarea cols="67" rows="4"
 						maxlength="500"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.title}"
 						style=" margin-bottom:5px;" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
-				<td><p:inputText size="28" disabled="true"
+				<td><p:inputText size="66" disabled="true"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.getParameterDesc(receivedNoteBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory)}" /></td>				
 			</tr>
 			<tr>
@@ -82,7 +82,7 @@
 				<td style="width: 150px;" rowspan="4" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td style="width: 350px;" rowspan="4"><p:inputTextarea
-						id="delAddrText1" cols="55" rows="7" maxlength="500"
+						id="delAddrText1" cols="57" rows="7" maxlength="500"
 						style=" margin-bottom:5px;" disabled="true"
 						autoResize="false"
 						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.flAddress)}" />
@@ -269,7 +269,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
-				<td><p:inputText disabled="true" size="25"
+				<td><p:inputText disabled="true" size="53"
 						value="#{receivedNoteBackingBean.getText(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}" /></td>
 			</tr>
 		</table>
