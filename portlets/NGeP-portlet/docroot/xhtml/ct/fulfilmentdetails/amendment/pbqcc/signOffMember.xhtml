@@ -76,7 +76,8 @@
 			           <td class="TableFieldLeft" width="14%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
 			           <td>
 				            <p:dataGrid id="lampiranComitte1" value="#{ctBackingBean.managedBean.contractVer.committeDecisionAttachements}"
-					           var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+					           var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
+					           emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
 					           <table>
 						          <tr>
 							       <td rowspan="2"><h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>

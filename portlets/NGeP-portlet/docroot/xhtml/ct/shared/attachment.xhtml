@@ -18,7 +18,8 @@
 			<td/>
 			<td>
 				<p:dataGrid id="lampiran" value="#{ctBackingBean.managedBean.attachmentList}"
-					var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+					var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
+					emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
 					<table>
 						<tr>
 							<td rowspan="2"><h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
