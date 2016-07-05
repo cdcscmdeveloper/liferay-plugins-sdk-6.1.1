@@ -65,9 +65,9 @@
 			<table style="width: 50%">
 				<tr>
 					<td style="width:250px;"></td>
-					<td style="width:150px;"><p:outputLabel value="#{lbl['lbl.fl.qty']}" /></td>
+					<td style="width:130px;"><p:outputLabel value="#{lbl['lbl.fl.qty']}" /></td>
 					<td style="width:50px;"></td>
-					<td style="width:150px;"><p:outputLabel value="#{lbl['lbl.fl.amount.rm']}" /></td>
+					<td style="width:138px;"><p:outputLabel value="#{lbl['lbl.fl.amount.rm']}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.ordered']}" /></td>
@@ -172,7 +172,7 @@
 				<tr>
 					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 					<td colspan="3">
-						<p:inputTextarea cols="40" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemark}" autoResize="false" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}">
+						<p:inputTextarea cols="42" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemark}" autoResize="false" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}">
 							<p:ajax process="@this" />
 						</p:inputTextarea><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.item.remarks']}"/>
 					</td>
