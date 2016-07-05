@@ -43,7 +43,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
@@ -76,7 +75,6 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
-import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
@@ -4942,46 +4940,51 @@ public class QTDetailBackingBean extends
 	public void closeProposal(ScQt scQt) {
 		log.info("loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
 		
+		IQTDetailSO qtDetailSO = null;
 		IQTProposalSO qtProposalSO = null;
 		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
 			qtProposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			
 			Long qtId = scQt.getQtId();
-
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			log.info("qtId: " + qtId);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(qtId);
-			
-			boolean isUpdateSucessful = qtProposalSO.updateProposalWorkFlowStatus(reqDTO)
-				.isSuccessful();
-			boolean isSucessful = false;
-			if(isUpdateSucessful){
-				IQTNoticeBoardSO noticeBoardSO = null;
-				try{
-					noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-					NoticeBoardReqDTO nbReqDTO = new NoticeBoardReqDTO();
-					nbReqDTO.setQtId(qtId);
-					isSucessful = noticeBoardSO.closeQtAndSaveProposalAmount(nbReqDTO).isSuccessful();
-				}catch(Exception e){
-					log.info("Close failed");
-					log.error(e.getLocalizedMessage());
+			scQt = qtDetailSO.retriveQtById(reqDTO)
+					.getQtDetail();
+			scQt.setClosingDate(new Date());
+			reqDTO.setQtdetail(scQt);
+			QuationTenderResDTO resDTO = qtDetailSO.saveQTDtl(reqDTO);
+			boolean isSucessful = resDTO.isSuccessful();
+			if(isSucessful){
+				scQt = resDTO.getQtDetail();
+				if(scQt != null) {
+					try {
+						log.info("call simple scheduler if QT is closing today.");
+						ScSchedulerHelper.getInstance().scheduleSimpleQTClosingJob(scQt);
+					} catch (SchedulerException e) {
+						log.info("Close failed");
+						log.error(e.getLocalizedMessage());
+					}
+					
+					ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
+					proposalReqDTO.setQtId(qtId);
+					qtProposalSO.closeProposal(proposalReqDTO);
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									scQt.getQtNo() + " Closed Sucessfully."
+					));
 				}
-				
 			}
-			if (isSucessful) {
-				qtProposalSO.closeProposal(reqDTO);
-				
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,
-								null,
-								"QT " + scQt.getQtNo() + " Closed Sucessfully."
-				));
-			}
-
 		} finally {
+			qtDetailSO = null;
 			qtProposalSO = null;
 		}
 	}
@@ -5002,7 +5005,11 @@ public class QTDetailBackingBean extends
 			log.info("qtId: " + scQt.getQtId());
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
-			QuationTenderResDTO resDTO = qtDetailSO.updateQTPublishDate(reqDTO);
+			scQt = qtDetailSO.retriveQtById(reqDTO)
+					.getQtDetail();
+			scQt.setPublishDate(new Date());
+			reqDTO.setQtdetail(scQt);
+			QuationTenderResDTO resDTO = qtDetailSO.saveQTDtl(reqDTO);
 			boolean isSucessful = resDTO.isSuccessful();
 			if(isSucessful){
 				scQt = resDTO.getQtDetail();
@@ -5010,21 +5017,19 @@ public class QTDetailBackingBean extends
 					try {
 						log.info("call simple scheduler if QT is publishing today.");
 						ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
-						isSucessful = true;
 					} catch (SchedulerException e) {
-						e.printStackTrace();
-						log.error(e.getMessage());
-					}	
+						log.info("Publish failed");
+						log.error(e.getLocalizedMessage());
+					}
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									scQt.getQtNo() + " Published Sucessfully."
+									));
 				}
-			}
-			if (isSucessful) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,
-								null,
-								"QT " + scQt.getQtNo() + " publish Sucessfully."
-								));
 			}
 		} finally {
 			qtDetailSO = null;
