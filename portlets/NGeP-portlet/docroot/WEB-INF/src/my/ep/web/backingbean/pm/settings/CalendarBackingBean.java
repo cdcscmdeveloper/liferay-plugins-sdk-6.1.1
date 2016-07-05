@@ -57,27 +57,25 @@ public class CalendarBackingBean extends
 		this.endDateTemp = endDateTemp;
 	}
 	
-	private void loadSchedule(long stateId) {
+	private void loadSchedule(Long stateId) {
 		log.info("...........loadSchedule............");
 		log.info("...........stateId="+stateId);
 		getManagedBean().setEventModel(new DefaultScheduleModel());
 		getManagedBean().setEvent(new DefaultScheduleEvent());
-	
-		if(stateId==0 || stateId== -1){
-			getManagedBean().setSelectedState(new PmState());
-		}else{
-			this.loadStateSchedule(stateId);
-		}
-		
-		getManagedBean().setSelectedStateId(stateId);
+		this.loadStateSchedule(stateId);
+		//getManagedBean().setSelectedStateId(stateId);
 		changeWeekEndColor();
 	}
 
-	private void loadStateSchedule(long stateId) {
-		
+	private void loadStateSchedule(Long stateId) {		
 		log.info("...........loadStateSchedule............");
-		PmState state = PmCommonUtil.retrievePmStateByStateId(stateId);
-		getManagedBean().setSelectedState(state);
+		if(stateId != null){
+			PmState state = PmCommonUtil.retrievePmStateByStateId(stateId);
+			getManagedBean().setSelectedState(state);
+		}else{
+			getManagedBean().setSelectedState(null);
+		}
+		
 		ICalendarSO calendarSO = (ICalendarSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICalendarSO.class);
 		CalendarReqDTO reqDTO = new CalendarReqDTO();
@@ -150,7 +148,7 @@ public class CalendarBackingBean extends
 			fillHolidayModelByEvent(holiday);
 			validateCalendar(holiday);
 			String id = getManagedBean().getEvent().getId();
-			
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			if (id == null) {
 				reqDTO.setHoliday(holiday);
 				resDTO = calendarSO.addHoliday(reqDTO);
@@ -212,6 +210,7 @@ public class CalendarBackingBean extends
 		this.getManagedBean().setEventModel(new DefaultScheduleModel());
 		this.getManagedBean().setEvent(new DefaultScheduleEvent());
 		this.getManagedBean().setInitialDate(getTodayDate());
+		loadSchedule(null);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "calendar");
@@ -246,6 +245,7 @@ public class CalendarBackingBean extends
 				holiday.setState(state);
 				
 				reqDTO.setHoliday(holiday);
+				reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 				
 				resDTO = calendarSO.removeHoliday(reqDTO);
 				
@@ -270,22 +270,11 @@ public class CalendarBackingBean extends
 		log.info("........updateState........");
 		this.getManagedBean().setEventModel(new DefaultScheduleModel());
 		this.getManagedBean().setEvent(new DefaultScheduleEvent());
-//		Long id = (Long) e.getComponent().getAttributes().get("value");
-//		log.info(".......id="+id);
-		log.info(".......this.getManagedBean().getSelectedState()="+this.getManagedBean().getSelectedState());
-		log.info(".......this.getManagedBean().getSelectedState().getStateId()="+this.getManagedBean().getSelectedState().getStateId());
-		if (this.getManagedBean().getSelectedState() != null && this.getManagedBean().getSelectedState().getStateId() != null) {
-			loadSchedule(this.getManagedBean().getSelectedState().getStateId());
+		if (this.getManagedBean().getSelectedStateId() != null) {
+			loadSchedule(this.getManagedBean().getSelectedStateId());
+		}else{
+			loadSchedule(null);
 		}
-		
-//			FacesContext facesContext = FacesContext.getCurrentInstance();
-//			facesContext.addMessage(
-//					null,
-//					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-//							MessageUtils.getMessage(
-//									"test",
-//									MessageUtils.BUNDLE_COMMON_MESSAGES,
-//									new FacesScopes().getUserLocale())));
 	}
 
 	public void fillHolidayModelByEvent(PmHoliday holiday) {
@@ -326,11 +315,11 @@ public class CalendarBackingBean extends
     public void onDateSelect(SelectEvent selectEvent) {
     	try{
     	RequestContext.getCurrentInstance().reset(":form:eventDetails");
-    	if(this.getManagedBean().getSelectedState() != null && (this.getManagedBean().getSelectedState().getStateId() == null || this.getManagedBean().getSelectedState().getStateId() == -1)){
-    		this.getManagedBean().setEvent(new DefaultScheduleEvent());
-    		RequestContext.getCurrentInstance().execute("errDialog.show()");
-    		return;
-    	}
+//    	if(this.getManagedBean().getSelectedState() != null && (this.getManagedBean().getSelectedState().getStateId() == null || this.getManagedBean().getSelectedState().getStateId() == -1)){
+//    		this.getManagedBean().setEvent(new DefaultScheduleEvent());
+//    		RequestContext.getCurrentInstance().execute("errDialog.show()");
+//    		return;
+//    	}
     	
 //    	renewSesionObject();
 
@@ -407,4 +396,13 @@ public class CalendarBackingBean extends
 		   RequestContext.getCurrentInstance()
 	  		.execute("changeWeekEndColor();");
 	   }
+	   
+	   /**
+		 * get faces scopes
+		 * @return FacesScopes
+		 */
+		private FacesScopes getFacesScopes(){
+			FacesScopes facesScopes = new FacesScopes();
+			return facesScopes;
+		}
 }
