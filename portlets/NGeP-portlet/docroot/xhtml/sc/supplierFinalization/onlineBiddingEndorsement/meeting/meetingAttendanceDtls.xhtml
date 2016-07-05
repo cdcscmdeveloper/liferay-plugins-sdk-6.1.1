@@ -1,18 +1,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition
-	xmlns:f="http://java.sun.com/jsf/core"
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="attendeesPanel" header="#{lbl['lbl.sc.join.in']}" toggleable="true">
+	<p:panel id="attendeesPanel" header="#{lbl['lbl.sc.join.in']}"
+		toggleable="true">
 		<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
 			value="#{suppFinalBiddingBackingBean.managedBean.meetingAttendanceList}"
 			rows="10" rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			selectionMode="single">
-			
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+
 			<ac:paginator for="meetingAttDtlTbl" />
 
 			<p:column styleClass="td-check-box-spacing">
@@ -20,21 +19,23 @@
 					<p:selectBooleanCheckbox id="selAllMeetingAttd"
 						value="#{suppFinalBiddingBackingBean.managedBean.selectAllMeetingAttendees}"
 						disabled="#{!isSecretaryUser}">
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])"
-								listener="#{suppFinalBiddingBackingBean.selectAllMeetingAttendeesEvent}" />
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=attendeesPanel)"
+							listener="#{suppFinalBiddingBackingBean.selectAllMeetingAttendeesEvent}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox id="selectMeetingAttd" value="#{meetingAttDtl.selected}"
+				<p:selectBooleanCheckbox id="selectMeetingAttd"
+					value="#{meetingAttDtl.selected}"
 					disabled="#{!isSecretaryUser or meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])"
-							listener="#{suppFinalBiddingBackingBean.selectMeetingAttendeeEvent(meetingAttDtl)}" />
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=attendeesPanel)" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50"
-							 required="#{!meetingAttDtl.selected}" label="#{lbl['lbl.sc.name']}"
-							 disabled="#{!isSecretaryUser or 
+					required="#{!meetingAttDtl.selected}" label="#{lbl['lbl.sc.name']}"
+					disabled="#{!isSecretaryUser or 
 							 			meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
 			</p:column>
 
@@ -51,41 +52,28 @@
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,meetingAttDtlTbl" partialSubmit="true"
 				action="#{suppFinalBiddingBackingBean.addMeetingAttendance}"
-				update="@([id$=attendeesPanel])"
-				rendered="#{isSecretaryUser}" />
+				update="@([id$=attendeesPanel])" rendered="#{isSecretaryUser}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" id="attdDelBtn"
-				process="@this, meetingAttDtlTbl" partialSubmit="true"
-				update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])"
-				onsuccess="dlgPerformDel.show();"
-				rendered="#{(suppFinalBiddingBackingBean.managedBean.meetingAttendanceList ne null) and 
-								(suppFinalBiddingBackingBean.managedBean.meetingAttendanceList.size() gt 0) 
-									and isSecretaryUser}"
-				disabled="#{(suppFinalBiddingBackingBean.managedBean.selectedMeetingAttList eq null) or 
-								(suppFinalBiddingBackingBean.managedBean.selectedMeetingAttList.size() eq 0)}" />
+				process="@this" partialSubmit="true"
+				update="@([id$=#{supplierFinalizationOnlineBiddingEndorsmentMeetingAttendanceDeleteId}])"
+				oncomplete="dlgPerformonlibeBiddingMeetingDel.show();"
+				rendered="#{isSecretaryUser}"
+				disabled="#{suppFinalBiddingBackingBean.deleteselectedList(suppFinalBiddingBackingBean.managedBean.meetingAttendanceList)}" />
 		</div>
 
-		<!-- Dialog to prompt the user before deleting attendance records -->
-		<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel"
-			styleClass="screen-title" resizable="false" modal="true" width="330">
-			<h:panelGrid columns="3">
-				<p:graphicImage
-					value="#{CommonUIConstant.imagePathUptoDesign}/exclamation.png"
-					styleClass="ui-icon-complain"></p:graphicImage>
-				<p:spacer width="10" />
-				<div class="confirmation-message-box" style="font-size: 11px;">#{lbl['lbl.sc.dialog.confirm.message']}</div>
-			</h:panelGrid>
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					update="attdDelBtn, meetingAttDtlTbl"
-					process="@this, meetingAttDtlTbl"
-					actionListener="#{suppFinalBiddingBackingBean.deleteMeetingAttendanceDetails()}"
-					onclick="dlgPerformDel.hide();">
-				</p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="dlgPerformDel.hide();" type="button" />
-			</div>
-		</p:dialog>
+		<ui:param
+			name="supplierFinalizationOnlineBiddingEndorsmentMeetingAttendanceDeleteId"
+			value="supplierFinalizationOnlineBiddingEndorsmentMeetingAttendanceDeleteId"></ui:param>
+		<ac:confirmationPopup
+			id="#{supplierFinalizationOnlineBiddingEndorsmentMeetingAttendanceDeleteId}"
+			widget="dlgPerformonlibeBiddingMeetingDel" width="450" height="100"
+			okAction="suppFinalBiddingBackingBean.deleteMeetingAttendanceDetails"
+			title="#{lbl['lbl.sc.join.in']}"
+			content="#{lbl['lbl.sc.dialog.confirm.message']}"
+			update="@([id$=attendeesPanel])" />
+
+
 	</p:panel>
 
 </ui:composition>
