@@ -762,65 +762,61 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 						if (getInterfaceProgActProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
-						}
-					
+						}						
 
 					case GLBAC:
 						if (getInterfaceAgOfficeProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
 						}						
-
+					
 					case GLSEG:
 						if (getInterfacePpProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
-						}
-						
+						}						
 
 					case GLVOT:
 						if (getInterfaceVotProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
-						}
-						
+						}					
 					case GLDNA:
 						if (getInterfaceDanaProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
-						}
-						break;
+						}						
 
 					case GLPRJ:
 						if (getInterfaceProjectProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
 						}					
-
+						
 					case GLGLC:
 						if (getInterfaceGlAcntProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
-						}
-						break;
+						}						
 
 					case GLPCG:
 						if (getInterfaceKptjProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
 						}						
-
+						
 					case GLPTJ:
 						if (getInterfacePtjProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
 						}						
-
+						
 					case CMBNK:
 						if (getInterfaceBankProcessStatus(resDto)) {
 							showErrorMsg(selectedProcess, logId, processId,
 									createdDate, filteredProcessCode);
-						}						
+						}		
+						
 					}
 				}
 			}
@@ -869,59 +865,80 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private String getChildProcessScreen(DIInterfaceLog interfaceLog,
 			InterfaceLogResDto interfaceGfMasResDto) {
 		log.info("In getChildProcessScreen");
-		
+
 		switch (ProcessCodeType.valueOf(interfaceLog.getProcessId())) {
 
 		case GLPRG:
-			this.getManagedBean().setListOfPrgAct(
-					interfaceGfMasResDto.getListOfPmInterfacePrgAct());
-			return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPrgAct.xhtml";
-
+			if (getInterfaceProgActProcessStatus(interfaceGfMasResDto)) {
+				this.getManagedBean().setListOfPrgAct(
+						interfaceGfMasResDto.getListOfPmInterfacePrgAct());
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPrgAct.xhtml";
+			}
+           break;
 		case GLBAC:
-			this.getManagedBean().setListOfAgOffice(
-					interfaceGfMasResDto.getListOfPmInterfaceAgOffice());
-			return "/xhtml/gfMas/gfmassearch/childprocess/gfmasAgOffice.xhtml";
-
+			if (getInterfaceAgOfficeProcessStatus(interfaceGfMasResDto)) {
+				this.getManagedBean().setListOfAgOffice(
+						interfaceGfMasResDto.getListOfPmInterfaceAgOffice());
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasAgOffice.xhtml";
+			}
+		break;
 		case GLVOT:
-			this.getManagedBean().setListOfVot(
-					interfaceGfMasResDto.getListOfPmInterfaceVot());
-			return "/xhtml/gfMas/gfmassearch/childprocess/gfmasVot.xhtml";
+			if (getInterfaceVotProcessStatus(interfaceGfMasResDto)) {
 
+				this.getManagedBean().setListOfVot(
+						interfaceGfMasResDto.getListOfPmInterfaceVot());
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasVot.xhtml";
+			}
+		break;
 		case GLDNA:
-			this.getManagedBean().setListOfDana(
-					interfaceGfMasResDto.getListOfPmInterfaceDana());
-			return "/xhtml/gfMas/gfmassearch/childprocess/gfmasDana.xhtml";
-
+			if (getInterfaceDanaProcessStatus(interfaceGfMasResDto)) {
+				this.getManagedBean().setListOfDana(
+						interfaceGfMasResDto.getListOfPmInterfaceDana());
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasDana.xhtml";
+			}
+		break;
 		case GLPRJ:
-			this.getManagedBean().setListOfProjectt(
-					interfaceGfMasResDto.getListOfPmInterfaceProject());
-			return "/xhtml/gfMas/gfmassearch/childprocess/gfmasProject.xhtml";
-
+			if (getInterfaceProjectProcessStatus(interfaceGfMasResDto)) {
+				this.getManagedBean().setListOfProjectt(
+						interfaceGfMasResDto.getListOfPmInterfaceProject());
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasProject.xhtml";
+			}
+		break;
 		case GLGLC:
-			this.getManagedBean().setListOfGlAccount(
-					interfaceGfMasResDto.getListOfPmInterfaceGlAccount());
-			return "/xhtml/gfMas/gfmassearch/childprocess/gfmasGlAccount.xhtml";
-
+			if (getInterfaceGlAcntProcessStatus(interfaceGfMasResDto)) {
+				this.getManagedBean().setListOfGlAccount(
+						interfaceGfMasResDto.getListOfPmInterfaceGlAccount());
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasGlAccount.xhtml";
+			}
+		break;
 		case GLPCG:
-			this.getManagedBean().setListOfKPTJ(
-					interfaceGfMasResDto.getListOfPmInterfaceKptj());
-			return "/xhtml/gfMas/gfmassearch/childprocess/gfmasKPTJ.xhtml";
-
+			if (getInterfaceKptjProcessStatus(interfaceGfMasResDto)) {
+				this.getManagedBean().setListOfKPTJ(
+						interfaceGfMasResDto.getListOfPmInterfaceKptj());
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasKPTJ.xhtml";
+			}
+		break;
 		case GLPTJ:
-			this.getManagedBean().setListOfPTJ(
-					interfaceGfMasResDto.getListOfPmInterfacePtj());
-			return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPTJ.xhtml";
-
+			if (getInterfacePtjProcessStatus(interfaceGfMasResDto)) {
+				this.getManagedBean().setListOfPTJ(
+						interfaceGfMasResDto.getListOfPmInterfacePtj());
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPTJ.xhtml";
+			}
+		break;
 		case CMBNK:
-			this.getManagedBean().setListOfBank(
-					interfaceGfMasResDto.getListOfPmInterfaceBank());
-			return "/xhtml/gfMas/gfmassearch/childprocess/gfmasBank.xhtml";
-
+			if (getInterfaceBankProcessStatus(interfaceGfMasResDto)) {
+				this.getManagedBean().setListOfBank(
+						interfaceGfMasResDto.getListOfPmInterfaceBank());
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasBank.xhtml";
+			}
+		break;
 		case GLSEG:
-			this.getManagedBean().setListOfPP(
-					interfaceGfMasResDto.getListOfPmInterfacePP());
-			return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPP.xhtml";
-
+			if (getInterfacePpProcessStatus(interfaceGfMasResDto)) {
+				this.getManagedBean().setListOfPP(
+						interfaceGfMasResDto.getListOfPmInterfacePP());
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPP.xhtml";
+			}
+		break;
 		default: {
 			System.out.println("unknown child page \t"
 					+ interfaceLog.getProcessId());
@@ -929,6 +946,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			return null;
 		}
 		}
+		return null;
 	}
 
 	/**
