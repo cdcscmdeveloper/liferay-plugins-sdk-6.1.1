@@ -151,7 +151,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 					
 				} else if (getSearchPtjGroupProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean(
-							"paramPtjGroupAndMinistry."
+							paramPtjGroupAndMinistry+"."
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT
 											.value()),
 							SearchOperator.OPERATOR_EQUALS.value(),
