@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -106,6 +107,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.AddressUtils;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.SecurityFilterUtil;
@@ -1713,7 +1715,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 */
 	protected void validateAmount(String label, BigDecimal amount) {
 		if(amount.precision()!=13 || amount.scale()!=2) {
-			throw new EpException(MessageConst.ERROR_100039, new String[]{label,"0.00","99999999999.99"});
+			CommonUtils commonUtils = new CommonUtils();
+			DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			throw new EpException(MessageConst.ERROR_100039, new String[]{label+" "+nf.format(amount),nf.format(BigDecimal.ZERO),nf.format(new BigDecimal("99999999999.99"))});
 		}
 	}
 }

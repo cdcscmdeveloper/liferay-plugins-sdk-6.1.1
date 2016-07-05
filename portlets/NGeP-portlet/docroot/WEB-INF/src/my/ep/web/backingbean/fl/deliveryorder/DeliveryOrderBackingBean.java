@@ -393,24 +393,28 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 */
 	private void reValidateRetrieveDelAmt() {
 		BigDecimal remainingQty=new BigDecimal(0.0);
+		BigDecimal accumulatedDeliveredAmount = BigDecimal.ZERO;
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
 				remainingQty = itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
 				if(itemAddr.getDeliveredQty() == null){
 					itemAddr.setDeliveredQty(new BigDecimal(0));
 				}
+				accumulatedDeliveredAmount = accumulatedDeliveredAmount.add(itemAddr.getDeliveredAmt());
+				validateAmount(ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()), itemAddr.getDeliveredAmt());
 				if(itemAddr.getDeliveredQty().doubleValue()>remainingQty.doubleValue()) {
 					itemAddr.setDeliveredQty(new BigDecimal(0));
 					itemAddr.setDeliveredAmt(new BigDecimal(0));
 					throw new EpException(MessageConst.ERROR_100032, new String[]{
-							ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
-							ResourceBundleUtils.getMessage("lbl.fl.do.remaining.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+							ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()),
+							ResourceBundleUtils.getMessage("lbl.fl.do.remaining.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())});
 				}
 			}
 		}
-		
+		validateAmount(ResourceBundleUtils.getMessage("lbl.txt.accumulated",ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())+" "+
+			ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()), accumulatedDeliveredAmount);
 	}
-
+	
 	/**
 	 * Sets the delivery order.
 	 *
