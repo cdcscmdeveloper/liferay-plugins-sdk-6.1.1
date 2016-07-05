@@ -85,8 +85,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private static final String MOF_SOFTCERT_REQUEST = "request-soft-cert";
 	//private static final String MOF_CODIFICATION_SEARCH = "codification-search";
 	private static final String UPGRADE_TO_MOF = "upgrade-basic-to-mof";
-	private static final String VIEW_VIRTUAL_CERT = "view-virtual-certification";
-	
 	private int softCertStatus;
 	private boolean changeRoleSection;
 	private boolean roleChangeSuccess;
@@ -725,55 +723,49 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		String path = null;
 		SmPersonnel currentPersonnel = retrieveCurrentPersonnel();
 		log.info("-------mofSupplierFlowAfterApproval supplier type-------------" + supplier.getSmAppl().getSupplierType());
-		if(!supplier.getSmAppl().isQuestionnaire()){
-			getManagedBean().setFlowStatus(5);
-			log.info("**********flow Status*********" + getManagedBean().getFlowStatus());
-			path =  VIEW_VIRTUAL_CERT;
-		}else{
-			if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
-				softCertStatus = currentPersonnel.getSoftcertFlg();
-				if(supplier.getSmAppl().getSmCompanyBasic().isWithFederal()){
-					if(!isPublishedCatalogue(supplier.getSupplierId())){
-						if(getCmSupplierItems(supplier.getSupplierId()).size() > 0){
-							path = CATALOGUE_MAINT;
-						}else{
-							path = CATALOGUE_UPLOAD_PATH;
-						}
+		if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
+			softCertStatus = currentPersonnel.getSoftcertFlg();
+			if(supplier.getSmAppl().getSmCompanyBasic().isWithFederal()){
+				if(!isPublishedCatalogue(supplier.getSupplierId())){
+					if(getCmSupplierItems(supplier.getSupplierId()).size() > 0){
+						path = CATALOGUE_MAINT;
+					}else{
+						path = CATALOGUE_UPLOAD_PATH;
+					}
+					getManagedBean().setFlowStatus(5);
+				}else{
+					if(checkPendingSoftCertRequest(supplier.getSupplierId())){
+						path = SOFT_CERT_PATH;
 						getManagedBean().setFlowStatus(6);
 					}else{
-						if(checkPendingSoftCertRequest(supplier.getSupplierId())){
+						if(softCertStatus == SupplierManagementConst.SOFT_CERT_REJECTED){
 							path = SOFT_CERT_PATH;
-							getManagedBean().setFlowStatus(7);
-						}else{
-							if(softCertStatus == SupplierManagementConst.SOFT_CERT_REJECTED){
-								path = SOFT_CERT_PATH;
-							}
-							getManagedBean().setFlowStatus(7);
 						}
-					}
-
-
-					if(isPublishedCatalogue(supplier.getSupplierId()) && validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
-						log.info(">>>CHange ROle for SUpplier Temp<<");
-						changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
-					}
-				}else{
-					log.info(">>>Contractor<<<");
-					if(validSupplierTemp()){
-						log.info(">>>CHange ROle for SUpplier Temp<<");
-						changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
-
+						getManagedBean().setFlowStatus(6);
 					}
 				}
-			}else{
-				log.info(">>>Consultant<<");
-				if(validSupplierTemp()){
+
+
+				if(isPublishedCatalogue(supplier.getSupplierId()) && validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
 					log.info(">>>CHange ROle for SUpplier Temp<<");
 					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
 				}
+			}else{
+				log.info(">>>Contractor<<<");
+				if(validSupplierTemp()){
+					log.info(">>>CHange ROle for SUpplier Temp<<");
+					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
+
+				}
+			}
+		}else{
+			log.info(">>>Consultant<<");
+			if(validSupplierTemp()){
+				log.info(">>>CHange ROle for SUpplier Temp<<");
+				changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
 			}
 		}
-
+		
 		return path;
 	}
 	
