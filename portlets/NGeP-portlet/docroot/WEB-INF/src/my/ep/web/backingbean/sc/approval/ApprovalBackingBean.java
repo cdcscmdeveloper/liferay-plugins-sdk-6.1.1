@@ -71,6 +71,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.scheduler.helper.sc.ScSchedulerHelper;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -730,6 +731,7 @@ public class ApprovalBackingBean extends
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
 			} else {
+				Date closingDate = qt.getClosingDate();
 				List<String> approvalTypes = null;
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 				SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)this.getManagedBean().getPayLoad();
@@ -818,18 +820,28 @@ public class ApprovalBackingBean extends
 						.updateBPMAction(qtReqDTO);
 				// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
 				
-				if (CollectionUtils.isNotEmpty(approvalTypes) && 
-						approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL)) {
-					Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-					if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
-						try {
-							log.info("call simple scheduler if QT is publishing today.");
-							EpSchedulerHelper.scheduleSimplePublishingJob(qt);
-						} catch (SchedulerException e) {
-							e.printStackTrace();
-							log.error(e.getMessage());
-						}
-					}
+				if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+					if (CollectionUtils.isNotEmpty(approvalTypes)) {
+						if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL)) {
+							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+							if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
+								try {
+									log.info("call simple scheduler if QT is publishing today.");
+									ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(qt);
+								} catch (SchedulerException e) {
+									e.printStackTrace();
+									log.error(e.getMessage());
+								}
+							}
+						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
+							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+							if (DateUtils.setDefaultDateTime(closingDate).equals(todayDate) &&
+									DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
+								EpSchedulerHelper.deleteJobAndAssociatedTriggers(
+										ScSchedulerHelper.getInstance().getQTClosingJobKey(qt));
+							}
+						}					
+					}	
 				}
 			}
 		} finally {
@@ -1316,8 +1328,12 @@ public class ApprovalBackingBean extends
 							IQTProposalSO.class);
 			ProposalReqDTO proposalReqDTO= new ProposalReqDTO();
 			proposalReqDTO.setQtId(qt.getQtId());
-			Integer count = proposalSO.getTotalQtValidityAcceptedSuppliers(proposalReqDTO).getTotalAccepted();
-			if(Integer.valueOf(1).equals(count)){
+			Integer totalAccepted = proposalSO.getTotalQtValidityAcceptedSuppliers(proposalReqDTO).getTotalAccepted();
+			dataType.getSupplierList();
+			int totalSuppliers = dataType.getSupplierList().size();
+			// Generate document if last supplier accept.
+			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outCome) &&
+					totalSuppliers > 0 && totalSuppliers == totalAccepted+1){
 				approveApprovalRequests(qt, approvalRequests, true);
 			}
 			
