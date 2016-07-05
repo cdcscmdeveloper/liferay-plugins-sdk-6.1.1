@@ -732,7 +732,6 @@ public class ApprovalBackingBean extends
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
 			} else {
-				Date closingDate = qt.getClosingDate();
 				List<String> approvalTypes = null;
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 				SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)this.getManagedBean().getPayLoad();
@@ -836,12 +835,12 @@ public class ApprovalBackingBean extends
 							}
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE)) {
 							Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-							if (DateUtils.setDefaultDateTime(closingDate).equals(todayDate) &&
-									DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
+							if (DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
+								// To remove the existing QT closing job from scheduler if any
 								JobKey jobKey = ScSchedulerHelper.getInstance().getQTClosingJobKey(qt);
+								jobKey = EpSchedulerHelper.getJobKey(jobKey.getName(), jobKey.getGroup());
 								if (jobKey != null) {
-									EpSchedulerHelper.deleteJobAndAssociatedTriggers(
-											EpSchedulerHelper.getJobKey(jobKey.getName(), jobKey.getGroup()));	
+									EpSchedulerHelper.deleteJobAndAssociatedTriggers(jobKey);	
 								}
 							}
 						}					
