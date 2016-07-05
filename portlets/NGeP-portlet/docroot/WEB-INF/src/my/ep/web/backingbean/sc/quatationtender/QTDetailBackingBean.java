@@ -4953,7 +4953,7 @@ public class QTDetailBackingBean extends
 			log.info("qtId: " + qtId);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(qtId);
-			scQt = qtDetailSO.retriveQtById(reqDTO)
+			scQt = qtDetailSO.retriveQTDetails(reqDTO)
 					.getQtDetail();
 			scQt.setClosingDate(new Date());
 			reqDTO.setQtdetail(scQt);
@@ -5005,7 +5005,7 @@ public class QTDetailBackingBean extends
 			log.info("qtId: " + scQt.getQtId());
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
-			scQt = qtDetailSO.retriveQtById(reqDTO)
+			scQt = qtDetailSO.retriveQTDetails(reqDTO)
 					.getQtDetail();
 			scQt.setPublishDate(new Date());
 			reqDTO.setQtdetail(scQt);
