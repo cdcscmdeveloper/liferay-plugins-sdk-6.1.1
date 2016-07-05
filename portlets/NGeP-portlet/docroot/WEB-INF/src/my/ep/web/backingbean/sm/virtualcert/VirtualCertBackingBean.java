@@ -21,7 +21,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
@@ -117,11 +116,6 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		log.info("******getSmSupplier******" + pmUser.getUserId());
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		supplierSearchReqDTO.setUserId(pmUser.getUserId());
-		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){ 
-			log.info("****Role is Supplier temp*****");
-			supplierSearchReqDTO.setAllStatuses(true);
-		}
-		
 		
 		ISupplierSearchSO supplierSearchSO= null;
 		SmSupplier smSupp = null;
