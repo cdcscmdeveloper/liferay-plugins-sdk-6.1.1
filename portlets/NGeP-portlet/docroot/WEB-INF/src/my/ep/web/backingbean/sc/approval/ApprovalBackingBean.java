@@ -839,8 +839,10 @@ public class ApprovalBackingBean extends
 							if (DateUtils.setDefaultDateTime(closingDate).equals(todayDate) &&
 									DateUtils.isDateGreater(qt.getClosingDate(), todayDate)) {
 								JobKey jobKey = ScSchedulerHelper.getInstance().getQTClosingJobKey(qt);
-								EpSchedulerHelper.deleteJobAndAssociatedTriggers(
-										EpSchedulerHelper.getJobKey(jobKey.getName(), jobKey.getGroup()));
+								if (jobKey != null) {
+									EpSchedulerHelper.deleteJobAndAssociatedTriggers(
+											EpSchedulerHelper.getJobKey(jobKey.getName(), jobKey.getGroup()));	
+								}
 							}
 						}					
 					}	
