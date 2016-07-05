@@ -344,7 +344,7 @@ public class ApprovalBackingBean extends
 		if (SCProcessNameConst.APPROVE_BUDGET.equalsIgnoreCase(taskName)) {
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_BUDGET;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
-					ParameterConst.DOCTYPE_BGT_APPROVAL, paramTypes);
+					ParameterConst.DOCTYPE_BGT_APPROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
@@ -355,7 +355,7 @@ public class ApprovalBackingBean extends
 					.getXflagBpk());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_BPK;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
-					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes);
+					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
@@ -380,19 +380,43 @@ public class ApprovalBackingBean extends
 					.getXflagPublication());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_PTJ;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
-					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
+					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE
-				.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE
+				.equalsIgnoreCase(taskName)) {
+			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
+					.getXflagFinalization());
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
+					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
+
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
+
+		} else if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE
 						.equalsIgnoreCase(taskName)) {
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagFinalization());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
-					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
+					ParameterConst.DOCTYPE_QUOTATION, paramTypes, 
+					ParameterConst.APPROVAL_DECISION_TYPE_APPROVED);
+			if (CollectionUtils.isNotEmpty(approvalRequests)) {
+				// Get the latest approval request for Extend Proposal Validity Period.
+				ScQtApprovalRequest latestApprovalRequest = approvalRequests.get(0);
+				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+					if (approvalRequest.getApproverActionDate() != null && 
+							latestApprovalRequest.getApproverActionDate() != null &&
+							approvalRequest.getApproverActionDate().after(latestApprovalRequest.getApproverActionDate())) {
+						latestApprovalRequest = approvalRequest;
+					}
+				}
+				if (latestApprovalRequest != null) {
+					approvalRequests = new ArrayList<ScQtApprovalRequest>();
+					approvalRequests.add(latestApprovalRequest);
+				}
+			}
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
@@ -401,7 +425,7 @@ public class ApprovalBackingBean extends
 					.getXflagBpk());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_BPK;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
-					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes);
+					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
@@ -410,7 +434,7 @@ public class ApprovalBackingBean extends
 
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
-					ParameterConst.DOCTYPE_COMMITTE_APROVAL, paramTypes);
+					ParameterConst.DOCTYPE_COMMITTE_APROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
@@ -463,7 +487,7 @@ public class ApprovalBackingBean extends
 			
 			approvalRequests = getApprovalRequests(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
-					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
+					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
 			
 			ScQt scQt = getManagedBean().getQt();
 			// Set New publish date for update publish date. To solve issue on publish date reset back to original time during primefaces calender update phase.
@@ -474,7 +498,7 @@ public class ApprovalBackingBean extends
 					.getXflagFinalization());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_PROCUREMENT_BOARD;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
-					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes);
+					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
@@ -492,7 +516,7 @@ public class ApprovalBackingBean extends
 					.getXflagFinalization());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
-					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes);
+					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
@@ -993,13 +1017,14 @@ public class ApprovalBackingBean extends
 	 * @return the ScQtApproval
 	 */
 	private List<ScQtApprovalRequest> getApprovalRequests(Long qtId,
-			String approvalCategory, String docType, List<String> reqTypes) {
+			String approvalCategory, String docType, List<String> reqTypes, String approverAction) {
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 
 		tenderReqDTO.setQtId(qtId);
 		tenderReqDTO.setDocType(docType);
 		tenderReqDTO.setApprovalReqTypes(reqTypes);
 		tenderReqDTO.setApprovalCategory(approvalCategory);
+		tenderReqDTO.setApproverAction(approverAction);
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
@@ -1332,7 +1357,7 @@ public class ApprovalBackingBean extends
 							IQTProposalSO.class);
 			ProposalReqDTO proposalReqDTO= new ProposalReqDTO();
 			proposalReqDTO.setQtId(qt.getQtId());
-			Integer totalAccepted = proposalSO.getTotalQtValidityAcceptedSuppliers(proposalReqDTO).getTotalAccepted();
+			int totalAccepted = proposalSO.getTotalQtValidityAcceptedSuppliers(proposalReqDTO);
 			dataType.getSupplierList();
 			int totalSuppliers = dataType.getSupplierList().size();
 			// Generate document if last supplier accept.
