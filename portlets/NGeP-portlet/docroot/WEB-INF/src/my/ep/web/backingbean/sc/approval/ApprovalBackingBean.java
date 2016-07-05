@@ -49,6 +49,7 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -269,7 +270,7 @@ public class ApprovalBackingBean extends
 	/**
 	 * Delete Attachment for other approvals.
 	 */
-	public void deleteOthersApprovalFile() {
+	public void deleteOthersApprovalFile(BaseEntity delEntity) {
 		logger.info("deleteOthersApprovalFile - START");
 		List<ScQtApprovalRequest> list = this.getManagedBean()
 				.getSelectedApprovalTabBean().getScQtApproval()
