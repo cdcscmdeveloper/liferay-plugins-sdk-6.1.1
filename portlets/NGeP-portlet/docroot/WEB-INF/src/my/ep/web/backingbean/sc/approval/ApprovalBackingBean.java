@@ -31,6 +31,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -44,6 +45,7 @@ import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
@@ -54,6 +56,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -339,6 +342,7 @@ public class ApprovalBackingBean extends
 		}
 
 		String approvalCategoryCode = null;
+		ScWorkFlowStatus currentStatus = null;
 		List<ScQtApprovalRequest> approvalRequests = null;
 
 		if (SCProcessNameConst.APPROVE_BUDGET.equalsIgnoreCase(taskName)) {
@@ -391,6 +395,8 @@ public class ApprovalBackingBean extends
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
+			currentStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_PCB_APPROVAL,
+					getManagedBean().getQt().getQtId());
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
@@ -417,6 +423,8 @@ public class ApprovalBackingBean extends
 					approvalRequests.add(latestApprovalRequest);
 				}
 			}
+			currentStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_PCB_APPROVAL,
+					getManagedBean().getQt().getQtId());
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
@@ -521,10 +529,14 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		}
+		
+		if (currentStatus == null) {
+			currentStatus = getManagedBean().getQt().getCurrentWorkFlowStatus();
+		}
 
-		initializeRemarks(this.getManagedBean().getScQtApproval(), this
-				.getManagedBean().getQt().getCurrentWorkFlowStatus(), this
-				.getManagedBean().getScQtApproval().getScQtApprovalRemarks(),
+		initializeRemarks(this.getManagedBean().getScQtApproval(), 
+				currentStatus, 
+				getManagedBean().getScQtApproval().getScQtApprovalRemarks(),
 				ScQtApprovalRemark.class);
 		// this.getManagedBean().setScQtApproval(this.getManagedBean().getScQtApproval());
 		this.getManagedBean().setScQtApprovalRequestList(approvalRequests);
@@ -540,6 +552,21 @@ public class ApprovalBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(context, null,
 							"/xhtml/sc/quatationtender/Approver/approverMain.xhtml");
+		}
+	}
+	
+	private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(docType);
+			reqDTO.setDocId(docId);
+			
+			return workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		} finally {
+			workFlowStatusSO = null;
 		}
 	}
 
