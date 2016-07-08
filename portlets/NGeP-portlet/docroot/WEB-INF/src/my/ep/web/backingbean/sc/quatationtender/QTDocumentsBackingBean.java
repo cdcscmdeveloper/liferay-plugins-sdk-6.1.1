@@ -86,6 +86,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
@@ -2470,45 +2471,63 @@ public class QTDocumentsBackingBean extends
 	public void reGenerateDocuments(Long qtId, Long statusId,
 			boolean isPcbProcess) {
 		debugLogger("reGenerateDocuments");
-		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-		quationTenderReqDTO.setQtId(qtId);
-		quationTenderReqDTO.setStatusId(statusId);
-		quationTenderReqDTO.setPcbProcess(isPcbProcess);
-		List<ScReport> reports = detailSO.retriveRegenerateDocumentsByQt(
-				quationTenderReqDTO).getRegenerateReports();
+		
+		IQTDetailSO detailSO;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			quationTenderReqDTO.setQtId(qtId);
+			quationTenderReqDTO.setStatusId(statusId);
+			quationTenderReqDTO.setPcbProcess(isPcbProcess);
+			List<ScReport> reports = detailSO.retriveRegenerateDocumentsByQt(
+					quationTenderReqDTO).getRegenerateReports();
 
-		SupplierFinalizationBackingBean finalizationBackingBean = new SupplierFinalizationBackingBean();
-		SupplierFinalizationManagedBean finalizationManagedBean = finalizationBackingBean.getManagedBean();
-		for (int i = 0; i < reports.size(); i++) {
-			ScReport report = reports.get(i);
-			try {
-				if (ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS
-						.equalsIgnoreCase(reports.get(i).getDocCategory())) {
-					ScQtDocReport qtDocReport = (ScQtDocReport)report;
-					ScQtDocReportAttachment qtDocReportAttachment = qtDocReport.getScQtDocReportAttachment();
-					String filePath = qtDocReportAttachment.getFilePath();
-					int startIndex = filePath.length()-qtDocReportAttachment.getFileName().length()-3;
-					generateDocumentAttachment(qtDocReport, 
-							filePath.substring(startIndex, startIndex+2));
-				} else if (ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER
-						.equalsIgnoreCase(reports.get(i).getDocCategory())) {
-					if (reports.get(i) instanceof ScQtFinalizationReport) {
-						ScQtFinalizationReport finalizationReport = (ScQtFinalizationReport)report;
-						finalizationManagedBean.setScQtFinalization(finalizationReport.getScQtFinalization());
-						finalizationManagedBean.setScQt(finalizationReport.getScQtFinalization().getScQt());
-						finalizationBackingBean.generateDocumentAttachment(finalizationReport);	
+			SupplierFinalizationBackingBean finalizationBackingBean = new SupplierFinalizationBackingBean();
+			SupplierFinalizationManagedBean finalizationManagedBean = finalizationBackingBean.getManagedBean();
+			for (int i = 0; i < reports.size(); i++) {
+				ScReport report = reports.get(i);
+				try {
+					if (ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS
+							.equalsIgnoreCase(report.getDocCategory())) {
+						if (report instanceof ScQtDocReport) {
+							ScQtDocReport qtDocReport = (ScQtDocReport)report;
+							ScQtDocReportAttachment qtDocReportAttachment = qtDocReport.getScQtDocReportAttachment();
+							String filePath = qtDocReportAttachment.getFilePath();
+							int startIndex = filePath.length()-qtDocReportAttachment.getFileName().length()-3;
+							
+							qtDocReportAttachment = generateDocumentAttachment(qtDocReport, 
+									filePath.substring(startIndex, startIndex+2));
+							qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
+						}
+						
+					} else if (ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER
+							.equalsIgnoreCase(report.getDocCategory())) {
+						if (report instanceof ScQtFinalizationReport) {
+							ScQtFinalizationReport finalizationReport = (ScQtFinalizationReport)report;
+							finalizationManagedBean.setScQtFinalization(finalizationReport.getScQtFinalization());
+							finalizationManagedBean.setScQt(finalizationReport.getScQtFinalization().getScQt());
+							
+							ScQtFinalizationReportAttachment reportAttachment = finalizationBackingBean
+									.generateDocumentAttachment(finalizationReport, true);	
+							finalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+						}
 					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new EpException(e.getMessage());
 				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new EpException(e.getMessage());
 			}
-
+			
+			quationTenderReqDTO.setScReportList(reports);
+			detailSO.saveReportAndAttachment(quationTenderReqDTO);
+			
+		} finally {
+			detailSO = null;
 		}
-
+		
 	}
 	
 	private String getPrefixFileName(int increment) {
