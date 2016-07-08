@@ -865,6 +865,8 @@ public class ApprovalBackingBean extends
 				qtReqDTO.setRoleCode(getUserRoleCode());
 				qtReqDTO.setOutcome(outcome);
 				qtReqDTO.setUserLocale(facesScope.getUserLocale());
+				qtReqDTO.setToBeRemoveRestrictedSupplierList(this
+						.getManagedBean().getToBeRemoveRestrictedSupplierList());
 
 				if (null != digiSign) {
 					updatePmDigiSignData(digiSign, approvalDocType,
@@ -1352,6 +1354,8 @@ public class ApprovalBackingBean extends
 	
 	private void revertQTTypeAsOpen(ScQt scQt) {
 		scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+		this.getManagedBean().setToBeRemoveRestrictedSupplierList(
+				scQt.getScQtSuppliers());
 		scQt.setScQtSuppliers(null);
 	}
 
