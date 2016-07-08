@@ -110,6 +110,7 @@ import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -2479,17 +2480,26 @@ public class QTDocumentsBackingBean extends
 				quationTenderReqDTO).getRegenerateReports();
 
 		SupplierFinalizationBackingBean finalizationBackingBean = new SupplierFinalizationBackingBean();
+		SupplierFinalizationManagedBean finalizationManagedBean = finalizationBackingBean.getManagedBean();
 		for (int i = 0; i < reports.size(); i++) {
-
+			ScReport report = reports.get(i);
 			try {
 				if (ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS
 						.equalsIgnoreCase(reports.get(i).getDocCategory())) {
-					generateDocumentAttachment((ScQtDocReport) reports.get(i),getPrefixFileName((i+1)));
+					ScQtDocReport qtDocReport = (ScQtDocReport)report;
+					ScQtDocReportAttachment qtDocReportAttachment = qtDocReport.getScQtDocReportAttachment();
+					String filePath = qtDocReportAttachment.getFilePath();
+					int startIndex = filePath.length()-qtDocReportAttachment.getFileName().length()-3;
+					generateDocumentAttachment(qtDocReport, 
+							filePath.substring(startIndex, startIndex+2));
 				} else if (ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER
 						.equalsIgnoreCase(reports.get(i).getDocCategory())) {
-					finalizationBackingBean
-							.generateDocumentAttachment((ScQtFinalizationReport) reports
-									.get(i));
+					if (reports.get(i) instanceof ScQtFinalizationReport) {
+						ScQtFinalizationReport finalizationReport = (ScQtFinalizationReport)report;
+						finalizationManagedBean.setScQtFinalization(finalizationReport.getScQtFinalization());
+						finalizationManagedBean.setScQt(finalizationReport.getScQtFinalization().getScQt());
+						finalizationBackingBean.generateDocumentAttachment(finalizationReport);	
+					}
 				}
 
 			} catch (Exception e) {
