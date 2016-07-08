@@ -1150,6 +1150,10 @@ public class QTDetailBackingBean extends
 			QtnTenderSearchBean qtnTenderSearchBean,
 			ISearchBean<ScQt> qtSearchBean) {
 		if (qtnTenderSearchBean != null) {
+			if (CollectionUtils.isNotEmpty(qtSearchBean
+					.getDataFilterBeans())) {
+				qtSearchBean.getDataFilterBeans().clear();
+			}
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String qtTitle = qtnTenderSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
@@ -1162,8 +1166,15 @@ public class QTDetailBackingBean extends
 								SearchOperator.OPERATOR_LIKE.value(), qtTitle,
 								true));
 			}
+			
+			// doctype 
+			if(getManagedBean().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
+				getManagedBean().setSearchLoaNo(null);
+			} else{
+				qtnTenderSearchBean.setQtNo(null);
+			}
 			String qtNumber = qtnTenderSearchBean.getQtNo();
-			if (!StringUtils.isBlank(qtNumber)) {
+			if (StringUtils.isNotEmpty(qtNumber)) {
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField(QTConstants.QT_NUMBER);
 				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
@@ -2780,6 +2791,7 @@ public class QTDetailBackingBean extends
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				populateQTSearchCriteria(qtnTenderSearchBean, searchBean);
 				reqDTO.setQtSearchBean(searchBean);
+				reqDTO.setLoaNo(getManagedBean().getSearchLoaNo());
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 				return resDTO.getQtResultBean();
@@ -2804,6 +2816,8 @@ public class QTDetailBackingBean extends
 	 * Reset.
 	 */
 	public void reset() {
+		getManagedBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		getManagedBean().setSearchLoaNo(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
 		this.getManagedBean().getQtnTenderSearchBean().setProcurementMode(null);
@@ -5036,5 +5050,23 @@ public class QTDetailBackingBean extends
 		}
 	}
 	
+	
+	/**
+	 * Gets the doc type qt loa dropdown values.
+	 *
+	 * @return the doc type qt loa dropdown values
+	 */
+	public SelectItem[] getDocTypeQtLOADropdownValues() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> qtLoaDoctypes = new ArrayList<String>();
+		qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+		qtLoaDoctypes.add(ParameterConst.DOCTYPE_QUOTATION);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), qtLoaDoctypes));
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(
+				ParameterTypeConst.DOCUMENT_TYPES, searchBean);
+		return items;
+	}
 	
 }
