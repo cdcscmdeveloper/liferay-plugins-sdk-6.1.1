@@ -15,27 +15,26 @@
 		<p:messages id="supplieacceptance" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
 
-
-		<div class="ppRightBtn">
-			<h:panelGroup id="suppBtns">
-
-
-				<ui:repeat var="bpmAction"
-					value="#{approvalBackingBean.managedBean.outComes}">
-					<ui:param name="buttonLabel"
-						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-					<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-						styleClass="ui-button" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();"
-						action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" />
-				</ui:repeat>
-			</h:panelGroup>
-		</div>
-
-
-
-
-
+		<table style="width: 100%">
+		<tr>
+			<td style="text-align: right;">
+				<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
+				<ui:decorate template="/WEB-INF/facelets/templates/claim_template.xhtml">
+					<ui:define name="outComeSection">
+						<ui:repeat var="bpmAction"
+							value="#{approvalBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+								styleClass="ui-button" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" />
+						</ui:repeat>
+					</ui:define>
+				</ui:decorate>
+			</td>
+		</tr>
+		</table>
 
 		<ui:include src="requestPTJdetails.xhtml" />
 		<ui:include src="FinalaizationCommitteeApproval.xhtml" />
