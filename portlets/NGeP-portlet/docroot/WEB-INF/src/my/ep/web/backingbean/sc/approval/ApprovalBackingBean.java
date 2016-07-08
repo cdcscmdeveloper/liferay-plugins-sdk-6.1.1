@@ -784,6 +784,7 @@ public class ApprovalBackingBean extends
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
 			} else {
+				boolean isFinalApproval = false;
 				List<String> approvalTypes = null;
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 				SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)this.getManagedBean().getPayLoad();
@@ -829,8 +830,10 @@ public class ApprovalBackingBean extends
 						revertToOldValues(qt, approvalRequests);
 					} else if (BpmOutcomeConst.BPM_APPROVE
 							.equalsIgnoreCase(outcome)) {
-						approvalTypes = approveApprovalRequests(qt, approvalRequests, 
-								(dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList())));
+						isFinalApproval = dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList());
+						approvalTypes = approveApprovalRequests(qt, 
+								approvalRequests, 
+								isFinalApproval);
 					}
 				} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
 						.equalsIgnoreCase(approvalCategoryCode)) {
@@ -895,7 +898,14 @@ public class ApprovalBackingBean extends
 									EpSchedulerHelper.deleteJobAndAssociatedTriggers(jobKey);	
 								}
 							}
-						}					
+						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD)) {
+							if (isFinalApproval) {
+								new QTDocumentsBackingBean().reGenerateDocuments(
+										qt.getQtId(), qt.getCurrentWorkFlowStatus()
+												.getPmStatus()
+												.getStatusId(), true);
+							}
+						}				
 					}	
 				}
 			}
@@ -1270,10 +1280,6 @@ public class ApprovalBackingBean extends
 								.parseInt(approvalRequest
 										.getChangedValue()));
 						updateProposalValidityDate(scQt);
-						new QTDocumentsBackingBean().reGenerateDocuments(
-								scQt.getQtId(), scQt.getCurrentWorkFlowStatus()
-										.getPmStatus()
-										.getStatusId(), true);
 					}
 				}
 
@@ -1384,6 +1390,7 @@ public class ApprovalBackingBean extends
 							IQTProposalSO.class);
 			ProposalReqDTO proposalReqDTO= new ProposalReqDTO();
 			proposalReqDTO.setQtId(qt.getQtId());
+			boolean isAllAccepted = false;
 			int totalAccepted = proposalSO.getTotalQtValidityAcceptedSuppliers(proposalReqDTO);
 			dataType.getSupplierList();
 			int totalSuppliers = dataType.getSupplierList().size();
@@ -1391,8 +1398,9 @@ public class ApprovalBackingBean extends
 			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outCome)){
 				// P1 - update proposal validity period if all suppliers approved.
 				// P2 - update proposal validity period if one of suppliers approved.
-				if (totalSuppliers > 0 && totalSuppliers == totalAccepted+1) {
-					approveApprovalRequests(qt, approvalRequests, true);	
+				isAllAccepted = totalSuppliers > 0 && totalSuppliers == totalAccepted+1;
+				if (isAllAccepted) {
+					approveApprovalRequests(qt, approvalRequests, true);
 				}
 				
 			} else {
@@ -1422,6 +1430,13 @@ public class ApprovalBackingBean extends
 
 			qt = tenderResDTO.getQtDetail();
 			if (tenderResDTO.isSuccessful()) {
+				if (isAllAccepted) {
+					new QTDocumentsBackingBean().reGenerateDocuments(
+							qt.getQtId(), qt.getCurrentWorkFlowStatus()
+									.getPmStatus()
+									.getStatusId(), true);
+				}
+				
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
