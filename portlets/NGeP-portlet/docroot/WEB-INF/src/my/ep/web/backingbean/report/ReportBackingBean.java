@@ -10138,8 +10138,9 @@ public class ReportBackingBean extends
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
 			if (StringUtils.isNotEmpty(this.getModuleValue())
-					&& (this.getModuleValue()
-							.equalsIgnoreCase(ReportConst.FL_MOD_VAL))) {
+					&& ((this.getModuleValue()
+							.equalsIgnoreCase(ReportConst.FL_MOD_VAL)  || this.getModuleValue()
+							.equalsIgnoreCase(ReportConst.CT_MOD_VAL)))) {
 				rptGenBean.setReportCategoryView(true);
 				retrieveSubModuleReportCategoryList(strLanguage);
 			} else {
@@ -10249,8 +10250,9 @@ public class ReportBackingBean extends
 		resetReportForm();
 		this.setReportValue(null);
 		if (rptGenBean.isReportCategoryView() == true
-				|| (this.getModuleValue().equalsIgnoreCase(
-						ModuleCodeConst.ORDER_FULFILLMENT) && (StringUtils
+				|| ((this.getModuleValue().equalsIgnoreCase(
+						ModuleCodeConst.CONTRACT_MANAGEMENT) || this.getModuleValue().equalsIgnoreCase(
+						ModuleCodeConst.ORDER_FULFILLMENT)) && (StringUtils
 						.isNotEmpty(this.getReportCategory())))) {
 			rptGenBean = new ReportsGenerateBean();
 			rptGenBean.setReportCategoryView(true);
