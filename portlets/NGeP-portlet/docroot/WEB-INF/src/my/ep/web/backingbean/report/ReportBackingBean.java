@@ -10121,7 +10121,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveReportListByAuthorization() {
 		log.info("ReportBackingBean-retrieveReportListByAuthorization");
 		reportList = new ArrayList<SelectItem>();
-		rptGenBean = new ReportsGenerateBean();
+		//rptGenBean = new ReportsGenerateBean();
 		this.setReportValue(null);
 		this.setReportName(null);
 		setRoleCode(null);
