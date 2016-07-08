@@ -1388,9 +1388,17 @@ public class ApprovalBackingBean extends
 			dataType.getSupplierList();
 			int totalSuppliers = dataType.getSupplierList().size();
 			// Generate document if last supplier accept.
-			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outCome) &&
-					totalSuppliers > 0 && totalSuppliers == totalAccepted+1){
-				approveApprovalRequests(qt, approvalRequests, true);
+			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outCome)){
+				// P1 - update proposal validity period if all suppliers approved.
+				// P2 - update proposal validity period if one of suppliers approved.
+				if (totalSuppliers > 0 && totalSuppliers == totalAccepted+1) {
+					approveApprovalRequests(qt, approvalRequests, true);	
+				}
+				
+			} else {
+				// P1 - update approval request as rejected if one of suppliers rejected.
+				// P2 - update approval request as rejected if all suppliers rejected.
+				updateApprovalRequest(approvalRequests, outCome);
 			}
 			
 			finalizeRemarks(approval.getScQtApprovalRemarks());
