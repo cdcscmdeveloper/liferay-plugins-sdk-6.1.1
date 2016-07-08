@@ -83,6 +83,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
@@ -773,6 +774,7 @@ public class CreateQtBackingBean extends
 			
 			if (qtDetailSO.isRestrictedTenderOpenForBumi(reqDTO)) {
 				scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+				clearNonBumiSuppliers(scQt);
 			} else {
 				scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
 			}
@@ -2660,5 +2662,40 @@ public class CreateQtBackingBean extends
 			approvalDetails.setApproverAction(new PmParameter());
 		}
 
+	}
+	
+	/**
+	 * To remove the non bumi suppliers as open for Bumi for Restricted tender
+	 * 
+	 * @param scQt
+	 */
+	public void clearNonBumiSuppliers(ScQt scQt){
+		
+		List<ScQtSupplier> supplierList = this.getManagedBean()
+				.getQtSupplierList();
+		if (CollectionUtils.isNotEmpty(supplierList)) {
+			int size = supplierList.size();
+			List<ScQtSupplier> removeSupplierList = new ArrayList<ScQtSupplier>(size);
+			for (ScQtSupplier supplier : supplierList) {
+				if (!supplier.isBumi()) {
+					removeSupplierList.add(supplier);
+				}
+			}
+			if (CollectionUtils.isNotEmpty(removeSupplierList)) {
+				this.getManagedBean().setToBeRemoveRestrictedSupplierList(
+						removeSupplierList);
+				if (size == removeSupplierList.size()) {
+					supplierList.clear();
+				} else {
+					for (ScQtSupplier supplier : removeSupplierList) {
+						supplierList.remove(supplier);
+					}
+				}
+				this.getManagedBean().setQtSupplierList(supplierList);
+				scQt.setScQtSuppliers(supplierList);
+				getManagedBean().setTotalSuppliers(supplierList.size());
+
+			}
+		}
 	}
 }
