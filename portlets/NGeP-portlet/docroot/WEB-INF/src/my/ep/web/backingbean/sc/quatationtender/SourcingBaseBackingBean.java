@@ -831,13 +831,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param reportName
 	 * @param paramMap
 	 * @param attachment
-	 * @param checkDownloadstatus
+	 * @param isDirectDownload
 	 * @return File instance
 	 * @throws IOException
 	 */
 	protected File generatePdfFromOracle(String reportName,
 			Map<String, String> paramMap, ScAttachment attachment,
-			boolean checkDownloadstatus) throws IOException {
+			boolean isDirectDownload) throws IOException {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 		String excPrevUrl = propertiesUtils
 				.getProperty(EpPropertiesConst.EXC_PREV_URL);
@@ -865,7 +865,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil
 				.getHttpServletResponse(portletResponse);
-		if (!checkDownloadstatus) {
+		if (!isDirectDownload) {
 			res.setHeader("Content-Disposition", "attachment; filename="
 					+ attachment.getFileName());
 			res.setHeader("Content-Transfer-Encoding", "binary");
@@ -901,7 +901,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			fos.close();
 			input.close();
 		}
-		if (!checkDownloadstatus) {
+		if (!isDirectDownload) {
 			out.flush();
 			out.close();
 		}
