@@ -716,7 +716,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				
 				for (int row = 0; row < scRemarks.size(); row++) {
 					ScRemark scRemark = scRemarks.get(row);
-					if (!isDiffWithPrevWorkFlowStatus(workFlowStatus, scRemark)) {
+					if (compareUserName(scRemark.getCreatedUser().getLoginId()) &&
+							!isDiffWithPrevWorkFlowStatus(workFlowStatus, scRemark)) {
 						scRemark.setEditable(true);
 					}
 				}
