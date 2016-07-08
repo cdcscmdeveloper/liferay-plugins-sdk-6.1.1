@@ -19,14 +19,14 @@
 				
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:center;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
 		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" style="width:5%; text-align:right;" />
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" style="width:5%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.remarks']}" style="width:10%;" />
 		           	</p:row>
 		           	<p:row>
@@ -36,10 +36,9 @@
 		           	</p:row>
 		       	</p:columnGroup>
 				
-				<p:column>
+				<p:column style="text-align:center;">
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-								   process="@this" update="@([id$=suppDetailsPopupId])" 
-								   style="float:right;">
+								   process="@this" update="@([id$=suppDetailsPopupId])">
 						<f:setPropertyActionListener value="#{qualifiedSupp.qtEvaluationResult.scQtProposal}"
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
@@ -71,7 +70,7 @@
 					</h:outputText>
 				</p:column>
 	
-				<p:column style="text-align:right;">
+				<p:column style="text-align:center;">
 					<h:outputText value="#{qualifiedSupp.evalRank}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
@@ -103,9 +102,9 @@
 	         		</p:commandLink> 
 				</p:column>
 
-				<p:column style="text-align:right;">
+				<p:column style="text-align:center;">
 					<p:inputText id="deskOfficerRankInput" value="#{qualifiedSupp.deskOfficerRank}" 
-								 style="text-align:right;" size="5" maxlength="3" required="false" 
+								 size="5" maxlength="3" required="false" 
 								 autocomplete="false" label="#{lbl['lbl.sc.consolidation.report.do.ranking']}">
 						<ac:validateNumber 
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
