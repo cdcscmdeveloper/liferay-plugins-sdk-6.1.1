@@ -365,9 +365,10 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			InterfaceLogReqDto interfaceGfMasReqDto = new InterfaceLogReqDto();
 			interfaceGfMasReqDto.setdIInterfaceLog(selectedProcess);
 			interfaceGfMasReqDto.setLogId(selectedProcess.getLogId());
-			interfaceGfMasReqDto.setProcessId(selectedProcess.getProcessId());
-			
+			interfaceGfMasReqDto.setProcessId(selectedProcess.getProcessId());			
+		
 			this.getManagedBean().setFileName(selectedProcess.getFileName());
+			this.getManagedBean().setTransId(selectedProcess.getTransId());
 
 			InterfaceLogResDto interfaceGfMasResDto = gfMasSO
 					.retrieveProcessDataForAll(interfaceGfMasReqDto);

@@ -59,6 +59,9 @@ public class GfMasManagedBean extends BaseManagedBean {
     
     /** The file name. */
     private String fileName;
+    
+    /** The trans id. */
+    private String transId;
 
 	/** The is lazy. */
 	private boolean isLazy;	
@@ -173,6 +176,25 @@ public class GfMasManagedBean extends BaseManagedBean {
 	 */
 	public List<PmInterfaceAgOff> getListOfAgOffice() {
 		return listOfAgOffice;
+	}
+
+	/**
+	 * Gets the trans id.
+	 * 
+	 * @return the transId
+	 */
+	public String getTransId() {
+		return transId;
+	}
+
+	/**
+	 * Sets the trans id.
+	 * 
+	 * @param transId
+	 *            the transId to set
+	 */
+	public void setTransId(String transId) {
+		this.transId = transId;
 	}
 
 	/**
