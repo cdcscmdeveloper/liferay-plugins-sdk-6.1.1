@@ -2399,7 +2399,7 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 
 		if (reportAttachment == null) {
-			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
 			scQtFinalizationReport
 					.setScQtFinalizationReportAttachment(reportAttachment);
 		}
@@ -2424,7 +2424,7 @@ public class SupplierFinalizationBackingBean extends
 			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports.get(i)
 					.getScQtFinalizationReportAttachment();
 			if (attachment == null) {
-				attachment = generateDocumentAttachment(scQtFinalizationReports.get(i));
+				attachment = generateDocumentAttachment(scQtFinalizationReports.get(i), false);
 				scQtFinalizationReports.get(i).setScQtFinalizationReportAttachment(attachment);
 			}
 			scAttachments.add(attachment);
@@ -2451,7 +2451,7 @@ public class SupplierFinalizationBackingBean extends
     }	
 
 	public ScQtFinalizationReportAttachment generateDocumentAttachment(
-			ScQtFinalizationReport scQtFinalizationReport) throws Exception {
+			ScQtFinalizationReport scQtFinalizationReport, boolean isDirectDownload) throws Exception {
 		String definitionType = scQtFinalizationReport.getDefinationType()
 				.getParameterCode();
 		ScQtFinalization scQtFinalization = getManagedBean()
@@ -2475,7 +2475,7 @@ public class SupplierFinalizationBackingBean extends
 			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
 				filename.append(".pdf");
 				reportAttachment.setFileName(filename.toString());
-				generateKertasTaklimatPdf(scQt, attachment);
+				generateKertasTaklimatPdf(scQt, attachment, isDirectDownload);
 
 			} else {
 				debugLogger("No document type is exists with the key "
@@ -2535,7 +2535,7 @@ public class SupplierFinalizationBackingBean extends
 		return reportAttachment;
 	}
 	
-	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment) 
+	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) 
 										   throws Exception {
 		debugLogger("generateSupplierFinalizationPdf");
 		populateAttachmentDetails(attachment);
@@ -2561,7 +2561,7 @@ public class SupplierFinalizationBackingBean extends
 				.getUserSessionBean().getUserId() + "");
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);		
 
-		generatePdfFromOracle(reportName, paramMap, attachment, false);		
+		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
 	}
 
 	private void generateEndorsementReportFromVelocityToPdf(
