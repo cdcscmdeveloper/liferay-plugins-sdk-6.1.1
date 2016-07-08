@@ -2292,6 +2292,10 @@ public class QTDetailBackingBean extends
 										tenderResDTO.getRestrictedSuppliers() != null ? tenderResDTO
 												.getRestrictedSuppliers()
 												.size() : 0);
+						if (ParameterConst.OPEN_FOR_BUMI.equals(scQt.getOpenFor())) {
+							CreateQtBackingBean backingBean = new CreateQtBackingBean();
+							backingBean.clearNonBumiSuppliers(scQt);
+						}
 					}
 				} else {
 					if (tenderResDTO.getTotalSuppliers() != null) {
