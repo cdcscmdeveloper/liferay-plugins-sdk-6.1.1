@@ -3720,3 +3720,10 @@ table.rptTbl {
 	padding:0px;
 	vertical-align: top;	 	 
 }
+
+.ui-icon-filter {
+	background-image: url('../images/design/ico-filter.png') !important;
+	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !important;
+}
