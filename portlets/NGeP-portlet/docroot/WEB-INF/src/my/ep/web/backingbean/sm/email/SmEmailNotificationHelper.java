@@ -147,7 +147,7 @@ public class SmEmailNotificationHelper {
 			s = "New MOF Registration";
 			break;
 		case "A":
-			s = "Additional Category Codes";
+			s = "Add Category Application";
 			// PROCEED_ADDTNLCAT_MOF_APPLN;
 			break;
 		case "B":
