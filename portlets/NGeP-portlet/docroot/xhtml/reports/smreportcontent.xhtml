@@ -2410,9 +2410,7 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
-
-
-
+						
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryStaticByStateView}">
 							<p:column>
@@ -2573,6 +2571,22 @@
 								<f:selectItems value="#{reportBackingBean.districtLst}"></f:selectItems>
 							</p:selectOneMenu>
 
+						</c:if>
+						
+						 <c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smSiteVisitStatusView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.site.visit.status']}" />
+							<p:selectOneMenu value="#{reportBackingBean.smSiteVisitStatus}"
+								style="width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.sv.after.approval']}"
+									itemValue="A"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.sv.before.approval']}"
+									itemValue="B"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
 						</c:if>
 
 						<c:if
