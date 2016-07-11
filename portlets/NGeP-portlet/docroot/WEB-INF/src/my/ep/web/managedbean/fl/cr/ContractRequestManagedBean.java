@@ -262,7 +262,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean zonalTierPrice = false;
 	private boolean tariffPrice = false;
 	private boolean serviceItem = false;
-	private PmParameter pmPriceType;
+//	private PmParameter pmPriceType;
 	private List<FLCtSupplierItemVO>	supplierItemPriceList = new ArrayList<FLCtSupplierItemVO>();
 	private BigDecimal UomFrequency ; 
 	private BigDecimal UomPerYear ; 
@@ -336,13 +336,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 					if(searchContractListDD == 3){
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean(
-										"contract_no",
+										"physical_no",
 										SearchOperator.OPERATOR_LIKE.value(), 
 										searchContractCriteria));
 					}else if(searchContractListDD == 2){
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean(
-										"physical_no",
+										"contract_no",
 										SearchOperator.OPERATOR_LIKE.value(), 
 										searchContractCriteria));
 					}else if(searchContractListDD == 4){
@@ -2097,19 +2097,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.reqItemInfoList = reqItemInfoList;
 	}
 
-	/**
-	 * @return the pmPriceType
-	 */
-	public PmParameter getPmPriceType() {
-		return pmPriceType;
-	}
-
-	/**
-	 * @param pmPriceType the pmPriceType to set
-	 */
-	public void setPmPriceType(PmParameter pmPriceType) {
-		this.pmPriceType = pmPriceType;
-	}
 
 	/**
 	 * @return the supplierItemPriceList
