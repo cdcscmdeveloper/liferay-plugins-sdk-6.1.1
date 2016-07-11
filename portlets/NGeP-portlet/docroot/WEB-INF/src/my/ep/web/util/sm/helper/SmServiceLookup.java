@@ -5,6 +5,7 @@ import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -533,5 +534,15 @@ public class SmServiceLookup {
 	public static IReasonSO getReasonSO() {
 		return (IReasonSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+	}
+
+	/**
+	 * Get ICertBodySO
+	 * 
+	 * @return ICertBodySO
+	 */
+	public static ICertBodySO getCertBodySO() {
+		return (ICertBodySO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 	}
 }
