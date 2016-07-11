@@ -36,7 +36,7 @@
 			
 			<p:column headerText="#{lbl['lbl.sc.bidding.schedule.status']}">
 				<ui:param name="isCancelled" value="#{item.scBidSchedule.pmStatus.statusId 
-															== BidStatusConst.bidCancelled}"/>
+															== BidStatusConst.BID_CANCELLED}"/>
 				
 				<h:outputText value="#{suppFinalBiddingBackingBean.getStatusDescById(
 												item.scBidSchedule.pmStatus.statusId)}" 
@@ -61,14 +61,13 @@
 					update="@([id$=supplierItemTbl])" 
 					listener="#{suppFinalBiddingBackingBean.awardSupplierEvent}"/>				
 			
-			<p:column headerText="#{lbl['lbl.sc.ranking']}">
+			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="text-align:center;">
 				<h:outputText value="#{itemSupplier.ranking}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="text-align:center;">
 				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-							   process="@this" update="@([id$=suppDetailsPopupId])" 
-							   style="float:right;">
+							   process="@this" update="@([id$=suppDetailsPopupId])">
 					<f:setPropertyActionListener value="#{itemSupplier.scQtProposal}"
 							   target="#{supplierDetailBackingBean.scQtProposal}" />
 					<h:outputText value="#{itemSupplier.scQtProposal.supplierNo}" />
@@ -79,23 +78,21 @@
 				<h:outputText value="#{(itemSupplier.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.starting.price']}">
-				<h:outputText style="float: right;" value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplier.startingPrice)}">
+			<p:column headerText="#{lbl['lbl.sc.starting.price']}" style="text-align: right;">
+				<h:outputText value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplier.startingPrice)}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.last.bid.price']}">
-				<div style="align: right">
-					<h:outputText style="float: right;" rendered="#{!(itemSupplier.startingPrice eq itemSupplier.bidPrice)}"
+			<p:column headerText="#{lbl['lbl.sc.last.bid.price']}" style="text-align: right;">
+					<h:outputText rendered="#{!(itemSupplier.startingPrice eq itemSupplier.bidPrice)}"
 						 value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplier.bidPrice)}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
-				</div>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
-				<h:outputText style="float: right;" rendered="#{itemSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable 
+			<p:column headerText="#{lbl['lbl.sc.difference.rm']}" style="text-align: right;">
+				<h:outputText rendered="#{itemSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable 
 																and (itemSupplier.startingPrice ne itemSupplier.bidPrice)}" 
 					value="#{suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice - 
 										suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplier.bidPrice)}">
@@ -103,9 +100,8 @@
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.cost.saving']}">
-				<h:outputText style="float: right;" 
-					value="#{suppFinalBiddingBackingBean.managedBean.selectedBiddingItem.estimatedCost - itemSupplier.bidPriceTotal}">
+			<p:column headerText="#{lbl['lbl.sc.cost.saving']}" style="text-align: right;">
+				<h:outputText value="#{suppFinalBiddingBackingBean.managedBean.selectedBiddingItem.estimatedCost - itemSupplier.bidPriceTotal}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
