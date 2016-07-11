@@ -25,6 +25,10 @@
 			.ui-blockui-content{
 				z-index:1200;
 			}
+			
+			.allstates .fc-event-skin{
+				background: red;
+			}
 		</style>
 
 		<script type="text/javascript">	
@@ -149,6 +153,8 @@
 								style="width: 275px;margin-bottom: 5px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />
+								<f:selectItem itemLabel="#{lbl['lbl.pm.all.states']}"
+									itemValue="0" />
 								<!--f:selectItem itemLabel="Malaysia" itemValue="0" /-->
 								<f:selectItems
 									value="#{calendarBackingBean.getStateListOfMalaysia()}"
@@ -202,11 +208,14 @@
 									update="eventDetails, calendarMsg"
 									oncomplete="eventDialog.show();"								
 									/>
-								<p:ajax event="eventMove"
-									listener="#{calendarBackingBean.onEventMove}"
-									update="calendarMsg" />
-								<p:ajax event="eventResize"
-									listener="#{calendarBackingBean.onEventResize}" />
+									
+								<ui:remove>
+									<p:ajax event="eventMove"
+										listener="#{calendarBackingBean.onEventMove}"
+										update="calendarMsg" />
+									<p:ajax event="eventResize"
+										listener="#{calendarBackingBean.onEventResize}" />
+								</ui:remove>
 							</p:schedule></td>
 					</tr>
 				</table>
@@ -222,12 +231,20 @@
 					<p:messages id="calendarMessages" showDetail="true" showSummary="false" autoUpdate="false"
 					closable="true" severity="error"></p:messages>	
 					<table width="100%">
+						<c:if test="#{calendarBackingBean.managedBean.disabledUpdate}">
+							<tr>
+								<td colspan="2" style="padding-bottom:5px;">
+									<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.cal.isNational']}" />
+								</td>
+							</tr>
+						</c:if>
 						<tr>
 							<td><h:outputLabel
 								value="#{lbl['lbl.pm.cal.title']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 							<td><p:inputText id="title" size="45" maxlength="30" 
 									label="#{lbl['lbl.pm.cal.title']}"
+									disabled="#{calendarBackingBean.managedBean.disabledUpdate}"
 									valueChangeListener="#{calendarBackingBean.holidayTitleValChange}"
 									value="#{calendarBackingBean.managedBean.event.title}"
 									required="true" >		
@@ -241,6 +258,7 @@
 
 							<td><p:outputLabel value="#{lbl['lbl.pm.cal.frmdate']}" /></td>
 							<td><p:calendar showOn="button" id="fromDateId" required="true"
+									disabled="#{calendarBackingBean.managedBean.disabledUpdate}"
 									label="#{lbl['lbl.pm.cal.frmdate']}" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 									value="#{calendarBackingBean.managedBean.event.startDate}">
@@ -251,6 +269,7 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.pm.cal.todate']}" /></td>
 							<td><p:calendar showOn="button" id="toDateId" required="true"
+									disabled="#{calendarBackingBean.managedBean.disabledUpdate}"
 									label="#{lbl['lbl.pm.cal.todate']}" readonlyInput="true"
 									validatorMessage="To Date should be greater than from Date"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -268,6 +287,7 @@
 					</table>
 					<div style="float: right;">
 							<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
+										rendered="#{not calendarBackingBean.managedBean.disabledUpdate}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
 										update="eventDetails,calendarMessages" process="eventDetails"/>
@@ -275,7 +295,7 @@
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 										actionListener="#{calendarBackingBean.deleteEvent}"
 										update="schedule,eventDetails" process="@this"
-										rendered="#{not calendarBackingBean.managedBean.newEvent}" />
+										rendered="#{not calendarBackingBean.managedBean.newEvent and not calendarBackingBean.managedBean.disabledUpdate}" />
 					</div>
 				</h:panelGroup>
 				</p:outputPanel>

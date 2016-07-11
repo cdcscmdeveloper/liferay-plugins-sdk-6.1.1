@@ -3,7 +3,9 @@ package my.ep.web.backingbean.pm.settings;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
@@ -57,11 +59,17 @@ public class CalendarBackingBean extends
 		this.endDateTemp = endDateTemp;
 	}
 	
+	//Holiday Id + disabled (pop up)
+	private Map<Long, Boolean> holidayDisableMap = 
+			new HashMap<Long, Boolean>();
+	
 	private void loadSchedule(Long stateId) {
 		log.info("...........loadSchedule............");
 		log.info("...........stateId="+stateId);
 		getManagedBean().setEventModel(new DefaultScheduleModel());
 		getManagedBean().setEvent(new DefaultScheduleEvent());
+		holidayDisableMap = 
+					new HashMap<Long, Boolean>();
 		this.loadStateSchedule(stateId);
 		//getManagedBean().setSelectedStateId(stateId);
 		changeWeekEndColor();
@@ -87,17 +95,32 @@ public class CalendarBackingBean extends
 		
 		
 		if (stateHolidayList != null) {
+			Calendar endDate = null;
+			DefaultScheduleEvent event = null;
 			for (PmHoliday holiday : stateHolidayList) {
-				Calendar endDate = Calendar.getInstance();
+				endDate = Calendar.getInstance();
 				endDate.setTime(holiday.getEndDate());
 				endDate.set(Calendar.HOUR_OF_DAY, 1);
 				endDate.set(Calendar.MINUTE, 0);
 				endDate.set(Calendar.SECOND, 0);
 				endDate.set(Calendar.MILLISECOND, 0);
 				
-				DefaultScheduleEvent event = new DefaultScheduleEvent(
-						holiday.getHolidayName(), holiday.getStartDate(),
-						endDate.getTime());
+				if(holiday.getState() == null){
+					if(getManagedBean().getSelectedStateId() != null ){
+						holidayDisableMap.put(holiday.getHolidayId(), true);
+					}else{
+						//enable when selectedStateId == null (All States)
+						holidayDisableMap.put(holiday.getHolidayId(), false);
+					}
+					event = new DefaultScheduleEvent(
+							holiday.getHolidayName(), holiday.getStartDate(),
+							endDate.getTime(),"allstates");
+				}else{
+					holidayDisableMap.put(holiday.getHolidayId(), false);
+					event = new DefaultScheduleEvent(
+							holiday.getHolidayName(), holiday.getStartDate(),
+							endDate.getTime());
+				}
 				event.setId(String.valueOf(holiday.getHolidayId()));
 				event.setData(holiday.getHolidayId());
 				getManagedBean().getEventModel().addEvent(event);
@@ -138,7 +161,7 @@ public class CalendarBackingBean extends
 		ICalendarSO calendarSO = null;
 		CalendarResDTO resDTO = null;
 		
-		Long stateId = getManagedBean().getSelectedStateId();
+		Long stateId = getManagedBean().getSelectedStateId() == 0 ? null : getManagedBean().getSelectedStateId();
 		try {
 			
 			calendarSO = (ICalendarSO) BusinessDelegate.getInstance()
@@ -210,7 +233,6 @@ public class CalendarBackingBean extends
 		this.getManagedBean().setEventModel(new DefaultScheduleModel());
 		this.getManagedBean().setEvent(new DefaultScheduleEvent());
 		this.getManagedBean().setInitialDate(getTodayDate());
-		loadSchedule(null);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "calendar");
@@ -225,7 +247,7 @@ public class CalendarBackingBean extends
 			String holidayName = getManagedBean().getEvent().getTitle();
 			Date startDate = getManagedBean().getEvent().getStartDate();
 			Date endDate = getManagedBean().getEvent().getEndDate();
-			Long stateId = getManagedBean().getSelectedStateId();
+			Long stateId = getManagedBean().getSelectedStateId() == 0 ? null : getManagedBean().getSelectedStateId();
 			ICalendarSO calendarSO = null;
 			CalendarResDTO resDTO = null;
 			try {
@@ -270,11 +292,17 @@ public class CalendarBackingBean extends
 		log.info("........updateState........");
 		this.getManagedBean().setEventModel(new DefaultScheduleModel());
 		this.getManagedBean().setEvent(new DefaultScheduleEvent());
-		if (this.getManagedBean().getSelectedStateId() != null) {
-			loadSchedule(this.getManagedBean().getSelectedStateId());
-		}else{
-			loadSchedule(null);
+		 holidayDisableMap = 
+					new HashMap<Long, Boolean>();
+		if(this.getManagedBean().getSelectedStateId() != null){
+			if (getManagedBean().getSelectedStateId() != 0) {
+				loadSchedule(this.getManagedBean().getSelectedStateId());
+			}else{
+				//All State
+				loadSchedule(null);
+			}
 		}
+		
 	}
 
 	public void fillHolidayModelByEvent(PmHoliday holiday) {
@@ -309,23 +337,30 @@ public class CalendarBackingBean extends
 		RequestContext.getCurrentInstance().reset(":form:eventDetails");
 		getManagedBean().setEvent((ScheduleEvent) selectEvent.getObject());
 		getManagedBean().setNewEvent(false);
+		if(getManagedBean().getSelectedStateId() != 0){
+			getManagedBean().setDisabledUpdate(holidayDisableMap.get(getManagedBean().getEvent().getData()));
+		}else{
+			getManagedBean().setDisabledUpdate(false);
+		}
+		
 //		 RequestContext.getCurrentInstance().execute("eventDialog.show()");
     }
 	     
     public void onDateSelect(SelectEvent selectEvent) {
     	try{
     	RequestContext.getCurrentInstance().reset(":form:eventDetails");
-//    	if(this.getManagedBean().getSelectedState() != null && (this.getManagedBean().getSelectedState().getStateId() == null || this.getManagedBean().getSelectedState().getStateId() == -1)){
-//    		this.getManagedBean().setEvent(new DefaultScheduleEvent());
-//    		RequestContext.getCurrentInstance().execute("errDialog.show()");
-//    		return;
-//    	}
+    	if(this.getManagedBean().getSelectedStateId() == null){
+    		this.getManagedBean().setEvent(new DefaultScheduleEvent());
+    		RequestContext.getCurrentInstance().execute("errDialog.show()");
+    		return;
+    	}
     	
 //    	renewSesionObject();
 
 	        getManagedBean().setEvent(new DefaultScheduleEvent("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject()));
 	    	log.info("(Date) selectEvent.getObject()="+((Date) selectEvent.getObject()));
 	    	getManagedBean().setNewEvent(true);
+	    	getManagedBean().setDisabledUpdate(false);
 	    	RequestContext.getCurrentInstance().execute("eventDialog.show()");
     	}catch(Exception e){
     		e.printStackTrace();
