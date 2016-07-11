@@ -3,8 +3,10 @@ package my.ep.web.backingbean.sm.govtsellerregistration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -25,6 +27,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -45,6 +48,7 @@ import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.govtsellerregistration.GovtSellerRegistrationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
@@ -61,6 +65,7 @@ public class GovtSellerRegistrationBackingBean extends
 		BaseBackingBean<GovtSellerRegistrationManagedBean> {
 
 	public static RegistrationBackingBean instance;
+	private static Map<Long, Object> identityType;
 
 	/**
 	 * Pre-render G2G page
@@ -850,6 +855,18 @@ public class GovtSellerRegistrationBackingBean extends
 					getManagedBean().getIdentificationTypeItems().add(item);
 				}
 			}
+			initIdentityTypeMap();
+		}
+	}
+
+	private void initIdentityTypeMap() {
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
+
+		identityType = new HashMap<Long, Object>();
+		for (PmParameterDesc pmDesc : parameterDescs) {
+			identityType.put(pmDesc.getPmParameter().getParameterId(),
+					pmDesc.getPmParameter());
 		}
 	}
 
@@ -1116,13 +1133,16 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 		SmCommonUtil.checkEmailDomainWithExceptionMsg(personnel.getName(),
 				personnel.getEmail());
-		if (personnel.getIdentificationNo().length() != 12) {
-			throw new EpException(MessageConst.ERROR_721013);
+
+		// validate IC length
+		PmParameter identificationType = (PmParameter) identityType
+				.get(personnel.getIdentificationTypeId());
+		if (identificationType != null
+				&& !StringUtils.isBlank(personnel.getIdentificationNo())) {
+			getInstance().validateIDFormat(personnel.getIdentificationNo(),
+					identificationType.getParameterCode());
 		}
 
-		if (!personnel.getIdentificationNo().matches("[0-9]+")) {
-			throw new EpException(MessageConst.ERROR_721013);
-		}
 		// validate IC with MyIdentity
 		SmCommonUtil.getInstance().verifyWithMyIdentity(personnel.getName(),
 				personnel.getIdentificationNo(),
