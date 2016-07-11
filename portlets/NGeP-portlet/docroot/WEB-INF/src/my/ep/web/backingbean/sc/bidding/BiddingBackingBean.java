@@ -220,6 +220,13 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				this.getManagedBean().setLastBidAction(lastBidAction);
 				this.getManagedBean().setBidAction(new ScBidAction());
 				this.getManagedBean().getBidAction().setScBidSchedule(bid);
+				getManagedBean().setRemainingTime(
+						remainingTimeCalculator(
+								lastBidAction.getCreatedDate(),
+								bid.getEndDate()));
+				getManagedBean().setDuration(
+						durationCalculator(lastBidAction.getCreatedDate(),
+								bid.getEndDate()));
 				if (lastBidAction != null
 						&& lastBidAction.getActionType().equalsIgnoreCase(
 								BiddingConst.BID_ACTION_TYPE_FAILED)) {
@@ -233,14 +240,6 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					this.getManagedBean().getBidAction()
 							.setActionType(BiddingConst.BID_ACTION_TYPE_RESUME);
 					getManagedBean().setMindate(DateUtils.getCurrentDate());
-					getManagedBean().setMaxdate(DateUtils.getCurrentDate());
-					getManagedBean().setRemainingTime(
-							remainingTimeCalculator(
-									lastBidAction.getCreatedDate(),
-									bid.getEndDate()));
-					getManagedBean().setDuration(
-							durationCalculator(lastBidAction.getCreatedDate(),
-									bid.getEndDate()));
 					getManagedBean().setNewBidDuration("");
 				}
 			}
@@ -264,9 +263,9 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getManagedBean().getBidAction().setNewEndDate(null);
 		getManagedBean().setNewBidDuration("");
 
-		if (type.equalsIgnoreCase(BiddingConst.BID_ACTION_TYPE_RESUME)) {
+		if (type.equalsIgnoreCase(BiddingConst.BID_ACTION_TYPE_RESUME) || type.equalsIgnoreCase(BiddingConst.BID_ACTION_TYPE_REBIDDING)) {
 			getManagedBean().setMindate(DateUtils.getCurrentDate());
-			getManagedBean().setMaxdate(DateUtils.getCurrentDate());
+			getManagedBean().setMaxdate(null);
 		} else {
 			getManagedBean().setMindate(getNextDate());
 			getManagedBean().setMaxdate(null);
@@ -385,6 +384,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 							.getCreatedDate();
 					Date resumedDate = this.getManagedBean().getBidAction()
 							.getNewStartDate();
+					getManagedBean().getSearchDataModel().reloadData();
 				}
 
 			}
@@ -900,18 +900,18 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			String parameterType) {
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		if (this.getManagedBean().getBidAction().getActionType() != null
+		if (this.getManagedBean().getLastBidAction() != null
 				&& this.getManagedBean()
-						.getBidAction()
+						.getLastBidAction()
 						.getActionType()
 						.equalsIgnoreCase(
-								BiddingConst.BID_ACTION_TYPE_RESCHEDULE)) {
-			SearchFilterBean pmParameterFilterBean = new SearchFilterBean(
+								BiddingConst.BID_ACTION_TYPE_FAILED)) {
+			SearchFilterBean parameterFilterBean = new SearchFilterBean(
 					"pmParameter.parameterCode",
-					SearchOperator.OPERATOR_EQUALS.value(),
-					BiddingConst.BID_ACTION_TYPE_RESCHEDULE);
-			pmParameterFilterBean.setCaseInsensitive(true);
-			searchBean.getDataFilterBeans().add(pmParameterFilterBean);
+					SearchOperator.OPERATOR_NOT_EQUALS.value(),
+					BiddingConst.BID_ACTION_TYPE_FAILED);
+			parameterFilterBean.setCaseInsensitive(true);
+			searchBean.getDataFilterBeans().add(parameterFilterBean);
 		} else {
 			SearchFilterBean pmParameterFilterBean = new SearchFilterBean(
 					"pmParameter.parameterCode",
