@@ -48,7 +48,7 @@
 			<p:column style="white-space:normal;text-align:center;width:25%">
 				<f:facet name="header">
 					#{lbl['lbl.fl.status']}
-					<p:commandButton id="addBtn" icon="ui-icon-lov" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+					<p:commandButton id="addBtn" icon="ui-icon-filter" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 						partialSubmit="true" process="@this" />					
 					<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom" style="width:250px;">
 			            <p:menuitem value="#{lbl['lbl.txt.all']}" update=":form:flPendingFlDt" action="#{flOrderBB.onFlStatusChange(null)}">
