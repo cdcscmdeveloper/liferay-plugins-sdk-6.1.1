@@ -1402,10 +1402,6 @@ public class ApprovalBackingBean extends
 					approveApprovalRequests(qt, approvalRequests, true);
 				}
 				
-			} else {
-				// P1 - update approval request as rejected if one of suppliers rejected.
-				// P2 - update approval request as rejected if all suppliers rejected.
-				updateApprovalRequest(approvalRequests, outCome);
 			}
 			
 			finalizeRemarks(approval.getScQtApprovalRemarks());
