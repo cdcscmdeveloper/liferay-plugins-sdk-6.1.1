@@ -3270,6 +3270,26 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Get PmProfBody as select items
+	 * 
+	 * @return List<SelectItem>
+	 */
+	public static List<SelectItem> getProfBodyItems() {
+		List<SelectItem> retVal = new ArrayList<SelectItem>();
+		List<PmCertBody> certBodyList = retrievePmProfBodyList();
+		if (!EntityHelper.isCollectionEmpty(certBodyList)) {
+			SelectItem item = null;
+			for (PmCertBody certBody : certBodyList) {
+				item = new SelectItem();
+				item.setValue(certBody.getCertBodyId());
+				item.setLabel(certBody.getBodyName());
+				retVal.add(item);
+			}
+		}
+		return retVal;
+	}
+
+	/**
 	 * Retrieve parent category list for experience page.
 	 * 
 	 * @param managedBean

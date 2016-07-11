@@ -319,6 +319,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmUom> uomLs;
 	private List<SelectItem> uomSelectItems;
 	private List<SelectItem> raceSelectItems;
+	private List<SelectItem> profBodyItems;
 	List<PmReasonDesc> reasonDescList;
 	List<PmReasonDesc> deletePendingApplDescList;
 	private Long rejectionOtherReasonId;
@@ -3537,5 +3538,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setShowMachineryEquipmentPanel(
 			boolean showMachineryEquipmentPanel) {
 		this.showMachineryEquipmentPanel = showMachineryEquipmentPanel;
+	}
+
+	public List<SelectItem> getProfBodyItems() {
+		return profBodyItems;
+	}
+
+	public void setProfBodyItems(List<SelectItem> profBodyItems) {
+		this.profBodyItems = profBodyItems;
 	}
 }
