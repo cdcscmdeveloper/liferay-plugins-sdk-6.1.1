@@ -1684,7 +1684,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @param identNo
 	 * @param identType
 	 */
-	private void validateIDFormat(String identNo, String identType){
+	public void validateIDFormat(String identNo, String identType){
 		if(identType.equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
 			if(identNo.length() != 12){
 				throw new EpException(MessageConst.ERROR_721013);
