@@ -539,7 +539,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 					flItemAddr.setOrderedQty(BigDecimal.ZERO);
 					flItemAddr.setOrderedAmt(BigDecimal.ZERO);
-					if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
+					if(flItemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
 						setGstPrice(flItemAddr, flItemAddr.getUnitPrice().doubleValue());
 					} else {
 						flItemAddr.setUnitPrice(BigDecimal.ZERO);
@@ -937,7 +937,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			if(!itemExisted){
 				flItemAddr = new FlFulfilmentItemAddr();
-				flItemAddr.setPriceType(getManagedBean().getPmPriceType());
+				flItemAddr.setPriceType(contractedItem.getPriceType());
 				flItemAddr.setItemType(contractedItem.getItemType());
 				flItemAddr.setScRequestItem(contractedItem.getScRequestItem());
 				flItemAddr.setCmItem(contractedItem.getScRequestItem().getCmItem());
@@ -946,7 +946,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				} else {
 					flItemAddr.setItemCode(contractedItem.getScRequestItem().getTempUnspscCode());
 				}					
-				if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
+				if(flItemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
 					if(getManagedBean().getFlRequest().getStartDate()!=null && getManagedBean().getFlRequest().getEndDate()!=null) {
 						long day = (getManagedBean().getFlRequest().getEndDate().getTime() - getManagedBean().getFlRequest().getStartDate().getTime()) / MILLIS_PER_DAY;
 						reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
@@ -1068,9 +1068,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				
 			} 
 			setFulfilmentRequestField(resDTO);
-			if(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().size()>0) {
-				getManagedBean().setPmPriceType(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
-			}
+//			if(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().size()>0) {
+//				getManagedBean().setPmPriceType(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
+//			}
 			
 			if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
 				getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
@@ -1175,9 +1175,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().getFlRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
 				updateDeliveryDate();
 			}
-			if(contractResDTO.getContract().getLatestContractVer().getCtContractItems().size()>0) {
-				getManagedBean().setPmPriceType(contractResDTO.getContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
-			}
+//			if(contractResDTO.getContract().getLatestContractVer().getCtContractItems().size()>0) {
+//				getManagedBean().setPmPriceType(contractResDTO.getContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
+//			}
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
@@ -1367,12 +1367,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if (!existed) {
 				newItem.setOrderedQty(BigDecimal.ZERO);
 				newItem.setOrderedAmt(BigDecimal.ZERO);
-				if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-					||getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
+				if(newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+					||newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
 					newItem.setUnitPrice(BigDecimal.ZERO);
 					newItem.setGstAmount(BigDecimal.ZERO);
 					newItem.setGstUnitPrice(BigDecimal.ZERO);
-				} else if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
+				} else if(newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
 					if(getManagedBean().getSelectedDelAddr()!=null && getManagedBean().getSelectedDelAddr().getStartDate()!=null && getManagedBean().getSelectedDelAddr().getEndDate()!=null) {
 						long day = (getManagedBean().getSelectedDelAddr().getEndDate().getTime() - getManagedBean().getSelectedDelAddr().getStartDate().getTime()) / MILLIS_PER_DAY;
 						reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
@@ -1791,8 +1791,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			flItemAddr.setOrderedQty(formattedOrderedQty);
 		}
 		// Tier only
-		if(getManagedBean().getPmPriceType() != null 
-				&& (getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER))){// TIER PRICE
+		if(flItemAddr.getPriceType() != null 
+				&& (flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER))){// TIER PRICE
 			if(null == flItemAddr.getOrderedQty()){
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 			}else{
@@ -1915,8 +1915,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
-		}else if(getManagedBean().getPmPriceType() != null 
-				&& (getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER))){//ZONAL TIER PRICE
+		}else if(flItemAddr.getPriceType() != null 
+				&& (flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER))){//ZONAL TIER PRICE
 			
 			List<FlFulfilmentItemAddr> itemAddrList = null;
 			String key = null;
@@ -2049,9 +2049,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
-		} else if(getManagedBean().getPmPriceType() != null 
-				&& (getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TARIFF) || 
-					getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))){
+		} else if(flItemAddr.getPriceType() != null 
+				&& (flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TARIFF) || 
+						flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))){
 			if(null == flItemAddr.getOrderedQty() || flItemAddr.getOrderedQty().doubleValue()==0){
 				flItemAddr.setOrderedQty(BigDecimal.ZERO);
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
@@ -2090,8 +2090,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					FlFulfilmentItemAddr clonedlItemAddr = (FlFulfilmentItemAddr) flItemAddr.cloneEntity();
 					flItemAddr = clonedlItemAddr;
 				}			
-				if(getManagedBean().getPmPriceType() != null){
-					if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
+				if(flItemAddr.getPriceType() != null){
+					if(flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
 						if(getManagedBean().getSelectedDelAddr()!=null && getManagedBean().getSelectedDelAddr().getStartDate()!=null && getManagedBean().getSelectedDelAddr().getEndDate()!=null) {
 							long day = (getManagedBean().getSelectedDelAddr().getEndDate().getTime() - getManagedBean().getSelectedDelAddr().getStartDate().getTime()) / MILLIS_PER_DAY;
 							reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
@@ -3533,7 +3533,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
-		flItemAddr.setPriceType(getManagedBean().getPmPriceType());
+		flItemAddr.setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setStandardUnitPrice(flItemAddr.getUnitPrice().doubleValue());
 		getManagedBean().setStandardPrice(false);
@@ -3756,7 +3756,16 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			for(FlTempItem flTempItem : flRequest.getFlTempItems()) {
 				flItemAddr = new FlFulfilmentItemAddr();
-				flItemAddr.setPriceType(getManagedBean().getPmPriceType());
+				ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
+				contractItemReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
+				contractItemReqDTO.setUomId(flTempItem.getScRequestItem().getUom().getUomId());
+				if(flTempItem.getScRequestItem().getCmItem().getExtensionCode() != null){
+					contractItemReqDTO.setItemCode(flTempItem.getScRequestItem().getCmItem().getExtensionCode());
+				}else{
+					contractItemReqDTO.setItemCode(flTempItem.getScRequestItem().getTempUnspscCode());
+				}
+				ContractItemResDTO contractItemResDTO = contractItemSO.retrieveContractItemByVersionAndItemCode(contractItemReqDTO);
+				flItemAddr.setPriceType(contractItemResDTO.getCtContractItem().getPriceType());
 				flItemAddr.setItemType(flTempItem.getScRequestItem().getItemType());
 				flItemAddr.setScRequestItem(flTempItem.getScRequestItem());
 				flItemAddr.setCmItem(flTempItem.getScRequestItem().getCmItem());
@@ -3765,8 +3774,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					flItemAddr.setItemCode(flTempItem.getScRequestItem().getCmItem().getExtensionCode());
 				} else {
 					flItemAddr.setItemCode(flTempItem.getScRequestItem().getTempUnspscCode());
-				}				
-				if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
+				}	
+				
+				if(flItemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
 					if(getManagedBean().getFlRequest().getStartDate()!=null && getManagedBean().getFlRequest().getEndDate()!=null) {
 						long day = (getManagedBean().getFlRequest().getEndDate().getTime() - getManagedBean().getFlRequest().getStartDate().getTime()) / MILLIS_PER_DAY;
 						reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
@@ -4931,9 +4941,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 //			getManagedBean().setSubmitButtonStatus(false);
 			getManagedBean().setFlDocId(flReqId);
 //			getManagedBean().setFlDocMaintain(true);
-			if(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().size()>0) {
-				getManagedBean().setPmPriceType(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
-			}
+//			if(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().size()>0) {
+//				getManagedBean().setPmPriceType(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
+//			}
 			setFulfilmentRequestField(resDTO);
 			for(CtAgency agency : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
 				if(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE || 
