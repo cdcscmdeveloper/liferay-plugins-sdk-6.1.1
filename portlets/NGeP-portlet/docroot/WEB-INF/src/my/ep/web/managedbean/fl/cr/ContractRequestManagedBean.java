@@ -333,13 +333,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 			try {
 				searchBean.setUseEntityClass(true);
 				if(searchContractListDD != null){
-					if(searchContractListDD == 2){
+					if(searchContractListDD == 3){
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean(
 										"contract_no",
 										SearchOperator.OPERATOR_LIKE.value(), 
 										searchContractCriteria));
-					}else if(searchContractListDD == 3){
+					}else if(searchContractListDD == 2){
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean(
 										"physical_no",
