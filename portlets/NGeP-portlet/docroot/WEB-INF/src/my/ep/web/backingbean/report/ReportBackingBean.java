@@ -917,6 +917,8 @@ public class ReportBackingBean extends
 
 	/** The sm district. */
 	private String smDistrict;
+	
+	private String smSiteVisitStatus;
 
 	/** The sm company name. */
 	private String smCompanyName;
@@ -4977,6 +4979,20 @@ public class ReportBackingBean extends
 	 */
 	public String getScSoneStatus() {
 		return scSoneStatus;
+	}
+
+	/**
+	 * @return the smSiteVisitStatus
+	 */
+	public String getSmSiteVisitStatus() {
+		return smSiteVisitStatus;
+	}
+
+	/**
+	 * @param smSiteVisitStatus the smSiteVisitStatus to set
+	 */
+	public void setSmSiteVisitStatus(String smSiteVisitStatus) {
+		this.smSiteVisitStatus = smSiteVisitStatus;
 	}
 
 	/**
@@ -15328,6 +15344,7 @@ public class ReportBackingBean extends
 				|| StringUtils.isNotEmpty(this.getSmApplicationStatus())
 				|| StringUtils.isNotEmpty(this.getSmState())
 				|| StringUtils.isNotEmpty(this.getSmDistrict())
+				|| StringUtils.isNotEmpty(this.getSmSiteVisitStatus())
 				|| StringUtils.isNotEmpty(this.getSmReportType())
 				|| StringUtils.isNotEmpty(this.getSmMofRegNoFrom())
 				|| StringUtils.isNotEmpty(this.getSmMofRegNoTo())
@@ -15571,6 +15588,13 @@ public class ReportBackingBean extends
 						.setDistrictTotVar(ReportConst.AMP_SM_DISTRICT_NAME_EQ
 								+ this.getSmDistrict());
 			}
+			
+			if (StringUtils.isNotEmpty(this.getSmSiteVisitStatus())) {
+				rptGenBean
+						.setSiteVisitStatusTotVar(ReportConst.AMP_SM_SITE_VISIT_STATUS_EQ
+								+ this.getSmSiteVisitStatus());
+			}
+			
 			if (StringUtils.isNotEmpty(this.getSmSupplierType())) {
 				rptGenBean
 						.setSupplierTypeTotVar(ReportConst.AMP_SM_SUPPLIER_TYPE_EQ
@@ -15959,6 +15983,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getApplicationTypeTotVar()
 						+ rptGenBean.getStateTotVar()
 						+ rptGenBean.getDistrictTotVar()
+						+ rptGenBean.getSiteVisitStatusTotVar()
 						+ rptGenBean.getReportTypeTotVar()
 						+ rptGenBean.getSmSVOUserVar()
 						+ rptGenBean.getReportValueIdVar()

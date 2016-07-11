@@ -682,6 +682,8 @@ public class ReportsGenerateBean {
 
 	/** The sm gen district view. */
 	private boolean smGenDistrictView = false;
+	
+	private boolean smSiteVisitStatusView = false;
 
 	/** The sm sa application no view. */
 	private boolean smSAApplicationNoView = false;
@@ -4176,6 +4178,8 @@ public class ReportsGenerateBean {
 
 	/** The district tot var. */
 	private String districtTotVar = ReportConst.EMPTY_VAL;
+	
+	private String siteVisitStatusTotVar = ReportConst.EMPTY_VAL;	
 
 	/** The application no tot var. */
 	private String applicationNoTotVar = ReportConst.EMPTY_VAL;
@@ -11579,6 +11583,20 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * @return the siteVisitStatusTotVar
+	 */
+	public String getSiteVisitStatusTotVar() {
+		return siteVisitStatusTotVar;
+	}
+
+	/**
+	 * @param siteVisitStatusTotVar the siteVisitStatusTotVar to set
+	 */
+	public void setSiteVisitStatusTotVar(String siteVisitStatusTotVar) {
+		this.siteVisitStatusTotVar = siteVisitStatusTotVar;
+	}
+
+	/**
 	 * Sets the sc procure method chk var.
 	 * 
 	 * @param scProcureMethodChkVar
@@ -17321,6 +17339,20 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmCDCompanyNameView(boolean smCDCompanyNameView) {
 		this.smCDCompanyNameView = smCDCompanyNameView;
+	}
+
+	/**
+	 * @return the smSiteVisitStatusView
+	 */
+	public boolean isSmSiteVisitStatusView() {
+		return smSiteVisitStatusView;
+	}
+
+	/**
+	 * @param smSiteVisitStatusView the smSiteVisitStatusView to set
+	 */
+	public void setSmSiteVisitStatusView(boolean smSiteVisitStatusView) {
+		this.smSiteVisitStatusView = smSiteVisitStatusView;
 	}
 
 	/**

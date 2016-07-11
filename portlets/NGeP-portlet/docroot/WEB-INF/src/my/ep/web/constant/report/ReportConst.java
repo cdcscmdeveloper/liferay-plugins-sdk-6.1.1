@@ -537,6 +537,7 @@ public class ReportConst {
 	public static final String AMP_SM_REG_STATUS_EQ = "&PREGSTATUSID=";
 	public static final String AMP_SM_STATE_NAME_EQ = "&PSTATEID=";
 	public static final String AMP_SM_DISTRICT_NAME_EQ = "&PDISTRICTID=";
+	public static final String AMP_SM_SITE_VISIT_STATUS_EQ = "&PSITESTATUS=";
 	public static final String AMP_SM_YEAR_FROM_EQ = "&PYEARFROM=";
 	public static final String AMP_SM_YEAR_TO_EQ = "&PYEARTO=";
 	public static final String AMP_SM_SUPPLIER_TYPE_EQ = "&PSUPPTYPE=";

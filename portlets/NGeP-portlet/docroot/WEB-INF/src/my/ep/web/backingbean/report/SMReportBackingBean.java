@@ -337,6 +337,7 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmFromDateView(true);
 			rptGenBean.setSmSupStateView(true);
 			rptGenBean.setSmGenDistrictView(true);
+			rptGenBean.setSmSiteVisitStatusView(true);
 			rptGenBean.setSmSAApplicationNoView(true);
 			break;
 		case ReportConst.SM_SITE_VISIT_APPL_OFFICER_RPT_VAL:
