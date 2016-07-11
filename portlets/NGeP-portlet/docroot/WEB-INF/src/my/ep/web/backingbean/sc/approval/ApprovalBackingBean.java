@@ -409,18 +409,13 @@ public class ApprovalBackingBean extends
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes, 
 					ParameterConst.APPROVAL_DECISION_TYPE_APPROVED);
 			if (CollectionUtils.isNotEmpty(approvalRequests)) {
-				// Get the latest approval request for Extend Proposal Validity Period.
-				ScQtApprovalRequest latestApprovalRequest = approvalRequests.get(0);
+				// Get the approval request for Extend Proposal Validity Period.
 				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-					if (approvalRequest.getApproverActionDate() != null && 
-							latestApprovalRequest.getApproverActionDate() != null &&
-							approvalRequest.getApproverActionDate().after(latestApprovalRequest.getApproverActionDate())) {
-						latestApprovalRequest = approvalRequest;
+					if (approvalRequest.getQtApprovalRequestId().equals(dataType.getRequestId())) {
+						approvalRequests = new ArrayList<ScQtApprovalRequest>();
+						approvalRequests.add(approvalRequest);;
+						break;
 					}
-				}
-				if (latestApprovalRequest != null) {
-					approvalRequests = new ArrayList<ScQtApprovalRequest>();
-					approvalRequests.add(latestApprovalRequest);
 				}
 			}
 			currentStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_PCB_APPROVAL,
