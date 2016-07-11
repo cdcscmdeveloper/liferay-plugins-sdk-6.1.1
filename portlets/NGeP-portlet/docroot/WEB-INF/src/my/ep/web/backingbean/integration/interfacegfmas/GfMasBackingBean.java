@@ -13,25 +13,32 @@ package my.ep.web.backingbean.integration.interfacegfmas;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.batch.IDIInterfaceSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceGlAccSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfacePrgActSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceProjectSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotDanaSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.common.interfaceptj.InterfaceGlAccReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogReqDto;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogResDto;
+import my.ep.dto.pm.common.interfaceptj.InterfacePrgActReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceProjectReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceVotDanaReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceVotReqDTO;
 import my.ep.exception.EpException;
@@ -58,8 +65,10 @@ import my.ep.web.managedbean.intergration.interfacegfmas.GfMasManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -984,35 +993,89 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 		log.info("processAllVendors");
 		String returnUrl = null;
-		
+
 		if (this.getManagedBean().getSelectedProgActList() != null) {
 			log.info("***************ProgActList***SIZE******************>>"
 					+ this.getManagedBean().getSelectedProgActList().size());
+			
+			IInterfacePrgActSO interfaceprgActSO = (IInterfacePrgActSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfacePrgActSO.class);
+			InterfacePrgActReqDTO reqDTO = new InterfacePrgActReqDTO();
+			
+			reqDTO.setFileName(this.getManagedBean().getFileName());
+			
+			try {
+				interfaceprgActSO.saveOrUpdatePrgActList(reqDTO);
+			} catch (Exception e) {
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+				
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPrgAct.xhtml";
+			}
+			
+			
+			
 		} else if (this.getManagedBean().getSelectedProjectList() != null) {
 			log.info("************ProjectList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedProjectList().size());
+
+			try {
+				IInterfaceProjectSO interfaceProjectSO = (IInterfaceProjectSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceProjectSO.class);
+				InterfaceProjectReqDTO reqDTO = new InterfaceProjectReqDTO();
+
+				reqDTO.setFileName(this.getManagedBean().getFileName());
+				reqDTO.setInterfaceProjectLs(this.getManagedBean().getSelectedProjectList());
+
+
+				interfaceProjectSO.saveOrUpdateProjectList(reqDTO);
+			} catch (Exception e) {
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasProject.xhtml";
+			}
+
+
 		} else if (this.getManagedBean().getSelectedAgOfficeList() != null) {
 
 			log.info("***********AgOfficeList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedAgOfficeList().size());
 
-//			IAgOfficeSO reqSO = (IAgOfficeSO) BusinessDelegate.getInstance()
-//					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-//							IAgOfficeSO.class);
-//
-//			List<PmInterfaceAgOff> list = this.getManagedBean()
-//					.getSelectedAgOfficeList();
-//
-//			for (int i = 0; i < list.size(); i++) {
-//				PmInterfaceAgOff pmInterfaceAgOff = list.get(i);
-//				//reqSO.execute(pmInterfaceAgOff);
-//			}
+			//			IAgOfficeSO reqSO = (IAgOfficeSO) BusinessDelegate.getInstance()
+			//					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+			//							IAgOfficeSO.class);
+			//
+			//			List<PmInterfaceAgOff> list = this.getManagedBean()
+			//					.getSelectedAgOfficeList();
+			//
+			//			for (int i = 0; i < list.size(); i++) {
+			//				PmInterfaceAgOff pmInterfaceAgOff = list.get(i);
+			//				//reqSO.execute(pmInterfaceAgOff);
+			//			}
 		} else if (this.getManagedBean().getSelectedBankList() != null) {
 			log.info("************BankList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedBankList().size());
 		} else if (this.getManagedBean().getSelectedGlAcntList() != null) {
 			log.info("***********GlAcntList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedGlAcntList().size());
+
+			IInterfaceGlAccSO interfaceGlAccSO = (IInterfaceGlAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceGlAccSO.class);
+			InterfaceGlAccReqDTO reqDTO = new InterfaceGlAccReqDTO();
+
+			reqDTO.setFileName(this.getManagedBean().getFileName());
+			reqDTO.setInterfaceGlAccLs(this.getManagedBean().getSelectedGlAcntList());
+
+			try {
+				interfaceGlAccSO.saveOrUpdateGlAccList(reqDTO);
+			} catch (Exception e) {
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasGlAccount.xhtml";
+
+			}
+
+
 		} else if (this.getManagedBean().getSelectedKptjList() != null) {
 			log.info("************KptjList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedKptjList().size());
@@ -1023,21 +1086,25 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			log.info("***********DanaList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedDanaList().size());
 
-			
+
 			IInterfaceVotDanaSO interfaceVotDanaSO = (IInterfaceVotDanaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceVotDanaSO.class);
-			
+
 			InterfaceVotDanaReqDTO reqDTO = new InterfaceVotDanaReqDTO();
-			
+
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setInterfaceDanaLs(this.getManagedBean().getSelectedDanaList());
-			
+
 			try {
 				interfaceVotDanaSO.saveOrUpdateVotDanaList(reqDTO);
 			} catch (Exception e) {
+
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
 				System.out.println("error:"+e.getMessage());
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasDana.xhtml";
 			}
-			
-			
+
+
 			this.getManagedBean().setSelectedDanaList(null);
 
 		} else if (this.getManagedBean().getSelectedPpList() != null) {
@@ -1047,22 +1114,25 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			log.info("***********VotList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedVotList().size());
 
-			
-			
-			
+
+
+
 			IInterfaceVotSO interfacevotSO = (IInterfaceVotSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceVotSO.class);
-			
+
 			InterfaceVotReqDTO reqDTO = new InterfaceVotReqDTO();
 			reqDTO.setFileName(this.getManagedBean().getFileName());
-			
+
 			reqDTO.setInterfaceVotLs(this.getManagedBean().getSelectedVotList());
 			try {
 				interfacevotSO.saveOrUpdateVotFundList(reqDTO);
 			} catch (Exception e) {
-				
+
 				System.out.println("*******"+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasVot.xhtml";
 			}
-			
+
 			this.getManagedBean().setSelectedVotList(null);
 
 		}
