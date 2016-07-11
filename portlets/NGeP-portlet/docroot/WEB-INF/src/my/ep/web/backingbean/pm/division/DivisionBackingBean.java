@@ -108,8 +108,8 @@ public class DivisionBackingBean extends BaseBackingBean<DivisionManagedBean> {
 
 		debugLogger("resetDivisionSearchBean");
 		this.getManagedBean().setLazy(false);
-		this.getManagedBean().setStateCode(new String());
-		this.getManagedBean().setDivisionName(new String());
+		/*this.getManagedBean().setStateCode(new String());
+		this.getManagedBean().setDivisionName(new String());*/
 		this.getManagedBean().setDivisionSearchBean(new DivisionSearchBean());
 		searchDivision = new SearchDivisionPagingDataModel();
 

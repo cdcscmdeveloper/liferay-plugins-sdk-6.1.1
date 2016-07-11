@@ -86,9 +86,9 @@ BaseBackingBean<FundManagedBean> {
 
 		debugLogger("resetFundSearchBean");		
 		this.getManagedBean().setLazy(false);
-		this.getManagedBean().setFundCode(new String());
+	/*	this.getManagedBean().setFundCode(new String());
 		this.getManagedBean().setFundName(new String());		
-		this.getManagedBean().setStatus(null);
+		this.getManagedBean().setStatus(null);*/
 		this.getManagedBean().setFundSearchBean(new FundSearchBean());
 		searchFund = new SearchFundPagingDataModel();
 	}
