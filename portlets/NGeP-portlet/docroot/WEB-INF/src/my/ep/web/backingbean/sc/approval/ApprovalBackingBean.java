@@ -402,25 +402,20 @@ public class ApprovalBackingBean extends
 
 		} else if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE
 						.equalsIgnoreCase(taskName)) {
-			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
-					.getXflagFinalization());
+			SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)obj;
+			paramTypes = getRequestTypes(dataType.getXflagFinalization());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes, 
 					ParameterConst.APPROVAL_DECISION_TYPE_APPROVED);
 			if (CollectionUtils.isNotEmpty(approvalRequests)) {
-				// Get the latest approval request for Extend Proposal Validity Period.
-				ScQtApprovalRequest latestApprovalRequest = approvalRequests.get(0);
+				// Get the approval request for Extend Proposal Validity Period.
 				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-					if (approvalRequest.getApproverActionDate() != null && 
-							latestApprovalRequest.getApproverActionDate() != null &&
-							approvalRequest.getApproverActionDate().after(latestApprovalRequest.getApproverActionDate())) {
-						latestApprovalRequest = approvalRequest;
+					if (approvalRequest.getQtApprovalRequestId().equals(dataType.getRequestId())) {
+						approvalRequests = new ArrayList<ScQtApprovalRequest>();
+						approvalRequests.add(approvalRequest);;
+						break;
 					}
-				}
-				if (latestApprovalRequest != null) {
-					approvalRequests = new ArrayList<ScQtApprovalRequest>();
-					approvalRequests.add(latestApprovalRequest);
 				}
 			}
 			currentStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_PCB_APPROVAL,
