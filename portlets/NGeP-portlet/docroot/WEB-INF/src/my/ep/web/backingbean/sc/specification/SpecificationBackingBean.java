@@ -11313,7 +11313,7 @@ public class SpecificationBackingBean extends
 				.getToBeRemoveProgPayments());
 		spReqDTO.setToBeRemoveRestrictedSupplierList(this.getManagedBean().getToBeRemoveRestrictedSupplierList());
 		spReqDTO.setOutcome(action);
-		spReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		//spReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		if (null != digiSign) {
 			updatePmDigiSignData(digiSign,
 					ParameterConst.DOCTYPE_SPEC_COMMITTE, scQt.getQtId(),
