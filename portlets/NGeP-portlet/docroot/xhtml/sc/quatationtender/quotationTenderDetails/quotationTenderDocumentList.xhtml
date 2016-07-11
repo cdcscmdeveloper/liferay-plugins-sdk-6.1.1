@@ -117,8 +117,4 @@
 				content="#{lbl['lbl.sc.dialog.confirm.document.dtls']}" update="@form" />
 	</p:panel>
 	
-	<ac:scSingleFileUploadPopup widgetVar="documentUploadDlg"
-		fileUploadListener="qTDocumentsBackingBean.handleFileAttachment"
-		readonly="#{createQtBB.managedBean.readOnly}"
-		update="@([id$=documentUploadBtn])" />
 </ui:composition>
