@@ -190,7 +190,7 @@
 					</td>
 					</tr>
 					<tr>
-						<td colspan="3"><p:schedule id="schedule" styleClass="calendarClass"
+						<td colspan="3"><p:schedule id="schedule" styleClass="calendarClass" draggable="false" resizable="false"
 								pattern="dd-MM-yyyy" locale="#{calendarBackingBean.getLocale()}" timeZone="GMT+8"
 								leftHeaderTemplate="" rightHeaderTemplate=""
 								style="width : 700px; height : 600px;"
@@ -209,13 +209,15 @@
 									oncomplete="eventDialog.show();"								
 									/>
 									
-								<ui:remove>
+							<ui:remove>
 									<p:ajax event="eventMove"
 										listener="#{calendarBackingBean.onEventMove}"
-										update="calendarMsg" />
+										update="eventDetails, calendarMsg" />
 									<p:ajax event="eventResize"
-										listener="#{calendarBackingBean.onEventResize}" />
-								</ui:remove>
+										listener="#{calendarBackingBean.onEventResize}"
+										update="eventDetails, calendarMsg" />
+										</ui:remove>
+								
 							</p:schedule></td>
 					</tr>
 				</table>
