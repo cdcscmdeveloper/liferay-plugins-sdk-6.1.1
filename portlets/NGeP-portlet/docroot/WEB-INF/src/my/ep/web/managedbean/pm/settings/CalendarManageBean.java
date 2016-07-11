@@ -28,6 +28,7 @@ public class CalendarManageBean extends BaseManagedBean {
 	private Map<String, String> eventToExTitleValueMap = new HashMap<String, String>();
 	private boolean isNewEvent;
 	private Date initialDate;
+	private boolean disabledUpdate;
 
 	public Map<String, String> getEventToExTitleValueMap() {
 		return eventToExTitleValueMap;
@@ -95,6 +96,20 @@ public class CalendarManageBean extends BaseManagedBean {
 	 */
 	public void setInitialDate(Date initialDate) {
 		this.initialDate = initialDate;
+	}
+
+	/**
+	 * @return the disabledUpdate
+	 */
+	public boolean isDisabledUpdate() {
+		return disabledUpdate;
+	}
+
+	/**
+	 * @param disabledUpdate the disabledUpdate to set
+	 */
+	public void setDisabledUpdate(boolean disabledUpdate) {
+		this.disabledUpdate = disabledUpdate;
 	}
 	
 }
