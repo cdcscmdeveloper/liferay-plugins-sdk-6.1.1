@@ -89,11 +89,11 @@ BaseBackingBean<ProjectManagedBean> {
 
 		debugLogger("resetProjectSearchBean");		
 		this.getManagedBean().setLazy(false);
-		this.getManagedBean().setVotCode(new String());
+	/*	this.getManagedBean().setVotCode(new String());
 		this.getManagedBean().setVotName(new String());
 		this.getManagedBean().setProjectCode(new String());
 		this.getManagedBean().setProjectDesc(new String());
-		this.getManagedBean().setStatus(null);
+		this.getManagedBean().setStatus(null);*/
 		this.getManagedBean().setProjectSearchBean(new ProjectSearchBean());
 		searchProject = new SearchProjectPagingDataModel();
 	}

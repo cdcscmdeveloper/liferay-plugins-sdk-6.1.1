@@ -120,11 +120,11 @@ BaseBackingBean<ProgramActivityManagedBean> {
 
 		debugLogger("resetVotProgramActivitySearchBean");		
 		this.getManagedBean().setLazy(false);
-		this.getManagedBean().setVotCode(new String());
+		/*this.getManagedBean().setVotCode(new String());
 		this.getManagedBean().setVotName(new String());
 		this.getManagedBean().setProgramActivityCode(new String());
 		this.getManagedBean().setProgramActivityDesc(new String());
-		this.getManagedBean().setStatus(null);
+		this.getManagedBean().setStatus(null);*/
 		this.getManagedBean().setProgramSearchBean(new ProgramSearchBean());
 		searchVotProgramActivity = new SearchVotPagingDataModel();
 

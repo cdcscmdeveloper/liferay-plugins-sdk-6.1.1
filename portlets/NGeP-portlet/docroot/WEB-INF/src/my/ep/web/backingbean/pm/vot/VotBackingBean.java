@@ -90,11 +90,11 @@ BaseBackingBean<VotManagedBean> {
 
 		debugLogger("resetVotSearchBean");		
 		this.getManagedBean().setLazy(false);
-		this.getManagedBean().setVotCode(new String());
+		/*this.getManagedBean().setVotCode(new String());
 		this.getManagedBean().setVotName(new String());
 		this.getManagedBean().setKumpulanPtjCode(new String());
 		this.getManagedBean().setKumpulanPtjDesc(new String());
-		this.getManagedBean().setStatus(null);
+		this.getManagedBean().setStatus(null);*/
 		this.getManagedBean().setVotSearchBean(new VotSearchBean());
 		searchVot = new SearchVotPagingDataModel();
 		
