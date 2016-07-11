@@ -5684,7 +5684,10 @@ public class EvaluationBackingBean extends
 				 */
 				resDTO = evaluationSo.checkDemoAndUploadChecklistStatus(reqDTO);
 				if (resDTO.getPendingCount() > 0) {
-					String checklistScoring = ":Scoring is not completed";
+					String checklistScoring = ResourceBundleUtils.getMessage(
+							"lbl.sc.checklist.scoring.completed", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 					this.getManagedBean().setEvaluatioStageActiveIndex(0);
 					throw new EpException(MessageConst.ERROR_760266,
 							new String[] { checklist.getTitle(),
@@ -5781,7 +5784,10 @@ public class EvaluationBackingBean extends
 
 				resDTO = evaluationSo.checkDemoAndUploadChecklistStatus(reqDTO);
 				if (resDTO.getPendingCount() > 0) {
-					String checklistScoring = ":Scoring is not completed";
+					String checklistScoring =  ResourceBundleUtils.getMessage(
+							"lbl.sc.checklist.scoring.completed", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 					/*
 					 * this.getManagedBean().setEvaluatioStageActiveIndex(0);
 					 * throw new EpException(MessageConst.ERROR_760266, new
