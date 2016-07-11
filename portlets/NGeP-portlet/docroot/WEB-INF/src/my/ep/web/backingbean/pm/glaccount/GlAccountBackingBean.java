@@ -85,9 +85,9 @@ public class GlAccountBackingBean extends
 	public void resetGlAccountSearchBean() {
 		debugLogger("resetGlAccountSearchBean");		
 		this.getManagedBean().setLazy(false);
-	    this.getManagedBean().setGlAccountCode(new String());
+	   /* this.getManagedBean().setGlAccountCode(new String());
 	    this.getManagedBean().setGlAccountName(new String());
-	    this.getManagedBean().setStatus(null);
+	    this.getManagedBean().setStatus(null);*/
 	    this.getManagedBean().setGlAccountSearchBean(new GlAccountSearchBean());
 		searchGlAccount = new SearchGlAccountPagingDataModel();
 	}
