@@ -939,26 +939,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return null;
 	}
 
-	/**
-	 * Get GST sample stream content
-	 * 
-	 * @return StreamedContent
-	 */
-	public StreamedContent getGstSample() {
-		StreamedContent retVal = null;
-		try {
-			retVal = SmCommonUtil.getFileStreamContentByTypeAndPath(
-					"/sm/shared/mofRegistration/gstSample.pdf",
-					"application/pdf");
-		} catch (IOException e) {
-			throw new EpException(e.getMessage());
-		}
-		return retVal;
-	}
-
-	public void onClickGstSample(String dialogWidget) {
-		RequestContext.getCurrentInstance().execute(dialogWidget + ".show()");
-	}
 
 	/**
 	 * Success message.
