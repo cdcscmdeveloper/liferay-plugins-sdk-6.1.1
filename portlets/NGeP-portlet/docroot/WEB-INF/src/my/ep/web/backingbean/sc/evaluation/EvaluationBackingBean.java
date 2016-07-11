@@ -140,6 +140,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.common.ScRemarkAndAttachmentBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -6394,20 +6395,29 @@ public class EvaluationBackingBean extends
 			}
 			if (!isAtleastOneChairPersonAttendance(chairPersonList)) {
 				throw new EpException(MessageConst.ERROR_760252, new String[] {
-						"ChairPerson",
+						ResourceBundleUtils
+						.getMessage("lbl.sc.chairperson",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()),
 						getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
 								this.getManagedBean().getCommitteeType()) });
 			}
 			if (!isAtleastOneSecretaryAttendance(secretaryList)) {
 				throw new EpException(MessageConst.ERROR_760252, new String[] {
-						"Secretary",
+						ResourceBundleUtils
+						.getMessage("lbl.sc.secretary",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()),
 						getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
 								this.getManagedBean().getCommitteeType()) });
 			}
 
 			if (!isAtleastOneMemberAttendance(memberList)) {
 				throw new EpException(MessageConst.ERROR_760252, new String[] {
-						"Member",
+						ResourceBundleUtils
+						.getMessage("lbl.sc.member",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()),
 						getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
 								this.getManagedBean().getCommitteeType()) });
 			}
