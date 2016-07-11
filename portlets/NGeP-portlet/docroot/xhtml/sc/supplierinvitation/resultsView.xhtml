@@ -28,7 +28,7 @@
 		<p:dataTable id="scSuppInviteTblId"
 			value="#{scSupplirInvitationdBB.supplierInvitationModel}" lazy="true"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			 style="width:100%" var="supplierInviteList" rows="10" rowIndexVar="rowIndex">
+			 style="width:100%" var="supplierInviteList" rows="5" rowIndexVar="rowIndex">
 			<ac:paginator for="scSuppInviteTblId" />
 			
 			<ui:param name="statusId" value="#{supplierInviteList[4]}"></ui:param>
