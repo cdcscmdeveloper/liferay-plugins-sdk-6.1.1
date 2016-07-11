@@ -201,6 +201,8 @@ public class GovtSellerRegistrationBackingBean extends
 		if (orgProfile != null) {
 			if (orgProfile.getSmSupplier() != null
 					&& orgProfile.getSmSupplier().getRecordStatusFlg() != null) {
+				SmPersonnel activatedPersonnel = getActivatedPersonnel(orgProfile
+						.getSmSupplier().getSmAppl().getSmPersonnels());
 				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 					// Selected agency account already deactivated. Please
 					// reactivate the account
@@ -210,12 +212,15 @@ public class GovtSellerRegistrationBackingBean extends
 							&& !SmCommonUtil.isCollectionEmpty(orgProfile
 									.getSmSupplier().getSmAppl()
 									.getSmPersonnels())) {
-						if (isPersonnelAlreadyActivated(orgProfile
-								.getSmSupplier().getSmAppl().getSmPersonnels())) {
-							// Selected agency already had account. Please login
-							// into ePerolehan system using existing login ID
-							// and password
-							throw new EpException(MessageConst.ERROR_722623);
+
+						if (activatedPersonnel != null) {
+							// Selected agency already had account. Please
+							// contact:- Sir/Madam: {0} / Mobile No.: {1}
+							throw new EpException(
+									MessageConst.ERROR_722623,
+									new String[] {
+											activatedPersonnel.getName(),
+											activatedPersonnel.getMobileFull() });
 						} else {
 							// Selected agency already had account but has not
 							// activated the account. Please activate the
@@ -226,10 +231,21 @@ public class GovtSellerRegistrationBackingBean extends
 					}
 				} else {
 					if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
-						// Selected agency already had account. Please login
-						// into ePerolehan system using existing login ID
-						// and password
-						throw new EpException(MessageConst.ERROR_722623);
+						if (activatedPersonnel != null) {
+							// Selected agency already had account. Please
+							// contact:- Sir/Madam: {0} / Mobile No.: {1}
+							throw new EpException(
+									MessageConst.ERROR_722623,
+									new String[] {
+											activatedPersonnel.getName(),
+											activatedPersonnel.getMobileFull() });
+						} else {
+							// Selected agency already had account but has not
+							// activated the account. Please activate the
+							// account using activation link that had been sent
+							// to the user's email address.
+							throw new EpException(MessageConst.ERROR_722624);
+						}
 					} else {
 						// Unknown problem occurred. Invalid or missing data.
 						// Please
@@ -1052,13 +1068,14 @@ public class GovtSellerRegistrationBackingBean extends
 	 *            <SmPersonnel> personnels
 	 * @return boolean
 	 */
-	private boolean isPersonnelAlreadyActivated(List<SmPersonnel> personnels) {
-		boolean retVal = false;
+	private SmPersonnel getActivatedPersonnel(List<SmPersonnel> personnels) {
+		SmPersonnel retVal = null;
 		for (SmPersonnel personnel : personnels) {
 			if (StringUtils.isNotBlank(personnel.getEpRole())
 					&& personnel.getPmUser() != null
 					&& personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				retVal = true;
+				retVal = personnel;
+				break;
 			}
 		}
 		return retVal;
