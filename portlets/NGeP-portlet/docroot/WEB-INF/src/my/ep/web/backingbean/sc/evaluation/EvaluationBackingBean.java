@@ -9694,7 +9694,7 @@ public class EvaluationBackingBean extends
 				return docMaster;
 			} else {
 				throw new EpException(
-						"Please create Standard Document Template");
+						MessageConst.ERROR_760417);
 			}
 		} finally {
 			templateDocSO = null;
