@@ -49,6 +49,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -646,6 +647,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 			getManagedBean().setProfBodyLs(
 					SmApplicationUtil.retrievePmProfBodyList());
+			getManagedBean().setProfBodyItems(
+					SmApplicationUtil.getProfBodyItems());
 
 			getManagedBean().setUomLs(SmApplicationUtil.retrieveUomList());
 			getManagedBean()
@@ -6169,13 +6172,6 @@ public class SmApplicationBackingBean extends
 	 * selected SmPersonnel.
 	 */
 	public void addOrUpdateShrHldrProfBody() {
-		for (PmCertBody cert : getManagedBean().getProfBodyLs()) {
-			if (getManagedBean().getSelectedStfPrfBdy().getPmCertBody()
-					.getCertBodyId().equals(cert.getCertBodyId())) {
-				getManagedBean().getSelectedStfPrfBdy().setPmCertBody(cert);
-				break;
-			}
-		}
 		if (getManagedBean().getSelectedShareHolder().getSmAssociationBodies()
 				.contains(getManagedBean().getSelectedStfPrfBdy())) {
 
@@ -6210,6 +6206,18 @@ public class SmApplicationBackingBean extends
 					new String[] { SmCommonUtil.getMessage(
 							"lbl.sm.personnel.dash.profbody", null) });
 		}
+	}
+
+	/**
+	 * Load cert body from DB based on selected id and set to PmCertBody object
+	 */
+	public void onChangeProfBody() {
+		CertBodyReqDTO reqDTO = new CertBodyReqDTO();
+		reqDTO.setCertBodyId(getManagedBean().getSelectedStfPrfBdy()
+				.getPmCertBody().getCertBodyId());
+		PmCertBody selCertBody = SmServiceLookup.getCertBodySO()
+				.retrievePmCertBodyDtlById(reqDTO).getCertBody();
+		getManagedBean().getSelectedStfPrfBdy().setPmCertBody(selCertBody);
 	}
 
 	/**
