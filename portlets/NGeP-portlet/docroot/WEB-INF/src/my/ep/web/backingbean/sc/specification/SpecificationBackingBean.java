@@ -11770,8 +11770,12 @@ public class SpecificationBackingBean extends
 
 		// Need to redirect particualr page..
 		if (resDTO.isSuccessful()) {
-			if (resDTO.getScQt() != null) {
-				this.getManagedBean().setQt(resDTO.getScQt());
+			ScQt qt = resDTO.getScQt();
+			if (qt != null) {
+				this.getManagedBean().setQt(qt);
+				if (qt.getEstimatedAmount() != null) {
+					new CreateQtBackingBean().setProcurementMode(qt,qt.getEstimatedAmount());
+				}
 			}
 			List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
 			this.getManagedBean().setFinancialScoring(null);
@@ -12343,8 +12347,12 @@ public class SpecificationBackingBean extends
 
 		// Need to redirect particualr page..
 		if (resDTO.isSuccessful()) {
-			if (resDTO.getScQt() != null) {
-				this.getManagedBean().setQt(resDTO.getScQt());
+			ScQt qt = resDTO.getScQt();
+			if (qt != null) {
+				this.getManagedBean().setQt(qt);
+				if(qt.getEstimatedAmount() != null){
+					new CreateQtBackingBean().setProcurementMode(qt, qt.getEstimatedAmount());
+				}
 			}
 
 			List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
