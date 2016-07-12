@@ -394,9 +394,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					 getManagedBean().getContractVer().getCtContract().getSmSupplier()));
 		}
 		else {
-			  getManagedBean().setCtAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+			if (getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null) {
+				getManagedBean().setCtAddress(
+						getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress());
+			} else {
+				getManagedBean().setCtAddress(
+						getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+			} 
 		}
-		 getManagedBean().setSupplierAddress(getFullAddress(getManagedBean().getCtAddress()));
+		getManagedBean().setSupplierAddress(getFullAddress(getManagedBean().getCtAddress()));
 	}	
 	
 	/**

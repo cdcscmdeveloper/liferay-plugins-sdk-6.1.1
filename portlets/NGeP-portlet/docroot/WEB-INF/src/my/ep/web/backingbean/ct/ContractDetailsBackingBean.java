@@ -582,7 +582,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
          		ctContractVer.getCtContractValue().setSupplierRegNo(ctBB.getManagedBean().getSupplierRegNo());
          		ctContractVer.getCtContractValue().setSupplierMofNo(ctBB.getManagedBean().getSupplierMofNo());
          	}
-         	if (ctContractVer.getCtContractValue().isAddressChange()) {
+         	if (ctBB.getManagedBean().getCtAddress() != null) {
          		ctContractVer.getCtContractValue().setSupplierAddress(ctBB.getManagedBean().getCtAddress());
          	}
             reqDTO.setCtContractVer(ctContractVer);
