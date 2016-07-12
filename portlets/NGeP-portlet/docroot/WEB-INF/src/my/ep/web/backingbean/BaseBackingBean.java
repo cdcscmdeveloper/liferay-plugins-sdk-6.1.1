@@ -1694,7 +1694,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * @param amount
 	 */
 	protected void validateAmount(String label, BigDecimal amount) {
-		if(amount.precision()!=13 || amount.scale()!=2) {
+		if((amount.precision()-amount.scale())>11 || amount.scale()>2) {
 			CommonUtils commonUtils = new CommonUtils();
 			DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 			throw new EpException(MessageConst.ERROR_100039, new String[]{label+" "+nf.format(amount),nf.format(BigDecimal.ZERO),nf.format(new BigDecimal("99999999999.99"))});
