@@ -76,6 +76,8 @@
 				selection="#{simpleQuoteBackingBean.managedBean.selectedQuote}"
 				selectionMode="single" rowKey="#{scQuote.quoteId}" rows="5"
 				rowIndexVar="index" lazy="true">
+				<p:ajax event="rowSelect" update=":form:proceedButton" />
+                <p:ajax event="rowUnselect"  update=":form:proceedButton" />
 				<ac:paginator for="scQuoteDataModel" />
 
 				<p:column headerText="#{lbl['lbl.sc.sq.simple.quote.no']}">
@@ -106,6 +108,8 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.proceed']}"
+				    disabled="#{simpleQuoteBackingBean.managedBean.selectedQuote eq null}"
+				    id="proceedButton"
 				    styleClass="BtnSpacing"
 					action="#{simpleQuoteBackingBean.addCloneItemSpec(simpleQuoteBackingBean.managedBean.productOrService)}"
 					partialSubmit="true" process="@this citemId"
