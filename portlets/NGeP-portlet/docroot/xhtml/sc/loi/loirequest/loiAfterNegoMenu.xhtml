@@ -12,6 +12,7 @@
 		toggleable="true">
 		<p:dataTable id="suppDocTbl" var="scLoiSuppDoc"
 			widgetVar="suppDocTblWidget"
+			rowIndexVar="rowIndex"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs}"
 			rows="10" rowKey="#{scLoiSuppDoc}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -44,21 +45,16 @@
 
 			<p:column style="width:20%;text-align: center;"
 				headerText="#{lbl['lbl.sc.upload']}">
-				<ui:fragment>
-					<h:commandLink
-						value="#{scLoiSuppDoc.scLoiSupportingDocAttachment.fileName}"
-						styleClass="blue_font" immediate="true"
-						action="#{lOIDetailBackingBean.downloadFile(scLoiSuppDoc.scLoiSupportingDocAttachment)}" />
 
-					<p:commandButton oncomplete="loiSuppAttmPopupDlg.show();"
-						disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
-						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
-						process="@this" update="@([id$=loiSuppAttmPopup])">
-						<f:setPropertyActionListener
-							target="#{lOIDetailBackingBean.managedBean.selectedScLoiSuppDoc}"
-							value="#{scLoiSuppDoc}" />
-					</p:commandButton>
-				</ui:fragment>
+				<ac:scSingleFileUploadButton id="supportDocUploadBtn"
+					readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
+					popupWidgetVar="supportDocUploadDlg"
+					attachment="#{scLoiSuppDoc.scLoiSupportingDocAttachment}"
+					rowIndex="#{rowIndex}">
+					<f:setPropertyActionListener for="actionEvent"
+						target="#{lOIDetailBackingBean.managedBean.selectedScLoiSuppDoc}"
+						value="#{scLoiSuppDoc}" />
+				</ac:scSingleFileUploadButton>
 			</p:column>
 
 		</p:dataTable>

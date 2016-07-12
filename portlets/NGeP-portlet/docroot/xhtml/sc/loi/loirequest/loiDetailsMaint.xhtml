@@ -149,22 +149,10 @@
 			</tr>
 		</table>
 
-		<p:dialog id="loiSuppAttmPopup" widgetVar="loiSuppAttmPopupDlg"
-			modal="true" resizable="false" width="700px" height="200"
-			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
-
-			<p:ajax event="close" />
-			<p:fileUpload style="display:inline;"
-				fileUploadListener="#{lOIDetailBackingBean.handleSuppDocFileUpload}"
-				mode="advanced" id="uploadattachment"
-				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-				label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-				cancelLabel="#{lbl['lbl.btn.cancel']}"
-				update="@form" oncomplete="loiSuppAttmPopupDlg.hide()">
-			</p:fileUpload>
-		</p:dialog>
+		<ac:scSingleFileUploadPopup widgetVar="supportDocUploadDlg"
+			fileUploadListener="lOIDetailBackingBean.handleSuppDocFileUpload"
+			readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
+			update="@([id$=supportDocUploadBtn])" />
 
 		<ui:include src="loiPreviewLetterPopup.xhtml" />
 
