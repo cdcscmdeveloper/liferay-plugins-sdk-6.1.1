@@ -106,37 +106,10 @@
 		</tr>
 		</table>
 		
-		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg" 
-			modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
-			header="#{lbl['lbl.txt.choose.files']}">
-			
-			<p:ajax event="close" />
-			
-			<c:if test="#{lOADetailBackingBean.managedBean.attachmentDocType != ParameterConst.doctypeLetterOfAward}">
-				<p:fileUpload style="display:inline;"
-					fileUploadListener="#{lOADetailBackingBean.handleFileUpload}"
-					mode="advanced" id="uploadattachment"
-					sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-					label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-					cancelLabel="#{lbl['lbl.btn.cancel']}"
-					update="menuContent" oncomplete="attachmentPopupDlg.hide()">
-				</p:fileUpload>
-			</c:if>
-			<c:if test="#{lOADetailBackingBean.managedBean.attachmentDocType == ParameterConst.doctypeLetterOfAward}">
-				<p:fileUpload style="display:inline;"
-					fileUploadListener="#{lOADetailBackingBean.handleFileUpload}"
-					mode="advanced" id="uploadattachment"
-					sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-					allowTypes="/(\.|\/)(pdf)$/"
-					invalidFileMessage="#{lbl['lbl.txt.upload.pdf.only']}"
-					label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-					cancelLabel="#{lbl['lbl.btn.cancel']}"
-					update="menuContent" oncomplete="attachmentPopupDlg.hide()">
-				</p:fileUpload>
-			</c:if>
-		</p:dialog>
+		<ac:scSingleFileUploadPopup widgetVar="scDocUploadDlg"
+			fileUploadListener="lOADetailBackingBean.handleFileUpload"
+			readonly="#{lOADetailBackingBean.managedBean.readOnly}"
+			update="@([id$=scDocUploadBtn])" />
 		
 		<p:confirmDialog widgetVar="gstSignerConfirmPopupWin"
 			id="gstSignerConfirmPopup" width="500px"

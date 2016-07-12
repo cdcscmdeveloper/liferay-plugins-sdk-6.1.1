@@ -11,6 +11,7 @@
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			var="scLoaReport"
+			rowIndexVar="rowIndex"
 			value="#{directLOABackingBean.managedBean.scLoa.scLoaReports}"
 			rows="10" rowKey="#{scLoaReport}"
 			selection="#{directLOABackingBean.managedBean.selectedScLoaReports}">
@@ -48,24 +49,24 @@
 
 			<p:column style="width:15%;text-align: center;"
 				headerText="#{lbl['lbl.sc.upload']}" disabled="#{!isEditableStatus}">
+			   <h:panelGroup id="docUploadId">
 				<ui:fragment
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
-					<h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
-
-					<p:commandButton oncomplete="attachmentPopupDlg.show();"
-						disabled="#{directLOABackingBean.managedBean.readOnly}"
-						rendered="#{isEditableStatus}"
-						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
-						process="@this" update="@([id$=attachmentPopup])">
-						<f:setPropertyActionListener
+					<ac:scSingleFileUploadButton id="scDocUploadBtn"
+						popupWidgetVar="scDocUploadDlg"
+						attachment="#{scLoaReport.scLoaReportAttachment}"
+						readonly="#{directLOABackingBean.managedBean.readOnly}"
+						rowIndex="#{rowIndex}">
+						<f:setPropertyActionListener for="actionEvent"
 							target="#{directLOABackingBean.managedBean.selectedScLoaReport}"
 							value="#{scLoaReport}" />
-						<f:setPropertyActionListener
+						<f:setPropertyActionListener for="actionEvent"
 							target="#{directLOABackingBean.managedBean.attachmentDocType}"
 							value="LAR" />
-					</p:commandButton>
+					</ac:scSingleFileUploadButton>
 
 				</ui:fragment>
+				</h:panelGroup>
 			</p:column>
 
 			<p:column style="width:10%;text-align: center;"
@@ -133,6 +134,7 @@
 			widgetVar="suppDocTblWidget"
 			value="#{directLOABackingBean.managedBean.scLoa.scLoaSupportingDocs}"
 			rows="10" rowKey="#{scLoaSuppDoc}"
+			rowIndexVar="rowIndex"
 			selection="#{directLOABackingBean.managedBean.selectedScLoaSuppDocs}">
 
 			<ac:paginator for="suppDocTbl" />
@@ -167,24 +169,15 @@
 
 			<p:column style="width:15%;text-align: center;"
 				headerText="#{lbl['lbl.sc.upload']}">
-				<ui:fragment>
-					<h:commandLink
-						disabled="#{directLOABackingBean.managedBean.readOnly}"
-						value="#{scLoaSuppDoc.scLoaSupportingDocAttachment.fileName}"
-						styleClass="blue_font" immediate="true"
-						action="#{directLOABackingBean.downloadFile(scLoaSuppDoc.scLoaSupportingDocAttachment)}" />
-
-					<p:commandButton oncomplete="loaSuppAttmPopupDlg.show();"
-						disabled="#{directLOABackingBean.managedBean.readOnly}"
-						rendered="#{isEditableStatus}"
-						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
-						process="@this" update="@([id$=loaSuppAttmPopup])">
-						<f:setPropertyActionListener
-							target="#{directLOABackingBean.managedBean.selectedScLoaSuppDoc}"
-							value="#{scLoaSuppDoc}" />
-					</p:commandButton>
-
-				</ui:fragment>
+				<ac:scSingleFileUploadButton id="supportDocUploadBtn"
+					popupWidgetVar="supportDocUploadDlg"
+					attachment="#{scLoaSuppDoc.scLoaSupportingDocAttachment}"
+					readonly="#{directLOABackingBean.managedBean.readOnly}"
+					rowIndex="#{rowIndex}">
+					<f:setPropertyActionListener for="actionEvent"
+						target="#{directLOABackingBean.managedBean.selectedScLoaSuppDoc}"
+						value="#{scLoaSuppDoc}" />
+				</ac:scSingleFileUploadButton>
 			</p:column>
 
 		</p:dataTable>

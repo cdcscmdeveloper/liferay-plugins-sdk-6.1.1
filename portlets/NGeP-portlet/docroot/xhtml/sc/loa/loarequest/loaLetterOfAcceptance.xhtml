@@ -10,6 +10,7 @@
 		id="loaletterOfAcceptancePanelIds" toggleable="true">
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget"
 			var="scLoaReport"
+			rowIndexVar="rowIndex"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoaReports}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rows="10"
 			rowKey="#{scLoaReport}">
@@ -51,18 +52,18 @@
 				headerText="#{lbl['lbl.sc.upload']}" rendered="#{isEditableStatus}">
 				<ui:fragment
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
-					<h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
-					<p:commandButton oncomplete="attachmentPopupDlg.show();"
-						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
-						process="@this" update="@([id$=attachmentPopup])">
-						<f:setPropertyActionListener
+					<ac:scSingleFileUploadButton id="scDocUploadBtn"
+						popupWidgetVar="scDocUploadDlg"
+						attachment="#{scLoaReport.scLoaReportAttachment}"
+						readonly="#{lOADetailBackingBean.managedBean.readOnly}"
+						rowIndex="#{rowIndex}">
+						<f:setPropertyActionListener for="actionEvent"
 							target="#{lOADetailBackingBean.managedBean.selectedScLoaReport}"
 							value="#{scLoaReport}" />
-						<f:setPropertyActionListener
+						<f:setPropertyActionListener for="actionEvent"
 							target="#{lOADetailBackingBean.managedBean.attachmentDocType}"
 							value="LAR" />
-					</p:commandButton>
+					</ac:scSingleFileUploadButton>
 				</ui:fragment>
 			</p:column>
 
