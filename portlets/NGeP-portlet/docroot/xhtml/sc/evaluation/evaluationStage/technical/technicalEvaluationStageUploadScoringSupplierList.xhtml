@@ -29,7 +29,7 @@
 				update="complianceTechnicalSupplier" />
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:20%">
+				style="width:20%; text-align:center;">
 
 				<h:outputText
 					value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}"></h:outputText>
@@ -60,7 +60,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
-				style="width:15%">
+				style="width:15%;">
 				<p:inputText value="#{complianceTechnicalSupplier.totalUserScore}"
 					id="technicaluploadNoActionUserScoreId"
 					label="#{lbl['lbl.tpl.spec.content.user.score']}"
