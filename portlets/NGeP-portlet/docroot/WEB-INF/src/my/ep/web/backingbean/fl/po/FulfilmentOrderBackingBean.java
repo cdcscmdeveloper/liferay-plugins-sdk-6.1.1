@@ -1108,7 +1108,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				crBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				crBB.getManagedBean().setDeclarationCheck(true);
 				flBB.getManagedBean().setHideRemarks(true);
-				crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
 				IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 				ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
 				if(null != resDTO.getFlFulfilmentRequest()){
