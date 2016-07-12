@@ -13,6 +13,7 @@ import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireReqDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAnswer;
 import my.ep.persistence.entity.sm.SmQuestion;
 import my.ep.persistence.entity.sm.SmSupplierAnswer;
@@ -20,6 +21,7 @@ import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.questionnaire.QuestionnaireManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
@@ -96,6 +98,13 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 			log.info("Desc >>>>>" + suppAns.getSmQuestion().getSmAnswerCategory().getAnswerCategoryDesc());
 			log.info("Answer Id>>>>>" + suppAns.getSmAnswer().getAnswerId());
 		}
+		
+		FacesScopes fs = new FacesScopes();
+		List<String> useList = new ArrayList<String>();
+		PmUser loginUser = fs.getUserSessionBean();
+		useList.add(loginUser.getLoginId());
+		reqDTO.setUserList(useList);
+		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 		
 		QuestionnaireResDTO resDTO = reqSO.questionnaireSubmission(reqDTO);
 
