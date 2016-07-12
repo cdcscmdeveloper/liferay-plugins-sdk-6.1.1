@@ -32,13 +32,13 @@
 						<p:selectBooleanCheckbox id="selAllChk"
 							value="#{requestNoteBackingBean.flag}">
 							<p:ajax partialSubmit="true" process="@this"
-								update="@([id$=requestNodeDeleteBtnId])"
+								update="@form"
 								listener="#{requestNoteBackingBean.selectAll}"></p:ajax>
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{requestNoteDtl.selected}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="@([id$=requestNodeDeleteBtnId])"
+							update="@form"
 							listener="#{requestNoteBackingBean.selectSingleRow}" />
 					</p:selectBooleanCheckbox>
 				</p:column>
@@ -291,22 +291,25 @@
 
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
+				disabled="#{requestNoteBackingBean.deleteselectedList(requestNoteBackingBean.managedBean.requestNoteDtls)}"
 				partialSubmit="true" process="@this"
 				rendered="#{!isViewOnly and isSourcheMethodAsSC}"
-				onclick="applyAllPopUp.show();"/>
+				onclick="applyAllPopUp.show();" />
 
 			<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
+				disabled="#{requestNoteBackingBean.deleteselectedList(requestNoteBackingBean.managedBean.requestNoteDtls)}"
 				partialSubmit="true" process="@this"
 				rendered="#{!(isViewOnly or isSourcheMethodAsSC)}"
-				onclick="applyAllPopUpSQ.show();"/>
+				onclick="applyAllPopUpSQ.show();" />
 
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
-			disabled="#{isViewOnly or requestNoteBackingBean.deleteselectedList(requestNoteBackingBean.managedBean.requestNoteDtls)}" 
-			id="requestNodeDeleteBtnId"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+				disabled="#{isViewOnly or requestNoteBackingBean.deleteselectedList(requestNoteBackingBean.managedBean.requestNoteDtls)}"
+				id="requestNodeDeleteBtnId"
 				rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
-				partialSubmit="true" onclick="deleteConformDlg.show();" update="@([id$=#{deleteConformDlgRequestNode}])" >
-				</p:commandButton>
+				partialSubmit="true" onclick="deleteConformDlg.show();"
+				update="@([id$=#{deleteConformDlgRequestNode}])">
+			</p:commandButton>
 		</div>
 		<ui:param name="deleteConformDlgRequestNode"
 			value="deleteConformDlgRequestNode"></ui:param>
