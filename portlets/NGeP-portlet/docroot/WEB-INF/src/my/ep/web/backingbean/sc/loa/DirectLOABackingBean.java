@@ -213,10 +213,10 @@ public class DirectLOABackingBean extends
 		debugLogger("saveAction");
 		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 		try {
-
+           String outcome = BpmOutcomeConst.BPM_SAVE;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
-			parseLOADetails(scLoa, BpmOutcomeConst.BPM_SAVE, reqDTO);
+			parseLOADetails(scLoa, outcome, reqDTO);
 
 			validateSupplierDetails(scLoa);
 			validateDeductionPaymentDtls(scLoa);
@@ -226,7 +226,7 @@ public class DirectLOABackingBean extends
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
 			reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+			reqDTO.setOutcome(outcome);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			updateToBeDeleteSpecAnswersTOReq(reqDTO);
@@ -1853,11 +1853,8 @@ public class DirectLOABackingBean extends
 
 		if (startMonth != null && endMonth != null && startYear != null
 				&& endYear != null) {
-			Date currentDate = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
-			String localDate = sdf.format(currentDate);
-			String day = localDate.substring(0, 2);
 			String fromDate = 01 + "/" + startMonth + "/" + startYear;
 			String toDate = 01 + "/" + endMonth + "/" + endYear;
 			Date startDate = sdf.parse(fromDate);
@@ -4414,24 +4411,11 @@ public class DirectLOABackingBean extends
 		return orginalText;
 	}
 
-	private PmOrgProfile ptjOrgProfileByLoginUser() {
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			reqDTO.setOrgType(OrganizationType.DIVISION.value());
-			// reqDTO.setParentOrgProfileId(parentOrgProfileId);
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IOrgProfileSO.class);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
-			return resDTO.getOrgProfileList().get(0);
-		} else {
-			throw new EpException("Please login");
-
-		}
-	}
-
+	/**
+	 * Ministry dropdown list.
+	 *
+	 * @return the list
+	 */
 	public List<PmOrgProfile> ministryDropdownList() {
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 
