@@ -3989,6 +3989,7 @@ public class SimpleQuoteBackingBean extends
 		} finally {
 			templateSpecSO = null;
 		}
+		getManagedBean().setSelectedQuote(null);
 	}
 
 	/*
@@ -4030,6 +4031,8 @@ public class SimpleQuoteBackingBean extends
 	 *            the product or service
 	 */
 	public void cloneAction(String productOrService) {
+		debugLogger("cloneAction - clone product or service item");
+		getManagedBean().setSelectedQuote(null);
 		if (productOrService != null) {
 			if (productOrService.equals(ParameterConst.SQ_ITEM_LIST_PRODUCT)) {
 				getManagedBean().setProductOrService(productOrService);
