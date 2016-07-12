@@ -714,7 +714,12 @@
 				width="100%" 
 				selection="#{contractRequestBackingBean.managedBean.selectedContractedItemList}">
 				<ac:paginator for="itemListResultDt" />
-				<p:column selectionMode="multiple" styleClass="td-check-box-spacing"/>
+				<p:column selectionMode="multiple" styleClass="td-check-box-spacing" />
+				<p:ajax event="rowSelectCheckbox" update=":form:itemAddButton"></p:ajax>
+				<p:ajax event="rowUnselectCheckbox" update=":form:itemAddButton"></p:ajax>
+				<p:ajax event="rowSelect" update=":form:itemAddButton" ></p:ajax>
+				<p:ajax event="rowUnselect" update=":form:itemAddButton" ></p:ajax>
+				<p:ajax event="toggleSelect" update=":form:itemAddButton"></p:ajax>
 				<p:column
 					headerText="#{lbl['lbl.fl.item.type']}">
 					<h:outputText
@@ -729,12 +734,13 @@
 				</p:column>
 			</p:dataTable>
 
-		</p:panel>
+		
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton  value="#{lbl['lbl.btn.add']}"
+			<p:commandButton  value="#{lbl['lbl.btn.add']}" id="itemAddButton"
 				action="#{contractRequestBackingBean.updateContractedItemDt}"
 				oncomplete="addItems.hide();" update="itemDataTable,messages"
+				disabled="#{contractRequestBackingBean.managedBean.selectedContractedItemList.size() == 0 }"
 				process="@this,itemListResultDt">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
@@ -742,6 +748,7 @@
 				partialSubmit="true">
 			</p:commandButton>
 		</div>
+		</p:panel>
 	</p:dialog>
 	
 	<p:dialog id="uomRefDlg" header="#{lbl['lbl.fl.instruction.uom.table']}" 
