@@ -13158,6 +13158,7 @@ public class ReportBackingBean extends
 		} else {
 			this.setValuesEmpty(true);
 		}
+		getOrgTypeDropdownValues();
 	}
 
 	/**
@@ -18841,10 +18842,22 @@ public class ReportBackingBean extends
 			if (StringUtils.isNotEmpty(this.getPmOrgCategory())
 					&& this.getPmOrgCategory().equals(ReportConst.FEDERAL_GOVT)) {
 				searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
+				
+				if (searchBean1 != null) {
+					searchBean1.getSortColumns();
+
+					itemsList = getDropdownValuesBySearchBean(
+							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
+				}
 
 			} else if (StringUtils.isNotEmpty(this.getPmOrgCategory())
 					&& this.getPmOrgCategory().equals(ReportConst.OTHERS)) {
 				searchBean1 = getOrgTypeSearchBean("orgTypeOthersList");
+				if (searchBean1 != null) {
+					searchBean1.getSortColumns();
+					itemsList = getDropdownValuesBySearchBean(
+							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
+				}
 			} else {
 				searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
 				if (searchBean1 != null) {
@@ -18854,13 +18867,13 @@ public class ReportBackingBean extends
 							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
 				}
 			}
-			if (StringUtils.isNotEmpty(this.getPmOrgCategory())) {
+			/*if (StringUtils.isNotEmpty(this.getPmOrgCategory())) {
 				if (searchBean1 != null) {
 					searchBean1.getSortColumns();
 					itemsList = getDropdownValuesBySearchBean(
 							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
 				}
-			}
+			}*/
 		} else if (this.reportValue
 				.equals(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
 			itemsList = getAllOrgTypeList(federalItems, otherItems);
