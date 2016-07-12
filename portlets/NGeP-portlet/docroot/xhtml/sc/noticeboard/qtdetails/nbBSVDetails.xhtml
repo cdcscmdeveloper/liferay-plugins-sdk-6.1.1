@@ -23,6 +23,15 @@
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="width:30%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.bsvDesc}" />
+						<br />
+						<ui:param name="bsvDescField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_DESC}" />
+						<ui:param name="bsvDescChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvDescField]}" />
+						<h:panelGroup rendered="#{!empty bsvDescChangeDate}">
+							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+							<h:outputText value="#{bsvDescChangeDate}" styleClass="lastUpdated">
+								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+							</h:outputText>
+						</h:panelGroup>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.date.time']}"
 						style="width:18%;white-space: normal;">
@@ -30,6 +39,15 @@
 							<f:convertDateTime
 								pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 						</h:outputText>
+						<br />
+						<ui:param name="bsvDateField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_DATE}" />
+						<ui:param name="bsvDateChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvDateField]}" />
+						<h:panelGroup rendered="#{!empty bsvDateChangeDate}">
+							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+							<h:outputText value="#{bsvDateChangeDate}" styleClass="lastUpdated">
+								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+							</h:outputText>
+						</h:panelGroup>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.location']}"
@@ -39,14 +57,59 @@
 							oncomplete="popupLoc.show()" update="@(.locationpopup)">
 							<h:outputText value="#{brfsitdtl.location}" />
 						</p:commandLink>
+						<br />
+						<ui:param name="bsvLocationField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_LOCATION}" />
+						<ui:param name="bsvLocationChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvLocationField]}" />
+						<ui:param name="bsvAddress1Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_1}" />
+						<ui:param name="bsvAddress1ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress1Field]}" />
+						<ui:param name="bsvAddress2Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_2}" />
+						<ui:param name="bsvAddress2ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress2Field]}" />
+						<ui:param name="bsvAddress3Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_3}" />
+						<ui:param name="bsvAddress3ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress3Field]}" />
+						<ui:param name="bsvAddress4Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_4}" />
+						<ui:param name="bsvAddress4ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress4Field]}" />
+						<ui:param name="bsvAddressPostcodeField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_POSTCODE}" />
+						<ui:param name="bsvAddressPostcodeChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressPostcodeField]}" />
+						<ui:param name="bsvAddressCityField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_CITY}" />
+						<ui:param name="bsvAddressCityChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressCityField]}" />
+						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress1ChangeDate}" />
+						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress2ChangeDate}" />
+						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress3ChangeDate}" />
+						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress4ChangeDate}" />
+						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressPostcodeChangeDate}" />
+						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressCityChangeDate}" />
+						<h:panelGroup rendered="#{!empty bsvLocationChangeDate}">
+							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+							<h:outputText value="#{bsvLocationChangeDate}" styleClass="lastUpdated">
+								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+							</h:outputText>
+						</h:panelGroup>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
 						style="width:18%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+						<br />
+						<ui:param name="coordinatingOfficerField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_COORDINATING_OFFICER}" />
+						<ui:param name="coordinatingOfficerChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[coordinatingOfficerField]}" />
+						<h:panelGroup rendered="#{!empty coordinatingOfficerChangeDate}">
+							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+							<h:outputText value="#{coordinatingOfficerChangeDate}" styleClass="lastUpdated">
+								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+							</h:outputText>
+						</h:panelGroup>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.max.attendence']}"
 						style="width:5%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.maxNoOfAttendance}" style="float:right;"/>
+						<br />
+						<ui:param name="maxNoOfAttendanceField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_MAX_NO_OF_ATTENDANCE}" />
+						<ui:param name="maxNoOfAttendanceChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[maxNoOfAttendanceField]}" />
+						<h:panelGroup rendered="#{!empty maxNoOfAttendanceChangeDate}">
+							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+							<h:outputText value="#{maxNoOfAttendanceChangeDate}" styleClass="lastUpdated">
+								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+							</h:outputText>
+						</h:panelGroup>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.status']}"
 						style="width:9%;white-space: normal;">
@@ -202,7 +265,7 @@
 						style="width:30%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.bsvDesc}" />
 						<br />
-						<ui:param name="bsvDescField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_DESC}" />
+						<ui:param name="bsvDescField" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_DESC}" />
 						<ui:param name="bsvDescChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvDescField]}" />
 						<h:panelGroup rendered="#{!empty bsvDescChangeDate}">
 							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
@@ -218,7 +281,7 @@
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 						</h:outputText>
 						<br />
-						<ui:param name="bsvDateField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_DATE}" />
+						<ui:param name="bsvDateField" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_DATE}" />
 						<ui:param name="bsvDateChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvDateField]}" />
 						<h:panelGroup rendered="#{!empty bsvDateChangeDate}">
 							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
@@ -236,19 +299,19 @@
 							<h:outputText value="#{sitevisitDtls.location}" />
 						</p:commandLink>
 						<br />
-						<ui:param name="bsvLocationField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_LOCATION}" />
+						<ui:param name="bsvLocationField" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_LOCATION}" />
 						<ui:param name="bsvLocationChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvLocationField]}" />
-						<ui:param name="bsvAddress1Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_1}" />
+						<ui:param name="bsvAddress1Field" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_1}" />
 						<ui:param name="bsvAddress1ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress1Field]}" />
-						<ui:param name="bsvAddress2Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_2}" />
+						<ui:param name="bsvAddress2Field" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_2}" />
 						<ui:param name="bsvAddress2ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress2Field]}" />
-						<ui:param name="bsvAddress3Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_3}" />
+						<ui:param name="bsvAddress3Field" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_3}" />
 						<ui:param name="bsvAddress3ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress3Field]}" />
-						<ui:param name="bsvAddress4Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_4}" />
+						<ui:param name="bsvAddress4Field" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_4}" />
 						<ui:param name="bsvAddress4ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress4Field]}" />
-						<ui:param name="bsvAddressPostcodeField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_POSTCODE}" />
+						<ui:param name="bsvAddressPostcodeField" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_POSTCODE}" />
 						<ui:param name="bsvAddressPostcodeChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressPostcodeField]}" />
-						<ui:param name="bsvAddressCityField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_CITY}" />
+						<ui:param name="bsvAddressCityField" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_CITY}" />
 						<ui:param name="bsvAddressCityChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressCityField]}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress1ChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress2ChangeDate}" />
@@ -267,7 +330,7 @@
 						style="width:18%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
 						<br />
-						<ui:param name="coordinatingOfficerField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_COORDINATING_OFFICER}" />
+						<ui:param name="coordinatingOfficerField" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_COORDINATING_OFFICER}" />
 						<ui:param name="coordinatingOfficerChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[coordinatingOfficerField]}" />
 						<h:panelGroup rendered="#{!empty coordinatingOfficerChangeDate}">
 							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
@@ -280,7 +343,7 @@
 						style="width:5%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.maxNoOfAttendance}" style="float:right;"/>
 						<br />
-						<ui:param name="maxNoOfAttendanceField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_MAX_NO_OF_ATTENDANCE}" />
+						<ui:param name="maxNoOfAttendanceField" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_MAX_NO_OF_ATTENDANCE}" />
 						<ui:param name="maxNoOfAttendanceChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[maxNoOfAttendanceField]}" />
 						<h:panelGroup rendered="#{!empty maxNoOfAttendanceChangeDate}">
 							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
@@ -294,7 +357,7 @@
 						style="width:9%;white-space: normal;">
 
 						<h:outputText
-							value="#{noticeBoardBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+							value="#{noticeBoardBackingBean.getStatusDescById(sitevisitDtls.bsvStatus.statusId)}" />
 					</p:column>
 
 				</p:dataTable>
