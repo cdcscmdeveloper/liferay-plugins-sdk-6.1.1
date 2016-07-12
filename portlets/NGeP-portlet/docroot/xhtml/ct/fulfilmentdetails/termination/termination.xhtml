@@ -246,7 +246,7 @@
 	</p:dialog>
 	<p:dialog id="uploadTerminatinDlg" widgetVar="uploadTerminatinDlg"
 		modal="true" width="700px" height="350px" resizable="false"
-		styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
+		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
 		onShow="singleUploadListener(uploadWV);">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
@@ -254,7 +254,7 @@
 			fileUploadListener="#{terminationBackingBean.fileUpload}" multiple="false"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="uploadWV"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-			update=":form:uploadTerminationPg">
+			update=":form:uploadTerminationPg" label="#{lbl['lbl.btn.choose']}">
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">
