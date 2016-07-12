@@ -1333,7 +1333,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			crBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
-			crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
 			if(null != resDTO.getFlFulfilmentRequest()){
