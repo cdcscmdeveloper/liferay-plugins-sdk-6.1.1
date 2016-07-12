@@ -5,8 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-
+	<ui:param name="isProposal"
+		value="#{QTStatusConst.QT_PROPOSAL_PREPARATION
+								.equals(supplierProposalDetailBackingBean.managedBean.qt.qtStatus.getStatusId())}" />
 	<p:panel id="creditFacilitiesPanel"
 		header="#{lbl['lbl.sc.spec.credit.facility']}" toggleable="true">
 
@@ -30,14 +31,12 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 
-				<p:selectBooleanCheckbox
-					value="#{creditfacilities.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=creditFacilitiesPanel])"/>
+				<p:selectBooleanCheckbox value="#{creditfacilities.selected}">
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=creditFacilitiesPanel])" />
 				</p:selectBooleanCheckbox>
 
 			</p:column>
-
-
 			<p:column style="white-space : normal; width : 22%; ">
 				<f:facet name="header">
 					<ui:fragment rendered="#{!statusHide}">
@@ -46,17 +45,15 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.bank.name']}" />
 				</f:facet>
 				<h:outputText value="#{creditfacilities.bankName}"
-					rendered="#{creditfacilities.brandNew eq false}" />
+					rendered="#{!isProposal}" />
 				<p:inputText id="bankName" value="#{creditfacilities.bankName}"
-					style="width:85%;" rendered="#{creditfacilities.brandNew eq true}"
-					required="true" maxlength="50"
-					label="#{lbl['lbl.sc.spec.bank.name']}">
+					style="width:85%;" required="true" maxlength="50"
+					rendered="#{isProposal}" label="#{lbl['lbl.sc.spec.bank.name']}">
 					<p:ajax process="@this" partialSubmit="true"
 						update="@this,bankNameMsg" />
 				</p:inputText>
 				<p:message id="bankNameMsg" for="bankName" display="icon" />
 			</p:column>
-
 			<p:column style="white-space : normal; width : 23%;">
 				<f:facet name="header">
 					<ui:fragment rendered="#{!statusHide}">
@@ -65,12 +62,12 @@
 					<h:outputText value="#{lbl['lbl.sc.address']}" />
 				</f:facet>
 				<h:outputText value="#{creditfacilities.bankAddress}"
-					rendered="#{creditfacilities.brandNew eq false}" />
+					rendered="#{!isProposal}" />
 				<p:inputTextarea id="bankAddress" style="width:85%;"
 					value="#{creditfacilities.bankAddress}" rows="3" required="true"
 					maxlength="100" label="#{lbl['lbl.sc.address']}"
-					onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
-					rendered="#{creditfacilities.brandNew eq true}">
+					rendered="#{isProposal}" onkeyup="limitTextArea(this,100);"
+					onkeydown="limitTextArea(this,100);">
 					<p:ajax process="@this" partialSubmit="true"
 						update="@this,bankAddressMsg" />
 				</p:inputTextarea>
@@ -86,12 +83,11 @@
 				</f:facet>
 				<p:outputLabel style="float : left"
 					value="#{supplierProposalDetailBackingBean.getParameterDesc(creditfacilities.creditType)}"
-					rendered="#{creditfacilities.brandNew eq false}" />
+					rendered="#{!isProposal}" />
 				<p:selectOneMenu id="creditType"
 					value="#{creditfacilities.creditType.parameterId}"
 					style="width:95%;margin-bottom: 5px;" required="true"
-					label="#{lbl['lbl.sc.spec.credit.type']}"
-					rendered="#{creditfacilities.brandNew eq true}">
+					rendered="#{isProposal}" label="#{lbl['lbl.sc.spec.credit.type']}">
 					<f:selectItems
 						value="#{supplierProposalDetailBackingBean.getDropdownValues(ParameterTypeConst.creditType)}" />
 					<p:ajax event="change" process="@this" partialSubmit="true"
@@ -99,10 +95,13 @@
 						listener="#{supplierProposalDetailBackingBean.creditTypeChange(creditfacilities)}" />
 				</p:selectOneMenu>
 				<br></br>
+				<p:outputLabel style="float : left"
+					value="#{creditfacilities.otherCreditType}"
+					rendered="#{(creditfacilities.creditType.parameterCode eq 'KKL') and !isProposal}" />
 				<p:inputText style="width : 90%" id="otherCreditType"
 					required="true" value="#{creditfacilities.otherCreditType}"
 					label="#{supplierProposalDetailBackingBean.getParameterDesc(creditfacilities.creditType)}"
-					rendered="#{creditfacilities.creditType.parameterCode eq 'KKL'}">
+					rendered="#{(creditfacilities.creditType.parameterCode eq 'KKL') and isProposal}">
 					<p:ajax event="change" process="@this" partialSubmit="true"
 						update="@this,otherCreditTypeMsg,creditfaciitiesid" />
 				</p:inputText>
@@ -119,14 +118,13 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.amt.credit']}" />
 				</f:facet>
 				<h:outputText value="#{creditfacilities.creditAmt}"
-					rendered="#{creditfacilities.brandNew eq false}">
+					rendered="#{!isProposal}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				<p:inputText id="creditAmt" value="#{creditfacilities.creditAmt}"
-					style="text-align:right;width:80%;"
-					rendered="#{creditfacilities.brandNew eq true}" required="true"
-					maxlength="14" label="#{lbl['lbl.sc.spec.amt.credit']}">
+					style="text-align:right;width:80%;" required="true" maxlength="14"
+					label="#{lbl['lbl.sc.spec.amt.credit']}" rendered="#{isProposal}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{supplierProposalDetailBackingBean.totalCreditFacilitiesSum}"
 						update="@this,creditAmtMsg,@([id$=totalSummaryPG])" />
@@ -143,16 +141,13 @@
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.spec.amt.paid']}" />
 				</f:facet>
-				<h:outputText value="#{creditfacilities.amtPaid}"
-					rendered="#{creditfacilities.brandNew eq false}">
+				<h:outputText value="#{creditfacilities.amtPaid}" rendered="#{!isProposal}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				<p:inputText id="amtPaid" value="#{creditfacilities.amtPaid}"
-					style="text-align:right;width:78%;"
-					rendered="#{creditfacilities.brandNew eq true}" required="true"
-					maxlength="14" label="#{lbl['lbl.sc.spec.amt.paid']}">
-					<!-- <f:validateDoubleRange for="amtPaid"  minimum="1" /> -->
+					style="text-align:right;width:78%;" required="true" maxlength="14"
+					label="#{lbl['lbl.sc.spec.amt.paid']}" rendered="#{isProposal}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{supplierProposalDetailBackingBean.creditFacilityValidator(rowIndex)}"
 						update="@this,amtPaidMsg,@([id$=totalSummaryPG])" />
@@ -171,13 +166,15 @@
 				update="@([id$=creditFacilitiesPanel])" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
-			disabled="#{supplierProposalDetailBackingBean.deleteselectedList(supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities)}"
+				disabled="#{supplierProposalDetailBackingBean.deleteselectedList(supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities)}"
 				partialSubmit="true" styleClass="BtnSpacing"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				oncomplete="finCreditFacilityDelete.show();"
-				update="@([id$=finCreditFacilityDeleteId])" >
-				<f:setPropertyActionListener target="#{supplierProposalDetailBackingBean.managedBean.selectedAll}" value="#{false}"></f:setPropertyActionListener>
-				</p:commandButton>
+				update="@([id$=finCreditFacilityDeleteId])">
+				<f:setPropertyActionListener
+					target="#{supplierProposalDetailBackingBean.managedBean.selectedAll}"
+					value="#{false}"></f:setPropertyActionListener>
+			</p:commandButton>
 
 			<ui:param name="finCreditFacilityDeleteId"
 				value="finCreditFacilityDeleteId"></ui:param>
