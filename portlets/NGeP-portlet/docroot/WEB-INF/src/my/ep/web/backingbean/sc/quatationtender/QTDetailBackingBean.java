@@ -43,6 +43,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
@@ -75,6 +76,7 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
@@ -4958,51 +4960,46 @@ public class QTDetailBackingBean extends
 	public void closeProposal(ScQt scQt) {
 		log.info("loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
 		
-		IQTDetailSO qtDetailSO = null;
 		IQTProposalSO qtProposalSO = null;
 		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			
 			qtProposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			
 			Long qtId = scQt.getQtId();
-			log.info("qtId: " + qtId);
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(qtId);
-			scQt = qtDetailSO.retriveQTDetails(reqDTO)
-					.getQtDetail();
-			scQt.setClosingDate(new Date());
-			reqDTO.setQtdetail(scQt);
-			QuationTenderResDTO resDTO = qtDetailSO.updateQTDetails(reqDTO);
-			boolean isSucessful = resDTO.isSuccessful();
-			if(isSucessful){
-				scQt = resDTO.getQtDetail();
-				if(scQt != null) {
-					try {
-						log.info("call simple scheduler if QT is closing today.");
-						ScSchedulerHelper.getInstance().scheduleSimpleQTClosingJob(scQt);
-					} catch (SchedulerException e) {
-						log.info("Close failed");
-						log.error(e.getLocalizedMessage());
-					}
-					
-					ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
-					proposalReqDTO.setQtId(qtId);
-					qtProposalSO.closeProposal(proposalReqDTO);
-					
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									scQt.getQtNo() + " Closed Sucessfully."
-					));
+			
+			boolean isUpdateSucessful = qtProposalSO.updateProposalWorkFlowStatus(reqDTO)
+				.isSuccessful();
+			boolean isSucessful = false;
+			if(isUpdateSucessful){
+				IQTNoticeBoardSO noticeBoardSO = null;
+				try{
+					noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+					NoticeBoardReqDTO nbReqDTO = new NoticeBoardReqDTO();
+					nbReqDTO.setQtId(qtId);
+					isSucessful = noticeBoardSO.closeQtAndSaveProposalAmount(nbReqDTO).isSuccessful();
+				}catch(Exception e){
+					log.info("Close failed");
+					log.error(e.getLocalizedMessage());
 				}
+				
 			}
+			if (isSucessful) {
+				qtProposalSO.closeProposal(reqDTO);
+				
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
+								null,
+								"QT " + scQt.getQtNo() + " Closed Sucessfully."
+				));
+			}
+
 		} finally {
-			qtDetailSO = null;
 			qtProposalSO = null;
 		}
 	}
