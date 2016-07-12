@@ -1540,16 +1540,16 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
-	public static PmTrackingDairyVO assignTrackingDairyForUOM(Long eduFiledId,
-			String eduFieldCode, PmStatus status, String actionDesc) {
+	public static PmTrackingDairyVO assignTrackingDairyForUOM(Long uomId,
+			String uomCode, PmStatus status, String actionDesc) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
 		trckVO.setActionedBy(user != null ? user.getUserId() : null);
 		trckVO.setActionedByRole(getUserRoleValue());
-		trckVO.setDocId(eduFiledId);
-		trckVO.setDocNo(eduFieldCode);
+		trckVO.setDocId(uomId);
+		trckVO.setDocNo(uomCode);
 		trckVO.setDocType(ParameterConst.UOM_PARAM_CODE);
 		trckVO.setStatus(status);
 		trckVO.setGroupId(null);
