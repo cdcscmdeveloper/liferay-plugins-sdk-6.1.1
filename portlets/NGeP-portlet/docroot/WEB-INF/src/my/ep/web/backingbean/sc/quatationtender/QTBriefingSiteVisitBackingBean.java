@@ -21,6 +21,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;
+import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -28,6 +30,7 @@ import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -803,11 +806,35 @@ public class QTBriefingSiteVisitBackingBean extends
 		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(this
 				.getManagedBean().getCurrentStatusId())){
 			ScQtBsvDtl tempScQtBsvDtl = new ScQtBsvDtl();
+			PmAddress currentAddress = bsvDtl.getAddress();
+			PmAddress tempPmAddress = new PmAddress();
 			try {
 				ConvertUtilsBean convertUtilsBean = BeanUtilsBean
 						.getInstance().getConvertUtils();
 				convertUtilsBean.register(false, true, -1);
+				
+				// tempScQtBsvDtl
 				BeanUtils.copyProperties(tempScQtBsvDtl, bsvDtl);
+				
+				// PmAddress
+				tempScQtBsvDtl.setAddress(tempPmAddress);
+				BeanUtils.copyProperties(tempPmAddress, currentAddress);
+
+				// PmState
+				tempPmAddress.setPmState(new PmState());
+				tempPmAddress.getPmState().setStateId(currentAddress.getPmState().getStateId());
+
+				// PmDivision
+				tempPmAddress.setPmDivision(new PmDivision());
+				tempPmAddress.getPmDivision().setDivisionId(currentAddress.getPmDivision().getDivisionId());
+
+				// PmDistrict
+				tempPmAddress.setPmDistrict(new PmDistrict());
+				tempPmAddress.getPmDistrict().setDistrictId(currentAddress.getPmDistrict().getDistrictId());
+
+				// PmCity
+				tempPmAddress.setPmCity(new PmCity());
+				tempPmAddress.getPmCity().setCityId(currentAddress.getPmCity().getCityId());
 			} catch (IllegalAccessException e) {
 				log.error("Exception occured while copying properties"
 						+ e.getMessage());
@@ -872,64 +899,121 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * @param bsvDetail
 	 * @param tempScQtBsvDtl
 	 */
-	private void updateQtAmmendMentDtls(String bsvType, ScQtBsvDtl tempScQtBsvDtl,
-			ScQtBsvDtl bsvDetail ) {
+	private void updateQtAmmendMentDtls(String bsvType,
+			ScQtBsvDtl oldBsvDtl, ScQtBsvDtl newBsvDtl) {
 
-		if (!(compareScQTBsvDtlObjs(tempScQtBsvDtl,bsvDetail))) {
-			/*QtAmendMentBean amendMentBean = this.getManagedBean()
-					.getAmendMentBean();
-			if (null == amendMentBean) {
-				amendMentBean = new QtAmendMentBean();
-			}
-			java.util.Date today = new java.util.Date();
-			if (SourcingConstants.BSV_TYPE_BRIEFING.equalsIgnoreCase(bsvType)) {
-				amendMentBean.setBriefingChangedDate(new Timestamp(today
-						.getTime()));
-			} else {
-				amendMentBean.setSiteVisitChangedDate(new Timestamp(today
-						.getTime()));
-			}
-			this.getManagedBean().setAmendMentBean(amendMentBean);*/
+		String fieldPrefix = oldBsvDtl.getQtBsvDtlId() + QTFieldConst.FILED_QT_BSV_SEPARATOR;
+		QtAmendMentBean amendMentBean = this.getManagedBean().getAmendMentBean();
+		
+		if (null == amendMentBean) {
+			amendMentBean = new QtAmendMentBean();
 		}
-		 this.getManagedBean().setTempScQtBsvDtl(null);
+		
+		// bsvDesc
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_DESC, 
+				oldBsvDtl.getBsvDesc(), newBsvDtl.getBsvDesc());
+		
+		// bsvDate
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_DATE, 
+				oldBsvDtl.getBsvDate(), newBsvDtl.getBsvDate());
+		
+		// location
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_LOCATION, 
+				oldBsvDtl.getLocation(), newBsvDtl.getLocation());
+
+		// address
+		PmAddress oldAddress = oldBsvDtl.getAddress();
+		PmAddress newAddress = newBsvDtl.getAddress();
+		if (newAddress.getAddress2().equals("")) {
+			newAddress.setAddress2(null);
+		}
+		if (newAddress.getAddress3().equals("")) {
+			newAddress.setAddress3(null);
+		}
+		if (newAddress.getAddress4().equals("")) {
+			newAddress.setAddress4(null);
+		}
+		// address1
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_1, 
+				oldAddress.getAddress1(), newAddress.getAddress1());
+		// address2
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_2, 
+				oldAddress.getAddress2(), newAddress.getAddress2());
+		// address3
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_3, 
+				oldAddress.getAddress3(), newAddress.getAddress3());
+		// address4
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_4, 
+				oldAddress.getAddress4(), newAddress.getAddress4());
+		// postcode
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_POSTCODE, 
+				oldAddress.getPostcode(), newAddress.getPostcode());
+		// cityId
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_CITY, 
+				oldAddress.getPmCity().getCityId(), newAddress.getPmCity().getCityId());
+
+		// coordinatingOfficer
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_COORDINATING_OFFICER, 
+				oldBsvDtl.getCoordinatingOfficer(), newBsvDtl.getCoordinatingOfficer());
+
+		// maxNoOfAttendance
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_MAX_NO_OF_ATTENDANCE, 
+				oldBsvDtl.getMaxNoOfAttendance(), newBsvDtl.getMaxNoOfAttendance());
+		
+		// remove amendment bean if no changes available.
+		if (amendMentBean.getValueMap() == null || amendMentBean.getValueMap().size() == 0) {
+			amendMentBean = null;
+		}
+
+		this.getManagedBean().setAmendMentBean(amendMentBean);
+		this.getManagedBean().setTempScQtBsvDtl(null);
 
 	}
 	
-	private boolean compareScQTBsvDtlObjs(ScQtBsvDtl bsvDtl1,ScQtBsvDtl bsvDtl2){
+	private void putIntoAmendMentBeanIfChanged(QtAmendMentBean amendMentBean, String key, Object oldValue, Object newValue) {
+		boolean isChanged = false;
+		QtAmendMentValueBean oldValueBean = amendMentBean.getValueMap().get(key);
 		
-		PmAddress addr = bsvDtl2.getAddress();
-		PmAddress thisAddr = bsvDtl1.getAddress();
-		if (StringUtils.equalsIgnoreCase(bsvDtl1.getBsvDesc(),bsvDtl2.getBsvDesc())
-				&& StringUtils.equalsIgnoreCase(bsvDtl1.getBsvType(),bsvDtl2.getBsvType())
-				&& bsvDtl1.getBsvDate().equals(bsvDtl2.getBsvDate())
-				&& StringUtils.equalsIgnoreCase(bsvDtl1.getLocation(),bsvDtl2.getLocation())
-				&& StringUtils.equalsIgnoreCase(thisAddr.getAddress1(), addr.getAddress1())
-				&& StringUtils.equalsIgnoreCase(thisAddr.getAddress2(),addr.getAddress2())
-				&& StringUtils.equalsIgnoreCase(thisAddr.getAddress3(),addr.getAddress3())
-				&& StringUtils.equalsIgnoreCase(thisAddr.getAddress4(),addr.getAddress4())
-				&& StringUtils.equalsIgnoreCase(thisAddr.getPostcode(),addr.getPostcode())
-				&& equalForLong(thisAddr.getPmState().getStateId(),addr.getPmState().getStateId())
-				&& equalForLong(thisAddr.getPmCity().getCityId(),addr.getPmCity().getCityId())
-				&& equalForLong(thisAddr.getPmDistrict().getDistrictId(),addr.getPmDistrict().getDistrictId())
-				&& equalForLong(thisAddr.getPmDivision().getDivisionId(),addr.getPmDivision().getDivisionId())
-				&& StringUtils.equalsIgnoreCase(bsvDtl1.getCoordinatingOfficer(),bsvDtl2.getCoordinatingOfficer())
-				&& (bsvDtl1.getMaxNoOfAttendance()==bsvDtl2.getMaxNoOfAttendance())){
-			
-			return true;
-			
+		// Always get the original old value. 
+		if (oldValueBean != null) {
+			oldValue = oldValueBean.getOldValue();
 		}
-		return false;
-	}
-	
-	private boolean equalForLong(Long l1,Long l2){
 		
-		boolean isEqual = false;
-		if(l1== null && l2 == null){
-			isEqual = true;
-		} else if(l1 != null){
-			isEqual = l1.equals(l2);
+		if (oldValue instanceof String || newValue instanceof String) {
+			if (!StringUtils.equalsIgnoreCase((String)oldValue, (String)newValue)) {
+				isChanged = true;
+			}
+		} else {
+			if (oldValue != null && newValue != null &&
+					!oldValue.equals(newValue)) {
+				isChanged = true;
+			}	
 		}
-		return isEqual;
+		
+		if (isChanged) {
+			QtAmendMentValueBean valueBean = new QtAmendMentValueBean();
+			valueBean.setOldValue(oldValue);
+			valueBean.setNewValue(newValue);
+			valueBean.setApprovalDate(new Date());
+			valueBean.setIsApproved(true);
+			amendMentBean.getValueMap().put(key, valueBean);	
+		} else {
+			// remove if had been revert to old value.
+			if (oldValueBean != null) {
+				amendMentBean.getValueMap().remove(key);
+			}
+		}
 	}
 
 	private void updateLatestBsvDate() {
