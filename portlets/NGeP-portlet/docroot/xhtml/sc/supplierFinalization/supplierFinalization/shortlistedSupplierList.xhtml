@@ -75,7 +75,7 @@
 				
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
@@ -94,7 +94,7 @@
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:5%; white-space:normal;"/>
 		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" 
-		               			  style="width:5%; text-align:right; white-space:normal;" />
+		               			  style="width:5%; text-align:center; white-space:normal;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 		               			  style="width:10%; white-space:normal;" />		               	
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
@@ -107,10 +107,9 @@
 		           	</p:row>
 		       	</p:columnGroup>
 				
-				<p:column>
+				<p:column style="text-align:center;">
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-								   process="@this" update="@([id$=suppDetailsPopupId])" 
-								   style="float:right;">
+								   process="@this" update="@([id$=suppDetailsPopupId])">
 						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal}"
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
@@ -141,7 +140,7 @@
 					</h:outputText>
 				</p:column>
 	
-				<p:column style="text-align:right;">
+				<p:column style="text-align:center;">
 					<c:if test="#{isRefinalizedAndBiddingAward}">
 						<h:outputText value="#{shortlistedSupp.bidRank}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -180,7 +179,7 @@
 	         		</p:commandLink> 
 				</p:column>
 				
-				<p:column style="text-align:right;">
+				<p:column style="text-align:center;">
 					<h:outputText value="#{shortlistedSupp.deskOfficerRank}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>					
@@ -211,11 +210,11 @@
 				
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" style="width:5%; text-align:right;">
+		               	<p:column rowspan="2" style="width:5%; text-align:center;">
 		               		<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
@@ -230,7 +229,7 @@
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:5%; white-space:normal;"/>
 		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" 
-		               			  style="width:5%; text-align:right; white-space:normal;" />
+		               			  style="width:5%; text-align:center; white-space:normal;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 		               			  style="width:10%; white-space:normal;" />	               	
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
@@ -243,10 +242,9 @@
 		           	</p:row>
 		       	</p:columnGroup>
 				
-				<p:column>
+				<p:column style="text-align:center;">
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-								   process="@this" update="@([id$=suppDetailsPopupId])" 
-								   style="float:right;">
+								   process="@this" update="@([id$=suppDetailsPopupId])">
 						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal}"
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />						
@@ -319,7 +317,7 @@
 	         		</p:commandLink> 
 				</p:column>
 				
-				<p:column style="text-align:right;">
+				<p:column style="text-align:center;">
 					<h:outputText value="#{shortlistedSupp.deskOfficerRank}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>					
@@ -375,11 +373,11 @@
 				
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" style="width:5%; text-align:right;">
+		               	<p:column rowspan="2" style="width:5%; text-align:center;">
 		               		<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
@@ -394,7 +392,7 @@
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:5%; white-space:normal;"/>
 		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" 
-		               			  style="width:5%; text-align:right; white-space:normal;" />
+		               			  style="width:5%; text-align:center; white-space:normal;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 		               			  style="width:10%; white-space:normal;" />		               	
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
@@ -407,10 +405,9 @@
 		           	</p:row>
 		       	</p:columnGroup>
 				
-				<p:column>
+				<p:column style="text-align:center;">
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-								   process="@this" update="@([id$=suppDetailsPopupId])" 
-								   style="float:right;">
+								   process="@this" update="@([id$=suppDetailsPopupId])">
 						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal}"
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
@@ -444,7 +441,7 @@
 					</h:outputText>
 				</p:column>
 	
-				<p:column style="text-align:right;">
+				<p:column style="text-align:center;">
 					<c:if test="#{isRefinalizedAndBiddingAward}">
 						<h:outputText value="#{shortlistedSupp.bidRank}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -483,7 +480,7 @@
 	         		</p:commandLink> 
 				</p:column>
 				
-				<p:column style="text-align:right;">
+				<p:column style="text-align:center;">
 					<h:outputText value="#{shortlistedSupp.deskOfficerRank}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>					
