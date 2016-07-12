@@ -33,7 +33,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
@@ -51,8 +50,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.clause.ClauseReqDTO;
-import my.ep.dto.pm.common.clause.ClauseResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -72,7 +69,6 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -103,7 +99,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
-import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
@@ -3774,8 +3769,6 @@ public class LOIDetailBackingBean extends
 			throws FileNotFoundException, IOException {
 		debugLogger("handleSuppDocFileUpload");
 		if (event.getFile() != null) {
-			// String attachmentDocType =
-			// getManagedBean().getAttachmentDocType();
 			ScAttachment scAttachment = null;
 			ScLoiSupportingDoc selectedScLoiSuppDoc = this.getManagedBean()
 					.getSelectedScLoiSuppDoc();
@@ -3788,8 +3781,7 @@ public class LOIDetailBackingBean extends
 				selectedScLoiSuppDoc
 						.setScLoiSupportingDocAttachment(scLoiSupportingDocAttachment);
 			}
-			scLoiSupportingDocAttachment.setDocNo(selectedScLoiSuppDoc
-					.getScLoi().getLoiNo());
+			scLoiSupportingDocAttachment.setDocNo(getManagedBean().getScLoi().getLoiNo());
 			scAttachment = scLoiSupportingDocAttachment;
 
 			uploadAttachment(event.getFile(), scAttachment);
