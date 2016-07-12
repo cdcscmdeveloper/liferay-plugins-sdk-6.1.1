@@ -6,22 +6,23 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<table style="width: 100%; height: 100%;">
-		<tr>
-			<td width="100%"><h:outputText styleClass="instruction"
-					style="float:left;margin-left:20px;"
-					value="#{lbl['lbl.gfmas.instruction.info']}" /></td>
-		</tr>
-	</table>
+
 	<p:panel id="gfMasResult" header="#{lbl['lbl.gfmas.search.result']}"
-		toggleable="true">	   
+		toggleable="true">
+		<table style="width: 100%; height: 100%;">
+			<tr>
+				<td width="100%"><h:outputText styleClass="instruction"
+						style="float:left;margin-left:20px;"
+						value="#{lbl['lbl.gfmas.instruction.info']}" /></td>
+			</tr>
+		</table>
 		<p:dataTable id="gfMas"
 			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			value="#{gfMasBackingBean.searchGfMas}" rows="10" var="gfMasList"
 			rowIndexVar="index" lazy="true">
 			<ac:paginator for="gfMas" />
-			
-			
+
+
 			<p:column headerText="#{lbl['lbl.pm.state.seq.no']}"
 				style="width:5%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{index+1}" />
