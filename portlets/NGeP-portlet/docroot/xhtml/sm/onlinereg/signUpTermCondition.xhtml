@@ -16,6 +16,13 @@
 			<p:scrollPanel style="height:300px;border:0;" mode="native">
 				<c:choose>
 					<c:when
+						test="${registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_GOVT_SELLER}">
+						<b>#{lbl['lbl.sm.basic.govt.tnc.header']}</b>
+						<br />
+						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.govt.tnc']}" /></p>
+					</c:when>
+					
+					<c:when
 						test="${registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_MOF}">
 						<b>#{lbl['lbl.sm.basic.mof.tnc.header']}</b>
 						<br />
