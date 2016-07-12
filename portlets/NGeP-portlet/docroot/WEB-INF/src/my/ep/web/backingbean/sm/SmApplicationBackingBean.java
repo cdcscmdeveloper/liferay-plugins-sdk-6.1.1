@@ -391,72 +391,73 @@ public class SmApplicationBackingBean extends
 						SmAppl rejectedAppl = SmApplicationUtil
 								.retriveApplicationById(
 										Integer.parseInt(applId)).getSmAppl();
-						SmAppl latestResubmitAppl = null;
+						SmAppl latestResubmitAppl = SmApplicationUtil
+								.getLatesResubmitApplicationByRejectedAppl(rejectedAppl);
 						MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
-						if (rejectedAppl.isQuestionnaire()) {
-							latestResubmitAppl = SmApplicationUtil
-									.getLatesResubmitApplicationByRejectedAppl(rejectedAppl);
-							if (latestResubmitAppl != null) {
-								try {
-									latestResubmitAppl = SmApplicationUtil
-											.deleteApplChildEntities(latestResubmitAppl);
-									mofReqDto = new MofRegistrationReqDTO();
-									mofReqDto.setSmAppl(latestResubmitAppl);
-									mofReqDto.setSrcAppl(rejectedAppl);
-									latestResubmitAppl = SmServiceLookup
-											.getMofRegistrationSO()
-											.cloneExistingResubmitApplication(
-													mofReqDto).getSmAppl();
-								} catch (Exception ex) {
-									resubmitErrorKey = ex.getMessage();
-									this.getManagedBean().setValidResubmit(
-											false);
-								}
+
+						// dont have latest resubmit appl, clone new appl with
+						// rejected appl
+						if (latestResubmitAppl == null) {
+							mofReqDto = new MofRegistrationReqDTO();
+							mofReqDto.setApplId(Long.parseLong(applId));
+							mofReqDto.setSmSupplier(supplierProfile);
+							MofRegistrationResDTO mofRespDto = mofRegistrationSO
+									.cloneSmApplicationForResubmissionDraft(mofReqDto);
+							latestResubmitAppl = mofRespDto.getSmAppl();
+						}
+						// have latest resubmit appl, just copy rejected appl to
+						// latest resubmit appl
+						else {
+							try {
+								latestResubmitAppl = SmApplicationUtil
+										.deleteApplChildEntities(latestResubmitAppl);
+								mofReqDto = new MofRegistrationReqDTO();
+								mofReqDto.setSmAppl(latestResubmitAppl);
+								mofReqDto.setSrcAppl(rejectedAppl);
+								latestResubmitAppl = SmServiceLookup
+										.getMofRegistrationSO()
+										.cloneExistingResubmitApplication(
+												mofReqDto).getSmAppl();
+							} catch (Exception ex) {
+								resubmitErrorKey = ex.getMessage();
+								this.getManagedBean().setValidResubmit(false);
 							}
 						}
-						if (this.getManagedBean().isValidResubmit()) {
-							if (latestResubmitAppl == null) {
+
+						if (getManagedBean().isValidResubmit()) {
+							getManagedBean().setSmAppl(latestResubmitAppl);
+							getManagedBean().setSmSupplier(
+									latestResubmitAppl.getSmSupplier());
+
+							// already answer questionnaire, redirect to
+							// application page
+							if (rejectedAppl.isQuestionnaire()) {
+								prerenderApplicationForResubmission();
+							}
+							// not yet answer questionnaire, redirect to
+							// questionnaire page
+							else {
 								FacesContext fc = FacesContext
 										.getCurrentInstance();
-								mofReqDto = new MofRegistrationReqDTO();
-								mofReqDto.setApplId(Long.parseLong(applId));
-								mofReqDto.setSmSupplier(supplierProfile);
-								MofRegistrationResDTO mofRespDto = mofRegistrationSO
-										.cloneSmApplicationForResubmissionDraft(mofReqDto);
-								SmAppl clnAppl = mofRespDto.getSmAppl();
-								SmSupplier supp = mofRespDto.getSmSupplier();
-
-								if (!clnAppl.getApplType().equalsIgnoreCase(
-										ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-									QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
-									quesBackingBean.getManagedBean()
-											.setTargetUrl(xhtml);
-									quesBackingBean.getManagedBean().setSmSupp(
-											supplierProfile);
-									quesBackingBean.getManagedBean().setSmAppl(
-											clnAppl);
-									quesBackingBean.getManagedBean()
-											.setRejectedAppl(rejectedAppl);
-									quesBackingBean.retrieveQuestionnaire();
-									fc.getApplication()
-											.getNavigationHandler()
-											.handleNavigation(fc, null,
-													"/xhtml/sm/questionnaire/questionnaireView.xhtml");
-									getManagedBean().setSmAppl(clnAppl);
-									getManagedBean().setSmSupplier(supp);
-								} else {
-									getManagedBean().setSmAppl(clnAppl);
-									getManagedBean().setSmSupplier(supp);
-									prerenderApplicationForResubmission();
-								}
-							} else {
-								getManagedBean().setSmAppl(latestResubmitAppl);
-								getManagedBean().setSmSupplier(supplierProfile);
-								prerenderApplicationForResubmission();
+								QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+								quesBackingBean.getManagedBean().setTargetUrl(
+										xhtml);
+								quesBackingBean.getManagedBean().setSmSupp(
+										supplierProfile);
+								quesBackingBean.getManagedBean().setSmAppl(
+										latestResubmitAppl);
+								quesBackingBean.getManagedBean()
+										.setRejectedAppl(rejectedAppl);
+								quesBackingBean.retrieveQuestionnaire();
+								fc.getApplication()
+										.getNavigationHandler()
+										.handleNavigation(fc, null,
+												"/xhtml/sm/questionnaire/questionnaireView.xhtml");
 							}
 						} else {
 							redirectToResubmitErrorPage(resubmitErrorKey);
 						}
+
 					} else {
 						redirectToResubmitErrorPage(resubmitErrorKey);
 					}
