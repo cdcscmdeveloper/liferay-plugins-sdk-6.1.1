@@ -229,7 +229,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 
 	// clone item spec
 	/** The selected quote. */
-	private ScQuote selectedQuote = new ScQuote();
+	private ScQuote selectedQuote;
 
 	/** The quotes. */
 	private List<ScQuote> quotes = new ArrayList<ScQuote>();
