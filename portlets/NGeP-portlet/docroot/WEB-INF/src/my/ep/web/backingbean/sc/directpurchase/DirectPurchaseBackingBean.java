@@ -312,7 +312,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * Reset direct purchase search.
 	 */
 	public void reset(){
-		this.getManagedBean().setSearchDocNo(null);
+		this.getManagedBean().setSearchDocumentNo(null);
 		this.getManagedBean().setSearchDocumentType(null);
 		this.getManagedBean().setSearchStatusId(null);
 		this.getManagedBean().setSearchDocumentTitle(null);
