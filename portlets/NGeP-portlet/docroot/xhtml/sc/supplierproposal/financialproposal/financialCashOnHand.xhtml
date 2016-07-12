@@ -5,7 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+	
+	<ui:param name="isProposal"
+		value="#{QTStatusConst.QT_PROPOSAL_PREPARATION
+								.equals(supplierProposalDetailBackingBean.managedBean.qt.qtStatus.getStatusId())}" />
 	<p:panel id="cashOnHandPanel" header="#{lbl['lbl.sc.spec.cash.hand']}"
 		toggleable="true">
 		<p:dataTable id="cashonhandid" var="cashonhand"
@@ -36,11 +39,11 @@
 					<h:outputText value="#{lbl['lbl.sc.bank.name']}" />
 				</f:facet>
 				<h:outputText value="#{cashonhand.bankName}"
-					rendered="#{cashonhand.brandNew eq false}" />
+					rendered="#{!isProposal}" />
 				<p:inputText id="bankName" value="#{cashonhand.bankName}" size="20"
 					required="true" maxlength="100" style="width : 85%;"
 					label="#{lbl['lbl.sc.bank.name']}"
-					rendered="#{cashonhand.brandNew eq true}">
+					rendered="#{isProposal}">
 					<p:ajax process="@this" partialSubmit="true"
 						update="@this,bankNameMsg" />
 				</p:inputText>
@@ -54,11 +57,11 @@
 					<h:outputText value="#{lbl['lbl.sc.account.no']}" />
 				</f:facet>
 				<h:outputText value="#{cashonhand.accountNum}"
-					rendered="#{cashonhand.brandNew eq false}" />
+					rendered="#{!isProposal}" />
 				<p:inputText id="accountNum" value="#{cashonhand.accountNum}"
 					size="20" required="true" maxlength="30" style="width : 85%"
 					label="#{lbl['lbl.sc.account.no']}"
-					rendered="#{cashonhand.brandNew eq true}">
+					rendered="#{isProposal}">
 					<p:ajax process="@this" partialSubmit="true"
 						update="@this,accountNumMsg" />
 				</p:inputText>
@@ -74,12 +77,12 @@
 				</f:facet>
 				<p:outputLabel style="float : left"
 					value="#{supplierProposalDetailBackingBean.getParameterDesc(cashonhand.accountType)}"
-					rendered="#{cashonhand.brandNew eq false}" />
+					rendered="#{!isProposal}" />
 				<p:selectOneMenu id="accountType"
 					value="#{cashonhand.accountType.parameterId}"
 					style="width: 85%;margin-bottom: 5px;" required="true"
 					label="#{lbl['lbl.sc.account.type']}"
-					rendered="#{cashonhand.brandNew eq true}">
+					rendered="#{isProposal}">
 					<f:selectItems
 						value="#{supplierProposalDetailBackingBean.getDropdownValues(ParameterTypeConst.accountType)}" />
 					<p:ajax event="change" process="@this" partialSubmit="true"
@@ -97,12 +100,13 @@
 					<h:outputText value="#{lbl['lbl.sc.address']}" />
 				</f:facet>
 				<h:outputText value="#{cashonhand.bankAddress}"
-					rendered="#{cashonhand.brandNew eq false}" />
+					rendered="#{!isProposal}" />
 				<p:inputTextarea id="bankAddress" value="#{cashonhand.bankAddress}"
 					cols="35" rows="2" required="true" maxlength="100"
-					onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
-					style="width : 85%;" label="#{lbl['lbl.sc.address']}"
-					rendered="#{cashonhand.brandNew eq true}">
+					onkeyup="limitTextArea(this,100);"
+					onkeydown="limitTextArea(this,100);" style="width : 85%;"
+					label="#{lbl['lbl.sc.address']}"
+					rendered="#{isProposal}">
 					<p:ajax process="@this" partialSubmit="true"
 						update="@this,bankAddressMsg" />
 				</p:inputTextarea>
@@ -117,14 +121,14 @@
 					<h:outputText value="#{lbl['lbl.sc.amount']}" />
 				</f:facet>
 				<h:outputText value="#{cashonhand.cashAmount}"
-					rendered="#{cashonhand.brandNew eq false}">
+					rendered="#{!isProposal}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				<p:inputText id="cashAmount" value="#{cashonhand.cashAmount}"
 					size="20" style="text-align:right" required="true" maxlength="14"
 					label="#{lbl['lbl.sc.amount']}" style="width : 85%"
-					rendered="#{cashonhand.brandNew eq true}">
+					rendered="#{isProposal}">
 					<p:ajax event="blur" process="@this"
 						listener="#{supplierProposalDetailBackingBean.totalCashOnHandSum}"
 						update="@this,cashAmountMsg, :form:totalcashonhand" />
