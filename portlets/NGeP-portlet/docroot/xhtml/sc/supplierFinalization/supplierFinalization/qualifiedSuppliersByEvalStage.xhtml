@@ -26,17 +26,16 @@
 
 			<ac:paginator for="evaluationQualifiedSuppliers" />
 
-			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:right;">
+			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:center;">
 				<h:outputText value="#{qualifiedSupp.evalRank}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
 												CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;">
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;">
 				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-					process="@this" update="@([id$=suppDetailsPopupId])"
-					style="float:right;">
+					process="@this" update="@([id$=suppDetailsPopupId])">
 					<f:setPropertyActionListener
 						value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
 						target="#{supplierDetailBackingBean.smSupplier}" />
@@ -66,17 +65,17 @@
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="Price Difference" style="width:5%; white-space:normal;" 
+			<p:column headerText="#{lbl['lbl.sc.difference.rm']}" style="width:5%; white-space:normal; text-align:right;" 
 					  rendered="#{isFinancialEvalStageByPkg}">
 				<h:outputText value="" />
 			</p:column>
 
-			<p:column headerText="Difference" style="width:15%; text-align:center;" 
+			<p:column headerText="#{lbl['lbl.sc.difference.perc']}" style="width:15%; text-align:center;" 
 					  rendered="#{isFinancialEvalStageByPkg}">
 				<h:outputText value="" />
 			</p:column>
 
-			<p:column headerText="Bumiputra Preference" 
+			<p:column headerText="#{lbl['lbl.sc.pref.margin']}" 
 					  style="width:5%; text-align:right; white-space:normal;" 
 					  rendered="#{isFinancialEvalStageByPkg}">
 				<h:outputText value="" />

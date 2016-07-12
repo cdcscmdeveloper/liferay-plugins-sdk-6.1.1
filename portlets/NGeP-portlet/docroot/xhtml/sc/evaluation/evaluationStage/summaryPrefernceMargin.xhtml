@@ -36,7 +36,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:10%">
+				style="width:10%; text-align:center;">
 
 				<h:outputText
 					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
@@ -59,7 +59,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
-				style="width:15%;text-align:right;">
+				style="width:15%; text-align:right;">
 				<h:outputText
 					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.proposalAmt}">
 					<f:convertNumber
@@ -68,7 +68,7 @@
 
 			</p:column>
 
-			<p:column style="width:15%;text-align:right;">
+			<p:column style="width:15%; text-align:right;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
 					<ac:iconTooltip id="summaryPrefMargin#{row}"
@@ -83,7 +83,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.difference.perc']}"
-				style="width:15%;text-align:right;">
+				style="width:15%; text-align:right;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.perc']}" />
 					<ac:iconTooltip id="summaryPriceDiff#{row}"
@@ -98,7 +98,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.pref.margin']}"
-				style="width:25%;text-align:right;">
+				style="width:25%; text-align:right;">
 
 				<h:outputText
 					rendered="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.preferenceMargin gt 0}"
@@ -153,7 +153,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:15%">
+				style="width:15%; text-align:center;">
 
 				<h:outputText
 					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
