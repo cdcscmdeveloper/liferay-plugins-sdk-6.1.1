@@ -50,23 +50,15 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.quote.scope.of.work.and.services']}" /></td>
-				<td colspan="3"><p:commandButton process="@this"
-						oncomplete="uploadDlg.show();return false;" icon="iconAttachment"
-						update="attachmentId" disabled="#{!isEditable}"
-						value="#{lbl['lbl.txt.attachment']}" /> <ui:param
-						name="attachFile"
-						value="#{simpleQuoteBackingBean.managedBean.scQuote.scQuoteAttachment}" />
-
-					<h:commandLink value="#{attachFile.fileName}" id="attachmentId"
-						styleClass="blue_font" immediate="true"
-						action="#{simpleQuoteBackingBean.downloadFile(attachFile)}"/>
-					<p:commandLink
-						action="#{simpleQuoteBackingBean.deleteUploadFile}"
-						rendered="#{simpleQuoteBackingBean.managedBean.scQuote.scQuoteAttachment ne null}"
-						immediate="true" update="sqinfoId"
-						disabled="#{!isEditable}">
-						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-					</p:commandLink></td>
+				<td colspan="3">				
+					<ac:scSingleFileUploadButton id="sqUploadBtn" popupWidgetVar="sqUploadDlg"
+							attachment="#{simpleQuoteBackingBean.managedBean.scQuote.scQuoteAttachment}"
+							readonly="#{!isEditable}" />
+						<ac:scSingleFileUploadPopup widgetVar="sqUploadDlg"
+							fileUploadListener="simpleQuoteBackingBean.handleFileUpload"
+							update="@([id$=sqUploadBtn])"
+							readonly="#{!isEditable}" />
+					</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -275,22 +267,4 @@
 	</p:panel>
 
 	<ui:include src="simpleQuoteRemark.xhtml" />
-
-	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.txt.choose.files']}">
-		<p:ajax event="close" oncomplete="uploadDlg.hide()" />
-		<p:fileUpload style="display:inline;" 
-			fileUploadListener="#{simpleQuoteBackingBean.handleFileUpload}"
-			mode="advanced" id="upload" 
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="@form" oncomplete="uploadDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
-
 </ui:composition>
