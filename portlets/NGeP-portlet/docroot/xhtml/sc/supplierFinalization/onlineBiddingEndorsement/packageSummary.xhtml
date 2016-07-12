@@ -26,14 +26,13 @@
 					update="@([id$=supplierPackageTbl])" 
 					listener="#{suppFinalBiddingBackingBean.awardSupplierEvent}"/>				
 			
-			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="width:5%;">
+			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:center;">
 				<p:outputLabel value="#{price.ranking}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:10%;">
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:10%; text-align:center;">
 				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-							   process="@this" update="@([id$=suppDetailsPopupId])" 
-							   style="float:right;">
+							   process="@this" update="@([id$=suppDetailsPopupId])">
 					<f:setPropertyActionListener value="#{price.scQtProposal}"
 							target="#{supplierDetailBackingBean.scQtProposal}" />
 					<h:outputText value="#{price.scQtProposal.supplierNo}" />
@@ -44,31 +43,30 @@
 				<h:outputText value="#{(price.scBidSupplier.smSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}" style="width:10%; white-space:normal;">
-				<h:outputText style="float : right;" value="#{price.scBidSupplier.packageStartPrice}">
+			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}" style="width:10%; white-space:normal; text-align:right;">
+				<h:outputText value="#{price.scBidSupplier.packageStartPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}" style="width:15%; white-space:normal;">
+			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}" style="width:15%; white-space:normal; text-align:right;">
 				<p:commandLink immediate="true" oncomplete="pricePop.show();"
 					actionListener="#{suppFinalBiddingBackingBean.supplierItemPricePopupAction(price)}" 
-					update="@([id$=itemPricePop])" style="float: right;" title="Item Price Details" 
+					update="@([id$=itemPricePop])" title="Item Price Details" 
 					rendered="#{!(price.scBidSupplier.packageStartPrice eq price.bidPriceTotal)}">
 					<p:graphicImage
 						value="#{CommonUIConstant.imagePathUptoDesign}/ico-price.png"
 						style="vertical-align:middle"></p:graphicImage>
 				</p:commandLink>
-				<h:outputText style="float: right; margin-right: 10px;" value="#{price.bidPriceTotal}" 
+				<h:outputText value="#{price.bidPriceTotal}" 
 							  rendered="#{!(price.scBidSupplier.packageStartPrice eq price.bidPriceTotal)}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.difference.rm']}" style="width:10%; white-space:normal;">
-				<h:outputText style="float : right;"
-					value="#{price.bidPriceTotal - suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice}"
+			<p:column headerText="#{lbl['lbl.sc.difference.rm']}" style="width:10%; white-space:normal; text-align:right;">
+				<h:outputText value="#{price.bidPriceTotal - suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice}"
 					rendered="#{price.scBidSupplier.smSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -90,8 +88,8 @@
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}"  style="width:10%; white-space:normal;">
-				<h:outputText style="float : right;" value="#{suppFinalBiddingBackingBean.managedBean.estimatedCost - 
+			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}"  style="width:10%; white-space:normal; text-align:right;">
+				<h:outputText value="#{suppFinalBiddingBackingBean.managedBean.estimatedCost - 
 																					price.bidPriceTotal}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
