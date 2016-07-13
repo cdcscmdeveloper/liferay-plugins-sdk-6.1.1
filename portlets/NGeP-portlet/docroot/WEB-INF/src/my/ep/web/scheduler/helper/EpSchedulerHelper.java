@@ -1,5 +1,6 @@
 package my.ep.web.scheduler.helper;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,11 +14,13 @@ import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerBuilder;
@@ -423,4 +426,32 @@ public class EpSchedulerHelper {
 		return instance;
 
 	}
+	
+	/**
+	 * schedule simple Job
+	 * 
+	 * @param jobKey
+	 *            the JobKey instance,jobClass the jobClass
+	 *            instance,newJobDataMap the JobDataMap instance,scheduleDate
+	 *            the Date instance
+	 * @throws SchedulerException
+	 */
+	public static void scheduleSimpleJob(JobKey jobKey, Class jobClass,
+			JobDataMap newJobDataMap, Date scheduleDate)
+			throws SchedulerException {
+
+		// define the job and tie it to our QTPublishJob class
+		JobDetail job = JobBuilder.newJob(jobClass)
+				.withIdentity(jobKey.getName(), jobKey.getGroup())
+				.usingJobData(newJobDataMap).build();
+
+		// define a simple trigger that runs at specific time (publish time)
+		SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+				.withIdentity(jobKey.getName(), jobKey.getGroup())
+				.startAt(scheduleDate).forJob(jobKey).build();
+
+		// Tell quartz to schedule the job using our trigger
+		getScheduler().scheduleJob(job, trigger);
+	}
+
 }
