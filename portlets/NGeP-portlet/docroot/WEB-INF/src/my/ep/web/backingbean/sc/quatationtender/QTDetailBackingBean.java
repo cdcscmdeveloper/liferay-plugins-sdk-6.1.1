@@ -4982,8 +4982,8 @@ public class QTDetailBackingBean extends
 					nbReqDTO.setQtId(qtId);
 					isSucessful = noticeBoardSO.closeQtAndSaveProposalAmount(nbReqDTO).isSuccessful();
 				}catch(Exception e){
-					log.info("Close failed");
-					log.error(e.getLocalizedMessage());
+					log.info(scQt.getQtNo() + " Close failed");
+					throw new EpException(e.getLocalizedMessage());
 				}
 				
 			}
@@ -5031,10 +5031,11 @@ public class QTDetailBackingBean extends
 				if(scQt != null) {
 					try {
 						log.info("call simple scheduler if QT is publishing today.");
+						scQt.setPublishDate(new Date());
 						ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
 					} catch (SchedulerException e) {
-						log.info("Publish failed");
-						log.error(e.getLocalizedMessage());
+						log.info(scQt.getQtNo()+ " Publish failed");
+						throw new EpException(e.getLocalizedMessage());
 					}
 					
 					FacesContext.getCurrentInstance().addMessage(
