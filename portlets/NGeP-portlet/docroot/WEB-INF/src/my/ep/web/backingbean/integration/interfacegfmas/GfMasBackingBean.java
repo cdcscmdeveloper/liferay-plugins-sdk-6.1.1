@@ -227,7 +227,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
 
 		SearchFilterBean bankFilterBean = new SearchFilterBean(
-				"pmInterfaceBank.dIInterfaceLog",
+				"pmInterfaceBank.diInterfaceLog",
 				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
 
 		SearchFilterBean kptjFilterBean = new SearchFilterBean(
@@ -239,7 +239,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
 
 		SearchFilterBean ppFilterBean = new SearchFilterBean(
-				"pmInterfacePP.dIInterfaceLog",
+				"pmInterfacePP.diInterfaceLog",
 				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
 
 		SearchFilterBean votFilterBean = new SearchFilterBean(
