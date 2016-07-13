@@ -52,14 +52,16 @@
 						update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
 						rendered="#{isRender and (qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 2)}"
 						actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
-						title="#{lbl['lbl.sc.qt.clone.to.tec.tooltip']}" />
+						title="#{lbl['lbl.sc.qt.clone.to.tec.tooltip']}" 
+						disabled="#{empty qTDetailBB.managedBean.committemembers}"/>
 		
 					<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.ec']}" styleClass="BtnSpacing"
 						process="@this, specificationcommitteeid"
 						update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
 						rendered="#{isRender and (qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 1)}"
 						actionListener="#{qTCommitteBackingBean.addCloneToEcDtl}"
-						title="#{lbl['lbl.sc.qt.clone.to.ec.tooltip']}" />
+						title="#{lbl['lbl.sc.qt.clone.to.ec.tooltip']}" 
+						disabled="#{empty qTDetailBB.managedBean.committemembers}"/>
 				</c:if>
 			</div>
 			<ui:param name="committeeAppointmentDeleteId"
