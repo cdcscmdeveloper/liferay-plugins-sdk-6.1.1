@@ -29,12 +29,12 @@
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}">
-						<p:ajax partialSubmit="true" process="@this" update="@form"
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=evaluationPreparationMeetingAttendanceIds])"
 							listener="#{evaluationBackingBean.selectAll(evaluationBackingBean.managedBean.templateSpecBean.selectAll, evaluationBackingBean.managedBean.meetingAttendanceList)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{meetingAttendance.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@form" />
+					<p:ajax partialSubmit="true" process="@this"  update="@([id$=evaluationPreparationMeetingAttendanceIds])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column style="width:50%">
@@ -48,7 +48,9 @@
 				<p:inputText size="55" value="#{meetingAttendance.name}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					id="attendanceNameId" required="true" label="#{lbl['lbl.sc.name']}"
-					maxlength="50"></p:inputText>
+					maxlength="50">
+					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
+					</p:inputText>
 				<p:message id="attendanceNameMessageId" for="attendanceNameId"
 					display="icon"></p:message>
 
@@ -66,7 +68,9 @@
 				<p:inputText size="55" value="#{meetingAttendance.icPassport}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					id="attendacePassportId" required="true"
-					label="#{lbl['lbl.sc.identification.no']}" maxlength="15"></p:inputText>
+					label="#{lbl['lbl.sc.identification.no']}" maxlength="15">
+					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
+					</p:inputText>
 				<p:message id="attendancePassportMessageId"
 					for="attendacePassportId" display="icon"></p:message>
 
@@ -84,7 +88,7 @@
 				oncomplete="tirutWidget.paginator.endLink.click();"
 				action="#{evaluationBackingBean.addTurutDetails}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				styleClass="BtnSpacing"
+				styleClass="BtnSpacing" id="evaluationpreparationMeetingAttendanceDeleteBtnId"
 				disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.deleteselectedList(evaluationBackingBean.managedBean.meetingAttendanceList)}"
 				oncomplete="evaluationMeetingAttendanceDeletePopUp.show();"
 				update="@([id$=#{evaluationmeetingAttendanceDeleteId}])"
