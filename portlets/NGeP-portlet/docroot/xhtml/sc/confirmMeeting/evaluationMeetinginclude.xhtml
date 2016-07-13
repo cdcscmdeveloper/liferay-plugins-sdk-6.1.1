@@ -53,12 +53,12 @@
 					<p:selectBooleanCheckbox
 						value="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="@form"
+							 update="@([id$=evaluationConfirmmeetingId])"
 							listener="#{evaluationMeetingBackingBean.selectAll(evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll, evaluationMeetingBackingBean.managedBean.scQtMeetings)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{meeting.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@form" />
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=evaluationConfirmmeetingId])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column style="width:25%">
@@ -66,12 +66,14 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 				</f:facet>
-
-				<p:calendar value="#{meeting.meetingDate}" showOn="button"
+                   <p:calendar value="#{meeting.meetingDate}" showOn="button"
 					mindate="#{evaluationMeetingBackingBean.managedBean.today}"
 					style="width:200px;" id="meetingDate"
 					label="#{lbl['lbl.sc.meeting.date']}" required="true"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"></p:calendar>
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}">
+					<p:ajax process="@this" partialSubmit="true" update="@this"></p:ajax>
+					</p:calendar>
+					
 				<p:message id="confirmMeetingId" for="meetingDate" display="icon"></p:message>
 
 			</p:column>
@@ -85,7 +87,9 @@
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
 					style="width:75%;" maxlength="255" onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
 					label="#{lbl['lbl.sc.meeting.location']}" id="locationId"
-					required="true" cols="140"></p:inputTextarea>
+					required="true" cols="140">
+					<p:ajax process="@this" partialSubmit="true" update="@this"></p:ajax>
+					</p:inputTextarea>
 				<p:message id="meetingLocationId" for="locationId" display="icon"></p:message>
 			</p:column>
 
