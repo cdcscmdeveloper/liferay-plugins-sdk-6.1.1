@@ -5029,13 +5029,13 @@ public class QTDetailBackingBean extends
 			if(isSucessful){
 				scQt = resDTO.getQtDetail();
 				if(scQt != null) {
-					/*try {
+					try {
 						log.info("call simple scheduler if QT is publishing today.");
 						ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
 					} catch (SchedulerException e) {
 						log.info("Publish failed");
 						log.error(e.getLocalizedMessage());
-					}*/
+					}
 					
 					FacesContext.getCurrentInstance().addMessage(
 							null,
