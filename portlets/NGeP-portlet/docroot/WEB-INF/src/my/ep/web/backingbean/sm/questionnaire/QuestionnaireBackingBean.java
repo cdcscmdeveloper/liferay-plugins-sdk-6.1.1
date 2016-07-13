@@ -105,11 +105,13 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 		useList.add(loginUser.getLoginId());
 		reqDTO.setUserList(useList);
 		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
-		
-		QuestionnaireResDTO resDTO = reqSO.questionnaireSubmission(reqDTO);
 
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, this.getManagedBean().getTargetUrl());
+		reqSO.questionnaireSubmission(reqDTO);
+
+		SmCommonUtil
+				.redirectToPage(this.getManagedBean().getTargetUrl(),
+						SmCommonUtil.getMessage(
+								"lbl.sm.submit.questionaire.msg", null), null);
 		
 		renewSesionObject();
 	}
