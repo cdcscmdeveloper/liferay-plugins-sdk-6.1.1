@@ -201,12 +201,12 @@
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmItemCodeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.itemCode']}" />
-							<ac:lov id="itemCode" style="width:265px;" lovId="CM_ITEM_REPORT"
+							<ac:lov id="itemCode" style="width:265px;" lovId="CM_UNSPSC_REPORT"
 								readonly="true" size="40" update="@form"
 								headerText="#{lbl['lbl.rpt.itemCode']}"
-								value="#{reportBackingBean.managedBean.selectedItem.extensionCode}"
+								value="#{reportBackingBean.managedBean.selectedUnspscItem.unspscCode}"
 								postUpdateListener="#{reportBackingBean.onItemCodeChangeForLOV()}"
-								saveObject="reportBackingBean.managedBean.selectedItem" />
+								saveObject="reportBackingBean.managedBean.selectedUnspscItem" />
 						</c:if>
 
 						<c:if
@@ -403,11 +403,11 @@
 					<TD class="pmColumn1Width"><p:outputLabel
 							value="#{lbl['lbl.rpt.itemCode']}" /></TD>
 					<TD><ac:lov id="itemCode" style="width:265px;"
-							lovId="CM_ITEM_REPORT" size="40" update="@form"
+							lovId="CM_UNSPSC_REPORT" size="40" update="@form"
 							headerText="#{lbl['lbl.rpt.itemCode']}" readonly="true"
-							value="#{reportBackingBean.managedBean.selectedItem.extensionCode}"
+							value="#{reportBackingBean.managedBean.selectedUnspscItem.unspscCode}"
 							postUpdateListener="#{reportBackingBean.onItemCodeChangeForLOV()}"
-							saveObject="reportBackingBean.managedBean.selectedItem" /></TD>
+							saveObject="reportBackingBean.managedBean.selectedUnspscItem" /></TD>
 				</c:if>
 				<c:if
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemNameView}">

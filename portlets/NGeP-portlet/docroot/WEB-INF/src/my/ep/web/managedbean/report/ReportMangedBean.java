@@ -137,6 +137,9 @@ public class ReportMangedBean extends BaseManagedBean {
 	/** The selected item. */
 	private CmItem selectedItem;
 	
+	/** The selected unspsc item. */
+	private CmUnspsc selectedUnspscItem;
+	
 	/** The selected org type. */
 	private PmParameter selectedOrgType;
 
@@ -344,6 +347,25 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public PmUser getSelectedPmUser() {
 		return selectedPmUser;
+	}
+
+	/**
+	 * Gets the selected unspsc item.
+	 * 
+	 * @return the selectedUnspscItem
+	 */
+	public CmUnspsc getSelectedUnspscItem() {
+		return selectedUnspscItem;
+	}
+
+	/**
+	 * Sets the selected unspsc item.
+	 * 
+	 * @param selectedUnspscItem
+	 *            the selectedUnspscItem to set
+	 */
+	public void setSelectedUnspscItem(CmUnspsc selectedUnspscItem) {
+		this.selectedUnspscItem = selectedUnspscItem;
 	}
 
 	/**

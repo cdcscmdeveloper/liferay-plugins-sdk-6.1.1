@@ -13922,12 +13922,13 @@ public class ReportBackingBean extends
 	 */
 	public void onItemCodeChangeForLOV() {
 		if (this.getManagedBean().getSelectedItem() != null) {
-			this.setPmItemCode(this.getManagedBean().getSelectedItem()
-					.getExtensionCode());
-			this.setPmItemName(this.getManagedBean().getSelectedItem()
-					.getItemName());
 			this.setCmItemName(this.getManagedBean().getSelectedItem()
 					.getItemName());
+		} else if (this.getManagedBean().getSelectedUnspscItem() != null) {
+			this.setPmItemCode(this.getManagedBean().getSelectedUnspscItem()
+					.getUnspscCode());
+			this.setPmItemName(this.getManagedBean().getSelectedUnspscItem()
+					.getUnspscTitle());
 		}
 	}
 
@@ -17775,6 +17776,7 @@ public class ReportBackingBean extends
 			this.setPmOrgCode(null);
 			// to clear the item code and item name values
 			this.getManagedBean().setSelectedItem(null);
+			this.getManagedBean().setSelectedUnspscItem(null);
 			this.setPmItemName(null);
 			this.setPmItemCode(null);
 			this.setPmCompanyName(null);
