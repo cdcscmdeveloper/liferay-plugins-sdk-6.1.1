@@ -37,7 +37,10 @@
 				<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50"
 					required="#{!meetingAttDtl.selected}" label="#{lbl['lbl.sc.name']}"
 					disabled="#{!isSecretaryUser or 
-							 			meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
+							 			meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" >
+							 			<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+							 			
+							 			</h:inputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}">
@@ -45,7 +48,9 @@
 					size="15" required="#{!meetingAttDtl.selected}"
 					label="#{lbl['lbl.sc.identification.no']}"
 					disabled="#{!isSecretaryUser or 
-								meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
+								meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" >
+								<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+								</h:inputText>
 			</p:column>
 		</p:dataTable>
 
