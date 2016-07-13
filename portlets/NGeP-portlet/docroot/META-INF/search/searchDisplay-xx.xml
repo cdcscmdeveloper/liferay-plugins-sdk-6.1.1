@@ -1163,6 +1163,30 @@
 		</property>
 	</bean>
 	
+	<bean id="CM_UNSPSC_REPORT" class="my.ep.web.bean.LovBean">
+	<property name="pk" value="unspscId" />
+	<property name="daoClass"
+		value="my.ep.persistence.dao.cm.catalog.CodificationDAO" />
+
+	<property name="columns">
+		<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+				<property name="columnName" value="unspscCode" />
+				<property name="bundleFile"
+					value="messageprovider-config.bundles.labels.labels" />
+				<property name="bundleKey" value="lbl.pm.itemcode" />
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+				<property name="columnName" value="unspscTitle" />
+				<property name="bundleFile"
+					value="messageprovider-config.bundles.labels.labels" />
+				<property name="bundleKey" value="lbl.pm.itemname" />
+
+			</bean>
+			</list>
+		</property>
+	</bean>
+	
 
 	<bean id="CT_CONTRACT_ITEM" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="contractItemId" />
