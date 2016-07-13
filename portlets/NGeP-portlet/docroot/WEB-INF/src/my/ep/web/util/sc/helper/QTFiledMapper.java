@@ -138,11 +138,14 @@ public class QTFiledMapper {
 		QT_BRIEFING_SITE_VISIT(QTStatusConst.QT_BRIEFING_SITE_VISIT,
 				new String[] { 
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
-						QTFieldConst.FILED_QT_PUBLISH_PERIOD }),
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_BSVDETAILS}),
 						
         //Proposal Preparation 
 		QT_PROPOSAL_PREPARATION(QTStatusConst.QT_PROPOSAL_PREPARATION,
-				QT_BRIEFING_SITE_VISIT.value()),
+				new String[] { 
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD}),
 						
 		// QT Closed				
 		QT_CLOSED(QTStatusConst.QT_CLOSED,
