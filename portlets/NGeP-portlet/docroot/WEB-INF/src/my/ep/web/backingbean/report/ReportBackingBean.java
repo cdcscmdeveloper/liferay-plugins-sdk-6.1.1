@@ -82,6 +82,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
@@ -14347,6 +14348,7 @@ public class ReportBackingBean extends
 					&& (this.getModuleValue()
 							.equalsIgnoreCase(ModuleCodeConst.PROFILE_MANAGEMENT))) {
 				if (this.isValuesEmpty()) {
+					
 					if (StringUtils.isNotBlank(this.getPmOrgCategory())
 							&& StringUtils.isNotBlank(this.getPmOrgType())) {
 						this.setValuesEmpty(false);
@@ -14362,63 +14364,82 @@ public class ReportBackingBean extends
 					}
 					if (StringUtils.isNotEmpty(this.getManagedBean()
 							.getReportCode())) {
+						if ((this
+								.getManagedBean()
+								.getReportCode()
+								.equals(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL)
+								|| this.getManagedBean()
+										.getReportCode()
+										.equals(ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL) || this
+								.getManagedBean()
+								.getReportCode()
+								.equals(ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL))) {
+							this.setValuesEmpty(false);
+						} else {
+							switch (EnumReportType.valueOf(this
+									.getManagedBean().getReportCode())) {
 
-						switch (EnumReportType.valueOf(this.getManagedBean()
-								.getReportCode())) {
-						
-						case PM_002:
+							case PM_002:
 
-							if (StringUtils.isBlank(this.getPmOrgCategory())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780031);
+								if (StringUtils
+										.isBlank(this.getPmOrgCategory())) {
+									throw new EpException(
+											MessageConst.ERROR_REPORT_780031);
+								}
+								if (StringUtils.isBlank(this.getPmOrgType())) {
+									throw new EpException(
+											MessageConst.ERROR_REPORT_780032);
+								}
+								break;
+							case PM_003:
+
+								if (StringUtils.isBlank(this.getPmOrgType())
+										&& StringUtils.isBlank(this
+												.getPmOrgName())
+										&& StringUtils.isBlank(this
+												.getPmIdentificationNo())
+										&& StringUtils.isBlank(this
+												.getPmUserName())
+										&& StringUtils.isBlank(this
+												.getPmRoleCode())
+										&& StringUtils.isBlank(this
+												.getPmStatus())) {
+									throw new EpException(
+											MessageConst.ERROR_REPORT_780003);
+								}
+								break;
+							case PM_004:
+
+								if (StringUtils.isBlank(this.getPmOrgCode())
+										&& StringUtils.isBlank(this
+												.getPmOrgName())
+										&& StringUtils.isBlank(this
+												.getPmStatus())) {
+									throw new EpException(
+											MessageConst.ERROR_REPORT_780003);
+								}
+								break;
+							case PM_001:
+
+								if (StringUtils
+										.isBlank(this.getPmServiceType())
+										&& StringUtils.isBlank(this
+												.getPmFinancialOrgName())
+										&& StringUtils.isBlank(this
+												.getPmBusinessRegNo())
+										&& StringUtils.isBlank(this
+												.getPmStatus())) {
+									throw new EpException(
+											MessageConst.ERROR_REPORT_780003);
+								}
+							default: {
+								System.out
+										.println("In generateReport unknown for PM report value"
+												+ this.getReportValue());
+								log.info("In generateReport unknown for PM report value \t"
+										+ this.getReportValue());
 							}
-							if (StringUtils.isBlank(this.getPmOrgType())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780032);
 							}
-							break;
-						case PM_003:
-							
-							if (StringUtils.isBlank(this.getPmOrgType())
-									&& StringUtils.isBlank(this.getPmOrgName())
-									&& StringUtils.isBlank(this
-											.getPmIdentificationNo())
-									&& StringUtils
-											.isBlank(this.getPmUserName())
-									&& StringUtils
-											.isBlank(this.getPmRoleCode())
-									&& StringUtils.isBlank(this.getPmStatus())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780003);
-							}
-							break;
-						case PM_004:
-							
-							if (StringUtils.isBlank(this.getPmOrgCode())
-									&& StringUtils.isBlank(this.getPmOrgName())
-									&& StringUtils.isBlank(this.getPmStatus())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780003);
-							}
-							break;
-						case PM_001:
-							
-							if (StringUtils.isBlank(this.getPmServiceType())
-									&& StringUtils.isBlank(this
-											.getPmFinancialOrgName())
-									&& StringUtils.isBlank(this
-											.getPmBusinessRegNo())
-									&& StringUtils.isBlank(this.getPmStatus())) {
-								throw new EpException(
-										MessageConst.ERROR_REPORT_780003);
-							}
-						default: {
-							System.out
-									.println("In generateReport unknown for PM report value"
-											+ this.getReportValue());
-							log.info("In generateReport unknown for PM report value \t"
-									+ this.getReportValue());
-						}
 						}
 					} else {
 						this.setValuesEmpty(false);
@@ -18161,14 +18182,15 @@ public class ReportBackingBean extends
 				} else {
 					this.setValuesEmpty(false);
 				}*/
-			}/* else if (this.getManagedBean().getReportCode()
+			} else if (this.getManagedBean().getReportCode()
 					.equalsIgnoreCase(ReportConst.PM_BPK_USER_PROFILE_RPT_VAL)
 					|| this.getManagedBean()
 							.getReportCode()
 							.equalsIgnoreCase(
 									ReportConst.PM_BPK_ADMIN_PROFILE_RPT_VAL)) {
 				this.setValuesEmpty(false);
-			}*/
+			}
+			
 		} else if ((this.getModuleValue().equalsIgnoreCase(
 				ModuleCodeConst.CATALOGUE_MANAGEMENT) && (CollectionUtils
 				.isNotEmpty(reportList)))) {
@@ -19401,6 +19423,23 @@ public class ReportBackingBean extends
 				+ getManagedBean().getSelectedOrgType().getParameterCode());
 
 		return sb.toString();
+	}
+	
+	public void updateSearchCriteriaForOrgName(BaseEntity entity) {
+		
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		
+	}
+	public String constructConditionFieldsForCreate() {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		/*sb.append(getManagedBean().getSelectedUserOrg().getPmOrgProfile()
+				.getOrgTypeCode().getParameterCode());*/
+		sb.append("|orgTypeCode.parameterType^");
+		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
+		sb.append("|recordStatus^1");
+		return null;
 	}
 
 }
