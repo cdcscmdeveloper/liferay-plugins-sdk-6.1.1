@@ -338,37 +338,37 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 								new SearchFilterBean(
 										"physical_no",
 										SearchOperator.OPERATOR_LIKE.value(), 
-										searchContractCriteria));
+										searchContractCriteria,false));
 					}else if(searchContractListDD == 3){
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean(
 										"contract_no",
 										SearchOperator.OPERATOR_LIKE.value(), 
-										searchContractCriteria));
+										searchContractCriteria,false));
 					}else if(searchContractListDD == 4){
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean(
 										"contract_name",
 										SearchOperator.OPERATOR_LIKE.value(), 
-										searchContractCriteria));
+										searchContractCriteria,false));
 					}else if(searchContractListDD == 5){
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean(
 										"physical_circular_no",
 										SearchOperator.OPERATOR_LIKE.value(), 
-										searchContractCriteria));
+										searchContractCriteria,false));
 					}else if(searchContractListDD == 6){
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean(
 										"circular_no",
 										SearchOperator.OPERATOR_LIKE.value(), 
-										searchContractCriteria));
+										searchContractCriteria,false));
 					}else if(searchContractListDD == 9){
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean(
 										"supplier_name",
 										SearchOperator.OPERATOR_LIKE.value(), 
-										searchContractCriteria));
+										searchContractCriteria,false));
 					}
 					
 				}
