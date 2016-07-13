@@ -30,11 +30,11 @@
 			</p:column>
 			<p:column style="white-space:normal;text-align:center;width:8%;">
 			<f:facet name="header" >
-					<h:outputText value="#{lbl['lbl.fl.payment.match.clauses']}"/>
+					<h:outputText value="#{lbl['lbl.fl.payment.match.clauses.reference']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.clauses']}"/>
 				</f:facet>
 			<p:commandLink
-					value="Clauses" action="#{paymentMatchBackingBean.retrieveClauses(deduction)}" oncomplete="clauses.show();"
+					value="#{lbl['lbl.fl.payment.match.clauses']}"  action="#{paymentMatchBackingBean.retrieveClauses(deduction)}" oncomplete="clauses.show();"
 					update=":form:clauseDialog"></p:commandLink>
 				<h:outputText style="text-align:right" />
 			</p:column>
