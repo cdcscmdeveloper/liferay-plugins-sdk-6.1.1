@@ -16,22 +16,24 @@
 				
 			</tr>
 			<tr>
-				<td style="width: 106px;"><p:outputLabel
+				<td style="width: 106px;" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
-				<td><p:inputText size="66" id="controlOff"
-						value="#{invoiceBackingBean.retrievePegawaiPengawalByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId, invoiceBackingBean.managedBean.invoice.flRequest.agApprovedDate)}"
-						disabled="true" /></td>
+				<td><p:inputTextarea rows="2" cols="67" readonly="true"
+						autoResize="false" style="resize:none;" id="controlOff"
+						value="#{invoiceBackingBean.retrievePegawaiPengawalByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId, invoiceBackingBean.managedBean.invoice.flRequest.agApprovedDate)}" />
+				</td>
 			</tr>
 			<tr>
-				<td style="width: 106px;"><p:outputLabel
+				<td style="width: 205px;" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="66" id="ptjGroup"
-						value="#{invoiceBackingBean.retrieveJabatanByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId, invoiceBackingBean.managedBean.invoice.flRequest.agApprovedDate)}"
-						disabled="true" /></td>
+				<td><p:inputTextarea id="ptjGroup" rows="2" cols="67"
+						disabled="true" autoResize="false" style="resize:none;"
+						value="#{invoiceBackingBean.retrieveJabatanByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId, invoiceBackingBean.managedBean.invoice.flRequest.agApprovedDate)}"/>
+				</td>
 				
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td colspan="3"><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgCode} #{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
