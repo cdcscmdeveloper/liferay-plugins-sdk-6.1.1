@@ -228,14 +228,6 @@ public class CreateQtBackingBean extends
 				scQt.setPanelItemId(null);
 				scQt.setItemGroup(null);
 				setDataNull();
-				// populate procurment mode values if changes as Non panel
-				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt
-						.getQtStatus().getStatusId())) {
-					BigDecimal amount = scQt.getTmpExpectedIntendedPrice();
-					if(null != amount){
-						setProcurementMode(scQt, amount);
-					}
-				}
 			}
 		} else {
 			if (scQt.isBrandNew() == false) {
@@ -243,8 +235,6 @@ public class CreateQtBackingBean extends
 				RequestContext.getCurrentInstance().execute(
 						"panelApprovalDlgs.show()");
 			} else {
-				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
-				scQt.setOpenFor(null);
 				circularListSelect(new CtCircularVer());
 				setDataNull();
 			}
@@ -604,7 +594,7 @@ public class CreateQtBackingBean extends
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			parameterReqDTO
 					.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
-			if (isQuotationThresHold) {
+			if (isQuotationThresHold || isPanel) {
 				parameterReqDTO
 						.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
 			} else {
@@ -622,10 +612,14 @@ public class CreateQtBackingBean extends
 				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 
 				// Open For
-				if (isQuotationThresHold && isOpenForBumiputraThresHold(amount)) {
-					scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+				if (isPanel) {
+					scQt.setOpenFor(null);
 				} else {
-					scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+					if (isQuotationThresHold && isOpenForBumiputraThresHold(amount)) {
+						scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+					} else {
+						scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+					}	
 				}
 
 				// Evaluation Type
@@ -2109,6 +2103,16 @@ public class CreateQtBackingBean extends
 		this.getManagedBean().setScQtCheckSt2techProposal(null);
 		this.getManagedBean().setScQtCheckSt2financeProposalList(null);
 		this.getManagedBean().setQtCategoryList(null);
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		// populate procurment mode values if changes as Non panel
+		if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt
+				.getQtStatus().getStatusId())) {
+			BigDecimal amount = scQt.getTmpExpectedIntendedPrice();
+			if(null != amount){
+				setProcurementMode(scQt, amount);
+			}
+		}
 	}
 
 	/**
