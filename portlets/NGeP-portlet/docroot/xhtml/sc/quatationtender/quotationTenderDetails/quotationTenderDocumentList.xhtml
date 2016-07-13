@@ -40,7 +40,9 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}" style="width:58%">
 				<h:inputText size="50" value="#{scQtDocReport.title}"
-					rendered="#{empty scQtDocReport.pmDocument}" />
+					rendered="#{empty scQtDocReport.pmDocument}" >
+					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
+					</h:inputText>
 				<h:outputText value="#{scQtDocReport.title}"
 					rendered="#{!empty scQtDocReport.pmDocument}" />
 			</p:column>
