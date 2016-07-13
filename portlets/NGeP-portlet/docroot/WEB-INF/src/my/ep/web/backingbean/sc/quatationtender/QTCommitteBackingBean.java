@@ -2223,12 +2223,8 @@ public class QTCommitteBackingBean extends
 	public boolean renderECOrTECButton(Long qtStatus, String commType) {
 
 		boolean isRenderBtn = false;
-
 		if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
-				.equalsIgnoreCase(commType)
-				&& (!this.getManagedBean().isMaintanceFlow() || isEligibleStatusForBtns(qtStatus))
-				&& this.getManagedBean().isDeskOfficer()) {
-			isRenderBtn = true;
+				.equalsIgnoreCase(commType)) {
 			ScQt scQt = this.getManagedBean().getQt();
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			String fetchCommType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
@@ -2247,21 +2243,9 @@ public class QTCommitteBackingBean extends
 				ScQtCommittee qtCommitte = resDTO.getScQtCommittee();
 				if (qtCommitte != null && qtCommitte.getScCommittee() != null) {
 					Long committeeStatus = qtCommitte.getScCommittee().getCommitteStatus().getStatusId();
-					Date closingDate = this.getManagedBean().getQt().getClosingDate();
-					if (this.getManagedBean().isMaintanceFlow() && isQTStatusPublished(qtStatus) &&
-							closingDate != null && DateUtils.getDaysDifference(new Date(), closingDate) <= 7
-							&& (QTStatusConst.CMT_PENDING_SUBMISSION
-									.equals(committeeStatus) || QTStatusConst.CMT_PENDING_REVISION
-									.equals(committeeStatus))) {
-
-						isRenderBtn = false;
-					} else if ((QTStatusConst.CMT_PENDING_APPROVAL
-							.equals(committeeStatus) || QTStatusConst.CMT_PENDING_REVISION_APPROVAL
-							.equals(committeeStatus))) {
-						isRenderBtn = false;
-					}
-					
-					
+					isRenderBtn = !isCommitteInfoEditable(committeeStatus,fetchCommType);
+				} else {
+					isRenderBtn = !isCommitteInfoEditable(QTStatusConst.CMT_PENDING_SUBMISSION,fetchCommType);
 				}
 			} finally {
 				committeSO = null;
