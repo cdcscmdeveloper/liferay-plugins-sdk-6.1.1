@@ -31,14 +31,14 @@
 						disabled="#{evaluationBackingBean.managedBean.readOnly}"
 						value="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="@form"
+							update="@([id$=evaluationPreparationMeetingDtlsId])"
 							listener="#{evaluationBackingBean.selectEvaluationMeetingAll(evaluationBackingBean.managedBean.templateSpecBean.selectAll, evaluationBackingBean.managedBean.scQtMeetings)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					value="#{meeting.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@form" />
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=evaluationPreparationMeetingDtlsId])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.meeting.date']}"
@@ -56,7 +56,9 @@
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					id="evaluationMeetingId" label="#{lbl['lbl.sc.meeting.date']}"
 					required="true"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"></p:calendar>
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}">
+					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
+					</p:calendar>
 				<p:message id="meetingEvaluationid" for="evaluationMeetingId"
 					display="icon"></p:message>
 
@@ -75,7 +77,9 @@
 				onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					maxlength="255" cols="40" id="evaluationMeetingLocation"
-					required="true" label="#{lbl['lbl.sc.meeting.location']}"></p:inputTextarea>
+					required="true" label="#{lbl['lbl.sc.meeting.location']}">
+					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
+					</p:inputTextarea>
 				<p:message id="meetingEvaluationLocationid"
 					for="evaluationMeetingLocation" display="icon"></p:message>
 			</p:column>
@@ -108,7 +112,9 @@
 				<p:inputTextarea value="#{meeting.remark}" rows="2" cols="40"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
-					maxlength="100" />
+					maxlength="100" >
+					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
+					</p:inputTextarea>
 
 			</p:column>
 
@@ -124,6 +130,7 @@
 				action="#{evaluationBackingBean.addMeetingAction}"
 				update="evaluationmeetingDetails" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
+			id="evaluationPreparaionMeetingDtlsDeleteBtnId"
 				disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.deleteselectedList(evaluationBackingBean.managedBean.scQtMeetings)}"
 				process="@this" partialSubmit="true"
 				oncomplete="evaluationMeetingDtlsDeletePopUp.show();"
