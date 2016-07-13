@@ -508,11 +508,6 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (appl != null && supplierProfile != null) {
-			if (appl.getSmApplSupportDocs() != null
-					&& !appl.getSmApplSupportDocs().isEmpty()) {
-				appl.getSmApplSupportDocs().clear();
-				appl.setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
-			}
 
 			appl.setSdoReceivedDate(null);
 			proceedToApplication(appl.getApplType(), Boolean.TRUE, appl,
