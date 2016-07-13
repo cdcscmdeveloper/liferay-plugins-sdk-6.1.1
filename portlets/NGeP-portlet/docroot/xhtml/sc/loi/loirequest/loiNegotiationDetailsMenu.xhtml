@@ -133,9 +133,11 @@
 					    label="#{lbl['lbl.sc.loiloa.nego.terms']}"
 					    id="termDescId"
 						readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
-						required="true" rows="2"
+						required="true" rows="2" 	onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 						value="#{negoTerm.termDesc}" autoResize="false" maxlength="1000"
-						rendered="#{empty negoTerm.pmTerm}" />
+						rendered="#{empty negoTerm.pmTerm}" >
+						<p:ajax partialSubmit="true" process="@this" update="@this" />
+						</p:inputTextarea>
 						<p:message id="termDescIdMsg" for="termDescId" display="icon" />
 				</c:if>
 
