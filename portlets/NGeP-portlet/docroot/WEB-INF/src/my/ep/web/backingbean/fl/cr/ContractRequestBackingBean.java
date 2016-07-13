@@ -1362,7 +1362,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
 						contractItemReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
 						contractItemReqDTO.setUomId(selectedItem.getScRequestItem().getUom().getUomId());
-						if(selectedItem.getScRequestItem().getCmItem().getExtensionCode() != null){
+						if(selectedItem.getScRequestItem().getCmItem() != null && selectedItem.getScRequestItem().getCmItem().getExtensionCode() != null){
 							contractItemReqDTO.setItemCode(selectedItem.getScRequestItem().getCmItem().getExtensionCode());
 						}else{
 							contractItemReqDTO.setItemCode(selectedItem.getScRequestItem().getTempUnspscCode());
@@ -3770,7 +3770,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
 				contractItemReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 				contractItemReqDTO.setUomId(flTempItem.getScRequestItem().getUom().getUomId());
-				if(flTempItem.getScRequestItem().getCmItem().getExtensionCode() != null){
+				if(flTempItem.getScRequestItem().getCmItem() != null && flTempItem.getScRequestItem().getCmItem().getExtensionCode() != null){
 					contractItemReqDTO.setItemCode(flTempItem.getScRequestItem().getCmItem().getExtensionCode());
 				}else{
 					contractItemReqDTO.setItemCode(flTempItem.getScRequestItem().getTempUnspscCode());
