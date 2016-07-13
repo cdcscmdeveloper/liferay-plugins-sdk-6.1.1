@@ -6,6 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:param name="isBSVEnabled" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
+	<ui:param name="isQTStatusPublished" value="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId)}" />
 	
 	<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true"
 		styleClass="briefingList">
@@ -14,7 +15,7 @@
 				<td style="width: 280px; white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.briefing.sameas.sv']}" /></td>
 				<td><p:selectOneRadio value="#{bsvdtlbean.scQtBsv.sameBsv}"
-						disabled="#{!isBSVEnabled}">
+						disabled="#{!isBSVEnabled or isQTStatusPublished}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
 						<p:ajax update="sameasbsvrequired, addtositebutton"
@@ -35,7 +36,7 @@
 			<p:ajax event="rowUnselectCheckbox" update="@form" />
 			<p:ajax event="toggleSelect" update="@form" />
 			<p:column selectionMode="multiple" style="width:2%"
-				rendered="#{isBSVEnabled}" />
+				rendered="#{isBSVEnabled and !isQTStatusPublished}" />
 			<p:column headerText="#{lbl['lbl.sc.description']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:panelGroup
@@ -100,12 +101,12 @@
 					value="#{lbl['lbl.sc.qt.addtositevisit']}"
 					process="@this,briefingdtlid" partialSubmit="true"
 					actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl(bsvdtlbean)}"
-					rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'false' and isBSVEnabled}" />
+					rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'false' and isBSVEnabled and !isQTStatusPublished}" />
 			</h:panelGroup>
 			<p:commandButton id="briefingaddid" value="#{lbl['lbl.btn.add']}"
 				process="@this"
 				disabled="#{bsvdtlbean.briefingList.size() eq 1}"
-				rendered="#{isBSVEnabled}"
+				rendered="#{isBSVEnabled and !isQTStatusPublished}"
 				action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
 				oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
@@ -114,7 +115,7 @@
 				process="@this, briefingdtlid"
 				partialSubmit="true"
 				oncomplete="#{briefingDelPopUp}.show();"
-				rendered="#{isBSVEnabled}"
+				rendered="#{isBSVEnabled and !isQTStatusPublished}"
 				update="@this" />
 			
 		</div>
@@ -146,7 +147,7 @@
 			<p:ajax event="rowUnselectCheckbox" update="@form" />
 			<p:ajax event="toggleSelect" update="@form" />
 					<p:column selectionMode="multiple" style="width:2%"
-						rendered="#{isBSVEnabled}" />
+						rendered="#{isBSVEnabled and !isQTStatusPublished}" />
 
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="white-space: normal;word-wrap: break-word;">
@@ -209,7 +210,7 @@
 				<ui:param name="siteVisitDelPopUp" value="siteVisitDelPopUp#{!empty bsvdtlbean.tplSpecZoneDtl ? bsvdtlbean.tplSpecZoneDtl.specZoneId : ''}" />
 				<div class="ppRightBtn BtnSpacing">
 					<p:commandButton id="addsitevisitid" 
-						rendered="#{isBSVEnabled}"
+						rendered="#{isBSVEnabled and !isQTStatusPublished}"
 						value="#{lbl['lbl.btn.add']}" process="@this"
 						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('S')}"
 						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
@@ -218,7 +219,7 @@
 					disabled="#{empty bsvdtlbean.selectedSiteVisitDtls}"
 						process="@this, sitevisitdtlid" partialSubmit="true"
 						oncomplete="#{siteVisitDelPopUp}.show();"
-						rendered="#{isBSVEnabled}"
+						rendered="#{isBSVEnabled and !isQTStatusPublished}"
 						update="@this" />
 				</div>
 				<ac:confirmationPopup id="sitevisitDtlsDeleteId"
