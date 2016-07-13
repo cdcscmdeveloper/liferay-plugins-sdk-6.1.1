@@ -47,13 +47,14 @@ public class DateTimeInput extends UIOutput implements ClientBehaviorHolder {
 	@Override
 	public void encodeBegin(FacesContext context) throws IOException {
 		Object dateObj = this.getValue();
+		FacesScopes facesScopes = new FacesScopes();
+		org.primefaces.component.calendar.Calendar dateComponent = ((org.primefaces.component.calendar.Calendar)facesScopes.findComponentById(this, "calDate"));
+		HtmlSelectOneMenu hourComponent = ((HtmlSelectOneMenu)facesScopes.findComponentById(this, "calHour"));
+		HtmlSelectOneMenu minuteComponent = ((HtmlSelectOneMenu)facesScopes.findComponentById(this, "calMin"));	
+		
 		if (dateObj != null) {
 			debugLogger("set date time: " + dateObj);
 			Date dateValue = (Date)dateObj;
-			FacesScopes facesScopes = new FacesScopes();
-			org.primefaces.component.calendar.Calendar dateComponent = ((org.primefaces.component.calendar.Calendar)facesScopes.findComponentById(this, "calDate"));
-			HtmlSelectOneMenu hourComponent = ((HtmlSelectOneMenu)facesScopes.findComponentById(this, "calHour"));
-			HtmlSelectOneMenu minuteComponent = ((HtmlSelectOneMenu)facesScopes.findComponentById(this, "calMin"));	
 			
 			Calendar c1 = Calendar.getInstance();
 			c1.setTime(dateValue);
@@ -61,6 +62,10 @@ public class DateTimeInput extends UIOutput implements ClientBehaviorHolder {
 			dateComponent.setValue(c1.getTime());
 			hourComponent.setValue(String.valueOf(c1.get(Calendar.HOUR_OF_DAY)));
 			minuteComponent.setValue(String.valueOf(c1.get(Calendar.MINUTE)));
+		} else {
+			dateComponent.setValue(null);
+			hourComponent.setValue(null);
+			minuteComponent.setValue(null);
 		}
 		
 		super.encodeBegin(context);
