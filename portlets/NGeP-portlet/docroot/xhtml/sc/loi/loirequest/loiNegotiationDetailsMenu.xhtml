@@ -38,7 +38,10 @@
 						<h:outputText value="#{lbl['lbl.sc.location']}"/>
 				</f:facet>
 				<p:inputText value="#{negoloc.negoLocation}" id="negLocId" label="#{lbl['lbl.sc.location']}" maxlength="255"
-				size="30" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}"/>
+				size="30" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}">
+					<p:ajax partialSubmit="true" process="@this"
+						update="@this" />
+				</p:inputText>
 				<p:message id="negLocIdMsg" for="negLocId" display="icon" />
 			</p:column>
 
@@ -50,14 +53,20 @@
 				<p:calendar id="date" readonlyInput="true" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}" label="#{lbl['lbl.sc.date']}"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" showOn="button"
 					mindate="#{DateUtils.getCurrentDate()}"
-					size="12" value="#{negoloc.negoDate}" />
+					size="12" value="#{negoloc.negoDate}" >
+					<p:ajax partialSubmit="true" process="@this"
+						update="@this" />
+					</p:calendar>
 					<p:message id="dateMsg" for="date" display="icon" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.remarks']}"
 				style="width:40%">
 				<p:inputText id="remarksId" value="#{negoloc.remark}" label="#{lbl['lbl.sc.remarks']}"
-				  size="30" maxlength="200" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}"/>
+				  size="30" maxlength="200" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}">
+				  <p:ajax partialSubmit="true" process="@this"
+						update="@this" />
+				  </p:inputText>
 				<p:message id="remarksIdMsg" for="remarksId" display="icon" />
 			</p:column>
 
