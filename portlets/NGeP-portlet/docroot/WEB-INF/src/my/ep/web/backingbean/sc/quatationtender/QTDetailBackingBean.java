@@ -4995,7 +4995,7 @@ public class QTDetailBackingBean extends
 						new FacesMessage(
 								FacesMessage.SEVERITY_INFO,
 								null,
-								"QT " + scQt.getQtNo() + " Closed Sucessfully."
+								scQt.getQtNo() + " Closing Started. Please wait a while for QT closing."
 				));
 			}
 
@@ -5029,20 +5029,20 @@ public class QTDetailBackingBean extends
 			if(isSucessful){
 				scQt = resDTO.getQtDetail();
 				if(scQt != null) {
-					try {
+					/*try {
 						log.info("call simple scheduler if QT is publishing today.");
 						ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
 					} catch (SchedulerException e) {
 						log.info("Publish failed");
 						log.error(e.getLocalizedMessage());
-					}
+					}*/
 					
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(
 									FacesMessage.SEVERITY_INFO,
 									null,
-									scQt.getQtNo() + " Published Sucessfully."
+									scQt.getQtNo() + " Publishing Started. Please wait a while for QT publishing."
 									));
 				}
 			}
