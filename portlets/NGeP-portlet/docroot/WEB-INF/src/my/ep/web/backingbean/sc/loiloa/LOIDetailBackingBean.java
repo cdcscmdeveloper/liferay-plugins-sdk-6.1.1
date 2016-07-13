@@ -352,74 +352,7 @@ public class LOIDetailBackingBean extends
 			handleException(e);
 		}
 	}
-
-	/**
-	 * Generate declaration from velocity.
-	 * 
-	 * @param scLoi
-	 *            the sc loi
-	 * @param scQt
-	 *            the sc qt
-	 * @return the string
-	 * @throws Exception
-	 *             the exception
-	 */
-	private String generateDeclarationFromVelocity(ScLoi scLoi, ScQt scQt)
-			throws Exception {
-		PmUser pmUser = scLoi.getAckByUser();
-		ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
-		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
-		VelocityContext context = new VelocityContext();
-		String procurementMode = null;
-		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoi.getScLoiLoa()
-				.getDocType())) {
-			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
-		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoi.getScLoiLoa()
-				.getDocType())) {
-			if (scQt != null) {
-				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
-						.getProcurementMode().getParameterCode())) {
-					procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
-				} else {
-					procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
-				}
-			}
-		}
-		String title = procurementMode != null ? procurementMode + " "
-				+ scLoiLoa.getTitle() : scLoiLoa.getTitle();
-		context.put("title", title);
-
-		String userName = "&#60;supplier user name&#62;";
-		String icNo = "&#60;ic no&#62;";
-		if (pmUser != null) {
-			userName = pmUser.getUserName();
-			icNo = pmUser.getIdentificationNo();
-		}
-		context.put("userName", userName);
-		context.put("icNo", icNo);
-
-		context.put("supplierName", scLoiLoa.getSupplierName());
-		// show (MOF/PKK/CIDB/ROS/ROC/ROB) in declaration.
-		if (scLoiLoa.getSmSupplier() != null) {
-			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
-			if (smSupplier.getSmMofAccounts() != null
-					&& smSupplier.getSmMofAccounts().size() > 0) {
-				context.put("mofNo", smSupplier.getSmMofAccounts().get(0)
-						.getMofNo());
-			} else {
-				context.put("mofNo", smSupplier.getRegNo());
-			}
-		}
-		context.put("agency", pmOrgProfile.getOrgName());
-
-		String termsConditions = DocumentGenerator
-				.getInstance()
-				.getHtmlFromVelocity(SourcingConstants.LOI_DECLARATION, context);
-		getManagedBean().setTermsConditions(termsConditions);
-
-		return termsConditions;
-	}
-
+	
 	/**
 	 * Pre render page navigation to multiple loi page based on task id
 	 * 
@@ -817,8 +750,9 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
 
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
+				getManagedBean().setRecSupplierList(resDTO.getLoiLoas());
 				// rec supplier in loi list
-				disableIsLoiRequired(resDTO.getLoiLoas());
+				//disableIsLoiRequired(resDTO.getLoiLoas());
 			}
 			// status
 			getCurrentStatus(getManagedBean().getCurrentStatusId());
@@ -1447,25 +1381,6 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Save pending lois.
-	 */
-	private void savePendingLois(){
-		List<ScLoiLoa> pendingloiloas  = getManagedBean().getRecSupplierList();
-		boolean isLoiLoasUpdate = updatePendingLoiLoas(pendingloiloas, getManagedBean().getDocType());
-
-		if (isLoiLoasUpdate) {
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setLoiLoaList(pendingloiloas);
-			AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO()
-					.saveLoiLoaList(reqDTO);
-			if(awardSupplierResDTO.isSuccessful()){
-				// reload loi list
-				reloadLOIList(getManagedBean().getSourceId());
-			}
-		}
-	}
-
-	/**
 	 * Edits the loi. page navigate to loi details page.
 	 * 
 	 * @param scLoi
@@ -2022,8 +1937,9 @@ public class LOIDetailBackingBean extends
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrievePendingLoiList(
 					reqDTO);
 			// rec supplier in loi list
-			disableIsLoiRequired(resDTO.getLoiLoas());
-
+			List<ScLoiLoa> recSupplierList = resDTO.getLoiLoas();
+			getManagedBean().setRecSupplierList(recSupplierList);
+			//disableIsLoiRequired(recSupplierList);
 		} finally{
 		}
 	}
@@ -5157,33 +5073,23 @@ public class LOIDetailBackingBean extends
 	 *
 	 * @param recSupplierList the rec supplier list
 	 */
-	private void disableIsLoiRequired(List<ScLoiLoa> recSupplierList){
-		boolean isRequiredSubmitBtn = Boolean.TRUE;
-		getManagedBean().setRecSupplierList(recSupplierList);
-		for (ScLoiLoa scLoiLoa : recSupplierList) {
-
-			if(null == scLoiLoa.getLoiRequired()){
-				scLoiLoa.setLoiRequiredDisabled(Boolean.FALSE);
-			} else{
-				scLoiLoa.setLoiRequiredDisabled(Boolean.TRUE);
-			}
-
-			if (null != scLoiLoa.getLoiRequired()) {
-				if(scLoiLoa.getLoiRequired() && scLoiLoa.isLoiLoaActive()){
-					isRequiredSubmitBtn = Boolean.FALSE;
-				}
-
-			} else{
-				isRequiredSubmitBtn = Boolean.FALSE;
-			}
-		}
-
-		if (isRequiredSubmitBtn) {
-			getManagedBean().setLoiRequired(Boolean.TRUE);
-		} else {
-			getManagedBean().setLoiRequired(Boolean.FALSE);
-		}
-	}
+	/*
+	 * private void disableIsLoiRequired(List<ScLoiLoa> recSupplierList){
+	 * boolean isRequiredSubmitBtn = Boolean.TRUE; for (ScLoiLoa scLoiLoa :
+	 * recSupplierList) {
+	 * 
+	 * if(null == scLoiLoa.getLoiRequired()){
+	 * scLoiLoa.setLoiRequiredDisabled(Boolean.FALSE); } else{
+	 * scLoiLoa.setLoiRequiredDisabled(Boolean.TRUE); }
+	 * 
+	 * if (null != scLoiLoa.getLoiRequired()) { if(scLoiLoa.getLoiRequired() &&
+	 * scLoiLoa.isLoiLoaActive()){ isRequiredSubmitBtn = Boolean.FALSE; }
+	 * 
+	 * } else{ isRequiredSubmitBtn = Boolean.FALSE; } }
+	 * 
+	 * if (isRequiredSubmitBtn) { getManagedBean().setLoiRequired(Boolean.TRUE);
+	 * } else { getManagedBean().setLoiRequired(Boolean.FALSE); } }
+	 */
 	
 	/**
 	 * Validate deduction payment dtls.
