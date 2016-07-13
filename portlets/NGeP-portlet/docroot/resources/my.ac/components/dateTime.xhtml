@@ -17,6 +17,7 @@
 		<cc:valueHolder name="calDate" />
 		<cc:valueHolder name="calHour" />
 		<cc:valueHolder name="calMin" />
+		<cc:attribute name="rowIndex" default="0" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -32,7 +33,7 @@
 			maxdate="#{cc.attrs.maxdate}" 
 			label="#{cc.attrs.label}"
 			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-			<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}SetValue();" />
+			<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
 			
 			<cc:insertChildren />
 		</p:calendar>
@@ -41,17 +42,17 @@
 			disabled="#{cc.attrs.disabled}"
 			label="#{cc.attrs.label}">
 			<f:selectItems value="#{dateTimeBackingBean.hoursDropdownValues}" />
-			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}SetValue();" />
+			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
 		</h:selectOneMenu>
 		<h:selectOneMenu id="calMin" style="width: 72px;"
 			disabled="#{cc.attrs.disabled}"
 			label="#{cc.attrs.label}">
 			<f:selectItems value="#{dateTimeBackingBean.minutesDropdownValues}" />
-			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}SetValue();" />
+			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
 		</h:selectOneMenu>
 		<p:message id="calDateMsg" for="calDate" display="icon" />
 		
-		<p:remoteCommand name="#{cc.id}SetValue"
+		<p:remoteCommand name="#{cc.id}#{cc.attrs.rowIndex}SetValue"
 			partialSubmit="true" process="@this" 
 			update="#{cc.id} #{cc.attrs.update}"
 			action="#{dateTimeBackingBean.postUpdateListener(cc.attrs.postUpdateListener)}">
