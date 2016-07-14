@@ -1384,4 +1384,22 @@ public class FinancialOrgBackingBean extends
 			getManagedBean().getPmAddress().setPmCity(tempCity);
 		}
 	}
+	
+	public boolean bizRegNoMandatory(){
+		boolean isMandatory = false;
+		if(getManagedBean().getFinancialOrg().getPmFinancialSvcs()!= null) {
+			for(PmFinancialSvc svc : getManagedBean().getFinancialOrg().getPmFinancialSvcs()){
+				if(DbValueConst.RECORD_STATUS_ACTIVE == svc.getRecordStatusFlg()){
+					if(svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND)  ||
+							svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_FACTORING_COMPANY)  ||
+							svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_REGISTRATION) ){
+						isMandatory = true;
+						break;
+					}
+				}
+				
+			}
+		}
+		return isMandatory;
+	}
 }
