@@ -73,6 +73,7 @@ public class QTProposalCloseSchedulingJob implements Job {
 						reSchedulePublicationForPublishFailQt(closedQt);
 					}else{
 						ScSchedulerHelper.getInstance().scheduleSimpleQTClosingJob(closedQt);
+						log.info("simple job was built to close proposal for QT with No: "+closedQt.getQtNo());
 					}
 				}
 			}
