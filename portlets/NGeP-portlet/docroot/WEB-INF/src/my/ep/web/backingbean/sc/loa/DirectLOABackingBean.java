@@ -1132,15 +1132,15 @@ public class DirectLOABackingBean extends
 		Locale locale = new FacesScopes().getUserLocale();
 		
 		if (StringUtils.isBlank(
-				scLoa.getScLoiLoa().getMofNo())) {
-			throw new EpException(MessageConst.ERROR_760400,
-					new String[] { ResourceBundleUtils.getMessage("lbl.sc.mof.no", 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-		}
-		if (StringUtils.isBlank(
 				scLoa.getScLoiLoa().getSupplierName())) {
 			throw new EpException(MessageConst.ERROR_760400,
 					new String[] { ResourceBundleUtils.getMessage("lbl.sc.supplier.name", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+		}
+		if (StringUtils.isBlank(
+				scLoa.getScLoiLoa().getMofNo())) {
+			throw new EpException(MessageConst.ERROR_760400,
+					new String[] { ResourceBundleUtils.getMessage("lbl.sc.mof.no", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 		if (scLoa.getSupplierAddress() == null) {
@@ -2095,11 +2095,6 @@ public class DirectLOABackingBean extends
 		getManagedBean().getScLoa().getScLoiLoa().setSmSupplier(suSmSupplier);
 		getManagedBean().getScLoa().getScLoiLoa()
 				.setSupplierName(suSmSupplier.getCompanyName());
-
-		/*
-		 * getManagedBean().getScLoa().getScLoiLoa()
-		 * .setMofNo(suSmSupplier.getSmMofAccount().getMofNo());
-		 */
 
 		getManagedBean().getScLoa().getScLoiLoa()
 				.setEpNo(suSmSupplier.getEpNo());
