@@ -13,13 +13,14 @@ package my.ep.web.backingbean.integration.interfacegfmas;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -29,6 +30,7 @@ import my.ep.biz.service.pm.common.batch.IDIInterfaceSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceAgOffSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceCmBankSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfacePpSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfacePrgActSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfacePtjSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotDanaSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotSO;
@@ -39,6 +41,7 @@ import my.ep.dto.pm.common.interfaceptj.InterfaceCmBankReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogReqDto;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogResDto;
 import my.ep.dto.pm.common.interfaceptj.InterfacePpReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfacePrgActReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfacePtjReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceVotDanaReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceVotReqDTO;
@@ -66,8 +69,10 @@ import my.ep.web.managedbean.intergration.interfacegfmas.GfMasManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -996,6 +1001,27 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		if (this.getManagedBean().getSelectedProgActList() != null) {
 			log.info("***************ProgActList***SIZE******************>>"
 					+ this.getManagedBean().getSelectedProgActList().size());
+
+			
+			IInterfacePrgActSO interfaceprgActSO = (IInterfacePrgActSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfacePrgActSO.class);
+			InterfacePrgActReqDTO reqDTO = new InterfacePrgActReqDTO();
+			
+			reqDTO.setFileName(this.getManagedBean().getFileName());
+			reqDTO.setInterfacePrgActLs(this.getManagedBean().getSelectedProgActList());
+			
+			try {
+				interfaceprgActSO.saveOrUpdatePrgActList(reqDTO);
+			} catch (Exception e) {
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+				
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPrgAct.xhtml";
+			}
+			
+			
+			
+
 		} else if (this.getManagedBean().getSelectedProjectList() != null) {
 			log.info("************ProjectList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedProjectList().size());
@@ -1089,7 +1115,11 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			try {
 				interfaceVotDanaSO.saveOrUpdateVotDanaList(reqDTO);
 			} catch (Exception e) {
-				System.out.println("error:"+e.getMessage());
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+				
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasDana.xhtml";
 			}
 			
 			
@@ -1133,7 +1163,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				interfacevotSO.saveOrUpdateVotFundList(reqDTO);
 			} catch (Exception e) {
 				
-				System.out.println("*******"+e.getMessage());
+				
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+				
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasVot.xhtml";
 			}
 			
 			this.getManagedBean().setSelectedVotList(null);
