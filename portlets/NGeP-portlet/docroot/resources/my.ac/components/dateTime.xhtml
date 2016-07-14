@@ -7,6 +7,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<cc:interface componentType="ac.DateTimeInput">
+		<cc:attribute name="id" />
 		<cc:attribute name="required" default="false" />
 		<cc:attribute name="disabled" default="false" />
 		<cc:attribute name="mindate" />
@@ -18,11 +19,12 @@
 		<cc:valueHolder name="calHour" />
 		<cc:valueHolder name="calMin" />
 		<cc:attribute name="rowIndex" default="0" />
+		<cc:attribute name="update" />
 	</cc:interface>
 
 	<cc:implementation>
 	<f:subview id="#{cc.id}sb">
-	<h:panelGroup id="#{cc.id}">
+	<h:panelGroup id="#{cc.attrs.id}">
 		<p:calendar id="calDate"
 			showOn="button" 
 			size="7"
@@ -40,13 +42,15 @@
 		
 		<h:selectOneMenu id="calHour" style="width: 62px;"
 			disabled="#{cc.attrs.disabled}"
-			label="#{cc.attrs.label}">
+			required="#{cc.attrs.required}"
+			label="#{cc.attrs.label} #{lbl['lbl.txt.hour']}">
 			<f:selectItems value="#{dateTimeBackingBean.hoursDropdownValues}" />
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
 		</h:selectOneMenu>
 		<h:selectOneMenu id="calMin" style="width: 72px;"
 			disabled="#{cc.attrs.disabled}"
-			label="#{cc.attrs.label}">
+			required="#{cc.attrs.required}"
+			label="#{cc.attrs.label} #{lbl['lbl.txt.minute']}">
 			<f:selectItems value="#{dateTimeBackingBean.minutesDropdownValues}" />
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}#{cc.attrs.rowIndex}SetValue();" />
 		</h:selectOneMenu>
