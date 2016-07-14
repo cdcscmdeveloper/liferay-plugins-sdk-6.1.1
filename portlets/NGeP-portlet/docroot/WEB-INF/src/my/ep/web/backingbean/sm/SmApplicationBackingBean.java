@@ -5028,11 +5028,14 @@ public class SmApplicationBackingBean extends
 									"suppPersonnelInfoDtWidVar.paginator.endLink.click()");
 				}
 			}
-			for(SmStaffAcademic aca : getManagedBean().getSelectedShareHolder().getSmStaffAcademics()) {
-				if(aca.getQualificationId() != null && aca.getQualificationId().getParameterType() == null) {
-					aca.setStaffAcademicId(aca.getQualificationId().getParameterId());
-				}
-			}
+//			for(SmStaffAcademic aca : getManagedBean().getSelectedShareHolder().getSmStaffAcademics()) {
+//				if(aca.isBrandNew()) {
+//					if(aca.getQualificationId() != null && aca.getQualificationId().getParameterType() == null) {
+////						aca.setStaffAcademicId(aca.getQualificationId().getParameterId());
+//						aca.setQualificationLevelId(qualificationLevelId)
+//					}	
+//				}
+//			}
 			saveOrUpdateAppl();
 			SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 					getManagedBean().getSmAppl(), getManagedBean()
