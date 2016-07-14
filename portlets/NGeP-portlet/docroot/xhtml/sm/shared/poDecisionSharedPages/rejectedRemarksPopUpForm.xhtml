@@ -9,30 +9,35 @@
 	<br />
 	<p:messages id="applicationRejectedRemarksMsg" showSummary="false"
 		showDetail="true" autoUpdate="true" closable="true" />
-
-	<table style="width: 100%">
-		<tr>
-			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-				<td style="vertical-align: top; width: 15%"><p:outputLabel
-						value="#{lbl['lbl.sm.rejection.reasons']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-
-				<td><p:selectManyMenu showCheckbox="true" id="applRejectSelBox"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.rejection.reasons']}"
-						value="#{backingBean.managedBean.reasonId}"
-						style="height:200px;width:750px;">
-						<f:selectItems value="#{backingBean.managedBean.reasonDescList}"
-							var="res" itemLabel="#{res.reasonDesc}"
-							itemValue="#{res.pmReason.reasonId}" />
-						<p:ajax update=":form:tt:rejRemarksPanelTst" event="change"
-							process="applRejectSelBox"
-							listener="#{backingBean.verifySelectedRejectReasons()}" />
-					</p:selectManyMenu> <p:message id="applRejectSelBoxMsg" for="applRejectSelBox"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</c:if>
-		</tr>
-	</table>
+	
+	<ui:remove>
+		<table style="width: 100%">
+			<tr>
+				<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+					<td style="vertical-align: top; width: 15%"><p:outputLabel
+							value="#{lbl['lbl.sm.rejection.reasons']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+	
+					<td><p:selectManyMenu showCheckbox="true" id="applRejectSelBox"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.rejection.reasons']}"
+							value="#{backingBean.managedBean.reasonId}"
+							style="height:200px;width:750px;">
+							<f:selectItems value="#{backingBean.managedBean.reasonDescList}"
+								var="res" itemLabel="#{res.reasonDesc}"
+								itemValue="#{res.pmReason.reasonId}" />
+							<p:ajax update=":form:tt:rejRemarksPanelTst" event="change"
+								process="applRejectSelBox"
+								listener="#{backingBean.verifySelectedRejectReasons()}" />
+						</p:selectManyMenu> <p:message id="applRejectSelBoxMsg" for="applRejectSelBox"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</c:if>
+			</tr>
+		</table>
+	</ui:remove>
+	
+	<ui:include src="searchRejectedReason.xhtml" />
+	
 	<p:outputPanel id="rejRemarksPanelTst">
 		<table style="width: 100%">
 			<tr>
