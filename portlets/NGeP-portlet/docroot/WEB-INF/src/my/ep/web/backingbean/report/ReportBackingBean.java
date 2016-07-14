@@ -13922,8 +13922,12 @@ public class ReportBackingBean extends
 	 * On item code change for lov.
 	 */
 	public void onItemCodeChangeForLOV() {
-		if (this.getManagedBean().getSelectedItem() != null) {
+		if (this.getManagedBean().getSelectedItem() != null) {			
 			this.setCmItemName(this.getManagedBean().getSelectedItem()
+					.getItemName());
+			this.setPmItemCode(this.getManagedBean().getSelectedItem()
+					.getExtensionCode());
+			this.setPmItemName(this.getManagedBean().getSelectedItem()
 					.getItemName());
 		} else if (this.getManagedBean().getSelectedUnspscItem() != null) {
 			this.setPmItemCode(this.getManagedBean().getSelectedUnspscItem()

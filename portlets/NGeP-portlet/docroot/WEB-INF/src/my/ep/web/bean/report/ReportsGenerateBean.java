@@ -126,6 +126,7 @@ public class ReportsGenerateBean {
 	/** The instruction info view. */
 	private boolean instructionInfoView = false;
 	
+	/** The dp instruction info view. */
 	private boolean dpInstructionInfoView = false;
 
 	/** The cm madatory indicator view. */
@@ -683,6 +684,7 @@ public class ReportsGenerateBean {
 	/** The sm gen district view. */
 	private boolean smGenDistrictView = false;
 	
+	/** The sm site visit status view. */
 	private boolean smSiteVisitStatusView = false;
 
 	/** The sm sa application no view. */
@@ -3937,6 +3939,9 @@ public class ReportsGenerateBean {
 
 	/** The pm status view. */
 	private boolean pmStatusView = false;
+	
+	/** The pm list of org status view. */
+	private boolean pmListOfOrgStatusView=false;
 
 	/** The pm financial org name view. */
 	private boolean pmFinancialOrgNameView = false;
@@ -4179,6 +4184,7 @@ public class ReportsGenerateBean {
 	/** The district tot var. */
 	private String districtTotVar = ReportConst.EMPTY_VAL;
 	
+	/** The site visit status tot var. */
 	private String siteVisitStatusTotVar = ReportConst.EMPTY_VAL;	
 
 	/** The application no tot var. */
@@ -4688,6 +4694,12 @@ public class ReportsGenerateBean {
 	/** The Pm mandatory org type view. */
 	private boolean pmMandatoryOrgTypeView = false;
 	
+	/** The pm mandatory org type for lop view. */
+	private boolean pmMandatoryOrgTypeForLOPView=false;
+	
+	/** The pm mandatory org name for lop view. */
+	private boolean pmMandatoryOrgNameForLOPView=false;
+	
 	/** The pm non mandatory org type view. */
 	private boolean pmNonMandatoryOrgTypeView = false;
 	
@@ -4735,6 +4747,12 @@ public class ReportsGenerateBean {
 
 	/** The Pm itme code view. */
 	private boolean pmItemCodeView = false;
+	
+	/** The pm contract item code view. */
+	private boolean pmContractItemCodeView=false;
+	
+	/** The pm contract item name view. */
+	private boolean pmContractItemNameView=false;
 
 	/** The Pm from date view. */
 	private boolean pmFromDateView = false;
@@ -4871,6 +4889,44 @@ public class ReportsGenerateBean {
 	 */
 	public String getScLOANoVar() {
 		return scLOANoVar;
+	}
+
+	/**
+	 * Checks if is pm contract item code view.
+	 * 
+	 * @return the pmContractItemCodeView
+	 */
+	public boolean isPmContractItemCodeView() {
+		return pmContractItemCodeView;
+	}
+
+	/**
+	 * Sets the pm contract item code view.
+	 * 
+	 * @param pmContractItemCodeView
+	 *            the pmContractItemCodeView to set
+	 */
+	public void setPmContractItemCodeView(boolean pmContractItemCodeView) {
+		this.pmContractItemCodeView = pmContractItemCodeView;
+	}
+
+	/**
+	 * Checks if is pm contract item name view.
+	 * 
+	 * @return the pmContractItemNameView
+	 */
+	public boolean isPmContractItemNameView() {
+		return pmContractItemNameView;
+	}
+
+	/**
+	 * Sets the pm contract item name view.
+	 * 
+	 * @param pmContractItemNameView
+	 *            the pmContractItemNameView to set
+	 */
+	public void setPmContractItemNameView(boolean pmContractItemNameView) {
+		this.pmContractItemNameView = pmContractItemNameView;
 	}
 
 	/**
@@ -5068,6 +5124,44 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is pm mandatory org type for lop view.
+	 * 
+	 * @return the pmMandatoryOrgTypeForLOPView
+	 */
+	public boolean isPmMandatoryOrgTypeForLOPView() {
+		return pmMandatoryOrgTypeForLOPView;
+	}
+
+	/**
+	 * Sets the pm mandatory org type for lop view.
+	 * 
+	 * @param pmMandatoryOrgTypeForLOPView
+	 *            the pmMandatoryOrgTypeForLOPView to set
+	 */
+	public void setPmMandatoryOrgTypeForLOPView(boolean pmMandatoryOrgTypeForLOPView) {
+		this.pmMandatoryOrgTypeForLOPView = pmMandatoryOrgTypeForLOPView;
+	}
+
+	/**
+	 * Checks if is pm mandatory org name for lop view.
+	 * 
+	 * @return the pmMandatoryOrgNameForLOPView
+	 */
+	public boolean isPmMandatoryOrgNameForLOPView() {
+		return pmMandatoryOrgNameForLOPView;
+	}
+
+	/**
+	 * Sets the pm mandatory org name for lop view.
+	 * 
+	 * @param pmMandatoryOrgNameForLOPView
+	 *            the pmMandatoryOrgNameForLOPView to set
+	 */
+	public void setPmMandatoryOrgNameForLOPView(boolean pmMandatoryOrgNameForLOPView) {
+		this.pmMandatoryOrgNameForLOPView = pmMandatoryOrgNameForLOPView;
+	}
+
+	/**
 	 * Sets the ct circular effective to date var.
 	 * 
 	 * @param ctCircularEffectiveToDateVar
@@ -5184,6 +5278,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is dp instruction info view.
+	 * 
 	 * @return the dpInstructionInfoView
 	 */
 	public boolean isDpInstructionInfoView() {
@@ -5191,7 +5287,10 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param dpInstructionInfoView the dpInstructionInfoView to set
+	 * Sets the dp instruction info view.
+	 * 
+	 * @param dpInstructionInfoView
+	 *            the dpInstructionInfoView to set
 	 */
 	public void setDpInstructionInfoView(boolean dpInstructionInfoView) {
 		this.dpInstructionInfoView = dpInstructionInfoView;
@@ -9042,6 +9141,25 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is pm list of org status view.
+	 * 
+	 * @return the pmListOfOrgStatusView
+	 */
+	public boolean isPmListOfOrgStatusView() {
+		return pmListOfOrgStatusView;
+	}
+
+	/**
+	 * Sets the pm list of org status view.
+	 * 
+	 * @param pmListOfOrgStatusView
+	 *            the pmListOfOrgStatusView to set
+	 */
+	public void setPmListOfOrgStatusView(boolean pmListOfOrgStatusView) {
+		this.pmListOfOrgStatusView = pmListOfOrgStatusView;
+	}
+
+	/**
 	 * Sets the cm extention type var.
 	 * 
 	 * @param cmExtentionTypeVar
@@ -11583,6 +11701,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Gets the site visit status tot var.
+	 * 
 	 * @return the siteVisitStatusTotVar
 	 */
 	public String getSiteVisitStatusTotVar() {
@@ -11590,7 +11710,10 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param siteVisitStatusTotVar the siteVisitStatusTotVar to set
+	 * Sets the site visit status tot var.
+	 * 
+	 * @param siteVisitStatusTotVar
+	 *            the siteVisitStatusTotVar to set
 	 */
 	public void setSiteVisitStatusTotVar(String siteVisitStatusTotVar) {
 		this.siteVisitStatusTotVar = siteVisitStatusTotVar;
@@ -15876,15 +15999,7 @@ public class ReportsGenerateBean {
 		return pmItemCodeView;
 	}
 
-	/**
-	 * Sets the pm itme code view.
-	 * 
-	 * @param pmItemCodeView
-	 *            the new pm itme code view
-	 */
-	public void setPmItmeCodeView(boolean pmItemCodeView) {
-		this.pmItemCodeView = pmItemCodeView;
-	}
+	
 
 	/**
 	 * Checks if is pm from date view.
@@ -17342,6 +17457,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is sm site visit status view.
+	 * 
 	 * @return the smSiteVisitStatusView
 	 */
 	public boolean isSmSiteVisitStatusView() {
@@ -17349,7 +17466,10 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smSiteVisitStatusView the smSiteVisitStatusView to set
+	 * Sets the sm site visit status view.
+	 * 
+	 * @param smSiteVisitStatusView
+	 *            the smSiteVisitStatusView to set
 	 */
 	public void setSmSiteVisitStatusView(boolean smSiteVisitStatusView) {
 		this.smSiteVisitStatusView = smSiteVisitStatusView;

@@ -217,7 +217,27 @@
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
-						
+
+						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmContractItemCodeView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.itemCode']}" />
+							<ac:lov id="contactItemCode" style="width:265px;" lovId="CM_ITEM_REPORT"
+								size="40" update="@form" headerText="#{lbl['lbl.rpt.itemCode']}"
+								readonly="true"
+								value="#{reportBackingBean.managedBean.selectedItem.extensionCode}"
+								postUpdateListener="#{reportBackingBean.onItemCodeChangeForLOV()}"
+								saveObject="reportBackingBean.managedBean.selectedItem" />
+						</c:if>
+						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmContractItemNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.itemName']}" />
+							<p:inputText maxlength="100" readonly="true"
+								value="#{reportBackingBean.pmItemName}" style="width:290px;">
+								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+							</p:inputText>
+						</c:if>
+
+
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmIdentificationNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.identificationNo']}" />
@@ -403,11 +423,11 @@
 					<TD class="pmColumn1Width"><p:outputLabel
 							value="#{lbl['lbl.rpt.itemCode']}" /></TD>
 					<TD><ac:lov id="itemCode" style="width:265px;"
-							lovId="CM_UNSPSC_REPORT" size="40" update="@form"
+							lovId="CM_ITEM_REPORT" size="40" update="@form"
 							headerText="#{lbl['lbl.rpt.itemCode']}" readonly="true"
-							value="#{reportBackingBean.managedBean.selectedUnspscItem.unspscCode}"
+							value="#{reportBackingBean.managedBean.selectedItem.extensionCode}"
 							postUpdateListener="#{reportBackingBean.onItemCodeChangeForLOV()}"
-							saveObject="reportBackingBean.managedBean.selectedUnspscItem" /></TD>
+							saveObject="reportBackingBean.managedBean.selectedItem" /></TD>
 				</c:if>
 				<c:if
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemNameView}">
