@@ -11,13 +11,13 @@
 		<table>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.buzregno']}" />
-					<p:outputPanel id="mandatoryFinBizRegNoPanel" rendered="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesPaymentBank)}">
+					<p:outputPanel id="mandatoryFinBizRegNoPanel" rendered="#{financialOrgBackingBean.bizRegNoMandatory()}">
 					<p:outputLabel id="mandatoryFinBizRegNoId" value="*" styleClass="mandatory" 
 						/>
 					</p:outputPanel>
 				</td>
 				<td><p:inputText id="bizRegNo" styleClass="ppDisplayTextL"
-						required="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesPaymentBank) and 
+						required="#{financialOrgBackingBean.bizRegNoMandatory() and 
 						!empty param['disableValidation']}"
 						label="#{lbl['lbl.pm.financialorg.buzregno']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.bizRegNumber}"						 
