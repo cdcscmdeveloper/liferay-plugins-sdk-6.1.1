@@ -41,7 +41,7 @@
 			<tr>
 			<td valign="top" style="width: 160px;"><p:outputLabel
 						value="#{lbl['lbl.fl.do.title']}" /></td>
-				<td ><p:inputTextarea cols="40" rows="2"
+				<td ><p:inputTextarea cols="67" rows="2"
 						style=" margin-bottom:5px;"
 						autoResize="false"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.title}"
@@ -66,7 +66,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}" /></td>
-				<td><p:inputText disabled="true" size="30" value="#{invoiceBackingBean.getParameterDesc(invoiceBackingBean.managedBean.invoice.flRequest.ctContract.fulfillmentType)}" 
+				<td><p:inputText disabled="true" size="66" value="#{invoiceBackingBean.getParameterDesc(invoiceBackingBean.managedBean.invoice.flRequest.ctContract.fulfillmentType)}" 
 				rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}"/></td>
 			</tr>
 		</table>

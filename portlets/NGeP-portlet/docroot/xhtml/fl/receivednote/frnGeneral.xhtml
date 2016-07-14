@@ -15,34 +15,34 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
+				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
-				<td><p:inputText size="66" id="controlOff"
-						value="#{receivedNoteBackingBean.retrievePegawaiPengawalByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, receivedNoteBackingBean.managedBean.fulfilmentRequest.agApprovedDate)}"
-						disabled="true" /></td>
+				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{receivedNoteBackingBean.retrievePegawaiPengawalByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, receivedNoteBackingBean.managedBean.fulfilmentRequest.agApprovedDate)}"/>
+				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
+				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="66" id="ptjGroup"
-						value="#{receivedNoteBackingBean.retrieveJabatanByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, receivedNoteBackingBean.managedBean.fulfilmentRequest.agApprovedDate)}"
-						disabled="true" /></td>
+				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{receivedNoteBackingBean.retrieveJabatanByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, receivedNoteBackingBean.managedBean.fulfilmentRequest.agApprovedDate)}"/>
+				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td width="460px"><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td width="460px"><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td width="460px"><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
