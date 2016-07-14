@@ -82,6 +82,7 @@ public class QTProposalCloseSchedulingJob implements Job {
 					} catch (Exception e) {
 						log.info("$&$&$ simple job build to close_Proposal/Reschedule failed for QT with No: "
 								+ closedQt.getQtNo());
+						log.error(e.getLocalizedMessage());
 					}
 				}
 			}

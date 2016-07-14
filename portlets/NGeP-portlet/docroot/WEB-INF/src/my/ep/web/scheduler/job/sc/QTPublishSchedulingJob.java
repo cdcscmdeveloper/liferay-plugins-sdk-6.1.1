@@ -74,6 +74,7 @@ public class QTPublishSchedulingJob implements Job {
 					}catch(Exception e){
 						log.info("$&$&$ simple job build to publish/Reschedule failed for QT with No: "
 								+ qtToPublish.getQtNo());
+						log.error(e.getLocalizedMessage());
 					}
 				}
 			}
