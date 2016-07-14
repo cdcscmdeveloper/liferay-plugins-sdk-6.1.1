@@ -80,7 +80,8 @@
 					<ac:scSingleFileUploadButton id="documentUploadBtn"
 						popupWidgetVar="documentUploadDlg"
 						attachment="#{scQtDocReport.scQtDocReportAttachment}"
-						rowIndex="#{rowIndex}">
+						rowIndex="#{rowIndex}"
+						readonly="#{!isRendered}">
 						<f:setPropertyActionListener for="actionEvent"
 							target="#{qTDocumentsBackingBean.managedBean.selectedScQtDocReport}"
 							value="#{scQtDocReport}" /> 
