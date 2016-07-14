@@ -7118,7 +7118,11 @@ public class EvaluationBackingBean extends
 					&& !this.getManagedBean().getScQtMeetings().isEmpty()) {
 				for (ScQtMeeting meeting : this.getManagedBean()
 						.getScQtMeetings()) {
-					compareMeetingDates(meeting, localMeetingList);
+					if(null!=meeting.getMeetingDate()){
+						compareMeetingDates(meeting, localMeetingList);
+						}else{
+							throw new EpException(MessageConst.ERROR_760418);
+						}
 				}
 				qtCommittee.setScQtMeetings(this.getManagedBean()
 						.getScQtMeetings());
