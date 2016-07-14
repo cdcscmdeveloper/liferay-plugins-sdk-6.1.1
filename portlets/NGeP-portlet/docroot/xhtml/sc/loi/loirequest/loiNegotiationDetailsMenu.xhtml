@@ -50,13 +50,16 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.date']}"/>
 				</f:facet>
-				<p:calendar id="date" readonlyInput="true" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}" label="#{lbl['lbl.sc.date']}"
-					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" showOn="button"
-					mindate="#{DateUtils.getCurrentDate()}"
-					size="12" value="#{negoloc.negoDate}" >
-					<p:ajax partialSubmit="true" process="@this"
-						update="@this" />
-					</p:calendar>
+				
+	<ac:dateTime id="date"
+      mindate="#{DateUtils.getCurrentDate()}"
+      disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}"
+      label="#{lbl['lbl.sc.date']}"
+      value="#{negoloc.negoDate}"
+      update="@([id$=date])"
+      rowIndex="#{rowIndex}">
+     </ac:dateTime>
+					
 					<p:message id="dateMsg" for="date" display="icon" />
 			</p:column>
 
