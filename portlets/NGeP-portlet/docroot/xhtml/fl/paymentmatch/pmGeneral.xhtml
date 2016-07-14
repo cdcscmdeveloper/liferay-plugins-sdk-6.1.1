@@ -16,33 +16,33 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td style="width: 106px;"><p:outputLabel
+				<td valign="top" style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
-				<td><p:inputText size="66" id="controlOff"
-						value="#{paymentMatchBackingBean.retrievePegawaiPengawalByOrgProfileId(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgProfileId, paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agApprovedDate)}"
-						disabled="true" /></td>
+				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{paymentMatchBackingBean.retrievePegawaiPengawalByOrgProfileId(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgProfileId, paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agApprovedDate)}"/>
+				</td>
 			</tr>
 			<tr>
-				<td style="width: 106px;"><p:outputLabel
+				<td valign="top" style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="66" id="ptjGroup"
-						value="#{paymentMatchBackingBean.retrieveJabatanByOrgProfileId(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgProfileId, paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agApprovedDate)}"
-						disabled="true" /></td>
+				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{paymentMatchBackingBean.retrieveJabatanByOrgProfileId(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgProfileId, paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agApprovedDate)}"/>
+				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgCode} #{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 			</tr>
-			<tr>
+			<tr valign="top">
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.orgCode} #{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.orgName}"/>
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgCode} #{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>

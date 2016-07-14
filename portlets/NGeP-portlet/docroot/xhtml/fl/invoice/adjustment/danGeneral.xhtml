@@ -40,7 +40,7 @@
 							disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
+					<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:396px;" 
 						value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgName}"/>
 					<ac:iconTooltip
@@ -50,7 +50,7 @@
 						value="#{danBackingBean.managedBean.adjustment.flRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : danBackingBean.getParameterDesc(danBackingBean.managedBean.adjustment.flRequest.procurementTypeCategory)}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
+					<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:396px;" 
 						value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgName}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
@@ -61,7 +61,7 @@
 							value="#{lbl['lbl.fl.tooltip.supp.inv.no']}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel
+					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:396px;" 
 						value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"/>
