@@ -64,11 +64,16 @@ public class QTPublishSchedulingJob implements Job {
 					.retriveQuotationTendersScheduledToPublish().getQtlist();
 			if (!publisingQts.isEmpty()) {
 				for (ScQt qtToPublish : publisingQts) {
-					if(qtToPublish.getPublishDate().before(DateUtils.getCurrentDate())){
-						reSchedulePublicationForPublishFailQt(qtToPublish);
-					}else{
-						ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(qtToPublish);
-						log.info("Simple Job was Built to Publish QT with No: "+qtToPublish.getQtNo());
+					try{
+						if(qtToPublish.getPublishDate().before(DateUtils.getCurrentDate())){
+							reSchedulePublicationForPublishFailQt(qtToPublish);
+						}else{
+							ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(qtToPublish);
+							log.info("Simple Job was Built to Publish QT with No: "+qtToPublish.getQtNo());
+						}
+					}catch(Exception e){
+						log.info("$&$&$ simple job build to publish/Reschedule failed for QT with No: "
+								+ qtToPublish.getQtNo());
 					}
 				}
 			}
