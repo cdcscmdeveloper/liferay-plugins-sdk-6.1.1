@@ -6,17 +6,18 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	
 
 
 
 
-	<p:panel id="evaluationPreparationMeetingDtlsId" header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
+
+	<p:panel id="evaluationPreparationMeetingDtlsId"
+		header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.meeting.details.instruction']}" escape="false" />
 
 		<p:dataTable var="meeting" id="evaluationmeetingDetails" rows="10"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			widgetVar="evaluationMeeting"
 			value="#{evaluationBackingBean.managedBean.scQtMeetings}"
 			selection="#{evaluationBackingBean.managedBean.meetingMultiSelect}"
@@ -38,7 +39,8 @@
 				<p:selectBooleanCheckbox
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					value="#{meeting.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=evaluationPreparationMeetingDtlsId])" />
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=evaluationPreparationMeetingDtlsId])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.meeting.date']}"
@@ -51,14 +53,14 @@
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 				</f:facet>
-				<p:calendar value="#{meeting.meetingDate}" showOn="button"
-					mindate="#{evaluationMeetingBackingBean.managedBean.today}"
+
+				<ac:dateTime id="evaluationMeetingId"
+					mindate="#{evaluationBackingBean.managedBean.today}"
+					required="true" label="#{lbl['lbl.sc.meeting.date']}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
-					id="evaluationMeetingId" label="#{lbl['lbl.sc.meeting.date']}"
-					required="true"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}">
-					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
-					</p:calendar>
+					value="#{meeting.meetingDate}" update="@([id$=evaluationMeetingId])"
+					rowIndex="#{index}">
+				</ac:dateTime>
 				<p:message id="meetingEvaluationid" for="evaluationMeetingId"
 					display="icon"></p:message>
 
@@ -70,16 +72,19 @@
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
-					<ac:iconTooltip id="meetingDtls#{index}" value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
+					<ac:iconTooltip id="meetingDtls#{index}"
+						value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
 				</f:facet>
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
-				onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
+					onkeyup="limitTextArea(this,255);"
+					onkeydown="limitTextArea(this,255);"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					maxlength="255" cols="40" id="evaluationMeetingLocation"
 					required="true" label="#{lbl['lbl.sc.meeting.location']}">
-					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
-					</p:inputTextarea>
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						update="@this"></p:ajax>
+				</p:inputTextarea>
 				<p:message id="meetingEvaluationLocationid"
 					for="evaluationMeetingLocation" display="icon"></p:message>
 			</p:column>
@@ -97,11 +102,11 @@
 				<p:selectOneMenu id="meetingstatus" required="true"
 					style="width:100px;"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
-					label="#{lbl['lbl.sc.status']}"
-					value="#{meeting.meetingStatusStr}">
+					label="#{lbl['lbl.sc.status']}" value="#{meeting.meetingStatusStr}">
 					<f:selectItems
 						value="#{evaluationBackingBean.getStatusDropdownValues('SC', 'MS')}" />
-					<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{evaluationBackingBean.changeMeetingStatus(meeting)}"/>
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{evaluationBackingBean.changeMeetingStatus(meeting)}" />
 				</p:selectOneMenu>
 
 			</p:column>
@@ -111,16 +116,17 @@
 
 				<p:inputTextarea value="#{meeting.remark}" rows="2" cols="40"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
-					onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
-					maxlength="100" >
-					<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
-					</p:inputTextarea>
+					onkeyup="limitTextArea(this,100);"
+					onkeydown="limitTextArea(this,100);" maxlength="100">
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						update="@this"></p:ajax>
+				</p:inputTextarea>
 
 			</p:column>
 
 
 		</p:dataTable>
-		
+
 		<div align="right">
 			<p:commandButton id="meetingbutton" styleClass="BtnSpacing"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
@@ -129,8 +135,9 @@
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationBackingBean.addMeetingAction}"
 				update="evaluationmeetingDetails" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
-			id="evaluationPreparaionMeetingDtlsDeleteBtnId"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				styleClass="BtnSpacing"
+				id="evaluationPreparaionMeetingDtlsDeleteBtnId"
 				disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.deleteselectedList(evaluationBackingBean.managedBean.scQtMeetings)}"
 				process="@this" partialSubmit="true"
 				oncomplete="evaluationMeetingDtlsDeletePopUp.show();"
