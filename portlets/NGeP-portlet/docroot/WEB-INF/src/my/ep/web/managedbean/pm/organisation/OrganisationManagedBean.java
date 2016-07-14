@@ -1,6 +1,5 @@
 package my.ep.web.managedbean.pm.organisation;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +32,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private int selectedTabIndex;
 	// Organization Search
 	private OrganisationSearchBean organisationSearchBean;
-	private int searchOrgCategory = 0;
+	private Integer searchOrgCategory = 0;
 	private int orgCategory = 0;
 	private String orgType;
 	private Long orgTypeId;
@@ -94,6 +93,8 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private SmSupplierBank selectedDeletePaymentBank;
 	private SmPersonnel selectedDeleteSupplierUser;
 	private PmProfileGroup selectedDeleteOrgUnit;
+	
+	private boolean notFirstRun;
 
 	public OrganisationManagedBean() {
 
@@ -695,7 +696,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	/**
 	 * @return the searchOrgCategory
 	 */
-	public int getSearchOrgCategory() {
+	public Integer getSearchOrgCategory() {
 		return searchOrgCategory;
 	}
 
@@ -703,7 +704,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	 * @param searchOrgCategory
 	 *            the searchOrgCategory to set
 	 */
-	public void setSearchOrgCategory(int searchOrgCategory) {
+	public void setSearchOrgCategory(Integer searchOrgCategory) {
 		this.searchOrgCategory = searchOrgCategory;
 	}
 
@@ -835,5 +836,19 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	 */
 	public void setSelectedDeleteOrgUnit(PmProfileGroup selectedDeleteOrgUnit) {
 		this.selectedDeleteOrgUnit = selectedDeleteOrgUnit;
+	}
+
+	/**
+	 * @return the notFirstRun
+	 */
+	public boolean isNotFirstRun() {
+		return notFirstRun;
+	}
+
+	/**
+	 * @param notFirstRun the notFirstRun to set
+	 */
+	public void setNotFirstRun(boolean notFirstRun) {
+		this.notFirstRun = notFirstRun;
 	}
 }

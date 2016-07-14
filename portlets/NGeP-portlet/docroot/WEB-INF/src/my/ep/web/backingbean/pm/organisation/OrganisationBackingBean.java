@@ -154,6 +154,7 @@ public class OrganisationBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
+		
 	}
 
 	/**
@@ -271,6 +272,7 @@ public class OrganisationBackingBean extends
 	public void searchOrganisation() {
 		if (getManagedBean().getOrganisationSearchBean().getOrgTypeCode() != null) {
 			getManagedBean().setIslazy(true);
+			getManagedBean().setNotFirstRun(true);
 			searchOrganisation.reloadData();
 		}
 
@@ -475,6 +477,7 @@ public class OrganisationBackingBean extends
 		log.info("resetOrgSearchBean");
 		this.getManagedBean().setOrganisationSearchBean(null);
 		getManagedBean().setIslazy(false);
+		getManagedBean().setNotFirstRun(false);
 		searchOrganisation = new SearchOrgPagingDataModel();
 	}
 
@@ -2649,5 +2652,15 @@ public class OrganisationBackingBean extends
 				supplierGstSO = null;
 			}
 		}
+	}
+	
+	public void autoSelectOrgType(){
+		//RequestContext.getCurrentInstance().execute("if($(\"input[id$=':form:sorSearchOrgTypeId:0']\").is(':disabled')){console.log(\"0\"); $(\"input[id$=':form:sorSearchOrgTypeId:1']\").prop('checked', true);$(\"input[id$=':form:sorSearchOrgTypeId:1']\").change();}else if($(\"input[id$=':form:sorSearchOrgTypeId:1']\").is(':disabled')){ console.log(\"1\"); $(\"input[id$=':form:sorSearchOrgTypeId:0']\").prop('checked', true);$(\"input[id$=':form:sorSearchOrgTypeId:0']\").change();}else{ console.log(\"2\");$(\"input[id$=':form:sorSearchOrgTypeId:0']\").prop('checked', true);	$(\"input[id$=':form:sorSearchOrgTypeId:0']\").change();");
+		if(!getManagedBean().isNotFirstRun()){
+			log.info("updateAuto");
+			RequestContext.getCurrentInstance().execute("autoSelectOrgType();");
+			getManagedBean().setNotFirstRun(true);
+		}
+		
 	}
 }
