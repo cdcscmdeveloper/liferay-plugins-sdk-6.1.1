@@ -92,15 +92,15 @@ public class PMReportBackingBean extends
 		case ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL:
 			rptGenBean.setPmExemptedItemView(true);
 			rptGenBean.setPmItemNameView(true);
-			rptGenBean.setPmItmeCodeView(true);
+			rptGenBean.setPmItemCodeView(true);
 			rptGenBean.setPmNonMandatoryDateView(true);
 			rptGenBean.setPmFromDateView(true);
 			break;
 
 		case ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL:
-			rptGenBean.setPmExemptedContractedItemView(true);			
-			rptGenBean.setPmItemNameView(true);
-			rptGenBean.setPmItmeCodeView(true);
+			rptGenBean.setPmExemptedContractedItemView(true);	
+			rptGenBean.setPmContractItemCodeView(true);
+			rptGenBean.setPmContractItemNameView(true);
 			rptGenBean.setPmNonMandatoryDateView(true);
 			rptGenBean.setPmFromDateView(true);
 			rptGenBean.setPmContractNoView(true);
