@@ -43,14 +43,14 @@
 						styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 				</f:facet>
-				<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true"
-					showOn="button" mindate="#{CommonConstants.CURRENT_DATE}"
-					value="#{meetingDtl.meetingDate}" readonlyInput="true"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
-					disabled="#{disableMeeting}" id="meetingDate">
-					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
-						update="@this,mtgDate" />
-				</p:calendar>
+				
+					<ac:dateTime id="meetingDate"
+									mindate="#{CommonConstants.CURRENT_DATE}"
+									required="true"
+									label="#{lbl['lbl.sc.meeting.date']}"
+									disabled="#{disableMeeting}" value="#{meetingDtl.meetingDate}"
+									update="@([id$=meetingDate])" rowIndex="#{rowIndex}">
+								</ac:dateTime>
 				<p:message id="mtgDate" for="meetingDate" display="icon"
 					showDetail="false"></p:message>
 			</p:column>
