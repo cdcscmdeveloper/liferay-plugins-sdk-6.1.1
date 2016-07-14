@@ -142,11 +142,13 @@
 					#{Obj[1]}
 				</p:column>
 
-				<p:column style="word-wrap: break-word;">
+				<p:column>
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.document.title']}" />
 					</f:facet>
-					#{Obj[5]}
+					
+					<h:outputText value="#{Obj[5]}"
+						style="white-space: normal;word-wrap: break-word;" />
 				</p:column>
 
 				<!-- 	<p:column width="6%">
