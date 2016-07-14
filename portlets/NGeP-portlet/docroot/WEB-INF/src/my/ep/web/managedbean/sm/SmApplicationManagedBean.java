@@ -236,7 +236,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmApplSupportDoc supportDoc;
 	// Address fields for all the forms
 	private List<PmEduField> eduFieldList;
-	private List<PmEduLevel> eduLevelList;
+	private List<PmParameterDesc> eduLevelList;
 	private List<PmCountry> countryLs;
 	private List<SelectItem> basicCompanyStates;
 	private List<SelectItem> basicCompanyDistricts;
@@ -710,7 +710,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedRelatedCompany = new SmRelatedCompany();
 		selectedStaffAcademic = new SmStaffAcademic();
 		selectedStaffAcademic.setPmEduField(new PmEduField());
-		selectedStaffAcademic.setPmEduLevel(new PmEduLevel());
+//		selectedStaffAcademic.setPmEduLevel(new PmEduLevel());
+		selectedStaffAcademic.setQualificationId(new PmParameter());
 		selectedStfPrfBdy = new SmAssociationBody();
 		selectedStfPrfBdy.setPmCertBody(new PmCertBody());
 		perIdTypeParam = new PmParameter();
@@ -2924,11 +2925,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.diplomaEduLevel = diplomaEduLevel;
 	}
 
-	public List<PmEduLevel> getEduLevelList() {
+	public List<PmParameterDesc> getEduLevelList() {
 		return eduLevelList;
 	}
 
-	public void setEduLevelList(List<PmEduLevel> eduLevelList) {
+	public void setEduLevelList(List<PmParameterDesc> eduLevelList) {
 		this.eduLevelList = eduLevelList;
 	}
 
