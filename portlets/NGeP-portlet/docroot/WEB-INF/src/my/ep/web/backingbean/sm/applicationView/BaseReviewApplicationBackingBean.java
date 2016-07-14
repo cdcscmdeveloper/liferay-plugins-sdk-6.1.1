@@ -1492,8 +1492,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (aca.getPmEduField() == null) {
 			aca.setPmEduField(new PmEduField());
 		}
-		if (aca.getPmEduLevel() == null) {
-			aca.setPmEduLevel(new PmEduLevel());
+		if(aca.getQualificationId() == null) {
+			aca.setQualificationId(new PmParameter());
 		}
 		getManagedBean().setSelectedStaffAcademic(aca);
 		closeBlockUI();
