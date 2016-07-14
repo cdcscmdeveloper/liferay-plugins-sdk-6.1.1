@@ -122,7 +122,7 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 							null), null);
 		} else {
 			SmCommonUtil.redirectToPage(this.getManagedBean().getTargetUrl(),
-					SmCommonUtil.getMessage(null, null), null);
+					null, null);
 		}
 
 		renewSesionObject();
