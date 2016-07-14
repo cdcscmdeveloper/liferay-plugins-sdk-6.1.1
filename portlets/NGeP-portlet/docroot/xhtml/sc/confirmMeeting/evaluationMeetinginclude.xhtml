@@ -66,14 +66,15 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 				</f:facet>
-                   <p:calendar value="#{meeting.meetingDate}" showOn="button"
-					mindate="#{evaluationMeetingBackingBean.managedBean.today}"
-					style="width:200px;" id="meetingDate"
-					label="#{lbl['lbl.sc.meeting.date']}" required="true"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}">
-					<p:ajax process="@this" partialSubmit="true" update="@this"></p:ajax>
-					</p:calendar>
-					
+                  
+					<ac:dateTime id="meetingDate"
+      mindate="#{evaluationMeetingBackingBean.managedBean.today}"
+      required="true"
+      label="#{lbl['lbl.sc.meeting.date']}"
+      value="#{meeting.meetingDate}"
+      update="@([id$=meetingDate])"
+      rowIndex="#{index}">
+     </ac:dateTime>
 				<p:message id="confirmMeetingId" for="meetingDate" display="icon"></p:message>
 
 			</p:column>
