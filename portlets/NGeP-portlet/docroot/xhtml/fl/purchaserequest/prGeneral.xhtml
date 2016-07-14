@@ -17,7 +17,7 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td style="width: 106px;"><p:outputLabel
+				<td valign="top" style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
 				<td><p:inputTextarea id="controlOff" rows="2" cols="67"
 						disabled="true" autoResize="false" style="resize:none;"
@@ -25,7 +25,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width: 106px;"><p:outputLabel
+				<td valign="top" style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
 				<td><p:inputTextarea id="ptjGroup" rows="2" cols="67"
 						disabled="true" autoResize="false" style="resize:none;"
@@ -33,7 +33,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
+				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.prepared.for.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td style="width: 560px;">
@@ -52,7 +52,7 @@
 				</td>				
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
 				<td>	<p:inputTextarea id="issuedOrgProfile" rows="2" cols="67" disabled="true" autoResize="false" style="resize:none;" 
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}" />	
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
@@ -60,7 +60,7 @@
 			</tr>										
 			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /><p:outputLabel
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputTextarea id="chargeOrgProfile" rows="2" cols="63"
 						readonly="true" autoResize="false" style="resize:none;"
@@ -74,7 +74,7 @@
 					</p:commandLink> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
 				<td><p:inputTextarea id="agOffice" rows="2" cols="67"
 						readonly="true" autoResize="false" style="resize:none;"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeName}" />
