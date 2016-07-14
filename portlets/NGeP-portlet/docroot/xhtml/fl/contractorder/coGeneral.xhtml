@@ -13,39 +13,39 @@
 			<tr>
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="65" id="ministry"
+				<td><p:inputText size="66" id="ministry"
 						value="#{flOrderBB.retrieveMinistryByOrgProfileId(flOrderBB.managedBean.flRequest.issuedOrgProfile.orgProfileId, flOrderBB.managedBean.flRequest.agApprovedDate)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td style="width: 106px;"><p:outputLabel
+				<td valign="top" style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
-				<td><p:inputText size="65" id="controlOff"
-						value="#{flOrderBB.retrievePegawaiPengawalByOrgProfileId(flOrderBB.managedBean.flRequest.preparedOrgProfile.orgProfileId, flOrderBB.managedBean.flRequest.agApprovedDate)}"
-						disabled="true" /></td>
+				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{flOrderBB.retrievePegawaiPengawalByOrgProfileId(flOrderBB.managedBean.flRequest.preparedOrgProfile.orgProfileId, flOrderBB.managedBean.flRequest.agApprovedDate)}"/>
+				</td>
 			</tr>
 			<tr>
-				<td style="width: 106px;"><p:outputLabel
+				<td valign="top" style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="65" id="ptjGroup"
-						value="#{flOrderBB.retrieveJabatanByOrgProfileId(flOrderBB.managedBean.flRequest.preparedOrgProfile.orgProfileId, flOrderBB.managedBean.flRequest.agApprovedDate)}"
-						disabled="true" /></td>
+				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{flOrderBB.retrieveJabatanByOrgProfileId(flOrderBB.managedBean.flRequest.preparedOrgProfile.orgProfileId, flOrderBB.managedBean.flRequest.agApprovedDate)}"/>
+				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgCode} #{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.prepared.for.ptj']}"/></td>
 						
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgCode} #{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td><p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgCode} #{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
