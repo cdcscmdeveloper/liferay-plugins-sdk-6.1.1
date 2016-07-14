@@ -320,8 +320,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> uomSelectItems;
 	private List<SelectItem> raceSelectItems;
 	private List<SelectItem> profBodyItems;
-	List<PmReasonDesc> reasonDescList;
-	List<PmReasonDesc> deletePendingApplDescList;
+	private List<PmReasonDesc> reasonDescList;
+	private List<PmReasonDesc> deletePendingApplDescList;
+	private List<PmReasonDesc> selectedReasonDescs;
 	private Long rejectionOtherReasonId;
 	private Long deletePendingApplOtherReasonId;
 	private List<PmStatusDesc> regStatusDescList;
@@ -3547,5 +3548,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setProfBodyItems(List<SelectItem> profBodyItems) {
 		this.profBodyItems = profBodyItems;
+	}
+
+	public List<PmReasonDesc> getSelectedReasonDescs() {
+		return selectedReasonDescs;
+	}
+
+	public void setSelectedReasonDescs(List<PmReasonDesc> selectedReasonDescs) {
+		this.selectedReasonDescs = selectedReasonDescs;
 	}
 }

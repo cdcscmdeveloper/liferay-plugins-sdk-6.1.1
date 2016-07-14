@@ -83,7 +83,6 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
-import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -2115,10 +2114,14 @@ public class SmApplicationBackingBean extends
 	 */
 	public void verifySelectedRejectReasons() {
 		getManagedBean().setRejectReasonReqd(false);
-		for (Long resId : getManagedBean().getReasonId()) {
-			if (resId.compareTo(getManagedBean().getRejectionOtherReasonId()) == 0) {
-				getManagedBean().setRejectReasonReqd(true);
-				break;
+
+		if (getManagedBean().getReasonId() != null) {
+			for (Long resId : getManagedBean().getReasonId()) {
+				if (resId.compareTo(getManagedBean()
+						.getRejectionOtherReasonId()) == 0) {
+					getManagedBean().setRejectReasonReqd(true);
+					break;
+				}
 			}
 		}
 		if (!getManagedBean().isRejectReasonReqd()) {
@@ -5028,14 +5031,18 @@ public class SmApplicationBackingBean extends
 									"suppPersonnelInfoDtWidVar.paginator.endLink.click()");
 				}
 			}
-//			for(SmStaffAcademic aca : getManagedBean().getSelectedShareHolder().getSmStaffAcademics()) {
-//				if(aca.isBrandNew()) {
-//					if(aca.getQualificationId() != null && aca.getQualificationId().getParameterType() == null) {
-////						aca.setStaffAcademicId(aca.getQualificationId().getParameterId());
-//						aca.setQualificationLevelId(qualificationLevelId)
-//					}	
-//				}
-//			}
+			// for(SmStaffAcademic aca :
+			// getManagedBean().getSelectedShareHolder().getSmStaffAcademics())
+			// {
+			// if(aca.isBrandNew()) {
+			// if(aca.getQualificationId() != null &&
+			// aca.getQualificationId().getParameterType() == null) {
+			// //
+			// aca.setStaffAcademicId(aca.getQualificationId().getParameterId());
+			// aca.setQualificationLevelId(qualificationLevelId)
+			// }
+			// }
+			// }
 			saveOrUpdateAppl();
 			SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 					getManagedBean().getSmAppl(), getManagedBean()
@@ -5277,7 +5284,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedShareHolder().getEpRole() == null) {
 			getManagedBean().getSelectedShareHolder().setEpRole("");
 		}
-		
+
 		assignSelShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		managePersonnelRoles("Y");
 		manageEquityLimit(getManagedBean().getSelectedShareHolder());
@@ -5977,7 +5984,7 @@ public class SmApplicationBackingBean extends
 
 		SmStaffAcademic aca = new SmStaffAcademic();
 		aca.setPmEduField(new PmEduField());
-//		aca.setPmEduLevel(new PmEduLevel());
+		// aca.setPmEduLevel(new PmEduLevel());
 		aca.setQualificationId(new PmParameter());
 
 		aca.setSmPersonnel(getManagedBean().getSelectedShareHolder());
@@ -5994,10 +6001,10 @@ public class SmApplicationBackingBean extends
 	 *            -SmStaffAcademic
 	 */
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
-//		if (aca.getPmEduLevel() == null) {
-//			aca.setPmEduLevel(new PmEduLevel());
-//		}
-		if(aca.getQualificationId() == null) {
+		// if (aca.getPmEduLevel() == null) {
+		// aca.setPmEduLevel(new PmEduLevel());
+		// }
+		if (aca.getQualificationId() == null) {
 			aca.setQualificationId(new PmParameter());
 		}
 		getManagedBean().setSelectedStaffAcademic(aca);
@@ -6064,9 +6071,14 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		for (PmParameterDesc lvl : getManagedBean().getEduLevelList()) {
-			if (getManagedBean().getSelectedStaffAcademic().getQualificationId()
-					.getParameterId().equals(lvl.getPmParameter().getParameterId())) {
-				getManagedBean().getSelectedStaffAcademic().setQualificationLevelId(getManagedBean().getSelectedStaffAcademic().getQualificationId().getParameterId().intValue());
+			if (getManagedBean().getSelectedStaffAcademic()
+					.getQualificationId().getParameterId()
+					.equals(lvl.getPmParameter().getParameterId())) {
+				getManagedBean().getSelectedStaffAcademic()
+						.setQualificationLevelId(
+								getManagedBean().getSelectedStaffAcademic()
+										.getQualificationId().getParameterId()
+										.intValue());
 				break;
 			}
 		}
@@ -6074,7 +6086,8 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedStaffAcademic().getQualificationId() != null) {
 
 			String qual = "";
-			if (getManagedBean().getSelectedStaffAcademic().getQualificationId().getParameterCode() != null) {
+			if (getManagedBean().getSelectedStaffAcademic()
+					.getQualificationId().getParameterCode() != null) {
 				qual = getManagedBean().getSelectedStaffAcademic()
 						.getQualificationId().getParameterCode();
 				if (getManagedBean().getSelectedShareHolder().isProf()) {
@@ -7914,6 +7927,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
 		assignValReqdToFalse();
+		resetSearchRejectedReason();
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
@@ -10106,6 +10120,70 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * On tick checkbox during search rejection reason
+	 * 
+	 * @param AjaxBehaviorEvent
+	 *            e
+	 */
+	public void onTickOrUnTickReason(AjaxBehaviorEvent e) {
+		getManagedBean().setRejectReasonReqd(false);
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedReasonDescs())) {
+			List<Long> reasonIdList = new ArrayList<Long>();
+			for (PmReasonDesc reason : getManagedBean()
+					.getSelectedReasonDescs()) {
+				reasonIdList.add(reason.getPmReason().getReasonId());
+			}
+			getManagedBean().setReasonId(
+					reasonIdList.toArray(new Long[reasonIdList.size()]));
+		}
+		verifySelectedRejectReasons();
+	}
+
+	/**
+	 * Search rejected reason
+	 */
+	public void searchRejectedReason() {
+		// reset selected reject reason during search
+		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+
+		// reset selected reject reason remarks during search
+		verifySelectedRejectReasons();
+
+		List<PmReasonDesc> resultList = new ArrayList<PmReasonDesc>();
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getReasonDescList())) {
+			if (StringUtils.isBlank(getManagedBean().getSearchRejectReason())) {
+				resultList = SmApplicationUtil
+						.retrieveRejectReasonListByParameterCode(ReasonCategory.SUPPLIER_REJECTION_REASON
+								.value());
+			} else {
+				for (PmReasonDesc tmp : getManagedBean().getReasonDescList()) {
+					if (StringUtils.upperCase(tmp.getReasonDesc()).contains(
+							StringUtils.upperCase(getManagedBean()
+									.getSearchRejectReason()))) {
+						resultList.add(tmp);
+					}
+				}
+			}
+		}
+		getManagedBean().setReasonDescList(resultList);
+	}
+
+	/**
+	 * Reset search rejected reason
+	 */
+	public void resetSearchRejectedReason() {
+		getManagedBean().setSearchRejectReason(StringUtils.EMPTY);
+		getManagedBean()
+				.setReasonDescList(
+						SmApplicationUtil
+								.retrieveRejectReasonListByParameterCode(ReasonCategory.SUPPLIER_REJECTION_REASON
+										.value()));
+		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+	}
+
+	/**
 	 * Auto ticked and disabled hq facility
 	 * 
 	 * @param e
@@ -10574,13 +10652,16 @@ public class SmApplicationBackingBean extends
 				if ((getManagedBean().getSelectedShareHolder().isEquityOwner() && SupplierManagementConst.EQUI_OWNER_EDU_LEVEL_CODES
 						.contains(eduLevel.getPmParameter().getParameterCode()))
 						|| (getManagedBean().getSelectedShareHolder().isProf() && SupplierManagementConst.PROF_STAFF_EDU_LEVEL_CODES
-								.contains(eduLevel.getPmParameter().getParameterCode()))
+								.contains(eduLevel.getPmParameter()
+										.getParameterCode()))
 						|| (getManagedBean().getSelectedShareHolder()
 								.isSemiProf() && SupplierManagementConst.SEMI_PROF_STAFF_EDU_LEVEL_CODES
-								.contains(eduLevel.getPmParameter().getParameterCode()))
+								.contains(eduLevel.getPmParameter()
+										.getParameterCode()))
 						|| (getManagedBean().getSelectedShareHolder()
 								.isClerical() && SupplierManagementConst.CLERICAL_STAFF_EDU_LEVEL_CODES
-								.contains(eduLevel.getPmParameter().getParameterCode()))) {
+								.contains(eduLevel.getPmParameter()
+										.getParameterCode()))) {
 					item = (SelectItem) EntityHelper
 							.getEntityBySinglePropertyFromList(
 									eduLevel.getParameterDescId(), finalList,
