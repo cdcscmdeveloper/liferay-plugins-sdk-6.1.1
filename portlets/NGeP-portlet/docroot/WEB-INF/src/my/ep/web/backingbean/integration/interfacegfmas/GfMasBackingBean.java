@@ -1066,7 +1066,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IInterfacePtjSO.class);
 
-				reqSO.saveOrUpdateInterfacePtj(reqDTO);
+				reqSO.saveOrUpdateInterfacePtjList(reqDTO);
 				
 			} catch (Exception e) {
 				System.out.println("error:"+e.getMessage());
