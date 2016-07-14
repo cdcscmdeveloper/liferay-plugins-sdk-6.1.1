@@ -794,7 +794,11 @@ public class EvaluationMeetingBackingBean extends
 			List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
 			if (meetingList != null && !meetingList.isEmpty()) {
 				for (ScQtMeeting meeting : meetingList) {
+					if(null!=meeting.getMeetingDate()){
 					compareMeetingDates(meeting, localMeetingList);
+					}else{
+						throw new EpException(MessageConst.ERROR_760418);
+					}
 				}
 				qtCommittee.setScQtMeetings(meetingList);
 			} else {
