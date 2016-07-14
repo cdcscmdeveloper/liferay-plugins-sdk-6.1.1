@@ -6,6 +6,7 @@ package my.ep.web.backingbean.sc.supplierfinalization;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -1768,6 +1769,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 
 	private ScQtFinalization prepareFinalizationInfo() {
+		List<ScQtMeeting> meetingList=this.getManagedBean().getMeetingList();
+		if(CollectionUtils.isNotEmpty(meetingList)){
+			List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
+			
+			for (ScQtMeeting meeting : meetingList) {
+				if(null!=meeting.getMeetingDate()){
+				compareMeetingDates(meeting, localMeetingList);
+				}else{
+					throw new EpException(MessageConst.ERROR_760418);
+				}
+			}
+		}
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
 		
@@ -1904,7 +1917,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public void submitBiddingEndorsement(String outcome) {
 		debugLogger("submitBiddingEndorsement");
-		
+		List<ScQtMeeting> meetingList=this.getManagedBean().getMeetingList();
+		if(CollectionUtils.isNotEmpty(meetingList)){
+			List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
+			
+			for (ScQtMeeting meeting : meetingList) {
+				if(null!=meeting.getMeetingDate()){
+				compareMeetingDates(meeting, localMeetingList);
+				}else{
+					throw new EpException(MessageConst.ERROR_760418);
+				}
+			}
+		}
 		validateBiddingSubmission();
 		
 		this.getManagedBean().setAction(outcome);
@@ -2321,5 +2345,34 @@ public class SupplierFinalizationBiddingBackingBean extends
 		return ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT;
 	}
 	
-	
+	// this method checking two meeting dates or equal or not.
+		private void compareMeetingDates(ScQtMeeting scqtMeeting,
+				List<ScQtMeeting> meetingList) {
+			if (null != meetingList && meetingList.size() >= 1) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+				boolean duplicateDate = false;
+				for (ScQtMeeting meeting : meetingList) {
+
+					String objectDate = sdf.format(scqtMeeting.getMeetingDate());
+					String listDate = sdf.format(meeting.getMeetingDate());
+
+					if (objectDate.equals(listDate)) {
+						duplicateDate = true;
+						break;
+
+					} else {
+						duplicateDate = false;
+					}
+
+				}
+				if (duplicateDate == true) {
+					throw new EpException(MessageConst.ERROR_760271);
+				} else {
+					meetingList.add(scqtMeeting);
+				}
+			} else {
+				meetingList.add(scqtMeeting);
+			}
+
+		}
 }
