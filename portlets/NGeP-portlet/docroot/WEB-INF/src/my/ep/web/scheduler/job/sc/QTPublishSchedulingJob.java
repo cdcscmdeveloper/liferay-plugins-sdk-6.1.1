@@ -68,6 +68,7 @@ public class QTPublishSchedulingJob implements Job {
 						reSchedulePublicationForPublishFailQt(qtToPublish);
 					}else{
 						ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(qtToPublish);
+						log.info("Simple Job was Built to Publish QT with No: "+qtToPublish.getQtNo());
 					}
 				}
 			}
