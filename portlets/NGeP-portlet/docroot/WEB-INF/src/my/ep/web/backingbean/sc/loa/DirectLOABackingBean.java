@@ -6028,6 +6028,7 @@ public class DirectLOABackingBean extends
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 		}
+		checkAgreementMandatory();
 	}
 
 	/**
@@ -6227,10 +6228,17 @@ public class DirectLOABackingBean extends
 	 * @return boolean isRequirementRequired
 	 */
 	public boolean checkAgreementMandatory() {
+		/*Ministry/Central contract 
+		 * Fulfillment type : One Off more than RM500k
+		 * is mandatory less than RM500k is optional
+		 * 
+		 * Fulfillment type : Periodic more than RM500k is mandatory less than
+		 * RM500k is mandatory
+		 */
 		boolean isAgreementMandatory = Boolean.FALSE;
 		ScLoa loa = getManagedBean().getScLoa();
 		BigDecimal overallContractAmtOrLoaAmt = getManagedBean().getOverallContractAmt();
-		
+
 		if (null != loa.getScLoiLoa().getFulfilmentTypeCode() && null != overallContractAmtOrLoaAmt ) {
 			String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode()
 					.getParameterCode();
