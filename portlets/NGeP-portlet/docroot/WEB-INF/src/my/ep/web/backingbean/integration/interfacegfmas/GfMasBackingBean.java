@@ -29,8 +29,10 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.batch.IDIInterfaceSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceAgOffSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceCmBankSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceGlAccSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfacePpSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfacePrgActSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceProjectSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfacePtjSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotDanaSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotSO;
@@ -38,10 +40,12 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.interfaceptj.InterfaceAgOffReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceCmBankReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceGlAccReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogReqDto;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogResDto;
 import my.ep.dto.pm.common.interfaceptj.InterfacePpReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfacePrgActReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceProjectReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfacePtjReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceVotDanaReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceVotReqDTO;
@@ -93,7 +97,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 	/** The search gf mas. */
 	private IPagingDataModel<DIInterfaceLog> searchGfMas = new SearchGfMasPagingDataModel();
-	
+
 	private boolean childProcessStatus = false;
 
 	/**
@@ -128,7 +132,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		this.resetGfMasSearchBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NAV_TO_MAIN);
+		.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
 
 	/**
@@ -160,22 +164,22 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("logId",
 							SearchOperator.OPERATOR_EQUALS.value(), this
-									.getManagedBean().getInterfaceLogId()));
+							.getManagedBean().getInterfaceLogId()));
 		}
 		if (StringUtils.isNotEmpty(this.getManagedBean().getServiceCode())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("serviceCode",
 							SearchOperator.OPERATOR_EQUALS.value(), this
-									.getManagedBean().getServiceCode()
-									.toUpperCase(), true));
+							.getManagedBean().getServiceCode()
+							.toUpperCase(), true));
 		}
-		
+
 		if (StringUtils.isNotEmpty(this.getManagedBean().getDirection())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("direction",
 							SearchOperator.OPERATOR_EQUALS.value(), this
-									.getManagedBean().getDirection()
-									.toUpperCase(), true));
+							.getManagedBean().getDirection()
+							.toUpperCase(), true));
 		}
 
 		List<ProcessCodeType> listOfProcessCodes = new ArrayList<ProcessCodeType>();
@@ -194,15 +198,15 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("processId", SearchOperator.OPERATOR_IN
 						.value(), listOfProcessCodes));
-		
+
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_EQUALS
 						.value(), new Long(0)));
 
 		searchBean.getDataFilterBeans()
-				.add(new SearchMultiFilterBean(new SearchFilterBean(
-						"targetSystem", SearchOperator.OPERATOR_EQUALS.value(),
-						"ePerolehan"), new SearchFilterBean("fileName",
+		.add(new SearchMultiFilterBean(new SearchFilterBean(
+				"targetSystem", SearchOperator.OPERATOR_EQUALS.value(),
+				"ePerolehan"), new SearchFilterBean("fileName",
 						SearchOperator.OPERATOR_NOT_LIKE.value(), ".txt",
 						SearchCondition.CONDITION_AND.value())));
 
@@ -257,33 +261,33 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				SearchCondition.CONDITION_OR.value());
 
 		searchBean.getDataFilterBeans().add(
-			             	new SearchMultiFilterBean(progAcctgFilterBean,SearchCondition.CONDITION_AND.value(),
-			                  new SearchMultiFilterBean(projectFilterBean,SearchCondition.CONDITION_OR.value(),
-			                	new SearchMultiFilterBean(glAcntFilterBean,SearchCondition.CONDITION_OR.value(),
-				                 new SearchMultiFilterBean(agOffFilterBean,SearchCondition.CONDITION_OR.value(),
-				                  new SearchMultiFilterBean(bankFilterBean,SearchCondition.CONDITION_OR.value(),
-				                   new SearchMultiFilterBean(kptjFilterBean,SearchCondition.CONDITION_OR.value(),
-				                    new SearchMultiFilterBean(ptjFilterBean,SearchCondition.CONDITION_OR.value(),
-			                     	 new SearchMultiFilterBean(ppFilterBean,SearchCondition.CONDITION_OR.value(),
-			                     	  new SearchMultiFilterBean(votFilterBean,SearchCondition.CONDITION_OR.value(),
-				                       danaFilterBean))))))))));
+				new SearchMultiFilterBean(progAcctgFilterBean,SearchCondition.CONDITION_AND.value(),
+						new SearchMultiFilterBean(projectFilterBean,SearchCondition.CONDITION_OR.value(),
+								new SearchMultiFilterBean(glAcntFilterBean,SearchCondition.CONDITION_OR.value(),
+										new SearchMultiFilterBean(agOffFilterBean,SearchCondition.CONDITION_OR.value(),
+												new SearchMultiFilterBean(bankFilterBean,SearchCondition.CONDITION_OR.value(),
+														new SearchMultiFilterBean(kptjFilterBean,SearchCondition.CONDITION_OR.value(),
+																new SearchMultiFilterBean(ptjFilterBean,SearchCondition.CONDITION_OR.value(),
+																		new SearchMultiFilterBean(ppFilterBean,SearchCondition.CONDITION_OR.value(),
+																				new SearchMultiFilterBean(votFilterBean,SearchCondition.CONDITION_OR.value(),
+																						danaFilterBean))))))))));
 
 		if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchMultiFilterBean(new SearchFilterBean("processId",
 							SearchOperator.OPERATOR_EQUALS.value(), this
-									.getManagedBean().getProcessId()
-									.toUpperCase()), new SearchFilterBean(
-							"fileName", SearchOperator.OPERATOR_LIKE.value(),
-							"1000"
-									+ this.getManagedBean().getProcessId()
+							.getManagedBean().getProcessId()
+							.toUpperCase()), new SearchFilterBean(
+									"fileName", SearchOperator.OPERATOR_LIKE.value(),
+									"1000"
+											+ this.getManagedBean().getProcessId()
 											.toUpperCase() + "400001")));
 		}
-		
+
 		searchBean.getSortColumns().add(
 				new SearchOrderBean("createdDate", true));
-		
-		
+
+
 		return searchBean;
 	}
 
@@ -292,7 +296,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * The Class SearchGfMasPagingDataModel.
 	 */
 	private class SearchGfMasPagingDataModel extends
-			PagingDataModel<DIInterfaceLog> {
+	PagingDataModel<DIInterfaceLog> {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
@@ -332,7 +336,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				InterfaceLogResDto resDTO = gfMasSO
 						.retrieveInterfaceLogDetaisls(gfMasReqDTO);
-				
+
 				getManagedBean().setLazy(true);
 
 				if (resDTO.isSuccessful()) {
@@ -379,13 +383,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			interfaceGfMasReqDto.setdIInterfaceLog(selectedProcess);
 			interfaceGfMasReqDto.setLogId(selectedProcess.getLogId());
 			interfaceGfMasReqDto.setProcessId(selectedProcess.getProcessId());			
-		
+
 			this.getManagedBean().setFileName(selectedProcess.getFileName());
 			this.getManagedBean().setTransId(selectedProcess.getTransId());
 
 			InterfaceLogResDto interfaceGfMasResDto = gfMasSO
 					.retrieveProcessDataForAll(interfaceGfMasReqDto);
-			
+
 			getUnprocessedRecordsByPreviousDate(selectedProcess,interfaceGfMasResDto);
 
 			childProcessPage = getChildProcessScreen(selectedProcess,
@@ -399,7 +403,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 		return childProcessPage;
 	}
-	
+
 	/**
 	 * Gets the interface prog act process status.
 	 * 
@@ -410,16 +414,16 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private boolean getInterfaceProgActProcessStatus(InterfaceLogResDto resDTO) {
 
 		//boolean childProcessStatus = false;
-		
+
 		List<PmInterfaceProgAct> progActList=resDTO.getListOfPmInterfacePrgAct();
-		
+
 		if (CollectionUtils.isNotEmpty(progActList)) {
-		
+
 			for (int i = 0; progActList.size() > 0; i++) {
 
 				if (progActList.get(i).getProcessStatus().equals(new Long(0))
 						|| progActList.get(i).getProcessStatus()
-								.equals(new Long(1))) {
+						.equals(new Long(1))) {
 					childProcessStatus = true;
 					break;
 				} else {
@@ -430,7 +434,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 		return childProcessStatus;
 	}
-	
+
 	/**
 	 * Gets the interface project process status.
 	 * 
@@ -441,16 +445,16 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private boolean getInterfaceProjectProcessStatus(InterfaceLogResDto resDTO) {
 
 		//boolean childProcessStatus = false;
-		
+
 		List<PmInterfaceProject> projectList=resDTO.getListOfPmInterfaceProject();
-		
+
 		if (CollectionUtils.isNotEmpty(projectList)) {
-		
+
 			for (int i = 0; projectList.size() > 0; i++) {
 
 				if (projectList.get(i).getProcessStatus().equals(new Long(0))
 						|| projectList.get(i).getProcessStatus()
-								.equals(new Long(1))) {
+						.equals(new Long(1))) {
 					childProcessStatus = true;
 					break;
 				} else {
@@ -460,7 +464,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 		return childProcessStatus;
 	}
-	
+
 	/**
 	 * Gets the interface ptj process status.
 	 * 
@@ -471,16 +475,16 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private boolean getInterfacePtjProcessStatus(InterfaceLogResDto resDTO) {
 
 		//boolean childProcessStatus = false;
-		
+
 		List<PmInterfacePtj> ptjList=resDTO.getListOfPmInterfacePtj();
-		
+
 		if (CollectionUtils.isNotEmpty(ptjList)) {
 
 			for (int i = 0; ptjList.size() > 0; i++) {
 
 				if (ptjList.get(i).getProcessStatus().equals(new Long(0))
 						|| ptjList.get(i).getProcessStatus()
-								.equals(new Long(1))) {
+						.equals(new Long(1))) {
 					childProcessStatus = true;
 					break;
 				} else {
@@ -490,7 +494,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 		return childProcessStatus;
 	}
-	
+
 	/**
 	 * Gets the interface kptj process status.
 	 * 
@@ -501,16 +505,16 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private boolean getInterfaceKptjProcessStatus(InterfaceLogResDto resDTO) {
 
 		//boolean childProcessStatus = false;
-		
+
 		List<PmInterfaceKptj> kptjList=resDTO.getListOfPmInterfaceKptj();
-		
+
 		if (CollectionUtils.isNotEmpty(kptjList)) {
 
 			for (int i = 0; kptjList.size() > 0; i++) {
 
 				if (kptjList.get(i).getProcessStatus().equals(new Long(0))
 						|| kptjList.get(i).getProcessStatus()
-								.equals(new Long(1))) {
+						.equals(new Long(1))) {
 					childProcessStatus = true;
 					break;
 				} else {
@@ -520,7 +524,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 		return childProcessStatus;
 	}
-	
+
 	/**
 	 * Gets the interface ag office process status.
 	 * 
@@ -541,7 +545,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				if (agOffList.get(i).getProcessStatus().equals(new Long(0))
 						|| agOffList.get(i).getProcessStatus()
-								.equals(new Long(1))) {
+						.equals(new Long(1))) {
 					childProcessStatus = true;
 					break;
 				} else {
@@ -551,7 +555,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 		return childProcessStatus;
 	}
-	
+
 	/**
 	 * Gets the interface pp process status.
 	 * 
@@ -562,11 +566,11 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private boolean getInterfacePpProcessStatus(InterfaceLogResDto resDTO) {
 
 		//boolean childProcessStatus = false;
-		
+
 		List<PmInterfacePP> ppList = resDTO.getListOfPmInterfacePP();
-		
+
 		if (CollectionUtils.isNotEmpty(ppList)) {
-			
+
 			for (int i = 0; ppList.size() > 0; i++) {
 
 				if (ppList.get(i).getProcessStatus().equals(new Long(0))
@@ -581,8 +585,8 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 		return childProcessStatus;
 	}
-	
-	
+
+
 	/**
 	 * Gets the interface vot process status.
 	 * 
@@ -593,28 +597,28 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private boolean getInterfaceVotProcessStatus(InterfaceLogResDto resDTO) {
 
 		//boolean childProcessStatus = false;
-		
-		List<PmInterfaceVot> votList=resDTO.getListOfPmInterfaceVot();
-		
-		if (CollectionUtils.isNotEmpty(votList)) {
-		
-		for (int i = 0; votList.size() > 0; i++) {
 
-			if (votList.get(i).getProcessStatus()
-					.equals(new Long(0))
-					|| votList.get(i).getProcessStatus()
-							.equals(new Long(1))) {
-				childProcessStatus = true;
-				break;
-			} else {
-				childProcessStatus = false;
+		List<PmInterfaceVot> votList=resDTO.getListOfPmInterfaceVot();
+
+		if (CollectionUtils.isNotEmpty(votList)) {
+
+			for (int i = 0; votList.size() > 0; i++) {
+
+				if (votList.get(i).getProcessStatus()
+						.equals(new Long(0))
+						|| votList.get(i).getProcessStatus()
+						.equals(new Long(1))) {
+					childProcessStatus = true;
+					break;
+				} else {
+					childProcessStatus = false;
+				}
 			}
-	    	}
-		
+
 		}
 		return childProcessStatus;
 	}
-	
+
 	/**
 	 * Gets the interface bank process status.
 	 * 
@@ -625,16 +629,16 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private boolean getInterfaceBankProcessStatus(InterfaceLogResDto resDTO) {
 
 		//boolean childProcessStatus = false;
-		
+
 		List<PmInterfaceBank> bankList=resDTO.getListOfPmInterfaceBank();
-		
+
 		if (CollectionUtils.isNotEmpty(bankList)) {
 
 			for (int i = 0; bankList.size() > 0; i++) {
 
 				if (bankList.get(i).getProcessStatus().equals(new Long(0))
 						|| bankList.get(i).getProcessStatus()
-								.equals(new Long(1))) {
+						.equals(new Long(1))) {
 					childProcessStatus = true;
 					break;
 				} else {
@@ -644,7 +648,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 		return childProcessStatus;
 	}
-	
+
 	/**
 	 * Gets the interface gl acnt process status.
 	 * 
@@ -655,16 +659,16 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private boolean getInterfaceGlAcntProcessStatus(InterfaceLogResDto resDTO) {
 
 		//boolean childProcessStatus = false;
-		
+
 		List<PmInterfaceGlAccount> glAcntList=resDTO.getListOfPmInterfaceGlAccount();
-		
+
 		if (CollectionUtils.isNotEmpty(glAcntList)) {
 
 			for (int i = 0; glAcntList.size() > 0; i++) {
 
 				if (glAcntList.get(i).getProcessStatus().equals(new Long(0))
 						|| glAcntList.get(i).getProcessStatus()
-								.equals(new Long(1))) {
+						.equals(new Long(1))) {
 					childProcessStatus = true;
 					break;
 				} else {
@@ -674,8 +678,8 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 		return childProcessStatus;
 	}
-	
-	
+
+
 	/**
 	 * Gets the interface dana process status.
 	 * 
@@ -695,7 +699,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				if (danaList.get(i).getProcessStatus().equals(new Long(0))
 						|| danaList.get(i).getProcessStatus()
-								.equals(new Long(1))) {
+						.equals(new Long(1))) {
 					childProcessStatus = true;
 					break;
 				} else {
@@ -714,8 +718,8 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * @return the unprocessed records by previous date
 	 */
 	private void getUnprocessedRecordsByPreviousDate(
-			
-	DIInterfaceLog selectedProcess,InterfaceLogResDto resDto) {
+
+			DIInterfaceLog selectedProcess,InterfaceLogResDto resDto) {
 
 		List<DIInterfaceLog> interfaceLogParentList = searchGfMas.getList();
 
@@ -743,7 +747,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				if (!mapOfProcess.containsKey(processId)) {
 					mapOfProcess
-							.put(processId, new ArrayList<DIInterfaceLog>());
+					.put(processId, new ArrayList<DIInterfaceLog>());
 				}
 				mapOfProcess.get(processId).add(allRecords);
 			}
@@ -772,65 +776,65 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 					switch (ProcessCodeType.valueOf(filteredProcessCode
 							.getProcessId())) {
 
-					case GLPRG:
-						if (getInterfaceProgActProcessStatus(resDto)) {
-							showErrorMsg(selectedProcess, logId, processId,
-									createdDate, filteredProcessCode);
-						}						
+							case GLPRG:
+								if (getInterfaceProgActProcessStatus(resDto)) {
+									showErrorMsg(selectedProcess, logId, processId,
+											createdDate, filteredProcessCode);
+								}						
 
-					case GLBAC:
-						if (getInterfaceAgOfficeProcessStatus(resDto)) {
-							showErrorMsg(selectedProcess, logId, processId,
-									createdDate, filteredProcessCode);
-						}						
-					
-					case GLSEG:
-						if (getInterfacePpProcessStatus(resDto)) {
-							showErrorMsg(selectedProcess, logId, processId,
-									createdDate, filteredProcessCode);
-						}						
+							case GLBAC:
+								if (getInterfaceAgOfficeProcessStatus(resDto)) {
+									showErrorMsg(selectedProcess, logId, processId,
+											createdDate, filteredProcessCode);
+								}						
 
-					case GLVOT:
-						if (getInterfaceVotProcessStatus(resDto)) {
-							showErrorMsg(selectedProcess, logId, processId,
-									createdDate, filteredProcessCode);
-						}					
-					case GLDNA:
-						if (getInterfaceDanaProcessStatus(resDto)) {
-							showErrorMsg(selectedProcess, logId, processId,
-									createdDate, filteredProcessCode);
-						}						
+							case GLSEG:
+								if (getInterfacePpProcessStatus(resDto)) {
+									showErrorMsg(selectedProcess, logId, processId,
+											createdDate, filteredProcessCode);
+								}						
 
-					case GLPRJ:
-						if (getInterfaceProjectProcessStatus(resDto)) {
-							showErrorMsg(selectedProcess, logId, processId,
-									createdDate, filteredProcessCode);
-						}					
-						
-					case GLGLC:
-						if (getInterfaceGlAcntProcessStatus(resDto)) {
-							showErrorMsg(selectedProcess, logId, processId,
-									createdDate, filteredProcessCode);
-						}						
+							case GLVOT:
+								if (getInterfaceVotProcessStatus(resDto)) {
+									showErrorMsg(selectedProcess, logId, processId,
+											createdDate, filteredProcessCode);
+								}					
+							case GLDNA:
+								if (getInterfaceDanaProcessStatus(resDto)) {
+									showErrorMsg(selectedProcess, logId, processId,
+											createdDate, filteredProcessCode);
+								}						
 
-					case GLPCG:
-						if (getInterfaceKptjProcessStatus(resDto)) {
-							showErrorMsg(selectedProcess, logId, processId,
-									createdDate, filteredProcessCode);
-						}						
-						
-					case GLPTJ:
-						if (getInterfacePtjProcessStatus(resDto)) {
-							showErrorMsg(selectedProcess, logId, processId,
-									createdDate, filteredProcessCode);
-						}						
-						
-					case CMBNK:
-						if (getInterfaceBankProcessStatus(resDto)) {
-							showErrorMsg(selectedProcess, logId, processId,
-									createdDate, filteredProcessCode);
-						}		
-						
+							case GLPRJ:
+								if (getInterfaceProjectProcessStatus(resDto)) {
+									showErrorMsg(selectedProcess, logId, processId,
+											createdDate, filteredProcessCode);
+								}					
+
+							case GLGLC:
+								if (getInterfaceGlAcntProcessStatus(resDto)) {
+									showErrorMsg(selectedProcess, logId, processId,
+											createdDate, filteredProcessCode);
+								}						
+
+							case GLPCG:
+								if (getInterfaceKptjProcessStatus(resDto)) {
+									showErrorMsg(selectedProcess, logId, processId,
+											createdDate, filteredProcessCode);
+								}						
+
+							case GLPTJ:
+								if (getInterfacePtjProcessStatus(resDto)) {
+									showErrorMsg(selectedProcess, logId, processId,
+											createdDate, filteredProcessCode);
+								}						
+
+							case CMBNK:
+								if (getInterfaceBankProcessStatus(resDto)) {
+									showErrorMsg(selectedProcess, logId, processId,
+											createdDate, filteredProcessCode);
+								}		
+
 					}
 				}
 			}
@@ -888,14 +892,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 						interfaceGfMasResDto.getListOfPmInterfacePrgAct());
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPrgAct.xhtml";
 			}
-           break;
+			break;
 		case GLBAC:
 			if (getInterfaceAgOfficeProcessStatus(interfaceGfMasResDto)) {
 				this.getManagedBean().setListOfAgOffice(
 						interfaceGfMasResDto.getListOfPmInterfaceAgOffice());
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasAgOffice.xhtml";
 			}
-		break;
+			break;
 		case GLVOT:
 			if (getInterfaceVotProcessStatus(interfaceGfMasResDto)) {
 
@@ -903,56 +907,56 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 						interfaceGfMasResDto.getListOfPmInterfaceVot());
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasVot.xhtml";
 			}
-		break;
+			break;
 		case GLDNA:
 			if (getInterfaceDanaProcessStatus(interfaceGfMasResDto)) {
 				this.getManagedBean().setListOfDana(
 						interfaceGfMasResDto.getListOfPmInterfaceDana());
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasDana.xhtml";
 			}
-		break;
+			break;
 		case GLPRJ:
 			if (getInterfaceProjectProcessStatus(interfaceGfMasResDto)) {
 				this.getManagedBean().setListOfProjectt(
 						interfaceGfMasResDto.getListOfPmInterfaceProject());
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasProject.xhtml";
 			}
-		break;
+			break;
 		case GLGLC:
 			if (getInterfaceGlAcntProcessStatus(interfaceGfMasResDto)) {
 				this.getManagedBean().setListOfGlAccount(
 						interfaceGfMasResDto.getListOfPmInterfaceGlAccount());
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasGlAccount.xhtml";
 			}
-		break;
+			break;
 		case GLPCG:
 			if (getInterfaceKptjProcessStatus(interfaceGfMasResDto)) {
 				this.getManagedBean().setListOfKPTJ(
 						interfaceGfMasResDto.getListOfPmInterfaceKptj());
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasKPTJ.xhtml";
 			}
-		break;
+			break;
 		case GLPTJ:
 			if (getInterfacePtjProcessStatus(interfaceGfMasResDto)) {
 				this.getManagedBean().setListOfPTJ(
 						interfaceGfMasResDto.getListOfPmInterfacePtj());
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPTJ.xhtml";
 			}
-		break;
+			break;
 		case CMBNK:
 			if (getInterfaceBankProcessStatus(interfaceGfMasResDto)) {
 				this.getManagedBean().setListOfBank(
 						interfaceGfMasResDto.getListOfPmInterfaceBank());
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasBank.xhtml";
 			}
-		break;
+			break;
 		case GLSEG:
 			if (getInterfacePpProcessStatus(interfaceGfMasResDto)) {
 				this.getManagedBean().setListOfPP(
 						interfaceGfMasResDto.getListOfPmInterfacePP());
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPP.xhtml";
 			}
-		break;
+			break;
 		default: {
 			System.out.println("unknown child page \t"
 					+ interfaceLog.getProcessId());
@@ -969,9 +973,9 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * @return the string
 	 */
 	public String redirectGfMasSearch() {
-		
+
 		log.info("In redirectGfMasSearch");
-		
+
 		this.getManagedBean().setSelectedProgActList(null);
 		this.getManagedBean().setSelectedProjectList(null);
 		this.getManagedBean().setSelectedBankList(null);
@@ -983,7 +987,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		this.getManagedBean().setSelectedPpList(null);
 		this.getManagedBean().setSelectedVotList(null);
 		this.getManagedBean().setProcessButtonStatus(false);
-		
+
 		return "/xhtml/gfMas/gfmassearch/gfmasSearchMain.xhtml?faces-redirect=true";
 
 	}
@@ -997,34 +1001,54 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 		log.info("processAllVendors");
 		String returnUrl = null;
-		
+
 		if (this.getManagedBean().getSelectedProgActList() != null) {
 			log.info("***************ProgActList***SIZE******************>>"
 					+ this.getManagedBean().getSelectedProgActList().size());
 
-			
+
 			IInterfacePrgActSO interfaceprgActSO = (IInterfacePrgActSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfacePrgActSO.class);
 			InterfacePrgActReqDTO reqDTO = new InterfacePrgActReqDTO();
-			
+
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setInterfacePrgActLs(this.getManagedBean().getSelectedProgActList());
-			
+
 			try {
 				interfaceprgActSO.saveOrUpdatePrgActList(reqDTO);
 			} catch (Exception e) {
 				System.out.println(""+e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
-				
+
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPrgAct.xhtml";
 			}
-			
-			
-			
+
+
+
 
 		} else if (this.getManagedBean().getSelectedProjectList() != null) {
 			log.info("************ProjectList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedProjectList().size());
+
+			IInterfaceProjectSO interfaceprojectActSO = (IInterfaceProjectSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceProjectSO.class);
+
+
+			InterfaceProjectReqDTO reqDTO = new InterfaceProjectReqDTO();
+
+			reqDTO.setFileName(this.getManagedBean().getFileName());
+			reqDTO.setInterfaceProjectLs(this.getManagedBean().getSelectedProjectList());
+
+			try {
+				interfaceprojectActSO.saveOrUpdateProjectList(reqDTO);
+			} catch (Exception e) {
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasProject.xhtml";
+			}
+
+
 		} else if (this.getManagedBean().getSelectedAgOfficeList() != null) {
 
 			log.info("***********AgOfficeList*******SIZE******************>>"
@@ -1036,10 +1060,10 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			List<PmInterfaceAgOff> list = this.getManagedBean()
 					.getSelectedAgOfficeList();
-			
+
 			InterfaceAgOffReqDTO reqDTO = new InterfaceAgOffReqDTO();
 			reqDTO.setInterfaceAgOffLs(list);
-			
+
 			try {
 				reqSO.saveOrUpdateInterfaceAgOffList(reqDTO);
 			} catch (Exception e) {
@@ -1047,130 +1071,151 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			}
 
 		} else if (this.getManagedBean().getSelectedBankList() != null) {
-			
+
 			log.info("************BankList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedBankList().size());
-			
+
 			InterfaceCmBankReqDTO reqDTO = new InterfaceCmBankReqDTO();
-			
+
 			reqDTO.setInterfaceBankLs(this.getManagedBean().getSelectedBankList());
 			reqDTO.setFileName(this.getManagedBean().getFileName());
-			
+
 			try {
-				
+
 				IInterfaceCmBankSO reqSO = (IInterfaceCmBankSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IInterfaceCmBankSO.class);
 
 				reqSO.saveOrUpdateInterfaceBankList(reqDTO);
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			this.getManagedBean().setSelectedBankList(null);
-			
+
 		} else if (this.getManagedBean().getSelectedGlAcntList() != null) {
 			log.info("***********GlAcntList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedGlAcntList().size());
+			
+			IInterfaceGlAccSO interfaceGlAccSO = (IInterfaceGlAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceGlAccSO.class);
+
+
+			InterfaceGlAccReqDTO reqDTO = new InterfaceGlAccReqDTO();
+
+			reqDTO.setFileName(this.getManagedBean().getFileName());
+			reqDTO.setInterfaceGlAccLs(this.getManagedBean().getSelectedGlAcntList());
+
+			try {
+				interfaceGlAccSO.saveOrUpdateGlAccList(reqDTO);
+			} catch (Exception e) {
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasGlAccount.xhtml";
+			}
+			
+			
+			
 		} else if (this.getManagedBean().getSelectedKptjList() != null) {
 			log.info("************KptjList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedKptjList().size());
 		} else if (this.getManagedBean().getSelectedPtjList() != null) {
-			
+
 			log.info("************PtjList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedPtjList().size());
-			
+
 			InterfacePtjReqDTO reqDTO = new InterfacePtjReqDTO();
-			
+
 			reqDTO.setInterfacePtjLs(this.getManagedBean().getSelectedPtjList());
 			reqDTO.setFileName(this.getManagedBean().getFileName());
-			
+
 			try {
-				
+
 				IInterfacePtjSO reqSO = (IInterfacePtjSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IInterfacePtjSO.class);
 
 				reqSO.saveOrUpdateInterfacePtjList(reqDTO);
-				
+
 			} catch (Exception e) {
 				System.out.println("error:"+e.getMessage());
 			}
-			
+
 			this.getManagedBean().setSelectedPtjList(null);
-			
+
 		} else if (this.getManagedBean().getSelectedDanaList() != null) {
-			
+
 			log.info("***********DanaList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedDanaList().size());
 
 			IInterfaceVotDanaSO interfaceVotDanaSO = (IInterfaceVotDanaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceVotDanaSO.class);
-			
+
 			InterfaceVotDanaReqDTO reqDTO = new InterfaceVotDanaReqDTO();
-			
+
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setInterfaceDanaLs(this.getManagedBean().getSelectedDanaList());
-			
+
 			try {
 				interfaceVotDanaSO.saveOrUpdateVotDanaList(reqDTO);
 			} catch (Exception e) {
 				System.out.println(""+e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
-				
+
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasDana.xhtml";
 			}
-			
-			
+
+
 			this.getManagedBean().setSelectedDanaList(null);
 
 		} else if (this.getManagedBean().getSelectedPpList() != null) {
-			
+
 			log.info("************PpList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedPpList().size());
-			
+
 			InterfacePpReqDTO reqDTO = new InterfacePpReqDTO();
-			
+
 			reqDTO.setInterfacePpLs(this.getManagedBean().getSelectedPpList());
 			reqDTO.setFileName(this.getManagedBean().getFileName());
-			
+
 			try {
-				
+
 				IInterfacePpSO reqSO = (IInterfacePpSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IInterfacePpSO.class);
 
 				reqSO.saveOrUpdateInterfacePpList(reqDTO);
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			this.getManagedBean().setSelectedPpList(null);
-			
+
 		} else if (this.getManagedBean().getSelectedVotList() != null) {
 			log.info("***********VotList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedVotList().size());
-			
+
 			IInterfaceVotSO interfacevotSO = (IInterfaceVotSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceVotSO.class);
-			
+
 			InterfaceVotReqDTO reqDTO = new InterfaceVotReqDTO();
 			reqDTO.setFileName(this.getManagedBean().getFileName());
-			
+
 			reqDTO.setInterfaceVotLs(this.getManagedBean().getSelectedVotList());
 			try {
 				interfacevotSO.saveOrUpdateVotFundList(reqDTO);
 			} catch (Exception e) {
-				
-				
+
+
 				System.out.println(""+e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
-				
+
 				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasVot.xhtml";
 			}
-			
+
 			this.getManagedBean().setSelectedVotList(null);
 
 		}
@@ -1196,22 +1241,22 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				.getSelectedProgActList())
 				|| CollectionUtils.isNotEmpty(this.getManagedBean()
 						.getSelectedProjectList())
-				|| CollectionUtils.isNotEmpty(this.getManagedBean()
-						.getSelectedAgOfficeList())
-				|| CollectionUtils.isNotEmpty(this.getManagedBean()
-						.getSelectedBankList())
-				|| CollectionUtils.isNotEmpty(this.getManagedBean()
-						.getSelectedGlAcntList())
-				|| CollectionUtils.isNotEmpty(this.getManagedBean()
-						.getSelectedKptjList())
-				|| CollectionUtils.isNotEmpty(this.getManagedBean()
-						.getSelectedPpList())
-				|| CollectionUtils.isNotEmpty(this.getManagedBean()
-						.getSelectedDanaList())
-				|| CollectionUtils.isNotEmpty(this.getManagedBean()
-						.getSelectedPtjList())
-				|| CollectionUtils.isNotEmpty(this.getManagedBean()
-						.getSelectedVotList())) {
+						|| CollectionUtils.isNotEmpty(this.getManagedBean()
+								.getSelectedAgOfficeList())
+								|| CollectionUtils.isNotEmpty(this.getManagedBean()
+										.getSelectedBankList())
+										|| CollectionUtils.isNotEmpty(this.getManagedBean()
+												.getSelectedGlAcntList())
+												|| CollectionUtils.isNotEmpty(this.getManagedBean()
+														.getSelectedKptjList())
+														|| CollectionUtils.isNotEmpty(this.getManagedBean()
+																.getSelectedPpList())
+																|| CollectionUtils.isNotEmpty(this.getManagedBean()
+																		.getSelectedDanaList())
+																		|| CollectionUtils.isNotEmpty(this.getManagedBean()
+																				.getSelectedPtjList())
+																				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+																						.getSelectedVotList())) {
 			this.getManagedBean().setProcessButtonStatus(true);
 
 		} else {
@@ -1219,7 +1264,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 		return this.getManagedBean().isProcessButtonStatus();
 	}
-	
+
 	/**
 	 * Row select event.
 	 * 
