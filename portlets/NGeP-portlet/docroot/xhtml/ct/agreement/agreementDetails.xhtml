@@ -36,7 +36,8 @@
 					<td>
 						<p:inputText id="contractPhysicalNo" for="physicalNo"
 							value="#{agreementBackingBean.managedBean.agreementContractVer.contractPhysicalNo}"
-							style="width:130px;" maxlength="30" required="true" label="#{lbl['lbl.ct.physical.no']}" >
+							style="width:130px;" maxlength="30" required="true" label="#{lbl['lbl.ct.physical.no']}"
+							disabled="#{agreementBackingBean.managedBean.uploadFinalAgreement}">
 							<p:ajax update="@this" />
 						</p:inputText>
 						<ac:iconTooltip  value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
