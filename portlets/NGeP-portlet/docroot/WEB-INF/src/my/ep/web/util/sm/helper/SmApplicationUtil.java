@@ -163,6 +163,7 @@ import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -6331,29 +6332,31 @@ public class SmApplicationUtil {
 	public static List<SelectItem> getAcademicQualifications(
 			SmApplicationManagedBean managedBean) {
 		List<SelectItem> academics = new ArrayList<SelectItem>();
-		List<PmEduLevel> eduLvls = new ArrayList<PmEduLevel>();
+		/*List<PmEduLevel> eduLvls = new ArrayList<PmEduLevel>();
 		EducationLevelReqDTO reqDTO = new EducationLevelReqDTO();
 		IEducationLevelSO reqSO = (IEducationLevelSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", IEducationLevelSO.class);
-		EducationLevelResDTO resDTO = reqSO.retrieveEducationLevelList(reqDTO);
-		if (resDTO != null && resDTO.getEduLevelList() != null) {
-			eduLvls = resDTO.getEduLevelList();
+		EducationLevelResDTO resDTO = reqSO.retrieveEducationLevelList(reqDTO);*/
+		
+		List<PmParameterDesc> eduLvls = new ArrayList<PmParameterDesc>();
+//		if (resDTO != null && resDTO.getEduLevelList() != null) {
+			eduLvls = ParameterHelper.getInstance().getParameterDescList(ParameterTypeConst.QUALIFICATION_LEVEL);
 			// sort
-			Collections.sort(eduLvls, new Comparator<PmEduLevel>() {
+			/*Collections.sort(eduLvls, new Comparator<PmParameter>() {
 				@Override
-				public int compare(final PmEduLevel s1, final PmEduLevel s2) {
-					return StringUtil.upperCase(s2.getLevelCode()).compareTo(
-							StringUtil.upperCase(s1.getLevelCode()));
+				public int compare(final PmParameter s1, final PmParameter s2) {
+					return StringUtil.upperCase(s2.getParameterCode()).compareTo(
+							StringUtil.upperCase(s1.getParameterCode()));
 				}
-			});
+			});*/
 			managedBean.setEduLevelList(eduLvls);
-		}
+//		}
 
 		academics.add(new SelectItem(null, SmCommonUtil.getMessage(
 				"lbl.txt.select", null)));
-		for (PmEduLevel edl : eduLvls) {
-			academics.add(new SelectItem(edl.getEduLevelId(), edl
-					.getLevelDesc()));
+		for (PmParameterDesc edl : eduLvls) {
+			academics.add(new SelectItem(edl.getParameterDescId(), edl
+					.getCodeName()));
 		}
 		return academics;
 	}

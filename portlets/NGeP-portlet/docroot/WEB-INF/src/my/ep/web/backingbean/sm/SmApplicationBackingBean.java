@@ -1639,9 +1639,9 @@ public class SmApplicationBackingBean extends
 		String retVal = "";
 		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getEduLevelList())
 				&& eduLvlId != null) {
-			for (PmEduLevel eduLvl : getManagedBean().getEduLevelList()) {
-				if (eduLvl.getEduLevelId().compareTo(eduLvlId) == 0) {
-					retVal = eduLvl.getLevelDesc();
+			for (PmParameterDesc eduLvl : getManagedBean().getEduLevelList()) {
+				if (eduLvl.getParameterDescId().compareTo(eduLvlId) == 0) {
+					retVal = eduLvl.getCodeName();
 				}
 			}
 		}
@@ -5028,6 +5028,11 @@ public class SmApplicationBackingBean extends
 									"suppPersonnelInfoDtWidVar.paginator.endLink.click()");
 				}
 			}
+			for(SmStaffAcademic aca : getManagedBean().getSelectedShareHolder().getSmStaffAcademics()) {
+				if(aca.getQualificationId() != null && aca.getQualificationId().getParameterType() == null) {
+					aca.setStaffAcademicId(aca.getQualificationId().getParameterId());
+				}
+			}
 			saveOrUpdateAppl();
 			SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 					getManagedBean().getSmAppl(), getManagedBean()
@@ -5269,6 +5274,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedShareHolder().getEpRole() == null) {
 			getManagedBean().getSelectedShareHolder().setEpRole("");
 		}
+		
 		assignSelShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		managePersonnelRoles("Y");
 		manageEquityLimit(getManagedBean().getSelectedShareHolder());
@@ -5968,7 +5974,8 @@ public class SmApplicationBackingBean extends
 
 		SmStaffAcademic aca = new SmStaffAcademic();
 		aca.setPmEduField(new PmEduField());
-		aca.setPmEduLevel(new PmEduLevel());
+//		aca.setPmEduLevel(new PmEduLevel());
+		aca.setQualificationId(new PmParameter());
 
 		aca.setSmPersonnel(getManagedBean().getSelectedShareHolder());
 		getManagedBean().setSelectedStaffAcademic(aca);
@@ -5984,8 +5991,11 @@ public class SmApplicationBackingBean extends
 	 *            -SmStaffAcademic
 	 */
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
-		if (aca.getPmEduLevel() == null) {
-			aca.setPmEduLevel(new PmEduLevel());
+//		if (aca.getPmEduLevel() == null) {
+//			aca.setPmEduLevel(new PmEduLevel());
+//		}
+		if(aca.getQualificationId() == null) {
+			aca.setQualificationId(new PmParameter());
 		}
 		getManagedBean().setSelectedStaffAcademic(aca);
 		if (getManagedBean().getLatestPersonnel() != null) {
@@ -6050,21 +6060,20 @@ public class SmApplicationBackingBean extends
 				break;
 			}
 		}
-		for (PmEduLevel lvl : getManagedBean().getEduLevelList()) {
-			if (getManagedBean().getSelectedStaffAcademic().getPmEduLevel()
-					.getEduLevelId().equals(lvl.getEduLevelId())) {
-				getManagedBean().getSelectedStaffAcademic().setPmEduLevel(lvl);
+		for (PmParameterDesc lvl : getManagedBean().getEduLevelList()) {
+			if (getManagedBean().getSelectedStaffAcademic().getQualificationId()
+					.getParameterId().equals(lvl.getPmParameter().getParameterId())) {
+				getManagedBean().getSelectedStaffAcademic().setQualificationLevelId(getManagedBean().getSelectedStaffAcademic().getQualificationId().getParameterId().intValue());
 				break;
 			}
 		}
 
-		if (getManagedBean().getSelectedStaffAcademic().getPmEduLevel() != null) {
+		if (getManagedBean().getSelectedStaffAcademic().getQualificationId() != null) {
 
 			String qual = "";
-			if (getManagedBean().getSelectedStaffAcademic().getPmEduLevel()
-					.getLevelCode() != null) {
+			if (getManagedBean().getSelectedStaffAcademic().getQualificationId().getParameterCode() != null) {
 				qual = getManagedBean().getSelectedStaffAcademic()
-						.getPmEduLevel().getLevelCode();
+						.getQualificationId().getParameterCode();
 				if (getManagedBean().getSelectedShareHolder().isProf()) {
 					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
 							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_LEVEL_CERT)
@@ -10558,25 +10567,25 @@ public class SmApplicationBackingBean extends
 						|| getManagedBean().getSelectedShareHolder()
 								.isSemiProf() || getManagedBean()
 						.getSelectedShareHolder().isClerical())) {
-			for (PmEduLevel eduLevel : getManagedBean().getEduLevelList()) {
+			for (PmParameterDesc eduLevel : getManagedBean().getEduLevelList()) {
 				if ((getManagedBean().getSelectedShareHolder().isEquityOwner() && SupplierManagementConst.EQUI_OWNER_EDU_LEVEL_CODES
-						.contains(eduLevel.getLevelCode()))
+						.contains(eduLevel.getPmParameter().getParameterCode()))
 						|| (getManagedBean().getSelectedShareHolder().isProf() && SupplierManagementConst.PROF_STAFF_EDU_LEVEL_CODES
-								.contains(eduLevel.getLevelCode()))
+								.contains(eduLevel.getPmParameter().getParameterCode()))
 						|| (getManagedBean().getSelectedShareHolder()
 								.isSemiProf() && SupplierManagementConst.SEMI_PROF_STAFF_EDU_LEVEL_CODES
-								.contains(eduLevel.getLevelCode()))
+								.contains(eduLevel.getPmParameter().getParameterCode()))
 						|| (getManagedBean().getSelectedShareHolder()
 								.isClerical() && SupplierManagementConst.CLERICAL_STAFF_EDU_LEVEL_CODES
-								.contains(eduLevel.getLevelCode()))) {
+								.contains(eduLevel.getPmParameter().getParameterCode()))) {
 					item = (SelectItem) EntityHelper
 							.getEntityBySinglePropertyFromList(
-									eduLevel.getEduLevelId(), finalList,
+									eduLevel.getParameterDescId(), finalList,
 									"value");
 					if (item == null) {
 						item = new SelectItem();
-						item.setLabel(eduLevel.getLevelDesc());
-						item.setValue(eduLevel.getEduLevelId());
+						item.setLabel(eduLevel.getCodeName());
+						item.setValue(eduLevel.getParameterDescId());
 						finalList.add(item);
 					}
 				}
@@ -10591,13 +10600,13 @@ public class SmApplicationBackingBean extends
 	private List<SelectItem> getAllPmEduLevelItems(
 			List<SelectItem> eduLevelItems) {
 		SelectItem item = null;
-		for (PmEduLevel eduLevel : getManagedBean().getEduLevelList()) {
+		for (PmParameterDesc eduLevel : getManagedBean().getEduLevelList()) {
 			item = (SelectItem) EntityHelper.getEntityBySinglePropertyFromList(
-					eduLevel.getEduLevelId(), eduLevelItems, "value");
+					eduLevel.getParameterDescId(), eduLevelItems, "value");
 			if (item == null) {
 				item = new SelectItem();
-				item.setLabel(eduLevel.getLevelDesc());
-				item.setValue(eduLevel.getEduLevelId());
+				item.setLabel(eduLevel.getCodeName());
+				item.setValue(eduLevel.getParameterDescId());
 				eduLevelItems.add(item);
 			}
 		}
