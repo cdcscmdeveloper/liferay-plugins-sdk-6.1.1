@@ -83,22 +83,29 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 
 	public void submitQuestionnaire() {
 		log.info("***********submitQuestionnaire Start**************");
-		log.info("***********SM SUPPLIER ID******" + this.getManagedBean().getSmSupp().getSupplierId());
+		log.info("***********SM SUPPLIER ID******"
+				+ this.getManagedBean().getSmSupp().getSupplierId());
 
 		QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
 
-		this.getManagedBean().getSmAppl().setSmSupplierAnswers(this.getManagedBean().getSmSuppAnswerLs());
+		this.getManagedBean()
+				.getSmAppl()
+				.setSmSupplierAnswers(this.getManagedBean().getSmSuppAnswerLs());
 		reqDTO.setSmSupplier(this.getManagedBean().getSmSupp());
 		reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 		reqDTO.setOriResubmitSmAppl(this.getManagedBean().getRejectedAppl());
-		IQuestionnaireSO reqSO = (IQuestionnaireSO) BusinessDelegate.getInstance().getServiceObject("sm", IQuestionnaireSO.class);
-	
-		for(SmSupplierAnswer suppAns : this.getManagedBean().getSmSuppAnswerLs()){
-			
-			log.info("Desc >>>>>" + suppAns.getSmQuestion().getSmAnswerCategory().getAnswerCategoryDesc());
+		IQuestionnaireSO reqSO = (IQuestionnaireSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IQuestionnaireSO.class);
+
+		for (SmSupplierAnswer suppAns : this.getManagedBean()
+				.getSmSuppAnswerLs()) {
+
+			log.info("Desc >>>>>"
+					+ suppAns.getSmQuestion().getSmAnswerCategory()
+							.getAnswerCategoryDesc());
 			log.info("Answer Id>>>>>" + suppAns.getSmAnswer().getAnswerId());
 		}
-		
+
 		FacesScopes fs = new FacesScopes();
 		List<String> useList = new ArrayList<String>();
 		PmUser loginUser = fs.getUserSessionBean();
@@ -107,12 +114,17 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 
 		reqSO.questionnaireSubmission(reqDTO);
-
-		SmCommonUtil
-				.redirectToPage(this.getManagedBean().getTargetUrl(),
-						SmCommonUtil.getMessage(
-								"lbl.sm.submit.questionaire.msg", null), null);
 		
+		//for resubmit application directly inject to task list
+		if (this.getManagedBean().getRejectedAppl() != null) {
+			SmCommonUtil.redirectToPage(this.getManagedBean().getTargetUrl(),
+					SmCommonUtil.getMessage("lbl.sm.submit.questionaire.msg",
+							null), null);
+		} else {
+			SmCommonUtil.redirectToPage(this.getManagedBean().getTargetUrl(),
+					SmCommonUtil.getMessage(null, null), null);
+		}
+
 		renewSesionObject();
 	}
 	
