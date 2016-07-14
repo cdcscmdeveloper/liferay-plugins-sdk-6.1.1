@@ -130,7 +130,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 						.getRuleValueList().get(0);
 				BigDecimal tolerancePercentage = new BigDecimal(
 						configRulevalue.getRuleValue());
-				this.setTolerancePrice(tolerancePercentage);
+				BigDecimal tolerancePrice = (new BigDecimal(100))
+						.subtract(tolerancePercentage);
+				this.setTolerancePrice(tolerancePrice);
 			}
 
 		} finally {
