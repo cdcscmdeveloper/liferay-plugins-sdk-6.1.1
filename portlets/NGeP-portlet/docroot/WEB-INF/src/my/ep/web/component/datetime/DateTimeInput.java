@@ -62,11 +62,11 @@ public class DateTimeInput extends UIOutput implements ClientBehaviorHolder {
 			dateComponent.setValue(c1.getTime());
 			hourComponent.setValue(String.valueOf(c1.get(Calendar.HOUR_OF_DAY)));
 			minuteComponent.setValue(String.valueOf(c1.get(Calendar.MINUTE)));
-		} else {
+		}/* else {
 			dateComponent.setValue(null);
 			hourComponent.setValue(null);
 			minuteComponent.setValue(null);
-		}
+		}*/
 		
 		super.encodeBegin(context);
 	}
