@@ -143,7 +143,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
-
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
 		try {
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 			this.getManagedBean().setPayLoad(dataType);
@@ -159,7 +161,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 			
 			retrieveOnlineBiddingEndorsement(qtId);
 			
-			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
@@ -172,6 +173,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 			}				
 		} catch (Exception e) {
 			handleException(e);
+			fc.getApplication().getNavigationHandler()
+			  .handleNavigation(fc, null,
+					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
 		}
 	}
 
