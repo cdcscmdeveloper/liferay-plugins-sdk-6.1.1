@@ -2018,17 +2018,13 @@ public class SmApplicationBackingBean extends
 	 */
 	private boolean retriveLatestApplAfterUpdate(String currentPageType,
 			String outputPageType) {
-
-		IMofRegistrationSO mofRegistrationSO = null;
-		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
-				.getServiceObject("sm", IMofRegistrationSO.class);
 		try {
 
 			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
 			finReqDto.setApplId(getManagedBean().getSmAppl().getApplId());
 			log.info("********* Final Block Id *****" + finReqDto.getApplId());
 			log.info("***** Its a valid ************");
-			MofRegistrationResDTO resDTO = mofRegistrationSO
+			MofRegistrationResDTO resDTO = SmServiceLookup.getMofRegistrationSO()
 					.retrieveCurrentDraftApplication(finReqDto);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmSupplier(
@@ -2053,7 +2049,6 @@ public class SmApplicationBackingBean extends
 			}
 			return true;
 		} finally {
-			mofRegistrationSO = null;
 			SmApplicationUtil.getInstance().setApplAddressTransientValue(
 					getManagedBean().getSmAppl(), false);
 
@@ -2071,18 +2066,16 @@ public class SmApplicationBackingBean extends
 	 * Retrieve current application.
 	 */
 	private void retriveCurrentAppl() {
-		IMofRegistrationSO mofRegistrationSO = null;
-		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
-				.getServiceObject("sm", IMofRegistrationSO.class);
 		try {
 
 			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
 			finReqDto.setApplId(getManagedBean().getSmAppl().getApplId());
-			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.retrieveCurrentDraftApplication(finReqDto);
+			MofRegistrationResDTO resDTO = SmServiceLookup
+					.getMofRegistrationSO().retrieveCurrentDraftApplication(
+							finReqDto);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 		} finally {
-			mofRegistrationSO = null;
+			
 		}
 	}
 
@@ -2094,19 +2087,15 @@ public class SmApplicationBackingBean extends
 	 * @return SmPersonnel
 	 */
 	public SmPersonnel getPersonnelInfoById(Long personnelId) {
-		IPersonnelSO smPersonnelSO = null;
-		smPersonnelSO = (IPersonnelSO) BusinessDelegate.getInstance()
-				.getServiceObject("sm", IPersonnelSO.class);
 		try {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setPersonnelId(Long.valueOf(personnelId));
-			PersonnelResDTO resDTO = smPersonnelSO
+			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 					.retrievePersonnelById(reqDTO);
 			return resDTO.getSmPersonnel();
 		} finally {
-			smPersonnelSO = null;
-		}
 
+		}
 	}
 
 	/**
