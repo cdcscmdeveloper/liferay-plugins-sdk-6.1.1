@@ -508,6 +508,8 @@ public class ReportConst {
 	public static final String CT_CONTRACT_UTILIZATION_MONITORING_CC_RPT_VAL = "CT_020";
 	public static final String CT_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL = "CT_021";
 	public static final String CT_LIST_OF_CONTRACT_CC_RPT_VAL = "CT_022";
+	public static final String CT_PANEL_LIST_OF_CONTRACT_CC_RPT_VAL = "CT_023";
+	public static final String CT_PANEL_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL = "CT_024";
 	
 	// /CT-VALUES
 	public static final String CT_TERMINATION_TYPE = "TERMINATE";
