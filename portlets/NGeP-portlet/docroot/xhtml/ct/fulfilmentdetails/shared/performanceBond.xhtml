@@ -147,13 +147,13 @@
 		<p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="true"
 			width="700px" height="350" styleClass="pop_up_top"
 			header="#{lbl['lbl.txt.choose.files']}"
-			onShow="singleUploadListener(uploadWV);">
+			onShow="singleUploadListener(performanceBondUploadWV);">
 			<p:ajax event="close" />
 			<p:fileUpload style="display:inline;"  dragDropSupport="false"
 			   	fileUploadListener="#{ctBackingBean.fileUploadPerformance}"
 			    mode="advanced" id="performanceFileuploadId" multiple="false"
 			 	sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"  showButtons="false"
-				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="uploadWV"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="performanceBondUploadWV"
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  
 				update=":form:tableBond" label="#{lbl['lbl.btn.choose']}">
 			</p:fileUpload>
