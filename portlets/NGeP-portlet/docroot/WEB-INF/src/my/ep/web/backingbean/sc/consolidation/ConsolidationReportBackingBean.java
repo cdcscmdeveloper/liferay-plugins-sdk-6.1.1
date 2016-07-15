@@ -94,7 +94,7 @@ public class ConsolidationReportBackingBean extends
 	
 	/** Public Methods **/
 	public void preRenderView() {
-		getManagedBean().setHasErrors(Boolean.FALSE);
+		FacesContext fc = FacesContext.getCurrentInstance();
 		
 		try {
 			SCEvaluationDataType dataType 
@@ -108,14 +108,14 @@ public class ConsolidationReportBackingBean extends
 			
 			loadInitialData();
 			
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							QTConstants.DO_CONSOLIDATION_REPORT_PAGE);
+			fc.getApplication().getNavigationHandler()
+			  .handleNavigation(fc, null,
+					QTConstants.DO_CONSOLIDATION_REPORT_PAGE); 
 		} catch (Exception e) {
-			getManagedBean().setHasErrors(Boolean.TRUE);
 			handleException(e);
+			fc.getApplication().getNavigationHandler()
+			  .handleNavigation(fc, null,
+					  CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);	
 		}
 	}
 	

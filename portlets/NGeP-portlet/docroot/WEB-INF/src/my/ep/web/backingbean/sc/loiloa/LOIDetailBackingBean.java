@@ -119,6 +119,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loiloa.LOIDetailManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -361,6 +362,8 @@ public class LOIDetailBackingBean extends
 	public void preRenderMultipleLoiView() {
 		debugLogger("preRenderMultipleLoiView");
 
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
 		try {
 			SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 
@@ -381,11 +384,13 @@ public class LOIDetailBackingBean extends
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
 			
-			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
-		} finally{
-			//handleException(e);
+		} catch (Exception e) {
+			handleException(e);
+			fc.getApplication().getNavigationHandler()
+			  .handleNavigation(fc, null,
+					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
 		}
 	}
 	
