@@ -171,7 +171,8 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
-		getManagedBean().setHasErrors(Boolean.FALSE);
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
 		
 		try {
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
@@ -186,14 +187,15 @@ public class SupplierFinalizationBackingBean extends
 			loadInitialData(qtId);
 			checkIfLoggedinUserIsSecretary();
 
-			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							QTConstants.FC_SUPPLIER_FINALIZATION_PAGE);
 		} catch (Exception e) {
-			getManagedBean().setHasErrors(Boolean.TRUE);
 			handleException(e);
+			fc.getApplication().getNavigationHandler()
+			  .handleNavigation(fc, null,
+					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 		}
 	}
 

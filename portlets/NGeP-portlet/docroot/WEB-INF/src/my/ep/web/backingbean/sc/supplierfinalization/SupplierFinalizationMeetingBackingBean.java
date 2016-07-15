@@ -132,7 +132,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	public void preRenderView() {
 		debugLogger("preRenderView");
 		
-		getManagedBean().setHasErrors(Boolean.FALSE);
+		FacesContext fc = FacesContext.getCurrentInstance();
 
 		try {
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
@@ -149,11 +149,14 @@ public class SupplierFinalizationMeetingBackingBean extends
 			retriveQTDetails(qtId);
 			retriveMeetingDetails(qtId);
 
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.FC_COORDINATE_MEETING_PAGE);
+			fc.getApplication().getNavigationHandler()
+			  .handleNavigation(fc, null, 
+					QTConstants.FC_COORDINATE_MEETING_PAGE);
 		} catch (Exception e) {
-			getManagedBean().setHasErrors(Boolean.TRUE);
 			handleException(e);
+			fc.getApplication().getNavigationHandler()
+			  .handleNavigation(fc, null,
+					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 		}
 	}
 
