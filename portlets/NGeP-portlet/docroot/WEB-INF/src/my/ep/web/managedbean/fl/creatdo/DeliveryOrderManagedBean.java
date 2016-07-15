@@ -194,6 +194,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
     private SpkiBackingBean spkiBackingBean;
     
     private boolean gfmasError=false;
+    private String gfmasErrorCode;
     private String gfmasErrorContent;
     private Date estDeliveryDate;
     private Date gstDeclareDate;
@@ -1240,6 +1241,14 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 
 	public void setFromDoDashboardPage(boolean fromDoDashboardPage) {
 		this.fromDoDashboardPage = fromDoDashboardPage;
+	}
+
+	public String getGfmasErrorCode() {
+		return gfmasErrorCode;
+	}
+
+	public void setGfmasErrorCode(String gfmasErrorCode) {
+		this.gfmasErrorCode = gfmasErrorCode;
 	}
 	
 }
