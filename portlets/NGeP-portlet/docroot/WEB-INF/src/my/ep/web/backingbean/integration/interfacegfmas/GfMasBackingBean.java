@@ -13,14 +13,12 @@ package my.ep.web.backingbean.integration.interfacegfmas;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -66,6 +64,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ProcessCodeType;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -73,7 +72,6 @@ import my.ep.web.managedbean.intergration.interfacegfmas.GfMasManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -106,6 +104,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	public GfMasBackingBean() {
 
 		log.info("inside GfMasBackingBean constructor");
+		searchGfMas();
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
 			System.out.println("***userId: " + pmUser.getUserId());
@@ -116,6 +115,11 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 
 	}
+	
+	/*public void init(){
+		log.info("inside init ");
+		searchGfMas();
+	}*/
 
 	/**
 	 * Search gf mas.
@@ -128,9 +132,10 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * Pre loading gfmas.
 	 */
 	public void preLoadingGfmas() {
-		log.info("preLoadingGfmas");
-		this.resetGfMasSearchBean();
-		FacesContext fc = FacesContext.getCurrentInstance();
+		log.info("preLoadingGfmas");	
+		this.getManagedBean().setProcessId(null);		
+		FacesContext fc = FacesContext.getCurrentInstance();	
+		searchGfMas();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
@@ -159,7 +164,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private ISearchBean<DIInterfaceLog> getSearchBeanData(
 			ISearchBean<DIInterfaceLog> searchBean) {
 		log.info("getSearchBeanData");
-		if (this.getManagedBean().getInterfaceLogId() != null) {
+		/*if (this.getManagedBean().getInterfaceLogId() != null) {
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("logId",
@@ -180,7 +185,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 							SearchOperator.OPERATOR_EQUALS.value(), this
 							.getManagedBean().getDirection()
 							.toUpperCase(), true));
-		}
+		}*/
 
 		List<ProcessCodeType> listOfProcessCodes = new ArrayList<ProcessCodeType>();
 
@@ -1300,9 +1305,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * Change process code.
 	 */
 	public void changeProcessCode() {
-		if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
-			this.getManagedBean().getProcessId();
-		}
+		searchGfMas();
 	}
 
 	/**
@@ -1310,7 +1313,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * 
 	 * @return the process codelist
 	 */
-	public List<SelectItem> getProcessCodelist() {
+	/*public List<SelectItem> getProcessCodelist() {
 		log.info("In getProcessCodelist");
 
 		List<ProcessCodeType> list = new ArrayList<ProcessCodeType>();
@@ -1332,9 +1335,57 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			SelectItem selectItem = new SelectItem();
 			selectItem.setValue(list.get(i));
 			selectItem.setLabel(list.get(i).toString());
+
 			processCodeValues.add(selectItem);
 		}
 
 		return processCodeValues;
+	}*/
+	
+	public static SelectItem[] getProcessCodelist() {
+
+		SelectItem[] items = new SelectItem[10];
+
+		items[0] = new SelectItem(ProcessCodeType.GLBAC,
+				ResourceBundleUtils.getMessage("lbl.gfmas.glbacdef",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(ProcessCodeType.GLSEG,
+				ResourceBundleUtils.getMessage("lbl.gfmas.glsegdef",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[2] = new SelectItem(ProcessCodeType.GLVOT,
+				ResourceBundleUtils.getMessage("lbl.gfmas.glvotdef",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[3] = new SelectItem(ProcessCodeType.GLDNA,
+				ResourceBundleUtils.getMessage("lbl.gfmas.gldanadef",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[4] = new SelectItem(ProcessCodeType.GLPRG,
+				ResourceBundleUtils.getMessage("lbl.gfmas.glprgdef",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[5] = new SelectItem(ProcessCodeType.GLPRJ,
+				ResourceBundleUtils.getMessage("lbl.gfmas.glprjdef",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[6] = new SelectItem(ProcessCodeType.GLGLC,
+				ResourceBundleUtils.getMessage("lbl.gfmas.glglcdef",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[7] = new SelectItem(ProcessCodeType.GLPCG,
+				ResourceBundleUtils.getMessage("lbl.gfmas.glpcgdef",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[8] = new SelectItem(ProcessCodeType.GLPTJ,
+				ResourceBundleUtils.getMessage("lbl.gfmas.glptjdef",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[9] = new SelectItem(ProcessCodeType.CMBNK,
+				ResourceBundleUtils.getMessage("lbl.gfmas.glbnkdef",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		return items;
 	}
 }

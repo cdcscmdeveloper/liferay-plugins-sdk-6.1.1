@@ -11,13 +11,12 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 	
 	<ui:define name="contentSection">
 
-		<p:messages id="gfMasMain" showDetail="true" autoUpdate="true"
-			severity="error,info" closable="true" showSummary="true"></p:messages>
-
+		<p:messages id="gfMasMain" showDetail="true" autoUpdate="true" escape="false"
+			severity="error,info" closable="true" showSummary="false"></p:messages>
 
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasSearch.xhtml" />
 				
-		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasResult.xhtml" />
+	<!-- 	<ui:include src="/xhtml/gfMas/gfmassearch/gfmasResult.xhtml" /> -->
 	
 	</ui:define>
 </ui:composition>
