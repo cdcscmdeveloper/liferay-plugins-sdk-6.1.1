@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.pm.organisation;
 
+import java.util.List;
+
 import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -10,13 +12,17 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -48,6 +54,27 @@ public class OrgProfileSearchBackingBean extends
 	
 	public void initPtjPopup(){
 		this.renewSesionObject();
+		List<PmUserOrg> userOrgList = PmCommonUtil
+				.retrieveActiveOrgWithoutRole(getFacesScopes()
+						.getUserSessionBean().getUserId(), false);
+
+		if (userOrgList == null || userOrgList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_770105);
+		}
+
+		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
+		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+		if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+			getManagedBean().setMinistryProfileId(pmOrgProfile.getOrgProfileId());
+			getManagedBean().setDisabledMinistry(true);
+		} else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
+			getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+					pmOrgProfile.getOrgProfileId()).getOrgProfileId());
+			getManagedBean().setJabatanProfileId(pmOrgProfile.getOrgProfileId());
+			getManagedBean().setDisabledMinistry(true);
+			getManagedBean().setDisabledJabatan(true);
+		} 
+		
 		this.getManagedBean().setPtjCodeName(ProfileManagementConst.PTJ_CODE);
 	}
 
@@ -191,6 +218,16 @@ public class OrgProfileSearchBackingBean extends
 			}
 		}
 		return searchBean;
+	}
+	
+	/**
+	 * get faces scopes
+	 * 
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
 	}
 	
 }
