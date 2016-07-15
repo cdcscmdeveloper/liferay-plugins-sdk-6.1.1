@@ -2233,9 +2233,12 @@ public class QTDetailBackingBean extends
 			// Added by Fara on 03092014 - Fix for Approval tab if no data for
 			// approval
 			if (CollectionUtils.isNotEmpty(tabBeans)) {
+				int selectedTabIndex = this.getManagedBean().getSelectedApprovalTabIndex();
+				if (selectedTabIndex > tabBeans.size()-1) {
+					selectedTabIndex = 0;
+				}
 				this.getManagedBean().setSelectedApprovalTabBean(
-						tabBeans.get(this.getManagedBean()
-								.getSelectedApprovalTabIndex()));
+						tabBeans.get(selectedTabIndex));
 				this.getManagedBean().setScQtApproval(
 						this.getManagedBean().getSelectedApprovalTabBean()
 								.getScQtApproval());
