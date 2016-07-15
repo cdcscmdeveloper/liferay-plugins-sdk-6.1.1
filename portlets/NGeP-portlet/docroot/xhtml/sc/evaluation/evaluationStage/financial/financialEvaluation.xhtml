@@ -52,13 +52,19 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:10%;text-align: center;">
-					<ui:fragment rendered="#{financialEval.scoringReq eq 'false' or (null ne financialEval.pmEvalStatus and financialEval.pmEvalStatus.statusId eq '60451')}">
+					<ui:fragment rendered="#{financialEval.scoringReq eq 'false'}">
 						<p:commandButton value="#{lbl['lbl.btn.view']}"
 							process="@this" partialSubmit="true"
 							action="#{evaluationBackingBean.viewfinacialEvaluation(financialEval,index,'EF')}" />
 					</ui:fragment>
 					<ui:fragment rendered="#{financialEval.scoringReq ne 'false' and  (null ne financialEval.pmEvalStatus and financialEval.pmEvalStatus.statusId eq '60450')}">
 						<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
+							process="@this" partialSubmit="true"
+							action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
+					</ui:fragment>
+					
+					<ui:fragment rendered="#{financialEval.scoringReq ne 'false' and  (null ne financialEval.pmEvalStatus and financialEval.pmEvalStatus.statusId eq '60451')}">
+						<p:commandButton value="#{lbl['lbl.btn.view']}"
 							process="@this" partialSubmit="true"
 							action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
 					</ui:fragment>

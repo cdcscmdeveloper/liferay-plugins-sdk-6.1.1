@@ -55,7 +55,12 @@
 				style="width:10%;text-align: center;">
 
 				<p:commandButton value="#{lbl['lbl.sc.btn.compliance']}"
-					rendered="#{complianceFinancial.definationType.parameterCode eq 'UP' or complianceFinancial.definationType.parameterCode eq 'NA'}"
+					rendered="#{(complianceFinancial.definationType.parameterCode eq 'UP' or complianceFinancial.definationType.parameterCode eq 'NA') and (null ne complianceFinancial.pmEvalStatus and complianceFinancial.pmEvalStatus.statusId eq '60450')}"
+					process="@this" partialSubmit="true"
+					action="#{evaluationBackingBean.complianceUploadCheckList(complianceFinancial,index,'F')}" />
+					
+						<p:commandButton value="#{lbl['lbl.btn.view']}"
+					rendered="#{(complianceFinancial.definationType.parameterCode eq 'UP' or complianceFinancial.definationType.parameterCode eq 'NA') and (null ne complianceFinancial.pmEvalStatus and complianceFinancial.pmEvalStatus.statusId eq '60451')}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.complianceUploadCheckList(complianceFinancial,index,'F')}" />
 
