@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div align="right" style="width: 100%">
@@ -34,11 +35,7 @@
 
 			<tr>
 				<td style="width: 55%;"><p:outputPanel>
-
-
-
 						<table style="width: 100%;">
-
 							<tr>
 								<td style="width: 120px"><p:outputLabel
 										value="#{lbl['lbl.sc.bidding.no']}" /></td>
@@ -47,7 +44,6 @@
 										size="20" /></td>
 								<TD></TD>
 								<TD></TD>
-
 							</tr>
 
 							<tr>
@@ -96,6 +92,28 @@
 											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 									</p:inputText></TD>
 							</tr>
+							<c:if
+								test="#{onlineBiddingBB.scBidSchedule.tplSpecZoneDtl ne null}">
+								<tr>
+									<td style="width: 120px"><p:outputLabel id="zoneNameLbl"
+											value="#{lbl['lbl.sc.zone.name']}" /></td>
+									<td><p:inputText id="zoneNameLabel" disabled="true"
+											size="15"
+											value="#{onlineBiddingBB.scBidSchedule.tplSpecZoneDtl.zoneName}" />
+										<p:commandLink id="zoneName" oncomplete="zoneLocPopup.show();"
+											partialSubmit="true" process="@this"
+											update="@([id$=zoneLocPopup])">
+											<p:graphicImage id="zoneDtlId"
+												title="#{lbl['lbl.sc.zone.details']}"
+												value="#{CommonUIConstant.imagePathUptoDesign}/evaluate.png" />
+											<f:setPropertyActionListener
+												target="#{zoneLocationBackingBean.tplSpecZoneDtl}"
+												value="#{onlineBiddingBB.scBidSchedule.tplSpecZoneDtl}" />
+										</p:commandLink></td>
+									<td></td>
+									<td></td>
+								</tr>
+							</c:if>
 						</table>
 					</p:outputPanel></td>
 				<td style="width: 45%;"><p:outputPanel>
@@ -126,5 +144,12 @@
 			</tr>
 		</table>
 	</p:panel>
+
+	<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup" rendered="true"
+		header="#{lbl['lbl.sc.zone.details']}" modal="true" width="350"
+		height="200">
+		<ui:include
+			src="/xhtml/sc/bidding/bidManagement/BMByItemZoneLocationPopup.xhtml" />
+	</p:dialog>
 
 </ui:composition>
