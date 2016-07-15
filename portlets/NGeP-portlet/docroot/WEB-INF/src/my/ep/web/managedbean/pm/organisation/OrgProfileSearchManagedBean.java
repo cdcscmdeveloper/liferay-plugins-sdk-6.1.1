@@ -18,6 +18,9 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	private PmOrgProfile selectedPtj;
 	private IPagingDataModel<PmOrgProfile> orgProfileDataModel;
 	private String orgType;
+	private PmOrgProfile currentActiveOrg;
+	private boolean disabledJabatan;
+	private boolean disabledMinistry;
 	
 	public OrgProfileSearchManagedBean() {
 
@@ -119,5 +122,47 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	 */
 	public void setOrgType(String orgType) {
 		this.orgType = orgType;
+	}
+
+	/**
+	 * @return the currentActiveOrg
+	 */
+	public PmOrgProfile getCurrentActiveOrg() {
+		return currentActiveOrg;
+	}
+
+	/**
+	 * @param currentActiveOrg the currentActiveOrg to set
+	 */
+	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
+		this.currentActiveOrg = currentActiveOrg;
+	}
+
+	/**
+	 * @return the disabledJabatan
+	 */
+	public boolean isDisabledJabatan() {
+		return disabledJabatan;
+	}
+
+	/**
+	 * @param disabledJabatan the disabledJabatan to set
+	 */
+	public void setDisabledJabatan(boolean disabledJabatan) {
+		this.disabledJabatan = disabledJabatan;
+	}
+
+	/**
+	 * @return the disabledMinistry
+	 */
+	public boolean isDisabledMinistry() {
+		return disabledMinistry;
+	}
+
+	/**
+	 * @param disabledMinistry the disabledMinistry to set
+	 */
+	public void setDisabledMinistry(boolean disabledMinistry) {
+		this.disabledMinistry = disabledMinistry;
 	}
 }

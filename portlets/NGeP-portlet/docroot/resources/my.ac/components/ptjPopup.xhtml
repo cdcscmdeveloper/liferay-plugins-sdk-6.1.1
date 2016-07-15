@@ -39,6 +39,7 @@
                 	 value="#{lbl['lbl.pm.org.ptj.search.ministry']}"/>
                  <p:spacer height="1"/>
                  <p:selectOneMenu id="somMinistry" styleClass="ptjPopupSomWidth"
+                 	disabled="#{organisationSearchBackingBean.managedBean.disabledMinistry}"
                       value="#{organisationSearchBackingBean.managedBean.ministryProfileId}" >
             	   <f:selectItems value="#{organisationSearchBackingBean.getMinistryDropdown()}"/>
             	   <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somJabatan,:form:#{cc.attrs.id}:searcbBtnId" />
@@ -48,6 +49,7 @@
                  	value="#{lbl['lbl.pm.org.ptj.search.jabatan']}"/>
                  <p:spacer height="1" rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"/>
                  <p:selectOneMenu id="somJabatan" styleClass="ptjPopupSomWidth"
+                 	  disabled="#{organisationSearchBackingBean.managedBean.disabledJabatan}"
                  	  rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"
                       value="#{organisationSearchBackingBean.managedBean.jabatanProfileId}" >
             	   <f:selectItems value="#{organisationSearchBackingBean.getJabatanDropdown()}"/>
