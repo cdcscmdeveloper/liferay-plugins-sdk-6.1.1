@@ -2772,7 +2772,7 @@ public class QTDetailBackingBean extends
 		 */
 		public QTPagingDataModel(String componentId,
 				QtnTenderSearchBean qtnTenderSearchBean) {
-			super(componentId);
+			super(componentId, false);
 			this.qtnTenderSearchBean = qtnTenderSearchBean;
 		}
 
