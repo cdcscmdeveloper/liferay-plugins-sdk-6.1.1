@@ -236,7 +236,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 
 					// Order by address Id.
 					searchBean.getSortColumns().add(
-							new SearchOrderBean("changedDate",
+							new SearchOrderBean("createdDate",
 									false));
 
 					if (getManagedBean().isUnRead()) {
