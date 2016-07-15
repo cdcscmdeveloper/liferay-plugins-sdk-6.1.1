@@ -56,12 +56,12 @@
 				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:10%;text-align: center;">
 
-					<ui:fragment rendered="#{technicalEvaluate.scoringReq eq 'false'}">
+					<ui:fragment rendered="#{technicalEvaluate.scoringReq eq 'false' or (null ne technicalEvaluate.pmEvalStatus and technicalEvaluate.pmEvalStatus.statusId eq '60451')}">
 						<p:commandButton value="#{lbl['lbl.btn.view']}"
 							process="@this" partialSubmit="true"
 							action="#{evaluationBackingBean.viewTechnicalEvaluation(technicalEvaluate,index,'ET')}" />
 					</ui:fragment>
-					<ui:fragment rendered="#{technicalEvaluate.scoringReq ne 'false'}">
+					<ui:fragment rendered="#{technicalEvaluate.scoringReq ne 'false' and  (null ne technicalEvaluate.pmEvalStatus and technicalEvaluate.pmEvalStatus.statusId eq '60450')}">
 						<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 							action="#{evaluationBackingBean.evaluateTechnicalEvaluation(technicalEvaluate,index,'ET')}"
 							process="@this" partialSubmit="true" />
