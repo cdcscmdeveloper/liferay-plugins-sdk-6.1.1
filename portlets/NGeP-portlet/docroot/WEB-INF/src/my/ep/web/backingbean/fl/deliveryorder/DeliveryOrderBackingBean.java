@@ -635,6 +635,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
 					errReq.setErrorId(doCancelDataType.getErrorId());
 					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
 					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 				}
 				getManagedBean().setButtonVal("ACK");

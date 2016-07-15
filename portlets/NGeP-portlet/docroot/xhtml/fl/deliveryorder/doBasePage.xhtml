@@ -10,6 +10,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<ui:define name="resourceSection">
+		<style>
+			.gfmasPanelCss>.ui-panel-content {
+				background: #f2dede !important;
+			}
+		</style>	
 	</ui:define>
 	<ui:define name="contentSection">
 		<p:blockUI block=":form" widgetVar="blockWidget">
@@ -29,17 +34,25 @@
 		</c:if>			
 		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{createDOBackingBean.managedBean.autoUpdate}"
 			closable="true" severity="error, info, warn" />
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" >		
 		<table>
 			<tr>
-				<td><p:outputLabel value="1GFMAS Error: "
-						rendered="#{createDOBackingBean.managedBean.gfmasError}" /></td>
-				<td><p:commandLink oncomplete="gfmasError.show();" immediate="true"
+				<td>
+					<p:commandLink oncomplete="gfmasError.show();" immediate="true"
 						action="#{createDOBackingBean.show1GFMASError()}"
 						rendered="#{createDOBackingBean.managedBean.gfmasError}">
-						<p:graphicImage value="/css/images/design/exclamation.png" />
-					</p:commandLink></td>
+						<p:graphicImage value="/css/images/design/exclamation.png" title="#{lbl['lbl.fl.integration.error.tooltip']}" />
+					</p:commandLink>
+					<p:spacer width="2" />
+				</td>
+				<td>
+					<ui:param name="errorCode" value="lbl.fl.integration.status.code.#{createDOBackingBean.managedBean.gfmasErrorCode}" />
+					<p:outputLabel value="#{lbl['lbl.fl.integration.error']} #{lbl[errorCode]} (ERR-#{createDOBackingBean.managedBean.gfmasErrorCode})" style="color: #C55751;"
+						rendered="#{createDOBackingBean.managedBean.gfmasError}" />
+				</td>					
 			</tr>
 		</table>
+		</p:panel>
 		<ac:gpkiPopup 
 			textBeforeSign="#{createDOBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{createDOBackingBean.preSubmitDeliveryOrder(gpkiBackingBean.pmDigiSign)}"
@@ -151,12 +164,12 @@
 				</h:panelGroup>
 			</tr>
 		</table>
-		<p:dialog id="gfmasErrorDlg" header="1GFMAS Error" widgetVar="gfmasError"
+		<p:dialog id="gfmasErrorDlg" header="1GFMAS Error" widgetVar="gfmasError" width="80%"
 		showEffect="fade" hideEffect="fade" modal="true" 
 		resizable="false">
 		<table style="width: 100%">
 			<tr>
-				<td><p:messages id="gfmasMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				<td><p:messages  id="gfmasMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
 			</tr>
 		</table>
 		<p:spacer height="2px"></p:spacer>
