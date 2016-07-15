@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 
@@ -417,7 +418,8 @@ public class EpSchedulerHelper {
 			try {
 				instance = StdSchedulerFactory.getDefaultScheduler();
 				if (!instance.isStarted()) {
-					instance.start();
+					throw new EpException(
+							"Quartz scheduler instance not started!!!");
 				}
 			} catch (SchedulerException e) {
 				log.error(e.getMessage());
@@ -426,7 +428,7 @@ public class EpSchedulerHelper {
 		return instance;
 
 	}
-	
+
 	/**
 	 * schedule simple Job
 	 * 
