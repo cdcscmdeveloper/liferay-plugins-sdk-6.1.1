@@ -4137,7 +4137,7 @@ public class EvaluationBackingBean extends
 				 * .getSpecAnswerList().get(0)
 				 * .getTplSpecQuestion().getTplSpecScorings());
 				 */
-				TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+				//TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
 				TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 				templateSpecSO = (ITemplateSpecSO) BusinessDelegate
 						.getInstance().getServiceObject("cc",
@@ -4162,13 +4162,13 @@ public class EvaluationBackingBean extends
 				}
 
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
-				specReqDTO.setSpecMaster(proposalCheckList.getScQtCheckList()
+				/*specReqDTO.setSpecMaster(proposalCheckList.getScQtCheckList()
 						.getScQtDoc().getTplSpecMaster());
 				specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_SCORE);
 				specReqDTO.setSupplier(proposalCheckList.getScQtProposal()
 						.getScQtSupplier().getSmSupplier());
 				TemplateSpecResDTO specresDTO1 = templateSpecSO
-						.getTemplateMaster(specReqDTO);
+						.getTemplateMaster(specReqDTO);*/
 				/*
 				 * TemplateSpecBean templateSpecBean = getManagedBean()
 				 * .getTemplateSpecBean();
@@ -4180,9 +4180,9 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setSpecItemScoringList(
 						new ArrayList<TplSpecScoring>());
 				Map<Long, TplSpecScoring> distinctScoring = new HashMap<Long, TplSpecScoring>();
-				if (null != specresDTO1.getSpecAnswerList()
-						&& !specresDTO1.getSpecAnswerList().isEmpty()) {
-					for (TplSpecAnswer specAnswers : specresDTO1
+				if (null != templateSpecBean.getSpecAnswerList()
+						&& !templateSpecBean.getSpecAnswerList().isEmpty()) {
+					for (TplSpecAnswer specAnswers : templateSpecBean
 							.getSpecAnswerList()) {
 						if (null != specAnswers.getTplSpecQuestion()
 								&& null != specAnswers.getTplSpecQuestion()
