@@ -62,7 +62,9 @@ public class DateTimeInput extends UIOutput implements ClientBehaviorHolder {
 			dateComponent.setValue(c1.getTime());
 			hourComponent.setValue(String.valueOf(c1.get(Calendar.HOUR_OF_DAY)));
 			minuteComponent.setValue(String.valueOf(c1.get(Calendar.MINUTE)));
-		}/* else {
+		}/* Kenny - cannot reset to null due to issue if date is selected and hour/minute not selected, 
+			system will reset to null so selected date is gone during rerender.
+			else {
 			dateComponent.setValue(null);
 			hourComponent.setValue(null);
 			minuteComponent.setValue(null);
