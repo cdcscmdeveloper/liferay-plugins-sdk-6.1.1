@@ -290,13 +290,13 @@
           </p:confirmDialog>
   <p:dialog id="uploadAp201Dlg" widgetVar="uploadAp201Dlg" modal="true" resizable="false"
 	   	width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-	   	onShow="singleUploadListener(uploadWV);">
+	   	onShow="singleUploadListener(ap201UploadWV);">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
 			fileUploadListener="#{ctBackingBean.uploadAp201File}"  showButtons="false"
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
-			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" widgetVar="uploadWV"
+			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" widgetVar="ap201UploadWV"
 			update="uploadAp201Pg" label="#{lbl['lbl.btn.choose']}" >
 		</p:fileUpload>
 		<f:facet name="footer">
@@ -343,13 +343,13 @@
     </p:confirmDialog>
   <p:dialog id="uploadBondExemptedDlg" widgetVar="uploadBondExemptedDlg" modal="true" resizable="false"
 	   	width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-	   	onShow="singleUploadListener(uploadWV1);">
+	   	onShow="singleUploadListener(bondUploadWV);">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
 			fileUploadListener="#{ctBackingBean.uploadBondExemptedFile}"  showButtons="false"
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
-			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" widgetVar="uploadWV1"
+			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" widgetVar="bondUploadWV"
 			update="uploadBondExemptedPg" label="#{lbl['lbl.btn.choose']}">
 		</p:fileUpload>
 		<f:facet name="footer">

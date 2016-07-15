@@ -49,12 +49,12 @@
 
 	<p:dialog id="uploadComitteDlg" widgetVar="uploadComitteDlg" resizable="false"
 	   modal="true" width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
-	   onShow="singleUploadListener(uploadWV);">
+	   onShow="singleUploadListener(meetingUploadWV);">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" dragDropSupport="false" multiple="false"
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
 			fileUploadListener="#{amendmentBackingBean.committeeFileUpload}"
-			mode="advanced" id="CommitteUploadId" widgetVar="uploadWV"
+			mode="advanced" id="CommitteUploadId" widgetVar="meetingUploadWV"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="lampiranComitte" >

@@ -247,12 +247,12 @@
 	<p:dialog id="uploadTerminatinDlg" widgetVar="uploadTerminatinDlg"
 		modal="true" width="700px" height="350px" resizable="false"
 		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-		onShow="singleUploadListener(uploadWV);">
+		onShow="singleUploadListener(terminationUploadWV);">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
 			fileUploadListener="#{terminationBackingBean.fileUpload}" multiple="false"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="uploadWV"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="terminationUploadWV"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update=":form:uploadTerminationPg" label="#{lbl['lbl.btn.choose']}">
 		</p:fileUpload>
