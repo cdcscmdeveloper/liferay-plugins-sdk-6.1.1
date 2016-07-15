@@ -361,6 +361,7 @@ public class CTReportBackingBean extends
 			// rptGenBean.setToDateView(true);
 			break;
 		case ReportConst.CT_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL:
+		case ReportConst.CT_PANEL_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL:
 			rptGenBean.setCtContractNoView(true);
 			rptGenBean.setCtPhysicalContractNoView(true);
 			rptGenBean.setCtAgreementExtraView(true);
@@ -382,6 +383,7 @@ public class CTReportBackingBean extends
 
 			break;
 		case ReportConst.CT_LIST_OF_CONTRACT_CC_RPT_VAL:
+		case ReportConst.CT_PANEL_LIST_OF_CONTRACT_CC_RPT_VAL:
 			rptGenBean.setCtContractNoView(true);
 			rptGenBean.setCtPhysicalContractNoView(true);
 			rptGenBean.setCtAgreementView(true);
