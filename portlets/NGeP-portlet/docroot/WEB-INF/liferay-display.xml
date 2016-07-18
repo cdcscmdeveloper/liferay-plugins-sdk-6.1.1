@@ -187,6 +187,7 @@
 			<portlet id="flViewStopInstuction" />
 			<portlet id="flPendingDeliveryListDashBoard" />
 			<portlet id="flPendingFlListDashBoard" />
+			<portlet id="flReSubmitAp59" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />

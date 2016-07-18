@@ -131,13 +131,15 @@
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ap59.decision']}" />
 						 <p:outputLabel	value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="margin-bottom:15px;" value="#{invoiceBackingBean.managedBean.statusId}" label="#{lbl['lbl.fl.ap59.decision']}" required="true">
+				<td><p:selectOneMenu rendered="#{!invoiceBackingBean.managedBean.reSubmitAp59}"
+					style="margin-bottom:15px;" value="#{invoiceBackingBean.managedBean.statusId}" label="#{lbl['lbl.fl.ap59.decision']}" required="true">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="decision"
 							value="#{invoiceBackingBean.managedBean.decisionList}"
 							itemLabel="#{decision.statusName}"
 							itemValue="#{decision.pmStatus.statusId}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu>
+					<p:inputText value="Payment Via Ap59" rendered="#{invoiceBackingBean.managedBean.reSubmitAp59}" disabled="true"></p:inputText> </td>
 			</tr>
 		</table>
 	</p:panel>

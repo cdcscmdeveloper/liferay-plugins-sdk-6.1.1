@@ -473,6 +473,13 @@
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>flpendingdashboard-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>flReSubmitAp59</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>flReSubmitAp59-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Fulfilment End Added by Giri -->
 
 	<portlet>
