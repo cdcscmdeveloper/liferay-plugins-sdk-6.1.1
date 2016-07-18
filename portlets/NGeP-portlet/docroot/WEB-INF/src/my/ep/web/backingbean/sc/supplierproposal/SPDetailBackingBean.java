@@ -2654,10 +2654,12 @@ public class SPDetailBackingBean extends
 			if (this.getManagedBean().getSmAppl().getSmSupplierBranches() != null
 					&& !this.getManagedBean().getSmAppl()
 							.getSmSupplierBranches().isEmpty()) {
-				this.getManagedBean().setSmGstSupplierBranch(
-						getGSTInfo(this.getManagedBean().getSupplierId(), this
-								.getManagedBean().getSmAppl()
-								.getSmSupplierBranches().get(0).getBranchCode()));
+				this.getManagedBean()
+						.setSmGstSupplierBranch(
+								getGSTInfo(this.getManagedBean()
+										.getSupplierId(), this.getManagedBean()
+										.getSmAppl().getSmSupplierBranches()
+										.get(0).getBranchCode()));
 			}
 
 			// staffInformation();
@@ -3954,58 +3956,36 @@ public class SPDetailBackingBean extends
 	 *            the instance of ScQtDocReport
 	 * @throws Exception
 	 */
-	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
 
-		log.info("** Qtn / TenderDetsils **");
-		ScQt scQt = this.getManagedBean().getQt();
-		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
-		qtDocumentsBackingBean.getManagedBean().setQt(null);
-		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
-		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
-				.getScQtDocReportAttachment();
-		if (scQtDocReportAttachment == null) {
-			scQtDocReportAttachment = qtDocumentsBackingBean
-					.generateDocumentAttachment(scQtDocReport, null);
-			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
-		}
-		downloadFile(scQtDocReportAttachment);
+	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
+		log.info("** download Report  in Proposal Preparation**");
+		downloadFile(scQtDocReport.getScQtDocReportAttachment());
 	}
 
+	
 	/**
-	 * Method is used to download all documents from repository on click of
-	 * 'Download all' button.
+	 * Download the documents from repository on click of download all button
 	 * 
-	 * @param qtId
-	 *            the Long variable.
 	 * @throws Exception
 	 */
 	public void downloadAllQTDocuments() throws Exception {
-
-		log.info("** Qtn / TenderDetsils **");
-		ScQt scQt = this.getManagedBean().getQt();
-		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
-		qtDocumentsBackingBean.getManagedBean().setQt(null);
-		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
-		List<ScQtDocReport> scQtDocReports = getManagedBean()
+		
+		List<ScQtDocReport> scQtDocReports = this.getManagedBean()
 				.getScQtDocReports();
-
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
 		if (null != scQtDocReports && !scQtDocReports.isEmpty()) {
-			int increment = 1;
 			for (ScQtDocReport scQtDocReport : scQtDocReports) {
 				ScQtDocReportAttachment attachment = scQtDocReport
 						.getScQtDocReportAttachment();
-				if (attachment == null) {
-					attachment = qtDocumentsBackingBean
-							.generateDocumentAttachment(scQtDocReport,
-									getPrefixFileName(increment));
-					scQtDocReport.setScQtDocReportAttachment(attachment);
-				}
 				scAttachments.add(attachment);
-				increment++;
 			}
-			downloadAllFiles("NGeP-QT-Documents", scAttachments);
+			if (!scAttachments.isEmpty()) {
+				downloadAllFiles("NGeP-QT-Documents", scAttachments);
+			} else {
+				throw new EpException("Attachment not found.");
+			}
 		}
+
 	}
 
 	/**
