@@ -1364,5 +1364,10 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		}
 		return sb.toString();
 	}
+	
+	public void selectPtjAction(PmOrgProfile orgProfile){
+		this.getManagedBean().getTaskAssignmentSearchBean().setOrgProfile(orgProfile);
+		onChangeOrg(orgProfile);
+	}
 		
 }
