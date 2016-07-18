@@ -27,6 +27,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.batch.IDIInterfaceSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceAgOffSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceCmBankSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceKptjSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceGlAccSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfacePpSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfacePrgActSO;
@@ -38,6 +39,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.interfaceptj.InterfaceAgOffReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceCmBankReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceKptjReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceGlAccReqDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogReqDto;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogResDto;
@@ -1072,9 +1074,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			try {
 				reqSO.saveOrUpdateInterfaceAgOffList(reqDTO);
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasAgOffice.xhtml";
 			}
 
+			
 		} else if (this.getManagedBean().getSelectedBankList() != null) {
 
 			log.info("************BankList******SIZE******************>>"
@@ -1094,7 +1101,11 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				reqSO.saveOrUpdateInterfaceBankList(reqDTO);
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasBank.xhtml";
 			}
 
 			this.getManagedBean().setSelectedBankList(null);
@@ -1124,8 +1135,32 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			
 			
 		} else if (this.getManagedBean().getSelectedKptjList() != null) {
+			
 			log.info("************KptjList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedKptjList().size());
+			
+			InterfaceKptjReqDTO reqDTO = new InterfaceKptjReqDTO();
+			
+			reqDTO.setInterfaceKptjLs(this.getManagedBean().getSelectedKptjList());
+			reqDTO.setFileName(this.getManagedBean().getFileName());
+			
+			try {
+				
+				IInterfaceKptjSO reqSO = (IInterfaceKptjSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IInterfaceKptjSO.class);
+
+				reqSO.saveOrUpdateInterfaceKptjList(reqDTO);
+				
+			} catch (Exception e) {
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasKPTJ.xhtml";
+			}
+			
+			this.getManagedBean().setSelectedPtjList(null);
 		} else if (this.getManagedBean().getSelectedPtjList() != null) {
 
 			log.info("************PtjList******SIZE******************>>"
@@ -1145,7 +1180,11 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				reqSO.saveOrUpdateInterfacePtjList(reqDTO);
 
 			} catch (Exception e) {
-				System.out.println("error:"+e.getMessage());
+				System.out.println(""+e.getMessage());
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
+
+				return "/xhtml/gfMas/gfmassearch/childprocess/gfmasPTJ.xhtml";
 			}
 
 			this.getManagedBean().setSelectedPtjList(null);
