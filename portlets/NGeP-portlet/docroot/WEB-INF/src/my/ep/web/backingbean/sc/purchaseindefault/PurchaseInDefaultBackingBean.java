@@ -432,9 +432,14 @@ public class PurchaseInDefaultBackingBean extends
 					}
 				}
 				if (scPurchaseInDefault.getQuantity() != null) {
+					double minimumQuantity = contractItem
+							.getMinimumOrderQty();
+					if(scPurchaseInDefault.getCircularItem() != null) {
+						minimumQuantity = scPurchaseInDefault.getCircularItem().
+								getMinimumOrderQty().doubleValue();
+					}
 					checkQty = Double.compare(scPurchaseInDefault.getQuantity()
-							.doubleValue(), contractItem
-							.getMinimumOrderQty());
+							.doubleValue(), minimumQuantity);
 				}
 				
 
