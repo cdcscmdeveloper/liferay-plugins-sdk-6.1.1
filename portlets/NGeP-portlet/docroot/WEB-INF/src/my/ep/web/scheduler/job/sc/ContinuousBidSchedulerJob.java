@@ -105,30 +105,27 @@ public class ContinuousBidSchedulerJob implements Job {
 
 						}
 
-					} else if (currentSchedule.getStartDate().before(
-							getCompareTime())
-							|| currentSchedule.getEndDate().before(
-									getCompareTime())) {
-
-						if (currentSchedule.getPmStatus().getStatusId()
-								.equals(BidStatusConst.BID_PENDING_BIDDING)
-								|| currentSchedule.getPmStatus().getStatusId()
-										.equals(BidStatusConst.BID_IN_PROGRESS)) {
-
-							log.info("$%$%$% bid seesion creation failed for bid no"
-									+ currentSchedule.getBidNo());
-							failedBidSchedulesCount++;
-							if (toDeleteIdList == null) {
-								toDeleteIdList = new ArrayList<Long>();
-								toDeleteIdList.add(currentSchedule
-										.getBidScheduleId());
-							} else {
-								toDeleteIdList.add(currentSchedule
-										.getBidScheduleId());
-							}
+					} else if ((currentSchedule.getStartDate().before(
+							getCompareTime()) && currentSchedule.getPmStatus()
+							.getStatusId()
+							.equals(BidStatusConst.BID_PENDING_BIDDING))
+							|| (currentSchedule.getEndDate()
+									.before(getCompareTime()))
+							&& currentSchedule.getPmStatus().getStatusId()
+									.equals(BidStatusConst.BID_IN_PROGRESS)) {
+						log.info("$%$%$% bid seesion creation failed for bid no"
+								+ currentSchedule.getBidNo());
+						failedBidSchedulesCount++;
+						if (toDeleteIdList == null) {
+							toDeleteIdList = new ArrayList<Long>();
+							toDeleteIdList.add(currentSchedule
+									.getBidScheduleId());
+						} else {
+							toDeleteIdList.add(currentSchedule
+									.getBidScheduleId());
 						}
-
 					}
+
 				} catch (Exception e) {
 					log.info("$%$%$% Exception while maintaining bid seesion with bid no"
 							+ currentSchedule.getBidNo());
