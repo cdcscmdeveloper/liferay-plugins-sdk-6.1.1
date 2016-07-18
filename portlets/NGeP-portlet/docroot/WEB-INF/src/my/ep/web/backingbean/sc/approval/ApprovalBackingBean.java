@@ -36,6 +36,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -898,9 +899,8 @@ public class ApprovalBackingBean extends
 						} else if (approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD)) {
 							if (isFinalApproval) {
 								new QTDocumentsBackingBean().reGenerateDocuments(
-										qt.getQtId(), qt.getCurrentWorkFlowStatus()
-												.getPmStatus()
-												.getStatusId(), true);
+										qt.getQtId(), 
+										QTFieldConst.FILED_QT_VALIDITY_PERIOD);
 							}
 						}				
 					}	
@@ -1427,9 +1427,8 @@ public class ApprovalBackingBean extends
 			if (tenderResDTO.isSuccessful()) {
 				if (isAllAccepted) {
 					new QTDocumentsBackingBean().reGenerateDocuments(
-							qt.getQtId(), qt.getCurrentWorkFlowStatus()
-									.getPmStatus()
-									.getStatusId(), true);
+							qt.getQtId(), 
+							QTFieldConst.FILED_QT_VALIDITY_PERIOD);
 				}
 				
 				FacesContext
