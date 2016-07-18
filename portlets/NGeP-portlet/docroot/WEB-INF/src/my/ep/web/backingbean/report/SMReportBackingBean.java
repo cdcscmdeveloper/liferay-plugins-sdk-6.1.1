@@ -222,7 +222,7 @@ public class SMReportBackingBean extends
 		case ReportConst.SM_TOT_NUM_DAILY_APPL_RPT_VAL:	
 			rptGenBean.setSmTotalNoOfDailyARView(true);
 			rptGenBean.setSmExtraTwoColumnView(true);
-			rptGenBean.setSmTNMandatoryReportTypeView(true);
+			//rptGenBean.setSmTNMandatoryReportTypeView(true);
 			rptGenBean.setSmMandatoryFromDateView(true);
 			rptGenBean.setSmTNApplicationDateView(true);
 			break;
