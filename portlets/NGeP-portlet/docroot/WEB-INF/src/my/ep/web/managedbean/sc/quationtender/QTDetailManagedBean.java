@@ -1552,6 +1552,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean changesOnQTMaintenance;
 	private String searchLoaNo;
 	private String docType = ParameterConst.DOCTYPE_QUOTATION;
+	private boolean nameRequired;
 	
 	/**
 	 * Sets the panel suppliers.
@@ -8758,6 +8759,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
+	}
+
+	/**
+	 * @return the nameRequired
+	 */
+	public boolean isNameRequired() {
+		return nameRequired;
+	}
+
+	/**
+	 * @param nameRequired the nameRequired to set
+	 */
+	public void setNameRequired(boolean nameRequired) {
+		this.nameRequired = nameRequired;
 	}
 
 }
