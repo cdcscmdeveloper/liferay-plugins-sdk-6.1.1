@@ -200,6 +200,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean isTaxInvoice = false;
 	
 	private boolean isTaxable=false;
+	private boolean reSubmitAp59 = false;
+	private String bpkDecisionValue;
 	
 	/**
 	 * Gets the doc type.
@@ -1174,4 +1176,21 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
 		this.previousAttachmentList = previousAttachmentList;
 	}
+
+	public boolean isReSubmitAp59() {
+		return reSubmitAp59;
+	}
+
+	public void setReSubmitAp59(boolean reSubmitAp59) {
+		this.reSubmitAp59 = reSubmitAp59;
+	}
+
+	public String getBpkDecisionValue() {
+		return bpkDecisionValue;
+	}
+
+	public void setBpkDecisionValue(String bpkDecisionValue) {
+		this.bpkDecisionValue = bpkDecisionValue;
+	}
+
 }
