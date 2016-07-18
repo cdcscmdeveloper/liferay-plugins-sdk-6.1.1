@@ -13,7 +13,6 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +40,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
@@ -74,6 +74,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.document.QTDocumentReqDTO;
+import my.ep.dto.sc.document.QTDocumentResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
@@ -2629,23 +2631,23 @@ public class QTDetailBackingBean extends
 	 */
 	public void retrieveDocumentTabDtl() {
 		debugLogger("retrieveDocumentTabDtl");
-		IQTDetailSO detailSO;
+		IQTDocumentSO qtDocumentSO;
 		if (getManagedBean().getScQtDocReportList() == null) {
-			QuationTenderResDTO resDTO = null;
+			QTDocumentResDTO resDTO = null;
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setQtdetail(getManagedBean().getQt());
+				qtDocumentSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDocumentSO.class);
+				QTDocumentReqDTO reqDTO = new QTDocumentReqDTO();
+				reqDTO.setScQt(getManagedBean().getQt());
 				reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-				resDTO = detailSO.retriveQTDocDetails(reqDTO);
-				if (resDTO.getReports() != null
-						&& !resDTO.getReports().isEmpty()) {
+				resDTO = qtDocumentSO.retriveQTDocDetails(reqDTO);
+				if (resDTO.getQtDocReports() != null
+						&& !resDTO.getQtDocReports().isEmpty()) {
 					this.getManagedBean().setScQtDocReportList(
-							resDTO.getReports());
+							resDTO.getQtDocReports());
 				}
 			} finally {
-				detailSO = null;
+				qtDocumentSO = null;
 			}
 		}
 	}
@@ -2848,66 +2850,6 @@ public class QTDetailBackingBean extends
 	}
 
 	/**
-	 * Gets the quote zones.
-	 * 
-	 * @param treeNodes
-	 *            the tree nodes
-	 * @param supplierCriteria
-	 *            the supplier criteria
-	 * @return the quote zones
-	 */
-	private List<ScQtLocCriteria> getQuoteZones(List<TreeNode> treeNodes,
-			ScQtSupplierCriteria supplierCriteria) {
-		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
-		if (null != treeNodes && !treeNodes.isEmpty()) {
-			for (TreeNode treeNode : treeNodes) {
-				List<TreeNode> stateNodes = treeNode.getChildren();
-				for (TreeNode treeNode2 : stateNodes) {
-					List<TreeNode> district = treeNode2.getChildren();
-					if (null != district && !district.isEmpty()) {
-						for (TreeNode devision : district) {
-							if (devision.getChildCount() > 0) {
-								for (TreeNode districtNode : devision
-										.getChildren()) {
-									ScQtLocCriteria criteria = ((ScQtLocCriteria) districtNode
-											.getData());
-									criteria.setPmDistrict(((ScQtLocCriteria) districtNode
-											.getData()).getPmDistrict());
-									criteria.setPmDivision(((ScQtLocCriteria) districtNode
-											.getParent().getData())
-											.getPmDivision());
-									criteria.setPmState(((ScQtLocCriteria) treeNode2
-											.getData()).getPmState());
-									criteria.setScQtSupplierCriteria(supplierCriteria);
-									setUserDetails(criteria);
-									results.add(criteria);
-								}
-							} else {
-								ScQtLocCriteria criteria = ((ScQtLocCriteria) devision
-										.getData());
-								criteria.setPmDistrict(((ScQtLocCriteria) devision
-										.getData()).getPmDistrict());
-								criteria.setPmState(((ScQtLocCriteria) treeNode2
-										.getData()).getPmState());
-								criteria.setScQtSupplierCriteria(supplierCriteria);
-								setUserDetails(criteria);
-								results.add(criteria);
-							}
-						}
-					} else {
-						ScQtLocCriteria criteria = (ScQtLocCriteria) treeNode2
-								.getData();
-						criteria.setScQtSupplierCriteria(supplierCriteria);
-						setUserDetails(criteria);
-						results.add(criteria);
-					}
-				}
-			}
-		}
-		return results;
-	}
-
-	/**
 	 * Update qt dtls.
 	 */
 	private void updateQtDtls() {
@@ -2955,7 +2897,6 @@ public class QTDetailBackingBean extends
 		if (null != qtId) {
 			// this.getManagedBean().setActiveIndex(0);
 			IQTDetailSO QtDetailsSO;
-			String qtNo = null;
 			try {
 				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -2966,7 +2907,6 @@ public class QTDetailBackingBean extends
 				tenderReqDTO.setBdgDtlsReq(true);
 				QuationTenderResDTO tenderResDTO = null;
 				ScQt scQt = this.getManagedBean().getQt();
-                 qtNo = scQt!= null?scQt.getQtNo():null;
 				if (null == scQt
 						|| (scQt.isZonal()
 						/* && !scQt.isPanel() */
@@ -2977,7 +2917,6 @@ public class QTDetailBackingBean extends
 					if (tenderResDTO.getQtDetail() != null) {
 						scQt = tenderResDTO.getQtDetail();
 						getManagedBean().setQt(scQt);
-						qtNo = scQt.getQtNo();
 						Long currentStatus = this.getManagedBean().getQt()
 								.getQtStatus().getStatusId();
 						this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -4141,27 +4080,6 @@ public class QTDetailBackingBean extends
 			getManagedBean().getSelectedApprovalTabBean().getScQtApproval()
 					.getApproverSettings().get(0).setPmUser(new PmUser());
 		}
-	}
-
-	/**
-	 * Gets the latest bsv date.
-	 * 
-	 * @param bsvDetails
-	 *            the bsv details
-	 * @return the latest bsv date
-	 */
-	private Date getLatestBsvDate(List<ScQtBsvDtl> bsvDetails) {
-		List<Date> dates = new ArrayList<Date>();
-		Date latestBsvDate = null;
-		for (ScQtBsvDtl bsvDtl : bsvDetails) {
-			if (bsvDtl.getBsvDate() != null) {
-				dates.add(bsvDtl.getBsvDate());
-			}
-		}
-		if (null != dates && !dates.isEmpty()) {
-			latestBsvDate = Collections.max(dates);
-		}
-		return latestBsvDate;
 	}
 
 	/**
