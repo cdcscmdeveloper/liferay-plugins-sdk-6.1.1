@@ -40,7 +40,6 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
-import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -95,6 +94,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
@@ -1732,6 +1732,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */	
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
+		FacesScopes facesScopes = new FacesScopes();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
 		String filePath = getManagedBean().getFileDirectory();
@@ -1742,9 +1743,19 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
+	    if(event.getComponent().getId().equalsIgnoreCase("uploadItemId")){
+			CtAttachment attachment = new CtAttachment();
+			attachment.setFileName(item.getFileName());
+			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedUser(facesScopes.getUserSessionBean());
+			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			getManagedBean().getCircularVer().getItemAttachments().add(attachment);
+		} else {
 		getManagedBean().getCircularVer().setCircularFileName(item.getFileName());
 		getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 		RequestContext.getCurrentInstance().execute("uploadCircularDlg.hide()");
+		}
 	}
 	
 	/**
@@ -3075,5 +3086,9 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 		 } else {
 			 return false;
 		 }
+	 }
+	 
+	 public void deleteCircularAttachmentAction(int index){
+		 getManagedBean().getCircularVer().getItemAttachments().remove(index);
 	 }
 }
