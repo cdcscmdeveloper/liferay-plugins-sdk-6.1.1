@@ -285,6 +285,18 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		this.getManagedBean().setUserGroup(userGroup);
 		this.getManagedBean().setUserGroups(userGroupUser);
 		this.getManagedBean().setOrgProfileId(null);
+		
+		List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
+		PmOrgProfile orgProfile = null;
+		if(userOrgList != null && !userOrgList.isEmpty()){
+			orgProfile = userOrgList.get(0).getPmOrgProfile();
+		}
+		if(orgProfile != null){
+			if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
+				getManagedBean().getUserGroup().setPmOrgProfile(orgProfile);
+				getManagedBean().setDisabledOrg(true);
+			}
+		}
 		return "/xhtml/pm/usergroupsearch/userGroupMaintenance.xhtml";
 
 	}
@@ -413,13 +425,13 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		}
 		return pmUserRole;
 	}
-	public void userListner(BaseEntity entity) {
-		if(entity != null){
-			PmOrgProfile orgProfile = (PmOrgProfile) entity;
+	public void userListner(PmOrgProfile orgProfile) {
+		if(orgProfile != null){
 			orgProfileId = orgProfile
 				.getOrgProfileId();
 			this.getManagedBean().setOrgProfileId(orgProfileId);
 			this.getManagedBean().setSelectGrp(true);
+			getManagedBean().getUserGroup().setPmOrgProfile(orgProfile);
 		
 			RequestContext.getCurrentInstance().update("usergrouping");
 		}
