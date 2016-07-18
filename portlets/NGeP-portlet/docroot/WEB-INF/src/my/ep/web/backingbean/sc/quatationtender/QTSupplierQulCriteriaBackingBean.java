@@ -38,6 +38,7 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -58,6 +59,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -166,20 +168,16 @@ public class QTSupplierQulCriteriaBackingBean extends
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			IQTDetailSO QtDetailsSO;
+			ISupplierSearchSO supplierSearchSO;
 			try {
-				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-				tenderReqDTO.setCategoryList(supplierSearchBean.getScQtCategoryList());
-				tenderReqDTO.setSupplierName(supplierSearchBean.getSupplierName());
-				tenderReqDTO.setMofAccountNo(supplierSearchBean.getMofAccountNo());
-				tenderReqDTO.setMinPaidUpCapital(supplierSearchBean.getMinPaidUpCapital());
+				supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 				populateSupplierSearchCriteria(supplierSearchBean, searchBean);
-				tenderReqDTO.setSupplierSearchBean(searchBean);
-				QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveSupplierProfiles(tenderReqDTO);
-				return tenderResDTO.getSmSupplierResultBean();
+				reqDTO.setSearchBean(searchBean);
+				return supplierSearchSO.retriveSupplierList(reqDTO)
+						.getResultBean();
 			} finally {
-				QtDetailsSO = null;
+				supplierSearchSO = null;
 			}
 		}
 	}
@@ -1888,6 +1886,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.QT_RT_MINIMUM_NUMBER_SUPPLIER);
+			/*ScQt scQt = getManagedBean().getQt();
+			if (scQt != null &&
+					scQt.getCurrentWorkFlowStatus() != null && 
+					super.isQTStatusPublished(scQt.getCurrentWorkFlowStatus().getPmStatus().getStatusId())) {
+				
+				reqDTO.setValidityDate(scQt.getPublishDate());	
+			}*/
 			
 			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
 					.getRuleValueList();
