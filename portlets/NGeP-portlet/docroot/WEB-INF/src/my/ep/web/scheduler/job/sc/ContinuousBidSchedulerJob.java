@@ -36,6 +36,7 @@ public class ContinuousBidSchedulerJob implements Job {
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
+		log.info("%%%%% ContinuousBidSchedulerJob start...... :) :) :)");
 		IBiddingSO biddingSO = null;
 		try {
 			List<Long> localBidScheduleIdList = SchedulerHelper
@@ -157,6 +158,7 @@ public class ContinuousBidSchedulerJob implements Job {
 		finally {
 			biddingSO = null;
 		}
+		log.info("%%%%% ContinuousBidSchedulerJob end...... :) :) :)");
 	}
 
 	private Date getCompareTime() {
