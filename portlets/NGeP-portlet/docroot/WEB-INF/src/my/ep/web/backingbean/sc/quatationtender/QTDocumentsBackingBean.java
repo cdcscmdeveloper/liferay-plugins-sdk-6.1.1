@@ -37,6 +37,7 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
@@ -55,6 +56,8 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sc.document.QTDocumentReqDTO;
+import my.ep.dto.sc.document.QTDocumentResDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -501,19 +504,19 @@ public class QTDocumentsBackingBean extends
 		debugLogger("onRowCloneAction");
 		ScQt scQt = (ScQt) event.getObject();
 		this.getManagedBean().setCloneDocumentSelectQt(scQt);
-		IQTDetailSO detailSO;
-		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		QuationTenderResDTO resDTO = null;
+		IQTDocumentSO qtDocumentSO;
+		QTDocumentReqDTO reqDTO = new QTDocumentReqDTO();
+		QTDocumentResDTO resDTO = null;
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			qtDocumentSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDocumentSO.class);
 			reqDTO.setQtId(scQt.getQtId());
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			resDTO = detailSO.retriveCloneQTDocDetails(reqDTO);
-			List<ScQtDocReport> scQtDocReports = resDTO.getReports();
+			resDTO = qtDocumentSO.retriveCloneQTDocDetails(reqDTO);
+			List<ScQtDocReport> scQtDocReports = resDTO.getQtDocReports();
 			this.getManagedBean().setCloneScQtDocReports(scQtDocReports);
 		} finally {
-			detailSO = null;
+			qtDocumentSO = null;
 		}
 	}
 
@@ -671,23 +674,23 @@ public class QTDocumentsBackingBean extends
 	private ScQtDocReport retriveRulesAndRegulationReport(
 			ScQtDocReport scQtDocReport) {
 		debugLogger("retriveRulesAndRegulationReport");
-		IQTDetailSO qTDetailSO = null;
+		IQTDocumentSO qtDocumentSO = null;
 		try {
-			qTDetailSO = (IQTDetailSO) BusinessDelegate.getInstance()
+			qtDocumentSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTDetailSO.class);
+							IQTDocumentSO.class);
 
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			QTDocumentReqDTO reqDTO = new QTDocumentReqDTO();
 			reqDTO.setScReport(scQtDocReport);
 			reqDTO.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS);
 			reqDTO.setDocDefKey(SourcingConstants.DOC_DEF_KEY_RULES_REGULATION);
 
-			QuationTenderResDTO resDTO = qTDetailSO
+			QTDocumentResDTO resDTO = qtDocumentSO
 					.retriveScQtReportByDefKey(reqDTO);
 			ScQtDocReport qtDocReport = (ScQtDocReport) resDTO.getScReport();
 			return qtDocReport;
 		} finally {
-			qTDetailSO = null;
+			qtDocumentSO = null;
 		}
 	}
 
@@ -1314,19 +1317,19 @@ public class QTDocumentsBackingBean extends
 									.equalsIgnoreCase(checklist.getPmDocument()
 											.getDocDefinitionKey())) {
 								// localcheckList.add(checklist);
-								IQTDetailSO qtDetailSO = null;
-								QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-								qtDetailSO = BusinessDelegate
+								IQTDocumentSO qtDocumentSO = null;
+								QTDocumentReqDTO quationTenderReqDTO = new QTDocumentReqDTO();
+								qtDocumentSO = BusinessDelegate
 										.getInstance()
 										.getServiceObject(
 												ModuleCodeConst.SUPPLIER_SELECTION,
-												IQTDetailSO.class);
+												IQTDocumentSO.class);
 								quationTenderReqDTO.setDocCategory(checklist
 										.getDocCategory());
 								quationTenderReqDTO
 										.setDocDefKey(docDefinitionKey);
 								quationTenderReqDTO.setScQtCheckList(checklist);
-								QuationTenderResDTO qtResDTO = qtDetailSO
+								QTDocumentResDTO qtResDTO = qtDocumentSO
 										.retriveScQtReportByDefKey(quationTenderReqDTO);
 
 								ScQtCheckList qtCheckList = qtResDTO
@@ -2218,10 +2221,6 @@ public class QTDocumentsBackingBean extends
 		SimpleDateFormat dateSDF = new SimpleDateFormat(
 				commonUtils
 						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-		
-		DecimalFormat amountDF = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		VelocityContext context = new VelocityContext();
 
 		FacesScopes fs = new FacesScopes();
@@ -2475,21 +2474,19 @@ public class QTDocumentsBackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void reGenerateDocuments(Long qtId, Long statusId,
-			boolean isPcbProcess) {
+	public void reGenerateDocuments(Long qtId, String qtField) {
 		debugLogger("reGenerateDocuments");
 		
-		IQTDetailSO detailSO;
+		IQTDocumentSO qtDocumentSO;
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			qtDocumentSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDocumentSO.class);
 			
-			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			QTDocumentReqDTO quationTenderReqDTO = new QTDocumentReqDTO();
 			quationTenderReqDTO.setQtId(qtId);
-			quationTenderReqDTO.setStatusId(statusId);
-			quationTenderReqDTO.setPcbProcess(isPcbProcess);
-			List<ScReport> reports = detailSO.retriveRegenerateDocumentsByQt(
-					quationTenderReqDTO).getRegenerateReports();
+			quationTenderReqDTO.setQtField(qtField);
+			List<ScReport> reports = qtDocumentSO.retriveRegenDocumentListByQTField(
+					quationTenderReqDTO).getScReports();
 
 			SupplierFinalizationBackingBean finalizationBackingBean = new SupplierFinalizationBackingBean();
 			SupplierFinalizationManagedBean finalizationManagedBean = finalizationBackingBean.getManagedBean();
@@ -2528,11 +2525,11 @@ public class QTDocumentsBackingBean extends
 				}
 			}
 			
-			quationTenderReqDTO.setScReportList(reports);
-			detailSO.saveReportAndAttachment(quationTenderReqDTO);
+			quationTenderReqDTO.setScReports(reports);
+			qtDocumentSO.saveReportAndAttachment(quationTenderReqDTO);
 			
 		} finally {
-			detailSO = null;
+			qtDocumentSO = null;
 		}
 		
 	}
