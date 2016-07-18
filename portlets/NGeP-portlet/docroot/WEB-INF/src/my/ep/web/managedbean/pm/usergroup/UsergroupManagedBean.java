@@ -50,6 +50,7 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private boolean brandNew = false;
 
 	private boolean selectGrp = false;
+	private boolean disabledOrg;
 
 	public PmUserGroup getUserGroup() {
 		return userGroup;
@@ -239,6 +240,20 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedDeleteGroupUser(PmUserGroupUser selectedDeleteGroupUser) {
 		this.selectedDeleteGroupUser = selectedDeleteGroupUser;
+	}
+
+	/**
+	 * @return the disabledOrg
+	 */
+	public boolean isDisabledOrg() {
+		return disabledOrg;
+	}
+
+	/**
+	 * @param disabledOrg the disabledOrg to set
+	 */
+	public void setDisabledOrg(boolean disabledOrg) {
+		this.disabledOrg = disabledOrg;
 	}
 
 }
