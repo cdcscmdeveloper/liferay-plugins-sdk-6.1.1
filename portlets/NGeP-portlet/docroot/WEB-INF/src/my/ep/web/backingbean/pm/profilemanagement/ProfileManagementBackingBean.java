@@ -4219,7 +4219,8 @@ public class ProfileManagementBackingBean extends
 									new String[] { resDTO
 											.getPmUser().getUserName(), 
 											resDTO
-											.getPmUser().getIdentificationNo()
+											.getPmUser().getIdentificationNo(),
+											resDTO.getPmUser().getEmail()
 									});
 					} else {
 						if(getManagedBean().isPmUserExist()){
