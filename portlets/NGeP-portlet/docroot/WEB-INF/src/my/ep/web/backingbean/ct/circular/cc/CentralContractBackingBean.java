@@ -88,6 +88,7 @@ import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -703,6 +704,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 */
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
+		FacesScopes facesScopes = new FacesScopes();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
 		String filePath = getManagedBean().getFileDirectory();
@@ -713,11 +715,21 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
+	    
+	    if(event.getComponent().getId().equalsIgnoreCase("uploadContractId")){
+			CtAttachment attachment = new CtAttachment();
+			attachment.setFileName(item.getFileName());
+			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedUser(facesScopes.getUserSessionBean());
+			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			getManagedBean().getCircularVer().getContractAttachments().add(attachment);
+		} else {
 		getManagedBean().getCircularVer().setCircularFileName(item.getFileName());
 		getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 		RequestContext.getCurrentInstance().execute("uploadCircularDlg.hide()");
 	}
-	
+	}
 	/**
 	 * This method used to download circular letter once approver login
 	 */
@@ -1988,7 +2000,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	     * Method to set boolean value for checkbox 
 	     * @param pass ajax event type
 	     * Set boolean value for user action 
+	     * 
 	     * */
+    	
+    	public void deleteContractAttachmentAction(int index){
+    		getManagedBean().getCircularVer().getContractAttachments().remove(index);
+    	}
         public void delCircularVerFile(){
         	getManagedBean().getCircularVer().setCircularFilePath(null);
         	getManagedBean().getCircularVer().setCircularFileName(null);
