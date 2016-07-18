@@ -1389,7 +1389,9 @@ public class FinancialOrgBackingBean extends
 		boolean isMandatory = false;
 		if(getManagedBean().getFinancialOrg().getPmFinancialSvcs()!= null) {
 			for(PmFinancialSvc svc : getManagedBean().getFinancialOrg().getPmFinancialSvcs()){
-				if(DbValueConst.RECORD_STATUS_ACTIVE == svc.getRecordStatusFlg()){
+				if(DbValueConst.RECORD_STATUS_ACTIVE == svc.getRecordStatusFlg() 
+						&& svc.getServiceTypeCode() != null 
+						&& svc.getServiceTypeCode().getParameterCode() !=null){
 					if(svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND)  ||
 							svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_FACTORING_COMPANY)  ||
 							svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_REGISTRATION) ){
