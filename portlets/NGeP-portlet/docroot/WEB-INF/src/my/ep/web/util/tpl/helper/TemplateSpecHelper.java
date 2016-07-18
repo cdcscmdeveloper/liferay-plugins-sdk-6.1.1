@@ -16,15 +16,19 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
@@ -37,6 +41,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
+import my.ep.type.pm.OrganizationType;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -895,5 +900,38 @@ public class TemplateSpecHelper {
 		
 		// copy tplSpecEstimations
 		cloneTplSpecEstimation(newSpecQuestion, oldSpecQuestion.getTplSpecEstimations());
+	}
+	
+	/**
+	 * Get the PTJ Organization Profile By Login User
+	 * 
+	 * @return	the PmOrgProfile instance
+	 */
+	public PmOrgProfile getPTJOrgProfileByLoginUser() {
+		PmOrgProfile pmOrgProfile = null;
+		Long userId = new FacesScopes().getUserSessionBean().getUserId();
+		
+		if (userId != null) {
+			IOrgProfileSO orgProfileSO = null;
+			try {
+				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setUserId(userId);
+				reqDTO.setOrgType(OrganizationType.DIVISION.value());
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
+				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+					pmOrgProfile = pmOrgProfiles.get(0);
+				}
+
+			} finally {
+				orgProfileSO = null;
+			}	
+		}
+		
+		return pmOrgProfile;
 	}
 }
