@@ -247,6 +247,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT, "invoice");
 			temp.put(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME,
 					"remove-factoring-company");
+			temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION + FLProcessNameConst.RESUBMIT_AP59_ORDER,
+					"resubmit-ap59-order");
 
 			// Added for qt..
 			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME

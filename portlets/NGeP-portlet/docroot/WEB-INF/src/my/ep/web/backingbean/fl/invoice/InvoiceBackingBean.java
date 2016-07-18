@@ -84,6 +84,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.invoice.FLInvoiceDataType;
+import my.ep.jaxb.fl.maintenace.cancel.common.order.FLOrderCancelReqType;
 import my.ep.jaxb.fl.maintenace.cancel.invoice.FLInvoiceCancelReqType;
 import my.ep.jaxb.fl.maintenace.modification.invoice.FLInvoiceModificationReqType;
 import my.ep.persistence.constant.DbValueConst;
@@ -440,7 +441,63 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				getManagedBean().setModificationCancel(true);
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
-			}else{
+			}else if(FLProcessNameConst.RESUBMIT_AP59_ORDER.equals(this.getManagedBean().getTaskName())){
+
+				FLOrderCancelReqType reqType = (FLOrderCancelReqType)obj;
+
+				reqDTO = new FulfilmentReqDTO();
+				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+				Long invoiceId = reqType.getInvoiceId();
+
+				invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+				IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+				reqDTO.setInvoiceId(invoiceId);
+				reqDTO.setDocType(ParameterConst.DOCTYPE_AP59);
+				resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setDocType(FulfilmentConst.DOC_TYPE_AP59);
+				statusReqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+				statusReqDTO.setModuleCode(FulfilmentConst.FULFILMENT);
+				StatusResDTO statusResDTO = statusSO.retrieveStatusDescList(statusReqDTO);
+				InvoiceBackingBean invBB = new InvoiceBackingBean();
+				invBB.getManagedBean().setInvoice(resDTO.getInvoice());
+				BigDecimal sumOrderedAmt = new BigDecimal(0);
+				for(FlFulfilmentItem item : resDTO.getInvoice().getFlRequest().getFlFulfilmentItems()){
+					for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
+						sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
+					}
+				}
+				invBB.getManagedBean().setSumOrderedAmt(sumOrderedAmt);
+				BigDecimal serviceFee = new BigDecimal(0);
+				if(resDTO.getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+					serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
+				} else {
+					if(getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee() != null){
+						serviceFee = getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee();
+					}
+				}
+
+				getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
+				for(PmStatusDesc statusDesc : statusResDTO.getStatusDescList()){
+					if(statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.AP59_PENDING_AP59_DECISION)){
+						getManagedBean().setReSubmitAp59(true);
+					}
+					if(statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.AP59_PAYMENT_VIA_AP59)){
+						getManagedBean().setBpkDecisionValue(statusDesc.getStatusName());
+						getManagedBean().setStatusId(statusDesc.getPmStatus().getStatusId());
+					}
+				}
+				SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+				String expDate=null;
+				String effDate=null;
+				expDate = DATE_FORMAT.format(invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate());
+				effDate = DATE_FORMAT.format(invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getEffDate());
+				invBB.getManagedBean().setExpDate(expDate);
+				invBB.getManagedBean().setEffDate(effDate);
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+			}
+			else{
 				String[] outcome = new String[this.getManagedBean().getOutComes().length + 1];
 				outcome[0] = BpmOutcomeConst.BPM_SAVE;
 				int i = 1;
@@ -1406,6 +1463,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setTaskId(getManagedBean().getTaskId());
 			if(flBB.getManagedBean().getRemarkList().size() >0){
 				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			}
