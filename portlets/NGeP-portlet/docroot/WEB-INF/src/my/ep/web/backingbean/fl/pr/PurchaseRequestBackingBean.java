@@ -413,6 +413,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 			getManagedBean().setSelectedDelAddr(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().get(0));
+			setPriceType();
 			populateItemsForSelectedAddress();
 			List<FlFulfilmentItemAddr> fulfilmentItemAddrList = null;
 			for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
@@ -422,9 +423,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					}
 					
 					//re-contruct zonal-tier map
-					if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) 
-							|| getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER)){
-						scReqDTO.setPriceType(getManagedBean().getPmPriceType());
+					if(itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) 
+							|| itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER)){
+						scReqDTO.setPriceType(itemAddr.getPriceType());
 						if(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()) != null){
 							scReqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()));
 						}
@@ -444,8 +445,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						}
 						
 						//re-construct tier map
-					}else if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER) 
-							|| getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER)){
+					}else if(itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER) 
+							|| itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER)){
 						
 						Long key = itemAddr.getScRequestItem().getRequestNoteItemId();
 						
@@ -508,6 +509,24 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
 	}
 
+	private void setPriceType() {
+		Map<Long, PmParameter> priceTypeMap = new HashMap<Long,PmParameter>();
+		for(ScRequestNoteDtl scRequestNoteDtl : getManagedBean().getRequestNoteWithDtlsList()){
+			if(priceTypeMap.get(scRequestNoteDtl.getRequestItem().getRequestNoteItemId()) != null){
+				continue;
+			}else{
+				priceTypeMap.put(scRequestNoteDtl.getRequestItem().getRequestNoteItemId(), scRequestNoteDtl.getPriceType());
+			}
+		}
+		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+				if(priceTypeMap.containsKey(itemAddr.getScRequestItem().getRequestNoteItemId())){
+					itemAddr.setPriceType(priceTypeMap.get(itemAddr.getScRequestItem().getRequestNoteItemId()));
+				}
+			}
+		}
+	}
+
 	/**
 	 * flDeliveryAddrList method get Delivery address list based on OrgProfileId and AddressType.
 	 */
@@ -567,7 +586,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	/**
 	 * updating the user selected delivery addresses to delivery address list(intended address for goods delivery).
 	 * <p>
-	 * It does not allow the duplicate addresses selected. If any,it will give the "Address already Slected" Message.
+	 * It does not allow the duplicate addresses selected. If any,it will give the "Address already selected" Message.
 	 * <p>
 	 * Sorts delivery addresses based on the address.
 	 */
@@ -754,16 +773,16 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			for(FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 				for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
 					if(deliveryAddress.isSelectedAddressRowDelete()){
-						if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) 
-								||getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
+						if(itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) 
+								||itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
 							Long key = itemAddr.getScRequestItem().getRequestNoteItemId();
 							if(getManagedBean().getTierMap().containsKey(key)){
 								flItemAddrList = getManagedBean().getTierMap().get(key);
 								flItemAddrList.remove(itemAddr);
 							}
 
-						}else if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER) 
-								||getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
+						}else if(itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER) 
+								||itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
 							String key = itemAddr.getZoneId()+" "+itemAddr.getScRequestItem().getRequestNoteItemId();
 							if(getManagedBean().getZonalTierMap().containsKey(key)){
 								flItemAddrList = getManagedBean().getZonalTierMap().get(key);
@@ -787,44 +806,48 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()>0) {
 				getManagedBean().setSelectedDelAddr(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().get(0));
 				//recalculate the latest tier n zonaltier map
-				if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER) 
-						||getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
-					
-					for (List<FlFulfilmentItemAddr> values : getManagedBean().getZonalTierMap().values()) {
-						for(FlFulfilmentItemAddr reCalculate : values){
-							BigDecimal sumOrderQty = new BigDecimal(0);
-							sumOrderQty = sumOrderQty.add(reCalculate.getOrderedQty());	
-							if(getManagedBean().getScRequestSupplierItemIdMap().get(reCalculate.getScRequestItem().getRequestNoteItemId()) != null){
-								reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(reCalculate.getScRequestItem().getRequestNoteItemId()));
-							}
-							reqDTO.setPriceType(getManagedBean().getPmPriceType());
-							reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
-							reqDTO.setOrderQuantity(sumOrderQty);
-							PurchaseRequestResDTO purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
-							reCalculate.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
-							reCalculate.setUnitPrice(purResDTO.getUnitPrice());
-							setGstPrice(reCalculate, purResDTO.getUnitPrice().doubleValue());
-							reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				for(FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+					for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+						if(itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER) 
+								||itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
+							for (List<FlFulfilmentItemAddr> values : getManagedBean().getZonalTierMap().values()) {
+								for(FlFulfilmentItemAddr reCalculate : values){
+									BigDecimal sumOrderQty = new BigDecimal(0);
+									sumOrderQty = sumOrderQty.add(reCalculate.getOrderedQty());	
+									if(getManagedBean().getScRequestSupplierItemIdMap().get(reCalculate.getScRequestItem().getRequestNoteItemId()) != null){
+										reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(reCalculate.getScRequestItem().getRequestNoteItemId()));
+									}
+									reqDTO.setPriceType(itemAddr.getPriceType());
+									reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
+									reqDTO.setOrderQuantity(sumOrderQty);
+									PurchaseRequestResDTO purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
+									reCalculate.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
+									reCalculate.setUnitPrice(purResDTO.getUnitPrice());
+									setGstPrice(reCalculate, purResDTO.getUnitPrice().doubleValue());
+									reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+								}
+							}	
+						}else if(itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) 
+								||itemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
+							for (List<FlFulfilmentItemAddr> values : getManagedBean().getTierMap().values()) {
+								for(FlFulfilmentItemAddr reCalculate : values){
+									BigDecimal sumOrderQty = new BigDecimal(0);
+									sumOrderQty = sumOrderQty.add(reCalculate.getOrderedQty());	
+									reqDTO.setRequestSupplierItemId(reCalculate.getScSupplierItemPrice().getScRequestSupplierItem().getRequestSupplierItemId());
+									reqDTO.setPriceType(itemAddr.getPriceType());
+									reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
+									reqDTO.setOrderQuantity(sumOrderQty);
+									PurchaseRequestResDTO purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
+									reCalculate.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
+									reCalculate.setUnitPrice(purResDTO.getUnitPrice());
+									setGstPrice(reCalculate, purResDTO.getUnitPrice().doubleValue());
+									reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+								}
+							}	
 						}
-					}	
-				}else if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) 
-						||getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
-					for (List<FlFulfilmentItemAddr> values : getManagedBean().getTierMap().values()) {
-						for(FlFulfilmentItemAddr reCalculate : values){
-							BigDecimal sumOrderQty = new BigDecimal(0);
-							sumOrderQty = sumOrderQty.add(reCalculate.getOrderedQty());	
-							reqDTO.setRequestSupplierItemId(reCalculate.getScSupplierItemPrice().getScRequestSupplierItem().getRequestSupplierItemId());
-							reqDTO.setPriceType(getManagedBean().getPmPriceType());
-							reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
-							reqDTO.setOrderQuantity(sumOrderQty);
-							PurchaseRequestResDTO purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
-							reCalculate.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
-							reCalculate.setUnitPrice(purResDTO.getUnitPrice());
-							setGstPrice(reCalculate, purResDTO.getUnitPrice().doubleValue());
-							reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-						}
-					}	
+					}
 				}
+				
 			} else {
 				getManagedBean().setSelectedDelAddr(null);
 				for(FlFulfilmentItemAddr flItemAddr : getManagedBean().getShowAllItemsRows()) {
@@ -835,7 +858,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					}
 					flItemAddr.setOrderedQty(BigDecimal.ZERO);
 					flItemAddr.setOrderedAmt(BigDecimal.ZERO);
-					if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
+					if(flItemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
 						setGstPrice(flItemAddr, flItemAddr.getUnitPrice().doubleValue());
 					} else {
 						flItemAddr.setUnitPrice(BigDecimal.ZERO);
@@ -871,6 +894,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				for (FlFulfilmentItemAddr selectedItem : getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()) {
 					if (selectedItem.getScRequestItem().getRequestNoteItemId().equals(newItem.getScRequestItem().getRequestNoteItemId())) {
 						existed = true;
+						selectedItem.setPriceType(newItem.getPriceType());
 						itemsList.add(selectedItem);
 						break;
 					}
@@ -879,10 +903,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			if (!existed) {
 				newItem.setOrderedQty(new BigDecimal(0));
 				newItem.setOrderedAmt(new BigDecimal(0));
-				if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER) 
-						||getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-						|| getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) 
-						||getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
+				if(newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER) 
+						||newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+						|| newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) 
+						||newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
 					newItem.setUnitPrice(new BigDecimal(0));
 				}
 				if(getManagedBean().getFulfilmentRequest().getProcurementTypeCategory()!=null && 
@@ -910,24 +934,23 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @param itemsList the items list
 	 */
 	private void validatePriceType(List<FlFulfilmentItemAddr> itemsList) {
-		if(getManagedBean().getPmPriceType() != null){
-			IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
-			PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
-			if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-					|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION)){
-				for(FlFulfilmentItemAddr itemAddr : itemsList){
-					reqDTO.setPriceType(getManagedBean().getPmPriceType());
-					if(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()) != null){
-						reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()));
-					}
-					reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
-					PurchaseRequestResDTO purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
-					itemAddr.setUnitPrice(purResDTO.getUnitPrice());
-					setGstPrice(itemAddr, purResDTO.getUnitPrice().doubleValue());
-					itemAddr.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
-					PurchaseRequestResDTO zoneIdResDTO = purchaseRequestSO.getSupplierItemZoneIdByFlAddress(reqDTO);
-					itemAddr.setZoneId(zoneIdResDTO.getSpecZoneId());
+		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
+		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+
+		for(FlFulfilmentItemAddr itemAddr : itemsList){
+			if(itemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+					|| itemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION)){
+				reqDTO.setPriceType(itemAddr.getPriceType());
+				if(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()) != null){
+					reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()));
 				}
+				reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
+				PurchaseRequestResDTO purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
+				itemAddr.setUnitPrice(purResDTO.getUnitPrice());
+				setGstPrice(itemAddr, purResDTO.getUnitPrice().doubleValue());
+				itemAddr.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
+				PurchaseRequestResDTO zoneIdResDTO = purchaseRequestSO.getSupplierItemZoneIdByFlAddress(reqDTO);
+				itemAddr.setZoneId(zoneIdResDTO.getSpecZoneId());
 			}
 		}
 	}
@@ -969,7 +992,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) 
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION)
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER)){
-					getManagedBean().setPmPriceType(purchaseItem.getPriceType());
 					if(!getManagedBean().getScRequestSupplierItemIdMap().containsKey(purchaseItem.getRequestItem().getRequestNoteItemId())){
 						getManagedBean().getScRequestSupplierItemIdMap().put(purchaseItem.getRequestItem().getRequestNoteItemId(), purchaseItem.getScRequestSupplierItem().getRequestSupplierItemId());
 					}
@@ -979,7 +1001,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION)
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER)){
-					getManagedBean().setPmPriceType(purchaseItem.getPriceType());
 					flItemAddr.setRequestSupplierItemId(purchaseItem.getScRequestSupplierItem().getRequestSupplierItemId());
 					reqDTO.setRequestSupplierItemId(purchaseItem.getScRequestSupplierItem().getRequestSupplierItemId());
 					reqDTO.setPriceType(purchaseItem.getPriceType());
@@ -1057,9 +1078,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flItemAddr.setOrderedQty(formattedOrderedQty);
 		}	
 		// Tier only
-		if(getManagedBean().getPmPriceType() != null 
-				&& (getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
-						|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_PROMOTION_TIER))){
+		if(flItemAddr.getPriceType() != null 
+				&& (flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
+						|| flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_PROMOTION_TIER))){
 			List<FlFulfilmentItemAddr> itemAddrList = null;
 			Long key = null;
 			BigDecimal sumOrderQty = new BigDecimal(0);
@@ -1112,7 +1133,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 			reqDTO.setRequestSupplierItemId(flItemAddr.getRequestSupplierItemId());
-			reqDTO.setPriceType(getManagedBean().getPmPriceType());
+			reqDTO.setPriceType(flItemAddr.getPriceType());
 			reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
 			reqDTO.setOrderQuantity(sumOrderQty);
 			PurchaseRequestResDTO purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
@@ -1135,7 +1156,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					reCalSumOrderQty = reCalSumOrderQty.add(itemAddr.getOrderedQty());	
 				}
 				reqDTO.setRequestSupplierItemId(flItemAddr.getRequestSupplierItemId());
-				reqDTO.setPriceType(getManagedBean().getPmPriceType());
+				reqDTO.setPriceType(flItemAddr.getPriceType());
 				reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
 				reqDTO.setOrderQuantity(reCalSumOrderQty);
 				PurchaseRequestResDTO reCalculateUnitPrice = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
@@ -1152,15 +1173,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
 			// add  or remove items to Selected delivery address
 			itemsToSelectedAddress(flItemAddr);
-		}else if(getManagedBean().getPmPriceType() != null 
-				&& (getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-						|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER))){
+		}else if(flItemAddr.getPriceType() != null 
+				&& (flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+						|| flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER))){
 			
 			List<FlFulfilmentItemAddr> itemAddrList = null;
 			String key = null;
 			BigDecimal sumOrderQty = new BigDecimal(0);
 			
-			reqDTO.setPriceType(getManagedBean().getPmPriceType());
+			reqDTO.setPriceType(flItemAddr.getPriceType());
 			if(getManagedBean().getScRequestSupplierItemIdMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId()) != null){
 				reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId()));
 			}
@@ -1225,7 +1246,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			if(getManagedBean().getScRequestSupplierItemIdMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId()) != null){
 				reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId()));
 			}
-			reqDTO.setPriceType(getManagedBean().getPmPriceType());
+			reqDTO.setPriceType(flItemAddr.getPriceType());
 			reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
 			reqDTO.setOrderQuantity(sumOrderQty);
 			PurchaseRequestResDTO purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
@@ -1251,7 +1272,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				if(getManagedBean().getScRequestSupplierItemIdMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId()) != null){
 					reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId()));
 				}
-				reqDTO.setPriceType(getManagedBean().getPmPriceType());
+				reqDTO.setPriceType(flItemAddr.getPriceType());
 				reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
 				reqDTO.setOrderQuantity(reCalSumOrderQty);
 				PurchaseRequestResDTO reCalculateUnitPrice = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
@@ -1274,8 +1295,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				FlFulfilmentItemAddr clonedlItemAddr = (FlFulfilmentItemAddr) flItemAddr.cloneEntity();
 				flItemAddr = clonedlItemAddr;
 			}			
-			if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
-					|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION)){
+			if(flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
+					|| flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION)){
 				if(flItemAddr.getZoneId() == null){
 					oriItemAddr.setOrderedQty(new BigDecimal(0));
 					flItemAddr.setOrderedQty(new BigDecimal(0));
@@ -2789,7 +2810,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}else{
 			getManagedBean().setQuantity(flItemAddr.getScRequestItem().getQuantity().doubleValue());
 		}
-		flItemAddr.setPriceType(getManagedBean().getPmPriceType());
 		getManagedBean().setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setStandardUnitPrice(flItemAddr.getUnitPrice().doubleValue());
 		getManagedBean().setStandardPrice(false);
@@ -2807,7 +2827,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 		reqDTO.setRequestItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
 		reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-		reqDTO.setPriceType(getManagedBean().getPmPriceType());
+		reqDTO.setPriceType(flItemAddr.getPriceType());
 		PurchaseRequestResDTO purResDTO = purchaseRequestSO.getSupplierItemByReqItemIdNSupplierId(reqDTO);
 		getManagedBean().setReqItemInfoList(purResDTO.getSupplierItemPriceList());
 		List<FLSupplierItemVO> supplierItems=new ArrayList<FLSupplierItemVO>();

@@ -70,9 +70,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	/** The fulfilment request. */
 	private FlFulfilmentRequest fulfilmentRequest;
-	
-	/** The pm price type. */
-	private PmParameter pmPriceType;
 
 	//remove multiple selection from data table
 	/** The selected address rows. */
@@ -2326,24 +2323,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.currentPreparedOrgId = currentPreparedOrgId;
 	}
 
-
-	/**
-	 * Gets the pm price type.
-	 *
-	 * @return the pmPriceType
-	 */
-	public PmParameter getPmPriceType() {
-		return pmPriceType;
-	}
-
-	/**
-	 * Sets the pm price type.
-	 *
-	 * @param pmPriceType the pmPriceType to set
-	 */
-	public void setPmPriceType(PmParameter pmPriceType) {
-		this.pmPriceType = pmPriceType;
-	}
 
 	/**
 	 * Gets the sc request supplier item id map.
