@@ -41,7 +41,7 @@
 					<p:commandLink oncomplete="gfmasError.show();" immediate="true"
 						action="#{createDOBackingBean.show1GFMASError()}"
 						rendered="#{createDOBackingBean.managedBean.gfmasError}">
-						<p:graphicImage value="/css/images/design/exclamation.png" title="#{lbl['lbl.fl.integration.error.tooltip']}" />
+						<p:graphicImage value="/css/images/design/exclamation.png" />
 					</p:commandLink>
 					<p:spacer width="2" />
 				</td>
@@ -164,19 +164,18 @@
 				</h:panelGroup>
 			</tr>
 		</table>
-		<p:dialog id="gfmasErrorDlg" header="1GFMAS Error" widgetVar="gfmasError" width="80%"
-		showEffect="fade" hideEffect="fade" modal="true" 
-		resizable="false">
-		<table style="width: 100%">
-			<tr>
-				<td><p:messages  id="gfmasMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
-			</tr>
-		</table>
-		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Close" oncomplete="gfmasError.hide();">
-			</p:commandButton>
-		</div>
-	</p:dialog>
+		<p:dialog id="gfmasErrorDlg" header="#{lbl['lbl.fl.integration.exception.details']}" widgetVar="gfmasError" width="80%"
+			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
+			<table style="width: 100%">
+				<tr>
+					<td><p:messages id="gfmasMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				</tr>
+			</table>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="Close" oncomplete="gfmasError.hide();">
+				</p:commandButton>
+			</div>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
