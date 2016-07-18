@@ -43,8 +43,31 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pm.ta.org.name']}"/>
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
-				<td width="55%" style="white-space:nowrap;">					
-	            	<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="55" 
+				<td width="55%" style="white-space:nowrap;">
+					<p:outputPanel id="opPtjOrgCode" 
+					rendered="#{ParameterConst.orgTypePtj eq taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">
+				<p:inputText 
+						size="60"
+						id="itSelectedPtj" 
+						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.pmOrgValidity.orgName}" 
+						readonly="true"
+						disabled="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
+							or !taskAssignBackingBean.managedBean.orgProfileRequired}"
+						/>
+					&#160;	
+					<p:commandLink id="ptjSearchCL" partialSubmit="true"
+						disabled="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
+							or !taskAssignBackingBean.managedBean.orgProfileRequired}"
+						process="@this" update=":form:orgProfileCcId:ptjPopup"
+						action="#{organisationSearchBackingBean.initPtjPopup}"
+						oncomplete="ptjPopup.show();" >
+						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+					</p:commandLink>
+					</p:outputPanel>
+					<p:outputPanel id="opSysOrgCode" 
+					rendered="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null or 
+					ParameterConst.orgTypeSys eq taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">				
+	            	<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="60" 
 						disabled="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
 							or !taskAssignBackingBean.managedBean.orgProfileRequired}"
 		            	update=":form:pTaskAssignSearch" readonly="true" 
@@ -53,6 +76,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile"
 						conditionField="#{taskAssignBackingBean.constructConditionFields()}"
 						postUpdateListener ="taskAssignBackingBean.onChangeOrg"/>
+						</p:outputPanel>
 				</td>
 				<td width="30%">
 					
@@ -75,6 +99,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user"
 						conditionField="#{taskAssignBackingBean.constructUserConditionFields()}"
 						postUpdateListener ="taskAssignBackingBean.onChangeUser"/>
+						
 				</td>
 				
 				<td width="30%">
@@ -163,6 +188,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</td>
 			</tr>
 		</table>
+		<ac:ptjPopup 
+		  	id="orgProfileCcId"
+		  	orgTypeParamCode="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}"
+		  	okAction="taskAssignBackingBean.selectPtjAction"
+		  	update=":form:pTaskAssignSearch"  />
 	</p:panel>
 
 </ui:composition>
