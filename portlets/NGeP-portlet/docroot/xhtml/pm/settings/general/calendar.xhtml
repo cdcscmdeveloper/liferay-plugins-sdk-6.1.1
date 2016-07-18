@@ -145,6 +145,16 @@
 			<h:panelGroup id="calendarId">
 				<table width="100%" >
 					<tr>
+						<td colspan="3">
+							<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.cal.notice']}" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" style="margin-bottom:5px;">
+							<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.cal.instruction']}" />
+						</td>
+					</tr>
+					<tr>
 						<td width="10%"><p:outputLabel
 								value="#{lbl['lbl.pm.cal.state']}" /></td>
 						<td><p:selectOneMenu id="orgState"
