@@ -65,7 +65,7 @@
 				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" style="text-align:left; float:left;"/>
 				<h:outputText value="(" rendered="#{chargeLineNode.parent == 'true'}" />
 					<h:outputText value="#{chargeLineNode.scRequestItem.uom.uomName}" 
-					rendered="#{chargeLineNode.parent == 'true'}" />
+					rendered="#{chargeLineNode.parent == 'true'}" style="white-space:normal;"/>
 					<h:outputText value=")" rendered="#{chargeLineNode.parent == 'true'}" />	
 				<br />
 				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;"
