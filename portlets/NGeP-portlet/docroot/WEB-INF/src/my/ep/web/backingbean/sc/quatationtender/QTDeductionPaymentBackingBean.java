@@ -22,14 +22,11 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -45,7 +42,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 /**
@@ -245,32 +241,6 @@ public class QTDeductionPaymentBackingBean extends
 		} else {
 			throw new EpException("Please select At least one Item");
 		}*/
-	}
-
-	/**
-	 * Retrieve deduction cluses.
-	 *
-	 * @param selectEvent the select event
-	 */
-	public void retrieveDeductionCluses(SelectEvent selectEvent) {
-		ScQtDeduction deduction = (ScQtDeduction) selectEvent.getObject();
-		if (null != deduction) {
-
-			List<ScQtDeductionClause> deductionClauses = deduction
-					.getScQtDeductionClauses();
-			if (null == deductionClauses || deductionClauses.isEmpty()) {
-				IQTDetailSO detailSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTDetailSO.class);
-				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setDeduction(deduction);
-				QuationTenderResDTO resDTO = detailSO
-						.retrieveDeDuctionClauseDtls(reqDTO);
-				deduction.setScQtDeductionClauses(resDTO
-						.getDeductionClauseResultBean());
-			}
-			this.getManagedBean().setSelectedScQtDeduction(deduction);
-		}
 	}
 
 	/**
