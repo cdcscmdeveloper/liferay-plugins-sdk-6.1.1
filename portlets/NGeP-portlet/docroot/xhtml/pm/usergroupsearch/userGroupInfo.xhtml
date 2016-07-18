@@ -50,6 +50,20 @@
 							id="orgCodeUpdate"
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
 							size="10" readonly="true" />&#160;&#160;
+							<p:inputText 
+						size="60"
+						id="itSelectedPtj" 
+						value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgName}" 
+						readonly="true"/>
+						&#160;	
+						<p:commandLink id="ptjSearchCL" partialSubmit="true"
+							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew or usergroupBackingBean.managedBean.disabledOrg}"
+							process="@this" update=":form:orgProfileCcId:ptjPopup"
+							action="#{organisationSearchBackingBean.initPtjPopup}"
+							oncomplete="ptjPopup.show();" >
+							<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+						</p:commandLink>
+						<ui:remove>
       	                   <ac:lov id="uomLovId"
 							lovId="PM_ORG_PROFILE_FPJ" size="60"
 							update=":form:orgCodeUpdate,:form:userPanelId"
@@ -59,14 +73,18 @@
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
 							postUpdateListener="usergroupBackingBean.userListner"
 							readonly="true" conditionField="#{usergroupBackingBean.constructConditionFields()}">
+							
 						</ac:lov>
+						
 						<ac:lovPopup />
+						</ui:remove>
 					</p:columnGroup></td>
 			</tr>
 			<p:spacer height="5"></p:spacer>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
 				<td><p:selectOneMenu style="width:230px;margin-bottom:5px;"
+						id="usergroupRecordStatusId"
 						value="#{usergroupBackingBean.managedBean.userGroup.recordStatusFlg}"
 						disabled="#{usergroupBackingBean.managedBean.userGroup.brandNew}">
 						<f:selectItems
@@ -79,6 +97,11 @@
 			</tr>
 		</table>
 	</p:panel>
+	<ac:ptjPopup 
+		  	id="orgProfileCcId"
+		  	orgTypeParamCode="#{ParameterConst.orgTypePtj}"
+		  	okAction="usergroupBackingBean.userListner"
+		  	update=":form:orgCodeUpdate,:form:userPanelId,:form:itSelectedPtj"  />
 
 	<p:panel header="#{lbl['lbl.pm.ug.result.title']}" toggleable="true"
 		id="userPanelId">
