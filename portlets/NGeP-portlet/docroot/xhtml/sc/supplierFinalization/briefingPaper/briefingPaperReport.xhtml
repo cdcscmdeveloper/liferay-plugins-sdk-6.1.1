@@ -28,20 +28,29 @@
 
 			<p:column headerText="#{lbl['lbl.sc.action']}"
 					  style="width:15%; white-space:normal; text-align: center;">
-
-				<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
-					popupWidgetVar="briefingReportAttWidget"
-					attachment="#{report.scQtFinalizationReportAttachment}"
-					readonly="#{!(isSecretaryUser and report.selected)}"
-					rowIndex="#{rowIndex}">
-
-					<f:setPropertyActionListener for="actionEvent" value="#{report}"
-						target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}" />
-
-					<f:setPropertyActionListener for="actionEvent" value="KTR"
-						target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
-
-				</ac:scSingleFileUploadButton>
+				<ui:fragment rendered="#{report.pmDocument ne null and
+										 report.pmDocument.docDefinitionKey eq 'KT'}">
+					<p:commandButton id="download" icon="ui-icon-download" 
+						style="background-color:transparent !important; border:0px none;"
+						ajax="false" action="#{suppFinalizationBackingBean.downloadReport(report)}" />
+				</ui:fragment>
+				<ui:fragment rendered="#{(report.pmDocument ne null and
+											report.pmDocument.docDefinitionKey ne 'KT') or 
+											report.pmDocument eq null}">						
+					<ac:scSingleFileUploadButton id="briefingReportUploadBtn"
+						popupWidgetVar="briefingReportAttWidget"
+						attachment="#{report.scQtFinalizationReportAttachment}"
+						readonly="#{!(isSecretaryUser and report.selected)}"
+						rowIndex="#{rowIndex}">
+	
+						<f:setPropertyActionListener for="actionEvent" value="#{report}"
+							target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}" />
+	
+						<f:setPropertyActionListener for="actionEvent" value="KTR"
+							target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
+	
+					</ac:scSingleFileUploadButton>
+				</ui:fragment>				
 			</p:column>
 		</p:dataTable>
 		
