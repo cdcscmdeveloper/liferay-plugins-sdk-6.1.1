@@ -17,10 +17,12 @@
 					toggleable="true" style="width:100%;margin-top:0px;">
 					<table>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
+							   <p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { supplierFinalizationConfirmMeetingAddSearch.jq.click(); return false; }"
 									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.name}"
-									size="64" /></td>
+									size="64" id="name1"  label="#{lbl['lbl.sc.name']}" required="true"/>
+									<p:message id="name1Msg" for="name1" display="icon" /></td>
 						</tr>
 						<tr>
 							<td style="width: 110px;"><p:outputLabel
