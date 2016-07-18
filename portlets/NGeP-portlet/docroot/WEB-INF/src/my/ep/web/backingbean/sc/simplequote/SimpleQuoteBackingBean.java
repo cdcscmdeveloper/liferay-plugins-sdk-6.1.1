@@ -4708,6 +4708,15 @@ public class SimpleQuoteBackingBean extends
 					// hide the save & submit button when Quote has been
 					// submitted previously. You are not allowed to submit twice
 					// in supplier view
+					Locale userLocale = new FacesScopes().getUserLocale();
+					message = MessageUtils.getMessage(e.getMessage(),
+							e.getParameters(),
+							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									message));
 					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
 					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
 
