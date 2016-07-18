@@ -10169,7 +10169,7 @@ public class SpecificationBackingBean extends
 		scQt.setScQtStatus(null);
 		scQt.setScQtBriefings(null);
 		reqDTO.setScQt(scQt);
-		List<ScQtCommitteeActivity> committeActivities = this.getManagedBean()
+	/*	List<ScQtCommitteeActivity> committeActivities = this.getManagedBean()
 				.getCommitteeActivities();
 		if (null != committeActivities) {
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -10183,7 +10183,7 @@ public class SpecificationBackingBean extends
 
 			}
 		}
-		reqDTO.setCommitteActivities(committeActivities);
+		reqDTO.setCommitteActivities(committeActivities);*/
 
 		return reqDTO;
 	}
@@ -11320,7 +11320,7 @@ public class SpecificationBackingBean extends
 					scQt.getQtNo());
 		}
 
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+	/*	if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 
 			List<ScQtSpecificationRemark> remarks = super
 					.finalizeRemarks(getManagedBean().getSpecificationRemarks());
@@ -11341,6 +11341,56 @@ public class SpecificationBackingBean extends
 				}
 			}
 			spReqDTO.setCommitteActivities(committeActivities);
+		}*/
+		
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			List<ScQtCommitteeActivity> committeActivities = this
+					.getManagedBean().getCommitteeActivities();
+			if (null != committeActivities) {
+
+				for (int i = 0; i < committeActivities.size(); i++) {
+                    if(ParameterConst.COMMITTEE_ROLE_SECRETARY.equalsIgnoreCase(committeActivities.get(i).getScCommitteeMember()
+										.getMemberRole().getParameterCode())){
+					committeActivities.get(i).setSignedOff(true);
+                    }else{
+                    	committeActivities.get(i).setSignedOff(false);
+                    }
+
+				}
+			}
+			spReqDTO.setCommitteActivities(committeActivities);
+			
+		}else{
+			if (BpmOutcomeConst.BPM_REVISE .equalsIgnoreCase(action)) {
+				List<ScQtSpecificationRemark> remarks = super
+						.finalizeRemarks(getManagedBean().getSpecificationRemarks());
+
+				if (null != remarks) {
+					ScQt localScQt = spReqDTO.getScQt();
+					localScQt.setScQtSpecificationRemarks(remarks);
+					spReqDTO.setScQt(localScQt);
+				}
+				
+			}else{
+				
+				List<ScQtCommitteeActivity> committeActivities = this
+						.getManagedBean().getCommitteeActivities();
+				if (null != committeActivities) {
+					PmUser pmUser = new FacesScopes().getUserSessionBean();
+					for (int i = 0; i < committeActivities.size(); i++) {
+						if (pmUser.getIdentificationNo().equals(
+								committeActivities.get(i).getScCommitteeMember()
+										.getPmUser().getIdentificationNo())) {
+							committeActivities.get(i).setSignedOff(true);
+							break;
+						}
+
+					}
+				}
+				spReqDTO.setCommitteActivities(committeActivities);
+				
+			}
+			
 		}
 		spReqDTO.setDigiSignData(digiSign);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
