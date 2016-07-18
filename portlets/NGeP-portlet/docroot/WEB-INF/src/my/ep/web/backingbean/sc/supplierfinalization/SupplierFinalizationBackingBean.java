@@ -37,6 +37,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -55,9 +56,9 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
@@ -3367,26 +3368,27 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 	private int findFinalizationCount() {
-		IQTDetailSO qtDetailSO = null;
+		IScWorkFlowStatusSO scWorkFlowStatusSO = null;
 		
 		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			tenderReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());	
+			scWorkFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO tenderReqDTO = new ScWorkFlowStatusReqDTO();
+			tenderReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());	
 			List<Long> statusIds = new ArrayList<Long>();
 			statusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 //			statusIds.add(QTStatusConst.QT_RE_FINALIZATION);
 //			statusIds.add(QTStatusConst.QT_RE_EVALUATION);
 			tenderReqDTO.setStatusIds(statusIds);
 			
-			List<ScWorkFlowStatus> statusList = qtDetailSO
-							.retrieveWorkFlowStatus(tenderReqDTO);
+			List<ScWorkFlowStatus> statusList = scWorkFlowStatusSO
+							.retrieveWorkFlowStatus(tenderReqDTO)
+							.getWorkFlowStatusList();
 			if (statusList != null) {
 				return statusList.size();
 			} 
 		} finally {
-			qtDetailSO = null;
+			scWorkFlowStatusSO = null;
 		}	
 		
 		return 0;
