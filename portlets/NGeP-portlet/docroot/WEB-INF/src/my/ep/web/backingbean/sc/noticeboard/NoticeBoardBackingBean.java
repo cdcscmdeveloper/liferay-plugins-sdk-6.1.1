@@ -31,9 +31,9 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -52,14 +52,14 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.document.QTDocumentReqDTO;
+import my.ep.dto.sc.document.QTDocumentResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -1747,20 +1747,20 @@ public class NoticeBoardBackingBean extends
 	public void downloadAllQTDocuments(Long qtId) throws Exception {
 
 		log.info("downloadAllQTDocuments in Notice Board");
-		IQTDetailSO detailSO;
-		QuationTenderResDTO resDTO = null;
+		IQTDocumentSO qtDocumentSO;
+		QTDocumentResDTO resDTO = null;
 		List<ScQtDocReport> scQtDocReports = null;
 		boolean isNotReportPresent = true;
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			qtDocumentSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDocumentSO.class);
+			QTDocumentReqDTO reqDTO = new QTDocumentReqDTO();
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			reqDTO.setQtId(qtId);
-			resDTO = detailSO.retriveQTDocDetailsByQtId(reqDTO);
-			scQtDocReports = resDTO.getReports();
+			resDTO = qtDocumentSO.retriveQTDocDetailsByQtId(reqDTO);
+			scQtDocReports = resDTO.getQtDocReports();
 		} finally {
-			detailSO = null;
+			qtDocumentSO = null;
 		}
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
 		if (null != scQtDocReports && !scQtDocReports.isEmpty()) {
