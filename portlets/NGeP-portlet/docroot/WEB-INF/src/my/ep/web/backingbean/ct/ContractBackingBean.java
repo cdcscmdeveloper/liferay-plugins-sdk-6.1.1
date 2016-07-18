@@ -36,17 +36,6 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.ToggleSelectEvent;
-import org.primefaces.event.UnselectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-import org.primefaces.model.UploadedFile;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -59,7 +48,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
@@ -85,8 +74,8 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.document.QTDocumentReqDTO;
+import my.ep.dto.sc.document.QTDocumentResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -146,6 +135,17 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+
+import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
 
 /**
  * Backing Bean For Contract
@@ -518,9 +518,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to retrieve the branch info file path
      */
     public void retrieveBranchInfo() {
-    	IQTDetailSO qtDetailSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-    	QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+    	IQTDocumentSO qtDocumentSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDocumentSO.class);
+    	QTDocumentReqDTO reqDTO = new QTDocumentReqDTO();
     	
     	String docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER; // AQ
 		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
@@ -534,7 +534,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		scLoaReport.getScLoa().setLoaId(getManagedBean().getContractVer().getCtContract().getLoa().getLoaId());
 		reqDTO.setScReport(scLoaReport);
 
-		QuationTenderResDTO resDTO = qtDetailSO.retriveScQtReportByDefKey(reqDTO);
+		QTDocumentResDTO resDTO = qtDocumentSO.retriveScQtReportByDefKey(reqDTO);
 		scLoaReport = (ScLoaReport)resDTO.getScReport();
 		
 		String filePath = (scLoaReport != null && scLoaReport.getScLoaReportAttachment() != null) ? scLoaReport.getScLoaReportAttachment().getFilePath() : null;
