@@ -50,6 +50,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
@@ -73,6 +74,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.document.QTDocumentReqDTO;
+import my.ep.dto.sc.document.QTDocumentResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReportReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
@@ -9776,24 +9779,24 @@ public class EvaluationBackingBean extends
 	private ScQtEvaluationReport retriveRulesAndRegulationReport(
 			ScQtEvaluationReport scQtEvaluationReport) {
 		debugLogger("retriveRulesAndRegulationReport");
-		IQTDetailSO qTDetailSO = null;
+		IQTDocumentSO qtDocumentSO = null;
 		try {
-			qTDetailSO = (IQTDetailSO) BusinessDelegate.getInstance()
+			qtDocumentSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTDetailSO.class);
+							IQTDocumentSO.class);
 
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			QTDocumentReqDTO reqDTO = new QTDocumentReqDTO();
 			reqDTO.setScReport(scQtEvaluationReport);
 			reqDTO.setDocCategory(scQtEvaluationReport.getDocCategory());
 			reqDTO.setDocDefKey(SourcingConstants.DOC_DEF_KEY_QT_INFO);
 
-			QuationTenderResDTO resDTO = qTDetailSO
+			QTDocumentResDTO resDTO = qtDocumentSO
 					.retriveScQtReportByDefKey(reqDTO);
 			ScQtEvaluationReport qtEvaluationReport = (ScQtEvaluationReport) resDTO
 					.getScReport();
 			return qtEvaluationReport;
 		} finally {
-			qTDetailSO = null;
+			qtDocumentSO = null;
 		}
 	}
 
