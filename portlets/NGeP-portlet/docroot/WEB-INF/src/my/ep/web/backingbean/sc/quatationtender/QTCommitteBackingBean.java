@@ -980,6 +980,8 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setScQtCommittee(committee);
 		getManagedBean().setTabTitle(titleName);
 		getManagedBean().setAutoUpdate(false);
+		getManagedBean().setNameRequired(true);
+		
 	}
 
 	/**
@@ -1613,6 +1615,7 @@ public class QTCommitteBackingBean extends
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 		}
 		setQtMaintencesChanges();
+		getManagedBean().setNameRequired(false);
 		// Specification Committee validation
 		RequestContext.getCurrentInstance().execute(
 				"newspecificationcommittee.hide()");
