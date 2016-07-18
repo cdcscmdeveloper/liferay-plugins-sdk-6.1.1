@@ -26,11 +26,13 @@
 						<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true">
 							<table>
 								<tr>
-									<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
+									    <p:outputLabel value="*" styleClass="mandatory" /></td>
 									<td colspan="3"><p:inputText maxlength="50" onkeypress="if (event.keyCode == 13) { coordinateMeetingaddSearch.jq.click(); return false; }"
 											style="margin-bottom: 5px;"
 											value="#{evaluationMeetingBackingBean.managedBean.name}"
-											size="47" /></td>
+											size="47" id="name1" label="#{lbl['lbl.sc.name']}" required="true"/>
+											<p:message id="name1Msg" for="name1" display="icon" /></td>
 								</tr>
 								<tr>
 									<td style="width: 125px;"><p:outputLabel
