@@ -22,7 +22,8 @@
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td colspan="3"><p:inputText  onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentAddSearch.jq.click(); return false; }"
 								value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.name}"
-								size="64" required="true" id="name2" label="#{lbl['lbl.sc.name']}"/>
+								size="64" required="#{qTCommitteBackingBean.managedBean.nameRequired}" id="name2" 
+								label="#{lbl['lbl.sc.name']}" styleClass="name2Class"/>
 								<p:message id="name2Msg" for="name2" display="icon" />
 								</td>
 					</tr>
@@ -222,7 +223,10 @@
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				styleClass="BtnSpacing"
 				oncomplete="newspecificationcommittee.hide();"
-				update="@(.scMemberDtl)" />
+				update="@(.scMemberDtl,name2Class)" immediate="true">
+				<f:setPropertyActionListener value="false"
+					target="#{qTCommitteBackingBean.managedBean.nameRequired}" />
+			</p:commandButton>
 		</div>
 	</p:dialog>
 </ui:composition>
