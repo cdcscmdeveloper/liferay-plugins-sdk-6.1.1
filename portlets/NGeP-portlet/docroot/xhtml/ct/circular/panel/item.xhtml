@@ -608,8 +608,84 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					</table>    					
 				</td>
 				<td width="50%" valign="top">
+				<table style="width: 100%">
+		<tr>
+			<td class="TableFieldLeft" width="24%">
+			      <h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
+			<td class="TableFieldRight">
+				<p:commandButton oncomplete="uploadItemDlg.show();return false;"
+					update="lampiranItem, uploadItemDlg" value="#{lbl['lbl.txt.attach.files']}"
+					disabled="#{panelBackingBean.managedBean.viewContract
+						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
+			</td>
+		</tr>
+		<tr>
+			<td/>
+			<td>
+				<p:dataGrid id="lampiranItem" value="#{panelBackingBean.managedBean.circularVer.itemAttachments}"
+					var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
+					emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+					<table>
+						<tr>
+							<td rowspan="2"><h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
+							<td width="5"></td>
+							<td>
+								<h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
+								<h:outputText value="#{attachFile.createdDate}">									
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<h:commandLink value="#{attachFile.fileName}" 
+									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+								<p:commandLink onsuccess="deleteItemAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
+									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)
+												and !ctBackingBean.managedBean.viewContract}"
+									disabled="#{ctBackingBean.managedBean.viewContract
+										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
+			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	 				</p:commandLink>
+			 	 			</td>
+						</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+	</table>
 				</td>
 			</tr>
 		</table>
+		<p:dialog id="uploadItemDlg" widgetVar="uploadItemDlg" modal="true"  resizable="false"
+	     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{panelBackingBean.fileUpload}"
+			mode="advanced" id="uploadItemId" multiple="true"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
+			update="lampiranItem" >
+		</p:fileUpload>
+		<f:facet name="footer">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadItemDlg.hide();" />
+  		</div>
+   		</f:facet>
+	</p:dialog>	
+	
+	               <p:confirmDialog id="deleteItemAttachmentDlg" widgetVar="deleteItemAttachmentDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:lampiranItem" 
+		                         action="#{panelBackingBean.deleteCircularAttachmentAction(ctBackingBean.managedBean.attachFileIndex)}"
+		                         oncomplete="deleteItemAttachmentDlg.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteItemAttachmentDlg.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
 	</p:panel>	
 </ui:composition>
