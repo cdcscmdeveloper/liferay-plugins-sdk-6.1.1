@@ -22,10 +22,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -62,6 +64,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -2046,7 +2049,7 @@ public class TemplateSpecBackingBean extends
 									getManagedBean()
 											.getSearchProcurementCategoryId()));
 				}
-
+				searchBeanForTemplateTypeCode(searchBean);
 				if (StringUtils.isNotBlank(getManagedBean().getSearchTemplateTypeCode())) {
 					String searchTemplateTypeCode = getManagedBean().getSearchTemplateTypeCode();
 					
@@ -2299,5 +2302,92 @@ public class TemplateSpecBackingBean extends
 		this.getManagedBean().setReadOnly(isReadOnly);
 		this.getManagedBean().setCloneBtnRendered(true);
 		return retrieveTemplateSpecMaster(templateSpecBean);
+	}
+	
+	/**
+	 * 
+	 * @param searchBean
+	 */
+	private void searchBeanForTemplateTypeCode(ISearchBean<TplSpecMaster> searchBean){
+		
+		// Filter By - ministry orgProfileId
+		List<String> templeteTypes = new ArrayList<String>();
+		templeteTypes.add(ParameterConst.TEMPLATE_TYPE_MINISTRY);
+		templeteTypes.add(ParameterConst.TEMPLATE_TYPE_PTJ);
+		PmOrgProfile ptjByloginUser = TemplateSpecHelper.getInstance().getPTJOrgProfileByLoginUser();
+		List<Long> orgProfileIds = getMinistryPTJOrgIds(ptjByloginUser);
+		List<Long> ownerOrgProfileIds = getMinistryPTJOrgIds(ptjByloginUser);
+
+		if (ownerOrgProfileIds != null
+				&& ownerOrgProfileIds.size() > 0) {
+			orgProfileIds.addAll(ownerOrgProfileIds);
+		}
+
+		SearchMultiFilterBean orgFilterBean = new SearchMultiFilterBean(
+				new SearchFilterBean(
+						"templateTypeCode.parameterCode",
+						SearchOperator.OPERATOR_IN.value(),
+						templeteTypes), new SearchFilterBean(
+						"orgProfile.orgProfileId",
+						SearchOperator.OPERATOR_IN.value(),orgProfileIds));
+
+		SearchMultiFilterBean ownFilterBean = new SearchMultiFilterBean(
+				new SearchFilterBean(
+						"templateTypeCode.parameterCode",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						ParameterConst.TEMPLATE_TYPE_OWN),
+				SearchCondition.CONDITION_OR.value(),
+				new SearchFilterBean("createdBy",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						new FacesScopes().getUserSessionBean().getUserId()));
+
+		BaseSearchFilterBean allFilterBean = new SearchMultiFilterBean(
+				new SearchFilterBean(
+						"templateTypeCode.parameterCode",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						ParameterConst.TEMPLATE_TYPE_ALL),
+				SearchCondition.CONDITION_OR.value(),
+				new SearchFilterBean("orgProfile.orgProfileId",
+						SearchOperator.OPERATOR_IS_NULL.value(),
+						null));
+		SearchFilterBean ownerOrgProfile = new SearchFilterBean();
+		ownerOrgProfile.setAndOr(SearchCondition.CONDITION_OR.value());
+		ownerOrgProfile.setSearchField("ownerOrgProfile.orgProfileId");
+		ownerOrgProfile.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		ownerOrgProfile.setSearchValue(ptjByloginUser.getOrgProfileId());
+		searchBean.getDataFilterBeans().add(
+				new SearchMultiFilterBean(new SearchMultiFilterBean(
+						orgFilterBean, ownFilterBean), allFilterBean));				
+		searchBean.getDataFilterBeans().add(ownerOrgProfile);				
+	}
+	
+	private List<Long> getMinistryPTJOrgIds(PmOrgProfile pmOrgProfile) {
+		List<Long> orgProfileIds = new ArrayList<Long>();
+
+		if (pmOrgProfile != null) {
+			IOrgProfileSO orgProfileSO = null;
+			try {
+				orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+
+				Long orgProfileId = pmOrgProfile.getOrgProfileId();
+
+				orgProfileIds.add(orgProfileId);
+
+				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+				orgProfileReqDTO.setOrgProfileId(orgProfileId);
+				PmOrgProfile ministryOrgProfile = orgProfileSO
+						.retrieveMinistryByOrgProfileId(orgProfileReqDTO)
+						.getPmOrgProfile();
+				if (ministryOrgProfile != null) {
+					orgProfileIds.add(ministryOrgProfile.getOrgProfileId());
+				}
+			} finally {
+				orgProfileSO = null;
+			}
+		}
+
+		return orgProfileIds;
 	}
 }
