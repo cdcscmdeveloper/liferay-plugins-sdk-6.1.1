@@ -72,6 +72,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private boolean hasPreviousMeeting;
 	
 	private Date currentDate = new Date();
+	private boolean nameRequired;
 	
 	public SupplierFinalizationMeetingManagedBean() {
 		this.userSearchBean = new UserCommitteeSearchBean();
@@ -526,6 +527,20 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public Date getCurrentDate() {
 		return currentDate;
+	}
+
+	/**
+	 * @return the nameRequired
+	 */
+	public boolean isNameRequired() {
+		return nameRequired;
+	}
+
+	/**
+	 * @param nameRequired the nameRequired to set
+	 */
+	public void setNameRequired(boolean nameRequired) {
+		this.nameRequired = nameRequired;
 	}
 
 }
