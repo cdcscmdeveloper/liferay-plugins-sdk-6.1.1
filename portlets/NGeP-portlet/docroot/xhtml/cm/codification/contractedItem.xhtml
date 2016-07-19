@@ -101,7 +101,12 @@
 					<f:facet name="header">
 					#{lbl['lbl.cm.doc.createdDate']}
 				   </f:facet>
-					#{vPendingCodifiedItem.createdDate}
+				   
+				   <h:outputText value="#{vPendingCodifiedItem.createdDate}">
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+				</h:outputText>
+					
 			   </p:column>
 
 				<p:column>
