@@ -136,7 +136,8 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> otherCommitteeMembersList;
 	private String checkOtherCommitteeType;
 	private String checkOtherCommitteeTypes;
-
+	private boolean nameRequired;
+	
 	/**
 	 * Gets the today.
 	 * 
@@ -776,6 +777,20 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the nameRequired
+	 */
+	public boolean getNameRequired() {
+		return nameRequired;
+	}
+
+	/**
+	 * @param nameRequired the nameRequired to set
+	 */
+	public void setNameRequired(boolean nameRequired) {
+		this.nameRequired = nameRequired;
 	}
 
 }
