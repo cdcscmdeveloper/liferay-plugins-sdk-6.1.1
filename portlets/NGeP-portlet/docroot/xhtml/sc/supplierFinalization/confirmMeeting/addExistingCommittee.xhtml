@@ -21,7 +21,7 @@
 							   <p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { supplierFinalizationConfirmMeetingAddSearch.jq.click(); return false; }"
 									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.name}"
-									size="64" id="name1"  label="#{lbl['lbl.sc.name']}" required="true"/>
+									size="64" id="name1"  label="#{lbl['lbl.sc.name']}" required="#{suppFinalMeetingBackingBean.managedBean.nameRequired}"/>
 									<p:message id="name1Msg" for="name1" display="icon" /></td>
 						</tr>
 						<tr>
@@ -113,7 +113,9 @@
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 					process="@this" oncomplete="memberWidgetVar.hide();"
 					action="#{suppFinalMeetingBackingBean.committeeCancelAction}"
-					ajax="true" />
+					ajax="true" update="name1"/>
 		</div>
+		<p:ajax event="close"
+				listener="#{suppFinalMeetingBackingBean.committeeCancelAction}" update="@([id$=name1])"/>
 	</p:dialog>
 </ui:composition>
