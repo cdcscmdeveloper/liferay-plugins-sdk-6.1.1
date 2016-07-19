@@ -262,7 +262,7 @@ public class CreateQtBackingBean extends
 		super.renewSesionObject();
 		debugLogger("preCreateQuotationTenderRenderView,@Managed Bean is " + this.getManagedBean());
 		
-		this.getManagedBean().setEditable(false);
+		this.getManagedBean().setReadOnly(false);
 		this.getManagedBean().setCreateQt(true);
 		this.getManagedBean().setOutComes(
 				new String[] { ResourceBundleUtils.getMessage("lbl.btn.submit",
