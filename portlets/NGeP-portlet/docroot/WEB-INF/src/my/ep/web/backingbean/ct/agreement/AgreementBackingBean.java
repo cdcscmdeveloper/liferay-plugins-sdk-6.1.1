@@ -69,6 +69,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
@@ -1108,6 +1109,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 */
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
+		FacesScopes facesScopes = new FacesScopes();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 
 		String filePath = getManagedBean().getFileDirectory();
@@ -1118,6 +1120,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
+		if(event.getComponent().getId().equalsIgnoreCase("uploadSignAttachId")){
+			CtAttachment attachment = new CtAttachment();
+			attachment.setFileName(item.getFileName());
+			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedUser(facesScopes.getUserSessionBean());
+			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			getManagedBean().getCtAgreement().getSignAgreementAttachments().add(attachment);
+		} else {
+
 		for (CtAgreementContent agreementContent : getManagedBean().getCtAgreement().getAgreementContents()) {
 			if (agreementContent.equals(getManagedBean().getSelectedAgreementContent())) {
 				agreementContent.setFileName(item.getFileName());
@@ -1125,6 +1137,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			}
 		}
 		RequestContext.getCurrentInstance().execute("uploadUserDefineDlg.hide()");
+		}
 	}
 
 	/**
@@ -2557,4 +2570,8 @@ public void selectOneSupplierWitnessCheckBox(AjaxBehaviorEvent e){
     public void onRowUnselect(UnselectEvent event) {
     	getManagedBean().setButtonHideActive(true);
     }
+    
+    public void deleteSignAttachmentAction(int index){
+		this.getManagedBean().getCtAgreement().getSignAgreementAttachments().remove(index);
+	}
 }
