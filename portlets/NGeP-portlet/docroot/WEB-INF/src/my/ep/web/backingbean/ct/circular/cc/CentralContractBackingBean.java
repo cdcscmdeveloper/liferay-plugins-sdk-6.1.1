@@ -983,6 +983,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 	
 	/**
+	 * The method used to set the selected zone item before view the zone details
+	 * */
+	public void viewZoneLocation(CtContractZone ctContractZone){
+		this.getManagedBean().setSelectedZoneItems(ctContractZone);
+		retriveItemZonesList();
+	}
+	
+	/**
 	 * The method used to retrieve list of zone
 	 * */
 	public void getContractZoneList(){
