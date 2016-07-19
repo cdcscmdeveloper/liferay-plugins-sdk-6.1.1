@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:param name="isRequire" value="#{!qTDetailBB.isAuditor()}"></ui:param>
+	<ui:param name="isRequire" value="#{!qTDetailBB.managedBean.readOnly}" />
+	
 	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true"
 		id="scheduleDetalsPublishingClosing">
 		<table style="width: 100%">

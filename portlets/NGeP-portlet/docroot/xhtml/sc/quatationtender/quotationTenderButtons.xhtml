@@ -12,12 +12,6 @@
 			
 		<table width="100%">
 		<tr>
-		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-					style="float:right;"
-					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, qTDetailBB.managedBean.qt.qtId)}"
-					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow and qTDetailBB.managedBean.viewQtDetails}"/></td>
-		</tr>
-		<tr>
 		<td align="right">
 			<c:if test="#{qTDetailBB.managedBean.taskId eq null and qTDetailBB.managedBean.maintanceFlow}">
 				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
@@ -27,7 +21,7 @@
 					update="@this" />
 			</c:if>
 				
-			<c:if test="#{!qTDetailBB.managedBean.auditorRoleView}">
+			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{qTDetailBB.saveQtDetailsAction}" process="@form" partialSubmit="true"
 					onstart="blockWidget.show();"
@@ -77,8 +71,7 @@
 			<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 					style="float:right;"
 					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, qTDetailBB.managedBean.qt.qtId)}"
-					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.managedBean.viewQtDetails}"/>
-			
+					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow}"/>			
 			</td>
 		</tr>
 		</table>
