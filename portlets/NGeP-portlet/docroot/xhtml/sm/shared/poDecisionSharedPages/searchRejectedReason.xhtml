@@ -22,12 +22,13 @@
 					<div style="text-align: right;">
 						<p:commandButton value="#{lbl['lbl.btn.search']}" 
 							action="#{backingBean.searchRejectedReason}"
-							update=":#{p:component('poRejectBlockPanel')}" 
-							onstart="poRejectBlockWidget.show()" oncomplete="poRejectBlockWidget.hide()">
+							onstart="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
+							update=":#{p:component('rejectBlockPanel')}" process=":#{p:component('rejectReasonSearchId')}">
 						</p:commandButton>
-						<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+						<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this"
 							action="#{backingBean.resetSearchRejectedReason}"
-							update=":#{p:component('poRejectBlockPanel')}">
+							update=":#{p:component('rejectBlockPanel')}" 
+							onstart="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()">
 						</p:commandButton>
 					</div>
 				</td>
@@ -43,19 +44,19 @@
 				
 				<ac:paginator for="reasonDtId" />
 				<p:ajax event="rowSelect" listener="#{backingBean.onTickOrUnTickReason}"
-					update=":#{p:component('poRejectBlockPanel')}"></p:ajax>
+					update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 				<p:ajax event="rowUnselect"
 					listener="#{backingBean.onTickOrUnTickReason}"
-					update=":#{p:component('poRejectBlockPanel')}"></p:ajax>
+					update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 				<p:ajax event="rowSelectCheckbox"
 					listener="#{backingBean.onTickOrUnTickReason}"
-					update=":#{p:component('poRejectBlockPanel')}"></p:ajax>
+					update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 				<p:ajax event="rowUnselectCheckbox"
 					listener="#{backingBean.onTickOrUnTickReason}"
-					update=":#{p:component('poRejectBlockPanel')}"></p:ajax>
+					update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 				<p:ajax event="rowDblselect"
 					listener="#{backingBean.onTickOrUnTickReason}"
-					update=":#{p:component('poRejectBlockPanel')}"></p:ajax>
+					update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 				
 				<p:column selectionMode="multiple" width="1%" />
 				
