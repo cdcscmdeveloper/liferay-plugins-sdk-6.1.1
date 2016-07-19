@@ -187,9 +187,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 	
 	/** The created dt to. */
 	private Date createdDtTo;
-
-	/** The is editable. */
-	private boolean isEditable = true;
 	
 	private IPagingDataModel<ScQtCommittee> committeeQTDataModel;
 
@@ -1029,24 +1026,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 	 */
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
-	}
-
-	/**
-	 * Checks if is editable.
-	 *
-	 * @return true, if is editable
-	 */
-	public boolean isEditable() {
-		return isEditable;
-	}
-
-	/**
-	 * Sets the editable.
-	 *
-	 * @param isEditable the new editable
-	 */
-	public void setEditable(boolean isEditable) {
-		this.isEditable = isEditable;
 	}
 
 	/**
