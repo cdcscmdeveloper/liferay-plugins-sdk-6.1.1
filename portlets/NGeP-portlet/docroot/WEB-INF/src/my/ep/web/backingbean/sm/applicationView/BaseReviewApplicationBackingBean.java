@@ -38,7 +38,6 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
-import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -83,7 +82,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
-import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -1492,7 +1490,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (aca.getPmEduField() == null) {
 			aca.setPmEduField(new PmEduField());
 		}
-		if(aca.getQualificationId() == null) {
+		if (aca.getQualificationId() == null) {
 			aca.setQualificationId(new PmParameter());
 		}
 		getManagedBean().setSelectedStaffAcademic(aca);
@@ -2054,8 +2052,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							smApplSer = SmServiceLookup.getSmApplRevisionSO()
 									.readApplicationHist(reqDTO).getSmAppl();
 							if (smApplSer == null) {
-								smAppl = retrieveApplByApplNoWithChild(smAppl
-										.getApplNo());
+								smAppl = retrieveApplByApplIdWithChild(smAppl
+										.getApplId());
 								log.info(">>>>>>>>>>>>>>>>fail to load from ser file for applNo:"
 										+ smAppl.getApplNo()
 										+ "<<<<<<<<<<<<<<<<");
@@ -2066,14 +2064,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								smAppl = smApplSer;
 							}
 						} else {
-							smAppl = retrieveApplByApplNoWithChild(smAppl
-									.getApplNo());
+							smAppl = retrieveApplByApplIdWithChild(smAppl
+									.getApplId());
 							log.info(">>>>>>>>>>>>ser file not exist for applNo:"
 									+ smAppl.getApplNo() + "<<<<<<<<<<<<<<");
 						}
 					} catch (Exception ex) {
-						smAppl = retrieveApplByApplNoWithChild(smAppl
-								.getApplNo());
+						smAppl = retrieveApplByApplIdWithChild(smAppl
+								.getApplId());
 						log.info(">>>>>>>>>>>>>>>>exception when load from ser file for applNo:"
 								+ smAppl.getApplNo() + "<<<<<<<<<<<<<<<<");
 						log.info(">>>>>>>>>>>>>>>>exception load ser msg:"
@@ -2085,32 +2083,32 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				// migrated data dont have serialized file, so directly load
 				// from DB
 				else {
-					smAppl = retrieveApplByApplNoWithChild(smAppl.getApplNo());
+					smAppl = retrieveApplByApplIdWithChild(smAppl.getApplId());
 					log.info(">>>>>>>>>>>dont have ser file so directly load from DB for applNo:"
 							+ smAppl.getApplNo());
 				}
 			}
 			// role po/approver can load directly from DB
 			else {
-				smAppl = retrieveApplByApplNoWithChild(smAppl.getApplNo());
+				smAppl = retrieveApplByApplIdWithChild(smAppl.getApplId());
 				log.info(">>>>>>>>>>>po/approver directly load from DB for applNo:"
 						+ smAppl.getApplNo());
 			}
 		} else {
 			// if not for view application history means for view supplier
 			// profile just directly load from DB
-			smAppl = retrieveApplByApplNoWithChild(smAppl.getApplNo());
+			smAppl = retrieveApplByApplIdWithChild(smAppl.getApplId());
 			log.info(">>>>>>>>>>>view latest profile directly load from DB for applNo:"
 					+ smAppl.getApplNo());
 		}
 		return smAppl;
 	}
 
-	private SmAppl retrieveApplByApplNoWithChild(String applNo) {
+	private SmAppl retrieveApplByApplIdWithChild(Long applId) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setApplNo(applNo);
+		reqDTO.setApplId(applId);
 		return SmServiceLookup.getMofRegistrationSO()
-				.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl();
+				.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
 	}
 
 	private SmCompanyBasic getCompanyBasicByRevNo() {

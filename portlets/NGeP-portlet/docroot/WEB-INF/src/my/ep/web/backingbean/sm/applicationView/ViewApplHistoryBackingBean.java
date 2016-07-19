@@ -179,12 +179,12 @@ public class ViewApplHistoryBackingBean extends
 	 * @param String
 	 *            applNo
 	 */
-	public void initSmApplByApplNo(String applNo, int index) {
+	public void initSmApplByApplNo(Long applId, int index) {
 		getManagedBean().setResubmitUrl(StringUtils.EMPTY);
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setApplNo(applNo);
+		reqDTO.setApplId(applId);
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
-				.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl();
+				.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
 		viewApplication(smAppl);
 		initBumiRecommendNote();
 		initVirtualCert();
