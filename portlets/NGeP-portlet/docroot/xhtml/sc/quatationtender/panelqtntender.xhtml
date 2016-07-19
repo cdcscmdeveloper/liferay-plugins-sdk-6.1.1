@@ -34,7 +34,7 @@
 				update="suppPopup"
 				action="#{qTSupplierQulCriteriaBackingBean.searchPanelSupplierPopupAction}"
 				oncomplete="suppdlg.show();" 
-				rendered="#{qTDetailBB.managedBean.editable}" />
+				rendered="#{!qTDetailBB.managedBean.readOnly}" />
 		</p:panelGrid>
 	
 	<ui:include src="supplierlist.xhtml" />	

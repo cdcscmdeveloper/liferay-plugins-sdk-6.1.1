@@ -2013,7 +2013,7 @@ public class QTCommitteBackingBean extends
 			} else if (!isEligibleStatusForBtns(currentStatusId)) {
 				return true;
 			} 
-			if (!getManagedBean().isDeskOfficer()) {
+			if (getManagedBean().isReadOnly()) {
 				return true;
 			}
 		} else {
@@ -2068,14 +2068,11 @@ public class QTCommitteBackingBean extends
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (isQTStatusInBetween(currentQtStatus,
 					QTStatusConst.QT_PENDING_PB_APPROVAL,
-					QTStatusConst.QT_EVALUATION_PROPOSAL)
-					&& !QTStatusConst.QT_CLOSED.equals(currentQtStatus)) {
-				return this.getManagedBean().isDeskOfficer();
+					QTStatusConst.QT_CLOSED)) {
+				return !this.getManagedBean().isReadOnly();
 			} 
 		}else {
-			return isQTStatusGreaterThanOrEquals(currentQtStatus,
-					QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) ? this
-					.getManagedBean().isDeskOfficer() : false;
+			return true;
 		}
 		return false;
 	}
