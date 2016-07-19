@@ -18,9 +18,9 @@
 			selectionMode="single">
 
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-				update=":form:clausePnl" />
+				update=":form:deductionPayId" />
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
-				update=":form:clausePnl" />
+				update=":form:deductionPayId" />
 
 			<ac:paginator for="deductTbl" />
 
@@ -75,7 +75,7 @@
 					process="@this, deductTbl" partialSubmit="true"
 					action="#{lOADetailBackingBean.addDeductionPaymentAction}"
 					oncomplete="deductTblWidget.paginator.endLink.click();"
-					update="deductTbl" />
+					update="deductTbl,deductionPayId" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					disabled="#{lOADetailBackingBean.managedBean.readOnly or null eq lOADetailBackingBean.managedBean.selectedScQtDeduction}"
 					process="@this, deductTbl" partialSubmit="true"
