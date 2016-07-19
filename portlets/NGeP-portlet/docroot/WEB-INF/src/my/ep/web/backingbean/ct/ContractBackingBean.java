@@ -305,7 +305,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
 		UploadedFile item = event.getFile();
-		
+		  
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
 		file.mkdirs();
@@ -321,6 +321,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		if(event.getComponent().getId().equalsIgnoreCase("uploadAgency1")){
+			getManagedBean().getContractVer().getAgencyAttachements().add(attachment);
+		}else if(event.getComponent().getId().equalsIgnoreCase("uploadItemId")){
+			getManagedBean().getContractVer().getItemAttachments().add(attachment);
+		}else if(event.getComponent().getId().equalsIgnoreCase("uploadDeductId")){
+			getManagedBean().getContractVer().getDeductionAttachments().add(attachment);
+		}else if(event.getComponent().getId().equalsIgnoreCase("uploadScheduleId")){
+			getManagedBean().getContractVer().getScheduleAttachments().add(attachment);
+		}else
 		this.getManagedBean().getAttachmentList().add(attachment);
 	}
 	
@@ -383,6 +392,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void deleteAttachmentAction(int index) {
 		this.getManagedBean().getAttachmentList().remove(index);
+	}
+	
+	public void deleteAgncyAttachmentAction(int index) {
+		this.getManagedBean().getContractVer().getAgencyAttachements().remove(index);
+	}
+	
+	public void deleteItemAttachmentAction(int index) {
+		this.getManagedBean().getContractVer().getItemAttachments().remove(index);
+	}
+	
+	public void deleteDeductAttachmentAction(int index) {
+		this.getManagedBean().getContractVer().getDeductionAttachments().remove(index);
+	}
+	
+	public void deleteScheduleAttachmentAction(int index){
+		this.getManagedBean().getContractVer().getScheduleAttachments().remove(index);
 	}
 	
 	/**
@@ -1090,10 +1115,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		// getManagedBean().setSelectedDeduction(null);
 		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
 			    int count = 0;
+			    String parameterCode;
 		         for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
 					    if(deId.getDeductionType().getParameterId() != null && parameteId.intValue() == deId.getDeductionType().getParameterId().intValue()){
 						    count++;
-						    if(!getParameterCode(deId.getDeductionType()).equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) && count == 2)
+						    parameterCode =  getParameterCode(deId.getDeductionType());
+						    if(!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) &&
+						    		!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && count == 2)
 							     throw new EpException(MessageConst.ERROR_100046,
 							    		 new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(parameteId))});
 				         }
