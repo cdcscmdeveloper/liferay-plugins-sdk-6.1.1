@@ -1422,15 +1422,17 @@ public class EvaluationBackingBean extends
 	 * 
 	 * 
 	 */
-	public void retriveComplianceFinancial() {
+	public void retriveComplianceFinancial(boolean value) {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
 
 		try {
-			if (this.getManagedBean().getScQt().isSampleReq()) {
+			if (this.getManagedBean().getScQt().isSampleReq() && value) {
 				this.getManagedBean().setComplianceActiveIndex(2);
 			} else {
+				if(value){
 				this.getManagedBean().setComplianceActiveIndex(1);
+				}
 			}
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -5347,7 +5349,7 @@ public class EvaluationBackingBean extends
 		List<ScQtCheckList> financialcheckList = this.getManagedBean()
 				.getCompliancefinancialCheckList();
 		if (null == financialcheckList || financialcheckList.isEmpty()) {
-			retriveComplianceFinancial();
+			retriveComplianceFinancial(false);
 			if (null != this.getManagedBean().getCompliancefinancialCheckList()
 					&& !this.getManagedBean().getCompliancefinancialCheckList()
 							.isEmpty()) {
