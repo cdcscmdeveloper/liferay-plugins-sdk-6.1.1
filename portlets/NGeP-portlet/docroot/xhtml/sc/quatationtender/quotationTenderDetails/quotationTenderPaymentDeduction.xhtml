@@ -72,6 +72,9 @@
 			</p:column>
 
 		</p:dataTable>
+		<c:if test="#{isDeductionPaymentReadOnly}">
+			<br />
+		</c:if>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 				process="@this, deductPaymentTblId" partialSubmit="true"
