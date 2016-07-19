@@ -68,7 +68,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 			.getLogger(SPDetailManagedBean.class);
 
 	private ScQt qt;
-	private boolean closed;
+	private boolean closed = true;
 	private ScQtProposal qtProposal;
 	private ScQtProposalChecklist qtProposalChecklist;
 	private String message;
