@@ -30,7 +30,7 @@
 						<td width="10%"><p:outputLabel style="font-weight: bold;"
 								value="#{lbl['lbl.cm.doc.type']}:"></p:outputLabel></td>
 						<td><h:outputText
-								value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docType}" /></td>
+								value="#{codificationBackingBean.getParameterDesc('DT', codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docType)}" /></td>
 					</tr>
 					<tr>
 
@@ -42,7 +42,7 @@
 						<td />
 						<td />
 					</tr>
-						<tr>
+					<tr>
 						<td width="10%"><p:outputLabel style="font-weight: bold;"
 								value=" #{lbl['lbl.pm.settings.ministry']}:"></p:outputLabel></td>
 						<td><h:outputText style="white-space: normal!important;"
@@ -64,7 +64,10 @@
 						<td width="10%"><p:outputLabel style="font-weight: bold;"
 								value="#{lbl['lbl.cm.doc.createdDate']}:"></p:outputLabel></td>
 						<td><h:outputText
-								value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.createdDate}" /></td>
+								value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.createdDate}">
+								<f:convertDateTime
+									pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							</h:outputText></td>
 
 						<td width="10%"><p:outputLabel style="font-weight: bold;"
 								value="#{lbl['lbl.cm.doc.status']}:"></p:outputLabel></td>
@@ -75,7 +78,8 @@
 			</p:panel>
 
 			<p:panel header="#{lbl['lbl.cm.list.of.items']}" toggleable="true">
-				<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				<p:dataTable
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{codificationBackingBean.managedBean.selectedVPendingRequestItemList}"
 					var="requestItem" binding="#{table}" id="contractedTableId">
 					<p:column width="3%">
