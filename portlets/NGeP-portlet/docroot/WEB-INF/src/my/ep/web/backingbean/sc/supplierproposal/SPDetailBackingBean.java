@@ -234,6 +234,7 @@ public class SPDetailBackingBean extends
 					getManagedBean().setClosed(true);
 					getManagedBean().setClosingTime("0");
 				} else {
+					getManagedBean().setClosed(false);
 					Date today = new Date();
 					long days = DateUtils.getDaysDifference(today,
 							getManagedBean().getQt().getClosingDate());
