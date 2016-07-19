@@ -6332,25 +6332,29 @@ public class SmApplicationUtil {
 	public static List<SelectItem> getAcademicQualifications(
 			SmApplicationManagedBean managedBean) {
 		List<SelectItem> academics = new ArrayList<SelectItem>();
-		/*List<PmEduLevel> eduLvls = new ArrayList<PmEduLevel>();
-		EducationLevelReqDTO reqDTO = new EducationLevelReqDTO();
-		IEducationLevelSO reqSO = (IEducationLevelSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", IEducationLevelSO.class);
-		EducationLevelResDTO resDTO = reqSO.retrieveEducationLevelList(reqDTO);*/
-		
+		/*
+		 * List<PmEduLevel> eduLvls = new ArrayList<PmEduLevel>();
+		 * EducationLevelReqDTO reqDTO = new EducationLevelReqDTO();
+		 * IEducationLevelSO reqSO = (IEducationLevelSO) BusinessDelegate
+		 * .getInstance().getServiceObject("pm", IEducationLevelSO.class);
+		 * EducationLevelResDTO resDTO =
+		 * reqSO.retrieveEducationLevelList(reqDTO);
+		 */
+
 		List<PmParameterDesc> eduLvls = new ArrayList<PmParameterDesc>();
-//		if (resDTO != null && resDTO.getEduLevelList() != null) {
-			eduLvls = ParameterHelper.getInstance().getParameterDescList(ParameterTypeConst.QUALIFICATION_LEVEL);
-			// sort
-			/*Collections.sort(eduLvls, new Comparator<PmParameter>() {
-				@Override
-				public int compare(final PmParameter s1, final PmParameter s2) {
-					return StringUtil.upperCase(s2.getParameterCode()).compareTo(
-							StringUtil.upperCase(s1.getParameterCode()));
-				}
-			});*/
-			managedBean.setEduLevelList(eduLvls);
-//		}
+		// if (resDTO != null && resDTO.getEduLevelList() != null) {
+		eduLvls = ParameterHelper.getInstance().getParameterDescList(
+				ParameterTypeConst.QUALIFICATION_LEVEL);
+		// sort
+		/*
+		 * Collections.sort(eduLvls, new Comparator<PmParameter>() {
+		 * 
+		 * @Override public int compare(final PmParameter s1, final PmParameter
+		 * s2) { return StringUtil.upperCase(s2.getParameterCode()).compareTo(
+		 * StringUtil.upperCase(s1.getParameterCode())); } });
+		 */
+		managedBean.setEduLevelList(eduLvls);
+		// }
 
 		academics.add(new SelectItem(null, SmCommonUtil.getMessage(
 				"lbl.txt.select", null)));
@@ -7713,7 +7717,9 @@ public class SmApplicationUtil {
 	public static void validateBranchGstInformation(boolean valid,
 			int currentTab, SmApplicationManagedBean bean) {
 		SmSupplierBranch br = bean.getSelectedBranch();
-		if (bean.getCompanyBasicGst() != null) {
+		if (bean.getCompanyBasicGst() != null
+				&& !StringUtils
+						.isBlank(bean.getCompanyBasicGst().getGstRegNo())) {
 			if (br.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 					&& (br.getGst() == null || StringUtils.isBlank(br.getGst()
 							.getGstRegNo()))) {
