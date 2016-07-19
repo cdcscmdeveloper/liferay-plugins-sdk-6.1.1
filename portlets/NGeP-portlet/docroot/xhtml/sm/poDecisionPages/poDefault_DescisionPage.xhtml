@@ -322,19 +322,19 @@
 		height="400px" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
 		
-		<p:outputPanel layout="block" id="poRejectBlockPanel">
+		<p:outputPanel layout="block" id="rejectBlockPanel">
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					onclick="poRejectBlockWidget.show()" oncomplete="poRejectBlockWidget.hide()"
+					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
 					update="@([id$=Msg])" partialSubmit="true" process="rejectDialogId"
 					action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectDialog','REJECT')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					action="#{backingBean.cancelFinalApproveOrReject('rejectDialog')}"
 					partialSubmit="true" process="@this" />
 			</div>
-			<p:blockUI block="poRejectBlockPanel" widgetVar="poRejectBlockWidget">
+			<p:blockUI block="rejectBlockPanel" widgetVar="rejectBlockPanelWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
 		</p:outputPanel>
