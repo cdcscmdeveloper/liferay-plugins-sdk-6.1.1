@@ -207,6 +207,13 @@
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem.itemName}"
 						size="106" /></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.item.name.after.codified']}" /></td>
+				<td colspan="3"><p:inputText disabled="true" style="width: 835px;"
+						value="#{purchaseInDefaultBackingBean.getText(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem.cmItem.itemName)}"
+						size="106" /></td>
+			</tr>
 			
 			<tr>
 				<td><p:outputLabel
