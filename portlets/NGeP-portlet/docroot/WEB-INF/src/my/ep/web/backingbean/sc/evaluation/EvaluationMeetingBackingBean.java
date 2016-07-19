@@ -364,6 +364,7 @@ public class EvaluationMeetingBackingBean extends
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection("E");
 		this.getManagedBean().setCommitteMember(committeeMember);
+		this.getManagedBean().setNameRequired(true);
 		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 		getSelectionTypes();
 		searchExistingUser.resetData();
@@ -1809,6 +1810,8 @@ public class EvaluationMeetingBackingBean extends
 	 * Close listener.close popup
 	 */
 	public void closeListener() {
+		
+		this.getManagedBean().setNameRequired(false);
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 

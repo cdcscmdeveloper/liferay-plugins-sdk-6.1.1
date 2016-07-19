@@ -407,7 +407,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		debugLogger("addCommitteMember");
 
 		resetUserAction();
-		
+		this.getManagedBean().setNameRequired(true);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection(SelectionType.Existing.value());
@@ -514,6 +514,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		userSearchBean.setIdentificationType(null);
 		
 		getManagedBean().setSelectedPmUsers(null);	
+		getManagedBean().setNameRequired(false);
 		getManagedBean().getUserSearchDataModel().resetData();		
 	}	
 	
