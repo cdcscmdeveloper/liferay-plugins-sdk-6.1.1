@@ -822,6 +822,7 @@ public class DirectLOABackingBean extends
 		scQtDeduction.setDeductionType(new PmParameter());
 		setUserDetails(scQtDeduction);
 		scQtDeductions.add(scQtDeduction);
+		getManagedBean().setSelectedScQtDeduction(null);
 	}
 
 	/**
@@ -3623,13 +3624,11 @@ public class DirectLOABackingBean extends
 
 		if (scLoaReports == null) {
 			scLoaReports = new ArrayList<ScLoaReport>();
-
 			scLoa.setScLoaReports(scLoaReports);
 		}
 
 		ScLoaReport scLoaReport = new ScLoaReport();
 		scLoaReport.setScLoa(scLoa);
-		scLoaReport.setScLoaReportAttachment(new ScLoaReportAttachment());
 
 		IParameterSO parameterSO = null;
 		try {
