@@ -56,12 +56,13 @@
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.fl.exp.del.date']}" />
 				<p:spacer width="2"/>
-				<p:calendar mode="popup" readonlyInput="true"
+				<p:calendar mode="popup" readonlyInput="true" id="expDelDate"
 						showOn="button" size="10"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						maxdate="#{createDOBackingBean.getCurrentDate()}"
 						disabled="#{createDOBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						value="#{doDelAddress.flTempDoAddr.estDeliveryDate}">
+						<p:ajax event="dateSelect" process="@this" update="@this" />
 					</p:calendar><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.exp.del.date']}"/>
 			</p:column>
 			<p:column style="white-space:normal;" headerText="#{lbl['lbl.fl.del.delivery.ord.no']}">
@@ -72,7 +73,8 @@
 					value="#{doDelAddress.flTempDoAddr.supplierDoRef}"
 					style="text-align:left" 
 					disabled="#{doDelAddress.suppDelOrdNoEnabled eq 'false'}"
-					onkeypress="if (event.keyCode == 13) { orderNo.jq.click(); return false; }" widgetVar="orderNo"></p:inputText>
+					onkeypress="if (event.keyCode == 13) { orderNo.jq.click(); return false; }" widgetVar="orderNo">
+					<p:ajax update="@this"/> </p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.order.no']}"/>
 				<p:commandLink oncomplete="addRemarks.show();"
 					action="#{fulfilmentBackingBean.openAttachmentPage(doDelAddress)}"
