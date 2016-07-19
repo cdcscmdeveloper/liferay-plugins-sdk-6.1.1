@@ -74,7 +74,7 @@
 					process="@this, deductTbl"
 					action="#{directLOABackingBean.addDeductionPaymentAction}"
 					oncomplete="deductTblWidget.paginator.endLink.click();"
-					update="deductTbl" />
+					update="deductTbl,deductionPayId" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				disabled="#{directLOABackingBean.managedBean.readOnly or null eq directLOABackingBean.managedBean.selectedScQtDeduction}"
 					process="@this, deductTbl"
