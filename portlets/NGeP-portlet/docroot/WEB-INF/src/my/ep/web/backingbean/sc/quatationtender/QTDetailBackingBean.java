@@ -276,7 +276,6 @@ public class QTDetailBackingBean extends
 							retrieveMinistryOrgProfile(ptjOrgProfile
 									.getOrgProfileId()));
 				}
-				getManagedBean().setDeskOfficer(true);
 
 			} else if (new FacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL
 					.value())) {
@@ -611,12 +610,12 @@ public class QTDetailBackingBean extends
 	 *            the sc qt
 	 * @return maintanacepage
 	 */
-	public String editQuationTenderDetails(ScQt scQt, boolean viewQT) {
+	public String editQuationTenderDetails(ScQt scQt, boolean editable) {
 		
 		debugLogger("start editQuationTenderDetails");
 		renewQTSesionObject();
 		debugLogger("editQuationTenderDetails, @Managedbean = "+ this.getManagedBean());
-		this.getManagedBean().setDeskOfficer(viewQT);
+		this.getManagedBean().setReadOnly(!editable);
 		this.getManagedBean().setMaintanceFlow(true);
 		IQTDetailSO detailSO;
 		String REDIRECT_PAGE = QTConstants.MAINTANANCE_PAGE;
@@ -658,8 +657,6 @@ public class QTDetailBackingBean extends
 
 			if ( QTStatusConst.QT_CANCELLED.equals(currentStatus) && null == selectedScQt
 							.getQtType()) {
-				this.getManagedBean().setEditable(
-						getEnableFlagByStatus(currentStatus, null, null));
 				ScQtCommittee committee = getQtCommiteDtlsByQtIdNType("BO",
 						selectedScQt.getQtId());
 				List<ScQtCommittee> qtCommittee = new ArrayList<ScQtCommittee>();
@@ -715,13 +712,8 @@ public class QTDetailBackingBean extends
 				getManagedBean().getQt().setProcurementTypeCatId(
 						new PmParameter());
 			}
-			if (!viewQT) {
-				this.getManagedBean().setAuditorRoleView(true);
-				this.getManagedBean().setEditable(true);
-			}
 
 			setScQtTrackingDairyObject(scQt);
-			this.getManagedBean().setViewQtDetails(viewQT);
 			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean()
 					.getCurrentStatusId())) {
 				this.getManagedBean().setCreateQt(true);
@@ -1779,7 +1771,7 @@ public class QTDetailBackingBean extends
 					initializeRemarksForCommitteeApproval();
 				}
 				
-				this.getManagedBean().setDeskOfficer(true);
+				this.getManagedBean().setReadOnly(false);
 				this.getManagedBean().setCommitteeAppointment(true);
 				this.getManagedBean().setCommitteeAppointmentRemark(isCommitteeAppointmentRemark);
 				this.getManagedBean().setActiveIndex(2);
@@ -3444,8 +3436,7 @@ public class QTDetailBackingBean extends
 		boolean isMaintFlow = this.getManagedBean().isMaintanceFlow();
 		String zonelocationLevel = this.getManagedBean().getStateCodes();
 		String locationLevel = this.getManagedBean().getLocalLevelCode();
-        boolean isDeskOfficer = this.getManagedBean().isDeskOfficer();
-        boolean isViewQtDetails = this.getManagedBean().isViewQtDetails();
+        boolean readOnly = this.getManagedBean().isReadOnly();
 		boolean isCommitteeAppointment = this.getManagedBean().isCommitteeAppointment();
 		boolean isCommitteeAppointmentRemark = this.getManagedBean().isCommitteeAppointmentRemark();
 
@@ -3604,8 +3595,7 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setPayLoad(payLoad);
 		this.getManagedBean().setCreateQt(isCreateQt);
 		this.getManagedBean().setMaintanceFlow(isMaintFlow);
-		this.getManagedBean().setDeskOfficer(isDeskOfficer);
-		this.getManagedBean().setViewQtDetails(isViewQtDetails);
+		this.getManagedBean().setReadOnly(readOnly);
 		if (isCreateQt) {
 			this.getManagedBean().setOutComes(
 					new String[] { ResourceBundleUtils.getMessage(
@@ -4404,7 +4394,7 @@ public class QTDetailBackingBean extends
 								.getParameterCode()) || (ParameterConst.APPROVAL_CATEGORY_PTJ
 						.equalsIgnoreCase(approval.getApprovalCategory()
 								.getParameterCode())))) {
-			return (!this.getManagedBean().isDeskOfficer());
+			return (this.getManagedBean().isReadOnly());
 		}
 		List<ScQtApprovalRequest> approvalRequests = approval
 				.getScQtApprovalDtls();
@@ -4415,7 +4405,7 @@ public class QTDetailBackingBean extends
 						|| (null != approvalRequest.getApproverAction() && "V"
 								.equalsIgnoreCase(approvalRequest
 										.getApproverAction().getParameterCode()))) {
-					return (!this.getManagedBean().isDeskOfficer());
+					return (this.getManagedBean().isReadOnly());
 				}
 			}
 		}
