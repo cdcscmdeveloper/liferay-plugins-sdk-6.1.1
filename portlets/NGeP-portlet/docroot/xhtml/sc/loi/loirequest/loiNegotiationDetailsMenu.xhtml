@@ -146,7 +146,7 @@
 
 			</p:column>
 
-			<p:column style="width:45%" rendered="#{isPendingNegotiation}">
+			<p:column style="width:45%" rendered="#{isPendingNegotiation or isCompleted}">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory"
 						rendered="#{isEditableStatus and !afterNegotiation}" />
