@@ -916,6 +916,7 @@ public class LOADetailBackingBean extends
 		scQtDeduction.setDeductionType(new PmParameter());
 
 		scQtDeductions.add(scQtDeduction);
+		getManagedBean().setSelectedScQtDeduction(null);
 	}
 
 	/**
@@ -992,7 +993,6 @@ public class LOADetailBackingBean extends
 
 		ScLoaReport scLoaReport = new ScLoaReport();
 		scLoaReport.setScLoa(scLoa);
-		scLoaReport.setScLoaReportAttachment(new ScLoaReportAttachment());
 
 		IParameterSO parameterSO = null;
 		try {
