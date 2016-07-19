@@ -52,7 +52,8 @@
 			
 			   <p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{lOADetailBackingBean.saveAction}"
-					rendered="#{isEditableStatus}" process="@form" update="@form"
+					rendered="#{(isPendingApprovalStatus or isPendingRevApprovalStatus or isPendingRevisionStatus) and !isTrackingDairyView}"
+				    process="@form" update="@form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					
 				<ui:decorate
