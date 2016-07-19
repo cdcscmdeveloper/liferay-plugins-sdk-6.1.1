@@ -2024,8 +2024,9 @@ public class SmApplicationBackingBean extends
 			finReqDto.setApplId(getManagedBean().getSmAppl().getApplId());
 			log.info("********* Final Block Id *****" + finReqDto.getApplId());
 			log.info("***** Its a valid ************");
-			MofRegistrationResDTO resDTO = SmServiceLookup.getMofRegistrationSO()
-					.retrieveCurrentDraftApplication(finReqDto);
+			MofRegistrationResDTO resDTO = SmServiceLookup
+					.getMofRegistrationSO().retrieveCurrentDraftApplication(
+							finReqDto);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmSupplier(
 					getManagedBean().getSmAppl().getSmSupplier());
@@ -2075,7 +2076,7 @@ public class SmApplicationBackingBean extends
 							finReqDto);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 		} finally {
-			
+
 		}
 	}
 
@@ -2854,9 +2855,12 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateBranchToSmAppl() {
-		// validate branch GST
-		SmApplicationUtil.validateBranchGstInformation(true, -1,
-				getManagedBean());
+		// validate branch GST only for New Application
+		if (getManagedBean().getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			SmApplicationUtil.validateBranchGstInformation(true, -1,
+					getManagedBean());
+		}
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSmAppl()
 				.getSmSupplierBranches());
@@ -2923,9 +2927,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setBranchCompanyDistricts(new ArrayList<SelectItem>());
 		getManagedBean().setBranchCompanyCities(new ArrayList<SelectItem>());
 		getManagedBean().setSelectedBranch(br);
-		SmApplicationUtil.addNewBranchGst(
-				getManagedBean().getCompanyBasicGst(), getManagedBean()
-						.getSelectedBranch());
+		copyHqGstToBranch(getManagedBean().getSelectedBranch());
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("banchDialog.show()");
 	}
