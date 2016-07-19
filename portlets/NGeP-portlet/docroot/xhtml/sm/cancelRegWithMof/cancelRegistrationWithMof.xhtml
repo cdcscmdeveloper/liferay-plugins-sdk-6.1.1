@@ -52,8 +52,9 @@
 		</p:panel>
 		<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
 			dynamic="true" resizable="false" width="700px" height="200"
-			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-			<p:fileUpload allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|pdf|doc|docx)$/"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
+			onShow="singleUploadListener(uploadWV);">
+			<p:fileUpload widgetVar="uploadWV" allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|pdf|doc|docx)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, PDF, DOC files are accepted"
 				id="upload"
 				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
@@ -62,7 +63,8 @@
 				update="@form" oncomplete="excelDialog.hide();" 
 				uploadLabel="#{lbl['lbl.btn.upload']}"  
 				label="#{lbl['lbl.btn.choose']}" 
-				cancelLabel="#{lbl['lbl.btn.cancel']}" />
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				multiple="false" showButtons="false" />
 		</p:dialog>
 		<p:message id="uploadMsg" for="upload" display="icon" />
 	</ui:define>
