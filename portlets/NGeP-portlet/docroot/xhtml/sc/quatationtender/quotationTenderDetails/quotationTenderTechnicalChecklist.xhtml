@@ -6,6 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<ui:param name="isReadOnly" value="#{qTDetailBB.managedBean.readOnly}" />
 
 	<p:panel header="#{lbl['lbl.sc.technical.specification']}" style="width: 100%"
 		toggleable="true">
@@ -36,8 +38,8 @@
 				style="width:10%;text-align: center;">
 				<p:commandLink ajax="false"
 					action="#{qTDetailBB.technicalSpecEditAction(technicalSpec)}">
-					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1" rendered="#{!qTDetailBB.isAuditor()}"/>
-					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1" rendered="#{qTDetailBB.isAuditor()}"
+					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1" rendered="#{!isReadOnly}"/>
+					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1" rendered="#{isReadOnly}"
 					title="click view icon"/>
 				</p:commandLink>
 			</p:column>
