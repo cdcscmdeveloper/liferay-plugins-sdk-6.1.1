@@ -5,6 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="isDeductionPaymentReadOnly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT) or qTDetailBB.managedBean.readOnly}" />
 
 	<p:panel header="#{lbl['lbl.sc.deduction.payment']}" id="deductionPayid" toggleable="true">
 		<p:dataTable id="deductPaymentTblId" widgetVar="deductPaymentTblWidget" 
@@ -27,29 +29,43 @@
 					<h:outputText value="#{lbl['lbl.sc.deduction.type']}"/>
 					<ac:iconTooltip id="dedType#{rowIndex}" value="#{lbl['lbl.sc.deduction.type.tooltip']}" />
 				</f:facet>
-				<h:selectOneMenu id="deductionType"
-					value="#{scQtDeduction.deductionType.parameterId}" disabled="#{qTDetailBB.isAuditor()}">
-					<f:selectItems
-						value="#{qTDeductionPaymentBackingBean.getDeductionTypes()}" />
-					<p:ajax event="change" partialSubmit="true" process="@this"
-						update=":form:deductionPayid, deductionamountid"
-						oncomplete="deductPaymentTblWidget.unselectAllRows(); deductPaymentTblWidget.selectRow(#{rowIndex}, true);"
-						listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(rowIndex,scQtDeduction)}" />
-				</h:selectOneMenu>
+				<c:choose>
+					<c:when test="#{!isDeductionPaymentReadOnly}">
+						<h:selectOneMenu id="deductionType"
+							value="#{scQtDeduction.deductionType.parameterId}">
+							<f:selectItems
+								value="#{qTDeductionPaymentBackingBean.getDeductionTypes()}" />
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								update=":form:deductionPayid, deductionamountid"
+								oncomplete="deductPaymentTblWidget.unselectAllRows(); deductPaymentTblWidget.selectRow(#{rowIndex}, true);"
+								listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(rowIndex,scQtDeduction)}" />
+						</h:selectOneMenu>
+					</c:when>
+					<c:otherwise>
+						#{qTDetailBB.getParameterDesc(scQtDeduction.deductionType)}
+					</c:otherwise>
+				</c:choose>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.deduction.amount']}">
+			<p:column headerText="#{lbl['lbl.sc.deduction.amount']}" style="#{isDeductionPaymentReadOnly ? 'text-align: right;' : ''}">
 				<h:panelGroup id="deductionamountid">
-					<p:inputText id="amtid" size="30" maxlength="18" required="true"
-						label="#{lbl['lbl.sc.deduction.amount']}"
-						value="#{scQtDeduction.deductionAmount}"
-						style="margin-right:5px;text-align:right;"
-						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}" disabled="#{qTDetailBB.isAuditor()}">
-						<ac:validateNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
-							maxIntegerDigits="14"></ac:validateNumber>
-					</p:inputText>
-					<p:message id="amtidMsg" for="amtid" display="icon" />
+					<c:choose>
+						<c:when test="#{!isDeductionPaymentReadOnly}">
+							<p:inputText id="amtid" size="30" maxlength="18" required="true"
+								label="#{lbl['lbl.sc.deduction.amount']}"
+								value="#{scQtDeduction.deductionAmount}"
+								style="margin-right:5px;text-align:right;"
+								rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}" disabled="#{isDeductionPaymentReadOnly}">
+								<ac:validateNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+									maxIntegerDigits="14"></ac:validateNumber>
+							</p:inputText>
+							<p:message id="amtidMsg" for="amtid" display="icon" />
+						</c:when>
+						<c:otherwise>
+							#{scQtDeduction.deductionAmount}
+						</c:otherwise>
+					</c:choose>
 				</h:panelGroup>
 			</p:column>
 
@@ -57,13 +73,13 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
 				process="@this, deductPaymentTblId" partialSubmit="true"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
+				rendered="#{!isDeductionPaymentReadOnly}"
 				action="#{qTDeductionPaymentBackingBean.addDeductionPaymentAction}"
 				oncomplete="deductPaymentTblWidget.paginator.endLink.click();"
 				update="deductPaymentTblId" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 			disabled="#{empty qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction}"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
+				rendered="#{!isDeductionPaymentReadOnly}"
 				process="@this, deductPaymentTblId" partialSubmit="true"
 				oncomplete="deductionPayDeletePopUp.show();"
 				update="@([id$=#{deductionPayDeleteId}])"/>
@@ -86,7 +102,7 @@
 				
 				<ac:paginator for="deductClauseTbl" />
 				
-				<p:column style="width:2%" disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}">
+				<p:column style="width:2%" rendered="#{!isDeductionPaymentReadOnly}">
 					<f:facet name="header">
 						<p:selectBooleanCheckbox id="selectAllDeductionClauseId"
 							value="#{qTDeductionPaymentBackingBean.flag}">
@@ -104,27 +120,34 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.deduction.clause']}" />
 					</f:facet>
-						<p:inputTextarea id="otherClause" value="#{scQtDeductionClause.clauseDesc}"
-							label="#{lbl['lbl.sc.deduction.clause']}" required="true"
-							onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
-							cols="140" rows="2" maxlength="500" style=" margin-bottom:5px;width :95%;" >
-							<p:ajax event="keyup" />
-						</p:inputTextarea>
-						<p:message id="otherClauseMsg" for="otherClause" display="icon" />
+					<c:choose>
+						<c:when test="#{!isDeductionPaymentReadOnly}">
+							<p:inputTextarea id="otherClause" value="#{scQtDeductionClause.clauseDesc}"
+								label="#{lbl['lbl.sc.deduction.clause']}" required="true"
+								onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
+								cols="140" rows="2" maxlength="500" style=" margin-bottom:5px;width :95%;" >
+								<p:ajax event="keyup" />
+							</p:inputTextarea>
+							<p:message id="otherClauseMsg" for="otherClause" display="icon" />
+						</c:when>
+						<c:otherwise>
+							#{scQtDeductionClause.clauseDesc}
+						</c:otherwise>
+					</c:choose>
 				</p:column>
 			</p:dataTable>
 			<div class="ppRightBtn">
 				<h:panelGroup
 					rendered="#{!empty qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
-						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
+						rendered="#{!isDeductionPaymentReadOnly}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						action="#{qTDeductionPaymentBackingBean.addDeductionClauseAction}"
 						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
 						update="deductClauseTbl" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 					disabled="#{qTDetailBB.deleteselectedList(qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses)}"
-						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
+						rendered="#{!isDeductionPaymentReadOnly}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						oncomplete="deductionClauseDeletePopUp.show();"
 						update="@([id$=#{deductionClauseDeleteId}])" />
