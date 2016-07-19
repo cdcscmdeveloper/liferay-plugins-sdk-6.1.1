@@ -19,7 +19,7 @@
 
 			<ac:paginator for="doctbl" />
 			
-			<p:column style="width:2%">
+			<p:column style="width:2%" rendered="#{isRendered}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{qTDocumentsBackingBean.selectAll}" disabled="true">
 						<p:ajax partialSubmit="true" process="@this" update="doctbl" listener="#{qTDocumentsBackingBean.selectAll(qTDocumentsBackingBean.selectAll, qTDocumentsBackingBean.managedBean.scQtDocReportList)}"/>
