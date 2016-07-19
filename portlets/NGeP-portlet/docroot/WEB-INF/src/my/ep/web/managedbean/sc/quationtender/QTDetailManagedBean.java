@@ -363,9 +363,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The upload update id. */
 	private String uploadUpdateId;
 
-	/** The is editable. */
-	private boolean isEditable;
-
 	/** The panel suppliers. */
 	private List<SmSupplier> panelSuppliers;
 
@@ -857,16 +854,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isCommitteeAppointment;
 	private boolean isCommitteeAppointmentRemark;
 
-	private boolean deskOfficer;
-
-	private boolean auditorRoleView;
-
 	private PmOrgProfile ptjProfile;
 
 	private PmOrgProfile ministryProfile;
 
 	private Object[] scTdObj;
-	private boolean viewQtDetails;
 
 	
 	private boolean createQt;
@@ -3875,25 +3867,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedCloneAllList(List<CloneAll> selectedCloneAllList) {
 		this.selectedCloneAllList = selectedCloneAllList;
-	}
-
-	/**
-	 * Checks if is editable.
-	 * 
-	 * @return true, if is editable
-	 */
-	public boolean isEditable() {
-		return isEditable;
-	}
-
-	/**
-	 * Sets the editable.
-	 * 
-	 * @param isEditable
-	 *            the new editable
-	 */
-	public void setEditable(boolean isEditable) {
-		this.isEditable = isEditable;
 	}
 
 	/**
@@ -7006,36 +6979,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the deskOfficer
-	 */
-	public boolean isDeskOfficer() {
-		return deskOfficer;
-	}
-
-	/**
-	 * @param deskOfficer
-	 *            the deskOfficer to set
-	 */
-	public void setDeskOfficer(boolean deskOfficer) {
-		this.deskOfficer = deskOfficer;
-	}
-
-	/**
-	 * @return the auditorRoleView
-	 */
-	public boolean isAuditorRoleView() {
-		return auditorRoleView;
-	}
-
-	/**
-	 * @param auditorRoleView
-	 *            the auditorRoleView to set
-	 */
-	public void setAuditorRoleView(boolean auditorRoleView) {
-		this.auditorRoleView = auditorRoleView;
-	}
-
-	/**
 	 * @return the ptjProfile
 	 */
 	public PmOrgProfile getPtjProfile() {
@@ -7078,21 +7021,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScTdObj(Object[] scTdObj) {
 		this.scTdObj = scTdObj;
-	}
-
-	/**
-	 * @return the viewQtDetails
-	 */
-	public boolean isViewQtDetails() {
-		return viewQtDetails;
-	}
-
-	/**
-	 * @param viewQtDetails
-	 *            the viewQtDetails to set
-	 */
-	public void setViewQtDetails(boolean viewQtDetails) {
-		this.viewQtDetails = viewQtDetails;
 	}
 
 	/**

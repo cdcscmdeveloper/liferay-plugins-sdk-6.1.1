@@ -14,7 +14,7 @@
 			<h:outputLabel value="#{lbl['lbl.sc.qt.optverification']}"></h:outputLabel>
 
 			<p:selectOneRadio
-				value="#{approvalCategory.scQtApproval.verifyOption}" disabled="#{!qTDetailBB.managedBean.editable}">
+				value="#{approvalCategory.scQtApproval.verifyOption}" disabled="#{!qTDetailBB.managedBean.readOnly}">
 				<f:selectItem itemLabel="Online" itemValue="O" />
 				<f:selectItem itemLabel="Offline" itemValue="F" />
 				<p:ajax event="change"
@@ -41,7 +41,7 @@
 
 			<p:calendar
 				value="#{approvalCategory.scQtApproval.verifierActionDate}"
-				showOn="button" disabled="#{!qTDetailBB.managedBean.editable}"></p:calendar>
+				showOn="button" disabled="#{!qTDetailBB.managedBean.readOnly}"></p:calendar>
 
 
 
@@ -62,7 +62,7 @@
 			<h:outputLabel value="#{lbl['lbl.sc.remarks']}" style="vertical-align:top;"></h:outputLabel>
 
 			<p:inputTextarea rows="3" cols="50" autoResize="false"
-				value="#{approvalCategory.scQtApproval.verifierRemark}" disabled="#{!qTDetailBB.managedBean.editable}"></p:inputTextarea>
+				value="#{approvalCategory.scQtApproval.verifierRemark}" disabled="#{!qTDetailBB.managedBean.readOnly}"></p:inputTextarea>
 
 
 		</h:panelGrid>
