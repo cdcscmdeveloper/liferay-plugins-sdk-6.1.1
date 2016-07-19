@@ -49,6 +49,12 @@
 
 			<c:if test="#{!empty lOADetailBackingBean.managedBean.taskId}">
 			<ui:param name="readOnlyTask" value="#{lOADetailBackingBean.managedBean.readOnly}" />
+			
+			   <p:commandButton value="#{lbl['lbl.btn.save']}"
+					action="#{lOADetailBackingBean.saveAction}"
+					rendered="#{isEditableStatus}" process="@form" update="@form"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					
 				<ui:decorate
 					template="/WEB-INF/facelets/templates/claim_template.xhtml">
 					<ui:define name="outComeSection">
