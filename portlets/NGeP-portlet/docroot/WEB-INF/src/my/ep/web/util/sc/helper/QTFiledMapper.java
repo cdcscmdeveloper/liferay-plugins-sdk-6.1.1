@@ -28,11 +28,11 @@ public class QTFiledMapper {
 	 * @return List<String> fieldNames
 	 */
 	public static List<String> getEnableFieldsByStatus(Long statusId,
-			boolean isMaintanceFlow, boolean isDeskOfficer) {
+			boolean isMaintanceFlow, boolean isEditable) {
 		List<String> updatedFiledsList = null;
 		String[] fileds = null;
 		if (isMaintanceFlow) {
-			if (isDeskOfficer) {
+			if (isEditable) {
 				fileds = QTMaintanaceEnableFields.getValuesByStatusId(statusId);
 			}
 		} else {
