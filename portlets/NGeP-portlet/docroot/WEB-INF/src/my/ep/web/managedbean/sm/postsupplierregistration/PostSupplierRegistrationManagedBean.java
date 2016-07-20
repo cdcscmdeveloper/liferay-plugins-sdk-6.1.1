@@ -27,6 +27,7 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	private int flowStatus;
 	private SmAppl smAppl;
 	private String mofExpDateMsg;
+	private boolean rejectedApplExist;
 	
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -90,6 +91,14 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 
 	public void setMofExpDateMsg(String mofExpDateMsg) {
 		this.mofExpDateMsg = mofExpDateMsg;
+	}
+
+	public boolean isRejectedApplExist() {
+		return rejectedApplExist;
+	}
+
+	public void setRejectedApplExist(boolean rejectedApplExist) {
+		this.rejectedApplExist = rejectedApplExist;
 	}
 
 }
