@@ -25,6 +25,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.states.IListOfStatesSO;
 import my.ep.constant.MessageConst;
@@ -38,6 +39,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -188,17 +190,18 @@ public class DistrictBackingBean extends BaseBackingBean<DistrictManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmDivision.divisionName",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							districtSearchBean.getDivisionName().toUpperCase(),
+							districtSearchBean.getDivisionName().toLowerCase(),
 							true));
-			
 		}
+		
+	
 
 		if (StringUtils.isNotBlank(districtSearchBean.getDistrictName())) {
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("districtName",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							districtSearchBean.getDistrictName().toUpperCase(),
+							districtSearchBean.getDistrictName().toLowerCase(),
 							true));
 		}
 		
@@ -207,11 +210,6 @@ public class DistrictBackingBean extends BaseBackingBean<DistrictManagedBean> {
 						SearchOperator.OPERATOR_EQUALS.value(),
 						CommonConstants.DEFAULT_COUNTRY_CODE,
 						true));			
-		
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmDivision.recordStatusFlg",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						DbValueConst.RECORD_STATUS_ACTIVE));
 		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("recordStatusFlg",

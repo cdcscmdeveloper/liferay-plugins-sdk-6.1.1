@@ -166,6 +166,8 @@ public class CityBackingBean extends BaseBackingBean<CityManagedBean> {
 							SearchOperator.OPERATOR_EQUALS.value(),
 							citySearchBean.getStateCode(),
 							true));
+			
+			
 		}
 
 		if (StringUtils.isNotBlank(citySearchBean.getDivisionName())) {
@@ -195,7 +197,7 @@ public class CityBackingBean extends BaseBackingBean<CityManagedBean> {
 		}
 		
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmDistrict.pmDivision.pmState.pmCountry.countryCode",
+				new SearchFilterBean("pmDistrict.pmState.pmCountry.countryCode",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						CommonConstants.DEFAULT_COUNTRY_CODE,
 						true));			
@@ -205,10 +207,7 @@ public class CityBackingBean extends BaseBackingBean<CityManagedBean> {
 						SearchOperator.OPERATOR_EQUALS.value(),
 						DbValueConst.RECORD_STATUS_ACTIVE));
 		
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmDistrict.pmDivision.recordStatusFlg",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						DbValueConst.RECORD_STATUS_ACTIVE));
+		
 		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("recordStatusFlg",
