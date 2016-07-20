@@ -3442,7 +3442,7 @@ public class LOADetailBackingBean extends
 			totalFrequency = scheduleList.size();
 			for (ScQtSchedule schedule : scheduleList) {
 				try {
-					if(schedule.getFromDate() == null && StringUtils.isNotBlank(schedule.getStartMonth()) 
+					if(StringUtils.isNotBlank(schedule.getStartMonth()) 
 							&& StringUtils.isNotBlank(schedule.getStartYear())){
 						String localDate = df.format(currentDate);
 						String day = localDate.substring(0, 2);
@@ -3450,7 +3450,7 @@ public class LOADetailBackingBean extends
 								+ schedule.getStartYear();
 						schedule.setFromDate(df.parse(fromdate));
 					} 
-					if(schedule.getToDate() == null && StringUtils.isNotBlank(schedule.getEndMonth()) && 
+					if(StringUtils.isNotBlank(schedule.getEndMonth()) && 
 							StringUtils.isNotBlank(schedule.getEndYear())){
 						String localDate = df.format(currentDate);
 						String day = localDate.substring(0, 2);
