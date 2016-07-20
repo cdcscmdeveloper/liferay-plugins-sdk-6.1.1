@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.postsupplierregistration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -85,7 +86,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private static final String MOF_SOFTCERT_REQUEST = "request-soft-cert";
 	//private static final String MOF_CODIFICATION_SEARCH = "codification-search";
 	private static final String UPGRADE_TO_MOF = "upgrade-basic-to-mof";
-	private static final String VIEW_VIRTUAL_CERT = "view-virtual-certification";
+	//private static final String VIEW_VIRTUAL_CERT = "view-virtual-certification";
+	private static final String VIEW_VIRTUAL_CERT = "virtual-cert";
+	private static final String RESUBMIT_APPLICATION = "resubmit-application?apId=";
 	
 	private int softCertStatus;
 	private boolean changeRoleSection;
@@ -120,26 +123,44 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			this.getManagedBean().setBannerImage(false);
 			getManagedBean().setSmAppl(appl);
 
+			boolean isRejectedApplExist = rejectedApplExist(supplier.getSupplierId());
+			
 			//Active Appl
 			if(appl != null){
 				log.info("*****In Progress*********");			
 				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
 				//desc = this.getStatusDescById(workFlowStatus.getPmStatus().getStatusId());
 				this.getManagedBean().setStatusDesc(getStatusDescById(workFlowStatus.getPmStatus().getStatusId()));
-				showHyperlink(workFlowStatus.getPmStatus().getStatusId());
+				
+				showHyperlink(workFlowStatus.getPmStatus().getStatusId(),isRejectedApplExist);
 				path = TASK_LIST_PATH;
 
-			}else{			
+			}else{	
 				//MOF APPL
 				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(supplier.getSmAppl());
 					if(workFlowStatus != null && 
 						(workFlowStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED || 
 						workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL)){
-						path = mofSupplierFlowAfterApproval(supplier);
+						path = mofSupplierFlowAfterApproval(supplier,isRejectedApplExist);
 					}else{
-						path = MOF_REG_PATH;
-						getManagedBean().setFlowStatus(1);
+						SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
+						if(wfStatus != null){
+							if(wfStatus.getPmStatus() != null && 
+								(wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
+								wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION)){
+								getManagedBean().setFlowStatus(3);
+								
+								path = RESUBMIT_APPLICATION + wfStatus.getDocId();
+								getManagedBean().setFlowStatus(3);
+							}else{
+								path = MOF_REG_PATH;
+								getManagedBean().setFlowStatus(1);
+							}
+						}else{
+							path = MOF_REG_PATH;
+							getManagedBean().setFlowStatus(1);
+						}
 					}
 					log.info("********FLOW STATUS**********" +  getManagedBean().getFlowStatus());
 				}else if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.BASIC_ACCOUNT)){
@@ -359,13 +380,18 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 * show/ Hide the hyperlink based on statusCode
 	 * @param statusCode
 	 */
-	private void showHyperlink(Long statusCode){
+	private void showHyperlink(Long statusCode, boolean isRejected){
 		Integer sc = statusCode.intValue();
 		
 		switch(sc){
 		case 20100 : //Pending Application Declaration
 			getManagedBean().setFlowStatus(1);
 			getManagedBean().setHyperlink(true);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(3);
+				getManagedBean().setHyperlink(true);
+			}
 			break;
 
 		case 20114 : //Pending Payment (Processing fee)
@@ -376,67 +402,118 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		case 20200 : //Pending Application Inquiry
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(true);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 
 		case 20251 : //Pending Payment
 			getManagedBean().setFlowStatus(4);
 			getManagedBean().setHyperlink(true);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 			
 			
 		case 20101 : //Pending Supporting Document Verification
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 		
 		case 20102 : //Pending Application Verification
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 		
 		case 20103 : //Pending Review Site Visit Report - Before Approval
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 
 		case 20104 : //Pending Review Application
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 			
 		case 20105 : //Pending Site Visit
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 		
 		case 20106 : //Pending Re-Site Visit
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 			
 		case 20107 : //Pending Reply Inquiry by Processing Officer
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(true);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 		
 		case 20108 : //Pending Application Approval
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 			
 		case 20109 : //Pending Application Re-Approval
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 		
 		case 20110 : //Pending Site Visit Assignment - Before Approval
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 		
 		case 20111 : //Pending Site Visit Assignment - Before Approval
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
+			
+			if(isRejected){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
 			break;
 			
 		default :
@@ -721,12 +798,17 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return softCertStatus;
 	}
 	
-	private String mofSupplierFlowAfterApproval(SmSupplier supplier){
+	private String mofSupplierFlowAfterApproval(SmSupplier supplier, boolean isRejectedApplExist){
 		String path = null;
 		SmPersonnel currentPersonnel = retrieveCurrentPersonnel();
 		log.info("-------mofSupplierFlowAfterApproval supplier type-------------" + supplier.getSmAppl().getSupplierType());
 		if(!supplier.getSmAppl().isQuestionnaire()){
 			getManagedBean().setFlowStatus(5);
+			
+			if(isRejectedApplExist){
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+			}
+			
 			log.info("**********flow Status*********" + getManagedBean().getFlowStatus());
 			path =  VIEW_VIRTUAL_CERT;
 		}else{
@@ -740,15 +822,23 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							path = CATALOGUE_UPLOAD_PATH;
 						}
 						getManagedBean().setFlowStatus(6);
+						
+						if(isRejectedApplExist){
+							getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
+						}
 					}else{
 						if(checkPendingSoftCertRequest(supplier.getSupplierId())){
 							path = SOFT_CERT_PATH;
-							getManagedBean().setFlowStatus(7);
+							//getManagedBean().setFlowStatus(7);
 						}else{
 							if(softCertStatus == SupplierManagementConst.SOFT_CERT_REJECTED){
 								path = SOFT_CERT_PATH;
 							}
-							getManagedBean().setFlowStatus(7);
+							//getManagedBean().setFlowStatus(7);
+						}
+						getManagedBean().setFlowStatus(7);
+						if(isRejectedApplExist){
+							getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
 						}
 					}
 
@@ -816,6 +906,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return path;
 	}
 	
+	/**
+	 * Navigate to Dash Board
+	 * @throws IOException
+	 */
 	public void naviToDashBoard() throws IOException{
 		log.info("<<<<<< naviToDashBoard >>>>>");
 		System.out.println("<<<<<< test >>>>>");
@@ -853,7 +947,50 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return catalogueStatus;
 	}
 	
+	/**
+	 * Get G2G Business Type
+	 * @return String
+	 */
 	public String getG2GBusinessType(){
 		return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
 	}
+	
+	private boolean rejectedApplExist(Long supplierId){
+		boolean isRejectedApplExist = false;
+		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		
+		reqDTO.setStatusIds(new ArrayList<Long>());
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION);
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION);
+		reqDTO.setSupplierId(supplierId);
+		
+		SmWorkFlowStatusResDTO resDTO = workFlowStatusSO.
+				retrieveWorkFlowBySuppIdAndStatusIds(reqDTO);
+		
+		if(resDTO.getWorkFlowStatusLs().size() > 0){
+			getManagedBean().setRejectedApplExist(true);
+			isRejectedApplExist = true;
+		}else{
+			getManagedBean().setRejectedApplExist(false);
+		}
+		
+		return isRejectedApplExist;
+	}
+	
+	private SmWorkflowStatus isLatestActiveWorkFlow(Long supplierId){
+		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		SmWorkflowStatus wfStatus = null;
+		
+		reqDTO.setSupplierId(supplierId);	
+		SmWorkFlowStatusResDTO resDTO = workFlowStatusSO.retrieveAllIsCurrentBySupplierId(reqDTO);
+		
+		if(resDTO.getWorkFlowStatusLs().size() > 0){
+			wfStatus = resDTO.getWorkFlowStatusLs().get(0);
+		}
+		
+		return wfStatus;
+	}
+	
 }
