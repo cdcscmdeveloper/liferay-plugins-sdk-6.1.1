@@ -18,9 +18,9 @@
 		<p:panel header="#{lbl['lbl.gfmas.kptj.info']}" id="childKPTJPage"
 			toggleable="true">			
 			<p:dataTable id="gfMasKPTJId" var="pmInterfaceKPTJ" rows="10"
-			    rowIndexVar="index" rowKey="#{pmInterfaceKPTJ}"
+			    rowIndexVar="index" rowKey="#{pmInterfaceKPTJ}" lazy="true"
 			    selection="#{gfMasBackingBean.managedBean.selectedKptjList}"
-				value="#{gfMasBackingBean.managedBean.listOfKPTJ}">
+				value="#{gfMasBackingBean.managedBean.searchKptj}">
                
                 <p:ajax event="rowSelect" 
 					update=":form:prcessIdButton,:form:gfMasKPTJId"					
@@ -38,9 +38,10 @@
 					update=":form:prcessIdButton,:form:gfMasKPTJId"					
 					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<ac:paginator for="gfMasKPTJId"></ac:paginator>
-				
-				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfaceKPTJ.processStatus eq '1'}" />				
-				
+
+				<p:column selectionMode="multiple" style="width:5%"
+					disabledSelection="#{pmInterfaceKPTJ.processStatus eq '1' or pmInterfaceKPTJ.processStatus eq '2'}" />
+
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfaceKPTJ.diInterfaceLog.logId}" />
 				</p:column>			

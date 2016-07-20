@@ -18,10 +18,10 @@
 		<p:panel header="#{lbl['lbl.gfmas.glacnt.info']}"
 			id="childGlAcntPage" toggleable="true">
 			<p:dataTable id="gfMasGlAcntId" var="pmInterfaceGlAcnt" rows="10"
-			    rowIndexVar="index"
+			    rowIndexVar="index" lazy="true"
 				selection="#{gfMasBackingBean.managedBean.selectedGlAcntList}"
 				rowKey="#{pmInterfaceGlAcnt}"
-				value="#{gfMasBackingBean.managedBean.listOfGlAccount}">
+				value="#{gfMasBackingBean.managedBean.searchGlAccount}">
 				
 				  <p:ajax event="rowSelect" 
 					update=":form:prcessIdButton,:form:gfMasGlAcntId"					
@@ -39,8 +39,9 @@
 					update=":form:prcessIdButton,:form:gfMasGlAcntId"					
 					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<ac:paginator for="gfMasGlAcntId"></ac:paginator>
-				
-				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfaceGlAcnt.processStatus eq '1'}" />			
+
+				<p:column selectionMode="multiple" style="width:5%"
+					disabledSelection="#{pmInterfaceGlAcnt.processStatus eq '1' or pmInterfaceGlAcnt.processStatus eq '2'}" />
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfaceGlAcnt.dIInterfaceLog.logId}" />
