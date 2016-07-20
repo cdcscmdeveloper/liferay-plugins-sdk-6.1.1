@@ -644,11 +644,15 @@ public class LOADetailBackingBean extends
 		} else{
 			getManagedBean().setSupplierHQPersonnel(supplierHQPersonnel); 
 		}
-		
 		getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
-		//if (scLoa.isBrandNew()) {
+		
+		// if loi created , copy supplier branch dtl from Loi to LOA
+		if(scLoa.getScLoiLoa().getScLois() != null 
+				&& scLoa.getScLoiLoa().getScLois().size()>0){
+			scLoa.setSupplierBranch(scLoa.getScLoiLoa().getScLois().get(0).getSupplierBranch());
+			scLoa.setLoiCreated(Boolean.TRUE);
+		}
 		handleBranchDetailsChanged();
-		//}
 		
 		// Supplier Witness
 		ScLoaWitness loaSupplierWitness = null;
@@ -3885,6 +3889,7 @@ public class LOADetailBackingBean extends
 	 * @return the string
 	 */
 	public String createQtLOAAction(ScLoiLoa scLoiLoa) {
+		debugLogger("createQtLOAAction");
 		ScLoa scLoa = new ScLoa();
 		scLoa.setScLoiLoa(scLoiLoa);
 		ScLoaWorkFlowStatus currentStatus = new ScLoaWorkFlowStatus();
@@ -3893,8 +3898,6 @@ public class LOADetailBackingBean extends
 		currentStatus.setCurrent(true);
 		scLoa.setCurrentStatus(currentStatus);
 		scLoa.setPmStatus(currentStatus.getPmStatus());
-		//scLoa.setLoaNo(getQtAwardSO().generateLoaNo());
-
 		FacesContext fc = FacesContext.getCurrentInstance();
         getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 		
