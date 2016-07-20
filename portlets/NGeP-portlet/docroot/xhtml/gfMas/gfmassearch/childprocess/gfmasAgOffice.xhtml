@@ -18,10 +18,10 @@
 		<p:panel header="#{lbl['lbl.gfmas.agoffice.info']}"
 			id="childAgOfficePage" toggleable="true">
 			<p:dataTable id="gfMasAgOfficeId" var="pmInterfaceAgOffice"
-				rowIndexVar="index" rows="10"
+				rowIndexVar="index" rows="10" lazy="true"
 				selection="#{gfMasBackingBean.managedBean.selectedAgOfficeList}"
 				rowKey="#{pmInterfaceAgOffice}"
-				value="#{gfMasBackingBean.managedBean.listOfAgOffice}">
+				value="#{gfMasBackingBean.managedBean.searchAgOff}">
                
                 <p:ajax event="rowSelect" 
 					update=":form:prcessIdButton,:form:gfMasAgOfficeId"					
@@ -40,7 +40,9 @@
 					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<ac:paginator for="gfMasAgOfficeId"></ac:paginator>
 
-				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfaceAgOffice.processStatus eq '1'}"   />
+				<p:column selectionMode="multiple" style="width:5%"
+					disabledSelection="#{pmInterfaceAgOffice.processStatus eq '1' or pmInterfaceAgOffice.processStatus eq '2'}" />
+					
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfaceAgOffice.diInterfaceLog.logId}" />

@@ -18,9 +18,9 @@
 		<p:panel header="#{lbl['lbl.gfmas.pp.info']}" id="childPPPage"
 			toggleable="true">
 			<p:dataTable id="gfMasPPId" var="pmInterfacePP" rows="10"
-				rowIndexVar="index" rowKey="#{pmInterfacePP}"
+				rowIndexVar="index" rowKey="#{pmInterfacePP}" lazy="true"
 				selection="#{gfMasBackingBean.managedBean.selectedPpList}"
-				value="#{gfMasBackingBean.managedBean.listOfPP}">
+				value="#{gfMasBackingBean.managedBean.searchPp}">
                 
                 <p:ajax event="rowSelect" 
 					update=":form:prcessIdButton,:form:gfMasPPId"					
@@ -39,7 +39,8 @@
 					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<ac:paginator for="gfMasPPId"></ac:paginator>
 
-				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfacePP.processStatus eq '1'}" />
+				<p:column selectionMode="multiple" style="width:5%"
+					disabledSelection="#{pmInterfacePP.processStatus eq '1' or pmInterfacePP.processStatus eq '2'}" />
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfacePP.diInterfaceLog.logId}" />

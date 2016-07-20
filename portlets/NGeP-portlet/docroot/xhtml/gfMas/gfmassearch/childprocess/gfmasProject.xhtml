@@ -18,9 +18,9 @@
 		<p:panel header="#{lbl['lbl.gfmas.project.info']}"
 			id="childProjectPage" toggleable="true">
 			<p:dataTable id="gfMasProjectId" var="pmInterfaceProject" rows="10"
-				rowIndexVar="index" rowKey="#{pmInterfaceProject}"
+				rowIndexVar="index" rowKey="#{pmInterfaceProject}" lazy="true"
 				selection="#{gfMasBackingBean.managedBean.selectedProjectList}"
-				value="#{gfMasBackingBean.managedBean.listOfProjectt}">
+				value="#{gfMasBackingBean.managedBean.searchProject}">
                 <p:ajax event="rowSelect" 
 					update=":form:prcessIdButton,:form:gfMasProjectId"					
 					listener="#{gfMasBackingBean.rowSelectEvent}" />
@@ -38,7 +38,8 @@
 					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<ac:paginator for="gfMasProjectId"></ac:paginator>
 
-				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfaceProject.processStatus eq '1'}" />
+				<p:column selectionMode="multiple" style="width:5%"
+					disabledSelection="#{pmInterfaceProject.processStatus eq '1' or pmInterfaceProject.processStatus eq '2'}" />
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfaceProject.dIInterfaceLog.logId}" />

@@ -18,10 +18,10 @@
 		<p:panel header="#{lbl['lbl.gfmas.bank.info']}" id="childBankPage"
 			toggleable="true">
 			<p:dataTable id="gfMasBankId" var="pmInterfaceBank" rows="10"
-				rowIndexVar="index"
+				rowIndexVar="index" lazy="true"
 				selection="#{gfMasBackingBean.managedBean.selectedBankList}" 
 				rowKey="#{pmInterfaceBank}"
-				value="#{gfMasBackingBean.managedBean.listOfBank}">
+				value="#{gfMasBackingBean.managedBean.searchBank}">
               
                <p:ajax event="rowSelect" 
 					update=":form:prcessIdButton,:form:gfMasBankId"					
@@ -41,7 +41,8 @@
 			
 				<ac:paginator for="gfMasBankId"></ac:paginator>
 
-				<p:column selectionMode="multiple" style="width:5%"  disabledSelection ="#{pmInterfaceBank.processStatus eq '1'}" />
+				<p:column selectionMode="multiple" style="width:5%"
+					disabledSelection="#{pmInterfaceBank.processStatus eq '1' or pmInterfaceBank.processStatus eq '2'}" />
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfaceBank.diInterfaceLog.logId}" />
