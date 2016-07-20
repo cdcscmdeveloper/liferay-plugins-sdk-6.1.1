@@ -854,9 +854,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isCommitteeAppointment;
 	private boolean isCommitteeAppointmentRemark;
 
-	private PmOrgProfile ptjProfile;
-
 	private PmOrgProfile ministryProfile;
+	private PmOrgProfile ptjGroupProfile;
+	private PmOrgProfile ptjProfile;
 
 	private Object[] scTdObj;
 
@@ -6979,21 +6979,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the ptjProfile
-	 */
-	public PmOrgProfile getPtjProfile() {
-		return ptjProfile;
-	}
-
-	/**
-	 * @param ptjProfile
-	 *            the ptjProfile to set
-	 */
-	public void setPtjProfile(PmOrgProfile ptjProfile) {
-		this.ptjProfile = ptjProfile;
-	}
-
-	/**
 	 * @return the ministryProfile
 	 */
 	public PmOrgProfile getMinistryProfile() {
@@ -7001,11 +6986,38 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param ministryProfile
-	 *            the ministryProfile to set
+	 * @param ministryProfile the ministryProfile to set
 	 */
 	public void setMinistryProfile(PmOrgProfile ministryProfile) {
 		this.ministryProfile = ministryProfile;
+	}
+
+	/**
+	 * @return the ptjGroupProfile
+	 */
+	public PmOrgProfile getPtjGroupProfile() {
+		return ptjGroupProfile;
+	}
+
+	/**
+	 * @param ptjGroupProfile the ptjGroupProfile to set
+	 */
+	public void setPtjGroupProfile(PmOrgProfile ptjGroupProfile) {
+		this.ptjGroupProfile = ptjGroupProfile;
+	}
+
+	/**
+	 * @return the ptjProfile
+	 */
+	public PmOrgProfile getPtjProfile() {
+		return ptjProfile;
+	}
+
+	/**
+	 * @param ptjProfile the ptjProfile to set
+	 */
+	public void setPtjProfile(PmOrgProfile ptjProfile) {
+		this.ptjProfile = ptjProfile;
 	}
 
 	/**
