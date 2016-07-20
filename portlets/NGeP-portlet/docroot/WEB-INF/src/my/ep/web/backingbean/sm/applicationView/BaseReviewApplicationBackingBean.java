@@ -252,6 +252,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 
 	/**
+	 * Get PmParameterDesc by language
+	 * 
+	 * @param PmParameter
+	 *            param
+	 * @return String
+	 */
+	public String getParameterDescByPmParameter(PmParameter param) {
+		return getParameterDesc(param, new FacesScopes().getUserLocale());
+	}
+
+	/**
 	 * Get authorized personnel account status label
 	 * 
 	 * @param SmPersonnel
