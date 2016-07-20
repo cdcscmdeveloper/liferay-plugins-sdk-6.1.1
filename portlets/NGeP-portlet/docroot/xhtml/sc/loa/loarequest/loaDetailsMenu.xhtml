@@ -93,7 +93,7 @@
 						<tr>
 							<td>
 								<p:selectOneMenu id="branch"
-								disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+								disabled="#{lOADetailBackingBean.managedBean.readOnly or lOADetailBackingBean.managedBean.scLoa.loiCreated}"
 									value="#{lOADetailBackingBean.managedBean.scLoa.supplierBranch}"
 									style="width: 250px;margin-bottom: 5px;"
 									label="#{lbl['lbl.sc.branch']}">
