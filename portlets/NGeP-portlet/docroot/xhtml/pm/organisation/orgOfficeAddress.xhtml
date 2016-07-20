@@ -264,7 +264,12 @@
 							validatorMessage="#{lbl['lbl.pm.contact.email']} - #{lbl['lbl.pm.profiles.invalidEmail']}">
 							<f:validateRegex
 								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-						</p:inputText></td>
+						</p:inputText>
+						&#160; <p:graphicImage id="giEmail"
+								value="/css/images/design/tooltips.png" /> <p:tooltip
+								for="giEmail" id="ttEmail"
+								value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}"
+								showEffect="fade" hideEffect="fade" /></td>
 					<td><p:message id="contactEmailMsg" for="contactEmail"
 							display="icon" /></td>
 				</tr>
