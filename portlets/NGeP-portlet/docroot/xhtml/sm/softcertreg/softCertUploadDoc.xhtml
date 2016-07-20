@@ -88,17 +88,28 @@
 								<td width="40%" style="border-style: none !important;">
 									<h:outputText value="#{suppDoc.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</td>
+								<td width="40%" style="border-style: none !important;">
+									<p:commandLink ajax="false" value="#{suppDoc.smSofcertDocFiles[0].fileName}" 
+										rendered="#{not empty suppDoc.smSofcertDocFiles and not empty suppDoc.smSofcertDocFiles[0].fileName}">
+										<p:fileDownload value="#{softCertBackingBean.commonDownload(suppDoc.smSofcertDocFiles[0].filePath,suppDoc.smSofcertDocFiles[0].fileName,suppDoc.smSofcertDocFiles[0].fileName)}" />
+									</p:commandLink>
+								</td>
+							</tr>
+						</ui:repeat>
+					</table>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.action']}" />
+					</f:facet>
+					<table width="100%">
+						<ui:repeat var="suppDoc" value="#{upload.suppDocList}">
+							<tr>
 								<td width="20%" style="border-style: none !important;">
 									<p:commandLink oncomplete="uploadDialog.show();return false;" update="@([id$=uploadDialog])"
 										action="#{softCertBackingBean.assignSelectedSupportDoc(upload.personnel,suppDoc)}">
 										<p:graphicImage value="/css/images/design/upload.png"
 											style="margin-right:2px;" />
-									</p:commandLink>
-								</td>
-								<td width="40%" style="border-style: none !important;">
-									<p:commandLink ajax="false" value="#{suppDoc.smSofcertDocFiles[0].fileName}" 
-										rendered="#{not empty suppDoc.smSofcertDocFiles and not empty suppDoc.smSofcertDocFiles[0].fileName}">
-										<p:fileDownload value="#{softCertBackingBean.commonDownload(suppDoc.smSofcertDocFiles[0].filePath,suppDoc.smSofcertDocFiles[0].fileName,suppDoc.smSofcertDocFiles[0].fileName)}" />
 									</p:commandLink>
 								</td>
 							</tr>
