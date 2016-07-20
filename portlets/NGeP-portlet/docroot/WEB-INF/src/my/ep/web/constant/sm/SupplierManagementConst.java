@@ -428,6 +428,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PO_REVIEW = 20104;
 	public static final long PM_STATUS_PO_ESCALTED_TO_APPROVER = 20108;
 	public static final long PM_STATUS_PO_REJECTED_APPLICATION = 20112;
+	public static final long PM_STATUS_APPROVER_REJECTED_APPLICATION = 20113;
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
 	public static final long PM_STATUS_PENDING_PAYMENT = 20251;
