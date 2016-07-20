@@ -2492,7 +2492,7 @@ public class LOIDetailBackingBean extends
 		reqDTO.setScQtFinalization(scQtFinalization);
 		reqDTO.setScLois(getManagedBean().getLois());
 		reqDTO.setScLoiReports(getManagedBean()
-								.getScLoi().getScLoiReports());
+								.getRecommendedLoi().getScLoiReports());
 		reqDTO.setDeletedScLoiReports(getManagedBean()
 								.getDeletedScLoiReports());
 
