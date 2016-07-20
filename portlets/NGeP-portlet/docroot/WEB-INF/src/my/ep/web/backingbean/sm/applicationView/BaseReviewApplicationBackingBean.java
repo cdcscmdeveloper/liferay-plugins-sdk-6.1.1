@@ -855,16 +855,19 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 *            statusId
 	 */
 	private void setPmStatusDesc(String statusId) {
-		StatusReqDTO reqDTO = new StatusReqDTO();
-		reqDTO.setStatusId(Long.parseLong(statusId));
-		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStatusSO.class);
-		StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
-		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
-			getManagedBean().setCurrentStatus(
-					resDTO.getPmStatusDesc().getStatusName());
+		if (StringUtils.isBlank(statusId)) {
+			getManagedBean().setCurrentStatus(StringUtils.EMPTY);
+		} else {
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setStatusId(Long.parseLong(statusId));
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale()
+					.getLanguage());
+			StatusResDTO resDTO = SmServiceLookup.getStatusSO()
+					.retrieveStatusDescById(reqDTO);
+			if (resDTO != null && resDTO.getPmStatusDesc() != null) {
+				getManagedBean().setCurrentStatus(
+						resDTO.getPmStatusDesc().getStatusName());
+			}
 		}
 	}
 
