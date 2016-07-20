@@ -321,6 +321,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> raceSelectItems;
 	private List<SelectItem> profBodyItems;
 	private List<PmReasonDesc> reasonDescList;
+	private List<PmReasonDesc> reasonDescInitList;
 	private List<PmReasonDesc> deletePendingApplDescList;
 	private List<PmReasonDesc> selectedReasonDescs;
 	private Long rejectionOtherReasonId;
@@ -3556,5 +3557,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedReasonDescs(List<PmReasonDesc> selectedReasonDescs) {
 		this.selectedReasonDescs = selectedReasonDescs;
+	}
+
+	public List<PmReasonDesc> getReasonDescInitList() {
+		return reasonDescInitList;
+	}
+
+	public void setReasonDescInitList(List<PmReasonDesc> reasonDescInitList) {
+		this.reasonDescInitList = reasonDescInitList;
 	}
 }

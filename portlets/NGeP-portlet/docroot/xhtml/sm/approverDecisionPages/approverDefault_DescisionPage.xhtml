@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<table style="width: 100%">
 		<tr>
@@ -151,23 +152,18 @@
 	</p:dialog>
 	
 	<p:dialog width="1000px" header="#{lbl['lbl.sm.reject.application']}" height="350px"
-		closable="false" id="approverRejDialog" widgetVar="approverRejDialog"
-		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
-		
-		<p:outputPanel layout="block" id="rejectBlockPanel">
-			<ui:include src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide();" 
-					partialSubmit="true" process="rejectBlockPanel"
-					action="#{backingBean.finalDecisionApproveOrRejectAppln('approverRejDialog','REJECT')}" />
-				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-					action="#{backingBean.cancelFinalApproveOrReject('approverRejDialog')}"
-					partialSubmit="true" process="@this" />
-			</div>
-			<p:blockUI block="rejectBlockPanel" widgetVar="rejectBlockPanelWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
-		</p:outputPanel>
+			closable="false" id="approverRejDialog" widgetVar="approverRejDialog"
+			resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+		<ac:smSearchRejectReasons>
+			<p:commandButton value="#{lbl['lbl.btn.submit']}"
+				onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide();" 
+				partialSubmit="true" process="rejectBlockPanel"
+				action="#{backingBean.finalDecisionApproveOrRejectAppln('approverRejDialog','REJECT')}" />
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+				action="#{backingBean.cancelFinalApproveOrReject('approverRejDialog')}"
+				onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
+				partialSubmit="true" process="@this" />
+		</ac:smSearchRejectReasons>
 	</p:dialog>
+	
 </ui:composition>

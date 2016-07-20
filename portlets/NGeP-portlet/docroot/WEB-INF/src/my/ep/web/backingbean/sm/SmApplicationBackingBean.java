@@ -647,10 +647,12 @@ public class SmApplicationBackingBean extends
 
 			getManagedBean().setUomLs(SmApplicationUtil.retrieveUomList());
 			getManagedBean()
-					.setReasonDescList(
+					.setReasonDescInitList(
 							SmApplicationUtil
 									.retrieveRejectReasonListByParameterCode(ReasonCategory.SUPPLIER_REJECTION_REASON
 											.value()));
+			getManagedBean().setReasonDescList(
+					getManagedBean().getReasonDescInitList());
 			getManagedBean()
 					.setRejectionOtherReasonId(
 							SmApplicationUtil
@@ -10143,13 +10145,12 @@ public class SmApplicationBackingBean extends
 
 		List<PmReasonDesc> resultList = new ArrayList<PmReasonDesc>();
 		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getReasonDescList())) {
+				.getReasonDescInitList())) {
 			if (StringUtils.isBlank(getManagedBean().getSearchRejectReason())) {
-				resultList = SmApplicationUtil
-						.retrieveRejectReasonListByParameterCode(ReasonCategory.SUPPLIER_REJECTION_REASON
-								.value());
+				resultList = getManagedBean().getReasonDescInitList();
 			} else {
-				for (PmReasonDesc tmp : getManagedBean().getReasonDescList()) {
+				for (PmReasonDesc tmp : getManagedBean()
+						.getReasonDescInitList()) {
 					if (StringUtils.upperCase(tmp.getReasonDesc()).contains(
 							StringUtils.upperCase(getManagedBean()
 									.getSearchRejectReason()))) {
