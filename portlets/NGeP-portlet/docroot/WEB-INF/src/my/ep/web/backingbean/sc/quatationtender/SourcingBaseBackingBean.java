@@ -36,7 +36,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -143,7 +142,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.sc.helper.QTFiledMapper;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -183,57 +181,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public static Logger log = EpLogger
 			.getLogger(SourcingBaseBackingBean.class);
-
-	/**
-	 * Method to retrive orgprofiles based on user id and parent org id
-	 * 
-	 * @param profileReqDTO
-	 * @return List<PmOrgProfile> orgProfiles.
-	 */
-	public List<PmOrgProfile> retriveOrgProfiles(OrgProfileReqDTO profileReqDTO) {
-
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
-		OrgProfileResDTO resDTO = orgProfileSO
-				.retrieveOrgProfileListByOrgType(profileReqDTO);
-		return resDTO.getOrgProfileList();
-	}
-
-	/**
-	 * To constuct SelectItem s for dropndowns for orgprofiles
-	 * 
-	 * @param orgProfile
-	 * @return List<SelectItem> selectItems
-	 */
-	public List<SelectItem> toOrgProfileSelectItems(
-			List<PmOrgProfile> orgProfile) {
-		List<SelectItem> orgProfileSelectItems = new ArrayList<SelectItem>();
-		orgProfileSelectItems.add(new SelectItem("", ResourceBundleUtils
-				.getMessage("lbl.txt.select",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale())));
-		for (PmOrgProfile pmOrgProfile : orgProfile) {
-			orgProfileSelectItems.add(new SelectItem(pmOrgProfile
-					.getOrgProfileId().toString(), pmOrgProfile.getOrgCode()));
-		}
-		return orgProfileSelectItems;
-	}
-
-	/**
-	 * To constuct SelectItem s for dropndowns for users
-	 * 
-	 * @param users
-	 * @return List<SelectItem> selectItems
-	 */
-	public List<SelectItem> toSelectItmes(List<PmUser> users) {
-		List<SelectItem> userList = new ArrayList<SelectItem>();
-		userList.add(new SelectItem("", "SelectOne"));
-		for (PmUser user : users) {
-			userList.add(new SelectItem(user.getUserId(), user.getUserName()));
-		}
-		return userList;
-	}
 
 	/**
 	 * To upload the attachment.
@@ -1195,29 +1142,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	/**
-	 * To check whether enable field or not.
-	 * 
-	 * @param fieldName
-	 * @param statusId
-	 * @param isMaintance
-	 * @return boolean flag
-	 */
-	public boolean enableFieldByStatusNFiledName(String fieldName,
-			Long statusId, boolean isMaintance, boolean isDeskOfficer) {
-
-		List<String> values = QTFiledMapper.getEnableFieldsByStatus(statusId,
-				isMaintance, isDeskOfficer);
-		if (CollectionUtils.isNotEmpty(values)) {
-			if (values.contains(fieldName)) {
-				return false;
-			}
-
-		}
-		return true;
-
-	}
-
-	/**
 	 * Validate Duplicate Category code.
 	 * 
 	 * @param pmCategoryL3
@@ -1252,35 +1176,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (isDuplicate) {
 			throw new EpException(MessageConst.ERROR_760111);
 		}
-	}
-
-	/**
-	 * To save Evaluation Attachment
-	 * 
-	 * @param fileName
-	 * @param attachment
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	protected void SaveEvaluationAttachment(String fileName,
-			ScAttachment attachment) throws FileNotFoundException, IOException {
-
-		attachment.setFileName(fileName);
-		attachment.setFileDesc("File uploded");
-
-		populateAttachmentDetails(attachment);
-
-		// FileOutputStream fos;
-		// fos = new FileOutputStream(getActualFilePath(attachment));
-		// fos.write(fileBytes);
-		// fos.close();
-
-		/*
-		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
-		 * "The file was uploaded successfully.", null);
-		 * 
-		 * FacesContext.getCurrentInstance().addMessage(null, message);
-		 */
 	}
 
 	public List<String> getRequestTypes(String paramaterTypes) {
