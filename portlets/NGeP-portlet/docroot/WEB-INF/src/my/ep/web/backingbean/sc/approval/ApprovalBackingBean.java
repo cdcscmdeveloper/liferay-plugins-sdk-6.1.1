@@ -651,6 +651,7 @@ public class ApprovalBackingBean extends
 					FacesScopes scope = new FacesScopes();
 					committeReqDTO.setUser(scope.getUserSessionBean());
 					committeReqDTO.setUserLocale(scope.getUserLocale());
+					committeReqDTO.setSpecApprovalReq(true);
 					committeSO.validateAppointCommitteDtls(committeReqDTO);
 				}
 				showDialog = "gpki_dlg.show()";
