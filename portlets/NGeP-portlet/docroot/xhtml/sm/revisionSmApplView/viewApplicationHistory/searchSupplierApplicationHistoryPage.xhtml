@@ -38,6 +38,7 @@
 				<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
 					<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smAppl[2] eq 'K'}"/>
 					<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smAppl[2] eq 'J'}"/>
+					<h:outputText value="#{lbl['lbl.sm.basic']}" rendered="#{smAppl[2] ne 'K' and smAppl[2] ne 'J'}"/>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal" 
@@ -54,7 +55,8 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.application.no']}">
-					<h:outputText value="#{smAppl[0]}" />
+					<h:outputText value="#{smAppl[0]}" rendered="#{not empty smAppl[0]}"/>
+					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl[0]}"/>
 				</p:column>
 		
 				<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="width :25%;white-space : normal">
