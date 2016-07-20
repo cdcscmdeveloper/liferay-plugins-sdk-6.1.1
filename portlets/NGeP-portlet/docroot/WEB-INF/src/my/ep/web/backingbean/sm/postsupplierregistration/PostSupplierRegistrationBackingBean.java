@@ -86,8 +86,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private static final String MOF_SOFTCERT_REQUEST = "request-soft-cert";
 	//private static final String MOF_CODIFICATION_SEARCH = "codification-search";
 	private static final String UPGRADE_TO_MOF = "upgrade-basic-to-mof";
-	//private static final String VIEW_VIRTUAL_CERT = "view-virtual-certification";
-	private static final String VIEW_VIRTUAL_CERT = "virtual-cert";
+	private static final String VIEW_VIRTUAL_CERT = "view-virtual-certification";
+	//private static final String VIEW_VIRTUAL_CERT = "virtual-cert";
 	private static final String RESUBMIT_APPLICATION = "resubmit-application?apId=";
 	
 	private int softCertStatus;
