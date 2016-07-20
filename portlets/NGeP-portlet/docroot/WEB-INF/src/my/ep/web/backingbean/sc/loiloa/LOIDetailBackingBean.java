@@ -2173,7 +2173,7 @@ public class LOIDetailBackingBean extends
 				} else if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(statusId)) {
 					if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
-						messageCode = MessageConst.INFO_700011;
+						messageCode = MessageConst.INFO_700066;
 					} else if (BpmOutcomeConst.BPM_REJECT
 							.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700008;
