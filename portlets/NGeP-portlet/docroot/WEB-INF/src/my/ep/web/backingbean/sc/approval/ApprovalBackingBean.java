@@ -628,7 +628,31 @@ public class ApprovalBackingBean extends
 						.getManagedBean().getApprovalType())) {
 					detailSO.validatePublicationScheduleDetails(reqDTO);
 					// detailSO.validateScheduleDetails(reqDTO);
-				} 
+				} else if(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this
+						.getManagedBean().getApprovalType())){
+					
+					List<TabBean> qtCommittes = this.getManagedBean().getScCommitteeMemberTabList();
+					if (CollectionUtils.isNotEmpty(qtCommittes)) {
+						List<ScQtCommittee> qtCommitees = new ArrayList<ScQtCommittee>(
+								qtCommittes.size());
+						for (int i = 0; i < qtCommittes.size(); i++) {
+							ScQtCommittee qtCommittee = qtCommittes.get(i)
+									.getScQtCommittee();
+							qtCommittee.setQtCommitteRemarks(this.getManagedBean()
+									.getQtCommitteeRemarks());
+							qtCommitees.add(qtCommittee);
+						}
+						reqDTO.getQtdetail().setScQtCommittees(qtCommitees);
+					}
+					ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ICommitteSO.class);
+					CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+					committeReqDTO.setScQt(reqDTO.getQtdetail());
+					FacesScopes scope = new FacesScopes();
+					committeReqDTO.setUser(scope.getUserSessionBean());
+					committeReqDTO.setUserLocale(scope.getUserLocale());
+					committeSO.validateAppointCommitteDtls(committeReqDTO);
+				}
 				showDialog = "gpki_dlg.show()";
 			}
 			
