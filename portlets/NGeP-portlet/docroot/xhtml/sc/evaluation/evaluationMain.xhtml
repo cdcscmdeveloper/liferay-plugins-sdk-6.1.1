@@ -60,7 +60,7 @@
 			</div>
 		</p:dialog>
 
-		<p:dialog id="reportContentPopupDlgId" widgetVar="reportContentPopupDlg" 
+		<p:dialog id="reportContentPopupDlgId" widgetVar="reportContentPopupDlg" closable="false"
 				  modal="true" resizable="false" width="600" height="200" styleClass="pop_up_top" 
 				  header="#{evaluationBackingBean.managedBean.selectedReport.title}">
 	
@@ -78,8 +78,8 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.close']}"
-					onclick="reportContentPopupDlg.hide();" type="button" />
+				<p:commandButton value="#{lbl['lbl.btn.close']}" action="#{evaluationBackingBean.saveEditTemplateDocContent(evaluationBackingBean.managedBean.selectedReport)}"
+					oncomplete="reportContentPopupDlg.hide();" process="@this" partialSubmit="true" />
 			</div>			
 		</p:dialog>
 
