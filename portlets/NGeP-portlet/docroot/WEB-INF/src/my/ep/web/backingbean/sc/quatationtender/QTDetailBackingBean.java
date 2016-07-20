@@ -12,6 +12,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -1286,6 +1287,8 @@ public class QTDetailBackingBean extends
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
+			
+			boolean filterByOrg = true;
 			String status = qtnTenderSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)) {
 				qtSearchBean
@@ -1297,6 +1300,27 @@ public class QTDetailBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
+			
+			if (isMofSupplier()) {
+				// Filter By - Published Status
+				List<Long> notPublishedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
+				notPublishedStatuses = new ArrayList<Long>(notPublishedStatuses.subList(
+						notPublishedStatuses.indexOf(QTStatusConst.QT_PENDING_QT_SUBMISSION), 
+						notPublishedStatuses.indexOf(QTStatusConst.QT_BRIEFING_SITE_VISIT)));
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"scQtStatus.pmStatus.statusId",
+						SearchOperator.OPERATOR_NOT_IN.value(), 
+						notPublishedStatuses));
+				if (StringUtils.isBlank(status)) {
+					qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+							"scQtStatus.current",
+							SearchOperator.OPERATOR_EQUALS.value(), 
+							true));	
+				}
+				
+				filterByOrg = false;
+			}
+			
 			if (isAuditor()) {
 				PmOrgProfile ptjProfiles = getManagedBean().getPtjProfile();
 				if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
@@ -1330,6 +1354,10 @@ public class QTDetailBackingBean extends
 					}
 					
 				}
+				filterByOrg = false;
+			}
+			
+			if (!filterByOrg) {
 				// Removed the restriction condition for auditor users.
 				if (CollectionUtils.isNotEmpty(qtSearchBean
 						.getDataFilterMetadatas())) {
@@ -4508,11 +4536,17 @@ public class QTDetailBackingBean extends
 	 * 
 	 * @return true, if is Auditor General/Internal user
 	 */
-	public boolean isAuditor() {
+	private boolean isAuditor() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
 				|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
 				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value());
+	}
+	
+	private boolean isMofSupplier() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value());
 	}
 
 	private void updateApprovalRequestDtls(List<ScQtApproval> approval,
