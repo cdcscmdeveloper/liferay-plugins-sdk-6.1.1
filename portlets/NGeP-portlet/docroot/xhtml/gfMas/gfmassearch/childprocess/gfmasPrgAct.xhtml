@@ -10,7 +10,7 @@
 
 	<ui:define name="contentSection">
 
-		<p:messages id="gfMasPrjActChild" showDetail="true" autoUpdate="true"
+		<p:messages id="gfMasProgActChild" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
 
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
@@ -18,9 +18,9 @@
 		<p:panel header="#{lbl['lbl.gfmas.prg.act.info']}"
 			id="childPrjActPage" toggleable="true">
 			<p:dataTable id="gfMasPrgActId" var="pmInterfacePrgAct" rows="10"
-				rowIndexVar="index" rowKey="#{pmInterfacePrgAct}"
+				rowIndexVar="index" rowKey="#{pmInterfacePrgAct}" lazy="true"
 				selection="#{gfMasBackingBean.managedBean.selectedProgActList}"
-				value="#{gfMasBackingBean.managedBean.listOfPrgAct}">
+				value="#{gfMasBackingBean.managedBean.searchProgAct}">
 
 				<p:ajax event="rowSelect" 
 					update=":form:prcessIdButton,:form:childPrjActPage"					
@@ -41,7 +41,7 @@
 				<ac:paginator for="gfMasPrgActId"></ac:paginator>
 
 				<p:column selectionMode="multiple" style="width:5%"
-					disabledSelection="#{pmInterfacePrgAct.processStatus eq '1'}" />
+					disabledSelection="#{pmInterfacePrgAct.processStatus eq '1' or pmInterfacePrgAct.processStatus eq '2' }" />
 				
 				<p:ajax event="rowSelectCheckbox"></p:ajax>
 				

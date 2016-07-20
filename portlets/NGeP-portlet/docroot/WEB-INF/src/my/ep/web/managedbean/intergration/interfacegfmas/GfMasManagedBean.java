@@ -10,12 +10,50 @@
 */
 package my.ep.web.managedbean.intergration.interfacegfmas;
 
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import org.apache.log4j.Logger;
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceAgOffSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceCmBankSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceGlAccSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceKptjSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfacePpSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfacePrgActSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceProjectSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfacePtjSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotDanaSO;
+import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotSO;
+import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.common.interfaceptj.InterfaceAgOffReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceAgOffResDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceCmBankReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceCmBankResDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceGlAccReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceGlAccResDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceKptjReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceKptjResDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfacePpReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfacePpResDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfacePrgActReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfacePrgActResDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceProjectReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceProjectResDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfacePtjReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfacePtjResDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceVotDanaReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceVotDanaResDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceVotReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceVotResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.DIInterfaceLog;
 import my.ep.persistence.entity.pm.integration.PmInterfaceAgOff;
 import my.ep.persistence.entity.pm.integration.PmInterfaceBank;
@@ -27,7 +65,11 @@ import my.ep.persistence.entity.pm.integration.PmInterfaceProgAct;
 import my.ep.persistence.entity.pm.integration.PmInterfaceProject;
 import my.ep.persistence.entity.pm.integration.PmInterfacePtj;
 import my.ep.persistence.entity.pm.integration.PmInterfaceVot;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -41,6 +83,19 @@ public class GfMasManagedBean extends BaseManagedBean {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	private IPagingDataModel<PmInterfaceProgAct> searchProgAct = new SearchProgActPagingDataModel();
+	private IPagingDataModel<PmInterfaceProject> searchProject = new SearchProjectPagingDataModel();
+	private IPagingDataModel<PmInterfaceGlAccount> searchGlAccount = new SearchGlAcntPagingDataModel();
+	private IPagingDataModel<PmInterfaceAgOff> searchAgOff = new SearchAgOffPagingDataModel();
+	private IPagingDataModel<PmInterfaceBank> searchBank = new SearchBankPagingDataModel();
+	private IPagingDataModel<PmInterfaceKptj> searchKptj = new SearchKptjPagingDataModel();
+	private IPagingDataModel<PmInterfacePtj> searchPtj = new SearchPtjPagingDataModel();
+	private IPagingDataModel<PmInterfacePP> searchPp = new SearchPpPagingDataModel();
+	private IPagingDataModel<PmInterfaceVot> searchVot = new SearchVotPagingDataModel();	
+	private IPagingDataModel<PmInterfaceDana> searchDana = new SearchDanaPagingDataModel();	
+	
+	private DIInterfaceLog selectedProcess;
 
     /** The service code. */
     private String serviceCode;
@@ -72,43 +127,14 @@ public class GfMasManagedBean extends BaseManagedBean {
 	/** The process button status. */
 	private boolean processButtonStatus;
 	
+	private Map<String, String> processLabels;
+	
 	/** The d i interface log. */
 	private DIInterfaceLog dIInterfaceLog;
 	
 	/** The map of process. */
 	private Map<String, List<DIInterfaceLog>> mapOfProcess;
 	
-	/** The list of prg act. */
-	private List<PmInterfaceProgAct> listOfPrgAct;
-	
-	/** The list of ag office. */
-	private List<PmInterfaceAgOff> listOfAgOffice;
-	
-	/** The list of bank. */
-	private List<PmInterfaceBank> listOfBank;
-	
-	/** The list of dana. */
-	private List<PmInterfaceDana> listOfDana;
-	
-	/** The list of gl account. */
-	private List<PmInterfaceGlAccount> listOfGlAccount;
-	
-	/** The list of kptj. */
-	private List<PmInterfaceKptj> listOfKPTJ;
-	
-	/** The list of projectt. */
-	private List<PmInterfaceProject> listOfProjectt;
-	
-	/** The list of ptj. */
-	private List<PmInterfacePtj> listOfPTJ;
-	
-	/** The list of vot. */
-	private List<PmInterfaceVot> listOfVot;
-	
-	/** The list of pp. */
-	private List<PmInterfacePP> listOfPP;	
-	
-  
     /** The selected prog act list. */
     private List<PmInterfaceProgAct> selectedProgActList;
 	
@@ -149,35 +175,627 @@ public class GfMasManagedBean extends BaseManagedBean {
 	/** The selected pp list. */
 	private List<PmInterfacePP> selectedPpList;
 	
+	private static Logger log = Logger.getLogger(GfMasManagedBean.class);
 	
-	/**
-	 * Gets the list of prg act.
-	 * 
-	 * @return the listOfPrgAct
-	 */
-	public List<PmInterfaceProgAct> getListOfPrgAct() {
-		return listOfPrgAct;
+	public  GfMasManagedBean() {
+	       log.info("In GfMasManagedBean");
+	}
+	
+	public void searchProgAct() {
+		 log.info("In searchProgAct");
+		searchProgAct.reloadData();
 	}
 
-	/**
-	 * Sets the list of prg act.
-	 * 
-	 * @param listOfPrgAct
-	 *            the listOfPrgAct to set
-	 */
-	public void setListOfPrgAct(List<PmInterfaceProgAct> listOfPrgAct) {
-		this.listOfPrgAct = listOfPrgAct;
+	public void searchProject() {
+		 log.info("In searchProject");
+		searchProject.reloadData();
 	}
 
-	/**
-	 * Gets the list of ag office.
-	 * 
-	 * @return the listOfAgOffice
-	 */
-	public List<PmInterfaceAgOff> getListOfAgOffice() {
-		return listOfAgOffice;
+	public void searchGlAccount() {
+		 log.info("In searchGlAccount");
+		searchGlAccount.reloadData();
 	}
 
+	public void searchAgOff() {
+		 log.info("In searchAgOff");
+		searchAgOff.reloadData();
+	}
+
+	public void searchBank() {
+		 log.info("In searchBank");
+		searchBank.reloadData();
+	}
+
+	public void searchKptj() {
+		 log.info("In searchKptj");
+		searchKptj.reloadData();
+	}
+
+	public void searchPtj() {
+		 log.info("In searchPtj");
+		searchPtj.reloadData();
+	}
+
+	public void searchPp() {
+		 log.info("In searchPp");
+		searchPp.reloadData();
+	}
+
+	public void searchVot() {
+		 log.info("In searchVot");
+		searchVot.reloadData();
+	}
+
+	public void searchDana() {
+		 log.info("In searchDana");
+		searchDana.reloadData();
+	}
+	
+	private ISearchBean<PmInterfaceProgAct> getPrgActSearchBeanData(
+			ISearchBean<PmInterfaceProgAct> searchBean) {
+		
+		log.info("getPrgActSearchBeanData");
+		
+		if ( this.getSelectedProcess().getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), this.getSelectedProcess().getLogId()));
+		}
+		return searchBean;
+	}	
+	
+	private class SearchProgActPagingDataModel extends
+	  PagingDataModel<PmInterfaceProgAct> {
+	
+		private static final long serialVersionUID = 1L;
+		
+		public SearchProgActPagingDataModel() {
+			super("gfMasPrgActId");
+		}	
+		@Override
+		public ISearchResultBean<PmInterfaceProgAct> pageChangeListener(
+				ISearchBean<PmInterfaceProgAct> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}			
+			
+		    IInterfacePrgActSO iPrgActSO;	        
+
+			try {				
+				ISearchBean<PmInterfaceProgAct> searchBeanData = getPrgActSearchBeanData(searchBean);
+
+				InterfacePrgActReqDTO prgActReqDTO = new InterfacePrgActReqDTO();
+
+				prgActReqDTO.setViewSearchBean(searchBeanData);
+
+				iPrgActSO = (IInterfacePrgActSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IInterfacePrgActSO.class);	
+
+				   InterfacePrgActResDTO resDTO = iPrgActSO
+						.getProgActSearchDetails(prgActReqDTO);
+                 
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getViewPrgActResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+			return null;
+		}
+	}
+	
+	
+	private ISearchBean<PmInterfaceProject> getProjectSearchBeanData(
+			ISearchBean<PmInterfaceProject> searchBean) {
+		
+		log.info("getProjectSearchBeanData");
+		
+		if ( this.getSelectedProcess().getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("dIInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), this.getSelectedProcess().getLogId()));
+		}
+		return searchBean;
+	}	
+	
+	private class SearchProjectPagingDataModel extends
+	  PagingDataModel<PmInterfaceProject> {
+	
+		private static final long serialVersionUID = 1L;
+		
+		public SearchProjectPagingDataModel() {
+			super("gfMasProjectId");
+		}	
+		@Override
+		public ISearchResultBean<PmInterfaceProject> pageChangeListener(
+				ISearchBean<PmInterfaceProject> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}			
+			
+			IInterfaceProjectSO IProjectSO;	        
+
+			try {				
+				ISearchBean<PmInterfaceProject> searchBeanData = getProjectSearchBeanData(searchBean);
+
+				InterfaceProjectReqDTO projectReqDTO = new InterfaceProjectReqDTO();
+
+				projectReqDTO.setViewProjectSearchBean(searchBeanData);
+
+				IProjectSO = (IInterfaceProjectSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IInterfaceProjectSO.class);	
+
+				   InterfaceProjectResDTO resDTO = IProjectSO
+						.getProjectSearchDetails(projectReqDTO);
+				
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getViewProjectResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+			return null;
+		}
+	}
+	
+	private ISearchBean<PmInterfaceGlAccount> getGlAcntSearchBeanData(
+			ISearchBean<PmInterfaceGlAccount> searchBean) {
+		
+		log.info("getSearchBeanData");
+		
+		if ( this.getSelectedProcess().getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("dIInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), this.getSelectedProcess().getLogId()));
+		}
+		return searchBean;
+	}	
+	
+	private class SearchGlAcntPagingDataModel extends
+	  PagingDataModel<PmInterfaceGlAccount> {
+	
+		private static final long serialVersionUID = 1L;
+		
+		public SearchGlAcntPagingDataModel() {
+			super("gfMasGlAcntId");
+		}	
+		@Override
+		public ISearchResultBean<PmInterfaceGlAccount> pageChangeListener(
+				ISearchBean<PmInterfaceGlAccount> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}			
+			
+		    IInterfaceGlAccSO IglAcntSO;	        
+
+			try {				
+				ISearchBean<PmInterfaceGlAccount> searchBeanData = getGlAcntSearchBeanData(searchBean);
+
+				InterfaceGlAccReqDTO glAcntReqDTO = new InterfaceGlAccReqDTO();
+
+				glAcntReqDTO.setViewGlAcntSearchBean(searchBeanData);
+
+				IglAcntSO = (IInterfaceGlAccSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IInterfaceGlAccSO.class);	
+
+				InterfaceGlAccResDTO resDTO = IglAcntSO
+						.getGlAcntSearchDetails(glAcntReqDTO);
+		
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getViewGlAcntResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+			return null;
+		}
+	}
+	
+	private ISearchBean<PmInterfaceAgOff> getAgOffSearchBeanData(
+			ISearchBean<PmInterfaceAgOff> searchBean) {
+		
+		log.info("getAgOffSearchBeanData");
+		
+		if ( this.getSelectedProcess().getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), this.getSelectedProcess().getLogId()));
+		}
+		return searchBean;
+	}	
+	
+	private class SearchAgOffPagingDataModel extends
+	  PagingDataModel<PmInterfaceAgOff> {
+	
+		private static final long serialVersionUID = 1L;
+		
+		public SearchAgOffPagingDataModel() {
+			super("gfMasAgOfficeId");
+		}	
+		@Override
+		public ISearchResultBean<PmInterfaceAgOff> pageChangeListener(
+				ISearchBean<PmInterfaceAgOff> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}			
+			
+		    IInterfaceAgOffSO iInterfaceAgOffSO;	        
+
+			try {				
+				ISearchBean<PmInterfaceAgOff> searchBeanData = getAgOffSearchBeanData(searchBean);
+
+				InterfaceAgOffReqDTO agOffReqDTO = new InterfaceAgOffReqDTO();
+
+				agOffReqDTO.setViewAgOffSearchBean(searchBeanData);
+
+				iInterfaceAgOffSO = (IInterfaceAgOffSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IInterfaceAgOffSO.class);	
+
+				InterfaceAgOffResDTO resDTO = iInterfaceAgOffSO
+						.getAgOffSearchDetails(agOffReqDTO);
+			
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getViewAgOffResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+			return null;
+		}
+	}
+	
+	
+	private ISearchBean<PmInterfaceBank> getBankSearchBeanData(
+			ISearchBean<PmInterfaceBank> searchBean) {
+		
+		log.info("getBankSearchBeanData");
+		
+		if ( this.getSelectedProcess().getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), this.getSelectedProcess().getLogId()));
+		}
+		return searchBean;
+	}	
+	
+	private class SearchBankPagingDataModel extends
+	  PagingDataModel<PmInterfaceBank> {
+	
+		private static final long serialVersionUID = 1L;
+		
+		public SearchBankPagingDataModel() {
+			super("gfMasBankId");
+		}	
+		@Override
+		public ISearchResultBean<PmInterfaceBank> pageChangeListener(
+				ISearchBean<PmInterfaceBank> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}			
+			
+		    IInterfaceCmBankSO IbankSO;	        
+
+			try {				
+				ISearchBean<PmInterfaceBank> searchBeanData = getBankSearchBeanData(searchBean);
+
+				InterfaceCmBankReqDTO bankReqDTO = new InterfaceCmBankReqDTO();
+
+				bankReqDTO.setViewBankSearchBean(searchBeanData);
+
+				IbankSO = (IInterfaceCmBankSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IInterfaceCmBankSO.class);	
+
+				InterfaceCmBankResDTO resDTO = IbankSO
+						.getBankSearchDetails(bankReqDTO);
+			
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getViewBankResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+			return null;
+		}
+	}
+	
+	private ISearchBean<PmInterfaceKptj> getKptjSearchBeanData(
+			ISearchBean<PmInterfaceKptj> searchBean) {
+		
+		log.info("getKptjSearchBeanData");
+		
+		if ( this.getSelectedProcess().getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), this.getSelectedProcess().getLogId()));
+		}
+		return searchBean;
+	}	
+	
+	private class SearchKptjPagingDataModel extends
+	  PagingDataModel<PmInterfaceKptj> {
+	
+		private static final long serialVersionUID = 1L;
+		
+		public SearchKptjPagingDataModel() {
+			super("gfMasKPTJId");
+		}	
+		@Override
+		public ISearchResultBean<PmInterfaceKptj> pageChangeListener(
+				ISearchBean<PmInterfaceKptj> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}			
+			
+		    IInterfaceKptjSO IkptjSO;	        
+
+			try {				
+				ISearchBean<PmInterfaceKptj> searchBeanData = getKptjSearchBeanData(searchBean);
+
+				InterfaceKptjReqDTO kptjReqDTO = new InterfaceKptjReqDTO();
+
+				kptjReqDTO.setViewKptjSearchBean(searchBeanData);
+
+				IkptjSO = (IInterfaceKptjSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IInterfaceKptjSO.class);	
+
+				InterfaceKptjResDTO resDTO = IkptjSO
+						.getKptjSearchDetails(kptjReqDTO);
+			
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getViewKptjResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+			return null;
+		}
+	}
+	
+	private ISearchBean<PmInterfacePtj> getPtjSearchBeanData(
+			ISearchBean<PmInterfacePtj> searchBean) {
+		
+		log.info("getPtjSearchBeanData");
+		
+		if ( this.getSelectedProcess().getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), this.getSelectedProcess().getLogId()));
+		}
+		return searchBean;
+	}	
+	
+	private class SearchPtjPagingDataModel extends
+	  PagingDataModel<PmInterfacePtj> {
+	
+		private static final long serialVersionUID = 1L;
+		
+		public SearchPtjPagingDataModel() {
+			super("gfMasPTJId");
+		}	
+		@Override
+		public ISearchResultBean<PmInterfacePtj> pageChangeListener(
+				ISearchBean<PmInterfacePtj> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}			
+			
+		    IInterfacePtjSO iPtjSO;	        
+
+			try {				
+				ISearchBean<PmInterfacePtj> searchBeanData = getPtjSearchBeanData(searchBean);
+
+				InterfacePtjReqDTO ptjReqDTO = new InterfacePtjReqDTO();
+
+				ptjReqDTO.setViewPtjSearchBean(searchBeanData);
+
+				iPtjSO = (IInterfacePtjSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IInterfacePtjSO.class);	
+
+				   InterfacePtjResDTO resDTO = iPtjSO
+						.getPtjSearchDetails(ptjReqDTO);
+				
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getViewPtjResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+			return null;
+		}
+	}
+	
+	private ISearchBean<PmInterfacePP> getPpSearchBeanData(
+			ISearchBean<PmInterfacePP> searchBean) {
+		
+		log.info("getPpSearchBeanData");
+		
+		if ( this.getSelectedProcess().getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), this.getSelectedProcess().getLogId()));
+		}
+		return searchBean;
+	}	
+	
+	private class SearchPpPagingDataModel extends
+	  PagingDataModel<PmInterfacePP> {
+	
+		private static final long serialVersionUID = 1L;
+		
+		public SearchPpPagingDataModel() {
+			super("gfMasPPId");
+		}	
+		@Override
+		public ISearchResultBean<PmInterfacePP> pageChangeListener(
+				ISearchBean<PmInterfacePP> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}			
+			
+		    IInterfacePpSO iPpSO;	        
+
+			try {				
+				ISearchBean<PmInterfacePP> searchBeanData = getPpSearchBeanData(searchBean);
+
+				InterfacePpReqDTO ppReqDTO = new InterfacePpReqDTO();
+
+				ppReqDTO.setViewPpSearchBean(searchBeanData);
+
+				iPpSO = (IInterfacePpSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IInterfacePpSO.class);	
+
+				   InterfacePpResDTO resDTO = iPpSO
+						.getPpSearchDetails(ppReqDTO);
+				
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getViewPpResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+			return null;
+		}
+	}
+	
+	private ISearchBean<PmInterfaceVot> getVotSearchBeanData(
+			ISearchBean<PmInterfaceVot> searchBean) {
+		
+		log.info("getVotSearchBeanData");
+		
+		if ( this.getSelectedProcess().getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), this.getSelectedProcess().getLogId()));
+		}
+		return searchBean;
+	}	
+	
+	
+
+	private class SearchVotPagingDataModel extends
+	  PagingDataModel<PmInterfaceVot> {
+	
+		private static final long serialVersionUID = 1L;
+		
+		public SearchVotPagingDataModel() {
+			super("gfMasVotId");
+		}	
+		@Override
+		public ISearchResultBean<PmInterfaceVot> pageChangeListener(
+				ISearchBean<PmInterfaceVot> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}			
+			
+		    IInterfaceVotSO iVotSO;	        
+
+			try {				
+				ISearchBean<PmInterfaceVot> searchBeanData = getVotSearchBeanData(searchBean);
+
+				InterfaceVotReqDTO votReqDTO = new InterfaceVotReqDTO();
+
+				votReqDTO.setViewVotSearchBean(searchBeanData);
+
+				iVotSO = (IInterfaceVotSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IInterfaceVotSO.class);	
+
+				   InterfaceVotResDTO resDTO = iVotSO
+						.getVotSearchDetails(votReqDTO);
+				
+                
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getViewVotResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+			return null;
+		}
+	}
+	
+	private ISearchBean<PmInterfaceDana> getDanaSearchBeanData(
+			ISearchBean<PmInterfaceDana> searchBean) {
+		
+		log.info("getDanaSearchBeanData");
+		
+		if ( this.getSelectedProcess().getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("dIInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), this.getSelectedProcess().getLogId()));
+		}
+		return searchBean;
+	}	
+	
+	private class SearchDanaPagingDataModel extends
+	  PagingDataModel<PmInterfaceDana> {
+	
+		private static final long serialVersionUID = 1L;
+		
+		public SearchDanaPagingDataModel() {
+			super("gfMasDanaId");
+		}	
+		@Override
+		public ISearchResultBean<PmInterfaceDana> pageChangeListener(
+				ISearchBean<PmInterfaceDana> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}			
+			
+		    IInterfaceVotDanaSO iDanaSO;	        
+
+			try {				
+				ISearchBean<PmInterfaceDana> searchBeanData = getDanaSearchBeanData(searchBean);
+
+				InterfaceVotDanaReqDTO danaReqDTO = new InterfaceVotDanaReqDTO();
+
+				danaReqDTO.setViewDanaSearchBean(searchBeanData);
+
+				iDanaSO = (IInterfaceVotDanaSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IInterfaceVotDanaSO.class);	
+
+				InterfaceVotDanaResDTO resDTO = iDanaSO
+						.getDanaSearchDetails(danaReqDTO);
+				
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getViewDanaResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+			return null;
+		}
+	}
+	
 	/**
 	 * Gets the trans id.
 	 * 
@@ -185,6 +803,151 @@ public class GfMasManagedBean extends BaseManagedBean {
 	 */
 	public String getTransId() {
 		return transId;
+	}
+
+	
+
+	/**
+	 * @return the selectedProcess
+	 */
+	public DIInterfaceLog getSelectedProcess() {
+		return selectedProcess;
+	}
+
+	/**
+	 * @return the searchProject
+	 */
+	public IPagingDataModel<PmInterfaceProject> getSearchProject() {
+		return searchProject;
+	}
+
+	/**
+	 * @param searchProject the searchProject to set
+	 */
+	public void setSearchProject(IPagingDataModel<PmInterfaceProject> searchProject) {
+		this.searchProject = searchProject;
+	}
+
+	/**
+	 * @return the searchGlAccount
+	 */
+	public IPagingDataModel<PmInterfaceGlAccount> getSearchGlAccount() {
+		return searchGlAccount;
+	}
+
+	/**
+	 * @param searchGlAccount the searchGlAccount to set
+	 */
+	public void setSearchGlAccount(
+			IPagingDataModel<PmInterfaceGlAccount> searchGlAccount) {
+		this.searchGlAccount = searchGlAccount;
+	}
+
+	/**
+	 * @return the searchAgOff
+	 */
+	public IPagingDataModel<PmInterfaceAgOff> getSearchAgOff() {
+		return searchAgOff;
+	}
+
+	/**
+	 * @param searchAgOff the searchAgOff to set
+	 */
+	public void setSearchAgOff(IPagingDataModel<PmInterfaceAgOff> searchAgOff) {
+		this.searchAgOff = searchAgOff;
+	}
+
+	/**
+	 * @return the searchBank
+	 */
+	public IPagingDataModel<PmInterfaceBank> getSearchBank() {
+		return searchBank;
+	}
+
+	/**
+	 * @param searchBank the searchBank to set
+	 */
+	public void setSearchBank(IPagingDataModel<PmInterfaceBank> searchBank) {
+		this.searchBank = searchBank;
+	}
+
+	/**
+	 * @return the searchKptj
+	 */
+	public IPagingDataModel<PmInterfaceKptj> getSearchKptj() {
+		return searchKptj;
+	}
+
+	/**
+	 * @param searchKptj the searchKptj to set
+	 */
+	public void setSearchKptj(IPagingDataModel<PmInterfaceKptj> searchKptj) {
+		this.searchKptj = searchKptj;
+	}
+
+	/**
+	 * @return the searchPtj
+	 */
+	public IPagingDataModel<PmInterfacePtj> getSearchPtj() {
+		return searchPtj;
+	}
+
+	/**
+	 * @param searchPtj the searchPtj to set
+	 */
+	public void setSearchPtj(IPagingDataModel<PmInterfacePtj> searchPtj) {
+		this.searchPtj = searchPtj;
+	}
+
+	/**
+	 * @return the searchPp
+	 */
+	public IPagingDataModel<PmInterfacePP> getSearchPp() {
+		return searchPp;
+	}
+
+	/**
+	 * @param searchPp the searchPp to set
+	 */
+	public void setSearchPp(IPagingDataModel<PmInterfacePP> searchPp) {
+		this.searchPp = searchPp;
+	}
+
+	/**
+	 * @return the searchVot
+	 */
+	public IPagingDataModel<PmInterfaceVot> getSearchVot() {
+		return searchVot;
+	}
+
+	/**
+	 * @param searchVot the searchVot to set
+	 */
+	public void setSearchVot(IPagingDataModel<PmInterfaceVot> searchVot) {
+		this.searchVot = searchVot;
+	}
+
+	/**
+	 * @return the searchDana
+	 */
+	public IPagingDataModel<PmInterfaceDana> getSearchDana() {
+		return searchDana;
+	}
+
+	
+
+	/**
+	 * @param searchDana the searchDana to set
+	 */
+	public void setSearchDana(IPagingDataModel<PmInterfaceDana> searchDana) {
+		this.searchDana = searchDana;
+	}
+
+	/**
+	 * @param selectedProcess the selectedProcess to set
+	 */
+	public void setSelectedProcess(DIInterfaceLog selectedProcess) {
+		this.selectedProcess = selectedProcess;
 	}
 
 	/**
@@ -197,43 +960,7 @@ public class GfMasManagedBean extends BaseManagedBean {
 		this.transId = transId;
 	}
 
-	/**
-	 * Sets the list of ag office.
-	 * 
-	 * @param listOfAgOffice
-	 *            the listOfAgOffice to set
-	 */
-	public void setListOfAgOffice(List<PmInterfaceAgOff> listOfAgOffice) {
-		this.listOfAgOffice = listOfAgOffice;
-	}
-
-	/**
-	 * Gets the list of bank.
-	 * 
-	 * @return the listOfBank
-	 */
-	public List<PmInterfaceBank> getListOfBank() {
-		return listOfBank;
-	}
-
-	/**
-	 * Sets the list of bank.
-	 * 
-	 * @param listOfBank
-	 *            the listOfBank to set
-	 */
-	public void setListOfBank(List<PmInterfaceBank> listOfBank) {
-		this.listOfBank = listOfBank;
-	}
-
-	/**
-	 * Gets the list of dana.
-	 * 
-	 * @return the listOfDana
-	 */
-	public List<PmInterfaceDana> getListOfDana() {
-		return listOfDana;
-	}
+	
 
 	/**
 	 * Checks if is process button status.
@@ -313,325 +1040,6 @@ public class GfMasManagedBean extends BaseManagedBean {
 	public void setDisable(boolean disable) {
 		this.disable = disable;
 	}
-
-	/**
-	 * Sets the list of dana.
-	 * 
-	 * @param listOfDana
-	 *            the listOfDana to set
-	 */
-	public void setListOfDana(List<PmInterfaceDana> listOfDana) {
-		this.listOfDana = listOfDana;
-	}
-
-	/**
-	 * Gets the list of gl account.
-	 * 
-	 * @return the listOfGlAccount
-	 */
-	public List<PmInterfaceGlAccount> getListOfGlAccount() {
-		return listOfGlAccount;
-	}
-
-	/**
-	 * Sets the list of gl account.
-	 * 
-	 * @param listOfGlAccount
-	 *            the listOfGlAccount to set
-	 */
-	public void setListOfGlAccount(List<PmInterfaceGlAccount> listOfGlAccount) {
-		this.listOfGlAccount = listOfGlAccount;
-	}
-
-	/**
-	 * Gets the list of kptj.
-	 * 
-	 * @return the listOfKPTJ
-	 */
-	public List<PmInterfaceKptj> getListOfKPTJ() {
-		return listOfKPTJ;
-	}
-
-	/**
-	 * Sets the list of kptj.
-	 * 
-	 * @param listOfKPTJ
-	 *            the listOfKPTJ to set
-	 */
-	public void setListOfKPTJ(List<PmInterfaceKptj> listOfKPTJ) {
-		this.listOfKPTJ = listOfKPTJ;
-	}
-
-	/**
-	 * Gets the list of projectt.
-	 * 
-	 * @return the listOfProjectt
-	 */
-	public List<PmInterfaceProject> getListOfProjectt() {
-		return listOfProjectt;
-	}
-
-	/**
-	 * Sets the list of projectt.
-	 * 
-	 * @param listOfProjectt
-	 *            the listOfProjectt to set
-	 */
-	public void setListOfProjectt(List<PmInterfaceProject> listOfProjectt) {
-		this.listOfProjectt = listOfProjectt;
-	}
-
-	/**
-	 * Gets the list of ptj.
-	 * 
-	 * @return the listOfPTJ
-	 */
-	public List<PmInterfacePtj> getListOfPTJ() {
-		return listOfPTJ;
-	}
-
-	/**
-	 * Gets the selected prog act list.
-	 * 
-	 * @return the selectedProgActList
-	 */
-	public List<PmInterfaceProgAct> getSelectedProgActList() {
-		return selectedProgActList;
-	}
-
-	/**
-	 * Sets the selected prog act list.
-	 * 
-	 * @param selectedProgActList
-	 *            the selectedProgActList to set
-	 */
-	public void setSelectedProgActList(List<PmInterfaceProgAct> selectedProgActList) {
-		this.selectedProgActList = selectedProgActList;
-	}
-
-	/**
-	 * Sets the list of ptj.
-	 * 
-	 * @param listOfPTJ
-	 *            the listOfPTJ to set
-	 */
-	public void setListOfPTJ(List<PmInterfacePtj> listOfPTJ) {
-		this.listOfPTJ = listOfPTJ;
-	}
-
-	/**
-	 * Gets the list of vot.
-	 * 
-	 * @return the listOfVot
-	 */
-	public List<PmInterfaceVot> getListOfVot() {
-		return listOfVot;
-	}
-
-	/**
-	 * Sets the list of vot.
-	 * 
-	 * @param listOfVot
-	 *            the listOfVot to set
-	 */
-	public void setListOfVot(List<PmInterfaceVot> listOfVot) {
-		this.listOfVot = listOfVot;
-	}
-
-	/**
-	 * Gets the list of pp.
-	 * 
-	 * @return the listOfPP
-	 */
-	public List<PmInterfacePP> getListOfPP() {
-		return listOfPP;
-	}
-
-
-	/**
-	 * Gets the selected project list.
-	 * 
-	 * @return the selectedProjectList
-	 */
-	public List<PmInterfaceProject> getSelectedProjectList() {
-		return selectedProjectList;
-	}
-
-	/**
-	 * Sets the selected project list.
-	 * 
-	 * @param selectedProjectList
-	 *            the selectedProjectList to set
-	 */
-	public void setSelectedProjectList(List<PmInterfaceProject> selectedProjectList) {
-		this.selectedProjectList = selectedProjectList;
-	}
-
-	/**
-	 * Gets the selected ag office list.
-	 * 
-	 * @return the selectedAgOfficeList
-	 */
-	public List<PmInterfaceAgOff> getSelectedAgOfficeList() {
-		return selectedAgOfficeList;
-	}
-
-	/**
-	 * Sets the selected ag office list.
-	 * 
-	 * @param selectedAgOfficeList
-	 *            the selectedAgOfficeList to set
-	 */
-	public void setSelectedAgOfficeList(List<PmInterfaceAgOff> selectedAgOfficeList) {
-		this.selectedAgOfficeList = selectedAgOfficeList;
-	}
-
-	/**
-	 * Gets the selected bank list.
-	 * 
-	 * @return the selectedBankList
-	 */
-	public List<PmInterfaceBank> getSelectedBankList() {
-		return selectedBankList;
-	}
-
-	/**
-	 * Sets the selected bank list.
-	 * 
-	 * @param selectedBankList
-	 *            the selectedBankList to set
-	 */
-	public void setSelectedBankList(List<PmInterfaceBank> selectedBankList) {
-		this.selectedBankList = selectedBankList;
-	}
-
-	/**
-	 * Gets the selected dana list.
-	 * 
-	 * @return the selectedDanaList
-	 */
-	public List<PmInterfaceDana> getSelectedDanaList() {
-		return selectedDanaList;
-	}
-
-	/**
-	 * Sets the selected dana list.
-	 * 
-	 * @param selectedDanaList
-	 *            the selectedDanaList to set
-	 */
-	public void setSelectedDanaList(List<PmInterfaceDana> selectedDanaList) {
-		this.selectedDanaList = selectedDanaList;
-	}
-
-	/**
-	 * Gets the selected gl acnt list.
-	 * 
-	 * @return the selectedGlAcntList
-	 */
-	public List<PmInterfaceGlAccount> getSelectedGlAcntList() {
-		return selectedGlAcntList;
-	}
-
-	/**
-	 * Sets the selected gl acnt list.
-	 * 
-	 * @param selectedGlAcntList
-	 *            the selectedGlAcntList to set
-	 */
-	public void setSelectedGlAcntList(List<PmInterfaceGlAccount> selectedGlAcntList) {
-		this.selectedGlAcntList = selectedGlAcntList;
-	}
-
-	/**
-	 * Gets the selected kptj list.
-	 * 
-	 * @return the selectedKptjList
-	 */
-	public List<PmInterfaceKptj> getSelectedKptjList() {
-		return selectedKptjList;
-	}
-
-	/**
-	 * Sets the selected kptj list.
-	 * 
-	 * @param selectedKptjList
-	 *            the selectedKptjList to set
-	 */
-	public void setSelectedKptjList(List<PmInterfaceKptj> selectedKptjList) {
-		this.selectedKptjList = selectedKptjList;
-	}
-
-	
-	/**
-	 * Gets the selected ptj list.
-	 * 
-	 * @return the selectedPtjList
-	 */
-	public List<PmInterfacePtj> getSelectedPtjList() {
-		return selectedPtjList;
-	}
-
-	/**
-	 * Sets the selected ptj list.
-	 * 
-	 * @param selectedPtjList
-	 *            the selectedPtjList to set
-	 */
-	public void setSelectedPtjList(List<PmInterfacePtj> selectedPtjList) {
-		this.selectedPtjList = selectedPtjList;
-	}
-
-	/**
-	 * Gets the selected vot list.
-	 * 
-	 * @return the selectedVotList
-	 */
-	public List<PmInterfaceVot> getSelectedVotList() {
-		return selectedVotList;
-	}
-
-	/**
-	 * Sets the selected vot list.
-	 * 
-	 * @param selectedVotList
-	 *            the selectedVotList to set
-	 */
-	public void setSelectedVotList(List<PmInterfaceVot> selectedVotList) {
-		this.selectedVotList = selectedVotList;
-	}
-
-	/**
-	 * Gets the selected pp list.
-	 * 
-	 * @return the selectedPpList
-	 */
-	public List<PmInterfacePP> getSelectedPpList() {
-		return selectedPpList;
-	}
-
-	/**
-	 * Sets the selected pp list.
-	 * 
-	 * @param selectedPpList
-	 *            the selectedPpList to set
-	 */
-	public void setSelectedPpList(List<PmInterfacePP> selectedPpList) {
-		this.selectedPpList = selectedPpList;
-	}
-
-	/**
-	 * Sets the list of pp.
-	 * 
-	 * @param listOfPP
-	 *            the listOfPP to set
-	 */
-	public void setListOfPP(List<PmInterfacePP> listOfPP) {
-		this.listOfPP = listOfPP;
-	}
-
-	
-	
 
 	/**
 	 * Checks if is lazy.
@@ -721,6 +1129,20 @@ public class GfMasManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the searchProgAct
+	 */
+	public IPagingDataModel<PmInterfaceProgAct> getSearchProgAct() {
+		return searchProgAct;
+	}
+
+	/**
+	 * @param searchProgAct the searchProgAct to set
+	 */
+	public void setSearchProgAct(IPagingDataModel<PmInterfaceProgAct> searchProgAct) {
+		this.searchProgAct = searchProgAct;
+	}
+
+	/**
 	 * Gets the interface log id.
 	 * 
 	 * @return the interfaceLogId
@@ -766,6 +1188,160 @@ public class GfMasManagedBean extends BaseManagedBean {
 	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+	
+	/**
+	 * @return the selectedProgActList
+	 */
+	public List<PmInterfaceProgAct> getSelectedProgActList() {
+		return selectedProgActList;
+	}
+
+	/**
+	 * @param selectedProgActList the selectedProgActList to set
+	 */
+	public void setSelectedProgActList(List<PmInterfaceProgAct> selectedProgActList) {
+		this.selectedProgActList = selectedProgActList;
+	}
+
+	/**
+	 * @return the selectedAgOfficeList
+	 */
+	public List<PmInterfaceAgOff> getSelectedAgOfficeList() {
+		return selectedAgOfficeList;
+	}
+
+	/**
+	 * @param selectedAgOfficeList the selectedAgOfficeList to set
+	 */
+	public void setSelectedAgOfficeList(List<PmInterfaceAgOff> selectedAgOfficeList) {
+		this.selectedAgOfficeList = selectedAgOfficeList;
+	}
+
+	/**
+	 * @return the selectedBankList
+	 */
+	public List<PmInterfaceBank> getSelectedBankList() {
+		return selectedBankList;
+	}
+
+	/**
+	 * @param selectedBankList the selectedBankList to set
+	 */
+	public void setSelectedBankList(List<PmInterfaceBank> selectedBankList) {
+		this.selectedBankList = selectedBankList;
+	}
+
+	/**
+	 * @return the selectedDanaList
+	 */
+	public List<PmInterfaceDana> getSelectedDanaList() {
+		return selectedDanaList;
+	}
+
+	/**
+	 * @param selectedDanaList the selectedDanaList to set
+	 */
+	public void setSelectedDanaList(List<PmInterfaceDana> selectedDanaList) {
+		this.selectedDanaList = selectedDanaList;
+	}
+
+	/**
+	 * @return the selectedGlAcntList
+	 */
+	public List<PmInterfaceGlAccount> getSelectedGlAcntList() {
+		return selectedGlAcntList;
+	}
+
+	/**
+	 * @param selectedGlAcntList the selectedGlAcntList to set
+	 */
+	public void setSelectedGlAcntList(List<PmInterfaceGlAccount> selectedGlAcntList) {
+		this.selectedGlAcntList = selectedGlAcntList;
+	}
+
+	/**
+	 * @return the selectedKptjList
+	 */
+	public List<PmInterfaceKptj> getSelectedKptjList() {
+		return selectedKptjList;
+	}
+
+	/**
+	 * @param selectedKptjList the selectedKptjList to set
+	 */
+	public void setSelectedKptjList(List<PmInterfaceKptj> selectedKptjList) {
+		this.selectedKptjList = selectedKptjList;
+	}
+
+	/**
+	 * @return the selectedProjectList
+	 */
+	public List<PmInterfaceProject> getSelectedProjectList() {
+		return selectedProjectList;
+	}
+
+	/**
+	 * @param selectedProjectList the selectedProjectList to set
+	 */
+	public void setSelectedProjectList(List<PmInterfaceProject> selectedProjectList) {
+		this.selectedProjectList = selectedProjectList;
+	}
+
+	/**
+	 * @return the selectedPtjList
+	 */
+	public List<PmInterfacePtj> getSelectedPtjList() {
+		return selectedPtjList;
+	}
+
+	/**
+	 * @param selectedPtjList the selectedPtjList to set
+	 */
+	public void setSelectedPtjList(List<PmInterfacePtj> selectedPtjList) {
+		this.selectedPtjList = selectedPtjList;
+	}
+
+	/**
+	 * @return the selectedVotList
+	 */
+	public List<PmInterfaceVot> getSelectedVotList() {
+		return selectedVotList;
+	}
+
+	/**
+	 * @param selectedVotList the selectedVotList to set
+	 */
+	public void setSelectedVotList(List<PmInterfaceVot> selectedVotList) {
+		this.selectedVotList = selectedVotList;
+	}
+
+	/**
+	 * @return the selectedPpList
+	 */
+	public List<PmInterfacePP> getSelectedPpList() {
+		return selectedPpList;
+	}
+
+	/**
+	 * @return the processLabels
+	 */
+	public Map<String, String> getProcessLabels() {
+		return processLabels;
+	}
+
+	/**
+	 * @param processLabels the processLabels to set
+	 */
+	public void setProcessLabels(Map<String, String> processLabels) {
+		this.processLabels = processLabels;
+	}
+
+	/**
+	 * @param selectedPpList the selectedPpList to set
+	 */
+	public void setSelectedPpList(List<PmInterfacePP> selectedPpList) {
+		this.selectedPpList = selectedPpList;
 	}
 
 }

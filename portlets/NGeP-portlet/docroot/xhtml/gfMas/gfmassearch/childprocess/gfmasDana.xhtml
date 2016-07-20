@@ -18,10 +18,10 @@
 		<p:panel header="#{lbl['lbl.gfmas.dana.info']}" id="childPage"
 			toggleable="true">
 			<p:dataTable id="gfMasDanaId" var="pmInterfacceDana" rows="10"
-				rowIndexVar="index"
+				rowIndexVar="index" lazy="true"
 				selection="#{gfMasBackingBean.managedBean.selectedDanaList}"
 				rowKey="#{pmInterfacceDana}"
-				value="#{gfMasBackingBean.managedBean.listOfDana}">
+				value="#{gfMasBackingBean.managedBean.searchDana}">
               
                <p:ajax event="rowSelect" 
 					update=":form:prcessIdButton,:form:gfMasDanaId"					
@@ -40,7 +40,8 @@
 					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<ac:paginator for="gfMasDanaId"></ac:paginator>
 
-				<p:column selectionMode="multiple" style="width:5%" disabledSelection="#{pmInterfacceDana.processStatus eq '1'}" />
+				<p:column selectionMode="multiple" style="width:5%"
+					disabledSelection="#{pmInterfacceDana.processStatus eq '1' or pmInterfacceDana.processStatus eq '2'}" />
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
 					<h:outputText value="#{pmInterfacceDana.dIInterfaceLog.logId}" />
