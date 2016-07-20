@@ -1026,8 +1026,6 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			
 			}
 
-			this.getManagedBean().setSelectedBankList(null);
-
 		} else if (this.getManagedBean().getSelectedGlAcntList() != null) {
 			log.info("***********GlAcntList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedGlAcntList().size());
@@ -1049,8 +1047,6 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				return NAV_TO_GLACCOUNT ;
 			}
-			
-			
 			
 		} else if (this.getManagedBean().getSelectedKptjList() != null) {
 			log.info("************KptjList******SIZE******************>>"
@@ -1104,8 +1100,6 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			
 			}
 
-			this.getManagedBean().setSelectedPtjList(null);
-
 		} else if (this.getManagedBean().getSelectedDanaList() != null) {
 
 			log.info("***********DanaList*******SIZE******************>>"
@@ -1127,10 +1121,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				return NAV_TO_DANA;
 			}
-
-
-			this.getManagedBean().setSelectedDanaList(null);
-
+			
 		} else if (this.getManagedBean().getSelectedPpList() != null) {
 
 			log.info("************PpList******SIZE******************>>"
@@ -1153,8 +1144,6 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				e.printStackTrace();
 			}
 
-			this.getManagedBean().setSelectedPpList(null);
-
 		} else if (this.getManagedBean().getSelectedVotList() != null) {
 			log.info("***********VotList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedVotList().size());
@@ -1176,9 +1165,6 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				return NAV_TO_VOT;
 			}
-
-			this.getManagedBean().setSelectedVotList(null);
-
 		}
 		returnUrl = NAV_TO_MAIN;
 		if (getSelectedAllProcessListStatus()) {
@@ -1237,6 +1223,17 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		getSelectedAllProcessListStatus();
 
 	}
+	/*public void selectPrgActEvent(PmInterfaceProgAct pmInterfaceProgAct) {
+		 this.getManagedBean().setSelectedProgActList(new ArrayList<PmInterfaceProgAct>());
+		if (pmInterfaceProgAct.isSelected()) {
+			this.getManagedBean().getSelectedProgActList()
+					.add(pmInterfaceProgAct);
+		}else{
+			this.getManagedBean().getSelectedProgActList().remove(pmInterfaceProgAct);
+		}
+	}*/
+	
+	
 
 	/**
 	 * Gets the search gf mas.

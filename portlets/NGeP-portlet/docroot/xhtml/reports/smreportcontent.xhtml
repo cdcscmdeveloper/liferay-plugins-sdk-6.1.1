@@ -88,21 +88,7 @@
 						columnClasses="columnGenClass,column5CheckClass,column11CheckClass,column12CheckClass"
 						style="width:100%;">
 
-						<c:if
-							test="#{scReportBackingBean.managedBean.rptGenBean.smRequestExpiryDateView}">
-							<p:outputLabel value="" />
-							<p:selectOneRadio id="reqexpdate" style="width:376px"
-								value="#{reportBackingBean.smRequestExpiryDate}">
-								<f:selectItem itemLabel="#{lbl['lbl.rptsoftcertreqdate']}"
-									itemValue="R" />
-								<f:selectItem itemLabel="#{lbl['lbl.rptsoftexpdate']}"
-									itemValue="E" />
-								<p:ajax event="change"
-									listener="#{reportBackingBean.changeSoftCertSelection}"
-									partialSubmit="true" update="@form" />
-							</p:selectOneRadio>
-
-						</c:if>
+						
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smCommonZoneView}">
 							<c:if
@@ -2353,6 +2339,23 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
+						
+						<c:if
+							test="#{scReportBackingBean.managedBean.rptGenBean.smRequestExpiryDateView}">
+							<p:outputLabel value="" />
+							<p:selectOneRadio id="reqexpdate" style="width:376px"
+								value="#{reportBackingBean.smRequestExpiryDate}">
+								<f:selectItem itemLabel="#{lbl['lbl.rptsoftcertreqdate']}"
+									itemValue="R" />
+								<f:selectItem itemLabel="#{lbl['lbl.rptsoftexpdate']}"
+									itemValue="E" />
+								<p:ajax event="change"
+									listener="#{reportBackingBean.changeSoftCertSelection}"
+									partialSubmit="true" update="@form" />
+							</p:selectOneRadio>
+
+						</c:if>
+						
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smIdentficationTypeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.identificationtype']}" />
@@ -2801,6 +2804,7 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
+						
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smExtraTwoColumnView}">
 							<p:outputLabel value="" style="width:160px;" />
