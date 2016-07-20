@@ -178,6 +178,10 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private SmSupplier searchSupplier;
 	private String searchMofNo;
 	private String searchSuppType;
+	private String searchEpNo;
+	private String searchApplNo;
+	private String searchApplType;
+	private Long searchApplStatusId;
 	private Long searchPmRegStatusId;
 	private Long searchPmZoneId;
 	private Date currDate;
@@ -1236,6 +1240,38 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setSerializedFileExist(boolean serializedFileExist) {
 		this.serializedFileExist = serializedFileExist;
+	}
+
+	public String getSearchEpNo() {
+		return searchEpNo;
+	}
+
+	public void setSearchEpNo(String searchEpNo) {
+		this.searchEpNo = searchEpNo;
+	}
+
+	public String getSearchApplNo() {
+		return searchApplNo;
+	}
+
+	public void setSearchApplNo(String searchApplNo) {
+		this.searchApplNo = searchApplNo;
+	}
+
+	public String getSearchApplType() {
+		return searchApplType;
+	}
+
+	public void setSearchApplType(String searchApplType) {
+		this.searchApplType = searchApplType;
+	}
+
+	public Long getSearchApplStatusId() {
+		return searchApplStatusId;
+	}
+
+	public void setSearchApplStatusId(Long searchApplStatusId) {
+		this.searchApplStatusId = searchApplStatusId;
 	}
 
 }
