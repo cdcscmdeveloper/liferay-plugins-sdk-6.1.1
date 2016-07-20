@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<table style="width: 100%">
 		<tr>
@@ -317,26 +318,21 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
+	
 	<p:dialog width="1000px" header="#{lbl['lbl.sm.reject.application']}"
 		closable="false" id="rejectDialogId" widgetVar="rejectDialog"
 		height="400px" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-		
-		<p:outputPanel layout="block" id="rejectBlockPanel">
-			<ui:include
-				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+		<ac:smSearchRejectReasons>
+			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
-					update="@([id$=Msg])" partialSubmit="true" process="rejectDialogId"
+					update="@([id$=Msg])" partialSubmit="true" process="rejectBlockPanel"
 					action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectDialog','REJECT')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
 					action="#{backingBean.cancelFinalApproveOrReject('rejectDialog')}"
 					partialSubmit="true" process="@this" />
-			</div>
-			<p:blockUI block="rejectBlockPanel" widgetVar="rejectBlockPanelWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
-		</p:outputPanel>
+		</ac:smSearchRejectReasons>
 	</p:dialog>
+	
 </ui:composition>
