@@ -53,20 +53,36 @@
 							<!-- MOF Account-->
 							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
 								<p class="title">#{lbl['lbl.sm.basic.mof.title.proceed']}</p>
+								
 								<c:choose>
-									<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeContractor}">		
+									<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true}">
 										<c:choose>
 											<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
-												<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
+												<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowRejectedMofContractorFederal.xhtml"></ui:include>
 											</c:when>
 											<c:otherwise>
-												<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
+												<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowRejectedMofCommon.xhtml"></ui:include>
 											</c:otherwise>
 										</c:choose>
 									</c:when>
 									
 									<c:otherwise>
-										<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
+										<c:choose>
+											<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.supplierTypeContractor}">		
+												<c:choose>
+													<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
+														<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
+													</c:when>
+													<c:otherwise>
+														<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
+													</c:otherwise>
+												</c:choose>
+											</c:when>
+											
+											<c:otherwise>
+												<ui:include src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
+											</c:otherwise>
+										</c:choose>
 									</c:otherwise>
 								</c:choose>
 							</p:outputPanel>
@@ -75,7 +91,8 @@
 				</div>
 			</div>
 			
-			<p:outputPanel rendered="#{postSupplierRegBB.managedBean.flowStatus == 3 and postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
+			<p:outputPanel rendered="#{((postSupplierRegBB.managedBean.flowStatus == 4 and postSupplierRegBB.managedBean.rejectedApplExist == true) or 
+			postSupplierRegBB.managedBean.flowStatus == 3 and postSupplierRegBB.managedBean.rejectedApplExist == false) and postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
 				<table>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.no']}" /></td>
@@ -100,7 +117,8 @@
 					postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
 						<c:if test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
 							<c:if test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal}">
-								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 7}">
+								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 7 or (postSupplierRegBB.managedBean.flowStatus == 8 and 
+								postSupplierRegBB.managedBean.rejectedApplExist == true)}">
 									<ui:include src="/xhtml/sm/shared/postsupplierregistration/softCertMsg.xhtml" />
 								</c:if>
 							</c:if>
