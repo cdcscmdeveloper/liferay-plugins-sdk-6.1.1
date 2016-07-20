@@ -9420,10 +9420,10 @@ public class EvaluationBackingBean extends
 	 * To set the report to be edited
 	 * 
 	 * @param evaluationReport
-	 */
+	 *//*
 	public void setSelectedReport(ScQtEvaluationReport evaluationReport) {
 		this.getManagedBean().setSelectedReport(evaluationReport);
-	}
+	}*/
 	
 	/**
 	 * Show template action.
@@ -11242,6 +11242,29 @@ public class EvaluationBackingBean extends
      }
      }
      this.getManagedBean().setToBeRemovedProposalAttachmentsChecklists(proposalChecklist);
+	}
+	
+	/*save templatedoc EditContentSession */
+	public void saveEditTemplateDocContent(ScQtEvaluationReport evaluationReport){
+		IQTEvaluationSO evaluationSO = null;
+		try{
+	List<ScQtEvaluationReport> evaluationReportList=this.getManagedBean().getScQtEvaluationReportList();
+		if(null!=evaluationReport && !this.getManagedBean().isReadOnly()){
+			int report=	evaluationReportList.indexOf(evaluationReport);
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO reqDto=new EvaluationReqDTO();
+			reqDto.setScQtEvaluationReport(evaluationReport);
+			EvaluationResDTO resDto=evaluationSO.saveReportsDtls(reqDto);
+			if(null!=resDto.getScQtEvaluationReport()){
+				this.getManagedBean().getScQtEvaluationReportList().set(report, resDto.getScQtEvaluationReport());
+				this.getManagedBean().setScQtEvaluationReport(resDto.getScQtEvaluationReport());
+			}
+		}
+		}finally{
+			
+		}
+		
 	}
 
 }
