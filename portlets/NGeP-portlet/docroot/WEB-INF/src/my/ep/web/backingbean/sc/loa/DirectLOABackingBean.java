@@ -3826,7 +3826,6 @@ public class DirectLOABackingBean extends
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
-						saveScheduleList();
 						generateFrequencySchedulePdfFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa,
 								getManagedBean().getScQt());
@@ -5012,7 +5011,7 @@ public class DirectLOABackingBean extends
 	 */
 	private void generateFrequencySchedulePdfFromVelocity(
 			ScAttachment attachment, ScLoa scLoa, ScQt scQt) throws Exception {
-
+		debugLogger("generateFrequencySchedulePdfFromVelocity");
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
 
@@ -5025,26 +5024,47 @@ public class DirectLOABackingBean extends
 		SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
 		SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 		IParameterSO parameterSO = null;
-
+		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		Date currentDate = new Date();
 		List<ScQtSchedule> scheduleList = scLoa.getScQtSchedules();
 		List<ScQtSchedule> scheduleReportList = new ArrayList<ScQtSchedule>();
 		ScQtSchedule reportSchedule = null;
+		PmParameter scheduleType =  null;
 		int totalFrequency = 0;
 		if (scheduleList != null && scheduleList.size() > 0) {
 			totalFrequency = scheduleList.size();
 			for (ScQtSchedule schedule : scheduleList) {
 				try {
+					if(schedule.getFromDate() == null && StringUtils.isNotBlank(schedule.getStartMonth()) 
+							&& StringUtils.isNotBlank(schedule.getStartYear())){
+						String localDate = df.format(currentDate);
+						String day = localDate.substring(0, 2);
+						String fromdate = day + "/" + schedule.getStartMonth() + "/"
+								+ schedule.getStartYear();
+						schedule.setFromDate(df.parse(fromdate));
+					} 
+					if(schedule.getToDate() == null && StringUtils.isNotBlank(schedule.getEndMonth()) && 
+							StringUtils.isNotBlank(schedule.getEndYear())){
+						String localDate = df.format(currentDate);
+						String day = localDate.substring(0, 2);
+						String toDate = day + "/" + schedule.getEndMonth() + "/"
+								+ schedule.getEndYear();
+						schedule.setToDate(df.parse(toDate));
+					} 
 					reportSchedule = new ScQtSchedule();
-					parameterSO = BusinessDelegate.getInstance()
-							.getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT,
-									IParameterSO.class);
-					ParameterReqDTO reqDTO = new ParameterReqDTO();
-					reqDTO.setParameterId(schedule.getScheduleType()
-							.getParameterId());
-					ParameterResDTO resDTO = parameterSO
-							.retrieveParameterById(reqDTO);
-					reportSchedule.setScheduleType(resDTO.getPmParameter());
+					if(scheduleType ==  null){
+						parameterSO = BusinessDelegate.getInstance()
+								.getServiceObject(
+										ModuleCodeConst.PROFILE_MANAGEMENT,
+										IParameterSO.class);
+						ParameterReqDTO reqDTO = new ParameterReqDTO();
+						reqDTO.setParameterId(schedule.getScheduleType()
+								.getParameterId());
+						ParameterResDTO resDTO = parameterSO
+								.retrieveParameterById(reqDTO);
+						scheduleType  = resDTO.getPmParameter();
+					}
+					reportSchedule.setScheduleType(scheduleType);
 					
 					if(schedule.getFromDate() != null){
 						reportSchedule.setStartMonth(monthFormat.format(schedule
@@ -5058,6 +5078,7 @@ public class DirectLOABackingBean extends
 						reportSchedule.setEndYear(yearFormat.format(schedule
 								.getToDate()));
 					}
+					
 					reportSchedule.setScheduleNo(schedule.getScheduleNo());
 					reportSchedule.setTotalMonths(schedule.getTotalMonths());
 					scheduleReportList.add(reportSchedule);
