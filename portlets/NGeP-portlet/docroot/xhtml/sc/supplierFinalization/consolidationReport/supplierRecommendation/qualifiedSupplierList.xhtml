@@ -108,7 +108,7 @@
 								 autocomplete="false" label="#{lbl['lbl.sc.consolidation.report.do.ranking']}">
 						<ac:validateNumber 
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-							maxIntegerDigits="3" integerOnly="true" />
+							maxIntegerDigits="4" integerOnly="true"  />
 							<f:attribute name="min" value="1" />
 							<f:attribute name="max" value="#{consolidationReportBackingBean.managedBean.maxRank}" />
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierListTblPanel])"/>						
@@ -120,7 +120,7 @@
 					<p:inputText id="deskOfficerRemarks" value="#{qualifiedSupp.deskOfficerRemark}" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 								 required="#{!empty qualifiedSupp.deskOfficerRank ? true : false}" 
-								 size="20" autocomplete="false" >
+								 size="20" autocomplete="false">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierListTblPanel])" />
 					</p:inputText>
 					<p:message id="deskOfficerRemarksErrorMsg" for="deskOfficerRemarks" display="icon"/>					
