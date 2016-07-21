@@ -9,7 +9,9 @@
 
 
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
-
+       <h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.eva.summary.item.instruction']}"
+			escape="false" />
 		<p:dataTable var="summaryItem" id="evaluationSummaryItem"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			editable="true" value="#{itemList}" rows="10"
