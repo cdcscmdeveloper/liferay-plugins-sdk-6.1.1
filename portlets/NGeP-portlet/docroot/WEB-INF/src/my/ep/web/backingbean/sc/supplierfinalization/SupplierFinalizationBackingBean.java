@@ -4813,13 +4813,16 @@ public class SupplierFinalizationBackingBean extends
 			scQtFinalization.setRePublishOption(null);
 			this.getManagedBean().setReEvaluate(true);
 		} else if (decision.equals(ParameterConst.DECISION_RE_PUBLISH)) {
-			if(null==scQtFinalization.getRePublishOption()){
-			scQtFinalization.setRePublishOption(new PmParameter());
+			resetReEvaluate(scQtFinalization);
+			
+			if (null == scQtFinalization.getRePublishOption()) {
+				scQtFinalization.setRePublishOption(new PmParameter());
 			}
 			this.getManagedBean().setRePublish(true);
 		} else if (decision.equals(ParameterConst.DECISION_CANCEL)) {
-			this.getManagedBean().setCancel(true);
+			resetReEvaluate(scQtFinalization);
 			scQtFinalization.setRePublishOption(null);
+			this.getManagedBean().setCancel(true);
 		}
 	}
 	
@@ -4930,8 +4933,9 @@ public class SupplierFinalizationBackingBean extends
 
 	private void resetReEvaluate(ScQtFinalization scQtFinalization) {
 		scQtFinalization.setReEvaluateCommitte(null);
-		scQtFinalization.setReEvaluateFinReq(false);
+		scQtFinalization.setReEvaluateCompReq(false);
 		scQtFinalization.setReEvaluateTechReq(false);
+		scQtFinalization.setReEvaluateFinReq(false);
 	}
 
 	private void resetDecisionForwardToHigherAuthority(ScQtFinalization scQtFinalization) {
@@ -5486,27 +5490,21 @@ public class SupplierFinalizationBackingBean extends
 	 * Event for Re-evaluate by Document compliance, Technical, Financial
 	 */
 	public void reEvaluateByOptionEvent(String reEvaluateOption, boolean isSelected) {
-		ScQt scQt = getManagedBean().getScQt();
-		String evaluationType = scQt.getEvaluationType();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		
-		if ("1".equals(reEvaluateOption)) {
-			scQtFinalization.setReEvaluateCompReq(isSelected);
+		if (StringUtils.isNotBlank(
+					reEvaluateOption)) {
 			
-			if ( ParameterConst.EVALUATION_TYPES_TWO_TIER
-					.equals(evaluationType) || 
-						(ParameterConst.EVALUATION_TYPES_ONE_TIER
-							.equals(evaluationType) && 
-								scQt.isTechEvaluationReq()) ) {
-				scQtFinalization.setReEvaluateTechReq(isSelected);
+			// Free fall method
+			switch (reEvaluateOption) {
+				case "1" : 
+					scQtFinalization.setReEvaluateCompReq(isSelected);
+				case "2" : 
+					scQtFinalization.setReEvaluateTechReq(isSelected);
+				case "3" : 
+					scQtFinalization.setReEvaluateFinReq(isSelected);
 			}
-			scQtFinalization.setReEvaluateFinReq(isSelected);
-		} else if ("2".equals(reEvaluateOption)) {
-			scQtFinalization.setReEvaluateTechReq(isSelected);
-			scQtFinalization.setReEvaluateFinReq(isSelected);
-		} else if ("3".equals(reEvaluateOption)) {
-			scQtFinalization.setReEvaluateFinReq(isSelected);
-		} 
+		}
 	}
 
 	/**
