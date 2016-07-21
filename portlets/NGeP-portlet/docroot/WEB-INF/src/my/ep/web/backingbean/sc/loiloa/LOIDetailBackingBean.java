@@ -126,6 +126,7 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
@@ -5239,4 +5240,17 @@ public class LOIDetailBackingBean extends
 		return true;
 	}
 
+	public String retrivemessage(Date date){
+		String message="";
+		if(null!=date){
+			long dayBal = DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(),
+					date);
+			String[] dayLeftParam = { dayBal + "" };
+			 message=SmCommonUtil.getMessage(
+					"lbl.sc.loiloa.loi.res.due.date.tooltip", dayLeftParam);
+			 System.out.println("displaymessage"+message);
+		}
+		return message;
+		
+	}
 }
