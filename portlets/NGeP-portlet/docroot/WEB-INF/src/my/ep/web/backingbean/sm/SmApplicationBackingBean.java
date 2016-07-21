@@ -255,6 +255,12 @@ public class SmApplicationBackingBean extends
 				"confirmDeleteHqDialog.show();");
 	}
 
+	public void onChangeBussType() {
+		assignSupplierBusinessType(getManagedBean().getSmSupplier());
+		RequestContext.getCurrentInstance().execute(
+				"changeBussTypeConfirmDialog.show();");
+	}
+
 	/**
 	 * Delete HQ GST attachment
 	 */
@@ -2238,8 +2244,6 @@ public class SmApplicationBackingBean extends
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
-			validSave = SmApplicationUtil.validateEquityOwnerCount(
-					getManagedBean(), currentTab, currentPageType);
 			if (getManagedBean().getSmAppl().getSupplierType()
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				validSave = SmApplicationUtil.validatePersonnelAcademics(
@@ -7058,6 +7062,10 @@ public class SmApplicationBackingBean extends
 		// validate machine
 		SmApplicationUtil.validateMachineDetails(true, -1, getManagedBean());
 
+		// validate equity owner
+		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+
 		if (getManagedBean().getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 				|| getManagedBean().getSmAppl().getApplType()
@@ -7755,6 +7763,9 @@ public class SmApplicationBackingBean extends
 	 *            - the recommendation
 	 */
 	public void submitPOEscalationToApprover(String recommendation) {
+		// validate equity owner
+		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
 		getManagedBean().getPoSecReview().setRecommendation(recommendation);
 		RequestContext.getCurrentInstance()
@@ -7778,6 +7789,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignFinalApproveOrReject(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
+		// validate equity owner
+		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		if (!dialog.equalsIgnoreCase("rejectDialog")
 				&& !dialog.equalsIgnoreCase("approverRejDialog")) {
 			SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
@@ -7814,6 +7828,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSiteVisitPopUp(String dialog) {
 		log.info("**** assignSiteVisitPopUp *** ");
+		// validate equity owner
+		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
 		getManagedBean()
 				.setSplCategoryList(new ArrayList<SmSupplierCategory>());
