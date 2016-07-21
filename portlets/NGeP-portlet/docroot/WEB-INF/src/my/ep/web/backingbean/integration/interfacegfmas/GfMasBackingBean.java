@@ -988,7 +988,11 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 					.getSelectedAgOfficeList();
 
 			InterfaceAgOffReqDTO reqDTO = new InterfaceAgOffReqDTO();
+			
 			reqDTO.setInterfaceAgOffLs(list);
+			reqDTO.setFileName(this.getManagedBean().getFileName());
+			reqDTO.setTransId(this.getManagedBean().getTransId());
+			
 
 			try {
 				reqSO.saveOrUpdateInterfaceAgOffList(reqDTO);
@@ -1010,7 +1014,8 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			reqDTO.setInterfaceBankLs(this.getManagedBean().getSelectedBankList());
 			reqDTO.setFileName(this.getManagedBean().getFileName());
-
+			reqDTO.setTransId(this.getManagedBean().getTransId());
+			
 			try {
 
 				IInterfaceCmBankSO reqSO = (IInterfaceCmBankSO) BusinessDelegate.getInstance()
@@ -1018,6 +1023,8 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 								IInterfaceCmBankSO.class);
 
 				reqSO.saveOrUpdateInterfaceBankList(reqDTO);
+				
+				
 
 			} catch (Exception e) {
 				System.out.println(""+e.getMessage());
@@ -1058,6 +1065,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			
 			reqDTO.setInterfaceKptjLs(this.getManagedBean().getSelectedKptjList());
 			reqDTO.setFileName(this.getManagedBean().getFileName());
+			reqDTO.setTransId(this.getManagedBean().getTransId());
 			
 			try {
 				
@@ -1085,7 +1093,8 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			reqDTO.setInterfacePtjLs(this.getManagedBean().getSelectedPtjList());
 			reqDTO.setFileName(this.getManagedBean().getFileName());
-
+			reqDTO.setTransId(this.getManagedBean().getTransId());
+			
 			try {
 
 				IInterfacePtjSO reqSO = (IInterfacePtjSO) BusinessDelegate.getInstance()
@@ -1134,6 +1143,8 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			reqDTO.setInterfacePpLs(this.getManagedBean().getSelectedPpList());
 			reqDTO.setFileName(this.getManagedBean().getFileName());
+			reqDTO.setTransId(this.getManagedBean().getTransId());
+			
 
 			try {
 
