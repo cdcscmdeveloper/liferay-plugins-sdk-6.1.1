@@ -67,10 +67,14 @@
 							 maxlength="100" style="width:840px"/></td>
 				</tr>
 				<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.document.type']}" /></td>
+				<td>
+					<h:outputLabel value="#{lbl['lbl.sc.document.type']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
 					<td><p:selectOneMenu
 							value="#{qTDetailBB.managedBean.docType}"
-							style="width: 297px;margin-bottom: 5px;">
+							style="width: 297px;margin-bottom: 5px;"
+							label="#{lbl['lbl.sc.document.type']}" required="true">
 							<f:selectItems
 								value="#{qTDetailBB.getDocTypeQtLOADropdownValues()}" />
 								<p:ajax update="qtsearchid" process="@this"/>
@@ -78,16 +82,12 @@
 				</tr>
 				<tr>
 					<td style="width: 165px;">
-						  <h:outputLabel for="qtnno" value="#{lbl['lbl.sc.qtn.no']}" rendered="#{qTDetailBB.managedBean.docType eq ParameterConst.doctypeQuotation}" /> 
-						  <h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.no']}"  rendered="#{qTDetailBB.managedBean.docType eq ParameterConst.doctypeLetterOfAward}" />
+						  <h:outputLabel for="docNo" value="#{lbl['lbl.sc.document.no']}" />
 					</td>
 					<td style="width:385px">
-						<p:inputText id="qtnno"
-							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtNo}"
-							maxlength="21" style="width:288px;" rendered="#{qTDetailBB.managedBean.docType eq ParameterConst.doctypeQuotation}" />
-						<p:inputText id="loaNo"
-							value="#{qTDetailBB.managedBean.searchLoaNo}"
-							maxlength="21" style="width:288px;" rendered="#{qTDetailBB.managedBean.docType eq ParameterConst.doctypeLetterOfAward}" />
+						<p:inputText id="docNo"
+							value="#{qTDetailBB.managedBean.docNo}"
+							maxlength="21" style="width:288px;" />
 					</td>
 							
 					<td style="width:165px"><h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
