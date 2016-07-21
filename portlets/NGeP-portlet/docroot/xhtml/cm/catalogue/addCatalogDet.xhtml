@@ -114,9 +114,16 @@
 							value="#{lbl['lbl.cm.item.code']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:outputLabel></td>
+				</tr>
+				
+				<tr style="height: 30px;">
 					<td><p:outputLabel styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.cm.item.name']}" /></td>
-					<td style="overflow-wrap: break-word; width: 25%;"><p:outputLabel
+							value="#{lbl['lbl.cm.unspsc.title']}" /></td>
+					<td style="overflow-wrap: break-word; width: 20%;">
+						<p:outputLabel styleClass="outputLabel-view" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemNameBeforeCodified}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sc.item.name.after.codified']}" /></td>
+					<td style="overflow-wrap: break-word; width: 20%;"><p:outputLabel
 							styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:outputLabel>
 						<p:spacer width="5" /> <p:commandLink
@@ -124,7 +131,7 @@
 							update=":form:itemSpecDlg" oncomplete="itemSpecDlg.show();">
 							<p:graphicImage value="/css/images/design/ico-view.png"
 								title="#{lbl['lbl.ct.specification']}" />
-						</p:commandLink></td>
+						</p:commandLink></td>				
 				</tr>
 
 				<tr style="height: 30px;">
