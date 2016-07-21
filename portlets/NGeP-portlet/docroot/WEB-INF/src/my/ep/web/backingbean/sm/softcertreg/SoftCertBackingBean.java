@@ -723,7 +723,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private void setDisableFlUserRowSelection(List<SmPersonnel> personnels) {
 		if (!getManagedBean().isAllAuthSuppUserAlreadyRequested()) {
 			for (SmPersonnel personnel : personnels) {
-				if (personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
+				if (!StringUtils.isBlank(personnel.getEpRole())
+						&& personnel.getEpRole().equals(
+								RoleCode.FL_USER.value())) {
 					personnel.setDisableRowSelection(true);
 				}
 			}
@@ -1185,7 +1187,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 		}
 	}
-	
+
 	public void navigateToViewSoftCert() {
 		log.info("navigateToViewSoftCert");
 
@@ -1212,6 +1214,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-			
+
 	}
 }
