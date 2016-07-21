@@ -182,12 +182,11 @@
 						</p:inputText> 
 						<p:graphicImage id="asocRegNoImg"
 							value="/css/images/design/tooltips.png" 
-							style="padding-left : 10px;" rendered="false" /> 
+							style="padding-left : 10px;" rendered="true" />
+						<ui:param name="lblRegNoTlTip" value="tt.sm.business.type.#{backingBean.managedBean.smSupplier.businessType}" />
 						<p:tooltip
 						id="asocRegNoImgtt" for="asocRegNoImg">
-						<p:inputTextarea escape="false" readonly="true" disabled="true"
-							rows="3" cols="50"
-							value="#{lbl['lbl.sm.assocCmpny.regNoToolTip']}" />
+							<p:outputLabel escape="false" value="#{lbl[lblRegNoTlTip]}"  />
 						</p:tooltip>
 						<p:message id="asocRegNoMsg" for="asocRegNo" showSummary="true"
 							showDetail="false" display="icon" /></td>
