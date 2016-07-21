@@ -3048,36 +3048,36 @@ public class ProfileManagementBackingBean extends
 		}
 		
 		SearchOrderBean orderBean = null;
-		if(getManagedBean().getSelectedOrgType() !=null && getManagedBean().getSelectedOrgType().getParameterCode() !=null){
-			if(OrganizationType.SUPPLIER.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
-				orderBean = new SearchOrderBean("pmOrgProfile.smSupplier.companyName", true);
-			}else if(OrganizationType.FACTORING_COMPANY.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
-				orderBean = new SearchOrderBean("pmOrgProfile.pmFinancialOrg.finOrgName", true);
-			}else{
-				Date currentDate = new Date();
-				// Filter By -  effDate
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmOrgProfile.pmOrgValidity.effDate",
-								SearchOperator.OPERATOR_LESS_EQUAL.value(),
-								currentDate));
-
-				// Filter By -  expDate
-				searchBean.getDataFilterBeans().add(
-						new SearchMultiFilterBean(new SearchFilterBean(
-								"pmOrgProfile.pmOrgValidity.expDate",
-								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-								currentDate), new SearchFilterBean(
-								"pmOrgProfile.pmOrgValidity.expDate",
-								SearchOperator.OPERATOR_IS_NULL.value(), null,
-								SearchCondition.CONDITION_OR.value())));
-				orderBean = new SearchOrderBean("pmOrgProfile.pmOrgValidity.orgName", true);
-			}
-		}
+//		if(getManagedBean().getSelectedOrgType() !=null && getManagedBean().getSelectedOrgType().getParameterCode() !=null){
+//			if(OrganizationType.SUPPLIER.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
+//				orderBean = new SearchOrderBean("pmOrgProfile.smSupplier.companyName", true);
+//			}else if(OrganizationType.FACTORING_COMPANY.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
+//				orderBean = new SearchOrderBean("pmOrgProfile.pmFinancialOrg.finOrgName", true);
+//			}else{
+//				Date currentDate = new Date();
+//				// Filter By -  effDate
+//				searchBean.getDataFilterBeans().add(
+//						new SearchFilterBean("pmOrgProfile.pmOrgValidity.effDate",
+//								SearchOperator.OPERATOR_LESS_EQUAL.value(),
+//								currentDate));
+//
+//				// Filter By -  expDate
+//				searchBean.getDataFilterBeans().add(
+//						new SearchMultiFilterBean(new SearchFilterBean(
+//								"pmOrgProfile.pmOrgValidity.expDate",
+//								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+//								currentDate), new SearchFilterBean(
+//								"pmOrgProfile.pmOrgValidity.expDate",
+//								SearchOperator.OPERATOR_IS_NULL.value(), null,
+//								SearchCondition.CONDITION_OR.value())));
+//				orderBean = new SearchOrderBean("pmOrgProfile.pmOrgValidity.orgName", true);
+//			}
+//		}
 		
-		if(orderBean != null){
-			searchBean.getSortColumns().add(orderBean);
-		}
-		searchBean.getSortColumns().add(new SearchOrderBean("pmUser.userName",true));
+//		if(orderBean != null){
+//			searchBean.getSortColumns().add(orderBean);
+//		}
+//		searchBean.getSortColumns().add(new SearchOrderBean("pmUser.userName",true));
 		
 		
 		logger.info("getSearchBeanData - End");
