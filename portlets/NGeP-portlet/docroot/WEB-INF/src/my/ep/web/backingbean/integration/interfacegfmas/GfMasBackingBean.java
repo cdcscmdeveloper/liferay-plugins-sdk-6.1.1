@@ -377,7 +377,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				InterfaceLogResDto resDTO = gfMasSO
 						.retrieveInterfaceLogDetaisls(gfMasReqDTO);
-
+				System.out.println("getTotalRecord:"+resDTO.getViewGfMasResultBean().getTotalRecord());
 				getManagedBean().setLazy(true);
 
 				if (resDTO.isSuccessful()) {
@@ -936,6 +936,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setInterfacePrgActLs(this.getManagedBean().getSelectedProgActList());
+			reqDTO.setTransId(this.getManagedBean().getTransId());
 
 			try {
 				interfaceprgActSO.saveOrUpdatePrgActList(reqDTO);
@@ -961,6 +962,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setInterfaceProjectLs(this.getManagedBean().getSelectedProjectList());
+			reqDTO.setTransId(this.getManagedBean().getTransId());
 
 			try {
 				interfaceprojectActSO.saveOrUpdateProjectList(reqDTO);
@@ -1037,6 +1039,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setInterfaceGlAccLs(this.getManagedBean().getSelectedGlAcntList());
+			reqDTO.setTransId(this.getManagedBean().getTransId());
 
 			try {
 				interfaceGlAccSO.saveOrUpdateGlAccList(reqDTO);
@@ -1111,7 +1114,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setInterfaceDanaLs(this.getManagedBean().getSelectedDanaList());
-
+			reqDTO.setTransId(this.getManagedBean().getTransId());
 			try {
 				interfaceVotDanaSO.saveOrUpdateVotDanaList(reqDTO);
 			} catch (Exception e) {
@@ -1152,6 +1155,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			InterfaceVotReqDTO reqDTO = new InterfaceVotReqDTO();
 			reqDTO.setFileName(this.getManagedBean().getFileName());
+			reqDTO.setTransId(this.getManagedBean().getTransId());
 
 			reqDTO.setInterfaceVotLs(this.getManagedBean().getSelectedVotList());
 			try {
