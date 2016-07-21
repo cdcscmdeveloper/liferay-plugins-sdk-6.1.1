@@ -12,7 +12,6 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +48,7 @@ import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -88,6 +88,7 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -140,6 +141,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
@@ -1180,7 +1182,7 @@ public class QTDetailBackingBean extends
 	 * @param qtSearchBean
 	 *            the qt search filter bean
 	 */
-	private void populateQTSearchCriteria(
+	private void populateQTSearchCriteria(QuationTenderReqDTO reqDTO,
 			QtnTenderSearchBean qtnTenderSearchBean,
 			ISearchBean<ScQt> qtSearchBean) {
 		if (qtnTenderSearchBean != null) {
@@ -1191,33 +1193,30 @@ public class QTDetailBackingBean extends
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String qtTitle = qtnTenderSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
-				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTConstants.QT_TITILE,
-								SearchOperator.OPERATOR_LIKE.value(), qtTitle,
-								true));
-				qtSearchBean.getDataFilterBeans().add(
+				searchFilterBean.add(
 						new SearchFilterBean(QTConstants.QT_TITILE,
 								SearchOperator.OPERATOR_LIKE.value(), qtTitle,
 								true));
 			}
 			
-			// doctype 
-			if(getManagedBean().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
-				getManagedBean().setSearchLoaNo(null);
-			} else{
-				qtnTenderSearchBean.setQtNo(null);
-			}
-			String qtNumber = qtnTenderSearchBean.getQtNo();
-			if (StringUtils.isNotEmpty(qtNumber)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField(QTConstants.QT_NUMBER);
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-				bean.setSearchValue(qtNumber);
-				searchFilterBean.add(bean);
+			// docType & docNo
+			String docType = getManagedBean().getDocType();
+			String docNo = getManagedBean().getDocNo();
+			if (StringUtils.isNotEmpty(docType)) {
+				if (ParameterConst.DOCTYPE_QUOTATION.equals(docType)) {
+					SearchFilterBean bean = new SearchFilterBean();
+					bean.setSearchField(QTConstants.QT_NUMBER);
+					bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+					bean.setSearchValue(docNo);
+					searchFilterBean.add(bean);	
+				} else {
+					reqDTO.setDocType(docType);
+					reqDTO.setDocNo(docNo);
+				}
 			}
 			String procurementMode = qtnTenderSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
-				qtSearchBean.getDataFilterBeans().add(
+				searchFilterBean.add(
 						new SearchFilterBean("procurementMode.parameterCode",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								procurementMode));
@@ -1291,31 +1290,42 @@ public class QTDetailBackingBean extends
 			boolean filterByOrg = true;
 			String status = qtnTenderSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)) {
-				qtSearchBean
-						.getDataFilterBeans()
-						.add(new SearchFilterBean(
+				searchFilterBean.add(new SearchFilterBean(
 								"scQtStatus.pmStatus.statusId",
 								SearchOperator.OPERATOR_EQUALS.value(), status));
-				qtSearchBean.getDataFilterBeans().add(
+				searchFilterBean.add(
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
 			
 			if (isMofSupplier()) {
-				// Filter By - Published Status
-				List<Long> notPublishedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-				notPublishedStatuses = new ArrayList<Long>(notPublishedStatuses.subList(
-						notPublishedStatuses.indexOf(QTStatusConst.QT_PENDING_QT_SUBMISSION), 
-						notPublishedStatuses.indexOf(QTStatusConst.QT_BRIEFING_SITE_VISIT)));
-				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(
-						"scQtStatus.pmStatus.statusId",
-						SearchOperator.OPERATOR_NOT_IN.value(), 
-						notPublishedStatuses));
-				if (StringUtils.isBlank(status)) {
-					qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(
-							"scQtStatus.current",
-							SearchOperator.OPERATOR_EQUALS.value(), 
-							true));	
+				// Filter By - supplierId
+				ISupplierSearchSO supplierSearchSO = null;
+				try {
+					supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+
+					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+					supplierSearchReqDTO.setUserId(userId);
+					List<SmSupplier> smSuppliers = supplierSearchSO
+							.retriveSupplierProfiles(supplierSearchReqDTO)
+							.getResultBean().getResultList();
+					
+					if (CollectionUtils.isNotEmpty(smSuppliers)) {
+						List<Long> supplierIds = new ArrayList<Long>();
+						for (SmSupplier smSupplier : smSuppliers) {
+							supplierIds.add(smSupplier.getSupplierId());
+						}
+						
+						searchFilterBean.add(new SearchFilterBean(
+								"scQtSuppliers.smSupplier.supplierId",
+								SearchOperator.OPERATOR_IN.value(), 
+								supplierIds));
+						reqDTO.setSupplierIds(supplierIds);
+					}
+
+				} finally {
+					supplierSearchSO = null;
 				}
 				
 				filterByOrg = false;
@@ -1367,6 +1377,8 @@ public class QTDetailBackingBean extends
 
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
+			
+			reqDTO.setQtSearchBean(qtSearchBean);
 		}
 	}
 
@@ -2861,9 +2873,7 @@ public class QTDetailBackingBean extends
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				populateQTSearchCriteria(qtnTenderSearchBean, searchBean);
-				reqDTO.setQtSearchBean(searchBean);
-				reqDTO.setLoaNo(getManagedBean().getSearchLoaNo());
+				populateQTSearchCriteria(reqDTO, qtnTenderSearchBean, searchBean);
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 				return resDTO.getQtResultBean();
@@ -2889,7 +2899,7 @@ public class QTDetailBackingBean extends
 	 */
 	public void reset() {
 		getManagedBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
-		getManagedBean().setSearchLoaNo(null);
+		getManagedBean().setDocNo(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
 		this.getManagedBean().getQtnTenderSearchBean().setProcurementMode(null);
@@ -5046,8 +5056,15 @@ public class QTDetailBackingBean extends
 	public SelectItem[] getDocTypeQtLOADropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> qtLoaDoctypes = new ArrayList<String>();
+		qtLoaDoctypes.add(ParameterConst.DOCTYPE_BIDDING);
+		qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 		qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 		qtLoaDoctypes.add(ParameterConst.DOCTYPE_QUOTATION);
+		
+		if (isMofSupplier()) {
+			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL);
+		}
+		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_IN.value(), qtLoaDoctypes));
