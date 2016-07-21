@@ -169,7 +169,8 @@
 					</p:inputText> <p:spacer width="10px" /> <p:inputText styleClass="ppRightBtn"
 						value="#{!empty lOIDetailBackingBean.managedBean.scLoi.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOIDetailBackingBean.managedBean.scLoi.ackDueDate) : ''}"
 						disabled="true" size="4" readonly="true" /> #{lbl['lbl.sc.days']}
-					<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loi.res.due.date.tooltip']}" />
+						<ui:param name="days" value="#{lOIDetailBackingBean.retrivemessage(lOIDetailBackingBean.managedBean.scLoi.ackDueDate)}"></ui:param>
+					<ac:iconTooltip value="#{days}" />
 				</td>
 			</tr>
 			<tr>
