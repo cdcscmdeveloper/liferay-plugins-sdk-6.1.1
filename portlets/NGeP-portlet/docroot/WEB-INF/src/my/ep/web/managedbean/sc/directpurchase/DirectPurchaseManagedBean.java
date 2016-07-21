@@ -24,12 +24,15 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 // TODO: Auto-generated Javadoc
@@ -185,6 +188,14 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 									 getSearchDocumentToDuration())));
 				}
 				
+				if(isReqOrApprover()){
+					// Removed the restriction condition 
+					if (CollectionUtils.isNotEmpty(searchBean
+							.getDataFilterMetadatas())) {
+						searchBean.getDataFilterMetadatas().clear();
+					}
+				}
+				
 				ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 				SourcingIntegrationReqDTO reqDTO = new SourcingIntegrationReqDTO();
 				reqDTO.setSourcingDocSearchBean(searchBean);
@@ -195,6 +206,18 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 			}
 			return null;
 		}
+	}
+	
+	
+    /**
+     * Checks if is requisitioner or approver.
+     *
+     * @return true, if is requisitioner or approver
+     */
+    public boolean isReqOrApprover() {
+    	FacesScopes fc = new FacesScopes();
+		return (fc.hasRoleUser(RoleCode.REQUISITIONER.value()) 
+				|| fc.hasRoleUser(RoleCode.APPROVER.value()));
 	}
 
 	/**

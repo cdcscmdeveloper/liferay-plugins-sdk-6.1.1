@@ -35,6 +35,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.ministry']}" /></td>
 						<td colspan="3"><ac:lov id="searchMinistry"
 								lovId="PM_ORG_PROFILE_MINSTRY" size="148" readonly="true"
+								disabled="#{directPurchaseBackingBean.disableMinistryLov()}"
 								headerText="#{lbl['lbl.sc.ministry']}"
 								value="#{directPurchaseBackingBean.managedBean.searchMinistryProfile.orgName}"
 								postUpdateListener="directPurchaseBackingBean.resetPtjGroupProfile()"
@@ -47,6 +48,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
 						<td colspan="3"><ac:lov id="searchPtjGroup"
 								lovId="PM_ORG_PROFILE_PTJ_GROUP" size="148" readonly="true"
+								disabled="#{directPurchaseBackingBean.isReqOrApprover()}"
 								headerText="#{lbl['lbl.sc.kumpulan.ptj']}"
 								value="#{directPurchaseBackingBean.managedBean.searchPtjGroupProfile.orgName}"
 								postUpdateListener="directPurchaseBackingBean.resetPtjProfile()"
