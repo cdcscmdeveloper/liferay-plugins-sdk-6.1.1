@@ -162,7 +162,7 @@ public class CityBackingBean extends BaseBackingBean<CityManagedBean> {
 		if (StringUtils.isNotBlank(citySearchBean.getStateCode())) {
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmDistrict.pmDivision.pmState.stateCode",
+					new SearchFilterBean("pmDistrict.pmState.stateCode",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							citySearchBean.getStateCode(),
 							true));
