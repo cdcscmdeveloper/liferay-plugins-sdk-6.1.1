@@ -171,6 +171,7 @@ public class DivisionBackingBean extends BaseBackingBean<DivisionManagedBean> {
 							SearchOperator.OPERATOR_EQUALS.value(),
 							divisionSearchBean.getStateCode(),
 							true));
+			
 		}
 
 		if (StringUtils.isNotBlank(divisionSearchBean.getDivisionName())) {
@@ -181,6 +182,12 @@ public class DivisionBackingBean extends BaseBackingBean<DivisionManagedBean> {
 							divisionSearchBean.getDivisionName().toUpperCase(),
 							true));
 		}
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmState.recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						DbValueConst.RECORD_STATUS_ACTIVE));
+		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("recordStatusFlg",
 						SearchOperator.OPERATOR_EQUALS.value(),

@@ -209,7 +209,13 @@ public class DistrictBackingBean extends BaseBackingBean<DistrictManagedBean> {
 				new SearchFilterBean("pmState.pmCountry.countryCode",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						CommonConstants.DEFAULT_COUNTRY_CODE,
-						true));			
+						true));	
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmState.recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						DbValueConst.RECORD_STATUS_ACTIVE));
+		
 		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("recordStatusFlg",
