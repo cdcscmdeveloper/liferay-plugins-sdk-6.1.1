@@ -140,7 +140,7 @@
 					<td>
 						<div style="display:inline-block;">
 							<c:if test="#{isFFCOrgType}">
-							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_FFC" size="65" 
+							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_FFC" size="103" 
 							    	required="true" 
 							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					            	update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
@@ -153,7 +153,7 @@
 									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />									
 							</c:if>
 							<c:if test="#{isSupplierOrgType}">
-							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="65" 
+							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="103" 
 							    	required="true" 
 							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					            	update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
@@ -166,7 +166,7 @@
 									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />									
 							</c:if>
 							<c:if test="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode and ParameterConst.orgTypeSupplier ne profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode}">
-							   <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="65"
+							   <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="103"
 												required="true"
 												label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 												update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
