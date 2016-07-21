@@ -228,5 +228,7 @@
 					target="#{qTCommitteBackingBean.managedBean.nameRequired}" />
 			</p:commandButton>
 		</div>
+		<p:ajax event="close" update="@([id$=name2])" listener="#{qTCommitteBackingBean.nameRequired}">
+		</p:ajax>
 	</p:dialog>
 </ui:composition>
