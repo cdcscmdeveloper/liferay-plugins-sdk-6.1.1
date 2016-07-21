@@ -31,19 +31,19 @@
 				<p:menuitem value="#{lbl['lbl.cm.draft']}"
 					action="#{catalogueBackingBean.onTabChange1('Draft')}"
 					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.cm.approval']}"
+				<p:menuitem value="#{lbl['lbl.cm.approval']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.onTabChange1('Approval')}"
 					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.cm.approved']}"
+				<p:menuitem value="#{lbl['lbl.cm.approved']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.onTabChange1('Approved')}"
 					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.cm.reject']}"
+				<p:menuitem value="#{lbl['lbl.cm.reject']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.onTabChange1('Rejected')}"
 					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.cm.published']}"
+				<p:menuitem value="#{lbl['lbl.cm.published']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.onTabChange1('Published')}"
 					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.cm.expired']}"
+				<p:menuitem value="#{lbl['lbl.cm.expired']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.onTabChange1('Expired')}"
 					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</p:tabMenu>
