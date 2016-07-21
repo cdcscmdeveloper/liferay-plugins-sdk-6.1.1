@@ -200,7 +200,12 @@ public class CityBackingBean extends BaseBackingBean<CityManagedBean> {
 				new SearchFilterBean("pmDistrict.pmState.pmCountry.countryCode",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						CommonConstants.DEFAULT_COUNTRY_CODE,
-						true));			
+						true));	
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmDistrict.pmState.recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						DbValueConst.RECORD_STATUS_ACTIVE));
 		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmDistrict.recordStatusFlg",
