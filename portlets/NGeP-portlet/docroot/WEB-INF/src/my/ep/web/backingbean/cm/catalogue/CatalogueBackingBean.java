@@ -1662,6 +1662,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				circularReqDTO.setPanelItemId(supplierItem.getDocId());
 				CircularDetailResDTO circularseqDTO = circularDetailSO.getPanelItemById(circularReqDTO);
 				CtPanelItem ctPanelItem = circularseqDTO.getCtPanelItem();
+				cmSupplierItem.setItemNameBeforeCodified(ctPanelItem.getItemName());
 				if(ctPanelItem.getScRequestItem().getCmItem()!=null) {
 					cmSupplierItem.setCmItem(ctPanelItem.getScRequestItem().getCmItem());
 				} else {
@@ -1671,7 +1672,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					if(cmItem.getExtensionCode()==null) {
 						cmItem.setExtensionCode("000"); 
 					}
-					cmItem.setItemName(ctPanelItem.getItemName());
+					cmItem.setItemName(ResourceBundleUtils.getMessage("lbl.txt.na",ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 					cmSupplierItem.setCmItem(cmItem);
 				}
 				cmSupplierItem.setPmUom(ctPanelItem.getPmUom());
@@ -1700,7 +1701,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				ContractItemReqDTO itemReqDTO = new ContractItemReqDTO();
 				itemReqDTO.setContractItemId(supplierItem.getDocId());
 				CtContractItem ctContractItem = contractItemSO.getContractItemForCatalogueView(itemReqDTO).getCtContractItem();
-
+				cmSupplierItem.setItemNameBeforeCodified(ctContractItem.getScRequestItem().getItemName());
+				
 				if(ctContractItem.getScRequestItem().getCmItem()!=null) {
 					cmSupplierItem.setCmItem(ctContractItem.getScRequestItem().getCmItem());
 				} else {
@@ -1710,7 +1712,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					if(cmItem.getExtensionCode()==null) {
 						cmItem.setExtensionCode("000"); 
 					}
-					cmItem.setItemName(ctContractItem.getScRequestItem().getItemName());
+					cmItem.setItemName(ResourceBundleUtils.getMessage("lbl.txt.na",ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 					cmSupplierItem.setCmItem(cmItem);
 				}
 				cmSupplierItem.setPmUom(ctContractItem.getScRequestItem().getUom());
@@ -1732,16 +1734,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				resDTO = catalogueSO.viewSupplierItem(reqDTO);
 				this.getManagedBean().setDisplayCatalogue(true);
 				this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItemList().get(0));
+				this.getManagedBean().getSelectedMaintainItem().setItemNameBeforeCodified(this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName());
 
 				reqDTO.setSupplierId(resDTO.getSupplierItemList().get(0).getSmSupplier().getSupplierId());
 				retriveSupplierGstInfomation(resDTO.getSupplierItemList().get(0).getSmSupplier());
 				resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 				this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
 
+				//remove N/A from Item name if any
+				String itemNameForView = this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName().replaceAll("N/A", "");
+				this.getManagedBean().getSelectedMaintainItem().getCmItem().setItemName(itemNameForView);
 			}
-			//remove N/A from Item name if any
-			String itemNameForView = this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName().replaceAll("N/A", "");
-			this.getManagedBean().getSelectedMaintainItem().getCmItem().setItemName(itemNameForView);
 			log.info("*****************end********************");
 
 		} catch (Exception e) {
