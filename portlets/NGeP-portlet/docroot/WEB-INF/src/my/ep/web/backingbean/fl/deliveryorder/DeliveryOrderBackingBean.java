@@ -466,6 +466,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 */
 	private void checkItemsWithDoAddress(String actionName) {
 		boolean anyAddressSelected = false;
+		getManagedBean().setSelectedDeliveryAddressList(new ArrayList<FlDeliveryAddress>());
+		for(FlDeliveryAddress selectedDelAddress  :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
+				getManagedBean().getSelectedDeliveryAddressList().add(selectedDelAddress);
+			}
+		}
 		for(FlDeliveryAddress selectedDelAddress  :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
 				anyAddressSelected = true;
@@ -490,6 +496,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						totalDeliveryQty = 0;
 						totalDeliveryAmount = 0;
 						for(FlFulfilmentItemAddr itemAddress: selectedDelAddress.getFlFulfilmentItemAddr()){
+							
 							if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 								if(itemAddress.getDeliveredAmt() == null){
 									itemAddress.setDeliveredAmt(new BigDecimal(0));
@@ -497,7 +504,27 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 								if(itemAddress.getDeliveredAmt().doubleValue() > 0 && itemAddress.getDeliveredQty().doubleValue() <= 0){
 									throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress()),ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress()),getFullAddress(selectedDelAddress.getFlAddress())});
 								}else if(itemAddress.getDeliveredAmt().doubleValue() <= 0 && itemAddress.getDeliveredQty().doubleValue() > 0){
-									throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress()),ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress()),getFullAddress(selectedDelAddress.getFlAddress()),getFullAddress(selectedDelAddress.getFlAddress())});
+									String messageId = MessageConst.ERROR_740047;
+									if(getManagedBean().getSelectedDeliveryAddressList().size()>1){
+										FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,	null,
+												MessageUtils.getMessage(messageId, 
+														new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  "}, 
+														MessageUtils.BUNDLE_COMMON_MESSAGES, 
+														new FacesScopes().getUserLocale())));
+														
+										for(FlDeliveryAddress selectedDelAddressValidation : getManagedBean().getSelectedDeliveryAddressList()){
+											FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getFullAddress(selectedDelAddressValidation.getFlAddress())));
+										}
+									}else if(getManagedBean().getSelectedDeliveryAddressList().size()==1){
+										messageId = MessageConst.ERROR_740048;
+										FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,	null,
+												MessageUtils.getMessage(messageId, 
+														new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()), getFullAddress(getManagedBean().getSelectedDeliveryAddressList().get(0).getFlAddress())}, 
+														MessageUtils.BUNDLE_COMMON_MESSAGES, 
+														new FacesScopes().getUserLocale())));
+									}
+									throw new EpException("");
+									//throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress()),ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress()),getFullAddress(selectedDelAddress.getFlAddress()),getFullAddress(selectedDelAddress.getFlAddress())});
 								}
 							}
 							totalDeliveryQty = totalDeliveryQty + itemAddress.getDeliveredQty().doubleValue();
@@ -507,7 +534,29 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 							throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.total.del.quantity",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),getFullAddress(selectedDelAddress.getFlAddress())});
 						}
 						if(totalDeliveryAmount==0) {
-							throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.total.del.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),getFullAddress(selectedDelAddress.getFlAddress())});
+							String messageId = MessageConst.ERROR_740047;
+							if(getManagedBean().getSelectedDeliveryAddressList().size()>1){
+								FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,	null,
+										MessageUtils.getMessage(messageId, 
+												new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  "}, 
+												MessageUtils.BUNDLE_COMMON_MESSAGES, 
+												new FacesScopes().getUserLocale())));
+												
+								for(FlDeliveryAddress selectedDelAddressValidation : getManagedBean().getSelectedDeliveryAddressList()){
+									FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getFullAddress(selectedDelAddressValidation.getFlAddress())));
+								}
+							}else if(getManagedBean().getSelectedDeliveryAddressList().size()==1){
+								messageId = MessageConst.ERROR_740048;
+								FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,	null,
+										MessageUtils.getMessage(messageId, 
+												new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()), getFullAddress(getManagedBean().getSelectedDeliveryAddressList().get(0).getFlAddress())}, 
+												MessageUtils.BUNDLE_COMMON_MESSAGES, 
+												new FacesScopes().getUserLocale())));
+							}
+							
+							
+							throw new EpException("");
+							//throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.total.del.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),getFullAddress(selectedDelAddress.getFlAddress())});
 						}
 					}
 				}
