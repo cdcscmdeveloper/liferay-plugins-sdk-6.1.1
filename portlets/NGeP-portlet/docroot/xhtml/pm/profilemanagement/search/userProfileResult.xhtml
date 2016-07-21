@@ -14,14 +14,15 @@
 			value="#{profileManagementBackingBean.userOrgDataModel}"
 			var="userOrg">
 			<ac:paginator for="dtUserResult" />
+			
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.orgname']}" style="width :25%;white-space : normal">			
 				#{profileManagementBackingBean.retrieveOrgName(userOrg.pmOrgProfile)}
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}" style="width :15%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}" style="width :10%;white-space : normal">
 				#{userOrg.pmUser.identificationNo}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" style="width :25%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" style="width :20%;white-space : normal">
 				#{userOrg.pmUser.userName}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.designation']}" style="width :10%;white-space : normal">
@@ -30,6 +31,11 @@
 
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.user.status']}" width="10%">
 				#{(userOrg.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.created.date']}" style="width :10%;white-space : normal">
+				<h:outputText value="#{userOrg.createdDate}" style="float:left;">
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+					</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.role']}" style="width:5%;text-align:center;">
 				<p:commandLink  action="#{profileManagementBackingBean.getListOfAssignedRoles(userOrg)}" oncomplete="dlRoleList.show();" update=":form:opRoleList" >
