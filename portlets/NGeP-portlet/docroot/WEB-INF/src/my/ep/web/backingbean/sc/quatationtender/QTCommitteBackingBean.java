@@ -2347,4 +2347,8 @@ public class QTCommitteBackingBean extends
 			}
 		}
 	}
+	
+	public void nameRequired(){
+		this.getManagedBean().setNameRequired(false);
+	}
 }
