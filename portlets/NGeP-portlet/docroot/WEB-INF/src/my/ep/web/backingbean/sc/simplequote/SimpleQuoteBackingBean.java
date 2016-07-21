@@ -35,7 +35,6 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
-import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -63,7 +62,6 @@ import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -101,7 +99,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationStateCriteria;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteDoc;
@@ -1133,6 +1130,8 @@ public class SimpleQuoteBackingBean extends
 						specQuestion.setClItem(ItemName);
 						specQuestion.setClSpecDetail(itemSpec);
 					}
+				} else{
+					serviceTpl.setCtPanelItem(ctPanelItem);
 				}
 				serviceTpl.setTplSpecQuestions(tplSpecQuestions);
 				serviceTemplateSpecBean.setSpecMaster(serviceTpl);
@@ -1177,6 +1176,8 @@ public class SimpleQuoteBackingBean extends
 							prodQuestion.setClSpecDetail(itemSpec);
 						}
 					}
+				} else {
+					prodTpl.setCtPanelItem(ctPanelItem);
 				}
 				prodTpl.setTplSpecQuestions(productQuestions);
 				prodTpl.setBrandNew(Boolean.FALSE);
