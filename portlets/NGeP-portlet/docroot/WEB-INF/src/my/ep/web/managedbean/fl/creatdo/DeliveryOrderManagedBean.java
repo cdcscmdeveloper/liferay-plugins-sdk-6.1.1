@@ -208,6 +208,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private List<FlAttachment> previousAttachmentList;	
 	
 	private boolean hyperLinkPage = false;
+	
+	private List <FlDeliveryAddress>selectedDeliveryAddressList;
     
 	/**
 	 * Gets the item selected for cal.
@@ -1250,5 +1252,25 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	public void setGfmasErrorCode(String gfmasErrorCode) {
 		this.gfmasErrorCode = gfmasErrorCode;
 	}
+
+	/**
+	 * @return the selectedDeliveryAddressList
+	 */
+	public List<FlDeliveryAddress> getSelectedDeliveryAddressList() {
+		if(selectedDeliveryAddressList==null) {
+			selectedDeliveryAddressList = new ArrayList<FlDeliveryAddress>();
+		}
+		return selectedDeliveryAddressList;
+	}
+
+	/**
+	 * @param selectedDeliveryAddressList the selectedDeliveryAddressList to set
+	 */
+	public void setSelectedDeliveryAddressList(
+			List<FlDeliveryAddress> selectedDeliveryAddressList) {
+		this.selectedDeliveryAddressList = selectedDeliveryAddressList;
+	}
+
+	
 	
 }
