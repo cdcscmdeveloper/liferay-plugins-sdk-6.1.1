@@ -29,6 +29,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
@@ -80,38 +81,61 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		// reset search info
 		reset();
 		
-		// TODO add role Panel Circular Admin
-		if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())  // Government 
-				|| getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())){
-			
+		if(isGovernament()){
 			getDocumentTypes(Boolean.TRUE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 			
 			// show default Ministry, Kumpulan PTJ and PTJ
 			getDefaultPtjAndMinistryAndKumpulanPtj();
 
-		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()) // supplier and govt seller
+		} else if(isSupplier()){
+			getDocumentTypes(Boolean.FALSE);
+			getManagedBean().setGovernment(Boolean.FALSE);
+		}
+		fc.getApplication()
+		.getNavigationHandler()
+		.handleNavigation(fc, null, DIRECT_PURCHASE_SEARCH_PAGE_NAV);
+	}
+	
+	
+	/**
+	 * Checks if is governament.
+	 *
+	 * @return true, if is governament
+	 */
+	private boolean isGovernament(){
+		if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())  // Government 
+				|| getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())){
+
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	/**
+	 * Checks if is supplier.
+	 *
+	 * @return true, if is supplier
+	 */
+	private boolean isSupplier() {
+		if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()) // supplier and govt seller
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())){
-			getDocumentTypes(Boolean.FALSE);
-			getManagedBean().setGovernment(Boolean.FALSE);
-		}
-		
-		fc.getApplication()
-		.getNavigationHandler()
-		.handleNavigation(fc, null, DIRECT_PURCHASE_SEARCH_PAGE_NAV);
-	}
 
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
 	
 	/**
 	 * Gets the document types.
@@ -408,29 +432,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 		log.info(message);
 	}
-	
-	/**
-	 * Gets the default ptj and ministry search values based on user role.
-	 */
-	private void getDefaultPtjAndMinistryAndKumpulanPtj() {
-		debugLogger("getDefaultPtjAndMinistryValues");
-		PmOrgProfile ptjOrgProfile = getPTJOrgProfileByLoginUser();
-		this.getManagedBean().setSearchPtjProfile(ptjOrgProfile);
-		if (ptjOrgProfile != null) {
-			this.getManagedBean().setSearchMinistryProfile(
-					retrieveMinistryOrgProfile(ptjOrgProfile
-							.getOrgProfileId()));
-
-			IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setOrgProfileId(ptjOrgProfile.getOrgProfileId());
-			OrgProfileResDTO resDTO = new OrgProfileResDTO();
-			resDTO = profileSO.retrieveJabatanByOrgProfileId(reqDTO);
-			if(resDTO.getPmOrgProfile() != null){
-				getManagedBean().setSearchPtjGroupProfile(resDTO.getPmOrgProfile());
-			}
-		}
-	}
 
 	/**
 	 * Gets the org name.
@@ -461,12 +462,15 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
    	 * Get PTJ Group condition for construct the LOV listing
    	 * @return String
    	 */
-   	public String getPTJGroupCondition() {
-   		String condition = OrgProfileUtil.getFromToSearchBeanParentString(
-   				OrganizationType.DEPARTMENT.value(), OrganizationType.MINISTRY.value())+"^"+
-   				this.getManagedBean().getSearchMinistryProfile().getOrgProfileId();
-   		return condition;
-   	}
+	public String getPTJGroupCondition() {
+		if(getManagedBean().getSearchMinistryProfile() != null){
+			String condition = OrgProfileUtil.getFromToSearchBeanParentString(
+					OrganizationType.DEPARTMENT.value(), OrganizationType.MINISTRY.value())+"^"+
+					this.getManagedBean().getSearchMinistryProfile().getOrgProfileId();
+			return condition;
+		}
+		return null;
+	}
 	
 	/**
 	 * Get PTJ condition for construct the LOV listing
@@ -500,6 +504,94 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	public void resetPtjProfile() {
 		getManagedBean().setSearchPtjProfile(null);
 	}
+    
+    /**
+   	 * The method used to disable the ministry lov
+   	 * if login user is or ministry administrator
+   	 * or internal auditor.
+   	 * 
+   	 * @return true, if login user is ministry contract administrator/internal auditor
+   	 *         false, if login user is not ministry contract administrator/internal auditor
+	 */
+    public boolean disableMinistryLov() {
+    	return (isReqOrApprover() || (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
+				&& !getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())));
+    }
+     
+  
+    /**
+     * Checks if is requisitioner or approver.
+     *
+     * @return true, if is requisitioner or approver
+     */
+    public boolean isReqOrApprover() {
+		return (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value()));
+	}
+   
+   
+    /**
+     * Checks if is contract admin or internal audit.
+     *
+     * @return true, if is contract admin or internal audit
+     */
+    public boolean isContractAdminOrInternalAudit() {
+		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()));
+	}
+    
+    /**
+     * Checks if is search all.
+     *
+     * @return true, if is search all
+     */
+    public boolean isSearchAll() {
+		return (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()));
+	}
+   
+    /**
+     * Gets the default ptj and ministry and kumpulan ptj.
+     *
+     * @return the default ptj and ministry and kumpulan ptj
+     */
+    private void getDefaultPtjAndMinistryAndKumpulanPtj() {
+    	if (isSupplier()) {
+    		this.getManagedBean().setSearchMinistryProfile(null);
+    		this.getManagedBean().setSearchPtjGroupProfile(null);
+    		this.getManagedBean().setSearchPtjProfile(null);
+			
+		} else {
+			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile orgProfile = null;
+			if (userResDTO.getUserOrgList()!=null && userResDTO.getUserOrgList().size()>0) {
+				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+			
+			this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
+			this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
+			this.getManagedBean().setSearchPtjProfile(orgProfile);
+		/*	
+			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {			
+				this.getManagedBean().setSearchMinistryProfile(orgProfile);
+				this.getManagedBean().setSearchPtjGroupProfile(null);
+				this.getManagedBean().setSearchPtjProfile(null);
+			} else if (isContractAdminOrInternalAudit()) {
+				this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
+				this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
+				this.getManagedBean().setSearchPtjProfile(orgProfile);
+			} else if (isReqOrApprover()) {
+				this.getManagedBean().setSearchMinistryProfile(null);
+    			this.getManagedBean().setSearchPtjGroupProfile(null);
+    			this.getManagedBean().setSearchPtjProfile(orgProfile);
+			}*/
+		}
+    }
 
 }
 
