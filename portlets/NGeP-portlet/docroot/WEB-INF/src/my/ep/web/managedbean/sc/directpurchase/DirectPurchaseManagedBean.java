@@ -217,7 +217,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
     public boolean isReqOrApprover() {
     	FacesScopes fc = new FacesScopes();
 		return (fc.hasRoleUser(RoleCode.REQUISITIONER.value()) 
-				|| fc.hasRoleUser(RoleCode.APPROVER.value()));
+				|| fc.hasRoleUser(RoleCode.RN_APPROVER.value()));
 	}
 
 	/**
