@@ -16,19 +16,6 @@
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
 			<table style="width: 100%;">
-				<tr>
-					<td width="22%"><p:outputLabel
-							value="#{lbl['lbl.sc.document.type']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 250px;"
-							value="#{directPurchaseBackingBean.managedBean.searchDocumentType}">
-							<f:selectItems
-								value="#{directPurchaseBackingBean.managedBean.documentTypes}" />
-							<p:ajax event="change" update="searchPanel"
-								listener="#{directPurchaseBackingBean.searchStatusDesc}" />
-						</p:selectOneMenu></td>
-				</tr>
-
 				<h:panelGroup
 					rendered="#{directPurchaseBackingBean.managedBean.government}">
 					<tr>
@@ -68,6 +55,18 @@
 							</ac:lov></td>
 					</tr>
 				</h:panelGroup>
+				<tr>
+					<td width="22%"><p:outputLabel
+							value="#{lbl['lbl.sc.document.type']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 250px;"
+							value="#{directPurchaseBackingBean.managedBean.searchDocumentType}">
+							<f:selectItems
+								value="#{directPurchaseBackingBean.managedBean.documentTypes}" />
+							<p:ajax event="change" update="searchPanel"
+								listener="#{directPurchaseBackingBean.searchStatusDesc}" />
+						</p:selectOneMenu></td>
+				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.document.title']}" /></td>
