@@ -46,8 +46,7 @@
 					<p:spacer width="2" />
 				</td>
 				<td>
-					<ui:param name="errorCode" value="lbl.fl.integration.status.code.#{createDOBackingBean.managedBean.gfmasErrorCode}" />
-					<p:outputLabel value="#{lbl['lbl.fl.integration.error']} #{lbl[errorCode]} (ERR-#{createDOBackingBean.managedBean.gfmasErrorCode})" style="color: #C55751 !important; font-weight: normal !important"
+					<p:outputLabel value="#{createDOBackingBean.managedBean.gfmasErrorDesc} #{lbl['lbl.fl.integration.click.for.exception.details']} (ERR-#{createDOBackingBean.managedBean.gfmasErrorCode})" style="color: #C55751 !important; font-weight: normal !important"
 						rendered="#{createDOBackingBean.managedBean.gfmasError}" />
 				</td>					
 			</tr>
@@ -168,7 +167,7 @@
 			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
 			<table style="width: 100%">
 				<tr>
-					<td><p:messages id="gfmasMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+					<td><p:messages id="gfmasMsg" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
 				</tr>
 			</table>
 			<p:spacer height="2px"></p:spacer>
