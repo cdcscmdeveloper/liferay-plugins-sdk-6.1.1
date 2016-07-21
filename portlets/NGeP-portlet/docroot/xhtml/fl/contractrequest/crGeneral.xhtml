@@ -11,7 +11,7 @@
 			<tr>
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="65" id="ministry"
+				<td><p:inputText size="65" id="ministry" style="width: 416px;"
 						value="#{contractRequestBackingBean.retrieveMinistryByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId, contractRequestBackingBean.getTransactionDate(contractRequestBackingBean.managedBean.flRequest))}"
 						disabled="true" /></td>
 			</tr>
@@ -454,6 +454,11 @@
 			  <p:panel id="chargeResultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
               <p:dataTable id="tableChargePtj" var="pmVar" value="#{contractRequestBackingBean.chargedPtjDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
                  rowIndexVar="rowIndex" selection="#{contractRequestBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true" rows="10">
+                 <p:ajax event="rowSelectCheckbox" update=":form:chargePtjSelectBtn"></p:ajax>
+				<p:ajax event="rowUnselectCheckbox" update=":form:chargePtjSelectBtn"></p:ajax>
+				<p:ajax event="rowSelect" update=":form:chargePtjSelectBtn" ></p:ajax>
+				<p:ajax event="rowUnselect" update=":form:chargePtjSelectBtn" ></p:ajax>
+				<p:ajax event="toggleSelect" update=":form:chargePtjSelectBtn"></p:ajax>
                   <ac:paginator for="tableChargePtj"/>
                     <p:column selectionMode="single" style="width:18px;"> 
                          <f:facet name="header">
@@ -469,7 +474,8 @@
 			 </p:dataTable>
 			 </p:panel>           
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"  update=":form:chargeOrgProfile" 
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"  update=":form:chargeOrgProfile" id="chargePtjSelectBtn"
+					disabled="#{contractRequestBackingBean.chargedPtjDataModel.list == 0 }"
 				    action="#{contractRequestBackingBean.addChargedPtjDetails()}" onclick="dlgChargedPtj.hide();"/>
 				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgChargedPtj.hide();" />
            </div>
