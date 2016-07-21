@@ -79,15 +79,15 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" style="width:5%; text-align:right;">
+		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
 		               		<f:facet name="header">
-								<p:outputLabel value="#{lbl['lbl.sc.ranking']}" /><br/>
+								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<p:outputLabel value="TEC #{lbl['lbl.sc.ranking']}" styleClass="commandLink" />
+									<p:outputLabel value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<p:outputLabel value="FEC #{lbl['lbl.sc.ranking']}" styleClass="commandLink" />
+									<p:outputLabel value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
 								</p:commandLink>								
 		               		</f:facet>
 		               	</p:column>
@@ -214,15 +214,15 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" style="width:5%; text-align:center;">
+		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
 		               		<f:facet name="header">
-								<p:outputLabel value="#{lbl['lbl.sc.ranking']}" /><br/>
+								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<p:outputLabel value="TEC #{lbl['lbl.sc.ranking']}" styleClass="commandLink" />
+									<p:outputLabel value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<p:outputLabel value="FEC #{lbl['lbl.sc.ranking']}" styleClass="commandLink" />
+									<p:outputLabel value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
 								</p:commandLink>								
 		               		</f:facet>
 		               	</p:column>
@@ -377,15 +377,15 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" style="width:5%; text-align:center;">
+		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
 		               		<f:facet name="header">
-								<p:outputLabel value="#{lbl['lbl.sc.ranking']}" /><br/>
+								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<p:outputLabel value="TEC #{lbl['lbl.sc.ranking']}" styleClass="commandLink" />
+									<p:outputLabel value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<p:outputLabel value="FEC #{lbl['lbl.sc.ranking']}" styleClass="commandLink" />
+									<p:outputLabel value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
 								</p:commandLink>								
 		               		</f:facet>
 		               	</p:column>		               	
