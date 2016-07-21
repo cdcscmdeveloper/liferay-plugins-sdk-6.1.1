@@ -301,6 +301,8 @@
 													isSecretaryUser)}">
 									<f:selectItems
 										value="#{suppFinalizationBackingBean.getReEvaluateByRadioBtn()}" />
+										
+									<p:ajax process="@this" update="@([id$=reEvaluatePanel])" />
 								</p:selectOneRadio></td>
 							<td style="margin-top: -3px"><ac:iconTooltip
 									value="#{lbl['lbl.sc.reevaluate.by.tooltip']}" /></td>
