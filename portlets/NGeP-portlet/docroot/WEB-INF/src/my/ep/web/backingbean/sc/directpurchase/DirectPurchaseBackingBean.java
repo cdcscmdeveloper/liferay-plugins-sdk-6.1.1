@@ -81,7 +81,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		// reset search info
 		reset();
 		
-		if(isGovernament()){
+		if(isGovernment()){
 			getDocumentTypes(Boolean.TRUE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 			
@@ -99,11 +99,11 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	
 	
 	/**
-	 * Checks if is governament.
+	 * Checks if is government.
 	 *
-	 * @return true, if is governament
+	 * @return true, if is government
 	 */
-	private boolean isGovernament(){
+	private boolean isGovernment(){
 		if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())  // Government 
 				|| getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
@@ -514,8 +514,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
    	 *         false, if login user is not ministry contract administrator/internal auditor
 	 */
     public boolean disableMinistryLov() {
-    	return (isReqOrApprover() || (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
-				&& !getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())));
+    	return (isReqOrApprover() || isContractAdminOrInternalAudit());
     }
      
   
