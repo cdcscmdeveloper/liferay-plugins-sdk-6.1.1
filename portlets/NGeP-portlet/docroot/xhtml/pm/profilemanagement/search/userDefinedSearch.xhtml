@@ -35,7 +35,7 @@
 						value="#{lbl['lbl.pm.organisation.orgType']}" /></th>
 				<td><p:outputPanel id="somType"><p:selectOneMenu id="somFederalOrgType" disabled="#{profileManagementBackingBean.managedBean.disabledOrgFields}"
 						rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.federalGovt}" 
-						styleClass="ppDropDownWidthL" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
+						styleClass="ppDropDownWidthL" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;width:225px"
 						value="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}">
 						<f:selectItems
 							value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
@@ -44,7 +44,7 @@
 					</p:selectOneMenu>
 					<p:selectOneMenu id="somOtherOrgType" disabled="#{profileManagementBackingBean.managedBean.disabledOrgFields}"
 							rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.others}" 
-							styleClass="ppDropDownWidthL" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
+							styleClass="ppDropDownWidthL" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;width:225px"
 							value="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}">
 						<f:selectItems
 							value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
@@ -121,7 +121,7 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.idno']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM"  size="27" maxlength="15" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.identificationNo}"/>
+					<p:inputText styleClass="ppDisplayTextM"  size="38" maxlength="15" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.identificationNo}"/>
 				</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
@@ -131,7 +131,7 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.name']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM" size="27" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userName}" maxlength="80"/>
+					<p:inputText styleClass="ppDisplayTextM" size="38" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userName}" maxlength="80"/>
 				</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
@@ -142,7 +142,7 @@
 				</th>
 				<td>
 					<p:inputText 
-						size="27"
+						size="38"
 						id="itSelectedRoleDesc" 
 						value="#{not empty(profileManagementBackingBean.managedBean.selectedRoleDesc) ? profileManagementBackingBean.managedBean.selectedRoleDesc.roleName :''}" 
 						readonly="true"
@@ -166,6 +166,7 @@
 				</th>
 				<td>
 					<p:selectOneMenu styleClass="ppDropDownWidthM" 
+						style="width:225px;"
 						value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userOrgStatus}">  
 		                        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 		                        <f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />		   
@@ -185,6 +186,7 @@
 				</th>
 				<td>
 					<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userRoleStatus}"
+						style="width:225px;"
 						disabled="#{profileManagementBackingBean.managedBean.selectedRoleDesc eq null}">
 		                        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 		                        <f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />		   
