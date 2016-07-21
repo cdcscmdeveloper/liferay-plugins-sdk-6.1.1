@@ -351,7 +351,7 @@
 			<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
 			<td class="TableFieldRight">
 				<p:commandButton oncomplete="uploadAgencyDlg.show();return false;"
-					update="lampiran1, uploadAgencyDlg" value="#{lbl['lbl.txt.attach.files']}"
+					update="agencyLampiran, uploadAgencyDlg" value="#{lbl['lbl.txt.attach.files']}"
 					disabled="#{ctBackingBean.managedBean.viewContract
 						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 			</td>
@@ -359,7 +359,7 @@
 		<tr>
 			<td/>
 			<td>
-				<p:dataGrid id="lampiran1" value="#{ctBackingBean.managedBean.contractVer.agencyAttachements}"
+				<p:dataGrid id="agencyLampiran" value="#{ctBackingBean.managedBean.contractVer.agencyAttachements}"
 					var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
 					emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
 					<table>
@@ -424,7 +424,7 @@
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
-			update="lampiran1" >
+			update="agencyLampiran" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">
@@ -437,7 +437,7 @@
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                          <div class="ppRightBtn">
 		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-		                         update=":form:lampiran1" 
+		                         update=":form:agencyLampiran" 
 		                         action="#{ctBackingBean.deleteAgncyAttachmentAction(ctBackingBean.managedBean.attachFileIndex)}"
 		                         oncomplete="deleteAgyAttachmentDlg.hide();"/>
 			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAgyAttachmentDlg.hide();" type="button" />
