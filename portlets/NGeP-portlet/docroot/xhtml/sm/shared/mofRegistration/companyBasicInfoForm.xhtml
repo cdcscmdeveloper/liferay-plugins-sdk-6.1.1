@@ -67,6 +67,7 @@
 							rendered="#{!backingBean.managedBean.disabledBusinessType}"
 							style="width:310px">
 							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}" />
+							<p:ajax event="change" process="@this" update="@this" partialSubmit="true" listener="#{backingBean.onChangeBussType}"/>
 						</p:selectOneMenu> <p:message id="smBusTypeIdMsg" for="smBusTypeId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.rocNo']}" /></td>
@@ -470,6 +471,15 @@
 				</p:outputPanel>
 			</table>
 		</p:outputPanel>
+		
+		<p:confirmDialog id="changeBussTypeConfirmDialog" closable="true"
+			message="#{lbl['lbl.sm.confirm.buss.type.changed.msg']}"
+			header="#{lbl['lbl.sm.confirm.buss.type.changed.header']}" severity="alert"
+			widgetVar="changeBussTypeConfirmDialog">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="changeBussTypeConfirmDialog.hide();" />
+			</div>
+		</p:confirmDialog>
 
 	</p:panel>
 	

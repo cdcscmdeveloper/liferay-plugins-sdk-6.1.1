@@ -1629,12 +1629,14 @@ public class SmApplicationUtil {
 		if (managedBean.getBusinessTypeVal() != null
 				&& (managedBean.getBusinessTypeVal()
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT))) {
-			if (managedBean.getSmapplShareHolders() == null
-					|| (managedBean.getSmapplShareHolders() != null && managedBean
-							.getSmapplShareHolders().size() < 1)) {
+			if (EntityHelper.isCollectionEmpty(managedBean
+					.getSmapplShareHolders())
+					|| (managedBean.getSmapplShareHolders().size() != 1)) {
 
 				validCount = false;
-				setNavigationBackToCurrentPage(currentTab, managedBean);
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
 				throw new EpException(MessageConst.ERROR_722507);
 			}
 		} else if (managedBean.getBusinessTypeVal() != null
@@ -1658,7 +1660,9 @@ public class SmApplicationUtil {
 				}
 				if (perShrCnt + compShrCnt < 2) {
 					validCount = false;
-					setNavigationBackToCurrentPage(currentTab, managedBean);
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, managedBean);
+					}
 					throw new EpException(MessageConst.ERROR_722592);
 				}
 			}
@@ -1667,11 +1671,14 @@ public class SmApplicationUtil {
 						.getBusinessTypeVal()
 						.equalsIgnoreCase(
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
-				&& (managedBean.getSmapplShareHolders() == null || (managedBean
-						.getSmapplShareHolders() != null && managedBean
+				&& (EntityHelper.isCollectionEmpty(managedBean
+						.getSmapplShareHolders()) || (managedBean
+						.getSmapplShareHolders().size() > 20 || managedBean
 						.getSmapplShareHolders().size() < 2))) {
 			validCount = false;
-			setNavigationBackToCurrentPage(currentTab, managedBean);
+			if (currentTab != -1) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+			}
 			throw new EpException(MessageConst.ERROR_722508);
 
 		}
