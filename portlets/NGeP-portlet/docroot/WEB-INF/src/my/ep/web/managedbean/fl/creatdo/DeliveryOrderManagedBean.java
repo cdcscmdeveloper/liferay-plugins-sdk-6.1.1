@@ -196,6 +196,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
     private boolean gfmasError=false;
     private String gfmasErrorCode;
     private String gfmasErrorContent;
+    private String gfmasErrorDesc;
     private Date estDeliveryDate;
     private Date gstDeclareDate;
     private Date gstEffDate;
@@ -1269,6 +1270,14 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	public void setSelectedDeliveryAddressList(
 			List<FlDeliveryAddress> selectedDeliveryAddressList) {
 		this.selectedDeliveryAddressList = selectedDeliveryAddressList;
+	}
+
+	public String getGfmasErrorDesc() {
+		return gfmasErrorDesc;
+	}
+
+	public void setGfmasErrorDesc(String gfmasErrorDesc) {
+		this.gfmasErrorDesc = gfmasErrorDesc;
 	}
 
 	
