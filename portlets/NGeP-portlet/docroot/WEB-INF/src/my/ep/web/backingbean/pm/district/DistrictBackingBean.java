@@ -181,15 +181,14 @@ public class DistrictBackingBean extends BaseBackingBean<DistrictManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmState.stateCode",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							districtSearchBean.getStateCode(),
-							true));
+							districtSearchBean.getStateCode()));
 		}
 
 		if (StringUtils.isNotBlank(districtSearchBean.getDivisionName())) {
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmDivision.divisionName",
-							SearchOperator.OPERATOR_EQUALS.value(),
+							SearchOperator.OPERATOR_LIKE.value(),
 							districtSearchBean.getDivisionName().toLowerCase(),
 							true));
 		}
@@ -200,7 +199,7 @@ public class DistrictBackingBean extends BaseBackingBean<DistrictManagedBean> {
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("districtName",
-							SearchOperator.OPERATOR_EQUALS.value(),
+							SearchOperator.OPERATOR_LIKE.value(),
 							districtSearchBean.getDistrictName().toLowerCase(),
 							true));
 		}

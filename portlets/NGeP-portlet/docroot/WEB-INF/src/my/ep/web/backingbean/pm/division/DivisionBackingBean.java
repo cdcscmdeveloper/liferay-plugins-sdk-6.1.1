@@ -169,8 +169,7 @@ public class DivisionBackingBean extends BaseBackingBean<DivisionManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmState.stateCode",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							divisionSearchBean.getStateCode(),
-							true));
+							divisionSearchBean.getStateCode()));
 			
 		}
 
@@ -178,7 +177,7 @@ public class DivisionBackingBean extends BaseBackingBean<DivisionManagedBean> {
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("divisionName",
-							SearchOperator.OPERATOR_EQUALS.value(),
+							SearchOperator.OPERATOR_LIKE.value(),
 							divisionSearchBean.getDivisionName().toUpperCase(),
 							true));
 		}

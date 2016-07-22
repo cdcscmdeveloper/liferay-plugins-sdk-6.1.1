@@ -164,8 +164,7 @@ public class CityBackingBean extends BaseBackingBean<CityManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmDistrict.pmState.stateCode",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							citySearchBean.getStateCode(),
-							true));
+							citySearchBean.getStateCode()));
 			
 			
 		}
@@ -174,8 +173,8 @@ public class CityBackingBean extends BaseBackingBean<CityManagedBean> {
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmDistrict.pmDivision.divisionName",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							citySearchBean.getDivisionName().toUpperCase(),
+							SearchOperator.OPERATOR_LIKE.value(),
+							citySearchBean.getDivisionName().toLowerCase(),
 							true));
 			
 		}		
@@ -183,16 +182,16 @@ public class CityBackingBean extends BaseBackingBean<CityManagedBean> {
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmDistrict.districtName",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							citySearchBean.getDistrictName().toUpperCase(),
+							SearchOperator.OPERATOR_LIKE.value(),
+							citySearchBean.getDistrictName().toLowerCase(),
 							true));
 		}		
 		if (StringUtils.isNotBlank(citySearchBean.getCityName())) {
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("cityName",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							citySearchBean.getCityName().toUpperCase(),
+							SearchOperator.OPERATOR_LIKE.value(),
+							citySearchBean.getCityName().toLowerCase(),
 							true));
 		}
 		
