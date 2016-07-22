@@ -1102,6 +1102,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				FulfilmentReqDTO errReq = new FulfilmentReqDTO();
 				errReq.setErrorId(coObj.getOrderDetails().getErrorId());
 				FulfilmentResDTO errRes = requestSO.retrieveErrorContent(errReq);
+				getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+				getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{CommonConstants.THIRD_PARTY_SYSTEM_1GFMAS}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
 				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 			}
 			updateGstRate(getManagedBean().getFlRequest());
