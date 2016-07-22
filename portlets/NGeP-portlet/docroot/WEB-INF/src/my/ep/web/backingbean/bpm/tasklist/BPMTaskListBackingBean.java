@@ -455,11 +455,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.VERIFY_LOA, SourcingConstants.NAV_PAGE_REVIEW_LOA);
 
 			temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
-					+ SCProcessNameConst.ENDORSE_FC_SELECTION,
+					+ SCProcessNameConst.UPDATE_FC_SELECTION,
 					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					+ SCProcessNameConst.FINALISE_FC_SELECTION,
 					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
+			temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
+					+ SCProcessNameConst.ENDORSE_FC_SELECTION,
+					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);			
 			temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 					+ SCProcessNameConst.APPROVE_LOI,
 					SourcingConstants.NAV_PAGE_REVIEW_LOI);
