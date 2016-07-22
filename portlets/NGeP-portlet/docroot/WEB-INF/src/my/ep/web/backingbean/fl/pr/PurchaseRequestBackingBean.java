@@ -1392,6 +1392,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				FulfilmentReqDTO errReq = new FulfilmentReqDTO();
 				errReq.setErrorId(flPurchaseOrd.getOrderDetails().getErrorId());
 				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+				getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+				getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{CommonConstants.THIRD_PARTY_SYSTEM_1GFMAS}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
 				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 			}
 			if (null != this.getManagedBean().getOutComes() && !"".equals(this.getManagedBean().getOutComes())) {

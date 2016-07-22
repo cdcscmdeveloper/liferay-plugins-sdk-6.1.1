@@ -500,6 +500,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private Date gstRegistrationDate;
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
+	private String gfmasErrorCode;
+	private String gfmasErrorDesc;
 	private PmOrgProfile currentChargePtjGroup;
 	private Long selectedApprover;
 	private List<Long> approverIdList;
@@ -3378,6 +3380,22 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setSelectedDeliveryFullAddr(List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr) {
 		this.selectedDeliveryFullAddr = selectedDeliveryFullAddr;
+	}
+
+	public String getGfmasErrorCode() {
+		return gfmasErrorCode;
+	}
+
+	public void setGfmasErrorCode(String gfmasErrorCode) {
+		this.gfmasErrorCode = gfmasErrorCode;
+	}
+
+	public String getGfmasErrorDesc() {
+		return gfmasErrorDesc;
+	}
+
+	public void setGfmasErrorDesc(String gfmasErrorDesc) {
+		this.gfmasErrorDesc = gfmasErrorDesc;
 	}
 
 }
