@@ -33,6 +33,9 @@
 		function singleUploadListener(upload_widget) {
 			addChooseOnchange(upload_widget);
 		}
+		function uploadListener(upload_widget) {
+			addChooseOnchange(upload_widget);
+		}		
 		
 		function addChooseOnchange(upload_widget) {
 			if(upload_widget.buttonBar.find('input[type=file]').get(0).type == 'file') {
