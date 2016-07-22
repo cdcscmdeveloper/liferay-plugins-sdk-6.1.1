@@ -1029,9 +1029,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 										new String[] {nf.format(latestContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 							}
 						}			
-						// Validation for ceiling quantity
+						
 						if (ctBB.getManagedBean().getContractVer().getCtContractItems() != null) {
 							for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
+								// Validation for minimum order quantity
+								if (item.getMinimumOrderQty() <= 0) {
+									item.setMinimumOrderQty(1);
+									if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+										setTabValue("IT");
+									} else {
+										setTabCentralValue("IT");
+									}
+									throw new EpException(MessageConst.ERROR_100033,
+											new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+								} 
+								
+								// Validation for ceiling quantity
 								double totalCeilingQuantity = 0.0;
 								if (item.getCtItemMaxQties().size() != 0) {						
 									for (CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()) {
