@@ -106,6 +106,27 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				
+				<ui:remove>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.category']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:selectManyMenu showCheckbox="true"
+							required="false"
+							label="#{lbl['lbl.sm.category']}" id="dockyardCategoryId"
+							value="#{backingBean.managedBean.selectedSuppCategoryFacilityIds}"
+							style="height:100px;width: 200px;">
+							<f:selectItems
+								value="#{backingBean.getSelectedCategoryItemsByFacilityType(backingBean.managedBean.selectedDockyardFacility.facilityType)}" />
+						</p:selectManyMenu>
+						<p:message id="dockyardCategoryIdMsg" for="dockyardCategoryId"
+							showSummary="true" showDetail="false" display="icon" />
+					</td>
+				</tr>
+				</ui:remove>
+				
 				<ac:smFacilityAddress backingBean="#{backingBean}" smAddress="#{backingBean.managedBean.selectedDockyardFacility.smAddress}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.dockFacilityStates}"
 					districtItems="#{backingBean.managedBean.dockFacilityDistricts}" cityItems="#{backingBean.managedBean.dockFacilityCities}" 
