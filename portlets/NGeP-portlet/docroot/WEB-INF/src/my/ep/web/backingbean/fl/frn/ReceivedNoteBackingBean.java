@@ -351,6 +351,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
 					errReq.setErrorId(fulfillmentCancelReqType.getErrorId());
 					FulfilmentResDTO errRes = iFulfilmentRequestSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{CommonConstants.THIRD_PARTY_SYSTEM_1GFMAS}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
 					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 				}
 				if(getManagedBean().getFlApprover() == null){
@@ -437,6 +439,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
 					errReq.setErrorId(fulFillmentRecievedNoteDataType.getErrorId());
 					FulfilmentResDTO errRes = iFulfilmentRequestSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{CommonConstants.THIRD_PARTY_SYSTEM_1GFMAS}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
 					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 				}
 				if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
