@@ -1132,8 +1132,31 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
-	public void setItemToDelete(Long supplierItemIdToDelete) {
+	public void setItemToDelete(Long supplierItemIdToDelete, int i) {
 		log.info("Supplier item id to delete: " + supplierItemIdToDelete);
+		
+		int index = i%10;
+		System.out.println("*******getCloneCmSupplierItemLs*************"+this.getManagedBean().getCloneCmSupplierItemLs().size());
+
+		CmSupplierItem suppItem =  this.getManagedBean().getDraftSearchDataModel().getList().get(index);
+		System.out.println("getSupplierItemId"+suppItem.getSupplierItemId());
+
+		if(this.getManagedBean().getCloneCmSupplierItemLs()!=null && this.getManagedBean().getCloneCmSupplierItemLs().size()>0){
+
+			boolean addInLs = true;
+			for(CmSupplierItem obj : this.getManagedBean().getCloneCmSupplierItemLs()){
+
+				if(obj.getSupplierItemId() == suppItem.getSupplierItemId()){
+					this.getManagedBean().getCloneCmSupplierItemLs().remove(obj);
+					
+					break;
+				}
+			}
+			
+
+		}
+
+		
 		this.getManagedBean().setItemToDelete(supplierItemIdToDelete);
 	}
 	/**
