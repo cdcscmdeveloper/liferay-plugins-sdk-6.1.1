@@ -112,6 +112,8 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
+	private String gfmasErrorCode;
+	private String gfmasErrorDesc;
 	private String bpmTaskName;
 	private boolean lastFRNTaxInv=false;
 	private List<PmUser> approverList;
@@ -946,6 +948,22 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 
 	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
 		this.previousAttachmentList = previousAttachmentList;
+	}
+
+	public String getGfmasErrorCode() {
+		return gfmasErrorCode;
+	}
+
+	public void setGfmasErrorCode(String gfmasErrorCode) {
+		this.gfmasErrorCode = gfmasErrorCode;
+	}
+
+	public String getGfmasErrorDesc() {
+		return gfmasErrorDesc;
+	}
+
+	public void setGfmasErrorDesc(String gfmasErrorDesc) {
+		this.gfmasErrorDesc = gfmasErrorDesc;
 	}
 
 }
