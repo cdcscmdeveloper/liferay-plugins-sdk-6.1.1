@@ -203,7 +203,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// Bank Info
 	private Long[] chequeSingPerId;
 	private Long[] selectedBankBranchIds;
+	private Long[] selectedSuppCategoryFacilityIds;
 	private Long selBankBranchId;
+	private Long selSuppCategoryFacilityId;
 	private SmSupplierBank selectedBank;
 	private SmSupplierBank selectedSignatoryBankAcct;
 	private List<SmSupplierBank> selectedSignatoryBankAccts;
@@ -712,7 +714,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedRelatedCompany = new SmRelatedCompany();
 		selectedStaffAcademic = new SmStaffAcademic();
 		selectedStaffAcademic.setPmEduField(new PmEduField());
-//		selectedStaffAcademic.setPmEduLevel(new PmEduLevel());
+		// selectedStaffAcademic.setPmEduLevel(new PmEduLevel());
 		selectedStaffAcademic.setQualificationId(new PmParameter());
 		selectedStfPrfBdy = new SmAssociationBody();
 		selectedStfPrfBdy.setPmCertBody(new PmCertBody());
@@ -2230,6 +2232,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selBankBranchId = selBankBranchId;
 	}
 
+	public Long getSelSuppCategoryFacilityId() {
+		return selSuppCategoryFacilityId;
+	}
+
+	public void setSelSuppCategoryFacilityId(Long selSuppCategoryFacilityId) {
+		this.selSuppCategoryFacilityId = selSuppCategoryFacilityId;
+	}
+
 	public PmCountry getDefPmCountry() {
 		return defPmCountry;
 	}
@@ -3565,5 +3575,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setReasonDescInitList(List<PmReasonDesc> reasonDescInitList) {
 		this.reasonDescInitList = reasonDescInitList;
+	}
+
+	public Long[] getSelectedSuppCategoryFacilityIds() {
+		return selectedSuppCategoryFacilityIds;
+	}
+
+	public void setSelectedSuppCategoryFacilityIds(
+			Long[] selectedSuppCategoryFacilityIds) {
+		this.selectedSuppCategoryFacilityIds = selectedSuppCategoryFacilityIds;
 	}
 }

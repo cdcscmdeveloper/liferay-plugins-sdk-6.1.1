@@ -4063,8 +4063,8 @@ public class SmApplicationBackingBean extends
 	 *            - SmFacility object
 	 */
 	public void assignSelFactory(SmFacility facilityBean) {
-		log.info("******** Selected value ******"
-				+ facilityBean.getSmAddress().getAddress1());
+		SmApplicationUtil.assignSupplierCategoryFacility(getManagedBean(),
+				facilityBean);
 		setFacilityAddressSameAs(facilityBean);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
@@ -4083,6 +4083,8 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmFacility object of type Factory
 	 */
 	public void assignNewFactoryBean() {
+		getManagedBean().setSelSuppCategoryFacilityId(null);
+		getManagedBean().setSelectedSuppCategoryFacilityIds(null);
 		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		getManagedBean().setSelectedFactoryFacility(new SmFacility());
 		setFacilityDefaultPrices(getManagedBean().getSelectedFactoryFacility());
@@ -4176,6 +4178,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelDockyard(SmFacility facilityBean) {
 		setFacilityAddressSameAs(facilityBean);
+		SmApplicationUtil.assignSupplierCategoryFacility(getManagedBean(),
+				facilityBean);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL);
@@ -4193,6 +4197,8 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmFacility object of type Dockyard
 	 */
 	public void assignNewDockyardBean() {
+		getManagedBean().setSelSuppCategoryFacilityId(null);
+		getManagedBean().setSelectedSuppCategoryFacilityIds(null);
 		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		getManagedBean().setSelectedDockyardFacility(new SmFacility());
 		setFacilityDefaultPrices(getManagedBean().getSelectedDockyardFacility());
@@ -4286,6 +4292,8 @@ public class SmApplicationBackingBean extends
 	 *            - SmFacility object
 	 */
 	public void assignSelWorkshop(SmFacility facilityBean) {
+		SmApplicationUtil.assignSupplierCategoryFacility(getManagedBean(),
+				facilityBean);
 		setFacilityAddressSameAs(facilityBean);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
@@ -4304,6 +4312,8 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmFacility object of type Workshop
 	 */
 	public void assignNewWorkshopBean() {
+		getManagedBean().setSelSuppCategoryFacilityId(null);
+		getManagedBean().setSelectedSuppCategoryFacilityIds(null);
 		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		getManagedBean().setSelectedWorkShopFacility(new SmFacility());
 		setFacilityDefaultPrices(getManagedBean().getSelectedWorkShopFacility());
@@ -4394,6 +4404,8 @@ public class SmApplicationBackingBean extends
 	 *            the facility bean
 	 */
 	public void assignSelStore(SmFacility facilityBean) {
+		SmApplicationUtil.assignSupplierCategoryFacility(getManagedBean(),
+				facilityBean);
 		setFacilityAddressSameAs(facilityBean);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
@@ -4412,6 +4424,8 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmFacility object of type Store
 	 */
 	public void assignNewStoreBean() {
+		getManagedBean().setSelSuppCategoryFacilityId(null);
+		getManagedBean().setSelectedSuppCategoryFacilityIds(null);
 		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		getManagedBean().setSelectedStoreFacility(new SmFacility());
 		setFacilityDefaultPrices(getManagedBean().getSelectedStoreFacility());
@@ -7789,12 +7803,12 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignFinalApproveOrReject(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
-		// validate equity owner
-		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
-				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		if (!dialog.equalsIgnoreCase("rejectDialog")
 				&& !dialog.equalsIgnoreCase("approverRejDialog")) {
 			SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
+			// validate equity owner
+			SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		}
 		assignValReqdToTrue();
 		getManagedBean().getSmAppl().setBumi(
@@ -10941,6 +10955,52 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 					getManagedBean(), address, panelName);
 		}
+	}
+
+	/**
+	 * Get new additional categories as select item
+	 * 
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> getSelectedCategoryItemsByFacilityType(
+			String facType) {
+		List<SmSupplierCategory> applCategories = null;
+		List<SelectItem> retVal = new ArrayList<SelectItem>();
+		SelectItem item = null;
+		if (EntityHelper.isCollectionEmpty(getManagedBean()
+				.getActiveCategoryList())) {
+			applCategories = getManagedBean().getSmAppl()
+					.getSmSupplierCategories();
+		} else {
+			applCategories = getManagedBean().getActiveCategoryList();
+		}
+		for (SmSupplierCategory cat : applCategories) {
+			if (cat.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.PENDING_ACT_STATUS) == 0
+					|| cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0
+					&& cat.getPmCategoryL3() != null
+					&& !StringUtils.isBlank(cat.getPmCategoryL3()
+							.getFacilityType())
+					&& cat.getPmCategoryL3().getFacilityType()
+							.equalsIgnoreCase(facType)) {
+
+				if (cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0
+						|| cat.getRecordStatusFlg()
+								.compareTo(
+										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+					item = new SelectItem();
+					item.setValue(cat.getSupplierCategoryId());
+					item.setLabel(cat.getPmCategoryL1().getCategoryL1Code()
+							+ cat.getPmCategoryL2().getCategoryL2Code()
+							+ cat.getPmCategoryL3().getCategoryL3Code() + " - "
+							+ cat.getPmCategoryL3().getCategoryName());
+					retVal.add(item);
+				}
+			}
+		}
+		return retVal;
 	}
 
 	/**

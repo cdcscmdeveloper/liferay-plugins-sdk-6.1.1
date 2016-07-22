@@ -103,6 +103,27 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				
+				<ui:remove>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.category']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:selectManyMenu showCheckbox="true"
+							required="false"
+							label="#{lbl['lbl.sm.category']}" id="workshopCategoryId"
+							value="#{backingBean.managedBean.selectedSuppCategoryFacilityIds}"
+							style="height:100px;width: 200px;">
+							<f:selectItems
+								value="#{backingBean.getSelectedCategoryItemsByFacilityType(backingBean.managedBean.selectedWorkShopFacility.facilityType)}" />
+						</p:selectManyMenu>
+						<p:message id="workshopCategoryIdMsg" for="workshopCategoryId"
+							showSummary="true" showDetail="false" display="icon" />
+					</td>
+				</tr>
+				</ui:remove>
+				
 				<ac:smFacilityAddress backingBean="#{backingBean}" smAddress="#{backingBean.managedBean.selectedWorkShopFacility.smAddress}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.workShopFacilityStates}"
 					districtItems="#{backingBean.managedBean.workShopFacilityDistricts}" cityItems="#{backingBean.managedBean.workShopFacilityCities}" 
