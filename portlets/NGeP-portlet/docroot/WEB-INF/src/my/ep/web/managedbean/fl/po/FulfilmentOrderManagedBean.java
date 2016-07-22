@@ -210,6 +210,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
     private List<PmUser> approverList;
     private boolean gfmasError=false;
 	private String gfmasErrorContent;
+	private String gfmasErrorCode;
+	private String gfmasErrorDesc;
 	private Long docStatusId;
 	private List<Long> statusIds;
     
@@ -1298,6 +1300,22 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 	public void setDocStatusId(Long docStatusId) {
 		this.docStatusId = docStatusId;
+	}
+
+	public String getGfmasErrorDesc() {
+		return gfmasErrorDesc;
+	}
+
+	public void setGfmasErrorDesc(String gfmasErrorDesc) {
+		this.gfmasErrorDesc = gfmasErrorDesc;
+	}
+
+	public String getGfmasErrorCode() {
+		return gfmasErrorCode;
+	}
+
+	public void setGfmasErrorCode(String gfmasErrorCode) {
+		this.gfmasErrorCode = gfmasErrorCode;
 	}
 
 }
