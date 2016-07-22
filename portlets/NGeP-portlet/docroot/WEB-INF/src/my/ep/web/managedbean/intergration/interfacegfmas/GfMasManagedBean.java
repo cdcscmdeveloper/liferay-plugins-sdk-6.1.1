@@ -103,6 +103,8 @@ public class GfMasManagedBean extends BaseManagedBean {
     /** The process id. */
     private String processId;
     
+    private String pageProcessId;
+    
     /** The direction. */
     private String direction;
     
@@ -1209,6 +1211,20 @@ public class GfMasManagedBean extends BaseManagedBean {
 	 */
 	public List<PmInterfaceAgOff> getSelectedAgOfficeList() {
 		return selectedAgOfficeList;
+	}
+
+	/**
+	 * @return the pageProcessId
+	 */
+	public String getPageProcessId() {
+		return pageProcessId;
+	}
+
+	/**
+	 * @param pageProcessId the pageProcessId to set
+	 */
+	public void setPageProcessId(String pageProcessId) {
+		this.pageProcessId = pageProcessId;
 	}
 
 	/**

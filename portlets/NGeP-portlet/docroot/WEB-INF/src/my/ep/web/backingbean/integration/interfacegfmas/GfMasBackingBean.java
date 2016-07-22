@@ -427,7 +427,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		
 		this.getManagedBean().setSelectedProcess(selectedProcess);
 		this.getManagedBean().setFileName(selectedProcess.getFileName());
-		this.getManagedBean().setProcessId(selectedProcess.getProcessId());
+		this.getManagedBean().setPageProcessId(selectedProcess.getProcessId());
 		this.getManagedBean().setTransId(selectedProcess.getTransId());
 		this.getManagedBean().setMapOfProcess(null);
 		getUnprocessedRecordsByPreviousDate(selectedProcess);
@@ -1457,7 +1457,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		if (getSelectedAllProcessListStatus()) {
 			
 			//returnUrl = NAV_TO_MAIN;
-			goToProcessPage(this.getManagedBean().getProcessId());
+			goToProcessPage(this.getManagedBean().getPageProcessId());
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 					FacesMessage.SEVERITY_INFO, MessageConst.INFO_780002, null);
 		} 
