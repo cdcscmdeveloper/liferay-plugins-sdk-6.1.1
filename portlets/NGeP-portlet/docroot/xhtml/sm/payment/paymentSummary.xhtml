@@ -69,9 +69,13 @@
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.sm.prev']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-						action="#{paymentBackingBean.back}" update=":form"/>
-				</div></td>
+					&#160;
+					<ui:remove>
+						<p:commandButton value="#{lbl['lbl.sm.prev']}" onstart="blockWidget.show()" 
+							oncomplete="blockWidget.hide()" action="#{paymentBackingBean.back}" update=":form"/>
+					</ui:remove>
+				</div>
+			</td>
 			<td>
 				
 				<div align="right" style="width: 100%">
