@@ -18,8 +18,14 @@
 				#{qtActivityBean.assignedTo}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.status']}">
-				#{qTDetailBB.getStatusDescById(qtActivityBean.statusId)}
+			<ui:fragment rendered="#{qtActivityBean.statusId ne null}">
+			#{qTDetailBB.getStatusDescById(qtActivityBean.statusId)}
+			</ui:fragment>
+			<ui:fragment rendered="#{qtActivityBean.statusId eq null}">
+			#{qtActivityBean.initialStatus}
+			</ui:fragment>
 			</p:column>
+			
 		</p:dataTable>
 	</p:panel>
 </ui:composition>
