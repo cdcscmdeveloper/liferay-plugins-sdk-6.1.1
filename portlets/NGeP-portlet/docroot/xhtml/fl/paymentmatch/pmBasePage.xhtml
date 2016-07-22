@@ -10,6 +10,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
+		<style>
+			.gfmasPanelCss>.ui-panel-content {
+				background: #f2dede !important;
+			}
+		</style>	
 	</ui:define>
 
 	<ui:define name="contentSection">
@@ -27,17 +32,24 @@
 		</c:if>			
 		<p:messages id="messages" showDetail="true" autoUpdate="#{paymentMatchBackingBean.managedBean.autoUpdate}" showSummary="false"
 			closable="true" severity="error, info, warn" />
-		<table>
-			<tr>
-				<td><p:outputLabel value="1GFMAS Error: " rendered="#{paymentMatchBackingBean.managedBean.gfmasError}"/> </td>
-				<td><p:commandLink oncomplete="gfmasError.show();" immediate="true"
-					action="#{paymentMatchBackingBean.show1GFMASError()}"
-					rendered="#{paymentMatchBackingBean.managedBean.gfmasError}">
-						<p:graphicImage value="/css/images/design/exclamation.png" />
-					</p:commandLink>
-				</td>
-			</tr>
-		</table>			
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{paymentMatchBackingBean.managedBean.gfmasError}" >		
+			<table>
+				<tr>
+					<td>
+						<p:commandLink oncomplete="gfmasError.show();" immediate="true"
+							action="#{paymentMatchBackingBean.show1GFMASError()}"
+							rendered="#{paymentMatchBackingBean.managedBean.gfmasError}">
+							<p:graphicImage value="/css/images/design/exclamation.png" />
+						</p:commandLink>
+						<p:spacer width="2" />
+					</td>
+					<td>
+						<p:outputLabel value="#{paymentMatchBackingBean.managedBean.gfmasErrorDesc} #{lbl['lbl.fl.integration.click.for.exception.details']} (ERR-#{paymentMatchBackingBean.managedBean.gfmasErrorCode})" style="color: #C55751 !important; font-weight: normal !important"
+							rendered="#{paymentMatchBackingBean.managedBean.gfmasError}" />
+					</td>					
+				</tr>
+			</table>
+		</p:panel>							
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
@@ -130,19 +142,18 @@
 					</p:outputPanel></td>
 			</tr>
 		</table>
-		<p:dialog id="gfmasErrorDlg" header="1GFMAS Error" widgetVar="gfmasError"
-		showEffect="fade" hideEffect="fade" modal="true" 
-		resizable="false">
-		<table style="width: 100%">
-			<tr>
-				<td><p:messages id="gfmasMsg" escape="false" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
-			</tr>
-		</table>
-		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Close" oncomplete="gfmasError.hide();">
-			</p:commandButton>
-		</div>
-	</p:dialog>
+		<p:dialog id="gfmasErrorDlg" header="#{lbl['lbl.fl.integration.exception.details']}" widgetVar="gfmasError" width="80%"
+			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
+			<table style="width: 100%">
+				<tr>
+					<td><p:messages id="gfmasMsg" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				</tr>
+			</table>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="Close" oncomplete="gfmasError.hide();">
+				</p:commandButton>
+			</div>
+		</p:dialog>			
 	</ui:define>
 </ui:composition>
