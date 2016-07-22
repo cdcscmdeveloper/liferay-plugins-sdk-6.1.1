@@ -15,27 +15,18 @@
 
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
 
-		<p:panel header="#{lbl['lbl.gfmas.ptj.info']}" id="childPTJPage"
+		<p:panel header="#{lbl['lbl.gfmas.glptjdef']}" id="childPTJPage"
 			toggleable="true">
 			<p:dataTable id="gfMasPTJId" var="pmInterfacePTJ" rows="10"
 				rowIndexVar="index" rowKey="#{pmInterfacePTJ}" lazy="true"
 				selection="#{gfMasBackingBean.managedBean.selectedPtjList}"
-				value="#{gfMasBackingBean.managedBean.searchPtj}">
-                <p:ajax event="rowSelect" 
-					update=":form:prcessIdButton,:form:gfMasPTJId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />
-				<p:ajax event="rowUnselect" 
-					update=":form:prcessIdButton,:form:gfMasPTJId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				value="#{gfMasBackingBean.managedBean.searchPtj}">              
 				<p:ajax event="rowSelectCheckbox" 
 					update=":form:prcessIdButton,:form:gfMasPTJId"					
 					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<p:ajax event="rowUnselectCheckbox" 
 					update=":form:prcessIdButton,:form:gfMasPTJId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />
-				<p:ajax event="toggleSelect"
-					update=":form:prcessIdButton,:form:gfMasPTJId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />
+					listener="#{gfMasBackingBean.rowSelectEvent}" />			
 				<ac:paginator for="gfMasPTJId"></ac:paginator>
 
 				<p:column selectionMode="multiple" style="width:5%"
@@ -45,22 +36,23 @@
 					<h:outputText value="#{pmInterfacePTJ.diInterfaceLog.logId}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.gfmas.financial.year']}">
+				<p:column headerText="#{lbl['lbl.gfmas.financial.year']}" style="width:5%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfacePTJ.financialYear}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.gfmas.ptj.code']}">
+				<p:column headerText="#{lbl['lbl.gfmas.ptj.code']}" style="width:20%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfacePTJ.ptjCode}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.gfmas.ptj.desc']}">
+				<p:column headerText="#{lbl['lbl.gfmas.ptj.desc']}" style="width:30%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfacePTJ.ptjDesc}" />
 				</p:column>
-
-				<p:column headerText="#{lbl['lbl.gfmas.code.status']}">
-					<h:outputText value="#{pmInterfacePTJ.codeStatus}" />
+				<p:column headerText="#{lbl['lbl.gfmas.code.status']}" style="width:20%;white-space: normal;word-wrap: break-word;">					
+					<h:outputText value="#{lbl['lbl.gfmas.codestatus.valid']}"
+						rendered="#{pmInterfacePTJ.codeStatus=='V'}" />
+					<h:outputText value="#{lbl['lbl.gfmas.codestatus.inValid']}"
+						rendered="#{pmInterfacePTJ.codeStatus=='X'}" />
 				</p:column>
-
-				<p:column headerText="#{lbl['lbl.gfmas.process.status']}">
+				<p:column headerText="#{lbl['lbl.gfmas.process.status']}" style="width:20%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
 						rendered="#{pmInterfacePTJ.processStatus==0}" />
 					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
@@ -68,15 +60,6 @@
 					<h:outputText value="#{lbl['lbl.gfmas.process.fail']}"
 						rendered="#{pmInterfacePTJ.processStatus==2}" />
 				</p:column>
-
-				<p:column headerText="#{lbl['lbl.pm.search.status']}"
-					style="width:10%">
-					<h:outputText value="#{lbl['lbl.pm.active']}"
-						rendered="#{pmInterfacePTJ.recordStatusFlg==1}" />
-					<h:outputText value="#{lbl['lbl.pm.inactive']}"
-						rendered="#{pmInterfacePTJ.recordStatusFlg!=1}" />
-				</p:column>
-
 			</p:dataTable>
 
 		</p:panel>

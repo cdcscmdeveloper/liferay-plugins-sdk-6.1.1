@@ -24,8 +24,7 @@
 		</p:commandLink>&#160;
 			<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.gfmas.instruction.two']}" />
-        <br />
-		<br />
+     
 		<table>
 			<tr>
 				<td><p:outputLabel
@@ -42,7 +41,7 @@
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
-		
+	
 		<table style="width: 100%; height: 100%;">
 			<tr>
 				<td width="100%"><h:outputText styleClass="instruction"
@@ -94,12 +93,13 @@
 				<h:outputText value="#{lbl['lbl.gfmas.glbnkdef']}"
 					rendered="#{gfMasList.processId == 'CMBNK'}" />					
 			</p:column>
-
 			<p:column headerText="#{lbl['lbl.gfmas.direction']}"
 				style="width:10%;white-space: normal;word-wrap: break-word;">
-				<h:outputText value="#{gfMasList.direction}" />
+				<h:outputText value="#{lbl['lbl.gfmas.direction.inbound']}"
+					rendered="#{gfMasList.direction=='I'}" />
+				<h:outputText value="#{lbl['lbl.gfmas.direction.outbound']}"
+					rendered="#{gfMasList.direction=='O'}" />
 			</p:column>
-
 			<p:column headerText="#{lbl['lbl.gfmas.targetSystem']}"
 				style="width:10%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{gfMasList.targetSystem}" />
