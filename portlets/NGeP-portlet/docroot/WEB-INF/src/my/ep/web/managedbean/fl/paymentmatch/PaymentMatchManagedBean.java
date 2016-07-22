@@ -237,6 +237,9 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private List<FlFulfilmentNote> fulfilmentNoteList;
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
+	private String gfmasErrorCode;
+	private String gfmasErrorDesc;
+	
 	private BigDecimal gstAmount;
 	private BigDecimal invoiceAmountWithoutGST;
 	private List<TaxInvoiceVO> taxInvoiceList;
@@ -1489,5 +1492,21 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	 */
 	public void setTaxInvoice(boolean taxInvoice) {
 		this.taxInvoice = taxInvoice;
+	}
+
+	public String getGfmasErrorCode() {
+		return gfmasErrorCode;
+	}
+
+	public void setGfmasErrorCode(String gfmasErrorCode) {
+		this.gfmasErrorCode = gfmasErrorCode;
+	}
+
+	public String getGfmasErrorDesc() {
+		return gfmasErrorDesc;
+	}
+
+	public void setGfmasErrorDesc(String gfmasErrorDesc) {
+		this.gfmasErrorDesc = gfmasErrorDesc;
 	}
 }
