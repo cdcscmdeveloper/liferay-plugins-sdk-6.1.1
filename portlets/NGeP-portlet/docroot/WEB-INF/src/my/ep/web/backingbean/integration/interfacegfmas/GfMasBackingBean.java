@@ -24,6 +24,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
@@ -41,20 +42,31 @@ import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.interfaceptj.InterfaceAgOffReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceAgOffResDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceCmBankReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceCmBankResDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceGlAccReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceGlAccResDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceKptjReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceKptjResDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogReqDto;
 import my.ep.dto.pm.common.interfaceptj.InterfaceLogResDto;
 import my.ep.dto.pm.common.interfaceptj.InterfacePpReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfacePpResDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfacePrgActReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfacePrgActResDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceProjectReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceProjectResDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfacePtjReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfacePtjResDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceVotDanaReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceVotDanaResDTO;
 import my.ep.dto.pm.common.interfaceptj.InterfaceVotReqDTO;
+import my.ep.dto.pm.common.interfaceptj.InterfaceVotResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.DIInterfaceLog;
+import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.integration.PmInterfaceAgOff;
 import my.ep.persistence.entity.pm.integration.PmInterfaceBank;
 import my.ep.persistence.entity.pm.integration.PmInterfaceDana;
@@ -80,6 +92,8 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -131,8 +145,9 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	/** The search gf mas. */
 	private IPagingDataModel<DIInterfaceLog> searchGfMas = new SearchGfMasPagingDataModel();
 
-	/** The child process status. */
-	private boolean childProcessStatus = false;
+	/** The child process status. */	
+	
+	boolean isContains = false;
 
 	/**
 	 * Instantiates a new gf mas backing bean.
@@ -152,11 +167,6 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 	}
 	
-	/*public void init(){
-		log.info("inside init ");
-		searchGfMas();
-	}*/
-
 	/**
 	 * Search gf mas.
 	 */
@@ -376,8 +386,9 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 								IDIInterfaceSO.class);
 
 				InterfaceLogResDto resDTO = gfMasSO
-						.retrieveInterfaceLogDetaisls(gfMasReqDTO);
+						.retrieveInterfaceLogDetails(gfMasReqDTO);					
 				System.out.println("getTotalRecord:"+resDTO.getViewGfMasResultBean().getTotalRecord());
+
 				getManagedBean().setLazy(true);
 
 				if (resDTO.isSuccessful()) {
@@ -416,283 +427,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		
 		this.getManagedBean().setSelectedProcess(selectedProcess);
 		this.getManagedBean().setFileName(selectedProcess.getFileName());
+		this.getManagedBean().setProcessId(selectedProcess.getProcessId());
 		this.getManagedBean().setTransId(selectedProcess.getTransId());
 		this.getManagedBean().setMapOfProcess(null);
 		getUnprocessedRecordsByPreviousDate(selectedProcess);
 		
 		return childProcessPage;
 	}
-		
 	
-	
-	/**
-	 * Gets the interface prog act process status.
-	 * 
-	 * @param progActList
-	 *            the prog act list
-	 * @return the interface prog act process status
-	 */
-	private boolean getInterfaceProgActProcessStatus(
-			List<PmInterfaceProgAct> progActList) {
-		log.info("getInterfaceProgActProcessStatus");
-		if (CollectionUtils.isNotEmpty(progActList)) {
-			for (int i = 0; progActList.size() > 0; i++) {
-				if (progActList.get(i).getProcessStatus().equals(new Long(0))
-						|| progActList.get(i).getProcessStatus()
-								.equals(new Long(1))
-						|| progActList.get(i).getProcessStatus()
-								.equals(new Long(2))) {
-					childProcessStatus = true;
-					break;
-				} else {
-					childProcessStatus = false;
-				}
-			}
-		}
-		return childProcessStatus;
-	}
-	
-	/**
-	 * Gets the interface project process status.
-	 * 
-	 * @param projectList
-	 *            the project list
-	 * @return the interface project process status
-	 */
-	private boolean getInterfaceProjectProcessStatus(
-			List<PmInterfaceProject> projectList) {
-		log.info("getInterfaceProjectProcessStatus");
-		if (CollectionUtils.isNotEmpty(projectList)) {
-			for (int i = 0; projectList.size() > 0; i++) {
-				if (projectList.get(i).getProcessStatus().equals(new Long(0))
-						|| projectList.get(i).getProcessStatus()
-								.equals(new Long(1))
-						|| projectList.get(i).getProcessStatus()
-								.equals(new Long(2))) {
-					childProcessStatus = true;
-					break;
-				} else {
-					childProcessStatus = false;
-				}
-			}
-		}
-		return childProcessStatus;
-	}
-
-	
-	/**
-	 * Gets the interface ptj process status.
-	 * 
-	 * @param ptjList
-	 *            the ptj list
-	 * @return the interface ptj process status
-	 */
-	private boolean getInterfacePtjProcessStatus(List<PmInterfacePtj> ptjList) {
-		log.info("getInterfacePtjProcessStatus");
-		if (CollectionUtils.isNotEmpty(ptjList)) {
-			for (int i = 0; ptjList.size() > 0; i++) {
-				if (ptjList.get(i).getProcessStatus().equals(new Long(0))
-						|| ptjList.get(i).getProcessStatus()
-								.equals(new Long(1))
-						|| ptjList.get(i).getProcessStatus()
-								.equals(new Long(2))) {
-					childProcessStatus = true;
-					break;
-				} else {
-					childProcessStatus = false;
-				}
-			}
-		}
-		return childProcessStatus;
-	}
-
-	/**
-	 * Gets the interface kptj process status.
-	 * 
-	 * @param kptjList
-	 *            the kptj list
-	 * @return the interface kptj process status
-	 */
-	private boolean getInterfaceKptjProcessStatus(List<PmInterfaceKptj> kptjList) {
-		log.info("getInterfaceKptjProcessStatus");
-		if (CollectionUtils.isNotEmpty(kptjList)) {
-			for (int i = 0; kptjList.size() > 0; i++) {
-				if (kptjList.get(i).getProcessStatus().equals(new Long(0))
-						|| kptjList.get(i).getProcessStatus()
-								.equals(new Long(1))
-						|| kptjList.get(i).getProcessStatus()
-								.equals(new Long(2))) {
-					childProcessStatus = true;
-					break;
-				} else {
-					childProcessStatus = false;
-				}
-			}
-		}
-		return childProcessStatus;
-	}
-
-	/**
-	 * Gets the interface ag office process status.
-	 * 
-	 * @param agOffList
-	 *            the ag off list
-	 * @return the interface ag office process status
-	 */
-	private boolean getInterfaceAgOfficeProcessStatus(
-			List<PmInterfaceAgOff> agOffList) {
-		log.info("getInterfaceAgOfficeProcessStatus");
-		if (CollectionUtils.isNotEmpty(agOffList)) {
-			for (int i = 0; agOffList.size() > 0; i++) {
-				if (agOffList.get(i).getProcessStatus().equals(new Long(0))
-						|| agOffList.get(i).getProcessStatus()
-								.equals(new Long(1))
-						|| agOffList.get(i).getProcessStatus()
-								.equals(new Long(2))) {
-					childProcessStatus = true;
-					break;
-				} else {
-					childProcessStatus = false;
-				}
-			}
-		}
-		return childProcessStatus;
-	}
-
-	
-	/**
-	 * Gets the interface pp process status.
-	 * 
-	 * @param ppList
-	 *            the pp list
-	 * @return the interface pp process status
-	 */
-	private boolean getInterfacePpProcessStatus(List<PmInterfacePP> ppList) {
-		log.info("getInterfacePpProcessStatus");
-		if (CollectionUtils.isNotEmpty(ppList)) {
-			for (int i = 0; ppList.size() > 0; i++) {
-				if (ppList.get(i).getProcessStatus().equals(new Long(0))
-						|| ppList.get(i).getProcessStatus().equals(new Long(1))
-						|| ppList.get(i).getProcessStatus().equals(new Long(2))) {
-					childProcessStatus = true;
-					break;
-				} else {
-					childProcessStatus = false;
-				}
-			}
-		}
-		return childProcessStatus;
-	}
-	
-	/**
-	 * Gets the interface vot process status.
-	 * 
-	 * @param votList
-	 *            the vot list
-	 * @return the interface vot process status
-	 */
-	private boolean getInterfaceVotProcessStatus(List<PmInterfaceVot> votList) {
-		log.info("getInterfaceVotProcessStatus");
-		if (CollectionUtils.isNotEmpty(votList)) {
-			for (int i = 0; votList.size() > 0; i++) {
-				if (votList.get(i).getProcessStatus().equals(new Long(0))
-						|| votList.get(i).getProcessStatus()
-								.equals(new Long(1))
-						|| votList.get(i).getProcessStatus()
-								.equals(new Long(2))) {
-					childProcessStatus = true;
-					break;
-				} else {
-					childProcessStatus = false;
-				}
-			}
-
-		}
-		return childProcessStatus;
-	}
-
-	
-	/**
-	 * Gets the interface bank process status.
-	 * 
-	 * @param bankList
-	 *            the bank list
-	 * @return the interface bank process status
-	 */
-	private boolean getInterfaceBankProcessStatus(List<PmInterfaceBank> bankList) {
-
-		log.info("getInterfaceBankProcessStatus");
-
-		if (CollectionUtils.isNotEmpty(bankList)) {
-			for (int i = 0; bankList.size() > 0; i++) {
-				if (bankList.get(i).getProcessStatus().equals(new Long(0))
-						|| bankList.get(i).getProcessStatus()
-								.equals(new Long(1))
-						|| bankList.get(i).getProcessStatus()
-								.equals(new Long(2))) {
-					childProcessStatus = true;
-					break;
-				} else {
-					childProcessStatus = false;
-				}
-			}
-		}
-		return childProcessStatus;
-	}
-	
-	/**
-	 * Gets the interface gl acnt process status.
-	 * 
-	 * @param glAcntList
-	 *            the gl acnt list
-	 * @return the interface gl acnt process status
-	 */
-	private boolean getInterfaceGlAcntProcessStatus(
-			List<PmInterfaceGlAccount> glAcntList) {
-		log.info("getInterfaceGlAcntProcessStatus");
-		if (CollectionUtils.isNotEmpty(glAcntList)) {
-			for (int i = 0; glAcntList.size() > 0; i++) {
-				if (glAcntList.get(i).getProcessStatus().equals(new Long(0))
-						|| glAcntList.get(i).getProcessStatus()
-								.equals(new Long(1))
-						|| glAcntList.get(i).getProcessStatus()
-								.equals(new Long(2))) {
-					childProcessStatus = true;
-					break;
-				} else {
-					childProcessStatus = false;
-				}
-			}
-		}
-		return childProcessStatus;
-	}
-
-	/**
-	 * Gets the interface dana process status.
-	 * 
-	 * @param danaList
-	 *            the dana list
-	 * @return the interface dana process status
-	 */
-	private boolean getInterfaceDanaProcessStatus(List<PmInterfaceDana> danaList) {
-		log.info("getInterfaceDanaProcessStatus");
-		if (CollectionUtils.isNotEmpty(danaList)) {
-			for (int i = 0; danaList.size() > 0; i++) {
-
-				if (danaList.get(i).getProcessStatus().equals(new Long(0))
-						|| danaList.get(i).getProcessStatus()
-								.equals(new Long(1))
-						|| danaList.get(i).getProcessStatus()
-								.equals(new Long(2))) {
-					childProcessStatus = true;
-					break;
-				} else {
-					childProcessStatus = false;
-				}
-			}
-		}
-		return childProcessStatus;
-	}
 
 	/**
 	 * Gets the unprocessed records by previous date.
@@ -704,162 +446,681 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private void getUnprocessedRecordsByPreviousDate(
 			DIInterfaceLog selectedProcess) {
 
-		List<DIInterfaceLog> interfaceLogParentList = searchGfMas.getList();
-
-		List<DIInterfaceLog> interfaceLogParentFilteredList = null;
-
+		DIInterfaceLog oldDateLog=getMasterDataByCreatedDate(selectedProcess);
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
-
-		Map<String, List<DIInterfaceLog>> mapOfProcess = this.getManagedBean()
-				.getMapOfProcess();
-
-		if (CollectionUtils.isNotEmpty(interfaceLogParentList)) {
-
-			for (DIInterfaceLog allRecords : interfaceLogParentList) {
-				String processId = allRecords.getProcessId();
-
-				if (!mapOfProcess.containsKey(processId)) {
-					mapOfProcess
-							.put(processId, new ArrayList<DIInterfaceLog>());
-				}
-				mapOfProcess.get(processId).add(allRecords);
-			}
-		}
-		interfaceLogParentFilteredList = mapOfProcess.get(selectedProcess
-				.getProcessId());
-
-		/*
-		 * String logId = this.getManagedBean().getMapfPross()
-		 * .get(selectedProcess.getProcessId()).get(0).getLogId() .toString();
-		 */
-
-		String processId = this.getManagedBean().getMapOfProcess()
-				.get(selectedProcess.getProcessId()).get(0).getProcessId();
+		
+		String processId =oldDateLog.getProcessId();
 		
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-		String createdDate = dateFormat.format(this.getManagedBean()
-				.getMapOfProcess().get(selectedProcess.getProcessId()).get(0)
-			.getCreatedDate());	
+		String createdDate = dateFormat.format(oldDateLog.getCreatedDate());
 
-		if (CollectionUtils.isNotEmpty(interfaceLogParentFilteredList)) {
-
-			for (DIInterfaceLog filteredProcessCode : interfaceLogParentFilteredList) {
-
-				if (filteredProcessCode.getProcessStatus() != null
-						&& filteredProcessCode.getProcessStatus().equals(
+				if (selectedProcess.getProcessStatus() != null
+						&& selectedProcess.getProcessStatus().equals(
 								new Long(0))) {
 
-					switch (ProcessCodeType.valueOf(filteredProcessCode
+					switch (ProcessCodeType.valueOf(selectedProcess
 							.getProcessId())) {
 
-					case GLPRG:
-						fc.getApplication().getNavigationHandler()
-								.handleNavigation(fc, null, NAV_TO_PRGACT);
-						this.getManagedBean().getSearchProgAct().reloadData();
-						if (getInterfaceProgActProcessStatus(this
-								.getManagedBean().getSearchProgAct().getList())) {
+					case GLPRG:						
+						if(getPrgActDataCountByProcessStatus(selectedProcess)){
+							fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_PRGACT);
 							showErrorMsg(selectedProcess, processId,
-									createdDate, filteredProcessCode, fc);
+									createdDate, oldDateLog, fc);
 						}
 						break;
-					case GLBAC:
-						fc.getApplication().getNavigationHandler()
-								.handleNavigation(fc, null, NAV_TO_AGOFFICE);
-						this.getManagedBean().getSearchAgOff().reloadData();
-						if (getInterfaceAgOfficeProcessStatus(this
-								.getManagedBean().getSearchAgOff().getList())) {
+					case GLBAC:						
+						if(getAgOffDataCountByProcessStatus(selectedProcess)){
+							fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_AGOFFICE);
 							showErrorMsg(selectedProcess, processId,
-									createdDate, filteredProcessCode, fc);
+									createdDate, oldDateLog, fc);
 						}
 						break;
 					case GLSEG:
-						fc.getApplication().getNavigationHandler()
-								.handleNavigation(fc, null, NAV_TO_PP);
-						this.getManagedBean().getSearchPp().reloadData();
-						if (getInterfacePpProcessStatus(this.getManagedBean()
-								.getSearchPp().getList())) {
+						if(getPpDataCountByProcessStatus(selectedProcess)){
+							fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_PP);
 							showErrorMsg(selectedProcess, processId,
-									createdDate, filteredProcessCode, fc);
-						}
+									createdDate, oldDateLog, fc);
+						}						
 						break;
 					case GLVOT:
-						fc.getApplication().getNavigationHandler()
-								.handleNavigation(fc, null, NAV_TO_VOT);
-						this.getManagedBean().getSearchVot().reloadData();
-						if (getInterfaceVotProcessStatus(this.getManagedBean()
-								.getSearchVot().getList())) {
+						if(getVotDataCountByProcessStatus(selectedProcess)){
+							fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_VOT);
 							showErrorMsg(selectedProcess, processId,
-									createdDate, filteredProcessCode, fc);
-						}
+									createdDate, oldDateLog, fc);
+						}						
 						break;
 					case GLDNA:
-						fc.getApplication().getNavigationHandler()
-								.handleNavigation(fc, null, NAV_TO_DANA);
-						this.getManagedBean().getSearchDana().reloadData();
-						if (getInterfaceDanaProcessStatus(this.getManagedBean()
-								.getSearchDana().getList())) {
+						if(getDanaDataCountByProcessStatus(selectedProcess)){
+							fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_DANA);
 							showErrorMsg(selectedProcess, processId,
-									createdDate, filteredProcessCode, fc);
-						}
+									createdDate, oldDateLog, fc);
+						}						
 						break;
 					case GLPRJ:
-						fc.getApplication().getNavigationHandler()
-								.handleNavigation(fc, null, NAV_TO_PROJECT);
-						this.getManagedBean().getSearchProject().reloadData();
-						if (getInterfaceProjectProcessStatus(this
-								.getManagedBean().getSearchProject().getList())) {
+						if(getProjectDataCountByProcessStatus(selectedProcess)){
+							fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_PROJECT);
 							showErrorMsg(selectedProcess, processId,
-									createdDate, filteredProcessCode, fc);
-						}
+									createdDate, oldDateLog, fc);
+						}						
 						break;
 					case GLGLC:
-						fc.getApplication().getNavigationHandler()
-								.handleNavigation(fc, null, NAV_TO_GLACCOUNT);
-						this.getManagedBean().getSearchGlAccount().reloadData();
-						if (getInterfaceGlAcntProcessStatus(this
-								.getManagedBean().getSearchGlAccount()
-								.getList())) {
+						if(getGlAccountDataCountByProcessStatus(selectedProcess)){
+							fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_GLACCOUNT);
 							showErrorMsg(selectedProcess, processId,
-									createdDate, filteredProcessCode, fc);
-						}
-						break;
+									createdDate, oldDateLog, fc);
+						}						
+						break;						
 					case GLPCG:
-						fc.getApplication().getNavigationHandler()
-								.handleNavigation(fc, null, NAV_TO_KPTJ);
-						this.getManagedBean().getSearchKptj().reloadData();
-						if (getInterfaceKptjProcessStatus(this.getManagedBean()
-								.getSearchKptj().getList())) {
+						if(getKptjDataCountByProcessStatus(selectedProcess)){
+							fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_KPTJ);
 							showErrorMsg(selectedProcess, processId,
-									createdDate, filteredProcessCode, fc);
-						}
+									createdDate, oldDateLog, fc);
+						}						
 						break;
 					case GLPTJ:
-						fc.getApplication().getNavigationHandler()
-								.handleNavigation(fc, null, NAV_TO_PTJ);
-						this.getManagedBean().getSearchPtj().reloadData();
-						if (getInterfacePtjProcessStatus(this.getManagedBean()
-								.getSearchPtj().getList())) {
+						if(getPtjDataCountByProcessStatus(selectedProcess)){
+							fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_PTJ);
 							showErrorMsg(selectedProcess, processId,
-									createdDate, filteredProcessCode, fc);
-						}
-						break;
+									createdDate, oldDateLog, fc);
+						}						
+						break;						
 					case CMBNK:
-						fc.getApplication().getNavigationHandler()
-								.handleNavigation(fc, null, NAV_TO_BANK);
-						this.getManagedBean().getSearchBank().reloadData();
-						if (getInterfaceBankProcessStatus(this.getManagedBean()
-								.getSearchBank().getList())) {
+						if(getBankDataCountByProcessStatus(selectedProcess)){
+							fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_BANK);
 							showErrorMsg(selectedProcess, processId,
-									createdDate, filteredProcessCode, fc);
-						}
+									createdDate, oldDateLog, fc);
+						}						
 						break;
 					}
 				}
-			}
 
+	}
+
+	private boolean getAgOffDataCountByProcessStatus(
+			DIInterfaceLog selectedProcess) {
+		
+		IInterfaceAgOffSO agOffSO;		
+
+		SearchBean<PmInterfaceAgOff> searchBean = new SearchBean<PmInterfaceAgOff>();
+
+		ISearchBean<PmInterfaceAgOff> searchBeanData = getAgOffSearchBeanData(
+				searchBean, selectedProcess);
+
+		InterfaceAgOffReqDTO reqDTO = new InterfaceAgOffReqDTO();
+
+		reqDTO.setViewAgOffSearchBean(searchBeanData);
+
+		agOffSO = (IInterfaceAgOffSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IInterfaceAgOffSO.class);
+
+		InterfaceAgOffResDTO resDTO = agOffSO
+				.getAgOffDataCountByProcessStatus(reqDTO);
+		if (resDTO.getCount() > 0) {
+			isContains = true;
 		}
 
+		return isContains;		
+	}
+
+	private boolean getVotDataCountByProcessStatus(
+			DIInterfaceLog selectedProcess) {
+		
+		IInterfaceVotSO votSO;
+
+		SearchBean<PmInterfaceVot> searchBean = new SearchBean<PmInterfaceVot>();
+
+		ISearchBean<PmInterfaceVot> searchBeanData = getVotSearchBeanData(
+				searchBean, selectedProcess);
+
+		InterfaceVotReqDTO reqDTO = new InterfaceVotReqDTO();
+
+		reqDTO.setViewVotSearchBean(searchBeanData);
+
+		votSO = (IInterfaceVotSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IInterfaceVotSO.class);
+
+		InterfaceVotResDTO resDTO = votSO
+				.getVotDataCountByProcessStatus(reqDTO);
+		if (resDTO.getCount() > 0) {
+			isContains = true;
+		}
+
+		return isContains;
+		
+	}
+
+	private boolean getDanaDataCountByProcessStatus(
+			DIInterfaceLog selectedProcess) {
+		IInterfaceVotDanaSO iDanaSO;
+
+		SearchBean<PmInterfaceDana> searchBean = new SearchBean<PmInterfaceDana>();
+
+		ISearchBean<PmInterfaceDana> searchBeanData = getDanaSearchBeanData(
+				searchBean, selectedProcess);
+
+		InterfaceVotDanaReqDTO reqDTO = new InterfaceVotDanaReqDTO();
+
+		reqDTO.setViewDanaSearchBean(searchBeanData);
+
+		iDanaSO = (IInterfaceVotDanaSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IInterfaceVotDanaSO.class);
+
+		InterfaceVotDanaResDTO resDTO = iDanaSO
+				.getDanaDataCountByProcessStatus(reqDTO);
+		if (resDTO.getCount() > 0) {
+			isContains = true;
+		}
+
+		return isContains;
+		
+	}
+
+	private boolean getProjectDataCountByProcessStatus(
+			DIInterfaceLog selectedProcess) {
+		IInterfaceProjectSO iProjectSO;
+		
+		SearchBean<PmInterfaceProject> searchBean = new SearchBean<PmInterfaceProject>();
+
+		ISearchBean<PmInterfaceProject> searchBeanData = getProjectSearchBeanData(
+				searchBean, selectedProcess);
+
+		InterfaceProjectReqDTO reqDTO = new InterfaceProjectReqDTO();
+
+		reqDTO.setViewProjectSearchBean(searchBeanData);
+
+		iProjectSO = (IInterfaceProjectSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IInterfaceProjectSO.class);
+
+		InterfaceProjectResDTO resDTO = iProjectSO
+				.getProjectDataCountByProcessStatus(reqDTO);
+		if (resDTO.getCount() > 0) {
+			isContains = true;
+		}
+
+		return isContains;
+		
+	}
+
+	private boolean getGlAccountDataCountByProcessStatus(
+			DIInterfaceLog selectedProcess) {
+		
+		IInterfaceGlAccSO glAccountSO;
+		SearchBean<PmInterfaceGlAccount> searchBean = new SearchBean<PmInterfaceGlAccount>();
+
+		ISearchBean<PmInterfaceGlAccount> searchBeanData = getGlAccountSearchBeanData(
+				searchBean, selectedProcess);
+
+		InterfaceGlAccReqDTO reqDTO  = new InterfaceGlAccReqDTO();
+
+		reqDTO.setViewGlAcntSearchBean(searchBeanData);
+
+		glAccountSO = (IInterfaceGlAccSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IInterfaceGlAccSO.class);
+
+		InterfaceGlAccResDTO resDTO = glAccountSO
+				.getGlAcntDataCountByProcessStatus(reqDTO);
+		if (resDTO.getCount() > 0) {
+			isContains = true;
+		}
+		return isContains;		
+	}
+
+	private boolean getKptjDataCountByProcessStatus(
+			DIInterfaceLog selectedProcess) {
+		
+		IInterfaceKptjSO iKptjSO;		
+
+		SearchBean<PmInterfaceKptj> searchBean = new SearchBean<PmInterfaceKptj>();
+
+		ISearchBean<PmInterfaceKptj> searchBeanData = getKptjSearchBeanData(
+				searchBean, selectedProcess);
+
+		InterfaceKptjReqDTO reqDTO = new InterfaceKptjReqDTO();
+
+		reqDTO.setViewKptjSearchBean(searchBeanData);
+
+		iKptjSO = (IInterfaceKptjSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IInterfaceKptjSO.class);
+
+		InterfaceKptjResDTO resDTO = iKptjSO
+				.getKptjDataCountByProcessStatus(reqDTO);
+		if (resDTO.getCount() > 0) {
+			isContains = true;
+		}
+		return isContains;		
+	}
+
+	private boolean getPtjDataCountByProcessStatus(
+			DIInterfaceLog selectedProcess) {
+		
+		IInterfacePtjSO iPtjSO;	
+
+		SearchBean<PmInterfacePtj> searchBean = new SearchBean<PmInterfacePtj>();
+
+		ISearchBean<PmInterfacePtj> searchBeanData = getPtjSearchBeanData(
+				searchBean, selectedProcess);
+
+		InterfacePtjReqDTO reqDTO = new InterfacePtjReqDTO();
+
+		reqDTO.setViewPtjSearchBean(searchBeanData);
+
+		iPtjSO = (IInterfacePtjSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IInterfacePtjSO.class);
+
+		InterfacePtjResDTO resDTO = iPtjSO
+				.getPtjDataCountByProcessStatus(reqDTO);
+		if (resDTO.getCount() > 0) {
+			isContains = true;
+		}
+
+		return isContains;
+		
+	}
+
+	private boolean getBankDataCountByProcessStatus(
+			DIInterfaceLog selectedProcess) {
+		
+		IInterfaceCmBankSO iBankSO;
+
+		SearchBean<PmInterfaceBank> searchBean = new SearchBean<PmInterfaceBank>();
+
+		ISearchBean<PmInterfaceBank> searchBeanData = getBankSearchBeanData(
+				searchBean, selectedProcess);
+
+		InterfaceCmBankReqDTO bankReqDTO = new InterfaceCmBankReqDTO();
+
+		bankReqDTO.setViewBankSearchBean(searchBeanData);
+
+		iBankSO = (IInterfaceCmBankSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IInterfaceCmBankSO.class);
+
+		InterfaceCmBankResDTO resDTO = iBankSO
+				.getBankDataCountByProcessStatus(bankReqDTO);
+		if (resDTO.getCount() > 0) {
+			isContains = true;
+		}
+
+		return isContains;
+		
+	}
+
+	private boolean getPrgActDataCountByProcessStatus(
+			DIInterfaceLog selectedProcess) {
+		
+		IInterfacePrgActSO iPrgActSO;
+
+		SearchBean<PmInterfaceProgAct> searchBean = new SearchBean<PmInterfaceProgAct>();
+
+		ISearchBean<PmInterfaceProgAct> searchBeanData = getPrgActSearchBeanData(
+				searchBean, selectedProcess);
+
+		InterfacePrgActReqDTO reqDTO = new InterfacePrgActReqDTO();
+
+		reqDTO.setViewSearchBean(searchBeanData);
+
+		iPrgActSO = (IInterfacePrgActSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IInterfacePrgActSO.class);
+
+		InterfacePrgActResDTO resDTO = iPrgActSO
+				.getPrjActDataCountByProcessStatus(reqDTO);
+		if (resDTO.getCount() > 0) {
+			isContains = true;
+		}
+		return isContains;
+		
+	}
+
+	private ISearchBean<PmInterfacePP> getPpSearchBeanData(
+			ISearchBean<PmInterfacePP> searchBean, DIInterfaceLog diLog) {
+
+		log.info("getPpSearchBeanData");
+
+		if (diLog.getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), diLog
+									.getLogId()));
+		}
+
+		List<Long> listOfProcessStatus = new ArrayList<Long>();
+		listOfProcessStatus.add(new Long(0));
+		listOfProcessStatus.add(new Long(1));
+		listOfProcessStatus.add(new Long(2));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
+						.value(), listOfProcessStatus));
+
+		return searchBean;
+	}
+	
+	private ISearchBean<PmInterfaceBank> getBankSearchBeanData(
+			ISearchBean<PmInterfaceBank> searchBean, DIInterfaceLog diLog) {
+
+		log.info("getBankSearchBeanData");
+
+		if (diLog.getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), diLog
+									.getLogId()));
+		}
+
+		List<Long> listOfProcessStatus = new ArrayList<Long>();
+		listOfProcessStatus.add(new Long(0));
+		listOfProcessStatus.add(new Long(1));
+		listOfProcessStatus.add(new Long(2));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
+						.value(), listOfProcessStatus));
+
+		return searchBean;
+	}
+	
+	
+	private ISearchBean<PmInterfaceVot> getVotSearchBeanData(
+			ISearchBean<PmInterfaceVot> searchBean, DIInterfaceLog diLog) {
+
+		log.info("getVotSearchBeanData");
+
+		if (diLog.getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), diLog
+									.getLogId()));
+		}
+
+		List<Long> listOfProcessStatus = new ArrayList<Long>();
+		listOfProcessStatus.add(new Long(0));
+		listOfProcessStatus.add(new Long(1));
+		listOfProcessStatus.add(new Long(2));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
+						.value(), listOfProcessStatus));
+
+		return searchBean;
+	}
+	
+	
+	private ISearchBean<PmInterfaceKptj> getKptjSearchBeanData(
+			ISearchBean<PmInterfaceKptj> searchBean, DIInterfaceLog diLog) {
+
+		log.info("getKptjSearchBeanData");
+
+		if (diLog.getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), diLog
+									.getLogId()));
+		}
+
+		List<Long> listOfProcessStatus = new ArrayList<Long>();
+		listOfProcessStatus.add(new Long(0));
+		listOfProcessStatus.add(new Long(1));
+		listOfProcessStatus.add(new Long(2));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
+						.value(), listOfProcessStatus));
+
+		return searchBean;
+	}
+	
+	
+	private ISearchBean<PmInterfacePtj> getPtjSearchBeanData(
+			ISearchBean<PmInterfacePtj> searchBean, DIInterfaceLog diLog) {
+
+		log.info("getPtjSearchBeanData");
+
+		if (diLog.getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), diLog
+									.getLogId()));
+		}
+
+		List<Long> listOfProcessStatus = new ArrayList<Long>();
+		listOfProcessStatus.add(new Long(0));
+		listOfProcessStatus.add(new Long(1));
+		listOfProcessStatus.add(new Long(2));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
+						.value(), listOfProcessStatus));
+
+		return searchBean;
+	}
+	
+	
+	private ISearchBean<PmInterfaceDana> getDanaSearchBeanData(
+			ISearchBean<PmInterfaceDana> searchBean, DIInterfaceLog diLog) {
+
+		log.info("getDanaSearchBeanData");
+
+		if (diLog.getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), diLog
+									.getLogId()));
+		}
+
+		List<Long> listOfProcessStatus = new ArrayList<Long>();
+		listOfProcessStatus.add(new Long(0));
+		listOfProcessStatus.add(new Long(1));
+		listOfProcessStatus.add(new Long(2));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
+						.value(), listOfProcessStatus));
+
+		return searchBean;
+	}
+	
+	
+	private ISearchBean<PmInterfaceAgOff> getAgOffSearchBeanData(
+			ISearchBean<PmInterfaceAgOff> searchBean, DIInterfaceLog diLog) {
+
+		log.info("getAgOffSearchBeanData");
+
+		if (diLog.getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), diLog
+									.getLogId()));
+		}
+
+		List<Long> listOfProcessStatus = new ArrayList<Long>();
+		listOfProcessStatus.add(new Long(0));
+		listOfProcessStatus.add(new Long(1));
+		listOfProcessStatus.add(new Long(2));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
+						.value(), listOfProcessStatus));
+
+		return searchBean;
+	}
+	
+	
+	private ISearchBean<PmInterfaceGlAccount> getGlAccountSearchBeanData(
+			ISearchBean<PmInterfaceGlAccount> searchBean, DIInterfaceLog diLog) {
+
+		log.info("getGlAccountSearchBeanData");
+
+		if (diLog.getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("dIInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), diLog
+									.getLogId()));
+		}
+
+		List<Long> listOfProcessStatus = new ArrayList<Long>();
+		listOfProcessStatus.add(new Long(0));
+		listOfProcessStatus.add(new Long(1));
+		listOfProcessStatus.add(new Long(2));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
+						.value(), listOfProcessStatus));
+
+		return searchBean;
+	}
+	
+	
+	private ISearchBean<PmInterfaceProgAct> getPrgActSearchBeanData(
+			ISearchBean<PmInterfaceProgAct> searchBean, DIInterfaceLog diLog) {
+
+		log.info("getPrgActSearchBeanData");
+
+		if (diLog.getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("diInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), diLog
+									.getLogId()));
+		}
+
+		List<Long> listOfProcessStatus = new ArrayList<Long>();
+		listOfProcessStatus.add(new Long(0));
+		listOfProcessStatus.add(new Long(1));
+		listOfProcessStatus.add(new Long(2));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
+						.value(), listOfProcessStatus));
+
+		return searchBean;
+	}
+	
+	
+	private ISearchBean<PmInterfaceProject> getProjectSearchBeanData(
+			ISearchBean<PmInterfaceProject> searchBean, DIInterfaceLog diLog) {
+
+		log.info("getProjectSearchBeanData");
+
+		if (diLog.getLogId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("dIInterfaceLog.logId",
+							SearchOperator.OPERATOR_EQUALS.value(), diLog
+									.getLogId()));
+		}
+
+		List<Long> listOfProcessStatus = new ArrayList<Long>();
+		listOfProcessStatus.add(new Long(0));
+		listOfProcessStatus.add(new Long(1));
+		listOfProcessStatus.add(new Long(2));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
+						.value(), listOfProcessStatus));
+
+		return searchBean;
+	}
+	
+	
+	private boolean getPpDataCountByProcessStatus(DIInterfaceLog diInterfaceLog) {
+		log.info("getChildDataCountByProcessStatus");
+
+		IInterfacePpSO iPpSO;
+
+		boolean isContains = false;
+
+		SearchBean<PmInterfacePP> searchBean = new SearchBean<PmInterfacePP>();
+
+		ISearchBean<PmInterfacePP> searchBeanData = getPpSearchBeanData(
+				searchBean, diInterfaceLog);
+
+		InterfacePpReqDTO ppReqDTO = new InterfacePpReqDTO();
+
+		ppReqDTO.setViewPpSearchBean(searchBeanData);
+
+		iPpSO = (IInterfacePpSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IInterfacePpSO.class);
+
+		InterfacePpResDTO resDTO = iPpSO
+				.getPpDataCountByProcessStatus(ppReqDTO);
+		if (resDTO.getCount() > 0) {
+			isContains = true;
+		}
+
+		return isContains;
+	}
+
+	private ISearchBean<DIInterfaceLog> getMasterSearchBeanData(
+			ISearchBean<DIInterfaceLog> searchBean,DIInterfaceLog selectedProcess) {
+		
+		log.info("getMasterSearchBeanData");
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_EQUALS
+						.value(),selectedProcess.getProcessStatus()));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("targetSystem", SearchOperator.OPERATOR_EQUALS
+						.value(),selectedProcess.getTargetSystem()));
+		
+		if (StringUtils.isNotEmpty(selectedProcess.getProcessId())) {
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("processId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							selectedProcess.getProcessId()));
+		}
+		searchBean.getSortColumns().add(
+				new SearchOrderBean("createdDate", true));
+
+
+		return searchBean;
+	}
+
+	private DIInterfaceLog getMasterDataByCreatedDate(DIInterfaceLog selectedProcess) {
+
+		IDIInterfaceSO gfMasSO;
+		DIInterfaceLog interfaceLog=null;
+
+		InterfaceLogReqDto ReqDTO = new InterfaceLogReqDto();
+		
+		SearchBean<DIInterfaceLog> searchBean = new SearchBean<DIInterfaceLog>();
+
+		ISearchBean<DIInterfaceLog> searchBeanData = this.getMasterSearchBeanData(searchBean,selectedProcess);
+
+		ReqDTO.setViewSearchBean(searchBeanData);
+
+		gfMasSO = (IDIInterfaceSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDIInterfaceSO.class);
+
+		InterfaceLogResDto resDTO = gfMasSO
+				.retrieveInterfaceLogDetailsByCreatedDate(ReqDTO);
+		
+		if(CollectionUtils.isNotEmpty(resDTO.getViewGfMasResultBean().getResultList())){
+		
+			interfaceLog=resDTO.getViewGfMasResultBean().getResultList().get(0);
+		}
+		
+		return interfaceLog;
 	}
 
 	/**
@@ -878,16 +1139,27 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 */
 	private void showErrorMsg(DIInterfaceLog selectedProcess,
 			String processId, String createdDate,
-			DIInterfaceLog filteredProcessCode,FacesContext fc) {
-		if (!selectedProcess.getLogId().equals(filteredProcessCode.getLogId())) {
+			DIInterfaceLog oldCreatedDateLog,FacesContext fc) {
+		/*if (!selectedProcess.getLogId().equals(oldCreatedDateLog.getLogId())) {
 			if (!(selectedProcess.getCreatedDate().compareTo(
-					filteredProcessCode.getCreatedDate())<0)) {
+					oldCreatedDateLog.getCreatedDate())<0)) {
 				fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_MAIN);			
 				log.info("Label--->"+this.getManagedBean().getProcessLabels().get(processId));
 				throw new EpException(MessageConst.ERROR_780001, new String[] {
 						this.getManagedBean().getProcessLabels().get(processId),createdDate });
+			}else{
+				
 			}
+		}*/
+		if (!selectedProcess.getLogId().equals(oldCreatedDateLog.getLogId())) {
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, NAV_TO_MAIN);
+			log.info("Label--->"
+					+ this.getManagedBean().getProcessLabels().get(processId));
+			throw new EpException(MessageConst.ERROR_780001, new String[] {
+					this.getManagedBean().getProcessLabels().get(processId),
+					createdDate });
 		}
 	}
 
@@ -911,7 +1183,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		this.getManagedBean().setSelectedPpList(null);
 		this.getManagedBean().setSelectedVotList(null);
 		this.getManagedBean().setProcessButtonStatus(false);
-
+        
 		return "/xhtml/gfMas/gfmassearch/gfmasSearchMain.xhtml?faces-redirect=true";
 
 	}
@@ -1181,15 +1453,60 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				return NAV_TO_VOT;
 			}
 		}
-		returnUrl = NAV_TO_MAIN;
+		//returnUrl = NAV_TO_MAIN;
 		if (getSelectedAllProcessListStatus()) {
-			returnUrl = NAV_TO_MAIN;
+			
+			//returnUrl = NAV_TO_MAIN;
+			goToProcessPage(this.getManagedBean().getProcessId());
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 					FacesMessage.SEVERITY_INFO, MessageConst.INFO_780002, null);
 		} 
 		return returnUrl;
 	}
 
+	
+	private String goToProcessPage(String processId) {
+
+		log.info("goToProcessPage");
+		
+		String processPage = null;
+
+		switch (ProcessCodeType.valueOf(processId)) {
+
+		case GLPRG:
+			processPage = NAV_TO_PROJECT;
+			break;
+		case GLBAC:
+			processPage = NAV_TO_AGOFFICE;
+			break;
+		case GLSEG:
+			processPage = NAV_TO_PP;
+			break;
+		case GLVOT:
+			processPage = NAV_TO_VOT;
+			break;
+		case GLDNA:
+			processPage = NAV_TO_DANA;
+			break;
+		case GLPRJ:
+			processPage = NAV_TO_PROJECT;
+			break;
+		case GLGLC:
+			processPage = NAV_TO_GLACCOUNT;
+			break;
+		case GLPCG:
+			processPage = NAV_TO_KPTJ;
+			break;
+		case GLPTJ:
+			processPage = NAV_TO_PTJ;
+			break;
+		case CMBNK:
+			processPage = NAV_TO_BANK;
+			break;
+		}
+		return processPage;
+	}
+	
 	/**
 	 * Gets the selected all process list.
 	 * 

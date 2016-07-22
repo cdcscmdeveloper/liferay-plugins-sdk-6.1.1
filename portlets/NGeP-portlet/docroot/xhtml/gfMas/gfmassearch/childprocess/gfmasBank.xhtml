@@ -15,53 +15,48 @@
 
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
 
-		<p:panel header="#{lbl['lbl.gfmas.bank.info']}" id="childBankPage"
+		<p:panel header="#{lbl['lbl.gfmas.glbnkdef']}" id="childBankPage"
 			toggleable="true">
 			<p:dataTable id="gfMasBankId" var="pmInterfaceBank" rows="10"
 				rowIndexVar="index" lazy="true"
 				selection="#{gfMasBackingBean.managedBean.selectedBankList}" 
 				rowKey="#{pmInterfaceBank}"
-				value="#{gfMasBackingBean.managedBean.searchBank}">
-              
-               <p:ajax event="rowSelect" 
-					update=":form:prcessIdButton,:form:gfMasBankId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />
-				<p:ajax event="rowUnselect" 
-					update=":form:prcessIdButton,:form:gfMasBankId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />
+				value="#{gfMasBackingBean.managedBean.searchBank}">              
+             
 				<p:ajax event="rowSelectCheckbox" 
 					update=":form:prcessIdButton,:form:gfMasBankId"					
 					listener="#{gfMasBackingBean.rowSelectEvent}" />
 				<p:ajax event="rowUnselectCheckbox" 
 					update=":form:prcessIdButton,:form:gfMasBankId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />
-				<p:ajax event="toggleSelect"
-					update=":form:prcessIdButton,:form:gfMasBankId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />
+					listener="#{gfMasBackingBean.rowSelectEvent}" />				
 			
 				<ac:paginator for="gfMasBankId"></ac:paginator>
 
 				<p:column selectionMode="multiple" style="width:5%"
 					disabledSelection="#{pmInterfaceBank.processStatus eq '1' or pmInterfaceBank.processStatus eq '2'}" />
 
-				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}">
+				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}" style="width:5%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceBank.diInterfaceLog.logId}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.gfmas.bank.code']}">
+				<p:column headerText="#{lbl['lbl.gfmas.bank.code']}" style="width:20%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceBank.bankCode}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.gfmas.bank.desc']}">
+				<p:column headerText="#{lbl['lbl.gfmas.bank.desc']}" style="width:35%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceBank.bankName}" />
 				</p:column>
-
-				<p:column headerText="#{lbl['lbl.gfmas.bank.action']}">
-					<h:outputText value="#{pmInterfaceBank.action}" />
+				<p:column headerText="#{lbl['lbl.gfmas.bank.action']}" style="width:20%;white-space: normal;word-wrap: break-word;">
+					<p:column headerText="#{lbl['lbl.gfmas.code.status']}">
+						<h:outputText value="#{lbl['lbl.gfmas.codestatus.creation']}"
+							rendered="#{pmInterfaceBank.action=='C'}" />
+						<h:outputText value="#{lbl['lbl.gfmas.codestatus.modification']}"
+							rendered="#{pmInterfaceBank.action=='M'}" />
+						<h:outputText value="#{lbl['lbl.gfmas.codestatus.deletion']}"
+							rendered="#{pmInterfaceBank.action=='D'}" />
+					</p:column>
 				</p:column>
-
-				<p:column headerText="#{lbl['lbl.gfmas.process.status']}">
-
+				<p:column headerText="#{lbl['lbl.gfmas.process.status']}" style="width:15%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
 						rendered="#{pmInterfaceBank.processStatus==0}" />
 					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
@@ -69,15 +64,6 @@
 					<h:outputText value="#{lbl['lbl.gfmas.process.fail']}"
 						rendered="#{pmInterfaceBank.processStatus==2}" />
 				</p:column>
-
-				<p:column headerText="#{lbl['lbl.pm.search.status']}"
-					style="width:10%">
-					<h:outputText value="#{lbl['lbl.pm.active']}"
-						rendered="#{pmInterfaceBank.recordStatusFlg==1}" />
-					<h:outputText value="#{lbl['lbl.pm.inactive']}"
-						rendered="#{pmInterfaceBank.recordStatusFlg!=1}" />
-				</p:column>
-
 			</p:dataTable>
 
 		</p:panel>
