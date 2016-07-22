@@ -278,6 +278,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private PmVotFund feeVoteFund;
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
+	private String gfmasErrorCode;
+	private String gfmasErrorDesc;
 	
 	//getFactoring address details
 	private String facSupplierAddress;
@@ -2927,6 +2929,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public String getSearchTypesDD() {
 		return searchTypesDD;
+	}
+
+	public String getGfmasErrorCode() {
+		return gfmasErrorCode;
+	}
+
+	public void setGfmasErrorCode(String gfmasErrorCode) {
+		this.gfmasErrorCode = gfmasErrorCode;
+	}
+
+	public String getGfmasErrorDesc() {
+		return gfmasErrorDesc;
+	}
+
+	public void setGfmasErrorDesc(String gfmasErrorDesc) {
+		this.gfmasErrorDesc = gfmasErrorDesc;
 	}
 
 }
