@@ -531,6 +531,7 @@ public class QTDetailBackingBean extends
 			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			quationTenderReqDTO.setUserLocale(facesScopes.getUserLocale());
 			quationTenderReqDTO.getQtdetail().setOtherApproval(true);
+			quationTenderReqDTO.setDeskOfficer(facesScopes.getUserSessionBean());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
@@ -2141,6 +2142,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setQtdetail(scQt);
 			reqDTO.setAvaliableApprovals(scQt.getScQtApprovals());
 			reqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
+			reqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
 			// reqDTO.setRuleDataBean(this.getManagedBean().getRuleDataBean());
 			resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
 
@@ -3191,6 +3193,8 @@ public class QTDetailBackingBean extends
 		UserResDTO userResDTO = iUserSO
 				.retrieveUserListWithProfileGroupUserByRole(userReqDto);
 		List<PmUser> approvers = userResDTO.getUserList();
+		// Remove Current DO from approver list
+		removeDeskOfficer(approvers);
 		if (null != approval) {
 			if (null != approval.getApproverSettings()
 					&& !approval.getApproverSettings().isEmpty()) {
@@ -3715,6 +3719,7 @@ public class QTDetailBackingBean extends
 								.getQt().getQtStatus().getStatusId())) {
 							reqDTO.getQtdetail().setFCApproval(true);
 						}
+						
 					detailSO.validateApprovalDetails(reqDTO);
 					// retrieveApprovalTabDtl();
 					break;
@@ -3753,6 +3758,7 @@ public class QTDetailBackingBean extends
 					if (isQTStatusBtwScheduleDocAndBeforePublished(getManagedBean().getQt().getQtStatus().getStatusId())) {
 
 							reqDTO.getQtdetail().setCallPTJValidation(true);
+							reqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
 							detailSO.validateApprovalDetails(reqDTO);
 						}
 					}
@@ -5071,6 +5077,30 @@ public class QTDetailBackingBean extends
 		SelectItem[] items = getDropdownCodeValuesBySearchBean(
 				ParameterTypeConst.DOCUMENT_TYPES, searchBean);
 		return items;
+	}
+	
+	/**
+	 * Remove pmUser if contains loggined in Desk Officer
+	 * 
+	 * @param approvers
+	 */
+	private void removeDeskOfficer(List<PmUser> approvers) {
+
+		if (CollectionUtils.isNotEmpty(approvers)) {
+			PmUser currentDO = new FacesScopes().getUserSessionBean();
+			boolean isDO = false;
+			int index = 0;
+			for (PmUser pmUser : approvers) {
+				if (pmUser.getUserId().equals(currentDO.getUserId())) {
+					isDO = true;
+					index++;
+					break;
+				}
+			}
+			if (isDO) {
+				approvers.remove(index);
+			}
+		}
 	}
 	
 }
