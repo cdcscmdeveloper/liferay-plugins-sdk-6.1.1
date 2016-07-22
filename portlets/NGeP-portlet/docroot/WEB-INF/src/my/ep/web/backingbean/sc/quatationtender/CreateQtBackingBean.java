@@ -199,6 +199,7 @@ public class CreateQtBackingBean extends
 		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		SpecificationResDTO resDTO= specSO.deleteTemplateSpecs(reqDTO);
+		this.getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
 		this.getManagedBean().setQt(resDTO.getScQt());
 		this.getManagedBean().setScQtCheckSt2techProposal(null);
 		this.getManagedBean().setScQtCheckSt2financeProposalList(null);
