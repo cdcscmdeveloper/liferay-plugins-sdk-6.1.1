@@ -2491,6 +2491,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				  }
 			 }
 	   }
+	  
+	  /**
+	   * The method used to validate the entered minimun order quantity.
+	   */
+	  public void onChangeMinimumQty(CtContractItem ctContractItem) {
+		  if (ctContractItem.getMinimumOrderQty() <= 0) {
+			  ctContractItem.setMinimumOrderQty(1);
+			  throw new EpException(MessageConst.ERROR_100033,
+				new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		  } 
+	  }
 		    
 	 /**
 	   * The method used to indicate the label flag for new price of service item.
