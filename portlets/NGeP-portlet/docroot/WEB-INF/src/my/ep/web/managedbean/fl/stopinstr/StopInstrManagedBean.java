@@ -74,6 +74,9 @@ public class StopInstrManagedBean extends BaseManagedBean {
     
     private boolean gfmasError=false;
     private String gfmasErrorContent;
+	private String gfmasErrorCode;
+	private String gfmasErrorDesc;
+	
     private List<PmUser> approverList;
     
     private boolean hyperLinkPage = false;
@@ -378,6 +381,22 @@ public class StopInstrManagedBean extends BaseManagedBean {
 
 	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
 		this.previousAttachmentList = previousAttachmentList;
+	}
+
+	public String getGfmasErrorDesc() {
+		return gfmasErrorDesc;
+	}
+
+	public void setGfmasErrorDesc(String gfmasErrorDesc) {
+		this.gfmasErrorDesc = gfmasErrorDesc;
+	}
+
+	public String getGfmasErrorCode() {
+		return gfmasErrorCode;
+	}
+
+	public void setGfmasErrorCode(String gfmasErrorCode) {
+		this.gfmasErrorCode = gfmasErrorCode;
 	}
 
 }
