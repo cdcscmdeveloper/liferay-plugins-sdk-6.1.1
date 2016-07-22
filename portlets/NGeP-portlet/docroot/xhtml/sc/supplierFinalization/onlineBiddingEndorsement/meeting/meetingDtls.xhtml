@@ -15,14 +15,17 @@
 
 			<ac:paginator for="meetingDtlTbl" />
 
+			<ui:param name="isSecretaryUser"
+					  value="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
 			<ui:param name="disableMeeting"
-					  value="#{!suppFinalBiddingBackingBean.managedBean.secretaryUser or 
+					  value="#{!isSecretaryUser or 
 									meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
 									
 			<p:column style="width:20px;" styleClass="td-check-box-spacing">
 				<f:facet name="header">
-					<p:selectBooleanCheckbox id="selAllChk"
-						value="#{suppFinalBiddingBackingBean.managedBean.selectAllMeetings}">
+					<p:selectBooleanCheckbox id="selAllChk" 
+						value="#{suppFinalBiddingBackingBean.managedBean.selectAllMeetings}"
+						disabled="#{!isSecretaryUser}">
 
 						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=supplierFinalizationOnlineEndorsmentMeetingPanel])"
