@@ -110,6 +110,27 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				
+				<ui:remove>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.category']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:selectManyMenu showCheckbox="true"
+							required="false"
+							label="#{lbl['lbl.sm.category']}" id="factoryCategoryId"
+							value="#{backingBean.managedBean.selectedSuppCategoryFacilityIds}"
+							style="height:100px;width: 200px;">
+							<f:selectItems
+								value="#{backingBean.getSelectedCategoryItemsByFacilityType(backingBean.managedBean.selectedFactoryFacility.facilityType)}" />
+						</p:selectManyMenu>
+						<p:message id="factoryCategoryIdMsg" for="factoryCategoryId"
+							showSummary="true" showDetail="false" display="icon" />
+					</td>
+				</tr>
+				</ui:remove>
+				
 				<ac:smFacilityAddress backingBean="#{backingBean}" smAddress="#{backingBean.managedBean.selectedFactoryFacility.smAddress}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.factoryFacilityStates}"
 					districtItems="#{backingBean.managedBean.factoryFacilityDistricts}" cityItems="#{backingBean.managedBean.factoryFacilityCities}" 

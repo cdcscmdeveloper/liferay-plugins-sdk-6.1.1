@@ -7943,6 +7943,36 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Assign supplier category facility default value during edit facility
+	 * (FACTORY/WORKSHOP/STORE/DOCKYARD)
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 * @param SmFacility
+	 *            facility
+	 */
+	public static void assignSupplierCategoryFacility(
+			SmApplicationManagedBean bean, SmFacility facility) {
+		bean.setSelectedSuppCategoryFacilityIds(null);
+
+		// assign category to facility
+		Long[] suppCatFacIds = null;
+		if (EntityHelper.isCollectionEmpty(facility
+				.getSmSupplierCategoryFacilities())) {
+			suppCatFacIds = new Long[0];
+		} else {
+			suppCatFacIds = new Long[facility.getSmSupplierCategoryFacilities()
+					.size()];
+			for (int i = 0; i < suppCatFacIds.length; i++) {
+				suppCatFacIds[i] = facility.getSmSupplierCategoryFacilities()
+						.get(i).getSmSupplierCategory().getSupplierCategoryId();
+
+			}
+		}
+		bean.setSelectedSuppCategoryFacilityIds(suppCatFacIds);
+	}
+
 	private static VelocityContext setSignatories(VelocityContext context,
 			List<SmChequeSignatory> smChequeSignatories) {
 		for (int i = 0; i < smChequeSignatories.size(); i++) {
