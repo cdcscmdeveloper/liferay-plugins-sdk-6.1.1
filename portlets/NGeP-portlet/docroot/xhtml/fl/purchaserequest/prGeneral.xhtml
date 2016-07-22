@@ -370,6 +370,7 @@
 					rowIndexVar="rowIndex"
 					selection="#{purchaseRequestBackingBean.selectedPmOrgProfile}"
 					rowKey="#{pmVar}" lazy="true" rows="10">
+					 <p:ajax event="rowSelectRadio" update=":form:chargePtjSelectBtn" ></p:ajax>
 					<ac:paginator for="tableChargePtj" />
 					<p:column selectionMode="single" style="width:18px;">
 						<f:facet name="header">
@@ -384,7 +385,8 @@
 				</p:dataTable>
 			</p:panel>           
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"   update=":form:chargeOrgProfile" 
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"   update=":form:chargeOrgProfile"  id="chargePtjSelectBtn"
+					disabled="#{fn:length(purchaseRequestBackingBean.chargedPtjDataModel.list) == 0 }"
 				    action="#{purchaseRequestBackingBean.addChargedPtjDetails()}" onclick="dlgChargedPtj.hide();"/>
 				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgChargedPtj.hide();" />
            </div>
