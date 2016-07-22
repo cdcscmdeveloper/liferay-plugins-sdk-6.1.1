@@ -84,7 +84,7 @@
 	<p:confirmDialog message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" widgetVar="confirmation1">
 		<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 			actionListener="#{catalogueBackingBean.deleteSupplierItem(catalogueBackingBean.managedBean.itemToDelete)}" 
-			update="@(.ui-datatable[id*=SupplierItemID])"
+			update="@form"
 			oncomplete="confirmation1.hide()" />
 		<p:commandButton id="decline" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 			onclick="confirmation1.hide()" />
