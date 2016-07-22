@@ -454,15 +454,10 @@
 			  <p:panel id="chargeResultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
               <p:dataTable id="tableChargePtj" var="pmVar" value="#{contractRequestBackingBean.chargedPtjDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
                  rowIndexVar="rowIndex" selection="#{contractRequestBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true" rows="10">
-                 <p:ajax event="rowSelectCheckbox" update=":form:chargePtjSelectBtn"></p:ajax>
-				<p:ajax event="rowUnselectCheckbox" update=":form:chargePtjSelectBtn"></p:ajax>
-				<p:ajax event="rowSelect" update=":form:chargePtjSelectBtn" ></p:ajax>
-				<p:ajax event="rowUnselect" update=":form:chargePtjSelectBtn" ></p:ajax>
-				<p:ajax event="toggleSelect" update=":form:chargePtjSelectBtn"></p:ajax>
+               <p:ajax event="rowSelectRadio" update=":form:chargePtjSelectBtn" ></p:ajax>
                   <ac:paginator for="tableChargePtj"/>
                     <p:column selectionMode="single" style="width:18px;"> 
                          <f:facet name="header">
-                             
 		               </f:facet>
                     </p:column>       
                     <p:column headerText="#{lbl['lbl.fl.ptj.code']}" >
@@ -475,7 +470,7 @@
 			 </p:panel>           
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"  update=":form:chargeOrgProfile" id="chargePtjSelectBtn"
-					disabled="#{contractRequestBackingBean.chargedPtjDataModel.list == 0 }"
+					disabled="#{fn:length(contractRequestBackingBean.chargedPtjDataModel.list) == 0 }"
 				    action="#{contractRequestBackingBean.addChargedPtjDetails()}" onclick="dlgChargedPtj.hide();"/>
 				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgChargedPtj.hide();" />
            </div>
