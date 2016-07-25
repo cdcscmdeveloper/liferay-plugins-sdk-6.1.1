@@ -42,7 +42,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.signer.desig']}" />
 					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
-				<td><p:inputText id="loiSignerDesigId" disabled="#{!isPendingSubmissionStatus or lOIDetailBackingBean.managedBean.readOnly}"
+				<td><p:inputText id="loiSignerDesigId" disabled="#{!isEditableStatus or lOIDetailBackingBean.managedBean.readOnly}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.loiSignerDesig}"
 						size="34" maxlength="100" required="true" label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}">
 					</p:inputText><p:message id="loiSignerDesigIdMsg" for="loiSignerDesigId"
