@@ -1856,11 +1856,27 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 				InvoiceBackingBean invBB = new InvoiceBackingBean();
 				invBB.getManagedBean().setInvoice(resDTO.getInvoice());
-				FacesContext fc = FacesContext.getCurrentInstance();
-				invBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 				invBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				invBB.getManagedBean().setHyperLinkPage(true);
+				FacesContext fc = FacesContext.getCurrentInstance();
 				flBB.getManagedBean().setHideRemarks(true);
+				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+				invBB.getManagedBean().setSelectedTabIndex(0);
+				invBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+				invBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+				invBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
+				//invBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+				flBB.getManagedBean().setHideRemarks(true);
+				invBB.getManagedBean().setReliefDeclarationCheck(true);
+				invBB.getManagedBean().setDocMaintain(false);
+				invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
+				for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
+					if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+						invBB.getManagedBean().getDelOrderList().add(flDeliveryOrder);
+					}
+				}		
+				
 				return NAV_INVOICE;
 			
 			}else if(docType.equalsIgnoreCase(FulfilmentConst.CONTRACT)){
