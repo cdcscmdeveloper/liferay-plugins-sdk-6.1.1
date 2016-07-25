@@ -40,7 +40,6 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
-import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -4031,6 +4030,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateFactoryToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedFactoryFacility();
+		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
@@ -4147,6 +4147,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateDockYardToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedDockyardFacility();
+		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
 		if (smFac.getFacilityId() == null) {
@@ -4261,6 +4262,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateWorkshopToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
@@ -4374,6 +4376,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateStoreToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedStoreFacility();
+		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
@@ -10975,15 +10978,15 @@ public class SmApplicationBackingBean extends
 			applCategories = getManagedBean().getActiveCategoryList();
 		}
 		for (SmSupplierCategory cat : applCategories) {
-			if (cat.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.PENDING_ACT_STATUS) == 0
-					|| cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0
-					&& cat.getPmCategoryL3() != null
-					&& !StringUtils.isBlank(cat.getPmCategoryL3()
-							.getFacilityType())
-					&& cat.getPmCategoryL3().getFacilityType()
-							.equalsIgnoreCase(facType)) {
+			if ((cat.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
+					.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+					&& (cat.getPmCategoryL3() != null
+							&& !StringUtils.isBlank(cat.getPmCategoryL3()
+									.getFacilityType()) && cat
+							.getPmCategoryL3().getFacilityType()
+							.equalsIgnoreCase(facType))) {
 
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0
