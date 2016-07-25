@@ -1134,6 +1134,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setContractList(new ArrayList<CtContract>());
 			//getManagedBean().setSelectedContractList(new ArrayList<CtContract>());
 			getManagedBean().setContractList(new ArrayList<CtContract>());
+			getManagedBean().setButtonHideActiveDel(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1481,7 +1482,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			       searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getOrgTypeCode()));
 				   searchBean.getDataFilterBeans()
-			          .add(new SearchFilterBean("recordStatus",SearchOperator.OPERATOR_LESS_EQUAL.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+			          .add(new SearchFilterBean("recordStatus",SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
 
 		    	  Date currentDate = DateUtils.getCurrentDateWithoutTime();
 			      // Filter By - Org effDate
