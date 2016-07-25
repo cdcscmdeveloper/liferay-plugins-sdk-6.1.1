@@ -146,6 +146,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvAddress;
@@ -7971,6 +7972,33 @@ public class SmApplicationUtil {
 			}
 		}
 		bean.setSelectedSuppCategoryFacilityIds(suppCatFacIds);
+	}
+
+	/**
+	 * Add or update facility category during add new facility or update
+	 * existing facility
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 * @param SmFacility
+	 *            smFac
+	 */
+	public static void addOrUpdateFacilityCategory(
+			SmApplicationManagedBean bean, SmFacility smFac) {
+		if (bean.getSelectedSuppCategoryFacilityIds() != null) {
+			smFac.setSmSupplierCategoryFacilities(new ArrayList<SmSupplierCategoryFacility>());
+			for (Long catId : bean.getSelectedSuppCategoryFacilityIds()) {
+				for (SmSupplierCategory cat : bean.getSmAppl()
+						.getSmSupplierCategories()) {
+					if (cat.getSupplierCategoryId().equals(catId)) {
+						SmSupplierCategoryFacility catFac = new SmSupplierCategoryFacility();
+						catFac.setSmFacility(smFac);
+						catFac.setSmSupplierCategory(cat);
+						smFac.getSmSupplierCategoryFacilities().add(catFac);
+					}
+				}
+			}
+		}
 	}
 
 	private static VelocityContext setSignatories(VelocityContext context,
