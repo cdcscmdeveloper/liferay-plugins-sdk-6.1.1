@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -48,7 +49,9 @@ import org.primefaces.model.UploadedFile;
 
 @ManagedBean(name = "fulfilmentBackingBean")
 @RequestScoped
-public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean> {
+public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean> implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	/** The log. */
 	private static Logger log = Logger.getLogger(FulfilmentBackingBean.class);
