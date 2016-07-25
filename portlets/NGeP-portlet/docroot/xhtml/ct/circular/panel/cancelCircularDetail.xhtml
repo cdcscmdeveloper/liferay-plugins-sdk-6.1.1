@@ -38,7 +38,7 @@
 			  </p:column>
 			  <p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" 
 			        styleClass="column-align-center"  style="width:35%; white-space:normal;" >
-				    <p:commandLink value="#{data.circularVer.circularNo}"
+				    <p:commandLink value="#{data.circularVer.circularNo}" style="float:left;"
 				      	onclick="gotoCancelPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVer.circularVerId}'}])">
 				    </p:commandLink>	
 			</p:column>
@@ -48,18 +48,19 @@
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn"> 
-			<p:commandButton value="#{lbl['lbl.btn.add']}" 
-			      actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" />
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
+			      actionListener="#{panelBackingBean.searchActiveCircularVer}" update=":form:activeCircularDlg" oncomplete="activeCircularDlg.show();" />
 			<p:commandButton value="#{lbl['lbl.ct.delete']}" id="delCancelBtn"
 			      process="@all"   onsuccess="delCancelCircular.show()" disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"/>				
 		</div>				
 		</p:outputPanel>	
 		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.active.circular']}" widgetVar="activeCircularDlg" 
 			styleClass="pop_up_top" modal="true" width="700" height="400" resizable="false">
-				<p:dataTable id="circularVerDt" var="data" rowKey="#{data.circularVerId}" 
-					selection="#{panelBackingBean.managedBean.selectedCircularVerList}"
-					value="#{panelBackingBean.managedBean.circularVerList}" rows="10" >
+				<p:dataTable id="circularVerDt" var="dataList" rowKey="#{dataList.circularVerId}" 
+				    widgetVar="CancelCircularObj" filteredValue="#{panelBackingBean.managedBean.filterCircularVerList}"
+					value="#{panelBackingBean.managedBean.circularVerList}" rows="10">
 					<ac:paginator for="circularVerDt" />
+				
 					<p:column>
 					 <f:facet name="header">
 						  <p:selectBooleanCheckbox id="checkBoxDlgAll" value="#{panelBackingBean.managedBean.selectAll}">
@@ -68,18 +69,18 @@
 					       </p:selectBooleanCheckbox>
 					  </f:facet>
 		              <p:selectBooleanCheckbox 
-		                       value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		                       value="#{dataList.selectedCheckBox}" styleClass="myCustomChekBox">
 		           		        <p:ajax event="change" 
 		           		               update=":form:circularVerDt,:form:checkBoxId" listener="#{panelBackingBean.selectAllDltDlgChkBoxSelect}"></p:ajax>
 			           </p:selectBooleanCheckbox>
 			  </p:column>
-					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" 
-					    styleClass="column-align-center"  style="width:35%; white-space:normal;" >
-						<h:outputText value="#{data.circularNo}" style="float:left;" />
+					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"   style="width:35%; white-space:normal;" 
+					       filterBy="#{dataList.circularNo}"   filterMatchMode="contains" styleClass="column-align-center" >
+						      <h:outputText value="#{dataList.circularNo}" style="float:left;" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.circular.name']}" 
-					   styleClass="column-align-center"  style="width:60%; white-space:normal;">
-						<h:outputText value="#{data.name}" style="float:left;" />
+					     styleClass="column-align-center"  style="width:65%; white-space:normal;">
+						    <h:outputText value="#{dataList.name}" style="float:left;" />
 					</p:column>									
 				</p:dataTable>
 				<f:facet name="footer">
