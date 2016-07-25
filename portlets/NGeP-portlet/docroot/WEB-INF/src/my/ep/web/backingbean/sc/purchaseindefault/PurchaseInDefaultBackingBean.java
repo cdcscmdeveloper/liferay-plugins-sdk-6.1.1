@@ -314,9 +314,6 @@ public class PurchaseInDefaultBackingBean extends
 		initializeApproverGroup();
 		
 		scPurchaseInDefault.setCreatedBy(user.getUserId());
-
-		// by default value as cheaper price
-		scPurchaseInDefault.setReasonType(new PmReason());
 		
 		// by default days
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
@@ -441,7 +438,6 @@ public class PurchaseInDefaultBackingBean extends
 					checkQty = Double.compare(scPurchaseInDefault.getQuantity()
 							.doubleValue(), minimumQuantity);
 				}
-				
 
 				/*
 				 * if(scPurchaseInDefault.getReasonType().getReasonCode().
@@ -533,6 +529,14 @@ public class PurchaseInDefaultBackingBean extends
 	 */
 	private void validatePID(ScPurchaseInDefault scPurchaseInDefault){
 		FacesScopes facesScopes = new FacesScopes();
+		if(null == scPurchaseInDefault.getReasonType()){
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.sc.purchase.in.default.just",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
+		}
+		
 		// validate quantity
 		if (scPurchaseInDefault.getQuantity() != null
 				&& scPurchaseInDefault.getQuantity().intValue() < 1) {
@@ -699,41 +703,41 @@ public class PurchaseInDefaultBackingBean extends
 		getManagedBean().setPidStatus(pmStatus);
 	}
 
+	
+
 	/**
-	 * Event for justification type drop down list to show order quantity to key
-	 * in.
+	 * Justification type event.
+	 *
+	 * @param pmReason the pm reason
+	 * @param otherDesc the other desc
 	 */
-	public void justificationTypeEvent() {
-		String reasonCode = getManagedBean().getPurchaseInDefault().getReasonType()
-				.getReasonCode();
-		log.info("justificationTypeEvent : "
-				+ reasonCode);
-		
+	public void justificationTypeEvent(PmReason pmReason, String otherDesc) {
+		log.info("justificationTypeEvent");
+		ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
 		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IReasonSO.class);
-		
+
 		PmParameter reasonCategory = getParameterByTypeAndCode(ParameterTypeConst.REASON_CATEGORY, ReasonCategory.PID_JUSTIFICATION
-						.value());
-		
+				.value());
+
 		if(reasonCategory != null) {
 			// call PM API to check output for reason
 			ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
 			reasonReqDTO.setReasonCategoryId(reasonCategory.getParameterId());
-			reasonReqDTO.setReasonCode(reasonCode);
+			reasonReqDTO.setReasonCode(pmReason.getReasonCode());
 			ReasonResDTO reasonResDTO = reasonSO.retrieveReasonByReasonCode(reasonReqDTO);
-			PmReason pmReason = reasonResDTO.getPmReason();
-			
+			pmReason = reasonResDTO.getPmReason();
 			if(pmReason != null) {
 				PmParameter conditionField = pmReason.getConditionField();
 				PmParameter sourceMethod = pmReason.getSourceMethod();
-				
+
 				if(conditionField!= null && conditionField.getParameterCode().equals(ParameterConst.PID_FIELD_MINIMUM_QUANTITY)) {
 					getManagedBean().setVisibleOrderQty(Boolean.TRUE);
 				} else {
 					getManagedBean().setVisibleOrderQty(Boolean.FALSE);
 				}
-				
+
 				if(sourceMethod == null) {
 					getManagedBean().setSourceMethods(
 							getSourceMethodDropdownCodeValues(null, true));
@@ -742,28 +746,13 @@ public class PurchaseInDefaultBackingBean extends
 							getSourceMethodDropdownCodeValues(sourceMethod.getParameterCode(), true));
 				}
 			}
+
+			purchaseInDefault.setReasonType(pmReason);
+			purchaseInDefault.setJustification(getReasonDescByReasonId(pmReason.getReasonId()).getReasonDesc());
 		}
-
-		/*if (getManagedBean().getPurchaseInDefault().getReasonType()
-				.getReasonCode() != null) {
-			if (getManagedBean().getPurchaseInDefault().getReasonType()
-					.getReasonCode().equalsIgnoreCase(ParameterConst.PID_CP)
-					|| getManagedBean().getPurchaseInDefault().getReasonType()
-							.getReasonCode()
-							.equalsIgnoreCase(ParameterConst.PID_SS)) {
-				getManagedBean().setVisibleOrderQty(Boolean.FALSE);
-
-			} else if (getManagedBean().getPurchaseInDefault().getReasonType()
-					.getReasonCode().equalsIgnoreCase(ParameterConst.PID_RI)
-					|| getManagedBean().getPurchaseInDefault().getReasonType()
-							.getReasonCode()
-							.equalsIgnoreCase(ParameterConst.PID_EQ)) {
-				getManagedBean().setVisibleOrderQty(Boolean.TRUE);
-
-			} else {
-				getManagedBean().setVisibleOrderQty(Boolean.FALSE);
-			}
-		}*/
+		purchaseInDefault.setReasonDesc(otherDesc);
+		getManagedBean().setCtReason(null);
+		getManagedBean().setPanelReason(null);
 		// update order qty
 		RequestContext.getCurrentInstance().update("reqDtlId");
 	}
@@ -914,22 +903,23 @@ public class PurchaseInDefaultBackingBean extends
 	public void populatePidReason(List<CtPidReason> ctPidReasonList, List<CtCircularPidReason> circularReasonList) {
 		List<PmReasonDesc> results = new ArrayList<PmReasonDesc>();
 		if (CollectionUtils.isNotEmpty(ctPidReasonList)) {
-			for(CtPidReason pidReason : ctPidReasonList) {
+			/*for(CtPidReason pidReason : ctPidReasonList) {
 				PmReasonDesc reasonDesc = getReasonDescByReasonId(pidReason.getPmReason().getReasonId());
 				if(reasonDesc.getPmReason().isRecordStatus()){
 					results.add(reasonDesc);
 				}
-			}
+			}*/
+			getManagedBean().setCtReasonList(ctPidReasonList);
+			
 		} else if(CollectionUtils.isNotEmpty(circularReasonList)){
-			for(CtCircularPidReason pidReason : circularReasonList) {
+		/*	for(CtCircularPidReason pidReason : circularReasonList) {
 				PmReasonDesc reasonDesc = getReasonDescByReasonId(pidReason.getPmReason().getReasonId());
 				if(reasonDesc.getPmReason().isRecordStatus()){
 					results.add(reasonDesc);
 				}
-			}
+			}*/
+			getManagedBean().setPanelReasonList(circularReasonList);
 		}
-		getManagedBean().setJustifications(
-				getDropdownCodeValues(results));
 		getManagedBean().setPidJustifications(results);
 	}
 
@@ -1099,7 +1089,7 @@ public class PurchaseInDefaultBackingBean extends
 		initializeApproverGroup();
 		populatePidReason(purchaseInDefaultResDTO.getCtPidReasonList(), 
 				purchaseInDefaultResDTO.getCircularPidReasonList());
-		justificationTypeEvent();
+		justificationTypeEvent(purchaseInDefault.getReasonType(), purchaseInDefault.getReasonDesc());
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -1161,7 +1151,7 @@ public class PurchaseInDefaultBackingBean extends
 				initializeApproverGroup();
 				populatePidReason(purchaseInDefaultResDTO.getCtPidReasonList(), 
 						purchaseInDefaultResDTO.getCircularPidReasonList());
-				justificationTypeEvent();
+				justificationTypeEvent(purchaseInDefault.getReasonType(), purchaseInDefault.getReasonDesc());
 
 				getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
 				
