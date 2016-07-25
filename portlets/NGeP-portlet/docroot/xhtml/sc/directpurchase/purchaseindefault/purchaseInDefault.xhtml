@@ -19,22 +19,24 @@
 						label="#{lbl['lbl.sc.direct.purchase.title']}"
 						disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
-						style="margin-bottom: 5px;width: 835px;" /> <p:message id="ctitleMsg"
-						for="ctitle" display="icon" /></td>
+						style="margin-bottom: 5px;width: 835px;" /> <p:message
+						id="ctitleMsg" for="ctitle" display="icon" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.item.name']}" /></td>
-				<td colspan="3"><p:inputText disabled="true" style="width: 835px;"
+				<td colspan="3"><p:inputText disabled="true"
+						style="width: 835px;"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.scRequestItem.itemName}"
 						size="106" /></td>
 			</tr>
-			
+
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.item.name.after.codified']}" /></td>
-				<td colspan="3"><p:inputText disabled="true" style="width: 835px;"
+				<td colspan="3"><p:inputText disabled="true"
+						style="width: 835px;"
 						value="#{purchaseInDefaultBackingBean.getText(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.scRequestItem.cmItem.itemName)}"
 						size="106" /></td>
 			</tr>
@@ -71,20 +73,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.min.qty']}" /></td>
 				<td><p:inputText disabled="true" style="text-align:right;"
-						rendered="#{!purchaseInDefaultBackingBean.managedBean.checkCentralContractItem}" 
+						rendered="#{!purchaseInDefaultBackingBean.managedBean.checkCentralContractItem}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.minimumOrderQty}"
 						size="43">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText>
-					<p:inputText disabled="true" style="text-align:right;"
-						rendered="#{purchaseInDefaultBackingBean.managedBean.checkCentralContractItem}" 
+					</p:inputText> <p:inputText disabled="true" style="text-align:right;"
+						rendered="#{purchaseInDefaultBackingBean.managedBean.checkCentralContractItem}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.circularItem.minimumOrderQty}"
 						size="43">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText>	
-				</td>
+					</p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.smGstSupplier.gstDeclaredDate}"
@@ -108,8 +108,9 @@
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 								</p:inputText></td>
 
-							<td style="width: 39px;text-align: center;">
-							<h:outputText value="#{lbl['lbl.sc.purchase.in.default.val.period.until']}" style="font-weight:bold" /></td>
+							<td style="width: 39px; text-align: center;"><h:outputText
+									value="#{lbl['lbl.sc.purchase.in.default.val.period.until']}"
+									style="font-weight:bold" /></td>
 
 							<td><p:inputText disabled="true" size="12"
 									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.expDate}">
@@ -129,15 +130,13 @@
 						size="43">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText>
-					<p:inputText disabled="true" style="text-align:right;"
+					</p:inputText> <p:inputText disabled="true" style="text-align:right;"
 						rendered="#{purchaseInDefaultBackingBean.managedBean.checkCentralContractItem}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.circularItem.maxProcureAmt}"
 						size="43">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText>
-				</td>
+					</p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -192,34 +191,36 @@
 				<td style="width: 218px;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-			<td colspan="3"><p:inputText size="106" id="ptitle" required="true"
-						maxlength="100" label="#{lbl['lbl.sc.direct.purchase.title']}"
+				<td colspan="3"><p:inputText size="106" id="ptitle"
+						required="true" maxlength="100"
+						label="#{lbl['lbl.sc.direct.purchase.title']}"
 						disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
-						style="margin-bottom: 5px; width: 835px;" /> <p:message id="ptitleMsg"
-						for="ptitle" display="icon" /></td>
+						style="margin-bottom: 5px; width: 835px;" /> <p:message
+						id="ptitleMsg" for="ptitle" display="icon" /></td>
 			</tr>
-			
+
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.item.name']}" /></td>
-				<td colspan="3"><p:inputText disabled="true" style="width: 835px;"
+				<td colspan="3"><p:inputText disabled="true"
+						style="width: 835px;"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem.itemName}"
 						size="106" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.item.name.after.codified']}" /></td>
-				<td colspan="3"><p:inputText disabled="true" style="width: 835px;"
+				<td colspan="3"><p:inputText disabled="true"
+						style="width: 835px;"
 						value="#{purchaseInDefaultBackingBean.getText(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem.cmItem.itemName)}"
 						size="106" /></td>
 			</tr>
-			
+
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.supp.name']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{lbl['lbl.txt.na']}"
+				<td><p:inputText disabled="true" value="#{lbl['lbl.txt.na']}"
 						size="43" /></td>
 			</tr>
 			<tr>
@@ -246,14 +247,16 @@
 				<td>
 					<table>
 						<tr>
-							<td style="width: 145px;"><p:inputText disabled="true" size="18"
+							<td style="width: 145px;"><p:inputText disabled="true"
+									size="18"
 									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.startDate}">
 									<f:convertDateTime
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 								</p:inputText></td>
 
-							<td style="width: 39px;text-align: center;">
-								<h:outputText value="#{lbl['lbl.sc.purchase.in.default.val.period.until']}" style="font-weight:bold" /></td>
+							<td style="width: 39px; text-align: center;"><h:outputText
+									value="#{lbl['lbl.sc.purchase.in.default.val.period.until']}"
+									style="font-weight:bold" /></td>
 
 							<td><p:inputText disabled="true" size="12"
 									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.endDate}">
@@ -281,7 +284,7 @@
 	<p:panel toggleable="true" header="#{lbl['lbl.sc.companyinfo']}"
 		rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
 		<p:dataTable id="panelSuppId" var="panelSupplier"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctPanelSuppliers}"
 			rowKey="#{panelSupplier}" rowIndexVar="index">
 			<ui:param name="smGstSupplier"
@@ -371,38 +374,39 @@
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:message id="pidvalidDaysMsg" for="pidvalidDays" display="icon" /></td>
 				</tr>
-
 				<tr>
 					<td style="width: 218px;"><p:outputLabel
 							value="#{lbl['lbl.sc.purchase.in.default.just']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td>
-						<table>
-							<tr>
-								<td><p:selectOneMenu id="justId"
-										label="#{lbl['lbl.sc.purchase.in.default.just']}"
-										disabled="#{!isPendingSubmissionStatus}" required="true"
-										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType.reasonCode}"
-										style="margin-bottom: 5px;width:340px;">
-										<f:selectItems
-											value="#{purchaseInDefaultBackingBean.managedBean.justifications}" />
+					<td colspan="3"><p:inputText size="51" id="justId" required="true" label="#{lbl['lbl.sc.purchase.in.default.just']}"
+							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.justification}"
+							disabled="true" /> <p:commandLink
+							disabled="#{!isPendingSubmissionStatus}"
+							onclick="justificationPopup.show();" style="padding-left: 2px;"
+							process="@this" update="@([id$=#{justificationPopupId}])">
+							<p:graphicImage value="/css/images/design/search.png"
+								style="background:transparent;"></p:graphicImage>
+						</p:commandLink> <p:commandLink style="text-align:left" ajax="false"
+							partialSubmit="true" process="@this" immediate="true"
+							action="#{purchaseInDefaultBackingBean.viewMarketResearch(purchaseInDefaultBackingBean.managedBean.purchaseInDefault)}">
+							<p:spacer width="3px"></p:spacer>
+							<p:graphicImage value="/css/images/design/ico-view.png"
+								title="#{lbl['lbl.sc.summary.searchresult.tooltip']}"></p:graphicImage>
+						</p:commandLink> <p:message id="justIdMsg" for="justId" display="icon" /></td>
 
-										<p:ajax event="change" update="@([id$=reqDtlId])"
-											partialSubmit="true" process="@this"
-											listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" />
-									</p:selectOneMenu> <p:commandLink style="text-align:left" ajax="false"
-										partialSubmit="true" process="@this" immediate="true"
-										action="#{purchaseInDefaultBackingBean.viewMarketResearch(purchaseInDefaultBackingBean.managedBean.purchaseInDefault)}">
-										<p:spacer width="3px"></p:spacer>
-										<p:graphicImage value="/css/images/design/ico-view.png"
-											title="#{lbl['lbl.sc.summary.searchresult.tooltip']}"></p:graphicImage>
-									</p:commandLink></td>
-								<td><p:message id="justIdMsg" for="justId" display="icon" /></td>
-							</tr>
-						</table>
-					</td>
 				</tr>
 
+				<h:panelGroup
+					rendered="#{!empty purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonDesc}">
+					<tr>
+						<td style="vertical-align: top; text-align: right;"><p:outputLabel
+								value="#{lbl['lbl.sc.reason.other.desc']}" /></td>
+						<td style="padding-bottom: 5px;"><p:inputTextarea
+								style="width:330px;" rows="5"
+								value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonDesc}"
+								disabled="true" /></td>
+					</tr>
+				</h:panelGroup>
 				<tr>
 					<td style="width: 218px;"><p:outputLabel
 							value="#{lbl['lbl.sc.request.note.header.method']}" /> <p:outputLabel
@@ -447,43 +451,38 @@
 				</tr>
 			</table>
 		</h:panelGroup>
-		
-			<table style="width: 100%">
-				<tr>
-					<td width="218px"
-						style="vertical-align: top; padding-right: 1px; text-align: right;">
-						<h:outputLabel value="#{lbl['lbl.sc.remark']}" />
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</td>
-					<td class="TableFieldRight">
-						<ac:scRemarkAndAttachment header=""
-							remarkList="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}"
-							showRemarkLabel="false"
-							showAttachment="false"
-							readonly="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
-					</td>
-				</tr>
-			</table>
 
-			<table style="width: 100%">
-				<tr>
-					<td width="218px" style="padding-right: 0px; text-align: right;">
-						<p:outputLabel
-							value="#{lbl['lbl.txt.attachment']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" />
-					</td>
-					<td class="TableFieldRight">
-						<ac:scSingleFileUploadButton id="pidUploadBtn" popupWidgetVar="pidUploadDlg"
-							attachment="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}"
-							readonly="#{!isPendingSubmissionStatus}" />
-						<ac:scSingleFileUploadPopup widgetVar="pidUploadDlg"
-							fileUploadListener="purchaseInDefaultBackingBean.handleFileUpload"
-							update="@([id$=pidUploadBtn])"
-							readonly="#{!isPendingSubmissionStatus}" />
-						
-					</td>
-				</tr>
-			</table>
+		<table style="width: 100%">
+			<tr>
+				<td width="218px"
+					style="vertical-align: top; padding-right: 1px; text-align: right;">
+					<h:outputLabel value="#{lbl['lbl.sc.remark']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" />
+				</td>
+				<td class="TableFieldRight"><ac:scRemarkAndAttachment
+						remarkList="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}"
+						showRemarkLabel="false" showAttachment="false"
+						readonly="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
+				</td>
+			</tr>
+		</table>
+
+		<table style="width: 100%">
+			<tr>
+				<td width="218px" style="padding-right: 0px; text-align: right;">
+					<p:outputLabel value="#{lbl['lbl.txt.attachment']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" />
+				</td>
+				<td class="TableFieldRight"><ac:scSingleFileUploadButton
+						id="pidUploadBtn" popupWidgetVar="pidUploadDlg"
+						attachment="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}"
+						readonly="#{!isPendingSubmissionStatus}" /> <ac:scSingleFileUploadPopup
+						widgetVar="pidUploadDlg"
+						fileUploadListener="purchaseInDefaultBackingBean.handleFileUpload"
+						update="@([id$=pidUploadBtn])"
+						readonly="#{!isPendingSubmissionStatus}" /></td>
+			</tr>
+		</table>
 	</p:panel>
 	<p:panel id="approversId" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
@@ -528,15 +527,94 @@
 			</tr>
 		</table>
 	</p:panel>
-	
-	<p:panel id="approvedById" toggleable="true" toggleSpeed="500" header="#{lbl['lbl.sc.approved.by']}">
+
+	<p:panel id="approvedById" toggleable="true" toggleSpeed="500"
+		header="#{lbl['lbl.sc.approved.by']}">
 		<table style="width: 100%">
-		    <tr>
-				<td style="width: 218px"><h:outputLabel value="#{lbl['lbl.sc.approved.by']}" /></td>
+			<tr>
+				<td style="width: 218px"><h:outputLabel
+						value="#{lbl['lbl.sc.approved.by']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.approvedBy.userName}"
 						size="51" /></td>
 			</tr>
 		</table>
 	</p:panel>
+
+	<p:dialog id="justificationPopupId" widgetVar="justificationPopup"
+		modal="true" header="#{lbl['lbl.sc.purchase.in.default.just']}"
+		dynamic="true" width="850" resizable="false" styleClass="pop_up_top"
+		closable="false">
+		<h:panelGroup
+			rendered="#{purchaseInDefaultBackingBean.managedBean.ctReasonList != null}">
+			<p:dataTable id="ctReasonId" var="ctReason" styleClass="BtnSpacing"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{purchaseInDefaultBackingBean.managedBean.ctReasonList}"
+				selection="#{purchaseInDefaultBackingBean.managedBean.ctReason}"
+				selectionMode="single" rowKey="#{ctReason}" rowIndexVar="index">
+				<p:ajax event="rowSelect" update="@([id$=selectButton1])" />
+				<p:ajax event="rowUnselect" update="@([id$=selectButton1])" />
+				
+				<p:column headerText="#{lbl['lbl.sc.purchase.in.default.just']}" rendered="#{ctReason.pmReason.isRecordStatus()}"
+					width="20%">
+				      #{purchaseInDefaultBackingBean.getReasonDescByReasonId(ctReason.pmReason.reasonId).reasonDesc}
+			     </p:column>
+				<p:column headerText="#{lbl['lbl.sc.reason.other.desc']}" rendered="#{ctReason.pmReason.isRecordStatus()}">
+					<p:inputTextarea style="width:450px;" rows="5" rendered="#{!empty ctReason.reasonDesc}"
+						value="#{ctReason.reasonDesc}" disabled="true" />
+				</p:column>
+			</p:dataTable>
+
+			<div class="ppRightBtn BtnSpacing">
+				<p:commandButton value="#{lbl['lbl.btn.select']}"
+				 disabled="#{purchaseInDefaultBackingBean.managedBean.ctReason eq null}"
+				    id="selectButton1"
+					action="#{purchaseInDefaultBackingBean.justificationTypeEvent(purchaseInDefaultBackingBean.managedBean.ctReason.pmReason, purchaseInDefaultBackingBean.managedBean.ctReason.reasonDesc)}"
+					partialSubmit="true" process="@this"
+					update="@([id$=reqDtlId])"
+					oncomplete="justificationPopup.hide();"/>
+
+				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
+					process="@this" onclick="justificationPopup.hide()" />
+			</div>
+		</h:panelGroup>
+		<h:panelGroup
+			rendered="#{purchaseInDefaultBackingBean.managedBean.panelReasonList != null}">
+			<p:dataTable id="panelReasonId" var="panelReason"
+				styleClass="BtnSpacing" selectionMode="single"
+				selection="#{purchaseInDefaultBackingBean.managedBean.panelReason}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{purchaseInDefaultBackingBean.managedBean.panelReasonList}"
+				rowKey="#{panelReason}" rowIndexVar="index">
+				<p:ajax event="rowSelect" update="@([id$=selectButton2])" />
+				<p:ajax event="rowUnselect" update="@([id$=selectButton2])" />
+				
+				<p:column headerText="#{lbl['lbl.sc.purchase.in.default.just']}" rendered="#{panelReason.pmReason.isRecordStatus()}"
+					width="20%">
+				     #{purchaseInDefaultBackingBean.getReasonDescByReasonId(panelReason.pmReason.reasonId).reasonDesc}
+			     </p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.reason.other.desc']}" rendered="#{panelReason.pmReason.isRecordStatus()}">
+					<p:inputTextarea style="width:450px;" rows="5" rendered="#{!empty panelReason.reasonDesc}"
+						value="#{panelReason.reasonDesc}" disabled="true" />
+				</p:column>
+
+			</p:dataTable>
+
+			<div class="ppRightBtn BtnSpacing">
+				<p:commandButton value="#{lbl['lbl.btn.select']}"
+				    disabled="#{purchaseInDefaultBackingBean.managedBean.panelReason eq null}"
+				    id="selectButton2"
+					action="#{purchaseInDefaultBackingBean.justificationTypeEvent(purchaseInDefaultBackingBean.managedBean.panelReason.pmReason, purchaseInDefaultBackingBean.managedBean.panelReason.reasonDesc)}"
+					partialSubmit="true" process="@this"
+					update="@([id$=reqDtlId])"
+					oncomplete="justificationPopup.hide();" />
+
+				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
+					process="@this" onclick="justificationPopup.hide()" />
+			</div>
+
+		</h:panelGroup>
+
+	</p:dialog>
 </ui:composition>
