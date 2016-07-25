@@ -242,7 +242,7 @@ rowKey="#{exemptedOrgsVar}" >
 	    
 	              <p:dialog id="dialogExemptedMinistry"  header="#{lbl['lbl.ct.panel.exempted.org.dlg']}" 
 	                     widgetVar="dlgExemptedMinistry" styleClass="pop_up_top" modal="true" width="670" height="550">
-			            <p:panel id="popUpExmptedDlg" header="Search" toggleable="true" toggleSpeed="500">
+			            <p:panel id="popUpExmptedDlg" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500">
 			                  <p:messages id="exemptedMsgId" showSummary="false"
 			                         showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
 		                             <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.orgtype.menu']}" escape="false"/><br/><br/>
@@ -319,7 +319,7 @@ rowKey="#{exemptedOrgsVar}" >
 		             </h:panelGroup>
 		            </p:panel>
 			          <p:spacer height="2"/>
-                      <p:panel id="popUpExmptedTable" header="Result" toggleable="true" toggleSpeed="500">
+                      <p:panel id="popUpExmptedTable" header="#{lbl['lbl.ct.search.result']}" toggleable="true" toggleSpeed="500">
                       <p:dataTable id="tablePtjCode" var="pmVar" value="#{centralContractBackingBean.exemptedOrgDataModel}" 
                               rowIndexVar="rowIndex"  rowKey="#{pmVar}" lazy="true" 
                               selection="#{centralContractBackingBean.managedBean.selectedOrgsProfile}">
