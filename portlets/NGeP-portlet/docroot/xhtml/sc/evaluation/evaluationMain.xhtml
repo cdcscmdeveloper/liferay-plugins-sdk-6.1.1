@@ -61,14 +61,14 @@
 		</p:dialog>
 
 		<p:dialog id="reportContentPopupDlgId" widgetVar="reportContentPopupDlg" closable="false"
-				  modal="true" resizable="false" width="600" height="200" styleClass="pop_up_top" 
+				  modal="true" resizable="false" width="900" height="400" styleClass="pop_up_top" 
 				  header="#{evaluationBackingBean.managedBean.selectedReport.title}">
 	
 			<table>
 				<tr>
 					<td align="center">
 						<p:inputTextarea value="#{evaluationBackingBean.managedBean.selectedReport.reportContent}" 
-								 		 scrollHeight="0" rows="6" cols="60" autoResize="false" 
+								 		 scrollHeight="0" rows="15" cols="145" autoResize="false" 
 								 		 disabled="#{evaluationBackingBean.managedBean.readOnly}"
 								 		 rendered="#{evaluationBackingBean.managedBean.selectedReport ne null}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
