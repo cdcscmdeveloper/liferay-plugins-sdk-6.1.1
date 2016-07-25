@@ -402,30 +402,33 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    if (getManagedBean().getUserMap().size() == 0) {
 		    initializeApproverList();
      	}
-		getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
-			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			List<PmUser> invalidApproverList = new ArrayList<PmUser>();
-			for (PmUser approverUser : resDTO.getApproverList())  {
-				Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
-				boolean isValidApprover = false;
-				while (sourceIt.hasNext()) {
-					PmUser user = sourceIt.next();
-					if (user.getUserId() == approverUser.getUserId()) {
-						sourceIt.remove();
-						isValidApprover = true;
-						break;
+	    // Retrieve Approver List Information
+		if (isApproverSetting()) {
+			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+			if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
+				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+				List<PmUser> invalidApproverList = new ArrayList<PmUser>();
+				for (PmUser approverUser : resDTO.getApproverList())  {
+					Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+					boolean isValidApprover = false;
+					while (sourceIt.hasNext()) {
+						PmUser user = sourceIt.next();
+						if (user.getUserId() == approverUser.getUserId()) {
+							sourceIt.remove();
+							isValidApprover = true;
+							break;
+						}
 					}
+					if (!isValidApprover) {
+	        			invalidApproverList.add(approverUser);
+	        		}
 				}
-				if (!isValidApprover) {
-        			invalidApproverList.add(approverUser);
-        		}
+				if (invalidApproverList.size() > 0) {
+	        		getManagedBean().getApproverModel().getTarget().removeAll(invalidApproverList);
+	        	}
+			} else {
+				getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
 			}
-			if (invalidApproverList.size() > 0) {
-        		getManagedBean().getApproverModel().getTarget().removeAll(invalidApproverList);
-        	}
-		} else {
-			getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
 		}
 		
 		String docType = ParameterConst.DOCTYPE_AGREEMENT;
@@ -722,7 +725,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			 	}
 			}
 		}
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
 				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
 			//Approver is mandatory for document submission. Please select at least one approver.
 			if (getManagedBean().isUploadStampedAndSignedPage()) {

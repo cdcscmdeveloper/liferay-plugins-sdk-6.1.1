@@ -419,13 +419,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						initializeApproverList();
 					}
 				    // Retrieve Approver List Information
-				   	if (!ctBB.getManagedBean().isViewContract()
-							|| (ctBB.getManagedBean().isViewContract() && this.isContractAdmin())) {
-				   		if(this.isContractAdmin()) {
-							getManagedBean().getApproverModel().setSource(
-									getAvailableApproverList(ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode(),
-											getManagedBean().getUserMap()));
-				   		}
+					if (isApproverSetting()) {				
+						getManagedBean().getApproverModel().setSource(
+								getAvailableApproverList(ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode(),
+										getManagedBean().getUserMap()));
+				   		
 						if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
 							getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 		                	List<PmUser> invalidApproverList = new ArrayList<PmUser>();
@@ -433,7 +431,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		                		Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();	
 		                		boolean isValidApprover = false;
 		                		while (sourceIt.hasNext()) {
-		                			log.info("#9975 #9976 Testing");
 		                			PmUser user = sourceIt.next();
 		                			log.info("user : "+user+"; approverUser: "+approverUser);
 		                			if (user!=null && approverUser!=null && (user.getUserId() == approverUser.getUserId())) {
@@ -1064,7 +1061,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						}
 		
 						// Validation for Approver
-						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
 								&& getManagedBean().getApproverModel().getTarget().size() == 0) {
 							if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 								setTabValue("SE");
