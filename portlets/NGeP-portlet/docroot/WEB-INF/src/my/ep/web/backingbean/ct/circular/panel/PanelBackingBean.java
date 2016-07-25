@@ -1581,6 +1581,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
         	}
 			getManagedBean().getCancelCircularReq().getCtCancelCircularList().addAll(cancelCircularList);
 			getManagedBean().setButtonHideActiveDel(true);
+			getManagedBean().setCircularVerList(null);
+			getManagedBean().setFilterCircularVerList(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
