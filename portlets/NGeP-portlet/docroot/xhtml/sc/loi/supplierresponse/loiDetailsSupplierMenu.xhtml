@@ -69,7 +69,7 @@
 				<p:inputTextarea id="suppAddr"
 					rows="5"
 					value="#{lOIDetailBackingBean.getFullAddress(lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress)}"
-					style=" margin-bottom:5px; width: 266px;" disabled="true" />
+					style=" margin-bottom:5px; width: 326px;" disabled="true" />
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
@@ -105,7 +105,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 			</td>
 			<td>
-				<p:inputText size="40"
+				<p:inputText size="50"
 					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierContact}"
 					disabled="true" />
 			</td>
@@ -125,13 +125,15 @@
 			<tr>
 				<td width="21%"><p:outputLabel
 						value="#{lbl['lbl.sc.title']}" /></td>
-				<td><c:if
+				<td colspan="3"><c:if
 						test="#{lOIDetailBackingBean.managedBean.scLoi.brandNew}">
 						<p:inputText readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
 							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}"
+							style="width:816px;"
 							size="40" maxlength="100" />
 					</c:if> <c:if test="#{!lOIDetailBackingBean.managedBean.scLoi.brandNew}">
 						<p:inputText size="40" readonly="true" disabled="true"
+						    style="width:816px;"
 							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}" />
 					</c:if></td>
 			</tr>
@@ -139,14 +141,14 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.qt.fileno']}" /></td>
 				<td><p:inputText disabled="true"
-						value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.fileNo}" size="30" />
-					<p:spacer width="2px"></p:spacer> <p:inputText disabled="true"
-						size="4"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.fileNo}" size="38" />
+					<p:spacer width="3px"></p:spacer> <p:inputText disabled="true"
+						size="5"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.fileExtnNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.issue']}" /></td>
-				<td><p:inputText size="40"
+				<td><p:inputText size="50"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.issueDate}"
 						disabled="true">
 						<f:convertDateTime
@@ -156,7 +158,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.res.due.date']}" /></td>
-				<td><p:inputText size="30" disabled="true"
+				<td><p:inputText size="38" disabled="true"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.ackDueDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
