@@ -203,6 +203,11 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean reSubmitAp59 = false;
 	private String bpkDecisionValue;
 	
+	private boolean gfmasError;
+	private String gfmasErrorContent;
+	private String gfmasErrorCode;
+	private String gfmasErrorDesc;
+	
 	/**
 	 * Gets the doc type.
 	 *
@@ -1191,6 +1196,38 @@ public class InvoiceManagedBean extends BaseManagedBean {
 
 	public void setBpkDecisionValue(String bpkDecisionValue) {
 		this.bpkDecisionValue = bpkDecisionValue;
+	}
+
+	public boolean isGfmasError() {
+		return gfmasError;
+	}
+
+	public void setGfmasError(boolean gfmasError) {
+		this.gfmasError = gfmasError;
+	}
+
+	public String getGfmasErrorContent() {
+		return gfmasErrorContent;
+	}
+
+	public void setGfmasErrorContent(String gfmasErrorContent) {
+		this.gfmasErrorContent = gfmasErrorContent;
+	}
+
+	public String getGfmasErrorCode() {
+		return gfmasErrorCode;
+	}
+
+	public void setGfmasErrorCode(String gfmasErrorCode) {
+		this.gfmasErrorCode = gfmasErrorCode;
+	}
+
+	public String getGfmasErrorDesc() {
+		return gfmasErrorDesc;
+	}
+
+	public void setGfmasErrorDesc(String gfmasErrorDesc) {
+		this.gfmasErrorDesc = gfmasErrorDesc;
 	}
 
 }
