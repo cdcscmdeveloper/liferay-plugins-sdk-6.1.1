@@ -1106,18 +1106,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	}
     
     /**
-	 * The method used to download the the Factoring Approval Form.
-	 * 
-	 * @throws IOException  if an input or output exception occurred
-	 * @see    IOException
-	 */
-    public void downloadFactoringApprovalForm() throws IOException {    	
-    	downloadFile(DocumentRepositoryUtils.getDBFilePath(
-    			EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.TEMPLATE_DIR) + 
-    			ContractConst.DOCPATH_CT_FACTORING_APPROVAL_FORM), ContractConst.TEMPLATE_FACTORING_APPROVAL_FORM + ".pdf");
-    }    
-    
-    /**
 	 * The method used to confirm the notification of factoring service is ready to view.
 	 * 
 	 * @return true, if factoring letter is ready to view
