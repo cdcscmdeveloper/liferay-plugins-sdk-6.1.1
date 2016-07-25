@@ -13,6 +13,10 @@
 			value="#{cityBackingBean.searchCity}" rows="10"
 			var="cityList" rowIndexVar="index" lazy="true">
 			<ac:paginator for="city" />
+			
+			<p:column headerText="#{lbl['lbl.pm.state.seq.no']}" style="width:5%;white-space: normal;word-wrap: break-word;">
+				<h:outputText value="#{index+1}" />
+			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.city.stateName']}" style="width:10%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{cityList.pmDistrict.pmState.stateName}" />
