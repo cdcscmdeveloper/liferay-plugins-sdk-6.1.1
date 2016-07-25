@@ -735,6 +735,10 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		}
 	}
 	
+	public String returnToMenu(){
+		return "complaintMain";
+	}
+	
 	private List<SmAttachment> getSmAttachmentsByDocTypeAndId(String docType, Long docId){
 		SmAttachmentReqDTO reqDTO = new SmAttachmentReqDTO();
 		reqDTO.setDocType(docType);
