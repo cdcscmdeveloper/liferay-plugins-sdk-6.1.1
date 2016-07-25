@@ -139,7 +139,7 @@
 							itemLabel="#{decision.statusName}"
 							itemValue="#{decision.pmStatus.statusId}" />
 					</p:selectOneMenu>
-					<p:inputText value="Payment Via Ap59" rendered="#{invoiceBackingBean.managedBean.reSubmitAp59}" disabled="true"></p:inputText> </td>
+					<p:inputText value="#{invoiceBackingBean.getStatusDescById(FulfilmentStatusCont.ap59PendingDecision)}" rendered="#{invoiceBackingBean.managedBean.reSubmitAp59}" disabled="true"></p:inputText> </td>
 			</tr>
 		</table>
 	</p:panel>
