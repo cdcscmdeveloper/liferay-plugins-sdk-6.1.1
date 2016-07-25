@@ -14,6 +14,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
+import my.ep.persistence.entity.ct.dtl.CtPidReason;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmReason;
@@ -142,6 +144,18 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
     
     /** The Approved by. */
     private PmUser approvedBy;
+    
+    /** The ct reason list. */
+    private List<CtPidReason> ctReasonList;
+	
+	/** The panel reason list. */
+	private List<CtCircularPidReason> panelReasonList;
+	
+    /** The ct reason. */
+    private CtPidReason ctReason;
+	
+	/** The panel reason. */
+	private CtCircularPidReason panelReason;
 
 	/**
 	 * Instantiates a new purchase in default managed bean.
@@ -730,10 +744,65 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the ctReasonList
+	 */
+	public List<CtPidReason> getCtReasonList() {
+		return ctReasonList;
+	}
+
+	/**
+	 * @param ctReasonList the ctReasonList to set
+	 */
+	public void setCtReasonList(List<CtPidReason> ctReasonList) {
+		this.ctReasonList = ctReasonList;
+	}
+
+	/**
+	 * @return the panelReasonList
+	 */
+	public List<CtCircularPidReason> getPanelReasonList() {
+		return panelReasonList;
+	}
+
+	/**
+	 * @param panelReasonList the panelReasonList to set
+	 */
+	public void setPanelReasonList(List<CtCircularPidReason> panelReasonList) {
+		this.panelReasonList = panelReasonList;
+	}
+
+	/**
 	 * @param approvedBy the approvedBy to set
 	 */
 	public void setApprovedBy(PmUser approvedBy) {
 		this.approvedBy = approvedBy;
 	}
-	
+
+	/**
+	 * @return the ctReason
+	 */
+	public CtPidReason getCtReason() {
+		return ctReason;
+	}
+
+	/**
+	 * @param ctReason the ctReason to set
+	 */
+	public void setCtReason(CtPidReason ctReason) {
+		this.ctReason = ctReason;
+	}
+
+	/**
+	 * @return the panelReason
+	 */
+	public CtCircularPidReason getPanelReason() {
+		return panelReason;
+	}
+
+	/**
+	 * @param panelReason the panelReason to set
+	 */
+	public void setPanelReason(CtCircularPidReason panelReason) {
+		this.panelReason = panelReason;
+	}
 }
