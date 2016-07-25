@@ -426,8 +426,8 @@
 			<h:outputText value="#{lbl['lbl.sm.person.shrPrvHdr']}" />
 			&#160;
 			<p:graphicImage id="codeti" value="/css/images/design/tooltips.png" />
-			<p:tooltip id="codett" for="codeti">
-				<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}" />
+			<p:tooltip id="codett" for="codeti" >
+				<h:outputText escape="false" value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}"  />
 			</p:tooltip>
 		</f:facet>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.disabled.role.msg']}" rendered="#{backingBean.managedBean.disableRoleSelection}"/>

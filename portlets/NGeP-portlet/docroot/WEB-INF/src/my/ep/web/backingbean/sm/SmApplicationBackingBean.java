@@ -10994,7 +10994,7 @@ public class SmApplicationBackingBean extends
 								.compareTo(
 										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
 					item = new SelectItem();
-					item.setValue(cat.getSupplierCategoryId());
+					item.setValue(cat.getPmCategoryL3().getCategoryL3Id());
 					item.setLabel(cat.getPmCategoryL1().getCategoryL1Code()
 							+ cat.getPmCategoryL2().getCategoryL2Code()
 							+ cat.getPmCategoryL3().getCategoryL3Code() + " - "
