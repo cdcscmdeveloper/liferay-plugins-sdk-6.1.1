@@ -356,34 +356,36 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
             			initializeFactoring();
             		}
             		
-                   getManagedBean().getApproverModel().setSource(
-				   getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
-						  getManagedBean().getUserMap()));
+            		if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME)) {
+            			getManagedBean().getApproverModel().setSource(
+            					getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
+            							getManagedBean().getUserMap()));
                  
-                   if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
-                	   getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-	                	List<PmUser> invalidApproverList = new ArrayList<PmUser>();
-	                	for (PmUser approverUser : resDTO.getApproverList())  {
-	                		Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();	
-	                		boolean isValidApprover = false;
-	                		while (sourceIt.hasNext()) {
-	                			PmUser user = sourceIt.next();
-	                			if (user.getUserId() == approverUser.getUserId()) {
-	                				sourceIt.remove();
-	                				isValidApprover = true;
-	                				break;
-	                			}
-	                		}
-	                		if (!isValidApprover) {
-	                			invalidApproverList.add(approverUser);
-	                		}
-	                	}
-	                	if (invalidApproverList.size() > 0) {
-	                		getManagedBean().getApproverModel().getTarget().removeAll(invalidApproverList);
-	                	}
-                   } else {
-		  				getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
-                   }
+            			if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
+            				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+            				List<PmUser> invalidApproverList = new ArrayList<PmUser>();
+            				for (PmUser approverUser : resDTO.getApproverList())  {
+		                		Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();	
+		                		boolean isValidApprover = false;
+		                		while (sourceIt.hasNext()) {
+		                			PmUser user = sourceIt.next();
+		                			if (user.getUserId() == approverUser.getUserId()) {
+		                				sourceIt.remove();
+		                				isValidApprover = true;
+		                				break;
+		                			}
+		                		}
+		                		if (!isValidApprover) {
+		                			invalidApproverList.add(approverUser);
+		                		}
+            				}
+		                	if (invalidApproverList.size() > 0) {
+		                		getManagedBean().getApproverModel().getTarget().removeAll(invalidApproverList);
+		                	}
+            			} else {
+            				getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
+            			}
+            		}
                
                    getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
         		          ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo()));
