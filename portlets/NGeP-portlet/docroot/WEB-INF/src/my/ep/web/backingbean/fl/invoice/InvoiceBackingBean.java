@@ -60,6 +60,7 @@ import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
@@ -442,13 +443,24 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}else if(FLProcessNameConst.RESUBMIT_AP59_ORDER.equals(this.getManagedBean().getTaskName())){
-
+				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 				FLOrderCancelReqType reqType = (FLOrderCancelReqType)obj;
 
 				reqDTO = new FulfilmentReqDTO();
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 				Long invoiceId = reqType.getInvoiceId();
 
+				if(reqType.getErrorIds() != null && Long.parseLong(reqType.getErrorIds()) > 0){
+					getManagedBean().setAutoUpdate(Boolean.FALSE);
+					getManagedBean().setGfmasError(true);
+					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+					errReq.setErrorId(Long.parseLong(reqType.getErrorIds()));
+					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{CommonConstants.THIRD_PARTY_SYSTEM_1GFMAS}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				}
+				
 				invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 				IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 				reqDTO.setInvoiceId(invoiceId);
@@ -2220,6 +2232,16 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		getManagedBean().setTextBeforeSign(sb.toString());
 	}
 
+	/**
+	 * Show 1GFMAS error
+	 *
+	 */
+	public void show1GFMASError(){
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		RequestContext.getCurrentInstance().update("@form");
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
+	}
+	
 	public List<InvoiceChargeLineVO> getEmptyTableList() {
 		return emptyTableList;
 	}
