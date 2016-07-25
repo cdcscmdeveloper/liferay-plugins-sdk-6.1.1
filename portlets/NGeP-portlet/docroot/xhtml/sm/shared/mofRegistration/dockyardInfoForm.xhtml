@@ -20,6 +20,16 @@
 				<p:column headerText="#{lbl['lbl.sm.facility.dockyard.name']}">
 					<h:outputText value="#{doc.facilityName}" />
 				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.category']}">
+					<ui:repeat var="catFac" value="#{doc.smSupplierCategoryFacilities}">
+						<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+									#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
+									#{catFac.pmCategoryL3.categoryL3Code}
+								 	(#{catFac.pmCategoryL3.categoryName})" 
+							style="float: left;white-space: normal;" /><br />
+					</ui:repeat>
+				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.dockyard.address']}"
 					style="width :60%;white-space : normal">
@@ -106,7 +116,6 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				
-				<ui:remove>
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sm.category']}" /> 
@@ -114,7 +123,7 @@
 					</td>
 					<td>
 						<p:selectManyMenu showCheckbox="true"
-							required="false"
+							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.category']}" id="dockyardCategoryId"
 							value="#{backingBean.managedBean.selectedSuppCategoryFacilityIds}"
 							style="height:100px;width: 200px;">
@@ -125,7 +134,6 @@
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>
-				</ui:remove>
 				
 				<ac:smFacilityAddress backingBean="#{backingBean}" smAddress="#{backingBean.managedBean.selectedDockyardFacility.smAddress}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.dockFacilityStates}"

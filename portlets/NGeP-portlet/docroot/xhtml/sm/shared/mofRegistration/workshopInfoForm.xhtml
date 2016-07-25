@@ -20,6 +20,17 @@
 				<p:column headerText="#{lbl['lbl.sm.facility.workshop.name']}">
 					<h:outputText value="#{work.facilityName}" />
 				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.category']}">
+					<ui:repeat var="catFac" value="#{work.smSupplierCategoryFacilities}">
+						<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+									#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
+									#{catFac.pmCategoryL3.categoryL3Code}
+								 	(#{catFac.pmCategoryL3.categoryName})" 
+							style="float: left;white-space: normal;" /><br />
+					</ui:repeat>
+				</p:column>
+				
 				<p:column headerText="#{lbl['lbl.sm.workshop.address']}"
 					style="width :60%;white-space : normal">
 					<h:outputText value="#{backingBean.getFullAddress(work.smAddress)}"
@@ -103,15 +114,14 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				
-				<ui:remove>
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sm.category']}" /> 
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
-						<p:selectManyMenu showCheckbox="true"
-							required="false"
+						<p:selectManyMenu showCheckbox="#{backingBean.managedBean.valueReqd}"
+							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.category']}" id="workshopCategoryId"
 							value="#{backingBean.managedBean.selectedSuppCategoryFacilityIds}"
 							style="height:100px;width: 200px;">
@@ -122,7 +132,6 @@
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>
-				</ui:remove>
 				
 				<ac:smFacilityAddress backingBean="#{backingBean}" smAddress="#{backingBean.managedBean.selectedWorkShopFacility.smAddress}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.workShopFacilityStates}"

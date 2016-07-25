@@ -7967,7 +7967,7 @@ public class SmApplicationUtil {
 					.size()];
 			for (int i = 0; i < suppCatFacIds.length; i++) {
 				suppCatFacIds[i] = facility.getSmSupplierCategoryFacilities()
-						.get(i).getSmSupplierCategory().getSupplierCategoryId();
+						.get(i).getPmCategoryL3().getCategoryL3Id();
 
 			}
 		}
@@ -7986,19 +7986,62 @@ public class SmApplicationUtil {
 	public static void addOrUpdateFacilityCategory(
 			SmApplicationManagedBean bean, SmFacility smFac) {
 		if (bean.getSelectedSuppCategoryFacilityIds() != null) {
-			smFac.setSmSupplierCategoryFacilities(new ArrayList<SmSupplierCategoryFacility>());
+			SmSupplierCategoryFacility catFac = null;
+			if (EntityHelper.isCollectionEmpty(smFac
+					.getSmSupplierCategoryFacilities())) {
+				smFac.setSmSupplierCategoryFacilities(new ArrayList<SmSupplierCategoryFacility>());
+			}
 			for (Long catId : bean.getSelectedSuppCategoryFacilityIds()) {
 				for (SmSupplierCategory cat : bean.getSmAppl()
 						.getSmSupplierCategories()) {
-					if (cat.getSupplierCategoryId().equals(catId)) {
-						SmSupplierCategoryFacility catFac = new SmSupplierCategoryFacility();
-						catFac.setSmFacility(smFac);
-						catFac.setSmSupplierCategory(cat);
-						smFac.getSmSupplierCategoryFacilities().add(catFac);
+
+					// insert new selected category
+					if (cat.getPmCategoryL3().getCategoryL3Id().equals(catId)) {
+						catFac = getSupplierCategoryFacilityByCategoryL3(
+								smFac.getSmSupplierCategoryFacilities(), catId);
+						if (catFac == null) {
+							catFac = new SmSupplierCategoryFacility();
+							catFac.setSmFacility(smFac);
+							catFac.setPmCategoryL3(cat.getPmCategoryL3());
+							smFac.getSmSupplierCategoryFacilities().add(catFac);
+						}
 					}
 				}
 			}
+
+			// remove not selected category
+			if (!EntityHelper.isCollectionEmpty(smFac
+					.getSmSupplierCategoryFacilities())) {
+				Iterator<SmSupplierCategoryFacility> removeCatFacIt = smFac
+						.getSmSupplierCategoryFacilities().iterator();
+				while (removeCatFacIt.hasNext()) {
+					SmSupplierCategoryFacility removeCatFac = removeCatFacIt
+							.next();
+
+					if (!EntityHelper.isIdExistInIds(removeCatFac
+							.getPmCategoryL3().getCategoryL3Id(), bean
+							.getSelectedSuppCategoryFacilityIds())) {
+						removeCatFacIt.remove();
+					}
+				}
+			}
+
+		} else {
+			// none selected so remove all
+			smFac.setSmSupplierCategoryFacilities(null);
 		}
+	}
+
+	private static SmSupplierCategoryFacility getSupplierCategoryFacilityByCategoryL3(
+			List<SmSupplierCategoryFacility> list, Long id) {
+		SmSupplierCategoryFacility retVal = null;
+		for (SmSupplierCategoryFacility obj : list) {
+			if (obj.getPmCategoryL3().getCategoryL3Id().equals(id)) {
+				retVal = obj;
+				break;
+			}
+		}
+		return retVal;
 	}
 
 	private static VelocityContext setSignatories(VelocityContext context,
