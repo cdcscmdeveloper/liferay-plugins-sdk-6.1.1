@@ -730,8 +730,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						initializeApproverList();
 					}
 				    // Retrieve approver list
-				    // Skip during supplier acknowledgment
-				    if (getManagedBean().getTaskName() == null || !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+				    if (isApproverSetting()) {
 					    getManagedBean().getApproverModel().setSource(
 								getAvailableApproverList(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode(),
 										getManagedBean().getUserMap()));
@@ -1636,7 +1635,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			validateMeetingDetails();
 		}
 		// Validation for approver
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
 				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
