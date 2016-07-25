@@ -10,19 +10,23 @@
 
 	<ui:define name="contentSection">
 		<div align="left" class="header-info">
-			<table class="customTbl">
+			<table>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.epno']}" /></td>
 						<td class="header-info-text">
 							#{postSupplierRegBB.managedBean.smSupplier.epNo}
 						</td>
+					</tr>
 					
+					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
 						<td class="header-info-text">
 							#{postSupplierRegBB.managedBean.smSupplier.companyName}
 						</td>
-						
-						<td><p:outputLabel value="#{lbl['lbl.sm.reg.no']} :" /></td>
+					</tr>
+					
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.reg.no']}" /></td>
 						<td class="header-info-text">
 							#{postSupplierRegBB.managedBean.smSupplier.regNo}
 						</td>
