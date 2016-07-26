@@ -34,6 +34,7 @@
 			addChooseOnchange(upload_widget);
 		}
 		function uploadListener(upload_widget) {
+			upload_widget.uploadContent.find("tr.ui-state-error").remove();
 			addChooseOnchange(upload_widget);
 		}		
 		
