@@ -2331,6 +2331,7 @@ public class CreateQtBackingBean extends
 			if (null != technicalSpecCheckList
 					&& !technicalSpecCheckList.isEmpty()) {
 				PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+				this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
 				boolean zonelevelChange = false;
 				for (ScQtCheckList technicalchecklist : technicalSpecCheckList) {
 					zonelevelChange = true;
