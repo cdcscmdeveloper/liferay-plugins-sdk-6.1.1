@@ -92,6 +92,9 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
+
+
 
 
 
@@ -114,40 +117,42 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 	/** The Constant NAV_TO_PRGACT. */
 	public static final String NAV_TO_PRGACT = "/xhtml/gfMas/gfmassearch/childprocess/gfmasPrgAct.xhtml";
-	
+
 	/** The Constant NAV_TO_PROJECT. */
 	public static final String NAV_TO_PROJECT = "/xhtml/gfMas/gfmassearch/childprocess/gfmasProject.xhtml";
-	
+
 	/** The Constant NAV_TO_VOT. */
 	public static final String NAV_TO_VOT = "/xhtml/gfMas/gfmassearch/childprocess/gfmasVot.xhtml";
-	
+
 	/** The Constant NAV_TO_DANA. */
 	public static final String NAV_TO_DANA = "/xhtml/gfMas/gfmassearch/childprocess/gfmasDana.xhtml";
-	
+
 	/** The Constant NAV_TO_KPTJ. */
 	public static final String NAV_TO_KPTJ = "/xhtml/gfMas/gfmassearch/childprocess/gfmasKPTJ.xhtml";
-	
+
 	/** The Constant NAV_TO_PTJ. */
 	public static final String NAV_TO_PTJ = "/xhtml/gfMas/gfmassearch/childprocess/gfmasPTJ.xhtml";
-	
+
 	/** The Constant NAV_TO_PP. */
 	public static final String NAV_TO_PP = "/xhtml/gfMas/gfmassearch/childprocess/gfmasPP.xhtml";
-	
+
 	/** The Constant NAV_TO_GLACCOUNT. */
 	public static final String NAV_TO_GLACCOUNT = "/xhtml/gfMas/gfmassearch/childprocess/gfmasGlAccount.xhtml";
-	
+
 	/** The Constant NAV_TO_BANK. */
 	public static final String NAV_TO_BANK = "/xhtml/gfMas/gfmassearch/childprocess/gfmasBank.xhtml";
-	
+
 	/** The Constant NAV_TO_AGOFFICE. */
 	public static final String NAV_TO_AGOFFICE = "/xhtml/gfMas/gfmassearch/childprocess/gfmasAgOffice.xhtml";
 
 	/** The search gf mas. */
 	private IPagingDataModel<DIInterfaceLog> searchGfMas = new SearchGfMasPagingDataModel();
 
-	/** The child process status. */	
-	
+	/** The child process status. */
+
 	boolean isContains = false;
+
+	private boolean flag;
 
 	/**
 	 * Instantiates a new gf mas backing bean.
@@ -166,7 +171,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 
 	}
-	
+
 	/**
 	 * Search gf mas.
 	 */
@@ -178,12 +183,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * Pre loading gfmas.
 	 */
 	public void preLoadingGfmas() {
-		log.info("preLoadingGfmas");	
-		this.getManagedBean().setProcessId(null);		
-		FacesContext fc = FacesContext.getCurrentInstance();	
-		searchGfMas();	
+		log.info("preLoadingGfmas");
+		this.getManagedBean().setProcessId(null);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		searchGfMas();
 		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, NAV_TO_MAIN);
+				.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
 
 	/**
@@ -210,28 +215,23 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private ISearchBean<DIInterfaceLog> getSearchBeanData(
 			ISearchBean<DIInterfaceLog> searchBean) {
 		log.info("getSearchBeanData");
-		/*if (this.getManagedBean().getInterfaceLogId() != null) {
-
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("logId",
-							SearchOperator.OPERATOR_EQUALS.value(), this
-							.getManagedBean().getInterfaceLogId()));
-		}
-		if (StringUtils.isNotEmpty(this.getManagedBean().getServiceCode())) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("serviceCode",
-							SearchOperator.OPERATOR_EQUALS.value(), this
-							.getManagedBean().getServiceCode()
-							.toUpperCase(), true));
-		}
-
-		if (StringUtils.isNotEmpty(this.getManagedBean().getDirection())) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("direction",
-							SearchOperator.OPERATOR_EQUALS.value(), this
-							.getManagedBean().getDirection()
-							.toUpperCase(), true));
-		}*/
+		/*
+		 * if (this.getManagedBean().getInterfaceLogId() != null) {
+		 * 
+		 * searchBean.getDataFilterBeans().add( new SearchFilterBean("logId",
+		 * SearchOperator.OPERATOR_EQUALS.value(), this
+		 * .getManagedBean().getInterfaceLogId())); } if
+		 * (StringUtils.isNotEmpty(this.getManagedBean().getServiceCode())) {
+		 * searchBean.getDataFilterBeans().add( new
+		 * SearchFilterBean("serviceCode",
+		 * SearchOperator.OPERATOR_EQUALS.value(), this
+		 * .getManagedBean().getServiceCode() .toUpperCase(), true)); }
+		 * 
+		 * if (StringUtils.isNotEmpty(this.getManagedBean().getDirection())) {
+		 * searchBean.getDataFilterBeans().add( new
+		 * SearchFilterBean("direction", SearchOperator.OPERATOR_EQUALS.value(),
+		 * this .getManagedBean().getDirection() .toUpperCase(), true)); }
+		 */
 
 		List<ProcessCodeType> listOfProcessCodes = new ArrayList<ProcessCodeType>();
 
@@ -251,13 +251,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 						.value(), listOfProcessCodes));
 
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_EQUALS
-						.value(), new Long(0)));
+				new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_EQUALS.value(), new Long(0)));
 
 		searchBean.getDataFilterBeans()
-		.add(new SearchMultiFilterBean(new SearchFilterBean(
-				"targetSystem", SearchOperator.OPERATOR_EQUALS.value(),
-				"ePerolehan"), new SearchFilterBean("fileName",
+				.add(new SearchMultiFilterBean(new SearchFilterBean(
+						"targetSystem", SearchOperator.OPERATOR_EQUALS.value(),
+						"ePerolehan"), new SearchFilterBean("fileName",
 						SearchOperator.OPERATOR_NOT_LIKE.value(), ".txt",
 						SearchCondition.CONDITION_AND.value())));
 
@@ -311,43 +311,66 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null,
 				SearchCondition.CONDITION_OR.value());
 
-		searchBean.getDataFilterBeans().add(
-				new SearchMultiFilterBean(progAcctgFilterBean,SearchCondition.CONDITION_AND.value(),
-						new SearchMultiFilterBean(projectFilterBean,SearchCondition.CONDITION_OR.value(),
-								new SearchMultiFilterBean(glAcntFilterBean,SearchCondition.CONDITION_OR.value(),
-										new SearchMultiFilterBean(agOffFilterBean,SearchCondition.CONDITION_OR.value(),
-												new SearchMultiFilterBean(bankFilterBean,SearchCondition.CONDITION_OR.value(),
-														new SearchMultiFilterBean(kptjFilterBean,SearchCondition.CONDITION_OR.value(),
-																new SearchMultiFilterBean(ptjFilterBean,SearchCondition.CONDITION_OR.value(),
-																		new SearchMultiFilterBean(ppFilterBean,SearchCondition.CONDITION_OR.value(),
-																				new SearchMultiFilterBean(votFilterBean,SearchCondition.CONDITION_OR.value(),
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchMultiFilterBean(
+						progAcctgFilterBean,
+						SearchCondition.CONDITION_AND.value(),
+						new SearchMultiFilterBean(
+								projectFilterBean,
+								SearchCondition.CONDITION_OR.value(),
+								new SearchMultiFilterBean(
+										glAcntFilterBean,
+										SearchCondition.CONDITION_OR.value(),
+										new SearchMultiFilterBean(
+												agOffFilterBean,
+												SearchCondition.CONDITION_OR
+														.value(),
+												new SearchMultiFilterBean(
+														bankFilterBean,
+														SearchCondition.CONDITION_OR
+																.value(),
+														new SearchMultiFilterBean(
+																kptjFilterBean,
+																SearchCondition.CONDITION_OR
+																		.value(),
+																new SearchMultiFilterBean(
+																		ptjFilterBean,
+																		SearchCondition.CONDITION_OR
+																				.value(),
+																		new SearchMultiFilterBean(
+																				ppFilterBean,
+																				SearchCondition.CONDITION_OR
+																						.value(),
+																				new SearchMultiFilterBean(
+																						votFilterBean,
+																						SearchCondition.CONDITION_OR
+																								.value(),
 																						danaFilterBean))))))))));
 
 		if (StringUtils.isNotEmpty(this.getManagedBean().getProcessId())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchMultiFilterBean(new SearchFilterBean("processId",
 							SearchOperator.OPERATOR_EQUALS.value(), this
-							.getManagedBean().getProcessId()
-							.toUpperCase()), new SearchFilterBean(
-									"fileName", SearchOperator.OPERATOR_LIKE.value(),
-									"1000"
-											+ this.getManagedBean().getProcessId()
+									.getManagedBean().getProcessId()
+									.toUpperCase()), new SearchFilterBean(
+							"fileName", SearchOperator.OPERATOR_LIKE.value(),
+							"1000"
+									+ this.getManagedBean().getProcessId()
 											.toUpperCase() + "400001")));
 		}
 
 		searchBean.getSortColumns().add(
 				new SearchOrderBean("createdDate", true));
 
-
 		return searchBean;
 	}
-
 
 	/**
 	 * The Class SearchGfMasPagingDataModel.
 	 */
 	private class SearchGfMasPagingDataModel extends
-	PagingDataModel<DIInterfaceLog> {
+			PagingDataModel<DIInterfaceLog> {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
@@ -386,8 +409,9 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 								IDIInterfaceSO.class);
 
 				InterfaceLogResDto resDTO = gfMasSO
-						.retrieveInterfaceLogDetails(gfMasReqDTO);					
-				System.out.println("getTotalRecord:"+resDTO.getViewGfMasResultBean().getTotalRecord());
+						.retrieveInterfaceLogDetails(gfMasReqDTO);
+				System.out.println("getTotalRecord:"
+						+ resDTO.getViewGfMasResultBean().getTotalRecord());
 
 				getManagedBean().setLazy(true);
 
@@ -424,17 +448,28 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		log.info("In goToGfMasProcessMaintaincePage");
 
 		String childProcessPage = null;
-		
+
 		this.getManagedBean().setSelectedProcess(selectedProcess);
 		this.getManagedBean().setFileName(selectedProcess.getFileName());
+		// this.getManagedBean().setProcessId(selectedProcess.getProcessId());
 		this.getManagedBean().setPageProcessId(selectedProcess.getProcessId());
 		this.getManagedBean().setTransId(selectedProcess.getTransId());
-		this.getManagedBean().setMapOfProcess(null);
+		//this.getManagedBean().setMapOfProcess(null);
 		getUnprocessedRecordsByPreviousDate(selectedProcess);
+		//refreshReload();		
 		
+
+	/*	this.getManagedBean().setSelectedBankList(
+				this.getManagedBean().getSearchBank().getList());
+*/
 		return childProcessPage;
 	}
-	
+
+	private void refreshReload() {		
+		this.getManagedBean()
+				.getSearchBank().reloadData();
+		selectAllBanks(false);		
+	}
 
 	/**
 	 * Gets the unprocessed records by previous date.
@@ -446,112 +481,140 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	private void getUnprocessedRecordsByPreviousDate(
 			DIInterfaceLog selectedProcess) {
 
-		DIInterfaceLog oldDateLog=getMasterDataByCreatedDate(selectedProcess);
-		
+		DIInterfaceLog oldDateLog = getMasterDataByCreatedDate(selectedProcess);
+
 		FacesContext fc = FacesContext.getCurrentInstance();
-		
-		String processId =oldDateLog.getProcessId();
-		
+
+		String processId = oldDateLog.getProcessId();
+
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
 		String createdDate = dateFormat.format(oldDateLog.getCreatedDate());
 
-				if (selectedProcess.getProcessStatus() != null
-						&& selectedProcess.getProcessStatus().equals(
-								new Long(0))) {
+		if (selectedProcess.getProcessStatus() != null
+				&& selectedProcess.getProcessStatus().equals(new Long(0))) {
 
-					switch (ProcessCodeType.valueOf(selectedProcess
-							.getProcessId())) {
+			switch (ProcessCodeType.valueOf(selectedProcess.getProcessId())) {
 
-					case GLPRG:						
-						if(getPrgActDataCountByProcessStatus(selectedProcess)){
-							fc.getApplication().getNavigationHandler()
+			case GLPRG:
+				if (getPrgActDataCountByProcessStatus(selectedProcess)) {
+					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, NAV_TO_PRGACT);
-							showErrorMsg(selectedProcess, processId,
-									createdDate, oldDateLog, fc);
-						}
-						break;
-					case GLBAC:						
-						if(getAgOffDataCountByProcessStatus(selectedProcess)){
-							fc.getApplication().getNavigationHandler()
+					showErrorMsg(selectedProcess, processId, createdDate,
+							oldDateLog, fc);
+				}	
+				this.getManagedBean()
+				.getSearchProgAct().reloadData();
+				selectAllPrgAct(false);				
+				break;
+			case GLBAC:
+				if (getAgOffDataCountByProcessStatus(selectedProcess)) {
+					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, NAV_TO_AGOFFICE);
-							showErrorMsg(selectedProcess, processId,
-									createdDate, oldDateLog, fc);
-						}
-						break;
-					case GLSEG:
-						if(getPpDataCountByProcessStatus(selectedProcess)){
-							fc.getApplication().getNavigationHandler()
+					showErrorMsg(selectedProcess, processId, createdDate,
+							oldDateLog, fc);
+				}				
+				this.getManagedBean()
+				.getSearchAgOff().reloadData();
+				selectAllAccountingOffice(false);			
+				break;
+			case GLSEG:
+				if (getPpDataCountByProcessStatus(selectedProcess)) {
+					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, NAV_TO_PP);
-							showErrorMsg(selectedProcess, processId,
-									createdDate, oldDateLog, fc);
-						}						
-						break;
-					case GLVOT:
-						if(getVotDataCountByProcessStatus(selectedProcess)){
-							fc.getApplication().getNavigationHandler()
+					showErrorMsg(selectedProcess, processId, createdDate,
+							oldDateLog, fc);
+				}		
+				this.getManagedBean()
+				.getSearchPp().reloadData();
+				selectAllPp(false);				
+				break;
+			case GLVOT:
+				if (getVotDataCountByProcessStatus(selectedProcess)) {
+					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, NAV_TO_VOT);
-							showErrorMsg(selectedProcess, processId,
-									createdDate, oldDateLog, fc);
-						}						
-						break;
-					case GLDNA:
-						if(getDanaDataCountByProcessStatus(selectedProcess)){
-							fc.getApplication().getNavigationHandler()
+					showErrorMsg(selectedProcess, processId, createdDate,
+							oldDateLog, fc);
+				}		
+				this.getManagedBean()
+				.getSearchVot().reloadData();
+				selectAllVot(false);				
+				break;
+			case GLDNA:
+				if (getDanaDataCountByProcessStatus(selectedProcess)) {
+					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, NAV_TO_DANA);
-							showErrorMsg(selectedProcess, processId,
-									createdDate, oldDateLog, fc);
-						}						
-						break;
-					case GLPRJ:
-						if(getProjectDataCountByProcessStatus(selectedProcess)){
-							fc.getApplication().getNavigationHandler()
-							.handleNavigation(fc, null, NAV_TO_PROJECT);
-							showErrorMsg(selectedProcess, processId,
-									createdDate, oldDateLog, fc);
-						}						
-						break;
-					case GLGLC:
-						if(getGlAccountDataCountByProcessStatus(selectedProcess)){
-							fc.getApplication().getNavigationHandler()
-							.handleNavigation(fc, null, NAV_TO_GLACCOUNT);
-							showErrorMsg(selectedProcess, processId,
-									createdDate, oldDateLog, fc);
-						}						
-						break;						
-					case GLPCG:
-						if(getKptjDataCountByProcessStatus(selectedProcess)){
-							fc.getApplication().getNavigationHandler()
-							.handleNavigation(fc, null, NAV_TO_KPTJ);
-							showErrorMsg(selectedProcess, processId,
-									createdDate, oldDateLog, fc);
-						}						
-						break;
-					case GLPTJ:
-						if(getPtjDataCountByProcessStatus(selectedProcess)){
-							fc.getApplication().getNavigationHandler()
-							.handleNavigation(fc, null, NAV_TO_PTJ);
-							showErrorMsg(selectedProcess, processId,
-									createdDate, oldDateLog, fc);
-						}						
-						break;						
-					case CMBNK:
-						if(getBankDataCountByProcessStatus(selectedProcess)){
-							fc.getApplication().getNavigationHandler()
-							.handleNavigation(fc, null, NAV_TO_BANK);
-							showErrorMsg(selectedProcess, processId,
-									createdDate, oldDateLog, fc);
-						}						
-						break;
-					}
+					showErrorMsg(selectedProcess, processId, createdDate,
+							oldDateLog, fc);
 				}
+				this.getManagedBean()
+				.getSearchDana().reloadData();
+				selectAllDana(false);			
+				break;
+			case GLPRJ:
+				if (getProjectDataCountByProcessStatus(selectedProcess)) {
+					fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_PROJECT);
+					showErrorMsg(selectedProcess, processId, createdDate,
+							oldDateLog, fc);
+				}
+				this.getManagedBean()
+				.getSearchProject().reloadData();
+				selectAllProject(false);
+				break;
+			case GLGLC:
+				if (getGlAccountDataCountByProcessStatus(selectedProcess)) {
+					fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_GLACCOUNT);
+					showErrorMsg(selectedProcess, processId, createdDate,
+							oldDateLog, fc);
+				}
+				this.getManagedBean()
+				.getSearchGlAccount().reloadData();
+				selectAllGlAccount(false);			
+				break;
+			case GLPCG:
+				if (getKptjDataCountByProcessStatus(selectedProcess)) {
+					fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_KPTJ);
+					showErrorMsg(selectedProcess, processId, createdDate,
+							oldDateLog, fc);
+				}
+				this.getManagedBean()
+				.getSearchKptj().reloadData();
+				selectAllKptj(false);
+				break;
+			case GLPTJ:
+				if (getPtjDataCountByProcessStatus(selectedProcess)) {
+					fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_PTJ);
+					showErrorMsg(selectedProcess, processId, createdDate,
+							oldDateLog, fc);
+				}
+				this.getManagedBean()
+				.getSearchPtj().reloadData();
+				selectAllPtj(false);
+				break;
+			case CMBNK:
+				if (getBankDataCountByProcessStatus(selectedProcess)) {
+					fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, NAV_TO_BANK);
+					showErrorMsg(selectedProcess, processId, createdDate,
+							oldDateLog, fc);
+				}
+				this.getManagedBean()
+				.getSearchBank().reloadData();
+				selectAllBanks(false);
+				break;
+			}
+		}
 
 	}
 
 	private boolean getAgOffDataCountByProcessStatus(
 			DIInterfaceLog selectedProcess) {
-		
-		IInterfaceAgOffSO agOffSO;		
+
+		IInterfaceAgOffSO agOffSO;
 
 		SearchBean<PmInterfaceAgOff> searchBean = new SearchBean<PmInterfaceAgOff>();
 
@@ -572,12 +635,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			isContains = true;
 		}
 
-		return isContains;		
+		return isContains;
 	}
 
 	private boolean getVotDataCountByProcessStatus(
 			DIInterfaceLog selectedProcess) {
-		
+
 		IInterfaceVotSO votSO;
 
 		SearchBean<PmInterfaceVot> searchBean = new SearchBean<PmInterfaceVot>();
@@ -600,7 +663,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 
 		return isContains;
-		
+
 	}
 
 	private boolean getDanaDataCountByProcessStatus(
@@ -627,13 +690,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 
 		return isContains;
-		
+
 	}
 
 	private boolean getProjectDataCountByProcessStatus(
 			DIInterfaceLog selectedProcess) {
 		IInterfaceProjectSO iProjectSO;
-		
+
 		SearchBean<PmInterfaceProject> searchBean = new SearchBean<PmInterfaceProject>();
 
 		ISearchBean<PmInterfaceProject> searchBeanData = getProjectSearchBeanData(
@@ -654,19 +717,19 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 
 		return isContains;
-		
+
 	}
 
 	private boolean getGlAccountDataCountByProcessStatus(
 			DIInterfaceLog selectedProcess) {
-		
+
 		IInterfaceGlAccSO glAccountSO;
 		SearchBean<PmInterfaceGlAccount> searchBean = new SearchBean<PmInterfaceGlAccount>();
 
 		ISearchBean<PmInterfaceGlAccount> searchBeanData = getGlAccountSearchBeanData(
 				searchBean, selectedProcess);
 
-		InterfaceGlAccReqDTO reqDTO  = new InterfaceGlAccReqDTO();
+		InterfaceGlAccReqDTO reqDTO = new InterfaceGlAccReqDTO();
 
 		reqDTO.setViewGlAcntSearchBean(searchBeanData);
 
@@ -679,13 +742,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		if (resDTO.getCount() > 0) {
 			isContains = true;
 		}
-		return isContains;		
+		return isContains;
 	}
 
 	private boolean getKptjDataCountByProcessStatus(
 			DIInterfaceLog selectedProcess) {
-		
-		IInterfaceKptjSO iKptjSO;		
+
+		IInterfaceKptjSO iKptjSO;
 
 		SearchBean<PmInterfaceKptj> searchBean = new SearchBean<PmInterfaceKptj>();
 
@@ -705,13 +768,13 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		if (resDTO.getCount() > 0) {
 			isContains = true;
 		}
-		return isContains;		
+		return isContains;
 	}
 
 	private boolean getPtjDataCountByProcessStatus(
 			DIInterfaceLog selectedProcess) {
-		
-		IInterfacePtjSO iPtjSO;	
+
+		IInterfacePtjSO iPtjSO;
 
 		SearchBean<PmInterfacePtj> searchBean = new SearchBean<PmInterfacePtj>();
 
@@ -733,12 +796,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 
 		return isContains;
-		
+
 	}
 
 	private boolean getBankDataCountByProcessStatus(
 			DIInterfaceLog selectedProcess) {
-		
+
 		IInterfaceCmBankSO iBankSO;
 
 		SearchBean<PmInterfaceBank> searchBean = new SearchBean<PmInterfaceBank>();
@@ -761,12 +824,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 
 		return isContains;
-		
+
 	}
 
 	private boolean getPrgActDataCountByProcessStatus(
 			DIInterfaceLog selectedProcess) {
-		
+
 		IInterfacePrgActSO iPrgActSO;
 
 		SearchBean<PmInterfaceProgAct> searchBean = new SearchBean<PmInterfaceProgAct>();
@@ -788,7 +851,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			isContains = true;
 		}
 		return isContains;
-		
+
 	}
 
 	private ISearchBean<PmInterfacePP> getPpSearchBeanData(
@@ -808,13 +871,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		listOfProcessStatus.add(new Long(1));
 		listOfProcessStatus.add(new Long(2));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
-						.value(), listOfProcessStatus));
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
 
 		return searchBean;
 	}
-	
+
 	private ISearchBean<PmInterfaceBank> getBankSearchBeanData(
 			ISearchBean<PmInterfaceBank> searchBean, DIInterfaceLog diLog) {
 
@@ -832,14 +896,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		listOfProcessStatus.add(new Long(1));
 		listOfProcessStatus.add(new Long(2));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
-						.value(), listOfProcessStatus));
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
 
 		return searchBean;
 	}
-	
-	
+
 	private ISearchBean<PmInterfaceVot> getVotSearchBeanData(
 			ISearchBean<PmInterfaceVot> searchBean, DIInterfaceLog diLog) {
 
@@ -857,14 +921,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		listOfProcessStatus.add(new Long(1));
 		listOfProcessStatus.add(new Long(2));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
-						.value(), listOfProcessStatus));
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
 
 		return searchBean;
 	}
-	
-	
+
 	private ISearchBean<PmInterfaceKptj> getKptjSearchBeanData(
 			ISearchBean<PmInterfaceKptj> searchBean, DIInterfaceLog diLog) {
 
@@ -882,14 +946,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		listOfProcessStatus.add(new Long(1));
 		listOfProcessStatus.add(new Long(2));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
-						.value(), listOfProcessStatus));
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
 
 		return searchBean;
 	}
-	
-	
+
 	private ISearchBean<PmInterfacePtj> getPtjSearchBeanData(
 			ISearchBean<PmInterfacePtj> searchBean, DIInterfaceLog diLog) {
 
@@ -907,14 +971,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		listOfProcessStatus.add(new Long(1));
 		listOfProcessStatus.add(new Long(2));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
-						.value(), listOfProcessStatus));
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
 
 		return searchBean;
 	}
-	
-	
+
 	private ISearchBean<PmInterfaceDana> getDanaSearchBeanData(
 			ISearchBean<PmInterfaceDana> searchBean, DIInterfaceLog diLog) {
 
@@ -932,14 +996,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		listOfProcessStatus.add(new Long(1));
 		listOfProcessStatus.add(new Long(2));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
-						.value(), listOfProcessStatus));
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
 
 		return searchBean;
 	}
-	
-	
+
 	private ISearchBean<PmInterfaceAgOff> getAgOffSearchBeanData(
 			ISearchBean<PmInterfaceAgOff> searchBean, DIInterfaceLog diLog) {
 
@@ -957,14 +1021,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		listOfProcessStatus.add(new Long(1));
 		listOfProcessStatus.add(new Long(2));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
-						.value(), listOfProcessStatus));
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
 
 		return searchBean;
 	}
-	
-	
+
 	private ISearchBean<PmInterfaceGlAccount> getGlAccountSearchBeanData(
 			ISearchBean<PmInterfaceGlAccount> searchBean, DIInterfaceLog diLog) {
 
@@ -982,14 +1046,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		listOfProcessStatus.add(new Long(1));
 		listOfProcessStatus.add(new Long(2));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
-						.value(), listOfProcessStatus));
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
 
 		return searchBean;
 	}
-	
-	
+
 	private ISearchBean<PmInterfaceProgAct> getPrgActSearchBeanData(
 			ISearchBean<PmInterfaceProgAct> searchBean, DIInterfaceLog diLog) {
 
@@ -1007,14 +1071,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		listOfProcessStatus.add(new Long(1));
 		listOfProcessStatus.add(new Long(2));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
-						.value(), listOfProcessStatus));
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
 
 		return searchBean;
 	}
-	
-	
+
 	private ISearchBean<PmInterfaceProject> getProjectSearchBeanData(
 			ISearchBean<PmInterfaceProject> searchBean, DIInterfaceLog diLog) {
 
@@ -1032,14 +1096,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		listOfProcessStatus.add(new Long(1));
 		listOfProcessStatus.add(new Long(2));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_IN
-						.value(), listOfProcessStatus));
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_IN.value(), listOfProcessStatus));
 
 		return searchBean;
 	}
-	
-	
+
 	private boolean getPpDataCountByProcessStatus(DIInterfaceLog diInterfaceLog) {
 		log.info("getChildDataCountByProcessStatus");
 
@@ -1070,17 +1134,20 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	}
 
 	private ISearchBean<DIInterfaceLog> getMasterSearchBeanData(
-			ISearchBean<DIInterfaceLog> searchBean,DIInterfaceLog selectedProcess) {
-		
+			ISearchBean<DIInterfaceLog> searchBean,
+			DIInterfaceLog selectedProcess) {
+
 		log.info("getMasterSearchBeanData");
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("processStatus", SearchOperator.OPERATOR_EQUALS
-						.value(),selectedProcess.getProcessStatus()));
+				new SearchFilterBean("processStatus",
+						SearchOperator.OPERATOR_EQUALS.value(), selectedProcess
+								.getProcessStatus()));
 
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("targetSystem", SearchOperator.OPERATOR_EQUALS
-						.value(),selectedProcess.getTargetSystem()));
-		
+				new SearchFilterBean("targetSystem",
+						SearchOperator.OPERATOR_EQUALS.value(), selectedProcess
+								.getTargetSystem()));
+
 		if (StringUtils.isNotEmpty(selectedProcess.getProcessId())) {
 
 			searchBean.getDataFilterBeans().add(
@@ -1091,20 +1158,21 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		searchBean.getSortColumns().add(
 				new SearchOrderBean("createdDate", true));
 
-
 		return searchBean;
 	}
 
-	private DIInterfaceLog getMasterDataByCreatedDate(DIInterfaceLog selectedProcess) {
+	private DIInterfaceLog getMasterDataByCreatedDate(
+			DIInterfaceLog selectedProcess) {
 
 		IDIInterfaceSO gfMasSO;
-		DIInterfaceLog interfaceLog=null;
+		DIInterfaceLog interfaceLog = null;
 
 		InterfaceLogReqDto ReqDTO = new InterfaceLogReqDto();
-		
+
 		SearchBean<DIInterfaceLog> searchBean = new SearchBean<DIInterfaceLog>();
 
-		ISearchBean<DIInterfaceLog> searchBeanData = this.getMasterSearchBeanData(searchBean,selectedProcess);
+		ISearchBean<DIInterfaceLog> searchBeanData = this
+				.getMasterSearchBeanData(searchBean, selectedProcess);
 
 		ReqDTO.setViewSearchBean(searchBeanData);
 
@@ -1114,12 +1182,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 		InterfaceLogResDto resDTO = gfMasSO
 				.retrieveInterfaceLogDetailsByCreatedDate(ReqDTO);
-		
-		if(CollectionUtils.isNotEmpty(resDTO.getViewGfMasResultBean().getResultList())){
-		
-			interfaceLog=resDTO.getViewGfMasResultBean().getResultList().get(0);
+
+		if (CollectionUtils.isNotEmpty(resDTO.getViewGfMasResultBean()
+				.getResultList())) {
+
+			interfaceLog = resDTO.getViewGfMasResultBean().getResultList()
+					.get(0);
 		}
-		
+
 		return interfaceLog;
 	}
 
@@ -1137,21 +1207,23 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * @param fc
 	 *            the fc
 	 */
-	private void showErrorMsg(DIInterfaceLog selectedProcess,
-			String processId, String createdDate,
-			DIInterfaceLog oldCreatedDateLog,FacesContext fc) {
-		/*if (!selectedProcess.getLogId().equals(oldCreatedDateLog.getLogId())) {
-			if (!(selectedProcess.getCreatedDate().compareTo(
-					oldCreatedDateLog.getCreatedDate())<0)) {
-				fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NAV_TO_MAIN);			
-				log.info("Label--->"+this.getManagedBean().getProcessLabels().get(processId));
-				throw new EpException(MessageConst.ERROR_780001, new String[] {
-						this.getManagedBean().getProcessLabels().get(processId),createdDate });
-			}else{
-				
-			}
-		}*/
+	private void showErrorMsg(DIInterfaceLog selectedProcess, String processId,
+			String createdDate, DIInterfaceLog oldCreatedDateLog,
+			FacesContext fc) {
+		/*
+		 * if (!selectedProcess.getLogId().equals(oldCreatedDateLog.getLogId()))
+		 * { if (!(selectedProcess.getCreatedDate().compareTo(
+		 * oldCreatedDateLog.getCreatedDate())<0)) {
+		 * fc.getApplication().getNavigationHandler() .handleNavigation(fc,
+		 * null, NAV_TO_MAIN);
+		 * log.info("Label--->"+this.getManagedBean().getProcessLabels
+		 * ().get(processId)); throw new EpException(MessageConst.ERROR_780001,
+		 * new String[] {
+		 * this.getManagedBean().getProcessLabels().get(processId),createdDate
+		 * }); }else{
+		 * 
+		 * } }
+		 */
 		if (!selectedProcess.getLogId().equals(oldCreatedDateLog.getLogId())) {
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, NAV_TO_MAIN);
@@ -1183,7 +1255,18 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		this.getManagedBean().setSelectedPpList(null);
 		this.getManagedBean().setSelectedVotList(null);
 		this.getManagedBean().setProcessButtonStatus(false);
-        
+		this.setFlag(false);
+		selectAllBanks(false);
+		selectAllVot(false);
+		selectAllDana(false);
+		selectAllAccountingOffice(false);
+		selectAllGlAccount(false);
+		selectAllKptj(false);
+		selectAllPtj(false);
+		selectAllPp(false);
+		selectAllPrgAct(false);
+		selectAllProject(false);
+
 		return "/xhtml/gfMas/gfmassearch/gfmasSearchMain.xhtml?faces-redirect=true";
 
 	}
@@ -1196,85 +1279,90 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	public String processAllVendors() {
 
 		log.info("processAllVendors");
-		String returnUrl = null;
+		
 
 		if (this.getManagedBean().getSelectedProgActList() != null) {
 			log.info("***************ProgActList***SIZE******************>>"
 					+ this.getManagedBean().getSelectedProgActList().size());
 
-
-			IInterfacePrgActSO interfaceprgActSO = (IInterfacePrgActSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfacePrgActSO.class);
+			IInterfacePrgActSO interfaceprgActSO = (IInterfacePrgActSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IInterfacePrgActSO.class);
 			InterfacePrgActReqDTO reqDTO = new InterfacePrgActReqDTO();
 
 			reqDTO.setFileName(this.getManagedBean().getFileName());
-			reqDTO.setInterfacePrgActLs(this.getManagedBean().getSelectedProgActList());
+			reqDTO.setInterfacePrgActLs(this.getManagedBean()
+					.getSelectedProgActList());
 			reqDTO.setTransId(this.getManagedBean().getTransId());
 
 			try {
 				interfaceprgActSO.saveOrUpdatePrgActList(reqDTO);
+				this.getManagedBean().getSearchProgAct().reloadData();
 			} catch (Exception e) {
-				System.out.println(""+e.getMessage());
+				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
 
 				return NAV_TO_PRGACT;
 			}
 
-
-
-
 		} else if (this.getManagedBean().getSelectedProjectList() != null) {
 			log.info("************ProjectList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedProjectList().size());
 
-			IInterfaceProjectSO interfaceprojectActSO = (IInterfaceProjectSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceProjectSO.class);
-
+			IInterfaceProjectSO interfaceprojectActSO = (IInterfaceProjectSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IInterfaceProjectSO.class);
 
 			InterfaceProjectReqDTO reqDTO = new InterfaceProjectReqDTO();
 
 			reqDTO.setFileName(this.getManagedBean().getFileName());
-			reqDTO.setInterfaceProjectLs(this.getManagedBean().getSelectedProjectList());
+			reqDTO.setInterfaceProjectLs(this.getManagedBean()
+					.getSelectedProjectList());
 			reqDTO.setTransId(this.getManagedBean().getTransId());
 
 			try {
 				interfaceprojectActSO.saveOrUpdateProjectList(reqDTO);
+				this.getManagedBean().getSearchProject().reloadData();
 			} catch (Exception e) {
-				System.out.println(""+e.getMessage());
+				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
 
-				return NAV_TO_PROJECT ;
+				return NAV_TO_PROJECT;
 			}
-
 
 		} else if (this.getManagedBean().getSelectedAgOfficeList() != null) {
 
 			log.info("***********AgOfficeList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedAgOfficeList().size());
 
-			IInterfaceAgOffSO reqSO = (IInterfaceAgOffSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+			IInterfaceAgOffSO reqSO = (IInterfaceAgOffSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
 							IInterfaceAgOffSO.class);
 
 			List<PmInterfaceAgOff> list = this.getManagedBean()
 					.getSelectedAgOfficeList();
 
 			InterfaceAgOffReqDTO reqDTO = new InterfaceAgOffReqDTO();
-			
+
 			reqDTO.setInterfaceAgOffLs(list);
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setTransId(this.getManagedBean().getTransId());
-			
 
 			try {
 				reqSO.saveOrUpdateInterfaceAgOffList(reqDTO);
+				this.getManagedBean().getSearchAgOff().reloadData();
 			} catch (Exception e) {
-				System.out.println(""+e.getMessage());
+				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
 
-				return NAV_TO_AGOFFICE ;
-			
+				return NAV_TO_AGOFFICE;
+
 			}
 
 		} else if (this.getManagedBean().getSelectedBankList() != null) {
@@ -1284,78 +1372,86 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			InterfaceCmBankReqDTO reqDTO = new InterfaceCmBankReqDTO();
 
-			reqDTO.setInterfaceBankLs(this.getManagedBean().getSelectedBankList());
+			reqDTO.setInterfaceBankLs(this.getManagedBean()
+					.getSelectedBankList());
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setTransId(this.getManagedBean().getTransId());
-			
+
 			try {
 
-				IInterfaceCmBankSO reqSO = (IInterfaceCmBankSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IInterfaceCmBankSO reqSO = (IInterfaceCmBankSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IInterfaceCmBankSO.class);
 
 				reqSO.saveOrUpdateInterfaceBankList(reqDTO);
-				
-				
+				this.getManagedBean().getSearchBank().reloadData();
 
 			} catch (Exception e) {
-				System.out.println(""+e.getMessage());
+				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
 
-				return NAV_TO_BANK ;
-			
+				return NAV_TO_BANK;
+
 			}
 
 		} else if (this.getManagedBean().getSelectedGlAcntList() != null) {
 			log.info("***********GlAcntList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedGlAcntList().size());
-			
-			IInterfaceGlAccSO interfaceGlAccSO = (IInterfaceGlAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceGlAccSO.class);
 
+			IInterfaceGlAccSO interfaceGlAccSO = (IInterfaceGlAccSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IInterfaceGlAccSO.class);
 
 			InterfaceGlAccReqDTO reqDTO = new InterfaceGlAccReqDTO();
 
 			reqDTO.setFileName(this.getManagedBean().getFileName());
-			reqDTO.setInterfaceGlAccLs(this.getManagedBean().getSelectedGlAcntList());
+			reqDTO.setInterfaceGlAccLs(this.getManagedBean()
+					.getSelectedGlAcntList());
 			reqDTO.setTransId(this.getManagedBean().getTransId());
 
 			try {
 				interfaceGlAccSO.saveOrUpdateGlAccList(reqDTO);
+				this.getManagedBean().getSearchGlAccount().reloadData();
 			} catch (Exception e) {
-				System.out.println(""+e.getMessage());
+				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
 
-				return NAV_TO_GLACCOUNT ;
+				return NAV_TO_GLACCOUNT;
 			}
-			
+
 		} else if (this.getManagedBean().getSelectedKptjList() != null) {
 			log.info("************KptjList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedKptjList().size());
-	        InterfaceKptjReqDTO reqDTO = new InterfaceKptjReqDTO();
-			
-			reqDTO.setInterfaceKptjLs(this.getManagedBean().getSelectedKptjList());
+			InterfaceKptjReqDTO reqDTO = new InterfaceKptjReqDTO();
+
+			reqDTO.setInterfaceKptjLs(this.getManagedBean()
+					.getSelectedKptjList());
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setTransId(this.getManagedBean().getTransId());
-			
+
 			try {
-				
-				IInterfaceKptjSO reqSO = (IInterfaceKptjSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+
+				IInterfaceKptjSO reqSO = (IInterfaceKptjSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IInterfaceKptjSO.class);
 
 				reqSO.saveOrUpdateInterfaceKptjList(reqDTO);
-				
+				this.getManagedBean().getSearchKptj().reloadData();
+
 			} catch (Exception e) {
-				System.out.println(""+e.getMessage());
+				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
 
-				return NAV_TO_KPTJ ;
+				return NAV_TO_KPTJ;
 			}
+
 			
-			this.getManagedBean().setSelectedPtjList(null);
 		} else if (this.getManagedBean().getSelectedPtjList() != null) {
 
 			log.info("************PtjList******SIZE******************>>"
@@ -1366,22 +1462,24 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			reqDTO.setInterfacePtjLs(this.getManagedBean().getSelectedPtjList());
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setTransId(this.getManagedBean().getTransId());
-			
+
 			try {
 
-				IInterfacePtjSO reqSO = (IInterfacePtjSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IInterfacePtjSO reqSO = (IInterfacePtjSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IInterfacePtjSO.class);
 
 				reqSO.saveOrUpdateInterfacePtjList(reqDTO);
+				this.getManagedBean().getSearchPtj().reloadData();
 
 			} catch (Exception e) {
-				System.out.println(""+e.getMessage());
+				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
 
-				return NAV_TO_PTJ ;
-			
+				return NAV_TO_PTJ;
+
 			}
 
 		} else if (this.getManagedBean().getSelectedDanaList() != null) {
@@ -1389,23 +1487,28 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			log.info("***********DanaList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedDanaList().size());
 
-			IInterfaceVotDanaSO interfaceVotDanaSO = (IInterfaceVotDanaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceVotDanaSO.class);
+			IInterfaceVotDanaSO interfaceVotDanaSO = (IInterfaceVotDanaSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IInterfaceVotDanaSO.class);
 
 			InterfaceVotDanaReqDTO reqDTO = new InterfaceVotDanaReqDTO();
 
 			reqDTO.setFileName(this.getManagedBean().getFileName());
-			reqDTO.setInterfaceDanaLs(this.getManagedBean().getSelectedDanaList());
+			reqDTO.setInterfaceDanaLs(this.getManagedBean()
+					.getSelectedDanaList());
 			reqDTO.setTransId(this.getManagedBean().getTransId());
 			try {
 				interfaceVotDanaSO.saveOrUpdateVotDanaList(reqDTO);
+				this.getManagedBean().getSearchDana().reloadData();
 			} catch (Exception e) {
-				System.out.println(""+e.getMessage());
+				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
 
 				return NAV_TO_DANA;
 			}
-			
+
 		} else if (this.getManagedBean().getSelectedPpList() != null) {
 
 			log.info("************PpList******SIZE******************>>"
@@ -1416,15 +1519,16 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			reqDTO.setInterfacePpLs(this.getManagedBean().getSelectedPpList());
 			reqDTO.setFileName(this.getManagedBean().getFileName());
 			reqDTO.setTransId(this.getManagedBean().getTransId());
-			
 
 			try {
 
-				IInterfacePpSO reqSO = (IInterfacePpSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IInterfacePpSO reqSO = (IInterfacePpSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IInterfacePpSO.class);
 
 				reqSO.saveOrUpdateInterfacePpList(reqDTO);
+				this.getManagedBean().getSearchPp().reloadData();
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1434,7 +1538,10 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			log.info("***********VotList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedVotList().size());
 
-			IInterfaceVotSO interfacevotSO = (IInterfaceVotSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IInterfaceVotSO.class);
+			IInterfaceVotSO interfacevotSO = (IInterfaceVotSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IInterfaceVotSO.class);
 
 			InterfaceVotReqDTO reqDTO = new InterfaceVotReqDTO();
 			reqDTO.setFileName(this.getManagedBean().getFileName());
@@ -1443,38 +1550,35 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			reqDTO.setInterfaceVotLs(this.getManagedBean().getSelectedVotList());
 			try {
 				interfacevotSO.saveOrUpdateVotFundList(reqDTO);
+				this.getManagedBean().getSearchVot().reloadData();
 			} catch (Exception e) {
 
-
-				System.out.println(""+e.getMessage());
+				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
 						FacesMessage.SEVERITY_ERROR, e.getMessage(), null);
 
 				return NAV_TO_VOT;
 			}
 		}
-		//returnUrl = NAV_TO_MAIN;
-		if (getSelectedAllProcessListStatus()) {
-			
-			//returnUrl = NAV_TO_MAIN;
-			goToProcessPage(this.getManagedBean().getPageProcessId());
-			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
-					FacesMessage.SEVERITY_INFO, MessageConst.INFO_780002, null);
-		} 
-		return returnUrl;
+
+		String processPage = goToProcessPage(this.getManagedBean()
+				.getPageProcessId());
+		PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
+				FacesMessage.SEVERITY_INFO, MessageConst.INFO_780002, null);
+
+		return processPage;
 	}
 
-	
 	private String goToProcessPage(String processId) {
 
 		log.info("goToProcessPage");
-		
+
 		String processPage = null;
 
 		switch (ProcessCodeType.valueOf(processId)) {
 
 		case GLPRG:
-			processPage = NAV_TO_PROJECT;
+			processPage = NAV_TO_PRGACT;
 			break;
 		case GLBAC:
 			processPage = NAV_TO_AGOFFICE;
@@ -1506,7 +1610,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		}
 		return processPage;
 	}
-	
+
 	/**
 	 * Gets the selected all process list.
 	 * 
@@ -1520,28 +1624,43 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				.getSelectedProgActList())
 				|| CollectionUtils.isNotEmpty(this.getManagedBean()
 						.getSelectedProjectList())
-						|| CollectionUtils.isNotEmpty(this.getManagedBean()
-								.getSelectedAgOfficeList())
-								|| CollectionUtils.isNotEmpty(this.getManagedBean()
-										.getSelectedBankList())
-										|| CollectionUtils.isNotEmpty(this.getManagedBean()
-												.getSelectedGlAcntList())
-												|| CollectionUtils.isNotEmpty(this.getManagedBean()
-														.getSelectedKptjList())
-														|| CollectionUtils.isNotEmpty(this.getManagedBean()
-																.getSelectedPpList())
-																|| CollectionUtils.isNotEmpty(this.getManagedBean()
-																		.getSelectedDanaList())
-																		|| CollectionUtils.isNotEmpty(this.getManagedBean()
-																				.getSelectedPtjList())
-																				|| CollectionUtils.isNotEmpty(this.getManagedBean()
-																						.getSelectedVotList())) {
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedAgOfficeList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedBankList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedGlAcntList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedKptjList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedPpList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedDanaList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedPtjList())
+				|| CollectionUtils.isNotEmpty(this.getManagedBean()
+						.getSelectedVotList())) {
 			this.getManagedBean().setProcessButtonStatus(true);
 
 		} else {
 			this.getManagedBean().setProcessButtonStatus(false);
 		}
 		return this.getManagedBean().isProcessButtonStatus();
+	}
+
+	/**
+	 * @return the flag
+	 */
+	public boolean isFlag() {
+		return flag;
+	}
+
+	/**
+	 * @param flag
+	 *            the flag to set
+	 */
+	public void setFlag(boolean flag) {
+		this.flag = flag;
 	}
 
 	/**
@@ -1555,17 +1674,16 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		getSelectedAllProcessListStatus();
 
 	}
-	/*public void selectPrgActEvent(PmInterfaceProgAct pmInterfaceProgAct) {
-		 this.getManagedBean().setSelectedProgActList(new ArrayList<PmInterfaceProgAct>());
-		if (pmInterfaceProgAct.isSelected()) {
-			this.getManagedBean().getSelectedProgActList()
-					.add(pmInterfaceProgAct);
-		}else{
-			this.getManagedBean().getSelectedProgActList().remove(pmInterfaceProgAct);
-		}
-	}*/
-	
-	
+
+	/*
+	 * public void selectPrgActEvent(PmInterfaceProgAct pmInterfaceProgAct) {
+	 * this.getManagedBean().setSelectedProgActList(new
+	 * ArrayList<PmInterfaceProgAct>()); if (pmInterfaceProgAct.isSelected()) {
+	 * this.getManagedBean().getSelectedProgActList() .add(pmInterfaceProgAct);
+	 * }else{
+	 * this.getManagedBean().getSelectedProgActList().remove(pmInterfaceProgAct
+	 * ); } }
+	 */
 
 	/**
 	 * Gets the search gf mas.
@@ -1598,87 +1716,73 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 	 * 
 	 * @return the process codelist
 	 */
-	/*public List<SelectItem> getProcessCodelist() {
-		log.info("In getProcessCodelist");
+	/*
+	 * public List<SelectItem> getProcessCodelist() {
+	 * log.info("In getProcessCodelist");
+	 * 
+	 * List<ProcessCodeType> list = new ArrayList<ProcessCodeType>();
+	 * 
+	 * List<SelectItem> processCodeValues = new ArrayList<SelectItem>();
+	 * 
+	 * list.add(ProcessCodeType.GLBAC); list.add(ProcessCodeType.GLSEG);
+	 * list.add(ProcessCodeType.GLVOT); list.add(ProcessCodeType.GLDNA);
+	 * list.add(ProcessCodeType.GLPRG); list.add(ProcessCodeType.GLPRJ);
+	 * list.add(ProcessCodeType.GLGLC); list.add(ProcessCodeType.GLPCG);
+	 * list.add(ProcessCodeType.GLPTJ); list.add(ProcessCodeType.CMBNK);
+	 * 
+	 * for (int i = 0; i < list.size(); i++) { SelectItem selectItem = new
+	 * SelectItem(); selectItem.setValue(list.get(i));
+	 * selectItem.setLabel(list.get(i).toString());
+	 * 
+	 * processCodeValues.add(selectItem); }
+	 * 
+	 * return processCodeValues; }
+	 */
 
-		List<ProcessCodeType> list = new ArrayList<ProcessCodeType>();
-
-		List<SelectItem> processCodeValues = new ArrayList<SelectItem>();
-
-		list.add(ProcessCodeType.GLBAC);
-		list.add(ProcessCodeType.GLSEG);
-		list.add(ProcessCodeType.GLVOT);
-		list.add(ProcessCodeType.GLDNA);
-		list.add(ProcessCodeType.GLPRG);
-		list.add(ProcessCodeType.GLPRJ);
-		list.add(ProcessCodeType.GLGLC);
-		list.add(ProcessCodeType.GLPCG);
-		list.add(ProcessCodeType.GLPTJ);
-		list.add(ProcessCodeType.CMBNK);
-
-		for (int i = 0; i < list.size(); i++) {
-			SelectItem selectItem = new SelectItem();
-			selectItem.setValue(list.get(i));
-			selectItem.setLabel(list.get(i).toString());
-
-			processCodeValues.add(selectItem);
-		}
-
-		return processCodeValues;
-	}*/
-	
 	public SelectItem[] getProcessCodelist() {
 
 		SelectItem[] items = new SelectItem[10];
 
 		Map<String, String> processLabels = new HashMap<String, String>();
 
-		items[0] = new SelectItem("GLBAC",
-				ResourceBundleUtils.getMessage("lbl.gfmas.glbacdef",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-		items[1] = new SelectItem("GLSEG",
-				ResourceBundleUtils.getMessage("lbl.gfmas.glsegdef",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-		items[2] = new SelectItem("GLVOT",
-				ResourceBundleUtils.getMessage("lbl.gfmas.glvotdef",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-		items[3] = new SelectItem("GLDNA",
-				ResourceBundleUtils.getMessage("lbl.gfmas.gldanadef",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-		items[4] = new SelectItem("GLPRG",
-				ResourceBundleUtils.getMessage("lbl.gfmas.glprgdef",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-		items[5] = new SelectItem("GLPRJ",
-				ResourceBundleUtils.getMessage("lbl.gfmas.glprjdef",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-		items[6] = new SelectItem("GLGLC",
-				ResourceBundleUtils.getMessage("lbl.gfmas.glglcdef",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-		items[7] = new SelectItem("GLPCG",
-				ResourceBundleUtils.getMessage("lbl.gfmas.glpcgdef",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-		items[8] = new SelectItem("GLPTJ",
-				ResourceBundleUtils.getMessage("lbl.gfmas.glptjdef",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-		items[9] = new SelectItem("CMBNK",
-				ResourceBundleUtils.getMessage("lbl.gfmas.glbnkdef",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
+		items[0] = new SelectItem("GLBAC", ResourceBundleUtils.getMessage(
+				"lbl.gfmas.glbacdef", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem("GLSEG", ResourceBundleUtils.getMessage(
+				"lbl.gfmas.glsegdef", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[2] = new SelectItem("GLVOT", ResourceBundleUtils.getMessage(
+				"lbl.gfmas.glvotdef", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[3] = new SelectItem("GLDNA", ResourceBundleUtils.getMessage(
+				"lbl.gfmas.gldanadef",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[4] = new SelectItem("GLPRG", ResourceBundleUtils.getMessage(
+				"lbl.gfmas.glprgdef", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[5] = new SelectItem("GLPRJ", ResourceBundleUtils.getMessage(
+				"lbl.gfmas.glprjdef", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[6] = new SelectItem("GLGLC", ResourceBundleUtils.getMessage(
+				"lbl.gfmas.glglcdef", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[7] = new SelectItem("GLPCG", ResourceBundleUtils.getMessage(
+				"lbl.gfmas.glpcgdef", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[8] = new SelectItem("GLPTJ", ResourceBundleUtils.getMessage(
+				"lbl.gfmas.glptjdef", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[9] = new SelectItem("CMBNK", ResourceBundleUtils.getMessage(
+				"lbl.gfmas.glbnkdef", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
 
 		if (items != null && items.length > 0) {
 			for (int i = 0; i < items.length; i++) {
 				String processIdLabel = items[i].getLabel().trim();
 				if (!processLabels.containsKey(processIdLabel)) {
-					processLabels.put(items[i].getValue().toString(),processIdLabel);
+					processLabels.put(items[i].getValue().toString(),
+							processIdLabel);
 				}
 			}
 		}
@@ -1686,4 +1790,927 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 		return items;
 	}
+
+	public void selectAllPrgAct(boolean selectAll) {
+
+		/*int disabledCount = 0;
+		int totalCount=0;*/
+		List<PmInterfaceProgAct> prgActList = getManagedBean()
+				.getSearchProgAct().getList();
+		
+		this.getManagedBean().setSelectedProgActList(
+				new ArrayList<PmInterfaceProgAct>());
+		if (prgActList != null) {
+			/*totalCount= banksList.size();*/
+			for (PmInterfaceProgAct pmInterfaceProgAct : prgActList) {
+				if (!childProcessStatus().contains(
+						pmInterfaceProgAct.getProcessStatus())
+						&& selectAll) {
+					pmInterfaceProgAct.setSelected(true);
+					this.getManagedBean().getSelectedProgActList()
+							.add(pmInterfaceProgAct);
+				} else {
+					pmInterfaceProgAct.setSelected(false);
+					//disabledCount++;					
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getSelectedProgActList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		/*if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+		}*/
+	}
+
+	public void selectAllGlAccount (boolean selectAll) {
+
+		/*int disabledCount = 0;
+		int totalCount=0;*/
+		List<PmInterfaceGlAccount> glAccountList = getManagedBean()
+				.getSearchGlAccount().getList();
+		
+		this.getManagedBean().setSelectedGlAcntList(
+				new ArrayList<PmInterfaceGlAccount>());
+		if (glAccountList != null) {
+			/*totalCount= banksList.size();*/
+			for (PmInterfaceGlAccount pmInterfaceGlAccount : glAccountList) {
+				if (!childProcessStatus().contains(
+						pmInterfaceGlAccount.getProcessStatus())
+						&& selectAll) {
+					pmInterfaceGlAccount.setSelected(true);
+					this.getManagedBean().getSelectedGlAcntList()
+							.add(pmInterfaceGlAccount);
+				} else {
+					pmInterfaceGlAccount.setSelected(false);
+					//disabledCount++;					
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getSelectedGlAcntList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		/*if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+		}*/
+	}
+
+	public void selectAllAccountingOffice(boolean selectAll) {
+
+		/*int disabledCount = 0;
+		int totalCount=0;*/
+		List<PmInterfaceAgOff> agOffList = getManagedBean()
+				.getSearchAgOff().getList();
+		
+		this.getManagedBean().setSelectedAgOfficeList(
+				new ArrayList<PmInterfaceAgOff>());
+		if (agOffList != null) {
+			/*totalCount= banksList.size();*/
+			for (PmInterfaceAgOff pmInterfaceAgOff : agOffList) {
+				if (!childProcessStatus().contains(
+						pmInterfaceAgOff.getProcessStatus())
+						&& selectAll) {
+					pmInterfaceAgOff.setSelected(true);
+					this.getManagedBean().getSelectedAgOfficeList()
+							.add(pmInterfaceAgOff);
+				} else {
+					pmInterfaceAgOff.setSelected(false);
+					//disabledCount++;					
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getSelectedAgOfficeList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		/*if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+		}*/
+	}
+
+	public void selectAllKptj(boolean selectAll) {
+		/*int disabledCount = 0;
+		int totalCount=0;*/
+		List<PmInterfaceKptj> kptjList = getManagedBean()
+				.getSearchKptj().getList();
+		
+		this.getManagedBean().setSelectedKptjList(
+				new ArrayList<PmInterfaceKptj>());
+		if (kptjList != null) {
+			/*totalCount= banksList.size();*/
+			for (PmInterfaceKptj pmInterfaceKptj : kptjList) {
+				if (!childProcessStatus().contains(
+						pmInterfaceKptj.getProcessStatus())
+						&& selectAll) {
+					pmInterfaceKptj.setSelected(true);
+					this.getManagedBean().getSelectedKptjList()
+							.add(pmInterfaceKptj);
+				} else {
+					pmInterfaceKptj.setSelected(false);
+					//disabledCount++;					
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getSelectedKptjList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		/*if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+		}*/
+	
+	}
+
+	public void selectAllPtj(boolean selectAll) {
+		/*int disabledCount = 0;
+		int totalCount=0;*/
+		List<PmInterfacePtj> ptjList = getManagedBean()
+				.getSearchPtj().getList();
+		
+		this.getManagedBean().setSelectedPtjList(
+				new ArrayList<PmInterfacePtj>());
+		if (ptjList != null) {
+			/*totalCount= banksList.size();*/
+			for (PmInterfacePtj pmInterfacePtj : ptjList) {
+				if (!childProcessStatus().contains(
+						pmInterfacePtj.getProcessStatus())
+						&& selectAll) {
+					pmInterfacePtj.setSelected(true);
+					this.getManagedBean().getSelectedPtjList()
+							.add(pmInterfacePtj);
+				} else {
+					pmInterfacePtj.setSelected(false);
+					//disabledCount++;					
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getSelectedPtjList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		/*if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+		}*/
+		
+	}
+
+	public void selectAllPp(boolean selectAll) {
+		/*int disabledCount = 0;
+		int totalCount=0;*/
+		List<PmInterfacePP> pPList = getManagedBean()
+				.getSearchPp().getList();
+		
+		this.getManagedBean().setSelectedPpList(
+				new ArrayList<PmInterfacePP>());
+		if (pPList != null) {
+			/*totalCount= banksList.size();*/
+			for (PmInterfacePP pmInterfacePP : pPList) {
+				if (!childProcessStatus().contains(
+						pmInterfacePP.getProcessStatus())
+						&& selectAll) {
+					pmInterfacePP.setSelected(true);
+					this.getManagedBean().getSelectedPpList()
+							.add(pmInterfacePP);
+				} else {
+					pmInterfacePP.setSelected(false);
+					//disabledCount++;					
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getSelectedPpList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		/*if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+		}*/
+	}
+
+	public void selectAllVot(boolean selectAll) {
+
+		/*int disabledCount = 0;
+		int totalCount=0;*/
+		List<PmInterfaceVot> votList = getManagedBean()
+				.getSearchVot().getList();
+		
+		this.getManagedBean().setSelectedVotList(
+				new ArrayList<PmInterfaceVot>());
+		if (votList != null) {
+			/*totalCount= banksList.size();*/
+			for (PmInterfaceVot pmInterfaceVot : votList) {
+				if (!childProcessStatus().contains(
+						pmInterfaceVot.getProcessStatus())
+						&& selectAll) {
+					pmInterfaceVot.setSelected(true);
+					this.getManagedBean().getSelectedVotList()
+							.add(pmInterfaceVot);
+				} else {
+					pmInterfaceVot.setSelected(false);
+					//disabledCount++;					
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getSelectedVotList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		/*if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+		}*/
+	}
+
+	public void selectAllDana(boolean selectAll) {
+		/*int disabledCount = 0;
+		int totalCount=0;*/
+		List<PmInterfaceDana> danaList = getManagedBean()
+				.getSearchDana().getList();
+		
+		this.getManagedBean().setSelectedDanaList(
+				new ArrayList<PmInterfaceDana>());
+		if (danaList != null) {
+			/*totalCount= banksList.size();*/
+			for (PmInterfaceDana pmInterfaceDana : danaList) {
+				if (!childProcessStatus().contains(
+						pmInterfaceDana.getProcessStatus())
+						&& selectAll) {
+					pmInterfaceDana.setSelected(true);
+					this.getManagedBean().getSelectedDanaList()
+							.add(pmInterfaceDana);
+				} else {
+					pmInterfaceDana.setSelected(false);
+					//disabledCount++;					
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getSelectedDanaList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		/*if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+		}*/
+
+	}
+
+	public void selectAllProject(boolean selectAll) {
+
+		/*int disabledCount = 0;
+		int totalCount=0;*/
+		List<PmInterfaceProject> projectList = getManagedBean()
+				.getSearchProject().getList();
+		
+		this.getManagedBean().setSelectedProjectList(
+				new ArrayList<PmInterfaceProject>());
+		if (projectList != null) {
+			/*totalCount= banksList.size();*/
+			for (PmInterfaceProject pmInterfaceProject : projectList) {
+				if (!childProcessStatus().contains(
+						pmInterfaceProject.getProcessStatus())
+						&& selectAll) {
+					pmInterfaceProject.setSelected(true);
+					this.getManagedBean().getSelectedProjectList()
+							.add(pmInterfaceProject);
+				} else {
+					pmInterfaceProject.setSelected(false);
+					//disabledCount++;					
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getSelectedProjectList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		/*if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+		}*/
+	}
+	
+ public void selectAllBanks(boolean selectAll) {
+		
+		/*int disabledCount = 0;
+		int totalCount=0;*/
+		List<PmInterfaceBank> banksList = getManagedBean()
+				.getSearchBank().getList();
+		
+		this.getManagedBean().setSelectedBankList(
+				new ArrayList<PmInterfaceBank>());
+		if (banksList != null) {
+			/*totalCount= banksList.size();*/
+			for (PmInterfaceBank pmInterfaceBank : banksList) {
+				if (!childProcessStatus().contains(
+						pmInterfaceBank.getProcessStatus())
+						&& selectAll) {
+					pmInterfaceBank.setSelected(true);
+					this.getManagedBean().getSelectedBankList()
+							.add(pmInterfaceBank);
+				} else {
+					pmInterfaceBank.setSelected(false);
+					//disabledCount++;					
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getSelectedBankList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		/*if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+		}*/
+	}
+	
+
+	public void selectAllPrgAct(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		selectAllPrgAct(flag);
+	}
+	public void selectAllBanks(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		selectAllBanks(flag);
+	}
+	public void selectAllAccountingOffice(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		selectAllAccountingOffice(flag);
+	}
+	public void selectAllGlAccount(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		selectAllGlAccount(flag);
+	}
+	public void selectAllKptj(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		selectAllKptj(flag);
+	}
+	public void selectAllPtj(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		selectAllPtj(flag);
+	}
+	public void selectAllPp(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		selectAllPp(flag);
+	}
+	public void selectAllVot(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		selectAllVot(flag);
+	}
+	public void selectAllDana(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		selectAllDana(flag);
+	}
+	public void selectAllProject(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		selectAllProject(flag);
+	}
+	
+	
+
+	private List<Long> childProcessStatus() {
+		List<Long> disableProcessList = new ArrayList<Long>(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			{
+				add(1L); 
+				add(2L);
+			}
+		};
+		return disableProcessList;
+	}
+
+	public void selectBankSingleRow(PmInterfaceBank singleSelectedBank) {
+
+		int disabledCount = 0;
+		int selectedCount = 0;
+		int totalCount=0;
+
+		setFlag(false);
+		List<PmInterfaceBank> banksList = getManagedBean().getSearchBank()
+				.getList();
+
+		if (this.getManagedBean().getSelectedBankList() == null) {
+			this.getManagedBean().setSelectedBankList(
+					new ArrayList<PmInterfaceBank>());
+		}
+		if (singleSelectedBank.isSelected()) {
+			this.getManagedBean().getSelectedBankList().add(singleSelectedBank);
+		} else {
+			this.getManagedBean().getSelectedBankList()
+					.remove(singleSelectedBank);
+		}
+		if (banksList != null) {
+			totalCount = banksList.size();
+			for (PmInterfaceBank pmInterfaceBank : banksList) {
+				if (pmInterfaceBank.isSelected()) {
+					selectedCount++;
+				} else {
+					if (childProcessStatus().contains(
+							pmInterfaceBank.getProcessStatus())) {
+						pmInterfaceBank.setSelected(false);
+						disabledCount++;
+					}
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedBankList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		if ((totalCount - disabledCount) == selectedCount) {
+			setFlag(true);
+		} else if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+			setFlag(false);
+		} else {
+			setFlag(false);
+		}
+
+	}
+	
+	
+	public void selectProjectSingleRow(PmInterfaceProject singleSelectedProject) {
+
+		int disabledCount = 0;
+		int selectedCount = 0;
+		int totalCount=0;
+
+		setFlag(false);
+		List<PmInterfaceProject> projectList = getManagedBean().getSearchProject()
+				.getList();
+
+		if (this.getManagedBean().getSelectedProjectList() == null) {
+			this.getManagedBean().setSelectedProjectList(
+					new ArrayList<PmInterfaceProject>());
+		}
+		if (singleSelectedProject.isSelected()) {
+			this.getManagedBean().getSelectedProjectList().add(singleSelectedProject);
+		} else {
+			this.getManagedBean().getSelectedProjectList()
+					.remove(singleSelectedProject);
+		}
+		if (projectList != null) {
+			totalCount = projectList.size();
+			for (PmInterfaceProject pmInterfaceProject : projectList) {
+				if (pmInterfaceProject.isSelected()) {
+					selectedCount++;
+				} else {
+					if (childProcessStatus().contains(
+							pmInterfaceProject.getProcessStatus())) {
+						pmInterfaceProject.setSelected(false);
+						disabledCount++;
+					}
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedProjectList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		if ((totalCount - disabledCount) == selectedCount) {
+			setFlag(true);
+		} else if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+			setFlag(false);
+		} else {
+			setFlag(false);
+		}
+
+	}
+	
+	public void selectVotSingleRow(PmInterfaceVot singleSelectedVot) {
+
+		int disabledCount = 0;
+		int selectedCount = 0;
+		int totalCount=0;
+
+		setFlag(false);
+		List<PmInterfaceVot> votList = getManagedBean().getSearchVot()
+				.getList();
+
+		if (this.getManagedBean().getSelectedVotList() == null) {
+			this.getManagedBean().setSelectedVotList(
+					new ArrayList<PmInterfaceVot>());
+		}
+		if (singleSelectedVot.isSelected()) {
+			this.getManagedBean().getSelectedVotList().add(singleSelectedVot);
+		} else {
+			this.getManagedBean().getSelectedVotList()
+					.remove(singleSelectedVot);
+		}
+		if (votList != null) {
+			totalCount = votList.size();
+			for (PmInterfaceVot pmInterfaceVot : votList) {
+				if (pmInterfaceVot.isSelected()) {
+					selectedCount++;
+				} else {
+					if (childProcessStatus().contains(
+							pmInterfaceVot.getProcessStatus())) {
+						pmInterfaceVot.setSelected(false);
+						disabledCount++;
+					}
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedVotList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		if ((totalCount - disabledCount) == selectedCount) {
+			setFlag(true);
+		} else if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+			setFlag(false);
+		} else {
+			setFlag(false);
+		}
+
+	}
+	
+	public void selectKptjSingleRow(PmInterfaceKptj singleSelectedKptj) {
+
+		int disabledCount = 0;
+		int selectedCount = 0;
+		int totalCount=0;
+
+		setFlag(false);
+		List<PmInterfaceKptj> kptjList = getManagedBean().getSearchKptj()
+				.getList();
+
+		if (this.getManagedBean().getSelectedKptjList() == null) {
+			this.getManagedBean().setSelectedKptjList(
+					new ArrayList<PmInterfaceKptj>());
+		}
+		if (singleSelectedKptj.isSelected()) {
+			this.getManagedBean().getSelectedKptjList().add(singleSelectedKptj);
+		} else {
+			this.getManagedBean().getSelectedKptjList()
+					.remove(singleSelectedKptj);
+		}
+		if (kptjList != null) {
+			totalCount = kptjList.size();
+			for (PmInterfaceKptj pmInterfaceKptj : kptjList) {
+				if (pmInterfaceKptj.isSelected()) {
+					selectedCount++;
+				} else {
+					if (childProcessStatus().contains(
+							pmInterfaceKptj.getProcessStatus())) {
+						pmInterfaceKptj.setSelected(false);
+						disabledCount++;
+					}
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedKptjList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		if ((totalCount - disabledCount) == selectedCount) {
+			setFlag(true);
+		} else if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+			setFlag(false);
+		} else {
+			setFlag(false);
+		}
+
+	}
+	
+	public void selectPtjSingleRow(PmInterfacePtj singleSelectedPtj) {
+
+		int disabledCount = 0;
+		int selectedCount = 0;
+		int totalCount=0;
+
+		setFlag(false);
+		List<PmInterfacePtj> ptjList = getManagedBean().getSearchPtj()
+				.getList();
+
+		if (this.getManagedBean().getSelectedPtjList() == null) {
+			this.getManagedBean().setSelectedPtjList(
+					new ArrayList<PmInterfacePtj>());
+		}
+		if (singleSelectedPtj.isSelected()) {
+			this.getManagedBean().getSelectedPtjList().add(singleSelectedPtj);
+		} else {
+			this.getManagedBean().getSelectedPtjList()
+					.remove(singleSelectedPtj);
+		}
+		if (ptjList != null) {
+			totalCount = ptjList.size();
+			for (PmInterfacePtj pmInterfacePtj : ptjList) {
+				if (pmInterfacePtj.isSelected()) {
+					selectedCount++;
+				} else {
+					if (childProcessStatus().contains(
+							pmInterfacePtj.getProcessStatus())) {
+						pmInterfacePtj.setSelected(false);
+						disabledCount++;
+					}
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedPtjList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		if ((totalCount - disabledCount) == selectedCount) {
+			setFlag(true);
+		} else if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+			setFlag(false);
+		} else {
+			setFlag(false);
+		}
+
+	}
+	public void selectPpSingleRow(PmInterfacePP singleSelectedPp) {
+
+		int disabledCount = 0;
+		int selectedCount = 0;
+		int totalCount=0;
+
+		setFlag(false);
+		List<PmInterfacePP> pPList = getManagedBean().getSearchPp()
+				.getList();
+
+		if (this.getManagedBean().getSelectedPpList() == null) {
+			this.getManagedBean().setSelectedPpList(
+					new ArrayList<PmInterfacePP>());
+		}
+		if (singleSelectedPp.isSelected()) {
+			this.getManagedBean().getSelectedPpList().add(singleSelectedPp);
+		} else {
+			this.getManagedBean().getSelectedPpList()
+					.remove(singleSelectedPp);
+		}
+		if (pPList != null) {
+			totalCount = pPList.size();
+			for (PmInterfacePP pmInterfacePP : pPList) {
+				if (pmInterfacePP.isSelected()) {
+					selectedCount++;
+				} else {
+					if (childProcessStatus().contains(
+							pmInterfacePP.getProcessStatus())) {
+						pmInterfacePP.setSelected(false);
+						disabledCount++;
+					}
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedPpList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		if ((totalCount - disabledCount) == selectedCount) {
+			setFlag(true);
+		} else if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+			setFlag(false);
+		} else {
+			setFlag(false);
+		}
+
+	}
+	public void selectAgOfficeSingleRow(PmInterfaceAgOff singleSelectedAgOff) {
+
+		int disabledCount = 0;
+		int selectedCount = 0;
+		int totalCount=0;
+
+		setFlag(false);
+		List<PmInterfaceAgOff> agOffList = getManagedBean().getSearchAgOff()
+				.getList();
+
+		if (this.getManagedBean().getSelectedAgOfficeList() == null) {
+			this.getManagedBean().setSelectedAgOfficeList(
+					new ArrayList<PmInterfaceAgOff>());
+		}
+		if (singleSelectedAgOff.isSelected()) {
+			this.getManagedBean().getSelectedAgOfficeList().add(singleSelectedAgOff);
+		} else {
+			this.getManagedBean().getSelectedAgOfficeList()
+					.remove(singleSelectedAgOff);
+		}
+		if (agOffList != null) {
+			totalCount = agOffList.size();
+			for (PmInterfaceAgOff pmInterfaceAgOff : agOffList) {
+				if (pmInterfaceAgOff.isSelected()) {
+					selectedCount++;
+				} else {
+					if (childProcessStatus().contains(
+							pmInterfaceAgOff.getProcessStatus())) {
+						pmInterfaceAgOff.setSelected(false);
+						disabledCount++;
+					}
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedAgOfficeList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		if ((totalCount - disabledCount) == selectedCount) {
+			setFlag(true);
+		} else if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+			setFlag(false);
+		} else {
+			setFlag(false);
+		}
+
+	}
+	public void selectGlAccountSingleRow(PmInterfaceGlAccount singleSelectedGlAccount) {
+
+		int disabledCount = 0;
+		int selectedCount = 0;
+		int totalCount=0;
+
+		setFlag(false);
+		List<PmInterfaceGlAccount> glAccountList = getManagedBean().getSearchGlAccount()
+				.getList();
+
+		if (this.getManagedBean().getSelectedGlAcntList() == null) {
+			this.getManagedBean().setSelectedGlAcntList(
+					new ArrayList<PmInterfaceGlAccount>());
+		}
+		if (singleSelectedGlAccount.isSelected()) {
+			this.getManagedBean().getSelectedGlAcntList().add(singleSelectedGlAccount);
+		} else {
+			this.getManagedBean().getSelectedGlAcntList()
+					.remove(singleSelectedGlAccount);
+		}
+		if (glAccountList != null) {
+			totalCount = glAccountList.size();
+			for (PmInterfaceGlAccount pmInterfaceGlAccount : glAccountList) {
+				if (pmInterfaceGlAccount.isSelected()) {
+					selectedCount++;
+				} else {
+					if (childProcessStatus().contains(
+							pmInterfaceGlAccount.getProcessStatus())) {
+						pmInterfaceGlAccount.setSelected(false);
+						disabledCount++;
+					}
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedGlAcntList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		if ((totalCount - disabledCount) == selectedCount) {
+			setFlag(true);
+		} else if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+			setFlag(false);
+		} else {
+			setFlag(false);
+		}
+
+	}
+	public void selectPrgActSingleRow(PmInterfaceProgAct singleSelectedPrgAct) {
+
+		int disabledCount = 0;
+		int selectedCount = 0;
+		int totalCount=0;
+
+		setFlag(false);
+		List<PmInterfaceProgAct> prgActList = getManagedBean().getSearchProgAct()
+				.getList();
+
+		if (this.getManagedBean().getSelectedProgActList() == null) {
+			this.getManagedBean().setSelectedProgActList(
+					new ArrayList<PmInterfaceProgAct>());
+		}
+		if (singleSelectedPrgAct.isSelected()) {
+			this.getManagedBean().getSelectedProgActList().add(singleSelectedPrgAct);
+		} else {
+			this.getManagedBean().getSelectedProgActList()
+					.remove(singleSelectedPrgAct);
+		}
+		if (prgActList != null) {
+			totalCount = prgActList.size();
+			for (PmInterfaceProgAct pmInterfaceProgAct : prgActList) {
+				if (pmInterfaceProgAct.isSelected()) {
+					selectedCount++;
+				} else {
+					if (childProcessStatus().contains(
+							pmInterfaceProgAct.getProcessStatus())) {
+						pmInterfaceProgAct.setSelected(false);
+						disabledCount++;
+					}
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedProgActList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		if ((totalCount - disabledCount) == selectedCount) {
+			setFlag(true);
+		} else if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+			setFlag(false);
+		} else {
+			setFlag(false);
+		}
+
+	}
+	public void selectDanaSingleRow(PmInterfaceDana singleSelectedDana) {
+
+		int disabledCount = 0;
+		int selectedCount = 0;
+		int totalCount=0;
+
+		setFlag(false);
+		List<PmInterfaceDana> danaList = getManagedBean().getSearchDana()
+				.getList();
+
+		if (this.getManagedBean().getSelectedDanaList() == null) {
+			this.getManagedBean().setSelectedDanaList(
+					new ArrayList<PmInterfaceDana>());
+		}
+		if (singleSelectedDana.isSelected()) {
+			this.getManagedBean().getSelectedDanaList().add(singleSelectedDana);
+		} else {
+			this.getManagedBean().getSelectedDanaList()
+					.remove(singleSelectedDana);
+		}
+		if (danaList != null) {
+			totalCount = danaList.size();
+			for (PmInterfaceDana pmInterfaceDana : danaList) {
+				if (pmInterfaceDana.isSelected()) {
+					selectedCount++;
+				} else {
+					if (childProcessStatus().contains(
+							pmInterfaceDana.getProcessStatus())) {
+						pmInterfaceDana.setSelected(false);
+						disabledCount++;
+					}
+				}
+			}
+		}		
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedDanaList())) {
+			this.getManagedBean().setProcessButtonStatus(true);
+		} else {
+			this.getManagedBean().setProcessButtonStatus(false);
+		}
+		if ((totalCount - disabledCount) == selectedCount) {
+			setFlag(true);
+		} else if (disabledCount == totalCount) {
+			this.getManagedBean().setDisableAllCheckBox(true);
+			setFlag(false);
+		} else {
+			setFlag(false);
+		}
+	}
+
 }

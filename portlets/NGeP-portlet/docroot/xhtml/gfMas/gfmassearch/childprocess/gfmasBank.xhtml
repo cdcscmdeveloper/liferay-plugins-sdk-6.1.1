@@ -18,35 +18,42 @@
 		<p:panel header="#{lbl['lbl.gfmas.glbnkdef']}" id="childBankPage"
 			toggleable="true">
 			<p:dataTable id="gfMasBankId" var="pmInterfaceBank" rows="10"
-				rowIndexVar="index" lazy="true"
-				selection="#{gfMasBackingBean.managedBean.selectedBankList}" 
-				rowKey="#{pmInterfaceBank}"
-				value="#{gfMasBackingBean.managedBean.searchBank}">              
-             
-				<p:ajax event="rowSelectCheckbox" 
-					update=":form:prcessIdButton,:form:gfMasBankId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />
-				<p:ajax event="rowUnselectCheckbox" 
-					update=":form:prcessIdButton,:form:gfMasBankId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />				
-			
+				rowIndexVar="index" lazy="true" rowKey="#{pmInterfaceBank}"
+				value="#{gfMasBackingBean.managedBean.searchBank}">
+				
 				<ac:paginator for="gfMasBankId"></ac:paginator>
+				
+				<p:column style="width:2%">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox id="selAllChk"							
+							value="#{gfMasBackingBean.flag}">
+							<p:ajax partialSubmit="true" process="@this" update="@form"
+								listener="#{gfMasBackingBean.selectAllBanks}"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{pmInterfaceBank.selected}"
+						disabled="#{pmInterfaceBank.processStatus eq '1' or pmInterfaceBank.processStatus eq '2'}">
+						<p:ajax partialSubmit="true" process="@this" update="@form"
+							listener="#{gfMasBackingBean.selectBankSingleRow(pmInterfaceBank)}" />
+					</p:selectBooleanCheckbox>
+				</p:column>
 
-				<p:column selectionMode="multiple" style="width:5%"
-					disabledSelection="#{pmInterfaceBank.processStatus eq '1' or pmInterfaceBank.processStatus eq '2'}" />
-
-				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}" style="width:5%;white-space: normal;word-wrap: break-word;">
+				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}"
+					style="width:5%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceBank.diInterfaceLog.logId}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.gfmas.bank.code']}" style="width:20%;white-space: normal;word-wrap: break-word;">
+				<p:column headerText="#{lbl['lbl.gfmas.bank.code']}"
+					style="width:20%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceBank.bankCode}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.gfmas.bank.desc']}" style="width:35%;white-space: normal;word-wrap: break-word;">
+				<p:column headerText="#{lbl['lbl.gfmas.bank.desc']}"
+					style="width:35%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceBank.bankName}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.gfmas.bank.action']}" style="width:20%;white-space: normal;word-wrap: break-word;">
+				<p:column headerText="#{lbl['lbl.gfmas.bank.action']}"
+					style="width:20%;white-space: normal;word-wrap: break-word;">
 					<p:column headerText="#{lbl['lbl.gfmas.code.status']}">
 						<h:outputText value="#{lbl['lbl.gfmas.codestatus.creation']}"
 							rendered="#{pmInterfaceBank.action=='C'}" />
@@ -56,7 +63,8 @@
 							rendered="#{pmInterfaceBank.action=='D'}" />
 					</p:column>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.gfmas.process.status']}" style="width:15%;white-space: normal;word-wrap: break-word;">
+				<p:column headerText="#{lbl['lbl.gfmas.process.status']}"
+					style="width:15%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
 						rendered="#{pmInterfaceBank.processStatus==0}" />
 					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
