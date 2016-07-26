@@ -97,6 +97,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private List<CtAttachment> attachmentList;
 	private List<CtPanelSupplier> panelSupplierList;
 	private CtCircularVer[] selectedCircularVerList;
+	private List<CtCircularVer> filterCircularVerList;
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
 	private List<SmSupplier> supplierList; 
@@ -921,5 +922,13 @@ public class PanelManagedBean extends BaseManagedBean {
 	 */
 	public void setCtPanelItemGroup(CtPanelItemGroup ctPanelItemGroup) {
 		this.ctPanelItemGroup = ctPanelItemGroup;
+	}
+
+	public List<CtCircularVer> getFilterCircularVerList() {
+		return filterCircularVerList;
+	}
+
+	public void setFilterCircularVerList(List<CtCircularVer> filterCircularVerList) {
+		this.filterCircularVerList = filterCircularVerList;
 	}
 }
