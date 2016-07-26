@@ -236,7 +236,7 @@
 		<table>	
 			<tr>
 				<td><p:selectBooleanCheckbox
-						disabled="#{invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
+						disabled="#{invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim or invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmCancel or invoiceBackingBean.managedBean.invoice.status.statusId == FulfilmentStatusCont.inPendingCancelApproval}"
 						value="#{invoiceBackingBean.managedBean.reliefDeclarationCheck}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><h:outputText style="text-align:left"
