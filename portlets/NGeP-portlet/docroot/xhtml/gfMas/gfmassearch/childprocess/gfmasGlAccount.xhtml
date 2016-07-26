@@ -15,50 +15,60 @@
 
 		<ui:include src="/xhtml/gfMas/gfmassearch/gfmasNavButton.xhtml" />
 
-		<p:panel header="#{lbl['lbl.gfmas.glglcdef']}"
-			id="childGlAcntPage" toggleable="true">
+		<p:panel header="#{lbl['lbl.gfmas.glglcdef']}" id="childGlAcntPage"
+			toggleable="true">
 			<p:dataTable id="gfMasGlAcntId" var="pmInterfaceGlAcnt" rows="10"
-			    rowIndexVar="index" lazy="true"
-				selection="#{gfMasBackingBean.managedBean.selectedGlAcntList}"
+				rowIndexVar="index" lazy="true"				
 				rowKey="#{pmInterfaceGlAcnt}"
 				value="#{gfMasBackingBean.managedBean.searchGlAccount}">
-			
-				<p:ajax event="rowSelectCheckbox" 
-					update=":form:prcessIdButton,:form:gfMasGlAcntId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />
-				<p:ajax event="rowUnselectCheckbox" 
-					update=":form:prcessIdButton,:form:gfMasGlAcntId"					
-					listener="#{gfMasBackingBean.rowSelectEvent}" />			
 				<ac:paginator for="gfMasGlAcntId"></ac:paginator>
-
-				<p:column selectionMode="multiple" style="width:5%"
-					disabledSelection="#{pmInterfaceGlAcnt.processStatus eq '1' or pmInterfaceGlAcnt.processStatus eq '2'}" />
-
-				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}" style="width:5%;white-space: normal;word-wrap: break-word;">
+				
+				<p:column style="width:2%">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox id="selAllChk"						
+							value="#{gfMasBackingBean.flag}">
+							<p:ajax partialSubmit="true" process="@this" update="@form"
+								listener="#{gfMasBackingBean.selectAllGlAccount}"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{pmInterfaceGlAcnt.selected}"
+						disabled="#{pmInterfaceGlAcnt.processStatus eq '1' or pmInterfaceGlAcnt.processStatus eq '2'}">
+						<p:ajax partialSubmit="true" process="@this" update="@form"
+							listener="#{gfMasBackingBean.selectGlAccountSingleRow(pmInterfaceGlAcnt)}" />
+					</p:selectBooleanCheckbox>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}"
+					style="width:5%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceGlAcnt.dIInterfaceLog.logId}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.gfmas.financial.year']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+				<p:column headerText="#{lbl['lbl.gfmas.financial.year']}"
+					style="width:10%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceGlAcnt.financialYear}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.gfmas.gl.acnt.code']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+				<p:column headerText="#{lbl['lbl.gfmas.gl.acnt.code']}"
+					style="width:10%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceGlAcnt.glAccountCode}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.gfmas.gl.acnt.desc']}" style="width:25%;white-space: normal;word-wrap: break-word;">
+				<p:column headerText="#{lbl['lbl.gfmas.gl.acnt.desc']}"
+					style="width:25%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceGlAcnt.glAccountDesc}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.gfmas.gl.kptj.code']}" style="width:15%;white-space: normal;word-wrap: break-word;">
+				<p:column headerText="#{lbl['lbl.gfmas.gl.kptj.code']}"
+					style="width:15%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceGlAcnt.kptjCode}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.gfmas.code.status']}" style="width:20%;white-space: normal;word-wrap: break-word;">				
-						<h:outputText value="#{lbl['lbl.gfmas.codestatus.valid']}"
-							rendered="#{pmInterfaceGlAcnt.codeStatus=='V'}" />
-						<h:outputText value="#{lbl['lbl.gfmas.codestatus.inValid']}"
-							rendered="#{pmInterfaceGlAcnt.codeStatus=='X'}" />					
+				<p:column headerText="#{lbl['lbl.gfmas.code.status']}"
+					style="width:20%;white-space: normal;word-wrap: break-word;">
+					<h:outputText value="#{lbl['lbl.gfmas.codestatus.valid']}"
+						rendered="#{pmInterfaceGlAcnt.codeStatus=='V'}" />
+					<h:outputText value="#{lbl['lbl.gfmas.codestatus.inValid']}"
+						rendered="#{pmInterfaceGlAcnt.codeStatus=='X'}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.gfmas.process.status']}" style="width:10%;white-space: normal;word-wrap: break-word;">
+				<p:column headerText="#{lbl['lbl.gfmas.process.status']}"
+					style="width:10%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
 						rendered="#{pmInterfaceGlAcnt.processStatus==0}" />
 					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
