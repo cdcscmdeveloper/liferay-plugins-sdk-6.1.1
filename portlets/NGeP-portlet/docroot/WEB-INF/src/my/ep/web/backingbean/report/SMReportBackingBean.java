@@ -611,7 +611,7 @@ public class SMReportBackingBean extends
 			// rptGenBean.setSmZoneView(true);
 			// rptGenBean.setSmMandatorySupplierTypeView(true);
 			rptGenBean.setSmSCPSupplierTypeView(true);
-			// rptGenBean.setSmSupplierView(true);
+			rptGenBean.setSmSupplierView(true);
 			rptGenBean.setSmRegistrationNoView(true);
 			// rptGenBean.setSmMofRegNoView(true);
 			rptGenBean.setSmRegistrationTypeView(true);
