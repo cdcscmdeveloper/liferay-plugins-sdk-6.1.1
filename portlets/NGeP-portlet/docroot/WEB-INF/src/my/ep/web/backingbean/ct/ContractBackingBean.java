@@ -549,7 +549,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
     	
     	String docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER; // AQ
 		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-	    		ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+	    		ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 			docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_DIRECT_PURCHASE; // AD
 		}
 		reqDTO.setDocCategory(docCategory);
