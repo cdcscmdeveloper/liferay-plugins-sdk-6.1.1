@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
@@ -62,6 +63,7 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 
 	private Long bidMinDuration;
 	private Long bidMaxDuration;
+	private SelectItem[] selectItems;
 
 	/**
 	 * Default COnstructor
@@ -397,5 +399,20 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	public void setBidMaxDuration(Long bidMaxDuration) {
 		this.bidMaxDuration = bidMaxDuration;
 	}
+
+	/**
+	 * @return the selectItems
+	 */
+	public SelectItem[] getSelectItems() {
+		return selectItems;
+	}
+
+	/**
+	 * @param selectItems the selectItems to set
+	 */
+	public void setSelectItems(SelectItem[] selectItems) {
+		this.selectItems = selectItems;
+	}
+	
 
 }

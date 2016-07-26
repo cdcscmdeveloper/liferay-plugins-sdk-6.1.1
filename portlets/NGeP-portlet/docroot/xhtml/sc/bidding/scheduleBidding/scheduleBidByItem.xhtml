@@ -33,7 +33,8 @@
 				</f:facet>
 				<p:selectBooleanCheckbox id="selectItemByItem"
 					value="#{bidItem.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=scheduleByItemPanel])"
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=scheduleByItemPanel])"
 						listener="#{scheduleBiddingBB.selected(index)}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -62,53 +63,45 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, bidItem.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.start']}"
-				style="width : 10%;">
-				<p:calendar value="#{bidItem.scBidSchedule.startDate}"
-					showOn="button" style="width:92%" id="bidStartDateByItem"
-					readonlyInput="true" label="#{lbl['lbl.sc.bidding.start']}"
+			<p:column style="width : 10%;">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.bidding.start']}" />
+				</f:facet>
+				<ac:dateTime id="bidStartDateByItem" style="width:92%"
 					mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
-					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
-
-					<p:ajax event="dateSelect" process="bidStartDateByItem"
-						partialSubmit="true"
-						listener="#{scheduleBiddingBB.itemStartDateSelectListener(bidItem)}"
-						update="@([id$=bidEndDateByItem],[id$=byItemStartDateMsg])" />
-					<p:ajax event="change" process="bidStartDateByItem"
-						partialSubmit="true"
-						listener="#{scheduleBiddingBB.itemStartDateSelectListener(bidItem)}"
-						update="@([id$=bidEndDateByItem],[id$=byItemStartDateMsg])" />
-				</p:calendar>
+					postUpdateListener="#{scheduleBiddingBB.itemStartDateSelectListener(bidItem)}"
+					label="#{lbl['lbl.sc.bidding.start']}"
+					value="#{bidItem.scBidSchedule.startDate}" rowIndex="#{index}"
+					update="@([id$=bidEndDateByItem],[id$=byItemStartDateMsg])">
+				</ac:dateTime>
 				<p:message id="byItemStartDateMsg" for="bidStartDateByItem"
 					showDetail="false" display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bidding.end']}"
 				style="width : 10%;">
-
-				<p:calendar id="bidEndDateByItem"
-					value="#{bidItem.scBidSchedule.endDate}" style="width:92%"
-					mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
-					label="#{lbl['lbl.sc.bidding.end']}" showOn="button"
-					readonlyInput="true"
-					maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
-					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
-
-					<p:ajax event="dateSelect" process="bidEndDateByItem"
-						partialSubmit="true"
-						listener="#{scheduleBiddingBB.itemEndDateSelectListener(bidItem)}"
-						update="@([id$=bidDurationByItem],[id$=byItemEndDateMsg])" />
-					<p:ajax event="change" process="bidEndDateByItem"
-						partialSubmit="true"
-						listener="#{scheduleBiddingBB.itemEndDateSelectListener(bidItem)}"
-						update="@([id$=bidDurationByItem],[id$=byItemEndDateMsg])" />
-				</p:calendar>
-				<p:message id="byItemEndDateMsg" for="bidEndDateByItem"
-					showDetail="false" display="icon" />
+				<p:inputText id="bidEndDateByItem" readonly="true" size="15"
+					value="#{bidItem.scBidSchedule.endDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+				</p:inputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.duration.hours']}"
-				style="width : 8%;">
-				<p:outputLabel id="bidDurationByItem"
-					value="#{bidItem.scBidSchedule.duration}" />
+			<p:column style="width : 8%;">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.duration.hours']}" />
+				</f:facet>
+				<p:selectOneMenu id="bidDurationByItem" 
+					value="#{bidItem.scBidSchedule.duration}">
+					<f:selectItems value="#{scheduleBiddingBB.managedBean.selectItems}"
+						var="selectItem" itemLabel="#{selectItem.label}"
+						itemValue="#{selectItem.value}" />
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						update="@([id$=bidEndDateByItem],[id$=bidDurationByItemMsg])"
+						listener="#{scheduleBiddingBB.itemDurationSelectListener(bidItem)}" />
+				</p:selectOneMenu>
+				<p:message id="bidDurationByItemMsg" showDetail="false"
+					for="bidDurationByItem" display="icon" />
 			</p:column>
 			<p:column style="width : 10%;">
 				<f:facet name="header">
@@ -129,46 +122,41 @@
 		<div align="left">
 
 			<table style="align: left">
-
 				<tr>
-
 					<td><p:outputLabel value="#{lbl['lbl.sc.bidding.start']}" /></td>
-
-					<td><p:calendar showOn="button"
-							id="multiSelectStartDateByItem" readonlyInput="true"
-							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.startDate}"
+					<td><ac:dateTime id="multiSelectStartDateByItem"
 							mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
-							<p:ajax event="dateSelect" process="multiSelectStartDateByItem"
-								partialSubmit="true"
-								listener="#{scheduleBiddingBB.multiSelectStartDateListener(scheduleBiddingBB.managedBean.rowSelectedBid)}"
-								update="@([id$=multiSelectEndDateByItem])" />
-							<p:ajax event="change" process="multiSelectStartDateByItem"
-								partialSubmit="true"
-								listener="#{scheduleBiddingBB.multiSelectStartDateListener(scheduleBiddingBB.managedBean.rowSelectedBid)}"
-								update="@([id$=multiSelectEndDateByItem])" />
-
-						</p:calendar></td>
-
+							postUpdateListener="#{scheduleBiddingBB.multiSelectStartDateListener(scheduleBiddingBB.managedBean.rowSelectedBid)}"
+							label="#{lbl['lbl.sc.bidding.start']}"
+							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.startDate}"
+							update="@([id$=multiSelectEndDateByItem],[id$=ScheduleBiddingMainnMessage])">
+						</ac:dateTime></td>
+						<td><p:spacer width="5" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.bidding.end']}" /></td>
-
-					<td><p:calendar showOn="button" id="multiSelectEndDateByItem"
-							readonlyInput="true"
-							mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
-							maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
-							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.endDate}"
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
-							<p:ajax event="dateSelect" process="multiSelectEndDateByItem"
-								partialSubmit="true"
-								listener="#{scheduleBiddingBB.multiSelectEndDateListener(scheduleBiddingBB.managedBean.rowSelectedBid)}" />
-							<p:ajax event="change" process="multiSelectEndDateByItem"
-								partialSubmit="true"
-								listener="#{scheduleBiddingBB.multiSelectEndDateListener(scheduleBiddingBB.managedBean.rowSelectedBid)}" />
-
-						</p:calendar></td>
+					<td><p:inputText id="multiSelectEndDateByItem" readonly="true"
+							size="15"
+							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.endDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+						</p:inputText></td>
+						<td><p:spacer width="5" /></td>
+					<td><h:outputText value="#{lbl['lbl.sc.duration.hours']}" />
+					</td>
+					<td><p:selectOneMenu id="bidDurationByItem" 
+							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.duration}">
+							<f:selectItems
+								value="#{scheduleBiddingBB.managedBean.selectItems}"
+								var="selectItem" itemLabel="#{selectItem.label}"
+								itemValue="#{selectItem.value}" />
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="@([id$=multiSelectEndDateByItem],[id$=ScheduleBiddingMainnMessage])"
+								listener="#{scheduleBiddingBB.multiSelectDurationListener(scheduleBiddingBB.managedBean.rowSelectedBid)}" />
+						</p:selectOneMenu></td>
+						<td><p:spacer width="5" /></td>
 
 					<TD><p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
-							id="applyDates" disabled="#{scheduleBiddingBB.deleteselectedList(scheduleBiddingBB.managedBean.bidItemList)}"
+							id="applyDates"
+							disabled="#{scheduleBiddingBB.deleteselectedList(scheduleBiddingBB.managedBean.bidItemList)}"
 							process="@this,multiSelectStartDateByItem,multiSelectEndDateByItem"
 							partialSubmit="true" style="float:center;"
 							action="#{scheduleBiddingBB.applyBidDates}"

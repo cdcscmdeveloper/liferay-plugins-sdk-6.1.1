@@ -14,6 +14,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
@@ -32,6 +33,7 @@ import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
@@ -67,6 +69,38 @@ public class ScheduleBiddingBackingBean extends
 
 	}
 
+	public void populateDurationDropDownValues() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+
+			items = new SelectItem[3];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			items[1] = new SelectItem(getManagedBean().getBidMinDuration(),
+					"01:00");
+
+			items[2] = new SelectItem(getManagedBean().getBidMaxDuration(),
+					"02:00");
+			/*
+			 * getManagedBean().getBidMinDuration()+" "+
+			 * ResourceBundleUtils.getMessage( "lbl.txt.hour",
+			 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())
+			 * getManagedBean().getBidMaxDuration()+" "+
+			 * ResourceBundleUtils.getMessage( "lbl.txt.hours",
+			 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())
+			 */
+			getManagedBean().setSelectItems(items);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+	}
+
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -92,7 +126,7 @@ public class ScheduleBiddingBackingBean extends
 			}
 
 			retriveItemsToBid(qtId, recommendDtls);
-
+			populateDurationDropDownValues();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -109,15 +143,22 @@ public class ScheduleBiddingBackingBean extends
 	public void applyBidDates() {
 		Date startDate = getManagedBean().getRowSelectedBid().getStartDate();
 		Date endDate = getManagedBean().getRowSelectedBid().getEndDate();
+		if (startDate == null) {
+			throw new EpException(MessageConst.ERROR_760336);
+		}
+
+		if (getManagedBean().getRowSelectedBid().getDuration() == null) {
+			throw new EpException(MessageConst.ERROR_760338);
+		}
 		if (startDate != null && endDate != null) {
-			String duration = getManagedBean().getRowSelectedBid()
-					.getDuration();
+			Long duration = getManagedBean().getRowSelectedBid().getDuration();
 			List<ScBidItem> bidItemList = this.getManagedBean()
 					.getBidItemList();
 			int size = bidItemList.size();
 			for (int i = 0; i < size; i++) {
 				if (bidItemList.get(i).isSelected()) {
-					bidItemList.get(i).getScBidSchedule().setStartDate(startDate);
+					bidItemList.get(i).getScBidSchedule()
+							.setStartDate(startDate);
 					bidItemList.get(i).getScBidSchedule().setEndDate(endDate);
 					bidItemList.get(i).getScBidSchedule().setDuration(duration);
 					bidItemList.get(i).setSelected(false);
@@ -323,24 +364,20 @@ public class ScheduleBiddingBackingBean extends
 	 */
 
 	public void bidStartDateSelectListener(ScBidSchedule scBidSchedule) {
-		Date date = scBidSchedule.getStartDate();
-		Calendar minEndDate = Calendar.getInstance();
-		minEndDate.setTime(date);
-		minEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean()
-				.getBidMinDuration().intValue());
-		getManagedBean().setMinEndDate(minEndDate.getTime());
-
-		Calendar maxEndDate = Calendar.getInstance();
-		maxEndDate.setTime(date);
-		maxEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean()
-				.getBidMaxDuration().intValue());
-		getManagedBean().setMaxEndDate(maxEndDate.getTime());
-		if (scBidSchedule.getEndDate() != null) {
+		if (scBidSchedule != null && scBidSchedule.getStartDate() != null
+				&& scBidSchedule.getDuration() != null) {
+			Date date = scBidSchedule.getStartDate();
+			Calendar endDate = Calendar.getInstance();
+			endDate.setTime(date);
+			endDate.add(Calendar.HOUR_OF_DAY, scBidSchedule.getDuration()
+					.intValue());
+			scBidSchedule.setEndDate(endDate.getTime());
+		} else {
 			scBidSchedule.setEndDate(null);
-			int index = getManagedBean().getBidScheduleList().indexOf(
-					scBidSchedule);
-			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
 		}
+		int index = getManagedBean().getBidScheduleList()
+				.indexOf(scBidSchedule);
+		getManagedBean().getBidScheduleList().set(index, scBidSchedule);
 	}
 
 	/**
@@ -348,36 +385,24 @@ public class ScheduleBiddingBackingBean extends
 	 * 
 	 * @param scBidSchedule
 	 */
-	public void bidEndDateSelectListener(ScBidSchedule scBidSchedule) {
-
+	public void durationSelectListener(ScBidSchedule scBidSchedule) {
 		int index = getManagedBean().getBidScheduleList()
 				.indexOf(scBidSchedule);
-
-		if (scBidSchedule.getStartDate() == null) {
-			scBidSchedule.setEndDate(null);
-			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
-			throw new EpException(MessageConst.ERROR_760336);
-		}
-
-		if (scBidSchedule.getEndDate() != null) {
-			long durationInMills = scBidSchedule.getEndDate().getTime()
-					- scBidSchedule.getStartDate().getTime();
-			if (durationInMills != 3600000 & durationInMills != 7200000) {
-				getManagedBean().setMinEndDate(scBidSchedule.getStartDate());
-				Calendar maxEndDate = Calendar.getInstance();
-				maxEndDate.setTime(scBidSchedule.getStartDate());
-				maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
-				getManagedBean().setMaxEndDate(maxEndDate.getTime());
+		if (scBidSchedule.getStartDate() != null) {
+			Calendar endDate = Calendar.getInstance();
+			endDate.setTime(scBidSchedule.getStartDate());
+			if (scBidSchedule.getDuration() != 0) {
+				endDate.add(Calendar.HOUR_OF_DAY, scBidSchedule.getDuration()
+						.intValue());
+				scBidSchedule.setEndDate(endDate.getTime());
+			} else {
 				scBidSchedule.setEndDate(null);
-				getManagedBean().getBidScheduleList().set(index, scBidSchedule);
-				throw new EpException(MessageConst.ERROR_760338);
 			}
-			scBidSchedule.setDuration(durationFormatter(durationInMills));
 			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
 		} else {
-			throw new EpException(MessageConst.ERROR_760337);
+			scBidSchedule.setEndDate(null);
+			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
 		}
-
 	}
 
 	/**
@@ -386,24 +411,18 @@ public class ScheduleBiddingBackingBean extends
 	 * @param bidItem
 	 */
 	public void itemStartDateSelectListener(ScBidItem bidItem) {
-		Date date = bidItem.getScBidSchedule().getStartDate();
-
-		Calendar minEndDate = Calendar.getInstance();
-		minEndDate.setTime(date);
-		minEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean()
-				.getBidMinDuration().intValue());
-		getManagedBean().setMinEndDate(minEndDate.getTime());
-
-		Calendar maxEndDate = Calendar.getInstance();
-		maxEndDate.setTime(date);
-		maxEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean()
-				.getBidMaxDuration().intValue());
-		getManagedBean().setMaxEndDate(maxEndDate.getTime());
-		if (bidItem.getScBidSchedule().getEndDate() != null) {
+		if (bidItem.getScBidSchedule().getStartDate() != null
+				&& bidItem.getScBidSchedule().getDuration() != null) {
+			Calendar endDate = Calendar.getInstance();
+			endDate.setTime(bidItem.getScBidSchedule().getStartDate());
+			endDate.add(Calendar.HOUR_OF_DAY, bidItem.getScBidSchedule()
+					.getDuration().intValue());
+			bidItem.getScBidSchedule().setEndDate(endDate.getTime());
+		} else {
 			bidItem.getScBidSchedule().setEndDate(null);
-			int index = getManagedBean().getBidItemList().indexOf(bidItem);
-			getManagedBean().getBidItemList().set(index, bidItem);
 		}
+		int index = getManagedBean().getBidItemList().indexOf(bidItem);
+		getManagedBean().getBidItemList().set(index, bidItem);
 	}
 
 	/**
@@ -412,34 +431,19 @@ public class ScheduleBiddingBackingBean extends
 	 * @param bidItem
 	 */
 
-	public void itemEndDateSelectListener(ScBidItem bidItem) {
+	public void itemDurationSelectListener(ScBidItem bidItem) {
 		int index = getManagedBean().getBidItemList().indexOf(bidItem);
-		if (bidItem.getScBidSchedule().getStartDate() == null) {
-			bidItem.getScBidSchedule().setEndDate(null);
-			getManagedBean().getBidItemList().set(index, bidItem);
-			throw new EpException(MessageConst.ERROR_760336);
-		}
-		if (bidItem.getScBidSchedule().getEndDate() != null) {
-			long durationInMills = bidItem.getScBidSchedule().getEndDate()
-					.getTime()
-					- bidItem.getScBidSchedule().getStartDate().getTime();
-			if (durationInMills != 3600000 & durationInMills != 7200000) {
-				getManagedBean().setMinEndDate(
-						bidItem.getScBidSchedule().getStartDate());
-				Calendar maxEndDate = Calendar.getInstance();
-				maxEndDate.setTime(bidItem.getScBidSchedule().getStartDate());
-				maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
-				getManagedBean().setMaxEndDate(maxEndDate.getTime());
-				bidItem.getScBidSchedule().setEndDate(null);
-				getManagedBean().getBidItemList().set(index, bidItem);
-				throw new EpException(MessageConst.ERROR_760338);
-			}
-			bidItem.getScBidSchedule().setDuration(
-					durationFormatter(durationInMills));
-			getManagedBean().getBidItemList().set(index, bidItem);
+		if (bidItem.getScBidSchedule().getStartDate() != null
+				&& bidItem.getScBidSchedule().getDuration() != null) {
+			Calendar endDate = Calendar.getInstance();
+			endDate.setTime(bidItem.getScBidSchedule().getStartDate());
+			endDate.add(Calendar.HOUR_OF_DAY, bidItem.getScBidSchedule()
+					.getDuration().intValue());
+			bidItem.getScBidSchedule().setEndDate(endDate.getTime());
 		} else {
-			throw new EpException(MessageConst.ERROR_760337);
+			bidItem.getScBidSchedule().setEndDate(null);
 		}
+		getManagedBean().getBidItemList().set(index, bidItem);
 	}
 
 	/**
@@ -450,22 +454,19 @@ public class ScheduleBiddingBackingBean extends
 	 */
 
 	public void multiSelectStartDateListener(ScBidSchedule scBidSchedule) {
-		Date date = scBidSchedule.getStartDate();
-		Calendar minEndDate = Calendar.getInstance();
-		minEndDate.setTime(date);
-		minEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean()
-				.getBidMinDuration().intValue());
-		getManagedBean().setMinEndDate(minEndDate.getTime());
-		Calendar maxEndDate = Calendar.getInstance();
-		maxEndDate.setTime(date);
-		maxEndDate.add(Calendar.HOUR_OF_DAY, getManagedBean()
-				.getBidMaxDuration().intValue());
-		getManagedBean().setMaxEndDate(maxEndDate.getTime());
-		if (getManagedBean().getRowSelectedBid().getEndDate() != null) {
-			getManagedBean().getRowSelectedBid().setEndDate(null);
 
-			getManagedBean().setRowSelectedBid(scBidSchedule);
+		if (scBidSchedule.getStartDate() != null
+				&& scBidSchedule.getDuration() != null) {
+			Date date = scBidSchedule.getStartDate();
+			Calendar endDate = Calendar.getInstance();
+			endDate.setTime(date);
+			endDate.add(Calendar.HOUR_OF_DAY, getManagedBean()
+					.getBidMinDuration().intValue());
+			scBidSchedule.setEndDate(endDate.getTime());
+		} else {
+			scBidSchedule.setEndDate(null);
 		}
+		getManagedBean().setRowSelectedBid(scBidSchedule);
 	}
 
 	/**
@@ -473,28 +474,20 @@ public class ScheduleBiddingBackingBean extends
 	 * 
 	 * @param bidItem
 	 */
-	public void multiSelectEndDateListener(ScBidSchedule scBidSchedule) {
-		if (scBidSchedule.getStartDate() == null) {
-			scBidSchedule.setEndDate(null);
-			int index = getManagedBean().getBidScheduleList().indexOf(
-					scBidSchedule);
-			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
-			throw new EpException(MessageConst.ERROR_760336);
-		}
+	public void multiSelectDurationListener(ScBidSchedule scBidSchedule) {
 
-		if (scBidSchedule.getEndDate() != null) {
-			long durationInMills = scBidSchedule.getEndDate().getTime()
-					- scBidSchedule.getStartDate().getTime();
-			if (durationInMills != 3600000 & durationInMills != 7200000) {
-				scBidSchedule.setEndDate(null);
-				getManagedBean().setRowSelectedBid(scBidSchedule);
-				throw new EpException(MessageConst.ERROR_760338);
-			}
-			scBidSchedule.setDuration(durationFormatter(durationInMills));
-			getManagedBean().setRowSelectedBid(scBidSchedule);
+		if (scBidSchedule.getStartDate() != null
+				&& scBidSchedule.getDuration() != null) {
+			Date date = scBidSchedule.getStartDate();
+			Calendar endDate = Calendar.getInstance();
+			endDate.setTime(date);
+			endDate.add(Calendar.HOUR_OF_DAY, scBidSchedule.getDuration()
+					.intValue());
+			scBidSchedule.setEndDate(endDate.getTime());
 		} else {
-			throw new EpException(MessageConst.ERROR_760337);
+			scBidSchedule.setEndDate(null);
 		}
+		this.getManagedBean().setRowSelectedBid(scBidSchedule);
 	}
 
 	private String durationFormatter(long durationInMills) {
