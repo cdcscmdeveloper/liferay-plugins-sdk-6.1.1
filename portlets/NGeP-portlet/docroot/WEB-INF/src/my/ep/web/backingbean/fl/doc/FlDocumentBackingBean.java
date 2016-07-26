@@ -583,6 +583,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.getManagedBean().setHideRemarks(true);
 				invBB.getManagedBean().setReliefDeclarationCheck(true);
 			}
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+				invBB.getManagedBean().setReliefDeclarationCheck(true);
+			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
