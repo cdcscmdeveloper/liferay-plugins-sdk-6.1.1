@@ -41,7 +41,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
@@ -226,7 +225,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				errReq.setErrorId(stopFlData.getErrorId());
 				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 				getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
-				getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{CommonConstants.THIRD_PARTY_SYSTEM_1GFMAS}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+				getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
 				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 			}
 			
