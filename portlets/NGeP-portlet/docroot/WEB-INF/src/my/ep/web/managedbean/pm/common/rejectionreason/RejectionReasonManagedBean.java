@@ -41,6 +41,7 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private boolean suppComCheck;
 	private boolean suppTypeCheck;
 	private boolean contractPurchaseCheck;
+	private Long selectedSourceMethodId;
 	
 	private List <PmSupplierReason> deleteRestrictions;
 	private int selectedTabIndex;
@@ -274,5 +275,20 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	public void setPmPidListOrigin(List<PmPIDReason> pmPidListOrigin) {
 		this.pmPidListOrigin = pmPidListOrigin;
 	}
+
+	/**
+	 * @return the selectedSourceMethodId
+	 */
+	public Long getSelectedSourceMethodId() {
+		return selectedSourceMethodId;
+	}
+
+	/**
+	 * @param selectedSourceMethodId the selectedSourceMethodId to set
+	 */
+	public void setSelectedSourceMethodId(Long selectedSourceMethodId) {
+		this.selectedSourceMethodId = selectedSourceMethodId;
+	}
+
 	
 }

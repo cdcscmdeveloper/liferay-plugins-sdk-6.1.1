@@ -124,7 +124,6 @@
 										value="#{lbl['lbl.pm.reason.circular.criteria']}" /> <p:outputLabel
 										value="* " styleClass="mandatory" /></th>
 								<td><p:selectOneMenu id="circularCategory" required="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode == ParameterConst.purchaseInDefault}"
-										disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}"
 										label="#{lbl['lbl.pm.reason.circular.criteria']}"
 										styleClass="ppDropDownWidthM"
 										value="#{rejectionReasonBackingBean.managedBean.selectedReason.conditionField.parameterId}">
@@ -143,13 +142,12 @@
 										disabled="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}"
 										label="#{lbl['lbl.pm.reason.sourcing.method']}"
 										styleClass="ppDropDownWidthM"
-										value="#{rejectionReasonBackingBean.managedBean.selectedReason.sourceMethod.parameterId}">
+										value="#{rejectionReasonBackingBean.managedBean.selectedSourceMethodId}">
 										<f:selectItems
 											value="#{rejectionReasonBackingBean.sourcingMethodOptions()}" />
-										<p:ajax event="change" partialSubmit="true" process="@this"
-											listener="#{rejectionReasonBackingBean.sourceMethodChange(false,
-					                           	rejectionReasonBackingBean.managedBean.selectedReason.sourceMethod.parameterId)}"
-											update="@this" />
+										<p:ajax event="change" process="@this" partialSubmit="true"
+											listener="#{rejectionReasonBackingBean.sourceMethodChange()}"
+											update="@this,:form:conditionTabId:dtReasonApplicaility" />
 									</p:selectOneMenu> <p:message id="sourcingMethodMsg" for="sourcingMethod"
 										display="icon" /></td>
 							</tr>
