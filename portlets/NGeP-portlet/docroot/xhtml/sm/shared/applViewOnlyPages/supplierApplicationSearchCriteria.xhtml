@@ -113,36 +113,38 @@
 								size="35" maxlength="20" />
 						</td>
 					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']}" /></td>
-						<td><p:selectOneMenu id="searchApplTypeId" label="#{lbl['lbl.sm.applicationtype']}"
-								value="#{viewSuppProfileBackingBean.managedBean.searchApplType}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-								<f:selectItems value="#{viewSuppProfileBackingBean.managedBean.applTypeItems}" />
-							</p:selectOneMenu>
-							<p:message id="searchApplTypeIdMsg" for="searchApplTypeId" display="icon" />
-						</td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
-						<td>
-							<p:inputText id="applNoId"
-								label="#{lbl['lbl.sm.application.no']}"
-								value="#{viewSuppProfileBackingBean.managedBean.searchApplNo}"
-								size="35" maxlength="20" />
-							<p:message id="applNoIdMsg" for="applNoId" display="icon" />
-						</td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.applicationstatus']}" /></td>
-						<td><p:selectOneMenu id="searchApplStatusId" label="#{lbl['lbl.sm.applicationstatus']}"
-								value="#{viewSuppProfileBackingBean.managedBean.searchApplStatusId}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-								<f:selectItems value="#{viewSuppProfileBackingBean.managedBean.applStatusItems}" />
-							</p:selectOneMenu>
-							<p:message id="searchApplStatusIdMsg" for="searchApplStatusId" display="icon" />
-						</td>
-					</tr>
+					<p:outputPanel rendered="#{viewSuppProfileBackingBean.managedBean.viewApplicationHistory}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']}" /></td>
+							<td><p:selectOneMenu id="searchApplTypeId" label="#{lbl['lbl.sm.applicationtype']}"
+									value="#{viewSuppProfileBackingBean.managedBean.searchApplType}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems value="#{viewSuppProfileBackingBean.managedBean.applTypeItems}" />
+								</p:selectOneMenu>
+								<p:message id="searchApplTypeIdMsg" for="searchApplTypeId" display="icon" />
+							</td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
+							<td>
+								<p:inputText id="applNoId"
+									label="#{lbl['lbl.sm.application.no']}"
+									value="#{viewSuppProfileBackingBean.managedBean.searchApplNo}"
+									size="35" maxlength="20" />
+								<p:message id="applNoIdMsg" for="applNoId" display="icon" />
+							</td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.applicationstatus']}" /></td>
+							<td><p:selectOneMenu id="searchApplStatusId" label="#{lbl['lbl.sm.applicationstatus']}"
+									value="#{viewSuppProfileBackingBean.managedBean.searchApplStatusId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems value="#{viewSuppProfileBackingBean.managedBean.applStatusItems}" />
+								</p:selectOneMenu>
+								<p:message id="searchApplStatusIdMsg" for="searchApplStatusId" display="icon" />
+							</td>
+						</tr>
+					</p:outputPanel>
 				
 					<tr>
 						<td colspan="2">
