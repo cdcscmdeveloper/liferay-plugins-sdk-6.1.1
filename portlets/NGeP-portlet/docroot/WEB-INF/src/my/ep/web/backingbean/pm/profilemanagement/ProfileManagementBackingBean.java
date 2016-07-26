@@ -1311,43 +1311,43 @@ public class ProfileManagementBackingBean extends
 					// hit error and exit
 					throw new EpException(MessageConst.ERROR_770167);
 				} else {
-					this.getManagedBean().getSelectedUserOrg()
-							.setExpDateDisplay(null);
-					this.getManagedBean().getSelectedUser()
-							.setHasActiveOrg(false);
-				}
+					//check if user group user is active
+					PmUserGroup userGroup = retrieveUserActiveUserGroup(this.getManagedBean()
+							.getSelectedUser().getUserId());
+						
+					if(userGroup != null){
+						// revert it to active
+						this.getManagedBean()
+								.getSelectedUserOrg()
+								.setRecordStatusFlg(
+										DbValueConst.RECORD_STATUS_ACTIVE);
 
-				if (this.getManagedBean().getSelectedUserOrg() != null
-						&& this.getManagedBean().getSelectedUserOrg()
-								.getPmUserRoles() != null) {
-					for (PmUserRole pmUserRoles : this.getManagedBean()
-							.getSelectedUserOrg().getPmUserRoles()) {
-						pmUserRoles.setRecordStatusFlg(status);
-						userRoleStatusChange(pmUserRoles);
+						throw new EpException(MessageConst.ERROR_770202, new
+								 String[]{userGroup.getGroupCode(),userGroup.getGroupName()});
+					}else{
+						this.getManagedBean().getSelectedUserOrg()
+						.setExpDateDisplay(null);
+						this.getManagedBean().getSelectedUser()
+								.setHasActiveOrg(false);
+						
+						if (this.getManagedBean().getSelectedUserOrg() != null
+								&& this.getManagedBean().getSelectedUserOrg()
+										.getPmUserRoles() != null) {
+							for (PmUserRole pmUserRoles : this.getManagedBean()
+									.getSelectedUserOrg().getPmUserRoles()) {
+								pmUserRoles.setRecordStatusFlg(status);
+								userRoleStatusChange(pmUserRoles);
+							}
+						}
+						if (this.getManagedBean().getSelectedReceivingAddrTypes() != null
+								&& !this.getManagedBean()
+										.getSelectedReceivingAddrTypes().isEmpty()) {
+							for (PmAddressType addressType : this.getManagedBean()
+									.getSelectedReceivingAddrTypes()) {
+								addressType.setRecordStatusFlg(status);
+							}
+						}
 					}
-				}
-				if (this.getManagedBean().getSelectedReceivingAddrTypes() != null
-						&& !this.getManagedBean()
-								.getSelectedReceivingAddrTypes().isEmpty()) {
-					for (PmAddressType addressType : this.getManagedBean()
-							.getSelectedReceivingAddrTypes()) {
-						addressType.setRecordStatusFlg(status);
-					}
-				}
-				
-				//check if user group user is active
-				PmUserGroup userGroup = retrieveUserActiveUserGroup(this.getManagedBean()
-						.getSelectedUser().getUserId());
-					
-				if(userGroup != null){
-					// revert it to active
-					this.getManagedBean()
-							.getSelectedUserOrg()
-							.setRecordStatusFlg(
-									DbValueConst.RECORD_STATUS_ACTIVE);
-
-					throw new EpException(MessageConst.ERROR_770202, new
-							 String[]{userGroup.getGroupCode(),userGroup.getGroupName()});
 				}
 			}
 
