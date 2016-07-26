@@ -11553,11 +11553,18 @@ public class ReportBackingBean extends
 						&& (getManagedBean().getRptGenBean().isSmSupplierView())) {
 					getManagedBean().getRptGenBean()
 							.setSmCompanyNameDropdownView(true);
+				
+					getManagedBean().getRptGenBean().setSmCommonZoneView(false);
+					getManagedBean().getRptGenBean().setSmMandatoryEPAdminPTJAdminZoneView(false);					
+					getManagedBean().getRptGenBean().setSmSCPSupplierTypeView(false);
+					getManagedBean().getRptGenBean().setSmRegistrationNoView(false);					
+					
 				} else if ((this.getSupplCompanyList().size() == 0)
 						&& (getManagedBean().getRptGenBean().isSmSupplierView())) {
 					getManagedBean().getRptGenBean().setSmCompanyNameView(true);
 				}
 				getManagedBean().getRptGenBean().setSmExtraTwoColumnView(true);
+				
 				getManagedBean().getRptGenBean().setSmRegistrationTypeView(
 						false);
 				getManagedBean().getRptGenBean().setSmNonMandatoryDateView(
