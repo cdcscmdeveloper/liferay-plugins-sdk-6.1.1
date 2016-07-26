@@ -408,7 +408,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				    }
 	   
 					if (ctBB.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-				    		ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+				    		ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 						 ctBB.getManagedBean().setDirectPurchase(true);
 						 ctBB.getManagedBean().setFlgPaymentTracking(false);
 					} else {
@@ -479,7 +479,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				} else {
 					ctBB.getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
 				}
-				if (ctBB.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+				if (ctBB.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 					ctBB.getManagedBean().setDisableScheduleRadio(true);
 					ctBB.getManagedBean().setFrequencySchedule(ContractConst.FREQENCY_SCHEDULE);
 				} else if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getScQtSchedules()!= null  && !ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getScQtSchedules().isEmpty()) {

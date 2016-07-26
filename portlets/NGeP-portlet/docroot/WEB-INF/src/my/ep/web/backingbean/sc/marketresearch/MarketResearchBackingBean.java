@@ -213,7 +213,7 @@ public class MarketResearchBackingBean extends
 				|| ParameterConst.PROCUREMENT_MODE_TENDER.equals(procurementMethod) 
 				||ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equals(procurementMethod)){
 			initQt(id, loaId);
-		}else if(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE.equals(procurementMethod)){
+		}else if(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equals(procurementMethod)){
 			initSimpleQuote(id,loaId);
 		}else{
 			throw new EpException("Invalid Procurement Mode.");
