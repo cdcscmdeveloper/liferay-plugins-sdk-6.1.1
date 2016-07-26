@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.salutation;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +49,12 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "salutationBackingBean")
 @ViewScoped
 public class SalutationBackingBean extends
-		BaseBackingBean<SalutationManagedBean> { 
+		BaseBackingBean<SalutationManagedBean> implements Serializable { 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final String NAV_TO_MAIN =  "salutationMain";
 	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/salutation/salutationMaintenance";
 	
