@@ -59,6 +59,7 @@
 			<ui:param name="isAllPriceTypesStandard" value="#{templateSpecBackingBean.isAllPriceTypesStandard(templateSpecBean)}" />
 			<ui:param name="durationMonth" value="#{templateSpecBean.specMaster.durationMonth}" />
 			<ui:param name="isUpdateSpecByAnswers" value="#{templateSpecBean.updateSpecByAnswers}" />
+			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			
 			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer}">
 				<table style="width:100%">
@@ -69,7 +70,7 @@
 					</td>
 					<td width="84%" class="TableFieldRight">
 						<c:if test="#{isContentTypeAnswer or isContentTypeScore}">
-							#{templateSpecBean.specMaster.durationMonth}
+						<h:outputText id="duraMonId" value="#{templateSpecBean.specMaster.durationMonth}"/>
 						</c:if>
 						<c:if test="#{!isContentTypeAnswer and !isContentTypeScore}">
 							<p:inputText id="durationMonth" style="text-align:right;"
