@@ -96,6 +96,8 @@ public class GfMasManagedBean extends BaseManagedBean {
 	private IPagingDataModel<PmInterfaceDana> searchDana = new SearchDanaPagingDataModel();	
 	
 	private DIInterfaceLog selectedProcess;
+	
+	private Boolean disableAllCheckBox=false;
 
     /** The service code. */
     private String serviceCode;
@@ -502,7 +504,26 @@ public class GfMasManagedBean extends BaseManagedBean {
 
 				InterfaceCmBankResDTO resDTO = IbankSO
 						.getBankSearchDetails(bankReqDTO);
-			
+				/*List<PmInterfaceBank> list=resDTO.getViewBankResultBean().getResultList();
+				
+				int totalCount = list.size();
+				int disabledCount = 0;
+				if (list != null) {
+					for (PmInterfaceBank pmInterfaceBank : list) {
+						if (pmInterfaceBank.getProcessStatus().equals(
+								new Long(1))
+								|| pmInterfaceBank.getProcessStatus().equals(
+										new Long(2))) {
+							disabledCount++;
+						}
+					}
+				}
+				if (disabledCount == totalCount) {
+					setDisableAllCheckBox(true);
+				} else {
+					setDisableAllCheckBox(false);
+				}
+			*/
 				if (resDTO.isSuccessful()) {
 
 					return resDTO.getViewBankResultBean();
@@ -1253,6 +1274,20 @@ public class GfMasManagedBean extends BaseManagedBean {
 	 */
 	public List<PmInterfaceDana> getSelectedDanaList() {
 		return selectedDanaList;
+	}
+
+	/**
+	 * @return the disableAllCheckBox
+	 */
+	public Boolean getDisableAllCheckBox() {
+		return disableAllCheckBox;
+	}
+
+	/**
+	 * @param disableAllCheckBox the disableAllCheckBox to set
+	 */
+	public void setDisableAllCheckBox(Boolean disableAllCheckBox) {
+		this.disableAllCheckBox = disableAllCheckBox;
 	}
 
 	/**
