@@ -60,7 +60,6 @@ import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
@@ -457,7 +456,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					errReq.setErrorId(Long.parseLong(reqType.getErrorIds()));
 					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
-					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{CommonConstants.THIRD_PARTY_SYSTEM_1GFMAS}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
 					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 				}
 				

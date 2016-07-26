@@ -672,7 +672,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					errReq.setErrorId(doModDataType.getErrorId());
 					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
-					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{CommonConstants.THIRD_PARTY_SYSTEM_1GFMAS}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
 					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 				}
 				getManagedBean().setButtonVal("ACK");
@@ -687,7 +687,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					errReq.setErrorId(doCancelDataType.getErrorId());
 					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
-					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{CommonConstants.THIRD_PARTY_SYSTEM_1GFMAS}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
 					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 				}
 				getManagedBean().setButtonVal("ACK");
