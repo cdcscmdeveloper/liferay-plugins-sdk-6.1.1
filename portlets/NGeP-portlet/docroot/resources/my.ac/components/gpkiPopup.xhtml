@@ -36,6 +36,17 @@
 			</c:otherwise>
 		</c:choose>
 		<h:outputScript library="ep/gpki_js" name="gpki-api.js" />
+		
+			<script>
+	$(document).keypress(
+		    function(event){
+		     if (event.which == '13') {
+		        event.preventDefault();
+		      }
+
+
+		});
+	</script>
 
 		<script>
 			function DigiSign() {
