@@ -194,6 +194,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		    ctBB.renewSesionObject();
 		    IContractSuspensionSO contractSuspensionSO= null;
 		    ContractResDTO resDTO = null;
+		    ctBB.getManagedBean().setDeleteAttachmentList(null);
 		     
 		    try{
 		    	      contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSuspensionSO.class);
@@ -441,6 +442,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		         reqDTO.setUserRole(getUserRole());
 	             reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 			     reqDTO.setAttachments(getManagedBean().getAttachmentList());
+			     reqDTO.setDeleteAttachments(ctBB.getManagedBean().getDeleteAttachmentList());
 			     reqDTO.setUserMap(getManagedBean().getUserMap());
 		        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 		        reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
