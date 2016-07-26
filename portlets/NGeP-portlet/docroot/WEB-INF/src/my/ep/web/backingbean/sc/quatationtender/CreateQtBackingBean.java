@@ -417,7 +417,7 @@ public class CreateQtBackingBean extends
 			}
 		} else {
 			this.getManagedBean().setZoneGeneralTrees(null);
-			supplierCriteria.setQtZoneCriterias(null);
+			//supplierCriteria.setQtZoneCriterias(null);
 			if (null == supplierCriteria.getLocationLevel()) {
 				supplierCriteria.setLocationLevel(new PmParameter());
 			}
@@ -467,6 +467,7 @@ public class CreateQtBackingBean extends
 					if (QTConstants.TEMPLETE_SPEC_CODE
 							.equalsIgnoreCase(financialchecklist.getDefinationType()
 									.getParameterCode())) {
+						this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
 					financialchecklist.setPmStatus(status);
 					
 				}
@@ -482,6 +483,7 @@ public class CreateQtBackingBean extends
 					if (QTConstants.TEMPLETE_SPEC_CODE
 							.equalsIgnoreCase(technicalchecklist.getDefinationType()
 									.getParameterCode())) {
+						this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
 						technicalchecklist.setPmStatus(status);
 					
 				}
