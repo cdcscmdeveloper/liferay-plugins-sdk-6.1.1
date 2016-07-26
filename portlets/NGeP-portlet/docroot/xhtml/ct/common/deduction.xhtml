@@ -13,7 +13,7 @@
 	   	   </f:facet>
 		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.deduction']}" escape="false"/><br/><br/>
 		   
-		   <p:dataTable id="tableDeduction" var="datas" widgetVar="tableDeductionObj"
+		   <p:dataTable id="tableDeduction" var="datas" widgetVar="tableDeductionObj" rowIndexVar="index"
 		         value="#{ctBackingBean.managedBean.contractVer.ctDeductions}" rowKey="#{datas}" 
 		         selectionMode="single" selection="#{ctBackingBean.managedBean.selectedDeduction}">	
 		         	<ac:paginator for="tableDeduction" />
@@ -37,7 +37,7 @@
 		            <p:column style="width:650px;" id="updateColumn"  styleClass="column-align-center">
 		        	     <f:facet name="header">
 			                  <h:outputText value="#{lbl['lbl.ct.deduction.type']}" styleClass="required"/>
-	               		      <ac:iconTooltip id="tooltipDedTypeId" value="#{lbl['lbl.ct.tooltip.deduction.type']}"/>
+	               		      <ac:iconTooltip id="index" value="#{lbl['lbl.ct.tooltip.deduction.type']}"/>
 	           		     </f:facet>
 	           		   
 	           		     <p:selectOneMenu value="#{datas.deductionType.parameterId}" style="width:170px;float:left;text-align:left;"
@@ -92,7 +92,7 @@
 	       <p:outputPanel id="clauseDescp">  
 	                <h:panelGroup rendered="#{ctBackingBean.managedBean.selectedDeduction != null}">
 	                      <p:spacer height="20"/>
-     	                  <p:dataTable id="tableClause" var="data" widgetVar="tableClauseWidget"
+     	                  <p:dataTable id="tableClause" var="data" widgetVar="tableClauseWidget" rowIndexVar="index"
      	                         value="#{ctBackingBean.managedBean.selectedDeduction.ctDeductionClauses}"  
         	                      selection="#{ctBackingBean.selectedDeductionClauses}"  rowKey="#{data}"> 
                                    <ac:paginator for="tableClause" />   
@@ -116,7 +116,7 @@
                                     <p:column style="white-space:normal;width:98%;">
 			                         	  <f:facet name="header">
 						                        <h:outputText value="#{lbl['lbl.ct.deduction.clause.desc']}"/>
-				               	          	   <ac:iconTooltip id="toolTipClauseid" value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
+				               	          	   <ac:iconTooltip id="index" value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
 				               	          </f:facet>
                                           <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="4" style="width:97%;" autoResize="false"
                                                disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" styleClass="ui-inputtextarea">
