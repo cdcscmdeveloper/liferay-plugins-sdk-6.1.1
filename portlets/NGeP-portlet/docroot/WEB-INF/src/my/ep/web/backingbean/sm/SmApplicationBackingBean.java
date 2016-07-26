@@ -878,11 +878,11 @@ public class SmApplicationBackingBean extends
 		if (!fromBpm) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
 
-			if (getManagedBean().getSmAppl().getSupplierType()
-					.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setWithFederal(true);
-			}
+			// if (getManagedBean().getSmAppl().getSupplierType()
+			// .equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+			// getManagedBean().getSmAppl().getSmCompanyBasic()
+			// .setWithFederal(true);
+			// }
 
 			// SmApplicationUtil.getInstance().setApplAddressTransientValue(
 			// getManagedBean().getSmAppl(), false);
@@ -1102,6 +1102,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setSupportingDocMode(
 					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
+
+		// init supporting docs mandatory and non mandatory
+		initNonMandatoryAndMandatoryDocs();
 
 		// set latest mofAccount
 		if (getManagedBean().getSmAppl().getSmSupplier() != null) {
@@ -1917,6 +1920,7 @@ public class SmApplicationBackingBean extends
 							|| getManagedBean().isApproverUser() && !valid) {
 						saveOrUpdateAppl();
 					}
+					initNonMandatoryAndMandatoryDocs();
 					displayBumiRecommendNote();
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
@@ -5045,18 +5049,7 @@ public class SmApplicationBackingBean extends
 									"suppPersonnelInfoDtWidVar.paginator.endLink.click()");
 				}
 			}
-			// for(SmStaffAcademic aca :
-			// getManagedBean().getSelectedShareHolder().getSmStaffAcademics())
-			// {
-			// if(aca.isBrandNew()) {
-			// if(aca.getQualificationId() != null &&
-			// aca.getQualificationId().getParameterType() == null) {
-			// //
-			// aca.setStaffAcademicId(aca.getQualificationId().getParameterId());
-			// aca.setQualificationLevelId(qualificationLevelId)
-			// }
-			// }
-			// }
+
 			saveOrUpdateAppl();
 			SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 					getManagedBean().getSmAppl(), getManagedBean()
@@ -5088,6 +5081,7 @@ public class SmApplicationBackingBean extends
 	private void saveOrUpdateAppl() {
 		// SmApplicationUtil.getInstance().setApplAddressTransientValue(
 		// getManagedBean().getSmAppl(), true);
+		updateMandatoryAndNonMandatorySuppDocToApplDoc();
 		updatePersonnelRecordStatus(getManagedBean().getSmAppl()
 				.getSmPersonnels(), getManagedBean().getSmSupplier());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
@@ -10417,6 +10411,52 @@ public class SmApplicationBackingBean extends
 							getManagedBean().isSupplierUser()));
 		}
 		log.info("*** End displayBumiRecommendNote ********");
+	}
+
+	/**
+	 * Initialize latest supporting docs to mandatory and non mandatory document
+	 * list
+	 */
+	private void initNonMandatoryAndMandatoryDocs() {
+		if (getManagedBean().getSmAppl() != null
+				&& !EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+						.getSmApplSupportDocs())) {
+			getManagedBean()
+					.setMandatoryDocs(new ArrayList<SmApplSupportDoc>());
+			getManagedBean().setNonMandatoryDocs(
+					new ArrayList<SmApplSupportDoc>());
+			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+					.getSmApplSupportDocs()) {
+				if (doc.getPmDocument() != null) {
+					if (doc.getPmDocument().isMandatory()) {
+						getManagedBean().getMandatoryDocs().add(doc);
+					} else {
+						getManagedBean().getNonMandatoryDocs().add(doc);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Update mandatory and non mandatory documents back to application main
+	 * list
+	 */
+	private void updateMandatoryAndNonMandatorySuppDocToApplDoc() {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getNonMandatoryDocs())) {
+			for (SmApplSupportDoc doc : getManagedBean().getNonMandatoryDocs()) {
+				EntityHelper.addOrUpdateEntityToList(doc, getManagedBean()
+						.getSmAppl().getSmApplSupportDocs());
+			}
+		}
+		if (!EntityHelper
+				.isCollectionEmpty(getManagedBean().getMandatoryDocs())) {
+			for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
+				EntityHelper.addOrUpdateEntityToList(doc, getManagedBean()
+						.getSmAppl().getSmApplSupportDocs());
+			}
+		}
 	}
 
 	/**
