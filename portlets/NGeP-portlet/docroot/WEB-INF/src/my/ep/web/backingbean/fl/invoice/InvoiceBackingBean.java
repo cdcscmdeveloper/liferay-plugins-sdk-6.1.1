@@ -23,15 +23,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -128,6 +119,15 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
+
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for invoice.
@@ -435,6 +435,15 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				getManagedBean().setInvoice(resDTO.getInvoice());
 				//invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 				getManagedBean().getInvoice().setFlRequest(resDTO.getInvoice().getFlRequest());
+				if(getManagedBean().getInvoice().getStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL)){
+					getManagedBean().setReliefDeclarationCheck(true);
+				}
+				getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
+				for(FlDeliveryOrder flDeliveryOrder : getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
+					if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+						getManagedBean().getDelOrderList().add(flDeliveryOrder);
+					}
+				}	
 				getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 				getManagedBean().setPmUser(reqDTO.getPmUser());
 				getManagedBean().setButtonVal("ACK");
