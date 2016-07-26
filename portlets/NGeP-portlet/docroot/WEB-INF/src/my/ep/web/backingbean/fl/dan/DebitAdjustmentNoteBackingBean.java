@@ -37,7 +37,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -180,7 +179,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 				errReq.setErrorId(danObj.getErrorId());
 				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 				getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
-				getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{CommonConstants.THIRD_PARTY_SYSTEM_1GFMAS}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+				getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
 				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 			}
 		}else{
