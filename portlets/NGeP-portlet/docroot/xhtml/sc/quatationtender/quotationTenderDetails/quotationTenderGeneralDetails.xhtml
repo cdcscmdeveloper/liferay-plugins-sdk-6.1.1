@@ -158,7 +158,7 @@
 						<tr>
 							<td><p:inputText id="fileno"
 									label="#{lbl['lbl.sc.qt.fileno']}" required="true"
-									value="#{scQt.fileNo}" style="width:195px;" maxlength="50"
+									value="#{scQt.fileNo}" style="width:350px;" maxlength="50"
 									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FILE_NO) or isReadOnly}">
 									<p:ajax event="blur" partialSubmit="true" update="@this"
 										listener="#{createQtBB.setFileNo(scQt)}"></p:ajax>
