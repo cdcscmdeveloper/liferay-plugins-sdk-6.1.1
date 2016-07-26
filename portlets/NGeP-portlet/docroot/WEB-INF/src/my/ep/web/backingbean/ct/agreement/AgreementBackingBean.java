@@ -324,6 +324,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * @param resDTO  the response data transfer object for agreement
 	 */
 	private void setCtAgreementDetails(ContractAgreementResDTO resDTO) {
+		ctBB.getManagedBean().setDeleteAttachmentList(null);
 		if (resDTO.getAgreement() != null) {
 			getManagedBean().setCtAgreement(resDTO.getAgreement());
 			getManagedBean().setCtContract(resDTO.getAgreement().getCtContract());
@@ -508,6 +509,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			boolean isBrandNew = getManagedBean().getCtAgreement().isBrandNew();
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(getManagedBean().getAttachmentList());
+			reqDTO.setDeleteAttachmentList(ctBB.getManagedBean().getDeleteAttachmentList());
 			reqDTO.setUserMap(getManagedBean().getUserMap());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
@@ -2575,6 +2577,10 @@ public void selectOneSupplierWitnessCheckBox(AjaxBehaviorEvent e){
     }
     
     public void deleteSignAttachmentAction(int index){
+    	 CtAttachment attachements =  getManagedBean().getCtAgreement().getSignAgreementAttachments().get(index);
+		 if(attachements.getAttachmentId() != null){
+			 ctBB.getManagedBean().getDeleteAttachmentList().add(attachements);
+		 }
 		this.getManagedBean().getCtAgreement().getSignAgreementAttachments().remove(index);
 	}
 }

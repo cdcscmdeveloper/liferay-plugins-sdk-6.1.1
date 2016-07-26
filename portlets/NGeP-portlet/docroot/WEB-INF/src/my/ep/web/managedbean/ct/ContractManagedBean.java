@@ -46,6 +46,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean viewContract = false;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
+	private List<CtAttachment> deleteAttachmentList;
 	private CtContractVer contractVer;
 	private CtContractVer agreementContractVer;
 	private boolean updateCompanyName;
@@ -989,4 +990,15 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setButtonHideSchActive(boolean buttonHideSchActive) {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
+	
+	public List<CtAttachment> getDeleteAttachmentList() {
+		if(deleteAttachmentList == null)
+			   deleteAttachmentList = new ArrayList<CtAttachment>();
+		return deleteAttachmentList;
+	}
+
+	public void setDeleteAttachmentList(List<CtAttachment> deleteAttachmentList) {
+		this.deleteAttachmentList = deleteAttachmentList;
+	}
+
 }

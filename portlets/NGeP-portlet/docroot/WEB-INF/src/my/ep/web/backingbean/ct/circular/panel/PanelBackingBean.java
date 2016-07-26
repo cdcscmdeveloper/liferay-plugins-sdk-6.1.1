@@ -156,13 +156,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-	
+	ContractBackingBean ctBB = null;
 	/**
 	 * The function constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
 	 */
 	public PanelBackingBean(){
 		
+		if(ctBB == null){
+			   ctBB =  new ContractBackingBean();
+		}
 	    /*Execute first time retrieve from maintenance*/
 		if(getManagedBean().getOutComes()==null) {
 				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
@@ -235,6 +238,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		
 		   ICircularSO circularSO = null;
 		   CircularResDTO resDTO = null;
+		   ctBB.getManagedBean().setDeleteAttachmentList(null);
 		   try {
 			          circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			          resDTO= circularSO.retrieveCircularVerById(reqDTO);
@@ -394,7 +398,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			        getManagedBean().setRemarkList(resDTO.getRemarkList());
 			        getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-		
+			        ctBB.getManagedBean().setDeleteAttachmentList(null);
 			        getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
 			        ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			        ctBB.initializeRemarkAndAttachement(resDTO.getCancelCircularReq().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
@@ -492,7 +496,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setRemark(getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(getManagedBean().getAttachmentList());
-		
+			reqDTO.setDeleteAttachmentList(ctBB.getManagedBean().getDeleteAttachmentList());
+			
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
@@ -593,7 +598,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());		
 			reqDTO.setRemark(getManagedBean().getRemarkList().get(0));
-			reqDTO.setAttachments(getManagedBean().getAttachmentList());			
+			reqDTO.setAttachments(getManagedBean().getAttachmentList());	
+		    reqDTO.setDeleteAttachmentList(ctBB.getManagedBean().getDeleteAttachmentList());
 			reqDTO.setDocType(getManagedBean().getCircularDocType());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
@@ -3091,6 +3097,10 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 	 }
 	 
 	 public void deleteCircularAttachmentAction(int index){
+		 CtAttachment attachements =  getManagedBean().getCircularVer().getItemAttachments().get(index);
+		 if(attachements.getAttachmentId() != null){
+			 ctBB.getManagedBean().getDeleteAttachmentList().add(attachements);
+		 }
 		 getManagedBean().getCircularVer().getItemAttachments().remove(index);
 	 }
 }
