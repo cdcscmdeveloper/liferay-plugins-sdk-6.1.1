@@ -187,7 +187,7 @@
 						</h:panelGroup> <p:commandLink style="margin-left: 200px;padding-right: 10px;"
 							title="#{lbl['lbl.cm.upload']}"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
-							onclick="imageDialog.show(); clearInvalidFileMsg();">
+							onclick="imageDialog.show(); ">
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-top:10px;"></p:graphicImage>
 						</p:commandLink> <p:commandLink
@@ -269,7 +269,8 @@
 
 
 		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"
-			width="700px" resizable="false" styleClass="pop_up_top">
+			width="700px" resizable="false" styleClass="pop_up_top"
+			onShow="uploadListener(importDevicesWidget)">
 
 
 			<p:fileUpload widgetVar="importDevicesWidget"
