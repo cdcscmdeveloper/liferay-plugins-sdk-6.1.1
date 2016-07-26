@@ -17,13 +17,13 @@
 			escape="false" />
 
 		<p:dataTable id="bidScheduleByZonal" rows="10" selectionMode="single"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{scheduleBiddingBB.managedBean.bidScheduleList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+			value="#{scheduleBiddingBB.managedBean.bidScheduleList}" 
 			selection="#{scheduleBiddingBB.managedBean.rowSelectedBid}"
 			var="scheduleZoneBid" rowIndexVar="index" rowKey="#{scheduleZoneBid}">
-			<p:ajax event="rowSelect" process="@this" 
+			<p:ajax event="rowSelect" process="@this" partialSubmit="true" 
 				listener="#{scheduleBiddingBB.zonalRowBidSelectListener}"
-				partialSubmit="true" update="@([id$=zoneBidItemsPanel])" />
+				 update="@([id$=zoneBidItemsPanel])" />
 			<ac:paginator for="bidScheduleByZonal"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.zone.name']}">
 				<h:outputText id="zoneNameByZone"
@@ -35,49 +35,42 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.bidding.start']}" />
 				</f:facet>
-				<p:calendar value="#{scheduleZoneBid.startDate}" showOn="button"
-					label="#{lbl['lbl.sc.bidding.start']}" readonlyInput="true"
-					id="zoneBidStartDate"
-					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
-					mindate="#{scheduleBiddingBB.managedBean.minStartDate}">
-					<p:ajax event="dateSelect" process="zoneBidStartDate"
-						partialSubmit="true"
-						listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleZoneBid)}"
-						update="@([id$=zoneBidEndDate])" />
-					<p:ajax event="change" process="zoneBidStartDate"
-						partialSubmit="true"
-						listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleZoneBid)}"
-						update="@([id$=zoneBidEndDate])" />
-				</p:calendar>
-				<p:message id="startDateByZoneMsg" for="zoneBidStartDate"
-					showDetail="false" display="icon" />
+				<ac:dateTime id="zoneBidStartDate"
+					mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
+					postUpdateListener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleZoneBid)}"
+					 label="#{lbl['lbl.sc.bidding.start']}" 
+					value="#{scheduleZoneBid.startDate}" rowIndex="#{index}"
+					update="@([id$=bidScheduleByZonal])">
+				</ac:dateTime>
+				<p:message id="startDateByZoneMsg" showDetail="false"
+					for="zoneBidStartDate" display="icon" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.bidding.end']}" />
+				</f:facet>
+				<p:inputText id="zoneBidEndDate" readonly="true"
+					value="#{scheduleZoneBid.endDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+				</p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.bidding.end']}" />
+					<h:outputText value="#{lbl['lbl.sc.duration.hours']}" />
 				</f:facet>
-				<p:calendar value="#{scheduleZoneBid.endDate}" showOn="button"
-					id="zoneBidEndDate" readonlyInput="true" maxMinute="0"
-					label="#{lbl['lbl.sc.bidding.end']}"
-					mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
-					maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
-					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
-					<p:ajax event="dateSelect" process="zoneBidEndDate"
-						partialSubmit="true"
-						listener="#{scheduleBiddingBB.bidEndDateSelectListener(scheduleZoneBid)}"
-						update="@([id$=bidDurationByZone])" />
-					<p:ajax event="change" process="zoneBidEndDate"
-						partialSubmit="true"
-						listener="#{scheduleBiddingBB.bidEndDateSelectListener(scheduleZoneBid)}"
-						update="@([id$=bidDurationByZone])" />
-				</p:calendar>
-				<p:message id="endDateByZoneMsg" for="zoneBidEndDate"
-					showDetail="false" display="icon" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.duration.hours']}">
-				<p:outputLabel id="bidDurationByZone"
-					value="#{scheduleZoneBid.duration}" />
+				<p:selectOneMenu id="bidDurationByZone"   
+					value="#{scheduleZoneBid.duration}">  
+					<f:selectItems value="#{scheduleBiddingBB.managedBean.selectItems}"
+						var="selectItem" itemLabel="#{selectItem.label}"
+						itemValue="#{selectItem.value}" />
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						update="@([id$=bidScheduleByZonal])"
+						listener="#{scheduleBiddingBB.durationSelectListener(scheduleZoneBid)}" />
+				</p:selectOneMenu>
+				<p:message id="bidDurationByZoneMsg" showDetail="false"
+					for="bidDurationByZone" display="icon" />
 			</p:column>
 		</p:dataTable>
 
