@@ -171,8 +171,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				if(ctBB == null) {
 				      ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 				      ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-				}
-			    
+				}    
 			}			
 		
 			if(getManagedBean().getUserMap().size()==0) {
@@ -228,6 +227,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		
 	    	ICircularSO circularSO = null;
 	        CircularResDTO resDTO = null;
+	        ctBB.getManagedBean().setDeleteAttachmentList(null);
 		     try {
 		    	        circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
 			            resDTO = circularSO.retrieveCircularVerById(reqDTO);
@@ -546,7 +546,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		         reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			     reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			     reqDTO.setRemark(getManagedBean().getRemarkList().get(0));
-			     reqDTO.setAttachments(getManagedBean().getAttachmentList());			
+			     reqDTO.setAttachments(getManagedBean().getAttachmentList());
+			     reqDTO.setDeleteAttachmentList(ctBB.getManagedBean().getDeleteAttachmentList());
+			     
 			     reqDTO.setOutcome(action);
 			     reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			     reqDTO.setTaskId(getManagedBean().getTaskId());
@@ -2013,8 +2015,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	     * */
     	
     	public void deleteContractAttachmentAction(int index){
-    		getManagedBean().getCircularVer().getContractAttachments().remove(index);
-    	}
+    		 CtAttachment attachements =  getManagedBean().getCircularVer().getContractAttachments().get(index);
+    		 if(attachements.getAttachmentId() != null){
+    			 ctBB.getManagedBean().getDeleteAttachmentList().add(attachements);
+    		 }
+    		 getManagedBean().getCircularVer().getContractAttachments().remove(index);
+    	 }
+    		
         public void delCircularVerFile(){
         	getManagedBean().getCircularVer().setCircularFilePath(null);
         	getManagedBean().getCircularVer().setCircularFileName(null);

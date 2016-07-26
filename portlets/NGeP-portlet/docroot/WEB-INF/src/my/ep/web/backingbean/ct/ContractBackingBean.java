@@ -391,23 +391,43 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param index  file index of attachment list
 	 */
 	public void deleteAttachmentAction(int index) {
+		CtAttachment attachment = this.getManagedBean().getAttachmentList().get(index);
+		if(attachment.getAttachmentId() != null){
+			   getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
 		this.getManagedBean().getAttachmentList().remove(index);
 	}
 	
 	public void deleteAgncyAttachmentAction(int index) {
-		this.getManagedBean().getContractVer().getAgencyAttachements().remove(index);
+		CtAttachment attachment = getManagedBean().getContractVer().getAgencyAttachements().get(index);
+		if(attachment.getAttachmentId() != null){
+			 getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		getManagedBean().getContractVer().getAgencyAttachements().remove(index);
 	}
 	
 	public void deleteItemAttachmentAction(int index) {
-		this.getManagedBean().getContractVer().getItemAttachments().remove(index);
+		CtAttachment attachment = getManagedBean().getContractVer().getItemAttachments().get(index);
+		if(attachment.getAttachmentId() != null){
+			 getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		getManagedBean().getContractVer().getItemAttachments().remove(index);
 	}
 	
 	public void deleteDeductAttachmentAction(int index) {
-		this.getManagedBean().getContractVer().getDeductionAttachments().remove(index);
+		CtAttachment attachment = getManagedBean().getContractVer().getDeductionAttachments().get(index);
+		if(attachment.getAttachmentId() != null){
+			 getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		getManagedBean().getContractVer().getDeductionAttachments().remove(index);
 	}
 	
 	public void deleteScheduleAttachmentAction(int index){
-		this.getManagedBean().getContractVer().getScheduleAttachments().remove(index);
+		CtAttachment attachment = getManagedBean().getContractVer().getScheduleAttachments().get(index);
+		if(attachment.getAttachmentId() != null){
+			 getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		getManagedBean().getContractVer().getScheduleAttachments().remove(index);
 	}
 	
 	/**
