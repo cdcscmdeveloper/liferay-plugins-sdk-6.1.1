@@ -340,6 +340,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 //			this.getManagedBean().setAppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, id));
 //			this.getManagedBean().setComTypeRestrictions(loadRestriction(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE, id));
 //			this.getManagedBean().setSuppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_TYPES, id));
+			if(pmReason.getSourceMethod() != null && pmReason.getSourceMethod().getParameterId() != null){
+					this.getManagedBean().setSelectedSourceMethodId(pmReason.getSourceMethod().getParameterId());
+			}
+		
 		}catch (Exception e){
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770004);
@@ -940,10 +944,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public ISearchBean<PmParameterDesc> getReasonApplicablitySearchBean(){
 		reasonApplicablitySearchBean = new SearchBean<PmParameterDesc>();
 
+    PmParameter contractRequestParam = getParameterByTypeAndCode(ParameterTypeConst.SOURCING_METHOD, ParameterConst.PID_SOURCE_METHOD_CR);
 	List<String> parameterCodes = new ArrayList<String>();
-	parameterCodes.add("MC");
-	parameterCodes.add("PQ");
-	parameterCodes.add("CQ");
+	parameterCodes.add(ParameterConst.CONTRACT_TYPE_MINISTRY);
+	if(!getManagedBean().getSelectedReason().getSourceMethod().getParameterId().equals(contractRequestParam.getParameterId())){
+		parameterCodes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+	}
+	parameterCodes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 	reasonApplicablitySearchBean.getDataFilterBeans().add(
 			new SearchFilterBean(
 					"pmParameter.parameterCode",
@@ -1261,18 +1268,45 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 	/**
 	 * get sourceMethod object by selected parameter id
-	 * @param isSearchBean
-	 * @param id
 	 */
-	public void sourceMethodChange(boolean isSearchBean, Long id){
+	public void sourceMethodChange(){
 		log.info("conditionFieldChange");
-
-		if(id!=null && id>0L){
-			PmParameter paramObj = (PmParameter) souringMethodParameterIdMapper.get(id);
-			this.getManagedBean().getSelectedReason().setSourceMethod(paramObj);
-			System.out.println(paramObj.getParameterCode());
-			
+		boolean invalid = false;
+		if(getManagedBean().getSelectedReason().getSourceMethod() != null){
+			PmParameter contractRequestParam = getParameterByTypeAndCode(ParameterTypeConst.SOURCING_METHOD, ParameterConst.PID_SOURCE_METHOD_CR);
+			if(getManagedBean().getSelectedSourceMethodId().equals(contractRequestParam.getParameterId()) 
+					&& getManagedBean().getSelectedReason().getPmPIDReasonList() != null){
+				for(PmPIDReason reason : getManagedBean().getSelectedReason().getPmPIDReasonList()){
+					if(reason.getDocType() != null && reason.getDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)){
+						invalid = true;
+						break;
+					}
+				}
+			}
 		}
+		
+		if(invalid){
+			PmParameter paramObj = (PmParameter) souringMethodParameterIdMapper.get(this.getManagedBean().getSelectedReason().getSourceMethod().getParameterId());
+			this.getManagedBean().getSelectedReason().setSourceMethod(paramObj);
+			this.getManagedBean().setSelectedSourceMethodId(paramObj.getParameterId());
+			FacesContext
+			.getCurrentInstance()
+			.addMessage(
+					null,
+					new FacesMessage(
+							FacesMessage.SEVERITY_ERROR,
+							null,
+							"Reason Applicability contains Panel Item."));
+			
+		}else{
+			if(getManagedBean().getSelectedSourceMethodId() != null){
+				PmParameter paramObj = (PmParameter) souringMethodParameterIdMapper.get(getManagedBean().getSelectedSourceMethodId());
+				this.getManagedBean().getSelectedReason().setSourceMethod(paramObj);
+				System.out.println(paramObj.getParameterCode());
+				
+			}
+		}
+		
 	}
 	/**
 	 * Below codes are for reason search
