@@ -1545,6 +1545,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String docNo;
 	private String docType = ParameterConst.DOCTYPE_QUOTATION;
 	private boolean nameRequired;
+	private boolean isPanelSpecExistedOrNot=Boolean.FALSE;
 	
 	/**
 	 * Sets the panel suppliers.
@@ -8713,6 +8714,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setNameRequired(boolean nameRequired) {
 		this.nameRequired = nameRequired;
+	}
+
+	/**
+	 * @return the isPanelSpecExistedOrNot
+	 */
+	public boolean isPanelSpecExistedOrNot() {
+		return isPanelSpecExistedOrNot;
+	}
+
+	/**
+	 * @param isPanelSpecExistedOrNot the isPanelSpecExistedOrNot to set
+	 */
+	public void setPanelSpecExistedOrNot(boolean isPanelSpecExistedOrNot) {
+		this.isPanelSpecExistedOrNot = isPanelSpecExistedOrNot;
 	}
 
 }
