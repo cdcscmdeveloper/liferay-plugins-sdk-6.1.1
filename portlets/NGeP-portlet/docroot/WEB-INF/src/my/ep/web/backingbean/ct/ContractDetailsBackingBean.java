@@ -301,6 +301,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		IContractSO contractSO = null;
 		ContractResDTO resDTO = null;
 		ctBB = new ContractBackingBean();
+		ctBB.getManagedBean().setDeleteAttachmentList(null);
 		try {
 		          contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		           resDTO = contractSO.retrieveContractVerDtls(reqDTO);
@@ -590,6 +591,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	        reqDTO.setUserMap(getManagedBean().getUserMap());
 	        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 		    reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+		    reqDTO.setDeleteAttachments(ctBB.getManagedBean().getDeleteAttachmentList());
 			
 		    if (this.getManagedBean().getPmDigiSign() != null) {
 		    	reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
@@ -2276,5 +2278,5 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     		 setValidateContractField(reqDTO);
     	 }
      }
-     
+
 }
