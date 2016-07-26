@@ -5081,7 +5081,7 @@ public class SmApplicationBackingBean extends
 	private void saveOrUpdateAppl() {
 		// SmApplicationUtil.getInstance().setApplAddressTransientValue(
 		// getManagedBean().getSmAppl(), true);
-		updateMandatoryAndNonMandatorySuppDocToApplDoc();
+//		updateMandatoryAndNonMandatorySuppDocToApplDoc();
 		updatePersonnelRecordStatus(getManagedBean().getSmAppl()
 				.getSmPersonnels(), getManagedBean().getSmSupplier());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
