@@ -545,8 +545,8 @@
 		modal="true" header="#{lbl['lbl.sc.purchase.in.default.just']}"
 		dynamic="true" width="850" resizable="false" styleClass="pop_up_top"
 		closable="false">
-		<p:outputPanel
-			rendered="#{purchaseInDefaultBackingBean.managedBean.ctReasonList != null}">
+		<c:if
+			test="#{purchaseInDefaultBackingBean.managedBean.ctReasonList != null}">
 			<p:dataTable id="ctReasonId" var="ctReason" styleClass="BtnSpacing"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{purchaseInDefaultBackingBean.managedBean.ctReasonList}"
@@ -554,32 +554,33 @@
 				selectionMode="single" rowKey="#{ctReason}" rowIndexVar="index">
 				<p:ajax event="rowSelect" update="@([id$=selectButton1])" />
 				<p:ajax event="rowUnselect" update="@([id$=selectButton1])" />
-				
-				<p:column headerText="#{lbl['lbl.sc.purchase.in.default.just']}" rendered="#{ctReason.pmReason.isRecordStatus()}"
-					width="25%">
+
+				<p:column headerText="#{lbl['lbl.sc.purchase.in.default.just']}"
+					rendered="#{ctReason.pmReason.isRecordStatus()}" width="25%">
 				      #{purchaseInDefaultBackingBean.getReasonDescByReasonId(ctReason.pmReason.reasonId).reasonDesc}
 			     </p:column>
-				<p:column headerText="#{lbl['lbl.sc.reason.other.desc']}" rendered="#{ctReason.pmReason.isRecordStatus()}">
-					<p:inputTextarea style="width:450px;" rows="5" rendered="#{!empty ctReason.reasonDesc}"
+				<p:column headerText="#{lbl['lbl.sc.reason.other.desc']}"
+					rendered="#{ctReason.pmReason.isRecordStatus()}">
+					<p:inputTextarea style="width:450px;" rows="5"
+						rendered="#{!empty ctReason.reasonDesc}"
 						value="#{ctReason.reasonDesc}" disabled="true" />
 				</p:column>
 			</p:dataTable>
 
 			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton value="#{lbl['lbl.btn.select']}"
-				 disabled="#{purchaseInDefaultBackingBean.managedBean.ctReason eq null}"
-				    id="selectButton1"
+					disabled="#{purchaseInDefaultBackingBean.managedBean.ctReason eq null}"
+					id="selectButton1"
 					action="#{purchaseInDefaultBackingBean.justificationTypeEvent(purchaseInDefaultBackingBean.managedBean.ctReason.pmReason, purchaseInDefaultBackingBean.managedBean.ctReason.reasonDesc)}"
-					partialSubmit="true" process="@this"
-					update="@([id$=reqDtlId])"
-					oncomplete="justificationPopup.hide();"/>
+					partialSubmit="true" process="@this" update="@([id$=reqDtlId])"
+					oncomplete="justificationPopup.hide();" />
 
 				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
 					process="@this" onclick="justificationPopup.hide()" />
 			</div>
-		</p:outputPanel>
-		<p:outputPanel
-			rendered="#{purchaseInDefaultBackingBean.managedBean.panelReasonList != null}">
+		</c:if>
+		<c:if
+			test="#{purchaseInDefaultBackingBean.managedBean.panelReasonList != null}">
 			<p:dataTable id="panelReasonId" var="panelReason"
 				styleClass="BtnSpacing" selectionMode="single"
 				selection="#{purchaseInDefaultBackingBean.managedBean.panelReason}"
@@ -588,14 +589,16 @@
 				rowKey="#{panelReason}" rowIndexVar="index">
 				<p:ajax event="rowSelect" update="@([id$=selectButton2])" />
 				<p:ajax event="rowUnselect" update="@([id$=selectButton2])" />
-				
-				<p:column headerText="#{lbl['lbl.sc.purchase.in.default.just']}" rendered="#{panelReason.pmReason.isRecordStatus()}"
-					width="25%">
+
+				<p:column headerText="#{lbl['lbl.sc.purchase.in.default.just']}"
+					rendered="#{panelReason.pmReason.isRecordStatus()}" width="25%">
 				     #{purchaseInDefaultBackingBean.getReasonDescByReasonId(panelReason.pmReason.reasonId).reasonDesc}
 			     </p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.reason.other.desc']}" rendered="#{panelReason.pmReason.isRecordStatus()}">
-					<p:inputTextarea style="width:450px;" rows="5" rendered="#{!empty panelReason.reasonDesc}"
+				<p:column headerText="#{lbl['lbl.sc.reason.other.desc']}"
+					rendered="#{panelReason.pmReason.isRecordStatus()}">
+					<p:inputTextarea style="width:450px;" rows="5"
+						rendered="#{!empty panelReason.reasonDesc}"
 						value="#{panelReason.reasonDesc}" disabled="true" />
 				</p:column>
 
@@ -603,18 +606,15 @@
 
 			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton value="#{lbl['lbl.btn.select']}"
-				    disabled="#{purchaseInDefaultBackingBean.managedBean.panelReason eq null}"
-				    id="selectButton2"
+					disabled="#{purchaseInDefaultBackingBean.managedBean.panelReason eq null}"
+					id="selectButton2"
 					action="#{purchaseInDefaultBackingBean.justificationTypeEvent(purchaseInDefaultBackingBean.managedBean.panelReason.pmReason, purchaseInDefaultBackingBean.managedBean.panelReason.reasonDesc)}"
-					partialSubmit="true" process="@this"
-					update="@([id$=reqDtlId])"
+					partialSubmit="true" process="@this" update="@([id$=reqDtlId])"
 					oncomplete="justificationPopup.hide();" />
 
 				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
 					process="@this" onclick="justificationPopup.hide()" />
 			</div>
-
-		</p:outputPanel>
-
+		</c:if>
 	</p:dialog>
 </ui:composition>
