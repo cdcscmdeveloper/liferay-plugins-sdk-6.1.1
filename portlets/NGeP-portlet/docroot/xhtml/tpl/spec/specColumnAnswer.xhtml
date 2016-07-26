@@ -86,13 +86,17 @@
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 		</f:facet>
-		<h:panelGroup id="ansYearPG">
+		<h:panelGroup id="ansYearPG" rendered="#{isDurationYear}">
 			<h:outputText 
 				value="#{tplSpecAnswer.amountPerYear}"
 				rendered="#{isQuestionTypeItem}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 		</h:panelGroup>
+	
+	<h:panelGroup rendered="#{!isDurationYear}">
+	<h:outputText value="#{lbl['lbl.txt.na']}"/>
+	</h:panelGroup>
 	</p:column>
 	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
 	<p:column style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}" headerText="#{lbl[answerlbl]}" rendered="#{!isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq) or isSpecificationReq)) and isAllPriceTypesStandard}">
