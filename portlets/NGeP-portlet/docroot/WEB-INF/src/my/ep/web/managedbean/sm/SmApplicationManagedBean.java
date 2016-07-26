@@ -348,6 +348,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> ePRoleList;
 	private boolean removeEpRole;
 	private List<SmApplSupportDoc> missinDocs;
+	private List<SmApplSupportDoc> mandatoryDocs;
+	private List<SmApplSupportDoc> nonMandatoryDocs;
 	private boolean reviewSiteVisit;
 	private SelectItem[] businessTypeLs;
 	private List<String> supplierToPOList;
@@ -3584,5 +3586,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedSuppCategoryFacilityIds(
 			Long[] selectedSuppCategoryFacilityIds) {
 		this.selectedSuppCategoryFacilityIds = selectedSuppCategoryFacilityIds;
+	}
+
+	public List<SmApplSupportDoc> getMandatoryDocs() {
+		return mandatoryDocs;
+	}
+
+	public void setMandatoryDocs(List<SmApplSupportDoc> mandatoryDocs) {
+		this.mandatoryDocs = mandatoryDocs;
+	}
+
+	public List<SmApplSupportDoc> getNonMandatoryDocs() {
+		return nonMandatoryDocs;
+	}
+
+	public void setNonMandatoryDocs(List<SmApplSupportDoc> nonMandatoryDocs) {
+		this.nonMandatoryDocs = nonMandatoryDocs;
 	}
 }
