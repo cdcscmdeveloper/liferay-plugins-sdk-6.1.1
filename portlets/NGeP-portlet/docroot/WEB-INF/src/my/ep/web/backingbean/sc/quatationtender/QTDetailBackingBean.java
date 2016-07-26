@@ -765,6 +765,34 @@ public class QTDetailBackingBean extends
 		}
 		return REDIRECT_PAGE;
 	}
+	
+	/**
+	 * Method to view Supplier Proposal Details.
+	 * 
+	 * @param scQt
+	 *            the ScQt instance
+	 * @return the navigation page
+	 */
+	public String viewSupplierProposalDetails(ScQt scQt) {
+		
+		debugLogger("viewSupplierProposalDetails");
+		Long qtId = scQt.getQtId();
+		String docType = getManagedBean().getDocType();
+		
+		if (ParameterConst.DOCTYPE_QUOTATION.equals(docType) || 
+				ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL.equals(docType)) {
+			
+		} else if (ParameterConst.DOCTYPE_BIDDING.equals(docType)) {
+			
+		} else if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
+			
+		} else if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)) {
+			/*return new MarketResearchBackingBean().redirectToMarketResearchMaintenance(
+					qtId, loaId, ParameterConst.PROCUREMENT_MODE_QUOTATION);*/
+		}
+		
+		return null;
+	}
 
 	/**
 	 * Method to prepare scqt object with all dependent object.
@@ -3369,7 +3397,7 @@ public class QTDetailBackingBean extends
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);
-		recommendList.add(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE);
+		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE);
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));

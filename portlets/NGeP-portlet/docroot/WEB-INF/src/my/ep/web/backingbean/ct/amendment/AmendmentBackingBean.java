@@ -790,7 +790,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					} else {
 						ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
 					}
-					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 						ctBackingBean.getManagedBean().setDisableScheduleRadio(true);
 						ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.FREQENCY_SCHEDULE);
 					} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getScQtSchedules()!= null  && !ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getScQtSchedules().isEmpty()) {
@@ -1838,7 +1838,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
 						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 						&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-								ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 				}
 				if (getManagedBean().isDecisionPbQcLOA()) {
@@ -1913,14 +1913,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    	if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq() && outputValue.equalsIgnoreCase("PB")
 		    			&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 		    			&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-		    					ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+		    					ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 		    		getManagedBean().setSelectedTabIndex(index + 3);
 		    	}
 		    	if (getManagedBean().isDecisionPbQcLOA() && outputValue.equalsIgnoreCase("DCN")) {
 		    		if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
 		    				&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 		    				&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-		    						ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+		    						ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 		    			getManagedBean().setSelectedTabIndex(index + 4);
 		    		} else {
 		    			getManagedBean().setSelectedTabIndex(index+3);
@@ -2002,14 +2002,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    	if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq() && outputValue.equalsIgnoreCase("PB")
 			    			&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 			    			&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-			    					ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+			    					ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 			    		getManagedBean().setSelectedTabIndex(index + 3);
 			    	}
 			    	if (getManagedBean().isDecisionPbQcLOA() && outputValue.equalsIgnoreCase("DCN")) {
 			    		if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
 			    				&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 			    				&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-			    						ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+			    						ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 			    			getManagedBean().setSelectedTabIndex(index + 4);
 			    		} else {
 			    			getManagedBean().setSelectedTabIndex(index+3);
