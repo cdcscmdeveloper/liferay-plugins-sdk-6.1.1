@@ -18259,12 +18259,19 @@ public class ReportBackingBean extends
 			urlConnection.setConnectTimeout(306000);
 			urlConnection.setReadTimeout(306000);
 			new Thread(new InterruptThread(urlConnection)).start();
-
+			log.info("@@@@ Report URL = " +urlConnection.getURL());
 			buf = new BufferedInputStream(urlConnection.getInputStream());
+			log.info("@@@@ Report URL222 = " +urlConnection.getURL() +"@@@@ Response Code222 = "+urlConnection.getResponseCode());
+			log.info("@@@@ Report getContentLength = " +urlConnection.getContentLength());
+			
+			log.info("@@@@ Start the PortletResponse from here");
 			PortletResponse portletResponse = (PortletResponse) FacesContext
 					.getCurrentInstance().getExternalContext().getResponse();
+			log.info("@@@@ PortletResponse = "+portletResponse);
+			
 			HttpServletResponse res = PortalUtil
 					.getHttpServletResponse(portletResponse);
+			log.info("@@@@ HttpServletResponse = "+res);
 			/*
 			 * int position = reportFile.lastIndexOf(ReportConst.DOTJSP); if
 			 * (position != -1) { reportFile = reportFile.substring(0,
@@ -18279,14 +18286,23 @@ public class ReportBackingBean extends
 					ReportConst.BINARY);
 			res.setContentType(ReportConst.APPLICATIONEIFONPDF);
 			res.flushBuffer();
+			log.info("@@@@ HttpServletResponse getContentType = "+res.getContentType());
+			log.info("@@@@ HttpServletResponse getStatus = "+res.getStatus());
+			for (String headrName : res.getHeaderNames()){
+				log.info("@@@@ HttpServletResponse getHeaderNames = "+headrName);
+			}
+			
 			OutputStream out = res.getOutputStream();
+			log.info("@@@@ OutputStream = "+out);
 			byte[] b = new byte[128];
 			int size;
 			while ((size = buf.read(b, 0, b.length)) != -1) {
 				out.write(b, 0, size);
+				log.info("@@@@ inside While loop = "+b);
 			}
 			buf.close();
 			out.close();
+			
 		} catch (MalformedURLException e) {
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
@@ -18314,9 +18330,10 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780020);
 		} finally {
+			log.info("@@@@ ReportBackingBean-fileGenerateReport finally block");
 			urlConnection.disconnect();
 		}
-
+		log.info("@@@@ End of ReportBackingBean-fileGenerateReport");
 	}
 
 	/**
