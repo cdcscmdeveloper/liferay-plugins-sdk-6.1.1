@@ -14629,7 +14629,7 @@ public class ReportBackingBean extends
 			}
 			if (StringUtils.isNotEmpty(constructedParamString)) {
 				// try {
-				getManagedBean().getRptGenBean().setGenerateButtonView(true);
+				//getManagedBean().getRptGenBean().setGenerateButtonView(true);
 				// generateReportTimer();
 				// generateReportIntime();
 
