@@ -11733,7 +11733,7 @@ public class SpecificationBackingBean extends
 					.isZonal()
 					&& null != zoneSupplierCriteria
 					&& null != zoneSupplierCriteria.getQtZoneCriterias() && null == zoneSupplierCriteria
-					.getQtZoneCriterias().getSpecZoneId()))) {
+					.getQtZoneCriterias().getSpecZoneId()) || (getManagedBean().getQt().isPanel() && this.getManagedBean().isPanelSpecExistedOrNot()))) {
 				ScQt scQt = saveZonesBeforeTemplateSpec(getManagedBean()
 						.getQt());
 				reqDTO.setZonesQt(true);
@@ -11823,7 +11823,7 @@ public class SpecificationBackingBean extends
 			ScQt qt = resDTO.getScQt();
 			if (qt != null) {
 				this.getManagedBean().setQt(qt);
-				if (qt.getEstimatedAmount() != null) {
+				if (qt.getEstimatedAmount() != null && qt.getEstimatedAmount().intValue()>0) {
 					new CreateQtBackingBean().setProcurementMode(qt,qt.getEstimatedAmount());
 				}
 			}
@@ -11834,6 +11834,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setZoneGeneralTrees(
 						new ArrayList<TreeNode>());
 			}
+			this.getManagedBean().setPanelSpecExistedOrNot(false);
 			specCommitteeResetData();
 			// settemplateSpecList(savedCheckLists);
 			setTechnicalCheckList(savedCheckLists.get(0));
@@ -12169,7 +12170,7 @@ public class SpecificationBackingBean extends
 					.isZonal()
 					&& null != zoneSupplierCriteria
 					&& null != zoneSupplierCriteria.getQtZoneCriterias() && null == zoneSupplierCriteria
-					.getQtZoneCriterias().getSpecZoneId()))) {
+					.getQtZoneCriterias().getSpecZoneId()) || (getManagedBean().getQt().isPanel() && this.getManagedBean().isPanelSpecExistedOrNot()))) {
 				ScQt scQt = saveZonesBeforeTemplateSpec(getManagedBean()
 						.getQt());
 				// SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -12400,7 +12401,7 @@ public class SpecificationBackingBean extends
 			ScQt qt = resDTO.getScQt();
 			if (qt != null) {
 				this.getManagedBean().setQt(qt);
-				if(qt.getEstimatedAmount() != null){
+				if(qt.getEstimatedAmount() != null  && qt.getEstimatedAmount().intValue()>0){
 					new CreateQtBackingBean().setProcurementMode(qt, qt.getEstimatedAmount());
 				}
 			}
@@ -12411,6 +12412,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCheckListTitle("");
 			this.getManagedBean().setFinancialScoring(null);
 			this.getManagedBean().setOfferPricePackage(null);
+			this.getManagedBean().setPanelSpecExistedOrNot(false);
 			specCommitteeResetData();
 			if (reqDTO.isZonesQt() || (this.getManagedBean().getQt().isZonal()&& SourcingConstants.FINANCIAL_DOCTYPE
 					.equalsIgnoreCase(specType))) {
@@ -14472,6 +14474,7 @@ public class SpecificationBackingBean extends
 	/*add panelItems asa TemplateSpecItems for Panel*/
 	public String addPanelItemsToTemplateSpec(){
 		this.getManagedBean().setSpecNewable(true);
+		this.getManagedBean().setPanelSpecExistedOrNot(false);
 		List<CtPanelItem> selectedPanelItems=this.getManagedBean().getSelectCtPanelItem();
 		if(null==selectedPanelItems || selectedPanelItems.isEmpty()){
 			selectedPanelItems=new ArrayList<CtPanelItem>();
@@ -14609,11 +14612,14 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().getQt().setZonal(true);
 			this.getManagedBean().getQt().setZoneLocationLevel(item.getLocationLevelId());
-			if(this.getManagedBean().getQt()
+			List<ScQtCheckList> technicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+			if(((this.getManagedBean().getQt()
 					.isZonal()
 					&& null != supplierCriteria
 					&& null != supplierCriteria.getQtZoneCriterias() && null == supplierCriteria
-					.getQtZoneCriterias().getSpecZoneId()) {
+					.getQtZoneCriterias().getSpecZoneId()) || (!isAtleastTechnicalSpec(technicalCheckList)))) {
+				this.getManagedBean().setPanelSpecExistedOrNot(true);
 				retriveZonesOrSuppliersByItem();
 					}
 		
