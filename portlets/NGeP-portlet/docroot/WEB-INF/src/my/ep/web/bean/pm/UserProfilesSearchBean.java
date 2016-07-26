@@ -1,5 +1,7 @@
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
+
 /**
  * Search Bean for User Profile
  * 
@@ -7,7 +9,11 @@ package my.ep.web.bean.pm;
  * @since 8/7/2013
  *
  */
-public class UserProfilesSearchBean {
+public class UserProfilesSearchBean implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String loginId;
 	private String identificationNo;
 	private String userName;

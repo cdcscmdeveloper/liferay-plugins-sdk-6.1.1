@@ -3,12 +3,19 @@
  */
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
+
 /**
  * @author venugopal
  *
  */
-public class LocationSearchBean {
+public class LocationSearchBean implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private Long countryId;
 
 	private String locationCode;
