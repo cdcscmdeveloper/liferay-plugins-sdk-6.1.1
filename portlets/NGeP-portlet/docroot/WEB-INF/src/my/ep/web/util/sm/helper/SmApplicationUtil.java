@@ -991,8 +991,9 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722526);
 			}
 		}
-		
-		if(!appl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+
+		if (!appl.getSupplierType().equalsIgnoreCase(
+				SupplierManagementConst.STYPE_CONSULTANT)) {
 			if (appl.getSmCompanyBasic() != null
 					&& !appl.getSmCompanyBasic().isWithFederal()
 					&& !appl.getSmCompanyBasic().isWithGlc()
@@ -2647,8 +2648,7 @@ public class SmApplicationUtil {
 		validSave = true;
 		int i = 0;
 		StringBuilder sb = new StringBuilder();
-		for (SmApplSupportDoc doc : managedBean.getSmAppl()
-				.getSmApplSupportDocs()) {
+		for (SmApplSupportDoc doc : managedBean.getMandatoryDocs()) {
 			if (doc.getVerifiedFlg() == null) {
 				validSave = false;
 				sb.append("<br/>").append(++i).append(".)")
@@ -8169,9 +8169,10 @@ public class SmApplicationUtil {
 	 *            appl
 	 * @return boolean
 	 */
-	public static boolean isAllSuppDocAlreadyVerified(SmAppl appl) {
+	public static boolean isAllSuppDocAlreadyVerified(
+			List<SmApplSupportDoc> docs) {
 		boolean retVal = true;
-		for (SmApplSupportDoc doc : appl.getSmApplSupportDocs()) {
+		for (SmApplSupportDoc doc : docs) {
 			if (doc.getVerifiedFlg() == null) {
 				retVal = false;
 			}
