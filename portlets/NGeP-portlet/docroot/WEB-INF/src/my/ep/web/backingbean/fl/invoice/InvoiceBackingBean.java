@@ -281,7 +281,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					messageId = MessageConst.INFO_700018;
+					messageId = MessageConst.INFO_745018;
 					messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
