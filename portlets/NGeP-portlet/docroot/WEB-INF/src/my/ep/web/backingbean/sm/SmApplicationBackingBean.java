@@ -3837,10 +3837,9 @@ public class SmApplicationBackingBean extends
 	 * Action to Approve all supporting document by PO or Approver.
 	 */
 	public void approveAllSuppDocByPOorApprover() {
-		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
-				.getSmApplSupportDocs())) {
-			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
-					.getSmApplSupportDocs()) {
+		if (!SmCommonUtil
+				.isCollectionEmpty(getManagedBean().getMandatoryDocs())) {
+			for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
 				doc.setVerifiedFlg(1);
 			}
 		}
@@ -5081,7 +5080,7 @@ public class SmApplicationBackingBean extends
 	private void saveOrUpdateAppl() {
 		// SmApplicationUtil.getInstance().setApplAddressTransientValue(
 		// getManagedBean().getSmAppl(), true);
-//		updateMandatoryAndNonMandatorySuppDocToApplDoc();
+		updateMandatoryAndNonMandatorySuppDocToApplDoc();
 		updatePersonnelRecordStatus(getManagedBean().getSmAppl()
 				.getSmPersonnels(), getManagedBean().getSmSupplier());
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
@@ -5100,6 +5099,8 @@ public class SmApplicationBackingBean extends
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
 		} finally {
 			retriveLatestApplAfterUpdate("", "");
+			
+			initNonMandatoryAndMandatoryDocs();
 
 			// set section editor VO after update
 			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false);

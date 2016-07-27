@@ -38,6 +38,8 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private Map<Long,SmApplSupportDoc> supportingDocMap;
 	private SmGstSupplier smGstSupplier;
 	private boolean claimTask;
+	private List<SmApplSupportDoc> mandatoryDocs;
+	private List<SmApplSupportDoc> nonMandatoryDocs;
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -174,6 +176,22 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 
 	public void setClaimTask(boolean claimTask) {
 		this.claimTask = claimTask;
+	}
+
+	public List<SmApplSupportDoc> getMandatoryDocs() {
+		return mandatoryDocs;
+	}
+
+	public void setMandatoryDocs(List<SmApplSupportDoc> mandatoryDocs) {
+		this.mandatoryDocs = mandatoryDocs;
+	}
+
+	public List<SmApplSupportDoc> getNonMandatoryDocs() {
+		return nonMandatoryDocs;
+	}
+
+	public void setNonMandatoryDocs(List<SmApplSupportDoc> nonMandatoryDocs) {
+		this.nonMandatoryDocs = nonMandatoryDocs;
 	}
 
 	

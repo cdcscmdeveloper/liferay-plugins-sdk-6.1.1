@@ -20,6 +20,7 @@ import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
@@ -129,6 +130,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		
 		//retrieveBusinessTypeList();
 		log.info("----------Supporting document-------------" +  this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
+		
+		//initialized mandatory and non mandatory supporting documents
+		initNonMandatoryAndMandatoryDocs();
 	}
 
 	/**
@@ -202,6 +206,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				smRmk.setDocId(this.getManagedBean().getSmAppl().getApplId());*/
 
 			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+			updateMandatoryAndNonMandatorySuppDocToApplDoc();
 			reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 			reqDTO.setToken(token);
 			reqDTO.setOutcome(resAction);
@@ -399,13 +404,57 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 	
 	/**
+	 * Initialize latest supporting docs to mandatory and non mandatory document
+	 * list
+	 */
+	private void initNonMandatoryAndMandatoryDocs() {
+		if (getManagedBean().getSmAppl() != null
+				&& !EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+						.getSmApplSupportDocs())) {
+			getManagedBean()
+					.setMandatoryDocs(new ArrayList<SmApplSupportDoc>());
+			getManagedBean().setNonMandatoryDocs(
+					new ArrayList<SmApplSupportDoc>());
+			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+					.getSmApplSupportDocs()) {
+				if (doc.getPmDocument() != null) {
+					if (doc.getPmDocument().isMandatory()) {
+						getManagedBean().getMandatoryDocs().add(doc);
+					} else {
+						getManagedBean().getNonMandatoryDocs().add(doc);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Update mandatory and non mandatory documents back to application main
+	 * list
+	 */
+	private void updateMandatoryAndNonMandatorySuppDocToApplDoc() {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getNonMandatoryDocs())) {
+			for (SmApplSupportDoc doc : getManagedBean().getNonMandatoryDocs()) {
+				EntityHelper.addOrUpdateEntityToList(doc, getManagedBean()
+						.getSmAppl().getSmApplSupportDocs());
+			}
+		}
+		if (!EntityHelper
+				.isCollectionEmpty(getManagedBean().getMandatoryDocs())) {
+			for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
+				EntityHelper.addOrUpdateEntityToList(doc, getManagedBean()
+						.getSmAppl().getSmApplSupportDocs());
+			}
+		}
+	}
+	
+	/**
 	 * Action to Receive all supporting document.
 	 */
 	public void receiveAllSuppDoc() {
-		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
-				.getSmApplSupportDocs())) {
-			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
-					.getSmApplSupportDocs()) {
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getMandatoryDocs())) {
+			for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
 				doc.setReceived(true);
 				this.receiveStatusChange(doc);
 			}
