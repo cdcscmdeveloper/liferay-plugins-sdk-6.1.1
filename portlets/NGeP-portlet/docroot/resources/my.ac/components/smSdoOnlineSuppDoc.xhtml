@@ -1,0 +1,63 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<cc:interface>
+		<cc:attribute name="tableId" required="true" />
+		<cc:attribute name="smApplSupportDocs" required="true" />
+		<cc:attribute name="mandatory" default="false"/>
+	</cc:interface>
+
+	<cc:implementation>
+		<table>
+			<p:outputPanel rendered="#{!cc.attrs.mandatory}">
+				<tr><td style="background-color: PaleGreen;text-align: center;"><h:outputText value="#{lbl['lbl.sm.nonmandatory.suppdoc']}" style="font-weight: bold !important;"/></td></tr>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{cc.attrs.mandatory}">
+				<tr><td style="background-color:PeachPuff;text-align: center;"><h:outputText value="#{lbl['lbl.sm.mandatory.suppdoc']}" style="font-weight: bold !important;"/></td></tr>
+			</p:outputPanel>
+			<tr><td>
+				<p:dataTable var="suppDoc" value="#{cc.attrs.smApplSupportDocs}" id="#{cc.attrs.tableId}" rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;">
+					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;">
+						<p:outputLabel value="#{index + 1}"
+							style="float: center;white-space: normal;" />
+					</p:column>
+					
+					<p:column style="width:70%; white-space:normal" headerText="#{lbl['lbl.sm.supportingdoc.docName']}">  
+			            <h:outputText value="#{suppDoc.pmDocument.docName}"  /> 
+			        </p:column>
+				
+					<p:column style="width:15%;"  headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
+						rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+						<p:commandLink value="#{suppDoc.smApplDocFiles[0].fileName}" rendered="#{not empty suppDoc.smApplDocFiles}"  ajax="false"
+				            action="#{sdoReviewBackingBean.downloadSuppDoc(suppDoc.smApplDocFiles[0].fileName,suppDoc.smApplDocFiles[0].filePath)}">
+				           		<p:fileDownload value="#{sdoReviewBackingBean.file}" />
+				        </p:commandLink>
+			        </p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}">
+						<div align="center">
+						<p:selectBooleanCheckbox value="#{suppDoc.received}" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
+							<p:ajax event="change" update=":form:btnInquiryId,:form:btnSubmitId" listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}"/>
+						</p:selectBooleanCheckbox>
+						</div>
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.remark']}">
+						<p:inputTextarea value="#{suppDoc.sdoRemarks}" id="docRemarkId" label="#{lbl['lbl.sm.remark']}" 
+							autoResize="false" maxlength="100" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
+							<f:validateLength maximum="100" />
+						</p:inputTextarea>
+					</p:column>
+	
+				</p:dataTable>
+			</td></tr>
+		</table>
+		
+	</cc:implementation>
+</ui:component>
