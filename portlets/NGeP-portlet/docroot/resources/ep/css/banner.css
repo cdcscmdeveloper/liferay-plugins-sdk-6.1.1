@@ -13,7 +13,7 @@ a:hover {
 	max-width: 700px;
 	display: table;  height:100vh; max-height: 60px; #position: relative; overflow: hidden;
 	border: 1px solid #d1d3d4;
-	background-image:url(upload-catalogue-bg.png);
+	background-image:url(#{resource['ep/images/supplierregistration/upload-catalogue-bg.png']}) !important;
 	background-size:cover;
 	background-repeat: no-repeat;
 }
@@ -36,7 +36,7 @@ a:hover {
 	max-width: 700px;
 	display: table; height:100vh; max-height: 60px; #position: relative; overflow: hidden;
 	border: 1px solid #d1d3d4;
-	background-image:url(request-softcert-bg.png);
+	background-image:url(#{resource['ep/images/supplierregistration/request-softcert-bg.png']}) !important;
 	background-position:right;
 	background-size:cover;
 	background-repeat: no-repeat;
@@ -59,7 +59,7 @@ a:hover {
 	max-width: 700px;
 	display: table; height:100vh; max-height: 60px;  #position: relative; overflow: hidden;
 	border: 1px solid #d1d3d4;
-	background-image:url(upgrade-mof-bg.png);
+	background-image:url(#{resource['ep/images/supplierregistration/upgrade-mof-bg.png']}) !important;
 	background-size:cover;
 	background-repeat: no-repeat;
 }
