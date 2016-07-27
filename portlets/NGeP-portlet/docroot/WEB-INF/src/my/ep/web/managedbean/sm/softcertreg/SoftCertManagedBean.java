@@ -56,6 +56,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private boolean applySoftcertForOthers;
 	private boolean renderRevokeButton;
 	private boolean allAuthSuppUserAlreadyRequested;
+	private boolean basicAppl;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -302,6 +303,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	public void setAllAuthSuppUserAlreadyRequested(
 			boolean allAuthSuppUserAlreadyRequested) {
 		this.allAuthSuppUserAlreadyRequested = allAuthSuppUserAlreadyRequested;
+	}
+
+	public boolean isBasicAppl() {
+		return basicAppl;
+	}
+
+	public void setBasicAppl(boolean basicAppl) {
+		this.basicAppl = basicAppl;
 	}
 
 }
