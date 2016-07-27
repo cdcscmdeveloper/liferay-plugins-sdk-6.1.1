@@ -21,16 +21,26 @@
 		</table>
 
 		<p:panel header="#{lbl['lbl.sm.softcert.selected.personnel.panheader']}" toggleable="true" id="uploadPanelId">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.upload.suppdoc.note']}&lt;br/&gt;" 
+				rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}" escape="false">
+			</h:outputText>
 			
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.upload.suppdoc.note']}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}"/>
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.offline.suppdoc.note']}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'H'}"/>
+			<h:outputText styleClass="instruction" style="color:red;" value="#{lbl['lbl.sm.softcert.upload.basic']}&lt;br/&gt;" escape="false"
+				rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S' and softCertBackingBean.managedBean.basicAppl == true}">
+			</h:outputText>
+			
+			<h:outputText styleClass="instruction" style="color:red;" value="#{lbl['lbl.sm.softcert.upload.file.type']}" 
+				rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}"></h:outputText>
+	
+			<h:outputText styleClass="instruction" style="color:red;" value="#{lbl['lbl.sm.softcert.offline.suppdoc.note']}" 
+			rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'H'}" escape="false"/>
 			
 			<table style="width: 100%;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.submission.type']}" /></td>
 					<td><p:selectOneRadio id="onLnSuppDocs" disabled="#{empty softCertBackingBean.managedBean.softcertUploadSuppDocList}"
 							value="#{softCertBackingBean.managedBean.suppDocMode}">
-							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
+							<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.ep.centre']}"
 								itemValue="H" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
 								itemValue="S"/>
@@ -175,7 +185,7 @@
 			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
 			onShow="singleUploadListener(uploadWV);">
 			<p:fileUpload
-				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|pdf|doc|docx)$/"
+				allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/"
 				sizeLimit="1000000"
 				id="upload"
 				invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
