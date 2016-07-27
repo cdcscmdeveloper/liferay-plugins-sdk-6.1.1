@@ -155,6 +155,7 @@
 		                <p:column headerText="#{lbl['lbl.ct.ic.no']}" style="width:20%;" styleClass="column-align-center">
 		                    <p:inputText value="#{signAgWitnessVar.officerIc}" style="width:90%"
 		                        label="#{lbl['lbl.ct.ic.no']}"  maxlength="20" disabled="#{agreementBackingBean.managedBean.uploadFinalAgreement}">
+		                    <p:ajax event="change" listener="#{agreementBackingBean.checkDuplicateAgreementParty()}"/>
 		                    </p:inputText>
 		                </p:column> 
 		         

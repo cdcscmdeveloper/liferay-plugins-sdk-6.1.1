@@ -785,7 +785,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * A error will display on screen when there is duplicated identification no.
 	 *
 	 */
-	private void checkDuplicateAgreementParty() {
+	public void checkDuplicateAgreementParty() {
 		List<CtAgreementParty> ctAgreementPartyList = new ArrayList<CtAgreementParty>();
 		ctAgreementPartyList.addAll(getManagedBean().getCtAgencySigner());
 		ctAgreementPartyList.addAll(getManagedBean().getCtSignAgencyWitness());
@@ -1694,6 +1694,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				party.setOfficerPosition(resDTO.getPmUser().getDesignation());
 			}
 		}
+		checkDuplicateAgreementParty();
 	}
 	
 	/**
@@ -1758,6 +1759,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			ctParty.setOfficerPosition(null);
 			ctParty.setOfficer(null);
 		}
+		checkDuplicateAgreementParty();
 	}
 	
 	/**
