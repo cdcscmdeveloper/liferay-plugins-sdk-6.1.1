@@ -13,7 +13,7 @@
 		 </p:blockUI> 	
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info, warning" />
 		<p:panel id="searchPanel" header="#{lbl['lbl.ct.search']}" toggleable="true">
-			<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth30, columnWidth30, columnWidth20,columnWidth20">
+			<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth25, columnWidth30, columnWidth25,columnWidth20">
 				<h:outputLabel value="#{lbl['lbl.ct.circular.type']}" styleClass="required" />
 				<p:selectOneMenu value="#{circularBackingBean.managedBean.searchCircularDocType}" style="width:380px;" >
 					<p:ajax event="change" process="@this" update="searchPanel" />
@@ -40,7 +40,7 @@
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
 					navigator="true" value="#{circularBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />								
 				<h:outputLabel value="#{lbl['lbl.ct.status']}" />
-				<p:selectOneMenu id="status" value="#{circularBackingBean.managedBean.searchStatusId}" style="width:450px;">
+				<p:selectOneMenu id="status" value="#{circularBackingBean.managedBean.searchStatusId}" style="width:470px;">
 					<f:selectItems value="#{circularBackingBean.getStatusDropdown()}" />
 				</p:selectOneMenu>
 			</h:panelGrid>		
