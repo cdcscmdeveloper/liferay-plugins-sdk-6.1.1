@@ -18912,6 +18912,7 @@ public class ReportBackingBean extends
 				}
 			} else {
 				searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
+				this.setPmOrgCategory(ReportConst.FEDERAL_GOVT);
 				if (searchBean1 != null) {
 					searchBean1.getSortColumns();
 
