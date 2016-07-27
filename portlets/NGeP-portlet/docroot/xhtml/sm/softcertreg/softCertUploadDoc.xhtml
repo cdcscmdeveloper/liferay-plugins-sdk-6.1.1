@@ -25,14 +25,14 @@
 				rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}" escape="false">
 			</h:outputText>
 			
-			<h:outputText styleClass="instruction" style="color:red;" value="#{lbl['lbl.sm.softcert.upload.basic']}&lt;br/&gt;" escape="false"
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.softcert.upload.basic']}&lt;br/&gt;" escape="false"
 				rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S' and softCertBackingBean.managedBean.basicAppl == true}">
 			</h:outputText>
 			
-			<h:outputText styleClass="instruction" style="color:red;" value="#{lbl['lbl.sm.softcert.upload.file.type']}" 
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.softcert.upload.file.type']}" 
 				rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}"></h:outputText>
 	
-			<h:outputText styleClass="instruction" style="color:red;" value="#{lbl['lbl.sm.softcert.offline.suppdoc.note']}" 
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.softcert.offline.suppdoc.note']}" 
 			rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'H'}" escape="false"/>
 			
 			<table style="width: 100%;">
@@ -188,7 +188,7 @@
 				allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/"
 				sizeLimit="1000000"
 				id="upload"
-				invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
+				invalidFileMessage="#{lbl['lbl.sm.upload.softcert.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
 				fileUploadListener="#{softCertBackingBean.handleSupDocFileAttachment}"
 				update=":form" oncomplete="uploadDialog.hide();" 
