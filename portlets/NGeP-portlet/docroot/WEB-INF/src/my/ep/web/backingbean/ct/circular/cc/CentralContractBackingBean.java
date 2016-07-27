@@ -227,7 +227,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		
 	    	ICircularSO circularSO = null;
 	        CircularResDTO resDTO = null;
-	        ctBB.getManagedBean().setDeleteAttachmentList(null);
+	        if(ctBB != null && ctBB.getManagedBean().getDeleteAttachmentList() != null ){
+	        	ctBB.getManagedBean().getDeleteAttachmentList().clear();
+	        }
 		     try {
 		    	        circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
 			            resDTO = circularSO.retrieveCircularVerById(reqDTO);

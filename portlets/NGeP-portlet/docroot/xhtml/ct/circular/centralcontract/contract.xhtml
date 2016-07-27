@@ -93,7 +93,7 @@
 					rowKey="#{itemVar}">
 					<ac:paginator for="circularItemDt" />
 					<p:ajax event="rowSelect"
-						update="@([id$=circularZonePanel],[id$=circularPricePanel])"
+						update=":form:circularZonePanel,:form:circularPricePanel"
 						process="@this" 
 						listener="#{centralContractBackingBean.setZoneListener()}" />
 					<p:column headerText="#{lbl['lbl.ct.item.name']}"
@@ -161,14 +161,14 @@
 					selection="#{centralContractBackingBean.managedBean.selectedZoneItems}"
 					selectionMode="single" rowKey="#{dataZone}" rowIndexVar="index">
 					<ac:paginator for="circularItemZoneDt" />
-					<p:ajax event="rowSelect" update="@([id$=circularPricePanel])"
+					<p:ajax event="rowSelect" update=":form:circularPricePanel"
 						process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						listener="#{centralContractBackingBean.setPriceListener()}" />
 					<p:column headerText="#{lbl['lbl.ct.zone']}" style="width:60%;" styleClass="column-align-center">
 						<h:outputText value="#{dataZone.zoneName}" style="float:left;text-align:left;width:50%;" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.action']}" style="width:40%;" styleClass="column-align-center">
-						<p:commandLink update="@([id$=itemZoneId])" actionListener="#{centralContractBackingBean.viewZoneLocation(dataZone)}"
+						<p:commandLink update=":form:itemZoneId" actionListener="#{centralContractBackingBean.viewZoneLocation(dataZone)}"
 							oncomplete="itemZoneDlg.show();" immediate="true">
 							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}"></p:graphicImage>
 						</p:commandLink>
@@ -345,7 +345,7 @@
 		<p:dialog id="itemZoneDlg" header="#{lbl['lbl.ct.panel.zone']}" styleClass="pop_up_top"
 			widgetVar="itemZoneDlg" modal="true" width="350" height="200">
 			<p:outputPanel id="itemZoneId">
-				<p:treeTable id="itemZoneDt"
+				<p:treeTable id="itemZoneDt" style="height:160px;"
 					value="#{centralContractBackingBean.managedBean.centralZoneTrees}"
 					var="zoneTree">
 					<p:column style="width:70%;" styleClass="column-align-center">
@@ -362,6 +362,10 @@
 					</p:column>
 				</p:treeTable>
 			</p:outputPanel>
+			<div align="right">
+		        <p:spacer height="10"/>
+		        <p:commandButton value="#{lbl['lbl.btn.close']}" onclick="itemZoneDlg.hide();"  />
+	      </div>
 		</p:dialog>
 
 		<p:dialog id="contractDlg" header="#{lbl['lbl.ct.contract.list']}" styleClass="pop_up_top"
