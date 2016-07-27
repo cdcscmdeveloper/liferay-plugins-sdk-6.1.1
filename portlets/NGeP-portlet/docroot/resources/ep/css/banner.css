@@ -21,7 +21,7 @@ a.bannerlink:hover {
 
 /* Banner 1 */
 .banner1{
-    background-image: url("http://ngepdevwps01.eperolehan.com.my:8621/web/epapp/dashboard?p_p_id=supplierPromotion_WAR_NGePportlet&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_cacheability=cacheLevelPage&p_p_col_id=column-3&p_p_col_count=2&p_p_col_pos=1&_supplierPromotion_WAR_NGePportlet_javax.faces.resource=ep%2Fimages%2Fsupplierregistration%2Fupload-catalogue-bg.png") !important;
+    background-image:url(#{resource['ep/images/supplierregistration/upload-catalogue-bg.png']}) !important;
     background-repeat: no-repeat;
     border: 1px solid #d1d3d4;
     border-radius: 8px;
@@ -41,7 +41,7 @@ a.bannerlink:hover {
 
 /* Banner 2 */
 .banner2 {
-    background-image: url("http://ngepdevwps01.eperolehan.com.my:8621/web/epapp/dashboard?p_p_id=supplierPromotion_WAR_NGePportlet&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_cacheability=cacheLevelPage&p_p_col_id=column-3&p_p_col_count=2&p_p_col_pos=1&_supplierPromotion_WAR_NGePportlet_javax.faces.resource=ep%2Fimages%2Fsupplierregistration%2Frequest-softcert-bg.png") !important;
+   	background-image:url(#{resource['ep/images/supplierregistration/request-softcert-bg.png']})!important;
     background-position: right center;
     background-repeat: no-repeat;
     border: 1px solid #d1d3d4;
@@ -63,7 +63,7 @@ a.bannerlink:hover {
 
 /* Banner 3 */
 .banner3 {
-    background-image: url("http://ngepdevwps01.eperolehan.com.my:8621/web/epapp/dashboard?p_p_id=supplierPromotion_WAR_NGePportlet&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_cacheability=cacheLevelPage&p_p_col_id=column-3&p_p_col_count=2&p_p_col_pos=1&_supplierPromotion_WAR_NGePportlet_javax.faces.resource=ep%2Fimages%2Fsupplierregistration%2Fupgrade-mof-bg.png") !important;
+    background-image:url(#{resource['ep/images/supplierregistration/upgrade-mof-bg.png']}) !important;
     background-position: left center;
     background-repeat: no-repeat;
     border: 1px solid #d1d3d4;
