@@ -30,7 +30,6 @@
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=loiNegotationDetailsPanel])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
-			
 
 			<p:column style="width:40%">
 				<f:facet name="header">
@@ -38,7 +37,7 @@
 						<h:outputText value="#{lbl['lbl.sc.location']}"/>
 				</f:facet>
 				<p:inputText value="#{negoloc.negoLocation}" id="negLocId" label="#{lbl['lbl.sc.location']}" maxlength="255"
-				size="30" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}">
+				size="65" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this" />
 				</p:inputText>
@@ -51,22 +50,21 @@
 						<h:outputText value="#{lbl['lbl.sc.date']}"/>
 				</f:facet>
 				
-	<ac:dateTime id="date"
-      mindate="#{DateUtils.getCurrentDate()}"
-      disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}"
-      label="#{lbl['lbl.sc.date']}"
-      value="#{negoloc.negoDate}"
-      update="@([id$=date])"
-      rowIndex="#{rowIndex}">
-     </ac:dateTime>
-					
-					<p:message id="dateMsg" for="date" display="icon" />
+				<ac:dateTime id="date"
+			      mindate="#{DateUtils.getCurrentDate()}"
+			      disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}"
+			      label="#{lbl['lbl.sc.date']}"
+			      value="#{negoloc.negoDate}"
+			      update="@([id$=date])"
+			      rowIndex="#{rowIndex}">
+			     </ac:dateTime>
+				<p:message id="dateMsg" for="date" display="icon" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.remarks']}"
 				style="width:40%">
 				<p:inputText id="remarksId" value="#{negoloc.remark}" label="#{lbl['lbl.sc.remarks']}"
-				  size="30" maxlength="200" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}">
+				  size="65" maxlength="200" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}">
 				  <p:ajax partialSubmit="true" process="@this"
 						update="@this" />
 				  </p:inputText>
@@ -157,7 +155,7 @@
 				</c:if>
 
 				<c:if test="#{isEditableStatus and !afterNegotiation}">
-					<p:inputTextarea style="width:400px" rows="2" maxlength="255" value="#{negoTerm.negoResult}" 
+					<p:inputTextarea style="width:500px" rows="2" maxlength="255" value="#{negoTerm.negoResult}" 
 					onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
 						autoResize="false" readonly="#{lOIDetailBackingBean.managedBean.readOnly}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
