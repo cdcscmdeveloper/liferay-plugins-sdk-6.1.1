@@ -44,11 +44,11 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
@@ -273,7 +273,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setBsvType(bsvType);
 		ScQtBsvDtl bsvDtl = new ScQtBsvDtl();
 		bsvDtl.setBsvType(bsvType);
-		ScAddress address = new ScAddress();
+		PmAddress address = new PmAddress();
 		PmCity pmCity = new PmCity();
 		address.setPmCity(pmCity);
 		PmState pmState = new PmState();
@@ -806,8 +806,8 @@ public class QTBriefingSiteVisitBackingBean extends
 		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(this
 				.getManagedBean().getCurrentStatusId())){
 			ScQtBsvDtl tempScQtBsvDtl = new ScQtBsvDtl();
-			ScAddress currentAddress = bsvDtl.getAddress();
-			ScAddress tempPmAddress = new ScAddress();
+			PmAddress currentAddress = bsvDtl.getAddress();
+			PmAddress tempPmAddress = new PmAddress();
 			try {
 				ConvertUtilsBean convertUtilsBean = BeanUtilsBean
 						.getInstance().getConvertUtils();
@@ -925,8 +925,8 @@ public class QTBriefingSiteVisitBackingBean extends
 				oldBsvDtl.getLocation(), newBsvDtl.getLocation());
 
 		// address
-		ScAddress oldAddress = oldBsvDtl.getAddress();
-		ScAddress newAddress = newBsvDtl.getAddress();
+		PmAddress oldAddress = oldBsvDtl.getAddress();
+		PmAddress newAddress = newBsvDtl.getAddress();
 		if (newAddress.getAddress2().equals("")) {
 			newAddress.setAddress2(null);
 		}
