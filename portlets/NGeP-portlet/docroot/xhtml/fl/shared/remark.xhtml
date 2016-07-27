@@ -9,7 +9,7 @@
 		<tr>
 			<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 			<td class="TableFieldRight">
-				<p:dataGrid value="#{fulfilmentBackingBean.managedBean.remarkList}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" styleClass="noBorder">
+				<p:dataGrid value="#{fulfilmentBackingBean.managedBean.remarkList}" var="remarkVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rowIndexVar="remarkIndex" columns="1" styleClass="noBorder">
 					<table>
 						<tr>
 							<td rowspan="2" valign="top">
