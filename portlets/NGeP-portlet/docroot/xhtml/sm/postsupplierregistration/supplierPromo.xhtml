@@ -13,24 +13,27 @@
 
 			<c:forEach items="#{postSupplierRegBB.managedBean.userActionMap}" var="entry">
 				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'SC'}" styleClass="bannerlink">
+					<div class="banner2-container">
 					<div class="banner2">
 					<div class="banner2-text">
 					  <p>#{lbl['lbl.sm.supplier.promo.request.softcert']}</p>
-					</div></div>
+					</div></div></div>
 				</p:commandLink>
 				
 				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'CU'}" styleClass="bannerlink">
+					<div class="banner1-container">
 					<div class="banner1">
 					<div class="banner1-text">
 					   <p>#{lbl['lbl.sm.supplier.promo.cat.upload1']} #{lbl['lbl.sm.supplier.promo.cat.upload2']}</p>
-					</div></div>
+					</div></div></div>
 				</p:commandLink>
 				
 				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'UPMOF'}" styleClass="bannerlink">
+					<div class="banner3-container">
 					<div class="banner3">
 					<div class="banner3-text">
 					  <p>#{lbl['lbl.sm.supplier.promo.upgrade.mof']}</p>
-					</div></div>
+					</div></div></div>
 				</p:commandLink><br />
 			</c:forEach>
 			<ui:remove>
