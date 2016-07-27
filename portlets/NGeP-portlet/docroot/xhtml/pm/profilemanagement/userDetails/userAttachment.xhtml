@@ -13,7 +13,13 @@
 		     value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserAttachments}">   
 		    <ac:paginator for="dtAttachment"/>
 		    <p:column style="width:55%;text-align:left;white-space:normal;" headerText="#{lbl['lbl.pm.profiles.authorisation.filename']}" >
-	          	#{attachment.fileName}
+		    	<p:commandLink value="#{attachment.fileName}" process="@this"
+										immediate="true" ajax="false"
+										styleClass="blue_font"
+										rendered="#{!attachment.brandNew}"
+										action="#{profileManagementBackingBean.downloadAttachment(attachment)}" />
+				<h:outputText value="#{attachment.fileName}" rendered="#{attachment.brandNew}"/>
+				
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.created.by']}" style="width:17%;text-align:center;white-space:normal;">
 	          	#{profileManagementBackingBean.getUsername(attachment.createdBy)}
@@ -24,11 +30,6 @@
 				</h:outputText>
 			</p:column>
 	        <p:column style="text-align:center;width:8%;" headerText="#{lbl['lbl.pm.action']}" >
-	        	<p:commandLink value="#{attachment.fileName}" process="@this"
-										immediate="true" ajax="false"
-										styleClass="blue_font"
-										rendered="#{!attachment.brandNew}"
-										action="#{profileManagementBackingBean.downloadAttachment(attachment)}" />
 	         <p:commandLink partialSubmit="true"
 						process="@this"
 						oncomplete="attachmentDeletePopUp.show();"
