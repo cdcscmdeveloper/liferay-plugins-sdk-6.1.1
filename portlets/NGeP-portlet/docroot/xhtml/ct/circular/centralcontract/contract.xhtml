@@ -167,7 +167,7 @@
 					<p:column headerText="#{lbl['lbl.ct.zone']}" style="width:60%;" styleClass="column-align-center">
 						<h:outputText value="#{dataZone.zoneName}" style="float:left;text-align:left;width:50%;" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.action']}" style="width:40%;" styleClass="column-align-center">
+					<p:column headerText="#{lbl['lbl.ct.location']}" style="width:40%;" styleClass="column-align-center">
 						<p:commandLink update=":form:itemZoneId" actionListener="#{centralContractBackingBean.viewZoneLocation(dataZone)}"
 							oncomplete="itemZoneDlg.show();" immediate="true">
 							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}"></p:graphicImage>
