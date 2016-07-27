@@ -931,6 +931,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		if (softcertSuppDocList == null || softcertSuppDocList.isEmpty()) {
 			getManagedBean().setSuppDocMode("H");
 		}
+		getManagedBean().setBasicAppl(basic);
 	}
 
 	/**
