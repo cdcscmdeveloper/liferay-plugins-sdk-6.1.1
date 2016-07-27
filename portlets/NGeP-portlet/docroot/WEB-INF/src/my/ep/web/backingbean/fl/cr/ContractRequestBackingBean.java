@@ -1378,8 +1378,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			if (!existed) {
-				newItem.setOrderedQty(BigDecimal.ZERO);
-				newItem.setOrderedAmt(BigDecimal.ZERO);
+				if(!newItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE) && getManagedBean().getFlRequest().getScPurchaseInDefault() == null){
+					newItem.setOrderedQty(BigDecimal.ZERO);
+					newItem.setOrderedAmt(BigDecimal.ZERO);
+				}
 				if(newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
 					||newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
 					newItem.setUnitPrice(BigDecimal.ZERO);
@@ -3804,7 +3806,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					flItemAddr.setGstAmount(BigDecimal.ZERO);
 					flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 				}
-				flItemAddr.setOrderedQty(BigDecimal.ZERO);
+				if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null && flItemAddr.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+					flItemAddr.setOrderedQty(getManagedBean().getFlRequest().getScPurchaseInDefault().getQuantity());
+				}else{
+					flItemAddr.setOrderedQty(BigDecimal.ZERO);
+				}
+				
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 				itemAddrList.add(flItemAddr);
 			}
@@ -4254,18 +4261,24 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 
 	private void checkPidMinQtyItem(FlFulfilmentRequest flRequest) {
 		BigDecimal sumOrderQty = BigDecimal.ZERO;
+		boolean isPIDService = false;
 		for(FlDeliveryAddress deliveryAddress : flRequest.getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+				if(itemAddr.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+					isPIDService= true;
+					break;
+				}
 				sumOrderQty = sumOrderQty.add(itemAddr.getOrderedQty());
 			}
 		}
-		if(flRequest.getScPurchaseInDefault().getQuantity().doubleValue() < sumOrderQty.doubleValue()){
-			throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getQuantity().doubleValue())});
+		if(!isPIDService){
+			if(flRequest.getScPurchaseInDefault().getQuantity().doubleValue() < sumOrderQty.doubleValue()){
+				throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getQuantity().doubleValue())});
+			}
+			if(flRequest.getScPurchaseInDefault().getQuantity().doubleValue() > sumOrderQty.doubleValue()){
+				throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getQuantity().doubleValue())});
+			}
 		}
-		if(flRequest.getScPurchaseInDefault().getQuantity().doubleValue() > sumOrderQty.doubleValue()){
-			throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getQuantity().doubleValue())});
-		}
-		
 	}
 
 	private void chargeLineValidationBeforeApproverList(){
