@@ -236,7 +236,8 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:center;width:148px">
 					<p:inputText value="#{item.orderedQty}" size="13" id="orderedQty" label="#{lbl['lbl.fl.ordered.qty']}"
-						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView)}"
+						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView 
+									or (contractRequestBackingBean.managedBean.flRequest.scPurchaseInDefault != null and item.itemType.parameterCode eq ParameterConst.itemTypeService))}"
 						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" style="text-align:right" styleClass="colFloatLeft" 
 						onkeypress="if (event.keyCode == 13) { return false; }">
 						<f:converter converterId="dynamicNumberConverter" />
