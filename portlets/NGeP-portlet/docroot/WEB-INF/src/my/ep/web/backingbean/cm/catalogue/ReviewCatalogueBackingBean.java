@@ -10,22 +10,34 @@
  */
 package my.ep.web.backingbean.cm.catalogue;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
@@ -37,7 +49,11 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -50,6 +66,7 @@ import my.ep.web.managedbean.cm.catalogue.ReviewCatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
+import my.ep.exception.EpException;
 
 
 /**
@@ -160,16 +177,16 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 		bb.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
 		bb.getManagedBean().setDisplayCatalogue(true);
 		bb.getManagedBean().setPreviousScreen(2);//pendingtask
-		
-		
+
+
 		CatalogueBackingBean.retriveSupplierGstInfomation(catResDTO.getSupplierItem().getSmSupplier());
-		
-		
-		
+
+
+
 		return "addCatalogItem";
 
 	}
-	
+
 
 	/**
 	 * Approve catalogue item.
@@ -368,14 +385,17 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 		renewSesionObject();
 
 		System.out.println("***********preRenderSupplierItemDashboard**************");
-		this.getManagedBean().getSuppItemDashboardSearchDataModel().reloadData();
-
+		countApproveList();
+		countRejectList();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "supplierDashboard");
+		
+		RequestContext.getCurrentInstance().execute(
+				"refreshId();");
 
 	}
-	
+
 	public String navigateToCatalogDetfromDashboard() {
 
 		System.out.println("************navigateToCatalogDet*************");
@@ -433,23 +453,166 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 		return "addCatalogView";
 
 	}
-	
+
 	public String getStatusDesc(String status){
-		
+
 		String statusDesc = "";
-		
+
 		if(status.equalsIgnoreCase("A")){
 			statusDesc = ResourceBundleUtils.getMessage("lbl.cm.approved",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 		}else if(status.equalsIgnoreCase("R")){
 			statusDesc = ResourceBundleUtils.getMessage("lbl.cm.reject",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 		}
-		
+
 		return statusDesc;
+	}
+
+
+	public void countRejectList(){
+
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+
+		try {
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+
+			SmSupplier smSupplier = null;
+
+
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
+			supplierReqDTO.setAllStatuses(true);
+
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierReqDTO);
+
+			if(smResDTO.getResultBean().getResultList().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_721017);
+			}
+
+			SearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
+			smSupplier = smResDTO.getResultBean().getResultList().get(0);
+
+			List<String> itemStatusLs = new ArrayList<String>();
+
+			itemStatusLs.add("R"); ///reject
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("itemStatus",
+							SearchOperator.OPERATOR_IN.value(),itemStatusLs ));
+
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("smSupplier.supplierId",
+							SearchOperator.OPERATOR_EQUALS.value(), smSupplier.getSupplierId()));
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatus",
+							SearchOperator.OPERATOR_EQUALS.value(), true));
+
+			reqDTO.setSearchBean(searchBean);
+			CatalogueResDTO resDTO = catalogueSO.retrieveSupplierItemDashBoard(reqDTO);
+			System.out.println("Rejected:"
+					+ resDTO.getSupplierItemList().size());
+			this.getManagedBean().setRejectSize(resDTO.getSupplierItemList().size());
+
+
+		}catch(Exception e){
+
+		}
+
+	}
+
+	public void countApproveList(){
+
+
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+
+		try {
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+
+			SmSupplier smSupplier = null;
+
+
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
+			supplierReqDTO.setAllStatuses(true);
+
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierReqDTO);
+
+			if(smResDTO.getResultBean().getResultList().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_721017);
+			}
+
+			SearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
+			smSupplier = smResDTO.getResultBean().getResultList().get(0);
+
+			List<String> itemStatusLs = new ArrayList<String>();
+
+			itemStatusLs.add("A"); ///approved
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("itemStatus",
+							SearchOperator.OPERATOR_IN.value(),itemStatusLs ));
+
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("smSupplier.supplierId",
+							SearchOperator.OPERATOR_EQUALS.value(), smSupplier.getSupplierId()));
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatus",
+							SearchOperator.OPERATOR_EQUALS.value(), true));
+
+			reqDTO.setSearchBean(searchBean);
+			CatalogueResDTO resDTO = catalogueSO.retrieveSupplierItemDashBoard(reqDTO);
+			System.out.println("Approved:"
+					+ resDTO.getSupplierItemList().size());
+			this.getManagedBean().setApproveSize(resDTO.getSupplierItemList().size());
+
+
+		}catch(Exception e){
+
+		}
 	}
 	
 	
-	
-	
+	public void navigateToCatalgoueURL() throws IOException,
+	PortalException, SystemException {
+		
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
+				.getRequestScope(WebKeys.THEME_DISPLAY);
+
+		System.out.println("getURLCurrent" + themeDisplay.getURLCurrent());
+		String commonUrl = themeDisplay.getURLCurrent().substring(
+				0,
+				themeDisplay.getURLCurrent().indexOf(
+						themeDisplay.getLayout().getGroup().getFriendlyURL())
+						+ themeDisplay.getLayout().getGroup().getFriendlyURL()
+						.length());
+		System.out.println("commonUrl" + commonUrl);
+
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		externalContext.redirect(commonUrl + "/catalogue-maintenance-file");
+	}
+
+
 
 
 }
