@@ -255,7 +255,14 @@
 
 				<tr>
 					<td class="tdTitle">
-						<p:outputLabel value="#{lbl['lbl.sm.permenantaddress']}" />
+						<c:choose>
+							<c:when test="#{bb.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+								<p:outputLabel value="#{lbl['lbl.sm.ic.address']}" />
+							</c:when>
+							<c:otherwise>
+								<p:outputLabel value="#{lbl['lbl.sm.permenantaddress']}" />
+							</c:otherwise>
+						</c:choose>
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent"><p:inputText size="40" maxlength="35"
