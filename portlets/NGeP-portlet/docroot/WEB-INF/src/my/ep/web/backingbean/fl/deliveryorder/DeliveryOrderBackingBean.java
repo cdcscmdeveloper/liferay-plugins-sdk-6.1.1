@@ -1418,12 +1418,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		getManagedBean().setTextBeforeSign(sb.toString());
 	}
 	
-	/**
-	 * Gets the current date.
-	 *
-	 * @return the current date
-	 */
-	public Date getCurrentDate() {
-		return new Date();
+	public void validateEstDate(FlDeliveryAddress deliveryAddress){
+		if(deliveryAddress.getFlTempDoAddr().getEstDeliveryDate().after(deliveryAddress.getEndDate())){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_745080,null,MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+		}
 	}
+	
 }
