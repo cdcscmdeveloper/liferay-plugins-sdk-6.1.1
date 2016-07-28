@@ -142,15 +142,16 @@
 	<p:dialog id="specPopUp" 
 		widgetVar="specPopUp" 
 		header="#{lbl['lbl.sc.eva.item.specification']}" 
-		modal="true" width="350" height="150">
+		modal="true" width="500" height="150">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="20%" valign="top">
+			<td width="30%" valign="top">
 				<p:outputLabel value="#{lbl['lbl.sc.eva.item.specification']}" />
 			</td>
 			<td width="80%">
 				<p:inputTextarea id="itemSpecTaId" 
 						rows="5"
+						style="width:250px;"
 						value="#{marketResearchBackingBean.managedBean.itemSpec}"
 						disabled="true" />
 			</td>
