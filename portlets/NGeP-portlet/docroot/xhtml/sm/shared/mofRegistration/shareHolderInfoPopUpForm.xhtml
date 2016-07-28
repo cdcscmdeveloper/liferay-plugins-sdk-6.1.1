@@ -47,7 +47,8 @@
 							itemLabel="#{shrOffCountry.countryName}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{backingBean.assignPersonNationality}" 
-							update="muslimLabelOutPanelId,muslimRadioOutPanelId,bumiLabelOutPanelId,bumiRadioOutPanelId,identTypeTtId,equiPerIdenType,equiPerDtlIdenTypePan,equiPerDtlIdenTypeLblPan"/>
+							update="muslimLabelOutPanelId,muslimRadioOutPanelId,bumiLabelOutPanelId,bumiRadioOutPanelId,
+							identTypeTtId,equiPerIdenType,equiPerDtlIdenTypePan,equiPerDtlIdenTypeLblPan,shareHolderAddrDialog"/>
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
