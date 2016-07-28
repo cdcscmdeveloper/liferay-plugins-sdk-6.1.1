@@ -17803,7 +17803,6 @@ public class ReportBackingBean extends
 			this.setPmStatus(null);
 			this.setPmFinancialOrgName(null);
 			this.setPmEpNo(null);
-			this.setPmOrgCategory(null);
 			this.setPmOrgType(null);
 			this.setPmOrgName(null);
 			this.setPmOrgCode(null);
