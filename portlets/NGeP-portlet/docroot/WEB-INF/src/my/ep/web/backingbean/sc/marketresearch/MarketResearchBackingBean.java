@@ -4,10 +4,9 @@
 package my.ep.web.backingbean.sc.marketresearch;
 
 
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -17,44 +16,35 @@ import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.QTStatusConst;
-import my.ep.dto.sc.directpurchase.QuoteReqDTO;
-import my.ep.dto.sc.directpurchase.QuoteResDTO;
+import my.ep.constant.sc.SourcingConstants;
+import my.ep.dto.sc.document.QTDocumentReqDTO;
+import my.ep.dto.sc.document.QTDocumentResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.MarketResearchSearchBean;
-import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.marketresearch.MarketResearchManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 import my.ep.web.vo.MarketResearchVO;
 
@@ -87,6 +77,7 @@ public class MarketResearchBackingBean extends
 	}
 	
 	public void preLoadingMarketResearch(){
+		log.info("preLoadingMarketResearch");
 		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -110,7 +101,7 @@ public class MarketResearchBackingBean extends
 		@Override
 		protected ISearchResultBean<ScLoa> pageChangeListener(
 					ISearchBean<ScLoa> searchBean) {
-			
+			log.info("pageChangeListener");
 			if(getManagedBean().isSearch()){
 				IQTAwardSO qtAwardSO = null;
 				try {
@@ -179,6 +170,7 @@ public class MarketResearchBackingBean extends
 	}
 	
 	public void searchMarketResearch(){
+		log.info("searchMarketResearch");
 		getManagedBean().setSearch(true);
 		MarketResearchSearchBean mrSearchBean = getManagedBean().getMarketResearchSearchBean();		
 		if(mrSearchBean.getLoaAckDateFrom() != null && mrSearchBean.getLoaAckDateTo() != null){
@@ -191,6 +183,7 @@ public class MarketResearchBackingBean extends
 	}
 	
 	public void resetMarketResearch(){
+		log.info("resetMarketResearch");
 		getManagedBean().setMarketResearchSearchBean(null);
 		getMarketResearchDataModel().resetData();
 	}
@@ -209,6 +202,7 @@ public class MarketResearchBackingBean extends
 	public String redirectToMarketResearchMaintenance(Long id,Long loaId,String procurementMethod) {
 		getManagedBean().setActiveIndex(0);
 		getManagedBean().setMarketResearchVO(null);
+		getManagedBean().setProcurementMethod(procurementMethod);
 		if(ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(procurementMethod) 
 				|| ParameterConst.PROCUREMENT_MODE_TENDER.equals(procurementMethod) 
 				||ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equals(procurementMethod)){
@@ -228,95 +222,111 @@ public class MarketResearchBackingBean extends
 	}
 	
 	private void initQt(Long qtId,Long loaId){
-		IQTDetailSO detailSO = null;
+		log.info("initQt");
+//		IQTDetailSO detailSO = null;
 		MarketResearchVO vo = null;
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);			
+//			detailSO = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);			
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setMaintanceFlow(true);
 			reqDTO.setQtId(qtId);
-			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);	
-			ScLoa loa = retrieveLoaByLoaId(loaId);
-			if (resDTO.getQtDetail() != null && loa != null) {
-				ScQt qt = resDTO.getQtDetail();
+//			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);	
+			ScLoa loa = retrieveLoaByLoaId(loaId,true);
+			if (loa != null) {
+				ScQt qt = loa.getScQt();
 				vo = new MarketResearchVO();
+				vo.setLoaNo(loa.getLoaNo());
 				vo.setIsPanel(qt.isPanel());
-				if(qt.isPanel()){
-					vo.setCircularNo(qt.getCircularVer() != null ? qt.getCircularVer().getCircularNo() : null);
-					vo.setItemGroupName(qt.getItemGroup() != null ? qt.getItemGroup().getGroupName() : null);
+				if(loa.isPanel()){
+					vo.setCircularNo(loa.getCtCircularVer() != null ? loa.getCtCircularVer().getCircularNo() : null);
+					vo.setItemGroupName(loa.getCtPanelItemGroup() != null ? loa.getCtPanelItemGroup().getGroupName() : null);
 				}
-				vo.setProcurementTitle(qt.getQtTitle());
-				vo.setProcurementMode(qt.getProcurementMode());
-				vo.setEstimatedAmount(qt.getEstimatedAmount());
+				vo.setProcurementTypeCatId(loa.getProcurementTypeCatId());	
+				vo.setContractDuration(loa.getContractDuration());
+				vo.setContractType(loa.getContractType());
+				
+				vo.setZonal(loa.getScLoiLoa().isZonal());
+				vo.setFulfilmentType(loa.getScLoiLoa().getFulfilmentTypeCode());
+				vo.setProcurementTitle(loa.getScLoiLoa().getTitle());
+				vo.setProcurementMode(loa.getProcurementMode());
+				
 				vo.setOpenFor(qt.getOpenFor());
-				vo.setZonal(qt.isZonal());
-				vo.setProcurementTypeCatId(qt.getProcurementTypeCatId());
 				vo.setPmProcurementCategory(qt.getPmProcurementCategory());
 				vo.setEvaluationType(qt.getEvaluationType());
-				vo.setContractType(qt.getContractType());
-				vo.setFulfilmentType(qt.getFulfilmentType());
-				vo.setContractDuration(qt.getContractDuration());
+				vo.setEstimatedAmount(qt.getEstimatedAmount());
+				vo.setSuppFinalizationMethodCode(loa.getFinalizationMethod());
+				
 				vo.setLoaAmt(loa.getLoaAmt());
 				vo.setGstAmt(loa.getGstAmt());
+				vo.setAckDate(loa.getAckDate());
 				// overall ct amount or loa amt
 				vo.setOverallContractAmt(overallCtAmount(loa.getLoaAmt(), loa.getGstAmt()));
-				vo.setAckDate(loa.getAckDate());
 				
+				getManagedBean().setQt(true);
 				getManagedBean().setMarketResearchVO(vo);
 				getManagedBean().setScLoa(loa);
 			}
 		}catch(Exception e){
 			throw new EpException(e.getMessage());
 		}finally {			
-			detailSO = null;
+//			detailSO = null;
 		}
 	}
 	
 	private void initSimpleQuote(Long quoteId, Long loaId){
-		IQuoteSO quoteSO = null;
+		log.info("initSimpleQuote");
+//		IQuoteSO quoteSO = null;
 		MarketResearchVO vo = null;
 		try{
-			quoteSO =  BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-			
-			quoteReqDTO.setQuoteId(quoteId);
-			quoteReqDTO.setFetchSubEntity(true);
-			QuoteResDTO quoteResDTO = quoteSO.getQuoteDtl((quoteReqDTO));
-			ScLoa loa = retrieveLoaByLoaId(loaId);
-			if(quoteResDTO.getQuoteBidDtl() != null && loa != null){
-				ScQuote quote = quoteResDTO.getQuoteBidDtl();
+//			quoteSO =  BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+//			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+//			
+//			quoteReqDTO.setQuoteId(quoteId);
+//			quoteReqDTO.setFetchSubEntity(true);
+//			QuoteResDTO quoteResDTO = quoteSO.getQuoteDtl((quoteReqDTO));
+			ScLoa loa = retrieveLoaByLoaId(loaId,false);
+//			if(quoteResDTO.getQuoteBidDtl() != null && loa != null){
+//				ScQuote quote = quoteResDTO.getQuoteBidDtl();
+			if(loa != null){
 				vo = new MarketResearchVO();
-				vo.setIsPanel(quote.isPanel());
-				vo.setProcurementTitle(quote.getTitle());
-				vo.setProcurementMode(getParameterByTypeAndCode(ParameterTypeConst.SC_PROCUREMENT_MODE,
-						ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE));
-				//TODO //vo.setOpenFor(quote.getOpenFor());
-				vo.setZonal(quote.isZonal());
-				vo.setProcurementTypeCatId(quote.getProcurementTypeCategory());
-				//vo.setPmProcurementCategory(quote.getPmProcurementCategory());
+				vo.setLoaNo(loa.getLoaNo());
+				vo.setProcurementTypeCatId(loa.getProcurementTypeCatId());	
+				vo.setContractDuration(loa.getContractDuration());
+				vo.setContractType(loa.getContractType());
+				
+				vo.setZonal(loa.getScLoiLoa().isZonal());
+				vo.setFulfilmentType(loa.getScLoiLoa().getFulfilmentTypeCode());
+				vo.setProcurementTitle(loa.getScLoiLoa().getTitle());
+				vo.setSuppFinalizationMethodCode(loa.getFinalizationMethod());
+				
+//				vo.setOpenFor(quote.getOpenFor());
+//				vo.setPmProcurementCategory(quote.getPmProcurementCategory());
 //				vo.setEvaluationType(quote.getEvaluationType());
-//				vo.setContractType(quote.getContractType());
-//				vo.setFulfilmentType(quote.getFulfilmentType());
-//				vo.setContractDuration(quote.getContractDuration());
+//				vo.setEstimatedAmount(quote.getEstimatedAmount());
+//				
+				vo.setProcurementMode(loa.getProcurementMode());
+				
 				vo.setLoaAmt(loa.getLoaAmt());
 				vo.setGstAmt(loa.getGstAmt());
+				vo.setAckDate(loa.getAckDate());
 				// overall ct amount or loa amt
 				vo.setOverallContractAmt(overallCtAmount(loa.getLoaAmt(), loa.getGstAmt()));
-				vo.setAckDate(loa.getAckDate());
+				
+				getManagedBean().setQt(false);
 				getManagedBean().setMarketResearchVO(vo);
 				getManagedBean().setScLoa(loa);
 			}
 		}catch(Exception e){
 			throw new EpException(e.getMessage());
 		}finally{
-			quoteSO = null;
+//			quoteSO = null;
 		}
 		
 	}
 	
-	private ScLoa retrieveLoaByLoaId(Long loaId){
+	private ScLoa retrieveLoaByLoaId(Long loaId,boolean fetchQt){
 		IQTAwardSO qtAwardSO = null;
 		ScLoa loa = null;
 		try {
@@ -324,6 +334,7 @@ public class MarketResearchBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO.setLoaId(loaId);
+			awardSupplierReqDTO.setFetchQt(fetchQt);
 			AwardSupplierResDTO awardSupplierResDTO = qtAwardSO.retrieveLOADtlForMarketResearchByLoaId(awardSupplierReqDTO);
 			if (awardSupplierResDTO.getScLoa() != null) {
 				loa = awardSupplierResDTO.getScLoa();
@@ -341,5 +352,56 @@ public class MarketResearchBackingBean extends
 				scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
 
 		return total;
+	}
+	
+	public void downloadSpecReport() throws IOException {
+		log.info("downloadSpecReport");
+		ScLoa loa= getManagedBean().getScLoa();
+		IQTDocumentSO qtDocumentSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDocumentSO.class);
+    	QTDocumentReqDTO reqDTO = new QTDocumentReqDTO();
+    	
+    	String docCategory = null;
+    	if(ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(getManagedBean().getProcurementMethod()) 
+				|| ParameterConst.PROCUREMENT_MODE_TENDER.equals(getManagedBean().getProcurementMethod()) ){
+    		docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER;
+		}else if(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equals(getManagedBean().getProcurementMethod())){
+			docCategory = ParameterConst.DOCUMENT_CATEGORY_DIRECT_LOA_FOR_QUOTATION_TENDER;
+		}
+    
+		reqDTO.setDocCategory(docCategory);
+		reqDTO.setDocDefKey(SourcingConstants.DOC_DEF_KEY_SPECIFICATION);
+		ScLoaReport scLoaReport = new ScLoaReport();
+		scLoaReport.setScLoa(new ScLoa());
+		scLoaReport.getScLoa().setLoaId(loa.getLoaId());
+		reqDTO.setScReport(scLoaReport);
+
+		QTDocumentResDTO resDTO = qtDocumentSO.retriveScQtReportByDefKey(reqDTO);
+		scLoaReport = (ScLoaReport)resDTO.getScReport();
+		
+		if(scLoaReport != null && scLoaReport.getScLoaReportAttachment() != null){
+			downloadFile(scLoaReport.getScLoaReportAttachment());
+		}
+	}
+	
+	
+	private ScQtFinalization retrieveSupplierFinalization(ScQt qt) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		ScQtFinalization scQtFinalization = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setScQt(qt);
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
+												.retrieveSupplierFinalizationDtls(reqDTO);
+			scQtFinalization = resDTO.getScQtFinalization();
+			
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+		return scQtFinalization;
 	}
 }

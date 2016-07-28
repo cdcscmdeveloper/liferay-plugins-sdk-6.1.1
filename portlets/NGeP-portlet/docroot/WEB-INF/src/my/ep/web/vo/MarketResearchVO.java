@@ -18,6 +18,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
  */
 public class MarketResearchVO  {
 	
+	private String loaNo;
 	private boolean isPanel;
 	private String circularNo;
 	private String itemGroupName;
@@ -31,11 +32,12 @@ public class MarketResearchVO  {
 	private String evaluationType;
 	private PmParameter contractType; 
 	private PmParameter fulfilmentType;
-	private Integer contractDuration;
+	private BigDecimal contractDuration;
 	private BigDecimal loaAmt;
 	private BigDecimal gstAmt;
 	private BigDecimal overallContractAmt;	
 	private Date ackDate;
+	private String suppFinalizationMethodCode;
 	
 	public MarketResearchVO(){
 		
@@ -209,19 +211,7 @@ public class MarketResearchVO  {
 		this.fulfilmentType = fulfilmentType;
 	}
 
-	/**
-	 * @return the contractDuration
-	 */
-	public Integer getContractDuration() {
-		return contractDuration;
-	}
-
-	/**
-	 * @param contractDuration the contractDuration to set
-	 */
-	public void setContractDuration(Integer contractDuration) {
-		this.contractDuration = contractDuration;
-	}
+	
 
 	/**
 	 * @return the loaAmt
@@ -292,6 +282,51 @@ public class MarketResearchVO  {
 	public void setZonal(boolean isZonal) {
 		this.isZonal = isZonal;
 	}
+
+	/**
+	 * @return the contractDuration
+	 */
+	public BigDecimal getContractDuration() {
+		return contractDuration;
+	}
+
+	/**
+	 * @param contractDuration the contractDuration to set
+	 */
+	public void setContractDuration(BigDecimal contractDuration) {
+		this.contractDuration = contractDuration;
+	}
+
+	/**
+	 * @return the loaNo
+	 */
+	public String getLoaNo() {
+		return loaNo;
+	}
+
+	/**
+	 * @param loaNo the loaNo to set
+	 */
+	public void setLoaNo(String loaNo) {
+		this.loaNo = loaNo;
+	}
+
+	/**
+	 * @return the suppFinalizationMethodCode
+	 */
+	public String getSuppFinalizationMethodCode() {
+		return suppFinalizationMethodCode;
+	}
+
+	/**
+	 * @param suppFinalizationMethodCode the suppFinalizationMethodCode to set
+	 */
+	public void setSuppFinalizationMethodCode(String suppFinalizationMethodCode) {
+		this.suppFinalizationMethodCode = suppFinalizationMethodCode;
+	}
+
+
+	
 	
 	
 }
