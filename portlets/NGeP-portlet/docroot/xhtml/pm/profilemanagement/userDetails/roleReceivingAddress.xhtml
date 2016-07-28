@@ -60,6 +60,12 @@
 							maxlength="50">
 							<p:ajax event="change" process="@this" />
 						</p:inputText>
+						&#160;<p:graphicImage id="giLetterNo"
+								value="/css/images/design/tooltips.png" /> <p:tooltip
+								for="giLetterNo" id="ttLetterNo"
+								showEffect="fade" hideEffect="fade" > 
+									<p:outputLabel escape="false" value="#{lbl['lbl.pm.profiles.authorisation.letterno.tt']}"/>
+								</p:tooltip>
 						<p:message id="auLetterNoMsg" for="auLetterNo" display="icon" />
 					</p:column>
 					<p:column
