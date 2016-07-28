@@ -17,7 +17,7 @@
 		
 		<h:panelGrid style="width:100%;">
 		   <p:dataTable id="itemTable" var="ctItemVar" widgetVar="ctItemsTableObj"
-			     value="#{amendmentBackingBean.managedBean.ctItemList}"  selectionMode="single"	
+			     value="#{ctBackingBean.managedBean.ctItemList}"  selectionMode="single"	
 			     selection="#{amendmentBackingBean.managedBean.selectedItem}"  rowKey="#{ctItemVar}">
 				 <ac:paginator for="itemTable" />
 				 <p:ajax event="rowSelect" update=":form:itemId" listener="#{amendmentBackingBean.onSelectProductItem()}"
@@ -235,7 +235,8 @@
 						  <p:inputText value="#{itemCeilingQtiesVar.ceilingQuantity}" 
 						      styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.qty']}"
 						  	  maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
-						  	  disabled="#{ctBackingBean.managedBean.disableAmendDetails}" >
+						  	  disabled="#{ctBackingBean.managedBean.disableAmendDetails
+						  	  	or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}" >
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 							<p:ajax event="blur" update="@this"/>
@@ -369,7 +370,7 @@
 	  	</f:facet>
 	  	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.service.item']}" escape="false"/><br/><br/>
 		<h:panelGrid style="width:100%;">
-			<p:dataTable id="serviceTable" var="serviceItemVar" value="#{amendmentBackingBean.managedBean.ctServiceItemList}"
+			<p:dataTable id="serviceTable" var="serviceItemVar" value="#{ctBackingBean.managedBean.ctItemServiceList}"
 				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowKey="#{serviceItemVar}"  widgetVar="serviceTableObj">
 				<ac:paginator for="serviceTable" />
 				<p:ajax event="rowSelect" update=":form:serviceId" process="@this" listener="#{amendmentBackingBean.onSelectServiceItem()}" 

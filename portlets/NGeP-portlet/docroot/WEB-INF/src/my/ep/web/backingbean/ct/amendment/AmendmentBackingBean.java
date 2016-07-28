@@ -644,8 +644,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 		  	
 				  	// Retrieve Items
-				  	this.getManagedBean().getCtItemList().clear();
-					this.getManagedBean().getCtServiceItemList().clear();
+					ctBackingBean.getManagedBean().getCtItemList().clear();
+					ctBackingBean.getManagedBean().getCtItemServiceList().clear();
 					getManagedBean().setItemProductExist(false);
 					getManagedBean().setItemServiceExist(false);
 					getManagedBean().setShowItem(null);
@@ -673,11 +673,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					      			getManagedBean().setItemProductExist(true);
 					      			Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 							    	Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-							    	getManagedBean().getCtItemList().add(item);
+							    	ctBackingBean.getManagedBean().getCtItemList().add(item);
 					      		} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 					      			getManagedBean().setItemServiceExist(true);
 							    	Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-							    	getManagedBean().getCtServiceItemList().add(item);
+					      			ctBackingBean.getManagedBean().getCtItemServiceList().add(item);
 						     	}
 					    	}
 						}
@@ -902,8 +902,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			      if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
 				     ctBackingBean.getManagedBean().getContractVer().getCtContractItems().clear();
 			      }
-			     ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtItemList());
-	     	     ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtServiceItemList());
+			     ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
+	     	     ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
 	     	     ctBackingBean.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 	              
 	     	     if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
@@ -3648,7 +3648,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				return true;
 			}
 		} else if (rulesType == 2) { // change quantity		
-			for (CtContractItem ctContractItem : getManagedBean().getCtItemList()) {
+			for (CtContractItem ctContractItem : ctBackingBean.getManagedBean().getCtItemList()) {
 				for (CtItemMaxQty ctItemMaxQty : ctContractItem.getCtItemMaxQties()) {
 					if (ctItemMaxQty.isChangeQuantity()) {
 						if (ctItemMaxQty.getMaxQuantity().doubleValue() > ctItemMaxQty.getAssociateCtItemMaxQty().getMaxQuantity().doubleValue() * 1.5) {
