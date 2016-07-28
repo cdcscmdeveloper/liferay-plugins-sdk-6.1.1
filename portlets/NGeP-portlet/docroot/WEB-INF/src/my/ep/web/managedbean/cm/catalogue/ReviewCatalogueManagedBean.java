@@ -61,6 +61,9 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 
 	private String itemName;
 	private String supplierName;
+	
+	private int approveSize = 0;
+	private int rejectSize =0;
 
 
 
@@ -281,6 +284,103 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 				List<String> itemStatusLs = new ArrayList<String>();
 
 				itemStatusLs.add("A"); ///approved
+
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("itemStatus",
+								SearchOperator.OPERATOR_IN.value(),itemStatusLs ));
+
+
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("smSupplier.supplierId",
+								SearchOperator.OPERATOR_EQUALS.value(), smSupplier.getSupplierId()));
+								
+								searchBean.getDataFilterBeans().add(
+										new SearchFilterBean("recordStatus",
+												SearchOperator.OPERATOR_EQUALS.value(), true));
+
+				reqDTO.setSearchBean(searchBean);
+				CatalogueResDTO resDTO = catalogueSO.retrieveSupplierItemDashBoard(reqDTO);
+				System.out.println("resDTO.getSupplierItemList():"
+						+ resDTO.getSupplierItemList().size());
+				setApproveSize(resDTO.getSupplierItemList().size());
+				return resDTO.getSuppItemResultBean();
+
+			}catch(Exception e){
+				e.printStackTrace();
+				return new SearchResultBean();
+			} finally {
+				catalogueSO = null;
+
+			}
+		}
+
+	}
+	
+	
+	
+	
+	private IPagingDataModel<CmSupplierItem> suppItemDashboardRejectSearchDataModel = new SuppItemDashboardRejectSearchDataModel();
+
+
+	private class SuppItemDashboardRejectSearchDataModel extends PagingDataModel<CmSupplierItem> {
+
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Instantiates a new search paging data model.
+		 */
+		public SuppItemDashboardRejectSearchDataModel() {
+			super("catalogueTableRejectId");
+			// TODO Auto-generated constructor stub
+		}
+
+		/**
+		 * page Change Listener.
+		 * @param  searchBean 
+		 *                  (ISearchBean<CmSupplierItem> searchBean(mandatory))
+		 * @return ISearchBean<CmSupplierItem>
+		 */
+		@Override
+		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
+				ISearchBean<CmSupplierItem> searchBean) {
+
+			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+					.getInstance().getServiceObject("cm", ICatalogueSO.class);
+
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+
+			try {
+
+
+				ReviewCatalogueBackingBean bb = new ReviewCatalogueBackingBean();
+
+
+				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+						.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+
+				SmSupplier smSupplier = null;
+
+
+				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				supplierReqDTO.setUserId(pmUser.getUserId());
+				supplierReqDTO.setAllStatuses(true);
+
+				SupplierSearchResDTO smResDTO = supplierSearchSO
+						.retriveSupplierProfiles(supplierReqDTO);
+
+				if(smResDTO.getResultBean().getResultList().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_721017);
+				}
+
+
+				smSupplier = smResDTO.getResultBean().getResultList().get(0);
+
+				List<String> itemStatusLs = new ArrayList<String>();
+
 				itemStatusLs.add("R"); ///rejected
 
 				searchBean.getDataFilterBeans().add(
@@ -300,7 +400,7 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 				CatalogueResDTO resDTO = catalogueSO.retrieveSupplierItemDashBoard(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
-
+				setRejectSize(resDTO.getSupplierItemList().size());
 				return resDTO.getSuppItemResultBean();
 
 			}catch(Exception e){
@@ -330,6 +430,52 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 			IPagingDataModel<CmSupplierItem> suppItemDashboardSearchDataModel) {
 		this.suppItemDashboardSearchDataModel = suppItemDashboardSearchDataModel;
 	}
+
+	/**
+	 * @return the suppItemDashboardRejectSearchDataModel
+	 */
+	public IPagingDataModel<CmSupplierItem> getSuppItemDashboardRejectSearchDataModel() {
+		return suppItemDashboardRejectSearchDataModel;
+	}
+
+	/**
+	 * @param suppItemDashboardRejectSearchDataModel the suppItemDashboardRejectSearchDataModel to set
+	 */
+	public void setSuppItemDashboardRejectSearchDataModel(
+			IPagingDataModel<CmSupplierItem> suppItemDashboardRejectSearchDataModel) {
+		this.suppItemDashboardRejectSearchDataModel = suppItemDashboardRejectSearchDataModel;
+	}
+
+	/**
+	 * @return the approveSize
+	 */
+	public int getApproveSize() {
+		return approveSize;
+	}
+
+	/**
+	 * @param approveSize the approveSize to set
+	 */
+	public void setApproveSize(int approveSize) {
+		this.approveSize = approveSize;
+	}
+
+	/**
+	 * @return the rejectSize
+	 */
+	public int getRejectSize() {
+		return rejectSize;
+	}
+
+	/**
+	 * @param rejectSize the rejectSize to set
+	 */
+	public void setRejectSize(int rejectSize) {
+		this.rejectSize = rejectSize;
+	}
+	
+	
+	
 
 
 

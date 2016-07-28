@@ -9,65 +9,34 @@
 	<p:messages id="catalogTaskListMsgId" showDetail="true"
 		autoUpdate="true" closable="true" showSummary="true"></p:messages>
 
+	<p:remoteCommand name="refreshId" id="refreshId" update=":form"></p:remoteCommand>
 
+	<h:panelGroup id="catalogueTaskListId">
 
+		<table style="border: 1px solid #e8e8e8; width: 100%;">
+			<tr style="border: 1px solid #e8e8e8;">
+				<td style="border-right: 1px solid #e8e8e8; width: 70%;"><h:outputText
+						style="float:left !important;margin-left: 10px !important;"
+						value="#{lbl['lbl.cm.approved']}" /></td>
+				<td><p:outputLabel
+						value="#{reviewCatBackingBean.managedBean.approveSize}" /></td>
+			</tr>
+			<tr style="border: 1px solid #e8e8e8;">
+				<td style="border-right: 1px solid #e8e8e8;"><h:outputText
+						style="float:left !important;margin-left: 10px !important;"
+						value="#{lbl['lbl.cm.reject']}" /></td>
+				<td><p:outputLabel
+						value="#{reviewCatBackingBean.managedBean.rejectSize}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:commandLink style="float:right;margin-right: 10px;"
+						action="#{reviewCatBackingBean.navigateToCatalgoueURL}"
+						value="#{lbl['lbl.pm.profiles.more.details']}" /></td>
+			</tr>
 
+		</table>
 
-
-	
-		<h:panelGroup id="catalogueTaskListId">
-			<div class="tabmenu-button-wrapper">
-				
-				<div
-					style="text-align: left; float: left; margin-top: 10px; margin-left: 8px;">
-					<p:outputLabel value="#{lbl['lbl.cm.supplier.dashboard.title']}" />
-				</div>
-			</div>
-			<div class="clear"></div>
-			<p:remoteCommand name="reviewCat"
-				action="#{reviewCatBackingBean.navigateToCatalogDetfromDashboard}" />
-
-			<p:dataTable rowKey="#{review.supplierItemId}" id="catalogueTableId"
-				lazy="true"
-				value="#{reviewCatBackingBean.managedBean.suppItemDashboardSearchDataModel}"
-				var="review" selectionMode="single"
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				selection="#{reviewCatBackingBean.managedBean.selectedReviewCat}"
-				rows="10">
-
-				<ac:paginator for="catalogueTableId"></ac:paginator>
-
-				<p:ajax event="rowSelect" oncomplete="reviewCat();" />
-
-				<p:column>
-					<f:facet name="header">
-						#{lbl['lbl.cm.unspsc.title']}
-					</f:facet>
-			
-			#{review.cmItem.itemName}
-
-		</p:column>
-		
-		<p:column>
-					<f:facet name="header">
-						#{lbl['lbl.cm.item.status']}
-					</f:facet>
-					
-					#{reviewCatBackingBean.getStatusDesc(review.itemStatus)}
-			
-			
-		</p:column>
-				
-
-				<p:column>
-					<f:facet name="header">
-						#{lbl['lbl.cm.submitted.date']}
-					</f:facet>
-			
-			#{review.changedDate}
-
-		</p:column>
-			</p:dataTable>
-		</h:panelGroup>
+	</h:panelGroup>
 
 </ui:composition>
