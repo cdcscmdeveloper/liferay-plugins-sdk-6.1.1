@@ -11,42 +11,30 @@
     <ui:define name="contentSection">
      <style>
       .column-align-center { text-align: center !important;}
+      .myTable thead {
+              display:none;
+      }
+      
+      table td, table th {
+            border-style:ridge;
+            border-width:1px;
+            border-color:#000000; 
+            padding: 10px;
+}
     </style>
    	    <p:panel id="supplier" header="#{lbl['lbl.ct.dash.board.panel']}" toggleable="true"  toggleSpeed="500">
-		     <h:panelGrid columns="2">
-		          <h:outputLabel for="expDaysId" value="#{lbl['lbl.ct.dash.board.edays']}" style="width:120px;"/>
-			     <p:selectOneMenu id="expDaysId"  value="#{contractDashboardBackingBean.managedBean.ctExpInDays}" style="width:170px;">
-				   <f:selectItems value="#{contractDashboardBackingBean.getCtExpiryDaysMenu()}" />
-			                 <p:ajax event="change" update=":form:tblCtExpId" 
-			                      process="@this" partialSubmit="true" listener="#{contractDashboardBackingBean.filterCtExpDetails}"/>  
-	            </p:selectOneMenu>
-           </h:panelGrid>
            <p:spacer height="2"/>
-	           <p:dataTable id="tblCtExpId" value="#{contractDashboardBackingBean.ctDashboardDataModel}"
-					var="data1" lazy="true" rowIndexVar="index" rowKey="#{data1}" width="100%"  rows="5">
-						<ac:paginator for="tblCtExpId" />
-			           <p:column headerText="#{lbl['lbl.ct.contract.no']}"  styleClass="column-align-center">
-				                   <h:outputText value="#{data1.contractNo}" style="text-align:left; float:left;" />
-				       </p:column> 
-				       <p:column headerText="#{lbl['lbl.ct.contract.title']}" styleClass="column-align-center"
-				                   style="white-space:normal;" >
-				             	<h:outputText value="#{data1.contractName}"  style="text-align:left; float:left;" />
-				       </p:column> 
-				       <p:column  headerText="#{lbl['lbl.ct.contract.start']}" styleClass="column-align-center">
-				          <h:outputText value="#{data1.latestContractVer.ctContractValue.effDate}" style="text-align:left; float:left;">
-							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText>
-				       </p:column>
-				        <p:column  headerText="#{lbl['lbl.ct.contract.end']}"  styleClass="column-align-center" >
-				           <h:outputText value="#{data1.latestContractVer.ctContractValue.expDate}" style="text-align:left; float:left;">
-							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText>
-				       </p:column>
-				         <p:column  headerText="#{lbl['lbl.ct.name.supplier']}" styleClass="column-align-center" 
-				                 style="white-space:normal;" >
-				            	<h:outputText value="#{data1.smSupplier.companyName}" style="text-align:left; float:left;" />
-				       </p:column>
-	            </p:dataTable>
+           <table style="width:100%;" >
+                    <tr><td style="width:80%; padding-left: 5px;"><p:outputLabel value="#{lbl['lbl.ct.dash.board.30.days']}" style="float:left;" /></td>
+                    <td  style="width:20%;text-align: center;">#{contractDashboardBackingBean.managedBean.lessThan30Days}</td></tr>
+                           <tr><td  style="width:80%;padding-left: 5px;" ><p:outputLabel value="#{lbl['lbl.ct.dash.board.120.days']}"  style="float:left;" /></td>
+                           <td  style="width:20%;text-align: center">#{contractDashboardBackingBean.managedBean.lessThan120Days}</td></tr>
+                           <tr><td colspan="3" style="text-align:right;padding-right: 6%;">
+	                            <p:commandLink value="#{lbl['lbl.ct.dash.board.more']}"  styleClass="blue_font" process="@form" 
+	                                action="#{contractDashboardBackingBean.goToMaintenancePage}" >
+								<f:param name="contractVerId" />
+							</p:commandLink></td></tr>
+                  </table>
          </p:panel>
      </ui:define>
 </ui:composition>
