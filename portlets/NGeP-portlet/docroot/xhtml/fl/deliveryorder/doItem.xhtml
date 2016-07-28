@@ -59,10 +59,10 @@
 				<p:calendar mode="popup" readonlyInput="true" id="expDelDate"
 						showOn="button" size="10"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						maxdate="#{createDOBackingBean.getCurrentDate()}"
+						mindate="#{doDelAddress.startDate}" 
 						disabled="#{createDOBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or doDelAddress.suppDelOrdNoEnabled eq 'false'}"
 						value="#{doDelAddress.flTempDoAddr.estDeliveryDate}">
-						<p:ajax event="dateSelect" process="@this" update="@this" />
+						<p:ajax event="dateSelect" process="@this" update="@this,:form:messages" listener="#{createDOBackingBean.validateEstDate(doDelAddress)}"/>
 					</p:calendar><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.exp.del.date']}"/>
 			</p:column>
 			<p:column style="white-space:normal;" headerText="#{lbl['lbl.fl.del.delivery.ord.no']}">
