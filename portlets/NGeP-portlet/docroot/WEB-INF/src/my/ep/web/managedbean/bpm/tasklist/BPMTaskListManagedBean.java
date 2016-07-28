@@ -1,11 +1,13 @@
 package my.ep.web.managedbean.bpm.tasklist;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -49,47 +51,32 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static Map bpmMap = null;
 	private String processName;
 	private String[] action;
-
 	private String taskId;
-	
 	private Integer tabActiveIndex = 0;
-
-	// private String status="ASSIGNED";
-
 	private String taskName;
-
 	private String tempLoginId; // TODO: temp and to be removed
-
 	private String viewBy = "ALL";
-
-	private String assignment = "ALL";
-	
-	private String docType = "";
-	
-	
-	private String viewByGroup = "ALL";
-	
+	private String assignment = "ALL";	
+	private String docType = "";	
+	private String viewByGroup = "ALL";	
 	private String docTypeGroup = "";
-
 	private int showIndex = 0;
-	
 	private PmOrgProfile selectedOrgProfile;
-	
 	private PmOrgProfile selectedOrgProfileGroup;
-	
 	private String docNo;
-	
 	private String taskDesc;
-	
-	
 	private String docNoGroup;
-	
 	private String taskDescGroup;
-	
 	private Boolean claim = true;
-	
 	private PmStatusDesc selectedStatusDesc;
 	private PmStatusDesc selectedStatusDescAdvance;
+	
+	private List<SelectItem> docStatusList;
+	private int docStatus;
+	
+	private List<SelectItem> docStatusListGroup;
+	private int docStatusGroup;
+	
 	
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -391,10 +378,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if(getSelectedOrgProfile()!=null){
 					System.out.println("getSelectedOrgProfile()"+getSelectedOrgProfile().getOrgProfileId());
 				}
-				
-				if(getSelectedStatusDesc()!=null && getSelectedStatusDesc().getPmStatus()!=null && getSelectedStatusDesc().getPmStatus().getStatusId()>0){
-					System.out.println("getSelectedStatusDesc()"+getSelectedStatusDesc().getPmStatus().getStatusId().intValue());
-					reqDTO.setStatus(getSelectedStatusDesc().getPmStatus().getStatusId().intValue());
+				System.out.println("getDocStatus()"+getDocStatus());
+				if(getDocStatus()>0){
+					reqDTO.setStatus(getDocStatus());
 				}
 				
 				
@@ -788,6 +774,68 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 		return null;
 	}
+
+	/**
+	 * @return the docStatusList
+	 */
+	public List<SelectItem> getDocStatusList() {
+		if(docStatusList==null)
+			docStatusList = new ArrayList<SelectItem>();
+		return docStatusList;
+	}
+
+	/**
+	 * @param docStatusList the docStatusList to set
+	 */
+	public void setDocStatusList(List<SelectItem> docStatusList) {
+		this.docStatusList = docStatusList;
+	}
+
+	/**
+	 * @return the docStatus
+	 */
+	public int getDocStatus() {
+		return docStatus;
+	}
+
+	/**
+	 * @param docStatus the docStatus to set
+	 */
+	public void setDocStatus(int docStatus) {
+		this.docStatus = docStatus;
+	}
+
+	/**
+	 * @return the docStatusListGroup
+	 */
+	public List<SelectItem> getDocStatusListGroup() {
+		return docStatusListGroup;
+	}
+
+	/**
+	 * @param docStatusListGroup the docStatusListGroup to set
+	 */
+	public void setDocStatusListGroup(List<SelectItem> docStatusListGroup) {
+		this.docStatusListGroup = docStatusListGroup;
+	}
+
+	/**
+	 * @return the docStatusGroup
+	 */
+	public int getDocStatusGroup() {
+		return docStatusGroup;
+	}
+
+	/**
+	 * @param docStatusGroup the docStatusGroup to set
+	 */
+	public void setDocStatusGroup(int docStatusGroup) {
+		this.docStatusGroup = docStatusGroup;
+	}
+	
+	
+	
+	
 	
 	
 
