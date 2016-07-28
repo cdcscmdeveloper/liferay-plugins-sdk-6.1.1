@@ -9,18 +9,27 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <ui:define name="contentSection">
-   	    <p:panel id="supplier" header="#{lbl['lbl.ct.dash.board.panel']}" toggleable="true"  toggleSpeed="500">
-           <p:spacer height="2"/>
+     <style>
+      .column-align-center { text-align: center !important;}
+    </style>
+   	    <p:panel id="supplier" header="#{lbl['lbl.ct.dash.board.panel']}" toggleable="true"  toggleSpeed="500" style="width:100%;">
            <table style="width:100%;" >
-                    <tr><td style="width:80%; padding-left: 5px;"><p:outputLabel value="#{lbl['lbl.ct.dash.board.30.days']}" style="float:left;" /></td>
-                    <td  style="width:20%;text-align: center;">#{contractDashboardBackingBean.managedBean.lessThan30Days}</td></tr>
-                           <tr><td  style="width:80%;padding-left: 5px;" ><p:outputLabel value="#{lbl['lbl.ct.dash.board.120.days']}"  style="float:left;" /></td>
-                           <td  style="width:20%;text-align: center">#{contractDashboardBackingBean.managedBean.lessThan120Days}</td></tr>
-                           <tr><td colspan="3" style="text-align:right;padding-right: 6%;">
-	                            <p:commandLink value="#{lbl['lbl.ct.dash.board.more']}"  styleClass="blue_font" process="@form" 
+                    <tr>
+                         <td style="width:80%; padding-left: 5px; border-style:ridge; border-width:1px; border-color:#000000;">
+                                 <p:outputLabel value="#{lbl['lbl.ct.dash.board.30.days']}" style="float:left;" /></td>
+                        <td  style="width:20%;text-align: center; border-style:ridge; border-width:1px; border-color:#000000;">
+                                  #{contractDashboardBackingBean.managedBean.lessThan30Days}</td></tr>
+                           <tr>
+                               <td  style="width:80%;padding-left: 5px; border-style:ridge; border-width:1px; border-color:#000000;" >
+                                     <p:outputLabel value="#{lbl['lbl.ct.dash.board.120.days']}"  style="float:left;" /></td>
+                                <td  style="width:20%;text-align: center; border-style:ridge; border-width:1px; border-color:#000000;">
+                                 #{contractDashboardBackingBean.managedBean.lessThan120Days}</td>
+                           </tr>
+                           <tr><td colspan="3" style="text-align:right;padding-right: 6%; border-style:ridge; border-width:1px; border-color:#000000;">
+	                            <p:commandLink value="#{lbl['lbl.ct.dash.board.more']}"  styleClass="blue_font" process="@this" update="@form"
 	                                action="#{contractDashboardBackingBean.goToMaintenancePage}" >
-								<f:param name="contractVerId" />
-							</p:commandLink></td></tr>
+							</p:commandLink></td>
+				     </tr>
                   </table>
          </p:panel>
      </ui:define>
