@@ -13,15 +13,22 @@ public class ContractDashboardManagedBean extends BaseManagedBean {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public Long ctExpInDays;
+	private int lessThan30Days;
+	private int lessThan120Days;
 
-	public Long getCtExpInDays() {
-		return ctExpInDays;
+	public int getLessThan30Days() {
+		return lessThan30Days;
 	}
 
-	public void setCtExpInDays(Long ctExpInDays) {
-		this.ctExpInDays = ctExpInDays;
+	public void setLessThan30Days(int lessThan30Days) {
+		this.lessThan30Days = lessThan30Days;
 	}
-	
-	
+
+	public int getLessThan120Days() {
+		return lessThan120Days;
+	}
+
+	public void setLessThan120Days(int lessThan120Days) {
+		this.lessThan120Days = lessThan120Days;
+	}
 }
