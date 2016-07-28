@@ -12,17 +12,6 @@
 		value="#{biddingBB.managedBean.bidManagementViewBy eq 'P'}" />
 	<ui:param name="isViewByItem"
 		value="#{biddingBB.managedBean.bidManagementViewBy eq 'I'}" />
-	<h:panelGroup id="pollPanelGroup">
-		<c:if
-			test="#{biddingBB.managedBean.scheduledBid.pmStatus.statusId eq BidStatusConst.BID_PENDING_BIDDING or biddingBB.managedBean.scheduledBid.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}">
-			<p:poll id="pollCOmponent"
-				interval="#{biddingBB.managedBean.remainingTimeForTimers}"
-				listener="#{biddingBB.pollListener}" />
-		</c:if>
-	</h:panelGroup>
-
-
-
 	<div align="left" class="header-info">
 		<table style="width: 100%;">
 			<tr>
@@ -118,6 +107,13 @@
 			</table>
 		</div>
 
+		<p:commandLink id="refreshId" partialSubmit="true" process="@this"
+			action="#{biddingBB.bidManagementAction(biddingBB.managedBean.scheduledBid)}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+			<p:graphicImage value="/css/images/design/ico-refresh.png"
+				title="#{lbl['lbl.sc.bidding.refresh.bid.prices']}" />
+		</p:commandLink>&#160;
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.bidding.refresh.instruction']}"/>
 	</p:panel>
 	<c:if test="#{isViewByPackage}">
 		<ui:include src="bidManagementByPackage.xhtml"></ui:include>
