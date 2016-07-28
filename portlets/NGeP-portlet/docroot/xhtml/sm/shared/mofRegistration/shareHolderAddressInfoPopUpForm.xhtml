@@ -13,8 +13,17 @@
 					layout="block">
 					<table style="width: 100%">
 						<tr>
-							<td><u><b><h:outputText
-											value="#{lbl['lbl.sm.person.permAddr']} " /></b></u></td>
+							<td><u><b>
+							<c:choose>
+								<c:when test="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+									<h:outputText value="#{lbl['lbl.sm.ic.address']}" />
+								</c:when>
+								<c:otherwise>
+									<h:outputText
+												value="#{lbl['lbl.sm.person.permAddr']}" />
+								</c:otherwise>
+							</c:choose>
+							</b></u></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel

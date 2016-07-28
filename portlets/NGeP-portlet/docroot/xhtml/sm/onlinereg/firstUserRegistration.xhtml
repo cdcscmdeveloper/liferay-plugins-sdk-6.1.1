@@ -175,12 +175,13 @@
 								value="#{registrationBackingBean.managedBean.countryLs}"
 								itemLabel="#{counLs.countryName}"
 								itemValue="#{counLs.countryId}" />
-							<p:ajax event="change" listener="#{registrationBackingBean.personnelNationalityOnChange}" update="cmbUsrIdenType,txtIdNumber,pnlFirstUserIdenType" />
+							<p:ajax event="change" listener="#{registrationBackingBean.personnelNationalityOnChange}" 
+							update="cmbUsrIdenType,txtIdNumber,pnlFirstUserIdenType,pnlPersonnelAddress" />
 						</p:selectOneMenu>
 						<p:selectOneMenu disabled="true" value="" rendered="#{registrationBackingBean.managedBean.sameAsOwner}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						</p:selectOneMenu>
+						</p:selectOneMenu> 
 						<p:message id="nationalityIdMsg" for="nationalityId" display="icon" /></td>
 				
 					<td class="tdTitle">
@@ -295,7 +296,17 @@
 
 				<tr>
 					<td class="tdTitle">
-						<p:outputLabel value="#{lbl['lbl.sm.permenantaddress']}" />
+						<p:outputPanel id="pnlPersonnelAddress">
+						<c:choose>
+							<c:when test="#{registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+								<p:outputLabel value="#{lbl['lbl.sm.ic.address']}" />
+							</c:when>
+							<c:otherwise>
+								<p:outputLabel value="#{lbl['lbl.sm.permenantaddress']}" />
+							</c:otherwise>
+						</c:choose>
+						</p:outputPanel>
+						
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent"><p:inputText size="40" maxlength="35"
