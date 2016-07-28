@@ -20,7 +20,7 @@
 				update=":form:itemDetPanelGroup"
 				listener="#{contractRequestBackingBean.selectAddrEvent()}" />			
 			<p:column rendered="#{contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}">
-				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}"
+				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}" disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
 						update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
@@ -93,7 +93,7 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<ac:lov id="agencyAddressId" lovId="FL_AGENCY_ADDRESS"
+			<ac:lov id="agencyAddressId" lovId="FL_AGENCY_ADDRESS" disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
 						postUpdateListener="contractRequestBackingBean.updateDeliveryAddrDt"
 						headerText="#{lbl['lbl.ct.delivery.address']}" 
 						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
@@ -103,7 +103,7 @@
 						update=":form:addressDataTable,:form:itemDetPanelGroup"
 						rendered="#{contractRequestBackingBean.managedBean.agencyAddress and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"/>
 			
-						<ac:lov id="addressTypeId" lovId="DELIVERY_FULL_ADDRESS_FL"
+						<ac:lov id="addressTypeId" lovId="DELIVERY_FULL_ADDRESS_FL" disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
 						postUpdateListener="contractRequestBackingBean.updateDeliveryAddrDt"
 						headerText="#{lbl['lbl.ct.delivery.address']}" 
 						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
@@ -112,7 +112,7 @@
 						conditionField="ORG_PROFILE_ID^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup"
 						rendered="#{!contractRequestBackingBean.managedBean.agencyAddress and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"/>
-			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" 
+			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
 				action="#{contractRequestBackingBean.flManualDeliveryAddr}"
 				rendered="#{contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView and contractRequestBackingBean.managedBean.flRequest.phisNo==null }"
 				update="addManualDelAddrPnl,@(.orderSummaryChange) " process="@this"
@@ -127,7 +127,7 @@
 				update="addressDataTable,@(.orderSummaryChange)"
 				title="#{lbl['lbl.fl.tooltip.delete']}"
 				rendered="#{contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
-				disabled="#{contractRequestBackingBean.managedBean.deleteButtonHide}">
+				disabled="#{contractRequestBackingBean.managedBean.deleteButtonHide or !bpmTasklistBackingBean.managedBean.claim}">
 			</p:commandButton>
 
 		</div>
@@ -190,7 +190,7 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					listener="#{contractRequestBackingBean.itemRowUnselectCheckbox}" />				
 				<ac:paginator for="itemDataTable" />
-				<p:column selectionMode="multiple" style="width:5%" styleClass="td-check-box-spacing"
+				<p:column selectionMode="multiple" style="width:5%" styleClass="td-check-box-spacing" disabledSelection="#{!bpmTasklistBackingBean.managedBean.claim}"
 					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff) and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}">
 				</p:column>	
 				<p:column>
@@ -200,7 +200,7 @@
 					</f:facet>				
 					<p:selectBooleanCheckbox value="#{item.gst}"
 						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr  or item.orderedQty == 0) or  
-									contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}">
+									contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}">
 						<p:ajax process="@this" listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"
 						update="subTotalTxt,unitPrice,orderedQty,itemDataTable"/>
 					</p:selectBooleanCheckbox>
@@ -237,7 +237,8 @@
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:center;width:148px">
 					<p:inputText value="#{item.orderedQty}" size="13" id="orderedQty" label="#{lbl['lbl.fl.ordered.qty']}"
 						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView 
-									or (contractRequestBackingBean.managedBean.flRequest.scPurchaseInDefault != null and item.itemType.parameterCode eq ParameterConst.itemTypeService))}"
+									or (contractRequestBackingBean.managedBean.flRequest.scPurchaseInDefault != null and item.itemType.parameterCode eq ParameterConst.itemTypeService))
+									or !bpmTasklistBackingBean.managedBean.claim}"
 						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" style="text-align:right" styleClass="colFloatLeft" 
 						onkeypress="if (event.keyCode == 13) { return false; }">
 						<f:converter converterId="dynamicNumberConverter" />
@@ -266,7 +267,7 @@
 			</p:dataTable>
 			<p:spacer height="2px"></p:spacer>
 			<div style="width: 100%; text-align: right">
-				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" 
+				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
 					action="#{contractRequestBackingBean.addContractedItems}"
 					rendered="#{contractRequestBackingBean.managedBean.itemAddButtonShow and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 					process="@this" update="resultPanel,searchPanel,messages,messages2"
@@ -274,7 +275,7 @@
 				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" id="deleteItemBtn"
 					rendered="#{contractRequestBackingBean.managedBean.itemAddButtonShow and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 					onsuccess="delItemDlg.show()" title="#{lbl['lbl.fl.tooltip.delete']}"
-					disabled="#{contractRequestBackingBean.managedBean.itemDeleteButtonShow }"
+					disabled="#{contractRequestBackingBean.managedBean.itemDeleteButtonShow or !bpmTasklistBackingBean.managedBean.claim}"
 					update="itemDataTable" partialSubmit="true" />
 			</div>
 		</h:panelGroup>

@@ -138,7 +138,7 @@
 								<h:panelGrid columns="2">
 									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" />
 									<p:selectOneMenu
-										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
 										value="#{contractRequestBackingBean.managedBean.flRequest.pmUserGroup.userGroupId}"
 										style="width:340px;">
 										<p:ajax event="change"
@@ -151,7 +151,7 @@
 								<h:panelGrid columns="2">
 									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" />
 									<p:selectOneMenu id="approverDropdown"
-										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
 										value="#{contractRequestBackingBean.managedBean.selectedApprover}"
 										style="width:340px;">
 										<f:selectItems
