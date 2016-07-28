@@ -52,14 +52,22 @@
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{contractRequestBackingBean.managedBean.buttonVal != null}" 
 						action="#{contractRequestBackingBean.backToPervious}" /></td>
-				<td colspan="4" style="text-align: right"><ui:repeat
-						var="bpmAction"
-						value="#{contractRequestBackingBean.managedBean.outComes}">
-						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}" update="@form" 
-							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							action="#{contractRequestBackingBean.gpkiSignAction(bpmAction)}" />
-					</ui:repeat></td>
+				<td colspan="4" style="text-align: right">
+					<c:if test='#{contractRequestBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
+						<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+							<ui:define name="outComeSection">
+								<ui:repeat
+								var="bpmAction" value="#{contractRequestBackingBean.managedBean.outComes}">	
+								<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button" 
+									update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+									action="#{contractRequestBackingBean.gpkiSignAction(bpmAction)}" />
+								</ui:repeat>
+							</ui:define>
+						</ui:decorate>
+					</c:if>				
+				</td>
 				<c:if
 					test='#{contractRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !contractRequestBackingBean.managedBean.isHyperLinkPage()}'>
 					<td colspan="4" style="text-align: right">	
