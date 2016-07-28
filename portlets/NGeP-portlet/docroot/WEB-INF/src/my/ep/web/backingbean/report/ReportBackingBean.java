@@ -13160,13 +13160,14 @@ public class ReportBackingBean extends
 	 * Change org category type.
 	 */
 	public void changeOrgCategoryType() {
+		getOrgTypeDropdownValues();
 		if (StringUtils.isNotEmpty(this.getPmOrgCategory())
 				&& StringUtils.isNotEmpty(this.getPmOrgType())) {
 			this.setValuesEmpty(false);
 		} else {
 			this.setValuesEmpty(true);
 		}
-		getOrgTypeDropdownValues();
+		
 	}
 
 	/**
