@@ -788,6 +788,8 @@ public class GovtSellerRegistrationBackingBean extends
 			getManagedBean().setSmResAdd(
 					(SmAddress) SerializationUtils.clone(defaultAddr));
 		}
+		
+		getManagedBean().getSmPersonnel().setIdentificationType(icNoType);
 		initUserPermanentAddressSelectItems(getManagedBean()
 				.getSmPermenantAdd());
 		initUserResidentialAddressSelectItems(getManagedBean().getSmResAdd());
