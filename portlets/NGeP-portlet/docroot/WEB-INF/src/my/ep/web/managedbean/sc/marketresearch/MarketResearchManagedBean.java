@@ -25,6 +25,9 @@ public class MarketResearchManagedBean extends BaseManagedBean{
 	
 	private MarketResearchVO marketResearchVO;
 	private boolean isSearch;
+	private boolean isQt;
+	private String procurementMethod;
+	private String itemSpec;
 	
 	public MarketResearchManagedBean(){
 		
@@ -102,6 +105,48 @@ public class MarketResearchManagedBean extends BaseManagedBean{
 	 */
 	public void setSearch(boolean isSearch) {
 		this.isSearch = isSearch;
+	}
+
+	/**
+	 * @return the isQt
+	 */
+	public boolean isQt() {
+		return isQt;
+	}
+
+	/**
+	 * @param isQt the isQt to set
+	 */
+	public void setQt(boolean isQt) {
+		this.isQt = isQt;
+	}
+
+	/**
+	 * @return the procurementMethod
+	 */
+	public String getProcurementMethod() {
+		return procurementMethod;
+	}
+
+	/**
+	 * @param procurementMethod the procurementMethod to set
+	 */
+	public void setProcurementMethod(String procurementMethod) {
+		this.procurementMethod = procurementMethod;
+	}
+
+	/**
+	 * @return the itemSpec
+	 */
+	public String getItemSpec() {
+		return itemSpec;
+	}
+
+	/**
+	 * @param itemSpec the itemSpec to set
+	 */
+	public void setItemSpec(String itemSpec) {
+		this.itemSpec = itemSpec;
 	}
 
 	

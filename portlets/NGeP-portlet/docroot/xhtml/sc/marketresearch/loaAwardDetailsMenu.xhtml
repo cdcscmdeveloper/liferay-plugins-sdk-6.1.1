@@ -11,14 +11,38 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="17%">
+			<td width="30%">
 				<h:outputLabel value="#{lbl['lbl.sc.award.type']}" />
 			</td>
-			<td width="83%">
-				<p:inputText
+			<td width="70%" colspan="2">
+				<p:inputText id="awardTypeIt"
 					value="#{marketResearchBackingBean.getParameterDesc(marketResearchBackingBean.managedBean.scLoa.scLoiLoa.recommendTypeCode)}"
 					disabled="true" size="30" readonly="true" />
 			</td>
+		</tr>
+		
+		<tr>
+			<td width="30%">
+				<h:outputLabel value="#{lbl['lbl.sc.recommend.by']}" />
+			</td>
+			
+			<td width="65%">
+				<p:inputText id="suppFinalMethodit" style="text-align:left;" 
+					value="#{not empty marketResearchBackingBean.managedBean.marketResearchVO.suppFinalizationMethodCode ? marketResearchBackingBean.getParameterDesc(ParameterTypeConst.finalizationRecommendBy,marketResearchBackingBean.managedBean.marketResearchVO.suppFinalizationMethodCode) : lbl['lbl.txt.na']}"
+					disabled="true" size="30" readonly="true" />
+			</td>
+			<td width="5%">
+					<p:commandLink id="specificationCl"
+						value="#{lbl['lbl.sc.specification']}"
+						rendered="#{marketResearchBackingBean.managedBean.qt}"
+						ajax="false"
+						immediate="true"
+						styleClass="blue_font"
+						action="#{marketResearchBackingBean.downloadSpecReport()}"
+						process="@this" />	
+					
+			</td>
+		
 		</tr>
 		</table> 
 		<p:dataTable id="itemtbl" var="scLoiLoaItem"
@@ -37,7 +61,18 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.item']}">
-				#{scLoiLoaItem.scRequestItem.itemName}
+				<h:outputText id ="itemNameOt" value="#{scLoiLoaItem.scRequestItem.itemName}" 
+					rendered="#{marketResearchBackingBean.managedBean.qt}" />
+				
+				<p:commandLink id="itemNameWithSpec"
+					rendered="#{not marketResearchBackingBean.managedBean.qt}"
+					oncomplete="specPopUp.show();"
+					value="#{scLoiLoaItem.scRequestItem.itemName}" 
+					partialSubmit="true" process="@this" update="@([id$=specPopUp])">					
+					<f:setPropertyActionListener target="#{marketResearchBackingBean.managedBean.itemSpec}" 
+						value="#{scLoiLoaItem.scRequestItem.itemDesc}" />
+				</p:commandLink>
+				
 			</p:column>
 			
 			<p:column style="width:7%;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
@@ -103,6 +138,27 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
+	
+	<p:dialog id="specPopUp" 
+		widgetVar="specPopUp" 
+		header="#{lbl['lbl.sc.eva.item.specification']}" 
+		modal="true" width="350" height="150">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="20%" valign="top">
+				<p:outputLabel value="#{lbl['lbl.sc.eva.item.specification']}" />
+			</td>
+			<td width="80%">
+				<p:inputTextarea id="itemSpecTaId" 
+						rows="5"
+						value="#{marketResearchBackingBean.managedBean.itemSpec}"
+						disabled="true" />
+			</td>
+		</tr>
+		
+		</table>
+
+	</p:dialog>
 	
 	<c:if test="#{isZonal}">
 		<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
