@@ -17,7 +17,8 @@
 			<div style="text-align: right;">
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}"
+					<ui:param name="lblBpmBtn" value="lbl.bpm.action.#{action}" />
+					<p:commandButton value="#{lbl[lblBpmBtn]}"
 						rendered="#{bpmTasklistBackingBean.managedBean.claim}"
 						oncomplete="extensionConfirmation.show()"
 						update=":form:extensionConfirmationId"
