@@ -88,8 +88,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtContractVer> amendHistoryList;
-	private List<CtContractItem> ctItemList;
-	private List<CtContractItem> ctServiceItemList;
 	private List<String> finalListOfSideMenu;
 	private List<SmPersonnel> supplierList;
 	private List<PmUser> bpkApproverList;
@@ -690,40 +688,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setAmendHistoryList(List<CtContractVer> amendHistoryList) {
 		this.amendHistoryList = amendHistoryList;
-	}
-	
-	/**
-	 * @return the ctItemList
-	 */
-	public List<CtContractItem> getCtItemList() {
-		if (ctItemList == null) {
-			ctItemList = new ArrayList<CtContractItem>();
-		}
-		return ctItemList;
-	}
-	
-	/**
-	 * @param ctItemList the ctItemList to set
-	 */
-	public void setCtItemList(List<CtContractItem> ctItemList) {
-		this.ctItemList = ctItemList;
-	}
-	
-	/**
-	 * @return the ctServiceItemList
-	 */
-	public List<CtContractItem> getCtServiceItemList() {
-		if (ctServiceItemList == null) {
-			ctServiceItemList = new ArrayList<CtContractItem>();
-		}
-		return ctServiceItemList;
-	}
-	
-	/**
-	 * @param ctServiceItemList the ctServiceItemList to set
-	 */
-	public void setCtServiceItemList(List<CtContractItem> ctServiceItemList) {
-		this.ctServiceItemList = ctServiceItemList;
 	}
 	
 	/**

@@ -395,7 +395,9 @@
 								<h:outputText value="#{lbl['lbl.ct.ceiling.qty']}"/>
 			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.qty']}"/>
 		               		</f:facet>
-					       <p:inputText style="width:70px;" styleClass="ppRightBtn" disabled="#{ctBackingBean.managedBean.viewContract}"
+					       <p:inputText style="width:70px;" styleClass="ppRightBtn"
+					       		disabled="#{ctBackingBean.managedBean.viewContract
+					       			or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}"
 					           	maxlength="#{ctBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" value="#{itemCeilingQtiesVar.ceilingQuantity}" required="true" label="#{lbl['lbl.ct.ceiling.qty']}">
 						      	<f:converter converterId="dynamicNumberConverter" />
 								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
@@ -527,7 +529,7 @@
 		</p:dialog>
   	 </p:panel>
   	<p:panel id="serviceId"
-         rendered="#{ctBackingBean.managedBean.ctItemServiceList.size() > 0 }"  toggleable="true"  toggleSpeed="500">
+         rendered="#{ctBackingBean.managedBean.ctItemServiceList.size() > 0}"  toggleable="true"  toggleSpeed="500">
   	     <f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.service']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/>

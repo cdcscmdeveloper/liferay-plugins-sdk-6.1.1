@@ -1683,6 +1683,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						}
 					}
 				}
+				//Reset ceiling amount and ceiling quantity to Zero if only single agency
+				if (this.getManagedBean().getContractVer().getCtAgencies() != null
+						&& this.getManagedBean().getContractVer().getCtAgencies().size() == 1) {
+					this.getManagedBean().getContractVer().getCtAgencies().get(0).setCeilingAmount(BigDecimal.ZERO);
+					
+					for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
+						contractItem.getCtItemCeilingQties().get(0).setCeilingQuantity(BigDecimal.ZERO);
+					}
+				}
+				
 			}
 			this.getManagedBean().setSelectedAgency(null);
 			getManagedBean().setButtonHideActive(true);
