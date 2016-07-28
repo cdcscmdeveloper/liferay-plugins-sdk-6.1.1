@@ -33,17 +33,17 @@
 				</f:facet>
 
 				<c:if test="#{isEditableStatus}">
-					<p:selectOneMenu id="deductionType"
+					<h:selectOneMenu id="deductionType" style="width: 300px;"
 						label="#{lbl['lbl.sc.deduction.type']}"
 						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{scQtDeduction.deductionType.parameterId}" required="true">
+						value="#{scQtDeduction.deductionType.parameterId}">
 						<f:selectItems
 							value="#{lOADetailBackingBean.getDeductionItemTypeDropdownList()}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							update=":form:deductionPayId, deductionPayAmtId "
 							oncomplete="deductTblWidget.unselectAllRows(); deductTblWidget.selectRow(#{rowIndex}, true);"
 							listener="#{lOADetailBackingBean.deductionTypeChange(scQtDeduction)}" />
-					</p:selectOneMenu>
+					</h:selectOneMenu>
 					<p:message id="deductionTypeMsg" for="deductionType" display="icon" />
 				</c:if>
 				<c:if test="#{!isEditableStatus}">
