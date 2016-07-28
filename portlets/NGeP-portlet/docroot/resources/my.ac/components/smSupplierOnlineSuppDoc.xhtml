@@ -15,127 +15,131 @@
 	</cc:interface>
 
 	<cc:implementation>
-		<table>
-			<p:outputPanel rendered="#{!cc.attrs.mandatory}">
-				<tr><td style="background-color: PaleGreen;text-align: center;"><h:outputText value="#{lbl['lbl.sm.nonmandatory.suppdoc']}" style="font-weight: bold !important;"/></td></tr>
-			</p:outputPanel>
-			<p:outputPanel rendered="#{cc.attrs.mandatory}">
-				<tr><td style="background-color:PeachPuff;text-align: center;"><h:outputText value="#{lbl['lbl.sm.mandatory.suppdoc']}" style="font-weight: bold !important;"/></td></tr>
-			</p:outputPanel>
-			<tr><td>
-				<p:dataTable var="table" id="#{cc.attrs.tableId}" value="#{cc.attrs.smApplSupportDocs}" rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;">
-	
-					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
-						style="width : 5%;text-align: center !important;">
-						<h:outputText value="#{index + 1}" />
-					</p:column>
-		
-					<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 55%;overflow: hidden !important;">
-					
-						<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
-							
-						<p:outputPanel rendered="#{table.pmDocument.licenseReq}">
-							<table width="100%">
-								<tr>
-									<td style="border-style: none !important;">
-										<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.no']}" />
-										<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
-									</td>
-									<td style="border-style: none !important;">
-										<p:inputText value="#{table.licenseNo}" size="20" id="licenseNoId" required="#{table.pmDocument.mandatory}" label="#{lbl['lbl.sm.suppdoc.license.no']}" >
-											<p:ajax process="@this" partialSubmit="true"/>
-										</p:inputText>
-										<p:message id="licenseNoIdMsg" for="licenseNoId" showSummary="true" showDetail="false" display="icon" />
-									</td>
-									<td colspan="2" style="border-style: none !important;"></td>
-								</tr>
-								<tr>
-									<td style="border-style: none !important;">
-										<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.effdate']}" />
-										<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
-									</td>
-									<td style="border-style: none !important;">
-										<p:calendar id="licenseEffDateId"
-											navigator="true" required="#{table.pmDocument.mandatory}" 
-											label="#{lbl['lbl.sm.suppdoc.license.effdate']}"
-											value="#{table.licenseEffDate}"
-											pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-											readonlyInput="true" size="10" showOn="button" yearRange="-99:+0" >
-											<p:ajax event="dateSelect" update="licenseExpDateId" process="@this"/>
-										</p:calendar>
-										<p:message id="licenseEffDateIdMsg"
-											for="licenseEffDateId" showSummary="true" showDetail="false"
-											display="icon" />
-									</td>
-									<td style="border-style: none !important;">
-										<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.expdate']}" />
-										<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
-									</td>
-									<td style="border-style: none !important;">
-										<p:calendar id="licenseExpDateId" disabled="#{empty table.licenseEffDate}"
-											navigator="true" required="#{table.pmDocument.mandatory}"
-											label="#{lbl['lbl.sm.suppdoc.license.expdate']}"
-											value="#{table.licenseExpDate}"
-											pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-											readonlyInput="true" size="10" showOn="button" yearRange="-99:+10" 
-											mindate="#{table.licenseEffDate}">
-											<p:ajax event="dateSelect" process="@this"/>
-										</p:calendar>
-										<p:message id="licenseExpDateIdMsg"
-											for="licenseExpDateId" showSummary="true" showDetail="false"
-											display="icon" />
-									</td>
-								</tr>
-							</table>
-						</p:outputPanel>
-						
-					</p:column>
-		
+		<p:dataTable var="table" id="#{cc.attrs.tableId}" 
+			value="#{cc.attrs.smApplSupportDocs}" rowIndexVar="index" 
+			style="width:100% !important; table-layout: fixed !important;">
+			
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" rendered="#{cc.attrs.mandatory}"
+						style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
+					<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" rendered="#{!cc.attrs.mandatory}"
+						style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
+                </p:row>
+                <p:row>
+                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+						style="width : 5%;text-align: center !important;" />
+					<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
+						style="width : 55%;overflow: hidden !important;" />
 					<p:column headerText="#{lbl['lbl.btn.download']}"
 						rendered="#{backingBean.managedBean.hasSuppDocToDownload}"
-						style="width : 10%;text-align: center  !important;">
-						<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
-							value="#{lbl['lbl.sm.suppDoc.document.hdrCpyOnly']}"
-							style="float: left;white-space: normal;" />
-		
-						<p:commandLink rendered="#{table.pmDocument.download}"
-							action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.docDefinitionKey)}"
-							update=":form" ajax="false">
-							<p:fileDownload value="#{backingBean.file}" />
-							<p:graphicImage value="/css/images/design/download.png"
-								style="margin-right:2px;" />
-						</p:commandLink>
-					</p:column>
-		
+						style="width : 10%;text-align: center  !important;" />
 					<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
-						style="width : 10%;text-align: center  !important;">
-		
-						<p:commandLink oncomplete="#{cc.attrs.uploadDialogId}.show();return false;"
-							process="@this" partialSubmit="true"
-							rendered="#{!table.pmDocument.hardCopyReq}"
-							update="@([id$=uploadDocDialog])"
-							action="#{backingBean.assignSelectedSupportDoc(table)}">
-							<p:graphicImage value="/css/images/design/upload.png"
-								style="margin-right:2px;" />
-						</p:commandLink>
-		
-					</p:column>
+						style="width : 10%;text-align: center  !important;" />
 					<p:column headerText="#{lbl['lbl.pm.document.name']}"
-						style="width : 20%;overflow: hidden !important;">
-		
-						<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
-							value="#{lbl['lbl.sm.suppDoc.document.hdrCpyRmrks']}"
-							style="float: left;white-space: normal;" />
-		
-						<p:commandLink ajax="false" value="#{table.smApplDocFiles[0].fileName}" rendered="#{not empty table.smApplDocFiles and !table.pmDocument.hardCopyReq}">
-								<p:fileDownload value="#{backingBean.commonDownload(table.smApplDocFiles[0].filePath,table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].fileName)}" />
-						</p:commandLink>
-		
-		
-					</p:column>
-				</p:dataTable>
-			</td></tr>
-		</table>
+						style="width : 20%;overflow: hidden !important;" />
+                </p:row>
+			</p:columnGroup>
+
+			<p:column>
+				<h:outputText value="#{index + 1}" />
+			</p:column>
+
+			<p:column>
+			
+				<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
+					
+				<p:outputPanel rendered="#{table.pmDocument.licenseReq}">
+					<table width="100%">
+						<tr>
+							<td style="border-style: none !important;">
+								<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.no']}" />
+								<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+							</td>
+							<td style="border-style: none !important;">
+								<p:inputText value="#{table.licenseNo}" size="20" id="licenseNoId" required="#{table.pmDocument.mandatory}" label="#{lbl['lbl.sm.suppdoc.license.no']}" >
+									<p:ajax process="@this" partialSubmit="true"/>
+								</p:inputText>
+								<p:message id="licenseNoIdMsg" for="licenseNoId" showSummary="true" showDetail="false" display="icon" />
+							</td>
+							<td colspan="2" style="border-style: none !important;"></td>
+						</tr>
+						<tr>
+							<td style="border-style: none !important;">
+								<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.effdate']}" />
+								<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+							</td>
+							<td style="border-style: none !important;">
+								<p:calendar id="licenseEffDateId"
+									navigator="true" required="#{table.pmDocument.mandatory}" 
+									label="#{lbl['lbl.sm.suppdoc.license.effdate']}"
+									value="#{table.licenseEffDate}"
+									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+									readonlyInput="true" size="10" showOn="button" yearRange="-99:+0" >
+									<p:ajax event="dateSelect" update="licenseExpDateId" process="@this"/>
+								</p:calendar>
+								<p:message id="licenseEffDateIdMsg"
+									for="licenseEffDateId" showSummary="true" showDetail="false"
+									display="icon" />
+							</td>
+							<td style="border-style: none !important;">
+								<p:outputLabel value="#{lbl['lbl.sm.suppdoc.license.expdate']}" />
+								<p:outputLabel value="*" styleClass="mandatory" rendered="#{table.pmDocument.mandatory}"/>
+							</td>
+							<td style="border-style: none !important;">
+								<p:calendar id="licenseExpDateId" disabled="#{empty table.licenseEffDate}"
+									navigator="true" required="#{table.pmDocument.mandatory}"
+									label="#{lbl['lbl.sm.suppdoc.license.expdate']}"
+									value="#{table.licenseExpDate}"
+									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+									readonlyInput="true" size="10" showOn="button" yearRange="-99:+10" 
+									mindate="#{table.licenseEffDate}">
+									<p:ajax event="dateSelect" process="@this"/>
+								</p:calendar>
+								<p:message id="licenseExpDateIdMsg"
+									for="licenseExpDateId" showSummary="true" showDetail="false"
+									display="icon" />
+							</td>
+						</tr>
+					</table>
+				</p:outputPanel>
+				
+			</p:column>
+
+			<p:column>
+				<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
+					value="#{lbl['lbl.sm.suppDoc.document.hdrCpyOnly']}"
+					style="float: left;white-space: normal;" />
+
+				<p:commandLink rendered="#{table.pmDocument.download}"
+					action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.docDefinitionKey)}"
+					update=":form" ajax="false">
+					<p:fileDownload value="#{backingBean.file}" />
+					<p:graphicImage value="/css/images/design/download.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
+			</p:column>
+
+			<p:column>
+				<p:commandLink oncomplete="#{cc.attrs.uploadDialogId}.show();return false;"
+					process="@this" partialSubmit="true"
+					rendered="#{!table.pmDocument.hardCopyReq}"
+					update="@([id$=uploadDocDialog])"
+					action="#{backingBean.assignSelectedSupportDoc(table)}">
+					<p:graphicImage value="/css/images/design/upload.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
+			</p:column>
+			<p:column>
+				<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
+					value="#{lbl['lbl.sm.suppDoc.document.hdrCpyRmrks']}"
+					style="float: left;white-space: normal;" />
+
+				<p:commandLink ajax="false" value="#{table.smApplDocFiles[0].fileName}" rendered="#{not empty table.smApplDocFiles and !table.pmDocument.hardCopyReq}">
+						<p:fileDownload value="#{backingBean.commonDownload(table.smApplDocFiles[0].filePath,table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].fileName)}" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
 		
 		<p:dialog id="#{cc.attrs.uploadDialogId}" widgetVar="#{cc.attrs.uploadDialogId}" modal="true"
 			dynamic="true" resizable="false" width="700px" height="200"
