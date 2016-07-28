@@ -31,10 +31,9 @@
 				</f:facet>
 
 				<c:if test="#{isEditableStatus}">
-					<p:selectOneMenu id="deductionType"
-					disabled="#{directLOABackingBean.managedBean.readOnly}"
-					    style="width: 250px;"
-						label="#{lbl['lbl.sc.deduction.type']}"
+					<h:selectOneMenu id="deductionType"
+						disabled="#{directLOABackingBean.managedBean.readOnly}"
+						style="width: 300px;" label="#{lbl['lbl.sc.deduction.type']}"
 						value="#{scQtDeduction.deductionType.parameterId}">
 						<f:selectItems
 							value="#{directLOABackingBean.getDeductionItemTypeDropdownList()}" />
@@ -42,7 +41,7 @@
 							update=":form:deductionPayId, deductionPayAmtId "
 							oncomplete="deductTblWidget.unselectAllRows(); deductTblWidget.selectRow(#{rowIndex}, true);"
 							listener="#{directLOABackingBean.deductionTypeChange(scQtDeduction)}" />
-					</p:selectOneMenu>
+					</h:selectOneMenu>
 					<p:message id="deductionTypeMsg" for="deductionType" display="icon" />
 				</c:if>
 				<c:if test="#{!isEditableStatus}">
