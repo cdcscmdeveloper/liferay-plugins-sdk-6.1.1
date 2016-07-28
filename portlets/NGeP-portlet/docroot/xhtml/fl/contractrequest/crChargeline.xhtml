@@ -28,12 +28,14 @@
 					<p:selectBooleanCheckbox 
 						onchange="goToSelectAll()"
 						rendered="#{contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
+						disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
 						value="#{contractRequestBackingBean.selectAllCheckbox}">
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
 					rendered="#{chargeLineNode.parent == 'true' and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
+					disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
 					listener="#{contractRequestBackingBean.selectCheckbox}"
