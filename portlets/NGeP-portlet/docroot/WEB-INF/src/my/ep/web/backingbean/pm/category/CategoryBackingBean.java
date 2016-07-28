@@ -3674,7 +3674,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		if(ccPulicSearchBean.getPaidUpCapital() !=null){
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("paidUpCapital",
-							SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+							SearchOperator.OPERATOR_LESS_EQUAL.value(),
 							ccPulicSearchBean.getPaidUpCapital()));
 		}
 		
