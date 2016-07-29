@@ -1,37 +1,41 @@
 package my.ep.web.backingbean.ct.dashboard;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.managedbean.ct.dashboard.ContractDashboardManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 @ManagedBean(name="contractDashboardBackingBean")
 @ViewScoped
 public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashboardManagedBean>{
 
-	
-		ContractDetailsBackingBean contractDetailsBackingBean =  null;
 		 
 		public ContractDashboardBackingBean(){
-			if(contractDetailsBackingBean == null){
-				contractDetailsBackingBean = new ContractDetailsBackingBean();
-			}
 		}
 		
 		@PostConstruct
@@ -40,8 +44,30 @@ public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashbo
 			getManagedBean().setLessThan120Days(calculateTotalRecord(2));
 		}
 		
-		public void goToMaintenancePage() {
-			contractDetailsBackingBean.preRenderSearch(false);
+		public void goToMaintenancePage() throws IOException {
+			FacesScopes facesScope = new FacesScopes();
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
+					.getRequestScope(WebKeys.THEME_DISPLAY);
+			String commonUrl;
+			try {
+				commonUrl = themeDisplay.getURLCurrent().substring(
+						0,
+						themeDisplay.getURLCurrent().indexOf(
+								themeDisplay.getLayout().getGroup()
+								.getFriendlyURL())
+								+ themeDisplay.getLayout().getGroup()
+								.getFriendlyURL().length());
+				System.out.println("commonUrl" + commonUrl);
+
+				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+				externalContext.redirect(commonUrl + "/" +ContractConst.NAV_TO_CONTRACT_MAINT);
+			} catch (PortalException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SystemException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		public static Date addDays(Date date, int days)
