@@ -18261,6 +18261,7 @@ public class ReportBackingBean extends
 			new Thread(new InterruptThread(urlConnection)).start();
 			log.info("@@@@ Report URL = " +urlConnection.getURL());
 			buf = new BufferedInputStream(urlConnection.getInputStream());
+			
 			log.info("@@@@ Report URL222 = " +urlConnection.getURL() +"@@@@ Response Code222 = "+urlConnection.getResponseCode());
 			log.info("@@@@ Report getContentLength = " +urlConnection.getContentLength());
 			
@@ -18304,6 +18305,8 @@ public class ReportBackingBean extends
 			out.close();
 			
 		} catch (MalformedURLException e) {
+			log.info("@@@@ ReportBackingBean-MalformedURLException"+e);
+			e.printStackTrace();
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 			externalContext.addResponseCookie(
@@ -18313,6 +18316,8 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780009);
 		} catch (IllegalArgumentException e) {
+			log.info("@@@@ ReportBackingBean-IllegalArgumentException "+e);
+			e.printStackTrace();
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 			externalContext.addResponseCookie(
@@ -18322,6 +18327,8 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780009);
 		} catch (IOException e) {
+			log.info("@@@@ ReportBackingBean-IOException "+e);
+			e.printStackTrace();
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 			externalContext.addResponseCookie("primefaces.download",
@@ -18329,7 +18336,10 @@ public class ReportBackingBean extends
 					Collections.<String, Object> emptyMap());
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780020);
-		} finally {
+		}catch(Exception e) {
+			log.info("@@@@ ReportBackingBean-Exception "+e);
+			e.printStackTrace();
+		}finally {
 			log.info("@@@@ ReportBackingBean-fileGenerateReport finally block");
 			urlConnection.disconnect();
 		}
