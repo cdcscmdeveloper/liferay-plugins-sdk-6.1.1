@@ -382,7 +382,7 @@ public class MarketResearchBackingBean extends
 		if(scLoaReport != null && scLoaReport.getScLoaReportAttachment() != null){
 			downloadFile(scLoaReport.getScLoaReportAttachment());
 		}else{
-			throw new EpException("LOA Report Attachment is not found.");
+			throw new EpException("Specification Attachment is not is not found.");
 		}
 	}
 	
