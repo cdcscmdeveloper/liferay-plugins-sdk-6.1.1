@@ -2086,22 +2086,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 			
 			public void selectAllDeduction(AjaxBehaviorEvent e) {
-				
+				  getManagedBean().setButtonHideDedActive(true);
 					for (CtDeduction deduct : getManagedBean().getContractVer().getCtDeductions()) {
-						if (getManagedBean().isSelectAll()) {
+						if (getManagedBean().isSelectAll() && !deduct.isFromDpQt()) {
+							    if(getManagedBean().isButtonHideDedActive()){
+							    	 getManagedBean().setButtonHideDedActive(false);
+							    }
 						        deduct.setSelectedCheckBox(true);
 					       }else {
 					    	   deduct.setSelectedCheckBox(false);
 					       }
-				}
-				
-				if((boolean) e.getComponent().getAttributes().get("value")){
-					getManagedBean().setButtonHideDedActive(false);
-				}else{
-					getManagedBean().setButtonHideDedActive(true);
-				}	
+				     }
 			}
-			
 			
 			public void selectAllDeductionClause(AjaxBehaviorEvent e) {
 				
