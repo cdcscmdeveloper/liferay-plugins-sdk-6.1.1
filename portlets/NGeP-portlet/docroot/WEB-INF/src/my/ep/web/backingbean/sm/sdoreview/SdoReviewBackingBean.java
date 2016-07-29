@@ -13,6 +13,9 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
@@ -21,6 +24,7 @@ import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
@@ -29,12 +33,14 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sdoreview.SdoReviewManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -226,8 +232,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 								new String[] {getManagedBean().getSmAppl().getApplNo(),getManagedBean().getSmAppl().getSmSupplier().getCompanyName()},MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 					}else{
+						String assignedPOName = getAssignedPOName(getManagedBean().getSmAppl().getApplNo());
 						FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721104,
-								new String[] {getManagedBean().getSmAppl().getApplNo()},MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new String[] {getManagedBean().getSmAppl().getApplNo(), assignedPOName},MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 					}
 					renewSesionObject();
@@ -247,6 +254,33 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		return null;
 	}
 
+	public String getAssignedPOName(String docNo) {
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setDocNumber(docNo);
+//		reqDTO.setState("ASSIGNED");
+		reqDTO.setStatus(20104);
+		
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		BpmResponseDTO resDTO = bpmSO.getTasks(reqDTO);		
+		
+		if(resDTO != null && resDTO.getWorklistVO() != null 
+				&& resDTO.getWorklistVO().getWorklistItem() != null 
+				&& resDTO.getWorklistVO().getWorklistItem().size() > 0) {
+			
+			if(resDTO.getWorklistVO().getWorklistItem().get(0).getAssignees() != null
+					&& resDTO.getWorklistVO().getWorklistItem().get(0).getAssignees().size() > 0) {
+				
+				String assignedPOLoginId = resDTO.getWorklistVO().getWorklistItem().get(0).getAssignees().get(0);
+				PmUser assignedPO = PmCommonUtil.retrieveUserByLoginId(assignedPOLoginId);
+				if(assignedPO != null) {
+					log.info("assigned PO name: " + assignedPO.getUserName());
+					return  " - " + assignedPO.getUserName();
+				}
+			}
+		}
+		return "";
+	}
+	
 	/**
 	 * Show the dialog based on action
 	 * -if action is "VERIFY", show submission confirmation dialog
