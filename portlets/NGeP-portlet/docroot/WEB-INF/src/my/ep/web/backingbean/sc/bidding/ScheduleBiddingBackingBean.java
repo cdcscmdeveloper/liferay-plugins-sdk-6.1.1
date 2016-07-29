@@ -125,7 +125,8 @@ public class ScheduleBiddingBackingBean extends
 				recommendDtls.add(Long.parseLong(str));
 			}
 
-			retriveItemsToBid(qtId, recommendDtls);
+			retriveItemsToBid(qtId, recommendDtls,((PmUser) (new FacesScopes().getUserSessionBean()))
+					.getUserId());
 			populateDurationDropDownValues();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
@@ -301,7 +302,7 @@ public class ScheduleBiddingBackingBean extends
 	 * @param recommandIds
 	 */
 
-	public void retriveItemsToBid(Long qtId, List<Long> recommandIds) {
+	public void retriveItemsToBid(Long qtId, List<Long> recommandIds,Long userId) {
 
 		debugLogger("retriveItemsToBid");
 		IScheduleBiddingSO scheduleBiddingSO = null;
@@ -313,6 +314,7 @@ public class ScheduleBiddingBackingBean extends
 			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
 			reqDTO.setQtID(qtId);
 			reqDTO.setRecommandIds(recommandIds);
+			reqDTO.setUserId(userId);
 			ScheduleBiddingResDTO resDTO = scheduleBiddingSO
 					.retrieveBidScduleDetials(reqDTO);
 
