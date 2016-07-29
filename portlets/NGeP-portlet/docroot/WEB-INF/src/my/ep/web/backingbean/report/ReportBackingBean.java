@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -113,6 +114,7 @@ import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.collections.CollectionUtils;
@@ -18230,7 +18232,9 @@ public class ReportBackingBean extends
 	 */
 	protected void fileGenerateReport(String reportTitle,
 			String paramConstrString) {
-		log.info("ReportBackingBean-fileGenerateReport");
+		
+		Timestamp time = DateUtils.getCurrentDate();
+		log.info("ReportBackingBean-fileGenerateReport Time stamp ="+time);
 		StringBuilder gnrtdURL = new StringBuilder();
 
 		if (this.getManagedBean().getReportUrlValue().equals("1")) {
@@ -18259,20 +18263,20 @@ public class ReportBackingBean extends
 			urlConnection.setConnectTimeout(306000);
 			urlConnection.setReadTimeout(306000);
 			new Thread(new InterruptThread(urlConnection)).start();
-			log.info("@@@@ Report URL = " +urlConnection.getURL());
+			log.info("@@@@ Report URL = " +urlConnection.getURL()+ " @@@@ Time stamp ="+time);
 			buf = new BufferedInputStream(urlConnection.getInputStream());
 			
-			log.info("@@@@ Report URL222 = " +urlConnection.getURL() +"@@@@ Response Code222 = "+urlConnection.getResponseCode());
-			log.info("@@@@ Report getContentLength = " +urlConnection.getContentLength());
+			log.info("@@@@ Report URL222 = " +urlConnection.getURL() +"@@@@ Response Code222 = "+urlConnection.getResponseCode()+ " @@@@ Time stamp ="+time);
+			log.info("@@@@ Report getContentLength = " +urlConnection.getContentLength()+ " @@@@ Time stamp ="+time);
 			
-			log.info("@@@@ Start the PortletResponse from here");
+			log.info("@@@@ Start the PortletResponse from here"+ " @@@@ Time stamp ="+time);
 			PortletResponse portletResponse = (PortletResponse) FacesContext
 					.getCurrentInstance().getExternalContext().getResponse();
-			log.info("@@@@ PortletResponse = "+portletResponse);
+			log.info("@@@@ PortletResponse = "+portletResponse+ " @@@@ Time stamp ="+time);
 			
 			HttpServletResponse res = PortalUtil
 					.getHttpServletResponse(portletResponse);
-			log.info("@@@@ HttpServletResponse = "+res);
+			log.info("@@@@ HttpServletResponse = "+res+ " @@@@ Time stamp ="+time);
 			/*
 			 * int position = reportFile.lastIndexOf(ReportConst.DOTJSP); if
 			 * (position != -1) { reportFile = reportFile.substring(0,
@@ -18287,10 +18291,10 @@ public class ReportBackingBean extends
 					ReportConst.BINARY);
 			res.setContentType(ReportConst.APPLICATIONEIFONPDF);
 			res.flushBuffer();
-			log.info("@@@@ HttpServletResponse getContentType = "+res.getContentType());
-			log.info("@@@@ HttpServletResponse getStatus = "+res.getStatus());
+			log.info("@@@@ HttpServletResponse getContentType = "+res.getContentType()+ " @@@@ Time stamp ="+time);
+			log.info("@@@@ HttpServletResponse getStatus = "+res.getStatus()+ " @@@@ Time stamp ="+time);
 			for (String headrName : res.getHeaderNames()){
-				log.info("@@@@ HttpServletResponse getHeaderNames = "+headrName);
+				log.info("@@@@ HttpServletResponse getHeaderNames = "+headrName+ " @@@@ Time stamp ="+time);
 			}
 			
 			OutputStream out = res.getOutputStream();
@@ -18305,7 +18309,7 @@ public class ReportBackingBean extends
 			out.close();
 			
 		} catch (MalformedURLException e) {
-			log.info("@@@@ ReportBackingBean-MalformedURLException"+e);
+			log.info("@@@@ ReportBackingBean-MalformedURLException"+e + " @@@@ Time stamp ="+time);
 			e.printStackTrace();
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
@@ -18316,7 +18320,7 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780009);
 		} catch (IllegalArgumentException e) {
-			log.info("@@@@ ReportBackingBean-IllegalArgumentException "+e);
+			log.info("@@@@ ReportBackingBean-IllegalArgumentException "+e + " @@@@ Time stamp ="+time);
 			e.printStackTrace();
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
@@ -18327,7 +18331,7 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780009);
 		} catch (IOException e) {
-			log.info("@@@@ ReportBackingBean-IOException "+e);
+			log.info("@@@@ ReportBackingBean-IOException "+e + " @@@@ Time stamp ="+time);
 			e.printStackTrace();
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
@@ -18337,13 +18341,13 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780020);
 		}catch(Exception e) {
-			log.info("@@@@ ReportBackingBean-Exception "+e);
+			log.info("@@@@ ReportBackingBean-Exception "+e + " @@@@ Time stamp ="+time);
 			e.printStackTrace();
 		}finally {
-			log.info("@@@@ ReportBackingBean-fileGenerateReport finally block");
+			log.info("@@@@ ReportBackingBean-fileGenerateReport finally block"+ " @@@@ Time stamp ="+time);
 			urlConnection.disconnect();
 		}
-		log.info("@@@@ End of ReportBackingBean-fileGenerateReport");
+		log.info("@@@@ End of ReportBackingBean-fileGenerateReport"+ " @@@@ Time stamp ="+time);
 	}
 
 	/**
