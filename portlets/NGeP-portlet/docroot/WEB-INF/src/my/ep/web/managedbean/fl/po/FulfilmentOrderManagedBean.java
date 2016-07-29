@@ -214,6 +214,10 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private String gfmasErrorDesc;
 	private Long docStatusId;
 	private List<Long> statusIds;
+	private BigDecimal totalPendingFl;
+	private BigDecimal totalPendingPartialFl;
+	private BigDecimal totalPendingSupplierAck;
+	private BigDecimal totalPendingInvoice;
     
     private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
     private IPagingDataModel<FlFulfilmentOrder> pendingFlDataModel = new PendingFlPagingDataModel();
@@ -1316,6 +1320,38 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 	public void setGfmasErrorCode(String gfmasErrorCode) {
 		this.gfmasErrorCode = gfmasErrorCode;
+	}
+
+	public BigDecimal getTotalPendingFl() {
+		return totalPendingFl;
+	}
+
+	public void setTotalPendingFl(BigDecimal totalPendingFl) {
+		this.totalPendingFl = totalPendingFl;
+	}
+
+	public BigDecimal getTotalPendingPartialFl() {
+		return totalPendingPartialFl;
+	}
+
+	public void setTotalPendingPartialFl(BigDecimal totalPendingPartialFl) {
+		this.totalPendingPartialFl = totalPendingPartialFl;
+	}
+
+	public BigDecimal getTotalPendingSupplierAck() {
+		return totalPendingSupplierAck;
+	}
+
+	public void setTotalPendingSupplierAck(BigDecimal totalPendingSupplierAck) {
+		this.totalPendingSupplierAck = totalPendingSupplierAck;
+	}
+
+	public BigDecimal getTotalPendingInvoice() {
+		return totalPendingInvoice;
+	}
+
+	public void setTotalPendingInvoice(BigDecimal totalPendingInvoice) {
+		this.totalPendingInvoice = totalPendingInvoice;
 	}
 
 }
