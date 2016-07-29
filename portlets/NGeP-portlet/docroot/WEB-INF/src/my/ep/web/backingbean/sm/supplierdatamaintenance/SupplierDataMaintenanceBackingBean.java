@@ -98,6 +98,9 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setExistingMofExpiryDate(
 					getManagedBean().getSmMofAccount().getExpDate());
 		}
+		if (getManagedBean().getSmMofAccount() == null) {
+			getManagedBean().setSmMofAccount(getSingleSmMofAccount());
+		}
 		getManagedBean().setDeleteApprovedCategories(
 				new ArrayList<SmSupplierCategory>());
 		getManagedBean().setSelectedApprovedCategories(
