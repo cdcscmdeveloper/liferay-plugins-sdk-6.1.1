@@ -59,9 +59,9 @@
 							<tr>
 								<td style="width: 120px"><p:outputLabel
 										value="#{lbl['lbl.sc.document.title']}" /></td>
-								<td colspan="3"><p:inputText id="documentTitle"
-										value="#{onlineBiddingBB.scBidSchedule.scBid.docTitle}"
-										disabled="true" size="77" /></td>
+								<td colspan="3"><p:inputTextarea id="documentTitle" disabled="true"
+										readonly="true" autoResize="true" cols="90"
+										value="#{onlineBiddingBB.scBidSchedule.scBid.docTitle}" rows="3" /> </td>
 							</tr>
 
 							<tr>
@@ -69,12 +69,9 @@
 										value="#{lbl['lbl.sc.ptj']}" /></td>
 								<td colspan="3"><p:inputText id="ptjName"
 										value="#{onlineBiddingBB.scBidSchedule.scBid.pmOrgProfile.orgName}"
-										disabled="true" size="77" /></td>
-
+										disabled="true" size="88" /></td>
 							</tr>
-
 							<tr>
-
 								<td style="width: 120px"><p:outputLabel
 										value="#{lbl['lbl.sc.bidding.start']}" /></td>
 								<td><p:inputText id="bidStart"
