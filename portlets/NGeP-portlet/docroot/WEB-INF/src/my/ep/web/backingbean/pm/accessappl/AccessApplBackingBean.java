@@ -428,13 +428,18 @@ public class AccessApplBackingBean extends
 				
 				String messageId = null;
 				PmAccessAppl savedAccessAppl = resDTO.getAccessAppl();
+				String helpdeskParam = null;
 				if(BpmOutcomeConst.BPM_SAVE.equals(outcome)){
+					helpdeskParam = ResourceBundleUtils.getMessage(
+							"lbl.pm.access.app.helpdesk.contact",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 					if(savedAccessAppl.isCompanyProfile() && savedAccessAppl.isMarketResearch()){
 						messageId = MessageConst.INFO_776032;
 					}else if(savedAccessAppl.isCompanyProfile() ){
-						messageId = MessageConst.INFO_776030;
+						messageId = MessageConst.INFO_776030;						
 					}else if(savedAccessAppl.isMarketResearch()){
-						messageId = MessageConst.INFO_776031;
+						messageId = MessageConst.INFO_776031;						
 					}
 				}else if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
 					if(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL.equals(currentStatus.longValue())){
@@ -451,10 +456,18 @@ public class AccessApplBackingBean extends
 					}
 				}
 				
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{savedAccessAppl.getApplNo() }, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				if(helpdeskParam != null){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{savedAccessAppl.getApplNo(),helpdeskParam }, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}else{
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{savedAccessAppl.getApplNo() }, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+			
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 			
