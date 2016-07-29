@@ -10,67 +10,57 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:selectOneMenu rendered="false"
-			value="#{flOrderBB.managedBean.docStatusId}"
-			style="width: 314px;">
-			<f:selectItems
-				value="#{flOrderBB.getPendingFlListStatus()}" />
-			<p:ajax event="change" update="form:flPendingFlDt"
-				listener="#{flOrderBB.getSelectedFlDocStatusDesc}" />
-		</p:selectOneMenu>
-		<p:spacer height="2px" rendered="false"></p:spacer>
-		<p:dataTable value="#{flOrderBB.managedBean.pendingFlDataModel}" lazy="true"
-			var="pending" id="flPendingFlDt" rowIndexVar="rowIndex" width="100%" rows="5">
-			<ac:paginator for="flPendingFlDt" />
-			<p:column headerText="#{lbl['lbl.fl.dopending.order.number']}" style="text-align:center;width:15%">
-				<h:outputText value="#{pending.docNo}" style="float:left;"/>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}" style="text-align:center" rendered="false">
-				<h:outputText value="#{flOrderBB.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, pending.docType)}" style="float:left;"/>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.title']}" style="white-space:normal;text-align:center;width:30%">
-				<p:commandLink value="#{pending.flFulfilmentRequest.title}"
-					action="#{flOrderBB.navigateToFlOrderFromDashBoard(rowIndex)}" style="text-align:left;float:left;">
-					<f:setPropertyActionListener
-						target="#{flOrderBB.managedBean.selectedFlOrder}"
-						value="#{pending}"></f:setPropertyActionListener>
-						<f:param name="status" value="#{flOrderBB.getStatusDescById(pending.status.statusId)}" />
-				</p:commandLink>				
-			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.supp.name']}" style="white-space:normal;text-align:center;width:30%">
-				<h:outputText value="#{pending.flFulfilmentRequest.flSupplierDtl.supplierName}" style="text-align:left;float:left;"/>
-			</p:column>				
-			<p:column headerText="#{lbl['lbl.fl.created.date']}" style="text-align:center" rendered="false">
-				<h:outputText value="#{pending.createdDate}" style="float:left;">
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-				</h:outputText>
-			</p:column>
-			<p:column style="white-space:normal;text-align:center;width:25%">
-				<f:facet name="header">
-					#{lbl['lbl.fl.status']}
-					<p:commandButton id="addBtn" icon="ui-icon-filter" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
-						partialSubmit="true" process="@this" />					
-					<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom" style="width:250px;">
-			            <p:menuitem value="#{lbl['lbl.txt.all']}" update=":form:flPendingFlDt" action="#{flOrderBB.onFlStatusChange(null)}">
-			            	<f:setPropertyActionListener value="#{null}" target="#{flOrderBB.managedBean.docStatusId}" />
-			            </p:menuitem>					
-			            <p:menuitem value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.poPendingSupplierAcknowledgement)}" update=":form:flPendingFlDt" action="#{flOrderBB.onFlStatusChange(FulfilmentStatusCont.poPendingSupplierAcknowledgement)}">
-			            	<f:setPropertyActionListener value="#{FulfilmentStatusCont.poPendingSupplierAcknowledgement}" target="#{flOrderBB.managedBean.docStatusId}" />
-			            </p:menuitem>	
-			            <p:menuitem value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.poPendingFulfilment)}" update=":form:flPendingFlDt" action="#{flOrderBB.onFlStatusChange(FulfilmentStatusCont.poPendingFulfilment)}">
-			            	<f:setPropertyActionListener value="#{FulfilmentStatusCont.poPendingFulfilment}" target="#{flOrderBB.managedBean.docStatusId}" />
-			            </p:menuitem>			            					
-			            <p:menuitem value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.poPendingPartialFulfilment)}" actionListener="#{flOrderBB.onFlStatusChange(FulfilmentStatusCont.poPendingPartialFulfilment)}" update=":form:flPendingFlDt" >
-				            <f:setPropertyActionListener value="#{FulfilmentStatusCont.poPendingPartialFulfilment}" target="#{flOrderBB.managedBean.docStatusId}" />
-			            </p:menuitem>
-			            <p:menuitem value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.poPendingInvoice)}" update=":form:flPendingFlDt" action="#{flOrderBB.onFlStatusChange(FulfilmentStatusCont.poPendingInvoice)}">
-			            	<f:setPropertyActionListener value="#{FulfilmentStatusCont.poPendingInvoice}" target="#{flOrderBB.managedBean.docStatusId}" />
-			            </p:menuitem>
-					</p:menu>
-				</f:facet>
-				<h:outputText value="#{flOrderBB.getStatusDescById(pending.status.statusId)}" style="text-align:left;float:left;" />
-			</p:column>			
-		</p:dataTable>
+		<table style="width: 100%;">
+			<tr>
+				<td
+					style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;">
+					<p:outputLabel value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.poPendingFulfilment)}"
+						style="float:left;" />
+				</td>
+				<td
+					style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;">
+					#{flOrderBB.managedBean.totalPendingFl}</td>
+			</tr>
+			<tr>
+				<td
+					style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;">
+					<p:outputLabel value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.coPendingPartialFl)}"
+						style="float:left;" />
+				</td>
+				<td
+					style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;">
+					#{flOrderBB.managedBean.totalPendingPartialFl}</td>
+			</tr>
+			<tr>
+				<td
+					style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;">
+					<p:outputLabel value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.coPendingSupplierAcknowledgement)}"
+						style="float:left;" />
+				</td>
+				<td
+					style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;">
+					#{flOrderBB.managedBean.totalPendingSupplierAck}</td>
+			</tr>
+			<tr>
+				<td
+					style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;">
+					<p:outputLabel value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.coPendingInvoice)}"
+						style="float:left;" />
+				</td>
+				<td
+					style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;">
+					#{flOrderBB.managedBean.totalPendingInvoice}</td>
+			</tr>
+			<tr>
+				<td colspan="3"
+					style="text-align: right; padding-right: 6%; border-style: ridge; border-width: 1px; border-color: #000000;">
+					<p:commandLink value="#{lbl['lbl.ct.dash.board.more']}"
+						styleClass="blue_font" process="@this" update="@form"
+						action="#{flOrderBB.navigateToFlAudit}">
+					</p:commandLink>
+				</td>
+			</tr>
+		</table>
 	</ui:define>
 
 </ui:composition>
