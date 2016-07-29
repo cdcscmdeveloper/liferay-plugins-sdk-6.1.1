@@ -71,6 +71,7 @@ import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
@@ -91,6 +92,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -1299,13 +1301,40 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	}
 	
 	public void preRenderViewDODashBoardTable(){
-		getManagedBean().getPendingDoDataModel().reloadData();
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		if(!getManagedBean().getStatusIds().isEmpty()){
+			reqDTO.setStatusIds(getManagedBean().getStatusIds());
+		}
+		
+		FulfilmentResDTO resDTO = orderSO.countPendingDo(reqDTO);
+		getManagedBean().setTotalPendingFl(resDTO.getTotalPendingFl());
+		getManagedBean().setTotalPendingPartialFl(resDTO.getTotalPendingPartialFl());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doPendingTableDashBoard.xhtml");
 	}
 	
 	public void preRenderViewFlDashBoardTable(){
-		getManagedBean().getPendingFlDataModel().reloadData();
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
+		if(pmUserOrgs.get(0) == null){
+			log.info("User does not have any active orgs.");
+		}
+		if(pmUserOrgs.get(0) != null || pmUserOrgs.get(0).getPmOrgProfile() != null){
+			reqDTO.setOrgProfileId(pmUserOrgs.get(0).getPmOrgProfile().getOrgProfileId());
+		}
+		if(!getManagedBean().getStatusIds().isEmpty()){
+			reqDTO.setStatusIds(getManagedBean().getStatusIds());
+		}
+		
+		FulfilmentResDTO resDTO = orderSO.countPendingFl(reqDTO);
+		getManagedBean().setTotalPendingFl(resDTO.getTotalPendingFl());
+		getManagedBean().setTotalPendingPartialFl(resDTO.getTotalPendingPartialFl());
+		getManagedBean().setTotalPendingSupplierAck(resDTO.getTotalPendingSupplierAck());
+		getManagedBean().setTotalPendingInvoice(resDTO.getTotalPendingInvoice());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "pendingFulfilment.xhtml");
 	}
@@ -1375,48 +1404,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		getManagedBean().getPendingFlDataModel().reloadData();
 	}
 	
-	/**
-	 * Get status select items by module and doc type for dropdown.
-	 * 
-	 * @param parameterType
-	 *            the parameter type
-	 * @return array of SelectItem
-	 */
-	public SelectItem[] getPendingDeliveryListStatus() {
-		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
-
-		try {
-			List<Long> statusIds = new ArrayList<Long>();
-			statusIds.add(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL);
-			statusIds.add(FulfilmentStatusConst.PO_PENDING_FULFILMENT);
-			
-			List<String> statusDescs = new ArrayList<String>();
-			Map<String, Long> statusMap = new HashMap<String, Long>();
-			for(Long statusId : statusIds){
-				if(statusMap.get(statusId) == null){
-					statusMap.put(getStatusDescById(statusId), statusId);
-					statusDescs.add(getStatusDescById(statusId));
-				}
-			}
-			items = new SelectItem[statusDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
-			int i = 1;
-			for (String statusDesc : statusDescs) {
-				items[i++] = new SelectItem(statusMap.get(statusDesc),statusDesc);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		}
-
-		return items;
-	}
 	
 	/**
 	 * Get status select items by module and doc type for dropdown.
@@ -1547,16 +1534,15 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @param index the index
 	 * @return the string
 	 */
-	public String navigateToDeliveryOrder(int index) {
-		return constructDOUrl(getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
+	public String navigateToDeliveryOrder() {
+		return constructDOUrl();
 	}
 	
-	private String constructDOUrl(Long orderId) {
+	private String constructDOUrl() {
 		StringBuilder doUrlLink = new StringBuilder();
 
 		doUrlLink.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)); // portal application url
-		doUrlLink.append(FulfilmentConst.VIEW_DELIVERY_ORDER); // do page
-		doUrlLink.append("?orderId="+orderId); // parameter - orderId
+		doUrlLink.append(FulfilmentConst.VIEW_PENDING_DO_PAGE); // do page
 		String url = doUrlLink.toString();
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		try {
@@ -1584,4 +1570,29 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		
 	}
 		
+	/**
+	 * Navigate to fl audit page.
+	 *
+	 * @return the string
+	 */
+	public String navigateToFlAudit(){
+		return constructFlAuditUrl();
+	}
+	
+	private String constructFlAuditUrl() {
+		StringBuilder urlLink = new StringBuilder();
+
+		urlLink.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)); // portal application url
+		urlLink.append(FulfilmentConst.VIEW_FULFILMENT_SEARCH); // do page
+		String url = urlLink.toString();
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		try {
+			externalContext.redirect(url);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return url;
+
+	}
 }
