@@ -3078,6 +3078,7 @@ public class ProfileManagementBackingBean extends
 //			searchBean.getSortColumns().add(orderBean);
 //		}
 //		searchBean.getSortColumns().add(new SearchOrderBean("pmUser.userName",true));
+		searchBean.getSortColumns().add(new SearchOrderBean("createdDate",false));
 		
 		
 		logger.info("getSearchBeanData - End");

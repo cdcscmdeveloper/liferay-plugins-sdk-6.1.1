@@ -129,7 +129,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.off.price']}" /></td>
-				<td><p:inputText style="text-align: right;"
+				<td><p:inputText style="width:195px;text-align: right;"
 						value="#{vo.loaAmt}"
 						disabled="true"
 						size="35">
@@ -139,7 +139,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" /></td>
-				<td><p:inputText style="text-align: right;"
+				<td><p:inputText style="width:195px;text-align: right;"
 						value="#{vo.gstAmt}"
 						disabled="true"
 						size="35">
@@ -150,7 +150,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.overall.contract.amount']}" /></td>
-				<td><p:inputText style="text-align: right;"
+				<td><p:inputText style="width:195px;text-align: right;"
 						value="#{vo.overallContractAmt}"
 						size="35" id="ContractAmtId" disabled="true">
 						<f:convertNumber
@@ -161,7 +161,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.mr.loa.ack.date']}" /></td>
 				<td>
-					<p:inputText size="35" disabled="true"  id="ackDateId"
+					<p:inputText size="35" disabled="true"  id="ackDateId" style="width:195px;"
 						value="#{vo.ackDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
