@@ -1280,11 +1280,11 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 		log.info("processAllVendors");
 		
-
-		if (this.getManagedBean().getSelectedProgActList() != null) {
+        
+		if (this.getManagedBean().getSelectedProgActList() != null && this.getManagedBean().getSelectedProgActList().size()>0 ) {
 			log.info("***************ProgActList***SIZE******************>>"
 					+ this.getManagedBean().getSelectedProgActList().size());
-
+			
 			IInterfacePrgActSO interfaceprgActSO = (IInterfacePrgActSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1298,6 +1298,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			try {
 				interfaceprgActSO.saveOrUpdatePrgActList(reqDTO);
+				this.getManagedBean().setSelectedProgActList(null);				
 				this.getManagedBean().getSearchProgAct().reloadData();
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
@@ -1307,7 +1308,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				return NAV_TO_PRGACT;
 			}
 
-		} else if (this.getManagedBean().getSelectedProjectList() != null) {
+		} else if (this.getManagedBean().getSelectedProjectList() != null && this.getManagedBean().getSelectedProjectList().size()>0) {
 			log.info("************ProjectList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedProjectList().size());
 
@@ -1325,6 +1326,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			try {
 				interfaceprojectActSO.saveOrUpdateProjectList(reqDTO);
+				this.getManagedBean().setSelectedProjectList(null);
 				this.getManagedBean().getSearchProject().reloadData();
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
@@ -1334,7 +1336,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				return NAV_TO_PROJECT;
 			}
 
-		} else if (this.getManagedBean().getSelectedAgOfficeList() != null) {
+		} else if (this.getManagedBean().getSelectedAgOfficeList() != null && this.getManagedBean().getSelectedAgOfficeList().size()>0) {
 
 			log.info("***********AgOfficeList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedAgOfficeList().size());
@@ -1355,6 +1357,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			try {
 				reqSO.saveOrUpdateInterfaceAgOffList(reqDTO);
+				this.getManagedBean().setSelectedAgOfficeList(null);
 				this.getManagedBean().getSearchAgOff().reloadData();
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
@@ -1365,7 +1368,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			}
 
-		} else if (this.getManagedBean().getSelectedBankList() != null) {
+		} else if (this.getManagedBean().getSelectedBankList() != null && this.getManagedBean().getSelectedBankList().size()>0) {
 
 			log.info("************BankList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedBankList().size());
@@ -1385,6 +1388,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 								IInterfaceCmBankSO.class);
 
 				reqSO.saveOrUpdateInterfaceBankList(reqDTO);
+				this.getManagedBean().setSelectedBankList(null);
 				this.getManagedBean().getSearchBank().reloadData();
 
 			} catch (Exception e) {
@@ -1396,7 +1400,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			}
 
-		} else if (this.getManagedBean().getSelectedGlAcntList() != null) {
+		} else if (this.getManagedBean().getSelectedGlAcntList() != null && this.getManagedBean().getSelectedGlAcntList().size()>0) {
 			log.info("***********GlAcntList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedGlAcntList().size());
 
@@ -1414,6 +1418,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			try {
 				interfaceGlAccSO.saveOrUpdateGlAccList(reqDTO);
+				this.getManagedBean().setSelectedGlAcntList(null);
 				this.getManagedBean().getSearchGlAccount().reloadData();
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
@@ -1423,7 +1428,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				return NAV_TO_GLACCOUNT;
 			}
 
-		} else if (this.getManagedBean().getSelectedKptjList() != null) {
+		} else if (this.getManagedBean().getSelectedKptjList() != null && this.getManagedBean().getSelectedKptjList().size()>0) {
 			log.info("************KptjList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedKptjList().size());
 			InterfaceKptjReqDTO reqDTO = new InterfaceKptjReqDTO();
@@ -1441,6 +1446,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 								IInterfaceKptjSO.class);
 
 				reqSO.saveOrUpdateInterfaceKptjList(reqDTO);
+				this.getManagedBean().setSelectedKptjList(null);
 				this.getManagedBean().getSearchKptj().reloadData();
 
 			} catch (Exception e) {
@@ -1452,7 +1458,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			}
 
 			
-		} else if (this.getManagedBean().getSelectedPtjList() != null) {
+		} else if (this.getManagedBean().getSelectedPtjList() != null && this.getManagedBean().getSelectedPtjList().size()>0) {
 
 			log.info("************PtjList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedPtjList().size());
@@ -1471,6 +1477,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 								IInterfacePtjSO.class);
 
 				reqSO.saveOrUpdateInterfacePtjList(reqDTO);
+				this.getManagedBean().setSelectedPtjList(null);
 				this.getManagedBean().getSearchPtj().reloadData();
 
 			} catch (Exception e) {
@@ -1482,7 +1489,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 			}
 
-		} else if (this.getManagedBean().getSelectedDanaList() != null) {
+		} else if (this.getManagedBean().getSelectedDanaList() != null && this.getManagedBean().getSelectedDanaList().size()>0) {
 
 			log.info("***********DanaList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedDanaList().size());
@@ -1500,6 +1507,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			reqDTO.setTransId(this.getManagedBean().getTransId());
 			try {
 				interfaceVotDanaSO.saveOrUpdateVotDanaList(reqDTO);
+				this.getManagedBean().setSelectedDanaList(null);
 				this.getManagedBean().getSearchDana().reloadData();
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
@@ -1509,7 +1517,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				return NAV_TO_DANA;
 			}
 
-		} else if (this.getManagedBean().getSelectedPpList() != null) {
+		} else if (this.getManagedBean().getSelectedPpList() != null && this.getManagedBean().getSelectedPpList().size()>0) {
 
 			log.info("************PpList******SIZE******************>>"
 					+ this.getManagedBean().getSelectedPpList().size());
@@ -1528,13 +1536,14 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 								IInterfacePpSO.class);
 
 				reqSO.saveOrUpdateInterfacePpList(reqDTO);
+				this.getManagedBean().setSelectedPpList(null);
 				this.getManagedBean().getSearchPp().reloadData();
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-		} else if (this.getManagedBean().getSelectedVotList() != null) {
+		} else if (this.getManagedBean().getSelectedVotList() != null && this.getManagedBean().getSelectedVotList().size()>0) {
 			log.info("***********VotList*******SIZE******************>>"
 					+ this.getManagedBean().getSelectedVotList().size());
 
@@ -1550,6 +1559,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			reqDTO.setInterfaceVotLs(this.getManagedBean().getSelectedVotList());
 			try {
 				interfacevotSO.saveOrUpdateVotFundList(reqDTO);
+				this.getManagedBean().setSelectedVotList(null);
 				this.getManagedBean().getSearchVot().reloadData();
 			} catch (Exception e) {
 
