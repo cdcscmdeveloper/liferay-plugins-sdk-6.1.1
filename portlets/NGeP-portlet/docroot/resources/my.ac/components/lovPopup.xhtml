@@ -31,7 +31,7 @@
 		<ui:include src="lovSearchPanel.xhtml" />
 
 		<table style="width:100%;"><tr><TD style="text-align:right;">
-			<p:commandButton id="searchBtn"
+			<p:commandButton id="lovSearchBtn"
 				value="#{lbl['lbl.btn.search']}"
 				action="#{lovBackingBean.searchAction}"
 				partialSubmit="true"
@@ -139,6 +139,6 @@
 		</p:panel>
 	</p:dialog>
 	
-	<p:defaultCommand target="searchBtn"></p:defaultCommand>
+	<p:defaultCommand target="lovSearchBtn"></p:defaultCommand>
 </cc:implementation>
 </ui:composition>
