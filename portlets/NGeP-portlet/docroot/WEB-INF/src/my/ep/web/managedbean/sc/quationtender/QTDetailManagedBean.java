@@ -1542,8 +1542,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<CtPanelItem> searchPanelItemList;
 	private List<ScCommitteeMember> extraDeleteComitteeSelection;
 	private boolean changesOnQTMaintenance;
-	private String docNo;
-	private String docType = ParameterConst.DOCTYPE_QUOTATION;
 	private boolean nameRequired;
 	private boolean isPanelSpecExistedOrNot=Boolean.FALSE;
 	
@@ -8672,34 +8670,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setChangesOnQTMaintenance(boolean changesOnQTMaintenance) {
 		this.changesOnQTMaintenance = changesOnQTMaintenance;
-	}
-
-	/**
-	 * @return the docNo
-	 */
-	public String getDocNo() {
-		return docNo;
-	}
-
-	/**
-	 * @param docNo the docNo to set
-	 */
-	public void setDocNo(String docNo) {
-		this.docNo = docNo;
-	}
-
-	/**
-	 * @return the docType
-	 */
-	public String getDocType() {
-		return docType;
-	}
-
-	/**
-	 * @param docType the docType to set
-	 */
-	public void setDocType(String docType) {
-		this.docType = docType;
 	}
 
 	/**

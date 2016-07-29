@@ -13,13 +13,16 @@ package my.ep.web.bean.sc.quatationtender;
 import java.io.Serializable;
 import java.util.Date;
 
+import my.ep.constant.pm.ParameterConst;
+
 /**
  * The Class QtnTenderSearchBean.
  *
  * @author Viswanath
  */
 public class QtnTenderSearchBean implements Serializable {
-	
+	private static final long serialVersionUID = 1L;
+
 	/** The qt no. */
 	private String qtNo;
 	
@@ -53,7 +56,14 @@ public class QtnTenderSearchBean implements Serializable {
 	/** The committee type. */
 	private String committeeType;
 	
+	/** The recordStatus. */
 	private Long recordStatus;
+	
+	/** The docType. */
+	private String docType = ParameterConst.DOCTYPE_QUOTATION;
+	
+	/** The docNo. */
+	private String docNo;
 	
 	/**
 	 * Instantiates a new qtn tender search bean.
@@ -271,6 +281,34 @@ public class QtnTenderSearchBean implements Serializable {
 	 */
 	public void setRecordStatus(Long recordStatus) {
 		this.recordStatus = recordStatus;
+	}
+
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+
+	/**
+	 * @return the docNo
+	 */
+	public String getDocNo() {
+		return docNo;
+	}
+
+	/**
+	 * @param docNo the docNo to set
+	 */
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
 	}
 	
 }
