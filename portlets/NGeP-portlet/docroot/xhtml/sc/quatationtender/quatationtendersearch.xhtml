@@ -72,7 +72,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 					<td><p:selectOneMenu
-							value="#{qTDetailBB.managedBean.docType}"
+							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.docType}"
 							style="width: 297px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sc.document.type']}" required="true">
 							<f:selectItems
@@ -86,7 +86,7 @@
 					</td>
 					<td style="width:385px">
 						<p:inputText id="docNo"
-							value="#{qTDetailBB.managedBean.docNo}"
+							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.docNo}"
 							maxlength="21" style="width:288px;" />
 					</td>
 							
@@ -233,7 +233,8 @@
 						<p:commandLink id="viewQTIcon" action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}"
 							style="margin-right:20px;" partialSubmit="true" process="@this">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
-								title="click view icon" />
+								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+						</p:commandLink>
 						</p:commandLink>
 						<p:commandLink id="publishQTIcon" action="#{qTDetailBB.publishQT(scQt)}"
 							style="margin-right:20px;" partialSubmit="true" process="@this"

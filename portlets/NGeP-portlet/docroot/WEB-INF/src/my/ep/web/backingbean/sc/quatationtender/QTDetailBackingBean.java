@@ -777,7 +777,7 @@ public class QTDetailBackingBean extends
 		
 		debugLogger("viewSupplierProposalDetails");
 		Long qtId = scQt.getQtId();
-		String docType = getManagedBean().getDocType();
+		String docType = getManagedBean().getQtnTenderSearchBean().getDocType();
 		
 		if (ParameterConst.DOCTYPE_QUOTATION.equals(docType) || 
 				ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL.equals(docType)) {
@@ -1229,15 +1229,17 @@ public class QTDetailBackingBean extends
 			}
 			
 			// docType & docNo
-			String docType = getManagedBean().getDocType();
-			String docNo = getManagedBean().getDocNo();
+			String docType = qtnTenderSearchBean.getDocType();
+			String docNo = qtnTenderSearchBean.getDocNo();
 			if (StringUtils.isNotEmpty(docType)) {
 				if (ParameterConst.DOCTYPE_QUOTATION.equals(docType)) {
-					SearchFilterBean bean = new SearchFilterBean();
-					bean.setSearchField(QTConstants.QT_NUMBER);
-					bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-					bean.setSearchValue(docNo);
-					searchFilterBean.add(bean);	
+					if (!StringUtils.isBlank(docNo)) {
+						SearchFilterBean bean = new SearchFilterBean();
+						bean.setSearchField(QTConstants.QT_NUMBER);
+						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+						bean.setSearchValue(docNo);
+						searchFilterBean.add(bean);	
+					}
 				} else {
 					reqDTO.setDocType(docType);
 					reqDTO.setDocNo(docNo);
@@ -2928,8 +2930,8 @@ public class QTDetailBackingBean extends
 	 * Reset.
 	 */
 	public void reset() {
-		getManagedBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
-		getManagedBean().setDocNo(null);
+		this.getManagedBean().getQtnTenderSearchBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		this.getManagedBean().getQtnTenderSearchBean().setDocNo(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
 		this.getManagedBean().getQtnTenderSearchBean().setProcurementMode(null);
