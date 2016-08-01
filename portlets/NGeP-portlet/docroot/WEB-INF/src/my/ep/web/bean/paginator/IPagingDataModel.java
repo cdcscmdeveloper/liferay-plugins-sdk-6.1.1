@@ -59,4 +59,9 @@ public interface IPagingDataModel<T> {
 	 * @return the total record
 	 */
 	public int getRowCount();
+	
+	/**
+	 * Reload the data from database.
+	 */
+	public void reloadDataWithoutReset();
 }
