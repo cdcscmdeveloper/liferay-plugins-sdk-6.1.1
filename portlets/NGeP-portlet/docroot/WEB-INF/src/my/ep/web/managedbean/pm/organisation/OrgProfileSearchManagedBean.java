@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2016 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.organisation;
 
 import javax.faces.bean.ManagedBean;
@@ -9,6 +12,13 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.report.ReportMangedBean;
 
+/**
+ * Managed Bean for Organization Search
+ * 
+ * @author Ken Wong
+ * @since 17/06/2016
+ * 
+ */
 @ManagedBean(name = "orgProfileSearchMB")
 @SessionScoped
 public class OrgProfileSearchManagedBean extends BaseManagedBean{
