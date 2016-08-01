@@ -46,9 +46,9 @@
 				</h:outputText>
 			</p:column>
 
-		<p:column headerText="#{lbl['lbl.sc.invitation.type']}" style="text-align:center">
+		<!-- <p:column headerText="#{lbl['lbl.sc.invitation.type']}" style="text-align:center">
 			<h:outputText value="#{labelVlaue}" style="float:left;"/>
-		</p:column>
+		</p:column> -->
 		
 			<p:column style="white-space:normal;text-align:center;width:25%">
 				<f:facet name="header">
@@ -85,6 +85,7 @@
 			            </p:menuitem>
 					</p:menu>
 				</f:facet>
+				<h:outputText value="#{labelVlaue}" style="float:left;"/>
 			</p:column>	
 
 	</p:dataTable>
