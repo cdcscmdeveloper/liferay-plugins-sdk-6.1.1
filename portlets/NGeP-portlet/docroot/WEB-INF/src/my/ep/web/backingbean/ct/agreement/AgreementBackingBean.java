@@ -53,6 +53,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
@@ -506,6 +507,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				getManagedBean().getCtAgreement().setFileName(agreementZipFileName);
 			}
 			
+			Long statusId = getManagedBean().getCtAgreement().getStatus().getStatusId();
 			boolean isBrandNew = getManagedBean().getCtAgreement().isBrandNew();
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(getManagedBean().getAttachmentList());
@@ -523,6 +525,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700026;
+				String prefix = "";
+				if(statusId.longValue()==ContractStatusConst.AC_PENDING_AGREEMENT_CREATION.longValue() || statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_APPROVAL.longValue() || 
+					statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_REVISION.longValue() || statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_REVISION_APPROVAL.longValue() || 
+					statusId.longValue()==ContractStatusConst.SA_PENDING_SUPPLEMENTAL_AGREEMENT_CREATION.longValue() || statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_APPROVAL.longValue() || 
+					statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_REVISION.longValue() || statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_REVISION_APPROVAL.longValue()) {
+					prefix = ResourceBundleUtils.getMessage("lbl.ct.draft", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				}
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					messageId = MessageConst.INFO_700005;
 				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
@@ -539,7 +548,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(messageId,
-											new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, reqDTO.getDocType()), getManagedBean().getCtContract().getContractNo()},
+											new String[] {prefix+" "+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, reqDTO.getDocType()), getManagedBean().getCtContract().getContractNo()},
 											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 				
