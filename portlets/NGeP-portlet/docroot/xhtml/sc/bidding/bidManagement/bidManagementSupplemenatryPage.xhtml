@@ -35,9 +35,16 @@
 				</td>
 
 			</tr>
+			<tr>
+			<td><p:outputLabel id="qtDocTitle"
+						value="#{lbl['lbl.sc.document.title']}" /></td>
+				<td class="header-info-text" colspan="7" style="white-space : normal;">
+					#{biddingBB.managedBean.scheduledBid.scBid.docTitle}</td>
+			</tr>
 
 		</table>
 	</div>
+	<p:spacer height="5" />
 	<p:panel header="#{lbl['lbl.sc.bid.details']}"
 		id="bidDetailsForBidManagement" toggleable="true">
 		<div align="center">
