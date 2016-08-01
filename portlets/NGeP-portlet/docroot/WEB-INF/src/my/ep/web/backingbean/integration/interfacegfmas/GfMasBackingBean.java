@@ -1299,7 +1299,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			try {
 				interfaceprgActSO.saveOrUpdatePrgActList(reqDTO);
 				this.getManagedBean().setSelectedProgActList(null);				
-				this.getManagedBean().getSearchProgAct().reloadData();
+				this.getManagedBean().getSearchProgAct().reloadDataWithoutReset();
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
@@ -1327,7 +1327,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			try {
 				interfaceprojectActSO.saveOrUpdateProjectList(reqDTO);
 				this.getManagedBean().setSelectedProjectList(null);
-				this.getManagedBean().getSearchProject().reloadData();
+				this.getManagedBean().getSearchProject().reloadDataWithoutReset();
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
@@ -1358,7 +1358,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			try {
 				reqSO.saveOrUpdateInterfaceAgOffList(reqDTO);
 				this.getManagedBean().setSelectedAgOfficeList(null);
-				this.getManagedBean().getSearchAgOff().reloadData();
+				this.getManagedBean().getSearchAgOff().reloadDataWithoutReset();
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
@@ -1389,7 +1389,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				reqSO.saveOrUpdateInterfaceBankList(reqDTO);
 				this.getManagedBean().setSelectedBankList(null);
-				this.getManagedBean().getSearchBank().reloadData();
+				this.getManagedBean().getSearchBank().reloadDataWithoutReset();
 
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
@@ -1419,7 +1419,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			try {
 				interfaceGlAccSO.saveOrUpdateGlAccList(reqDTO);
 				this.getManagedBean().setSelectedGlAcntList(null);
-				this.getManagedBean().getSearchGlAccount().reloadData();
+				this.getManagedBean().getSearchGlAccount().reloadDataWithoutReset();
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
@@ -1447,7 +1447,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				reqSO.saveOrUpdateInterfaceKptjList(reqDTO);
 				this.getManagedBean().setSelectedKptjList(null);
-				this.getManagedBean().getSearchKptj().reloadData();
+				this.getManagedBean().getSearchKptj().reloadDataWithoutReset();
 
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
@@ -1478,7 +1478,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				reqSO.saveOrUpdateInterfacePtjList(reqDTO);
 				this.getManagedBean().setSelectedPtjList(null);
-				this.getManagedBean().getSearchPtj().reloadData();
+				this.getManagedBean().getSearchPtj().reloadDataWithoutReset();
 
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
@@ -1508,7 +1508,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			try {
 				interfaceVotDanaSO.saveOrUpdateVotDanaList(reqDTO);
 				this.getManagedBean().setSelectedDanaList(null);
-				this.getManagedBean().getSearchDana().reloadData();
+				this.getManagedBean().getSearchDana().reloadDataWithoutReset();
 			} catch (Exception e) {
 				System.out.println("" + e.getMessage());
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(),
@@ -1537,7 +1537,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 
 				reqSO.saveOrUpdateInterfacePpList(reqDTO);
 				this.getManagedBean().setSelectedPpList(null);
-				this.getManagedBean().getSearchPp().reloadData();
+				this.getManagedBean().getSearchPp().reloadDataWithoutReset();
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1560,7 +1560,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			try {
 				interfacevotSO.saveOrUpdateVotFundList(reqDTO);
 				this.getManagedBean().setSelectedVotList(null);
-				this.getManagedBean().getSearchVot().reloadData();
+				this.getManagedBean().getSearchVot().reloadDataWithoutReset();
 			} catch (Exception e) {
 
 				System.out.println("" + e.getMessage());
