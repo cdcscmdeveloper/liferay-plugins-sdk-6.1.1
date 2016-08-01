@@ -100,13 +100,16 @@
 						style="width:45%; white-space:pre-line;" styleClass="column-align-center">
 						<h:outputText value="#{itemVar.ctContractItem.scRequestItem.itemName}"  style="float:left;text-align:left;"  />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="width:10%;" styleClass="column-align-center">
+					<p:column headerText="#{lbl['lbl.ct.uom']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
+		              <h:outputText value="#{itemVar.ctContractItem.scRequestItem.uom.uomName}" style="float:left;"/>
+		         </p:column> 
+					<p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="width:13%;white-space:pre-line;" styleClass="column-align-center">
 						<h:outputText value="#{itemVar.minimumOrderQty}" style="float:right;text-align:right;" 
 						     rendered="#{centralContractBackingBean.managedBean.viewContract}">
 						     <f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemVar.ctContractItem.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
-						<p:inputText styleClass="ppRightBtn"  style="width:120px;" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
+						<p:inputText styleClass="ppRightBtn"  style="width:110px;" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
 							value="#{itemVar.minimumOrderQty}" maxlength="#{itemVar.ctContractItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
 							label="#{lbl['lbl.ct.min.order.qty']}">
 							<f:converter converterId="dynamicNumberConverter" />
@@ -114,13 +117,13 @@
 							<p:ajax event="blur" update="@this, :form:messages"  />
 						</p:inputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.min.order.amount']}" style="width:15%;white-space:pre-line;" styleClass="column-align-center">
+					<p:column headerText="#{lbl['lbl.ct.min.order.amount']}" style="width:13%;white-space:pre-line;" styleClass="column-align-center">
 						<h:outputText value="#{itemVar.minimumOrderAmt}" style="float:right;text-align:right;" 
 						    rendered="#{centralContractBackingBean.managedBean.viewContract}">
 						    	<f:convertNumber
 								    pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />	
 				         </h:outputText>
-						<p:inputText styleClass="ppRightBtn" style="width:120px;"
+						<p:inputText styleClass="ppRightBtn" style="width:110px;"
 							value="#{itemVar.minimumOrderAmt}" maxlength="19" label="#{lbl['lbl.ct.min.order.amount']}"
 							rendered="#{!centralContractBackingBean.managedBean.viewContract}">
 							<f:convertNumber
@@ -129,13 +132,13 @@
 						</p:inputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.purchase.limit']}"
-						style="width:15%;white-space:pre-line;" styleClass="column-align-center">
+						style="width:14%;white-space:pre-line;" styleClass="column-align-center">
 							<h:outputText value="#{itemVar.maxProcureAmt}" style="float:right;text-align:right;" 
 						           rendered="#{centralContractBackingBean.managedBean.viewContract}">
 						    		<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				         </h:outputText>
-						<p:inputText styleClass="ppRightBtn" style="width:120px;"
+						<p:inputText styleClass="ppRightBtn" style="width:110px;"
 							value="#{itemVar.maxProcureAmt}" maxlength="19"
 							label="#{lbl['lbl.ct.contract.purchase.limit']}"
 							 rendered="#{!centralContractBackingBean.managedBean.viewContract}">
