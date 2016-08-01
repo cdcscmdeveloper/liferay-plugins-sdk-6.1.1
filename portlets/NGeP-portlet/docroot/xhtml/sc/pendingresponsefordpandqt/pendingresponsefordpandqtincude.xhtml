@@ -6,30 +6,35 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<table style="border: 0px; width: 100%">
+	<table style="width: 100%">
 	<tr>
-			<td style="width: 250px;"><h:outputText value="#{lbl['lbl.sc.quotation']}"></h:outputText></td>
-			<td ><h:outputText  value="#{pendingResponseDpQtBB.managedBean.quotationCount}"></h:outputText></td>
+			<td style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText value="#{lbl['lbl.sc.quotation']}" style="float:left;"></h:outputText></td>
+			<td style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText  value="#{pendingResponseDpQtBB.managedBean.quotationCount}"></h:outputText></td>
 		</tr>
 		<tr>
-			<td><h:outputText value="#{lbl['lbl.sc.tender']}"></h:outputText></td>
-			<td ><h:outputText value="#{pendingResponseDpQtBB.managedBean.tenderCount}"></h:outputText></td>
+			<td style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText value="#{lbl['lbl.sc.tender']}" style="float:left;"></h:outputText></td>
+			<td style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText value="#{pendingResponseDpQtBB.managedBean.tenderCount}"></h:outputText></td>
 		</tr>
 		<tr>
-			<td ><h:outputText value="#{lbl['lbl.sc.qt.briefing.sv']}"></h:outputText></td>
-			<td ><h:outputText value="#{pendingResponseDpQtBB.managedBean.briefingSiteVisitCount}"></h:outputText></td>
+			<td style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText value="#{lbl['lbl.sc.qt.briefing.sv']}" style="float:left;"></h:outputText></td>
+			<td style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText value="#{pendingResponseDpQtBB.managedBean.briefingSiteVisitCount}"></h:outputText></td>
 		</tr>
 		<tr>
-			<td ><h:outputText value="#{lbl['lbl.sc.bidding']}"></h:outputText></td>
-			<td ><h:outputText value="#{pendingResponseDpQtBB.managedBean.biddingCount}"></h:outputText></td>
+			<td style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText value="#{lbl['lbl.sc.bidding']}" style="float:left;"></h:outputText></td>
+			<td style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText value="#{pendingResponseDpQtBB.managedBean.biddingCount}"></h:outputText></td>
 		</tr>
 		<tr>
-			<td ><h:outputText value="#{lbl['lbl.ss.simple.quote.pending.response.redirect.dp.qt']}"></h:outputText></td>
-			<td ><h:outputText value="#{pendingResponseDpQtBB.managedBean.simpleQuoteCount}"></h:outputText></td>
+			<td style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText value="#{lbl['lbl.ss.simple.quote.pending.response.redirect.dp.qt']}" style="float:left;"></h:outputText></td>
+			<td style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText value="#{pendingResponseDpQtBB.managedBean.simpleQuoteCount}"></h:outputText></td>
 		</tr>
 		<tr>
-			<td></td>
-			<td><p:commandLink value="#{lbl['lbl.sc.more.details']}" action="#{pendingResponseDpQtBB.navigatetoSupplierredirect()}"/></td>
+		<td colspan="3"
+					style="text-align: right; padding-right: 6%; border-style: ridge; border-width: 1px; border-color: #000000;">
+					<p:commandLink value="#{lbl['lbl.sc.more.details']}"
+						styleClass="blue_font" process="@this" update="@form"
+						action="#{pendingResponseDpQtBB.navigatetoSupplierredirect()}">
+					</p:commandLink>
+				</td>
 		</tr>
 	</table>
 </ui:composition>
