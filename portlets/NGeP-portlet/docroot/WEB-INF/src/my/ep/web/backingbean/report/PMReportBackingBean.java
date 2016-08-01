@@ -63,9 +63,11 @@ public class PMReportBackingBean extends
 		case ReportConst.PM_LIST_OF_PROFILES_RPT_VAL:
 			rptGenBean.setGenerateButton(false);
 			rptGenBean.setConditionGenerateButton(true);
-			rptGenBean.setPmNonMandatoryOrgTypeView(true);
-			rptGenBean.setPmNonMandatoryOrgNameForProfileView(true);
-			rptGenBean.setPmStatusView(true);
+			/*rptGenBean.setPmNonMandatoryOrgTypeView(true);
+			rptGenBean.setPmNonMandatoryOrgNameForProfileView(true);*/
+			rptGenBean.setPmMandatoryOrgTypeForLOPView(true);
+			rptGenBean.setPmMandatoryOrgNameForLOPView(true);
+			rptGenBean.setPmListOfOrgStatusView(true); 
 			rptGenBean.setPmIdentificationNoView(true);
 			rptGenBean.setPmUserNameView(true);
 			rptGenBean.setPmRoleCodeView(true);

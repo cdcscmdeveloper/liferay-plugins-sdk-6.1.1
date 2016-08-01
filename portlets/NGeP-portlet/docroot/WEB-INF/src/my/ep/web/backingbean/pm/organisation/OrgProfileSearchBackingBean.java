@@ -1,13 +1,11 @@
 package my.ep.web.backingbean.pm.organisation;
 
 import java.util.List;
-
 import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -31,7 +29,6 @@ import my.ep.web.managedbean.pm.organisation.OrgProfileSearchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -46,10 +43,28 @@ public class OrgProfileSearchBackingBean extends
 	public SelectItem[] getMinistryDropdown() {
 		return PmCommonUtil.getMinistryDropdown();
 	}
-
+	
 	public SelectItem[] getJabatanDropdown() {
 		return PmCommonUtil.getJabatanDropdown(getManagedBean()
 				.getMinistryProfileId());
+	}
+	
+	public SelectItem[] getMinistryDropdownRpt() {
+		SelectItem[] ministryItems = PmCommonUtil.getMinistryDropdown();
+		this.getManagedBean().setPegaiPengawaProfileId(null);
+		this.getManagedBean().setJabatanProfileId(null);
+		return ministryItems;
+	}	
+	public SelectItem[] getPegwaiDropdownRpt() {
+		SelectItem[] pegaiItems = PmCommonUtil
+				.getPegwaiPengawalDropdown(getManagedBean()
+						.getMinistryProfileId());
+		this.getManagedBean().setJabatanProfileId(null);
+		return pegaiItems;
+	}	
+	public SelectItem[] getJabatanDropdownRpt() {
+		return PmCommonUtil.getJabatanDropdown(getManagedBean()
+				.getPegaiPengawaProfileId());
 	}
 	
 	public void initPtjPopup(){
@@ -70,12 +85,18 @@ public class OrgProfileSearchBackingBean extends
 		} else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
 			getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 					pmOrgProfile.getOrgProfileId()).getOrgProfileId());
+			getManagedBean().setPegaiPengawaProfileId(retrievePegawaiPegawalOrgProfile(pmOrgProfile.getOrgProfileId()).getOrgProfileId());
 			getManagedBean().setJabatanProfileId(pmOrgProfile.getOrgProfileId());
 			getManagedBean().setDisabledMinistry(true);
-			getManagedBean().setDisabledJabatan(true);
+			getManagedBean().setDisabledPegaiPengawa(true);
+			getManagedBean().setDisabledJabatan(true);	
+			
+			
 		} 
 		
 		this.getManagedBean().setPtjCodeName(ProfileManagementConst.PTJ_CODE);
+		//only For Report to disable the IdentificationField
+		this.getManagedBean().getReportManagedBean().setDisabledOrgFields(true);
 	}
 
 	private class OrgProfileDataModel extends PagingDataModel<PmOrgProfile> {
@@ -100,7 +121,9 @@ public class OrgProfileSearchBackingBean extends
 				if(getManagedBean().getMinistryProfileId() != null){
 					reqDTO.setMinistryId(getManagedBean().getMinistryProfileId());
 				}
-				
+				if(getManagedBean().getPegaiPengawaProfileId() != null){
+					reqDTO.setPegaiId(getManagedBean().getPegaiPengawaProfileId());
+				}
 				if(getManagedBean().getJabatanProfileId() != null){
 					reqDTO.setJabatanId(getManagedBean().getJabatanProfileId());
 				}
@@ -115,6 +138,8 @@ public class OrgProfileSearchBackingBean extends
 				OrgProfileResDTO resDTO = null;
 				if(ParameterConst.ORG_TYPE_PTJ.equals(getManagedBean().getOrgType())){
 					resDTO = orgProfileSO.retrievePtjListByParents(reqDTO);
+				}else if(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL.equals(getManagedBean().getOrgType())){
+					resDTO = orgProfileSO.retrievePegaiPengawaListByParents(reqDTO);
 				}else if(ParameterConst.ORG_TYPE_PTJ_GROUP.equals(getManagedBean().getOrgType())){
 					resDTO = orgProfileSO.retrieveKPtjListByParents(reqDTO);
 				}
@@ -170,6 +195,14 @@ public class OrgProfileSearchBackingBean extends
 	
 	public static SelectItem[] getPtjOrKptjDropDown(String orgType) {
 		SelectItem[] items = new SelectItem[2];
+		if(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL.equals(orgType)){
+			items[0] = new SelectItem(ProfileManagementConst.PEGAWAI_CODE, ResourceBundleUtils.getMessage(
+					"lbl.pm.org.pegaiCode", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(ProfileManagementConst.PEGAWAI_NAME, ResourceBundleUtils.getMessage(
+					"lbl.pm.org.pegaiName", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}
 		if(ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)){
 			items[0] = new SelectItem(ProfileManagementConst.KPTJ_CODE, ResourceBundleUtils.getMessage(
 					"lbl.pm.org.kptjCode", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -196,7 +229,9 @@ public class OrgProfileSearchBackingBean extends
 			if (getManagedBean().getPtjCodeName().equalsIgnoreCase(
 					ProfileManagementConst.PTJ_CODE) || 
 					getManagedBean().getPtjCodeName().equalsIgnoreCase(
-							ProfileManagementConst.KPTJ_CODE )) {
+							ProfileManagementConst.KPTJ_CODE )
+							|| getManagedBean().getPtjCodeName().equalsIgnoreCase(
+									ProfileManagementConst.PEGAWAI_CODE)) {
 				SearchFilterBean filterBean = new SearchFilterBean(
 						"pmOrgValidity.orgCode",
 						SearchOperator.OPERATOR_LIKE.value(),
@@ -205,10 +240,11 @@ public class OrgProfileSearchBackingBean extends
 				searchBean.getDataFilterBeans().add(filterBean);
 
 			} else if (getManagedBean().getPtjCodeName()
-					.equalsIgnoreCase(ProfileManagementConst.PTJ_NAME
-							) || 
-							getManagedBean().getPtjCodeName().equalsIgnoreCase(
-									ProfileManagementConst.KPTJ_NAME )) {
+					.equalsIgnoreCase(ProfileManagementConst.PTJ_NAME) ||
+					 getManagedBean().getPtjCodeName().equalsIgnoreCase(
+							ProfileManagementConst.KPTJ_NAME)
+					|| getManagedBean().getPtjCodeName().equalsIgnoreCase(
+							ProfileManagementConst.PEGAWAI_NAME)) {
 				SearchFilterBean filterBean = new SearchFilterBean(
 						"pmOrgValidity.orgName",
 						SearchOperator.OPERATOR_LIKE.value(),
