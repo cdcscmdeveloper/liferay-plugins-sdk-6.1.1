@@ -5,6 +5,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:fn="http://java.sun.com/jsp/jstl/functions"
    	xmlns:p="http://primefaces.org/ui"
+   	xmlns:c="http://java.sun.com/jsp/jstl/core"
    	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 <cc:interface>
@@ -31,19 +32,52 @@
 
 		<p:messages id="ptjPopupMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"  />
-
+       
 		<h:panelGroup id="orgProfilePnlGrp">
 			<p:panel id="orgProfilePnlId" header="#{lbl['lbl.pm.header.general.org.search']}" toggleable="true"  >
               <h:panelGrid columns="3" id="orgProfilePg">
                  <p:inputText id="itMin"  readonly="true" style="width:170px" 
                 	 value="#{lbl['lbl.pm.org.ptj.search.ministry']}"/>
                  <p:spacer height="1"/>
-                 <p:selectOneMenu id="somMinistry" styleClass="ptjPopupSomWidth"
+                 <p:selectOneMenu id="somMinistry" styleClass="ptjPopupSomWidth"  rendered="#{!reportBackingBean.managedBean.requiredForReport}"
                  	disabled="#{organisationSearchBackingBean.managedBean.disabledMinistry}"
                       value="#{organisationSearchBackingBean.managedBean.ministryProfileId}" >
             	   <f:selectItems value="#{organisationSearchBackingBean.getMinistryDropdown()}"/>
             	   <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somJabatan,:form:#{cc.attrs.id}:searcbBtnId" />
                  </p:selectOneMenu>
+                 
+                 <c:if test="#{reportBackingBean.managedBean.requiredForReport}">                
+                 <p:selectOneMenu id="somMinistryReport" styleClass="ptjPopupSomWidth"  
+                 	disabled="#{organisationSearchBackingBean.managedBean.disabledMinistry}"
+                      value="#{organisationSearchBackingBean.managedBean.ministryProfileId}" >
+            	   <f:selectItems value="#{organisationSearchBackingBean.getMinistryDropdownRpt()}"/>
+            	   <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somPegaiPengwa,:form:#{cc.attrs.id}:somJabatanRpt,:form:#{cc.attrs.id}:searcbBtnId" />
+                 </p:selectOneMenu>
+                 
+                 <p:inputText id="somPegai" readonly="true" style="width:170px" rendered="#{(ParameterConst.orgTypePtjGroup eq cc.attrs.orgTypeParamCode) or (ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode)}"                 
+                 	value="#{lbl['lbl.pm.org.ptj.search.pegwai']}"/>
+                 <p:spacer height="1" rendered="#{(ParameterConst.orgTypePtjGroup eq cc.attrs.orgTypeParamCode) or (ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode)}"/>
+                 <p:selectOneMenu id="somPegaiPengwa" styleClass="ptjPopupSomWidth"
+                 	  disabled="#{organisationSearchBackingBean.managedBean.disabledPegaiPengawa}"    
+                 	  rendered="#{(ParameterConst.orgTypePtjGroup eq cc.attrs.orgTypeParamCode) or (ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode)}"             	 
+                      value="#{organisationSearchBackingBean.managedBean.pegaiPengawaProfileId}" >
+            	   <f:selectItems value="#{organisationSearchBackingBean.getPegwaiDropdownRpt()}"/>
+            	    <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somJabatanRpt,:form:#{cc.attrs.id}:searcbBtnId" />
+                 </p:selectOneMenu>
+                 
+                 <p:inputText id="somJabRpt" readonly="true" style="width:170px"
+                 	rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}" 
+                 	value="#{lbl['lbl.pm.org.ptj.search.jabatan']}"/>
+                 <p:spacer height="1" rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"/>
+                 <p:selectOneMenu id="somJabatanRpt" styleClass="ptjPopupSomWidth"
+                 	  disabled="#{organisationSearchBackingBean.managedBean.disabledJabatan}"
+                 	  rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"
+                      value="#{organisationSearchBackingBean.managedBean.jabatanProfileId}" >
+            	   <f:selectItems value="#{organisationSearchBackingBean.getJabatanDropdownRpt()}"/>
+            	    <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
+                 </p:selectOneMenu>
+                </c:if>
+                <c:if test="#{!reportBackingBean.managedBean.requiredForReport}">  
                  <p:inputText id="somJab" readonly="true" style="width:170px"
                  	rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}" 
                  	value="#{lbl['lbl.pm.org.ptj.search.jabatan']}"/>
@@ -55,6 +89,7 @@
             	   <f:selectItems value="#{organisationSearchBackingBean.getJabatanDropdown()}"/>
             	    <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
                  </p:selectOneMenu>
+                 </c:if>
                  <p:selectOneMenu for="somPtjCodeName"  style="width:180px"
                     value="#{organisationSearchBackingBean.managedBean.ptjCodeName}" >
                       <f:selectItems

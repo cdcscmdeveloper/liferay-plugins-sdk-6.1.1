@@ -30,6 +30,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -52,6 +53,17 @@ public class ReportMangedBean extends BaseManagedBean {
 
 	/** The report list. */
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
+	
+	private UserProfilesSearchBean userProfileSearchBean;
+	
+	private List<PmRoleDesc> roleDescResults;
+	
+	private boolean  disabledOrgFields=false;
+	
+	private PmOrgProfile currentActiveOrg;
+	
+	private PmRoleDesc selectedRoleDesc;
+	
 	// private String reportName;
 	/** The report value. */
 	private String reportValue;
@@ -67,6 +79,8 @@ public class ReportMangedBean extends BaseManagedBean {
 	
 	/** The report url value. */
 	private String reportUrlValue;
+	
+	private boolean requiredForReport;
 	
 	/** The values empty. */
 	boolean valuesEmpty=false;
@@ -274,6 +288,20 @@ public class ReportMangedBean extends BaseManagedBean {
 		return monthMap;
 	}	
 	/**
+	 * @return the disabledOrgFields
+	 */
+	public boolean isDisabledOrgFields() {
+		return disabledOrgFields;
+	}
+
+	/**
+	 * @param disabledOrgFields the disabledOrgFields to set
+	 */
+	public void setDisabledOrgFields(boolean disabledOrgFields) {
+		this.disabledOrgFields = disabledOrgFields;
+	}
+
+	/**
 	 * Sets the month map.
 	 * 
 	 * @param monthMap
@@ -350,6 +378,20 @@ public class ReportMangedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the currentActiveOrg
+	 */
+	public PmOrgProfile getCurrentActiveOrg() {
+		return currentActiveOrg;
+	}
+
+	/**
+	 * @param currentActiveOrg the currentActiveOrg to set
+	 */
+	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
+		this.currentActiveOrg = currentActiveOrg;
+	}
+
+	/**
 	 * Gets the selected unspsc item.
 	 * 
 	 * @return the selectedUnspscItem
@@ -388,6 +430,20 @@ public class ReportMangedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the selectedRoleDesc
+	 */
+	public PmRoleDesc getSelectedRoleDesc() {
+		return selectedRoleDesc;
+	}
+
+	/**
+	 * @param selectedRoleDesc the selectedRoleDesc to set
+	 */
+	public void setSelectedRoleDesc(PmRoleDesc selectedRoleDesc) {
+		this.selectedRoleDesc = selectedRoleDesc;
+	}
+
+	/**
 	 * Sets the search operator value.
 	 * 
 	 * @param searchOperatorValue
@@ -414,6 +470,23 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public List<SelectItem> getSearchOperator() {
 		return searchOperator;
+	}
+
+	/**
+	 * @return the roleDescResults
+	 */
+	public List<PmRoleDesc> getRoleDescResults() {
+		if(roleDescResults == null){
+			roleDescResults = new ArrayList<PmRoleDesc>();
+		}
+		return roleDescResults;
+	}
+
+	/**
+	 * @param roleDescResults the roleDescResults to set
+	 */
+	public void setRoleDescResults(List<PmRoleDesc> roleDescResults) {
+		this.roleDescResults = roleDescResults;
 	}
 
 	/**
@@ -464,6 +537,20 @@ public class ReportMangedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the requiredForReport
+	 */
+	public boolean isRequiredForReport() {
+		return requiredForReport;
+	}
+
+	/**
+	 * @param requiredForReport the requiredForReport to set
+	 */
+	public void setRequiredForReport(boolean requiredForReport) {
+		this.requiredForReport = requiredForReport;
+	}
+
+	/**
 	 * Gets the sm supplier.
 	 * 
 	 * @return the smSupplier
@@ -479,6 +566,23 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public PmRoleDesc getSelectedPmRoleDesc() {
 		return selectedPmRoleDesc;
+	}
+
+	/**
+	 * @return the userProfileSearchBean
+	 */
+	public UserProfilesSearchBean getUserProfileSearchBean() {
+		if(userProfileSearchBean==null)
+			userProfileSearchBean = new UserProfilesSearchBean();
+		return userProfileSearchBean;
+	}
+
+	/**
+	 * @param userProfileSearchBean the userProfileSearchBean to set
+	 */
+	public void setUserProfileSearchBean(
+			UserProfilesSearchBean userProfileSearchBean) {
+		this.userProfileSearchBean = userProfileSearchBean;
 	}
 
 	/**
@@ -900,6 +1004,7 @@ public class ReportMangedBean extends BaseManagedBean {
 	public String getMinistryId() {
 		return ministryId;
 	}
+
 
 	/**
 	 * Sets the ministry id.
