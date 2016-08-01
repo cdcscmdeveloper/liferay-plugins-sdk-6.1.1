@@ -152,6 +152,8 @@
 			<portlet id="scConsolidationReport"></portlet>
 			<portlet id="scQTRetry"/>
 			<portlet id="scSupplierInvitation"/>
+			<portlet id="PendingResponseDpQt"/>
+			<portlet id="OnlineBiddingStatus"/>
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
