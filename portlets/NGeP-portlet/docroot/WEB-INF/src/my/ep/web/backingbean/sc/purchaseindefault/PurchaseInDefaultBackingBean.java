@@ -150,6 +150,7 @@ public class PurchaseInDefaultBackingBean extends
 	 */
 	public String pidAction(VCmSupplierItem vCmSupplierItem) {
 		debugLogger("pidAction");
+		boolean isContractTypeAsMinistry = Boolean.FALSE;
 		ISearchBean<VCmSupplierItem> viewSearchBean = null;
 		IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
 				.getInstance().getServiceObject(
@@ -170,10 +171,17 @@ public class PurchaseInDefaultBackingBean extends
 			CtContractItem contractItem = resDTO.getCtContractItem();
 			CtCircularItem circularItem = resDTO.getCtCircularItem();
 			
+			
 			// approved by
 			getManagedBean().setApprovedBy(resDTO.getApprovedBy());
 			
 			if (contractItem != null) {
+				
+				// contract type as ministry
+				if(contractItem.getCtContractVer().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+					 isContractTypeAsMinistry = Boolean.TRUE;
+				}
+				
 				//validation for non codify contract item
 				if(contractItem.getScRequestItem() == null ||
 						(contractItem.getScRequestItem() != null && 
@@ -196,7 +204,7 @@ public class PurchaseInDefaultBackingBean extends
 					getManagedBean().setCheckCentralContractItem(true);
 				}
 			}
-			populatePidReason(resDTO.getCtPidReasonList(), resDTO.getCircularPidReasonList());
+			//populatePidReason(resDTO.getCtPidReasonList(), resDTO.getCircularPidReasonList());
 //			retrieveReasonDescListByCategory(Boolean.TRUE);
 			
 		} else if (vCmSupplierItem.getCircularNo() != null) {
@@ -244,11 +252,11 @@ public class PurchaseInDefaultBackingBean extends
 //						.getIsExceedMaxProcurementAmount(purchaseInDefaultReqDTO);
 //				retrieveReasonDescListByCategory(defaultResDTO
 //						.isExceedProcurementAmt());
-				List<CtCircularPidReason> pidReason = new ArrayList<CtCircularPidReason>();
+				/*List<CtCircularPidReason> pidReason = new ArrayList<CtCircularPidReason>();
 				if(ctPanelItem.getCtCircularVer() != null) {
 					pidReason = ctPanelItem.getCtCircularVer().getCtCircularPidReason();
 				}
-				populatePidReason(null, pidReason);
+				populatePidReason(null, pidReason);*/
 			}
 		}
 	
@@ -328,6 +336,8 @@ public class PurchaseInDefaultBackingBean extends
 			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 		}
 		
+		getManagedBean().setContractTypeAsMinistry(isContractTypeAsMinistry);
+		
 		return PURCHASE_IN_DEFAULT_PAGE;
 	}
 
@@ -389,7 +399,7 @@ public class PurchaseInDefaultBackingBean extends
 			boolean isQuantityCheckNeeded = false;
 			
 			// justification
-			if (scPurchaseInDefault.getReasonType().getReasonCode() != null) {
+			/*if (scPurchaseInDefault.getReasonType().getReasonCode() != null) {
 				for (PmReasonDesc reasonDesc : getManagedBean().getPidJustifications()) {
 					PmReason pmReason = reasonDesc.getPmReason();
 					if (scPurchaseInDefault
@@ -400,7 +410,7 @@ public class PurchaseInDefaultBackingBean extends
 						scPurchaseInDefault.setReasonType(pmReason);
 					}
 				}
-			}
+			}*/
 			
 			if(getManagedBean().isVisibleOrderQty()) {
 				isQuantityCheckNeeded = true;
@@ -903,22 +913,20 @@ public class PurchaseInDefaultBackingBean extends
 	public void populatePidReason(List<CtPidReason> ctPidReasonList, List<CtCircularPidReason> circularReasonList) {
 		List<PmReasonDesc> results = new ArrayList<PmReasonDesc>();
 		if (CollectionUtils.isNotEmpty(ctPidReasonList)) {
-			/*for(CtPidReason pidReason : ctPidReasonList) {
+			for(CtPidReason pidReason : ctPidReasonList) {
 				PmReasonDesc reasonDesc = getReasonDescByReasonId(pidReason.getPmReason().getReasonId());
 				if(reasonDesc.getPmReason().isRecordStatus()){
 					results.add(reasonDesc);
 				}
-			}*/
-			getManagedBean().setCtReasonList(ctPidReasonList);
+			}
 			
 		} else if(CollectionUtils.isNotEmpty(circularReasonList)){
-		/*	for(CtCircularPidReason pidReason : circularReasonList) {
+			for(CtCircularPidReason pidReason : circularReasonList) {
 				PmReasonDesc reasonDesc = getReasonDescByReasonId(pidReason.getPmReason().getReasonId());
 				if(reasonDesc.getPmReason().isRecordStatus()){
 					results.add(reasonDesc);
 				}
-			}*/
-			getManagedBean().setPanelReasonList(circularReasonList);
+			}
 		}
 		getManagedBean().setPidJustifications(results);
 	}
@@ -1470,6 +1478,54 @@ public class PurchaseInDefaultBackingBean extends
 		}
 		
 		getManagedBean().setApproverList(approvers);
+	}
+	
+	/**
+	 * Gets the ct contract criteria.
+	 *
+	 * @return the ct contract criteria
+	 */
+	public String getCtContractCriteria() {
+		StringBuilder criteria = new StringBuilder();
+		StringBuilder ctContractCriteria = new StringBuilder();
+		ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
+		// contract ver id
+		if(scPurchaseInDefault.getContractedItem() != null && scPurchaseInDefault.getContractedItem().getCtContractVer() != null){
+			ctContractCriteria.append(scPurchaseInDefault.getContractedItem().getCtContractVer().getContractVerId());
+		}
+		ctContractCriteria.append("^").append(
+					SearchOperator.OPERATOR_EQUALS.value());
+			criteria.append("ctContractVer.contractVerId").append("^")
+					.append(ctContractCriteria.toString());
+		return criteria.toString();
+	}
+	
+	
+	/**
+	 * Gets the circular criteria.
+	 *
+	 * @return the circular criteria
+	 */
+	public String getCircularCriteria() {
+		StringBuilder criteria = new StringBuilder();
+		StringBuilder ctCircularCriteria = new StringBuilder();
+		ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
+		
+		// for panel
+		if(scPurchaseInDefault.getPanelItem() != null){
+			ctCircularCriteria.append(scPurchaseInDefault.getPanelItem().getCtCircularVer().getCircularVerId());
+		} else{
+			// circular ver id for Circular
+			if(scPurchaseInDefault.getCircularItem() != null && scPurchaseInDefault.getCircularItem().getCtCircularContract().getCtCircularVer().getCircularVerId() != null){
+				ctCircularCriteria.append(scPurchaseInDefault.getCircularItem().getCtCircularContract().getCtCircularVer().getCircularVerId());
+			}
+		}
+		
+		ctCircularCriteria.append("^").append(
+				SearchOperator.OPERATOR_EQUALS.value());
+		criteria.append("ctCircularVer.circularVerId").append("^")
+		.append(ctCircularCriteria.toString());
+		return criteria.toString();
 	}
 	
 	/**
