@@ -10,9 +10,6 @@
 		id="companyInfoPanel">
 
 		<table style="width: 100%; table-layout: fixed">
-			<tr height="10">
-				<td colspan="4"></td>
-			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.sm.companyname']}" /></td>
@@ -51,10 +48,17 @@
 				<td><p:outputLabel styleClass="outputLabel-view"
 						value="#{backingBean.managedBean.basicInfo.gstNum}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label"
-						value="#{lbl['lbl.sm.gstDate']}" /></td>
+						value="#{lbl['lbl.sm.gst.effdate']}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view"
 						value="#{backingBean.managedBean.basicInfo.gstRegDate}" /></td>
 
+			</tr>
+			<tr>
+				<td colspan="2">&#160;</td>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						value="#{backingBean.managedBean.basicInfo.gstEndDate}" /></td>
 			</tr>
 			<tr>
 				<td style="vertical-align: baseline;"><p:outputLabel
