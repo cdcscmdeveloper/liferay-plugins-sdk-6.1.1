@@ -67,7 +67,7 @@
 						rendered="#{stopInstrBB.managedBean.taskId==null}" />
 				</td>
 				<td colspan="4" style="text-align: right">
-					<ui:repeat var="bpmAction" value="#{stopInstrBB.managedBean.outComes}">
+				    <ui:repeat var="bpmAction" value="#{stopInstrBB.managedBean.outComes}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -108,8 +108,11 @@
 						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
 							<f:setPropertyActionListener target="#{stopInstrBB.managedBean.selectedTabIndex}" value="0" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.fl.si.item.summary']}" update="@form" actionListener="#{stopInstrBB.onTabChange(1)}">
+						<p:menuitem value="#{lbl['lbl.fl.do.delivery.items']}" update="@form">
 							<f:setPropertyActionListener target="#{stopInstrBB.managedBean.selectedTabIndex}" value="1" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.si.item.summary']}" update="@form" actionListener="#{stopInstrBB.onTabChange(2)}">
+							<f:setPropertyActionListener target="#{stopInstrBB.managedBean.selectedTabIndex}" value="2" />
 						</p:menuitem>
 					</p:tabMenu>
 				</td>
@@ -118,6 +121,9 @@
 						<ui:include src="siGeneral.xhtml" />
 					</p:outputPanel> 
 					<p:outputPanel rendered="#{stopInstrBB.managedBean.selectedTabIndex == 1}">
+						<ui:include src="siDeliveryItems.xhtml" />
+					</p:outputPanel> 
+					<p:outputPanel rendered="#{stopInstrBB.managedBean.selectedTabIndex == 2}">
 						<ui:include src="siItem.xhtml" />
 					</p:outputPanel>
 				</td>
