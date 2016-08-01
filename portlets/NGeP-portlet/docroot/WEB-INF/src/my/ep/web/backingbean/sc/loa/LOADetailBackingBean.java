@@ -845,7 +845,6 @@ public class LOADetailBackingBean extends
 			Long parameterId = scQtDeduction.getDeductionType().getParameterId();
 			if (null != parameterId) {
 				scQtDeduction.setDeductionType(retrieveParameterById(parameterId));
-				validateDeductionPayment(scQtDeduction);
 				getClausesTitle(scQtDeduction);
 				scQtDeduction.setScQtDeductionClauses(null);
 				getManagedBean().setSelectedScQtDeduction(scQtDeduction);
@@ -855,27 +854,6 @@ public class LOADetailBackingBean extends
 			}
 	
 	}
-	
-	/**
-	 * Validate deduction payment.
-	 *
-	 * @param scQtDeduction the sc qt deduction
-	 */
-	private void validateDeductionPayment(ScQtDeduction scQtDeduction) {
-		List<ScQtDeduction> scQtDeductions = getManagedBean().getScLoa().getScQtDeductions();
-		if(scQtDeductions != null && scQtDeductions.size()>1){
-			for (ScQtDeduction qtDeduction : scQtDeductions) {
-				if(!qtDeduction.equals(scQtDeduction)){
-					if(qtDeduction.getDeductionType().getParameterId() == scQtDeduction.getDeductionType().getParameterId()){
-						throw new EpException(MessageConst.ERROR_700027, new String[] {ResourceBundleUtils.getMessage(getParameterDesc(scQtDeduction.getDeductionType()),
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					}
-				}
-				
-			}
-		}
-	}
-
 
 	/**
 	 * Gets the clauses title.
@@ -3442,6 +3420,7 @@ public class LOADetailBackingBean extends
 			totalFrequency = scheduleList.size();
 			for (ScQtSchedule schedule : scheduleList) {
 				try {
+					reportSchedule = new ScQtSchedule();
 					if(StringUtils.isNotBlank(schedule.getStartMonth()) 
 							&& StringUtils.isNotBlank(schedule.getStartYear())){
 						String localDate = df.format(currentDate);
@@ -3449,6 +3428,11 @@ public class LOADetailBackingBean extends
 						String fromdate = day + "/" + schedule.getStartMonth() + "/"
 								+ schedule.getStartYear();
 						schedule.setFromDate(df.parse(fromdate));
+						
+						reportSchedule.setStartMonth(monthFormat.format(schedule
+								.getFromDate()));
+						reportSchedule.setStartYear(yearFormat.format(schedule
+								.getFromDate()));
 					} 
 					if(StringUtils.isNotBlank(schedule.getEndMonth()) && 
 							StringUtils.isNotBlank(schedule.getEndYear())){
@@ -3457,8 +3441,13 @@ public class LOADetailBackingBean extends
 						String toDate = day + "/" + schedule.getEndMonth() + "/"
 								+ schedule.getEndYear();
 						schedule.setToDate(df.parse(toDate));
+						
+						reportSchedule.setEndMonth(monthFormat.format(schedule
+								.getToDate()));
+						reportSchedule.setEndYear(yearFormat.format(schedule
+								.getToDate()));
 					} 
-					reportSchedule = new ScQtSchedule();
+					
 					if(scheduleType ==  null){
 						parameterSO = BusinessDelegate.getInstance()
 								.getServiceObject(
@@ -3472,20 +3461,6 @@ public class LOADetailBackingBean extends
 						scheduleType  = resDTO.getPmParameter();
 					}
 					reportSchedule.setScheduleType(scheduleType);
-					
-					if(schedule.getFromDate() != null){
-						reportSchedule.setStartMonth(monthFormat.format(schedule
-								.getFromDate()));
-						reportSchedule.setStartYear(yearFormat.format(schedule
-								.getFromDate()));
-					}
-					if(schedule.getToDate() != null){
-						reportSchedule.setEndMonth(monthFormat.format(schedule
-								.getToDate()));
-						reportSchedule.setEndYear(yearFormat.format(schedule
-								.getToDate()));
-					}
-					
 					reportSchedule.setScheduleNo(schedule.getScheduleNo());
 					reportSchedule.setTotalMonths(schedule.getTotalMonths());
 					scheduleReportList.add(reportSchedule);
