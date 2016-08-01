@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<table style="border: 0px; width: 100%">
+	<ui:repeat var="status"
+						value="#{onlineBiddingStatusBB.managedBean.statusDescList}">
+	<tr>
+	<ui:fragment rendered="#{status.pmStatus.statusId eq onlineBiddingStatusBB.bidInProgress}">
+			<td style="width: 250px;"><h:outputText value="#{status.statusName}"></h:outputText></td>
+			<td ><h:outputText  value="#{onlineBiddingStatusBB.searchAllStatusBiddingCount(onlineBiddingStatusBB.bidInProgress)}"></h:outputText></td>
+			</ui:fragment>
+		</tr>
+		<tr>
+		<ui:fragment rendered="#{status.pmStatus.statusId eq onlineBiddingStatusBB.bidPending}">
+			<td><h:outputText value="#{status.statusName}"></h:outputText></td>
+			<td ><h:outputText value="#{onlineBiddingStatusBB.searchAllStatusBiddingCount(onlineBiddingStatusBB.bidPending)}"></h:outputText></td>
+			</ui:fragment>
+		</tr>
+		<tr>
+		<ui:fragment rendered="#{status.pmStatus.statusId eq onlineBiddingStatusBB.bidPause}">
+			<td ><h:outputText value="#{status.statusName}"></h:outputText></td>
+			<td ><h:outputText value="#{onlineBiddingStatusBB.searchAllStatusBiddingCount(onlineBiddingStatusBB.bidPause)}"></h:outputText></td>
+			</ui:fragment>
+		</tr>
+		<tr>
+		<ui:fragment rendered="#{status.pmStatus.statusId eq onlineBiddingStatusBB.bidReschedule}">
+			<td ><h:outputText value="#{status.statusName}"></h:outputText></td>
+			<td ><h:outputText value="#{onlineBiddingStatusBB.searchAllStatusBiddingCount(onlineBiddingStatusBB.bidReschedule)}"></h:outputText></td>
+			</ui:fragment>
+		</tr>
+		</ui:repeat>
+		<tr>
+			<td></td>
+			<td><p:commandLink value="#{lbl['lbl.sc.more.details']}" action="#{onlineBiddingStatusBB.navigatetoScheduleBidding()}"/></td>
+		</tr>
+	</table>
+</ui:composition>
