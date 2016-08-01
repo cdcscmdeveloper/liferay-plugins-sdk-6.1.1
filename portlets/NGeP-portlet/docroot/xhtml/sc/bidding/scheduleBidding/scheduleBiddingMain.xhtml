@@ -131,12 +131,12 @@
 			</p:dataTable>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.add']}" id="addContact"
-					process="@this,contactPersonDetails" partialSubmit="true"
+					process="@this" partialSubmit="true"
 					action="#{scheduleBiddingBB.addContactAction}" immediate="true"
 					update="@([id$=contactPersonDetails])" />
 
 				<p:commandButton id="deleteContact" value="#{lbl['lbl.btn.delete']}"
-					immediate="true" process="@this,contactPersonDetails"
+					immediate="true" process="@this"
 					disabled="#{scheduleBiddingBB.deleteselectedList(scheduleBiddingBB.managedBean.scBidContactPersonList)}"
 					partialSubmit="true" oncomplete="contactPersonDelete.show();"
 					update="@([id$=contactPersonDeleteId])" />
