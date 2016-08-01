@@ -1,13 +1,15 @@
-/**
- * 
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.bean.pm;
 
 import java.io.Serializable;
 
 /**
+ * Search Bean for Location
+ * 
  * @author venugopal
- *
+ * @since 6/11/2014
  */
 public class LocationSearchBean implements Serializable{
 	

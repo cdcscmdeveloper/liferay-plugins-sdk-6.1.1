@@ -1,6 +1,27 @@
+/* 
+ ***************************************************
+ *    
+ * Copyright © 2014 Archisoft. All rights reserved.
+ * 
+ ***************************************************
+*/
 package my.ep.web.bean.pm;
 
-public class AddressList {
+import java.io.Serializable;
+
+/**
+ * Search Bean for Task Assignment
+ * 
+ * @author RAIN POH
+ * @since 6/8/2014
+ *
+ */
+public class AddressList implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private String addressName;
 

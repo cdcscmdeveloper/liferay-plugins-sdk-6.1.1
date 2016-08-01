@@ -1,10 +1,23 @@
+/*
+ * Copyright © 2015 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.bean.pm;
 
-public class FundSearchBean {
+import java.io.Serializable;
+
+/**
+ * Search Bean for Fund
+ * 
+ * @author npoluri
+ * @since 10/6/2015
+ */
+public class FundSearchBean implements Serializable {
 	
-	/**my.ep.web.bean.pm
-	 * @param args
+	/**
+	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+
 	private String fundCode;
 	private String fundName;	
 	private String status;

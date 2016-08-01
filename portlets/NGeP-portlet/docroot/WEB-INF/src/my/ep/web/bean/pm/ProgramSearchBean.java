@@ -1,7 +1,21 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.bean.pm;
 
-	
-public class ProgramSearchBean {
+import java.io.Serializable;
+
+/**
+ * The Class ProgramSearchBean.
+ * 
+ * @author npoluri
+ * @since 12/6/2015
+ */
+public class ProgramSearchBean implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String votCode;
 	private String votName;
 	private String programActivityCode;

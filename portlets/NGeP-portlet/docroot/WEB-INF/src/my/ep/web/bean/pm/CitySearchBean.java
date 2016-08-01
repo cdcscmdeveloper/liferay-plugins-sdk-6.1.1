@@ -1,12 +1,29 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.bean.pm;
-//TODO: Auto-generated Javadoc
+
+import java.io.Serializable;
+
 /*
 *    The Class CitySearchBean.
 *    @author Nagasiva
 *    @since 14.06.2016
 */
-public class CitySearchBean {
+public class CitySearchBean implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String stateCode;
 	
 	/** The division name. */

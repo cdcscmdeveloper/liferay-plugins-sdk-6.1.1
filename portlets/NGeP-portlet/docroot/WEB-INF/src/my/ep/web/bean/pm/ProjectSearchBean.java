@@ -10,11 +10,20 @@
 */
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
+
 	
 /**
  * The Class ProjectSearchBean.
+ * 
+ * @author npoluri
+ * @since 12/6/2015
  */
-public class ProjectSearchBean {
+public class ProjectSearchBean implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String votCode;
 	private String votName;
 	private String projectCode;

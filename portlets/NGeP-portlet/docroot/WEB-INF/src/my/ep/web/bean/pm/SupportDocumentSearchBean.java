@@ -3,14 +3,20 @@
  */
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
+
 /**
  * Search Bean for Support Document 
  * 
  * @author RAIN POH
- * @since 8/7/2013
+ * @since 22/7/2014
  *
  */
-public class SupportDocumentSearchBean {
+public class SupportDocumentSearchBean implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long docCategoryParam;
 	private String docCategoryParamCode;
 	private Long suppTypeParam;

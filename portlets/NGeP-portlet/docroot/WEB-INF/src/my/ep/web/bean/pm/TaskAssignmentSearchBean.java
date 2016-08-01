@@ -3,6 +3,7 @@
  */
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
 import java.util.List;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -11,14 +12,18 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 
 /**
- * Search Bean for Support Document 
+ * Search Bean for Task Assignment
  * 
  * @author RAIN POH
- * @since 8/7/2013
+ * @since 15/9/2014
  *
  */
-public class TaskAssignmentSearchBean {
+public class TaskAssignmentSearchBean implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private PmOrgProfile orgProfile;
 	private PmUser user;
 	private PmParameter orgType;
