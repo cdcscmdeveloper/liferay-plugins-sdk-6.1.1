@@ -275,7 +275,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 			return invitationTypes;
 	}
 	
-	public void searchSelectedInvitationType() {
+	public void onSearchSelectedInvitationType(String type) {
 		supplierInvitationModel.reloadData();
 	}
 	
@@ -309,6 +309,32 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 		}
 
 		return resDTO != null ? resDTO.getPmParameter() : null;
+	}
+	
+	/*retrive pmParameter id based on type*/
+	public Long retriveParameterId(String type){
+		IParameterSO parameterSo=null;
+		Long returnId=0L;
+		log.info("====type ==="+type);
+		try{
+			parameterSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO invitationType = new ParameterReqDTO();
+			invitationType.setParameterType(ParameterTypeConst.SUPPLIER_INVITATION_TYPES);
+			invitationType.setParameterCode(type);
+			ParameterResDTO invitationTyperesDTO = parameterSo
+					.retrieveParameterByTypeAndCode(invitationType);
+			if(null!=invitationTyperesDTO && null!=invitationTyperesDTO.getPmParameter()){
+				returnId=invitationTyperesDTO.getPmParameter().getParameterId();
+				
+			}
+			log.info("====returnId ==="+returnId);
+			
+		}finally{
+			parameterSo=null;
+			
+		}
+		return returnId;
 	}
 
 }
