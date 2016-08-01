@@ -12,7 +12,6 @@ package my.ep.web.backingbean.sc.specification;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -178,7 +177,6 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -195,14 +193,12 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
@@ -838,7 +834,7 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 9:
-			ScQt committeeEndorsment = constructSpecCommitteDtls().getScQt();
+			constructSpecCommitteDtls().getScQt();
 			//checktemplateSpecStatus(committeeEndorsment);
 			//checkFinancialSpecStatus(committeeEndorsment);
 			break;
@@ -993,61 +989,6 @@ public class SpecificationBackingBean extends
 		log.info("retriveBusinessOwnerQualificationCriteri - START");
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveSuppQualificationTabDtl();
-	}
-
-
-	/**
-	 * Gets the locations list.
-	 * 
-	 * @param zoneLocation
-	 *            the zone location
-	 * @return the locations list
-	 */
-	private List<ScQtLocCriteria> getLocationsList(TreeNode zoneLocation) {
-		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
-		for (TreeNode zoneNode : zoneLocation.getChildren()) {
-			for (TreeNode stateNode : zoneNode.getChildren()) {
-				if (stateNode.getType().equals("state")) {
-
-					TplSpecLoc stateLoc = (TplSpecLoc) stateNode.getData();
-					ScQtLocCriteria stateLocCriteria = new ScQtLocCriteria();
-					stateLocCriteria.setPmState(stateLoc.getPmState());
-					// stateLocCriteria.setPmDistrict(stateLoc.getPmDistrict());
-					// stateLocCriteria.setPmDivision(stateLoc.getPmDivision());
-					// ScQtLocCriteria locationDTO = (ScQtLocCriteria)
-					// zoneLocation.getData();
-					results.add(stateLocCriteria);
-
-					for (TreeNode districtNode : stateNode.getChildren()) {
-						TplSpecLoc districtLoc = (TplSpecLoc) districtNode
-								.getData();
-						ScQtLocCriteria districtLocCriteria = new ScQtLocCriteria();
-						// districtLocCriteria.setPmState(districtLoc.getPmState());
-						districtLocCriteria.setPmDistrict(districtLoc
-								.getPmDistrict());
-						districtLocCriteria.setPmDivision(districtLoc
-								.getPmDivision());
-						results.add(districtLocCriteria);
-						for (TreeNode divisionCode : districtNode.getChildren()) {
-							TplSpecLoc divisionLoc = (TplSpecLoc) divisionCode
-									.getData();
-							ScQtLocCriteria divisionLocCriteria = new ScQtLocCriteria();
-							divisionLocCriteria.setPmDistrict(divisionLoc
-									.getPmDistrict());
-							results.add(divisionLocCriteria);
-						}
-					}
-				}
-			}
-		}
-		/*
-		 * if (zoneLocation.isLeaf()) {
-		 * 
-		 * } else { for (TreeNode childrendLocationNode :
-		 * zoneLocation.getChildren()) {
-		 * results.addAll(getLocationsList(childrendLocationNode)); } }
-		 */
-		return results;
 	}
 
 	/**
@@ -1430,87 +1371,6 @@ public class SpecificationBackingBean extends
 			specSO = null;
 		}
 
-	}
-
-	/**
-	 * Retrive financial specification.retrieve all the financial specification
-	 * menu information and display in business owner.
-	 */
-	private void retriveFinancialSpecification() {
-		IQTSpecSO specSO;
-		SpecificationResDTO resDto;
-		// this.getManagedBean().setActiveIndex(3);
-
-		try {
-			if (null == this.getManagedBean()
-					.getScQtCheckSt2financeProposalList()
-					|| this.getManagedBean()
-							.getScQtCheckSt2financeProposalList().isEmpty()) {
-				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-				reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-				reqDTO.setPrepareSpec(false);
-
-				specSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-				resDto = specSO.retrieveSpecDetails(reqDTO);
-
-				this.getManagedBean().setScQtCheckSt2financeProposalList(
-						resDto.getFinSpecResultBean().getResultList());
-			}
-
-		} finally {
-			specSO = null;
-		}
-
-	}
-
-	/**
-	 * Retrive approval remarks.retrieve all the approval Remarks menu
-	 * information and display in business owner.
-	 */
-
-	private void retriveApprovalRemarks() {
-		IQTDetailSO qtDetailSO;
-		QuationTenderResDTO resDto;
-		// this.getManagedBean().setActiveIndex(4);
-
-		try {
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-
-			resDto = qtDetailSO.retriveQtRemarks(reqDTO);
-
-			if (resDto.getRemarks() == null) {
-
-				this.getManagedBean().setScQtRemarksList(
-						new ArrayList<ScQtRemark>());
-			}
-
-			else {
-
-				List<ScQtRemark> remarkList = new ArrayList<ScQtRemark>();
-				for (ScRemark remark : resDto.getRemarks()) {
-					ScQtRemark qtRemark = (ScQtRemark) remark;
-					remarkList.add(qtRemark);
-
-				}
-				this.getManagedBean().setMinistryRemarksSize(remarkList.size());
-				this.getManagedBean().setScQtRemarksList(remarkList);
-			}
-			if (SCProcessNameConst.SPECIFICATION_APPROVAL.equalsIgnoreCase(this
-					.getManagedBean().getTaskName())) {
-				initializeRemarks(this.getManagedBean().getQt(), this
-						.getManagedBean().getQt().getCurrentWorkFlowStatus(),
-						this.getManagedBean().getScQtRemarksList(),
-						ScQtRemark.class);
-			}
-
-		} finally {
-			qtDetailSO = null;
-		}
 	}
 
 	/**
@@ -3380,152 +3240,6 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Gets the pm state ids.
-	 * 
-	 * @param tplSpecZoneLocs
-	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
-	 * @return (List<Long>).
-	 */
-	private List<Long> getPmStateIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
-		List<Long> results = new ArrayList<Long>();
-
-		if (tplSpecZoneLocs != null && tplSpecZoneLocs.size() > 0) {
-			for (TplSpecZoneLoc TplSpecZoneLoc : tplSpecZoneLocs) {
-
-				if (TplSpecZoneLoc.getPmState() != null) {
-					results.add(TplSpecZoneLoc.getPmState().getStateId());
-				}
-			}
-		}
-		return results;
-	}
-
-	/**
-	 * Gets the pm division ids.
-	 * 
-	 * @param tplSpecZoneLocs
-	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
-	 * @return (List<Long>).
-	 */
-	private List<Long> getPmDivisionIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
-		List<Long> results = new ArrayList<Long>();
-
-		if (tplSpecZoneLocs != null && tplSpecZoneLocs.size() > 0) {
-			for (TplSpecZoneLoc TplSpecZoneLoc : tplSpecZoneLocs) {
-
-				if (TplSpecZoneLoc.getPmDivision() != null) {
-					results.add(TplSpecZoneLoc.getPmDivision().getDivisionId());
-				}
-			}
-		}
-		return results;
-	}
-
-	/**
-	 * Gets the pm districts ids.
-	 * 
-	 * @param tplSpecZoneLocs
-	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
-	 * @return (List<Long>).
-	 */
-	private List<Long> getPmDistrictsIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
-		List<Long> results = new ArrayList<Long>();
-
-		if (tplSpecZoneLocs != null && tplSpecZoneLocs.size() > 0) {
-			for (TplSpecZoneLoc TplSpecZoneLoc : tplSpecZoneLocs) {
-
-				if (TplSpecZoneLoc.getPmDistrict() != null) {
-					results.add(TplSpecZoneLoc.getPmDistrict().getDistrictId());
-				}
-			}
-		}
-		return results;
-	}
-
-	/**
-	 * Delete state or div or dist.
-	 * 
-	 * @param tplSpecZoneDtl
-	 *            (TplSpecZoneDtl tplSpecZoneDtl)
-	 * @param tplSpecZoneLocs
-	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
-	 */
-	private void deleteStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl,
-			List<TplSpecZoneLoc> tplSpecZoneLocs) {
-		List<Long> stateIds = null;
-		List<Long> divIds = null;
-		List<Long> distIds = null;
-
-		if (tplSpecZoneLocs != null && tplSpecZoneLocs.size() > 0) {
-			stateIds = getPmStateIds(tplSpecZoneLocs);
-
-			divIds = getPmDivisionIds(tplSpecZoneLocs);
-
-			distIds = getPmDistrictsIds(tplSpecZoneLocs);
-		}
-
-		List<ZonesBean> results = new ArrayList<ZonesBean>();
-		List<ZonesBean> list = getManagedBean().getBeans();
-		if (list != null && list.size() > 0) {
-			for (ZonesBean zonesBean : list) {
-				ZonesBean bean = new ZonesBean();
-				TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
-
-				if (zone != null) {
-
-					if (tplSpecZoneDtl != null) {
-						if (!zone.getZoneName().equalsIgnoreCase(
-								tplSpecZoneDtl.getZoneName())) {
-							bean = zonesBean;
-							results.add(bean);
-						}
-
-					} else {
-						if (zonesBean.getTplSpecZoneLocs() != null
-								&& zonesBean.getTplSpecZoneLocs().size() > 0) {
-							List<TplSpecZoneLoc> specZoneLocs = new ArrayList<TplSpecZoneLoc>();
-							for (TplSpecZoneLoc TplSpecZoneLoc : zonesBean
-									.getTplSpecZoneLocs()) {
-
-								if (TplSpecZoneLoc.getPmState() != null) {
-
-									if (stateIds != null && stateIds.size() > 0) {
-
-										if (!stateIds.contains(TplSpecZoneLoc
-												.getPmState().getStateId())) {
-											specZoneLocs.add(TplSpecZoneLoc);
-										}
-									}
-
-								} else if (TplSpecZoneLoc.getPmDivision() != null) {
-									if (divIds != null && divIds.size() > 0) {
-										if (!divIds.contains(TplSpecZoneLoc
-												.getPmDivision()
-												.getDivisionId())) {
-											specZoneLocs.add(TplSpecZoneLoc);
-										}
-									}
-								} else if (TplSpecZoneLoc.getPmDistrict() != null) {
-									if (distIds != null && distIds.size() > 0) {
-										if (!distIds.contains(TplSpecZoneLoc
-												.getPmDistrict()
-												.getDistrictId())) {
-											specZoneLocs.add(TplSpecZoneLoc);
-										}
-									}
-								}
-							}
-							bean.setTplSpecZoneLocs(specZoneLocs);
-						}
-						results.add(bean);
-					}
-				}
-			}
-			getManagedBean().setBeans(results);
-		}
-	}
-
-	/**
 	 * Prepare spec req.Prepare Data for Business Owner
 	 * save/Submit/Accept/Revise buttons.
 	 * 
@@ -3734,44 +3448,6 @@ public class SpecificationBackingBean extends
 		
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(qtId);
-	}
-
-	/**
-	 * Retrive nonpanel zone dtls.retrive all the zones informations and
-	 * display.
-	 * 
-	 * @param zonedtls
-	 *            the zonedtls
-	 */
-	private void retriveNonpanelZoneDtls(List<TplSpecZoneDtl> zonedtls) {
-
-		try {
-			List<ZonesBean> beans = getManagedBean().getBeans();
-
-			this.getManagedBean().setCtzones(false);
-			if (isNotNullOREmpty(zonedtls)) {
-
-				for (TplSpecZoneDtl zone : zonedtls) {
-					this.getManagedBean().setCtzones(true);
-					if (null != this.getManagedBean().getQt()
-							&& !this.getManagedBean().getQt().isPanel()) {
-						ZonesBean zonesBean = new ZonesBean();
-						zonesBean.setTplSpecZoneDtl(zone);
-						zonesBean.setTplSpecZoneLocs(zone.getTplSpecZoneLocs());
-						beans.add(zonesBean);
-					}
-
-					getManagedBean().getZoneGeneralTrees().add(
-							LocationSingleton.getInstance().constuctTreeNode(
-									zone, zone.getTplSpecZoneLocs()));
-
-				}
-			}
-			getManagedBean().setBeans(beans);
-
-		} finally {
-
-		}
 	}
 
 	/**
@@ -7211,11 +6887,11 @@ public class SpecificationBackingBean extends
 
 		if (startMonth != null && endMonth != null && startYear != null
 				&& endYear != null) {
-			Date currentDate = new Date();
+			//Date currentDate = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
-			String localDate = sdf.format(currentDate);
-			String day = localDate.substring(0, 2);
+			//String localDate = sdf.format(currentDate);
+			//String day = localDate.substring(0, 2);
 			String localstartMonth=retriveMonthDtls(new Integer(startMonth));
 			String localemdMonth=retriveMonthDtls(new Integer(endMonth));
 			String fromDate = 01 + "/" + localstartMonth + "/" + startYear;
@@ -8280,20 +7956,10 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Paneltab change.
-	 * 
-	 * @param event
-	 *            the event
-	 */
-	public void paneltabChange(TabChangeEvent event) {
-
-	}
-
-	/**
 	 * Retrive zones or suppliers by item.retrive zones or suppliers based on
 	 * item in supplier qualification criteria.
 	 */
-	public void retriveZonesOrSuppliersByItem() {
+	private void retriveZonesOrSuppliersByItem() {
 		IPanelSupplierSO panelSupplierSO;
 		PanelSupplierResDTO resDTO = new PanelSupplierResDTO();
 		try {
@@ -8402,79 +8068,6 @@ public class SpecificationBackingBean extends
 
 		}
 
-	}
-
-	/**
-	 * Retrive tpl spec zone dtls.
-	 * 
-	 * @param selectedTreeNode
-	 *            the selected tree node
-	 * @return the tpl spec zone dtl
-	 */
-	private TplSpecZoneDtl retriveTplSpecZoneDtls(TreeNode selectedTreeNode) {
-		TplSpecZoneDtl tplSpecZoneDtl = null;
-		List<TreeNode> zoneNodes = selectedTreeNode.getChildren();
-
-		if (null != zoneNodes && zoneNodes.size() > 0) {
-			for (TreeNode treeNode1 : zoneNodes) {
-
-				List<TreeNode> stateNodes = treeNode1.getChildren();
-
-				for (TreeNode treeNode2 : stateNodes) {
-
-					List<TreeNode> district = treeNode2.getChildren();
-					if (null != district && !district.isEmpty()) {
-						for (TreeNode devision : district) {
-
-							if (devision.getChildCount() > 0) {
-								for (TreeNode districtNode : devision
-										.getChildren()) {
-
-									TplSpecZoneLoc criteria = (TplSpecZoneLoc) districtNode
-											.getData();
-
-									criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
-											.getData()));
-									tplSpecZoneDtl = criteria
-											.getTplSpecZoneDtl();
-
-								}
-
-							} else {
-
-								TplSpecZoneLoc criteria = (TplSpecZoneLoc) devision
-										.getData();
-
-								criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
-										.getData()));
-								tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
-
-							}
-
-						}
-					} else {
-
-						TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode2
-								.getData();
-
-						criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
-								.getData()));
-						tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
-
-					}
-
-				}
-				if (null != stateNodes && stateNodes.size() == 0) {
-					TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode1
-							.getData();
-					criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
-							.getData()));
-					tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
-				}
-
-			}
-		}
-		return tplSpecZoneDtl;
 	}
 
 	/**
@@ -9982,11 +9575,11 @@ public class SpecificationBackingBean extends
 								schedule.getEndMonth()));
 					}
 
-					Date currentDate = new Date();
+					//Date currentDate = new Date();
 					SimpleDateFormat df = new SimpleDateFormat(
 							CommonConstants.DEFAULT_DATE_FORMAT);
-					String localDate = df.format(currentDate);
-					String day = localDate.substring(0, 2);
+					//String localDate = df.format(currentDate);
+					//String day = localDate.substring(0, 2);
 					String fromdate = 01 + "/" + Startmonth + "/"
 							+ schedule.getStartYear();
 					String toDate = 01 + "/" + endmonth + "/"
@@ -10030,11 +9623,11 @@ public class SpecificationBackingBean extends
 						endmonth = retriveMonthDtls(new Integer(
 								schedule.getEndMonth()));
 					}
-					Date d1 = new Date();
-					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+					//Date d1 = new Date();
+					//SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-					String localDate = format.format(d1);
-					String date = localDate.substring(0, 2);
+					//String localDate = format.format(d1);
+					//String date = localDate.substring(0, 2);
 					String fromdate = 01 + "/" + Startmonth + "/"
 							+ schedule.getStartYear();
 					String toDate = 01 + "/" + endmonth + "/"
@@ -10687,384 +10280,6 @@ public class SpecificationBackingBean extends
 		}
 		return null;
 
-	}
-
-	/**
-	 * Select zone tree node.Event handle check non panel Treenodes.
-	 * 
-	 * @param event
-	 *            (TreeNode treeNode)
-	 */
-	public void selectZoneTreeNode(NodeSelectEvent event) {
-		TreeNode selectedTreeNode = event.getTreeNode();
-
-		selectedTreeNode.setSelected(true);
-	}
-
-	/**
-	 * Un select zone tree node.Event handle uncheck Nonpanel treeNodes.
-	 * 
-	 * @param event
-	 *            (TreeNode treeNode).
-	 */
-	public void unSelectZoneTreeNode(NodeUnselectEvent event) {
-		TreeNode selectedTreeNode = event.getTreeNode();
-
-		selectedTreeNode.setSelected(false);
-	}
-
-	/**
-	 * Delete panel tree node.Event handle delete zones from panel supplier
-	 * qualification criteria.
-	 */
-	public void deletePanelTreeNode() {
-
-		TreeNode selectedTreeNode = this.getManagedBean()
-				.getDeletePanelTreenode();
-
-		if (null != selectedTreeNode) {
-			List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
-			if (null != getManagedBean().getZoneGeneralTrees()) {
-				if (getManagedBean().getZoneGeneralTrees().size() > 1) {
-					for (TreeNode treenode : this.getManagedBean()
-							.getZoneGeneralTrees()) {
-						for (TreeNode node : treenode.getChildren()) {
-
-							if (!node.equals(selectedTreeNode)) {
-								zoneGeneralTrees.add(treenode);
-							}
-						}
-						this.getManagedBean().setZoneGeneralTrees(
-								zoneGeneralTrees);
-					}
-				} else {
-
-					throw new EpException(MessageConst.ERROR_760245);
-
-				}
-			}
-
-		} else {
-			throw new EpException(MessageConst.ERROR_760146);
-		}
-	}
-
-	/**
-	 * Delete tree node.Event handle delete NonPanel Zones from General
-	 * information.
-	 */
-	public void deleteTreeNode() {
-		getManagedBean().setSelectedFlag(true);
-		List<TreeNode> rootTrees = this.getManagedBean().getZoneGeneralTrees();
-
-		// LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
-		deleteZonesTreeNodes(rootTrees);
-		TplSpecZoneDtl zoneDtl = null;
-		// zone details
-		if (getManagedBean().isSelectedFlag()) {
-			throw new EpException(MessageConst.ERROR_760146);
-		}
-		if (!rootTrees.isEmpty()) {
-			getManagedBean()
-					.getQt()
-					.getScQtSupplierCriteria()
-					.getQtZoneCriterias()
-					.setTplSpecZoneDtls(
-							convertTreeNodesToZoneCriteria(rootTrees, zoneDtl));
-		}
-		ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt()
-				.getScQtSupplierCriteria();
-		if (null != zoneSupplierCriteria
-				&& zoneSupplierCriteria.isBrandNew() == false) {
-			updateFinacialSpecStatus();
-		}
-		this.getManagedBean().setIndex(-1);
-
-	}
-
-	/**
-	 * Delete zones tree nodes.
-	 * 
-	 * @param rootTrees
-	 *            the root trees
-	 * @return the list
-	 */
-	private List<TreeNode> deleteZonesTreeNodes(List<TreeNode> rootTrees) {
-		TplSpecZoneDtl tplSpecZoneDtl = null;
-		List<TreeNode> removedList = new ArrayList<TreeNode>();
-		if (rootTrees != null) {
-			if (null != this.getManagedBean().getQt().getScQtSupplierCriteria()
-					&& null != this.getManagedBean().getQt()
-							.getScQtSupplierCriteria().getQtZoneCriterias()) {
-				this.getManagedBean().getQt().getScQtSupplierCriteria()
-						.getQtZoneCriterias().setModified(true);
-			}
-			for (int row = 0; row < rootTrees.size(); row++) {
-				TreeNode rootTree = rootTrees.get(row);
-
-				for (TreeNode zoneTree : rootTree.getChildren()) {
-					if (zoneTree.isSelected()) {
-						getManagedBean().setSelectedFlag(false);
-						tplSpecZoneDtl = (TplSpecZoneDtl) zoneTree.getData();
-						if (tplSpecZoneDtl.getPanelZone() != null) {
-							// deletePanelItemSuppliers(tplSpecZoneDtl);
-
-						} else {
-							deleteStateOrDivOrDist(tplSpecZoneDtl, null);
-						}
-
-						rootTrees.remove(row--);
-					} else {
-
-						removedList = deleteZoneChildTreeNodes(zoneTree
-								.getChildren());
-
-						if (removedList != null) {
-							for (TreeNode treeNode : removedList) {
-								List<TplSpecZoneLoc> locationDTOs = getZoneLocations(treeNode);
-
-								deleteStateOrDivOrDist(tplSpecZoneDtl,
-										locationDTOs);
-							}
-						}
-
-						if (zoneTree.getChildren().size() == 0) {
-							rootTrees.remove(row--);
-						}
-					}
-
-				}
-			}
-		}
-		return removedList;
-	}
-
-	/**
-	 * Delete zone child tree nodes.
-	 * 
-	 * @param treeNodes
-	 *            the tree nodes
-	 * @return the list
-	 */
-	private List<TreeNode> deleteZoneChildTreeNodes(List<TreeNode> treeNodes) {
-		List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
-		if (treeNodes != null) {
-
-			for (TreeNode treeNode : treeNodes) {
-				if (treeNode.isSelected()) {
-					getManagedBean().setSelectedFlag(false);
-					nodesToRemoved.add(treeNode);
-				} else {
-					if (treeNode.getChildren() != null
-							&& treeNode.getChildren().size() > 0) {
-						deleteChildTreeNodes(treeNode.getChildren());
-
-						if (treeNode.getChildren().size() == 0) {
-							nodesToRemoved.add(treeNode);
-						}
-					}
-				}
-			}
-
-			if (nodesToRemoved.size() > 0) {
-				treeNodes.removeAll(nodesToRemoved);
-			}
-		}
-		return nodesToRemoved;
-	}
-
-	/**
-	 * Select location tree node.Event handle check treeNode Locations in
-	 * Supplier qualification criteria .
-	 * 
-	 * @param event
-	 *            (TreeNode treeNode).
-	 */
-	public void selectLocationTreeNode(NodeSelectEvent event) {
-		TreeNode selectedTreeNode = event.getTreeNode();
-
-		selectedTreeNode.setSelected(true);
-	}
-
-	/**
-	 * Un select location tree node.Event handle Uncheck treeNode Locations in
-	 * Supplier qualification criteria .
-	 * 
-	 * @param event
-	 *            (TreeNode treeNode).
-	 */
-	public void unSelectLocationTreeNode(NodeUnselectEvent event) {
-		TreeNode selectedTreeNode = event.getTreeNode();
-
-		selectedTreeNode.setSelected(false);
-	}
-
-	/**
-	 * Delete supplier qualification tree node.Event handle delete Locations
-	 * from supplier qualification criteria.
-	 * 
-	 * @throws NoSuchMethodException
-	 * @throws InvocationTargetException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public void deleteSupplierQualificationTreeNode() {
-		try {
-			List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
-			deleteTreeNodes(rootTrees);
-			this.getManagedBean().setTotalSuppliersSpecLoc(
-					new ArrayList<TplSpecLoc>());
-			List<ScQtLocCriteria> CriteriaNew = new ArrayList<ScQtLocCriteria>();
-			if (!rootTrees.isEmpty()) {
-
-				// this.getManagedBean().setZoneTrees(new
-				// ArrayList<TreeNode>());
-				List<TplSpecLoc> localLoc = new ArrayList<TplSpecLoc>();
-				List<ScQtLocCriteria> Criteria = new ArrayList<ScQtLocCriteria>();
-
-				Criteria = convertTreeNodesToLocationCriteria(rootTrees, this
-						.getManagedBean().getQt().getScQtSupplierCriteria());
-
-				for (ScQtLocCriteria locCriteria : Criteria) {
-					// Criteria.add(locCriteria);
-					ScQtLocCriteria criteriaNew = (ScQtLocCriteria) BeanUtils
-							.cloneBean(locCriteria);
-					CriteriaNew.add(criteriaNew);
-					TplSpecLoc specLoc = (TplSpecLoc) locCriteria;
-
-					localLoc.add(specLoc);
-
-				}
-				/*
-				 * getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
-				 * getManagedBean().getZoneTrees().addAll(
-				 * LocationSingleton.getInstance().constuctTreeNode(
-				 * CriteriaNew));
-				 */
-
-				// this.getManagedBean().setExistingSupplierLocationList(Criteria);
-				this.getManagedBean().setTotalSuppliersSpecLoc(localLoc);
-			}
-			checkExistingLocation(CriteriaNew, this.getManagedBean()
-					.getExistingSupplierLocationList());
-			this.getManagedBean().setIndex(-1);
-		} catch (IllegalAccessException e) {
-			log.error(e);
-		} catch (InstantiationException e) {
-			log.error(e);
-		} catch (InvocationTargetException e) {
-			log.error(e);
-		} catch (NoSuchMethodException e) {
-			log.error(e);
-		}
-	}
-
-	private void checkExistingLocation(
-			List<ScQtLocCriteria> currentLocationList,
-			List<ScQtLocCriteria> existingLocations) {
-		List<ScQtLocCriteria> localDeleteList = this.getManagedBean()
-				.getSupplierLocationList();
-		if (null == localDeleteList) {
-			localDeleteList = new ArrayList<ScQtLocCriteria>();
-		}
-		if (null != existingLocations && !existingLocations.isEmpty()
-				&& null != currentLocationList
-				&& !currentLocationList.isEmpty()) {
-			for (ScQtLocCriteria locDeleteCriteria : existingLocations) {
-				boolean delectLoc = false;
-				for (ScQtLocCriteria locCurrentList : currentLocationList) {
-					if (null != locCurrentList.getSpecLocId()) {
-						if (locCurrentList.getSpecLocId().equals(
-								locDeleteCriteria.getSpecLocId())) {
-							delectLoc = true;
-							break;
-						}
-					} else {
-						delectLoc = true;
-					}
-				}
-				if (!delectLoc) {
-					if (!localDeleteList.contains(locDeleteCriteria)) {
-						localDeleteList.add(locDeleteCriteria);
-					}
-				}
-			}
-
-			this.getManagedBean().setSupplierLocationList(localDeleteList);
-
-		}
-		if (null == currentLocationList || currentLocationList.isEmpty()) {
-			if (null != existingLocations && !existingLocations.isEmpty()) {
-				this.getManagedBean()
-						.setSupplierLocationList(existingLocations);
-			}
-		}
-	}
-
-	/**
-	 * Delete tree nodes.
-	 * 
-	 * @param rootTrees
-	 *            the root trees
-	 */
-	private void deleteTreeNodes(List<TreeNode> rootTrees) {
-		if (rootTrees != null) {
-			for (int row = 0; row < rootTrees.size(); row++) {
-				TreeNode rootTree = rootTrees.get(row);
-
-				for (TreeNode zoneTree : rootTree.getChildren()) {
-					if (zoneTree.isSelected()) {
-						/*
-						 * ScQtLocCriteria loccriteria = (ScQtLocCriteria)
-						 * zoneTree .getData();
-						 */
-						rootTrees.remove(row--);
-						// deleteSupplierLocacriteria(loccriteria);
-					} else {
-						deleteChildTreeNodes(zoneTree.getChildren());
-
-						if (zoneTree.getChildren().size() == 0) {
-							// rootTrees.remove(row--);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Delete child tree nodes.
-	 * 
-	 * @param treeNodes
-	 *            the tree nodes
-	 */
-	private void deleteChildTreeNodes(List<TreeNode> treeNodes) {
-		if (treeNodes != null) {
-			List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
-
-			for (TreeNode treeNode : treeNodes) {
-				if (treeNode.isSelected()) {
-
-					nodesToRemoved.add(treeNode);
-
-					// deleteSupplierLocacriteria(loccriteria);
-				} else {
-					if (treeNode.getChildren() != null
-							&& treeNode.getChildren().size() > 0) {
-
-						deleteChildTreeNodes(treeNode.getChildren());
-						// deleteSupplierLocacriteria(loccriteria);
-						if (treeNode.getChildren().size() == 0) {
-							nodesToRemoved.add(treeNode);
-						}
-					}
-				}
-			}
-
-			if (nodesToRemoved.size() > 0) {
-				treeNodes.removeAll(nodesToRemoved);
-			}
-		}
 	}
 
 	/**
@@ -12684,96 +11899,6 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Construct l3 ids.
-	 * 
-	 * @param categories
-	 *            the categories
-	 * @return the list
-	 */
-	private List<Long> constructL3Ids(List<ScQtCategory> categories) {
-		List<Long> categoryIds = null;
-		if (null != categories) {
-			categoryIds = new ArrayList<Long>();
-			for (ScQtCategory category : categories) {
-				Long catId = category.getPmCategoryL3().getCategoryL3Id();
-				categoryIds.add(catId);
-			}
-		}
-		return categoryIds;
-	}
-
-	/**
-	 * Gets the states n district.
-	 * 
-	 * @param locations
-	 *            the locations
-	 * @param codes
-	 *            the codes
-	 * @param locLevel
-	 *            the loc level
-	 * @return the states n district
-	 */
-	private void getStatesNDistrict(List<? extends TplSpecLoc> locations,
-			List<String> codes, String locLevel) {
-
-		List<PmState> states = new ArrayList<PmState>();
-		List<PmDistrict> districts = new ArrayList<PmDistrict>();
-		List<PmDivision> divisions = new ArrayList<PmDivision>();
-		if (null != locations) {
-			for (TplSpecLoc specLoc : locations) {
-				if (ParameterConst.LOCATION_LEVEL_STATE
-						.equalsIgnoreCase(locLevel)) {
-					PmState state = specLoc.getPmState();
-					if (null != state) {
-						if (!codes.contains(state.getStateCode())) {
-							codes.add(state.getStateCode());
-							states.add(state);
-						}
-					}
-					this.getManagedBean().setSupplierStateCode(codes);
-					if (null == this.getManagedBean().getStateList()) {
-						this.getManagedBean().setStateList(
-								new ArrayList<PmState>());
-					}
-					this.getManagedBean().setStateList(states);
-
-				} else if (ParameterConst.LOCATION_LEVEL_DISTRICT
-						.equalsIgnoreCase(locLevel)) {
-					PmDistrict district = specLoc.getPmDistrict();
-					if (null != district) {
-						if (!codes.contains(district.getDistrictCode())) {
-							codes.add(district.getDistrictCode());
-							districts.add(district);
-						}
-					}
-					this.getManagedBean().setSupplierDistrictCode(codes);
-					if (null == this.getManagedBean().getDistrictList()) {
-						this.getManagedBean().setDistrictList(
-								new ArrayList<PmDistrict>());
-					}
-					this.getManagedBean().setDistrictList(districts);
-
-				} else if (ParameterConst.LOCATION_LEVEL_DIVISION
-						.equalsIgnoreCase(locLevel)) {
-					PmDivision divison = specLoc.getPmDivision();
-					if (null != divison) {
-						if (!codes.contains(divison.getDivisionCode())) {
-							codes.add(divison.getDivisionCode());
-							divisions.add(divison);
-						}
-					}
-					this.getManagedBean().setSupplierDivisionCode(codes);
-					if (null == this.getManagedBean().getDivisionList()) {
-						this.getManagedBean().setDivisionList(
-								new ArrayList<PmDivision>());
-					}
-					this.getManagedBean().setDivisionList(divisions);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Update selected check list indx.
 	 * 
 	 * @param checkList
@@ -13110,42 +12235,6 @@ public class SpecificationBackingBean extends
 			}
 		}
 		log.info("retrievLocationDtls - END");
-	}
-
-	/**
-	 * Retrieve non zonal dtls.
-	 */
-	private void retrieveNonZonalDtls() {
-		log.info("retrieveNonZonalDtls - START");
-		if (null != this.getManagedBean().getQt().getZoneLocationLevel()
-				&& null != this.getManagedBean().getQt().getZoneLocationLevel()
-						.getParameterId()) {
-			Long locationLevel = this.getManagedBean().getQt()
-					.getZoneLocationLevel().getParameterId();
-			this.getManagedBean().getQt().getScQtSupplierCriteria()
-					.getLocationLevel().setParameterId(locationLevel);
-			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
-			String locationLevelCode = null;
-			for (PmParameterDesc paramDesc : localParamDesc) {
-				if (paramDesc.getPmParameter().getParameterId()
-						.equals(locationLevel)) {
-					locationLevelCode = paramDesc.getPmParameter()
-							.getParameterCode();
-					this.getManagedBean().setLocalLevelCode(locationLevelCode);
-					break;
-				}
-			}
-			List<ScQtLocCriteria> scQtLocCriteriaList = new ArrayList<ScQtLocCriteria>();
-			if (null != getManagedBean().getZoneGeneralTrees()
-					&& !getManagedBean().getZoneGeneralTrees().isEmpty()) {
-				for (TreeNode treeNode : getManagedBean().getZoneGeneralTrees()) {
-					List<ScQtLocCriteria> qtLocCriteriaList = getLocationsList(treeNode);
-					scQtLocCriteriaList.addAll(qtLocCriteriaList);
-				}
-			}
-			retrievLocationDtls(scQtLocCriteriaList);
-		}
-		log.info("retrieveNonZonalDtls - END");
 	}
 
 	/**
@@ -13879,46 +12968,6 @@ public class SpecificationBackingBean extends
 	public void cancelPopup() {
 		this.getManagedBean().setAutoUpdate(true);
 		this.getManagedBean().setSelectCtPanelItem(null);
-
-	}
-
-	private void updateFinacialSpecStatus() {
-		try {
-			List<ScQtCheckList> financialSpecCheckList = this.getManagedBean()
-					.getScQtCheckSt2financeProposalList();
-			if (null == financialSpecCheckList
-					|| financialSpecCheckList.isEmpty()) {
-				retriveFinancialSpecification();
-				financialSpecCheckList = this.getManagedBean()
-						.getScQtCheckSt2financeProposalList();
-			}
-			if (null != financialSpecCheckList
-					&& !financialSpecCheckList.isEmpty()) {
-				boolean financialSpecZonesEstimatedpriceUpdate = Boolean.FALSE;
-				this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
-				for (ScQtCheckList financialchecklist : financialSpecCheckList) {
-					if (null != financialchecklist.getPmStatus()
-							&& QTStatusConst.TS_COMPLETED
-									.equals(financialchecklist.getPmStatus()
-											.getStatusId())) {
-						financialSpecZonesEstimatedpriceUpdate = Boolean.TRUE;
-						this.getManagedBean().setZonesWarnMessageUpdate(
-								Boolean.TRUE);
-						this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
-						financialchecklist.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-
-					}
-
-				}
-				if (financialSpecZonesEstimatedpriceUpdate == true) {
-					ZonesUpdateWarningMessage(this.getManagedBean()
-							.isZonesWarnMessageUpdate());
-
-				}
-			}
-		} finally {
-
-		}
 
 	}
 
