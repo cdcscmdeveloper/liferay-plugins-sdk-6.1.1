@@ -56,7 +56,8 @@
 				</ui:fragment>
 
 		<h:panelGrid
-			rendered="#{!empty biddingBB.managedBean.selectedBidItem}" style="width : 100%">
+			rendered="#{!empty biddingBB.managedBean.selectedBidItem}"
+			style="width : 100%">
 			<h:panelGroup id="itemPriceLineChartPanel">
 				<div align="center">
 
@@ -75,9 +76,10 @@
 						legendPosition="e" style="height:300px;" />
 				</div>
 			</h:panelGroup>
-
 			<c:if test="#{biddingBB.managedBean.remainingTimeForTimers ne 0}">
-				<ui:include src="bidManagementTimers.xhtml"></ui:include>
+				<h:panelGrid style="align : left;">
+					<ui:include src="bidManagementTimers.xhtml"></ui:include>
+				</h:panelGrid>
 			</c:if>
 
 			<h:panelGroup id="itemizedSupplierPricesPanel">
