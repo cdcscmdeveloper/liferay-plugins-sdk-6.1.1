@@ -144,18 +144,15 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
     
     /** The Approved by. */
     private PmUser approvedBy;
-    
-    /** The ct reason list. */
-    private List<CtPidReason> ctReasonList;
-	
-	/** The panel reason list. */
-	private List<CtCircularPidReason> panelReasonList;
 	
     /** The ct reason. */
     private CtPidReason ctReason;
 	
 	/** The panel reason. */
 	private CtCircularPidReason panelReason;
+	
+	/** The is contract type as ministry. */
+	private boolean isContractTypeAsMinistry;
 
 	/**
 	 * Instantiates a new purchase in default managed bean.
@@ -744,34 +741,6 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the ctReasonList
-	 */
-	public List<CtPidReason> getCtReasonList() {
-		return ctReasonList;
-	}
-
-	/**
-	 * @param ctReasonList the ctReasonList to set
-	 */
-	public void setCtReasonList(List<CtPidReason> ctReasonList) {
-		this.ctReasonList = ctReasonList;
-	}
-
-	/**
-	 * @return the panelReasonList
-	 */
-	public List<CtCircularPidReason> getPanelReasonList() {
-		return panelReasonList;
-	}
-
-	/**
-	 * @param panelReasonList the panelReasonList to set
-	 */
-	public void setPanelReasonList(List<CtCircularPidReason> panelReasonList) {
-		this.panelReasonList = panelReasonList;
-	}
-
-	/**
 	 * @param approvedBy the approvedBy to set
 	 */
 	public void setApprovedBy(PmUser approvedBy) {
@@ -805,4 +774,20 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	public void setPanelReason(CtCircularPidReason panelReason) {
 		this.panelReason = panelReason;
 	}
+
+	/**
+	 * @return the isContractTypeAsMinistry
+	 */
+	public boolean isContractTypeAsMinistry() {
+		return isContractTypeAsMinistry;
+	}
+
+	/**
+	 * @param isContractTypeAsMinistry the isContractTypeAsMinistry to set
+	 */
+	public void setContractTypeAsMinistry(boolean isContractTypeAsMinistry) {
+		this.isContractTypeAsMinistry = isContractTypeAsMinistry;
+	}
+	
+	
 }

@@ -2088,4 +2088,51 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="CT_CIRCULAR_PID_REASON" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="circularPidReasonId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.ct.circular.dtl.CtCircularPidReasonDAO" />
+		<property name="searchMethod" value="retrieveCircularPidReason" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="purchaseInDefaultBackingBean.getReasonDescByReasonId(entity.pmReason.reasonId).reasonDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.purchase.in.default.just" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="reasonDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.reason.other.desc" />
+				</bean>
+
+			</list>
+		</property>
+	</bean>
+	<bean id="CT_PID_REASON" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="pidReasonId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.ct.dtl.CtPidReasonDAO" />
+		<property name="searchMethod" value="retrieveContractPidReason" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="purchaseInDefaultBackingBean.getReasonDescByReasonId(entity.pmReason.reasonId).reasonDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.purchase.in.default.just" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="reasonDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.reason.other.desc" />
+				</bean>
+
+			</list>
+		</property>
+	</bean>
 </beans>
