@@ -4619,6 +4619,9 @@ public class SmApplicationUtil {
 			smSupplierBasicInfoVO.setGstRegDate((hqGst == null || hqGst
 					.getGstEffDate() == null) ? "--" : DateUtils.dateToString(
 					"dd/MM/yyyy", hqGst.getGstEffDate()));
+			smSupplierBasicInfoVO.setGstEndDate((hqGst == null || hqGst
+					.getGstEndDate() == null) ? "--" : DateUtils.dateToString(
+					"dd/MM/yyyy", hqGst.getGstEndDate()));
 		}
 		// mof account
 		if (supplier != null && supplier.getSmMofAccounts() != null) {

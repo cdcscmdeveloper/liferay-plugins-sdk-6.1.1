@@ -3930,6 +3930,26 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Get status description by status ID
+	 * 
+	 * @param Long
+	 *            statusId
+	 * @return PmStatusDesc
+	 */
+	public static PmStatusDesc getStatusDescByStatusId(Long statusId) {
+		PmStatusDesc retVal = null;
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setStatusId(statusId);
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		StatusResDTO resDTO = SmServiceLookup.getStatusSO()
+				.retrieveStatusDescById(reqDTO);
+		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
+			retVal = resDTO.getPmStatusDesc();
+		}
+		return retVal;
+	}
+
+	/**
 	 * Generate velocity template to PDF
 	 * 
 	 * @param svTask

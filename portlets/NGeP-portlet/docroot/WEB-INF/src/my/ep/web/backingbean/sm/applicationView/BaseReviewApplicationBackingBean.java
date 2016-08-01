@@ -858,15 +858,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (StringUtils.isBlank(statusId)) {
 			getManagedBean().setCurrentStatus(StringUtils.EMPTY);
 		} else {
-			StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setStatusId(Long.parseLong(statusId));
-			reqDTO.setLanguageCode(new FacesScopes().getUserLocale()
-					.getLanguage());
-			StatusResDTO resDTO = SmServiceLookup.getStatusSO()
-					.retrieveStatusDescById(reqDTO);
-			if (resDTO != null && resDTO.getPmStatusDesc() != null) {
-				getManagedBean().setCurrentStatus(
-						resDTO.getPmStatusDesc().getStatusName());
+			PmStatusDesc sd = SmCommonUtil.getStatusDescByStatusId(Long
+					.parseLong(statusId));
+			if (sd != null) {
+				getManagedBean().setCurrentStatus(sd.getStatusName());
 			}
 		}
 	}
@@ -1853,12 +1848,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Reset search value
 	 */
 	public void resetSearch() {
-		getManagedBean().getSearchSupplier().setCompanyName("");
-		getManagedBean().getSearchSupplier().setRegNo("");
-		getManagedBean().setSearchMofNo("");
-		getManagedBean().setSearchSuppType("");
+		getManagedBean().getSearchSupplier().setCompanyName(StringUtils.EMPTY);
+		getManagedBean().getSearchSupplier().setRegNo(StringUtils.EMPTY);
+		getManagedBean().setSearchMofNo(StringUtils.EMPTY);
+		getManagedBean().setSearchSuppType(StringUtils.EMPTY);
 		getManagedBean().setSearchPmRegStatusId(null);
 		getManagedBean().setSearchPmZoneId(null);
+		getManagedBean().setSearchApplType(StringUtils.EMPTY);
+		getManagedBean().setSearchApplNo(StringUtils.EMPTY);
+		getManagedBean().setSearchApplStatusId(null);
 	}
 
 	/**
