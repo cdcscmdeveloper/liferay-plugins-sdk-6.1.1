@@ -366,7 +366,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 * @param selectedTabIndex the selected tab index
 	 */
 	public void onTabChange(int selectedTabIndex){
-		if(selectedTabIndex==1){
+		if(selectedTabIndex==2){
 			if(null==getManagedBean().getChargeLineItemRoot()){
 //				 populateChargeLineData();
 			}

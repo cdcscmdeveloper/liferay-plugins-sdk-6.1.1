@@ -19,9 +19,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
-import org.apache.log4j.Logger;
-// TODO: Auto-generated Javadoc
-
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
@@ -99,6 +96,9 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
+// TODO: Auto-generated Javadoc
 
 /**
  * Backingbean for Fulfillment document.
@@ -688,6 +688,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveStopInstruction(flReqDTO);
 			StopInstrBackingBean siBB = new StopInstrBackingBean();
 			siBB.getManagedBean().setSelectedTabIndex(0);
+			siBB.getManagedBean().setHyperLinkPage(false);
 			siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 			siBB.getManagedBean().setButtonVal(buttonVal);
 			siBB.getManagedBean().setBackToDocument(null);
