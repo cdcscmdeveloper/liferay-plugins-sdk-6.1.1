@@ -125,8 +125,9 @@ public class ScheduleBiddingBackingBean extends
 				recommendDtls.add(Long.parseLong(str));
 			}
 
-			retriveItemsToBid(qtId, recommendDtls,((PmUser) (new FacesScopes().getUserSessionBean()))
-					.getUserId());
+			retriveItemsToBid(qtId, recommendDtls,
+					((PmUser) (new FacesScopes().getUserSessionBean()))
+							.getUserId());
 			populateDurationDropDownValues();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
@@ -228,20 +229,22 @@ public class ScheduleBiddingBackingBean extends
 	 */
 	public void deleteContactDetails() {
 		try {
-			List<ScBidContactPerson> contactList = getManagedBean()
-					.getScBidContactPersonList();
+			getManagedBean().getScBidContactPersonList();
 			List<ScBidContactPerson> toDeleteContacts = new ArrayList<ScBidContactPerson>();
-			for (ScBidContactPerson contact : contactList) {
+			for (ScBidContactPerson contact : getManagedBean()
+					.getScBidContactPersonList()) {
 				if (contact.isSelected()) {
 					toDeleteContacts.add(contact);
 				}
 			}
 			if (CollectionUtils.isNotEmpty(toDeleteContacts)) {
-				contactList.removeAll(toDeleteContacts);
+				getManagedBean().getScBidContactPersonList().removeAll(
+						toDeleteContacts);
+				toDeleteContacts = null;
 			}
 			getManagedBean().setSelectedAllBidContacts(false);
 		} catch (Exception e) {
-
+			log.info(e.getLocalizedMessage());
 		}
 	}
 
@@ -302,7 +305,8 @@ public class ScheduleBiddingBackingBean extends
 	 * @param recommandIds
 	 */
 
-	public void retriveItemsToBid(Long qtId, List<Long> recommandIds,Long userId) {
+	public void retriveItemsToBid(Long qtId, List<Long> recommandIds,
+			Long userId) {
 
 		debugLogger("retriveItemsToBid");
 		IScheduleBiddingSO scheduleBiddingSO = null;
