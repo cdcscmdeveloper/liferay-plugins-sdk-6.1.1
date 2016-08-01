@@ -1874,6 +1874,40 @@ public class PmCommonUtil {
 		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			for (PmOrgProfile orgProfile : list) {
 			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}finally{
+			orgProfileSO = null;
+		}
+	    return items;
+	}
+	
+	public static SelectItem[] getPegwaiPengawalDropdown(Long pegwaiPengawalId) {		
+		SelectItem[] items = null;
+		IOrgProfileSO orgProfileSO = null;
+		
+		try {
+		    int i = 1;
+		    List<Object[]> list = new ArrayList<Object[]>();
+		    if(pegwaiPengawalId != null){
+		    	orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+			    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(pegwaiPengawalId);
+				reqDTO.setOrgCode(OrganizationType.PENGAWAI_PENGAWAL.value());
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				list = resDTO.getOrgProfileDDList();
+				items = new SelectItem[list.size() + 1];
+		    }else{
+		    	items = new SelectItem[1];
+		    }		   
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			
+		    for(Object[] object : list){
+			  items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

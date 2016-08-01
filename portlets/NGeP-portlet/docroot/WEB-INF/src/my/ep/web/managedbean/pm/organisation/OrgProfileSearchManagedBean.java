@@ -1,17 +1,20 @@
 package my.ep.web.managedbean.pm.organisation;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.managedbean.report.ReportMangedBean;
 
 @ManagedBean(name = "orgProfileSearchMB")
 @SessionScoped
 public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	private Long ministryProfileId;
+	private Long pegaiPengawaProfileId;
 	private Long jabatanProfileId;
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
@@ -21,6 +24,10 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	private PmOrgProfile currentActiveOrg;
 	private boolean disabledJabatan;
 	private boolean disabledMinistry;
+	private boolean disabledPegaiPengawa;	
+	@ManagedProperty(value = "#{reportManagedBean}")
+	private ReportMangedBean reportManagedBean;
+	
 	
 	public OrgProfileSearchManagedBean() {
 
@@ -151,6 +158,19 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	public void setDisabledJabatan(boolean disabledJabatan) {
 		this.disabledJabatan = disabledJabatan;
 	}
+	/**
+	 * @return the pegaiPengawaProfileId
+	 */
+	public Long getPegaiPengawaProfileId() {
+		return pegaiPengawaProfileId;
+	}
+
+	/**
+	 * @param pegaiPengawaProfileId the pegaiPengawaProfileId to set
+	 */
+	public void setPegaiPengawaProfileId(Long pegaiPengawaProfileId) {
+		this.pegaiPengawaProfileId = pegaiPengawaProfileId;
+	}
 
 	/**
 	 * @return the disabledMinistry
@@ -159,10 +179,41 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 		return disabledMinistry;
 	}
 
+
 	/**
 	 * @param disabledMinistry the disabledMinistry to set
 	 */
 	public void setDisabledMinistry(boolean disabledMinistry) {
 		this.disabledMinistry = disabledMinistry;
 	}
+
+	/**
+	 * @return the disabledPegaiPengawa
+	 */
+	public boolean isDisabledPegaiPengawa() {
+		return disabledPegaiPengawa;
+	}
+
+	/**
+	 * @param disabledPegaiPengawa the disabledPegaiPengawa to set
+	 */
+	public void setDisabledPegaiPengawa(boolean disabledPegaiPengawa) {
+		this.disabledPegaiPengawa = disabledPegaiPengawa;
+	}
+
+	/**
+	 * @return the reportManagedBean
+	 */
+	public ReportMangedBean getReportManagedBean() {
+		return reportManagedBean;
+	}
+
+	/**
+	 * @param reportManagedBean the reportManagedBean to set
+	 */
+	public void setReportManagedBean(ReportMangedBean reportManagedBean) {
+		this.reportManagedBean = reportManagedBean;
+	}
+
+	
 }

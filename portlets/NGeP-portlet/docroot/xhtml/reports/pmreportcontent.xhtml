@@ -237,37 +237,6 @@
 							</p:inputText>
 						</c:if>
 
-
-						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmIdentificationNoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.identificationNo']}" />
-							<ac:lov id="pmIdntificationNo" style="width:265px;"
-								lovId="PM_USER_ID_REPORT" size="38" update="@form"
-								headerText="#{lbl['lbl.rpt.identificationNo']}" readonly="true"
-								value="#{reportBackingBean.managedBean.selectedPmUser.identificationNo}"
-								postUpdateListener="#{reportBackingBean.onChangePmListOfProfileFields()}"
-								saveObject="reportBackingBean.managedBean.selectedPmUser" />
-						</c:if>
-						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmUserNameView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.username']}" />
-							<p:inputText maxlength="100" readonly="true"
-								value="#{reportBackingBean.pmUserName}" style="width:290px;">
-								<p:ajax  process="@this" partialSubmit="true"  update="@form" />
-							</p:inputText>
-						</c:if>
-
-						<c:if
-							test="#{pmReportBackingBean.managedBean.rptGenBean.pmRoleCodeView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.roleCode']}" />
-							<ac:lov id="pmOrgCode" style="width:265px;"
-								lovId="PM_ROLE_DESC_REPORT" size="38" update="@form"
-								headerText="#{lbl['lbl.rpt.roleCode']}" readonly="true"
-								value="#{reportBackingBean.managedBean.selectedPmRoleDesc.pmRole.roleCode}"
-								postUpdateListener="#{reportBackingBean.onRoleCodeChangeForLOV()}"
-								saveObject="reportBackingBean.managedBean.selectedPmRoleDesc" />
-						</c:if>	
-
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmStatusView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.status']}" />
