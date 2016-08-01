@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.organisation;
 
 import java.util.ArrayList;
@@ -23,6 +26,13 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+/**
+ * Managed Bean for Organization
+ * 
+ * @author venugopal
+ * @since 30/07/2014
+ * 
+ */
 @ManagedBean(name = "organisationMB")
 @SessionScoped
 public class OrganisationManagedBean extends BaseManagedBean{
