@@ -4719,7 +4719,7 @@ public class SmApplicationUtil {
 		SmPersonnel smPersonnel = getAdminPersonnel(smAppl.getSmPersonnels());
 		if (smPersonnel != null) {
 			smSupplierBasicInfoVO.setAdminEmail(smPersonnel.getEmail());
-			smSupplierBasicInfoVO.setAdminPhoneNo(smPersonnel.getMobileNo());
+			smSupplierBasicInfoVO.setAdminPhoneNo(smPersonnel.getMobileFull());
 			smSupplierBasicInfoVO.setAdminName(smPersonnel.getName());
 		}
 
