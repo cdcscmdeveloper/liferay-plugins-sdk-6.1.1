@@ -71,13 +71,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 								          </f:facet>
 								         
 								          <c:if test="#{!panelBackingBean.managedBean.viewContract}">
-										     <div  align="left">
-										       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="15" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
-													value="#{panelItemsVar.ctPanelItemGroup.groupName}" conditionField="recordStatus^1" 
-													saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].ctPanelItemGroup">
-										       </ac:lov>
-										       </div>
-										  </c:if>
+								          	<p:inputTextarea id="panelItemGroupTxtAreaId" rows="2" cols="15" readonly="true" autoResize="false" style="resize:none;" 
+						                          value="#{panelItemsVar.ctPanelItemGroup.groupName}" />					
+					                             <ac:lov id="itemGroupLovId" uiMode="link" 
+					                            	lovId="CT_PANEL_ITEM_GROUP" headerText="#{lbl['lbl.ct.item.group']}"
+						                            saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].ctPanelItemGroup"
+						                            value="#{panelBackingBean.managedBean.circularVer.ctPanelItems[index].ctPanelItemGroup.groupName}"
+						                             size="15" update=":form:panelItemDt" readonly="true" conditionField="recordStatus^1">
+				                         	</ac:lov>     
+								      	  </c:if>
 										   <c:if test="#{panelBackingBean.managedBean.viewContract}">
 								                   <h:outputText value="#{panelItemsVar.ctPanelItemGroup.groupName}" style="float:left; text-align:left;"/>
 								           </c:if>
@@ -90,6 +92,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 							             <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 						                    <p:selectOneMenu value="#{panelItemsVar.itemType.parameterId}" style="width:110px;">
 									           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}"/>
+									           <p:ajax  process="@this"/>
 									         </p:selectOneMenu>
 									    </c:if>
 									     <c:if test="#{panelBackingBean.managedBean.viewContract}">
@@ -105,7 +108,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			                       
 			               
 			                           <c:if test="#{!panelBackingBean.managedBean.viewContract}">
-                                           <p:inputTextarea value="#{panelItemsVar.itemName}"  maxlength="100" rows="2" style="width:80px;" autoResize="false"/>
+                                           <p:inputTextarea value="#{panelItemsVar.itemName}"  maxlength="100" rows="2" style="width:80px;" autoResize="false">
+                                               <p:ajax  process="@this"/>
+                                           </p:inputTextarea>
                                   	   </c:if>
 					                   <c:if test="#{panelBackingBean.managedBean.viewContract}">
 			                                 <h:outputText value="#{panelItemsVar.itemName}" style="float:left; text-align:left;"/>
@@ -122,13 +127,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				  	                    <f:facet name="header" >
 						                    <h:outputText value="#{lbl['lbl.ct.uom']}"  styleClass="required"  />
 	                            	    </f:facet>
-	               	 
-	               	                    <c:if test="#{!panelBackingBean.managedBean.viewContract}">
-			                                  <ac:lov id="uomLovId" lovId="PM_UOM" size="7" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
-				                                   value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1" 
-				                                   saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
-			                                 </ac:lov>
-			                            </c:if>
+	                            	        <c:if test="#{!panelBackingBean.managedBean.viewContract}">
+			                            	    <p:inputTextarea id="panelItemUomTxtAreaId" rows="2"  cols="7" readonly="true" 
+			                            	          autoResize="false" style="resize:none;"  value="#{panelItemsVar.pmUom.uomName}" />					
+							                             <ac:lov id="uomLovId" uiMode="link" 
+							                            	lovId="PM_UOM" headerText="#{lbl['lbl.ct.uom']}"
+								                            saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom"
+								                            value="#{panelBackingBean.managedBean.circularVer.ctPanelItems[index].pmUom.uomName}"
+								                             size="7" update=":form:panelItemDt" readonly="true" conditionField="recordStatus^1">
+						                         	</ac:lov> 
+	               	                       </c:if>
 					                    <c:if test="#{panelBackingBean.managedBean.viewContract}">
 			                                   <h:outputText value="#{panelItemsVar.pmUom.uomName}" style="float:left; text-align:left;"/>
 			                            </c:if>
@@ -140,7 +148,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 										       		maxlength="#{panelItemsVar.pmUom.decimalScale == 0 ? 13 : 14}">
 										           	<f:converter converterId="dynamicNumberConverter" />
 													<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItemsVar.pmUom.uomCode)}" />
-													<p:ajax event="blur" update="@this" />
+													<p:ajax event="blur" update="@this" process="@this" />
 										       </p:inputText>
 								        </c:if>
 										   <c:if test="#{panelBackingBean.managedBean.viewContract}">
@@ -156,6 +164,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 								  
 								       <p:inputText value="#{panelItemsVar.maxProcureAmt}" style="width:65px;text-align:right;" label="#{lbl['lbl.ct.purchase.limit']}">
 								          <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								          <p:ajax process="@this"></p:ajax>
 								       </p:inputText>
 								        </c:if>
 										   <c:if test="#{panelBackingBean.managedBean.viewContract}">
