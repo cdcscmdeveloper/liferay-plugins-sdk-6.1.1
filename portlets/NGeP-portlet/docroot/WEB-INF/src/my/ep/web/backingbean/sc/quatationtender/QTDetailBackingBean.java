@@ -4165,7 +4165,21 @@ public class QTDetailBackingBean extends
 
 				ScQtApproval approval = this.getManagedBean()
 						.getSelectedApprovalTabBean().getScQtApproval();
-				finalizeRemarks(approval.getScQtApprovalRemarks());
+//				finalizeRemarks(approval.getScQtApprovalRemarks());
+				List<ScQtApprovalRemark> remarks = approval.getScQtApprovalRemarks();
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						String userRemark = remarks.get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { 
+										ResourceBundleUtils.getMessage(
+											"lbl.sc.remark", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()) });
+						}
+					}
+				}
 
 				List<ScQtApproverSettings> approverSettings = approval
 						.getApproverSettings();
