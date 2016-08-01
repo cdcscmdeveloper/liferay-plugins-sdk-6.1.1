@@ -35,7 +35,6 @@ import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -60,8 +59,6 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -1348,7 +1345,7 @@ public class NoticeBoardBackingBean extends
 				} else {
 					getManagedBean().setAmendmentClosingDateMap(null);
 				}
-
+				
 				return resDTO.getQtResultBean();
 			} finally {
 				qtNoticeBoardSO = null;
@@ -2200,10 +2197,17 @@ public class NoticeBoardBackingBean extends
 				// Get MOF number of sign in supplier & set into mofNo property
 				// to pre populate in check supplier qualification criteria  screen.
 				if (this.getManagedBean().getSupplierMofNo() == null) {
-					SmMofAccount mofAccount = retrieveMofAccount();
-					this.getManagedBean().setSupplierMofNo(mofAccount != null ? 
-							mofAccount.getMofNo() : null);
-									
+					final Long supplierId = getSupplierId();
+					if (null != supplierId) {
+						SmMofAccount mofAccount = retrieveMofAccount(supplierId);
+						if (mofAccount != null) {
+							this.getManagedBean().setSupplierMofNo(mofAccount.getMofNo());
+						} else {
+							isUser = false;// no need to display the check qualification icon
+						}
+
+					}
+
 				}
 			}
 
@@ -2359,38 +2363,21 @@ public class NoticeBoardBackingBean extends
 	 * 
 	 * @return mofAccount
 	 */
-	private SmMofAccount retrieveMofAccount() {
+	private SmMofAccount retrieveMofAccount(Long supplierId) {
 		
 		SmMofAccount mofAccount = null;
-		final Long supplierId = getSupplierId();
-		if (null != supplierId) {
-			MofAccountResDTO resDTO = getIMofAccount(supplierId);
-			if (resDTO.isSuccessful() && resDTO.getMofAccount() != null) {
-				mofAccount  = resDTO.getMofAccount();
+			SupplierSearchResDTO supplierResDTO = getSupplierInfo(supplierId);
+			SmSupplier supplier = supplierResDTO.getSmSupplier();
+			if (supplier != null) {
+				List<SmMofAccount> mofAccounts = supplier.getSmMofAccounts();
+				if (CollectionUtils.isNotEmpty(mofAccounts)) {
+					mofAccount = mofAccounts.get(0);
+				}
 			}
-		}
 		
 		return mofAccount;
 	}
-
-	private MofAccountResDTO getIMofAccount(Long supplierId) {
-		
-		IMofAccountSO mofAccountSO = null;
-		MofAccountResDTO resDTO = null;
-		try {
-			mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							IMofAccountSO.class);
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setSupplierId(supplierId);
-			resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
-
-		} finally {
-			mofAccountSO = null;
-		}
-		return resDTO;
-	}
-
+	
 	private Long getSupplierId() {
 
 		Long supplierId = null;
