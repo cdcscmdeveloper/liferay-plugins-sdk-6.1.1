@@ -20,9 +20,13 @@
 	background-color: none !important;
 	box-shadow: none !important;
 }
+#bsvDtls:hover {
+	background-color: none !important;
+	box-shadow: none !important;
+}
 </style>
-		<ui:fragment rendered="#{bsvDetails.scQtBsv.sameBsv}">
-
+		
+          <c:if test="#{bsvDetails.scQtBsv.sameBsv}">
 			<p:panel id="bsvId" header="#{lbl['lbl.sc.notice.board.briefing.and.sv.dtls']}" toggleable="true">
 
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
@@ -70,9 +74,9 @@
 				</p:dataTable>
 
 			</p:panel>
-		</ui:fragment>
-		<ui:fragment rendered="#{!bsvDetails.scQtBsv.sameBsv}">
-
+		</c:if>
+	
+		<c:if test="#{!bsvDetails.scQtBsv.sameBsv}">
 			<p:panel id="briefigDtlId" header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true">
 
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
@@ -170,7 +174,7 @@
 				</p:dataTable>
 
 			</p:panel>
-		</ui:fragment>
+		</c:if>
 		<p:spacer height="5px"></p:spacer>
 		<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
 			width="100%">
