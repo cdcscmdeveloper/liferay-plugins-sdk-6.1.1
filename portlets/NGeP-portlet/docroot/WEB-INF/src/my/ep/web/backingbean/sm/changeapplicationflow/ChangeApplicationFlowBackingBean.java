@@ -20,7 +20,6 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.managedbean.sm.changeapplicationflow.ChangeApplicationFlowManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
