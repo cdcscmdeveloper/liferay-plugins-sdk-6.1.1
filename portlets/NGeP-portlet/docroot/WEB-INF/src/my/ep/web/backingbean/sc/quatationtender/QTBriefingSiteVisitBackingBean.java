@@ -970,11 +970,6 @@ public class QTBriefingSiteVisitBackingBean extends
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_MAX_NO_OF_ATTENDANCE, 
 				oldBsvDtl.getMaxNoOfAttendance(), newBsvDtl.getMaxNoOfAttendance());
-		
-		// remove amendment bean if no changes available.
-		if (amendMentBean.getValueMap() == null || amendMentBean.getValueMap().size() == 0) {
-			amendMentBean = null;
-		}
 
 		this.getManagedBean().setAmendMentBean(amendMentBean);
 		this.getManagedBean().setTempScQtBsvDtl(null);
@@ -1045,7 +1040,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		} 
 		
 		scQt.setProposalStartDate(latestBsvDate);
-		
+		this.getManagedBean().setAmendMentBean(new QtAmendMentBean());
 		updatePublishClosingDate(scQt);
 	}
 	
