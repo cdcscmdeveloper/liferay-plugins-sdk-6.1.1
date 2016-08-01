@@ -1,13 +1,15 @@
-/**
- * 
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.bean.pm;
 
 import java.io.Serializable;
 
 /**
+ * Search Bean for User Group
+ * 
  * @author DK
- *
+ * @since 15/10/2014
  */
 public class UserGroupSearchBean implements Serializable {
 	private static final long serialVersionUID = 1L;

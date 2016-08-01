@@ -1,7 +1,19 @@
+/*
+ * Copyright © 2015 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.bean.pm;
 
-public class VotSearchBean {
+import java.io.Serializable;
+/**
+ * Search Bean for VOT
+ * 
+ * @author venugopal
+ * @since 17/4/2015
+ *
+ */
+public class VotSearchBean implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	/**
 	 * @param args
 	 */

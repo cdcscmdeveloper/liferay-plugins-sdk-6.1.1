@@ -1,18 +1,26 @@
-/**
- * 
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
+
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 
 /**
+ * Search Bean for Organisation
+ * 
  * @author venugopal
+ * @since 6/11/2014
  * 
  */
-public class OrganisationSearchBean {
+public class OrganisationSearchBean implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String orgTypeCode;
 	private String orgCode;
 	private String orgName;

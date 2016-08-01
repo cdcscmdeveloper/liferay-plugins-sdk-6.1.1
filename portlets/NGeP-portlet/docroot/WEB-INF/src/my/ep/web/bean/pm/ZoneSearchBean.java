@@ -1,8 +1,23 @@
-
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.bean.pm;
 
-public class ZoneSearchBean {
+import java.io.Serializable;
 
+/**
+ * Search Bean for Zone
+ * 
+ * @author venugopal
+ * @since 6/11/2014
+ *
+ */
+public class ZoneSearchBean implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * @param args
 	 */

@@ -4,16 +4,25 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright © 2015 Archisoft. All rights reserved.
  * 
  ****************************************************
 */
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
+
 /**
- * The Class AccountingOfficeSearchBean.
+ * Search Bean for Accounting Office
+ * 
+ * @author venugopal
+ * @since 17/4/2015
  */
-public class AccountingOfficeSearchBean {
+public class AccountingOfficeSearchBean implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String officeCode;
 	private String officeName;
 	private String status;

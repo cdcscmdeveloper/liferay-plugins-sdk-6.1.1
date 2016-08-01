@@ -1,13 +1,28 @@
-/**
- * 
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
+
 /**
- * @author venugopal
+ * Search Bean for Financial Organisation
  * 
+ * @author venugopal
+ * @since 6/11/2014
  */
-public class FinancialOrgSearchBean {
+public class FinancialOrgSearchBean implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String orgName;
+	private String regNumber;
+	private String orgStatus;
+	private String serviceType;
+	
+
 	/**
 	 * @return the orgName
 	 */
@@ -67,10 +82,5 @@ public class FinancialOrgSearchBean {
 	public void setServiceType(String serviceType) {
 		this.serviceType = serviceType;
 	}
-
-	private String orgName;
-	private String regNumber;
-	private String orgStatus;
-	private String serviceType;
 
 }

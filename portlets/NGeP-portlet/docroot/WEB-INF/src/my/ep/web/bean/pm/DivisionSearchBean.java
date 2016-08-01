@@ -10,15 +10,22 @@
 */
 package my.ep.web.bean.pm;
 
-// TODO: Auto-generated Javadoc
+import java.io.Serializable;
+
+
 /**
  * The Class DivisionSearchBean.
  *    @author Nagasiva
  *    @since 13.06.2016
  */
-public class DivisionSearchBean {
+public class DivisionSearchBean implements Serializable {
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The state code. */
 	private String stateCode;
 	

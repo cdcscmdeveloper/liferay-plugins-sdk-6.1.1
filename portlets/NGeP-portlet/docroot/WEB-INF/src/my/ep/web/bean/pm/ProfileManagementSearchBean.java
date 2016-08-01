@@ -1,9 +1,25 @@
+/*
+ * Copyright © 2016 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.bean.pm;
+
+import java.io.Serializable;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 
-public class ProfileManagementSearchBean {
+/**
+ * Search Bean for Profile Management
+ * 
+ * @author Zeinab
+ * @since 25/2/2016
+ *
+ */
+public class ProfileManagementSearchBean implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long selectedOrgType;
 	private PmOrgProfile selectedOrgProfile;
 	private Boolean companyProfile;
