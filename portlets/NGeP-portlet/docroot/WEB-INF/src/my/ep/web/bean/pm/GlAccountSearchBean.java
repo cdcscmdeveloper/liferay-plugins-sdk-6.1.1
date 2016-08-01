@@ -1,7 +1,22 @@
+/*
+ * Copyright © 2015 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.bean.pm;
 
-public class GlAccountSearchBean {
+import java.io.Serializable;
 
+/**
+ * Search Bean for Gl Account
+ * 
+ * @author venugopal
+ * @since 17/4/2015
+ */
+public class GlAccountSearchBean implements Serializable  {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2975003646974502819L;
 	private String accountCode;
 	private String accountName;
 	private String ptjCode;

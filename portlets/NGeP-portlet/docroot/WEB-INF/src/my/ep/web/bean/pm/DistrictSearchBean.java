@@ -10,9 +10,11 @@
 */
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
+
 import my.ep.persistence.entity.pm.common.PmState;
 
-// TODO: Auto-generated Javadoc
+
 /*
 * The Class DistrictSearchBean.
 *    @author Nagasiva
@@ -21,9 +23,14 @@ import my.ep.persistence.entity.pm.common.PmState;
 /**
  * The Class DistrictSearchBean.
  */
-public class DistrictSearchBean {
+public class DistrictSearchBean implements Serializable {
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The state code. */
 	private String stateCode;
 	

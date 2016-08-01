@@ -1,6 +1,23 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.bean.pm;
 
-public class PreferenceList {
+import java.io.Serializable;
+
+/**
+ * Preference List
+ * 
+ * @author RAIN POH
+ * @since 6/8/2014
+ *
+ */
+public class PreferenceList implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	// user preferences datatables
 	private String noticeMode;

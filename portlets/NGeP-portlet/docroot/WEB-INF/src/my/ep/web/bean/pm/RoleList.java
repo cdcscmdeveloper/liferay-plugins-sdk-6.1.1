@@ -1,6 +1,23 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.bean.pm;
 
-public class RoleList {
+import java.io.Serializable;
+
+/**
+ * Role List
+ * 
+ * @author RAIN POH
+ * @since 6/8/2014
+ *
+ */
+public class RoleList implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private String roleName;
 	

@@ -1,7 +1,22 @@
+/*
+ * Copyright © 2015 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.bean.pm;
 
-public class ControllerOfficerSearchBean {
+import java.io.Serializable;
 
+/**
+ * Search Bean for Financial Organisation
+ * 
+ * @author venugopal
+ * @since 17/3/2015
+ */
+public class ControllerOfficerSearchBean implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * @param args
 	 */

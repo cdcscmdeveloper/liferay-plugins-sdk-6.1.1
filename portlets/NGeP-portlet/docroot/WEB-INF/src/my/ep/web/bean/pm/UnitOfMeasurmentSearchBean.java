@@ -1,14 +1,23 @@
+/*
+ * Copyright © 2015 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
+
 /**
- * Search Bean for Rejection Reason
+ * Search Bean for Unit of Measurement
  * 
  * @author Zeinab
  * @since 8/11/2015
  *
  */
-public class UnitOfMeasurmentSearchBean {
+public class UnitOfMeasurmentSearchBean implements Serializable  {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String UOMCode;
 	private String UOMName;
 	public String getUOMCode() {

@@ -3,15 +3,21 @@
  */
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
+
 import my.ep.persistence.entity.pm.common.PmParameter;
 /**
  * Search Bean for Rejection Reason
  * 
  * @author RAIN POH
- * @since 8/7/2013
+ * @since 17/7/2014
  *
  */
-public class ReasonSearchBean {
+public class ReasonSearchBean implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private PmParameter reasonCategoryParam;
 	private Long reasonCategory;
 	private String reasonCode;

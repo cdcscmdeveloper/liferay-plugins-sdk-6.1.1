@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2013 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.bean.pm;
 
 import java.io.Serializable;
