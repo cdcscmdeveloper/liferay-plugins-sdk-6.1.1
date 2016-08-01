@@ -295,6 +295,7 @@
 		<portlet id="viewApplicationHistory"></portlet>
 		<portlet id="gstHistory"></portlet>
 		<portlet id="supplierDataMaintenance"></portlet>
+		<portlet id="changeApplicationFlow"></portlet>
 		<portlet id="resendExpiredInquirySdo"></portlet>
 		<portlet id="SoftCertReg"></portlet>
 		<portlet id="MySoftCert"></portlet>

@@ -17,6 +17,7 @@ public class SmSupplierBasicInfoVO {
 	private String postCodeStateCityCountry;
 	private String gstNum;
 	private String gstRegDate;
+	private String gstEndDate;
 	
 	public String getMofNo() {
 		return mofNo;
@@ -101,5 +102,11 @@ public class SmSupplierBasicInfoVO {
 	}
 	public void setGstRegDate(String gstRegDate) {
 		this.gstRegDate = gstRegDate;
+	}
+	public String getGstEndDate() {
+		return gstEndDate;
+	}
+	public void setGstEndDate(String gstEndDate) {
+		this.gstEndDate = gstEndDate;
 	}
 }
