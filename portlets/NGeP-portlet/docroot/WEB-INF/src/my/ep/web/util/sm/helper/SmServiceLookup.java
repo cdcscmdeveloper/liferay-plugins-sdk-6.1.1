@@ -46,6 +46,7 @@ import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
+import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -544,5 +545,16 @@ public class SmServiceLookup {
 	public static ICertBodySO getCertBodySO() {
 		return (ICertBodySO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
+	}
+
+	/**
+	 * Get ITrackingDiarySO
+	 * 
+	 * @return ITrackingDiarySO
+	 */
+	public static ITrackingDiarySO getTrackingDiarySO() {
+		return (ITrackingDiarySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITrackingDiarySO.class);
 	}
 }
