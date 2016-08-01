@@ -46,6 +46,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	private String sortField;
 	private SortOrder sortOrder;
 	private ISearchBean<T> searchBean;
+	private boolean pageSameLoad = false;
 
 	/**
 	 * PagingDataModel Contructor
@@ -134,7 +135,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 		int pageNo = (int)(first / pageSize) + 1;
 		ISearchResultBean<T> resultBean = null;
 
-		if (pageNo != this.pageNo) {
+		if (pageNo != this.pageNo || pageSameLoad) {
 			// retrieve new list from DB.
 			
 			this.pageNo = pageNo;
@@ -150,7 +151,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 
 				resultBean = new SearchResultBean<T>();
 			}
-
+			pageSameLoad = false;
 			return updatePagingResults(resultBean);	
 		}else if(sortOrder != this.sortOrder){
 
@@ -197,6 +198,15 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	public final void reloadData() {
 		debugLogger("reloadData");
 
+		reloadDataWithoutReset();
+
+		resetValue();
+	}
+	
+	
+	public final void reloadDataWithoutReset() {
+		debugLogger("reloadDataWithoutReset");
+
 		UIComponent component = new FacesScopes().findComponentById(
 				FacesContext.getCurrentInstance().getViewRoot(), 
 				componentId);
@@ -207,9 +217,11 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 			dataTable.reset();
 			//dataTable.loadLazyData();
 		}
-
-		resetValue();
+		
+		pageSameLoad = true;
+	
 	}
+	
 
 	/*
 	 * (non-Javadoc)
