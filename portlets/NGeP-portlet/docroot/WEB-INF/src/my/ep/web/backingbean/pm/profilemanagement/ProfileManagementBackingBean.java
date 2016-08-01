@@ -2621,6 +2621,7 @@ public class ProfileManagementBackingBean extends
 				roleReqDTO.setOrgTypeId(currentOrgTypeId);
 				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null 
 						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
+				roleReqDTO.setAssignRole(true);
 				// roleReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				logger.info("..getFacesScopes().getUserSessionBean().getUserId()="
 								+ getFacesScopes().getUserSessionBean()
