@@ -1,17 +1,21 @@
 package my.ep.web.backingbean.bpm.tasklist;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.pm.ParameterConst;
@@ -22,6 +26,8 @@ import my.ep.constants.PPProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -46,6 +52,8 @@ public class BPMTaskListBackingBean extends
 BaseBackingBean<BPMTaskListManagedBean> {
 
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
+	
+	private String language = new FacesScopes().getUserLocale().getLanguage();
 
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 
@@ -944,6 +952,66 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 		System.out.println("sb.toString()"+sb.toString());
 		return sb.toString();
+	}
+	
+	public void findDocStatus() {
+		if (this.getManagedBean().getDocType() != null) {
+				log.info("*********findDocStatus*********");
+				log.info("For Doc Type Id:" + this.getManagedBean().getDocType());
+
+				IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setDocType(this.getManagedBean().getDocType());
+				reqDTO.setLanguageCode(language);
+
+				StatusResDTO resDTO = statusSO.retrieveStatusDescListByDocType(reqDTO);
+
+				List<SelectItem> docStatusList = new ArrayList<SelectItem>();
+				for (PmStatusDesc docStatus : resDTO.getStatusDescList()) {
+					SelectItem si = new SelectItem();
+					si.setLabel(docStatus.getStatusName());
+					si.setValue(docStatus.getPmStatus().getStatusId());
+					log.info("statusId" + si.getValue());
+					log.info("statusName" + si.getLabel());
+					docStatusList.add(si);
+				}
+				this.getManagedBean().setDocStatusList(docStatusList);
+		} else {
+			log.info("*********doc type empty*********");
+			this.getManagedBean().setDocType("");
+			this.getManagedBean().setDocStatusList(null);
+		}
+	}
+	
+	public void findDocStatusGroup() {
+		if (this.getManagedBean().getDocTypeGroup() != null) {
+				log.info("*********findDocStatusGroup*********");
+				log.info("For Doc Type Id:" + this.getManagedBean().getDocTypeGroup());
+
+				IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setDocType(this.getManagedBean().getDocTypeGroup());
+				reqDTO.setLanguageCode(language);
+
+				StatusResDTO resDTO = statusSO.retrieveStatusDescListByDocType(reqDTO);
+
+				List<SelectItem> docStatusList = new ArrayList<SelectItem>();
+				for (PmStatusDesc docStatus : resDTO.getStatusDescList()) {
+					SelectItem si = new SelectItem();
+					si.setLabel(docStatus.getStatusName());
+					si.setValue(docStatus.getPmStatus().getStatusId());
+					log.info("statusId" + si.getValue());
+					log.info("statusName" + si.getLabel());
+					docStatusList.add(si);
+				}
+				this.getManagedBean().setDocStatusListGroup(docStatusList);
+		} else {
+			log.info("*********doc type empty*********");
+			this.getManagedBean().setDocTypeGroup("");
+			this.getManagedBean().setDocStatusListGroup(null);
+		}
 	}
 
 
