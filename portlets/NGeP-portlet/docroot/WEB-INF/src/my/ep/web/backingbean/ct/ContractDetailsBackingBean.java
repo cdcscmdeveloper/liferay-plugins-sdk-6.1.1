@@ -179,7 +179,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				&& StringUtils.isBlank(getManagedBean().getSearchLoaPhysicalNo()) 
 				&& getManagedBean().getSearchStatus() == 0 
 				&& getManagedBean().getSearchTerminationType() == null
-				&& getManagedBean().getSearchContractStatus() == 0
+				&& (getManagedBean().getSearchContractStatus() == 0 && !isSupplierRole())
 				&& getManagedBean().getSearchMinistryProfile() == null
 				&& getManagedBean().getSearchPtjGroupProfile() == null
 				&& getManagedBean().getSearchPtjProfile() == null) {
@@ -1763,8 +1763,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		try {
 			items = new SelectItem[5];
 			int i = 0;
-			items[i++] = new SelectItem(0, ResourceBundleUtils.getMessage("lbl.txt.select", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			if (isSupplierRole()) {
+				items[i++] = new SelectItem(0, ResourceBundleUtils.getMessage("lbl.bpm.all", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			} else {
+				items[i++] = new SelectItem(0, ResourceBundleUtils.getMessage("lbl.txt.select", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			}
 			items[i++] = new SelectItem(ContractConst.CONTRACT_STATUS_EFFECTIVE,  
 					ResourceBundleUtils.getMessage("lbl.ct.effective", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			items[i++] = new SelectItem(ContractConst.CONTRACT_STATUS_INACTIVE,  
