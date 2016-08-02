@@ -39,7 +39,7 @@
 			<p:message id="specificationMsg" for="specification" display="icon" />
 		</c:if>
 		<c:if test="#{!newable}">
-			<h:outputText value="#{question.clSpecDetail}" escape="false" rendered="#{!isQuestionTypeItem or !isSpecificationReq}" 
+			<h:outputText value="#{templateSpecBackingBean.replaceWithBR(question.clSpecDetail)}" escape="false" rendered="#{!isQuestionTypeItem or !isSpecificationReq}" 
 			style="white-space: normal;word-wrap: break-word;" />
 		</c:if>
 	</p:column>
