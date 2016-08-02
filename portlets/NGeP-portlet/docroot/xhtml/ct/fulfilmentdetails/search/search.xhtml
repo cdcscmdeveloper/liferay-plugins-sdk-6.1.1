@@ -87,9 +87,9 @@
 		   	    style="width:200px; margin-bottom:5px" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
 		   		<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
 		   	</p:selectOneMenu>
-		  	<p:outputLabel for="contractStatus" value="#{lbl['lbl.ct.contract.status']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}" />
+		  	<p:outputLabel for="contractStatus" value="#{lbl['lbl.ct.contract.status']}" />
 		   	<p:selectOneMenu id="contractStatus" value="#{contractDetailsBackingBean.managedBean.searchContractStatus}"	
-		   	   style="width:200px;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
+		   	   style="width:200px;">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchContractStatusDropdown()}" />
 		   	</p:selectOneMenu>
 		   	<p:outputLabel for="status" value="#{lbl['lbl.ct.doc.contract.status']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
