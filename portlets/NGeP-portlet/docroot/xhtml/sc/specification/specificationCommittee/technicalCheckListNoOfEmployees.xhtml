@@ -162,7 +162,7 @@
 										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 										label="#{lbl['lbl.sc.spec.max.score']}"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
-										maxlength="18">
+										maxlength="14">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 											<p:ajax  event="change" process="@this" partialSubmit="true" update="technicalTotalEmployees"></p:ajax>
 									</p:inputText> <p:message id="techTotalEmployee" for="totalEmployeesScore"

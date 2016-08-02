@@ -208,7 +208,7 @@
 								<td><p:inputText id="finMaxScore" required="true"
 										style="text-align:right;"
 										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
-										maxlength="18" label="#{lbl['lbl.sc.spec.max.score']}"
+										maxlength="14" label="#{lbl['lbl.sc.spec.max.score']}"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 										<p:ajax  event="change" process="@this" partialSubmit="true" update="financialGovernmentContracts"></p:ajax>

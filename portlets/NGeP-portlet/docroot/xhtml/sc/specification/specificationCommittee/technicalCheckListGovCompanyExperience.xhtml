@@ -26,7 +26,7 @@
 						value="#{lbl['lbl.btn.back']}" immediate="true"
 						style="float:left;"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.print']}" process="@all"  type="button">
+						value="#{lbl['lbl.btn.print']}" process="@all" type="button">
 						<p:printer target="techCheckListGovtCompExp" />
 					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
@@ -62,14 +62,15 @@
 								required="true" style="text-align:right;"
 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"
 								maxlength="4">
-								<p:ajax event="blur" process="@this" partialSubmit="true" update="compExpFedGovtId"
+								<p:ajax event="blur" process="@this" partialSubmit="true"
+									update="compExpFedGovtId"
 									listener="#{specificationBackingBean.compareChecklistValueCurrentYear(specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue)}"></p:ajax>
 							</p:inputText> <p:message id="techGovCompanyId" for="techGovCompany"
 								display="icon"></p:message></td>
 					</tr>
 				</table>
 				<p:dataTable id="experience" rowIndexVar="index" var="experience"
-				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{experience}" style="width:1090px">
 					<ac:paginator for="experience"></ac:paginator>
 					<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
@@ -167,13 +168,13 @@
 								value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
 							<ui:param name="componentName" value="contractor" />
 							<ui:param name="scoringPnlId" value="contractorListId" />
-						
+
 							<ui:param name="scoringPnlName"
 								value="#{lbl['lbl.sc.spec.score.total.no.contracts']}"></ui:param>
 							<ui:include
 								src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
 							<div align="right">
-								<p:commandButton value="#{lbl['lbl.btn.add']}" 
+								<p:commandButton value="#{lbl['lbl.btn.add']}"
 									styleClass="BtnSpacing"
 									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 									process="@this,#{scoringPnlId}" partialSubmit="true"
@@ -215,14 +216,15 @@
 											style="float : left" />
 									</ui:fragment> <p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"
 										style="float : left" /></td>
-								<td><p:inputText required="true" maxlength="18"
+								<td><p:inputText required="true" maxlength="14"
 										style="text-align:right;"
 										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 										label="#{lbl['lbl.sc.spec.max.score']}"
 										id="techGovCompanyContracts"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
-											<p:ajax  event="change" process="@this" partialSubmit="true" update="techCompanyExpContracts"></p:ajax>
+										<p:ajax event="change" process="@this" partialSubmit="true"
+											update="techCompanyExpContracts"></p:ajax>
 
 									</p:inputText> <p:message id="govContracts" for="techGovCompanyContracts"
 										display="icon"></p:message></td>
@@ -270,7 +272,7 @@
 							<ui:param name="scoringPnlId" value="scoringYearId" />
 							<ui:param name="scoringPnlName"
 								value="#{lbl['lbl.sc.spec.score.total.no.years']}"></ui:param>
-								
+
 							<!-- 	<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include> -->
 							<h:panelGroup>
 
@@ -315,12 +317,13 @@
 											style="text-align:right"
 											disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 											label="#{lbl['lbl.sc.from']}" required="true"
-											value="#{checkListScoring.rangeFrom}" maxlength="18">
-											<p:ajax process="@this" partialSubmit="true"
+											value="#{checkListScoring.rangeFrom}" maxlength="14">
+											<p:ajax event="blur" process="@this" partialSubmit="true"
 												update="@this,#{scoringPnlId}_fromRangeyears" />
-											<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+											<ac:validateNumber
+												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+												maxIntegerDigits="14" />
 											<f:attribute name="min" value="0"></f:attribute>
-											<p:ajax  event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
 										</p:inputText>
 
 
@@ -341,7 +344,7 @@
 											disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 											required="#{index lt scoringList.size()-1}"
 											label="#{lbl['lbl.sc.to']}"
-											value="#{checkListScoring.rangeTo}" maxlength="18">
+											value="#{checkListScoring.rangeTo}" maxlength="14">
 											<p:ajax event="blur" process="@this" partialSubmit="true"
 												update="@this,#{scoringPnlId}_toRangeTGYears" />
 											<ac:validateNumber
@@ -364,9 +367,10 @@
 											style="text-align:right"
 											disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 											label="#{lbl['lbl.sc.score']}"
-											value="#{checkListScoring.score}" maxlength="18">
+											value="#{checkListScoring.score}" maxlength="14">
 											<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
-											<p:ajax  event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												update="@this"></p:ajax>
 										</p:inputText>
 
 									</p:column>
@@ -383,7 +387,7 @@
 									oncomplete="scoreWidget.paginator.endLink.click();"
 									actionListener="#{specificationBackingBean.addScoringyears(11)}"
 									update="#{scoringPnlId}" />
-								<p:commandButton value="#{lbl['lbl.btn.delete']}" 
+								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									styleClass="BtnSpacing"
 									disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(scoringList)}"
 									process="@this" partialSubmit="true"
@@ -422,10 +426,11 @@
 								<td><p:inputText style="text-align:right;"
 										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 										value="#{specificationBackingBean.managedBean.scQtContractScore.score}"
-										maxlength="18" required="true"
+										maxlength="14" required="true"
 										label="#{lbl['lbl.sc.spec.max.score']}" id="techGovYrs">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
-											<p:ajax  event="change" process="@this" partialSubmit="true" update="techGovNumberOfYearsUpdate"></p:ajax>
+										<p:ajax event="change" process="@this" partialSubmit="true"
+											update="techGovNumberOfYearsUpdate"></p:ajax>
 
 									</p:inputText> <p:message id="govyeras" for="techGovYrs" display="icon"></p:message>
 								</td>
