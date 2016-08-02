@@ -273,7 +273,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		
 		   IChangeBankAccSO changeBankAccSO = null;
 		   ContractResDTO resDTO = null;
-		 
+		   if(ctBB != null && ctBB.getManagedBean().getDeleteAttachmentList().size() > 0){
+	       		ctBB.getManagedBean().getDeleteAttachmentList().clear();
+	       	}
 		    try{
 			             changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IChangeBankAccSO.class);
 				    	 resDTO = changeBankAccSO.retrieveContractVerForChangeAcc(reqDTO);
@@ -323,7 +325,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
     private void setFactoringDetails(ContractSupplierReqDTO reqDTO) {
     	   IContractSupplierSO contractSupplierSO = null;
     	   ContractSupplierResDTO resDTO = null;
-    	   
+    	   if(ctBB != null && ctBB.getManagedBean().getDeleteAttachmentList().size() > 0){
+       		ctBB.getManagedBean().getDeleteAttachmentList().clear();
+       	}
     	   try {
 	    	 	    contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 	    	 	    resDTO = contractSupplierSO.retrieveFactoringRequest(reqDTO);
@@ -439,7 +443,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    reqDTO.setCtContractVer(getManagedBean().getContractVer());
 		    reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 		    reqDTO.setAttachments(getManagedBean().getAttachmentList());
-			 
+		    reqDTO.setDeleteAttachments(ctBB.getManagedBean().getDeleteAttachmentList());
 		    if (getManagedBean().getPmDigiSign() != null) {
 		    	reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 		    }    
@@ -521,7 +525,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
     public String saveFactoringRequest(String action) throws Exception {
     	IContractSupplierSO supplierSO = null;
     	ContractSupplierReqDTO reqDTO = null;
-    	
     	try {
     		validateFactoringRequest(action);
     		reqDTO = new ContractSupplierReqDTO();
@@ -544,6 +547,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			reqDTO.setCtContract(getManagedBean().getFactoring().getCtContract());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(getManagedBean().getAttachmentList());			
+			reqDTO.setDeleteAttachmentList(ctBB.getManagedBean().getDeleteAttachmentList());
 		    reqDTO.setUserMap(getManagedBean().getUserMap());
 	        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 		    reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
