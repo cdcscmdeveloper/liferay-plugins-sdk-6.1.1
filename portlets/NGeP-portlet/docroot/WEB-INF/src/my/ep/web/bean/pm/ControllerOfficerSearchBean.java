@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author venugopal
  * @since 17/3/2015
  */
-public class ControllerOfficerSearchBean implements Serializable{
+public class ControllerOfficerSearchBean implements Serializable {
 
 	/**
 	 * 
@@ -23,6 +23,10 @@ public class ControllerOfficerSearchBean implements Serializable{
 	private String ctrlCode;
 	private String ctrlDescription;
 	private String status;
+
+	public ControllerOfficerSearchBean() {
+	}
+
 	/**
 	 * @return the ctrlCode
 	 */
@@ -67,7 +71,5 @@ public class ControllerOfficerSearchBean implements Serializable{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	
 
 }

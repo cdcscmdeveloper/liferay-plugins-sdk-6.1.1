@@ -63,12 +63,12 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
+import my.ep.web.bean.pm.ProfCertifiedBodySearchBean;
 import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
 import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodySearchBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;

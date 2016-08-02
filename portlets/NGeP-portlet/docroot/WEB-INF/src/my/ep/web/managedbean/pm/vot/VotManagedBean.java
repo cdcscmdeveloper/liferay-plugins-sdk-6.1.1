@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.vot;
 
 import javax.faces.bean.ManagedBean;
@@ -8,31 +11,27 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.web.bean.pm.VotSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+/**
+ * Managed Bean for VOT	
+ * 
+ * @author venugopal
+ * @since 17/4/2015
+ */
 @ManagedBean(name = "votManagedBean")
 @SessionScoped
 public class VotManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	private VotSearchBean votSearchBean;
-	
+	private static final long serialVersionUID = 1L;	
+	private VotSearchBean votSearchBean;	
 	private PmVotFund pmVotFund;
-
 	private String votCode;
-
-	private String votName;
-	
-	private String kumpulanPtjCode;
-	
+	private String votName;	
+	private String kumpulanPtjCode;	
 	private String kumpulanPtjDesc;
-
 	private Long status;
-
 	private boolean isLazy;
 	
+	public VotManagedBean(){}
 	
 	/**
 	 * @return the votSearchBean
@@ -131,7 +130,4 @@ public class VotManagedBean extends BaseManagedBean {
 		this.isLazy = isLazy;
 	}
 	
-	
-	
-
 }

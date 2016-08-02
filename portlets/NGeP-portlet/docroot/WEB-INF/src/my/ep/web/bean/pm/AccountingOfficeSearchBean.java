@@ -26,6 +26,8 @@ public class AccountingOfficeSearchBean implements Serializable {
 	private String officeCode;
 	private String officeName;
 	private String status;
+	
+	public AccountingOfficeSearchBean(){}
 
 	/**
 	 * @return the officeCode

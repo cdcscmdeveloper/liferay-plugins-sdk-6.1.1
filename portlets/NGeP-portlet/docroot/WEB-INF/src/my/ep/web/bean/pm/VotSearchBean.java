@@ -22,6 +22,9 @@ public class VotSearchBean implements Serializable {
 	private String kumpulanPtjCode;
 	private String kumpulanPtjDesc;
 	private String status;
+	
+	public VotSearchBean(){}
+	
 	/**
 	 * @return the votCode
 	 */

@@ -1,19 +1,25 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.project;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.common.PmVotFund;
-import my.ep.web.bean.pm.ProgramSearchBean;
 import my.ep.web.bean.pm.ProjectSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+/**
+ * Managed Bean for Project
+ * 
+ * @author npoluri
+ * @since 12/6/2015
+ * 
+ */
 @ManagedBean(name = "projectManagedBean")
 @SessionScoped
 public class ProjectManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private ProjectSearchBean projectSearchBean;	
@@ -145,9 +151,5 @@ public class ProjectManagedBean extends BaseManagedBean {
 	public void setProjectDesc(String projectDesc) {
 		this.projectDesc = projectDesc;
 	}
-	
-	
-	
-	
 	
 }

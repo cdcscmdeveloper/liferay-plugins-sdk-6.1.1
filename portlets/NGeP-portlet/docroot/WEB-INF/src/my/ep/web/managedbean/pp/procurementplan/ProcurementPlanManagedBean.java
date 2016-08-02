@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pp.procurementplan;
 
 import java.math.BigDecimal;
@@ -25,16 +28,13 @@ import org.primefaces.model.DualListModel;
  * Managed Bean for Procurement Plan 
  * 
  * @author RAIN POH
- * @since 20/10/2013
+ * @since 20/10/2014
  *
  */
 @ManagedBean(name = "pPlanManagedBean")
 @SessionScoped
 public class ProcurementPlanManagedBean extends BaseManagedBean{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ProcurementPlanSearchBean planSearchBean;
 	private String filterOrgCondition;
@@ -103,9 +103,10 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private PmOrgProfile selectedMinistry;
 	private boolean isDisabledMinistryLov = false;
 	private boolean isDisabledKumpulanPTJLov = false;
-	private boolean isDisabledPTJLov = false;
-	
+	private boolean isDisabledPTJLov = false;	
 	private boolean isTrackingDiary;
+	
+	public ProcurementPlanManagedBean(){}
 
 	/**
 	 * @return the epItemsB

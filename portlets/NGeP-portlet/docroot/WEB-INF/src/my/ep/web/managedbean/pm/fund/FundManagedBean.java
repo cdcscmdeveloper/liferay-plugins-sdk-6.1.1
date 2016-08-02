@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2015 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.fund;
 
 import javax.faces.bean.ManagedBean;
@@ -6,6 +9,13 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.web.bean.pm.FundSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+/**
+ * Managed Bean for Fund
+ * 
+ * @author npoluri
+ * @since 10/06/2015
+ * 
+ */
 @ManagedBean(name = "fundManagedBean")
 @SessionScoped
 public class FundManagedBean extends BaseManagedBean {
@@ -26,6 +36,8 @@ public class FundManagedBean extends BaseManagedBean {
 	private Long status;
 
 	private boolean isLazy;
+	
+	public FundManagedBean(){}
 	
 	
 	/**
