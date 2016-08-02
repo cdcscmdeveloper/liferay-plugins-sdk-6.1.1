@@ -633,7 +633,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			  }
 			}		
 			if (!getManagedBean().isAgreeFactoringClause()) {
-				if (!isApproverRole() && !getManagedBean().isRemoveFactoring()) {
+				if ((isSupplierRole() || isApproverRole()) && !getManagedBean().isRemoveFactoring()) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 					throw new EpException(MessageConst.ERROR_750001);
 				}

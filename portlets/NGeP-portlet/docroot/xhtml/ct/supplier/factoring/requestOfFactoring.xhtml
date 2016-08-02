@@ -333,18 +333,7 @@
 		
 		<p:panel id="clausePanel" header="#{lbl['lbl.ct.panel.notification.factoring']}"
 			toggleable="true" toggleSpeed="500" rendered="#{!supplierBackingBean.managedBean.removeFactoring}">
-			<table style="width: 100%">
-				<tr rowspan="2">
-					<h:panelGroup
-						rendered="#{!supplierBackingBean.approverRole and !supplierBackingBean.managedBean.viewOnly}">
-						<td style="width: 10%; vertical-align: top; text-align: right">
-							<p:selectBooleanCheckbox id="checkBox"
-							     required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" />
-						</td>
-						<td><h:outputText value="#{lbl['lbl.ct.agree.factoring']}" />
-							<span> #{supplierBackingBean.getFactoringCompany()}</span></td>
-					</h:panelGroup>
-				</tr>
+			<table style="width: 100%">								
 				<tr>
 					<td />
 					<td><p:commandButton id="notificationBtn"
@@ -353,6 +342,26 @@
 							process="@this,approverpickList" update="editorDisplay"
 							actionListener="#{supplierBackingBean.previewAction()}"
 							oncomplete="factoringClauseDlg.show();" /></td>
+				</tr>
+				<tr rowspan="2">
+					<h:panelGroup
+						rendered="#{supplierBackingBean.supplierRole and !supplierBackingBean.managedBean.viewOnly}">
+						<td style="width: 10%; vertical-align: top; text-align: right">
+							<p:selectBooleanCheckbox id="agreeFactoring"
+							     required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" />
+						</td>
+						<td><h:outputText value="#{lbl['lbl.ct.agree.factoring']}" />
+							<span> #{supplierBackingBean.getFactoringCompany()}</span></td>
+					</h:panelGroup>
+				</tr>
+				<tr>
+					<h:panelGroup rendered="#{supplierBackingBean.approverRole and !supplierBackingBean.managedBean.viewOnly}">
+						<td style="width: 10%; vertical-align: top; text-align: right">
+							<p:selectBooleanCheckbox id="agreeCondition"
+							     required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" />
+						</td>
+						<td><h:outputText value="#{lbl['lbl.ct.agree.condition']}" /></td>
+					</h:panelGroup>
 				</tr>
 			</table>
 			<p:dialog 
