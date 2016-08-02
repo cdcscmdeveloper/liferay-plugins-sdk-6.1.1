@@ -10,6 +10,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -87,7 +88,14 @@ public class ChangeApplicationFlowBackingBean extends
 	 * Submit change application flow
 	 */
 	public void submitChangeApplicationFlow() {
-
+		PmStatusDesc newStatus = SmCommonUtil
+				.getStatusDescByStatusId(getManagedBean().getSelectedStatusId());
+		SmCommonUtil.redirectToPage(
+				SmApplicationUtil.getApplicationErrorPage(),
+				MessageConst.INFO_721224,
+				new String[] { getManagedBean().getSmAppl().getApplNo(),
+						getManagedBean().getCurrStatusName(),
+						newStatus.getStatusName() });
 	}
 
 	/**
