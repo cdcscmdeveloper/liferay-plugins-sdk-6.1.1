@@ -17,7 +17,7 @@
 				<td><p:selectOneMenu id="somusergrouproles" style="width:230px;margin-bottom:5px;"
 						required="true"
 						label="#{lbl['lbl.pm.ug.search.role']}"
-						value="#{usergroupBackingBean.managedBean.role}">
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.role}">
 						<f:selectItems
 							value="#{usergroupBackingBean.getUserGroupRoles()}"></f:selectItems>
 					</p:selectOneMenu></td>
@@ -28,7 +28,7 @@
 				<th width="20%"><h:outputLabel
 						value="#{lbl['lbl.pm.ug.result.groupcode']}"></h:outputLabel></th>
 				<td><p:inputText
-						value="#{usergroupBackingBean.managedBean.groupCode}" size="30"
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.groupCode}" size="30"
 						style="text-transform: uppercase" maxlength="10" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
@@ -37,7 +37,7 @@
 				<th width="20%"><h:outputLabel
 						value="#{lbl['lbl.pm.ug.result.groupname']}"></h:outputLabel></th>
 				<td><p:inputText
-						value="#{usergroupBackingBean.managedBean.groupName}" size="30"
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.groupName}" size="30"
 						maxlength="50" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
@@ -46,7 +46,7 @@
 				<th width="20%"><h:outputLabel
 						value="#{lbl['lbl.pm.ug.search.ptjcode']}"></h:outputLabel></th>
 				<td><p:inputText maxlength="8" 
-						value="#{usergroupBackingBean.managedBean.ptjCode}" size="30" /></td>
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.ptjCode}" size="30" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
@@ -54,7 +54,7 @@
 				<th width="20%"><h:outputLabel
 						value="#{lbl['lbl.pm.ug.search.ptjname']}"></h:outputLabel></th>
 				<td><p:inputText maxlength="100" 
-						value="#{usergroupBackingBean.managedBean.ptjName}" size="30" /></td>
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.ptjName}" size="30" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
@@ -62,7 +62,7 @@
 				<th width="20%"><h:outputLabel
 						value="#{lbl['lbl.pm.ug.search.name']}"></h:outputLabel></th>
 				<td><p:inputText maxlength="80" 
-						value="#{usergroupBackingBean.managedBean.userName}" size="30" /></td>
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.userName}" size="30" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
@@ -71,7 +71,7 @@
 						value="#{lbl['lbl.pm.search.status']}">
 					</h:outputLabel></th>
 				<td><p:selectOneMenu style="width:203px"
-						value="#{usergroupBackingBean.managedBean.status}">
+						value="#{usergroupBackingBean.managedBean.usergroupSearchBean.status}">
 						<f:selectItems
 							value="#{usergroupBackingBean.getUserGroupStatus()}" />
 					</p:selectOneMenu></td>
