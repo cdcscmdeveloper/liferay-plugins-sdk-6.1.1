@@ -325,7 +325,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * @param resDTO  the response data transfer object for agreement
 	 */
 	private void setCtAgreementDetails(ContractAgreementResDTO resDTO) {
-		ctBB.getManagedBean().setDeleteAttachmentList(null);
+		 if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
+	        	ctBB.getManagedBean().getDeleteAttachmentList().clear();
+	        }
 		if (resDTO.getAgreement() != null) {
 			getManagedBean().setCtAgreement(resDTO.getAgreement());
 			getManagedBean().setCtContract(resDTO.getAgreement().getCtContract());
