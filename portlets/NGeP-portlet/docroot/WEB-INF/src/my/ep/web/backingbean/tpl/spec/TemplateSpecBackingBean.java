@@ -2390,4 +2390,11 @@ public class TemplateSpecBackingBean extends
 
 		return orgProfileIds;
 	}
+	
+	public String replaceWithBR(String specDetails) {
+		
+		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+	}
+	
 }

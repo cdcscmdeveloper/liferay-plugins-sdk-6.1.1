@@ -28,7 +28,7 @@
 			<p:message id="specificationMsg" for="specification" display="icon" />
 		</c:if>
 		<c:if test="#{!isContentTypeUpdateSpec}">
-			<h:outputText value="#{question.clSpecDetail}" escape="false"
+			<h:outputText value="#{templateSpecBackingBean.replaceWithBR(question.clSpecDetail)}" escape="false"
 				rendered="#{!isRepeated}"
 				style="white-space: normal;word-wrap: break-word;" />
 		</c:if>
