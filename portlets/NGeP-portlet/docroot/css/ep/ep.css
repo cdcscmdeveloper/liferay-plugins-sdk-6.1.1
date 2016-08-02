@@ -3167,8 +3167,10 @@ input[type="submit"]:hover,input[type="button"]:hover,input[type="reset"]:hover,
 }
 
 .tableheaderrow {
-	background-color: #F0EFEF;
-	font-weight: bold;
+	background:#2c576e !important;
+	padding:2px !important;
+	color:rgb(255, 255, 255) !important;
+	font-weight:bold !important;
 }
 
 .instruction {
