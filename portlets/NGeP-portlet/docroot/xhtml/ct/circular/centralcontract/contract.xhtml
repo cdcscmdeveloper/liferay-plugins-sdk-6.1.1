@@ -506,8 +506,7 @@
 								<h:commandLink value="#{attachFile.fileName}" 
 									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 								<p:commandLink onsuccess="deleteContractAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
-									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)
-												and !centralContractBackingBean.managedBean.viewContract}"
+									rendered="#{!centralContractBackingBean.managedBean.viewContract}"
 									disabled="#{centralContractBackingBean.managedBean.viewContract
 										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
 			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
