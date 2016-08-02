@@ -559,7 +559,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    if (resDTO.isSuccessful()) {
 		    	log.info("Record saved successfully");
 		    	String messageId = MessageConst.INFO_700043;
-		    	if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+		    	if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 		    		messageId = MessageConst.INFO_700011;
 		    	} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
 				    messageId = MessageConst.INFO_700011;
@@ -646,13 +646,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    		throw new EpException(MessageConst.ERROR_750037);
 		    	}
 			}
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) 
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
 					&& getManagedBean().getApproverModel().getTarget().size() == 0) {
 				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 			}
 			
-			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(getManagedBean().getContractNo());
 				sb.append(ContractConst.SEPRATE_LINE);
@@ -775,7 +775,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			return null;
 		} else {
 				// No GPKI for CA acknowledge
-				if(BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome)) {
+				if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
 					validateFactoringRequest(outcome);
 				}
  			return saveFactoringRequest(outcome);
