@@ -8,7 +8,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.bpm.group.task']}" collapsed="true" toggleable="true">
+	<p:panel header="#{lbl['lbl.bpm.group.task']}" collapsed="true"
+		toggleable="true">
 
 
 		<table style="width: 100%">
@@ -20,8 +21,17 @@
 						value="#{bpmTasklistBackingBean.managedBean.docNoGroup}"></p:inputText></td>
 
 
-				<td width="10%"></td>
-				<td width="40%"></td>
+				<td width="10%"><p:outputLabel
+						value="#{lbl['lbl.bpm.doc.type']} : " /></td>
+				<td width="40%"><p:selectOneMenu id="docTypeAnvanceId"
+						style="width: 200px;"
+						value="#{bpmTasklistBackingBean.managedBean.docTypeGroup}">
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
+						<f:selectItems
+							value="#{bpmTasklistBackingBean.getRadioButtonCodeValuesBySearchBean(ParameterTypeConst.documentTypes, bpmTasklistBackingBean.docTypeSearchBean)}" />
+						<p:ajax listener="#{bpmTasklistBackingBean.findDocStatusGroup}"
+							update="docStatusGroup" />
+					</p:selectOneMenu></td>
 
 			</tr>
 			<tr>
@@ -33,13 +43,17 @@
 						saveObject="bpmTasklistBackingBean.managedBean.selectedOrgProfileGroup"
 						conditionField="recordStatus^1|orgTypeCode.parameterId^73" /></td>
 
-					<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.status']} :" /></td>
-				<td width="40%"><ac:lov id="lovStatusDescAdvance"
-						lovId="PM_STATUS_DESC" size="56" readonly="true"
-						headerText="#{lbl['lbl.bpm.status']}"
-						value="#{bpmTasklistBackingBean.managedBean.selectedStatusDescAdvance.statusName}"
-						saveObject="bpmTasklistBackingBean.managedBean.selectedStatusDescAdvance"
-						conditionField="recordStatus^1|#{bpmTasklistBackingBean.constructCondition()}" /></td>
+				<td width="10%"><p:outputLabel
+						value="#{lbl['lbl.bpm.status']} :" /></td>
+				<td width="40%"><p:selectOneMenu id="docStatusGroup"
+						style="width: 200px;" disabled="#{bpmTasklistBackingBean.managedBean.docTypeGroup==''}"
+						value="#{bpmTasklistBackingBean.managedBean.docStatusGroup}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+						<f:selectItems
+							value="#{bpmTasklistBackingBean.managedBean.docStatusListGroup}"
+							itemLabel="#{docStatus.statusName}" var="docStatus"
+							itemValue="#{docStatus.statusDescId}"></f:selectItems>
+					</p:selectOneMenu></td>
 			</tr>
 
 
@@ -48,27 +62,8 @@
 
 		<div class="clear"></div>
 
-
 		<div
-			style="text-align: left; margin-right: 2px; margin-top: 5px; float: left;margin-left: 21px;">
-			<p:outputLabel value="#{lbl['lbl.bpm.doc.type']} : " />
-		</div>
-		<div
-			style="text-align: left; margin-right: 5px; margin-top: 3px; float: left;">
-			<p:selectOneMenu id="docTypeAnvanceId" style="width: 150px;"
-				value="#{bpmTasklistBackingBean.managedBean.docTypeGroup}">
-				<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
-				<f:selectItems
-					value="#{bpmTasklistBackingBean.getRadioButtonCodeValuesBySearchBean(ParameterTypeConst.documentTypes, bpmTasklistBackingBean.docTypeSearchBean)}" />
-
-			</p:selectOneMenu>
-
-		</div>
-
-
-
-		<div
-			style="text-align: left; margin-right: 2px; margin-top: 5px; float: left;">
+			style="text-align: left; margin-right: 2px; margin-top: 5px; float: left; margin-left: 80px;">
 			<p:outputLabel value="#{lbl['lbl.bpm.date']} : " />
 		</div>
 		<div
@@ -99,63 +94,63 @@
 	<div class="clear"></div>
 
 	<!-- <p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true"> -->
-		<p:dataTable
-			value="#{bpmTasklistBackingBean.managedBean.taskListGroupDataModel}"
-			emptyMessage="#{lbl['lbl.pp.no.record.found']}" lazy="true"
-			rowIndexVar="rowIndex" rows="10" id="taskListGroupId"
-			style="width:100%;" var="tasks" widgetVar="taskListAdvanceTableWidget">
-			<ac:paginator for="taskListGroupId"></ac:paginator>
+	<p:dataTable
+		value="#{bpmTasklistBackingBean.managedBean.taskListGroupDataModel}"
+		emptyMessage="#{lbl['lbl.pp.no.record.found']}" lazy="true"
+		rowIndexVar="rowIndex" rows="10" id="taskListGroupId"
+		style="width:100%;" var="tasks" widgetVar="taskListAdvanceTableWidget">
+		<ac:paginator for="taskListGroupId"></ac:paginator>
 
-			<p:column width="5%;">
-				<f:facet name="header">
+		<p:column width="5%;">
+			<f:facet name="header">
 					#{lbl['lbl.bpm.doc.no']}
 				</f:facet>
 				#{tasks.docNumber}
 			</p:column>
-			<p:column width="20%;" style="white-space:normal;">
-				<f:facet name="header">
+		<p:column width="20%;" style="white-space:normal;">
+			<f:facet name="header">
 					#{lbl['lbl.bpm.doc.type']}
 				</f:facet>
 				#{bpmTasklistBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,tasks.docType)}
 				
 			</p:column>
 
-			<p:column style="white-space:normal;">
-				<f:facet name="header">
+		<p:column style="white-space:normal;">
+			<f:facet name="header">
 					#{lbl['lbl.bpm.description']}
 				</f:facet>
-				<p:commandLink value="#{tasks.title}"
-					action="#{bpmTasklistBackingBean.navigateToURL}">
-					<f:param name="taskId" value="#{tasks.taskId}" />
-					<f:param name="process" value="#{tasks.process}" />
-					<f:param name="taskName" value="#{tasks.taskName}" />
-					<f:param name="docType" value="#{tasks.docType}" />
-					<f:param name="isClaim" value="#{tasks.claimed}" />
-				</p:commandLink>
+			<p:commandLink value="#{tasks.title}"
+				action="#{bpmTasklistBackingBean.navigateToURL}">
+				<f:param name="taskId" value="#{tasks.taskId}" />
+				<f:param name="process" value="#{tasks.process}" />
+				<f:param name="taskName" value="#{tasks.taskName}" />
+				<f:param name="docType" value="#{tasks.docType}" />
+				<f:param name="isClaim" value="#{tasks.claimed}" />
+			</p:commandLink>
 
-			</p:column>
-			<p:column width="10%">
-				<f:facet name="header">
+		</p:column>
+		<p:column width="10%">
+			<f:facet name="header">
 					#{lbl['lbl.bpm.created.date']}
 				</f:facet>
-				<h:outputText value="#{tasks.createDate.time}">
-					<f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
-				</h:outputText>
+			<h:outputText value="#{tasks.createDate.time}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+			</h:outputText>
 
-			</p:column>
-			<p:column width="10%">
-				<f:facet name="header">
+		</p:column>
+		<p:column width="10%">
+			<f:facet name="header">
 					#{lbl['lbl.bpm.due.date']}
 				</f:facet>
-				<h:outputText value="#{tasks.expirationDate.time}">
-					<f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
-				</h:outputText>
+			<h:outputText value="#{tasks.expirationDate.time}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+			</h:outputText>
 
-			</p:column>
-			<p:column width="18%;" style="white-space:normal;">
-				<f:facet name="header">
+		</p:column>
+		<p:column width="18%;" style="white-space:normal;">
+			<f:facet name="header">
 					#{lbl['lbl.bpm.status']}
 				</f:facet>
 				
@@ -166,25 +161,25 @@
 			</p:column>
 
 
-			<p:column width="6%">
-				<f:facet name="header">
+		<p:column width="6%">
+			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>
 
-				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
-					action="#{bpmTasklistBackingBean.claimTask}" update="@form">
+			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
+				action="#{bpmTasklistBackingBean.claimTask}" update="@form">
 
-					<f:param name="taskId" value="#{tasks.taskId}" />
-				</p:commandButton>
+				<f:param name="taskId" value="#{tasks.taskId}" />
+			</p:commandButton>
 
-			</p:column>
-
-
+		</p:column>
 
 
-		</p:dataTable>
 
-<!-- 	</p:panel> -->
+
+	</p:dataTable>
+
+	<!-- 	</p:panel> -->
 
 
 
