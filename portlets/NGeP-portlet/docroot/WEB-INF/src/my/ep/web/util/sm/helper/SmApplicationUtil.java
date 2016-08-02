@@ -4881,14 +4881,16 @@ public class SmApplicationUtil {
 		log.info("*** Valid For Approval After category checking Decision **** "
 				+ validForApproval);
 		if (validForApproval) {
-			for (SmApplSupportDoc doc : managedBean.getMandatoryDocs()) {
-				if (doc.getVerifiedFlg() == null
-						|| (doc.getVerifiedFlg() != null && doc
-								.getVerifiedFlg().compareTo(0) == 0)) {
-					validForApproval = false;
-					break;
-				} else {
-					validForApproval = true;
+			if (!EntityHelper.isCollectionEmpty(managedBean.getMandatoryDocs())) {
+				for (SmApplSupportDoc doc : managedBean.getMandatoryDocs()) {
+					if (doc.getVerifiedFlg() == null
+							|| (doc.getVerifiedFlg() != null && doc
+									.getVerifiedFlg().compareTo(0) == 0)) {
+						validForApproval = false;
+						break;
+					} else {
+						validForApproval = true;
+					}
 				}
 			}
 		}
