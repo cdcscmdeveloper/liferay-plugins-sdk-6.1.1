@@ -159,12 +159,12 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 			
-			if(StringUtils.isNotBlank(getManagedBean().getRole())){
+			if(StringUtils.isNotBlank(getManagedBean().getUsergroupSearchBean().getRole())){
 				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_EQUALS.value());
 				codesSearchBean
 						.setSearchField("roleCode");
-				codesSearchBean.setSearchValue(getManagedBean().getRole());
+				codesSearchBean.setSearchValue(getManagedBean().getUsergroupSearchBean().getRole());
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
