@@ -111,6 +111,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.type.report.EnumReportType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -136,7 +137,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
 import com.liferay.portal.util.PortalUtil;
-import my.ep.type.report.EnumReportType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18961,50 +18961,87 @@ public class ReportBackingBean extends
 		SelectItem[] otherItems = null;
 		this.setPmOrgType(null);
 		this.setItemsList(null);
-	
 
 		if (this.reportValue
 				.equals(ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
-			
-			if (StringUtils.isNotEmpty(this.getPmOrgCategory())
-					&& this.getPmOrgCategory().equals(ReportConst.FEDERAL_GOVT)) {
-				searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
-				
-				if (searchBean1 != null) {
-					searchBean1.getSortColumns();
 
-					itemsList = getDropdownValuesBySearchBean(
-							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
-				}
-
-			} else if (StringUtils.isNotEmpty(this.getPmOrgCategory())
-					&& this.getPmOrgCategory().equals(ReportConst.OTHERS)) {
-				searchBean1 = getOrgTypeSearchBean("orgTypeOthersList");
-				if (searchBean1 != null) {
-					searchBean1.getSortColumns();
-					itemsList = getDropdownValuesBySearchBean(
-							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
-				}
-			} else {
-				searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
+			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+					|| getFacesScopes().hasRoleUser(
+							RoleCode.AUDITOR_INTERNAL.value())) {
+				SelectItem[] items = new SelectItem[1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						getFacesScopes().getUserLocale()));
 				this.setPmOrgCategory(ReportConst.FEDERAL_GOVT);
-				if (searchBean1 != null) {
-					searchBean1.getSortColumns();
+				this.setItemsList(items);
+			} else {
+				if (StringUtils.isNotEmpty(this.getPmOrgCategory())
+						&& this.getPmOrgCategory().equals(
+								ReportConst.FEDERAL_GOVT)) {
+					searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
 
-					itemsList = getDropdownValuesBySearchBean(
-							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
+					if (searchBean1 != null) {
+						searchBean1.getSortColumns();
+
+						itemsList = getDropdownValuesBySearchBean(
+								ParameterTypeConst.ORGANISATION_TYPES,
+								searchBean1);
+					}
+
+				} else if (StringUtils.isNotEmpty(this.getPmOrgCategory())
+						&& this.getPmOrgCategory().equals(ReportConst.OTHERS)) {
+					searchBean1 = getOrgTypeSearchBean("orgTypeOthersList");
+					if (searchBean1 != null) {
+						searchBean1.getSortColumns();
+						itemsList = getDropdownValuesBySearchBean(
+								ParameterTypeConst.ORGANISATION_TYPES,
+								searchBean1);
+					}
+				} else {
+					searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
+					this.setPmOrgCategory(ReportConst.FEDERAL_GOVT);
+					if (searchBean1 != null) {
+						searchBean1.getSortColumns();
+
+						itemsList = getDropdownValuesBySearchBean(
+								ParameterTypeConst.ORGANISATION_TYPES,
+								searchBean1);
+					}
 				}
 			}
-			/*if (StringUtils.isNotEmpty(this.getPmOrgCategory())) {
-				if (searchBean1 != null) {
-					searchBean1.getSortColumns();
-					itemsList = getDropdownValuesBySearchBean(
-							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
-				}
-			}*/
+			/*
+			 * if (StringUtils.isNotEmpty(this.getPmOrgCategory())) { if
+			 * (searchBean1 != null) { searchBean1.getSortColumns(); itemsList =
+			 * getDropdownValuesBySearchBean(
+			 * ParameterTypeConst.ORGANISATION_TYPES, searchBean1); } }
+			 */
 		} else if (this.reportValue
-				.equals(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {			
-			itemsList = getAllOrgTypeList(federalItems, otherItems);
+				.equals(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
+			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+					|| getFacesScopes().hasRoleUser(
+							RoleCode.AUDITOR_INTERNAL.value())) {
+				SelectItem[] items = new SelectItem[1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						getFacesScopes().getUserLocale()));
+                this.getManagedBean().setDisabledOrgFields(false);
+				this.setItemsList(items);
+			}
+			/*
+			 * searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
+			 * 
+			 * if (searchBean1 != null) { searchBean1.getSortColumns();
+			 * 
+			 * itemsList = getDropdownValuesBySearchBean(
+			 * ParameterTypeConst.ORGANISATION_TYPES, searchBean1); }
+			 */
+
+			else {
+				itemsList = getAllOrgTypeList(federalItems, otherItems);
+			}
+
 		}
 		return itemsList;
 	}
@@ -19545,40 +19582,47 @@ public class ReportBackingBean extends
 	
 	
 	public String constructConditionForIdentification() {
-		
-		StringBuilder sb = new StringBuilder();	
-			
-        sb.append("pmUserOrgs.pmOrgProfile.recordStatus^1");
-		
-		sb.append("|pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode^");
-		
-		sb.append(getManagedBean().getSelectedOrgType().getParameterCode());
-		
-		sb.append("|pmUserOrgs.pmOrgProfile.orgTypeCode.parameterType^");
-		
-		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
-		
-		if (this.getManagedBean().getSelectedOrgProfile() != null
-				&& this.getManagedBean().getSelectedOrgProfile()
-						.getPmOrgValidity() != null) {
-			sb.append("|pmUserOrgs.pmOrgProfile.pmOrgValidity.recordStatus^1");
-			sb.append("|pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode^");
-			sb.append(getManagedBean().getSelectedOrgProfile()
-					.getPmOrgValidity().getOrgCode());
-		} /*else if (this.getManagedBean().getSelectedOrgProfile()
-				.getPmFinancialOrg().getBizRegNumber() != null) {
-			sb.append("|pmUserOrgs.pmOrgProfile.pmFinancialOrg.recordStatus^1");
-			sb.append("|pmUserOrgs.pmOrgProfile.pmFinancialOrg.bizRegNumber^");
-			sb.append(getManagedBean().getSelectedOrgProfile()
-					.getPmFinancialOrg().getBizRegNumber());
-		} else if (this.getManagedBean().getSelectedOrgProfile()
-				.getSmSupplier().getRegNo() != null) {
-			sb.append("|pmUserOrgs.pmOrgProfile.smSupplier.recordStatus^1");
-			sb.append("|pmUserOrgs.pmOrgProfile.smSupplier.regNo");
-			sb.append(getManagedBean().getSelectedOrgProfile()
-					.getPmOrgValidity().getOrgCode());
-		}*/
 
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("pmUserOrgs.pmOrgProfile.recordStatus^1");
+
+		sb.append("|pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode^");
+
+		sb.append(getManagedBean().getSelectedOrgType().getParameterCode());
+
+		sb.append("|pmUserOrgs.pmOrgProfile.orgTypeCode.parameterType^");
+
+		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
+
+		if (this.getManagedBean().getSelectedOrgType().getParameterCode()
+				.equals(ParameterConst.ORG_TYPE_FACTORING)) {
+			if (this.getManagedBean().getSelectedOrgProfile()
+					.getPmFinancialOrg().getBizRegNumber() != null) {
+				sb.append("|pmUserOrgs.pmOrgProfile.pmFinancialOrg.recordStatus^1");
+				sb.append("|pmUserOrgs.pmOrgProfile.pmFinancialOrg.bizRegNumber^");
+				sb.append(getManagedBean().getSelectedOrgProfile()
+						.getPmFinancialOrg().getBizRegNumber());
+			}
+		} else if (this.getManagedBean().getSelectedOrgType()
+				.getParameterCode().equals(ParameterConst.ORG_TYPE_SUPPLIER)) {
+			if (this.getManagedBean().getSelectedOrgProfile().getSmSupplier()
+					.getRegNo() != null) {
+				sb.append("|pmUserOrgs.pmOrgProfile.smSupplier.recordStatus^1");
+				sb.append("|pmUserOrgs.pmOrgProfile.smSupplier.regNo");
+				sb.append(getManagedBean().getSelectedOrgProfile()
+						.getSmSupplier().getRegNo());
+			}
+		} else {
+			if (this.getManagedBean().getSelectedOrgProfile() != null
+					&& this.getManagedBean().getSelectedOrgProfile()
+							.getPmOrgValidity() != null) {
+				sb.append("|pmUserOrgs.pmOrgProfile.pmOrgValidity.recordStatus^1");
+				sb.append("|pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode^");
+				sb.append(getManagedBean().getSelectedOrgProfile()
+						.getPmOrgValidity().getOrgCode());
+			}
+		}
 		return sb.toString();
 	}
 	
@@ -19589,20 +19633,30 @@ public class ReportBackingBean extends
 	}
 	
 	public void updateSearchCriteriaForOrgName(BaseEntity entity) {
-		
+
 		this.getManagedBean().setDisabledOrgFields(false);
 		PmOrgProfile orgProfile = (PmOrgProfile) entity;
 		this.getManagedBean().setSelectedOrgProfile(orgProfile);
 		if (this.getManagedBean().getSelectedOrgProfile() != null) {
-			this.setPmOrgName(this.getManagedBean().getSelectedOrgProfile()
-					.getPmOrgValidity().getOrgName());
+			if (this.getManagedBean().getSelectedOrgType().getParameterCode()
+					.equals(ParameterConst.ORG_TYPE_FACTORING)) {
+				this.setPmOrgName(this.getManagedBean().getSelectedOrgProfile()
+						.getPmFinancialOrg().getFinOrgName());
+			} else if (this.getManagedBean().getSelectedOrgType().getParameterCode()
+					.equals(ParameterConst.ORG_TYPE_SUPPLIER)) {
+				this.setPmOrgName(this.getManagedBean().getSelectedOrgProfile()
+						.getSmSupplier().getCompanyName());
+			}else {
+				this.setPmOrgName(this.getManagedBean().getSelectedOrgProfile()
+						.getPmOrgValidity().getOrgName());
+			}
 			this.getManagedBean().setDisabledOrgFields(true);
 			chkValuesForPmListOfProfiles();
-			
-		}else{
+
+		} else {
 			this.getManagedBean().setDisabledOrgFields(false);
 		}
-		
+
 	}
 	
 	public void resetRoleSearchAction(){
@@ -19744,6 +19798,12 @@ public class ReportBackingBean extends
 			roleCode = RoleCode.PROCUREMENT_ADMIN.value();
 		}else if(getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())){
 			roleCode = RoleCode.SUPPORT_ADMIN.value();
+		}		
+		else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())){
+			roleCode = RoleCode.AUDITOR_GENERAL.value();
+		}		
+		else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+			roleCode = RoleCode.AUDITOR_INTERNAL.value();
 		}
 		
 		return roleCode;
