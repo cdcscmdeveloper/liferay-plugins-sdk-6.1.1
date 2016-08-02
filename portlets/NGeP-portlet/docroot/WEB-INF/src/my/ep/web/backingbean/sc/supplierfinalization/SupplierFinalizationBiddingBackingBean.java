@@ -1993,6 +1993,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 			ScQt scQt = getManagedBean().getScQt();
 
 			ScQtFinalization scQtFinalization = prepareFinalizationInfo();
+			List<ScQtEvaluationResultDtl> shortlistedSuppliers = prepareShortlistedSuppliers();
+			suppFinalizationReqDTO.setShortlistedSuppliersForBidding(shortlistedSuppliers);
 
 			suppFinalizationReqDTO.setScQtFinalization(scQtFinalization);
 			suppFinalizationReqDTO.setRecommendDtlIds(
@@ -2055,9 +2057,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 				scQtCommittee = getManagedBean().getScQtCommittee();
 			}
 			suppFinalizationReqDTO.setScQtCommittee(scQtCommittee);
-			
-			List<ScQtEvaluationResultDtl> shortlistedSuppliers = prepareShortlistedSuppliers();
-			suppFinalizationReqDTO.setShortlistedSuppliersForBidding(shortlistedSuppliers);
 			
 			if (ParameterConst.ONLINE_BIDDING_ESCALATION.equals(
 						scQtFinalization.getOnlineBiddingEndorse())) {
