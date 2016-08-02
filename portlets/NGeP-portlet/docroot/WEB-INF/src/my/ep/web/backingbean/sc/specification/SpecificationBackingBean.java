@@ -6717,7 +6717,7 @@ public class SpecificationBackingBean extends
 			if (prevSpecScoring != null) {
 				BigDecimal prevRangeTo = prevSpecScoring.getRangeTo();
 				if (prevRangeTo != null) {
-					if ("61".equalsIgnoreCase(CriteriaType)) {
+					if ("61".equalsIgnoreCase(CriteriaType) || "11".equalsIgnoreCase(CriteriaType) || "16".equalsIgnoreCase(CriteriaType)) {
 						score.setRangeFrom(prevRangeTo.add(BigDecimal
 								.valueOf(0.01)));
 					} else {
@@ -13085,7 +13085,7 @@ public class SpecificationBackingBean extends
 
 					if ("50".equalsIgnoreCase(criteriaType)
 							|| "60".equalsIgnoreCase(criteriaType)
-							|| "61".equalsIgnoreCase(criteriaType)) {
+							|| "61".equalsIgnoreCase(criteriaType) || "11".equalsIgnoreCase(criteriaType) || "16".equalsIgnoreCase(criteriaType)) {
 						if (prevScore.getRangeTo()
 								.add(BigDecimal.valueOf(0.01d))
 								.compareTo(currScoring.getRangeFrom()) != 0) {
@@ -13122,7 +13122,7 @@ public class SpecificationBackingBean extends
 							&& null != lastObject.getRangeFrom()) {
 						if ("50".equalsIgnoreCase(criteriaType)
 								|| "60".equalsIgnoreCase(criteriaType)
-								|| "61".equalsIgnoreCase(criteriaType)) {
+								|| "61".equalsIgnoreCase(criteriaType) || "11".equalsIgnoreCase(criteriaType) || "16".equalsIgnoreCase(criteriaType)) {
 							if (prevScore.getRangeTo()
 									.add(BigDecimal.valueOf(0.01d))
 									.compareTo(lastObject.getRangeFrom()) != 0) {
