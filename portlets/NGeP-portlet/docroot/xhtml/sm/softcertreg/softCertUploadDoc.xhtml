@@ -40,9 +40,9 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.submission.type']}" /></td>
 					<td><p:selectOneRadio id="onLnSuppDocs" disabled="#{empty softCertBackingBean.managedBean.softcertUploadSuppDocList}"
 							value="#{softCertBackingBean.managedBean.suppDocMode}">
-							<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.ep.centre']}"
+							<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.submission.ep.centre']}"
 								itemValue="H" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
+							<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.submission.online']}"
 								itemValue="S"/>
 							<p:ajax update="@([id$=uploadPanelId])" event="change" />
 						</p:selectOneRadio></td>
