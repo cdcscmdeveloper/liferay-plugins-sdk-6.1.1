@@ -128,6 +128,10 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			initializeFactoring();
 		}
 		
+		if(ctBB == null){
+			ctBB = new ContractBackingBean();
+		}
+		
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
         HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
     	if (originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null) {
@@ -273,7 +277,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		
 		   IChangeBankAccSO changeBankAccSO = null;
 		   ContractResDTO resDTO = null;
-		   if(ctBB != null && ctBB.getManagedBean().getDeleteAttachmentList().size() > 0){
+		   if(ctBB != null && ctBB.getManagedBean().getDeleteAttachmentList() != null){
 	       		ctBB.getManagedBean().getDeleteAttachmentList().clear();
 	       	}
 		    try{
@@ -325,7 +329,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
     private void setFactoringDetails(ContractSupplierReqDTO reqDTO) {
     	   IContractSupplierSO contractSupplierSO = null;
     	   ContractSupplierResDTO resDTO = null;
-    	   if(ctBB != null && ctBB.getManagedBean().getDeleteAttachmentList().size() > 0){
+    	   if(ctBB != null && ctBB.getManagedBean().getDeleteAttachmentList() != null){
        		ctBB.getManagedBean().getDeleteAttachmentList().clear();
        	}
     	   try {
