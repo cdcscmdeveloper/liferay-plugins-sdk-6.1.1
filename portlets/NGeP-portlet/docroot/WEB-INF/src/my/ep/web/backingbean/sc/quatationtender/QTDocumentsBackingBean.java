@@ -1975,6 +1975,10 @@ public class QTDocumentsBackingBean extends
 					}
 					if (question.getClSpecDetail() == null) {
 						question.setClSpecDetail("");
+					} else{
+						final String clSpecDetail = question.getClSpecDetail()
+								.replaceAll(QTConstants.NEW_LINE_CHARACTER,QTConstants.HTML_NEW_LINE_CHARACTER);
+						question.setClSpecDetail(clSpecDetail);
 					}
 					if (question.getClUom() != null) {
 						if (question.getClUom().getUomName() == null) {
