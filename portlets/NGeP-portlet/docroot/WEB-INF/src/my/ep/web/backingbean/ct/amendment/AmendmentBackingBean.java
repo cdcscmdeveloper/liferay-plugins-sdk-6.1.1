@@ -567,6 +567,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IContractAmendmentSO contractAmendmentSO = null;
 		ContractResDTO resDTO = null;
 		Date currentDate = DateUtils.getCurrentDateWithoutTime();
+		 if(ctBackingBean.getManagedBean().getDeleteAttachmentList() != null ){
+			 ctBackingBean.getManagedBean().getDeleteAttachmentList().clear();
+	        }
         
 		try {
 					contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
@@ -1006,6 +1009,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			     	reqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
 			     	reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 			     	reqDTO.setAttachments(getManagedBean().getAttachmentList());
+			     	 reqDTO.setDeleteAttachments(ctBackingBean.getManagedBean().getDeleteAttachmentList());
 			     	reqDTO.setUserMap(getManagedBean().getUserMap());
 			     	reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 					reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
