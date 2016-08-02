@@ -195,6 +195,9 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
       public void setTerminationContractVer(ContractReqDTO reqDTO) {
              IContractTerminationSO contractTerminationSO = null;
              ContractResDTO resDTO = null;
+             if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
+ 	        	ctBB.getManagedBean().getDeleteAttachmentList().clear();
+ 	         }
              try {
                         contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
                         resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(reqDTO);
@@ -379,6 +382,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		    reqDTO.setUserRole(getUserRole());
             reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 		    reqDTO.setAttachments(getManagedBean().getAttachmentList());
+		    reqDTO.setDeleteAttachments(ctBB.getManagedBean().getDeleteAttachmentList());
 		    reqDTO.setUserMap(getManagedBean().getUserMap());
 	        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 	        reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
@@ -909,7 +913,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	  * Method describes reason for termination
 	  * Admin used to enter reason of termination
 	  */
-	 public void addTerminateReason() {
+	 public void addTerminateReason() { 
 		CtTerminationReason terminateReason = new CtTerminationReason();
 		    terminateReason.setCtTermination(getManagedBean().getContractVer().getCtTermination());
 		    getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().add(terminateReason);
