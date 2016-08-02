@@ -14,19 +14,18 @@
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
 						style="float:right;" id="proceedBtnId" disabled="#{empty softCertBackingBean.managedBean.softCertSelectList}">
 					</p:commandButton>
-					<h:commandLink style="float:right;" action="#{softCertBackingBean.revoke}"
-						disabled="#{!softCertBackingBean.managedBean.renderRevokeButton}" target="_blank"
-						process="@this" partialSubmit="true" update=":form" >
-							<p:commandButton type="button" value="#{lbl['lbl.sm.softcert.revoke']}" style="float:right;"
-							disabled="#{!softCertBackingBean.managedBean.renderRevokeButton}"/>
-					</h:commandLink>
 				</td>
 			</tr>
 		</table>
-
-		<p:panel header="#{lbl['lbl.sm.softcert.authpersonnel.panheader']}" toggleable="true" id="resultPanelId">
 		
+		<p:panel header="#{lbl['lbl.sm.softcert.authpersonnel.panheader']}" toggleable="true" id="resultPanelId">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.disclaimer']}"/>
+			<h:outputText styleClass="instruction" value="&lt;br/&gt;#{lbl['lbl.sm.softcert.revoke']}" escape="false" 
+			rendered="#{softCertBackingBean.managedBean.renderRevokeButton}" />
+			<h:commandLink action="#{softCertBackingBean.revoke}" value="#{lbl['lbl.sm.softcert.revoke.here']}" rendered="#{softCertBackingBean.managedBean.renderRevokeButton}"
+				disabled="#{!softCertBackingBean.managedBean.renderRevokeButton}" target="_blank" styleClass="instruction"
+				process="@this" partialSubmit="true" update=":form" >
+			</h:commandLink>
 			
 			<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -82,6 +81,9 @@
 				</p:column>
 
 			</p:dataTable>
+			
+			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.softcert.revoke.remark']}" escape="false"
+				rendered="#{softCertBackingBean.managedBean.renderRevokeButton}">
+			</h:outputText>
 		</p:panel>
-
 </ui:composition>
