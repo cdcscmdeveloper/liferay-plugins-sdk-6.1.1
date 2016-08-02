@@ -19,23 +19,18 @@
 								<p:panelGrid styleClass="tablePanel" id="contrPerSumTable">
 
 									<p:row id="contrPerSumTableHdrRow1">
-										<p:column rowspan="2" style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;" />
-										<p:column rowspan="2" style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
-										<p:column rowspan="2" style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.bod']}</p:column>
-										<p:column rowspan="2" style="width:20%;background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
-										<p:column rowspan="2" style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.mngt']}</p:column>
-										<p:column colspan="2" style="text-align:center;background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.stfTtl']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow" />
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.bod']}</p:column>
+										<p:column rowspan="2" style="width:20%"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.stfTtl']}</p:column>
 									</p:row>
 									<p:row id="contrPerSumTableHdrRow2">
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
 
 									</p:row>
 									<p:row>
@@ -174,29 +169,28 @@
 										</p:column>
 									</p:row>
 									<p:row>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.total.summary']}</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
+										<p:column>#{lbl['lbl.sm.total.summary']}</p:column>
+										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
 										</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
+										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodTotalCnt}" />
 										</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
+										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.hghrMngmtTotalCnt}" />
 										</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
+										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.mngmtTotalCnt}" />
 										</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
+										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.stfTotalCnt}" />
 										</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
+										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.stfActualTotalCnt}" />
 										</p:column>
@@ -207,37 +201,26 @@
 								test="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
 								<p:panelGrid styleClass="tablePanel" id="consultPerSumTable">
 									<p:row id="consultPerSumHdrRow">
-										<p:column rowspan="2" 
-											style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;" />
-										<p:column rowspan="2" 
-											style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;" >
-											#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;"
-											rowspan="2" >#{lbl['lbl.sm.person.composition.bod']}</p:column>
-										<p:column rowspan="2" style="width:15%;background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
-										<p:column rowspan="2" style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.mngt']}</p:column>
-										<p:column colspan="2" style="text-align:center;background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.prfStf']}</p:column>
-										<p:column colspan="2" style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.semiPrfStf']}</p:column>
-										<p:column colspan="2" style="text-align:center;background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.clrStf']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow" />
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.bod']}</p:column>
+										<p:column rowspan="2" style="width:15%"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.prfStf']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.semiPrfStf']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.clrStf']}</p:column>
 									</p:row>
 									<p:row id="consultPerEntActSumHdrRow">
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.actual']}</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.actual']}</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column style="background:#2c576e !important;padding:2px !important;color:rgb(255, 255, 255) !important;font-weight:bold !important;">
-											#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
 
 									</p:row>
 									<p:row>
@@ -464,44 +447,44 @@
 										</p:column>
 									</p:row>
 									<p:row>
-										<p:column>#{lbl['lbl.sm.total.summary']}</p:column>
-										<p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.total.summary']}</p:column>
+										<p:column styleClass="tableheaderrow">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
 										</p:column>
-										<p:column>
+										<p:column styleClass="tableheaderrow">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodTotalCnt}" />
 										</p:column>
-										<p:column>
+										<p:column styleClass="tableheaderrow">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.hghrMngmtTotalCnt}" />
 										</p:column>
-										<p:column>
+										<p:column styleClass="tableheaderrow">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.mngmtTotalCnt}" />
 										</p:column>
-										<p:column>
+										<p:column styleClass="tableheaderrow">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.profTotalCnt}" />
 										</p:column>
-										<p:column>
+										<p:column styleClass="tableheaderrow">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.profActualTotalCnt}" />
 										</p:column>
-										<p:column>
+										<p:column styleClass="tableheaderrow">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.semiTotalCnt}" />
 										</p:column>
-										<p:column>
+										<p:column styleClass="tableheaderrow">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.semiActualTotalCnt}" />
 										</p:column>
-										<p:column>
+										<p:column styleClass="tableheaderrow">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.stfTotalCnt}" />
 										</p:column>
-										<p:column>
+										<p:column styleClass="tableheaderrow">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.stfActualTotalCnt}" />
 										</p:column>
