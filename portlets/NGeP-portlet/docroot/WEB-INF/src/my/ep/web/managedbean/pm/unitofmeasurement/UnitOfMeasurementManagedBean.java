@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.unitofmeasurement;
 
 import javax.faces.bean.ManagedBean;
@@ -6,15 +9,15 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
- * @author DK
+ * Managed Bean for Unit Of Measurement
  * 
+ * @author DK
+ * @since 9/8/2014
  */
 @ManagedBean(name = "unitOfMeasurementManagedBean")
 @SessionScoped
 public class UnitOfMeasurementManagedBean extends BaseManagedBean {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -32,6 +35,8 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	
 	private PmUom oldPmUom;
 
+	public UnitOfMeasurementManagedBean(){}
+	
 	/**
 	 * @return the pmUom
 	 */

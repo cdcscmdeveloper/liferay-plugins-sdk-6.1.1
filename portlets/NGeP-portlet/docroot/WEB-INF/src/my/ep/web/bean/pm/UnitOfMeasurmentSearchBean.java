@@ -14,24 +14,41 @@ import java.io.Serializable;
  */
 public class UnitOfMeasurmentSearchBean implements Serializable  {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String UOMCode;
 	private String UOMName;
+	
+	public UnitOfMeasurmentSearchBean(){}
+
+	/**
+	 * @return the uOMCode
+	 */
 	public String getUOMCode() {
 		return UOMCode;
 	}
-	public String getUOMName() {
-		return UOMName;
-	}
+
+	/**
+	 * @param uOMCode the uOMCode to set
+	 */
 	public void setUOMCode(String uOMCode) {
 		UOMCode = uOMCode;
 	}
+
+	/**
+	 * @return the uOMName
+	 */
+	public String getUOMName() {
+		return UOMName;
+	}
+
+	/**
+	 * @param uOMName the uOMName to set
+	 */
 	public void setUOMName(String uOMName) {
 		UOMName = uOMName;
 	}
+	
+	
 
 
 }

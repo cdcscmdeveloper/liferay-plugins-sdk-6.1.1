@@ -19,21 +19,18 @@ import java.io.Serializable;
 */
 public class CitySearchBean implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	private String stateCode;
 	
 	/** The division name. */
 	private String divisionName;	
 	
 	/** The district name. */
-	private String districtName;
-	
+	private String districtName;	
 	private String cityName;
 
+	public CitySearchBean(){}
+	
 	/**
 	 * @return the stateCode
 	 */
@@ -89,6 +86,5 @@ public class CitySearchBean implements Serializable{
 	public void setStateCode(String stateCode) {
 		this.stateCode = stateCode;
 	}
-
 	
 }

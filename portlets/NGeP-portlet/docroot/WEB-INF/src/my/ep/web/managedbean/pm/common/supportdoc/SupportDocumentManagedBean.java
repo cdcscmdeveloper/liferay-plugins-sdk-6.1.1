@@ -53,14 +53,7 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private PmParameter supplierDocParameter;
 	private Integer deleteRowIndex;
 	
-	
-	public PmParameter getSupplierDocParameter() {
-		return supplierDocParameter;
-	}
-
-	public void setSupplierDocParameter(PmParameter supplierDocParameter) {
-		this.supplierDocParameter = supplierDocParameter;
-	}
+	public SupportDocumentManagedBean(){}
 
 	/**
 	 * @return the selectedTabIndex
@@ -353,6 +346,24 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setDeleteRowIndex(Integer deleteRowIndex) {
 		this.deleteRowIndex = deleteRowIndex;
+	}
+
+
+
+	/**
+	 * @return the supplierDocParameter
+	 */
+	public PmParameter getSupplierDocParameter() {
+		return supplierDocParameter;
+	}
+
+
+
+	/**
+	 * @param supplierDocParameter the supplierDocParameter to set
+	 */
+	public void setSupplierDocParameter(PmParameter supplierDocParameter) {
+		this.supplierDocParameter = supplierDocParameter;
 	}
 
 	

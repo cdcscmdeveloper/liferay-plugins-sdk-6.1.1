@@ -10,18 +10,16 @@ import java.io.Serializable;
  * 
  * @author RAIN POH
  * @since 6/8/2014
- *
+ * 
  */
-public class RoleSelectionList implements Serializable  {
+public class RoleSelectionList implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	private String RolesNames;
-
 	private String ApproverEtc;
+
+	public RoleSelectionList() {
+	}
 
 	/**
 	 * @return the rolesNames
@@ -31,7 +29,8 @@ public class RoleSelectionList implements Serializable  {
 	}
 
 	/**
-	 * @param rolesNames the rolesNames to set
+	 * @param rolesNames
+	 *            the rolesNames to set
 	 */
 	public void setRolesNames(String rolesNames) {
 		RolesNames = rolesNames;
@@ -45,11 +44,11 @@ public class RoleSelectionList implements Serializable  {
 	}
 
 	/**
-	 * @param approverEtc the approverEtc to set
+	 * @param approverEtc
+	 *            the approverEtc to set
 	 */
 	public void setApproverEtc(String approverEtc) {
 		ApproverEtc = approverEtc;
-	}	
-	
-	
+	}
+
 }

@@ -1,5 +1,7 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.profilepersonalization;
-
 
 import java.util.Date;
 import java.util.List;
@@ -8,7 +10,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -18,24 +19,21 @@ import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.web.bean.pm.ChallengeQAList;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.apache.log4j.Logger;
-
-
 /**
- * @author DK
- *
+ * Managed Bean for Profile Personalization
+ * 
+ * @author RAIN POH
+ * @since 06/08/2014
+ * 
  */
-@ManagedBean(name="profilePersonalizationManagedBean")
+@ManagedBean(name = "profilePersonalizationManagedBean")
 @SessionScoped
 public class ProfilePersonalizationManagedBean extends BaseManagedBean {
-	
+
 	private static final long serialVersionUID = 1L;
-	
-	private static final Logger log= EpLogger.getLogger(ProfilePersonalizationManagedBean.class);	
-	
-	
+
 	private PmUser selectedUser;
-	private PmAddress userAddress; //Address Type - C
+	private PmAddress userAddress; // Address Type - C
 	private boolean divisionFlagC;
 	private boolean deletePortrait;
 	private int selectedTabIndex;
@@ -53,8 +51,11 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private Date softCertExpDate;
 	private Date mofExpDate;
 	private int roleTableScrollHeight;
+
 	
-/**
+	public ProfilePersonalizationManagedBean(){}
+	
+	/**
 	 * @return the addressEntered
 	 */
 	public boolean isAddressEntered() {
@@ -62,16 +63,14 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param addressEntered the addressEntered to set
+	 * @param addressEntered
+	 *            the addressEntered to set
 	 */
 	public void setAddressEntered(boolean addressEntered) {
 		this.addressEntered = addressEntered;
 	}
-	
-	
-	
 
-public boolean isProfileChanged() {
+	public boolean isProfileChanged() {
 		return profileChanged;
 	}
 
@@ -79,7 +78,7 @@ public boolean isProfileChanged() {
 		this.profileChanged = profileChanged;
 	}
 
-/**
+	/**
 	 * @return the currentUserOrg
 	 */
 	public PmUserOrg getCurrentUserOrg() {
@@ -87,17 +86,18 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param currentUserOrg the currentUserOrg to set
+	 * @param currentUserOrg
+	 *            the currentUserOrg to set
 	 */
 	public void setCurrentUserOrg(PmUserOrg currentUserOrg) {
 		this.currentUserOrg = currentUserOrg;
 	}
 
-/**
+	/**
 	 * @return the currentProfile
 	 */
 	public PmOrgProfile getCurrentProfile() {
-		if(currentProfile==null){
+		if (currentProfile == null) {
 			currentProfile = new PmOrgProfile();
 			currentProfile.setPmOrgValidity(new PmOrgValidity());
 		}
@@ -105,13 +105,14 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param currentProfile the currentProfile to set
+	 * @param currentProfile
+	 *            the currentProfile to set
 	 */
 	public void setCurrentProfile(PmOrgProfile currentProfile) {
 		this.currentProfile = currentProfile;
 	}
 
-/**
+	/**
 	 * @return the deletePortrait
 	 */
 	public boolean isDeletePortrait() {
@@ -119,7 +120,8 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param deletePortrait the deletePortrait to set
+	 * @param deletePortrait
+	 *            the deletePortrait to set
 	 */
 	public void setDeletePortrait(boolean deletePortrait) {
 		this.deletePortrait = deletePortrait;
@@ -134,7 +136,8 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param selectedUser the selectedUser to set
+	 * @param selectedUser
+	 *            the selectedUser to set
 	 */
 	public void setSelectedUser(PmUser selectedUser) {
 		this.selectedUser = selectedUser;
@@ -148,7 +151,8 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param userAddress the userAddress to set
+	 * @param userAddress
+	 *            the userAddress to set
 	 */
 	public void setUserAddress(PmAddress userAddress) {
 		this.userAddress = userAddress;
@@ -162,12 +166,13 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param divisionFlagC the divisionFlagC to set
+	 * @param divisionFlagC
+	 *            the divisionFlagC to set
 	 */
 	public void setDivisionFlagC(boolean divisionFlagC) {
 		this.divisionFlagC = divisionFlagC;
 	}
-	
+
 	/**
 	 * @return the selectedTabIndex
 	 */
@@ -176,7 +181,8 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param selectedTabIndex the selectedTabIndex to set
+	 * @param selectedTabIndex
+	 *            the selectedTabIndex to set
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
@@ -198,7 +204,8 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param challengeQADDList the challengeQADDList to set
+	 * @param challengeQADDList
+	 *            the challengeQADDList to set
 	 */
 	public void setChallengeQADDList(SelectItem[] challengeQADDList) {
 		this.challengeQADDList = challengeQADDList;
@@ -219,14 +226,16 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param rolesList the rolesList to set
+	 * @param rolesList
+	 *            the rolesList to set
 	 */
 	public void setRolesList(List<String> rolesList) {
 		this.rolesList = rolesList;
 	}
 
 	/**
-	 * @param challengeQAList the challengeQAList to set
+	 * @param challengeQAList
+	 *            the challengeQAList to set
 	 */
 	public void setChallengeQAList(List<ChallengeQAList> challengeQAList) {
 		this.challengeQAList = challengeQAList;
@@ -240,7 +249,8 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param currentPassword the currentPassword to set
+	 * @param currentPassword
+	 *            the currentPassword to set
 	 */
 	public void setCurrentPassword(String currentPassword) {
 		this.currentPassword = currentPassword;
@@ -254,7 +264,8 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param passwordPolicy the passwordPolicy to set
+	 * @param passwordPolicy
+	 *            the passwordPolicy to set
 	 */
 	public void setPasswordPolicy(String passwordPolicy) {
 		this.passwordPolicy = passwordPolicy;
@@ -268,7 +279,8 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param softCertExpDate the softCertExpDate to set
+	 * @param softCertExpDate
+	 *            the softCertExpDate to set
 	 */
 	public void setSoftCertExpDate(Date softCertExpDate) {
 		this.softCertExpDate = softCertExpDate;
@@ -282,7 +294,8 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param roles the roles to set
+	 * @param roles
+	 *            the roles to set
 	 */
 	public void setRoles(String roles) {
 		this.roles = roles;
@@ -296,7 +309,8 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param mofExpDate the mofExpDate to set
+	 * @param mofExpDate
+	 *            the mofExpDate to set
 	 */
 	public void setMofExpDate(Date mofExpDate) {
 		this.mofExpDate = mofExpDate;
@@ -310,12 +324,11 @@ public boolean isProfileChanged() {
 	}
 
 	/**
-	 * @param roleTableScrollHeight the roleTableScrollHeight to set
+	 * @param roleTableScrollHeight
+	 *            the roleTableScrollHeight to set
 	 */
 	public void setRoleTableScrollHeight(int roleTableScrollHeight) {
 		this.roleTableScrollHeight = roleTableScrollHeight;
 	}
 
-}	
-	
-
+}

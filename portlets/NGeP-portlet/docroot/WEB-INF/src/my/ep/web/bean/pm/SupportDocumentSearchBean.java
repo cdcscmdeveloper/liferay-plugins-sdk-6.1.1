@@ -30,6 +30,8 @@ public class SupportDocumentSearchBean implements Serializable {
 	private String docStatus;
 	private Long glpCertBodyId;
 	
+	public SupportDocumentSearchBean(){}
+	
 	/**
 	 * @return the docCategoryParam
 	 */

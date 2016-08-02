@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.signatory;
 
 import java.util.Calendar;
@@ -16,8 +19,10 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
- * @author DK
+ * Managed Bean for Authorized Signatory
  * 
+ * @author DK
+ * @since 7/8/2014
  */
 @ManagedBean
 @SessionScoped
@@ -26,38 +31,55 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private PmZone zone;
-	
+
 	private PmCertSignatory pmCertSignatory;
-	
+
 	private List<PmUser> signatoryUsers;
 	private PmUser signatoryUser;
 	private List<PmCertSignatory> certSignatories;
 	private List<PmCertSignatory> deletedCertSignatories;
 	private int status;
 	private boolean validationError = false;
-	private Map<Long , Date> idToCertSignMapForChangedRecs = new HashMap<Long , Date>();
-	private Date  tomorrow = tomorrowDate();
+	private Map<Long, Date> idToCertSignMapForChangedRecs = new HashMap<Long, Date>();
+	private Date tomorrow = tomorrowDate();
 	private PmCertSignatory deleteSignatory;
-	
-	public AuthorizedSignatoryManagedBean(){}
 
+	public AuthorizedSignatoryManagedBean() {
+	}
+
+	/**
+	 * @return the tomorrow
+	 */
 	public Date getTomorrow() {
 		return tomorrow;
 	}
+
+	/**
+	 * @param tomorrow
+	 *            the tomorrow to set
+	 */
 	public void setTomorrow(Date tomorrow) {
 		this.tomorrow = tomorrow;
 	}
+
+	/**
+	 * To get Tommorow Date
+	 * 
+	 * @return tomorrowDate
+	 */
 	public Date tomorrowDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
-        Calendar c1 = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+				calendar.get(Calendar.DATE), 0, 0, 0);
+		Calendar c1 = Calendar.getInstance();
 		c1.add(Calendar.DATE, 1);
-		
-        return c1.getTime();
-    } 
+
+		return c1.getTime();
+	}
+
 	/**
 	 * @return the deletedCertSignatories
 	 */
@@ -66,7 +88,8 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deletedCertSignatories the deletedCertSignatories to set
+	 * @param deletedCertSignatories
+	 *            the deletedCertSignatories to set
 	 */
 	public void setDeletedCertSignatories(
 			List<PmCertSignatory> deletedCertSignatories) {
@@ -75,19 +98,18 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 
 	/**
 	 * @return the zone
-	 */	
+	 */
 	public PmZone getZone() {
 		return zone;
 	}
 
 	/**
-	 * @param zone the zone to set
+	 * @param zone
+	 *            the zone to set
 	 */
 	public void setZone(PmZone zone) {
 		this.zone = zone;
 	}
-
-
 
 	/**
 	 * @return the signatoryUsers
@@ -97,7 +119,8 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param signatoryUsers the signatoryUsers to set
+	 * @param signatoryUsers
+	 *            the signatoryUsers to set
 	 */
 	public void setSignatoryUsers(List<PmUser> signatoryUsers) {
 		this.signatoryUsers = signatoryUsers;
@@ -111,7 +134,8 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param signatoryUser the signatoryUser to set
+	 * @param signatoryUser
+	 *            the signatoryUser to set
 	 */
 	public void setSignatoryUser(PmUser signatoryUser) {
 		this.signatoryUser = signatoryUser;
@@ -119,22 +143,30 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 
 	/**
 	 * @return the pmCertSignatory
-	 */	
+	 */
 	public PmCertSignatory getPmCertSignatory() {
 		return pmCertSignatory;
 	}
 
 	/**
-	 * @param pmCertSignatory the pmCertSignatory to set
+	 * @param pmCertSignatory
+	 *            the pmCertSignatory to set
 	 */
 	public void setPmCertSignatory(PmCertSignatory pmCertSignatory) {
 		this.pmCertSignatory = pmCertSignatory;
 	}
 
+	/**
+	 * @return the status
+	 */
 	public int getStatus() {
 		return status;
 	}
 
+	/**
+	 * @param status
+	 *            the status to set
+	 */
 	public void setStatus(int status) {
 		this.status = status;
 	}
@@ -147,7 +179,8 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param certSignatories the certSignatories to set
+	 * @param certSignatories
+	 *            the certSignatories to set
 	 */
 	public void setCertSignatories(List<PmCertSignatory> certSignatories) {
 		this.certSignatories = certSignatories;
@@ -161,32 +194,42 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param validationError the validationError to set
+	 * @param validationError
+	 *            the validationError to set
 	 */
 	public void setValidationError(boolean validationError) {
 		this.validationError = validationError;
 	}
 
+	/**
+	 * @return the idToCertSignMapForChangedRecs
+	 */
 	public Map<Long, Date> getIdToCertSignMapForChangedRecs() {
 		return idToCertSignMapForChangedRecs;
 	}
 
+	/**
+	 * @param idToCertSignMapForChangedRecs
+	 *            the idToCertSignMapForChangedRecs to set
+	 */
 	public void setIdToCertSignMapForChangedRecs(
 			Map<Long, Date> idToCertSignMapForChangedRecs) {
 		this.idToCertSignMapForChangedRecs = idToCertSignMapForChangedRecs;
 	}
+
 	/**
 	 * @return the deleteSignatory
 	 */
 	public PmCertSignatory getDeleteSignatory() {
 		return deleteSignatory;
 	}
+
 	/**
-	 * @param deleteSignatory the deleteSignatory to set
+	 * @param deleteSignatory
+	 *            the deleteSignatory to set
 	 */
 	public void setDeleteSignatory(PmCertSignatory deleteSignatory) {
 		this.deleteSignatory = deleteSignatory;
 	}
 
-		
 }

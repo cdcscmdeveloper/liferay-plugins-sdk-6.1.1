@@ -13,14 +13,13 @@ import java.io.Serializable;
  */
 public class FundSearchBean implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	private String fundCode;
 	private String fundName;	
 	private String status;
+	
+	public FundSearchBean(){}
+	
 	/**
 	 * @return the fundCode
 	 */
@@ -57,7 +56,5 @@ public class FundSearchBean implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	
 
 }

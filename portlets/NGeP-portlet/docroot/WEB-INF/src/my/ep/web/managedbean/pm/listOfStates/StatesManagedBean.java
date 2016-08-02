@@ -16,10 +16,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.managedbean.BaseManagedBean;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class StatesManagedBean.
- */
+
 /**
  * EJB ManagedBean For List Of States.
  * 

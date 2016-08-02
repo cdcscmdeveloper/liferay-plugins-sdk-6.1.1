@@ -19,10 +19,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
  *
  */
 public class TaskAssignmentSearchBean implements Serializable {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private PmOrgProfile orgProfile;
 	private PmUser user;
@@ -37,7 +34,8 @@ public class TaskAssignmentSearchBean implements Serializable {
 //	private Long ptjId;
 //	private String userId;
 	
-
+	public TaskAssignmentSearchBean(){}
+	
 	/**
 	 * @return the user
 	 */

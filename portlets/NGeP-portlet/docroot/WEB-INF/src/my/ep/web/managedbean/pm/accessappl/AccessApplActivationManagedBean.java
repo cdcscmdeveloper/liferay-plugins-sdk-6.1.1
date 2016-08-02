@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2016 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.accessappl;
 
 import javax.faces.bean.ManagedBean;
@@ -6,6 +9,13 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.pm.common.PmAccessAppl;
 import my.ep.web.managedbean.BaseManagedBean;
 
+/**
+ * Managed Bean for Access Application Activation
+ * 
+ * @author Ken
+ * @since 27/1/2016 
+ *
+ */
 @ManagedBean(name = "accessApplActivationManagedBean")
 @SessionScoped
 public class AccessApplActivationManagedBean extends BaseManagedBean {/**

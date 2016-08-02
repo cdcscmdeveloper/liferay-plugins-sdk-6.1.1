@@ -59,8 +59,8 @@ import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.managedbean.pm.usergroup.UsergroupManagedBean;
-import my.ep.web.managedbean.pm.usergroup.UsergroupSearchBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -94,8 +94,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 */
 	public void reset() {
 		logger.info("inside reset");
-		this.getManagedBean().setUsergroupSearchBean(new UsergroupSearchBean());
-		this.getManagedBean().setStatus(null);
+		this.getManagedBean().setUsergroupSearchBean(new UserGroupSearchBean());
+		this.getManagedBean().getUsergroupSearchBean().setStatus(null);
 		this.getManagedBean().setLazy(false);
 		userGroupList = new UserGroupProfilePagingDataModel();
 	}
@@ -149,12 +149,12 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		 */
 		private void populateSearchBean(ISearchBean<PmUserGroup> searchBean) {
 			SearchFilterBean codesSearchBean = null;
-			if (StringUtils.isNotBlank(getManagedBean().getUserName())) {
+			if (StringUtils.isNotBlank(getManagedBean().getUsergroupSearchBean().getUserName())) {
 				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean
 						.setSearchField("pmUserGroupUsers.pmUser.userName");
-				codesSearchBean.setSearchValue(getManagedBean().getUserName());
+				codesSearchBean.setSearchValue(getManagedBean().getUsergroupSearchBean().getUserName());
 				codesSearchBean.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
@@ -168,48 +168,48 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
-			if (StringUtils.isNotBlank(getManagedBean().getGroupCode())) {
+			if (StringUtils.isNotBlank(getManagedBean().getUsergroupSearchBean().getGroupCode())) {
 				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean.setSearchField("groupCode");
-				codesSearchBean.setSearchValue(getManagedBean().getGroupCode());
+				codesSearchBean.setSearchValue(getManagedBean().getUsergroupSearchBean().getGroupCode());
 				codesSearchBean.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
-			if (StringUtils.isNotBlank(getManagedBean().getGroupName())){
+			if (StringUtils.isNotBlank(getManagedBean().getUsergroupSearchBean().getGroupName())){
 				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean.setSearchField("groupName");
-				codesSearchBean.setSearchValue(getManagedBean().getGroupName());
+				codesSearchBean.setSearchValue(getManagedBean().getUsergroupSearchBean().getGroupName());
 				codesSearchBean.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
-			if (StringUtils.isNotBlank(getManagedBean().getPtjCode())){
+			if (StringUtils.isNotBlank(getManagedBean().getUsergroupSearchBean().getPtjCode())){
 				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean.setSearchField("pmOrgProfile.pmOrgValidity.orgCode");
-				codesSearchBean.setSearchValue(getManagedBean().getPtjCode());
+				codesSearchBean.setSearchValue(getManagedBean().getUsergroupSearchBean().getPtjCode());
 				codesSearchBean.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
-			if (StringUtils.isNotBlank(getManagedBean().getPtjName())){
+			if (StringUtils.isNotBlank(getManagedBean().getUsergroupSearchBean().getPtjName())){
 				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean
 						.setSearchField("pmOrgProfile.pmOrgValidity.orgName");
 				codesSearchBean.setCaseInsensitive(true);
-				codesSearchBean.setSearchValue(getManagedBean().getPtjName());
+				codesSearchBean.setSearchValue(getManagedBean().getUsergroupSearchBean().getPtjName());
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
-			if (getManagedBean().getStatus() != null) {
+			if (getManagedBean().getUsergroupSearchBean().getStatus() != null) {
 				codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_EQUALS.value());
 				codesSearchBean.setSearchField("recordStatusFlg");
-				codesSearchBean.setSearchValue(getManagedBean().getStatus());
+				codesSearchBean.setSearchValue(getManagedBean().getUsergroupSearchBean().getStatus());
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}else{
 				codesSearchBean = new SearchFilterBean(

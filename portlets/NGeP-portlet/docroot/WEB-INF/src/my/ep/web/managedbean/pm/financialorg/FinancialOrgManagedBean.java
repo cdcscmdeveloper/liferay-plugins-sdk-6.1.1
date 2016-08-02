@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.financialorg;
 
 import java.util.Date;
@@ -14,10 +17,10 @@ import my.ep.persistence.entity.pm.common.PmFinancialSvc;
 import my.ep.web.bean.pm.FinancialOrgSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 /**
- * Managed Bean for Financial Org
+ * Managed Bean for Financial Organisation
  * 
- * @author RAIN POH
- * @since 8/1/2014
+ * @author venugopal
+ * @since 30/7/2014
  *
  */
 @ManagedBean(name = "financialOrgManagedBean")
@@ -49,7 +52,10 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	private Integer tabActiveIndex = 0;
 	private PmFinancialSvc selectedDeleteSvc;
 	private PmFinancialAcc selectedDeleteFactoringBank;
+	
+	private boolean addressAndContactPersonMandatory;
 
+	public FinancialOrgManagedBean(){}
 
 	/**
 	 * @return the currentDate
@@ -64,36 +70,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	public void setCurrentDate(Date currentDate) {
 		this.currentDate = currentDate;
 	}
-
-//	/**
-//	 * @return the branchAddress
-//	 */
-//	public PmAddress getBranchAddress() {
-//		return branchAddress;
-//	}
-
-//	/**
-//	 * @param branchAddress
-//	 *            the branchAddress to set
-//	 */
-//	public void setBranchAddress(PmAddress branchAddress) {
-//		this.branchAddress = branchAddress;
-//	}
-//
-//	/**
-//	 * @return the branchContactPerson
-//	 */
-//	public PmContact getBranchContactPerson() {
-//		return branchContactPerson;
-//	}
-//
-//	/**
-//	 * @param branchContactPerson
-//	 *            the branchContactPerson to set
-//	 */
-//	public void setBranchContactPerson(PmContact branchContactPerson) {
-//		this.branchContactPerson = branchContactPerson;
-//	}
 
 	public PmAddress getPmAddress() {
 		return pmAddress;
@@ -275,6 +251,21 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedDeleteSvc(PmFinancialSvc selectedDeleteSvc) {
 		this.selectedDeleteSvc = selectedDeleteSvc;
+	}
+
+	/**
+	 * @return the addressAndContactPersonMandatory
+	 */
+	public boolean isAddressAndContactPersonMandatory() {
+		return addressAndContactPersonMandatory;
+	}
+
+	/**
+	 * @param addressAndContactPersonMandatory the addressAndContactPersonMandatory to set
+	 */
+	public void setAddressAndContactPersonMandatory(
+			boolean addressAndContactPersonMandatory) {
+		this.addressAndContactPersonMandatory = addressAndContactPersonMandatory;
 	}
 
 

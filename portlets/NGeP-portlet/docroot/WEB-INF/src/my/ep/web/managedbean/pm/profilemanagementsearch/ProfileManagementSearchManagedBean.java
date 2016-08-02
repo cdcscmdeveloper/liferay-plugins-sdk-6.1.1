@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2016 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.profilemanagementsearch;
 
 import java.util.HashMap;
@@ -10,22 +13,14 @@ import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.access.application.IAccessApplSO;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
-import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.common.PmAccessAppl;
 import my.ep.type.aut.SearchOperator;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.ProfileManagementSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.profilemanagement.ProfileManagementManagedBean;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
  * The managed bean for profile Management Search
@@ -46,7 +41,11 @@ public class ProfileManagementSearchManagedBean extends BaseManagedBean {
 	private Long selectedOrgType;
 
 	private PmOrgProfile selectedOrgProfile;
-	
+	private ProfileManagementSearchBean profileManagSearchBean;
+
+	public ProfileManagementSearchManagedBean() {
+	}
+
 	/**
 	 * get search bean
 	 * 
@@ -54,17 +53,19 @@ public class ProfileManagementSearchManagedBean extends BaseManagedBean {
 	 */
 	public void fillRequestDTO(AccessApplReqDTO applReqDTO) {
 		log.info("fillRequestDTO - Start");
-		ProfileManagementSearchBean pmSearchBean = this.getProfileManagSearchBean();
+		ProfileManagementSearchBean pmSearchBean = this
+				.getProfileManagSearchBean();
 
 		if (getSelectedOrgProfile() != null) {
 			log.info("..getSelectedOrgProfile().getOrgProfileId()="
 					+ getSelectedOrgProfile().getOrgProfileId());
-			applReqDTO.setOrgProfileId(getSelectedOrgProfile().getOrgProfileId());	
+			applReqDTO.setOrgProfileId(getSelectedOrgProfile()
+					.getOrgProfileId());
 		}
 
 		if (this.getSelectedOrgType() != null) {
 			log.info("+ getSelectedOrgType " + getSelectedOrgType());
-			applReqDTO.setOrgTypeId(this.getSelectedOrgType());	
+			applReqDTO.setOrgTypeId(this.getSelectedOrgType());
 		}
 
 		// IdentificationNO
@@ -83,12 +84,13 @@ public class ProfileManagementSearchManagedBean extends BaseManagedBean {
 		if (pmSearchBean.getCompanyProfile() != null
 				&& pmSearchBean.getCompanyProfile()) {
 			applReqDTO.setCompanyProfile(1);
-		}else if (pmSearchBean.getMarketResearch() != null
+		} else if (pmSearchBean.getMarketResearch() != null
 				&& pmSearchBean.getMarketResearch()) {
 			applReqDTO.setMarketResearch(1);
 		}
 
 	}
+
 	/**
 	 * get search bean
 	 * 
@@ -164,16 +166,69 @@ public class ProfileManagementSearchManagedBean extends BaseManagedBean {
 		return searchBean;
 	}
 
-	private ProfileManagementSearchBean profileManagSearchBean;
+	/**
+	 * @return the orgTypeMap
+	 */
+	public Map<String, SelectItem[]> getOrgTypeMap() {
+		return orgTypeMap;
+	}
 
+	/**
+	 * @param orgTypeMap
+	 *            the orgTypeMap to set
+	 */
+	public void setOrgTypeMap(Map<String, SelectItem[]> orgTypeMap) {
+		this.orgTypeMap = orgTypeMap;
+	}
+
+	/**
+	 * @return the selectedAppTypeParamCode
+	 */
 	public String getSelectedAppTypeParamCode() {
 		return selectedAppTypeParamCode;
 	}
 
+	/**
+	 * @param selectedAppTypeParamCode
+	 *            the selectedAppTypeParamCode to set
+	 */
 	public void setSelectedAppTypeParamCode(String selectedAppTypeParamCode) {
 		this.selectedAppTypeParamCode = selectedAppTypeParamCode;
 	}
 
+	/**
+	 * @return the selectedOrgType
+	 */
+	public Long getSelectedOrgType() {
+		return selectedOrgType;
+	}
+
+	/**
+	 * @param selectedOrgType
+	 *            the selectedOrgType to set
+	 */
+	public void setSelectedOrgType(Long selectedOrgType) {
+		this.selectedOrgType = selectedOrgType;
+	}
+
+	/**
+	 * @return the selectedOrgProfile
+	 */
+	public PmOrgProfile getSelectedOrgProfile() {
+		return selectedOrgProfile;
+	}
+
+	/**
+	 * @param selectedOrgProfile
+	 *            the selectedOrgProfile to set
+	 */
+	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
+		this.selectedOrgProfile = selectedOrgProfile;
+	}
+
+	/**
+	 * @return the profileManagSearchBean
+	 */
 	public ProfileManagementSearchBean getProfileManagSearchBean() {
 		if (profileManagSearchBean == null) {
 			profileManagSearchBean = new ProfileManagementSearchBean();
@@ -181,33 +236,13 @@ public class ProfileManagementSearchManagedBean extends BaseManagedBean {
 		return profileManagSearchBean;
 	}
 
+	/**
+	 * @param profileManagSearchBean
+	 *            the profileManagSearchBean to set
+	 */
 	public void setProfileManagSearchBean(
 			ProfileManagementSearchBean profileManagSearchBean) {
 		this.profileManagSearchBean = profileManagSearchBean;
-	}
-
-	public Long getSelectedOrgType() {
-		return selectedOrgType;
-	}
-
-	public PmOrgProfile getSelectedOrgProfile() {
-		return selectedOrgProfile;
-	}
-
-	public void setSelectedOrgType(Long selectedOrgType) {
-		this.selectedOrgType = selectedOrgType;
-	}
-
-	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
-		this.selectedOrgProfile = selectedOrgProfile;
-	}
-
-	public Map<String, SelectItem[]> getOrgTypeMap() {
-		return orgTypeMap;
-	}
-
-	public void setOrgTypeMap(Map<String, SelectItem[]> orgTypeMap) {
-		this.orgTypeMap = orgTypeMap;
 	}
 
 }

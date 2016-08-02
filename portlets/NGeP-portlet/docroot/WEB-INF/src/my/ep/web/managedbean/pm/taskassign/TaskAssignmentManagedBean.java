@@ -2,6 +2,7 @@
  * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.managedbean.pm.taskassign;
+
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -17,14 +18,14 @@ import my.ep.web.managedbean.BaseManagedBean;
  * Managed Bean for Task Assignment
  * 
  * @author RAIN POH
- * @since 8/7/2013
- *
+ * @since 8/7/2014
+ * 
  */
 @ManagedBean(name = "taskAssignManagedBean")
 @SessionScoped
 public class TaskAssignmentManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-	
+
 	private TaskAssignmentSearchBean taskAssignmentSearchBean;
 	private WorklistItemVO selectedTask;
 	private List<PmUser> availableUsers;
@@ -32,10 +33,13 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	private boolean orgProfileRequired;
 	private String filterOrgCondition;
 	private PmOrgProfile currentActiveOrg;
-	
+
 	private PmUser resultUser;
 	private PmOrgProfile resultOrgProfile;
 	private List<String> roleCodes;
+
+	public TaskAssignmentManagedBean() {
+	}
 
 	/**
 	 * @return the currentActiveOrg
@@ -45,7 +49,8 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param currentActiveOrg the currentActiveOrg to set
+	 * @param currentActiveOrg
+	 *            the currentActiveOrg to set
 	 */
 	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
 		this.currentActiveOrg = currentActiveOrg;
@@ -59,7 +64,8 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param resultOrgProfile the resultOrgProfile to set
+	 * @param resultOrgProfile
+	 *            the resultOrgProfile to set
 	 */
 	public void setResultOrgProfile(PmOrgProfile resultOrgProfile) {
 		this.resultOrgProfile = resultOrgProfile;
@@ -73,7 +79,8 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param taskAssignmentSearchBean the taskAssignmentSearchBean to set
+	 * @param taskAssignmentSearchBean
+	 *            the taskAssignmentSearchBean to set
 	 */
 	public void setTaskAssignmentSearchBean(
 			TaskAssignmentSearchBean taskAssignmentSearchBean) {
@@ -88,7 +95,8 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedTask the selectedTask to set
+	 * @param selectedTask
+	 *            the selectedTask to set
 	 */
 	public void setSelectedTask(WorklistItemVO selectedTask) {
 		this.selectedTask = selectedTask;
@@ -102,7 +110,8 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedUser the selectedUser to set
+	 * @param selectedUser
+	 *            the selectedUser to set
 	 */
 	public void setSelectedUser(PmUser selectedUser) {
 		this.selectedUser = selectedUser;
@@ -116,7 +125,8 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param availableUsers the availableUsers to set
+	 * @param availableUsers
+	 *            the availableUsers to set
 	 */
 	public void setAvailableUsers(List<PmUser> availableUsers) {
 		this.availableUsers = availableUsers;
@@ -130,7 +140,8 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param orgProfileRequired the orgProfileRequired to set
+	 * @param orgProfileRequired
+	 *            the orgProfileRequired to set
 	 */
 	public void setOrgProfileRequired(boolean orgProfileRequired) {
 		this.orgProfileRequired = orgProfileRequired;
@@ -144,13 +155,12 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param resultUser the resultUser to set
+	 * @param resultUser
+	 *            the resultUser to set
 	 */
 	public void setResultUser(PmUser resultUser) {
 		this.resultUser = resultUser;
 	}
-
-
 
 	/**
 	 * @return the filterOrgCondition
@@ -160,7 +170,8 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param filterOrgCondition the filterOrgCondition to set
+	 * @param filterOrgCondition
+	 *            the filterOrgCondition to set
 	 */
 	public void setFilterOrgCondition(String filterOrgCondition) {
 		this.filterOrgCondition = filterOrgCondition;
@@ -174,16 +185,11 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param roleCodes the roleCodes to set
+	 * @param roleCodes
+	 *            the roleCodes to set
 	 */
 	public void setRoleCodes(List<String> roleCodes) {
 		this.roleCodes = roleCodes;
 	}
 
-
-
-	
-
-	
-	
 }
