@@ -229,7 +229,7 @@
 							<td><p:inputText id="techprivateContScore" required="true"
 									style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
-									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
+									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="14"
 									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 									<p:ajax  event="change" process="@this" partialSubmit="true" update="companyExpPrivateContracts"></p:ajax>
@@ -323,12 +323,13 @@
 										style="text-align:right"
 										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 										label="#{lbl['lbl.sc.from']}" required="true"
-										value="#{checkListScoring.rangeFrom}" maxlength="18">
-										<p:ajax process="@this" partialSubmit="true"
+										value="#{checkListScoring.rangeFrom}" maxlength="14">
+										<p:ajax event="blur" process="@this" partialSubmit="true"
 											update="@this,#{scoringPnlId}_fromRangeTNyears" />
-										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
-										<f:attribute name="min" value="0"></f:attribute>
-										<p:ajax  event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
+											<ac:validateNumber
+												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+												maxIntegerDigits="14" />
+											<f:attribute name="min" value="0"></f:attribute>
 									</p:inputText>
 
 
@@ -349,7 +350,7 @@
 										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 										required="#{index lt scoringList.size()-1}"
 										label="#{lbl['lbl.sc.to']}"
-										value="#{checkListScoring.rangeTo}" maxlength="18">
+										value="#{checkListScoring.rangeTo}" maxlength="14">
 										<p:ajax event="blur" process="@this" partialSubmit="true"
 											update="@this,#{scoringPnlId}_toRangeTNYears" />
 										<ac:validateNumber
@@ -372,7 +373,7 @@
 										style="text-align:right"
 										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 										label="#{lbl['lbl.sc.score']}" 
-										value="#{checkListScoring.score}" maxlength="18">
+										value="#{checkListScoring.score}" maxlength="14">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 										<p:ajax  event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
 									</p:inputText>
@@ -431,7 +432,7 @@
 									style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 									label="#{lbl['lbl.sc.spec.max.score']}" required="true"
-									maxlength="18"
+									maxlength="14"
 									value="#{specificationBackingBean.managedBean.scQtContractScore.score}">
 									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 									<p:ajax  event="change" process="@this" partialSubmit="true" update="techcompanyExpPrivateNumbersOfYears"></p:ajax>

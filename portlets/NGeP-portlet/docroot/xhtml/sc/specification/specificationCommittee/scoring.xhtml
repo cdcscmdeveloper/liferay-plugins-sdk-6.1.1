@@ -47,7 +47,7 @@
 					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'AL' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'TG' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'TN' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'FG' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'FN'}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					label="#{lbl['lbl.sc.from']}" required="true"
-					value="#{checkListScoring.rangeFrom}" maxlength="18">
+					value="#{checkListScoring.rangeFrom}" maxlength="14">
 					<p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/>
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 
@@ -58,7 +58,7 @@
 					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'BS' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'AL'}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					label="#{lbl['lbl.sc.from']}" required="true"
-					value="#{checkListScoring.rangeFrom}" maxlength="18">
+					value="#{checkListScoring.rangeFrom}" maxlength="14">
 					<p:ajax process="@this" partialSubmit="true"
 						update="@this,#{scoringPnlId}_fromRangeTG" />
 					<ac:validateNumber
@@ -73,7 +73,7 @@
 					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'TG' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'TN' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'FG' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'FN'}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					label="#{lbl['lbl.sc.from']}" required="true"
-					value="#{checkListScoring.rangeFrom}" maxlength="18">
+					value="#{checkListScoring.rangeFrom}" maxlength="14">
 					<p:ajax process="@this" partialSubmit="true"
 						update="@this,#{scoringPnlId}_fromRangeFG" />
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
@@ -97,7 +97,7 @@
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					required="#{index lt scoringList.size()-1}"
 					label="#{lbl['lbl.sc.to']}" value="#{checkListScoring.rangeTo}"
-					maxlength="18">
+					maxlength="14">
 					<p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/>
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 				</p:inputText>
@@ -107,7 +107,7 @@
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					required="#{index lt scoringList.size()-1}"
 					label="#{lbl['lbl.sc.to']}" value="#{checkListScoring.rangeTo}"
-					maxlength="18">
+					maxlength="14">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						update="#{scoringPnlId}_toRangeBS" />
 					<ac:validateNumber
@@ -128,7 +128,7 @@
 				<p:inputText id="#{scoringPnlId}_toScore" style="text-align:right"
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					label="#{lbl['lbl.sc.score']}" value="#{checkListScoring.score}"
-					maxlength="18">
+					maxlength="14">
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 					<p:ajax  event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
 				</p:inputText>
