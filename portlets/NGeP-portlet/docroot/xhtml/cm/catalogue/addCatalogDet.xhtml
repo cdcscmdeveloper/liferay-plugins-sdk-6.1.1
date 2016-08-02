@@ -120,12 +120,12 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.cm.unspsc.title']}" /></td>
 					<td style="overflow-wrap: break-word; width: 20%;">
-						<p:outputLabel styleClass="outputLabel-view" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemNameBeforeCodified}" /></td>
+						<p:outputLabel styleClass="outputLabel-view" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sc.item.name.after.codified']}" /></td>
+							value="#{lbl['lbl.cm.item.name.contract.panel']}" /></td>
 					<td style="overflow-wrap: break-word; width: 20%;"><p:outputLabel
 							styleClass="outputLabel-view"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:outputLabel>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemNameBeforeCodified}"></p:outputLabel>
 						<p:spacer width="5" /> <p:commandLink
 							rendered="#{fn:length(catalogueBackingBean.managedBean.itemSpec) > 0}"
 							update=":form:itemSpecDlg" oncomplete="itemSpecDlg.show();">
