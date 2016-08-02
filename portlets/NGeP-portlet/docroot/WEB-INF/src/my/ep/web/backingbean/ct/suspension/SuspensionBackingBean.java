@@ -194,7 +194,9 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		    ctBB.renewSesionObject();
 		    IContractSuspensionSO contractSuspensionSO= null;
 		    ContractResDTO resDTO = null;
-		    ctBB.getManagedBean().setDeleteAttachmentList(null);
+		    if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
+	        	ctBB.getManagedBean().getDeleteAttachmentList().clear();
+	        }
 		     
 		    try{
 		    	      contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSuspensionSO.class);

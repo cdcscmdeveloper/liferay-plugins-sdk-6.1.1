@@ -329,8 +329,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().getContractVer().getDeductionAttachments().add(attachment);
 		}else if(event.getComponent().getId().equalsIgnoreCase("uploadScheduleId")){
 			getManagedBean().getContractVer().getScheduleAttachments().add(attachment);
+		}else if(event.getComponent().getId().equalsIgnoreCase("uploadItemAmendId")){
+			getManagedBean().getContractVer().getItemAmendAttachments().add(attachment);
 		}else
-		this.getManagedBean().getAttachmentList().add(attachment);
+		   this.getManagedBean().getAttachmentList().add(attachment);
 	}
 	
 	/**
@@ -407,11 +409,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	
 	public void deleteItemAttachmentAction(int index) {
-		CtAttachment attachment = getManagedBean().getContractVer().getItemAttachments().get(index);
+		CtAttachment attachment = getManagedBean().getContractVer().getItemAmendAttachments().get(index);
 		if(attachment.getAttachmentId() != null){
 			 getManagedBean().getDeleteAttachmentList().add(attachment);
 		}
-		getManagedBean().getContractVer().getItemAttachments().remove(index);
+		getManagedBean().getContractVer().getItemAmendAttachments().remove(index);
 	}
 	
 	public void deleteDeductAttachmentAction(int index) {
