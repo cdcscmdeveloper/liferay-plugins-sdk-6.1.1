@@ -361,7 +361,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
-
+				System.out.println("getDocType()"+getDocType());
 				reqDTO.setDocType(getDocType());
 
 												
@@ -537,9 +537,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					System.out.println("getOrgProfileId"+getSelectedOrgProfileGroup().getOrgProfileId());
 				}
 				
-				if(getSelectedStatusDescAdvance()!=null && getSelectedStatusDescAdvance().getPmStatus()!=null && getSelectedStatusDescAdvance().getPmStatus().getStatusId()>0){
-					System.out.println("getSelectedStatusDescAdvance"+getSelectedStatusDescAdvance().getPmStatus().getStatusId().intValue());
-					reqDTO.setStatus(getSelectedStatusDescAdvance().getPmStatus().getStatusId().intValue());
+				if(getDocStatusGroup()>0){
+					System.out.println("getDocStatusGroup"+getDocStatusGroup());
+					reqDTO.setStatus(getDocStatusGroup());
 				}
 				
 				reqDTO.setViewBy(getViewByGroup());
