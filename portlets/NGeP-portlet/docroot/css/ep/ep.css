@@ -3171,7 +3171,6 @@ input[type="submit"]:hover,input[type="button"]:hover,input[type="reset"]:hover,
 	padding:2px !important;
 	color:rgb(255, 255, 255) !important;
 	font-weight:bold !important;
-	text-align: left !important;
 }
 
 .instruction {
