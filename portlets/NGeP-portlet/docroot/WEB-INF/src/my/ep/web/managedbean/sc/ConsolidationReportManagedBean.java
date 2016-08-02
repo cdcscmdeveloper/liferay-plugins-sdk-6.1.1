@@ -1,11 +1,13 @@
 package my.ep.web.managedbean.sc;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -77,6 +79,16 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> boardofDirectors;
 
 	private List<ScQtFinalizationRemarks> finalizationRemars;
+	
+	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
+		{
+			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
+			add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
+			add(SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT);
+			add(SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT);
+			add(SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT);
+		}
+	};
 
 	public ConsolidationReportManagedBean() {
 	}
@@ -522,6 +534,13 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setFinalizationRemars(
 			List<ScQtFinalizationRemarks> finalizationRemars) {
 		this.finalizationRemars = finalizationRemars;
+	}
+
+	/**
+	 * @return the directdownloaddocdefkeys
+	 */
+	public static List<String> getDirectdownloaddocdefkeys() {
+		return directDownloadDocDefKeys;
 	}
 
 }

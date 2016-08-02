@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.sc.supplierfinalization;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +11,7 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -182,6 +184,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//Online Bidding Endorsement
 	private List<ScQtCommitteeActivity> onlineBiddingEndorsementList;
 	private List<ScQtCommitteeActivity> onlineBiddingReminderList;
+	
+	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
+		{
+			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
+			add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
+			add(SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT);
+			add(SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT);
+			add(SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT);
+		}
+	};
 	
 	private String subject;
 	private String message;
@@ -1914,6 +1926,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setEvaluationHeader(String evaluationHeader) {
 		this.evaluationHeader = evaluationHeader;
+	}
+
+	/**
+	 * @return the directdownloaddocdefkeys
+	 */
+	public static List<String> getDirectdownloaddocdefkeys() {
+		return directDownloadDocDefKeys;
 	}
 
 }
