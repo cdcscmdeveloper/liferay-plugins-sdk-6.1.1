@@ -237,7 +237,6 @@
 								<h:commandLink value="#{attachFile.fileName}" 
 									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 								<p:commandLink onsuccess="deleteSignAttachDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
-									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)}"
 									disabled="#{ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim}">
 			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	 				</p:commandLink>
