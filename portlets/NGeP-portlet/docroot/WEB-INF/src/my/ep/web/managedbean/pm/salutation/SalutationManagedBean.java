@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.salutation;
 
 import javax.faces.bean.ManagedBean;
@@ -7,16 +10,15 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
- * @author DK
+ * Managed Bean for Salutation
  * 
+ * @author DK
+ * @since 25/7/2014
  */
 @ManagedBean(name = "salutationManagedBean")
 @SessionScoped
 public class SalutationManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private PmSalutation pmSalutation;
@@ -28,6 +30,8 @@ public class SalutationManagedBean extends BaseManagedBean {
 	private Long status;
 
 	private boolean isLazy;
+	
+	public SalutationManagedBean(){}
 
 	/**
 	 * @return the salutationCodes

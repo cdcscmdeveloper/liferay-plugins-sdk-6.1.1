@@ -7,15 +7,14 @@ import java.io.Serializable;
 
 /**
  * OIM Challenge Question & Answer List
+ * 
  * @author KEN WONG
  * @since 20/5/2015	 
  *
  */
 public class ChallengeQAList implements Serializable{
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private String question;
 	private String answer;

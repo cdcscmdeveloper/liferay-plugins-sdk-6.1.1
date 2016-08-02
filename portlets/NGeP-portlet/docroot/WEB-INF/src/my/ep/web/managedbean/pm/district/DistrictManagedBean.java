@@ -21,11 +21,13 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.bean.pm.DistrictSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
-// TODO: Auto-generated Javadoc
+
 /**
- * The Class DistrictManagedBean.
- *    @author Nagasiva
- *    @since 14.06.2016
+ * Managed Bean for District
+ * 
+ * @author Nagasiva
+ * @since 14.06.2016
+ * 
  */
 @ManagedBean(name = "districtManagedBean")
 @SessionScoped
@@ -46,6 +48,7 @@ public class DistrictManagedBean extends BaseManagedBean {
 	/** The list of states. */
 	private List<SelectItem> listOfStates;
 	
+	public DistrictManagedBean(){}
 	
 	/**
 	 * Gets the list of states.

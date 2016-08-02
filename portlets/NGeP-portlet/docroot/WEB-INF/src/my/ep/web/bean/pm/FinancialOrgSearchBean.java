@@ -21,7 +21,9 @@ public class FinancialOrgSearchBean implements Serializable {
 	private String regNumber;
 	private String orgStatus;
 	private String serviceType;
-	
+
+	public FinancialOrgSearchBean() {
+	}
 
 	/**
 	 * @return the orgName

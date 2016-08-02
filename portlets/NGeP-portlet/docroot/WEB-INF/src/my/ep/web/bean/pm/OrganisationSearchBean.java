@@ -17,9 +17,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
  */
 public class OrganisationSearchBean implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String orgTypeCode;
 	private String orgCode;
@@ -27,6 +24,9 @@ public class OrganisationSearchBean implements Serializable {
 	private String orgStatus;
 	private PmOrgProfile orgProfile;
 	private PmParameter orgType;
+	
+	public OrganisationSearchBean(){}
+	
 	/**
 	 * @return the orgTypeCode
 	 */

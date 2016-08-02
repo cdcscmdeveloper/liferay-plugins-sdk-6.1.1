@@ -13,15 +13,15 @@ import java.io.Serializable;
  */
 public class GlAccountSearchBean implements Serializable  {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2975003646974502819L;
 	private String accountCode;
 	private String accountName;
 	private String ptjCode;
 	private String ptjDescription;
 	private String status;
+	
+	public GlAccountSearchBean(){}
+	
 	/**
 	 * @return the accountCode
 	 */

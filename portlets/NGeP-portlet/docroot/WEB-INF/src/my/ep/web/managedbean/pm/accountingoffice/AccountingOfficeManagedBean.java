@@ -17,9 +17,11 @@ import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.web.bean.pm.AccountingOfficeSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AccountingOfficeManagedBean.
+ * 
+ * @author venugopal
+ * @since 17/4/2015
  */
 @ManagedBean(name = "accountingOfficeManagedBean")
 @SessionScoped
@@ -46,6 +48,8 @@ public class AccountingOfficeManagedBean extends BaseManagedBean {
 
 	/** The is lazy. */
 	private boolean isLazy;
+	
+	public AccountingOfficeManagedBean(){}
 	
 	/**
 	 * Gets the accounting office search bean.

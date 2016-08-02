@@ -15,20 +15,15 @@ import java.io.Serializable;
 import my.ep.persistence.entity.pm.common.PmState;
 
 
-/*
+/**
 * The Class DistrictSearchBean.
+* 
 *    @author Nagasiva
 *    @since 14.06.2016
 */
-/**
- * The Class DistrictSearchBean.
- */
+
 public class DistrictSearchBean implements Serializable {
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** The state code. */
@@ -40,6 +35,8 @@ public class DistrictSearchBean implements Serializable {
 	
 	/** The district name. */
 	private String districtName;
+	
+	public DistrictSearchBean(){}
 	
 	/**
 	 * Gets the state code.

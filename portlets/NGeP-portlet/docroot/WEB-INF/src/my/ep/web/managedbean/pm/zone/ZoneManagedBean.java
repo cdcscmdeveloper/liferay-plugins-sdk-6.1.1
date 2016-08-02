@@ -7,7 +7,7 @@
  * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
-*/
+ */
 package my.ep.web.managedbean.pm.zone;
 
 import java.util.ArrayList;
@@ -23,9 +23,11 @@ import my.ep.persistence.entity.pm.common.PmZoneState;
 import my.ep.web.bean.pm.ZoneSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ZoneManagedBean.
+ * Managed Bean for Zone
+ * 
+ * @author venugopal
+ * @since 30/7/2014
  */
 @ManagedBean(name = "zoneManagedBean")
 @SessionScoped
@@ -33,69 +35,46 @@ public class ZoneManagedBean extends BaseManagedBean {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The zone search bean. */
 	private ZoneSearchBean zoneSearchBean;
-	
+
 	/** The pm zone. */
 	private PmZone pmZone;
-	
-	/** The pm zone. */
-	private boolean isLazy=false;
-	
-	
 
-	
+	/** The pm zone. */
+	private boolean isLazy = false;
 
 	/** The states. */
 	private List<PmState> states = new ArrayList<PmState>();
-	
+
 	/** The selected states. */
 	private List<PmState> selectedStates = new ArrayList<PmState>();
-	
+
 	/** The pm state. */
 	private PmState pmState;
-	
+
 	/** The zone state list. */
 	private List<PmZoneState> zoneStateList = new ArrayList<PmZoneState>();
-	
+
 	/** The selected zones. */
 	private List<PmZoneState> selectedZones = new ArrayList<PmZoneState>();
-	
+
 	/** The selected zone. */
 	private PmZoneState selectedZone;
-	
+
 	/** The selections. */
 	private List<SelectItem> selections;
-	
+
 	/** The show parent msg. */
 	private boolean showParentMsg;
-
-	/**
-	 * Checks if is show parent msg.
-	 * 
-	 * @return the showParentMsg
-	 */
-	public boolean isShowParentMsg() {
-		return showParentMsg;
-	}
-
-	/**
-	 * Sets the show parent msg.
-	 * 
-	 * @param showParentMsg
-	 *            the showParentMsg to set
-	 */
-	public void setShowParentMsg(boolean showParentMsg) {
-		this.showParentMsg = showParentMsg;
-	}
-
+	
 	/** The state list. */
 	private List<PmState> stateList;
-	
+
 	/** The select state. */
 	private PmState selectState;
-	
+
 	/** The pm zones list. */
 	private List<PmZone> pmZonesList;
 
@@ -335,7 +314,7 @@ public class ZoneManagedBean extends BaseManagedBean {
 	public void setPmZonesList(List<PmZone> pmZonesList) {
 		this.pmZonesList = pmZonesList;
 	}
-	
+
 	/**
 	 * Checks if is lazy.
 	 * 
@@ -354,5 +333,25 @@ public class ZoneManagedBean extends BaseManagedBean {
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
 	}
+	
+	/**
+	 * Checks if is show parent msg.
+	 * 
+	 * @return the showParentMsg
+	 */
+	public boolean isShowParentMsg() {
+		return showParentMsg;
+	}
+
+	/**
+	 * Sets the show parent msg.
+	 * 
+	 * @param showParentMsg
+	 *            the showParentMsg to set
+	 */
+	public void setShowParentMsg(boolean showParentMsg) {
+		this.showParentMsg = showParentMsg;
+	}
+
 
 }

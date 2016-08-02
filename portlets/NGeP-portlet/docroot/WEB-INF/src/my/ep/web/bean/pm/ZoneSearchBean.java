@@ -25,6 +25,9 @@ public class ZoneSearchBean implements Serializable {
 	private String zoneName;
 	private String stateName;
 	private String status;
+	
+	public ZoneSearchBean(){}
+	
 	/**
 	 * @return the zoneCode
 	 */

@@ -15,15 +15,12 @@ import java.io.Serializable;
 
 /**
  * The Class DivisionSearchBean.
+ * 
  *    @author Nagasiva
  *    @since 13.06.2016
  */
 public class DivisionSearchBean implements Serializable {
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** The state code. */
@@ -31,6 +28,8 @@ public class DivisionSearchBean implements Serializable {
 	
 	/** The division name. */
 	private String divisionName;
+	
+	public DivisionSearchBean(){}
 	
 	/**
 	 * @return the stateCode

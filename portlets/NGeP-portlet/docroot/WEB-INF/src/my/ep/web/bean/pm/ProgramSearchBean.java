@@ -6,7 +6,7 @@ package my.ep.web.bean.pm;
 import java.io.Serializable;
 
 /**
- * The Class ProgramSearchBean.
+ * Search Bean for Program
  * 
  * @author npoluri
  * @since 12/6/2015
@@ -21,6 +21,8 @@ public class ProgramSearchBean implements Serializable {
 	private String programActivityCode;
 	private String programActivityDesc;
 	private String status;
+	
+	public ProgramSearchBean(){}
 	
 	/**
 	 * @return the votCode

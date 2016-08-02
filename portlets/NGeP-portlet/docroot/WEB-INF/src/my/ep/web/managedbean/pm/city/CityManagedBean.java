@@ -40,6 +40,8 @@ public class CityManagedBean extends BaseManagedBean {
 	private boolean isLazy;
 	
 	private List<SelectItem> listOfStates;
+	
+	public CityManagedBean(){}
 
 	/**
 	 * @return the citySearchBean

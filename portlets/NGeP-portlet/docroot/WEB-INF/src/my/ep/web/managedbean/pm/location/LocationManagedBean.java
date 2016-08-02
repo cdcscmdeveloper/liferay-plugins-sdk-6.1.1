@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.location;
 
 import java.util.List;
@@ -14,6 +17,13 @@ import my.ep.persistence.entity.pm.common.VPmLocation;
 import my.ep.web.bean.pm.LocationSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+/**
+ * Managed Bean for Location
+ * 
+ * @author venugopal
+ * @since 30/07/2014
+ * 
+ */
 @ManagedBean(name = "locationMB")
 @SessionScoped
 public class LocationManagedBean extends BaseManagedBean {

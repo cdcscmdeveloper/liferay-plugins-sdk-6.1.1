@@ -46,6 +46,9 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private List <PmSupplierReason> deleteRestrictions;
 	private int selectedTabIndex;
 	private List<PmPIDReason> pmPidListOrigin = new ArrayList<PmPIDReason>();
+	
+	public RejectionReasonManagedBean(){}
+	
 	/**
 	 * @return the reasonSearchBean
 	 */

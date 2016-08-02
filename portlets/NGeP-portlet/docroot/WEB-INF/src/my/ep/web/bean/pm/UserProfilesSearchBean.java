@@ -28,6 +28,9 @@ public class UserProfilesSearchBean implements Serializable{
 	private Long userRoleStatus;
 	private Long selectedRoleOptionSearch;
 	private String userRoleNameSearch;
+	
+	public UserProfilesSearchBean(){}
+	
 	/**
 	 * @return the userName
 	 */

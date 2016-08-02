@@ -17,11 +17,11 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.bean.pm.DivisionSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DivisionManagedBean.
- *    @author Nagasiva
- *    @since 13.06.2016
+ * Managed Bean for Division
+ * 
+ * @author Nagasiva
+ * @since 13.06.2016
  */
 @ManagedBean(name = "divisionManagedBean")
 @SessionScoped
@@ -41,11 +41,10 @@ public class DivisionManagedBean extends BaseManagedBean{
 	
 	private String divisionName;
 	
-	
-	
 	/** The list of states. */
 	private List<PmState> listOfStates;
 	
+	public DivisionManagedBean(){}
 
 	/**
 	 * Gets the division search bean.

@@ -30,7 +30,11 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 
 /**
- * The Class CategoryManagedBean.
+ * Managed Bean for Category
+ * 
+ * @author azizi
+ * @since 30/9/2014 
+ * 
  */
 @ManagedBean(name = "categoryPM")
 @SessionScoped
@@ -206,6 +210,13 @@ public class CategoryManagedBean extends BaseManagedBean {
 	private List<String> machineList;
 	
 	private CategoryCodePublicSearchBean categoryCodePublicSearchBean;
+	
+	/**
+	 * Instantiates a new category managed bean.
+	 */
+	public CategoryManagedBean() {
+
+	}
 	
 	/**
 	 * Gets the cat level.
@@ -395,14 +406,6 @@ public class CategoryManagedBean extends BaseManagedBean {
 	 */
 	public void setSubDivDesc(String subDivDesc) {
 		this.subDivDesc = subDivDesc;
-	}
-
-
-	/**
-	 * Instantiates a new category managed bean.
-	 */
-	public CategoryManagedBean() {
-
 	}
 
 	/**

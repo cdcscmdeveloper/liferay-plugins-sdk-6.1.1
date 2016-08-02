@@ -13,21 +13,15 @@ import java.io.Serializable;
  */
 public class LocationSearchBean implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	private Long countryId;
-
 	private String locationCode;
-
 	private String locationType;
-
 	private String locationName;
-
 	private String recordStatus;
-
+	
+	public LocationSearchBean(){}
+	
 	/**
 	 * @return the locationCode
 	 */
@@ -100,7 +94,5 @@ public class LocationSearchBean implements Serializable{
 	public void setCountryId(Long countryId) {
 		this.countryId = countryId;
 	}
-
-	
 
 }

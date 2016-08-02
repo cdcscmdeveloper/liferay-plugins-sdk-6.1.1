@@ -7,7 +7,7 @@
  * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
-*/
+ */
 package my.ep.web.managedbean.pm.educationfield;
 
 import java.util.List;
@@ -19,11 +19,12 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.web.managedbean.BaseManagedBean;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class EducationManagedBean.
  * 
  * @author DK
+ * @since 01/08/2014
+ * 
  */
 @ManagedBean(name = "educationManagedBean")
 @SessionScoped
@@ -34,7 +35,7 @@ public class EducationManagedBean extends BaseManagedBean {
 
 	/** The pm edu field. */
 	private PmEduField pmEduField;
-	
+
 	private PmEduField oldPmEduField;
 
 	/** The edu field. */
@@ -49,15 +50,13 @@ public class EducationManagedBean extends BaseManagedBean {
 	/** The status. */
 	private Long status;
 
-	
-
 	/** The edu restr select list. */
 	private List<PmCategoryL3> eduRestrSelectList;
 
-	
-
 	/** The is lazy. */
 	private boolean isLazy = false;
+	
+	public EducationManagedBean(){}
 
 	/**
 	 * Gets the pm edu field.
@@ -96,8 +95,7 @@ public class EducationManagedBean extends BaseManagedBean {
 	public void setEduField(List<PmEduField> eduField) {
 		this.eduField = eduField;
 	}
-	
-	
+
 	/**
 	 * Gets the field codes.
 	 * 
@@ -136,10 +134,6 @@ public class EducationManagedBean extends BaseManagedBean {
 		this.fieldNames = fieldNames;
 	}
 
-	
-
-	
-
 	/**
 	 * Gets the status.
 	 * 
@@ -159,13 +153,8 @@ public class EducationManagedBean extends BaseManagedBean {
 		this.status = status;
 	}
 
-	
-
 	/**
-	
-
-	/**
-	 * Gets the edu restr select list.
+	 * /** Gets the edu restr select list.
 	 * 
 	 * @return the edu restr select list
 	 */
@@ -182,7 +171,6 @@ public class EducationManagedBean extends BaseManagedBean {
 	public void setEduRestrSelectList(List<PmCategoryL3> eduRestrSelectList) {
 		this.eduRestrSelectList = eduRestrSelectList;
 	}
-
 
 	/**
 	 * Checks if is lazy.
@@ -211,12 +199,11 @@ public class EducationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param oldPmEduField the oldPmEduField to set
+	 * @param oldPmEduField
+	 *            the oldPmEduField to set
 	 */
 	public void setOldPmEduField(PmEduField oldPmEduField) {
 		this.oldPmEduField = oldPmEduField;
 	}
-
-	
 
 }

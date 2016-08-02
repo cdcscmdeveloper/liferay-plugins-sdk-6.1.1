@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pm.usergroup;
 
 import java.util.List;
@@ -9,223 +12,267 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
- * @author DK
+ * Managed Bean for User Group
  * 
+ * @author DK
+ * @since 27/10/2014
  */
 @ManagedBean(name = "usergroupManagedBean")
 @SessionScoped
 public class UsergroupManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	private PmUserGroup userGroup;
-
 	private List<PmUserGroupUser> userGroups;
 	private List<PmUser> users;
 	private List<PmUserGroupUser> selectedUsrGrps;
 	private List<PmUserGroup> pmUserGroupList;
 	private String role;
-	private UsergroupSearchBean usergroupSearchBean = new UsergroupSearchBean();
+	private UserGroupSearchBean usergroupSearchBean = new UserGroupSearchBean();
 	private PmOrgProfile pmOrgProfile;
-
 	private String orgConditionField;
 	private PmOrgProfile orgProfile;
-
 	private PmUserGroupUser selectedDeleteGroupUser;
-	
 	private String orgId;
-
 	private Long orgProfileId;
-
 	private boolean isLazy = false;
-
 	private String errorMessage;
-
 	private boolean brandNew = false;
-
 	private boolean selectGrp = false;
 	private boolean disabledOrg;
 
+	public UsergroupManagedBean() {
+	}
+
+	/**
+	 * @return the userGroup
+	 */
 	public PmUserGroup getUserGroup() {
 		return userGroup;
 	}
 
+	/**
+	 * @param userGroup
+	 *            the userGroup to set
+	 */
 	public void setUserGroup(PmUserGroup userGroup) {
 		this.userGroup = userGroup;
 	}
 
+	/**
+	 * @return the userGroups
+	 */
 	public List<PmUserGroupUser> getUserGroups() {
 		return userGroups;
 	}
 
+	/**
+	 * @param userGroups
+	 *            the userGroups to set
+	 */
 	public void setUserGroups(List<PmUserGroupUser> userGroups) {
 		this.userGroups = userGroups;
 	}
 
+	/**
+	 * @return the users
+	 */
 	public List<PmUser> getUsers() {
 		return users;
 	}
 
+	/**
+	 * @param users
+	 *            the users to set
+	 */
 	public void setUsers(List<PmUser> users) {
 		this.users = users;
 	}
 
+	/**
+	 * @return the selectedUsrGrps
+	 */
 	public List<PmUserGroupUser> getSelectedUsrGrps() {
 		return selectedUsrGrps;
 	}
 
+	/**
+	 * @param selectedUsrGrps
+	 *            the selectedUsrGrps to set
+	 */
 	public void setSelectedUsrGrps(List<PmUserGroupUser> selectedUsrGrps) {
 		this.selectedUsrGrps = selectedUsrGrps;
 	}
 
-	public String getPtjCode() {
-		return usergroupSearchBean.getPtjCode();
-	}
-
-	public void setPtjCode(String ptjCode) {
-		this.usergroupSearchBean.setPtjCode(ptjCode);
-	}
-
-	public String getUserName() {
-		return usergroupSearchBean.getUserName();
-	}
-
-	public void setUserName(String userName) {
-		this.usergroupSearchBean.setUserName(userName);
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
-	public String getPtjName() {
-		return usergroupSearchBean.getPtjName();
-	}
-
-	public void setPtjName(String ptjName) {
-		this.usergroupSearchBean.setPtjName(ptjName);
-	}
-
-	public String getGroupName() {
-		return usergroupSearchBean.getGroupName();
-	}
-
-	public void setGroupName(String groupName) {
-		this.usergroupSearchBean.setGroupName(groupName);
-	}
-
-	public String getGroupCode() {
-		return usergroupSearchBean.getGroupCode();
-	}
-
-	public void setGroupCode(String groupCode) {
-		this.usergroupSearchBean.setGroupCode(groupCode);
-	}
-
-	public Long getStatus() {
-		return usergroupSearchBean.getStatus();
-	}
-
-	public void setStatus(Long status) {
-		this.usergroupSearchBean.setStatus(status);
-	}
-
-	public String getOrgConditionField() {
-		return orgConditionField;
-	}
-
-	public void setOrgConditionField(String orgConditionField) {
-		this.orgConditionField = orgConditionField;
-	}
-
-	public PmOrgProfile getOrgProfile() {
-		return orgProfile;
-	}
-
-	public void setOrgProfile(PmOrgProfile orgProfile) {
-		this.orgProfile = orgProfile;
-	}
-
-	public UsergroupSearchBean getUsergroupSearchBean() {
-		return usergroupSearchBean;
-	}
-
-	public void setUsergroupSearchBean(UsergroupSearchBean usergroupSearchBean) {
-		this.usergroupSearchBean = usergroupSearchBean;
-	}
-
-	public String getOrgId() {
-		return orgId;
-	}
-
-	public void setOrgId(String orgId) {
-		this.orgId = orgId;
-	}
-
-	public Long getOrgProfileId() {
-		return orgProfileId;
-	}
-
-	public void setOrgProfileId(Long orgProfileId) {
-		this.orgProfileId = orgProfileId;
-	}
-
-	public boolean isLazy() {
-		return isLazy;
-	}
-
-	public void setLazy(boolean isLazy) {
-		this.isLazy = isLazy;
-	}
-
+	/**
+	 * @return the pmUserGroupList
+	 */
 	public List<PmUserGroup> getPmUserGroupList() {
 		return pmUserGroupList;
 	}
 
+	/**
+	 * @param pmUserGroupList
+	 *            the pmUserGroupList to set
+	 */
 	public void setPmUserGroupList(List<PmUserGroup> pmUserGroupList) {
 		this.pmUserGroupList = pmUserGroupList;
 	}
 
-	public String getErrorMessage() {
-		return errorMessage;
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
 	}
 
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
+	/**
+	 * @param role
+	 *            the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
 	}
 
-	public boolean isBrandNew() {
-		return brandNew;
-	}
+	
 
-	public void setBrandNew(boolean brandNew) {
-		this.brandNew = brandNew;
-	}
-
-	public boolean getSelectGrp() {
-		return selectGrp;
-	}
-
-	public void setSelectGrp(boolean selectGrp) {
-		this.selectGrp = selectGrp;
-	}
-
+	/**
+	 * @return the pmOrgProfile
+	 */
 	public PmOrgProfile getPmOrgProfile() {
 		return pmOrgProfile;
 	}
 
+	/**
+	 * @param pmOrgProfile
+	 *            the pmOrgProfile to set
+	 */
 	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
 		this.pmOrgProfile = pmOrgProfile;
+	}
+
+	/**
+	 * @return the orgConditionField
+	 */
+	public String getOrgConditionField() {
+		return orgConditionField;
+	}
+
+	/**
+	 * @param orgConditionField
+	 *            the orgConditionField to set
+	 */
+	public void setOrgConditionField(String orgConditionField) {
+		this.orgConditionField = orgConditionField;
+	}
+
+	/**
+	 * @return the orgProfile
+	 */
+	public PmOrgProfile getOrgProfile() {
+		return orgProfile;
+	}
+
+	/**
+	 * @param orgProfile
+	 *            the orgProfile to set
+	 */
+	public void setOrgProfile(PmOrgProfile orgProfile) {
+		this.orgProfile = orgProfile;
+	}
+
+	/**
+	 * @return the orgId
+	 */
+	public String getOrgId() {
+		return orgId;
+	}
+
+	/**
+	 * @param orgId
+	 *            the orgId to set
+	 */
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+
+	/**
+	 * @return the orgProfileId
+	 */
+	public Long getOrgProfileId() {
+		return orgProfileId;
+	}
+
+	/**
+	 * @param orgProfileId
+	 *            the orgProfileId to set
+	 */
+	public void setOrgProfileId(Long orgProfileId) {
+		this.orgProfileId = orgProfileId;
+	}
+
+	/**
+	 * @return the isLazy
+	 */
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	/**
+	 * @param isLazy
+	 *            the isLazy to set
+	 */
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
+	}
+
+	/**
+	 * @return the errorMessage
+	 */
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	/**
+	 * @param errorMessage
+	 *            the errorMessage to set
+	 */
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
+	/**
+	 * @return the brandNew
+	 */
+	public boolean isBrandNew() {
+		return brandNew;
+	}
+
+	/**
+	 * @param brandNew
+	 *            the brandNew to set
+	 */
+	public void setBrandNew(boolean brandNew) {
+		this.brandNew = brandNew;
+	}
+
+	/**
+	 * @return the selectGrp
+	 */
+	public boolean isSelectGrp() {
+		return selectGrp;
+	}
+
+	/**
+	 * @param selectGrp
+	 *            the selectGrp to set
+	 */
+	public void setSelectGrp(boolean selectGrp) {
+		this.selectGrp = selectGrp;
 	}
 
 	/**
@@ -236,9 +283,11 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedDeleteGroupUser the selectedDeleteGroupUser to set
+	 * @param selectedDeleteGroupUser
+	 *            the selectedDeleteGroupUser to set
 	 */
-	public void setSelectedDeleteGroupUser(PmUserGroupUser selectedDeleteGroupUser) {
+	public void setSelectedDeleteGroupUser(
+			PmUserGroupUser selectedDeleteGroupUser) {
 		this.selectedDeleteGroupUser = selectedDeleteGroupUser;
 	}
 
@@ -250,10 +299,25 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param disabledOrg the disabledOrg to set
+	 * @param disabledOrg
+	 *            the disabledOrg to set
 	 */
 	public void setDisabledOrg(boolean disabledOrg) {
 		this.disabledOrg = disabledOrg;
+	}
+
+	/**
+	 * @return the usergroupSearchBean
+	 */
+	public UserGroupSearchBean getUsergroupSearchBean() {
+		return usergroupSearchBean;
+	}
+
+	/**
+	 * @param usergroupSearchBean the usergroupSearchBean to set
+	 */
+	public void setUsergroupSearchBean(UserGroupSearchBean usergroupSearchBean) {
+		this.usergroupSearchBean = usergroupSearchBean;
 	}
 
 }
