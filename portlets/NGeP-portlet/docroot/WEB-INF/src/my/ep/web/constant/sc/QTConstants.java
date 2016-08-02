@@ -207,4 +207,7 @@ public interface QTConstants {
 	public static final int CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT = 70; // TODO
 	public static final int CRITERIA_TYPE_SUPPLIER_DETAILS = 30;
 	public static final int CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO = 61;
+	public static final String NEW_LINE_CHARACTER = "\r\n";
+	public static final String HTML_NEW_LINE_CHARACTER = "<br />";
+	
 }
