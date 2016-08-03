@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true" id="branchGstInfoPanelId">
+	<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true" id="branchGstInfoPanelId" rendered="#{not empty smUpdateGstInfoBackingBean.managedBean.branches}">
 		<p:dataTable var="br" id="branchDt" 
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 			value="#{smUpdateGstInfoBackingBean.managedBean.branches}"
