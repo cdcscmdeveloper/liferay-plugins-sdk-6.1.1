@@ -88,11 +88,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class CategoryBackingBean.
+ * Backing Bean for Category
  * 
- * @author hktan
+ * @author azizi
+ * @since 30/9/2014
  */
 @ManagedBean(name = "categoryBackingBean")
 @ViewScoped
@@ -122,23 +122,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
     private String originalCategoryName;
     private boolean categoryNameChanged = false;
 	private DecimalFormat amountDF = null;
-    
-    
-	public boolean isCategoryNameChanged() {
-		return categoryNameChanged;
-	}
-
-	public void setCategoryNameChanged(boolean categoryNameChanged) {
-		this.categoryNameChanged = categoryNameChanged;
-	}
-
-	public String getOriginalCategoryName() {
-		return originalCategoryName;
-	}
-
-	public void setOriginalCategoryName(String originalCategoryName) {
-		this.originalCategoryName = originalCategoryName;
-	}
 
 	//Authorization 
 	private ISearchBean<PmParameterDesc> facilityTypeSearchBean;
@@ -146,13 +129,20 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	//Param Type as key
 	private Map<String, List<PmParameterDesc>> parameterDescMap = 
 			new HashMap<String, List<PmParameterDesc>>();
+	
+	
+	/**
+	 * Instantiates a new category backing bean.
+	 */
+	public CategoryBackingBean() {
 
-
-	public void setFacilityTypeSearchBean(
-			ISearchBean<PmParameterDesc> facilityTypeSearchBean) {
-		this.facilityTypeSearchBean = facilityTypeSearchBean;
 	}
 	
+	/**
+	 * To set a flag to indicate whether the category name has been changed
+	 * 
+	 * @param event
+	 */
 	public void categoryNameChanges(ValueChangeEvent event){
 		log.info("...event.getOldValue()="+(String) event.getOldValue());
 		log.info("...event.getNewValue()="+(String) event.getNewValue());
@@ -165,12 +155,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}else{//initial original category desc
 			originalCategoryName = (String) event.getOldValue();
 		}
-	}
-	/**
-	 * Instantiates a new category backing bean.
-	 */
-	public CategoryBackingBean() {
-
 	}
 
 	/**
@@ -2332,6 +2316,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 
+	/**
+	 * To retrieve categoryL1 List By Category Code Description
+	 * 
+	 * @param categoryCodeSO
+	 * @return CategoryCodeResDTO
+	 */
 	private CategoryCodeResDTO retrieveCategoryL1ListByCatCodeDesc(
 			ICategoryCodeSO categoryCodeSO) {
 		CategoryCodeReqDTO reqDTOUpdate = new CategoryCodeReqDTO();
@@ -2434,6 +2424,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 
+	/**
+	 * To Retrieve CategoryL2 List By Category Code Description
+	 * 
+	 * @param categoryCodeSO
+	 * @return CategoryCodeResDTO
+	 */
 	private CategoryCodeResDTO retrieveCategoryL2ListByCatCodeDesc(
 			ICategoryCodeSO categoryCodeSO) {
 		CategoryCodeReqDTO reqDTOUpdate = new CategoryCodeReqDTO();
@@ -2631,6 +2627,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 
+	/**
+	 * To Retrieve CategoryL3 List By Category Code Description
+	 * 
+	 * @param categoryCodeSO
+	 * @return CategoryCodeResDTO
+	 */
 	private CategoryCodeResDTO retrieveCategoryL3ListByCatCodeDesc(
 			ICategoryCodeSO categoryCodeSO) {
 		CategoryCodeReqDTO reqDTODesc = new CategoryCodeReqDTO();
@@ -3524,6 +3526,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * }
 	 */
 
+	/**
+	 * Get Check Category Restriction List
+	 * 
+	 * @param event
+	 */
 	public void getCheckCategoryRestrList(AjaxBehaviorEvent event) {
 		if (this.getManagedBean().getPmCategoryL3().isBrandNew()) {
 			if (this.getManagedBean().getPmCategoryL3().isByCompType()
@@ -3549,6 +3556,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				.handleNavigation(fc, null, "/xhtml/pm/category/publicSearch.xhtml");
 	}
 	
+	/**
+	 * Reset Public Search Bean
+	 */
 	public void resetPublicSearchBean(){
 		log.info("resetPublicSearchBean");
 		getManagedBean().setCategoryCodePublicSearchBean(null);
@@ -3556,6 +3566,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		publicSearchCategoryPagingDataModel.resetData();
 	}
 	
+	/**
+	 * Public Search Category
+	 */
 	public void publicSearchCategory(){
 		log.info("publicSearchCategory");
 		CategoryCodePublicSearchBean ccPulicSearchBean = getManagedBean().getCategoryCodePublicSearchBean();
@@ -3618,6 +3631,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 			
+	/**
+	 * To Generate Search Bean Data 
+	 * @param searchBean
+	 * @return ISearchBean<PmCategoryL3>
+	 */
 	private ISearchBean<PmCategoryL3> getSearchBeanData(
 			ISearchBean<PmCategoryL3> searchBean) {
 		CategoryCodePublicSearchBean ccPulicSearchBean = getManagedBean().getCategoryCodePublicSearchBean();
@@ -3728,11 +3746,18 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		return searchBean;
 	}
-			
+	
+	/**
+	 * To get Operate From Home Status Drop Down(Yes / No)
+	 * @return
+	 */
 	public SelectItem[] getOperateFromHomeStatus() {
 		return PmCommonUtil.getYesNoOptions();
 	}		
 	
+	/**
+	 * To Retrieve Supplier Type
+	 */
 	public void retrieveSupplierType() {
 		String supplierParamType = "ST";
 		String languageCode = new FacesScopes().getUserLocale()
@@ -3775,9 +3800,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		} 
 	}
 	
-	public ISearchBean<PmParameterDesc> getFacilityTypeSearchBean() {
-		return facilityTypeSearchBean;
-	}
+	
 
 	/**
 	 * @return the publicSearchCategoryPagingDataModel
@@ -3875,6 +3898,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return sb.toString();
 	}
 	
+	/**
+	 * To bold the wording if the wording contains search description.
+	 * 
+	 * @param desc
+	 * @return String
+	 */
 	public String getBoldWithSearchDesc(String desc){
 		StringBuilder sb = new StringBuilder();
 		if(getManagedBean().getCategoryCodePublicSearchBean() != null 
@@ -3915,6 +3944,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return sb.toString();
 	}
 	
+	/**
+	 * To Construct Machine Dialog
+	 * 
+	 * @param categoryL3
+	 */
 	public void constructMachineDlg(PmCategoryL3 categoryL3){
 		getManagedBean().getMachineList().clear();
 		getManagedBean().setPmCategoryL3(categoryL3);
@@ -3941,6 +3975,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		RequestContext.getCurrentInstance().execute("dataTableMachine.getPaginator().setPage(0);");
 	}
 	
+	/**
+	 * To get Amount Decimal Format
+	 * 
+	 * @return DecimalFormat
+	 */
 	private DecimalFormat getAmountDecimalFormat(){		
 		if(amountDF == null){
 		   CommonUtils commonUtils = new CommonUtils();
@@ -3982,4 +4021,99 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		};
 		Collections.sort(pmCategoryL3s, comparator);
 	}
+
+	/**
+	 * @return the result
+	 */
+	public boolean isResult() {
+		return result;
+	}
+
+	/**
+	 * @param result the result to set
+	 */
+	public void setResult(boolean result) {
+		this.result = result;
+	}
+
+	/**
+	 * @return the originalCategoryName
+	 */
+	public String getOriginalCategoryName() {
+		return originalCategoryName;
+	}
+
+	/**
+	 * @param originalCategoryName the originalCategoryName to set
+	 */
+	public void setOriginalCategoryName(String originalCategoryName) {
+		this.originalCategoryName = originalCategoryName;
+	}
+
+	/**
+	 * @return the categoryNameChanged
+	 */
+	public boolean isCategoryNameChanged() {
+		return categoryNameChanged;
+	}
+
+	/**
+	 * @param categoryNameChanged the categoryNameChanged to set
+	 */
+	public void setCategoryNameChanged(boolean categoryNameChanged) {
+		this.categoryNameChanged = categoryNameChanged;
+	}
+
+	/**
+	 * @return the amountDF
+	 */
+	public DecimalFormat getAmountDF() {
+		return amountDF;
+	}
+
+	/**
+	 * @param amountDF the amountDF to set
+	 */
+	public void setAmountDF(DecimalFormat amountDF) {
+		this.amountDF = amountDF;
+	}
+
+	/**
+	 * @return the facilityTypeSearchBean
+	 */
+	public ISearchBean<PmParameterDesc> getFacilityTypeSearchBean() {
+		return facilityTypeSearchBean;
+	}
+
+	/**
+	 * @param facilityTypeSearchBean the facilityTypeSearchBean to set
+	 */
+	public void setFacilityTypeSearchBean(
+			ISearchBean<PmParameterDesc> facilityTypeSearchBean) {
+		this.facilityTypeSearchBean = facilityTypeSearchBean;
+	}
+
+	/**
+	 * @return the parameterDescMap
+	 */
+	public Map<String, List<PmParameterDesc>> getParameterDescMap() {
+		return parameterDescMap;
+	}
+
+	/**
+	 * @param parameterDescMap the parameterDescMap to set
+	 */
+	public void setParameterDescMap(
+			Map<String, List<PmParameterDesc>> parameterDescMap) {
+		this.parameterDescMap = parameterDescMap;
+	}
+
+	/**
+	 * @param searchCategory the searchCategory to set
+	 */
+	public void setSearchCategory(IPagingDataModel<Object[]> searchCategory) {
+		this.searchCategory = searchCategory;
+	}
+	
+	
 }

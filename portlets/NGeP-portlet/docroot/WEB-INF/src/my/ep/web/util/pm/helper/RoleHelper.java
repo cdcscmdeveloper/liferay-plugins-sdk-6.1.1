@@ -1,3 +1,6 @@
+/**
+ *  Copyright © 2014 Archisoft. All rights reserved.
+ */
 package my.ep.web.util.pm.helper;
 
 import java.util.HashMap;
@@ -16,6 +19,13 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
+/**
+ *  Singleton Helper For Role.
+ * 
+ * @author RAIN POH
+ * @since 8/7/2014
+ * 
+ */
 public class RoleHelper {
 	private static Logger log = EpLogger.getLogger(RoleHelper.class);
 	
@@ -194,12 +204,25 @@ public class RoleHelper {
 		
 		return roleDesc;
 	}
+	
+	/**
+	 * Debug Logger
+	 * 
+	 * @param message
+	 */
 	private void debugLogger(Object message) {
         if(log.isDebugEnabled()) {
             log.debug(message);
         }
     }
 	
+	/**
+	 * Get Role Key
+	 * 
+	 * @param roleCode
+	 * @param languageCode
+	 * @return String
+	 */
 	private String getRoleKey(String roleCode, String languageCode) {
 		return new StringBuilder()
 			.append(roleCode)

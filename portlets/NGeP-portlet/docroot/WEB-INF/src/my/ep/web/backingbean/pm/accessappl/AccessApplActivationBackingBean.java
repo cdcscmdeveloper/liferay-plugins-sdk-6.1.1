@@ -22,9 +22,7 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAccessAppl;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.util.MessageUtils;
@@ -55,8 +53,11 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 	private static final String ACCESS_APPL_ACTIVATION_PAGE = "/xhtml/pm/accessappl/accessApplicationActivation.xhtml";
 	private static final String ACCESS_APPL_OUTPUT_MSG = "/xhtml/pm/accessappl/outputMsg.xhtml";
 	
+	public AccessApplActivationBackingBean(){}
 	
-
+	/**
+	 * Pre Render 
+	 */
 	public void preRenderActivation(){
 		log.info("preRenderActivation");
 		renewSesionObject();
@@ -195,8 +196,13 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 			return retVal;
 		}
 	
-	
+	/**
+	 * To Activate Account
+	 * 
+	 * @return Acknowledge Page URL
+	 */
 	public String activateAccount() {
+		log.info("activateAccount");
 		//validateActivationAccessAppl();
 		StringBuilder keyStr = new StringBuilder();
 		keyStr.append(getManagedBean().getAccessAppl().getAccessApplId());
@@ -266,32 +272,38 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 		this.activationKey = activationKey;
 	}
 	
-	private void validateActivationAccessAppl(){
-		log.info("validateActivationAccessAppl");
-		PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
-		
-		PmUser user = PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());
-		if(user != null){
-			PmUserOrg currentUserOrg = null;
-			for(PmUserOrg userOrg : user.getPmUserOrgs()){
-				if(DbValueConst.RECORD_STATUS_ACTIVE == userOrg.getRecordStatusFlg().intValue()){
-					currentUserOrg = userOrg;
-					break;
-				}
-			}
-			
-			if(currentUserOrg != null){
-				if(!currentUserOrg.getPmOrgProfile().getOrgProfileId()
-						.equals(accessAppl.getOrgProfile().getOrgProfileId())){
-					throw new EpException(MessageConst.ERROR_770217,
-							new String[] {currentUserOrg.getPmOrgProfile().getOrgName()});
-				}
-			}
-		}
-		
-		
-	}
+//	private void validateActivationAccessAppl(){
+//		log.info("validateActivationAccessAppl");
+//		PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
+//		
+//		PmUser user = PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());
+//		if(user != null){
+//			PmUserOrg currentUserOrg = null;
+//			for(PmUserOrg userOrg : user.getPmUserOrgs()){
+//				if(DbValueConst.RECORD_STATUS_ACTIVE == userOrg.getRecordStatusFlg().intValue()){
+//					currentUserOrg = userOrg;
+//					break;
+//				}
+//			}
+//			
+//			if(currentUserOrg != null){
+//				if(!currentUserOrg.getPmOrgProfile().getOrgProfileId()
+//						.equals(accessAppl.getOrgProfile().getOrgProfileId())){
+//					throw new EpException(MessageConst.ERROR_770217,
+//							new String[] {currentUserOrg.getPmOrgProfile().getOrgName()});
+//				}
+//			}
+//		}
+//		
+//		
+//	}
 	
+	/**
+	 * To Validate if the user active by Access Applicant Identification Number
+	 * 
+	 * @param accessAppl
+	 * @return boolean
+	 */
 	private boolean validateUserActive(PmAccessAppl accessAppl){
 		boolean isValid = true;
 		PmUser user = PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());

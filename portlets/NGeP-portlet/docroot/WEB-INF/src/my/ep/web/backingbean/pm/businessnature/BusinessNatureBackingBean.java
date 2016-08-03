@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2015 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.pm.businessnature;
 
 import javax.faces.application.FacesMessage;
@@ -37,8 +40,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
- * @author DK
+ * The Backing Bean for Business Nature
  * 
+ * @author DK
+ * @since 15/8/2014
  */
 @ManagedBean(name = "businessNatureBackingBean")
 @ViewScoped
@@ -52,11 +57,13 @@ public class BusinessNatureBackingBean extends
 
 	public BusinessNatureBackingBean() {
 		log.info("inside constructor");
-
-		// resetBusinessNatureSearch();
-
 	}
 
+	/**
+	 * Debug Logger
+	 * 
+	 * @param message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -88,6 +95,9 @@ public class BusinessNatureBackingBean extends
 
 	}
 	
+	/**
+	 * Update Business Category Level
+	 */
 	public void updateBusinessCategoryLevel(){
 		businessNatureDataModel.updatePagingResults(null);
 	}
@@ -140,6 +150,12 @@ public class BusinessNatureBackingBean extends
 
 	}
 
+	/**
+	 * To create Business Nature
+	 * 
+	 * @param pmBusinessNature
+	 * @return String
+	 */
 	public String createBusinessNature(PmBusinessNature pmBusinessNature) {
 
 		getManagedBean().setNewcategory(true);
@@ -676,6 +692,9 @@ public class BusinessNatureBackingBean extends
 		return searchBean;
 	}
 
+	/**
+	 * To Retrieve Business Nature
+	 */
 	public void retrieveBusinessNature() {
 		debugLogger("retrieveBusinessNature");
 
@@ -713,15 +732,28 @@ public class BusinessNatureBackingBean extends
 
 	}
 
+	/**
+	 * 
+	 * @return businessNatureDataModel
+	 */
 	public IPagingDataModel<PmBusinessNature> getBusinessNatureDataModel() {
 		return businessNatureDataModel;
 	}
 
+	/**
+	 * @param businessNatureDataModel the categoryLvl to businessNatureDataModel
+	 */
 	public void setBusinessNatureDataModel(
 			IPagingDataModel<PmBusinessNature> businessNatureDataModel) {
 		this.businessNatureDataModel = businessNatureDataModel;
 	}
 
+	/**
+	 * Business Nature Paging Data Model for searching
+	 * 
+	 * @author DK
+	 *
+	 */
 	private class BusinessNaturePagingDataModel extends
 			PagingDataModel<PmBusinessNature> {
 		private static final long serialVersionUID = 1L;
@@ -811,6 +843,11 @@ public class BusinessNatureBackingBean extends
 		}
 	}
 	
+	/**
+	 * Validate Unique Level Code
+	 * 
+	 * @param businessNature
+	 */
 	private void validateLevelCode(PmBusinessNature businessNature){
 		log.info("validateLevelCode");
 		IBusinessNatureSO businessNatureSO = null;
@@ -863,6 +900,11 @@ public class BusinessNatureBackingBean extends
 		}
 	}
 	
+	/**
+	 * Validate Unique Level Name
+	 * 
+	 * @param businessNature
+	 */
 	private void validateLevelName(PmBusinessNature businessNature){
 		log.info("validateLevelName");
 		IBusinessNatureSO businessNatureSO = null;
@@ -1052,6 +1094,11 @@ public class BusinessNatureBackingBean extends
 		return returnUrl;
 	}
 
+	/**
+	 * To update category level
+	 * 
+	 * @param businessLvlCode
+	 */
 	public void updateCategoryLevel(int businessLvlCode) {
 
 		// ResourceBundleUtils.getMessage("lbl.sm.businessnature.lvl5.item",
@@ -1096,6 +1143,12 @@ public class BusinessNatureBackingBean extends
 
 	}
 
+	/**
+	 * To Retrieve Action Label
+	 * 
+	 * @param level
+	 * @return String
+	 */
 	public String retrieveActionLabel(String level){
 		String label = "";
 		if("10".equals(level)){
