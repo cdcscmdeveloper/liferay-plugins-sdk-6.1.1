@@ -122,7 +122,7 @@
 						<p:outputLabel value="*" styleClass="mandatory"
 							rendered="#{!locCoverageReadonly}" /></td>
 					<td><c:choose>
-							<c:when test="#{!locCoverageReadonly}">
+							<c:when test="#{!locCoverageReadonly and !qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 								<p:selectOneMenu id="locLevels"
 									label="#{lbl['lbl.sc.location.level']}"
 									value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
@@ -144,150 +144,153 @@
 			</c:if>
 		</table>
 
-		<c:if
-			test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
-			<h:panelGrid width="100%">
-				<p:dataTable id="zoneLocationDataTable" rows="10"
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
-					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					var="zoneTree" style="width:100%" rowIndexVar="index">
-
-					<ac:paginator for="zoneLocationDataTable" />
-
-					<p:column style="width:90%">
-						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.sc.location']}" />
-						</f:facet>
-						<p:tree value="#{zoneTree}" var="location"
-							selectionMode="checkbox">
-							<p:ajax event="select" update="@([id$=supplierQualificationcriteriaNonpanelDelBtnId])"
-								listener="#{qTSupplierQulCriteriaBackingBean.selectLocationTreeNode}" />
-							<p:ajax event="unselect" update="@([id$=supplierQualificationcriteriaNonpanelDelBtnId])"
-								listener="#{qTSupplierQulCriteriaBackingBean.unSelectLocationTreeNode}" />
-							<p:treeNode type="state">
-								<h:outputText value="#{location.pmState.stateName}" />
-							</p:treeNode>
-							<p:treeNode type="division">
-								<h:outputText value="#{location.pmDivision.divisionName}" />
-							</p:treeNode>
-							<p:treeNode type="district">
-								<h:outputText value="#{location.pmDistrict.districtName}" />
-							</p:treeNode>
-
-						</p:tree>
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%"
-						rendered="#{!locCoverageReadonly}">
-						<p:commandLink
-						rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel ne null and  ((qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterCode ne 'ST') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterCode eq 'ST' and index eq'0'))}"
-							actionListener="#{qTSupplierQulCriteriaBackingBean.editZoneLocation(zoneTree,index)}"
-							process="@this" update="@([id$=zonePopupPanel])"
-							oncomplete="ZoneLocation.show();">
-							<h:graphicImage
-								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
-								styleClass="tasklist_title1" />
-						</p:commandLink>
-						
-					
-					</p:column>
-
-				</p:dataTable>
-			</h:panelGrid>
-
-			<c:if test="#{!locCoverageReadonly}">
-				<div align="right">
-					<p:selectBooleanCheckbox id="checkAll"
-						style="float:left;margin-top: 13px;margin-right: -4px;">
-						<p:ajax event="change" partialSubmit="true" process="@all"
-							update="zoneLocationDataTable"
-							listener="#{qTSupplierQulCriteriaBackingBean.checkAllConditions}" />
-					</p:selectBooleanCheckbox>
-					<p:spacer width="1" />
-					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
-						style="float:left;margin-top: 12px;;margin-left: 10px;" />
-					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
-						update="@([id$=zonePopupPanel])"
-						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}" />
-					<p:commandButton value="#{lbl['lbl.btn.delete']}" id="supplierQualificationcriteriaNonpanelDelBtnId"
-					disabled="#{qTSupplierQulCriteriaBackingBean.checkLocationDeleteButtonDisable()}"
-						process="@this,zoneLocationDataTable" partialSubmit="true"
-						oncomplete="supplierNonZoneDeletePopUp.show();"
-						update="@([id$=#{supplierNonZoneDeleteId}])" />
-				</div>
-				<ui:param name="supplierNonZoneDeleteId"
-					value="supplierNonZoneDeleteId" />
-				<ac:confirmationPopup id="#{supplierNonZoneDeleteId}"
-					widget="supplierNonZoneDeletePopUp"
-					okAction="qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode"
-					width="400" height="100"
-					title="#{lbl['lbl.sc.location.list.paidup.capital']}"
-					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
-					update="@([id$=supplierQualificationCriterialocationPaidUpcapitalPanel])" />
-
-				<p:dialog header="#{lbl['lbl.sc.add.location']}"
-					widgetVar="ZoneLocation" modal="true" position="top" height="65%">
-					<p:panel id="zonePopupPanel">
-						<table border="0">
-							<tr>
-								<td>#{lbl['lbl.sc.location']}</td>
-							</tr>
-							<TR>
-								<TD width="80%">
-									<div style="height: 300px; overflow-y: scroll;">
-										<p:tree id="treeZoneLocationPopup"
-											value="#{qTSupplierQulCriteriaBackingBean.managedBean.rootLocationTree}"
-											var="location"
-											selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedNodes}"
-											selectionMode="checkbox">
-											<p:treeNode type="state">
-												<h:outputText value="#{location.pmState.stateName}" />
-											</p:treeNode>
-											<p:treeNode type="division">
-												<h:outputText value="#{location.pmDivision.divisionName}" />
-											</p:treeNode>
-											<p:treeNode type="district">
-												<h:outputText value="#{location.pmDistrict.districtName}" />
-											</p:treeNode>
-											<p:treeNode type="city">
-												<h:outputText value="#{pmCity.cityName}" />
-											</p:treeNode>
-										</p:tree>
-									</div>
-								</TD>
-							</TR>
-							<tr>
-								<td><p:spacer height="1" /></td>
-							</tr>
-							<tr>
-								<td>
-									<div class="ppRightBtn">
-										<c:if test="#{!locCoverageReadonly}">
-											<p:selectBooleanCheckbox id="popupCheckAll"
-												style="float:left;margin-top: 13px;margin-right: -4px;">
-												<p:ajax event="change" partialSubmit="true" process="@all"
-													update=":form:treeZoneLocationPopup"
-													listener="#{qTSupplierQulCriteriaBackingBean.checkAllPopUpConditions}" />
-											</p:selectBooleanCheckbox>
-											<p:spacer width="1" />
-											<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
-												style="float:left;margin-top: 12px;;margin-left: 10px;" />
-											<p:commandButton value="#{lbl['lbl.btn.ok']}"
-												onclick="ZoneLocation.hide();" process="@all"
-												update="@this, zoneLocationDataTable, zonePopupPanel"
-												action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}">
-											</p:commandButton>
-											<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-												onclick="ZoneLocation.hide();" />
-										</c:if>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</p:panel>
-				</p:dialog>
-			</c:if>
+		<c:if test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
+			<c:choose>
+				<c:otherwise>
+					<h:panelGrid width="100%">
+						<p:dataTable id="zoneLocationDataTable" rows="10"
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							var="zoneTree" style="width:100%" rowIndexVar="index">
+		
+							<ac:paginator for="zoneLocationDataTable" />
+		
+							<p:column style="width:90%">
+								<f:facet name="header">
+									<h:outputText value="* " styleClass="mandatory" />
+									<h:outputText value="#{lbl['lbl.sc.location']}" />
+								</f:facet>
+								<p:tree value="#{zoneTree}" var="location"
+									selectionMode="checkbox">
+									<p:ajax event="select" update="@([id$=supplierQualificationcriteriaNonpanelDelBtnId])"
+										listener="#{qTSupplierQulCriteriaBackingBean.selectLocationTreeNode}" />
+									<p:ajax event="unselect" update="@([id$=supplierQualificationcriteriaNonpanelDelBtnId])"
+										listener="#{qTSupplierQulCriteriaBackingBean.unSelectLocationTreeNode}" />
+									<p:treeNode type="state">
+										<h:outputText value="#{location.pmState.stateName}" />
+									</p:treeNode>
+									<p:treeNode type="division">
+										<h:outputText value="#{location.pmDivision.divisionName}" />
+									</p:treeNode>
+									<p:treeNode type="district">
+										<h:outputText value="#{location.pmDistrict.districtName}" />
+									</p:treeNode>
+		
+								</p:tree>
+							</p:column>
+		
+							<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%"
+								rendered="#{!locCoverageReadonly}">
+								<p:commandLink
+								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel ne null and  ((qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterCode ne 'ST') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterCode eq 'ST' and index eq'0'))}"
+									actionListener="#{qTSupplierQulCriteriaBackingBean.editZoneLocation(zoneTree,index)}"
+									process="@this" update="@([id$=zonePopupPanel])"
+									oncomplete="ZoneLocation.show();">
+									<h:graphicImage
+										value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+										styleClass="tasklist_title1" />
+								</p:commandLink>
+								
+							
+							</p:column>
+		
+						</p:dataTable>
+					</h:panelGrid>
+		
+					<c:if test="#{!locCoverageReadonly}">
+						<div align="right">
+							<p:selectBooleanCheckbox id="checkAll"
+								style="float:left;margin-top: 13px;margin-right: -4px;">
+								<p:ajax event="change" partialSubmit="true" process="@all"
+									update="zoneLocationDataTable"
+									listener="#{qTSupplierQulCriteriaBackingBean.checkAllConditions}" />
+							</p:selectBooleanCheckbox>
+							<p:spacer width="1" />
+							<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
+								style="float:left;margin-top: 12px;;margin-left: 10px;" />
+							<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+								update="@([id$=zonePopupPanel])"
+								actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}" />
+							<p:commandButton value="#{lbl['lbl.btn.delete']}" id="supplierQualificationcriteriaNonpanelDelBtnId"
+							disabled="#{qTSupplierQulCriteriaBackingBean.checkLocationDeleteButtonDisable()}"
+								process="@this,zoneLocationDataTable" partialSubmit="true"
+								oncomplete="supplierNonZoneDeletePopUp.show();"
+								update="@([id$=#{supplierNonZoneDeleteId}])" />
+						</div>
+						<ui:param name="supplierNonZoneDeleteId"
+							value="supplierNonZoneDeleteId" />
+						<ac:confirmationPopup id="#{supplierNonZoneDeleteId}"
+							widget="supplierNonZoneDeletePopUp"
+							okAction="qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode"
+							width="400" height="100"
+							title="#{lbl['lbl.sc.location.list.paidup.capital']}"
+							content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
+							update="@([id$=supplierQualificationCriterialocationPaidUpcapitalPanel])" />
+		
+						<p:dialog header="#{lbl['lbl.sc.add.location']}"
+							widgetVar="ZoneLocation" modal="true" position="top" height="65%">
+							<p:panel id="zonePopupPanel">
+								<table border="0">
+									<tr>
+										<td>#{lbl['lbl.sc.location']}</td>
+									</tr>
+									<TR>
+										<TD width="80%">
+											<div style="height: 300px; overflow-y: scroll;">
+												<p:tree id="treeZoneLocationPopup"
+													value="#{qTSupplierQulCriteriaBackingBean.managedBean.rootLocationTree}"
+													var="location"
+													selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedNodes}"
+													selectionMode="checkbox">
+													<p:treeNode type="state">
+														<h:outputText value="#{location.pmState.stateName}" />
+													</p:treeNode>
+													<p:treeNode type="division">
+														<h:outputText value="#{location.pmDivision.divisionName}" />
+													</p:treeNode>
+													<p:treeNode type="district">
+														<h:outputText value="#{location.pmDistrict.districtName}" />
+													</p:treeNode>
+													<p:treeNode type="city">
+														<h:outputText value="#{pmCity.cityName}" />
+													</p:treeNode>
+												</p:tree>
+											</div>
+										</TD>
+									</TR>
+									<tr>
+										<td><p:spacer height="1" /></td>
+									</tr>
+									<tr>
+										<td>
+											<div class="ppRightBtn">
+												<c:if test="#{!locCoverageReadonly}">
+													<p:selectBooleanCheckbox id="popupCheckAll"
+														style="float:left;margin-top: 13px;margin-right: -4px;">
+														<p:ajax event="change" partialSubmit="true" process="@all"
+															update=":form:treeZoneLocationPopup"
+															listener="#{qTSupplierQulCriteriaBackingBean.checkAllPopUpConditions}" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="1" />
+													<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
+														style="float:left;margin-top: 12px;;margin-left: 10px;" />
+													<p:commandButton value="#{lbl['lbl.btn.ok']}"
+														onclick="ZoneLocation.hide();" process="@all"
+														update="@this, zoneLocationDataTable, zonePopupPanel"
+														action="#{qTSupplierQulCriteriaBackingBean.updateLocation}">
+													</p:commandButton>
+													<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+														onclick="ZoneLocation.hide();" />
+												</c:if>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</p:panel>
+						</p:dialog>
+					</c:if>
+				</c:otherwise>
+			</c:choose>
 		</c:if>
 	</p:panel>
 
