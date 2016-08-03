@@ -176,10 +176,10 @@ public class OnlineBiddingStatusCountBackingBean extends
 			biddingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 			ISearchBean<ScBidSchedule> bidSchSearchBean = new SearchBean<ScBidSchedule>();
-			bidSchSearchBean.getDataFilterBeans().add(
+			/*bidSchSearchBean.getDataFilterBeans().add(
 					new SearchFilterBean("startDate",
 							SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-							DateUtils.getCurrentDateWithoutTime()));
+							DateUtils.getCurrentDateWithoutTime()));*/
 			if (StringUtils.isNotBlank(status)
 					&& StringUtils.isNotEmpty(status)) {
 				bidSchSearchBean.getDataFilterBeans().add(
