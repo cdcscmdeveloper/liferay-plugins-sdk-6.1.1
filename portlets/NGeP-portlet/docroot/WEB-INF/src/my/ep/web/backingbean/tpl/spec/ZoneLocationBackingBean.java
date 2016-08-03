@@ -11,7 +11,6 @@ import javax.faces.bean.ViewScoped;
 
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
@@ -59,10 +58,9 @@ public class ZoneLocationBackingBean extends BaseBackingBean<ZoneLocationManaged
 					ModuleCodeConst.COMMON_COMPONENT, ISpecZoneLocSO.class);
 			
 			SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
-			reqDTO.setDocType(TemplateSpecConst.SPEC_LOC_DOC_TYPE_ZONE);
 			reqDTO.setDocId(tplSpecZoneDtl.getSpecZoneId());
 			
-			SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveLocationDtlsByDocIdNType(reqDTO);
+			SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveZoneLocationList(reqDTO);
 			List<TplSpecZoneLoc> tplSpecZoneLocs = new ArrayList<TplSpecZoneLoc>();
 			
 			for (TplSpecLoc tplSpecLoc : resDTO.getLocationsList()) {
