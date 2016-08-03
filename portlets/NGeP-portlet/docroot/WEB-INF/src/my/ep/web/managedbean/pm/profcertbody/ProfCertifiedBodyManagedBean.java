@@ -24,7 +24,7 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private ProfCertifiedBodySearchBean profCertifiedBodySearchBean;
+	private ProfCertifiedBodySearchBean profCertifiedBodySearchBean = new ProfCertifiedBodySearchBean();
 
 	/**
 	 * Search Bean List
