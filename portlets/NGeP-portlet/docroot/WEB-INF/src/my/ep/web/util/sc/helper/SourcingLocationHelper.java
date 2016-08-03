@@ -6,6 +6,7 @@ package my.ep.web.util.sc.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -37,9 +38,19 @@ public class SourcingLocationHelper {
 			if (locationDTO.getPmState() != null) {
 
 				results.add(locationDTO.getPmState());
+				
+				updateSelectableForZonal(locationDTO, locationDTO.getPmState());
 			}
 		}
 		return results;
+	}
+	
+	private static <LOCATION_CLASS extends TplSpecLoc> void updateSelectableForZonal(LOCATION_CLASS tplSpecLoc,
+			BaseEntity location) {
+		if (tplSpecLoc instanceof TplSpecZoneLoc
+				&& ((TplSpecZoneLoc)tplSpecLoc).isZonalLocation()) {
+			location.setSelectable(false);
+		}
 	}
 
 	/**
@@ -88,6 +99,8 @@ public class SourcingLocationHelper {
 		for (LOCATION_CLASS locationDTO : locationDTOs) {
 			if (locationDTO.getPmDistrict() != null) {
 				results.add(locationDTO.getPmDistrict());
+				
+				updateSelectableForZonal(locationDTO, locationDTO.getPmDistrict());
 			}
 		}
 		return results;
@@ -105,6 +118,8 @@ public class SourcingLocationHelper {
 		for (LOCATION_CLASS locationDTO : locationDTOs) {
 			if (locationDTO.getPmDivision() != null) {
 				results.add(locationDTO.getPmDivision());
+				
+				updateSelectableForZonal(locationDTO, locationDTO.getPmDivision());
 			}
 		}
 		return results;
