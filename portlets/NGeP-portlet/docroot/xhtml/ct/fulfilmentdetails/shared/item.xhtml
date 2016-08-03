@@ -24,7 +24,7 @@
                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 		 
 		         <p:column filterBy="#{ctItemVar.scRequestItem.itemName}"  styleClass="column-align-center"
-		              style="width:28%; white-space:normal;" filterMatchMode="contains" >
+		              style="width:33%; white-space:normal;" filterMatchMode="contains" >
 		              <f:facet name="header">
 		                    <h:outputText id="productItemDesc" value="#{lbl['lbl.ct.item.desc']}" escape="false"/>
 		                    <ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}" />
@@ -34,16 +34,16 @@
                                    <p:tooltip id="toolTipItemName" for="itemNameID" style="white-space: pre-line"  value="#{ctItemVar.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : ctItemVar.scRequestItem.itemDesc}" />
                            </p:column>       
 		     
-		         <p:column headerText="#{lbl['lbl.ct.uom']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
+		         <p:column headerText="#{lbl['lbl.ct.uom']}" styleClass="column-align-center" style="width:12%; white-space:normal;">
 		              <h:outputText value="#{ctItemVar.scRequestItem.uom.uomName}" style="float:left;"/>
 		         </p:column>        
 		  
-		         <p:column style="width:14%; white-space:normal;" styleClass="column-align-center">
+		         <p:column style="width:12%; white-space:normal;" styleClass="column-align-center">
 		            <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
 	               	</f:facet>	               	
-	               	<p:inputText value="#{ctItemVar.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;" label="#{lbl['lbl.ct.min.order.qty']}"
+	               	<p:inputText value="#{ctItemVar.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;width:130px;" label="#{lbl['lbl.ct.min.order.qty']}"
 		        		maxlength="#{ctItemVar.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{ctBackingBean.managedBean.viewContract}">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
@@ -545,7 +545,7 @@
               	onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 		      
 		      <p:column filterBy="#{data.scRequestItem.itemName}" 
-		          style="width:20%; white-space:normal;" filterMatchMode="contains" styleClass="column-align-center">
+		          style="width:37%; white-space:normal;" filterMatchMode="contains" styleClass="column-align-center">
 		             <f:facet name="header">
 		                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.desc']}"/>
 		                    <ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}"/>
@@ -556,7 +556,7 @@
                         
 		      </p:column>       
 		    
-		      <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:11%; white-space:normal;" styleClass="column-align-center">
+		      <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:13%; white-space:normal;" styleClass="column-align-center">
 		        <h:outputText value="#{data.scRequestItem.uom.uomName}" style="float:left;"/>
 		      </p:column>        
 		      
@@ -577,12 +577,12 @@
 		          	<h:outputText value="#{data.scRequestItem.tplSpecQuestion.clUomPerYear == null ? lbl['lbl.txt.na'] : data.scRequestItem.tplSpecQuestion.clUomPerYear}" style="float:right;" />
 		      </p:column>
 		      
-		      <p:column style="width:14%; white-space:normal;" styleClass="column-align-center">
+		      <p:column style="width:12%; white-space:normal;" styleClass="column-align-center">
 	            <f:facet name="header">
 		            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
                		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
                	</f:facet>	               	
-               	<p:inputText value="#{data.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;" label="#{lbl['lbl.ct.min.order.qty']}"
+               	<p:inputText value="#{data.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;width:130px;" label="#{lbl['lbl.ct.min.order.qty']}"
 	        		maxlength="#{data.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{ctBackingBean.managedBean.viewContract}">
 					<f:converter converterId="dynamicNumberConverter" />
 					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.scRequestItem.uom.uomCode)}" />
@@ -590,7 +590,7 @@
 		        </p:inputText>
 	         </p:column>  
 		      	      
-		      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:7%; white-space:normal;" styleClass="column-align-center">
+		      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%; white-space:normal;" styleClass="column-align-center">
 		            <h:outputText value="#{data.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		      </p:column>   
 		        
