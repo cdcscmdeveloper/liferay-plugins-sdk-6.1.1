@@ -2653,7 +2653,10 @@ public class SmCommonUtil {
 			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 					&& StringUtils.isNotBlank(tmp.getBranchName())
 					&& tmp.getBranchName().equals(param.getBranchName())) {
-				if (tmp.getRevNo() == revNo) {
+				if (tmp.getSmAddress() != null
+						&& param.getSmAddress() != null
+						&& !isAddressHasDifferences(param.getSmAddress(),
+								tmp.getSmAddress()) && tmp.getRevNo() == revNo) {
 					retVal = tmp;
 					break;
 				} else {
