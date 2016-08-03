@@ -89,6 +89,7 @@ import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
@@ -619,7 +620,15 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			}
 		}
 		
-		if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {			
+		if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+			if (getManagedBean().getAgreementContractVer().getContractPhysicalNo() == null  
+					|| getManagedBean().getAgreementContractVer().getContractPhysicalNo().isEmpty()) {
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.physical.no", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			
 			// Validation for Agency Signer
 			if (getManagedBean().getCtAgencySigner().size() == 0) {
 				getManagedBean().setSelectedTabIndex(1);
@@ -1094,6 +1103,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 	
 	/**
+	 * The method used to navigate to contract details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
+	public void goToLoaView() {
+		long loaId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("loaId"));
+		
+		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+		loaDetailBackingBean.viewLOA(loaId);
+	}
+	
+	/**
 	 * The method used to navigate to template doc screen
 	 * for creation or view purpose.
 	 * 
@@ -1520,7 +1542,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context.put("contractTitle", getManagedBean().getCtContract().getContractName());
 			context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			context.put("supplierRegistrationNo", getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
-			context.put("physicalContactNo", getManagedBean().getAgreementContractVer().getContractPhysicalNo());
+			if (getManagedBean().getAgreementContractVer().getContractPhysicalNo() == null
+					|| getManagedBean().getAgreementContractVer().getContractPhysicalNo().isEmpty()) {
+				context.put("physicalContactNo", getManagedBean().getCtContract().getContractNo());
+			} else {
+				context.put("physicalContactNo", getManagedBean().getAgreementContractVer().getContractPhysicalNo());
+			}
 			context.put("contractStartDate", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
 			context.put("contractEndDate", df.format(getManagedBean().getCtAgreement().getExpDate()));
 			context.put("contractPeriod", getManagedBean().getAgreementContractVer().getCtContractValue().getContractPeriod() + "");

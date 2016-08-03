@@ -20,24 +20,18 @@
 						<p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />
 					</td>
 					<td>
-						<h:panelGrid columns="3">
-							<p:commandLink value="#{agreementBackingBean.managedBean.ctContract.contractNo}"
-								styleClass="blue_font" action="#{agreementBackingBean.goToContractView}">
-								<f:param name="contractVerId" value="#{agreementBackingBean.managedBean.contractVer.contractVerId}" />
-							</p:commandLink>
-							<p:spacer width="1" />
-							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
-						</h:panelGrid>
+						<p:inputText disabled="true" maxlength="17" style="width:130px;"
+							value="#{agreementBackingBean.managedBean.ctContract.contractNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
 					</td>
 					<h:panelGroup>
 					<td class="columnWidth150">
 	     	             	<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}"  styleClass="required"/>
 					</td> 
 					<td>
-						<p:inputText id="contractPhysicalNo" for="physicalNo"
+						<p:inputText id="contractPhysicalNo"
 							value="#{agreementBackingBean.managedBean.agreementContractVer.contractPhysicalNo}"
-							style="width:130px;" maxlength="30" required="true" label="#{lbl['lbl.ct.physical.no']}"
-							disabled="#{agreementBackingBean.managedBean.uploadFinalAgreement}">
+							style="width:130px;" maxlength="30" disabled="#{agreementBackingBean.managedBean.uploadFinalAgreement}">
 							<p:ajax update="@this" />
 						</p:inputText>
 						<ac:iconTooltip  value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
