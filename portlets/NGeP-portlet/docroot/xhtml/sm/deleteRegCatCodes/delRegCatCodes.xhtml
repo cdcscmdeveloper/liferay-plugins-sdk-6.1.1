@@ -83,7 +83,7 @@
 				</p:column>
 				<p:column>
 					<p:inputTextarea cols="30" rendered="#{catBean.selected}"
-						id="delRmrks" value="#{catBean.remarks}" >
+						id="delRmrks" value="#{catBean.remarks}" maxlength="2500">
 						<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
 					</p:inputTextarea>
 					<p:message id="delRmrksMsg" for="delRmrks" showSummary="true"
