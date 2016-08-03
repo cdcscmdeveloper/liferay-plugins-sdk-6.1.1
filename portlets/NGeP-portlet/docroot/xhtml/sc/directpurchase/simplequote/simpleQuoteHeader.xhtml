@@ -23,7 +23,12 @@
 					<td style="width:3%"><h:outputLabel
 							value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td class="header-info-text">
+					<h:panelGroup rendered="#{simpleQuoteBackingBean.managedBean.scQuote.isBrandNew()}">
 						#{simpleQuoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}
+				     </h:panelGroup>
+				     <h:panelGroup rendered="#{!simpleQuoteBackingBean.managedBean.scQuote.isBrandNew()}">
+						#{requestNoteBackingBean.getPtjNameByOrgProfileIdAndCreatedDate(simpleQuoteBackingBean.managedBean.requestNote.pmOrgProfile.orgProfileId, simpleQuoteBackingBean.managedBean.scQuote.createdDate)}
+				     </h:panelGroup>
 					</td>
 
 					<td style="width:8%"><p:outputLabel
