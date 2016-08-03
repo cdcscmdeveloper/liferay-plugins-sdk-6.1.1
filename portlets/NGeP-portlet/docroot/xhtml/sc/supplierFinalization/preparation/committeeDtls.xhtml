@@ -15,54 +15,49 @@
 			resizableColumns="false">
 			<ac:paginator for="committeeDtlTbl" />
 
-			<p:column headerText="#{lbl['lbl.sc.name']}"
-				style="width:100%; white-space:normal;">
-				<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}"></h:outputText>
+			<p:column headerText="#{lbl['lbl.sc.name']}" style="width:20%; white-space:normal;">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.identification.no']}">
-				<h:outputText value="#{committeeDtl.scCommitteeMember.icPassport}"></h:outputText>
+			<p:column headerText="#{lbl['lbl.sc.identification.no']}" style="width:7%;">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.icPassport}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.designation']}"
-				style="width:100%; white-space:normal;">
-				<h:outputText value="#{committeeDtl.scCommitteeMember.designation}"></h:outputText>
+			<p:column headerText="#{lbl['lbl.sc.designation']}" style="width:15%; white-space:normal;">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.designation}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.email']}">
-				<h:outputText value="#{committeeDtl.scCommitteeMember.email}"></h:outputText>
+			<p:column headerText="#{lbl['lbl.sc.email']}" style="width:20%;">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.email}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.grade']}">
-				<h:outputText value="#{committeeDtl.scCommitteeMember.grade}"></h:outputText>
+			<p:column headerText="#{lbl['lbl.sc.grade']}" style="width:5%;">
+				<h:outputText value="#{committeeDtl.scCommitteeMember.grade}" />
 			</p:column>
 
-			<p:column>
+			<p:column style="width:5%;">
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+					<h:outputText value="#{lbl['lbl.sc.pnp']}"/>
 					<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 				</f:facet>
-				<h:outputText
-					value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-								fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}" />
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.role']}">
-				<h:outputText
-					value="#{suppFinalizationBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}"></h:outputText>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.representative.type']}"
-			 		  style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.sc.role']}" style="width:10%;">
 				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(
-									   committeeDtl.scCommitteeMember.representativeType)}" />
+								committeeDtl.scCommitteeMember.memberRole)}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.representative.type']}" style="white-space:normal; width:10%;">
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(
+									  	 committeeDtl.scCommitteeMember.representativeType)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.attendance']}"
-				styleClass="td-check-box-spacing">
+					  styleClass="td-check-box-spacing" style="width:8%;">
 				<p:selectBooleanCheckbox value="#{committeeDtl.attended}"
-					disabled="#{!isSecretaryUser}"
-					styleClass="td-check-box-spacing" />
+					disabled="#{!isSecretaryUser}" styleClass="td-check-box-spacing" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
