@@ -670,10 +670,10 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRacesList(
 					SmApplicationUtil.retrievePmRaceList());
 
-			getManagedBean().setDiplomaEduLevel(
+			/*getManagedBean().setDiplomaEduLevel(
 					SmApplicationUtil.retrievePmEduLevelByCode("80"));
 			getManagedBean().setCertEduLevel(
-					SmApplicationUtil.retrievePmEduLevelByCode("60"));
+					SmApplicationUtil.retrievePmEduLevelByCode("60"));*/
 			getManagedBean().setGlpCert(
 					SmApplicationUtil.retrievePmParameterByTypeAndCode(
 							SupplierManagementConst.SM_SUPPLIER_PARAM_TYPE_CRT,
