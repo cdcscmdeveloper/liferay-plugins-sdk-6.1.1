@@ -22,8 +22,7 @@
 		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" escape="false"/>
 		
 		<div align="left">
-			<p:commandButton id="btnProceed" value="#{lbl['lbl.btn.back']}" 
-				rendered="#{gstHistoryBackingBean.managedBean.renderedBackButton}"
+			<p:commandButton id="btnProceed" value="#{lbl['lbl.btn.back']}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{gstHistoryBackingBean.back}" />
 		</div>
