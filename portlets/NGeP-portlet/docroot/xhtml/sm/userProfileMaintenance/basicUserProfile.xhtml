@@ -262,7 +262,9 @@
 					<td>
 						<p:outputPanel id="contractOutPanelId">
 							<p:selectOneRadio disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER' 
-								or empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"
+								or empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole 
+								or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN' 
+								or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'G2G_ADMIN'}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg}" >
 								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
