@@ -106,7 +106,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
-import my.ep.persistence.entity.pm.common.PmEduLevel;
+//import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
@@ -4582,7 +4582,7 @@ public class SmApplicationUtil {
 	 *            -String levelCode
 	 * @return PmEduLevel object
 	 */
-	public static PmEduLevel retrievePmEduLevelByCode(String code) {
+	/*public static PmEduLevel retrievePmEduLevelByCode(String code) {
 		IEducationLevelSO reqSO = (IEducationLevelSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -4593,7 +4593,7 @@ public class SmApplicationUtil {
 				.retrieveEducationLevelByCode(reqDTO);
 
 		return resDTO.getEduLevel();
-	}
+	}*/
 
 	/**
 	 * Gets the sm supplier basic info vo for mapping data.

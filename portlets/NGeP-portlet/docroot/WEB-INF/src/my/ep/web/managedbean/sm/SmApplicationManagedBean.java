@@ -28,7 +28,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
-import my.ep.persistence.entity.pm.common.PmEduLevel;
+//import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -408,8 +408,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmParameter certificate;
 	private PmParameter diploma;
 	private PmParameter glpCert;
-	private PmEduLevel certEduLevel;
-	private PmEduLevel diplomaEduLevel;
+//	private PmEduLevel certEduLevel;
+//	private PmEduLevel diplomaEduLevel;
 	private PmParameterDesc glp;
 	private List<SelectItem> acadQualifications;
 	private List<SelectItem> travellingSoftwareItems;
@@ -2923,7 +2923,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.rejectionOtherReasonId = rejectionOtherReasonId;
 	}
 
-	public PmEduLevel getCertEduLevel() {
+	/*public PmEduLevel getCertEduLevel() {
 		return certEduLevel;
 	}
 
@@ -2937,7 +2937,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDiplomaEduLevel(PmEduLevel diplomaEduLevel) {
 		this.diplomaEduLevel = diplomaEduLevel;
-	}
+	}*/
 
 	public List<PmParameterDesc> getEduLevelList() {
 		return eduLevelList;
