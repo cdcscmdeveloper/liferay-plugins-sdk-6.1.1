@@ -76,7 +76,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private Long selectedBidScheduleId;
 	private String recommendTypeItem = ParameterConst.RECOMMEND_TYPE_ITEM;
 	private String recommendTypePackage = ParameterConst.RECOMMEND_TYPE_PACKAGE;
-	
+	private Long previousStatusId;
+
 	private boolean isBidPaused = false;
 
 	private BigDecimal itemStartPriceTotal;
@@ -191,6 +192,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				setActiveBidSchedules(resDTO.getActiveBidSchedules());
 				setScBidSchedule(bidSchedule);
 				if (null != bidSchedule) {
+					this.previousStatusId = bidSchedule.getPmStatus()
+							.getStatusId();
 					setSelectedBidScheduleId(bidSchedule.getBidScheduleId());
 					if (bidSchedule.getPmStatus().getStatusId()
 							.equals(BidStatusConst.BID_PAUSED)) {
@@ -277,6 +280,17 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				.equals(BidStatusConst.BID_PAUSED)) {
 			RequestContext.getCurrentInstance().execute(
 					"onlineBiddingNotification.show()");
+		} else if (this.previousStatusId
+				.equals(BidStatusConst.BID_PENDING_BIDDING)
+				&& getScBidSchedule().getPmStatus().getStatusId()
+						.equals(BidStatusConst.BID_IN_PROGRESS)) {
+			this.previousStatusId = BidStatusConst.BID_IN_PROGRESS;
+			navigateUsingExternalContext(getScBidSchedule().getBidScheduleId());
+		} else if (this.previousStatusId.equals(BidStatusConst.BID_IN_PROGRESS)
+				&& getScBidSchedule().getPmStatus().getStatusId()
+						.equals(BidStatusConst.BID_COMPLETED)) {
+			this.previousStatusId = BidStatusConst.BID_COMPLETED;
+			navigateUsingExternalContext(getScBidSchedule().getBidScheduleId());
 		}
 		if (this.isBidPaused()
 				&& getScBidSchedule().getPmStatus().getStatusId()
@@ -501,7 +515,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			BigDecimal dividend = this.getScBidSchedule()
 					.getPackageEstimateCost().multiply(this.tolerancePrice);
 			BigDecimal tolerancePrice = dividend.divide(new BigDecimal(100));
-			System.out.println("Tolerance price"+tolerancePrice);
+			System.out.println("Tolerance price" + tolerancePrice);
 			if (getItemNewBidPriceTotal().doubleValue() < tolerancePrice
 					.doubleValue()) {
 				throw new EpException(MessageConst.ERROR_760369);
@@ -755,7 +769,11 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				interval = 10L;
 			}
 
-		} else {
+		} else if (getScBidSchedule().getPmStatus().getStatusId()
+				.equals(BidStatusConst.BID_IN_PROGRESS)
+				&& durationCalculator(new Date(), scBidSchedule.getStartDate()) < 20) {
+			interval = 5L;
+		}else {
 			interval = 10L;
 		}
 
@@ -1181,7 +1199,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		this.remainingSeconds = remainingSeconds;
 	}
 
-	
 	/**
 	 * @param tplSpecHelper
 	 *            the tplSpecHelper to set
@@ -1242,4 +1259,18 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		this.isBidPaused = isBidPaused;
 	}
 
+	/**
+	 * @return the previousStatusId
+	 */
+	public Long getPreviousStatusId() {
+		return previousStatusId;
+	}
+
+	/**
+	 * @param previousStatusId
+	 *            the previousStatusId to set
+	 */
+	public void setPreviousStatusId(Long previousStatusId) {
+		this.previousStatusId = previousStatusId;
+	}
 }
