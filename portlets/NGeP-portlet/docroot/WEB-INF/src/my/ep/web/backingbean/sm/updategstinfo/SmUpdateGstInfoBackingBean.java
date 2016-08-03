@@ -17,6 +17,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.gsthistory.SmGstHistoryBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.updategstinfo.SmUpdateGstInfoManagedBean;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -336,6 +337,14 @@ public class SmUpdateGstInfoBackingBean extends
 			retVal = true;
 		}
 		return retVal;
+	}
+
+	/**
+	 * Redirect to GST history page
+	 */
+	public void redirectToHistoryPage() {
+		SmGstHistoryBackingBean history = new SmGstHistoryBackingBean();
+		history.preRenderGstHistory();
 	}
 
 	/**

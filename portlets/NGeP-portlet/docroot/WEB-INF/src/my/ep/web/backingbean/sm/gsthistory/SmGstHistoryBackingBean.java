@@ -16,6 +16,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
+import my.ep.web.backingbean.sm.updategstinfo.SmUpdateGstInfoBackingBean;
 import my.ep.web.managedbean.sm.gsthistory.SmGstHistoryManagedBean;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -32,6 +33,8 @@ public class SmGstHistoryBackingBean extends
 	private static int SEARCH_BY_MOFNO = 2;
 	private static int SEARCH_BY_COMP_NAME = 3;
 
+	public static SmUpdateGstInfoBackingBean instance;
+
 	/**
 	 * Pre-render gst update information screen
 	 */
@@ -44,11 +47,11 @@ public class SmGstHistoryBackingBean extends
 			setHqAndBranchGst(supplier);
 			getManagedBean().setRenderedBackButton(false);
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "",null);
+					"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "", null);
 		} else {
 			getManagedBean().setRenderedBackButton(true);
 			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "",null);
+					"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "", null);
 		}
 	}
 
@@ -60,7 +63,7 @@ public class SmGstHistoryBackingBean extends
 	public void viewGst(SmSupplier supplier) {
 		setHqAndBranchGst(supplier);
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "",null);
+				"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "", null);
 	}
 
 	/**
@@ -189,11 +192,17 @@ public class SmGstHistoryBackingBean extends
 	}
 
 	/**
-	 * Back and redirect to search supplier screen
+	 * Back and redirect to previous screen
 	 */
 	public void back() {
-		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "",null);
+		if (getManagedBean().isRenderedBackButton()) {
+			SmCommonUtil.redirectToPage(
+					"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "", null);
+		} else {
+			SmCommonUtil.redirectToPage(
+					"/xhtml/sm/updateGstInfo/preRenderGstAfterTnc.xhtml", "",
+					null);
+		}
 	}
 
 	/**
@@ -201,5 +210,16 @@ public class SmGstHistoryBackingBean extends
 	 */
 	public void search() {
 		getManagedBean().searchGstHistory();
+	}
+
+	public static SmUpdateGstInfoBackingBean getInstance() {
+		if (instance == null) {
+			instance = new SmUpdateGstInfoBackingBean();
+		}
+		return instance;
+	}
+
+	public static void setInstance(SmUpdateGstInfoBackingBean instance) {
+		SmGstHistoryBackingBean.instance = instance;
 	}
 }
