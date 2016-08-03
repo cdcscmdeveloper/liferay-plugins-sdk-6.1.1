@@ -2074,13 +2074,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 			suppFinalizationResDTO = qtSuppFinalizationSO.updateBPMAction(suppFinalizationReqDTO);
 				
 			if (suppFinalizationResDTO.isSuccessful()) {
-				String variable1 = getParameterDesc(
-						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_QUOTATION)
-						+ " " + scQt.getQtNo();
-				String variable2 = getMessageCommon("lbl.sc.online.bidding.endorsement");
+				String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+												  ParameterConst.DOCTYPE_QUOTATION)
+									+ " " + scQt.getQtNo();
+				String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
 				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
-						variable1, variable2);
+											   qtParam, statusParam);
 			}
 		} finally {
 			qtSuppFinalizationSO = null;
@@ -2172,6 +2171,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	private void saveMeetingDetailsOnException(IQTSuppFinalizationSO qtSuppFinalizationSO, 
 									 SuppFinalizationReqDTO suppFinalizationReqDTO) {
+		suppFinalizationReqDTO.setSubmit(false);
 		qtSuppFinalizationSO.saveEndorsementCommitteeDetails(suppFinalizationReqDTO);
 		renewSessionAndRetrieve();
 		navigateToBiddingFinalizationMeetingTab();
