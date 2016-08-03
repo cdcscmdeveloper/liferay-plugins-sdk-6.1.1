@@ -110,6 +110,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean myOwner;
 	private boolean aggreeDeclareAdmin;
 	
+	private boolean hasActiveTransaction;
+	
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -617,6 +619,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setAggreeDeclareAdmin(boolean aggreeDeclareAdmin) {
 		this.aggreeDeclareAdmin = aggreeDeclareAdmin;
+	}
+
+	public boolean isHasActiveTransaction() {
+		return hasActiveTransaction;
+	}
+
+	public void setHasActiveTransaction(boolean hasActiveTransaction) {
+		this.hasActiveTransaction = hasActiveTransaction;
 	}
 
 }
