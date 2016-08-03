@@ -146,6 +146,106 @@
 
 		<c:if test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 			<c:choose>
+				<c:when test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
+					<h:panelGrid width="100%">
+						<p:dataTable id="zoneLocationDataTable" rows="10"
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneSuppQualTrees}"
+							var="zoneTree" style="width:100%" rowIndexVar="index"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							rowKey="#{zoneTree}">
+		
+							<p:column style="width:250%;">
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.zone.location']}" />
+								</f:facet>
+								<p:tree value="#{zoneTree}" var="location">		
+									<p:treeNode type="zone">
+										<h:outputText value="#{location.zoneName}" />
+									</p:treeNode>
+		
+									<p:treeNode type="state">
+										<h:outputText value="#{location.pmState.stateName}" />
+									</p:treeNode>
+									<p:treeNode type="division">
+										<h:outputText value="#{location.pmDivision.divisionName}" />
+									</p:treeNode>
+									<p:treeNode type="district">
+										<h:outputText value="#{location.pmDistrict.districtName}" />
+									</p:treeNode>
+								</p:tree>
+							</p:column>
+							<p:column headerText="#{lbl['lbl.sc.action']}"
+								style="width:10%;text-align: center;"
+								rendered="#{!locCoverageReadonly}">
+								<p:commandLink
+									actionListener="#{createQtBB.editZones(zoneTree,index,true)}"
+									process="@this" update="@([id$=zoneLocationId])"
+									oncomplete="zoneLocation.show();">
+									<h:graphicImage value="/css/images/design/edit.png" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</h:panelGrid>
+					<c:if test="#{!locCoverageReadonly}">
+						<p:dialog id="zoneLocationId" header="#{lbl['lbl.sc.add.location']}"
+							widgetVar="zoneLocation" modal="true" position="top" height="65%">
+							<p:messages id="zonPopupMsg" showDetail="true"
+								showSummary="false" autoUpdate="true" closable="true"
+								severity="error, info" />
+							<h:panelGroup id="editZonePopup">
+								<h:panelGroup rendered="#{!empty qTSupplierQulCriteriaBackingBean.managedBean.rootZoanlTree}">
+								<table styleClass="noBorders tr,noBorders td" border="0">
+									<TR>
+										<TD valign="top"><p:outputLabel
+												value="#{lbl['lbl.sc.location']}" /> <p:outputLabel value="*"
+												styleClass="mandatory" /></TD>
+										<TD>
+											<div style="height: 300px; overflow-y: scroll;">
+												<p:tree id="treeZoneGeneralPopup"
+													value="#{qTSupplierQulCriteriaBackingBean.managedBean.rootZoanlTree}"
+													var="location"
+													selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedNodes}"
+													selectionMode="checkbox"
+													showUnselectableCheckbox="true">
+													<p:treeNode type="state">
+														<h:outputText value="#{location.pmState.stateName}" />
+													</p:treeNode>
+													<p:treeNode type="division">
+														<h:outputText value="#{location.pmDivision.divisionName}" />
+													</p:treeNode>
+													<p:treeNode type="district">
+														<h:outputText value="#{location.pmDistrict.districtName}" />
+													</p:treeNode>
+													<p:treeNode type="city">
+														<h:outputText value="#{pmCity.cityName}" />
+													</p:treeNode>
+												</p:tree>
+											</div>
+										</TD>
+									</TR>
+									<TR>
+										<TD></TD>
+										<TD>
+											<p:commandButton
+												value="#{lbl['lbl.btn.cancel']}" style="float:right;"
+												styleClass="BtnSpacing" onclick="zoneLocation.hide();" process="@this">
+												<f:setPropertyActionListener target="#{qTSupplierQulCriteriaBackingBean.managedBean.autoUpdate}" value="true" />
+											</p:commandButton>
+											&#160;&#160; 
+											<p:commandButton value="#{lbl['lbl.btn.ok']}"
+												style="float:right;" process="@all"
+												update="@this, zoneLocationDataTable,editZonePopup"
+												styleClass="BtnSpacing"
+												action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}">
+											</p:commandButton>
+										</TD>
+									</TR>
+								</table>
+								</h:panelGroup>
+							</h:panelGroup>
+						</p:dialog>
+					</c:if>
+				</c:when>
 				<c:otherwise>
 					<h:panelGrid width="100%">
 						<p:dataTable id="zoneLocationDataTable" rows="10"
