@@ -1510,10 +1510,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			} else {
 				if (scQt.isZonal()) {
 					// value < 500k - if zonal, 
-					tplSpecLocList = getManagedBean().getTotalSuppliersSpecLoc();
-					if (null == tplSpecLocList) {
-						tplSpecLocList = new ArrayList<TplSpecLoc>();
-					}
+					tplSpecLocList = new ArrayList<TplSpecLoc>();
 					List<TreeNode> rootZoneLocation = getManagedBean()
 							.getZoneSuppQualTrees();
 					if (rootZoneLocation != null) {
@@ -1971,13 +1968,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.QT_RT_MINIMUM_NUMBER_SUPPLIER);
-			ScQt scQt = getManagedBean().getQt();
+			/*ScQt scQt = getManagedBean().getQt();
 			if (scQt != null &&
 					scQt.getCurrentWorkFlowStatus() != null && 
 					super.isQTStatusPublished(scQt.getCurrentWorkFlowStatus().getPmStatus().getStatusId())) {
 				
 				reqDTO.setValidityDate(scQt.getPublishDate());	
-			}
+			}*/
 			
 			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
 					.getRuleValueList();
