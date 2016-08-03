@@ -2310,6 +2310,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
 
 			getManagedBean().setSmSupp(smSupp);
+			initHasActiveTransactionStatus();
 			
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, basicAccDeactivation);
 		}else{
@@ -2503,6 +2504,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		return false;
+	}
+	
+	private void initHasActiveTransactionStatus() {
+		getManagedBean().setHasActiveTransaction(false);
+		if (getManagedBean().getSmSupp() != null) {
+			getManagedBean().setHasActiveTransaction(
+					SmApplicationUtil.hasActiveTransactions(getManagedBean()
+							.getSmSupp()));
+			if (!getManagedBean().isHasActiveTransaction()) {
+				getManagedBean().setHasActiveTransaction(
+						SmApplicationUtil
+								.checkActiveSmApplForSupp(getManagedBean()
+										.getSmSupp()));
+			}
+
+		}
+
 	}
 }
 
