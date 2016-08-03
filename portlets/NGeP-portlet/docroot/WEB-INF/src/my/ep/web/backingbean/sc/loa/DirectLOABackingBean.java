@@ -2489,7 +2489,8 @@ public class DirectLOABackingBean extends
 					LocationSingleton.getInstance().buildLocationPopupTree(
 							countryResDTO.getPmCountry().getCountryId(),
 							states, districts, divisions, cities,
-							locationLevelCode, TplSpecZoneLoc.class));
+							locationLevelCode, TplSpecZoneLoc.class,
+							false));
 			int i = index;
 			this.getManagedBean().setAutoUpdate(false);
 			this.getManagedBean().setIndex(i);
@@ -2633,7 +2634,8 @@ public class DirectLOABackingBean extends
 											null,
 											paramDesc.getPmParameter()
 													.getParameterCode(),
-											TplSpecZoneLoc.class));
+											TplSpecZoneLoc.class,
+											false));
 					this.getManagedBean().setIndex(-1);
 					this.getManagedBean().setZoneName("");
 				}

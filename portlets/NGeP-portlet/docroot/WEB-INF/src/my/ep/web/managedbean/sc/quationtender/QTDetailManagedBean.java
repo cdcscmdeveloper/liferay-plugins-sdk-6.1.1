@@ -161,6 +161,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The zone general trees. */
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
+	
+	/** The zone supplier qualification trees. */
+	private List<TreeNode> zoneSuppQualTrees = null;
 
 	/** The qt doc. */
 	private ScQtDoc qtDoc;
@@ -1739,6 +1742,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
 		this.zoneGeneralTrees = zoneGeneralTrees;
+	}
+
+	/**
+	 * @return the zoneSuppQualTrees
+	 */
+	public List<TreeNode> getZoneSuppQualTrees() {
+		return zoneSuppQualTrees;
+	}
+
+	/**
+	 * @param zoneSuppQualTrees the zoneSuppQualTrees to set
+	 */
+	public void setZoneSuppQualTrees(List<TreeNode> zoneSuppQualTrees) {
+		this.zoneSuppQualTrees = zoneSuppQualTrees;
 	}
 
 	/**

@@ -1121,7 +1121,7 @@ public class CreateQtBackingBean extends
 	 * @param index
 	 *            (int index).
 	 */
-	public void editZones(TreeNode rootZoneLocation, int index, ScQt scQt) {
+	public void editZones(TreeNode rootZoneLocation, int index, boolean disabledPopupSelectable) {
 		IParameterSO parameterSo = null;
 		ICountrySO countrySo = null;
 		try {
@@ -1132,7 +1132,7 @@ public class CreateQtBackingBean extends
 			List<TplSpecZoneLoc> locationDTOs = getZoneLocations(rootZoneLocation);
 
 			// TplSpecZoneDtl zone = getZone(rootZoneLocation);
-			Long locationLevel = scQt
+			Long locationLevel = getManagedBean().getQt()
 					.getZoneLocationLevel().getParameterId();
 			if (locationLevel == null) {
 				ParameterReqDTO districtReqDTO = new ParameterReqDTO();
@@ -1177,7 +1177,8 @@ public class CreateQtBackingBean extends
 					LocationSingleton.getInstance().buildLocationPopupTree(
 							countryResDTO.getPmCountry().getCountryId(),
 							states, districts, divisions, cities,
-							locationLevelCode, TplSpecZoneLoc.class));
+							locationLevelCode, TplSpecZoneLoc.class,
+							disabledPopupSelectable));
 			int i = index;
 			this.getManagedBean().setAutoUpdate(false);
 			this.getManagedBean().setIndex(i);
@@ -1285,7 +1286,8 @@ public class CreateQtBackingBean extends
 											null,
 											paramDesc.getPmParameter()
 													.getParameterCode(),
-											TplSpecZoneLoc.class));
+											TplSpecZoneLoc.class,
+											false));
 					this.getManagedBean().setIndex(-1);
 					this.getManagedBean().setZoneName("");
 				}
@@ -1854,7 +1856,7 @@ public class CreateQtBackingBean extends
 		 * @param tplSpecZoneLocs
 		 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
 		 */
-		private void checkDuplicateStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl) {
+		public void checkDuplicateStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl) {
 			List<Long> stateIds = null;
 			List<Long> divIds = null;
 			List<Long> distIds = null;
@@ -2334,9 +2336,9 @@ public class CreateQtBackingBean extends
 					&& !technicalSpecCheckList.isEmpty()) {
 				PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 				this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
-				boolean zonelevelChange = false;
+				//boolean zonelevelChange = false;
 				for (ScQtCheckList technicalchecklist : technicalSpecCheckList) {
-					zonelevelChange = true;
+					//zonelevelChange = true;
 					//technicalchecklist.setPmStatus(status);
 					if (QTConstants.TEMPLETE_SPEC_CODE
 							.equalsIgnoreCase(technicalchecklist.getDefinationType()
