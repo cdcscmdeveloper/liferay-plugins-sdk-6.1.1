@@ -97,7 +97,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public static final int RESTR_COMP = 2;
 	public static final int RESTR_SUPP = 3;
 
-
+	/**
+	 * Pre Loading
+	 */
 	public void preLoading(){
 		log.info("preLoading");
 		//load critical mappers
@@ -111,7 +113,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
 	
-	
+	/**
+	 *  Backing Bean Constructor
+	 */
 	public RejectionReasonBackingBean() {
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
@@ -122,12 +126,24 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			new LogKey(1L); 
 		}
 	}
+	
+	/**
+	 * Delete Reason Applicability
+	 * 
+	 * @param rowIndex
+	 */
 	public void deleteReasonApplicability(int rowIndex){
 		log.info("...............deleteReasonApplicability................");
 
 			this.getManagedBean().getSelectedReason().getPmPIDReasonList()
 					.remove(rowIndex);
 	}
+	
+	/**
+	 * Reason Applicable Change
+	 * 
+	 * @param pidReason
+	 */
 	public void reasonApplicableChange(PmPIDReason pidReason){
 		
 		List<PmPIDReason> temp = new ArrayList<PmPIDReason>();
@@ -141,6 +157,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 		}
 	}
+	
+	/**
+	 * Add more reason applicability
+	 */
 	public void addMoreReasonApplicablity() {
 		log.info(".................addMoreReasonApplicablity...................");
 		
@@ -701,6 +721,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	
 	}
 	
+	/**
+	 * Generate Reason Code
+	 */
 	private void generateReasonCode() {
 		IReasonSO reasonSO = (IReasonSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 		IParameterSO parameterSO  = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -875,6 +898,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		return isUnique;
 		
 	}
+	
+	/**
+	 * To load reason category mapper
+	 */
 	public void loadReasonCategoryMapper(){
 		log.info("loadReasonCategoryMapper");
 		reasonCategoryMapper = new HashMap<Long,Object>();
@@ -883,6 +910,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			reasonCategoryMapper.put(desc.getPmParameter().getParameterId(), desc.getPmParameter());
 		}
 	}
+	
+	/**
+	 * To load condition field mapper
+	 */
 	public void loadConditionFieldMapper(){
 		log.info("loadConditionFieldMapper");
 		conditionFieldMapper = new HashMap<Long,Object>();
@@ -892,6 +923,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}
 	}
 	
+	/**
+	 * To load sourcing method mapper
+	 */
 	public void loadSourcingMethodMapper(){
 		log.info("loadSourcingMethodMapper");
 		souringMethodMapper = new HashMap<String,Object>();
@@ -1207,6 +1241,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		return parameterDescs;
 	}
 	
+	/**
+	 * To Purchase From Contract Change
+	 */
 	public void purchaseFromContractChange(){
 		if(this.getManagedBean().getSelectedReason().isContractPurchase()){
 			PmParameter paramObj = (PmParameter) souringMethodMapper.get(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
@@ -1453,6 +1490,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}
 	}
 	
+	/**
+	 * 
+	 * @return docTypeSearchBean
+	 */
 	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
 		if (this.docTypeSearchBean == null) {
 			this.docTypeSearchBean = super.createSearchBean(
@@ -1462,12 +1503,21 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		return this.docTypeSearchBean;
 	}
 	
-	
+	/**
+	 * 
+	 * @return catCirSearchBean
+	 */
 	public ISearchBean<PmParameterDesc> getCatCirSearchBean() {
 		return catCirSearchBean;
 	}
 
 
+	/**
+	 * To Delete Restriction
+	 * 
+	 * @param restrictionType
+	 * @param rowIndex
+	 */
 	public void deleteRestrictions(int restrictionType,int rowIndex){
 		log.info("deleteRestrictions");
 		PmSupplierReason supplierReason = null;

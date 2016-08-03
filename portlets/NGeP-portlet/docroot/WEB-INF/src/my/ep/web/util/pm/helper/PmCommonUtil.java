@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+ */
 package my.ep.web.util.pm.helper;
 
 import java.io.BufferedOutputStream;
@@ -123,12 +133,11 @@ import com.liferay.portal.theme.ThemeDisplay;
  * CommonUtil for Profile Management
  * 
  * @author RAIN POH
- * @since 8/7/2013
+ * @since 8/7/2014
  * 
  */
 public class PmCommonUtil {
 	private static Logger log = Logger.getLogger(PmCommonUtil.class);
-	private static final String FILE_DATETIME_FORMAT = "ddMMyyyyHHmmss";
 
 	/**
 	 * Check date overlapping
@@ -161,6 +170,13 @@ public class PmCommonUtil {
 		return isCurrentPairOverlap;
 	}
 
+	/**
+	 * Check Role Restriction by role code and user role list
+	 * 
+	 * @param roleCode
+	 * @param userRoles
+	 * @return boolean
+	 */
 	public static boolean checkRoleRestriction(String roleCode,
 			List<PmUserRole> userRoles) {
 		log.info("checkRoleRestriction");
@@ -212,7 +228,7 @@ public class PmCommonUtil {
 
 		return msg;
 	}
-	
+
 	/**
 	 * get record status options
 	 * 
@@ -271,7 +287,7 @@ public class PmCommonUtil {
 
 		return roleDesc;
 	}
-	
+
 	/**
 	 * Get Role description by role code and Language code.
 	 * 
@@ -281,13 +297,14 @@ public class PmCommonUtil {
 	 *            the language code.
 	 * @return role description
 	 */
-	public static String getRoleDescByRoleCodeAndLanguage(String roleCode, String languageCode) {
+	public static String getRoleDescByRoleCodeAndLanguage(String roleCode,
+			String languageCode) {
 		String roleDesc = null;
 
 		if (roleCode != null) {
 			// Get the role description.
-			PmRoleDesc pmRoleDesc = RoleHelper.getInstance().getRoleDescByCodeAndLanguage(
-					roleCode, languageCode);
+			PmRoleDesc pmRoleDesc = RoleHelper.getInstance()
+					.getRoleDescByCodeAndLanguage(roleCode, languageCode);
 
 			if (pmRoleDesc != null) {
 				roleDesc = pmRoleDesc.getRoleName();
@@ -296,7 +313,7 @@ public class PmCommonUtil {
 
 		return roleDesc;
 	}
-	
+
 	/**
 	 * initialize a complete Pm Address
 	 */
@@ -398,7 +415,7 @@ public class PmCommonUtil {
 	 * retrieve all languages from pm
 	 * 
 	 * @param paramType
-	 * @return
+	 * @return List<PmLanguage>
 	 */
 	public static List<PmLanguage> retrieveLanguageObjs() {
 		log.info("retrieveLanguageObjs");
@@ -537,6 +554,7 @@ public class PmCommonUtil {
 		}
 		return resultList;
 	}
+
 	/**
 	 * retrieve state list from Pm State by country id
 	 * 
@@ -559,6 +577,7 @@ public class PmCommonUtil {
 		}
 		return resultList;
 	}
+
 	/**
 	 * retrieve division list from Pm Division by state id
 	 * 
@@ -581,14 +600,15 @@ public class PmCommonUtil {
 		}
 		return resultList;
 	}
-	
+
 	/**
 	 * retrieve district list from Pm District by division id
 	 * 
 	 * @param stateId
 	 * @return List<PmDistrict>
 	 */
-	public static List<PmDistrict> retrievePmDistrictListByDivisionId(Long divisionId) {
+	public static List<PmDistrict> retrievePmDistrictListByDivisionId(
+			Long divisionId) {
 		IDistrictSO reqSO = null;
 		List<PmDistrict> resultList = null;
 		try {
@@ -1009,6 +1029,12 @@ public class PmCommonUtil {
 		return path;
 	}
 
+	/**
+	 * common Upload File
+	 * 
+	 * @param event
+	 * @param path
+	 */
 	public static void commonUploadFile(FileUploadEvent event, String path) {
 		File dir = new File(path);
 		log.info(" dir.exists()" + dir.exists());
@@ -1029,10 +1055,14 @@ public class PmCommonUtil {
 
 	}
 
+	/**
+	 * Generate File
+	 * 
+	 * @param uploadDir
+	 * @param content
+	 */
 	public static void genFile(String uploadDir, byte[] content) {
-
 		try {
-
 			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
 					new FileOutputStream(uploadDir));
 
@@ -1046,7 +1076,6 @@ public class PmCommonUtil {
 		} catch (Exception e) {
 			log.error(e);
 		}
-
 	}
 
 	/**
@@ -1079,6 +1108,11 @@ public class PmCommonUtil {
 		return userName;
 	}
 
+	/**
+	 * Delete upload file
+	 * 
+	 * @param path
+	 */
 	public static void deleteUploadFile(String path) {
 		File dir = new File(path);
 		System.out.println(path);
@@ -1351,6 +1385,14 @@ public class PmCommonUtil {
 		return items;
 	}
 
+	/**
+	 * Assign Tracking Diary values
+	 * 
+	 * @param pmUser
+	 * @param actionDesc
+	 * @param status
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyValues(PmUser pmUser,
 			String actionDesc, PmStatus status) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1360,13 +1402,22 @@ public class PmCommonUtil {
 		trckVO.setActionedByRole(getUserRoleValue());
 		trckVO.setDocId(pmUser.getUserId());
 		trckVO.setDocType(ParameterConst.USER_PROFILE_PARAM_CODE);
-		trckVO.setDocNo(pmUser.getUserId() != null ? pmUser.getUserId().toString() : null);
+		trckVO.setDocNo(pmUser.getUserId() != null ? pmUser.getUserId()
+				.toString() : null);
 		trckVO.setGroupId(null);
 		trckVO.setStatus(status);
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For Rule Config
+	 * 
+	 * @param rule
+	 * @param actionDesc
+	 * @param status
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForRuleConfig(
 			PmConfigRule rule, String actionDesc, PmStatus status) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1383,6 +1434,14 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For Signatory
+	 * 
+	 * @param pmcertSignatory
+	 * @param actionDesc
+	 * @param status
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForSignatory(
 			PmCertSignatory pmcertSignatory, String actionDesc, PmStatus status) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1399,6 +1458,14 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For Fee Exemption
+	 * 
+	 * @param fee
+	 * @param actionDesc
+	 * @param status
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForFeeExemption(
 			PmFeeExemption fee, String actionDesc, PmStatus status) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1415,6 +1482,14 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For Unplanned Threshold
+	 * 
+	 * @param threshold
+	 * @param actionDesc
+	 * @param status
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForUnplannedThreshold(
 			PmThreshold threshold, String actionDesc, PmStatus status) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1431,6 +1506,14 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For Budget Threshold
+	 * 
+	 * @param threshold
+	 * @param actionDesc
+	 * @param status
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForBudgetThreshold(
 			PmThreshold threshold, String actionDesc, PmStatus status) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1447,6 +1530,16 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For Pm Category Level 1
+	 * 
+	 * @param pmCategoryL1Id
+	 * @param categoryL1Code
+	 * @param status
+	 * @param actionDesc
+	 * @param docType
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL1(
 			Long pmCategoryL1Id, String categoryL1Code, PmStatus status,
 			String actionDesc, String docType) {
@@ -1465,6 +1558,16 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For Pm Category Level 2
+	 * 
+	 * @param pmCategoryL2Id
+	 * @param categoryL1Code
+	 * @param status
+	 * @param actionDesc
+	 * @param docType
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL2(
 			Long pmCategoryL2Id, String pmCategoryL2Code, Long pmCategoryL1Id,
 			PmStatus status, String actionDesc, String docType,
@@ -1484,6 +1587,16 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For Pm Category Level 3
+	 * 
+	 * @param pmCategoryL3Id
+	 * @param categoryL1Code
+	 * @param status
+	 * @param actionDesc
+	 * @param docType
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL3(
 			Long pmCategoryL3Id, Long pmCategoryL2Id, String categoryL3Code,
 			PmStatus status, String actionDesc, String docType,
@@ -1503,6 +1616,18 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For Pm Basic Category
+	 * 
+	 * @param pmCategoryL3Id
+	 * @param pmCategoryL2Id
+	 * @param categoryL3Code
+	 * @param status
+	 * @param actionDesc
+	 * @param docType
+	 * @param groupDocType
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForPmBasicCategory(
 			Long pmCategoryL3Id, Long pmCategoryL2Id, String categoryL3Code,
 			PmStatus status, String actionDesc, String docType,
@@ -1522,6 +1647,15 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For Education
+	 * 
+	 * @param eduFiledId
+	 * @param eduFieldCode
+	 * @param status
+	 * @param actionDesc
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForEducation(
 			Long eduFiledId, String eduFieldCode, PmStatus status,
 			String actionDesc) {
@@ -1540,6 +1674,15 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For UOM
+	 * 
+	 * @param uomId
+	 * @param uomCode
+	 * @param status
+	 * @param actionDesc
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForUOM(Long uomId,
 			String uomCode, PmStatus status, String actionDesc) {
 
@@ -1557,6 +1700,15 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 
+	/**
+	 * Assign Tracking Dairy For Professional Cert Bodies
+	 * 
+	 * @param certBodyId
+	 * @param certBodyCode
+	 * @param status
+	 * @param actionDesc
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForProfessional(
 			Long certBodyId, String certBodyCode, PmStatus status,
 			String actionDesc) {
@@ -1574,8 +1726,18 @@ public class PmCommonUtil {
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
-	
-	public static PmTrackingDairyVO assignTrackingDairyForSupportingDocument(Long docId,String docCode,PmStatus status,String actionDesc) {
+
+	/**
+	 * Assign Tracking Dairy For Supporting Document
+	 * 
+	 * @param docId
+	 * @param docCode
+	 * @param status
+	 * @param actionDesc
+	 * @return PmTrackingDairyVO
+	 */
+	public static PmTrackingDairyVO assignTrackingDairyForSupportingDocument(
+			Long docId, String docCode, PmStatus status, String actionDesc) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
@@ -1590,6 +1752,15 @@ public class PmCommonUtil {
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
+
+	/**
+	 * Assign Tracking Dairy For Designated Area
+	 * 
+	 * @param da
+	 * @param actionDesc
+	 * @param status
+	 * @return PmTrackingDairyVO
+	 */
 	public static PmTrackingDairyVO assignTrackingDairyForDesignatedArea(
 			PmDesignatedArea da, String actionDesc, PmStatus status) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1599,12 +1770,19 @@ public class PmCommonUtil {
 		trckVO.setActionedByRole(getUserRoleValue());
 		trckVO.setDocId(da.getDesignatedAreaId());
 		trckVO.setDocType(ParameterConst.GST_PARAM_CODE);
-		trckVO.setDocNo(da.getDesignatedAreaId() != null ? da.getDesignatedAreaId().toString() : null);
+		trckVO.setDocNo(da.getDesignatedAreaId() != null ? da
+				.getDesignatedAreaId().toString() : null);
 		trckVO.setGroupId(null);
 		trckVO.setStatus(status);
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
+
+	/**
+	 * get user role value
+	 * 
+	 * @return String
+	 */
 	public static String getUserRoleValue() {
 		FacesScopes sc = new FacesScopes();
 		if (sc.hasRoleUser(RoleCode.EP_ADMIN.value())) {
@@ -1628,7 +1806,13 @@ public class PmCommonUtil {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Retrieve Pm District By District Id
+	 * 
+	 * @param distId
+	 * @return PmDistrict
+	 */
 	public static PmDistrict retrievePmDistById(Long distId) {
 		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1639,7 +1823,13 @@ public class PmCommonUtil {
 
 		return resDTO.getPmDistrict();
 	}
-	
+
+	/**
+	 * Retrieve Pm City By City Id
+	 * 
+	 * @param cityId
+	 * @return PmCity
+	 */
 	public static PmCity retrievePmCityById(Long cityId) {
 		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1650,7 +1840,13 @@ public class PmCommonUtil {
 
 		return resDTO.getPmCity();
 	}
-	
+
+	/**
+	 * Retrieve Pm Division By Division Id
+	 * 
+	 * @param divisionId
+	 * @return PmDivision
+	 */
 	public static PmDivision retrievePmDivisionById(Long divisionId) {
 		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1661,9 +1857,17 @@ public class PmCommonUtil {
 
 		return resDTO.getPmDivision();
 	}
-	
-	// docuRepo/dev/ngep/2016/PM/AccAppl/loginId/timemilis/fileName
-	public static String getUploadFilePath(String path,String loginId, String fileName) {
+
+	/**
+	 * Get Upload File Path (eg docuRepo/dev/ngep/2016/PM/AccAppl/loginId/timemilis/fileName)
+	 * 
+	 * @param path
+	 * @param loginId
+	 * @param fileName
+	 * @return String
+	 */
+	public static String getUploadFilePath(String path, String loginId,
+			String fileName) {
 		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		StringBuilder filePath = new StringBuilder(docRepoBaseDir);
@@ -1678,7 +1882,7 @@ public class PmCommonUtil {
 		filePath.append(fileName);
 		return filePath.toString();
 	}
-	
+
 	/**
 	 * Hash string.
 	 * 
@@ -1700,7 +1904,7 @@ public class PmCommonUtil {
 		byte[] shaDig = md.digest();
 		return new String(Hex.encodeHex(shaDig));
 	}
-	
+
 	/**
 	 * Redirect to page with message as optional.
 	 * 
@@ -1732,7 +1936,7 @@ public class PmCommonUtil {
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, page);
 	}
-	
+
 	/**
 	 * retrieve pmUser by loginId
 	 * 
@@ -1748,10 +1952,8 @@ public class PmCommonUtil {
 			reqDTO.setLoginId(loginId);
 			userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			
-			resDTO = userSO
-					.retrieveUserByLoginIdOrUserIdIgnoreStatus(reqDTO);
-			
+
+			resDTO = userSO.retrieveUserByLoginIdOrUserIdIgnoreStatus(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				pmUser = resDTO.getPmUser();
@@ -1764,7 +1966,7 @@ public class PmCommonUtil {
 		}
 		return pmUser;
 	}
-	
+
 	/**
 	 * Get Liferay Portal Base URL
 	 * 
@@ -1778,9 +1980,7 @@ public class PmCommonUtil {
 				.getAttribute(WebKeys.THEME_DISPLAY);
 		return themeDisplay.getURLPortal();
 	}
-	
-	
-	
+
 	/**
 	 * retrieve pmUser by idNo
 	 * 
@@ -1796,10 +1996,8 @@ public class PmCommonUtil {
 			reqDTO.setIdentificationNo(idNo);
 			userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			
-			resDTO = userSO
-					.retriveUserProfileByIdNo(reqDTO);
-			
+
+			resDTO = userSO.retriveUserProfileByIdNo(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				pmUser = resDTO.getPmUser();
@@ -1812,151 +2010,196 @@ public class PmCommonUtil {
 		}
 		return pmUser;
 	}
-	
-	public static String getResourceBundleLabels(String label){
-		return ResourceBundleUtils
-		.getMessage(
-				label,
+
+	/**
+	 * Get Resource Bundle Label
+	 * 
+	 * @param label
+	 * @return String
+	 */
+	public static String getResourceBundleLabels(String label) {
+		return ResourceBundleUtils.getMessage(label,
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes()
-						.getUserLocale());
+				new FacesScopes().getUserLocale());
 	}
-	
-	public static void showFacesMsg(FacesContext fc,Severity severity,String msgId, String[] params){
-		fc.addMessage(
-				null,
-				new FacesMessage(
-						severity,
-						null,
-						getMsgFromMsgUtils(msgId,params)
-				));
+
+	/**
+	 * Show Faces Message
+	 * 
+	 * @param fc
+	 * @param severity
+	 * @param msgId
+	 * @param params
+	 */
+	public static void showFacesMsg(FacesContext fc, Severity severity,
+			String msgId, String[] params) {
+		fc.addMessage(null, new FacesMessage(severity, null,
+				getMsgFromMsgUtils(msgId, params)));
 	}
-	
-	public static String getMsgFromMsgUtils(String msgId, String[] params){
-		return MessageUtils
-				.getMessage(
-						msgId,
-						params,
-						MessageUtils.BUNDLE_COMMON_MESSAGES,
-						new FacesScopes()
-								.getUserLocale());
+
+	/**
+	 * Get Message From Message Utils By Message Id and params
+	 * 
+	 * @param msgId
+	 * @param params
+	 * @return String
+	 */
+	public static String getMsgFromMsgUtils(String msgId, String[] params) {
+		return MessageUtils.getMessage(msgId, params,
+				MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale());
 	}
-	
+
+	/**
+	 * Retrieve PmCountry By Country Id
+	 * 
+	 * @param countryId
+	 * @return PmCountry
+	 */
 	public static PmCountry retrievePmCountryById(Long countryId) {
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICountrySO.class);
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryId(countryId);
 		CountryResDTO resDTO = reqSO.retrieveCountryById(reqDTO);
 
 		return resDTO.getPmCountry();
 	}
-	
-	 /**
-	 * The method used for generating a list of available ministry
-	 * for searching agency as selection.
+
+	/**
+	 * The method used for generating a list of available ministry for searching
+	 * agency as selection.
 	 * 
 	 * @return the selection list of ministry
 	 */
-	public static SelectItem[] getMinistryDropdown() {		
+	public static SelectItem[] getMinistryDropdown() {
 		SelectItem[] items = null;
 		IOrgProfileSO orgProfileSO = null;
 		try {
-		    int i = 1;
-		    orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+			int i = 1;
+			orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
-		    
-		    List<PmOrgProfile> list = resDTO.getOrgProfileList();
-		    items = new SelectItem[list.size() + 1];
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByMinistry(reqDTO);
+
+			List<PmOrgProfile> list = resDTO.getOrgProfileList();
+			items = new SelectItem[list.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
 			for (PmOrgProfile orgProfile : list) {
-			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
-			}			
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}finally{
-			orgProfileSO = null;
-		}
-	    return items;
-	}
-	
-	public static SelectItem[] getPegwaiPengawalDropdown(Long pegwaiPengawalId) {		
-		SelectItem[] items = null;
-		IOrgProfileSO orgProfileSO = null;
-		
-		try {
-		    int i = 1;
-		    List<Object[]> list = new ArrayList<Object[]>();
-		    if(pegwaiPengawalId != null){
-		    	orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
-			    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setParentOrgProfileId(pegwaiPengawalId);
-				reqDTO.setOrgCode(OrganizationType.PENGAWAI_PENGAWAL.value());
-				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
-				list = resDTO.getOrgProfileDDList();
-				items = new SelectItem[list.size() + 1];
-		    }else{
-		    	items = new SelectItem[1];
-		    }		   
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			
-		    for(Object[] object : list){
-			  items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+				items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
+						orgProfile.getOrgName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}finally{
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
 			orgProfileSO = null;
 		}
-	    return items;
+		return items;
 	}
-	
+
 	/**
-	 * The method used for generating a list of available jabatan
-	 * for searching agency as selection.
+	 * Get Pegawai Pengawal Drop Down SelectItem List 
+	 * 
+	 * @param pegwaiPengawalId
+	 * @return SelectItem[]
+	 */
+	public static SelectItem[] getPegwaiPengawalDropdown(Long pegwaiPengawalId) {
+		SelectItem[] items = null;
+		IOrgProfileSO orgProfileSO = null;
+
+		try {
+			int i = 1;
+			List<Object[]> list = new ArrayList<Object[]>();
+			if (pegwaiPengawalId != null) {
+				orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(pegwaiPengawalId);
+				reqDTO.setOrgCode(OrganizationType.PENGAWAI_PENGAWAL.value());
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				list = resDTO.getOrgProfileDDList();
+				items = new SelectItem[list.size() + 1];
+			} else {
+				items = new SelectItem[1];
+			}
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+
+			for (Object[] object : list) {
+				items[i++] = new SelectItem(
+						Long.parseLong(object[0].toString()),
+						object[1].toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
+			orgProfileSO = null;
+		}
+		return items;
+	}
+
+	/**
+	 * The method used for generating a list of available jabatan for searching
+	 * agency as selection.
 	 * 
 	 * @return the selection list of jabatan
 	 */
-	public static SelectItem[] getJabatanDropdown(Long ministryId) {		
+	public static SelectItem[] getJabatanDropdown(Long ministryId) {
 		SelectItem[] items = null;
 		IOrgProfileSO orgProfileSO = null;
-		
+
 		try {
-		    int i = 1;
-		    List<Object[]> list = new ArrayList<Object[]>();
-		    if(ministryId != null){
-		    	orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
-			    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			int i = 1;
+			List<Object[]> list = new ArrayList<Object[]>();
+			if (ministryId != null) {
+				orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setParentOrgProfileId(ministryId);
 				reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
-				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveChildDDListByParentOrgProfileId(reqDTO);
 				list = resDTO.getOrgProfileDDList();
 				items = new SelectItem[list.size() + 1];
-		    }else{
-		    	items = new SelectItem[1];
-		    }		   
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			
-		    for(Object[] object : list){
-			  items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+			} else {
+				items = new SelectItem[1];
+			}
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+
+			for (Object[] object : list) {
+				items[i++] = new SelectItem(
+						Long.parseLong(object[0].toString()),
+						object[1].toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}finally{
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
 			orgProfileSO = null;
 		}
-	    return items;
+		return items;
 	}
-	
-	
+
 }

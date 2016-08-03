@@ -95,6 +95,8 @@ public class AccessApplBackingBean extends
 	private static final String ACCESS_APPL_MAIN_PAGE ="/xhtml/pm/accessappl/accessApplicationMain.xhtml";
 	private static final String ACCESS_APPL_TNC ="/xhtml/pm/accessappl/accessApplicationTnc.xhtml";
 	
+	public AccessApplBackingBean(){}
+	
 	/**
 	 * Pre Loading
 	 * 	 
@@ -108,6 +110,11 @@ public class AccessApplBackingBean extends
 				.handleNavigation(fc, null, ACCESS_APPL_TNC);
 	}
 	
+	/**
+	 * Procced to Main Page
+	 * 
+	 * @return String
+	 */
 	public String proceedToMainPage(){
 		initialAccessApplication();
 		return "/xhtml/pm/accessappl/accessApplicationMain.xhtml?faces-redirect=true";
@@ -181,6 +188,13 @@ public class AccessApplBackingBean extends
 
 	}
 	
+	/**
+	 * Redirect To Access Application (View only)
+	 * 
+	 * @param accessApplId
+	 * @param statusId
+	 * @param selectedDocType
+	 */
 	public void redirectToAccessApplView(Long accessApplId, Integer statusId,String selectedDocType) {
 		log.info("redirectToAccessApplView");
 		renewSesionObject();
@@ -227,6 +241,9 @@ public class AccessApplBackingBean extends
 				.handleNavigation(fc, null, ACCESS_APPL_MAIN_PAGE);
 	}
 	
+	/**
+	 * Initialize Access Application
+	 */
 	private void initialAccessApplication(){
 		PmAccessAppl accessAppl = new PmAccessAppl();
 		PmOrgProfile orgProfile = new PmOrgProfile();
@@ -294,6 +311,11 @@ public class AccessApplBackingBean extends
 		return PmCommonUtil.retrievePmSalutationList();
 	}
 	
+	/**
+	 * To construct condition fields
+	 * 
+	 * @return String
+	 */
 	public String constructConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterId^");
@@ -302,10 +324,18 @@ public class AccessApplBackingBean extends
 		return sb.toString();
 	}
 	
+	/**
+	 * Change Org Unit (LOV postActionListener)
+	 * 
+	 * @param entity
+	 */
 	public void changeOrgUnit(BaseEntity entity) {
 		log.info("changeOrgUnit");
 	}
 	
+	/**
+	 * Change Org Type From Selection/Drop Down List 
+	 */
 	public void changeOrgType() {
 		log.info("changeResOrgType");
 
@@ -317,6 +347,11 @@ public class AccessApplBackingBean extends
 
 	}
 	
+	/**
+	 * To retrieve Pm State List
+	 * 
+	 * @return List<PmState> 
+	 */
 	public List<PmState> getStateList() {
 		log.info("getStateList");
 		Long countryId = getManagedBean().getAccessAppl().getPmCountry().getCountryId();
@@ -324,6 +359,11 @@ public class AccessApplBackingBean extends
 		return resultList;
 	}
 	
+	/**
+	 * To Retrieve PmState
+	 * 
+	 * @param pmState
+	 */
 	public void retrievePmState(PmState pmState) {
 		log.info("retrievePmState");
 		if(pmState != null ){
@@ -363,7 +403,11 @@ public class AccessApplBackingBean extends
 		return PmCommonUtil.retrievePmCityList(districtId);
 	}
 	
-	
+	/**
+	 * To Retrieve PmDistrict
+	 * 
+	 * @param pmDistrict
+	 */
 	public void retrievePmDistrict(PmDistrict pmDistrict) {	
 		if(pmDistrict != null && pmDistrict.getDistrictId() != null){
 			PmDistrict tempDistrict = PmCommonUtil.retrievePmDistById(pmDistrict.getDistrictId());				
@@ -372,6 +416,11 @@ public class AccessApplBackingBean extends
 		getManagedBean().getAccessAppl().setPmCity(new PmCity());		
 	}
 	
+	/**
+	 * To Retrieve PmCity
+	 * 
+	 * @param pmCity
+	 */
 	public void retrievePmCity(PmCity pmCity) {
 		if(pmCity != null && pmCity.getCityId() !=null){
 			PmCity tempCity = PmCommonUtil.retrievePmCityById(pmCity.getCityId());			
@@ -379,6 +428,13 @@ public class AccessApplBackingBean extends
 		}
 	}
 	
+	/**
+	 * To Save/Submit Access Application
+	 * 
+	 * @param outcome
+	 * @return String
+	 * @throws Exception
+	 */
 	public String saveAccessApplication(String outcome) throws Exception {
 		log.info("saveAccessApplication");
 		IAccessApplSO accessApplSO = null;		
@@ -480,6 +536,10 @@ public class AccessApplBackingBean extends
 		return null;
 	}
 	
+	/**
+	 * To Retrieve Supporting Doc List For Access Application
+	 * 
+	 */
 	private void retrieveSuppDocList(){
 		IDocumentSO docSO = null;
 		try{
@@ -506,6 +566,11 @@ public class AccessApplBackingBean extends
 		}
 	}
 	
+	/**
+	 * To assign selected ApplDoc 
+	 * 
+	 * @param doc
+	 */
 	public void assignSelectedApplDoc(PmAccessApplDoc doc) {
 		getManagedBean().setSelectedPmAccessApplDoc(doc);
 	}
@@ -536,6 +601,10 @@ public class AccessApplBackingBean extends
 //
 //	}
 	
+	/**
+	 * Delete Supporting Doc Attachment Action
+	 * 
+	 */
 	public void deleteAttachmentAction(){
 		if (getManagedBean().getSelectedPmAccessApplDoc() != null) {
 			for(PmAccessApplDoc applDoc : getManagedBean().getAccessApplDocList()){
@@ -548,7 +617,13 @@ public class AccessApplBackingBean extends
 		}
 	}
 	
+	/**
+	 * To validate access application
+	 * 
+	 * @param outcome
+	 */
 	private void validateAccessAppl(String outcome){
+		log.info("validateAccessAppl");
 		PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
 		
 		if(accessAppl.getOrgProfile() == null ){
@@ -677,6 +752,11 @@ public class AccessApplBackingBean extends
 		}
 	}
 	
+	/**
+	 * Get Facescopes
+	 * 
+	 * @return FacesScopes
+	 */
 	private FacesScopes getFacescopes(){
 		return new FacesScopes();
 	}
@@ -877,6 +957,11 @@ public class AccessApplBackingBean extends
 		log.info("deleteAttachment - END");
 	}
 	
+	/**
+	 * To get user role value
+	 * 
+	 * @return String
+	 */
 	private static String getUserRoleValue() {
 		FacesScopes sc = new FacesScopes();
 		if (sc.hasRoleUser(RoleCode.UPS_ADMIN.value())) {
