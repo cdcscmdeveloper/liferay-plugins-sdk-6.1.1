@@ -11,13 +11,19 @@
 					<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 				</td>
 				<td style="width: 10%" class="header-info-text">
-					#{agreementBackingBean.managedBean.ctContract.loa.loaNo}
+					<p:commandLink value="#{agreementBackingBean.managedBean.ctContract.loa.loaNo}"
+						styleClass="blue_font" action="#{agreementBackingBean.goToLoaView}">
+						<f:param name="loaId" value="#{agreementBackingBean.managedBean.ctContract.loa.loaId}" />
+					</p:commandLink>
 				</td>
 				<td style="width: 10%">
 					<p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
 				</td>
 				<td style="width: 10%" class="header-info-text">
-					#{agreementBackingBean.managedBean.ctContract.contractNo}
+					<p:commandLink value="#{agreementBackingBean.managedBean.ctContract.contractNo}"
+						styleClass="blue_font" action="#{agreementBackingBean.goToContractView}">
+						<f:param name="contractVerId" value="#{agreementBackingBean.managedBean.contractVer.contractVerId}" />
+					</p:commandLink>
 				</td>
 				<td style="width: 10%">
 					<p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
