@@ -1405,11 +1405,12 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			MeetingResDTO resDTO = meetingSO.submitFinalizationCommitteeMeeting(reqDTO);
 			String qtNo = getManagedBean().getScQt().getQtNo();
+			String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
 			renewSesionObject();
 			
-			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + qtNo;
-			String variable2 = getMessageCommon("lbl.sc.meeting.confirmation");
-			commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
+			String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
+											  ParameterConst.DOCTYPE_QUOTATION) + " " + qtNo;
+			commonMessageAcknowledmentPage(MessageConst.INFO_700026, qtParam, statusParam);
 		} finally {
 			meetingSO = null;
 		}

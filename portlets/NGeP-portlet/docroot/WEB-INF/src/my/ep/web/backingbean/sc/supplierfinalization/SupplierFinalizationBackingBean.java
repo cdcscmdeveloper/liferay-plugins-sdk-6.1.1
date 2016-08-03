@@ -2128,14 +2128,14 @@ public class SupplierFinalizationBackingBean extends
 			resDTO = qtSuppFinalizationSO.submitSupplierFinalization(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				String variable1 = getParameterDesc(
-						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_QUOTATION)
+				String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+												    ParameterConst.DOCTYPE_QUOTATION)
 						+ " " + getManagedBean().getScQt().getQtNo();
-				String variable2 = getMessageCommon("lbl.sc.supplier.finalization");
+				String statusParam = getStatusDescById(
+										getManagedBean().getCurrentStatusId());
 
 				commonMessageAcknowledmentPage(getMessgeConstant(outcome),
-						variable1, variable2);
+											   qtParam, statusParam);
 			}
 
 		} finally {
