@@ -17,7 +17,13 @@
 					<td style="width: 6%"><h:outputLabel
 							value="#{lbl['lbl.sc.price.inquiry.header.ptj.name']}" /></td>
 					<td class="header-info-text">
-						#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgName}</td>
+					  <h:panelGroup rendered="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.isBrandNew()}">
+						 #{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgName}
+				     </h:panelGroup>
+				     <h:panelGroup rendered="#{!purchaseInquiryBackingBean.managedBean.scPrInquiry.isBrandNew()}">
+						 #{requestNoteBackingBean.getPtjNameByOrgProfileIdAndCreatedDate(purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgProfileId, purchaseInquiryBackingBean.managedBean.scPrInquiry.createdDate)}
+				     </h:panelGroup>
+					</td>
 					<td style="width: 6%"><h:outputLabel
 							value="#{lbl['lbl.sc.price.inquiry.status']}" /></td>
 					<td class="header-info-text">
