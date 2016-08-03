@@ -2453,7 +2453,8 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setRootZoneTree(
 				LocationSingleton.getInstance().buildLocationPopupTree(
 						getManagedBean().getDefaultCountryId(), null, null,
-						null, null, locationLevel, TplSpecZoneLoc.class));
+						null, null, locationLevel, TplSpecZoneLoc.class,
+						false));
 		// zone required validation
 		getManagedBean().setRequired(Boolean.TRUE);
 		getManagedBean().setZoneName("");
@@ -2489,7 +2490,8 @@ public class SimpleQuoteBackingBean extends
 				LocationSingleton.getInstance().buildLocationPopupTree(
 						getManagedBean().getDefaultCountryId(), states,
 						districts, divisions, null, locationLevel,
-						TplSpecZoneLoc.class));
+						TplSpecZoneLoc.class,
+						false));
 	}
 
 	/**
@@ -2803,7 +2805,8 @@ public class SimpleQuoteBackingBean extends
 				LocationSingleton.getInstance().buildLocationPopupTree(
 						getManagedBean().getDefaultCountryId(), states,
 						districts, divisions, cities, locationLevel,
-						TplSpecZoneLoc.class));
+						TplSpecZoneLoc.class,
+						false));
 		int i = zoneIndex;
 		this.getManagedBean().setZoneIndex(i);
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -2839,7 +2842,8 @@ public class SimpleQuoteBackingBean extends
 				LocationSingleton.getInstance().buildLocationPopupTree(
 						getManagedBean().getDefaultCountryId(), states,
 						districts, divisions, null, locationLevel,
-						TplSpecZoneLoc.class));
+						TplSpecZoneLoc.class,
+						false));
 	}
 
 	/**
