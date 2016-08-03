@@ -21,6 +21,11 @@
 		
 		<p:outputPanel>
 			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.view.history']}" 
+					partialSubmit="true" update="@this" process="@this"
+					action="#{smUpdateGstInfoBackingBean.redirectToHistoryPage}"
+					onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
+				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.sm.declare']}" 
 					partialSubmit="true" update="@form" 
 					action="#{smUpdateGstInfoBackingBean.onDeclareGst}"
