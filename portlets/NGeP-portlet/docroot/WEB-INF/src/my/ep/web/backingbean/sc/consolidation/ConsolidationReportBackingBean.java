@@ -494,14 +494,14 @@ public class ConsolidationReportBackingBean extends
 			SuppFinalizationResDTO resDTO 
 					= qtSuppFinalizationSO.submitConsolidationReport(reqDTO);
 			if (resDTO.isSuccessful()) {
-				String variable1 = getParameterDesc(
-						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_QUOTATION)
+				String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+													ParameterConst.DOCTYPE_QUOTATION)
 						+ " " + getManagedBean().getScQt().getQtNo();
-				String variable2 = getMessageCommon("lbl.sc.consolidation.report");
+				String statusParam = getStatusDescById(
+									getManagedBean().getCurrentStatusId());
 
 				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
-						variable1, variable2);
+											   qtParam, statusParam);
 			}			
 			
 		} finally {
