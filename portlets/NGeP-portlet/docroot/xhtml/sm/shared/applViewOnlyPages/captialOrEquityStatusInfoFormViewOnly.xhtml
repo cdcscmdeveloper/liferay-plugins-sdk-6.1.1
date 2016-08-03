@@ -90,51 +90,48 @@
 			</table>
 			
 			<div align="center">
-				<table class="ui-panelgrid ui-widget tablePanel" role="grid" style="width: 100%">
-					<tbody>
-						<tr class="ui-widget-content" role="row">
-							<td class="tableheaderrow" role="gridcell"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.compTabHdr']}" /></td>
-							<td class="tableheaderrow" role="gridcell"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.valTabHdr']}" /></td>
-							<td class="tableheaderrow" role="gridcell"><p:outputLabel styleClass="outputLabel-view" value="%" /></td>
-						</tr>
-						<tr class="ui-widget-content" role="row">
-							<td class="tableheaderrow" role="gridcell"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.bumi']}" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}" styleClass="outputLabel-view" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiPercent}" styleClass="outputLabel-view" /></td>
-						</tr>
-						<tr class="ui-widget-content" role="row">
-							<td class="tableheaderrow" role="gridcell"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.nonBumi']}" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}" styleClass="outputLabel-view" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiPercent}" styleClass="outputLabel-view" /></td>
-						</tr>
-						<tr class="ui-widget-content" role="row">
-							<td class="tableheaderrow" role="gridcell"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.nonMy']}" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}" styleClass="outputLabel-view" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foriegnerPercent}" styleClass="outputLabel-view" /></td>
-						</tr>
-						
-						<tr class="ui-widget-content" role="row">
-							<td class="tableheaderrow" role="gridcell"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.utAgency']}" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}" styleClass="outputLabel-view" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUTPercent}" styleClass="outputLabel-view" /></td>
-						</tr>
-						<tr class="ui-widget-content" role="row">
-							<td class="tableheaderrow" role="gridcell"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.govtEquity']}" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquity}" styleClass="outputLabel-view" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquityPercent}" styleClass="outputLabel-view" /></td>
-						</tr>
-						<tr class="ui-widget-content" role="row">
-							<td class="tableheaderrow" role="gridcell"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.frgComp']}" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}" styleClass="outputLabel-view" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foriegnCompPercent}" styleClass="outputLabel-view" /></td>
-						</tr>
-						<tr class="ui-widget-content" role="row">
-							<td class="tableheaderrow" role="gridcell"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.lclComp']}" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}" styleClass="outputLabel-view" /></td>
-							<td class="tableheaderrow" role="gridcell"><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompPercent}" styleClass="outputLabel-view" /></td>
-						</tr>
-					</tbody>
-				</table>
+				<p:panelGrid styleClass="tablePanel" id="capitalEquityStatusGridId">
+					<p:row id="row1Id">
+						<p:column styleClass="tableheaderrow"><h:outputText value="#{lbl['lbl.sm.equiStatus.compTabHdr']}" /></p:column>
+						<p:column styleClass="tableheaderrow"><h:outputText value="#{lbl['lbl.sm.equiStatus.valTabHdr']}" /></p:column>
+						<p:column styleClass="tableheaderrow"><h:outputText value="%" /></p:column>
+					</p:row>
+					<p:row id="row2Id">
+						<p:column><h:outputText value="#{lbl['lbl.sm.equiStatus.bumi']}" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiPercent}" styleClass="outputLabel-view" /></p:column>
+					</p:row>
+					<p:row id="row3Id">
+						<p:column><h:outputText value="#{lbl['lbl.sm.equiStatus.nonBumi']}" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiPercent}" styleClass="outputLabel-view" /></p:column>
+					</p:row>
+					<p:row id="row4Id">
+						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.nonMy']}" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foriegnerPercent}" styleClass="outputLabel-view" /></p:column>
+					</p:row>
+					<p:row id="row5Id">
+						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.utAgency']}" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUTPercent}" styleClass="outputLabel-view" /></p:column>
+					</p:row>
+					<p:row id="row6Id">
+						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.govtEquity']}" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquityPercent}" styleClass="outputLabel-view" /></p:column>
+					</p:row>
+					<p:row id="row7Id">
+						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.frgComp']}" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foriegnCompPercent}" styleClass="outputLabel-view" /></p:column>
+					</p:row>
+					<p:row id="row8Id">
+						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.lclComp']}" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompPercent}" styleClass="outputLabel-view" /></p:column>
+					</p:row>
+				</p:panelGrid>
 			</div>
 			
 			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
