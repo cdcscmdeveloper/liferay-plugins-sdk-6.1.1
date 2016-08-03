@@ -980,8 +980,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 						index,
 						LocationSingleton.getInstance().constuctTreeNode(
 								specZoneDtl, specZoneDtl.getTplSpecZoneLocs()));
-			} else {
-				throw new EpException("Please select At least one Zone Location");
 			}
 			
 			specZoneDtl.setDeletedSpecZoneLocs(deletedNodes);
@@ -1973,13 +1971,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.QT_RT_MINIMUM_NUMBER_SUPPLIER);
-			/*ScQt scQt = getManagedBean().getQt();
+			ScQt scQt = getManagedBean().getQt();
 			if (scQt != null &&
 					scQt.getCurrentWorkFlowStatus() != null && 
 					super.isQTStatusPublished(scQt.getCurrentWorkFlowStatus().getPmStatus().getStatusId())) {
 				
 				reqDTO.setValidityDate(scQt.getPublishDate());	
-			}*/
+			}
 			
 			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
 					.getRuleValueList();
