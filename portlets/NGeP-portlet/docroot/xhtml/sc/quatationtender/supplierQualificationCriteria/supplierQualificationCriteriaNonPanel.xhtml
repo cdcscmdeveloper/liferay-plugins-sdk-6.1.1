@@ -146,7 +146,7 @@
 
 		<c:if test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 			<c:choose>
-				<c:when test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
+				<c:when test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal and isQuotationThresHold}">
 					<h:panelGrid width="100%">
 						<p:dataTable id="zoneLocationDataTable" rows="10"
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneSuppQualTrees}"
