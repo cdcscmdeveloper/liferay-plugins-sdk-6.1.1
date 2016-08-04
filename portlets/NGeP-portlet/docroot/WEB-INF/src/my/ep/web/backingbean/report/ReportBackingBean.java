@@ -18359,7 +18359,7 @@ public class ReportBackingBean extends
 			
 			OutputStream out = res.getOutputStream();
 			log.info("@@@@ OutputStream = "+out);
-			byte[] b = new byte[128];
+			byte[] b = new byte[4096];
 			int size;
 			while ((size = buf.read(b, 0, b.length)) != -1) {
 				out.write(b, 0, size);
