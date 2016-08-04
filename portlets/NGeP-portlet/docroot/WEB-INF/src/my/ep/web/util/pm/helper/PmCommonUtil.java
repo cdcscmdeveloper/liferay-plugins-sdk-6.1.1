@@ -1349,41 +1349,41 @@ public class PmCommonUtil {
 		return jabatanProfile;
 	}
 
-	/**
-	 * retrieve challenge question list
-	 * 
-	 * @param PmUser
-	 * @return List<String>
-	 */
-	public static SelectItem[] retrieveChallengeQAList(PmUser pmUser) {
-		List<String> challengeQAList = null;
-		IUserSO userSO = null;
-		SelectItem[] items = null;
-		if (pmUser == null || pmUser.getLoginId() == null) {
-			throw new EpException("User login id is invalid.");
-		}
-		try {
-			UserReqDTO reqDTO = new UserReqDTO();
-			UserResDTO resDTO = null;
-			reqDTO.setLoginId(pmUser.getLoginId());
-			userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDTO = userSO.getChallengeQAList(reqDTO);
-			if (resDTO.isSuccessful()) {
-				challengeQAList = resDTO.getOimChallengeQAs();
-				items = new SelectItem[challengeQAList.size()];
-				for (int i = 0; i < challengeQAList.size(); i++) {
-					String value = challengeQAList.get(i);
-					items[i] = new SelectItem(value, value);
-				}
-			}
-		} catch (Exception e) {
-			throw new EpException("Retrive Challenge QA error");
-		} finally {
-			userSO = null;
-		}
-		return items;
-	}
+//	/**
+//	 * retrieve challenge question list
+//	 * 
+//	 * @param PmUser
+//	 * @return List<String>
+//	 */
+//	public static SelectItem[] retrieveChallengeQAList(PmUser pmUser) {
+//		List<String> challengeQAList = null;
+//		IUserSO userSO = null;
+//		SelectItem[] items = null;
+//		if (pmUser == null || pmUser.getLoginId() == null) {
+//			throw new EpException("User login id is invalid.");
+//		}
+//		try {
+//			UserReqDTO reqDTO = new UserReqDTO();
+//			UserResDTO resDTO = null;
+//			reqDTO.setLoginId(pmUser.getLoginId());
+//			userSO = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+//			resDTO = userSO.getChallengeQAList(reqDTO);
+//			if (resDTO.isSuccessful()) {
+//				challengeQAList = resDTO.getOimChallengeQAs();
+//				items = new SelectItem[challengeQAList.size()];
+//				for (int i = 0; i < challengeQAList.size(); i++) {
+//					String value = challengeQAList.get(i);
+//					items[i] = new SelectItem(value, value);
+//				}
+//			}
+//		} catch (Exception e) {
+//			throw new EpException("Retrive Challenge QA error");
+//		} finally {
+//			userSO = null;
+//		}
+//		return items;
+//	}
 
 	/**
 	 * Assign Tracking Diary values
