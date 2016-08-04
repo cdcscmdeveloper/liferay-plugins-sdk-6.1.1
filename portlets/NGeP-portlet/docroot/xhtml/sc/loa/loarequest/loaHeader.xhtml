@@ -18,7 +18,12 @@
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 				</td>
 				<td class="header-info-text">
+				<c:if test="#{lOADetailBackingBean.managedBean.scLoa.brandNew}">
 					#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgName}
+					</c:if>
+					<c:if test="#{!lOADetailBackingBean.managedBean.scLoa.brandNew}">
+					#{lOADetailBackingBean.getPtjNameByOrgProfileIdAndCreatedDate(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgProfileId, lOADetailBackingBean.managedBean.scLoa.scLoiLoa.createdDate)}
+					</c:if>
 				</td>
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" />
 				</td>
