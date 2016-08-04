@@ -1221,11 +1221,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				
 				if (ContractConst.TEMPLATE_FACTORING_CLAUSE_CA.equalsIgnoreCase(templateName)) {
 					PmUser user = null;
-					for (PmUser approver : getManagedBean().getApproverModel().getTarget()) {
-						if (getManagedBean().getUserMap()!=null && getManagedBean().getUserMap().get(approver.getUserId()) != null) {
-							user = getManagedBean().getUserMap().get(approver.getUserId());
-							break;
+					if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME)) {
+						for (PmUser approver : getManagedBean().getApproverModel().getTarget()) {
+							if (getManagedBean().getUserMap()!=null && getManagedBean().getUserMap().get(approver.getUserId()) != null) {
+								user = getManagedBean().getUserMap().get(approver.getUserId());
+								break;
+							}
 						}
+					} else {
+						user = getFacesScopes().getUserSessionBean();
 					}
 					if (user != null) {
 						context.put("approverName", user.getUserName());
