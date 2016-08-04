@@ -1112,6 +1112,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		long loaId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("loaId"));
 		
 		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+		loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+		loaDetailBackingBean.getManagedBean().setBackToPreviousPage(AGREEMENT_DOC_PAGE);
 		loaDetailBackingBean.viewLOA(loaId);
 	}
 	
