@@ -9,19 +9,42 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <ui:define name="contentSection">
-           <table style="width:100%;" >
+    <style>
+      .dashboarTable {
+             color: #000 !important;
+             font-family: Arial,Helvetica,sans-serif;
+              font-size: 12px;
+              border-color: #ddd;
+              border-width:1px;
+              padding-left: 5px;
+              border-style:solid;
+      }
+      
+     .tableWidth80{
+          width:80%;
+     }
+     
+      .tableWidth20{
+          width:20%;
+          text-align: center;
+     }
+    
+    
+    </style>
+    
+           <table style="width:100%;">
                     <tr>
-                         <td style="width:80%; padding-left: 5px; border-style:ridge; border-width:1px; border-color:#000000;">
+                         <td  class="tableWidth80 dashboarTable">
                                  <p:outputLabel value="#{lbl['lbl.ct.dash.board.30.days']}" style="float:left;" /></td>
-                        <td  style="width:20%;text-align: center; border-style:ridge; border-width:1px; border-color:#000000;">
+                        <td class=" tableWidth20 dashboarTable">
                                   #{contractDashboardBackingBean.managedBean.lessThan30Days}</td></tr>
                            <tr>
-                               <td  style="width:80%;padding-left: 5px; border-style:ridge; border-width:1px; border-color:#000000;" >
+                               <td  class="tableWidth80, dashboarTable">
                                      <p:outputLabel value="#{lbl['lbl.ct.dash.board.120.days']}"  style="float:left;" /></td>
-                                <td  style="width:20%;text-align: center; border-style:ridge; border-width:1px; border-color:#000000;">
+                                <td  class="tableWidth20 dashboarTable">
                                  #{contractDashboardBackingBean.managedBean.lessThan120Days}</td>
                            </tr>
-                           <tr><td colspan="3" style="text-align:right;padding-right: 8%; border-style:ridge; border-width:1px; border-color:#000000;">
+                           <tr><td colspan="3" style="text-align:right;padding-right: 6%;" class="dashboarTable">
 	                            <p:commandLink value="#{lbl['lbl.ct.dash.board.more']}"  styleClass="blue_font" process="@this" update="@form"
 	                                action="#{contractDashboardBackingBean.goToMaintenancePage}" >
 							</p:commandLink></td>
