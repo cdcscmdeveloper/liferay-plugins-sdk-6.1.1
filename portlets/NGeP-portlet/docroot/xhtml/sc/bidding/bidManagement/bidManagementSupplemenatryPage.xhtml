@@ -25,7 +25,7 @@
 				</td>
 
 				<td><p:outputLabel id="ptjNameLbl" value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.pmOrgProfile.orgName}
+				<td class="header-info-text">#{biddingBB.getPtjNameByOrgProfileIdAndCreatedDate(biddingBB.managedBean.scheduledBid.scBid.pmOrgProfile.orgProfileId, biddingBB.managedBean.scheduledBid.scBid.createdDate)}
 				</td>
 
 				<td><p:outputLabel id="bidStatusLbl"
