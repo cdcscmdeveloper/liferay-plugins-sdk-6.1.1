@@ -808,8 +808,8 @@ public class LocationSingleton {
 		if (tplSpecZoneDtl != null) {
 			TreeNode zoneNode = new DefaultTreeNode(QTConstants.NODE_ZONE,
 					tplSpecZoneDtl, root);
-			List<PmState> states = new ArrayList<PmState>();
-			List<PmDivision> divisions = new ArrayList<PmDivision>();
+			Map<Long, TreeNode> stateMap = new HashMap<Long, TreeNode>();
+			Map<Long, TreeNode> divisionMap = new HashMap<Long, TreeNode>();
 			List<PmDistrict> districts = new ArrayList<PmDistrict>();
 			TreeNode stateNode = null;
 			TreeNode divisonNode = null;
@@ -817,20 +817,30 @@ public class LocationSingleton {
 			for (TplSpecLoc locCriteria : specLocs) {
 				PmState pmState = locCriteria.getPmState();
 
-				if (null != pmState && !states.contains(pmState)) {
-					stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
-							locCriteria, zoneNode);
-					// locations.add(root);
+				if (null != pmState) {
+					stateNode = stateMap.get(pmState.getStateId());
+					if (stateNode == null) {
+						stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+								locCriteria, zoneNode);
+						stateMap.put(pmState.getStateId(), stateNode);	
+					}
+				} else {
+					stateNode = null;
 				}
+				
 				PmDivision division = locCriteria.getPmDivision();
-
-				if (null != division && !divisions.contains(pmState)) {
-					divisonNode = new DefaultTreeNode(
-							QTConstants.NODE_DIVISION, locCriteria, stateNode);
-					divisions.add(division);
+				if (null != division) {
+					divisonNode = divisionMap.get(division.getDivisionId());
+					if (divisonNode == null) {
+						divisonNode = new DefaultTreeNode(
+								QTConstants.NODE_DIVISION, locCriteria, stateNode);
+						divisionMap.put(division.getDivisionId(), divisonNode);	
+					}
+				} else {
+					divisonNode = null;
 				}
+				
 				PmDistrict pmDistrict = locCriteria.getPmDistrict();
-
 				if (null != pmDistrict && !districts.contains(pmDistrict)) {
 					if (divisonNode == null) {
 						new DefaultTreeNode(QTConstants.NODE_DISTRICT,
@@ -843,7 +853,6 @@ public class LocationSingleton {
 					}
 					districts.add(pmDistrict);
 				}
-				states.add(pmState);
 			}
 		} else {
 
