@@ -35,6 +35,11 @@ public class DateTimeBackingBean {
 		}log.info(message);
 	}
 	
+	/**
+	 * Gets the hours dropdown values.
+	 *
+	 * @return the hours dropdown values
+	 */
 	public SelectItem[] getHoursDropdownValues() {
 		SelectItem[] selectItems = new SelectItem[25];
 		
@@ -49,20 +54,41 @@ public class DateTimeBackingBean {
 		return selectItems;
 	}
 	
-	public SelectItem[] getMinutesDropdownValues() {
-		SelectItem[] selectItems = new SelectItem[61];
-		
-		selectItems[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-				"lbl.txt.minute", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale()));
-		
-		for (int i = 0; i < selectItems.length-1; i++) {
-			selectItems[i+1] = new SelectItem(i, String.format("%1$02d", i));
+	/**
+	 * Gets the minutes dropdown values.
+	 *
+	 * @param modVal the mod val
+	 * @return the minutes dropdown values
+	 */
+	public SelectItem[] getMinutesDropdownValues(String modVal) {
+		if ((StringUtils.isNotEmpty(modVal))){
+			int modValue = Integer.valueOf(modVal);
+			SelectItem[] selectItems = new SelectItem[((60/modValue)+1)];
+
+			selectItems[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.minute", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+
+			int j = 1;
+			for (int i = 0; i < 60; i++) {
+
+				if ((i % modValue ) == 0){
+					selectItems[j] = new SelectItem(i, String.format("%1$02d", i));
+					j++;
+				}
+			}
+
+			return selectItems;
 		}
-		
-		return selectItems;
+		return null;
 	}
 	
+	/**
+	 * Time changed action.
+	 *
+	 * @param component the component
+	 * @return the date
+	 */
 	public Date timeChangedAction(UIComponent component) {
 		debugLogger("timeChangedAction");
 		
@@ -88,6 +114,11 @@ public class DateTimeBackingBean {
 		return dateValue;
 	}
 	
+	/**
+	 * Post update listener.
+	 *
+	 * @param postUpdateListener the post update listener
+	 */
 	public void postUpdateListener(String postUpdateListener) {
 		if (StringUtils.isNotBlank(postUpdateListener)) {
 			MethodExpression methodExp = FacesScopes
