@@ -18,6 +18,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -412,6 +413,8 @@ public class OrganisationBackingBean extends
 						"pmOrgValidity.expDate",
 						SearchOperator.OPERATOR_IS_NULL.value(), null,
 						SearchCondition.CONDITION_OR.value())));
+		
+		searchBean.getSortColumns().add(new SearchOrderBean("pmOrgValidity.orgName",true));
 		
 		
 		log.info("getSearchBeanData - End");
