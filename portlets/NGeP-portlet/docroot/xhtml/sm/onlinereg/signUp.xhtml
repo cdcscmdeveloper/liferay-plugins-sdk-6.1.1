@@ -35,17 +35,37 @@
 							value="#{registrationBackingBean.managedBean.applType}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="#{SupplierManagementConst.ACC_BASIC}" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="#{SupplierManagementConst.ACC_MOF}" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.govt']}" itemValue="#{SupplierManagementConst.ACC_GOVT_SELLER}" />
-							
-							<p:ajax event="change" update="btnProceed"/>
+							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.govt']}" itemValue="#{SupplierManagementConst.ACC_GOVT_SELLER}" />					
+							<p:ajax event="change" update="agreementId,btnProceed" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 						</p:selectOneRadio></td>
 				</tr>
 			</table>
 		</p:panel>
 
 		<p:panel id="agreementId" header="#{lbl['lbl.sm.basic.account.supplier.acc.intro']}">
-			<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.default']}" /></p>
-
+			<p:scrollPanel style="height:330px;border:0;" mode="native">
+				<c:choose>
+					<c:when test="#{empty registrationBackingBean.managedBean.applType}">
+						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.default']}" /></p>
+					</c:when>
+				
+					<c:otherwise>
+						<c:choose>
+							<c:when test="#{registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_MOF}">
+								<b>#{lbl['lbl.sm.basic.account.mof']}</b>
+								<br />
+								<h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.mofdesc']}" style="white-space : normal !important"/>
+							</c:when>
+							
+							<c:otherwise>
+								<b>#{lbl['lbl.sm.basic.account.basic']}</b>
+								<br />
+								<h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.basicdesc']}" style="white-space : normal !important"/>
+							</c:otherwise>
+						</c:choose>
+					</c:otherwise>
+				</c:choose>
+			</p:scrollPanel>
 			<br />
 		</p:panel>
 		<div align="right">
