@@ -860,7 +860,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				extCodeVO.setMeasurementName(clone.getMeasurementName());
 				extCodeVO.setColorName(clone.getColorName());
 
-				bb.getManagedBean().getExtensionVoList().add(extCodeVO);
+				if(!bb.getManagedBean().getExtensionVoList().contains(extCodeVO)){
+					bb.getManagedBean().getExtensionVoList().add(extCodeVO);
+				}
 
 			}
 
