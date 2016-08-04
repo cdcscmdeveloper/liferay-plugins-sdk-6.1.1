@@ -1687,12 +1687,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					}
 				}
 				//Reset ceiling amount and ceiling quantity to Zero if only single agency
-				if (this.getManagedBean().getContractVer().getCtAgencies() != null
-						&& this.getManagedBean().getContractVer().getCtAgencies().size() == 1) {
+				if (this.getManagedBean().getContractVer().getCtAgencies().size() == 1) {
 					this.getManagedBean().getContractVer().getCtAgencies().get(0).setCeilingAmount(BigDecimal.ZERO);
-					
 					for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
 						contractItem.getCtItemCeilingQties().get(0).setCeilingQuantity(BigDecimal.ZERO);
+					}
+				}
+				//Reset show item
+				if (this.getManagedBean().getContractVer().getCtAgencies().size() <= 1) {
+					if (getManagedBean().getShowItem() != null
+		    				&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+						getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 					}
 				}
 				
@@ -2992,7 +2997,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);			
 			
 			if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
-				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+				if (this.getManagedBean().getContractVer().getCtAgencies() != null
+						&& this.getManagedBean().getContractVer().getCtAgencies().size() > 1) {
+					itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+				}
 				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
 			} else if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);				
