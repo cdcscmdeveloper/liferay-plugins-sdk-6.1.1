@@ -12879,9 +12879,12 @@ public class SpecificationBackingBean extends
 		if (!scQt.isPanel() && null != qtSupplierCriteria) {
 			if (scQt.isZonal()
 					&& scQt.getQtType().equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
-
+				List<TreeNode> zoneTrees = this.getManagedBean().getZoneSuppQualTrees();
+				if (zoneTrees == null) {
+					zoneTrees = this.getManagedBean().getZoneGeneralTrees();
+				}
 				List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
-						this.getManagedBean().getZoneGeneralTrees(), null);
+						zoneTrees, null);
 
 				if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
 					// TODO Code needs to be remove
