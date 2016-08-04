@@ -273,7 +273,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
         </p:confirmDialog>
        
         <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.item.specification.list']}" 
-	   		styleClass="pop_up_top" modal="true" width="700" height="450">
+	   		styleClass="pop_up_top" modal="true" width="700" height="450"  resizable="false">
 	   		<p:messages id="itemSpecMsg" showSummary="false" 
 			   showDetail="true"   autoUpdate="true" cosable="true" />
 	   		<h:panelGrid columns="1">
@@ -299,16 +299,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			                     </p:selectBooleanCheckbox>     
 				      		</p:column>
 				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:40%;" styleClass="column-align-center" >
-					<p:inputTextarea value="#{data.specification}" maxlength="1000" rows="3" style="width:98%;" autoResize="false"
+					<p:inputTextarea value="#{data.specification}" maxlength="1000" rows="3" style="width:98%; resize:none;" autoResize="false"
 						disabled="#{panelBackingBean.managedBean.viewContract}" required="true" label="#{lbl['lbl.ct.specification']}">
 						<p:ajax process="@this"></p:ajax>
 						</p:inputTextarea>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.description']}" style="width:40%;" styleClass="column-align-center" >
-					<p:inputTextarea value="#{data.description}" maxlength="1000" rows="3" style="width:98%;" autoResize="false"
+					<p:inputTextarea value="#{data.description}" maxlength="1000" rows="3" style="width:98%; resize:none;" autoResize="false"
 						disabled="#{panelBackingBean.managedBean.viewContract}" />
 				</p:column>
-			</p:dataTable>
+			</p:dataTable>			
+     		<f:facet name="footer">
 			<div class="ppRightBtn"> 
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
 					action="#{panelBackingBean.addPanelItemSpec()}" update="itemSpecDt" 
@@ -318,6 +319,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				     onsuccess="delPanelItemSpecDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>				
 				<p:commandButton value="#{lbl['lbl.btn.close']}"  action="#{panelBackingBean.onClose()}" process="@all"  />
 			</div>
+			</f:facet>
    		</p:dialog>
    		
    		 <p:confirmDialog id="delPanelItemSpecDlg" widgetVar="delPanelItemSpecDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	

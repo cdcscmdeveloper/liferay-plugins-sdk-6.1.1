@@ -47,6 +47,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
+	private CtContractItem selectedItemForSpec;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtContractItem> ctItemFilter;
@@ -291,4 +292,18 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	public void setUserMap(Map<Long, PmUser> userMap) {
 		this.userMap = userMap;
 	}
+
+	/**
+	 * @return the selectedItemForSpec
+	 */
+	public CtContractItem getSelectedItemForSpec() {
+		return selectedItemForSpec;
+	}
+
+	/**
+	 * @param selectedItemForSpec the selectedItemForSpec to set
+	 */
+	public void setSelectedItemForSpec(CtContractItem selectedItemForSpec) {
+		this.selectedItemForSpec = selectedItemForSpec;
+	}	
 }

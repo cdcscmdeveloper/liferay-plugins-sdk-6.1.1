@@ -110,7 +110,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	 private String showItem;
 	 private String showServiceItem;
 	 private List<CtContractItem> ctItemServiceList;
-	private CtContractItem selectedServiceItem;
+	 private CtContractItem selectedServiceItem;
 	 
 	 private boolean disableAmendDetails;
 	 private CtCircularVer ctCircularVer;
@@ -118,6 +118,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	 
 	  private boolean updateContract = false;
 	  private boolean serviceTaxAlertFlg = false;
+	  
+	  private CtContractItem selectedItemForSpec;
 	
 	/**
 	 * @return the fileDirectory
@@ -1001,4 +1003,17 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.deleteAttachmentList = deleteAttachmentList;
 	}
 
+	/**
+	 * @return the selectedItemForSpec
+	 */
+	public CtContractItem getSelectedItemForSpec() {
+		return selectedItemForSpec;
+	}
+
+	/**
+	 * @param selectedItemForSpec the selectedItemForSpec to set
+	 */
+	public void setSelectedItemForSpec(CtContractItem selectedItemForSpec) {
+		this.selectedItemForSpec = selectedItemForSpec;
+	}
 }
