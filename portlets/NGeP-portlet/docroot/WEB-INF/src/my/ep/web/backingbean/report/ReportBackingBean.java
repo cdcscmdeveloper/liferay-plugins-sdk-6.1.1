@@ -18363,7 +18363,6 @@ public class ReportBackingBean extends
 			int size;
 			while ((size = buf.read(b, 0, b.length)) != -1) {
 				out.write(b, 0, size);
-				log.info("@@@@ inside While loop = "+b);
 			}
 			buf.close();
 			out.close();
