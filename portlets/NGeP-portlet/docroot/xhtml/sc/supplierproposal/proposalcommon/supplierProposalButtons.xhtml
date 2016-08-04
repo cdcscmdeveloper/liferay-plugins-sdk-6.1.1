@@ -10,10 +10,20 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@all"
-			styleClass="BtnSpacing" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" 
+			styleClass="BtnSpacing" onstart="blockWidget.show()"
+			oncomplete="blockWidget.hide()" action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
-			action="#{supplierProposalDetailBackingBean.submitSupplierProposal}" />
+			update="spkiOutputPanel" process="@form" 
+			actionListener="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}" />
 	</div>
+
+	<p:outputPanel id="spkiOutputPanel">
+		<ac:spkiPopup id="spkiPopup"
+			password="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.password}"
+			challengeAns1="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+			challengeQues1="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+			postSignAction="#{supplierProposalDetailBackingBean.submitSupplierProposal(spkiBackingBean.pmDigiSign)}" />
+	</p:outputPanel>
 
 </ui:composition>
