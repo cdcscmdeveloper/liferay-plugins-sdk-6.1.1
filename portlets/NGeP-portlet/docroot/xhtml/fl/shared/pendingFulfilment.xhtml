@@ -10,50 +10,63 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
+	 <style>
+      .dashboarTable {
+             color: #000 !important;
+             font-family: Arial,Helvetica,sans-serif;
+              font-size: 12px;
+              border-color: #ddd;
+              border-width:1px;
+              padding-left: 5px;
+              border-style:solid;
+      }
+      
+     .tableWidth80{
+          width:80%;
+     }
+     
+      .tableWidth20{
+          width:20%;
+          text-align: center;
+     }
+    
+    
+    </style>
 		<table style="width: 100%;">
 			<tr>
-				<td
-					style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;">
+				<td class="tableWidth80 dashboarTable">
 					<p:outputLabel value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.poPendingFulfilment)}"
 						style="float:left;" />
 				</td>
-				<td
-					style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;">
+				<td class=" tableWidth20 dashboarTable">
 					#{flOrderBB.managedBean.totalPendingFl}</td>
 			</tr>
 			<tr>
-				<td
-					style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;">
+				<td class="tableWidth80 dashboarTable">
 					<p:outputLabel value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.coPendingPartialFl)}"
 						style="float:left;" />
 				</td>
-				<td
-					style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;">
+				<td class=" tableWidth20 dashboarTable">
 					#{flOrderBB.managedBean.totalPendingPartialFl}</td>
 			</tr>
 			<tr>
-				<td
-					style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;">
+				<td class="tableWidth80 dashboarTable">
 					<p:outputLabel value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.coPendingSupplierAcknowledgement)}"
 						style="float:left;" />
 				</td>
-				<td
-					style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;">
+				<td class=" tableWidth20 dashboarTable">
 					#{flOrderBB.managedBean.totalPendingSupplierAck}</td>
 			</tr>
 			<tr>
-				<td
-					style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;">
+				<td class="tableWidth80 dashboarTable">
 					<p:outputLabel value="#{flOrderBB.getStatusDescById(FulfilmentStatusCont.coPendingInvoice)}"
 						style="float:left;" />
 				</td>
-				<td
-					style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;">
+				<td class=" tableWidth20 dashboarTable">
 					#{flOrderBB.managedBean.totalPendingInvoice}</td>
 			</tr>
 			<tr>
-				<td colspan="3"
-					style="text-align: right; padding-right: 6%; border-style: ridge; border-width: 1px; border-color: #000000;">
+				<td colspan="3" style="text-align:right;padding-right: 6%;" class="dashboarTable">
 					<p:commandLink value="#{lbl['lbl.ct.dash.board.more']}"
 						styleClass="blue_font" process="@this" update="@form"
 						action="#{flOrderBB.navigateToFlAudit}">
