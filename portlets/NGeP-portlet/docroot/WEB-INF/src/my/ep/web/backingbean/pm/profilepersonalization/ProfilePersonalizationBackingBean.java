@@ -343,11 +343,11 @@ public class ProfilePersonalizationBackingBean extends
 			// update address entered flag
 			// addressEntered(); 19Nov2014
 			
-			//load challengeQA
-			clearChallengeQuestions();
-			
-			//load challengeQADropDownList
-			getManagedBean().setChallengeQADDList(PmCommonUtil.retrieveChallengeQAList(pmUser));
+//			//load challengeQA
+//			clearChallengeQuestions();
+//			
+//			//load challengeQADropDownList
+//			getManagedBean().setChallengeQADDList(PmCommonUtil.retrieveChallengeQAList(pmUser));
 			
 			//clear password policy
 			getManagedBean().setPasswordPolicy(null);
@@ -1166,148 +1166,148 @@ public class ProfilePersonalizationBackingBean extends
 		logger.info("changePassword - END");
 	}
 	
-	public SelectItem[] getChallengeQAList(){
-		PmUser pmUser = getFacesScopes().getUserSessionBean();			
-		return PmCommonUtil.retrieveChallengeQAList(pmUser);
-	}
+//	public SelectItem[] getChallengeQAList(){
+//		PmUser pmUser = getFacesScopes().getUserSessionBean();			
+//		return PmCommonUtil.retrieveChallengeQAList(pmUser);
+//	}
+//	
+//	public String getChallengeQuestionsLabel(Long index){
+//		index = index + 1;
+//		return ResourceBundleUtils.getMessage(
+//				"lbl.pm.profiles.ccq.q"+index,
+//				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//				new FacesScopes().getUserLocale());
+//	}
+//	
+//	public String getChallengeAnswersLabel(Long index){
+//		index = index + 1;
+//		return ResourceBundleUtils.getMessage(
+//				"lbl.pm.profiles.ccq.a"+index,
+//				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//				new FacesScopes().getUserLocale());
+//	}
+//	
+//	
+//	/**
+//	 * Change password
+//	 * 
+//	 * @throws Exception
+//	 */
+//	public void changeChallengeQuestions() throws Exception {
+//		logger.info("changeChallengeQuestions - START");
+//		IUserSO userSO = null;
+//		UserReqDTO reqDTO = new UserReqDTO();
+//		UserResDTO resDTO = new UserResDTO();
+//		try {
+//			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser()
+//					.getLoginId())) {
+//				throw new EpException(MessageConst.ERROR_770125);
+//			}
+//			if (StringUtils.isBlank(this.getManagedBean().getCurrentPassword())) {
+//				throw new EpException(MessageConst.ERROR_770124);
+//			}
+//			Set<String> questionsSet = new HashSet<String>();
+//			Set<String> answersSet = new HashSet<String>();
+//			List<String> questionList = new ArrayList<String>();
+//			List<String> answerList = new ArrayList<String>();
+//			int counter = 1;
+//			for(ChallengeQAList qa : getManagedBean().getChallengeQAList()){
+//				if(!StringUtils.isBlank(qa.getQuestion())){
+//					questionsSet.add(qa.getQuestion());
+//					questionList.add(qa.getQuestion());
+//				}else{
+//					throw new EpException("Please Select Question " + counter);
+//				}
+//				
+//				if(!StringUtils.isBlank(qa.getAnswer())){
+//					answersSet.add(qa.getAnswer());
+//					answerList.add(qa.getAnswer());
+//				}else{
+//					throw new EpException("Please Insert Answer " + counter);
+//				}
+//				counter ++;
+//			}
+//			
+//			
+//			if(questionsSet.size() != getManagedBean().getChallengeQAList().size()){
+//				throw new EpException("Duplicate Questions are selected");
+//			}
+//			
+//			if(answersSet.size() != getManagedBean().getChallengeQAList().size()){
+//				throw new EpException("Duplicate Answers are inserted");
+//			}
+//			
+//			 userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+//			 ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+//			 reqDTO = new UserReqDTO();
+//			 reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+//			 PmUser user = getManagedBean().getSelectedUser();
+//				IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+//						.getServiceObject("pm", IStatusSO.class);
+//				StatusReqDTO statusReqDTO = new StatusReqDTO();
+//				statusReqDTO.setStatusId(user.getRecordStatusFlg()
+//						.longValue());
+//				StatusResDTO statusResDTO = statusSO
+//						.retrieveStatusByStatusId(statusReqDTO);
+//				logger.info("Tracking diary for my profile: change challenge Questions :changeChallengeQuestions");
+//				String messageId = MessageConst.TD_80016;
+//				String[] msgParam = new String[] {user.getUserName()};
+//				reqDTO.setTrackingStatus(true);
+//				reqDTO.getTrackDairyVOs().add(
+//							PmCommonUtil.assignTrackingDairyValues(user,
+//									getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
+//											.getPmStatus() : new PmStatus()));
+//			 reqDTO.setLoginId(getManagedBean().getSelectedUser()
+//					.getLoginId());
+//			 reqDTO.setUserOimPassword(getManagedBean().getCurrentPassword());
+//			 reqDTO.setChallangeQuestions(questionList);
+//			 reqDTO.setChallangeAnswers(answerList);
+//			 resDTO = userSO.setOimChallengeQA(reqDTO);
+//			 if (resDTO != null && resDTO.isSuccessful()) {
+//					FacesContext
+//							.getCurrentInstance()
+//							.addMessage(
+//									null,
+//									new FacesMessage(
+//											FacesMessage.SEVERITY_INFO,
+//											null,
+//											MessageUtils
+//													.getMessage(
+//															MessageConst.INFO_770171,
+//															new String[] { this
+//																	.getManagedBean()
+//																	.getSelectedUser()
+//																	.getLoginId() },
+//															MessageUtils.BUNDLE_COMMON_MESSAGES,
+//															new FacesScopes()
+//																	.getUserLocale())));
+//					clearChallengeQuestions();
+//
+//				}
+//
+//		} catch (Exception e) {
+//			throw new EpException(MessageConst.ERROR_770171,
+//					new String[] { e.getMessage() });
+//		} finally {
+//			userSO = null;
+//		}
+//		logger.info("changeChallengeQuestions - END");
+//	}
 	
-	public String getChallengeQuestionsLabel(Long index){
-		index = index + 1;
-		return ResourceBundleUtils.getMessage(
-				"lbl.pm.profiles.ccq.q"+index,
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale());
-	}
 	
-	public String getChallengeAnswersLabel(Long index){
-		index = index + 1;
-		return ResourceBundleUtils.getMessage(
-				"lbl.pm.profiles.ccq.a"+index,
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale());
-	}
-	
-	
-	/**
-	 * Change password
-	 * 
-	 * @throws Exception
-	 */
-	public void changeChallengeQuestions() throws Exception {
-		logger.info("changeChallengeQuestions - START");
-		IUserSO userSO = null;
-		UserReqDTO reqDTO = new UserReqDTO();
-		UserResDTO resDTO = new UserResDTO();
-		try {
-			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser()
-					.getLoginId())) {
-				throw new EpException(MessageConst.ERROR_770125);
-			}
-			if (StringUtils.isBlank(this.getManagedBean().getCurrentPassword())) {
-				throw new EpException(MessageConst.ERROR_770124);
-			}
-			Set<String> questionsSet = new HashSet<String>();
-			Set<String> answersSet = new HashSet<String>();
-			List<String> questionList = new ArrayList<String>();
-			List<String> answerList = new ArrayList<String>();
-			int counter = 1;
-			for(ChallengeQAList qa : getManagedBean().getChallengeQAList()){
-				if(!StringUtils.isBlank(qa.getQuestion())){
-					questionsSet.add(qa.getQuestion());
-					questionList.add(qa.getQuestion());
-				}else{
-					throw new EpException("Please Select Question " + counter);
-				}
-				
-				if(!StringUtils.isBlank(qa.getAnswer())){
-					answersSet.add(qa.getAnswer());
-					answerList.add(qa.getAnswer());
-				}else{
-					throw new EpException("Please Insert Answer " + counter);
-				}
-				counter ++;
-			}
-			
-			
-			if(questionsSet.size() != getManagedBean().getChallengeQAList().size()){
-				throw new EpException("Duplicate Questions are selected");
-			}
-			
-			if(answersSet.size() != getManagedBean().getChallengeQAList().size()){
-				throw new EpException("Duplicate Answers are inserted");
-			}
-			
-			 userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-			 ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			 reqDTO = new UserReqDTO();
-			 reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
-			 PmUser user = getManagedBean().getSelectedUser();
-				IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-						.getServiceObject("pm", IStatusSO.class);
-				StatusReqDTO statusReqDTO = new StatusReqDTO();
-				statusReqDTO.setStatusId(user.getRecordStatusFlg()
-						.longValue());
-				StatusResDTO statusResDTO = statusSO
-						.retrieveStatusByStatusId(statusReqDTO);
-				logger.info("Tracking diary for my profile: change challenge Questions :changeChallengeQuestions");
-				String messageId = MessageConst.TD_80016;
-				String[] msgParam = new String[] {user.getUserName()};
-				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(
-							PmCommonUtil.assignTrackingDairyValues(user,
-									getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
-											.getPmStatus() : new PmStatus()));
-			 reqDTO.setLoginId(getManagedBean().getSelectedUser()
-					.getLoginId());
-			 reqDTO.setUserOimPassword(getManagedBean().getCurrentPassword());
-			 reqDTO.setChallangeQuestions(questionList);
-			 reqDTO.setChallangeAnswers(answerList);
-			 resDTO = userSO.setOimChallengeQA(reqDTO);
-			 if (resDTO != null && resDTO.isSuccessful()) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_770171,
-															new String[] { this
-																	.getManagedBean()
-																	.getSelectedUser()
-																	.getLoginId() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-					clearChallengeQuestions();
-
-				}
-
-		} catch (Exception e) {
-			throw new EpException(MessageConst.ERROR_770171,
-					new String[] { e.getMessage() });
-		} finally {
-			userSO = null;
-		}
-		logger.info("changeChallengeQuestions - END");
-	}
-	
-	
-	/**
-	 * reset challenge questions ui
-	 */
-	public void clearChallengeQuestions() {
-		logger.info("clearChallengeQuestions");
-		this.getManagedBean().setCurrentPassword(null);
-		//load challengeQA
-		List<ChallengeQAList> challengeQAList = new ArrayList<ChallengeQAList>();
-		challengeQAList.add(new ChallengeQAList(null,null));
-		challengeQAList.add(new ChallengeQAList(null,null));
-		challengeQAList.add(new ChallengeQAList(null,null));			
-		getManagedBean().setChallengeQAList(challengeQAList);
-	}
+//	/**
+//	 * reset challenge questions ui
+//	 */
+//	public void clearChallengeQuestions() {
+//		logger.info("clearChallengeQuestions");
+//		this.getManagedBean().setCurrentPassword(null);
+//		//load challengeQA
+//		List<ChallengeQAList> challengeQAList = new ArrayList<ChallengeQAList>();
+//		challengeQAList.add(new ChallengeQAList(null,null));
+//		challengeQAList.add(new ChallengeQAList(null,null));
+//		challengeQAList.add(new ChallengeQAList(null,null));			
+//		getManagedBean().setChallengeQAList(challengeQAList);
+//	}
 	
 	
 	private void fillUserOrgInfoFromUser(PmUser user) {
