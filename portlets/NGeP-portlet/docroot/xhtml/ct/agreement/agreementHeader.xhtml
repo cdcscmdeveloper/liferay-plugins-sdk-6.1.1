@@ -12,8 +12,7 @@
 				</td>
 				<td style="width: 10%" class="header-info-text">
 					<p:commandLink value="#{agreementBackingBean.managedBean.ctContract.loa.loaNo}"
-						styleClass="blue_font" action="#{agreementBackingBean.goToLoaView}">
-						<f:param name="loaId" value="#{agreementBackingBean.managedBean.ctContract.loa.loaId}" />
+						styleClass="blue_font" action="#{agreementBackingBean.goToLoaView(agreementBackingBean.managedBean.ctContract.loa.loaId)}">
 					</p:commandLink>
 				</td>
 				<td style="width: 10%">
