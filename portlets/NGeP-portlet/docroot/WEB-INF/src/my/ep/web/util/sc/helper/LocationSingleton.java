@@ -220,7 +220,8 @@ public class LocationSingleton {
 				for (PmState state : listStates) {
 					stateIds.add(state.getStateId());
 					
-					if (!state.isSelectable()) {
+					if (ParameterConst.LOCATION_LEVEL_STATE.equals(locationLevelCode) &&
+							!state.isSelectable()) {
 						stateNonSelectableIds.add(state.getStateId());
 					}
 				}
@@ -231,7 +232,8 @@ public class LocationSingleton {
 				for (PmDistrict district : listDistricts) {
 					districtIds.add(district.getDistrictId());
 					
-					if (!district.isSelectable()) {
+					if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(locationLevelCode) &&
+							!district.isSelectable()) {
 						districtNonSelectableIds.add(district.getDistrictId());
 					}
 				}
@@ -242,7 +244,9 @@ public class LocationSingleton {
 				for (PmDivision division : listDivisions) {
 					divisionIds.add(division.getDivisionId());
 					
-					if (!division.isSelectable()) {
+					if ((ParameterConst.LOCATION_LEVEL_DISTRICT.equals(locationLevelCode) ||
+							ParameterConst.LOCATION_LEVEL_DIVISION.equals(locationLevelCode)) &&
+							!division.isSelectable()) {
 						divisionNonSelectableIds.add(division.getDivisionId());
 					}
 				}
@@ -255,9 +259,9 @@ public class LocationSingleton {
 
 			for (PmState state : allStates) {
 				// LocationDTO stateLocation = new LocationDTO(state);
-				LOCATION_CLASS locCriteria = locClass.newInstance();
-				locCriteria.setPmState(state);
 				if (!disabledSelectable || !stateNonSelectableIds.contains(state.getStateId())) {
+					LOCATION_CLASS locCriteria = locClass.newInstance();
+					locCriteria.setPmState(state);
 					TreeNode stateNode = new DefaultTreeNode(
 							QTConstants.NODE_STATE, locCriteria, rootLocationTree);
 					// build state tree
