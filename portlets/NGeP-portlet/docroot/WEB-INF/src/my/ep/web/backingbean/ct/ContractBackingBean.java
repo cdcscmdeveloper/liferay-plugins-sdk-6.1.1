@@ -3006,6 +3006,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return super.getDropdownCodeValuesBySearchBean(ParameterTypeConst.ITEM_DISPLAY_TYPE, searchBean);
 		}
 		
+		/**
+		 * The method used to invoke and initiate the item specification dialog.
+		 */
+		public void viewItemSpecDlg(CtContractItem ctContractItem) {
+			getManagedBean().setSelectedItemForSpec(ctContractItem);
+			RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
+		}
+		
 		public void del201AttachDoc(){
 			getManagedBean().getContractVer().getCtContractValue().setAp201FilePath(null);
 			getManagedBean().getContractVer().getCtContractValue().setAp201FileName(null);
