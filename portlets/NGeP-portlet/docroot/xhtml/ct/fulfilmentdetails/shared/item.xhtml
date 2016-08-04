@@ -398,8 +398,7 @@
 			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.qty']}"/>
 		               		</f:facet>
 					       <p:inputText style="width:70px;" styleClass="ppRightBtn"
-					       		disabled="#{ctBackingBean.managedBean.viewContract
-					       			or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}"
+					       		disabled="#{ctBackingBean.managedBean.viewContract}"
 					           	maxlength="#{ctBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" value="#{itemCeilingQtiesVar.ceilingQuantity}" required="true" label="#{lbl['lbl.ct.ceiling.qty']}">
 						      	<f:converter converterId="dynamicNumberConverter" />
 								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
@@ -710,7 +709,7 @@
      	</h:panelGrid>
      	<p:spacer  height="5"/>
  		<p:inputTextarea value="#{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc}"
-   			rows="7" style="width:98%; resize:none;" autoResize="false" disabled="true">
+   			rows="5" style="width:98%; resize:none;" autoResize="false" disabled="true">
 		</p:inputTextarea>
      	<f:facet name="footer">
 		<div class="ppRightBtn">
