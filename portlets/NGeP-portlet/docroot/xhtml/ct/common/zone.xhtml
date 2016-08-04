@@ -51,7 +51,7 @@
              <p:treeNode type="zone">
              	<h:panelGrid columns="2" style="width:30%;" styleClass="zone-tree-node">
 	                <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="false" maxlength="4"
-	                     style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" label="#{lbl['lbl.ct.delivery.term']}"
+	                     style="width:40px;" styleClass="ppRightBtn"  label="#{lbl['lbl.ct.delivery.term']}"
 	                     disabled="#{ctBackingBean.managedBean.viewContract or 
 	                      ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}"/>
 	                <h:outputText rendered="#{zoneTree.zone != null}" value="#{lbl['lbl.ct.days']}" ></h:outputText>
