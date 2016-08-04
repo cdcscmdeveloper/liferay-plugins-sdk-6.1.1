@@ -964,6 +964,18 @@ public class QTSupplierQulCriteriaBackingBean extends
 					for (TplSpecZoneLoc treeZoneLoc : treeZoneLocs) {
 						treeZoneLoc.setZonalLocation(false);
 						
+						// set parent state and division for constuctTreeNode used.
+						if (treeZoneLoc.getPmState() == null) {
+							if (treeZoneLoc.getPmDivision() != null) {
+								treeZoneLoc.setPmState(treeZoneLoc.getPmDivision().getPmState());
+							} else {
+								if (treeZoneLoc.getPmDistrict() != null) {
+									treeZoneLoc.setPmState(treeZoneLoc.getPmDistrict().getPmState());
+									treeZoneLoc.setPmDivision(treeZoneLoc.getPmDistrict().getPmDivision());
+								}
+							}
+						}
+						
 						allNodes.add(treeZoneLoc);	
 					}
 				}
