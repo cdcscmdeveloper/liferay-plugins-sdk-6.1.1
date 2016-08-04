@@ -853,8 +853,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				extCodeVO.setBrandId(clone.getBrandId());
 				extCodeVO.setMeasurementId(Long.valueOf(clone.getMeasurementId()));
 				extCodeVO.setColorId(clone.getColorId());
-
-
 				extCodeVO.setTypeName(clone.getTypeName());
 				extCodeVO.setBrandName(clone.getBrandName());
 				extCodeVO.setMeasurementName(clone.getMeasurementName());
@@ -1136,8 +1134,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public void setItemToDelete(Long supplierItemIdToDelete, int i) {
 		log.info("Supplier item id to delete: " + supplierItemIdToDelete);
-		
-		int index = i%10;
+		System.out.println("this.getManagedBean().getDraftTabPageSize():"+this.getManagedBean().getDraftTabPageSize());
+		int index = i%this.getManagedBean().getDraftTabPageSize();
 		System.out.println("*******getCloneCmSupplierItemLs*************"+this.getManagedBean().getCloneCmSupplierItemLs().size());
 
 		CmSupplierItem suppItem =  this.getManagedBean().getDraftSearchDataModel().getList().get(index);
@@ -9687,7 +9685,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void cloneItemSelection(int i){
 
 		this.getManagedBean().setRefreshDraftSuppItemFlag(true);
-		int index = i%10;
+		int index = i%this.getManagedBean().getDraftTabPageSize();;
 		System.out.println("*******getCloneCmSupplierItemLs*************"+this.getManagedBean().getCloneCmSupplierItemLs().size());
 
 
