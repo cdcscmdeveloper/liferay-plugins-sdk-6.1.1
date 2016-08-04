@@ -19,7 +19,9 @@
 			   <p:column id="modelColumn" headerText="#{lbl['lbl.ct.item.desc']}"  styleClass="column-align-center" 
 			        style="width:40%;white-space:normal;"  filterBy="#{itemData.scRequestItem.itemName}"   filterMatchMode="contains"> 
 			        <h:outputText id="serviceNameID"  value="#{itemData.scRequestItem.itemName}" style="float:left;"/>
-			           <p:tooltip id="toolTipServiceName" for="serviceNameID" value="#{itemData.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : itemData.scRequestItem.itemDesc}" />
+			        <p:commandLink id="productSpec" update=":form:itemSpecDlg" action="#{suspensionBackingBean.viewItemSpecDlg(itemData)}">
+						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;"  />
+					</p:commandLink>
 			   </p:column>
 			
 			   <p:column style="width:15%;" styleClass="column-align-center" >
@@ -65,4 +67,19 @@
 		
 		</p:dataTable>
 	</p:panel>
+	<p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.specification']}" 
+   		styleClass="pop_up_top" modal="true" width="500" height="150" resizable="false">
+   		<h:panelGrid columns="1">
+    		<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" >: #{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}</p:outputLabel>
+     	</h:panelGrid>
+     	<p:spacer  height="5"/>
+ 		<p:inputTextarea value="#{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc}"
+   			rows="7" style="width:98%; resize:none;" autoResize="false" disabled="true">
+		</p:inputTextarea>
+     	<f:facet name="footer">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="itemSpecDlg.hide();" />
+  		</div>
+   		</f:facet>
+  	</p:dialog>	
 </ui:composition>

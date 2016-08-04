@@ -33,9 +33,9 @@
 						</p:tooltip> 
 		               </f:facet>
 					    <h:outputText id="itemNameID" value="#{ctItemVar.scRequestItem.itemName}" style="float:left;" />
-					        <p:tooltip id="toolTipItemName" for="itemNameID" style="white-space: pre-line"
-					         value="#{ctItemVar.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : ctItemVar.scRequestItem.itemDesc}" />
-             
+					    <p:commandLink id="productSpec" update=":form:itemSpecDlg" action="#{ctBackingBean.viewItemSpecDlg(ctItemVar)}">
+							<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;"  />
+						</p:commandLink>
 			   	  </p:column>
 			
 				  <p:column style="width:15%; white-space:normal;" 
@@ -385,9 +385,9 @@
 						</p:tooltip> 
 		               </f:facet>
 					<h:outputText id="serviceNameID" value="#{serviceItemVar.scRequestItem.itemName}" style="float:left;" />
-					  <p:tooltip id="toolTipServiceName" for="serviceNameID"  style="white-space: pre-line"
-					       value="#{serviceItemVar.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : serviceItemVar.scRequestItem.itemDesc}" />
-             
+					<p:commandLink id="serviceSpec" update=":form:itemSpecDlg" action="#{ctBackingBean.viewItemSpecDlg(serviceItemVar)}">
+					<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;" />
+				 </p:commandLink>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.uom']}"  style="width:14%;white-space:normal;" styleClass="column-align-center">
 					<h:outputText value="#{serviceItemVar.scRequestItem.uom.uomName}" style="float:left;" />
@@ -544,6 +544,23 @@
 		  	</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
+	
+	<p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.specification']}" 
+   		styleClass="pop_up_top" modal="true" width="500" height="150" resizable="false">
+   		<h:panelGrid columns="1">
+    		<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" >: #{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}</p:outputLabel>
+     	</h:panelGrid>
+     	<p:spacer  height="5"/>
+ 		<p:inputTextarea value="#{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc}"
+   			rows="7" style="width:98%; resize:none;" autoResize="false" disabled="true">
+		</p:inputTextarea>
+     	<f:facet name="footer">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="itemSpecDlg.hide();" />
+  		</div>
+   		</f:facet>
+  	</p:dialog>
+	
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract}">
 		<table style="width: 100%">
 			<tr>
