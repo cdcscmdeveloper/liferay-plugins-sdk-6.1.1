@@ -730,7 +730,7 @@ public class CommitteBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 
-				if (null != outCome) {
+				if (StringUtils.isNotBlank(outCome)) {
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
