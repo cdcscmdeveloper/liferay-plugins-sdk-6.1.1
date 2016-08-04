@@ -97,14 +97,14 @@
 				    	</td>
 			           	<td class="TableFieldRight">
 				        	<p:commandButton oncomplete="uploadDlg2.show();return false;"
-					        	update="lampiran1, uploadDlg2" value="#{lbl['lbl.ct.upload.attach.files']}"
+					        	update="lampiranApproved, uploadDlg2" value="#{lbl['lbl.ct.upload.attach.files']}"
 					        	disabled="#{ctBackingBean.managedBean.viewContract or !bpmTasklistBackingBean.managedBean.claim}" />
 			           	</td>
 		           	</tr>
 		            <tr>
 		            	<td/>
 		            	<td>
-	            		<p:dataGrid id="lampiran1" value="#{ctBackingBean.managedBean.contractVer.ap201Attachements}"
+	            		<p:dataGrid id="lampiranApproved" value="#{ctBackingBean.managedBean.contractVer.ap201Attachements}"
 				           var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
 				           emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
 							<table>
@@ -144,7 +144,7 @@
 							allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 							invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 							label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
-							update="lampiran1" >
+							update="lampiranApproved" >
 						</p:fileUpload>
 						<f:facet name="footer">
 						<div class="ppRightBtn">
@@ -156,7 +156,7 @@
 					 <p:confirmDialog id="deleteAttachmentDlgObj" widgetVar="deleteAttachmentDlgObj" message="#{lbl['lbl.msg.confirm.delete']}" 	
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="lampiran1" process="@this"  partialSubmit="true"
+							<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="lampiranApproved" process="@this"  partialSubmit="true"
 					     		actionListener="#{amendmentBackingBean.deleteAttachmentAction(amendmentBackingBean.managedBean.attachFileIndex)}" 
 					     		oncomplete="deleteAttachmentDlgObj.hide();"/>
 						 	<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlgObj.hide();" type="button" />
