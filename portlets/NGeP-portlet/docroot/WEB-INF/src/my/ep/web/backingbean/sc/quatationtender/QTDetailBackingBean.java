@@ -1687,9 +1687,16 @@ public class QTDetailBackingBean extends
 							.getParameterDesc(parameterType, tabType), tabType,
 							fecCommitte));
 				}
-
-				String fcTitleName = null;
+				// FC tab
 				PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
+				tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
+				StringBuilder fcTitleLabel = new StringBuilder(
+						"lbl.sc.finalization.committee.secretary.");
+				String fcTitleName = ResourceBundleUtils
+						.getMessage(fcTitleLabel.toString()
+									+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale());
 				if (fcSecretaryCode == null
 						|| fcSecretaryCode.getParameterId() == null) {
 					SelectItem[] fcSecretaries = retrieveFinalizationCommitteeType();
@@ -1704,8 +1711,7 @@ public class QTDetailBackingBean extends
 
 				// Displaying the Secretary Details
 				if (fcSecretaryCode != null) {
-					StringBuilder fcTitleLabel = new StringBuilder(
-							"lbl.sc.finalization.committee.secretary.");
+					
 					String fcSecretary = fcSecretaryCode.getParameterCode();
 
 					if (fcSecretary != null) {
@@ -1717,7 +1723,6 @@ public class QTDetailBackingBean extends
 							fcTitleLabel
 									.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
 						}
-						tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
 						fcTitleName = ResourceBundleUtils.getMessage(
 								fcTitleLabel.toString().toLowerCase(),
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
