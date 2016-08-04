@@ -651,8 +651,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctBackingBean.getManagedBean().getCtItemServiceList().clear();
 					getManagedBean().setItemProductExist(false);
 					getManagedBean().setItemServiceExist(false);
-					getManagedBean().setShowItem(null);
-					getManagedBean().setShowServiceItem(null);
+					ctBackingBean.getManagedBean().setShowItem(null);
+					ctBackingBean.getManagedBean().setShowServiceItem(null);
 					getManagedBean().setSelectedItem(null);
 					getManagedBean().setSelectedServiceItem(null);
 					if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems() != null 
@@ -2765,20 +2765,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used for rendering the item price or ceiling quantity
 	 * of selected product item that to be displayed on screen.
 	 */
-	public void onSelectProductItem() {		
+	public void onSelectProductItem() {
 		if (getManagedBean().getSelectedItem() != null) {
-			if (getManagedBean().getShowItem() != null 
-					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+			if (ctBackingBean.getManagedBean().getShowItem() != null 
+					&& ctBackingBean.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+				ctBackingBean.getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 				
-			} else if (getManagedBean().getShowItem() != null 
-					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
-			} else if (getManagedBean().getShowItem() != null 
-					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);				
+			} else if (ctBackingBean.getManagedBean().getShowItem() != null 
+					&& ctBackingBean.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+				ctBackingBean.getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+			} else if (ctBackingBean.getManagedBean().getShowItem() != null 
+					&& ctBackingBean.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+				ctBackingBean.getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);				
 			} else {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+				ctBackingBean.getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 			}
 			
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
@@ -2845,14 +2845,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onSelectServiceItem() {
 		if (getManagedBean().getSelectedServiceItem() != null) {
-    		if (getManagedBean().getShowServiceItem() != null
-    				&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-    			getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-    		} else if (getManagedBean().getShowServiceItem() != null
-    				&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
-    			getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
+    		if (ctBackingBean.getManagedBean().getShowServiceItem() != null
+    				&& ctBackingBean.getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+    			ctBackingBean.getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+    		} else if (ctBackingBean.getManagedBean().getShowServiceItem() != null
+    				&& ctBackingBean.getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
+    			ctBackingBean.getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
     		} else {
-    			getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+    			ctBackingBean.getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
     		}
 
     		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
@@ -3721,7 +3721,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAgencies() != null
+						&& ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size() > 1) {
 				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+				}
 				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
 			} else if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);				

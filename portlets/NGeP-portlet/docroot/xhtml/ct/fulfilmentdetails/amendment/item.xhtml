@@ -78,7 +78,7 @@
 				        rendered="#{amendmentBackingBean.managedBean.selectedItem != null}">
 				        <h:outputLabel for="show" value="#{lbl['lbl.ct.show']}" style="width:50px;" />
 					    <h:panelGrid columns="3">
-					    	<p:selectOneMenu id="show" value="#{amendmentBackingBean.managedBean.showItem}" style="width:200px;">
+					    	<p:selectOneMenu id="show" value="#{ctBackingBean.managedBean.showItem}" style="width:200px;">
 					           	<f:selectItems value="#{amendmentBackingBean.getItemDisplayTypeDropdownList(
 					           		amendmentBackingBean.managedBean.selectedItem.itemType.parameterCode)}" />
 						        <p:ajax event="change" update=":form:changeField"  process="@form"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
@@ -90,7 +90,7 @@
 				   <!-- Item Price -->
 			       <p:outputPanel style="width:100%" 
 			           rendered="#{amendmentBackingBean.managedBean.selectedItem !=null and 
-			    	   amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice
+			    	   ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice
 				       and (ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or  ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
 				
 				            <p:dataTable id="itemPriceTable" var="itemPriceVar" 
@@ -205,7 +205,7 @@
 				<!-- Ceiling Quantity -->
 				<p:outputPanel style="width:100%" 
 			         rendered="#{amendmentBackingBean.managedBean.selectedItem!=null and
-			 		amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty
+			 		ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty
 			 		and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
 				<p:dataTable id="ceilingTable" var="itemCeilingQtiesVar"
 					value="#{amendmentBackingBean.getActiveItemCeilingQty()}" >
@@ -235,8 +235,7 @@
 						  <p:inputText value="#{itemCeilingQtiesVar.ceilingQuantity}" 
 						      styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.qty']}"
 						  	  maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
-						  	  disabled="#{ctBackingBean.managedBean.disableAmendDetails
-						  	  	or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}" >
+						  	  disabled="#{ctBackingBean.managedBean.disableAmendDetails}" >
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 							<p:ajax event="blur" update="@this"/>
@@ -288,7 +287,7 @@
 			<!-- Maximum Order Quantity -->
 			<p:outputPanel style="width:100%" 
 		           rendered="#{amendmentBackingBean.managedBean.selectedItem !=null and 
-		    	   amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeMaxQty
+		    	   ctBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeMaxQty
 			       and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
 			
 			            <p:dataTable id="itemMaxQtyTable" var="itemMaxQtyVar" 
@@ -433,7 +432,7 @@
 	        	rendered="#{amendmentBackingBean.managedBean.selectedServiceItem != null}">
 	    		<h:outputLabel for="show" value="#{lbl['lbl.ct.show']}" style="width:50px;"/>
 	   			<h:panelGrid columns="3">
-		   			<p:selectOneMenu id="showService" value="#{amendmentBackingBean.managedBean.showServiceItem}" style="width:200px;">
+		   			<p:selectOneMenu id="showService" value="#{ctBackingBean.managedBean.showServiceItem}" style="width:200px;">
 		      			<f:selectItems value="#{amendmentBackingBean.getItemDisplayTypeDropdownList(
 		      				amendmentBackingBean.managedBean.selectedServiceItem.itemType.parameterCode)}" />
 		         		<p:ajax event="change" update=":form:showServicePrice" process="@form"
@@ -446,7 +445,7 @@
 			<!-- Item Price -->
 			<p:outputPanel style="width:100%" 
 				rendered="#{amendmentBackingBean.managedBean.selectedServiceItem !=null and 
-					amendmentBackingBean.managedBean.showServiceItem == ParameterConst.itemDisplayTypePrice
+					ctBackingBean.managedBean.showServiceItem == ParameterConst.itemDisplayTypePrice
 					and (ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or  ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
 					
 				<p:dataTable id="servicePriceTable" var="ItemPricesVar"
@@ -510,7 +509,7 @@
 			<!-- Quantity -->
 			<p:outputPanel style="width:100%" 
 				rendered="#{amendmentBackingBean.managedBean.selectedServiceItem !=null and 
-					amendmentBackingBean.managedBean.showServiceItem == ParameterConst.itemDisplayTypeQty
+					ctBackingBean.managedBean.showServiceItem == ParameterConst.itemDisplayTypeQty
 					and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or ctBackingBean.managedBean.contractVer.ctAmendment.otherChange)}">
 					
 					
@@ -552,7 +551,7 @@
      	</h:panelGrid>
      	<p:spacer  height="5"/>
  		<p:inputTextarea value="#{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc}"
-   			rows="7" style="width:98%; resize:none;" autoResize="false" disabled="true">
+   			rows="5" style="width:98%; resize:none;" autoResize="false" disabled="true">
 		</p:inputTextarea>
      	<f:facet name="footer">
 		<div class="ppRightBtn">
