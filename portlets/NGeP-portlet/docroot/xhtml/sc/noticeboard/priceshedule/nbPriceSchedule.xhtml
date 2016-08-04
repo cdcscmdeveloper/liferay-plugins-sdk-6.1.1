@@ -35,8 +35,8 @@
 
 				<h:outputLabel value="#{lbl['lbl.sc.ptj']}" styleClass="outputLabel-view-label"></h:outputLabel>
 				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgName}"
-					readonly="true" />
+					value="#{noticeBoardBackingBean.getPtjNameByOrgProfileIdAndCreatedDate( noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId,  noticeBoardBackingBean.managedBean.scQt.createdDate)}"
+					 />
 
 
 				<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" styleClass="outputLabel-view-label"></h:outputLabel>
