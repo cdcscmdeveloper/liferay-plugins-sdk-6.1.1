@@ -1108,12 +1108,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * 
 	 * @return the navigate URL 
 	 */
-	public void goToLoaView() {
-		long loaId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("loaId"));
-		
+	public void goToLoaView(Long loaId) {
 		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 		loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
-		loaDetailBackingBean.getManagedBean().setBackToPreviousPage(AGREEMENT_DOC_PAGE);
 		loaDetailBackingBean.viewLOA(loaId);
 	}
 	
