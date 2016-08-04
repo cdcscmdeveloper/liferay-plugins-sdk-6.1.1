@@ -1126,6 +1126,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								MessageUtils.getMessage(MessageConst.INFO_710005,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+				
+				
+				for (int i = 0; i < this.getManagedBean().getDraftSearchDataModel().getList().size(); i++) {
+					CmSupplierItem suppItem =  this.getManagedBean().getDraftSearchDataModel().getList().get(i);
+					suppItem.setSelected(false);
+				}
+				
+				this.getManagedBean().setCloneCmSupplierItemLs(null);
+				
+				
 			}
 		} finally {
 			catalogueSO = null;
@@ -1141,22 +1151,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		CmSupplierItem suppItem =  this.getManagedBean().getDraftSearchDataModel().getList().get(index);
 		System.out.println("getSupplierItemId"+suppItem.getSupplierItemId());
 
-		if(this.getManagedBean().getCloneCmSupplierItemLs()!=null && this.getManagedBean().getCloneCmSupplierItemLs().size()>0){
-
-			boolean addInLs = true;
-			for(CmSupplierItem obj : this.getManagedBean().getCloneCmSupplierItemLs()){
-
-				if(obj.getSupplierItemId() == suppItem.getSupplierItemId()){
-					this.getManagedBean().getCloneCmSupplierItemLs().remove(obj);
-					
-					break;
-				}
-			}
-			
-
-		}
-
-		
 		this.getManagedBean().setItemToDelete(supplierItemIdToDelete);
 	}
 	/**
