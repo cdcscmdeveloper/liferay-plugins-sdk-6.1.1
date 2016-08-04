@@ -13,7 +13,7 @@
 		</f:facet>
 		<c:if test="#{newable}">
 			<p:inputTextarea id="itemName" style="width:150px" value="#{question.clItem}" 
-				rendered="#{isQuestionTypeItem}" required="#{isValidationReq}" rows="1" maxlength="2000"
+				rendered="#{isQuestionTypeItem}" required="#{isValidationReq}" rows="2" maxlength="2000"
 				onkeyup="limitTextArea(this,2000);" onkeydown="limitTextArea(this,2000);"
 				label="#{lbl['lbl.tpl.spec.content.item']}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
