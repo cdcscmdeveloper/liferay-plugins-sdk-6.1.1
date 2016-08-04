@@ -75,6 +75,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -85,10 +86,10 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -376,12 +377,11 @@ public class SPDetailBackingBean extends
 	/**
 	 * Method to submit the Supplier Proposal details
 	 */
-	public void submitSupplierProposal() {
+	public void submitSupplierProposal(PmDigiSign digiSign) {
 
-		PmDigiSign digiSign = null;
 		debugLogger("submitSupplierProposal");
 
-		// retrievePaidUpCapitalNdDeclarationDtls();
+		retrievePaidUpCapitalNdDeclarationDtls();
 
 		IQTProposalSO proposalSO = null;
 		ProposalReqDTO reqDTO = null;
@@ -410,22 +410,21 @@ public class SPDetailBackingBean extends
 					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
 							scQtProposalChecklists));
 
-			/*
-			 * // spki
-			 * RequestContext.getCurrentInstance().execute("blockWidget.hide();"
-			 * );
-			 * RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
-			 * String originalText =
-			 * prepareOriginalText(getManagedBean().getSmSupplier()); byte[]
-			 * signedData =
-			 * getManagedBean().getSpkiBackingBean().spkiSignTransaction
-			 * (originalText); digiSign.setSpkiSignedData(signedData);
-			 * 
-			 * if (null != digiSign) { updateSpkiDigiSignData(digiSign,
-			 * ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL,
-			 * scQtProposal.getQtProposalId(), scQtProposal.getProposalNo(),
-			 * originalText); }
-			 */
+			// spki
+			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
+			String originalText = prepareOriginalText(getManagedBean()
+					.getSmSupplier());
+			byte[] signedData = getManagedBean().getSpkiBackingBean()
+					.spkiSignTransaction(originalText);
+			digiSign.setSpkiSignedData(signedData);
+
+			if (null != digiSign) {
+				updateSpkiDigiSignData(digiSign,
+						ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL,
+						scQtProposal.getQtProposalId(),
+						scQtProposal.getProposalNo(), originalText);
+			}
 
 			reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
@@ -440,7 +439,7 @@ public class SPDetailBackingBean extends
 					.isAgreeWithIntegrityPact());
 			reqDTO.setAgreeWithOthersTermsConditions(getManagedBean()
 					.isAgreeWithOthersTermsConditions());
-			// reqDTO.setDigiSignData(digiSign);
+			reqDTO.setDigiSignData(digiSign);
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setRoleCode(super.getUserRoleCode());
 
@@ -462,6 +461,42 @@ public class SPDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Prepare original text.
+	 * 
+	 * @param smSupplier
+	 *            the sm supplier
+	 * @return the string
+	 */
+	private String prepareOriginalText(SmSupplier smSupplier) {
+		FacesScopes facesScopes = new FacesScopes();
+		StringBuilder sb = new StringBuilder();
+		String countryCode = "";
+		String orginalText = "";
+
+		if (smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
+				&& smSupplier.getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().size() > 0) {
+			List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl()
+					.getSmCompanyBasic().getSmCompanyAddresses();
+
+			for (SmCompanyAddress compaAddress : companyAddress) {
+				if (compaAddress.getAddressType().equalsIgnoreCase(
+						AddressType.CONTACT_ADDRESS.value())) {
+					countryCode = compaAddress.getSmAddress().getPmCountry()
+							.getCountryCode();
+					break;
+				}
+			}
+		}
+		sb.append(getManagedBean().getQtProposal().getProposalNo()).append("|")
+				.append(facesScopes.getUserSessionBean().getIdentificationNo())
+				.append("|").append(smSupplier.getRegNo()).append("|")
+				.append(countryCode);
+		orginalText = sb.toString();
+		return orginalText;
+	}
+	
 	private void commonMessageAcknowledmentPage(String messageId,
 			String variable1, String variable2) {
 		FacesContext.getCurrentInstance().addMessage(
@@ -3963,14 +3998,13 @@ public class SPDetailBackingBean extends
 		downloadFile(scQtDocReport.getScQtDocReportAttachment());
 	}
 
-	
 	/**
 	 * Download the documents from repository on click of download all button
 	 * 
 	 * @throws Exception
 	 */
 	public void downloadAllQTDocuments() throws Exception {
-		
+
 		List<ScQtDocReport> scQtDocReports = this.getManagedBean()
 				.getScQtDocReports();
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
