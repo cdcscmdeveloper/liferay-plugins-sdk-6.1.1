@@ -5,6 +5,29 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<style>
+      .dashboarTable {
+             color: #000 !important;
+             font-family: Arial,Helvetica,sans-serif;
+              font-size: 12px;
+              border-color: #ddd;
+              border-width:1px;
+              padding-left: 5px;
+              border-style:solid;
+      }
+      
+     .tableWidth80{
+          width:80%;
+     }
+     
+      .tableWidth20{
+          width:20%;
+          text-align: center;
+     }
+    
+    
+    </style>
 
 	<table style="width: 100%">
 		<ui:repeat var="status"
@@ -13,10 +36,10 @@
 				<ui:fragment
 					rendered="#{status.pmStatus.statusId eq onlineBiddingStatusBB.bidInProgress}">
 					<td
-						style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;"><p:outputLabel
+						class="tableWidth80 dashboarTable"><p:outputLabel
 							value="#{onlineBiddingStatusBB.getStatusDescById(status.pmStatus.statusId)}" style="float:left;"></p:outputLabel></td>
 					<td
-						style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText
+						class=" tableWidth20 dashboarTable"><h:outputText
 							value="#{onlineBiddingStatusBB.searchAllStatusBiddingCount(onlineBiddingStatusBB.bidInProgress)}"></h:outputText></td>
 				</ui:fragment>
 			</tr>
@@ -24,10 +47,10 @@
 				<ui:fragment
 					rendered="#{status.pmStatus.statusId eq onlineBiddingStatusBB.bidPending}">
 					<td
-						style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;"><p:outputLabel
+						class="tableWidth80 dashboarTable"><p:outputLabel
 							value="#{onlineBiddingStatusBB.getStatusDescById(status.pmStatus.statusId)}" style="float:left;"></p:outputLabel></td>
 					<td
-						style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText
+						class=" tableWidth20 dashboarTable"><h:outputText
 							value="#{onlineBiddingStatusBB.searchAllStatusBiddingCount(onlineBiddingStatusBB.bidPending)}"></h:outputText></td>
 				</ui:fragment>
 			</tr>
@@ -35,10 +58,10 @@
 				<ui:fragment
 					rendered="#{status.pmStatus.statusId eq onlineBiddingStatusBB.bidPause}">
 					<td
-						style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;"><p:outputLabel
+						class="tableWidth80 dashboarTable"><p:outputLabel
 							value="#{onlineBiddingStatusBB.getStatusDescById(status.pmStatus.statusId)}" style="float:left;"></p:outputLabel></td>
 					<td
-						style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText
+						class=" tableWidth20 dashboarTable"><h:outputText
 							value="#{onlineBiddingStatusBB.searchAllStatusBiddingCount(onlineBiddingStatusBB.bidPause)}"></h:outputText></td>
 				</ui:fragment>
 			</tr>
@@ -46,17 +69,17 @@
 				<ui:fragment
 					rendered="#{status.pmStatus.statusId eq onlineBiddingStatusBB.bidReschedule}">
 					<td
-						style="width: 80%; padding-left: 5px; border-style: ridge; border-width: 1px; border-color: #000000;"><p:outputLabel
+						class="tableWidth80 dashboarTable"><p:outputLabel
 							value="#{onlineBiddingStatusBB.getStatusDescById(status.pmStatus.statusId)}" style="float:left;"></p:outputLabel></td>
 					<td
-						style="width: 20%; text-align: center; border-style: ridge; border-width: 1px; border-color: #000000;"><h:outputText
+						class=" tableWidth20 dashboarTable"><h:outputText
 							value="#{onlineBiddingStatusBB.searchAllStatusBiddingCount(onlineBiddingStatusBB.bidReschedule)}"></h:outputText></td>
 				</ui:fragment>
 			</tr>
 		</ui:repeat>
 		<tr>
 		<td colspan="3"
-					style="text-align: right; padding-right: 6%; border-style: ridge; border-width: 1px; border-color: #000000;">
+					style="text-align: right; padding-right: 6%;" class="dashboarTable">
 					<p:commandLink value="#{lbl['lbl.sc.more.details']}"
 						styleClass="blue_font" process="@this" update="@form"
 						action="#{onlineBiddingStatusBB.navigatetoScheduleBidding()}">
