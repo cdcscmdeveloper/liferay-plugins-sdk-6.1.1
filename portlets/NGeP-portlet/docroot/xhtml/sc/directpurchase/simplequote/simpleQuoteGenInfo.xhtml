@@ -200,6 +200,7 @@
 						label="#{lbl['lbl.sc.start.date']}"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
 						postUpdateListener="simpleQuoteBackingBean.dateListener"
+						modValue="15"
 						update="@([id$=endDate])">
 					</ac:dateTime></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.end.date']}" /> <p:outputLabel
@@ -210,6 +211,7 @@
 						required="true" disabled="#{!isEditable}"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"
 						postUpdateListener="simpleQuoteBackingBean.dateListener"
+						modValue="15"
 						update="@([id$=durationId])">
 					</ac:dateTime></td>
 			</tr>
