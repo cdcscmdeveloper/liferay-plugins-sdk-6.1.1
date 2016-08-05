@@ -590,6 +590,19 @@ public class LovBackingBean implements Serializable {
 		
 	}
 	
+	public boolean isSelectButtonDisable() {
+		if(getLovBean()!=null && getLovBean().getSelectionMode()!=null) {
+			if(getLovBean().getSelectionMode().equalsIgnoreCase("single")) {
+				if(getSelectedEntity()!=null) {
+					return false;
+				}
+			} else if(getSelectedEntities()!=null && getSelectedEntities().size()>0){
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	private void prepareColumnTitle(LovBean lovBean) {
 		ResourceBundle bundle = null;
 		for(LovColumnBean column : lovBean.getColumns()) {
