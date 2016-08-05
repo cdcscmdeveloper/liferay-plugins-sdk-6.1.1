@@ -1358,6 +1358,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public SelectItem[] pmBusinessTypeDropDown(){
 		String applType = this.getManagedBean().getApplType();
 		SelectItem[] items = null;
+		String businessType = getManagedBean().getSmSupp().getBusinessType();
 		
 		if(applType.equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)){
 			items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);
@@ -1377,6 +1378,43 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						fs.getUserLocale()));
 			}
+		}
+		
+		if(!getManagedBean().getSmAppl().isBrandNew() && 
+				(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+						businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) || 
+						businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+						businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH))){
+			items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);
+			List<SelectItem> sabahSarawakBusinessLs = new ArrayList<SelectItem>();
+			
+			for(SelectItem item : getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE)){
+				if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+						businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
+					if(item.getValue() != null){	
+						if (item.getValue()
+								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+								|| item.getValue()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)) {
+							sabahSarawakBusinessLs.add(item);
+						}
+					}
+				}
+				
+				if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+						businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+					if(item.getValue() != null){
+						if (item.getValue()
+								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+								|| item.getValue()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)) {
+							sabahSarawakBusinessLs.add(item);
+						}
+					}
+				}
+				
+			}
+			return  sabahSarawakBusinessLs.toArray(new SelectItem[sabahSarawakBusinessLs.size()]);
 		}
 
 		return items;
