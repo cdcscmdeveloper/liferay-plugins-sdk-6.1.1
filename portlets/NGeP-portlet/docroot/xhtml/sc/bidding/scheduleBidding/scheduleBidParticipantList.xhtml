@@ -17,14 +17,23 @@
 			var="bidParticipant">
 			<ac:paginator for="participantList"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.supplier.name']}"
-				style="width : 65%">
-				<h:outputText id="companyNamePopUp"
+				style="width : 35%">
+				<h:outputText id="companyNameId" style="white-space : normal;"
 					value="#{bidParticipant.supplier.companyName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
+			<p:column headerText="#{lbl['lbl.sc.unit.price']}"
+				style="width : 30%">
+				<h:outputText id="unitPriceId"
+					value="#{bidParticipant.scQtProposalItem.offerPrice}"
+					style="text-align:right;">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.sub.total']}"
 				style="width : 35%">
 				<h:outputText id="offerPricePopUp"
-					value="#{bidParticipant.scQtProposalItem.offerPrice}"
+					value="#{scheduleBiddingBB.itemUnitPriceSubTotal(bidParticipant)}"
 					style="text-align:right;">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
