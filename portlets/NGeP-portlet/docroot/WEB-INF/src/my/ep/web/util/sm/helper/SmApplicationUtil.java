@@ -8176,7 +8176,8 @@ public class SmApplicationUtil {
 			List<SmApplSupportDoc> docs) {
 		boolean retVal = true;
 		for (SmApplSupportDoc doc : docs) {
-			if (doc.getVerifiedFlg() == null) {
+			if (doc.getVerifiedFlg() == null
+					&& !EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
 				retVal = false;
 			}
 		}
