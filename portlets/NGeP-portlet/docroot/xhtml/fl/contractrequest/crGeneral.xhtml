@@ -408,7 +408,7 @@
 	</p:panel>
 	
 	<p:dialog id="dialogChargedPtj"  header="#{lbl['lbl.fl.add.charge.ptj']}" widgetVar="dlgChargedPtj" 
-			styleClass="pop_up_top" modal="true" width="700" height="500">
+			styleClass="pop_up_top" modal="true" width="700" resizable="false" position="top">
 			<p:messages id="chargePtjMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
 		   <h:panelGroup  id="chargedPtj">
 		   	<p:panel id="chargePtjSearchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
@@ -450,7 +450,6 @@
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}" process="@this"
 			            action="#{contractRequestBackingBean.resetChargedPtjDetails}" update=":form:chargedPtj"   />
 		       </div>
-			   <p:spacer height="1"/>
 			  <p:panel id="chargeResultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
               <p:dataTable id="tableChargePtj" var="pmVar" value="#{contractRequestBackingBean.chargedPtjDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
                  rowIndexVar="rowIndex" selection="#{contractRequestBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true" rows="10">
