@@ -140,7 +140,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	
 	private static Logger log = Logger.getLogger(AgreementBackingBean.class);
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
-	private static final String AGREEMENT_DOC_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementTab.xhtml?faces-redirect=true";
 	private ContractBackingBean ctBB = null;
 	/*private CtAgreementParty[] selectedAgencyWitnes;
 	private CtAgreementParty[] selectedAgencySigner;
@@ -1098,7 +1097,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		contractDetailsBB.setValidateContractField(ctReqDTO);
 		//contractDetailsBB.ConstructSideTabMenu();
 		contractDetailsBB.getManagedBean().setSelectedTabIndex(0);
-		contractDetailsBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
+		contractDetailsBB.getManagedBean().setExternalPageUrl(FacesContext.getCurrentInstance().getViewRoot().getViewId());
 		return CONTRACT_PAGE;
 	}
 	
@@ -1128,7 +1127,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 		TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
 		tplDocBB.getManagedBean().setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
-		tplDocBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		tplDocBB.getManagedBean().setExternalPageUrl(fc.getViewRoot().getViewId());
 		tplDocBB.getManagedBean().setCtAgreementContent(agreementContent);
 		// Create new template doc
 		if (agreementContent.getTplDocMaster() == null) {
