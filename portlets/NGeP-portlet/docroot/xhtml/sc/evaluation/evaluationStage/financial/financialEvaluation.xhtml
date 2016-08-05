@@ -50,8 +50,13 @@
 						value="#{evaluationBackingBean.getStatusDescById(financialEval.pmEvalStatus.statusId)}"></h:outputText>
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.action']}"
+				<p:column 
 					style="width:10%;text-align: center;">
+					<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.action']}" />
+					<ac:iconTooltip id="actionfinancialEvaluatio#{index}FECSSLOT"
+							value="#{lbl['lbl.sc.action.evaluation.tooltip']}" />
+				</f:facet>
 					<ui:fragment rendered="#{financialEval.scoringReq eq 'false'}">
 						<p:commandButton value="#{lbl['lbl.btn.view']}"
 							process="@this" partialSubmit="true"
