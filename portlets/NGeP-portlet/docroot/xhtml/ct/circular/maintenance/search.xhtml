@@ -43,6 +43,11 @@
 				<p:selectOneMenu id="status" value="#{circularBackingBean.managedBean.searchStatusId}" style="width:470px;">
 					<f:selectItems value="#{circularBackingBean.getStatusDropdown()}" />
 				</p:selectOneMenu>
+				<p:outputLabel for="circularStatus" value="#{lbl['lbl.ct.circular.status']}" />
+		   			<p:selectOneMenu id="circularStatus" value="#{circularBackingBean.managedBean.searchCircularStatus}"	
+		   	   			style="width:200px;">
+					<f:selectItems value="#{circularBackingBean.getSearchCircularStatusDropdown()}" />
+		   		</p:selectOneMenu>
 			</h:panelGrid>		
 			<div class="ppRightBtn"> 
 				<p:commandButton id="panelSearchId" value="#{lbl['lbl.btn.search']}" action="#{circularBackingBean.searchCircular}"
