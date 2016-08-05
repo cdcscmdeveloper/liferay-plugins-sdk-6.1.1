@@ -1256,37 +1256,21 @@ public class LOIDetailBackingBean extends
 	 */
 	public void addNegotiationTerm() {
 		debugLogger("addNegotiationTerm");
-		ScLoiTerm negoTerm = new ScLoiTerm();
-		List<ScLoiTerm> scNegoTerms = getManagedBean().getScLoi()
+		ScLoi scLoi = getManagedBean().getScLoi();
+		List<ScLoiTerm> scNegoTerms = scLoi
 				.getScNegoTerms();
 		if (null == scNegoTerms) {
 			scNegoTerms = new ArrayList<ScLoiTerm>();
 		}
+		ScLoiTerm negoTerm = new ScLoiTerm();
 		negoTerm.setPmTerm(null);
 		negoTerm.setSelected(Boolean.TRUE);
-		negoTerm.setScLoi(getManagedBean().getScLoi());
+		negoTerm.setScLoi(scLoi);
 		negoTerm.setModified(true);
 		scNegoTerms.add(negoTerm);
-
-		getManagedBean().getScLoi().setScNegoTerms(scNegoTerms);
+		scLoi.setScNegoTerms(scNegoTerms);
 	}
 
-	/**
-	 * Adds the predefined terms in negotiation details.
-	 */
-	public void addPredefinedTerms() {
-		debugLogger("addPredefinedTerms");
-		ScLoiTerm scNegoTerm = new ScLoiTerm();
-		List<ScLoiTerm> list = getManagedBean().getNegoTermsList();
-		if (list == null) {
-			list = new ArrayList<ScLoiTerm>();
-		}
-		
-		scNegoTerm.setScLoi(getManagedBean().getScLoi());
-		list.add(scNegoTerm);
-		getManagedBean().setNegoTermsList(list);
-
-	}
 
 	/**
 	 * Delete nego terms in negotiation details.
