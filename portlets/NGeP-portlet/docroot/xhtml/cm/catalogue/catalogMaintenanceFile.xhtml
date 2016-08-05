@@ -13,13 +13,44 @@
 
 
 	<ui:define name="contentSection">
-	
+
 		<script>
-		$('#portlet_CatalogueMaintenance_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.maintenance']}"); 
+			$('#portlet_CatalogueMaintenance_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					"#{lbl['lbl.cm.catalogue.maintenance']}");
 		</script>
 
-		<p:messages id="catalogFileMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" ></p:messages>
-		
+		<p:messages id="catalogFileMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false"></p:messages>
+
+		<h:panelGroup
+			rendered="#{unspscCodeBackingBean.supplierTemp}">
+			<table style="width: 80%">
+				<tr>
+					<td style="width: 80%;"><div class="navDiv" id="menuDiv"
+							align="center">
+							<ul class="menu-text" style="margin: 5px 0 0 -50px;">
+								<li style="width: 210px;"><h:outputText
+										value="#{lbl['lbl.cm.choose.unspsc']}" /></li>
+
+								<li style="width: 210px;"><h:outputText
+										value="#{lbl['lbl.cm.choose.product.service']}" /></li>
+
+								<li style="width: 210px;"><h:outputText
+										value="#{lbl['lbl.cm.complete.product.details']}" /></li>
+							</ul>
+							<ul id="tripMeter" class="menu-line">
+								<li class="black-dot" style="margin-right: 200px;" />
+								<li class="black-dot" style="margin-right: 200px;" />
+								<li class="red-dot" />
+
+							</ul>
+						</div></td>
+					<td></td>
+				</tr>
+			</table>
+		</h:panelGroup>
+
 		<p:blockUI block="form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -30,22 +61,33 @@
 
 				<p:menuitem value="#{lbl['lbl.cm.draft']}"
 					action="#{catalogueBackingBean.onTabChange1('Draft')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.cm.approval']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
+					update="@form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" />
+				<p:menuitem value="#{lbl['lbl.cm.approval']}"
+					rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.onTabChange1('Approval')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.cm.approved']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
+					update="@form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" />
+				<p:menuitem value="#{lbl['lbl.cm.approved']}"
+					rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.onTabChange1('Approved')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.cm.reject']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
+					update="@form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" />
+				<p:menuitem value="#{lbl['lbl.cm.reject']}"
+					rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.onTabChange1('Rejected')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.cm.published']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
+					update="@form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" />
+				<p:menuitem value="#{lbl['lbl.cm.published']}"
+					rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.onTabChange1('Published')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.cm.expired']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
+					update="@form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" />
+				<p:menuitem value="#{lbl['lbl.cm.expired']}"
+					rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.onTabChange1('Expired')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					update="@form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" />
 			</p:tabMenu>
 
 
@@ -81,15 +123,18 @@
 
 
 
-	<p:confirmDialog message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" widgetVar="confirmation1">
-		<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-			actionListener="#{catalogueBackingBean.deleteSupplierItem(catalogueBackingBean.managedBean.itemToDelete)}" 
-			update="@form"
-			oncomplete="confirmation1.hide()" />
-		<p:commandButton id="decline" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-			onclick="confirmation1.hide()" />
-			<h:inputHidden id="rowIndex"></h:inputHidden>
-	</p:confirmDialog>
+			<p:confirmDialog message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}"
+				header="#{lbl['lbl.cm.dialog.cofirm.header']}"
+				widgetVar="confirmation1">
+				<p:commandButton id="conf"
+					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+					actionListener="#{catalogueBackingBean.deleteSupplierItem(catalogueBackingBean.managedBean.itemToDelete)}"
+					update="@form" oncomplete="confirmation1.hide()" />
+				<p:commandButton id="decline"
+					value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+					onclick="confirmation1.hide()" />
+				<h:inputHidden id="rowIndex"></h:inputHidden>
+			</p:confirmDialog>
 
 		</h:panelGroup>
 	</ui:define>
