@@ -49,6 +49,7 @@ public class CircularManagedBean extends BaseManagedBean {
 	private Date searchStartDate;
 	private Date searchEndDate;
 	private Long searchStatusId;
+	private int searchCircularStatus;
 	private IPagingDataModel<CtCircularVer> circularListingPagingDataModel = new CircularListingPagingDataModel();
 	
 	private class CircularListingPagingDataModel extends PagingDataModel<CtCircularVer> {
@@ -119,6 +120,7 @@ public class CircularManagedBean extends BaseManagedBean {
 			    CircularReqDTO reqDTO = new CircularReqDTO();
 				reqDTO.setCircularVerSearchBean(searchBean);
 				reqDTO.setFilterStatusId(getSearchStatusId());
+				reqDTO.setSearchCircularStatus(getSearchCircularStatus());
 				
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 				CircularResDTO resDTO = null;
@@ -327,5 +329,18 @@ public class CircularManagedBean extends BaseManagedBean {
 	public void setTrackingDiarySearch(boolean trackingDiarySearch) {
 		this.trackingDiarySearch = trackingDiarySearch;
 	}
-	
+
+	/**
+	 * @return the searchCircularStatus
+	 */
+	public int getSearchCircularStatus() {
+		return searchCircularStatus;
+	}
+
+	/**
+	 * @param searchCircularStatus the searchCircularStatus to set
+	 */
+	public void setSearchCircularStatus(int searchCircularStatus) {
+		this.searchCircularStatus = searchCircularStatus;
+	}	
 }
