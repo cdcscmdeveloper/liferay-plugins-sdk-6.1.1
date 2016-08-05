@@ -1545,7 +1545,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			} else {
 				context.put("agreementTypeUpper", ContractConst.AGREEMENT_STRING.toUpperCase());
 			}
-			context.put("contractTitle", getManagedBean().getCtContract().getContractName());
+			context.put("contractTitle", getManagedBean().getCtContract().getContractName().toUpperCase());
 			context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			context.put("supplierRegistrationNo", getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
 			if (getManagedBean().getAgreementContractVer().getContractPhysicalNo() == null
