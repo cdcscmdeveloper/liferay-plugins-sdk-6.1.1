@@ -2596,7 +2596,8 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean) {
 		for (SmApplSupportDoc doc : managedBean.getSmAppl()
 				.getSmApplSupportDocs()) {
-			if (doc.getVerifiedFlg() == null) {
+			if (doc.getVerifiedFlg() == null
+					&& !EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
 				throw new EpException(MessageConst.ERROR_722559);
 			}
 		}
@@ -4582,18 +4583,16 @@ public class SmApplicationUtil {
 	 *            -String levelCode
 	 * @return PmEduLevel object
 	 */
-	/*public static PmEduLevel retrievePmEduLevelByCode(String code) {
-		IEducationLevelSO reqSO = (IEducationLevelSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						IEducationLevelSO.class);
-		EducationLevelReqDTO reqDTO = new EducationLevelReqDTO();
-		reqDTO.setLevelCode(code);
-		EducationLevelResDTO resDTO = reqSO
-				.retrieveEducationLevelByCode(reqDTO);
-
-		return resDTO.getEduLevel();
-	}*/
+	/*
+	 * public static PmEduLevel retrievePmEduLevelByCode(String code) {
+	 * IEducationLevelSO reqSO = (IEducationLevelSO) BusinessDelegate
+	 * .getInstance().getServiceObject( ModuleCodeConst.PROFILE_MANAGEMENT,
+	 * IEducationLevelSO.class); EducationLevelReqDTO reqDTO = new
+	 * EducationLevelReqDTO(); reqDTO.setLevelCode(code); EducationLevelResDTO
+	 * resDTO = reqSO .retrieveEducationLevelByCode(reqDTO);
+	 * 
+	 * return resDTO.getEduLevel(); }
+	 */
 
 	/**
 	 * Gets the sm supplier basic info vo for mapping data.
