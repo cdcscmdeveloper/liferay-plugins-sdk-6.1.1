@@ -1542,14 +1542,15 @@ public class QTDocumentsBackingBean extends
 		}
 
 		boolean isOneOff = false;
-		if (qt.getFulfilmentType().getParameterCode()
-				.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+		String fulfilmentType = qt.getFulfilmentType() != null ? qt
+				.getFulfilmentType().getParameterCode() : null;
+		if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType)) {
 			isOneOff = true;
 			context.put("fulfilmentType", isOneOff);
-		} else if (qt.getFulfilmentType().getParameterCode()
-				.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-				|| qt.getFulfilmentType().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+		} else if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
+				.equals(fulfilmentType)
+				|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+						.equals(fulfilmentType)) {
 			context.put("fulfilmentType", isOneOff);
 		}
 
@@ -2392,14 +2393,16 @@ public class QTDocumentsBackingBean extends
 		}
 
 		boolean isOneOff = false;
-		if (qt.getFulfilmentType().getParameterCode()
-				.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+		String fulfilmentType = qt.getFulfilmentType() != null ? qt
+				.getFulfilmentType().getParameterCode() : null;
+		if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType)) {
 			isOneOff = true;
 			context.put("fulfilmentType", isOneOff);
-		} else if (qt.getFulfilmentType().getParameterCode()
-				.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-				|| qt.getFulfilmentType().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+		} else if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
+				.equals(fulfilmentType)
+				|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+						.equals(fulfilmentType)) {
+
 			context.put("fulfilmentType", isOneOff);
 		}
 				
