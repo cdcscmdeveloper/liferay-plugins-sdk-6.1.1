@@ -90,8 +90,8 @@
 				value="#{scheduleBiddingBB.managedBean.rowSelectedBid.scBidItems}"
 				var="item" rowKey="#{item}" rowIndexVar="index">
 				<p:ajax event="rowSelect" process="@this" immediate="true"
-					partialSubmit="true"
-					listener="#{scheduleBiddingBB.retrieveParticipantsListAction}"
+					partialSubmit="true" 
+					listener="#{scheduleBiddingBB.bidItemSelectionListner}"
 					update="@([id$=qualifiedSupplierPanel])" />
 
 				<ac:paginator for="bidScheduleByZoneBidItems"></ac:paginator>

@@ -22,6 +22,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 /**
  * Schedule Bidding Managed Bean
@@ -64,6 +65,15 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private Long bidMinDuration;
 	private Long bidMaxDuration;
 	private SelectItem[] selectItems;
+	
+	private TemplateSpecHelper tplSpecHelper = TemplateSpecHelper.getInstance();
+
+	/**
+	 * @return the tplSpecHelper
+	 */
+	public TemplateSpecHelper getTplSpecHelper() {
+		return tplSpecHelper;
+	}
 
 	/**
 	 * Default COnstructor
