@@ -785,7 +785,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				throw new EpException(MessageConst.ERROR_750041, 
 						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}			
+			} else if (!resDTO.isBondComplete()) {
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_750043, 
+						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
 		}
 		      
 		// Contract Approver cannot approve the final agreement if:-
