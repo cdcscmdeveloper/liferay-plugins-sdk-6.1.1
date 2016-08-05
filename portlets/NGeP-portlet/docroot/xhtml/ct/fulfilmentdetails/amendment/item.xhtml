@@ -49,7 +49,7 @@
 					    <h:outputText value="#{ctItemVar.scRequestItem.uom.uomName}" style="float:left;" />
 				  </p:column>
 			
-				  <p:column style="width:12%; white-space:normal;" styleClass="column-align-center">
+				  <p:column style="width:10%; white-space:normal;" styleClass="column-align-center">
 		            <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
@@ -63,7 +63,7 @@
 			        </p:inputText>
 		         </p:column> 
 				
-				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:13%; white-space:normal;" styleClass="column-align-center">
+				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:15%; white-space:normal;" styleClass="column-align-center">
 		             <h:outputText value="#{ctItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		        </p:column> 
 				
@@ -374,7 +374,7 @@
 				<ac:paginator for="serviceTable" />
 				<p:ajax event="rowSelect" update=":form:serviceId" process="@this" listener="#{amendmentBackingBean.onSelectServiceItem()}" 
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-				<p:column  style="width:30%;white-space:normal;" filterBy="#{serviceItemVar.scRequestItem.itemName}" filterMatchMode="contains"
+				<p:column  style="width:32%;white-space:normal;" filterBy="#{serviceItemVar.scRequestItem.itemName}" filterMatchMode="contains"
 					styleClass="column-align-center">
 				      <f:facet name="header">
 		                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.desc']}"/>
@@ -407,7 +407,7 @@
 		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" style="float:right;" />
 		      </p:column>
 		      
-		      <p:column style="width:12%; white-space:normal;" styleClass="column-align-center">
+		      <p:column style="width:10%; white-space:normal;" styleClass="column-align-center">
 		            <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
