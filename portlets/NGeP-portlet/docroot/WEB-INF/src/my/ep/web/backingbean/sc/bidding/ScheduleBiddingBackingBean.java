@@ -4,6 +4,7 @@
 
 package my.ep.web.backingbean.sc.bidding;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,6 +33,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -43,6 +45,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.event.SelectEvent;
 
 /**
  * Schedule Bidding Backing Bean
@@ -258,6 +261,12 @@ public class ScheduleBiddingBackingBean extends
 			retrieveParticipantsListAction();
 		}
 
+	}
+
+	public void bidItemSelectionListner(SelectEvent event) {
+		ScBidItem bidItem = (ScBidItem) event.getObject();
+		this.getManagedBean().setSelectedBidItem(bidItem);
+		retrieveParticipantsListAction();
 	}
 
 	/**
@@ -619,4 +628,16 @@ public class ScheduleBiddingBackingBean extends
 
 	}
 
+	public BigDecimal itemUnitPriceSubTotal(ScQtRecommendDtl recommendDtl) {
+
+		BigDecimal itemSubTotal = this
+				.getManagedBean()
+				.getTplSpecHelper()
+				.calcTotalAmount(
+						recommendDtl.getScQtProposalItem().getScRequestItem()
+								.getTplSpecQuestion(),
+						recommendDtl.getScQtProposalItem().getOfferPrice(),
+						this.getManagedBean().getSelectedBidItem().getQty());
+		return itemSubTotal;
+	}
 }
