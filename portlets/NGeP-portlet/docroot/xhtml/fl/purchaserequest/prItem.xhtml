@@ -226,24 +226,20 @@
 
 	<p:dialog id="addManualDelAddrDialog" header="#{lbl['lbl.fl.btn.other.address']}"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
-		 modal="true" width="900px"
-		 resizable="false">
+		 modal="true" width="900px" position="top" resizable="false">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}" escape="false"/>
-		<p:ajax event="close"
-			listener="#{purchaseRequestBackingBean.closeListener}"
-			update="addManualDelAddrDialog" />
+		<p:ajax event="close" listener="#{purchaseRequestBackingBean.closeListener}" update="addManualDelAddrDialog" />
 		<p:panel id="addManualDelAddrPnl">
-			<p:messages id="manualAddrMessages" showDetail="true"
-				autoUpdate="true" closable="true" showSummary="false" />
+			<p:messages id="manualAddrMessages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 			<table style="width: 100%">
 				<tr>
 					<td width="120"><p:outputLabel value="#{lbl['lbl.fl.country']}" /> <h:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td width="220"><p:selectOneMenu id="manCountry"
+					<td width="255"><p:selectOneMenu id="manCountry"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.country']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmCountry.countryId}"
-							style="width: 212px;margin-bottom: 5px;">
+							style="width: 255px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="countryList"
 								value="#{purchaseRequestBackingBean.managedBean.countryList}"
@@ -256,11 +252,11 @@
 					<td><p:message for="manCountry" display="icon" /></td>
 					<td width="150"><p:outputLabel value="#{lbl['lbl.fl.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td width="220"><p:selectOneMenu id="manState"
+					<td width="210"><p:selectOneMenu id="manState"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.state']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmState.stateId}"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 210px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="stateList"
 								value="#{purchaseRequestBackingBean.managedBean.stateList}"
@@ -270,23 +266,22 @@
 								listener="#{purchaseRequestBackingBean.retrieveDivisionList}"
 								update="manDivison,manDistrict" />
 						</p:selectOneMenu></td>
-					<td colspan="2"><p:message for="manState" display="icon" /></td>
+					<td><p:message for="manState" display="icon" /></td>
 				</tr>
 				<tr>
-					<td width="126"><p:outputLabel value="#{lbl['lbl.fl.address']}" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.fl.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="address1" label="#{lbl['lbl.fl.address']}"
-							maxlength="255"
+							maxlength="255" size="37" 
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address1}"
-							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></td>
 					<td><p:message for="address1" display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td> 
 					<td><p:selectOneMenu id="manDivison"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmDivision.divisionId}"
 							disabled="#{purchaseRequestBackingBean.managedBean.divisionDisplay}"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 180px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="divisionList"
 								value="#{purchaseRequestBackingBean.managedBean.divisionList}"
@@ -296,15 +291,13 @@
 								listener="#{purchaseRequestBackingBean.retrieveDistrictList}"
 								update="manDistrict" />
 						</p:selectOneMenu>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.manual.addr']}"/>
-						<p:message for="manDistrict" display="icon" /></td>
-					<td></td>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.manual.addr']}"/></td>
+					<td><p:message for="manDivison" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="" /></td>
-					<td><p:inputText maxlength="255"
+					<td><p:inputText maxlength="255" size="37" 
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address2}"
-							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.district']}" /> <p:outputLabel
@@ -313,26 +306,23 @@
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.district']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmDistrict.districtId}"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 210px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="districtList"
 								value="#{purchaseRequestBackingBean.managedBean.districtList}"
 								itemValue="#{districtList.districtId}"
 								itemLabel="#{districtList.districtName}" />
-							<p:ajax event="change"
-								listener="#{purchaseRequestBackingBean.retrieveCityList}"
+							<p:ajax event="change" listener="#{purchaseRequestBackingBean.retrieveCityList}"
 								update="manCity" />
-							<p:ajax event="change"
-								listener="#{purchaseRequestBackingBean.retrieveDeliveryAddressList}"
+							<p:ajax event="change" listener="#{purchaseRequestBackingBean.retrieveDeliveryAddressList}"
 								update="manAddress" />
 						</p:selectOneMenu></td>
 					<td><p:message for="manDistrict" display="icon" /></td>
-				</tr>
+				</tr>			
 				<tr>
 					<td><p:outputLabel value="" /></td>
-					<td><p:inputText maxlength="255"
+					<td><p:inputText maxlength="255" size="37" 
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address3}"
-							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.city']}" /> <p:outputLabel
@@ -341,19 +331,18 @@
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.city']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmCity.cityId}"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 210px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="cityList"
 								value="#{purchaseRequestBackingBean.managedBean.cityList}"
 								itemLabel="#{cityList.cityName}" itemValue="#{cityList.cityId}" />
 						</p:selectOneMenu></td>
 					<td><p:message for="manCity" display="icon" /></td>
-				</tr>
+				</tr>		
 				<tr>
 					<td><p:outputLabel value="" /></td>
-					<td><p:inputText maxlength="255"
+					<td><p:inputText maxlength="255" size="37"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address4}"
-							size="35"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></td>
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.postcode']}" /> <p:outputLabel
@@ -370,45 +359,43 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="contactPerson"
+					<td><p:inputText id="contactPerson" 
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="85"
+							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="85" size="32"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactPerson}"
-							size="35"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"></p:inputText>
-							</td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person']}"/>
-							<p:message for="contactPerson" display="icon" /></td>
+						<ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person']}"/>
+					</td>
+					<td><p:message for="contactPerson" display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manAddress" label="#{lbl['lbl.fl.manual.add.delivery.add']}"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.receivingGrp.addressTypeId}"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 180px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="delAddByDistrict"
 								value="#{purchaseRequestBackingBean.managedBean.manualAddrList}" />
 						</p:selectOneMenu>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address']}"/>
-						<p:message for="manAddress" display="icon" /></td>
-				</tr>
+					</td>
+					<td><p:message for="manAddress" display="icon" /></td>
+				</tr>		
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.email']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
 					<td><p:inputText id="email"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.email']}" maxlength="80"
+							label="#{lbl['lbl.fl.email']}" maxlength="80" size="32"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactEmail}"
 							validatorMessage="#{lbl['lbl.fl.email.msg']}"
-							size="35"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex disabled="#{purchaseRequestBackingBean.managedBean.emailValidate}"
        						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
        					</p:inputText>	
-       					
+       					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.email']}"/>
        				</td>
-       				<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.email']}"/>
-       				<p:message for="email" display="icon" /></td>
-				</tr>
+       				<td><p:message for="email" display="icon" /></td>
+				</tr>	
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.telno']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -418,9 +405,7 @@
 						number="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactPhoneNo}"  
 						validatorMessage="#{lbl['lbl.fl.telno']} - #{lbl['lbl.fl.invalidNo']}" 
 						required="#{purchaseRequestBackingBean.managedBean.required}"/>
-						</td>
-					<td></td>	
-					
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
@@ -442,7 +427,7 @@
 							validatorMessage="#{lbl['lbl.fl.mobile']} - #{lbl['lbl.fl.invalidNo']}" /></td>
 					<td></td>
 							<td></td>
-				</tr>
+				</tr>																								
 			</table>
 		</p:panel>
 		<p:spacer height="2px"></p:spacer>
@@ -480,7 +465,7 @@
 	</p:dialog>
 	<p:dialog id="reqItemInfoDialog" header="#{lbl['lbl.fl.requested.item']}"
 		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade"
-		modal="true" width="900" resizable="true">
+		modal="true" width="900" resizable="false">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
