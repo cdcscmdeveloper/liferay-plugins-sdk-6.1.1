@@ -68,6 +68,8 @@
 				<ac:paginator for="lovTb" />
 				<p:ajax event="rowDblselect" listener="#{lovBackingBean.populateToSaveObject}" 
                      update="@form" />
+                <p:ajax event="rowSelect" update="@([id$=slbtn])" />   
+                <p:ajax event="rowUnselect" update="@([id$=slbtn])" />   
 				<!-- <p:column selectionMode="single" style="width:2%" /> 
 				
 				<p:column width="5%">
@@ -102,7 +104,10 @@
 				<ac:paginator for="lovTb2" />
 				
 				<p:column selectionMode="multiple" styleClass="td-check-box-spacing" /> 
-				
+				<p:ajax event="rowSelectCheckbox" update="@([id$=slbtn])" />
+				<p:ajax event="rowUnselectCheckbox" update="@([id$=slbtn])" />
+				<p:ajax event="rowSelect" update="@([id$=slbtn])" />   
+                <p:ajax event="rowUnselect" update="@([id$=slbtn])" />   
 				<!-- <p:column width="5%">
 					<f:facet name="header">
 						<p:outputLabel value="No." />
@@ -129,6 +134,7 @@
 					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
 					oncomplete="lovPopup.hide();"
 					process="resultPanel"
+					disabled="#{lovBackingBean.isSelectButtonDisable()}"
 					partialSubmit="true"  styleClass="BtnSpacing"/>	<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				partialSubmit="true" process="@this" update="@this"
 				oncomplete="lovPopup.hide();" styleClass="BtnSpacing"/>
