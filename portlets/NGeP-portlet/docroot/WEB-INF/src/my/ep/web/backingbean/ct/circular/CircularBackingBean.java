@@ -19,6 +19,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.circular.CircularReqDTO;
@@ -107,6 +108,35 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	}
 	
 	/**
+	 * The method used for generating a list of contract status 
+	 * for searching contract as selection.
+	 * 
+	 * @return the selection list of contract status
+	 */
+	public SelectItem[] getSearchCircularStatusDropdown() {
+		SelectItem[] items = null;
+		
+		try {
+			items = new SelectItem[5];
+			int i = 0;
+			items[i++] = new SelectItem(0, ResourceBundleUtils.getMessage("lbl.txt.select", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CIRCULAR_STATUS_EFFECTIVE,  
+					ResourceBundleUtils.getMessage("lbl.ct.effective", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CIRCULAR_STATUS_INACTIVE,  
+					ResourceBundleUtils.getMessage("lbl.ct.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CIRCULAR_STATUS_EXPIRED,  
+					ResourceBundleUtils.getMessage("lbl.ct.expired", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.CIRCULAR_STATUS_CANCELLED,  
+					ResourceBundleUtils.getMessage("lbl.ct.cancelled", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+		return items;
+	}
+	
+	/**
 	 * The method used to reset the search criteria for circular.
 	 */
 	public void searchReset(){
@@ -120,6 +150,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		getManagedBean().setSearchEndDate(null);
 		getManagedBean().setSearchStatusId(null);
 		getManagedBean().setSearchStatus(null);
+		getManagedBean().setSearchCircularStatus(0);
 		if(getManagedBean().isReadOnly()) {
 			getManagedBean().getCircularListingPagingDataModel().reloadData();
 		} else {
