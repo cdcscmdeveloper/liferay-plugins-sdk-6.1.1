@@ -6424,7 +6424,7 @@ public class EvaluationBackingBean extends
 			}
 
 			if (!isAtleastOneMemberAttendance(memberList)) {
-				throw new EpException(MessageConst.ERROR_760252, new String[] {
+				throw new EpException(MessageConst.ERROR_760423, new String[] {
 						ResourceBundleUtils
 						.getMessage("lbl.sc.member",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -6483,7 +6483,7 @@ public class EvaluationBackingBean extends
 				}
 
 			}
-			if (i >= 1) {
+			if (i >= 2) {
 				return true;
 			}
 		}
