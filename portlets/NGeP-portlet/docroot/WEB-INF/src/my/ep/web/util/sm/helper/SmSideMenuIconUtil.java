@@ -416,7 +416,7 @@ public class SmSideMenuIconUtil {
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
-							.getMandatoryDocs())) {
+							.getSmAppl().getSmApplSupportDocs())) {
 				retVal = ICON_TICK;
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)
