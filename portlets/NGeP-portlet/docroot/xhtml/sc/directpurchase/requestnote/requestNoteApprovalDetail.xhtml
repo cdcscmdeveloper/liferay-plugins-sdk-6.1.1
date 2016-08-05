@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="#{lbl['lbl.sc.approve.list']}" id="approverId"
+	<p:panel header="#{lbl['lbl.sc.approve.list']}" id="approverId" rendered="#{!isPendingApprovalStatus}"
 		toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
