@@ -915,7 +915,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 		ContractItemResDTO resDTO = new ContractItemResDTO();
 		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-		reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
+		if(getManagedBean().getSelectedDelAddr() != null){
+			reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
+		}
 		
 		if(getManagedBean().getItemAddrList()==null) {
 			getManagedBean().setItemAddrList(new ArrayList<FlFulfilmentItemAddr>());
