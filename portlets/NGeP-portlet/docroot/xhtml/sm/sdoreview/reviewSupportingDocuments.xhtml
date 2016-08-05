@@ -47,7 +47,7 @@
 		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
    			 #{lbl['lbl.sm.confirm.proceed']}
    			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="submissionConfirmDlg.hide();blockWidget.show();" oncomplete="blockWidget.hide()" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();"></p:commandButton>
 			</div>
 		</p:dialog>
