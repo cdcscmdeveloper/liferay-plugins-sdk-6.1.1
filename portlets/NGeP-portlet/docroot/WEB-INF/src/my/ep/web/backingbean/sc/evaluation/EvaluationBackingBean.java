@@ -7804,6 +7804,27 @@ public class EvaluationBackingBean extends
 						null);
 				if (resDTO.isSuccessful()) {
 					ScQtCommittee qtCommittee = resDTO.getQtCommittee();
+					if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)){
+						FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														 MessageConst.INFO_700033,
+														new String[] {
+															getMessageCommon("lbl.sc.prepare.secretary.evaluation"),
+																qtCommittee
+																		.getScQt()
+																		.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+						
+					}else{
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -7822,6 +7843,7 @@ public class EvaluationBackingBean extends
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
+					}
 
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}
@@ -7893,9 +7915,9 @@ public class EvaluationBackingBean extends
 									null,
 									MessageUtils
 											.getMessage(
-													getMessgeConstant(this.getManagedBean().getLocalOutCome()),
+													MessageConst.INFO_700033,
 													new String[] {
-														getMessageCommon("lbl.sc.prepare.evaluation"),
+														getMessageCommon("lbl.sc.prepare.secretary.evaluation"),
 															qt.getScQt()
 																	.getQtNo() },
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
