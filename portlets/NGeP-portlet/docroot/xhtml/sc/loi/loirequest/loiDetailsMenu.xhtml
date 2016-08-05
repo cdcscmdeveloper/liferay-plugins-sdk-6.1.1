@@ -129,16 +129,26 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.loi.details.section']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td width="21%"><p:outputLabel
+				<td width="21%" style="vertical-align: top;"><p:outputLabel
 						value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><c:if
 						test="#{lOIDetailBackingBean.managedBean.scLoi.brandNew}">
-						<p:inputText readonly="#{lOIDetailBackingBean.managedBean.readOnly}" style="width:670px;"
+						<p:inputTextarea id="title"
 							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}"
-							size="50" maxlength="100" />
+							maxlength="500" rows="3"
+							readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
+							label="#{lbl['lbl.sc.title']}"
+							style="width: 670px;margin-bottom: 5px;">
+							<f:ajax></f:ajax>
+						</p:inputTextarea>
+
 					</c:if> <c:if test="#{!lOIDetailBackingBean.managedBean.scLoi.brandNew}">
-						<p:inputText size="40" readonly="true" disabled="true" style="width:670px;"
-							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}" />
+						<p:inputTextarea id="title"
+							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}"
+							maxlength="500" rows="3" disabled="true"
+							label="#{lbl['lbl.sc.title']}" 
+							style="width: 670px;margin-bottom: 5px;">
+						</p:inputTextarea>
 					</c:if></td>
 			</tr>
 			<tr>
