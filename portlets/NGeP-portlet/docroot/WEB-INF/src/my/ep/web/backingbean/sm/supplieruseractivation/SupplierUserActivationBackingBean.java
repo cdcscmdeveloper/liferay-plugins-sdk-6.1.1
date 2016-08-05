@@ -38,6 +38,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -96,6 +97,28 @@ public class SupplierUserActivationBackingBean extends
 			if(resDTO.getSmPersonnel() != null) {
 				personnel = resDTO.getSmPersonnel();
 				supplierProfile = personnel.getSmAppl().getSmSupplier();
+			}else{
+				//retrieve for invalid personnel
+				
+				// 1)Basic Personnel that already expired link and deleted by
+				// scheduler
+				// or
+				// 2)MOF Personnel that already expired link and remove role by
+				// scheduler
+				personnel = SmServiceLookup.getPersonnelSO()
+						.retrievePersonnelById(reqDTO).getSmPersonnel();
+				if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+						|| (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE && StringUtils
+								.isBlank(personnel.getEpRole()))) {
+					errMsg = SmCommonUtil.getMessage(
+							"lbl.sm.activation.invalid.link.expired",
+							new String[] { SmRuleHelper.getInstance()
+									.getEmailActivationDays() + "" });
+
+					// reset back personnel to null
+					personnel = null;
+				}
+				
 			}
 		} catch(Exception ex){
 			getManagedBean().setValidActivation(false);
