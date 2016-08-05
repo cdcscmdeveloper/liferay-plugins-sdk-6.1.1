@@ -18322,7 +18322,7 @@ public class ReportBackingBean extends
 
 			urlConnection.setConnectTimeout(306000);
 			urlConnection.setReadTimeout(306000);
-			new Thread(new InterruptThread(urlConnection)).start();
+			//new Thread(new InterruptThread(urlConnection)).start();
 			log.info("@@@@ Report URL = " +urlConnection.getURL()+" @@@@ Time stamp ="+time);
 			buf = new BufferedInputStream(urlConnection.getInputStream());
 			
