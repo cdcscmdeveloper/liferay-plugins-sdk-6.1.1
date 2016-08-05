@@ -192,16 +192,19 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.title']}" />
+				<td style="vertical-align: top;"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{isEditableStatus}" /></td>
-				<td colspan="3"><p:inputText id="sqTitle"
+				<td colspan="3">
+					<p:inputTextarea id="sqTitle"
 						value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}"
-						size="106" required="true"
+						required="true" maxlength="500" rows="3"
 						label="#{lbl['lbl.sc.title']}"
-						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
-						maxlength="100" /> <p:message id="sqTitleMsg" for="sqTitle"
-						display="icon" />
+						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" 
+						style="margin-bottom: 5px; width: 670px;">
+						<f:ajax></f:ajax>
+					</p:inputTextarea>
+					<p:message id="sqTitleMsg" for="sqTitle" display="icon" />
 					</td>
 			</tr>
 
