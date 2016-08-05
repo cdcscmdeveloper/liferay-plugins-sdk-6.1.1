@@ -7058,26 +7058,27 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-
-		// validate personnel email domain
-		SmApplicationUtil
-				.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
-						.getSmAppl().getSmPersonnels());
-
-		// validate branch
-		SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
-				currentTab, true);
-
-		// validate facility
-		SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
-
-		// validate machine
-		SmApplicationUtil.validateMachineDetails(true, -1, getManagedBean());
-
-		// validate equity owner
-		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
-				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
-
+		if(!this.getManagedBean().isPoInquiryRespond()) {			
+		
+			// validate personnel email domain
+			SmApplicationUtil
+					.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
+							.getSmAppl().getSmPersonnels());
+	
+			// validate branch
+			SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
+					currentTab, true);
+	
+			// validate facility
+			SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
+	
+			// validate machine
+			SmApplicationUtil.validateMachineDetails(true, -1, getManagedBean());
+	
+			// validate equity owner
+			SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+		}
 		if (getManagedBean().getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 				|| getManagedBean().getSmAppl().getApplType()
