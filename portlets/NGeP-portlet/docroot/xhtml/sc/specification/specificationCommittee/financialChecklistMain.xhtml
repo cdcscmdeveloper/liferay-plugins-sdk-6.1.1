@@ -132,8 +132,13 @@
 
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
+			<p:column 
 				style="width:15%;white-space: normal;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.spec.supplier.action']}" />
+					<ac:iconTooltip id="financialChecklistsupplieractionchecklist#{index}Scall"
+						value="#{lbl['lbl.sc.spec.supplier.finacial.checklist.action.tooltip']}" />
+				</f:facet>
 				<h:panelGroup id="financialChecklistsupplier">
 					<ui:fragment
 						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and  stageTwofunctional.pmDocument.docDefinitionKey ne null)) or (stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode eq 'TS'))}">
