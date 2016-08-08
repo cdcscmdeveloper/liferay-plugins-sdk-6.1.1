@@ -45,6 +45,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -825,10 +826,17 @@ public class QTCommitteBackingBean extends
 						}
 					}
 					cloneCommitte.setApprovalReq(true);
+					// validate 
+					String commType = cloneCommitte.getCommitteeType().getParameterCode();
+					if ((!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
+							.equalsIgnoreCase(commType))) {
+						validateMember(scQt, memberList, commType);
+					}
 					tabs.get(beanCount).getMembers().addAll(memberList);
 				}
 			}
 		}
+		
 		// updating the memebers into sccommitte object if no error..
 		for (int i = 0; i < tabs.size(); i++) {
 			if (null != tabs.get(i).getMembers()) {
@@ -1436,6 +1444,12 @@ public class QTCommitteBackingBean extends
 											.getParameterCode()) });
 		}
 		
+		// validate member against existed committee
+		String committeeType = scCommittee.getCommitteeType().getParameterCode();
+			if ((!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
+					.equalsIgnoreCase(committeeType))) {
+				validateMember(scQt, toBeAddedList, committeeType);
+			}
 		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
 		Collections.sort(scCommittee.getScCommitteeMembers(),new MemberRoleComparator());
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
@@ -2176,5 +2190,41 @@ public class QTCommitteBackingBean extends
 	
 	public void nameRequired(){
 		this.getManagedBean().setNameRequired(false);
+	}
+	
+	private void validateMember(ScQt scQt,
+			List<ScCommitteeMember> toBeAddedList, String committeeType) {
+
+		List<TabBean> committeTabs = this.getManagedBean()
+				.getScCommitteeMemberTabList();
+		List<ScQtCommittee> qtCommitteList = null;
+		if (CollectionUtils.isNotEmpty(committeTabs)) {
+			qtCommitteList = new ArrayList<ScQtCommittee>();
+			for (int i = 0; i < committeTabs.size(); i++) {
+				TabBean tabBean = committeTabs.get(i);
+				if (!SourcingConstants.COMMITTE_TYPE_FINALIZATION
+						.equals(tabBean.getTabType())) {
+					ScQtCommittee qtCommittee = tabBean.getScQtCommittee();
+					qtCommittee.setScQt(scQt); // set latest saved scQt object.
+					qtCommitteList.add(qtCommittee);
+				}
+			}
+		}
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ICommitteSO.class);
+						
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setScQt(scQt);
+		FacesScopes scope = new FacesScopes();
+		committeReqDTO.setUser(scope.getUserSessionBean());
+		committeReqDTO.setUserLocale(scope.getUserLocale());
+		committeReqDTO.setQtCommittee(qtCommitteList);
+		committeReqDTO.setCommitteeMembers(toBeAddedList);
+		committeReqDTO.setCommitteeType(committeeType);
+		if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
+				.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
+			committeReqDTO.setApprovalFlow(true);
+		}
+		committeSO.validateEvaluationMethodMembers(committeReqDTO);
 	}
 }
