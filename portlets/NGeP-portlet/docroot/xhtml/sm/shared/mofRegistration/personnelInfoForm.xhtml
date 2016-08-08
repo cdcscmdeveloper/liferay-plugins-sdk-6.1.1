@@ -13,24 +13,24 @@
 			<br />
 			<table style="width: 100%">
 				<tr>
-					<td colspan="4"><div align="center" style="width: 98%">
+					<td colspan="4"><div align="center" style="width: 100%">
 							<c:if
 								test="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
-								<p:panelGrid styleClass="tablePanel" id="contrPerSumTable">
+								<p:panelGrid id="contrPerSumTable">
 
 									<p:row id="contrPerSumTableHdrRow1">
-										<p:column rowspan="2" styleClass="tableheaderrow" />
-										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
-										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.bod']}</p:column>
-										<p:column rowspan="2" style="width:20%"
-											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
-										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
-										<p:column colspan="2" style="text-align:center"
+										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;"/>
+										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.bod']}</p:column>
+										<p:column rowspan="2" style="width:20%;text-align: center !important;"
+											styleClass="tableheaderrow" >#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
+										<p:column colspan="2" style="text-align: center !important;"
 											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.stfTtl']}</p:column>
 									</p:row>
 									<p:row id="contrPerSumTableHdrRow2">
-										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.actual']}</p:column>
 
 									</p:row>
 									<p:row>
@@ -169,8 +169,8 @@
 										</p:column>
 									</p:row>
 									<p:row>
-										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.total.summary']}</p:column>
-										<p:column styleClass="tableheaderrow">
+										<p:column styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.total.summary']}</p:column>
+										<p:column styleClass="tableheaderrow" style="te">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
 										</p:column>
@@ -201,26 +201,26 @@
 								test="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
 								<p:panelGrid styleClass="tablePanel" id="consultPerSumTable">
 									<p:row id="consultPerSumHdrRow">
-										<p:column rowspan="2" styleClass="tableheaderrow" />
-										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
-										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.bod']}</p:column>
-										<p:column rowspan="2" style="width:15%"
+										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;"/>
+										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.bod']}</p:column>
+										<p:column rowspan="2" style="width:15%;text-align: center !important;"
 											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
 										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
-										<p:column colspan="2" style="text-align:center"
+										<p:column colspan="2" style="text-align: center !important;"
 											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.prfStf']}</p:column>
-										<p:column colspan="2" style="text-align:center"
+										<p:column colspan="2" style="text-align: center !important;"
 											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.semiPrfStf']}</p:column>
-										<p:column colspan="2" style="text-align:center"
+										<p:column colspan="2" style="text-align: center !important;"
 											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.clrStf']}</p:column>
 									</p:row>
 									<p:row id="consultPerEntActSumHdrRow">
-										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
-										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
-										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.person.composition.actual']}</p:column>
 
 									</p:row>
 									<p:row>
@@ -447,7 +447,7 @@
 										</p:column>
 									</p:row>
 									<p:row>
-										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.total.summary']}</p:column>
+										<p:column styleClass="tableheaderrow" style="text-align: center !important;">#{lbl['lbl.sm.total.summary']}</p:column>
 										<p:column styleClass="tableheaderrow">
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
