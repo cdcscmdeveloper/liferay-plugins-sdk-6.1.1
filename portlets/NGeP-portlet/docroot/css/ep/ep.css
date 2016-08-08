@@ -3170,7 +3170,6 @@ input[type="submit"]:hover,input[type="button"]:hover,input[type="reset"]:hover,
 	background:#2c576e !important;
 	color:rgb(255, 255, 255) !important;
 	font-weight:bold !important;
-	text-align: center !important;
 }
 
 .instruction {
