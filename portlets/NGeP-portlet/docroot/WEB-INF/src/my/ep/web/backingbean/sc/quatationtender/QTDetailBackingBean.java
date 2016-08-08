@@ -5065,7 +5065,7 @@ public class QTDetailBackingBean extends
 		if(isQTAwarded) {
 			throw new EpException(MessageConst.ERROR_760425);
 		} else if(isBiddingActive) {
-			throw new EpException(MessageConst.ERROR_76042);
+			throw new EpException(MessageConst.ERROR_760424);
 		} else {
 			RequestContext.getCurrentInstance().execute("cancelQTDlg.show()");
 		}
