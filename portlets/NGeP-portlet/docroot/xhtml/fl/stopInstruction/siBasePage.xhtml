@@ -80,7 +80,7 @@
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{stopInstrBB.signingAction(bpmAction)}"  update="@form"  />
 					</ui:repeat> 
-					<c:if test='#{stopInstrBB.managedBean.stopInstr.brandNew}'>
+					<c:if test='#{stopInstrBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmStopFulfilment}'>
 						<p:commandButton value="#{lbl['lbl.btn.stop.fulfilment']}" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmStopFulfilment)}"  update="@form">

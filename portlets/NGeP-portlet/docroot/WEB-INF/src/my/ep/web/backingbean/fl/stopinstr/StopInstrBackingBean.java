@@ -203,12 +203,8 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		// TODO Auto-generated method stub
 		getManagedBean().setSelectedTabIndex(0);
 		getManagedBean().setStopInstr(resDTO.getFlStopInstr());
+		getManagedBean().setButtonVal(BpmOutcomeConst.BPM_STOP_FULFILMENT);
 		populateChargeLineData();
-		System.out.println("getTaskName: "+this.getManagedBean().getTaskName());
-		/*if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
-			checkCogstr();
-		}*/
-		
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		flBB.getManagedBean().setHideRemarks(false);
 		if(resDTO.getFlStopInstr().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
@@ -217,16 +213,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			new FulfilmentBackingBean(ParameterConst.DOCTYPE_STOP_DELIVERY, resDTO.getFlStopInstr().getFlRequest().getCtContract().getContractNo());
 		}
 		flBB.initializeRemarkAndAttachement(resDTO.getFlStopInstr().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
-		/*if(stopFlData.getErrorId() != null && stopFlData.getErrorId() > 0){
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			getManagedBean().setGfmasError(true);
-			FulfilmentReqDTO errReq = new FulfilmentReqDTO();
-			errReq.setErrorId(stopFlData.getErrorId());
-			FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
-			getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
-			getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
-			getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
-		}*/
 		
 		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
 		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
