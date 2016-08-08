@@ -32,8 +32,7 @@
 					  createDOBackingBean.managedBean.isHyperLinkPage()}">
 			<ac:title value="#{createDOBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeDeliveryOrder)}" />
 		</c:if>			
-		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{createDOBackingBean.managedBean.autoUpdate}"
-			closable="true" severity="error, info, warn" />
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{createDOBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info,warn" />
 		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{createDOBackingBean.managedBean.gfmasError}" >		
 			<table>
 				<tr>
@@ -70,19 +69,19 @@
 				<h:panelGroup
 					rendered="#{empty createDOBackingBean.managedBean.buttonVal}">
 					<td colspan="4" style="text-align: right">
-						<p:commandButton
+						<p:commandButton disabled="#{createDOBackingBean.managedBean.orderDisabledForSdCheck eq true}"
 							styleClass="ui-button"  value="#{lbl['lbl.btn.save']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							update="@form"  
 							action="#{createDOBackingBean.createDeliveryOrder(BpmOutcomeConstant.bpmSave)}" /> 
-						<p:commandButton update="spkiPopUp, @form"
+						<p:commandButton update="spkiPopUp, @form" disabled="#{createDOBackingBean.managedBean.orderDisabledForSdCheck eq true}"
 							styleClass="ui-button"  value="#{lbl['lbl.btn.submit']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmSubmit)}" />
 					</td>
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'ACK'}">
+					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'ACK' }">
 					<td colspan="4" style="text-align: right"><ui:repeat
 							var="bpmAction"
 							value="#{createDOBackingBean.managedBean.outComes}">
@@ -94,7 +93,7 @@
 				</h:panelGroup>
 				
 				<h:panelGroup
-					rendered="#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate}">	
+					rendered="#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate }">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmUpdate)}">
