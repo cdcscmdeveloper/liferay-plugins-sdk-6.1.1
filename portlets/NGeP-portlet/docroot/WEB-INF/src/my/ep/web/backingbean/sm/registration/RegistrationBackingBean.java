@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -2162,16 +2163,41 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @throws Exception
 	 */
 	public void handleFileUpload(FileUploadEvent event) throws Exception {
-		if(event != null){
-			log.info("******handleFileUpload******");
+		handleFileUpload(getManagedBean().getSmGstSupplier()
+				.getSmGstSupplierDocs(), getManagedBean()
+				.getSelectedGstSupplierDoc(), event);
+	}
+
+	public void handleFileUpload(List<SmGstSupplierDoc> mainDocList,
+			SmGstSupplierDoc doc, FileUploadEvent event) {
+		if (event != null) {
 			String tempPath = String.valueOf((new Date()).getTime());
-			String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.GST_FILE_PATH) + tempPath + "/";
-			
-			String fileName = String.valueOf((new Date()).getTime()) + "_" + event.getFile().getFileName();
-			getManagedBean().getSelectedGstSupplierDoc().setFileName(fileName);
-			getManagedBean().getSelectedGstSupplierDoc().setFilePath(filePath);
-			
+			String filePath = SmCommonUtil
+					.getUploadFilePath(SupplierManagementConst.GST_FILE_PATH)
+					+ tempPath + "/";
+
+			String fileName = String.valueOf((new Date()).getTime()) + "_"
+					+ event.getFile().getFileName();
+			doc.setFileName(fileName);
+			doc.setFilePath(filePath);
+
+			setGstDocToMainList(mainDocList, doc);
+
 			SmCommonUtil.processUpload(filePath, event, fileName);
+		}
+	}
+	
+	private void setGstDocToMainList(List<SmGstSupplierDoc> mainDocList,
+			SmGstSupplierDoc selectedDoc) {
+		Iterator<SmGstSupplierDoc> docVOIter = mainDocList.iterator();
+		while (docVOIter.hasNext()) {
+			SmGstSupplierDoc docVO = docVOIter.next();
+			if (docVO.getPmDocument().getDocumentId()
+					.compareTo(selectedDoc.getPmDocument().getDocumentId()) == 0) {
+
+				docVO = selectedDoc;
+
+			}
 		}
 	}
 	
