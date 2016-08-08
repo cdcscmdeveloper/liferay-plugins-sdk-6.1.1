@@ -295,19 +295,19 @@ public class GovtSellerRegistrationBackingBean extends
 	 * @throws Exception
 	 */
 	public void handleFileUpload(FileUploadEvent event) throws Exception {
-		if (event != null) {
-			String tempPath = String.valueOf((new Date()).getTime());
-			String filePath = SmCommonUtil
-					.getUploadFilePath(SupplierManagementConst.GST_FILE_PATH)
-					+ tempPath + "/";
+		getInstance().handleFileUpload(
+				getManagedBean().getSmGstSupplier().getSmGstSupplierDocs(),
+				getManagedBean().getSelectedGstSupplierDoc(), event);
+	}
 
-			String fileName = String.valueOf((new Date()).getTime()) + "_"
-					+ event.getFile().getFileName();
-			getManagedBean().getSelectedGstSupplierDoc().setFileName(fileName);
-			getManagedBean().getSelectedGstSupplierDoc().setFilePath(filePath);
+	/**
+	 * remove uploaded gst attachment
+	 */
+	public void removeGstUploadedFile() {
+		SmGstSupplierDoc gstDoc = getManagedBean().getSelectedGstSupplierDoc();
+		gstDoc.setFileName(null);
+		gstDoc.setFilePath(null);
 
-			commonUploadFile(event, filePath);
-		}
 	}
 
 	/**
@@ -788,7 +788,7 @@ public class GovtSellerRegistrationBackingBean extends
 			getManagedBean().setSmResAdd(
 					(SmAddress) SerializationUtils.clone(defaultAddr));
 		}
-		
+
 		getManagedBean().getSmPersonnel().setIdentificationType(icNoType);
 		initUserPermanentAddressSelectItems(getManagedBean()
 				.getSmPermenantAdd());
