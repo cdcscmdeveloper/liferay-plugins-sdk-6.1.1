@@ -54,8 +54,8 @@
 				<p:graphicImage rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.coaValue != 'Y' }"
 					value="/css/images/design/ico-reject.png" title="#{chargeLineNode.coaValue}" />								
 			</p:column>
-			<p:column sortBy="#{chargeLineNode.cmItem.extensionCode}" style="width:20%;">
-				<f:facet name="header" style="white-space:normal;width:8%;">
+			<p:column sortBy="#{chargeLineNode.cmItem.extensionCode}" style="width:25%;">
+				<f:facet name="header" style="white-space:normal;">
 					<h:outputText value="#{lbl['lbl.fl.item.details']}" style="text-align:center;"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.details']}"/>
 				</f:facet>
