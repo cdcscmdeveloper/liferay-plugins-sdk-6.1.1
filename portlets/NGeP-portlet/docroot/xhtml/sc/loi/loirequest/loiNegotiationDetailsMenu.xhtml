@@ -11,6 +11,9 @@
 			<h:outputText value="#{lbl['lbl.sc.loiloa.nego.loc']}" />
 			<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.nego.loc.tooltip']}" />
 		</f:facet>
+		
+	   <ui:param name="delNegoLocBtnId" value="delNegoLocId" />
+       <ui:param name="isTermLocRequired" value="#{param[p:component(delNegoLocBtnId)]==null}" />
 		<p:dataTable id="negoloctbl" var="negoloc"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoLocations}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -37,7 +40,7 @@
 						<h:outputText value="#{lbl['lbl.sc.location']}"/>
 				</f:facet>
 				<p:inputText value="#{negoloc.negoLocation}" id="negLocId" label="#{lbl['lbl.sc.location']}" maxlength="255"
-				size="36" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}">
+				size="36" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected and isTermLocRequired}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this" />
 				</p:inputText>
@@ -52,7 +55,7 @@
 				
 				<ac:dateTime id="date"
 			      mindate="#{DateUtils.getCurrentDate()}"
-			      disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}"
+			      disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected and isTermLocRequired}"
 			      label="#{lbl['lbl.sc.date']}"
 			      value="#{negoloc.negoDate}"
 			      update="@([id$=date])"
@@ -80,7 +83,7 @@
 				update="negoloctbl"
 				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" id="delNegoLocId"
 			disabled="#{lOIDetailBackingBean.managedBean.readOnly or lOIDetailBackingBean.deleteselectedList(lOIDetailBackingBean.managedBean.scLoi.scNegoLocations)}"
 				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 				process="@this negoloctbl" partialSubmit="true"
