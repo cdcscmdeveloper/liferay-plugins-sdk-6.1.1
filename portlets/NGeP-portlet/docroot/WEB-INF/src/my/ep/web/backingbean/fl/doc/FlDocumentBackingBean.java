@@ -688,7 +688,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveStopInstruction(flReqDTO);
 			StopInstrBackingBean siBB = new StopInstrBackingBean();
 			siBB.getManagedBean().setSelectedTabIndex(0);
-			siBB.getManagedBean().setHyperLinkPage(false);
 			siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 			siBB.getManagedBean().setButtonVal(buttonVal);
 			siBB.getManagedBean().setBackToDocument(null);
