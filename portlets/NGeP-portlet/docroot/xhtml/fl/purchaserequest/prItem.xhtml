@@ -235,11 +235,11 @@
 				<tr>
 					<td width="120"><p:outputLabel value="#{lbl['lbl.fl.country']}" /> <h:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td width="255"><p:selectOneMenu id="manCountry"
+					<td width="276"><p:selectOneMenu id="manCountry"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.country']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmCountry.countryId}"
-							style="width: 255px;margin-bottom: 5px;">
+							style="width: 276px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="countryList"
 								value="#{purchaseRequestBackingBean.managedBean.countryList}"
@@ -272,7 +272,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="address1" label="#{lbl['lbl.fl.address']}"
-							maxlength="255" size="37" 
+							maxlength="255" size="38" 
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address1}"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></td>
@@ -296,7 +296,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="" /></td>
-					<td><p:inputText maxlength="255" size="37" 
+					<td><p:inputText maxlength="255" size="38" 
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address2}"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td></td>
@@ -321,7 +321,7 @@
 				</tr>			
 				<tr>
 					<td><p:outputLabel value="" /></td>
-					<td><p:inputText maxlength="255" size="37" 
+					<td><p:inputText maxlength="255" size="38" 
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address3}"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td></td>
@@ -341,7 +341,7 @@
 				</tr>		
 				<tr>
 					<td><p:outputLabel value="" /></td>
-					<td><p:inputText maxlength="255" size="37"
+					<td><p:inputText maxlength="255" size="38"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address4}"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></td>
 					<td></td>
@@ -361,7 +361,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="contactPerson" 
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="85" size="32"
+							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="85" size="34"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactPerson}"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"></p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person']}"/>
@@ -386,7 +386,7 @@
 							styleClass="mandatory" /></td>
 					<td><p:inputText id="email"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.email']}" maxlength="80" size="32"
+							label="#{lbl['lbl.fl.email']}" maxlength="80" size="34"
 							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactEmail}"
 							validatorMessage="#{lbl['lbl.fl.email.msg']}"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex disabled="#{purchaseRequestBackingBean.managedBean.emailValidate}"
@@ -416,7 +416,7 @@
 							number="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactFaxNo}"
 							validatorMessage="#{lbl['lbl.fl.faxno']} - #{lbl['lbl.fl.invalidNo']}" /></td>
 					<td></td>
-				</tr>
+				</tr> 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 					<td class="tdContent"><ac:phone id="mobileNo" isMobile="true" hideTelco="true"
