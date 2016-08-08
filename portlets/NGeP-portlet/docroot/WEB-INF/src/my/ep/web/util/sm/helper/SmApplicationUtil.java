@@ -2597,7 +2597,9 @@ public class SmApplicationUtil {
 		for (SmApplSupportDoc doc : managedBean.getSmAppl()
 				.getSmApplSupportDocs()) {
 			if (doc.getVerifiedFlg() == null
-					&& !EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
+					&& !EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())
+					&& !StringUtils.isBlank(doc.getSmApplDocFiles().get(0)
+							.getFileName())) {
 				throw new EpException(MessageConst.ERROR_722559);
 			}
 		}
