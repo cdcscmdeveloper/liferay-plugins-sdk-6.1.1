@@ -46,7 +46,7 @@
 				<td width="10%"><p:outputLabel
 						value="#{lbl['lbl.bpm.status']} :" /></td>
 				<td width="40%"><p:selectOneMenu id="docStatusGroup"
-						style="width: 200px;" disabled="#{bpmTasklistBackingBean.managedBean.docTypeGroup==''}"
+						style="width: 200px;" disabled="#{bpmTasklistBackingBean.managedBean.docTypeGroup == null || bpmTasklistBackingBean.managedBean.docTypeGroup==''}"
 						value="#{bpmTasklistBackingBean.managedBean.docStatusGroup}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 						<f:selectItems

@@ -49,7 +49,7 @@
 
 				<td width="10%"><p:outputLabel
 						value="#{lbl['lbl.bpm.status']} :" /></td>
-				<td width="40%"><p:selectOneMenu id="docStatus" style="width: 200px;" disabled="#{bpmTasklistBackingBean.managedBean.docType ==''}"
+				<td width="40%"><p:selectOneMenu id="docStatus" style="width: 200px;" disabled="#{bpmTasklistBackingBean.managedBean.docType == null || bpmTasklistBackingBean.managedBean.docType ==''}"
 						value="#{bpmTasklistBackingBean.managedBean.docStatus}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 						<f:selectItems
