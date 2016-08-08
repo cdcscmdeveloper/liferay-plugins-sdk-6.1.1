@@ -38,7 +38,7 @@
 	        <f:attribute name="labelName" value="#{cc.attrs.label}" />
 		</p:inputText>	
 		&#160;
-		<p:graphicImage id="#{phonePanelId}teleno"	value="/css/images/design/tooltips.png" /> 
+		<p:graphicImage id="#{phonePanelId}teleno"	value="/css/images/design/ico-tooltips.png" /> 
 		<p:tooltip	id="#{phonePanelId}tfno" for="#{phonePanelId}teleno">
 			<p:outputLabel escape="false" value="#{cc.attrs.isMobile ? lbl['tt.sm.registration.user.mobileno'] : lbl['tt.sm.registration.company.telephoneno']}"  />
 		</p:tooltip>
@@ -49,7 +49,7 @@
 			<f:selectItems value="#{applicationBean.telcoItems}" />
 			<p:ajax process="@this" event="change" update="@this" partialSubmit="true"/>
 		</p:selectOneMenu>
-		<p:graphicImage id="#{phonePanelId}telco"	value="/css/images/design/tooltips.png" rendered="#{cc.attrs.isMobile and !cc.attrs.hideTelco}" /> 
+		<p:graphicImage id="#{phonePanelId}telco"	value="/css/images/design/ico-tooltips.png" rendered="#{cc.attrs.isMobile and !cc.attrs.hideTelco}" /> 
 		<p:tooltip	id="#{phonePanelId}tftelco" for="#{phonePanelId}telco">
 			<table><tr><td width="300px">
 			<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.company.telco']}" />
