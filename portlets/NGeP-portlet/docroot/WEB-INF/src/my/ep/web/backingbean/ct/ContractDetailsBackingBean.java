@@ -862,7 +862,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						}		
 	
 						// Validation for schedule
-						if(ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						if(ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+								&& ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 								if (ctBB.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
 									ctBB.getManagedBean().getContractVer().setCtProgressivePayments(null);
 								} else {
