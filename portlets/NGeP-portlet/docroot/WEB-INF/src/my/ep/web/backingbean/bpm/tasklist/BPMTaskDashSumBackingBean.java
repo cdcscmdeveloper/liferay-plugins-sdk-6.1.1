@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.util.List;
 
@@ -15,18 +17,27 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cc.dashsummary.IDashSummarySO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.cc.dashsummary.BpmTaskStatusDTO;
 import my.ep.dto.cc.dashsummary.BpmTaskSummaryDTO;
 import my.ep.dto.cc.dashsummary.DashSummaryReqDTO;
 import my.ep.dto.cc.dashsummary.DashSummaryResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskDashSumManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.component.submenu.Submenu;
+import org.primefaces.model.DefaultMenuModel;
+import org.primefaces.model.MenuModel;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -49,10 +60,14 @@ public class BPMTaskDashSumBackingBean extends
 	private long pendingPublishedItemsNum;
 	private long rejectedItemsNum;
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
-
+	private MenuModel model;
+	
+    
 	public BPMTaskDashSumBackingBean() {
 		super();
 		createTaskBarModel();
+		model = new DefaultMenuModel();
+		createMenu();
 	}
 
 	private void createTaskBarModel() {
@@ -424,5 +439,49 @@ public class BPMTaskDashSumBackingBean extends
 			return "";
 		}
 	}
-
+	
+    public void createMenu(){
+        
+    	List<BpmTaskSummaryDTO> list = this.getDashboardSummary();
+		
+		if (CollectionUtils.isNotEmpty(list)) {
+				
+			Map<Long,BpmTaskSummaryDTO> zoneMap = new HashMap<Long,BpmTaskSummaryDTO>();
+			
+			if (CollectionUtils.isNotEmpty(list)) {
+				
+				for (BpmTaskSummaryDTO taskSummary : list) {
+					
+					String subMenuTitle = this.getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,taskSummary.getDocTypeId());
+				
+					Submenu submenu = new Submenu();
+				    submenu.setLabel(subMenuTitle);
+				    
+					for (BpmTaskStatusDTO bpmTaskStatusDTO : taskSummary.getBpmTaskStatusList()){
+						
+						MenuItem menuItem = new MenuItem();
+						
+						int total = bpmTaskStatusDTO.getTotal();
+					
+						String applicationStatus = this.applicationStatus(Integer.parseInt(bpmTaskStatusDTO.getStatusId()));
+			
+						menuItem.setValue(total + " " + applicationStatus);
+						menuItem.setTransient(true);
+						menuItem.setPartialSubmit(true);
+						menuItem.setProcess("@this");
+						menuItem.setUpdate("@this");
+						menuItem.setOnstart("blockWidget.show();");
+					
+						submenu.getChildren().add(menuItem);
+					}
+					
+					model.addSubmenu(submenu);
+				}
+			}
+		}
+    }
+ 
+    public MenuModel getModel() {
+        return model;
+    }
 }
