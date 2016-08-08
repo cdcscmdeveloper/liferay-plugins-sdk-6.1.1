@@ -211,6 +211,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private boolean hyperLinkPage = false;
 	
 	private List <FlDeliveryAddress>selectedDeliveryAddressList;
+	
+	private boolean orderDisabledForSdCheck = false;
     
 	/**
 	 * Gets the item selected for cal.
@@ -1280,6 +1282,18 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.gfmasErrorDesc = gfmasErrorDesc;
 	}
 
-	
+	/**
+	 * @return the orderDisabledForSdCheck
+	 */
+	public boolean isOrderDisabledForSdCheck() {
+		return orderDisabledForSdCheck;
+	}
+
+	/**
+	 * @param orderDisabledForSdCheck the orderDisabledForSdCheck to set
+	 */
+	public void setOrderDisabledForSdCheck(boolean orderDisabledForSdCheck) {
+		this.orderDisabledForSdCheck = orderDisabledForSdCheck;
+	}
 	
 }

@@ -649,6 +649,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		String orderId = originalServletRequest.getParameter("orderId");
+		FacesScopes facesScopes = new FacesScopes();
+		reqDTO.setPmUser(facesScopes.getUserSessionBean());
+		IFulfilmentOrderSO fulfilmentOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		if(orderId != null){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlOrderId(Long.parseLong(orderId));
@@ -709,9 +712,24 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				
 				
 		}else{
+			getManagedBean().setOrderDisabledForSdCheck(false);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
+			}
+			reqDTO.setFulfilmentOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+			FulfilmentResDTO siResDTO = fulfilmentOrderSO.retrieveStopInstructionByOrder(reqDTO);
+			if(siResDTO.getFlStopInstr()!=null) {
+				
+				String messageId = MessageConst.INFO_745081;
+				if(siResDTO.getFlStopInstr().getFlWorkflowStatus().getPmStatus().getStatusId().longValue()==FulfilmentStatusConst.SD_PENDING_SUBMISSION.longValue()){
+					getManagedBean().setOrderDisabledForSdCheck(true);
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getManagedBean().getFulfilmentOrder().getDocType(),reqDTO.getPmUser().getUserName()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+				}
 			}
 		}
 		
