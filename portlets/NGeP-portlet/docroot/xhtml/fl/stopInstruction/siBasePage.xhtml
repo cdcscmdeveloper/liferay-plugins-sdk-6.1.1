@@ -67,7 +67,14 @@
 						rendered="#{stopInstrBB.managedBean.taskId==null}" />
 				</td>
 				<td colspan="4" style="text-align: right">
-				    <ui:repeat var="bpmAction" value="#{stopInstrBB.managedBean.outComes}">
+					<c:if test='#{stopInstrBB.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
+					<p:commandButton
+							styleClass="ui-button"  value="#{lbl['lbl.btn.save']}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form"  
+							action="#{stopInstrBB.saveStopInstruction(BpmOutcomeConstant.bpmSave)}" />
+				</c:if>		
+					<ui:repeat var="bpmAction" value="#{stopInstrBB.managedBean.outComes}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"

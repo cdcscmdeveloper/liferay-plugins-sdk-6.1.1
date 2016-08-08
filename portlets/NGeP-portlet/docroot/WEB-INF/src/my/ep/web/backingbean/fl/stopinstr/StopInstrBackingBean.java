@@ -165,6 +165,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				}
 				
 			}
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				messageId = MessageConst.INFO_700004;
+			}	
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(messageId, 
@@ -173,6 +176,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		} else {
 			throw new EpException(MessageConst.ERROR_700020);
 		}
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 		renewSesionObject();
 		/*if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 			Map<String, String> paramMap = new HashMap<String, String>();
@@ -185,6 +189,56 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
 		}*/
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}else{
+			reqDTO.setFlOrderId(resDTO.getFlStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
+			reqDTO.setStopRequestId(resDTO.getFlStopInstr().getStopInstrId());
+			resDTO=getFulfilmentOrderSO().retrieveStopInstruction(reqDTO);
+			setStopInstrFields(resDTO);
+			return null;
+		}
+		
+	}
+
+	public void setStopInstrFields(FulfilmentResDTO resDTO) {
+		// TODO Auto-generated method stub
+		getManagedBean().setSelectedTabIndex(0);
+		getManagedBean().setStopInstr(resDTO.getFlStopInstr());
+		populateChargeLineData();
+		System.out.println("getTaskName: "+this.getManagedBean().getTaskName());
+		/*if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
+			checkCogstr();
+		}*/
+		
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		flBB.getManagedBean().setHideRemarks(false);
+		if(resDTO.getFlStopInstr().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_STOP_DELIVERY, resDTO.getFlStopInstr().getFlRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+		} else {
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_STOP_DELIVERY, resDTO.getFlStopInstr().getFlRequest().getCtContract().getContractNo());
+		}
+		flBB.initializeRemarkAndAttachement(resDTO.getFlStopInstr().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+		/*if(stopFlData.getErrorId() != null && stopFlData.getErrorId() > 0){
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			getManagedBean().setGfmasError(true);
+			FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+			errReq.setErrorId(stopFlData.getErrorId());
+			FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+			getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+			getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+			getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+		}*/
+		
+		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+		gstReqDTO.setBranchCode(resDTO.getFlStopInstr().getFlRequest().getFlSupplierDtl().getBranchCode());
+		gstReqDTO.setSupplierId(resDTO.getFlStopInstr().getFlRequest().getSmSupplier().getSupplierId());
+		SupplierGstResDTO gstResDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
+		if(gstResDTO.getSmGstSupplier() != null){
+			getManagedBean().getStopInstr().setGstEffectiveDate(gstResDTO.getSmGstSupplier().getGstEffDate());
+			getManagedBean().getStopInstr().setGstDeclaredDate(gstResDTO.getSmGstSupplier().getGstDeclaredDate());
+			getManagedBean().getStopInstr().setGstRegNo(gstResDTO.getSmGstSupplier().getGstRegNo());
+		}
+		
 	}
 
 	/**
