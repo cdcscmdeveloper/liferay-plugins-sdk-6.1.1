@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
@@ -46,6 +47,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -56,6 +58,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.BidStatusConst;
 import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
@@ -74,6 +77,8 @@ import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sc.bidding.BiddingReqDTO;
+import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.document.QTDocumentReqDTO;
@@ -88,6 +93,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -97,6 +103,7 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -116,6 +123,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -137,6 +145,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
@@ -175,8 +184,10 @@ import my.ep.web.util.sc.helper.QTFiledMapper;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.quartz.SchedulerException;
@@ -5030,6 +5041,37 @@ public class QTDetailBackingBean extends
 	}
 	
 	/**
+	 * is Allow QT To cancel
+	 * 
+	 * @param scQt
+	 * 		the ScQt instance
+	 * 
+	 * @return
+	 */
+	public void checkIsQTAllowCancel() {
+		debugLogger("checkIsQTAllowCancel");
+		ScQt scQt = this.getManagedBean().getQt();
+		Long statusId = scQt.getQtStatus().getStatusId();
+		boolean isQTAwarded = false;
+		boolean isBiddingActive = false;
+		if(statusId.equals(QTStatusConst.QT_PENDING_LOI) || statusId.equals(QTStatusConst.QT_PENDING_LOA) ||
+				statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION) || statusId.equals(QTStatusConst.QT_RE_FINALIZATION)) {
+			isQTAwarded = checkIsQTAwarded(scQt);
+			if(statusId.equals(QTStatusConst.QT_PENDING_LOI)) {
+				isBiddingActive = checkIsBiddingActive(scQt);
+			} 
+		}
+		
+		if(isQTAwarded) {
+			throw new EpException(MessageConst.ERROR_760425);
+		} else if(isBiddingActive) {
+			throw new EpException(MessageConst.ERROR_76042);
+		} else {
+			RequestContext.getCurrentInstance().execute("cancelQTDlg.show()");
+		}
+	}
+	
+	/**
 	 * Trigger to close the supplier prepare proposal.
 	 * 
 	 * @param qtId
@@ -5177,6 +5219,78 @@ public class QTDetailBackingBean extends
 			if (isDO) {
 				approvers.remove(index);
 			}
+		}
+	}
+	
+	private boolean checkIsQTAwarded(ScQt scQt) {
+		IQTSuppFinalizationSO suppFinalizationSO;
+		try {
+			boolean isQTAwarded = false;
+			suppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+			
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			
+			List<ScQtRecommendDtl> recommendDtls = suppFinalizationSO.getRecommendDtlByQTandSupplier(reqDTO).
+					getScQtRecommendDtlList();
+			for (ScQtRecommendDtl recommendDtl 
+					: recommendDtls) {
+				Long recommendDtlId = recommendDtl.getRecommendDtlId();
+
+				// If LOI awarded and no decision made on LOA (or) 
+				// if LOI awarded and LOA awarded,
+				// then consider the item as awarded
+				if (recommendDtlId != null) {
+					if ( (BooleanUtils.isTrue(
+							recommendDtl.getLoiAwarded()) && 
+							recommendDtl.getLoaAwarded() == null && 
+							recommendDtl.getRecordStatusFlg().equals(
+									DbValueConst.RECORD_STATUS_ACTIVE)) ||
+											(BooleanUtils.isTrue(
+													recommendDtl.getLoiAwarded()) && 
+													BooleanUtils.isTrue(
+															recommendDtl.getLoaAwarded())) ) {
+						isQTAwarded = true;
+					}
+				}
+			}
+			return isQTAwarded;
+		} finally {
+			suppFinalizationSO = null;
+		}
+	}
+	
+	private boolean checkIsBiddingActive(ScQt scQt) {
+		IBiddingSO biddingSO;
+		try {
+			boolean isBiddingActive = false;
+			biddingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+			
+			BiddingReqDTO reqDTO = new BiddingReqDTO();	
+			
+			List<Long> statusIds = new ArrayList<Long>();
+			statusIds.add(BidStatusConst.BID_COMPLETED);
+			statusIds.add(BidStatusConst.BID_CANCELLED);
+			
+			ISearchBean<ScBidSchedule> bidSchSearchBean = new SearchBean<ScBidSchedule>();
+			bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"scBid.docType", SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_QUOTATION));
+			bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"scBid.docId", SearchOperator.OPERATOR_EQUALS.value(), scQt.getQtId()));
+			bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"pmStatus.statusId", SearchOperator.OPERATOR_NOT_IN.value(), statusIds));
+			reqDTO.setBidSchSearchBean(bidSchSearchBean);
+
+			BiddingResDTO resDTO = biddingSO.searchBiddingScheduleList(reqDTO);
+			List<ScBidSchedule> list = resDTO.getBidSchResultBean().getResultList();
+			if(list.size() > 0 ) {
+				isBiddingActive = true;
+			}
+			return isBiddingActive;
+		} finally {
+			biddingSO = null;
 		}
 	}
 	
