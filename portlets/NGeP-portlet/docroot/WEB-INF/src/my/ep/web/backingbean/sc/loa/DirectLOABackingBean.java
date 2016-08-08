@@ -943,18 +943,12 @@ public class DirectLOABackingBean extends
 					log.info("found hq address");
 
 					scLoa.setSupplierBranch("HQ");
-					scLoa.setSupplierAddress(smCompanyAddress.getSmAddress());
 					
 					ScAddress supplierAddress = createOrUpdateScAddress(
-														scLoa.getScSupplierAddress(),
+														scLoa.getSupplierAddress(),
 														smCompanyAddress.getSmAddress(), 
 														supplierHQPersonnel, smCompanyBasic);
-					scLoa.setScSupplierAddress(supplierAddress);					
-					scLoa.setSupplierContact(supplierHQPersonnel.getName());
-					scLoa.setSupplierPhoneNo(smCompanyBasic.getPhoneFull());
-					scLoa.setSupplierFaxNo(smCompanyBasic.getFaxFull());
-					scLoa.setSupplierMobNo(supplierHQPersonnel.getMobileFull());
-					scLoa.setSupplierEmail(supplierHQPersonnel.getEmail());
+					scLoa.setSupplierAddress(supplierAddress);
 					// Get gst info
 					SupplierGstResDTO resDTO = getGSTInfo(supplierId, null);
 					setGSTInfo(resDTO, scLoa);
@@ -971,28 +965,21 @@ public class DirectLOABackingBean extends
 					log.info("found branch address");
 
 					scLoa.setSupplierBranch(supplierBranch.getBranchName());
-					scLoa.setSupplierAddress(supplierBranch.getSmAddress());
 					
 					SmCompanyBasic smCompanyBasic = null;
 					SmPersonnel smPersonnel = supplierBranch.getSmPersonnel();
 					if (smPersonnel != null) {
-						scLoa.setSupplierContact(smPersonnel.getName());
-						scLoa.setSupplierMobNo(smPersonnel.getMobileFull());
-						scLoa.setSupplierEmail(smPersonnel.getEmail());
-						
 						if (smPersonnel.getSmAppl() != null) {
 							smCompanyBasic = smPersonnel.getSmAppl()
 												.getSmCompanyBasic();
 						}
 					}
 					ScAddress supplierAddress = createOrUpdateScAddress(
-													scLoa.getScSupplierAddress(),
+													scLoa.getSupplierAddress(),
 													supplierBranch.getSmAddress(), 
 													supplierBranch.getSmPersonnel(), 
 													smCompanyBasic);
-					scLoa.setScSupplierAddress(supplierAddress);					
-					scLoa.setSupplierPhoneNo(supplierBranch.getPhoneFull());
-					scLoa.setSupplierFaxNo(supplierBranch.getFaxFull());
+					scLoa.setSupplierAddress(supplierAddress);
 					
 					// Get gst info
 					SupplierGstResDTO resDTO = getGSTInfo(supplierId,supplierBranch.getBranchCode());
@@ -4644,32 +4631,40 @@ public class DirectLOABackingBean extends
 
 		context.put("supplierName", scLoiLoa.getSupplierName());
 		String supplierAddress = "";
+		String supplierEmail = "";
+		String supplierPhoneNo = "";
+		String supplierFaxNo = "";
+		String supplierMobNo = "";
 		if (scLoa.getSupplierAddress() != null) {
+			supplierEmail = scLoa.getSupplierAddress().getContactEmail();
+			if (supplierEmail == null) {
+				supplierEmail = "";
+			}
+			
+			supplierPhoneNo = scLoa.getSupplierAddress().getPhoneFull();
+			if (supplierPhoneNo == null) {
+				supplierPhoneNo = "";
+			}
+			
+			supplierFaxNo = scLoa.getSupplierAddress().getFaxFull();
+			if (supplierFaxNo == null) {
+				supplierFaxNo = "";
+			}
+			
+			supplierMobNo = scLoa.getSupplierAddress().getContactMobileFull();
+			if (supplierMobNo == null) {
+				supplierMobNo = "";
+			}
+			
 			supplierAddress = getFullAddress(scLoa.getSupplierAddress());
 			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
 			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 		}
 		context.put("supplierAddress", supplierAddress);
-		String supplierPhoneNo = scLoa.getSupplierPhoneNo();
-		if (supplierPhoneNo == null) {
-			supplierPhoneNo = "";
-		}
-		context.put("supplierPhoneNo", supplierPhoneNo);
-		String supplierFaxNo = scLoa.getSupplierFaxNo();
-		if (supplierFaxNo == null) {
-			supplierFaxNo = "";
-		}
-		context.put("supplierFaxNo", supplierFaxNo);
-		String supplierMobNo = scLoa.getSupplierMobNo();
-		if (supplierMobNo == null) {
-			supplierMobNo = "";
-		}
-		context.put("supplierMobNo", supplierMobNo);
-		String supplierEmail = scLoa.getSupplierEmail();
-		if (supplierEmail == null) {
-			supplierEmail = "";
-		}
 		context.put("supplierEmail", supplierEmail);
+		context.put("supplierPhoneNo", supplierPhoneNo);
+		context.put("supplierFaxNo", supplierFaxNo);
+		context.put("supplierMobNo", supplierMobNo);
 
 		String procurementMode = "";
 		ParameterReqDTO reqDTO = new ParameterReqDTO();

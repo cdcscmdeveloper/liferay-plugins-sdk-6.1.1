@@ -73,7 +73,7 @@
 			<td rowspan="3">
 				<p:inputTextarea id="suppAddr"
 					rows="5"
-					value="#{lOIDetailBackingBean.getFullAddress(lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress)}"
+					value="#{lOIDetailBackingBean.getFullAddress(lOIDetailBackingBean.managedBean.scLoi.supplierAddress)}"
 					style=" margin-bottom:5px; width: 325px;" disabled="true" />
 			</td>
 			<td>
@@ -81,7 +81,7 @@
 			</td>
 			<td>
 				<p:inputText id="suppPhoneNo" size="30"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierPhoneNo}"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierAddress.phoneFull}"
 					disabled="true" />
 			</td>
 		</tr>
@@ -91,7 +91,7 @@
 			</td>
 			<td>
 				<p:inputText id="suppFaxNo" size="30"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierFaxNo}"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierAddress.faxFull}"
 					disabled="true" />
 			</td>
 		</tr>
@@ -101,7 +101,7 @@
 			</td>
 			<td>
 				<p:inputText id="suppMobNo" size="30"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierMobNo}"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierAddress.contactMobileFull}"
 					disabled="true" />
 			</td>
 		</tr>
@@ -111,7 +111,7 @@
 			</td>
 			<td>
 				<p:inputText id="suppContact" size="50"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierContact}"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierAddress.contactPerson}"
 					disabled="true" />
 			</td>
 			<td>
@@ -119,7 +119,7 @@
 			</td>
 			<td>
 				<p:inputText id="suppEmail" size="30" style=" margin-bottom:5px;"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierEmail}"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierAddress.contactEmail}"
 					disabled="true" />
 			</td>
 		</tr>

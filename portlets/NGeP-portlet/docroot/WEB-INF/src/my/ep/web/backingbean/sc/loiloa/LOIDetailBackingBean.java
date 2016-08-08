@@ -1711,19 +1711,12 @@ public class LOIDetailBackingBean extends
 						log.info("found hq address");
 
 						scLoi.setSupplierBranch(supplierBranchAsHQ);
-						scLoi.setSupplierAddress(smCompanyAddress
-								.getSmAddress());
 						
 						ScAddress supplierAddress = createOrUpdateScAddress(
-														scLoi.getScSupplierAddress(),
+														scLoi.getSupplierAddress(),
 														smCompanyAddress.getSmAddress(), 
 														supplierHQPersonnel, smCompanyBasic);
-						scLoi.setScSupplierAddress(supplierAddress);
-						scLoi.setSupplierContact(supplierHQPersonnel.getName());
-						scLoi.setSupplierPhoneNo(smCompanyBasic.getPhoneFull());
-						scLoi.setSupplierFaxNo(smCompanyBasic.getFaxFull());
-						scLoi.setSupplierMobNo(supplierHQPersonnel.getMobileFull());
-						scLoi.setSupplierEmail(supplierHQPersonnel.getEmail());
+						scLoi.setSupplierAddress(supplierAddress);
 
 						break;
 					}
@@ -1739,27 +1732,20 @@ public class LOIDetailBackingBean extends
 					log.info("found branch address");
 
 					scLoi.setSupplierBranch(supplierBranch.getBranchName());
-					scLoi.setSupplierAddress(supplierBranch.getSmAddress());
 					
 					SmCompanyBasic smCompanyBasic = null;
 					SmPersonnel smPersonnel = supplierBranch.getSmPersonnel();
-					if (smPersonnel != null) {
-						scLoi.setSupplierContact(smPersonnel.getName());
-						scLoi.setSupplierMobNo(smPersonnel.getMobileFull());
-						scLoi.setSupplierEmail(smPersonnel.getEmail());
-						
+					if (smPersonnel != null) {						
 						if (smPersonnel.getSmAppl() != null) {
 							smCompanyBasic = smPersonnel.getSmAppl()
 												.getSmCompanyBasic();
 						}
 					}					
 					ScAddress supplierAddress = createOrUpdateScAddress(
-													scLoi.getScSupplierAddress(),
+													scLoi.getSupplierAddress(),
 													supplierBranch.getSmAddress(), 
 													smPersonnel, smCompanyBasic);
-					scLoi.setScSupplierAddress(supplierAddress);
-					scLoi.setSupplierPhoneNo(supplierBranch.getPhoneFull());
-					scLoi.setSupplierFaxNo(supplierBranch.getFaxFull());
+					scLoi.setSupplierAddress(supplierAddress);
 
 					break;
 				}
