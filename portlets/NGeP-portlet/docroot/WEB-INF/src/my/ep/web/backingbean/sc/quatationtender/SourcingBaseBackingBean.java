@@ -2393,21 +2393,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			scAddress.setMapLatitude(smAddress.getMapLatitude());
 			scAddress.setMapLongitude(smAddress.getMapLongitude());
 			
-			if (smPersonnel != null) {
-				scAddress.setContactEmail(smPersonnel.getEmail());
-				scAddress.setContactFaxArea(smPersonnel.getFaxArea());
-				scAddress.setContactFaxCountry(smPersonnel.getFaxCountry());
-				scAddress.setContactMobileArea(smPersonnel.getMobileArea());
-				scAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
-				scAddress.setContactMobileNo(smPersonnel.getMobileNo());
-				scAddress.setContactPerson(smPersonnel.getName());
-				scAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
-				scAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
-			}
-			if (smCompanyBasic != null) {
-				scAddress.setContactFaxNo(smCompanyBasic.getFaxNo());
-				scAddress.setContactPhoneNo(smCompanyBasic.getPhoneNo());	
-			}
+			if (smPersonnel == null) {
+				// to reset all contact person details as null.
+				smPersonnel = new SmPersonnel();
+			} 
+			scAddress.setContactEmail(smPersonnel.getEmail());
+			scAddress.setContactFaxArea(smPersonnel.getFaxArea());
+			scAddress.setContactFaxCountry(smPersonnel.getFaxCountry());
+			scAddress.setContactFaxNo(smPersonnel.getFaxNo());
+			scAddress.setContactMobileArea(smPersonnel.getMobileArea());
+			scAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
+			scAddress.setContactMobileNo(smPersonnel.getMobileNo());
+			scAddress.setContactPerson(smPersonnel.getName());
+			scAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
+			scAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
+			scAddress.setContactPhoneNo(smPersonnel.getPhoneNo());
+			
+			if (smCompanyBasic == null) {
+				// to reset all company contact details as null.
+				smCompanyBasic = new SmCompanyBasic();
+			} 
+			scAddress.setFaxArea(smCompanyBasic.getFaxArea());
+			scAddress.setFaxCountry(smCompanyBasic.getFaxCountry());
+			scAddress.setFaxNo(smCompanyBasic.getFaxNo());
+			scAddress.setPhoneArea(smCompanyBasic.getPhoneArea());
+			scAddress.setPhoneCountry(smCompanyBasic.getPhoneCountry());
+			scAddress.setPhoneNo(smCompanyBasic.getPhoneNo());
 		}
 		
 		return scAddress;
