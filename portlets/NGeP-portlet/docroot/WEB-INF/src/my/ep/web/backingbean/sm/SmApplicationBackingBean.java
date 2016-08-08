@@ -8271,6 +8271,10 @@ public class SmApplicationBackingBean extends
 							getManagedBean().getSmAppl().getApplId(),
 							ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY,
 							getManagedBean().getOverLappedCategoryRemarks());
+					SmApplicationUtil.manageAndSaveNewSmRemarks(
+							getManagedBean().getSmAppl().getApplId(),
+							ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
+							getManagedBean().getApplnOverLapRemarks());
 				}
 
 			}
