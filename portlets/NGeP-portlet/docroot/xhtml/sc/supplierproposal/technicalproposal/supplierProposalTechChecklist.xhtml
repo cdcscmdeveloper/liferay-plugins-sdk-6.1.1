@@ -45,8 +45,11 @@
 
 			<p:column style="white-space : normal">
 				<h:outputText
-					rendered="#{((techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'O') or (techList.scQtCheckList.definationType.parameterCode eq 'NA'))}"
+					rendered="#{(techList.scQtCheckList.definationType.parameterCode eq 'NA')}"
 					value="#{lbl['lbl.sc.attachment.msg']}" />
+				<h:outputText
+					rendered="#{(techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'O')}"
+					value="#{lbl['lbl.sc.attachment.msg1']}" />
 				<h:outputText
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'V'}"
 					value="#{lbl['lbl.sc.attachment.view.msg']}" />
