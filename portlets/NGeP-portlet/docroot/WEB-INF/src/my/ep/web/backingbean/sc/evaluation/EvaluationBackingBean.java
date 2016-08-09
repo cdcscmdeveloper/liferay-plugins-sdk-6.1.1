@@ -7836,7 +7836,7 @@ public class EvaluationBackingBean extends
 													.getMessage(
 															getMessgeConstant(outCome),
 															new String[] {
-																getMessageCommon("lbl.sc.prepare.evaluation"),
+																getMessageCommon("lbl.sc.prepare.secretary.evaluation"),
 																	qtCommittee
 																			.getScQt()
 																			.getQtNo() },
