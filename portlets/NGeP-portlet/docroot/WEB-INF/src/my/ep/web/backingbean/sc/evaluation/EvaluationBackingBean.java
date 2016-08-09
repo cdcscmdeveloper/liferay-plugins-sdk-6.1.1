@@ -11188,12 +11188,18 @@ public class EvaluationBackingBean extends
 					&& !currentDate
 							.equals(currendate.format(this.getManagedBean()
 									.getScQt().getSampleClosingDate()))) {
-				this.getManagedBean().setCountDays(1);
+				this.getManagedBean().setCountDays(0);
+				if(this.getManagedBean().getCurrentTime()<12){
+					this.getManagedBean().setCurrentTime(12);
+				}
 			}
 			if (day == 0
 					&& currentDate
 							.equals(currendate.format(this.getManagedBean()
 									.getScQt().getSampleClosingDate()))) {
+				if(this.getManagedBean().getCurrentTime()<12){
+					this.getManagedBean().setCurrentTime(12);
+				}
 				this.getManagedBean().setCountDays(0);
 			}
 		} finally {
