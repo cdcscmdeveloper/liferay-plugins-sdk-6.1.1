@@ -493,6 +493,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		log.info("Key1>>>>" + key1);
 		if (skey.equals(key1)) {
 				if(localCounter == 1){
+					
+				session.removeAttribute("paymentBpmTaskId");
+				session.removeAttribute("paymentBpmPojo");
+				
 				//if(paymentTaskId != null && paymentBpmPojo != null){
 				log.info("SKey & Key1 Are Match>>>>");
 				IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
@@ -656,8 +660,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		} else {
 			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null);
 		}
-		session.removeAttribute("paymentBpmTaskId");
-		session.removeAttribute("paymentBpmPojo");
+
 		this.renewSesionObject();
 
 		FacesContext fc = FacesContext.getCurrentInstance();
