@@ -1459,7 +1459,10 @@ public class DirectLOABackingBean extends
 				} finally {
 					userSO = null;
 				}
-			}			
+			}	
+			// set fulfillment type as default as "As and When" for Central Contract
+			scLoa.getScQt().setFulfilmentType(getParameterByTypeAndCode(
+					ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
 		}
 
 		contractAgencyChanged();
