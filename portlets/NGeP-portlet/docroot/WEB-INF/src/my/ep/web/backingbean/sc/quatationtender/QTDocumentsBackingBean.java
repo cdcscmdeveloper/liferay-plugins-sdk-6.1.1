@@ -1157,9 +1157,11 @@ public class QTDocumentsBackingBean extends
 				scQtDocReportAttachment.setScQtDocReport(scQtDocReport);
 				scQtDocReportAttachment.setDocNo(scQtDocReport.getScQt()
 						.getQtNo());
-				scQtDocReportAttachment.setPrefixFileName(prefixFileName);
 				if (SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 						.equals(docDefinitionKey)) {
+					StringBuilder fileName = new StringBuilder(prefixFileName)
+							.append(UNDER_SCORE).append(SourcingConstants.DOCNAME_QT_SYARAT_AM);
+					scQtDocReportAttachment.setFileName(fileName.toString());
 					generateSyaratSyaratAmPdfFromVelocity(
 							(ScAttachment) scQtDocReportAttachment,
 							scQtDocReport);
@@ -1190,7 +1192,6 @@ public class QTDocumentsBackingBean extends
 	private void generateSyaratSyaratAmPdfFromVelocity(ScAttachment attachment,
 			ScQtDocReport scQtDocReport) throws Exception {
 		debugLogger("generateSyaratSyaratAmPdfFromVelocity");
-		attachment.setFileName(SourcingConstants.DOCNAME_QT_SYARAT_AM);
 
 		String html = generateSyaratSyaratAmFromVelocity(scQtDocReport,
 				getManagedBean().getQt());
@@ -2044,7 +2045,10 @@ public class QTDocumentsBackingBean extends
 	private void generateSamplesamplesalinankontrakPdfFromVelocity(
 			ScAttachment attachment, ScQt qt, String prefixFileName) throws Exception {
 		debugLogger("generateSamplesamplesalinankontrakPdfFromVelocity");
-		attachment.setFileName(prefixFileName+UNDER_SCORE+"Sampel_Kontrak_Umum.docx");
+		
+		StringBuilder fileName = new StringBuilder(prefixFileName).append(
+				UNDER_SCORE).append(SourcingConstants.DOCNAME_QT_SMPLE_CONTRACT);
+		attachment.setFileName(fileName.toString());
 
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		PmUser createdUser = new FacesScopes().getUserSessionBean();
@@ -2066,7 +2070,7 @@ public class QTDocumentsBackingBean extends
 		theDir.mkdirs();
 
 		AttachmentFormat scFormat = getAttachFormat(attachment);
-		String formatedFileName = scFormat.format(attachment.getFileName(),
+		String formatedFileName = scFormat.format(SourcingConstants.DOCNAME_QT_SMPLE_CONTRACT,
 				attachment.getPrefixFileName());
 
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
