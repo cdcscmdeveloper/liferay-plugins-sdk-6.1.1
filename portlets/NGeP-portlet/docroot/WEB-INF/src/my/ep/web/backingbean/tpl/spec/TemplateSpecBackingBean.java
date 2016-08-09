@@ -1294,7 +1294,7 @@ public class TemplateSpecBackingBean extends
 				.getSelectedSpecQuestion();
 		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE
 				.equals(specQuestion.getTplSpecMaster().getItemTypeCode().getParameterCode());
-		//if(CollectionUtils.isEmpty(specQuestion.getTplSpecAnswers())) {
+		if(CollectionUtils.isEmpty(specQuestion.getTplSpecAnswers())) {
 			String priceType = specQuestion.getClPriceTypeCode()
 					.getParameterCode();
 			TplSpecZone specZone = specQuestion.getTplSpecMaster()
@@ -1350,7 +1350,7 @@ public class TemplateSpecBackingBean extends
 			}
 
 			specQuestion.setTplSpecAnswers(specAnswers);
-		//}
+		}
 			
 	}
 
@@ -1820,7 +1820,7 @@ public class TemplateSpecBackingBean extends
 								.compareTo(specQuestion.getSpecQuestionId()) != 0)) {
 					// Always used the 1st tier quantity unit price to calculate
 					// total amount.
-					if (tplSpecAnswer.getRatePerUom() != null) {
+					if (tplSpecAnswer.getRatePerUom() != null && quantity != null) {
 						totalAmount = totalAmount.add(quantity
 								.multiply(tplSpecAnswer.getRatePerUom()));
 					}
