@@ -7,6 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:param name="isRequire" value="#{!qTDetailBB.managedBean.readOnly}" />
+	<ui:param name="scheduleReadonly"
+		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 	
 	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true"
 		id="scheduleDetalsPublishingClosing">
@@ -195,7 +197,7 @@
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 						mindate="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
 						readonlyInput="true" showOn="button"
-						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" /></td>
+						disabled="#{scheduleReadonly}" /></td>
 			</tr> -->
 		</table>
 	</p:panel>
@@ -213,7 +215,7 @@
 				styleClass="submissionlist">
 
 				<p:column selectionMode="multiple" style="width:2%"
-					disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
+					rendered="#{!scheduleReadonly}" />
 
 				<p:column headerText="#{lbl['lbl.sc.qt.zone.location']}">
 					<h:outputText
@@ -231,7 +233,7 @@
 						style="margin-right:20px;" partialSubmit="true" process="@this"
 						update="@(.sampleSubmitionAddrUpdate)">
 						<h:graphicImage
-							value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+							value="#{CommonUIConstant.imagePathUptoDesign}/#{!scheduleReadonly ? 'edit' : 'ico-view'}.png"
 							styleClass="tasklist_title1" />
 					</p:commandLink>
 				</p:column>
@@ -239,7 +241,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton id="samplesubaddId" styleClass="BtnSpacing"
 					value="#{lbl['lbl.sc.qt.btn.same.address']}"
-					rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
+					rendered="#{!scheduleReadonly}"
 					process="@this,sampleid"
 					action="#{qTScheduleDetailBackingBean.applyAddessToSelectedZonesAction}"
 					update="@(.sampleSubmitionAddrUpdate)" />
@@ -250,7 +252,7 @@
 			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal ne 'true'}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 120px;"><p:outputLabel
+					<td style="width: 235px;"><p:outputLabel
 							value="#{lbl['lbl.sc.qt.address.one']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
@@ -259,9 +261,9 @@
 								<td><p:inputText id="sampleaddress1"
 										required="#{isRequire}"
 										label="#{lbl['lbl.sc.qt.address.one']}"
-										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
+										disabled="#{scheduleReadonly}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.address1}"
-										style="margin-top:5px;" size="30" maxlength="255" /></td>
+										size="30" maxlength="255" /></td>
 								<td><p:message id="sampleaddress1Msg" for="sampleaddress1"
 										display="icon" /></td>
 							</tr>
@@ -271,107 +273,147 @@
 							value="#{lbl['lbl.sc.state']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
 					<td>
-						<table>
-							<tr>
-								<td><p:selectOneMenu id="samplestate1"
-										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-										label="#{lbl['lbl.sc.state']}" required="#{isRequire}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmState.stateId}"
-										style="width: 249px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-											itemValue="" />
-										<f:selectItems var="state"
-											value="#{qTScheduleDetailBackingBean.managedBean.states}"
-											itemLabel="#{state.stateName}" itemValue="#{state.stateId}" />
-										<p:ajax event="change"
-											listener="#{qTScheduleDetailBackingBean.retrievePmDivisions}"
-											update="sampleDivison1, sampledistrict1, samplecity1, samplepost1" />
-									</p:selectOneMenu></td>
-								<td><p:message id="samplestate1Msg" for="samplestate1"
-										display="icon" /></td>
-							</tr>
-						</table>
+						<c:choose>
+							<c:when test="#{!scheduleReadonly}">
+								<table>
+									<tr>
+										<td>
+											<p:selectOneMenu id="samplestate1"
+												label="#{lbl['lbl.sc.state']}" required="#{isRequire}"
+												value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmState.stateId}"
+												style="width: 249px;margin-bottom: 5px;">
+												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+													itemValue="" />
+												<f:selectItems var="state"
+													value="#{qTScheduleDetailBackingBean.managedBean.states}"
+													itemLabel="#{state.stateName}" itemValue="#{state.stateId}" />
+												<p:ajax event="change"
+													listener="#{qTScheduleDetailBackingBean.retrievePmDivisions}"
+													update="sampleDivison1, sampledistrict1, samplecity1, samplepost1" />
+											</p:selectOneMenu></td>
+										<td><p:message id="samplestate1Msg" for="samplestate1"
+												display="icon" /></td>
+									</tr>
+								</table>
+							</c:when>
+							<c:otherwise>
+								<p:inputText id="samplestate1Txt"
+									disabled="true"
+									value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmState.stateName}"
+									style="width:254px;" />
+							</c:otherwise>
+						</c:choose>
 					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.two']}" /></td>
 					<td><p:inputText
-							disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
+							disabled="#{scheduleReadonly}"
 							value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address2}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.division']}" /></td>
-					<td><p:selectOneMenu id="sampleDivison1"
-							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDivision.divisionId}"
-							style="width: 249px;margin-bottom: 5px;"
-							disabled="#{!qTScheduleDetailBackingBean.managedBean.state or qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems var="divisionList"
-								value="#{qTScheduleDetailBackingBean.managedBean.divisionList}"
-								itemValue="#{divisionList.divisionId}"
-								itemLabel="#{divisionList.divisionName}" />
-							<p:ajax event="change"
-								listener="#{qTScheduleDetailBackingBean.retrievePmDistrictList}"
-								update="sampledistrict1" />
-						</p:selectOneMenu></td>
+					<td>
+						<c:choose>
+							<c:when test="#{!scheduleReadonly}">
+								<p:selectOneMenu id="sampleDivison1"
+									value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDivision.divisionId}"
+									style="width: 249px;margin-bottom: 5px;"
+									disabled="#{!qTScheduleDetailBackingBean.managedBean.state}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="divisionList"
+										value="#{qTScheduleDetailBackingBean.managedBean.divisionList}"
+										itemValue="#{divisionList.divisionId}"
+										itemLabel="#{divisionList.divisionName}" />
+									<p:ajax event="change"
+										listener="#{qTScheduleDetailBackingBean.retrievePmDistrictList}"
+										update="sampledistrict1" />
+								</p:selectOneMenu>
+							</c:when>
+							<c:otherwise>
+								<p:inputText id="sampleDivison1Txt"
+									disabled="true"
+									value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDivision.divisionName}"
+									style="width:254px;" />
+							</c:otherwise>
+						</c:choose>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.three']}" /></td>
 					<td><p:inputText
-							disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
+							disabled="#{scheduleReadonly}"
 							value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address3}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
-						<table>
-							<tr>
-								<td><p:selectOneMenu styleClass="samplestate"
-										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-										style="width: 249px;margin-bottom: 5px;" id="sampledistrict1"
-										required="#{isRequire}" label="#{lbl['lbl.sc.district']}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDistrict.districtId}">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-											itemValue="" />
-										<f:selectItems var="district"
-											value="#{qTScheduleDetailBackingBean.managedBean.districts}"
-											itemValue="#{district.districtId}"
-											itemLabel="#{district.districtName}" />
-										<p:ajax event="change"
-											listener="#{qTScheduleDetailBackingBean.retrievePmCityList}"
-											update="@(.sampledistrictCity)" partialSubmit="true" />
-									</p:selectOneMenu></td>
-								<td><p:message id="sampledistrict1Msg"
-										for="sampledistrict1" display="icon" /></td>
-							</tr>
-						</table>
+						<c:choose>
+							<c:when test="#{!scheduleReadonly}">
+								<table>
+									<tr>
+										<td><p:selectOneMenu styleClass="samplestate"
+												style="width: 249px;margin-bottom: 5px;" id="sampledistrict1"
+												required="#{isRequire}" label="#{lbl['lbl.sc.district']}"
+												value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDistrict.districtId}">
+												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+													itemValue="" />
+												<f:selectItems var="district"
+													value="#{qTScheduleDetailBackingBean.managedBean.districts}"
+													itemValue="#{district.districtId}"
+													itemLabel="#{district.districtName}" />
+												<p:ajax event="change"
+													listener="#{qTScheduleDetailBackingBean.retrievePmCityList}"
+													update="@(.sampledistrictCity)" partialSubmit="true" />
+											</p:selectOneMenu></td>
+										<td><p:message id="sampledistrict1Msg"
+												for="sampledistrict1" display="icon" /></td>
+									</tr>
+								</table>
+							</c:when>
+							<c:otherwise>
+								<p:inputText id="sampledistrict1Txt"
+									disabled="true"
+									value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDistrict.districtName}"
+									style="width:254px;" />
+							</c:otherwise>
+						</c:choose>
 					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.four']}" /></td>
 					<td><p:inputText
-							disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
+							disabled="#{scheduleReadonly}"
 							value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address4}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
-						<table>
-							<tr>
-								<td><p:selectOneMenu styleClass="sampledistrictCity"
-										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-										style="width: 249px;margin-bottom: 5px;" id="samplecity1"
-										required="#{isRequire}" label="#{lbl['lbl.sc.town']}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmCity.cityId}">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-											itemValue="" />
-										<f:selectItems var="city"
-											value="#{qTScheduleDetailBackingBean.managedBean.citys}"
-											itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
-									</p:selectOneMenu></td>
-								<td><p:message id="samplecity1Msg" for="samplecity1"
-										display="icon" /></td>
-							</tr>
-						</table>
+						<c:choose>
+							<c:when test="#{!scheduleReadonly}">
+								<table>
+									<tr>
+										<td><p:selectOneMenu styleClass="sampledistrictCity"
+												style="width: 249px;margin-bottom: 5px;" id="samplecity1"
+												required="#{isRequire}" label="#{lbl['lbl.sc.town']}"
+												value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmCity.cityId}">
+												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+													itemValue="" />
+												<f:selectItems var="city"
+													value="#{qTScheduleDetailBackingBean.managedBean.citys}"
+													itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
+											</p:selectOneMenu></td>
+										<td><p:message id="samplecity1Msg" for="samplecity1"
+												display="icon" /></td>
+									</tr>
+								</table>
+							</c:when>
+							<c:otherwise>
+								<p:inputText id="samplecity1Txt"
+									disabled="true"
+									value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmCity.cityName}"
+									style="width:254px;" />
+							</c:otherwise>
+						</c:choose>
 					</td>
 				</tr>
 				<tr>
@@ -383,10 +425,11 @@
 						<table>
 							<tr>
 								<td><p:inputText id="samplepost1" required="#{isRequire}"
-										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
+										disabled="#{scheduleReadonly}"
 										label="#{lbl['lbl.sc.post.code']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.postcode}"
-										size="30" maxlength="10">
+										maxlength="10"
+										style="width:254px;">
 										<p:ajax event="blur" partialSubmit="true" process="@this"
 											listener="#{qTScheduleDetailBackingBean.validatePostcode}" />
 									</p:inputText></td>
@@ -414,38 +457,66 @@
 			<p:ajax event="rowUnselectCheckbox" update="@([id$=quotationTndrPersonContactDtlsDeleteBtnId])" />
 			<p:ajax event="toggleSelect" update="@([id$=quotationTndrPersonContactDtlsDeleteBtnId])" />
 			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
+				rendered="#{!scheduleReadonly}" />
 
 		
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:inputText value="#{contactpersondetails.name}"
-					style="width: 200px;"
-					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
+				<c:choose>
+					<c:when test="#{!scheduleReadonly}">
+						<h:inputText value="#{contactpersondetails.name}"
+							maxlength="200"
+							style="width: 200px;" />
+					</c:when>
+					<c:otherwise>
+						#{contactpersondetails.name}
+					</c:otherwise>
+				</c:choose>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.tel.no']}">
-				<h:inputText value="#{contactpersondetails.phoneNo}"
-					style="width: 120px;"
-					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
+				<c:choose>
+					<c:when test="#{!scheduleReadonly}">
+						<h:inputText value="#{contactpersondetails.phoneNo}"
+							maxlength="22"
+							style="width: 120px;" />
+					</c:when>
+					<c:otherwise>
+						#{contactpersondetails.phoneNo}
+					</c:otherwise>
+				</c:choose>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.fax.no']}">
-				<h:inputText value="#{contactpersondetails.faxNo}"
-					style="width: 120px;"
-					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
+				<c:choose>
+					<c:when test="#{!scheduleReadonly}">
+						<h:inputText value="#{contactpersondetails.faxNo}"
+							maxlength="20"
+							style="width: 120px;" />
+					</c:when>
+					<c:otherwise>
+						#{contactpersondetails.faxNo}
+					</c:otherwise>
+				</c:choose>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.email']}">
-				<h:inputText value="#{contactpersondetails.email}"
-					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
+				<c:choose>
+					<c:when test="#{!scheduleReadonly}">
+						<h:inputText value="#{contactpersondetails.email}"
+							maxlength="80" />
+					</c:when>
+					<c:otherwise>
+						#{contactpersondetails.email}
+					</c:otherwise>
+				</c:choose>
 			</p:column>
 		</p:dataTable>
 
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				styleClass="BtnSpacing"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
+				rendered="#{!scheduleReadonly}"
 				process="@this, cpersondetailsid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addContactPerson}"
 				update="cpersondetailsid" />
@@ -453,7 +524,7 @@
 			disabled="#{empty qTScheduleDetailBackingBean.managedBean.selectedContactPersons}"
 				styleClass="BtnSpacing" process="@this, cpersondetailsid"
 				partialSubmit="true" oncomplete="contactPersonDeletePopUp.show();"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
+				rendered="#{!scheduleReadonly}"
 				update="@([id$=#{contactPersonDeleteId}])" />
 		</div>
 		<ui:param name="contactPersonDeleteId" value="contactPersonDeleteId" />
@@ -480,28 +551,34 @@
 			<p:ajax event="rowUnselectCheckbox" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:ajax event="toggleSelect" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
+				rendered="#{!scheduleReadonly}" />
 
 			
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<p:selectOneMenu value="#{deskofficeradmin.user.userId}"
-					id="doaaUserId"
-					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems
-						value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
-						var="appName" itemLabel="#{appName.userName}"
-						itemValue="#{appName.userId}" />
-					<p:ajax event="change" process="doaaUserId" update="doaaUserId"
-						listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin,rowIndex)}" />
-				</p:selectOneMenu>
+				<c:choose>
+					<c:when test="#{!scheduleReadonly}">
+						<p:selectOneMenu value="#{deskofficeradmin.user.userId}"
+							id="doaaUserId">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems
+								value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
+								var="appName" itemLabel="#{appName.userName}"
+								itemValue="#{appName.userId}" />
+							<p:ajax event="change" process="doaaUserId" update="doaaUserId"
+								listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin,rowIndex)}" />
+						</p:selectOneMenu>
+					</c:when>
+					<c:otherwise>
+						#{deskofficeradmin.user.userName}
+					</c:otherwise>
+				</c:choose>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				styleClass="BtnSpacing"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
+				rendered="#{!scheduleReadonly}"
 				process="@this, doaaid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
 				update="doaaid" />
@@ -510,7 +587,7 @@
 				styleClass="BtnSpacing" process="@this, doaaid" partialSubmit="true"
 				oncomplete="doaaDeletePopUp.show()"
 				update="@([id$=#{doaaDeleteId}])"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
+				rendered="#{!scheduleReadonly}" />
 		</div>
 		<ui:param name="doaaDeleteId" value="doaaDeleteId" />
 		<ac:confirmationPopup id="#{doaaDeleteId}" widget="doaaDeletePopUp"
