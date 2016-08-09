@@ -101,7 +101,7 @@
 					<td class="columnWidth150">
 	     	             	<p:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%"  styleClass="required" />
 					</td> 
-					<td><p:inputText id="centralDelPeriod" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" style="width:45px;"
+					<td><p:inputText id="centralDelPeriod" styleClass="ppRightBtn"  style="width:45px;"
 		              		maxlength="4" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"
 		              		disabled="#{ctBackingBean.managedBean.viewContract
 		              			or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}" label="#{lbl['lbl.ct.delivery.period']}" />
