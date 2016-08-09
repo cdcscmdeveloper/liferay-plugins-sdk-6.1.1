@@ -17,7 +17,7 @@
 						<tr>
 							<td><p:inputText id="sampleaddress1" required="true"
 									label="#{lbl['lbl.sc.qt.address.one']}" readonly="true"
-									value="#{bsvDetails.sampleAddress.address.address1}"
+									value="#{bsvDetails.sampleAddress.scAddress.address1}"
 									style="margin-top:5px;" size="30" maxlength="255" /></td>
 							<td></td>
 						</tr>
@@ -30,7 +30,7 @@
 						<tr>
 							<td><p:inputText id="samplestate" required="true"
 									readonly="true"
-									value="#{bsvDetails.sampleAddress.address.pmState.stateName}"
+									value="#{bsvDetails.sampleAddress.scAddress.pmState.stateName}"
 									style="margin-top:5px;" size="30" maxlength="255" /></td>
 							<td></td>
 						</tr>
@@ -40,14 +40,14 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.two']}" /></td>
 				<td><p:inputText readonly="true"
-						value="#{bsvDetails.sampleAddress.address.address2}" size="30"
+						value="#{bsvDetails.sampleAddress.scAddress.address2}" size="30"
 						maxlength="255" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.division']}" /></td>
 				<td>
 					<table>
 						<tr>
 							<td><p:inputText id="sampledivision" readonly="true"
-									value="#{bsvDetails.sampleAddress.address.pmDivision.divisionName}"
+									value="#{bsvDetails.sampleAddress.scAddress.pmDivision.divisionName}"
 									style="margin-top:5px;" size="30" maxlength="255" /></td>
 							<td></td>
 						</tr>
@@ -58,14 +58,14 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.three']}" /></td>
 				<td><p:inputText readonly="true"
-						value="#{bsvDetails.sampleAddress.address.address3}" size="30"
+						value="#{bsvDetails.sampleAddress.scAddress.address3}" size="30"
 						maxlength="255" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /> </td>
 				<td>
 					<table>
 						<tr>
 							<td><p:inputText id="sampledistrict" readonly="true"
-									value="#{bsvDetails.sampleAddress.address.pmDistrict.districtName}"
+									value="#{bsvDetails.sampleAddress.scAddress.pmDistrict.districtName}"
 									style="margin-top:5px;" size="30" maxlength="255" /></td>
 							<td></td>
 						</tr>
@@ -75,14 +75,14 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.four']}" /></td>
 				<td><p:inputText readonly="true"
-						value="#{bsvDetails.sampleAddress.address.address4}" size="30"
+						value="#{bsvDetails.sampleAddress.scAddress.address4}" size="30"
 						maxlength="255" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> </td>
 				<td>
 					<table>
 						<tr>
 							<td><p:inputText id="sampletown" readonly="true"
-									value="#{bsvDetails.sampleAddress.address.pmCity.cityName}"
+									value="#{bsvDetails.sampleAddress.scAddress.pmCity.cityName}"
 									style="margin-top:5px;" size="30" maxlength="255" /></td>
 							<td></td>
 						</tr>
@@ -98,7 +98,7 @@
 						<tr>
 							<td><p:inputText id="samplepost1" required="true"
 									readonly="true" label="#{lbl['lbl.sc.post.code']}"
-									value="#{bsvDetails.sampleAddress.address.postcode}" size="30"
+									value="#{bsvDetails.sampleAddress.scAddress.postcode}" size="30"
 									maxlength="10" /></td>
 							<td></td>
 						</tr>
