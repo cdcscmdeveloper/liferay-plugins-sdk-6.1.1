@@ -232,7 +232,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setPublicCatalogSearchBean(searchBean);
 
 				CatalogueResDTO resDTO = catalogueSO
-						.searchPublicCatalogueBy(reqDTO);
+						.searchCatalogueBy(reqDTO);
 
 				int totalRecord = resDTO.getViewPublicSuppItemResultBean().getTotalRecord();
 				System.out.println("*******size*******"+totalRecord);
