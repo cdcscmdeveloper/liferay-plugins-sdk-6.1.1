@@ -1002,7 +1002,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								
 								if (ctAgency.isAp178() == true && (ctAgency.getRefNo() == null  || ctAgency.getRefNo().equalsIgnoreCase(""))) {
 									setTabValue("AG");
-									throw new EpException(MessageConst.ERROR_100022, 
+									throw new EpException(MessageConst.ERROR_100061, 
 				           					new String[] {ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
 				           							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 								}
