@@ -8175,14 +8175,25 @@ public class SmApplicationUtil {
 	 * @return boolean
 	 */
 	public static boolean isAllSuppDocAlreadyVerified(
-			List<SmApplSupportDoc> docs) {
+			List<SmApplSupportDoc> docs, String suppDocMode) {
 		boolean retVal = true;
 		for (SmApplSupportDoc doc : docs) {
-			if (doc.getVerifiedFlg() == null
-					&& !EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())
-					&& !StringUtils.isBlank(doc.getSmApplDocFiles().get(0)
-							.getFileName())) {
-				retVal = false;
+			if (doc.getVerifiedFlg() == null) {
+				if (suppDocMode != null
+						&& suppDocMode
+								.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+					if (!EntityHelper
+							.isCollectionEmpty(doc.getSmApplDocFiles())
+							&& !StringUtils.isBlank(doc.getSmApplDocFiles()
+									.get(0).getFileName())) {
+						retVal = false;
+					}
+				} else {
+					if (doc.getPmDocument().isMandatory()) {
+						retVal = false;
+					}
+				}
+
 			}
 		}
 		return retVal;
