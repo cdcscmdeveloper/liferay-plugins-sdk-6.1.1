@@ -10,146 +10,215 @@
 
 
 		<style>
-a{
-	text-decoration:none;
+a {
+	text-decoration: none;
 	color: #009ae5;
 }
-textarea{
+
+textarea {
 	width: 205px;
 	margin: 5px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-color: #000 !important;
+	line-height: 1.5em;
 }
-#profile-bg 
-{
-    background: rgba(0, 0, 0, 0) linear-gradient(#fff 0%, #f8f8f8 1%, white 20%) repeat scroll 0 0;
-    border: 1px solid #f2f2f2;
-    padding: 0 5px 1px 0;
-    width: 100%;
+
+img {
+	vertical-align: top;
+	margin: 0 10px;
 }
-.myProfile-title{
-	font-family: Arial,Helvetica,sans-serif;
+
+.myProfile-container {
+	margin: 5px;
+}
+
+.myProfile-title {
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	font-weight: bold;
-	color: #0054a6;
-	margin: 10px 5px 0;
+	color: #000;
+	margin: 10px;
 }
-.myProfile-text{
-	font-family: Arial,Helvetica,sans-serif;
+
+.myProfile-icon {
+	float: left;
+	display: inline-block;
+}
+
+.myProfile-text {
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	color: #000 !important;
-	margin: 5px;
+	font-color: #000 !important;
+	margin: 10px;
 }
 
 .div-content-break-word {
 	word-wrap: break-word;
 }
 </style>
-			<p:messages id="messages" showDetail="true" autoUpdate="true"
-				closable="true" showSummary="true" escape="false" />
-			
-			<ui:param name="showExpSection"
-				value="#{profilePersonalizationBackingBean.mofExpiryShown or profilePersonalizationBackingBean.virtualCertShown or
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="true" escape="false" />
+
+		<ui:param name="showExpSection"
+			value="#{profilePersonalizationBackingBean.mofExpiryShown or profilePersonalizationBackingBean.virtualCertShown or
 			profilePersonalizationBackingBean.softCertExpiryShown}" />
 
-			<div id="profile-bg">
-				<div class="myProfile-title">#{lbl['lbl.pm.profiles.authorisation.org.lov']}</div>
-				<div class="myProfile-text">
-					<div class="div-content-break-word">
-						<c:choose>
-					    <c:when test="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode}">
-					    	<h:outputText style="white-space:normal;" value="#{profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName}" />
-					    </c:when>
-					    <c:when test="#{ParameterConst.orgTypeFactoring eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode}">
-					        <h:outputText style="white-space:normal;" value="#{profilePersonalizationBackingBean.managedBean.currentProfile.pmFinancialOrg.finOrgName}" />
-					     </c:when>
-					    <c:otherwise>
-					    	 <h:outputText style="white-space:normal;" value="#{profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />
-					    </c:otherwise>
-					</c:choose>						
-						<h:outputText style="white-space:normal;" value="#{orgName}" />
-					</div>
+		<div class="myProfile-container">
+			<div class="myProfile-icon">
+				<p:graphicImage value="/css/images/design/ico-organization.png" />
+			</div>
+			<div class="myProfile-text">
+				<div class="div-content-break-word">
+					<c:choose>
+						<c:when
+							test="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode}">
+							<h:outputText style="white-space:normal;"
+								value="#{profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName}" />
+						</c:when>
+						<c:when
+							test="#{ParameterConst.orgTypeFactoring eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode}">
+							<h:outputText style="white-space:normal;"
+								value="#{profilePersonalizationBackingBean.managedBean.currentProfile.pmFinancialOrg.finOrgName}" />
+						</c:when>
+						<c:otherwise>
+							<h:outputText style="white-space:normal;"
+								value="#{profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />
+						</c:otherwise>
+					</c:choose>
+					<h:outputText style="white-space:normal;" value="#{orgName}" />
 				</div>
-				<div class="myProfile-title">#{lbl['lbl.pm.profiles.userdetails.email']}</div>
-				<div class="myProfile-text">
-					<div class="div-content-break-word">
-						<h:outputText
-							value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" />
-						&#160;
-						<h:graphicImage value="/css/images/design/tick.png"
-							rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" />
-					</div>
+			</div>
+		</div>
+		<div style="clear: both;"></div>
+
+		<div class="myProfile-container">
+			<div class="myProfile-icon">
+				<p:graphicImage value="/css/images/design/ico-email.png" />
+			</div>
+			<div class="myProfile-text">
+				<div class="div-content-break-word">
+					<h:outputText
+						value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" />
+					&#160;
+					<h:graphicImage value="/css/images/design/tick.png"
+						rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" />
 				</div>
-				<div class="myProfile-title">#{lbl['lbl.pm.profiles.userdetails.mobileno']}</div>
-				<div class="myProfile-text">
-					<div class="div-content-break-word">
-						<h:outputText style="white-space:normal;"
-							value="#{not empty profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull 
+			</div>
+		</div>
+		<div style="clear: both;"></div>
+
+
+		<div class="myProfile-container">
+			<div class="myProfile-icon">
+				<p:graphicImage value="/css/images/design/ico-sms.png" />
+			</div>
+			<div class="myProfile-text">
+				<div class="div-content-break-word">
+					<h:outputText style="white-space:normal;"
+						value="#{not empty profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull 
                   ? profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull : '-'}" />
-						&#160;
-						<h:graphicImage value="/css/images/design/tick.png"
-							rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" />
-					</div>
+					&#160;
+					<h:graphicImage value="/css/images/design/tick.png"
+						rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" />
 				</div>
-				<div class="myProfile-title">#{lbl['lbl.pm.profiles.authorisation.roles']}</div>
-				<p:scrollPanel
-					style="max-height: 100px; min-height:20px;max-width:210px;padding: 0px !important;margin-top: 0px !important;margin-left:5px;"
-					mode="native">
-					<ui:repeat var="role"
-						value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
-						varStatus="status">
-						<div class="#{status.odd ? 'role-odd' : 'role-even'}">
-							<div class="div-content-break-word">
-								<h:outputText value="#{role}" />
-							</div>
+			</div>
+		</div>
+		<div style="clear: both;"></div>
+
+
+		<div class="myProfile-container">
+			<div class="myProfile-icon">
+				<p:graphicImage value="/css/images/design/ico-role.png" />
+			</div>
+			<p:scrollPanel
+				style="max-height: 100px; min-height:20px;max-width:210px;padding: 0px !important;margin-top: 0px !important;margin-left:5px;"
+				mode="native">
+				<ui:repeat var="role"
+					value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
+					varStatus="status">
+					<div class="#{status.odd ? 'role-odd' : 'role-even'}">
+						<div class="div-content-break-word">
+							<h:outputText value="#{role}" />
 						</div>
+					</div>
 
-					</ui:repeat>
+				</ui:repeat>
 
-				</p:scrollPanel>
-				<c:if test="#{showExpSection}">
-					<div id="opUserCommonDetSuppDiv">
-							<c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">
-								<div class="myProfile-title">#{lbl['lbl.pm.ucd.mof.exp']}</div>
-  								<div class="myProfile-text"><h:outputText
-										value="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null ? '' : '-'}" />
-									<h:outputText
-										value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}"
-										rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null}">
-										<f:convertDateTime
-											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-									</h:outputText></div>
-							</c:if>
+			</p:scrollPanel>
+			</div>
+			<div style="clear: both;"></div>
+			<c:if test="#{showExpSection}">
+			<div id="opUserCommonDetSuppDiv">
+				
+					<c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">
+						<div class="myProfile-container">
+							<div class="myProfile-title">#{lbl['lbl.pm.ucd.mof.exp']}</div>
+							<div class="myProfile-text">
+								<h:outputText
+									value="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null ? '' : '-'}" />
+								<h:outputText
+									value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}"
+									rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText>
+							</div>
+
+
 							<c:if
 								test="#{profilePersonalizationBackingBean.virtualCertShown}">
-								  <div class="myProfile-text"><p:graphicImage value="/css/images/design/icon-view.png" />
-										&#160;
-										<p:commandLink
-											action="#{supplierAlertBackingBean.navigateToViewVirtualCert}"
-											value="#{lbl['lbl.pm.ucd.virtual.cert']}" /></div>
-							</c:if>
-							<c:if
-								test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
-								  <div class="myProfile-title">#{lbl['lbl.pm.ucd.softcert.exp']}</div>
-  								  <div class="myProfile-text"><h:outputText
-										value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null ? '' : '-'}" />
-									<h:outputText
-										value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate}"
-										rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null}">
-										<f:convertDateTime
-											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-									</h:outputText></div>
-
-							</c:if>
-							<c:if
-								test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
-								<div class="myProfile-text"><p:graphicImage value="/css/images/design/icon-view.png" />
-									&#160;
+								<div class="myProfile-icon">
+									<p:graphicImage value="/css/images/design/icon-view.png" />
+								</div>
+								<div class="myProfile-text">
 									<p:commandLink
-										action="#{softCertBackingBean.navigateToViewSoftCert}"
-										value="#{lbl['lbl.pm.ucd.soft.cert']}" /></div>
-							</c:if>
+										action="#{supplierAlertBackingBean.navigateToViewVirtualCert}"
+										value="#{lbl['lbl.pm.ucd.virtual.cert']}" />
+								</div>
 						
+					</c:if>
 					</div>
+					<div style="clear: both;"></div>
+
 				</c:if>
+				
+				<c:if
+					test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
+					<div class="myProfile-container">
+						<div class="myProfile-title">#{lbl['lbl.pm.ucd.softcert.exp']}</div>
+						<div class="myProfile-text">
+							<h:outputText
+								value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null ? '' : '-'}" />
+							<h:outputText
+								value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate}"
+								rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText>
+						</div>
+
+						<c:if
+							test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
+
+							<div class="myProfile-icon">
+								<p:graphicImage value="/css/images/design/icon-view.png" />
+							</div>
+							<div class="myProfile-text">
+								<p:commandLink
+									action="#{softCertBackingBean.navigateToViewSoftCert}"
+									value="#{lbl['lbl.pm.ucd.soft.cert']}" />
+							</div>
+						</c:if>
+					</div>
+
+					<div style="clear: both;"></div>
+				</c:if>
+
+
+
 			</div>
+			</c:if>
+		
 	</ui:define>
 </ui:composition>
