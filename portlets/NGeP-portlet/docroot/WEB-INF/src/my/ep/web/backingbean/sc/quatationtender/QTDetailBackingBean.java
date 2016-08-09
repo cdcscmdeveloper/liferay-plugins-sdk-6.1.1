@@ -111,7 +111,6 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -124,6 +123,7 @@ import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -1004,17 +1004,15 @@ public class QTDetailBackingBean extends
 				if (sampleSubmissionList != null
 						&& !sampleSubmissionList.isEmpty()) {
 					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
-						PmAddress pmAddress = scQtSampleSubmission.getAddress();
+						ScAddress scAddress = scQtSampleSubmission.getScAddress();
 
-						if (null != pmAddress) {
-							if (pmAddress.getPmDivision() != null
-									&& pmAddress.getPmDivision()
+						if (null != scAddress) {
+							if (scAddress.getPmDivision() != null
+									&& scAddress.getPmDivision()
 											.getDivisionId() == null) {
-								scQtSampleSubmission.getAddress()
-										.setPmDivision(null);
+								scAddress.setPmDivision(null);
 							}
-							scQtSampleSubmission.getAddress().setPmCountry(
-									retrieveCountry());
+							scAddress.setPmCountry(retrieveCountry());
 						}
 						scQtSampleSubmission.setScQt(getManagedBean().getQt());
 					}
@@ -1022,16 +1020,14 @@ public class QTDetailBackingBean extends
 			} else {
 				sampleSubmissionList = new ArrayList<ScQtSampleSubmission>();
 				if (null != this.getManagedBean().getScQtSampleSubmission()) {
-					PmAddress pmAddress = this.getManagedBean()
-							.getScQtSampleSubmission().getAddress();
+					ScAddress scAddress = this.getManagedBean()
+							.getScQtSampleSubmission().getScAddress();
 
-					if (pmAddress.getPmDivision() != null
-							&& pmAddress.getPmDivision().getDivisionId() == null) {
-						this.getManagedBean().getScQtSampleSubmission()
-								.getAddress().setPmDivision(null);
+					if (scAddress.getPmDivision() != null
+							&& scAddress.getPmDivision().getDivisionId() == null) {
+						scAddress.setPmDivision(null);
 					}
-					this.getManagedBean().getScQtSampleSubmission()
-							.getAddress().setPmCountry(retrieveCountry());
+					scAddress.setPmCountry(retrieveCountry());
 					sampleSubmissionList.add(this.getManagedBean()
 							.getScQtSampleSubmission());
 				}

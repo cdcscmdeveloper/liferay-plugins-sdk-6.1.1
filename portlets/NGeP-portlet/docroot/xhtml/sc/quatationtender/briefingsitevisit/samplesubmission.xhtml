@@ -19,7 +19,7 @@
 								<td><p:inputText id="sampleaddress"
 										label="#{lbl['lbl.sc.qt.address.one']}"
 										required="#{qTScheduleDetailBackingBean.managedBean.required}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address1}"
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.address1}"
 										style="margin-top:5px;" size="30" maxlength="255" /></td>
 								<td><p:message id="sampleaddressMsg" for="sampleaddress"
 										display="icon" /></td>
@@ -35,7 +35,7 @@
 								<td><p:selectOneMenu id="samplestate"
 										label="#{lbl['lbl.sc.state']}"
 										required="#{qTScheduleDetailBackingBean.managedBean.required}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmState.stateId}"
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmState.stateId}"
 										style="width: 218px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -55,11 +55,11 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.two']}" /></td>
 					<td><p:inputText
-							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address2}"
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address2}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.division']}" /></td>
 					<td><p:selectOneMenu id="sampleDivison"
-							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDivision.divisionId}"
+							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDivision.divisionId}"
 							style="width: 218px;margin-bottom: 5px;"
 							disabled="#{!qTScheduleDetailBackingBean.managedBean.stateCode}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -75,7 +75,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.three']}" /></td>
 					<td><p:inputText
-							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address3}"
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address3}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -86,7 +86,7 @@
 										style="width: 218px;margin-bottom: 5px;" id="sampledistrict"
 										required="#{qTScheduleDetailBackingBean.managedBean.required}"
 										label="#{lbl['lbl.sc.district']}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDistrict.districtId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="district"
@@ -106,7 +106,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.four']}" /></td>
 					<td><p:inputText
-							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address4}"
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address4}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -117,7 +117,7 @@
 										style="width: 218px;margin-bottom: 5px;" id="samplecity"
 										required="#{qTScheduleDetailBackingBean.managedBean.required}"
 										label="#{lbl['lbl.sc.town']}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmCity.cityId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="city"
@@ -141,7 +141,7 @@
 								<td><p:inputText id="samplepost"
 										required="#{qTScheduleDetailBackingBean.managedBean.required}"
 										label="#{lbl['lbl.sc.post.code']}"
-										value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.postcode}"
+										value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.postcode}"
 										size="30" maxlength="10" /></td>
 								<td><p:message id="samplepostpostMsg" for="samplepost"
 										display="icon" /></td>
