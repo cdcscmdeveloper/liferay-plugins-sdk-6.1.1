@@ -51,13 +51,13 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
@@ -186,7 +186,7 @@ public class QTScheduleDetailBackingBean extends
 		this.getManagedBean().setState(false);
 		if (null != this.getManagedBean().getScQtSampleSubmission()) {
 			Long stateId = this.getManagedBean().getScQtSampleSubmission()
-					.getAddress().getPmState().getStateId();
+					.getScAddress().getPmState().getStateId();
 			this.getManagedBean().setDivisionList(null);
 			this.getManagedBean().setDistrictList(null);
 			this.getManagedBean().setCitys(null);
@@ -200,15 +200,15 @@ public class QTScheduleDetailBackingBean extends
 							PmCommonUtil.retrievePmDivisionList(stateId));
 				} else {
 					PmDivision division = this.getManagedBean()
-							.getScQtSampleSubmission().getAddress()
+							.getScQtSampleSubmission().getScAddress()
 							.getPmDivision();
 					if (null != division) {
 						this.getManagedBean().getScQtSampleSubmission()
-								.getAddress().getPmDivision()
+								.getScAddress().getPmDivision()
 								.setDivisionId(null);
 					} else {
 						this.getManagedBean().getScQtSampleSubmission()
-								.getAddress().setPmDivision(new PmDivision());
+								.getScAddress().setPmDivision(new PmDivision());
 					}
 				}
 			}
@@ -225,12 +225,12 @@ public class QTScheduleDetailBackingBean extends
 			this.getManagedBean().setDistricts(null);
 			Long divisionId = null;
 			if (null != this.getManagedBean().getScQtSampleSubmission()
-					.getAddress().getPmDivision()) {
+					.getScAddress().getPmDivision()) {
 				divisionId = this.getManagedBean().getScQtSampleSubmission()
-						.getAddress().getPmDivision().getDivisionId();
+						.getScAddress().getPmDivision().getDivisionId();
 			}
 			Long stateId = this.getManagedBean().getScQtSampleSubmission()
-					.getAddress().getPmState().getStateId();
+					.getScAddress().getPmState().getStateId();
 			if (!this.getManagedBean().isState() && divisionId == null) {
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
 				reqDTO.setStateId(stateId);
@@ -264,7 +264,7 @@ public class QTScheduleDetailBackingBean extends
 		this.getManagedBean().setCitys(null);
 		if (null != this.getManagedBean().getScQtSampleSubmission()) {
 			Long districtId = this.getManagedBean().getScQtSampleSubmission()
-					.getAddress().getPmDistrict().getDistrictId();
+					.getScAddress().getPmDistrict().getDistrictId();
 			if (null != districtId) {
 				CityReqDTO reqDTO = new CityReqDTO();
 				reqDTO.setDistrictId(districtId);
@@ -460,7 +460,7 @@ public class QTScheduleDetailBackingBean extends
 		debugLogger("applySampleSubmission");
 		if (!this.getManagedBean().getSelectedSubmissionList().isEmpty()) {
 			ScQtSampleSubmission sampleSubmission = new ScQtSampleSubmission();
-			PmAddress address = new PmAddress();
+			ScAddress address = new ScAddress();
 			address.setPmCity(new PmCity());
 			address.setPmState(new PmState());
 			address.setPmDistrict(new PmDistrict());
@@ -475,7 +475,7 @@ public class QTScheduleDetailBackingBean extends
 					.retrieveCountryByCode(countryReqDTo);
 			country.setCountryId(countryResDTO.getPmCountry().getCountryId());
 			address.setPmCountry(country);
-			sampleSubmission.setAddress(address);
+			sampleSubmission.setScAddress(address);
 			this.getManagedBean().setScQtSampleSubmission(sampleSubmission);
 			retrievePmStateList();
 			RequestContext.getCurrentInstance().execute("sampledlg.show();");
@@ -507,8 +507,8 @@ public class QTScheduleDetailBackingBean extends
 				throw new EpException(MessageConst.ERROR_760100);
 			}
 			for (ScQtSampleSubmission sampleSubmission : submissionList) {
-				sampleSubmission.setAddress(this.getManagedBean()
-						.getScQtSampleSubmission().getAddress());
+				sampleSubmission.setScAddress(this.getManagedBean()
+						.getScQtSampleSubmission().getScAddress());
 			}
 			this.getManagedBean().setSelectedSubmissionList(submissionList);
 		}
@@ -589,8 +589,8 @@ public class QTScheduleDetailBackingBean extends
 	 */
 	public void editAddress(ScQtSampleSubmission sampleSubmission, int index) {
 		debugLogger("editAddress");
-		if (sampleSubmission.getAddress() == null) {
-			PmAddress address = new PmAddress();
+		if (sampleSubmission.getScAddress() == null) {
+			ScAddress address = new ScAddress();
 			address.setPmCity(new PmCity());
 			address.setPmState(new PmState());
 			address.setPmDistrict(new PmDistrict());
@@ -605,7 +605,7 @@ public class QTScheduleDetailBackingBean extends
 					.retrieveCountryByCode(countryReqDTo);
 			country.setCountryId(countryResDTO.getPmCountry().getCountryId());
 			address.setPmCountry(country);
-			sampleSubmission.setAddress(address);
+			sampleSubmission.setScAddress(address);
 		}
 		this.getManagedBean().setSampleAddressIndex(index);
 		this.getManagedBean().setActionType(SourcingConstants.ACTION_EDIT);
@@ -633,7 +633,7 @@ public class QTScheduleDetailBackingBean extends
 			int index = this.getManagedBean().getSampleAddressIndex();
 			ScQtSampleSubmission sampleSubmissionFrmList  = this.getManagedBean()
 					.getScQtSampleSubmissionList().get(index);
-			sampleSubmissionFrmList.setAddress(null);
+			sampleSubmissionFrmList.setScAddress(null);
 			this.getManagedBean()
 			.getScQtSampleSubmissionList().set(index,sampleSubmissionFrmList);
 					
@@ -887,7 +887,7 @@ public class QTScheduleDetailBackingBean extends
 	public void validatePostcode() {
 		debugLogger("validatePostcode");
 		String postcode = getManagedBean().getScQtSampleSubmission()
-				.getAddress().getPostcode();
+				.getScAddress().getPostcode();
 		Pattern pattern = Pattern.compile("\\d{5}");
 		Matcher matcher = pattern.matcher(postcode);
 		if (matcher.matches()) {

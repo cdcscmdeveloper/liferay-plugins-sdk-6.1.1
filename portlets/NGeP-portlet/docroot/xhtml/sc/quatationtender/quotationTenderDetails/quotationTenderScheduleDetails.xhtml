@@ -220,10 +220,10 @@
 						value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.address']}">
-					<h:outputText value="#{samplesubmissiondtl.address.address1}" />
-					<h:outputText value="#{samplesubmissiondtl.address.address2}" />,
-					<h:outputText value="#{samplesubmissiondtl.address.address3}" />,
-					<h:outputText value="#{samplesubmissiondtl.address.address4}" />
+					<h:outputText value="#{samplesubmissiondtl.scAddress.address1}" />
+					<h:outputText value="#{samplesubmissiondtl.scAddress.address2}" />,
+					<h:outputText value="#{samplesubmissiondtl.scAddress.address3}" />,
+					<h:outputText value="#{samplesubmissiondtl.scAddress.address4}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
 					<p:commandLink
@@ -260,7 +260,7 @@
 										required="#{isRequire}"
 										label="#{lbl['lbl.sc.qt.address.one']}"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address1}"
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.address1}"
 										style="margin-top:5px;" size="30" maxlength="255" /></td>
 								<td><p:message id="sampleaddress1Msg" for="sampleaddress1"
 										display="icon" /></td>
@@ -276,7 +276,7 @@
 								<td><p:selectOneMenu id="samplestate1"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										label="#{lbl['lbl.sc.state']}" required="#{isRequire}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmState.stateId}"
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmState.stateId}"
 										style="width: 249px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -297,11 +297,11 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.two']}" /></td>
 					<td><p:inputText
 							disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address2}"
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address2}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.division']}" /></td>
 					<td><p:selectOneMenu id="sampleDivison1"
-							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDivision.divisionId}"
+							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDivision.divisionId}"
 							style="width: 249px;margin-bottom: 5px;"
 							disabled="#{!qTScheduleDetailBackingBean.managedBean.state or qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -318,7 +318,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.three']}" /></td>
 					<td><p:inputText
 							disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address3}"
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address3}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -329,7 +329,7 @@
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										style="width: 249px;margin-bottom: 5px;" id="sampledistrict1"
 										required="#{isRequire}" label="#{lbl['lbl.sc.district']}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDistrict.districtId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="district"
@@ -350,7 +350,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.four']}" /></td>
 					<td><p:inputText
 							disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address4}"
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address4}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -361,7 +361,7 @@
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										style="width: 249px;margin-bottom: 5px;" id="samplecity1"
 										required="#{isRequire}" label="#{lbl['lbl.sc.town']}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmCity.cityId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="city"
@@ -385,7 +385,7 @@
 								<td><p:inputText id="samplepost1" required="#{isRequire}"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										label="#{lbl['lbl.sc.post.code']}"
-										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.postcode}"
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.postcode}"
 										size="30" maxlength="10">
 										<p:ajax event="blur" partialSubmit="true" process="@this"
 											listener="#{qTScheduleDetailBackingBean.validatePostcode}" />
