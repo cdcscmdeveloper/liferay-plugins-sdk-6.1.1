@@ -8,7 +8,7 @@
 
 	<table>
 		<tr>
-			<td valign="top" style="white-space:normal; width:18%"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.status']}" /></td>
+			<td valign="top" style="width:18%"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.status']}" /></td>
 			<td valign="top"><c:if test="#{postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()}">
 					<h:outputText value="#{lbl['lbl.sm.postreg.softcert.pending.approval']}" />
 				</c:if> 
