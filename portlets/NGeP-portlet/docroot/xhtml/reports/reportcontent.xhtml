@@ -646,13 +646,11 @@ width:32.5%;
 												</c:if>
 												<c:if
 													test="#{reportBackingBean.managedBean.rptGenBean.generateButton}">
-													<p:commandButton onstart="blkReportContent.show();"
-														id="falseGenerate" oncomplete="blkReportContent.hide();"                                                       
+													<p:commandButton action="#{reportBackingBean.generateReport()}"
+														id="falseGenerate" oncomplete="openReportPopUp();" 
 														value="#{lbl['lbl.rpt.generate']}"
 														disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
-														ajax="false" update="@form" process="@this" >
-														<p:fileDownload
-															value="#{reportBackingBean.generateReport()}" />
+														ajax="true" update="@form" process="@this" >
 													</p:commandButton>
 												</c:if>
 												<p:commandButton value="#{lbl['lbl.btn.reset']}"
@@ -665,6 +663,8 @@ width:32.5%;
 						</tr>
 					</table>
 					
+					<input type="hidden" id="reportStr" value="#{reportBackingBean.reportStr}" />
+					
 					<p:dialog id="statusDialog" modal="true" widgetVar="statusDialog" width="376" 
 						draggable="false" closable="true"  header="#{lbl['lbl.rpt.reportstatus']}"
 						resizable="false">	
@@ -675,9 +675,20 @@ width:32.5%;
 					<script type="text/javascript">
 						/*Function to hide the Iframe*/
 						
+						function openReportPopUp(){
+							
+							var reportStr = document.getElementById("reportStr").value;
+							
+							if(reportStr!=""){
+								window.open(reportStr);
+					        	window.focus();
+					        	reportStr = "";
+							}
+						}
+						
 						function start() {
                            statusDialog.show();
-                             }
+                        }
  
                        function stop() {
                     	   statusDialog.hide();
