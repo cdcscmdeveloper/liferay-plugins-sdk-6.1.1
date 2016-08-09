@@ -20,6 +20,7 @@
 			<p:dataTable id="gfMasPPId" var="pmInterfacePP" rows="10"
 				rowIndexVar="index" rowKey="#{pmInterfacePP}" lazy="true"			
 				value="#{gfMasBackingBean.managedBean.searchPp}">
+					<ac:paginator for="gfMasPPId"></ac:paginator>
 				<p:column style="width:2%">
 					<f:facet name="header">
 						<p:selectBooleanCheckbox id="selAllChk"							
