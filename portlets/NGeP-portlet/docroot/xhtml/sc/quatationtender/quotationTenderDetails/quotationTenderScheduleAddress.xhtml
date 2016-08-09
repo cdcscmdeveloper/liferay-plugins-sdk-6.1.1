@@ -4,6 +4,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:param name="scheduleReadonly"
+		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 
 	<p:dialog id="sampledlg" header="#{lbl['lbl.sc.qt.sample.submission']}" modal="true"
 		dynamic="true" position="top"
@@ -28,7 +31,8 @@
 												label="#{lbl['lbl.sc.qt.address.one']}"
 												required="#{qTScheduleDetailBackingBean.managedBean.required}"
 												value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.address1}"
-												style="margin-top:5px;" size="30" maxlength="255" /></td>
+												style="margin-top:5px;" size="30" maxlength="255"
+												disabled="#{scheduleReadonly}" /></td>
 										<td><p:message id="sampleaddressMsg" for="sampleaddress"
 												display="icon" /></td>
 									</tr>
@@ -44,7 +48,8 @@
 												label="#{lbl['lbl.sc.state']}"
 												required="#{qTScheduleDetailBackingBean.managedBean.required}"
 												value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmState.stateId}"
-												style="width: 218px;margin-bottom: 5px;">
+												style="width: 218px;margin-bottom: 5px;"
+												disabled="#{scheduleReadonly}">
 												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 													itemValue="" />
 												<f:selectItems var="state"
@@ -64,12 +69,13 @@
 							<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.two']}" /></td>
 							<td><p:inputText
 									value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address2}"
-									size="30" maxlength="255" /></td>
+									size="30" maxlength="255"
+									disabled="#{scheduleReadonly}" /></td>
 							<td><p:outputLabel value="#{lbl['lbl.sc.division']}" /></td>
 							<td><p:selectOneMenu id="sampleDivison"
 									value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDivision.divisionId}"
 									style="width: 218px;margin-bottom: 5px;"
-									disabled="#{!qTScheduleDetailBackingBean.managedBean.state}">
+									disabled="#{!qTScheduleDetailBackingBean.managedBean.state or scheduleReadonly}">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="divisionList"
 										value="#{qTScheduleDetailBackingBean.managedBean.divisionList}"
@@ -84,7 +90,8 @@
 							<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.three']}" /></td>
 							<td><p:inputText
 									value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address3}"
-									size="30" maxlength="255" /></td>
+									size="30" maxlength="255"
+									disabled="#{scheduleReadonly}" /></td>
 							<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
 							<td>
@@ -94,7 +101,8 @@
 												style="width: 218px;margin-bottom: 5px;" id="sampledistrict"
 												required="#{qTScheduleDetailBackingBean.managedBean.required}"
 												label="#{lbl['lbl.sc.district']}"
-												value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDistrict.districtId}">
+												value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmDistrict.districtId}"
+												disabled="#{scheduleReadonly}">
 												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 													itemValue="" />
 												<f:selectItems var="district"
@@ -115,7 +123,8 @@
 							<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.four']}" /></td>
 							<td><p:inputText
 									value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address4}"
-									size="30" maxlength="255" /></td>
+									size="30" maxlength="255"
+									disabled="#{scheduleReadonly}" /></td>
 							<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
 							<td>
@@ -125,7 +134,8 @@
 												style="width: 218px;margin-bottom: 5px;" id="samplecity"
 												required="#{qTScheduleDetailBackingBean.managedBean.required}"
 												label="#{lbl['lbl.sc.town']}"
-												value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmCity.cityId}">
+												value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.pmCity.cityId}"
+												disabled="#{scheduleReadonly}">
 												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 													itemValue="" />
 												<f:selectItems var="city"
@@ -149,7 +159,8 @@
 										<td><p:inputText id="samplepost" required="true"
 												label="#{lbl['lbl.sc.post.code']}"
 												value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.postcode}"
-												size="30" maxlength="10" /></td>
+												size="30" maxlength="10"
+												disabled="#{scheduleReadonly}" /></td>
 										<td><p:message id="samplepostpostMsg" for="samplepost"
 												display="icon" /></td>
 									</tr>
@@ -165,7 +176,8 @@
 							update="@(.sampleSubmitionUpdate)" />
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 							action="#{qTScheduleDetailBackingBean.closeSampleAddressPopUp}"
-							partialSubmit="true" />
+							partialSubmit="true"
+							rendered="#{!scheduleReadonly}" />
 
 					</div>
 
