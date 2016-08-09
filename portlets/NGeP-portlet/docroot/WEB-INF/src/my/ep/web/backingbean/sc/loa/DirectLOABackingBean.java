@@ -930,7 +930,7 @@ public class DirectLOABackingBean extends
 		Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
 
 		if (selectedSupplierBranchName == null
-				|| "HQ".equals(selectedSupplierBranchName)) {
+				|| SourcingConstants.SUPPLIER_BRANCH_HQ.equals(selectedSupplierBranchName)) {
 			SmPersonnel supplierHQPersonnel = this.getManagedBean()
 					.getSupplierHQPersonnel();
 			SmCompanyBasic smCompanyBasic = supplierHQPersonnel.getSmAppl()
@@ -942,7 +942,7 @@ public class DirectLOABackingBean extends
 						smCompanyAddress.getAddressType())) {
 					log.info("found hq address");
 
-					scLoa.setSupplierBranch("HQ");
+					scLoa.setSupplierBranch(SourcingConstants.SUPPLIER_BRANCH_HQ);
 					
 					ScAddress supplierAddress = createOrUpdateScAddress(
 														scLoa.getSupplierAddress(),
@@ -2030,7 +2030,7 @@ public class DirectLOABackingBean extends
 		if (resDTO.getSupplierHQPersonnel() != null) {
 			getManagedBean().setSupplierHQPersonnel(
 					resDTO.getSupplierHQPersonnel());
-			getManagedBean().setSelectedSupplierBranchName("HQ");
+			getManagedBean().setSelectedSupplierBranchName(SourcingConstants.SUPPLIER_BRANCH_HQ);
 			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
 			handleBranchDetailsChanged();
 		}
@@ -2077,7 +2077,7 @@ public class DirectLOABackingBean extends
 		if (resDTO.getSupplierHQPersonnel() != null) {
 			getManagedBean().setSupplierHQPersonnel(
 					resDTO.getSupplierHQPersonnel());
-			getManagedBean().setSelectedSupplierBranchName("HQ");
+			getManagedBean().setSelectedSupplierBranchName(SourcingConstants.SUPPLIER_BRANCH_HQ);
 			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
 			handleBranchDetailsChanged();
 		}
