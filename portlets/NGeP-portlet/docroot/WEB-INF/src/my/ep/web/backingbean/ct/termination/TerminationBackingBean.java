@@ -400,7 +400,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
-					messageId = MessageConst.INFO_700045;
+					messageId = MessageConst.INFO_700011;
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)) {
 					messageId = MessageConst.INFO_700026;
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
