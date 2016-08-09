@@ -63,6 +63,7 @@ import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlReliefOrderItem;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
@@ -644,6 +645,17 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			recNoteBB.getManagedBean().setBackToPrevious(null);
+			for(FlFulfilmentNoteItem noteItem : recNoteBB.getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+				if(noteItem.getFulfilmentNoteItemId() != null){
+					reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
+					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
+					resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
+					noteItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
+					recNoteBB.initializeRejectionRemarks(recNoteBB.getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
+				}else{
+					noteItem.getRejectionRemarks().add(new FlRemark());
+				}
+			}
 			navgPage=NAV_TO_MAINTAIN_FRN;
 		}else if(docType.equals(ParameterConst.DOCTYPE_PAYMENT_ADVICE)){
 			paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);

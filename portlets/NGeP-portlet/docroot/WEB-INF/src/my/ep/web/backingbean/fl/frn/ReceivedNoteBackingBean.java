@@ -72,6 +72,8 @@ import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqTyp
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.fl.FlActor;
+import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.FlWorkflowStatus;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.frn.FlSupplierEvaluation;
@@ -209,6 +211,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setFrnCancellationProcess(getManagedBean().isFrnCancellationProcess());
 			reqDTO.setLastFRNTaxInv(getManagedBean().isLastFRNTaxInv());
+			reqDTO.setRejectionRemark(getManagedBean().getRejectionRemark());
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 				if(getManagedBean().getApproverList() == null || getManagedBean().getApproverList().isEmpty()){
 					getAcknowledgeOfficer();
@@ -472,7 +475,18 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			if(null == getManagedBean().getFulfilmentNote().getSubmissionDate() || 
 				(getManagedBean().getFulfilmentNote().getStatus()!=null && getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue()==FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT.longValue())){
 				getManagedBean().getFulfilmentNote().setSubmissionDate(DateUtils.getCurrentDateWithoutTime());
-			}			
+			}	
+			for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+				if(noteItem.getFulfilmentNoteItemId() != null){
+					reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
+					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
+					resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
+					noteItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
+					initializeRejectionRemarks(getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
+				}else{
+					noteItem.getRejectionRemarks().add(new FlRemark());
+				}
+			}
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -481,6 +495,40 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	
+	public void initializeRejectionRemarks(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> rejectionRemarks,FlFulfilmentNoteItem noteItem,boolean isHideRemarks) {
+		FacesScopes facesScopes = new FacesScopes();
+
+		boolean flWorkflowStatusMatch = false;
+		if(flWorkflowStatus!=null) {
+			if(rejectionRemarks.size()>0 && rejectionRemarks.get(0).getFlWorkflowStatus()!=null) {
+				if(flWorkflowStatus.getWorkflowStatusId().longValue()==rejectionRemarks.get(0).getFlWorkflowStatus().getWorkflowStatusId().longValue()) {
+					flWorkflowStatusMatch = true;
+				}
+			}
+		} else { // both also null
+			flWorkflowStatusMatch = true;
+		}
+
+		if (rejectionRemarks.size() == 0 || !flWorkflowStatusMatch) {
+			FlRemark remark = new FlRemark();
+			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			remark.setCreatedUsername(facesScopes.getUserSessionBean()
+					.getUserName());
+			remark.setUserId(facesScopes.getUserSessionBean().getLoginId());
+
+			noteItem.setRejectionRemarks(rejectionRemarks);
+			if(!isHideRemarks) {
+				noteItem.getRejectionRemarks().add(0, remark);
+			}
+		} else {
+			noteItem.setRejectionRemarks(rejectionRemarks);
+		}
+
+	}
+
 	/**
 	 * calculate  received amount based on received quantity and unit price.
 	 *
@@ -577,7 +625,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
 			frnItem.setRejectedQty(frnItem.getFlDelOrderItem().getDeliveredQty().subtract(frnItem.getReceivedQty()));
 			if(frnItem.getReceivedQty().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
-				if(frnItem.getRejectionRemark()==null || frnItem.getRejectionRemark().length()==0) {
+				if(frnItem.getRejectionRemarks().get(0).getRemark()==null || frnItem.getRejectionRemarks().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_740024, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
 				}
 			}
@@ -587,7 +635,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 			if(ParameterConst.ITEM_TYPE_PRODUCT.equalsIgnoreCase(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode())){
 				if(frnItem.getReceivedAmt().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
-					if(frnItem.getRejectionRemark()==null || frnItem.getRejectionRemark().length()==0) {
+					if(frnItem.getRejectionRemarks().get(0).getRemark()==null || frnItem.getRejectionRemarks().get(0).getRemark().length()==0) {
 						throw new EpException(MessageConst.ERROR_745051, new String[]{frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
 					}
 				}		
@@ -1221,7 +1269,21 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(null == getManagedBean().getFulfilmentNote().getSubmissionDate() || 
 				(getManagedBean().getFulfilmentNote().getStatus()!=null && getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue()==FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT.longValue())){
 			getManagedBean().getFulfilmentNote().setSubmissionDate(DateUtils.getCurrentDateWithoutTime());
-		}		
+		}	
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		IReceivedNoteSO receivedNoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+		for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+			if(noteItem.getFulfilmentNoteItemId() != null){
+				reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
+				resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
+				noteItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
+				initializeRejectionRemarks(getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
+			}else{
+				noteItem.getRejectionRemarks().add(new FlRemark());
+			}
+		}
 	}
 	
 	public void checkLastTaxFRN(){
@@ -1431,6 +1493,24 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 		orderApproverList.addAll(pendingApproverList);
 		getManagedBean().getApproverList().addAll(orderApproverList);
+	}
+	
+	public void retrieveRemarkRejectionHistory(){
+		
+		if(getManagedBean().getSelectedItem().getFulfilmentNoteItemId() != null && !getManagedBean().getSelectedItem().getRejectionRemarks().isEmpty()){
+			getManagedBean().getRejectionRemarkHistory().clear();
+			 for(int i = 1; i < getManagedBean().getSelectedItem().getRejectionRemarks().size(); i++) {
+				 getManagedBean().getRejectionRemarkHistory().add(getManagedBean().getSelectedItem().getRejectionRemarks().get(i));
+			}
+			
+		}
+	}
+	
+	/**
+	 * Close listener.
+	 */
+	public void closeListener() {
+		RequestContext.getCurrentInstance().execute("rejectionRemarksHistory.hide()");
 	}
 		
 }

@@ -172,13 +172,59 @@
 				<tr>
 					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 					<td colspan="3">
-						<p:inputTextarea cols="42" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemark}" autoResize="false" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}">
+						<p:inputTextarea cols="42" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemarks.get(0).remark}" autoResize="false" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}">
 							<p:ajax process="@this" />
 						</p:inputTextarea><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.item.remarks']}"/>
 					</td>
 				</tr>
+				<tr>
+					<td valign="top" style="width:110px;"><p:outputLabel value="Remark History" /></td>
+					<td>
+						<p:commandLink id="remarkHistory"
+							oncomplete="rejectionRemarksHistory.show();"
+							action="#{receivedNoteBackingBean.retrieveRemarkRejectionHistory}"
+							update=":form:rejectionRemarksHistory">
+							<p:graphicImage value="/css/images/design/ico-view.png"
+								title="Remark History" />
+						</p:commandLink>
+					</td>
+				</tr>
 			</table>
-			
 		</h:panelGroup>
 	</p:panel>	
+	<p:dialog id="rejectionRemarksHistory" header="Rejections Remarks"
+		widgetVar="rejectionRemarksHistory" showEffect="fade" hideEffect="fade"
+		 modal="true" width="900px"
+		 resizable="false">
+		 <p:ajax event="close"
+			listener="#{receivedNoteBackingBean.closeListener}"
+			update="remarkHistory" />
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.item.code']}" /></td>
+					<td><p:inputText value="#{receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.itemCode}" disabled="true"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.item.code']}" /></td>
+					<td><p:inputText value="#{receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" disabled="true"/></td>
+				</tr>
+			</table>
+			<p:dataTable id="rejectionRemarks" value="#{receivedNoteBackingBean.managedBean.rejectionRemarkHistory}" var="remarks"
+			rowIndexVar="rowIndex">
+			<ac:paginator for="rejectionRemarks" />
+			<p:column headerText="No." style="text-align:right;width:2%">
+				<h:outputText value="#{rowIndex+1}" ></h:outputText>
+			</p:column>
+			<p:column headerText="Remarks By" style="text-align:right">
+				<h:outputText value="#{remarks.createdUsername}" ></h:outputText>
+			</p:column>
+			<p:column headerText="Remarks" style="text-align:right">
+				<h:outputText value="#{remarks.remark}" ></h:outputText>
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" 
+				oncomplete="rejectionRemarksHistory.hide();">
+			</p:commandButton>
+		</div>
+		 </p:dialog>
 </ui:composition>
