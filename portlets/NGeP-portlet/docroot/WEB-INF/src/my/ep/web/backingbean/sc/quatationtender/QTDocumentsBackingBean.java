@@ -151,7 +151,8 @@ public class QTDocumentsBackingBean extends
 	private static final String DOCUMENT_PAGE = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml";
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
 				  SourcingConstants.MALAYSIA_COUNTRY_CODE);
-
+	private static final String  UNDER_SCORE = "_";
+	
 	/**
 	 * Debug logger.
 	 * 
@@ -1040,10 +1041,10 @@ public class QTDocumentsBackingBean extends
 			scQtDocReportAttachment = new ScQtDocReportAttachment();
 			scQtDocReportAttachment.setScQtDocReport(scQtDocReport);
 			scQtDocReportAttachment.setDocNo(scQtDocReport.getScQt().getQtNo());
-			scQtDocReportAttachment.setPrefixFileName(prefixFileName);
 			StringBuilder filename = new StringBuilder();
+			filename.append(prefixFileName).append(UNDER_SCORE);
 			// replace white space due to firefox
-			filename.append(scQtDocReport.getTitle().replaceAll("\\s", "_"));
+			filename.append(scQtDocReport.getTitle().replaceAll("\\s", UNDER_SCORE));
 
 			if (SourcingConstants.DOC_DEF_KEY_SUPP_OFFER_STATEMENT
 					.equals(docDefinitionKey)) {
@@ -1099,7 +1100,7 @@ public class QTDocumentsBackingBean extends
 				// TODO put attachment in repository folder
 				generateSamplesamplesalinankontrakPdfFromVelocity(
 						(ScAttachment) scQtDocReportAttachment,
-						getManagedBean().getQt());
+						getManagedBean().getQt(),prefixFileName);
 			} else if (SourcingConstants.DOC_DEF_KEY_DECLARION_SAMPLE
 					.equals(docDefinitionKey)) {
 				filename.append(".pdf");
@@ -2041,9 +2042,9 @@ public class QTDocumentsBackingBean extends
 	 *             the exception
 	 */
 	private void generateSamplesamplesalinankontrakPdfFromVelocity(
-			ScAttachment attachment, ScQt qt) throws Exception {
+			ScAttachment attachment, ScQt qt, String prefixFileName) throws Exception {
 		debugLogger("generateSamplesamplesalinankontrakPdfFromVelocity");
-		attachment.setFileName("Sampel_Kontrak_Umum.docx");
+		attachment.setFileName(prefixFileName+UNDER_SCORE+"Sampel_Kontrak_Umum.docx");
 
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		PmUser createdUser = new FacesScopes().getUserSessionBean();
