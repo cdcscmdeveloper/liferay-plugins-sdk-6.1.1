@@ -6495,7 +6495,7 @@ public class EvaluationBackingBean extends
 	 * Retrieve report tab dtl.Event handle set attachment for Reports tab.
 	 */
 	private void retrieveReportTabDtl() {
-		debugLogger("retrieveReportTabDtl");
+		log.info("start retrieveReportTabDtl");
 		retrieveReportHeader();
 		IQTEvaluationSO evaluationSO;
 		EvaluationResDTO resDTO = null;
@@ -6554,6 +6554,7 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setScAttachment(attachment);
 
 			}
+			log.info("end retrieveReportTabDtl");
 		} finally {
 			evaluationSO = null;
 		}
@@ -6589,6 +6590,7 @@ public class EvaluationBackingBean extends
 	 * @throws Exception
 	 */
 	public void retriveCommitteeEndorsment() throws Exception {
+      log.info("start retriveCommitteeEndorsment");
 		ICommitteSO committeSO = null;
 		CommitteResDTO resDTO = null;
 		IQTDetailSO qtDetailSO;
@@ -6821,7 +6823,7 @@ public class EvaluationBackingBean extends
 											.getEvaluationFinancialCommitteeRemark());
 				}
 			}
-
+			log.info("end retriveCommitteeEndorsment");
 		} finally {
 			committeSO = null;
 
