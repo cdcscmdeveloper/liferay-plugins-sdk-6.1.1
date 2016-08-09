@@ -416,9 +416,11 @@ public class SmSideMenuIconUtil {
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
-							.getMandatoryDocs())
+							.getMandatoryDocs(), bean.getSmAppl()
+							.getSupportingDocMode())
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
-							.getNonMandatoryDocs())) {
+							.getNonMandatoryDocs(), bean.getSmAppl()
+							.getSupportingDocMode())) {
 				retVal = ICON_TICK;
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)
