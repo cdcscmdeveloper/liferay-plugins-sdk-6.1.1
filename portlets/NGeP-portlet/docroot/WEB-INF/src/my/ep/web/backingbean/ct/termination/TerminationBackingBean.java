@@ -454,7 +454,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		    if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 				   if(getManagedBean().getContractVer().getCtTermination().getFileRefNo() == null
 						|| getManagedBean().getContractVer().getCtTermination().getFileRefNo().isEmpty()) {
-		 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
+		 				throw new EpException(MessageConst.ERROR_100061, new String[]{ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		 		   }
 			
