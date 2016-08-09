@@ -43,7 +43,7 @@
 								</p:selectBooleanCheckbox>
 							</td>
 							<td valign="top" style="border-style: none !important;">
-								<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.brnch.gstSame']}" />
+								<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.brnch.gstSame']}" style="white-space: normal !important;"/>
 							</td>
 						</tr>
 					</table>
@@ -51,7 +51,7 @@
 				 
 				 <p:outputPanel rendered="#{!br.sameWithHq}">
 				 	<p:outputPanel id="branchGstNotEmptyPanelId" rendered="#{not empty br.gst and br.gst.isCurrent}">
-						<table style="width: 50%;table-layout:fixed">
+						<table style="width: 60%;table-layout:fixed">
 							<tr>
 								<td style="border-style: none !important;">
 									<p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" />
@@ -59,7 +59,7 @@
 								</td>
 								<td style="border-style: none !important;"><p:inputText id="branchGstRegNo"  maxlength="12" 
 									value="#{br.gst.gstRegNo}" required="true"
-									size="35" label="#{lbl['lbl.sm.gst.regno']}" 
+									size="35" label="#{lbl['lbl.sm.gst.regno']} (#{br.branch.branchName})" 
 									validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
 									<p:ajax event="blur" process="@this" update="@form"/>
 									<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
@@ -77,7 +77,7 @@
 								<td style="border-style: none !important;"><p:calendar id="branchGstRegDateCalId"
 										navigator="true" 
 										required="#{not empty br.gst.gstRegNo}" 
-										label="#{lbl['lbl.sm.gst.effdate']}"
+										label="#{lbl['lbl.sm.gst.effdate']} (#{br.branch.branchName})"
 										value="#{br.gst.gstEffDate}"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 										readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
@@ -93,7 +93,7 @@
 								<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
 								<td style="border-style: none !important;"><p:calendar id="branchGstEffEndDateCalId"
 										navigator="true" 
-										label="#{lbl['lbl.sm.gst.eff.end.date']}"
+										label="#{lbl['lbl.sm.gst.eff.end.date']} (#{br.branch.branchName})"
 										value="#{br.gst.gstEndDate}" mindate="#{CommonConstants.GST_LAUNCH_DATE}"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 										readonlyInput="true" size="30" showOn="button" yearRange="-99:+10" >
