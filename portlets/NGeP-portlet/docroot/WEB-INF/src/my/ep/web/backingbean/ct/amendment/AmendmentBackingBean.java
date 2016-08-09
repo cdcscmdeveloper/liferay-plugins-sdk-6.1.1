@@ -1312,7 +1312,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     				}
 	     				
 	     				if (ctAgency.isAp178() == true && (ctAgency.getRefNo() == null  || ctAgency.getRefNo().equalsIgnoreCase(""))) {
-	     					throw new EpException(MessageConst.ERROR_100022, 
+	     					throw new EpException(MessageConst.ERROR_100061, 
 	                					new String[] {ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
 	                							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	     				}
@@ -1402,7 +1402,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == null 
 				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == "") {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-			throw new EpException(MessageConst.ERROR_100022, 
+			throw new EpException(MessageConst.ERROR_100061, 
 					new String[]{ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
