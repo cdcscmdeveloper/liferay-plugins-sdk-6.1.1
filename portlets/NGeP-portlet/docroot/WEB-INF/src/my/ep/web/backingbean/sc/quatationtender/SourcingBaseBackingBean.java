@@ -435,15 +435,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected <ATTACHMENT extends ScAttachment> void downloadAllFiles(
 			String zipFileName, List<ATTACHMENT> scAttachments)
 			throws IOException {
-		List<File> files = new ArrayList<File>();
-
-		for (ScAttachment scAttachment : scAttachments) {
-			if (null != scAttachment
-					&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
-				files.add(new File(getActualFilePath(scAttachment)));
-			}
-		}
-
+		
 		PortletResponse portalresponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil
@@ -455,27 +447,33 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
 				response.getOutputStream()));
 		try {
-			for (File file : files) {
-				zos.putNextEntry(new ZipEntry(file.getName()));
+			for (ScAttachment scAttachment : scAttachments) {
 
-				// Get the file
-				FileInputStream fis = null;
-				try {
-					fis = new FileInputStream(file);
-				} catch (FileNotFoundException fnfe) {
-					zos.write(("ERROR: Could not find file " + file.getName())
-							.getBytes());
+				if (null != scAttachment
+						&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
+					File file = new File(getActualFilePath(scAttachment));
+
+					zos.putNextEntry(new ZipEntry(scAttachment.getFileName()));
+
+					// Get the file
+					FileInputStream fis = null;
+					try {
+						fis = new FileInputStream(file);
+					} catch (FileNotFoundException fnfe) {
+						zos.write(("ERROR: Could not find file " + file
+								.getName()).getBytes());
+						zos.closeEntry();
+						continue;
+					}
+					BufferedInputStream fif = new BufferedInputStream(fis);
+					// Write the contents of the file
+					int data = 0;
+					while ((data = fif.read()) != -1) {
+						zos.write(data);
+					}
+					fif.close();
 					zos.closeEntry();
-					continue;
 				}
-				BufferedInputStream fif = new BufferedInputStream(fis);
-				// Write the contents of the file
-				int data = 0;
-				while ((data = fif.read()) != -1) {
-					zos.write(data);
-				}
-				fif.close();
-				zos.closeEntry();
 			}
 		} catch (Exception ex) {
 
