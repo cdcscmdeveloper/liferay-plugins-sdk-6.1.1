@@ -25,6 +25,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.IFulfilmentSO;
+import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -747,11 +748,20 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 */
 	public void retrieveRejectionData(FlFulfilmentItemAddr flFulfilmentItemAddr) {
 		getManagedBean().setRejectionList(new ArrayList<FlFulfilmentNoteItem>());
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		IReceivedNoteSO receivedNoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
 		for(FlDelOrderItem delOrderItem : flFulfilmentItemAddr.getTempFlDelOrderItems()) {
 			for(FlFulfilmentNoteItem frnItem : delOrderItem.getTempFlFulfilmentNoteItem()) {
 				if(frnItem.getRejectedQty().doubleValue()>0 || frnItem.getRejectedAmt().doubleValue()>0) {
 					getManagedBean().getRejectionList().add(frnItem);
 				}
+				if(frnItem.getFulfilmentNoteItemId() != null){
+					reqDTO.setDocId(frnItem.getFulfilmentNoteItemId());
+					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
+					FulfilmentResDTO resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
+					frnItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
+				}
+				
 			}
 		}
 	}

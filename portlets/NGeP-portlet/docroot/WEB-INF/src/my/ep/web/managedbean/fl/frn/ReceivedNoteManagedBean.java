@@ -158,6 +158,8 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	
 	private PmUser selectedAckOfficer;
 	private boolean issuanceCogstrCheck=false;
+	private String rejectionRemark;
+	private List<FlRemark> rejectionRemarkHistory;
 	
 	
 	/**
@@ -964,6 +966,25 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 
 	public void setGfmasErrorDesc(String gfmasErrorDesc) {
 		this.gfmasErrorDesc = gfmasErrorDesc;
+	}
+
+	public String getRejectionRemark() {
+		return rejectionRemark;
+	}
+
+	public void setRejectionRemark(String rejectionRemark) {
+		this.rejectionRemark = rejectionRemark;
+	}
+
+	public List<FlRemark> getRejectionRemarkHistory() {
+		if(rejectionRemarkHistory == null){
+			rejectionRemarkHistory = new ArrayList<FlRemark>();
+		}
+		return rejectionRemarkHistory;
+	}
+
+	public void setRejectionRemarkHistory(List<FlRemark> rejectionRemarkHistory) {
+		this.rejectionRemarkHistory = rejectionRemarkHistory;
 	}
 
 }

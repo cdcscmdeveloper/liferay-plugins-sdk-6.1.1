@@ -2236,6 +2236,17 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		flBB.getManagedBean().setHideRemarks(true);
 		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+		for(FlFulfilmentNoteItem noteItem : recNoteBB.getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+			if(noteItem.getFulfilmentNoteItemId() != null){
+				reqDTO.setDocId(noteItem.getFulfilmentNoteItemId());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
+				resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
+				noteItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
+				recNoteBB.initializeRejectionRemarks(recNoteBB.getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
+			}else{
+				noteItem.getRejectionRemarks().add(new FlRemark());
+			}
+		}
 
 		return NAV_FULFILMENTNOTE_PAGE;
 	}

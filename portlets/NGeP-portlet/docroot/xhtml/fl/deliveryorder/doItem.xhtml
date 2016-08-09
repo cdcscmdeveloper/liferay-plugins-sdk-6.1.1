@@ -341,7 +341,10 @@
 					value="#{frnItem.flDelOrderItem.flDeliveryOrder.deliveryOrderNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.txt.remarks']}"  style="white-space:normal;">
-				<h:outputText value="#{frnItem.rejectionRemark}" />
+				<h:outputText value="#{frnItem.rejectionRemarks.get(0).remark}" />
+			</p:column>
+			<p:column headerText="Remarks By"  style="white-space:normal;">
+				<h:outputText value="#{frnItem.rejectionRemarks.get(0).createdUsername}" />
 			</p:column>
 			<p:column >
 				<f:facet name="header" style="width:8%;">
