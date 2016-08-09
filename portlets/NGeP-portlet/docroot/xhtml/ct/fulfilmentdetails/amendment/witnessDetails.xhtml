@@ -39,21 +39,25 @@
 				   		label="#{lbl['lbl.ct.address']}" />
 			
 			        	 <p:outputLabel value="#{lbl['lbl.ct.tel']}" styleClass="required" />
-				        <p:inputText id="tellNo" style="width:150px;"  label="#{lbl['lbl.ct.tel']}" maxlength="20"
-					             disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails
-					             	or !bpmTasklistBackingBean.managedBean.claim}"
-					             value="#{amendmentBackingBean.managedBean.scLoaWitness.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"/>
+			        	 <h:panelGrid columns="2">
+				               <p:inputText id="tellNo" style="width:150px;"  label="#{lbl['lbl.ct.tel']}" maxlength="20"
+					                disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails
+					             	  or !bpmTasklistBackingBean.managedBean.claim}"
+					                  value="#{amendmentBackingBean.managedBean.scLoaWitness.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"/>
+					                     <ac:iconTooltip value="#{lbl['lbl.sc.telephone.no.tooltip']}"/>
+					     </h:panelGrid>
 			
 			  <h:panelGrid columns="2" style="float:right;">
 					        <p:outputLabel value="#{lbl['lbl.ct.fax']}" />
 	      </h:panelGrid>
-	     <h:panelGrid columns="3" style="width:420px;" columnClasses="columnWidth30,columnWidth30">
-			           <h:panelGrid columns="2">
+	     <h:panelGrid columns="3" style="width:500px;" columnClasses="columnWidth30,columnWidth30">
+			           <h:panelGrid columns="3">
 					        <p:inputText id="faxNo" style="width:150px;" label="#{lbl['lbl.ct.fax']}" maxlength="20"
 					            disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails
 					            	or !bpmTasklistBackingBean.managedBean.claim}"
 					            value="#{amendmentBackingBean.managedBean.scLoaWitness.faxNo}" validator="#{webappBean.checkFaxNumber}"   />
 					        <p:message for="faxNo" display="icon"/>
+					          <ac:iconTooltip value="#{lbl['lbl.sc.fax.no.tooltip']}"/>
 					   </h:panelGrid>
 					    
 				  	      <p:outputLabel value="#{lbl['lbl.ct.mobile']}" />
@@ -61,8 +65,9 @@
 					       <p:inputText id="mobileNo" style="width:150px;"    label="#{lbl['lbl.ct.mobile']}" maxlength="20"
 					           disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails
 					      		or !bpmTasklistBackingBean.managedBean.claim}"
-					           value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}"  validator="#{webappBean.checkMobileNumber}"/>
+					           value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}"  validator="#{webappBean.checkPhoneNumber}"/>
 					       <p:message for="mobileNo" display="icon"/>
+					          <ac:iconTooltip value="#{lbl['lbl.sc.mobile.no.tooltip']}"/>
 					   </h:panelGrid>
 				</h:panelGrid>
 			      <p:outputLabel value="#{lbl['lbl.ct.email']}" styleClass="required" />
