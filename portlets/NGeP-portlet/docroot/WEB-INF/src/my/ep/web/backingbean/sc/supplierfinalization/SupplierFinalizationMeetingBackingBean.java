@@ -448,21 +448,23 @@ public class SupplierFinalizationMeetingBackingBean extends
 	public SelectItem[] getRepresentativeTypeDropdownValues(){
 		SelectItem[] items = null;
 		String committeeType = getManagedBean().getCommitteeType();
+		ISearchBean<PmParameterDesc> searchBean =getRepresentiveType(ParameterConst.COMMITTEE_REPRESENT_TURUT_HADIR);
+		
 		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
-			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
+			items = getDropdownValuesBySearchBean(ParameterTypeConst.REPRESENTATIVE_TYPE_QC,searchBean);
 		
 		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(committeeType)) {
-			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
+			items = getDropdownValuesBySearchBean(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB,searchBean);
 		
 		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(committeeType)) {
-			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBA);
+			items = getDropdownValuesBySearchBean(ParameterTypeConst.REPRESENTATIVE_TYPE_PBA,searchBean);
 		
 		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equalsIgnoreCase(committeeType)) {
-			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH);
+			items = getDropdownValuesBySearchBean(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH,searchBean);
 		
 		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType)) {
-			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK);
+			items = getDropdownValuesBySearchBean(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK,searchBean);
 		}
 		return items;
 	}
@@ -1705,6 +1707,18 @@ public class SupplierFinalizationMeetingBackingBean extends
 			meetingList.add(scqtMeeting);
 		}
 
+	}
+	
+	
+	private ISearchBean<PmParameterDesc> getRepresentiveType(String parameterCode){
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(parameterCode);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(),
+						recommendList));
+		return searchBean;
 	}
 	
 }
