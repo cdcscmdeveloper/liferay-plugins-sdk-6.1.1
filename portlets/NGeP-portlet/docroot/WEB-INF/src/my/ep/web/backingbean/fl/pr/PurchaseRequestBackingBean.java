@@ -3177,6 +3177,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						throw new EpException(MessageConst.ERROR_740041);
 					}
 				}
+				if(getManagedBean().getFulfilmentRequest().getTitle() == null || getManagedBean().getFulfilmentRequest().getTitle().trim().length() < 1){
+					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.title",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				}
 				if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 					if(getManagedBean().getSelectedApprover() == null){
 						throw new EpException(MessageConst.ERROR_750010);
