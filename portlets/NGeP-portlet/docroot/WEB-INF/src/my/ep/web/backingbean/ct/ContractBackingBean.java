@@ -2875,7 +2875,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		  LOADetailBackingBean loaBB = new LOADetailBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			loaBB.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-		//	loaBB.getManagedBean().setTrackingDairyView(true);
+			loaBB.getManagedBean().setTrackingDairyView(true);
 			loaBB.viewLOA(loaId);
 	  }
 	  
