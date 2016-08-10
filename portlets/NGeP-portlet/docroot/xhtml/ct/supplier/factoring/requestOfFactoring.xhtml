@@ -300,6 +300,24 @@
 			   				</p:commandLink>
 					</h:panelGrid>
 				</h:panelGroup>
+				
+				<f:verbatim rendered="#{!supplierBackingBean.managedBean.removeFactoring}"/>
+				<f:verbatim rendered="#{!supplierBackingBean.managedBean.removeFactoring}"/>
+				
+				<p:outputLabel value="#{lbl['lbl.ct.ft.ag.date']}"  styleClass="required" />
+				<h:panelGrid columns="2">
+					<p:calendar id="agDateCal" size="10" required="true"
+						showOn="button" label="#{lbl['lbl.ct.ft.ag.date']}" value="#{supplierBackingBean.managedBean.factoring.agreementDate}"
+						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
+							or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
+						readonlyInput="true" navigator="true" 
+						maxdate="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						<f:validator validatorId="primeDateRangeValidator" />
+						<p:ajax event="dateSelect" update="notificationBtn" />
+					</p:calendar>
+					<p:message for="agDateCal" display="icon" />
+				</h:panelGrid>
 			</h:panelGrid>
 
 			<p:dialog id="uploadFactoringDlg" widgetVar="uploadFactoringDlg"
