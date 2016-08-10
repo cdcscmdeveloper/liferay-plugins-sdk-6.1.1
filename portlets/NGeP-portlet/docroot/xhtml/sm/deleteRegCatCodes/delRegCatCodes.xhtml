@@ -84,7 +84,7 @@
 				<p:column>
 					<p:inputTextarea cols="30" rendered="#{catBean.selected}"
 						id="delRmrks" value="#{catBean.remarks}" 
-						onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);">
+						onkeyup="limitTextArea(this,502);" onkeydown="limitTextArea(this,502);">
 						<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
 					</p:inputTextarea>
 					<p:message id="delRmrksMsg" for="delRmrks" showSummary="true"
