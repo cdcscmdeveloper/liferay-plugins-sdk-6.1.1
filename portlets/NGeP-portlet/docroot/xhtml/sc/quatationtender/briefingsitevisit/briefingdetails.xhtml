@@ -37,18 +37,16 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.date.time']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<ui:param name="publishDate" value="#{qTBriefingSiteVisitBackingBean.handlePublishDate()}"/>
 						<td colspan="3">
-								
-								<ac:dateTime id="briefdate"
-						mindate="#{DateUtils.addDays(publishDate,1)}"
-						required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
-						label="#{lbl['lbl.sc.date.time']}"
-						value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
-						update="@this">
-					</ac:dateTime>
-								
-								</td>
+						<ac:dateTime id="briefdate"
+								mindate="#{qTBriefingSiteVisitBackingBean.handleBSVMinDate()}"
+								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+								label="#{lbl['lbl.sc.date.time']}"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
+								update="@this">
+							</ac:dateTime>
+
+						</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.location']}" /> <p:outputLabel

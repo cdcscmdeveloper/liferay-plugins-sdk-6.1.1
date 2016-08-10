@@ -59,6 +59,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.sc.bsvattendance.BSVAttendanceBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -1059,5 +1060,20 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		
 		return latestBsvDate;
+	}
+	
+	/**
+	 * @return minDate
+	 */
+	public Date handleBSVMinDate() {
+		
+		Date minDate = DateUtils.addDays(handlePublishDate(),1);
+		ScQt scQt = this.getManagedBean().getQt();
+		Long statusId = scQt.getQtStatus().getStatusId();
+		if (isQTStatusPublished(statusId)) {
+			minDate = DateUtils.addDays(scQt.getPublishDate(),1);
+		}
+		return minDate;
+
 	}
 }
