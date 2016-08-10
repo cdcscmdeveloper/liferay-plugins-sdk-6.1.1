@@ -102,13 +102,13 @@ textarea {
 					<td width="20" valign="top" class="myProfile-text"><p:graphicImage
 							value="/css/images/design/ico-role.png" /></td>
 					<td valign="top"><p:scrollPanel
-							style="line-height: 1.5em;max-height: 100px; min-height:20px;max-width:205px;padding: 0px !important;margin-top: 0px !important;margin-left:5px;background:white;"
+							style="max-height: 100px; min-height:20px;max-width:205px;padding: 0px !important;margin-top: 2px !important;margin-left:5px;"
 							mode="native">
 							<ui:repeat var="role"
 								value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
 								varStatus="status">
 								<div class="#{status.odd ? 'role-odd' : 'role-even'}">
-									<div class="div-content-break-word">
+									<div class="div-content-break-word" style="background:white;">
 										<h:outputText value="#{role}"
 											style="color: #000;font-family: Arial, Helvetica, sans-serif;font-size: 12px;" />
 									</div>
