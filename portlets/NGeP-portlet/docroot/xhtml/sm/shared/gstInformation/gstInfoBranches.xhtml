@@ -58,7 +58,7 @@
 									<p:outputLabel value="*" styleClass="mandatory" />
 								</td>
 								<td style="border-style: none !important;"><p:inputText id="branchGstRegNo"  maxlength="12" 
-									value="#{br.gst.gstRegNo}" required="true"
+									value="#{br.gst.gstRegNo}"
 									size="35" label="#{lbl['lbl.sm.gst.regno']} (#{br.branch.branchName})" 
 									validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
 									<p:ajax event="blur" process="@this" update="@form"/>
