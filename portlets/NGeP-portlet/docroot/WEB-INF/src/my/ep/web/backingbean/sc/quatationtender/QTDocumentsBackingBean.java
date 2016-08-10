@@ -482,16 +482,18 @@ public class QTDocumentsBackingBean extends
 			List<ScQtDocReport> scQtDocReports = getManagedBean()
 					.getScQtDocReportList();
 			int indexOfReport = scQtDocReports.indexOf(selectedScQtDocReport);
-			if (indexOfReport >= 0) {
-				scQtDocReportAttachment
-						.setPrefixFileName(getPrefixFileName((indexOfReport + 1)));
-			}
 			scQtDocReportAttachment.setDocNo(selectedScQtDocReport.getScQt()
 					.getQtNo());
 			scAttachment = scQtDocReportAttachment;
 			uploadAttachment(event.getFile(), scAttachment);
+			String fileName = scAttachment.getFileName();
+			if (indexOfReport >= 0 && fileName != null) {
+				scQtDocReportAttachment.setFileName(indexOfReport + UNDER_SCORE
+						+ fileName);
+			}
 			selectedScQtDocReport
 					.setScQtDocReportAttachment(scQtDocReportAttachment);
+			
 		}
 	}
 
