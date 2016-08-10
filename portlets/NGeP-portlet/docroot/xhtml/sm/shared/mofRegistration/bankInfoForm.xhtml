@@ -178,7 +178,7 @@
 			</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="570px" height="470px"
+	<p:dialog width="600px" height="470px"
 		header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" widgetVar="bankDialog"
 		resizable="false" showEffect="fade" closable="false" hideEffect="fade"
 		modal="true" id="bankDialog">
@@ -480,52 +480,69 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.is.associate.to.hq']}" /></td>
-					<td><p:selectOneRadio disabled="#{backingBean.managedBean.selectedBank.accountPurpose ne 'P' 
-								or empty backingBean.managedBean.smAppl.smSupplierBranches }"
-							value="#{backingBean.managedBean.selectedBank.forHqFlg}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
-							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-							<p:ajax event="change" partialSubmit="true" process="@this" />
-						</p:selectOneRadio>
-						&#160;
-						<p:graphicImage id="hqFlgImg" value="/css/images/design/tooltips.png" />
-						<p:tooltip id="hqFlgImgTt" for="hqFlgImg">
-							<p:outputLabel escape="false" value="#{lbl['tt.sm.account.used.for.hq']}"  />
-						</p:tooltip>
+					<td>
+						<table>
+							<tr>
+								<td><p:selectOneRadio disabled="#{backingBean.managedBean.selectedBank.accountPurpose ne 'P' 
+										or empty backingBean.managedBean.smAppl.smSupplierBranches }"
+										value="#{backingBean.managedBean.selectedBank.forHqFlg}">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
+										<p:ajax event="change" partialSubmit="true" process="@this" />
+									</p:selectOneRadio>
+								</td>
+								<td>
+									<p:graphicImage id="hqFlgImg" value="/css/images/design/tooltips.png" />
+									<p:tooltip id="hqFlgImgTt" for="hqFlgImg">
+										<p:outputLabel escape="false" value="#{lbl['tt.sm.account.used.for.hq']}"  />
+									</p:tooltip>
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 				<p:outputPanel rendered="#{(backingBean.managedBean.selectedBank.accountPurpose eq 'P' 
 					or backingBean.managedBean.selectedBank.accountPurpose eq 'B')
 					and not empty backingBean.managedBean.smAppl.smSupplierBranches}" >
 					<tr>
-						<td><p:outputLabel value="#{(backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT 
-								or backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT) ? lbl['lbl.sm.bankDtls.rob.assocBran'] : lbl['lbl.sm.bankDtls.assocBran']}"
-								id="banBranchLbl" />
+						<td>
+							<p:outputLabel value="#{(backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT 
+								or backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT) ? 
+								lbl['lbl.sm.bankDtls.rob.assocBran'] : lbl['lbl.sm.bankDtls.assocBran']}" id="banBranchLbl" />
 						</td>
 						<td>
-							<p:selectManyMenu showCheckbox="true"
-								required="false"
-								label="#{lbl['lbl.sm.bankDtls.assocBran']}" id="banBranchVal"
-								value="#{backingBean.managedBean.selectedBankBranchIds}"
-								style="height:100px;width: 200px;">
-								<f:selectItems
-									value="#{backingBean.managedBean.smAppl.smSupplierBranches}" var="br"
-									itemLabel="#{br.branchName}" itemValue="#{br.supplierBranchId}" />
-							</p:selectManyMenu>
-							&#160;
-							<p:graphicImage id="brImg" value="/css/images/design/tooltips.png" />
-							<p:tooltip id="brImgtt" for="brImg">
-								<p:outputLabel escape="false" value="#{lbl['tt.sm.account.no']}"  />
-							</p:tooltip>
-							<p:message id="banBranchValMsg" for="banBranchVal"
-								showSummary="true" showDetail="false" display="icon" />
+							<table>
+								<tr>
+									<td>
+										<p:selectManyMenu showCheckbox="true"
+											required="false"
+											label="#{lbl['lbl.sm.bankDtls.assocBran']}" id="banBranchVal"
+											value="#{backingBean.managedBean.selectedBankBranchIds}"
+											style="height:100px;width: 200px;">
+											<f:selectItems
+												value="#{backingBean.managedBean.smAppl.smSupplierBranches}" var="br"
+												itemLabel="#{br.branchName}" itemValue="#{br.supplierBranchId}" />
+										</p:selectManyMenu>
+									</td>
+									<td style="vertical-align: baseline;">
+										&#160;
+										<p:graphicImage id="brImg" value="/css/images/design/tooltips.png" />
+										<p:tooltip id="brImgtt" for="brImg">
+											<p:outputLabel escape="false" value="#{lbl['tt.sm.account.no']}"  />
+										</p:tooltip>
+										<p:message id="banBranchValMsg" for="banBranchVal"
+											showSummary="true" showDetail="false" display="icon" />
+									</td>
+								</tr>
+							</table>
 						</td>
 					</tr>
 				</p:outputPanel>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sm.bankDtls.chequesign.tnc']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.bankDtls.chequesign.tnc']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
 					<td><p:inputTextarea maxlength="1000"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.chequesign.tnc']}" id="banCqTnc"
