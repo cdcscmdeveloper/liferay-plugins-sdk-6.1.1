@@ -1128,7 +1128,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				&& getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null 
 				&& getManagedBean().getFactoring().getAuthRefNo() != null 
 				&& getManagedBean().getFactoring().getEffDate() != null 
-				&& getManagedBean().getFactoring().getExpDate() != null) {
+				&& getManagedBean().getFactoring().getExpDate() != null
+				&& getManagedBean().getFactoring().getAgreementDate() != null) {
 			return true;
 		} else {
 			return false;
@@ -1206,6 +1207,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 							context.put("contractPhysicalNo",ctContractVer.getContractPhysicalNo());
 						}
 				context.put("factoringStartDate", df.format(getManagedBean().getFactoring().getEffDate()));
+				context.put("agreementStartDate", df.format(getManagedBean().getFactoring().getAgreementDate()));
 				context.put("factoringCompName", getFactoringCompany());
 				if (getManagedBean().getFactoring().getFinancialOrgAddress() != null) {
 					context.put("factoringBankAddress", getFullAddress(getManagedBean().getFactoring().getFinancialOrgAddress()).replaceAll("(\r\n|\n)", "<br/>"));
