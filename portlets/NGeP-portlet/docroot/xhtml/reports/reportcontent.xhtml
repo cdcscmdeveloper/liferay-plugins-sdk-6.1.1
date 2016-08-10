@@ -646,11 +646,13 @@ width:32.5%;
 												</c:if>
 												<c:if
 													test="#{reportBackingBean.managedBean.rptGenBean.generateButton}">
-													<p:commandButton action="#{reportBackingBean.generateReport()}"
-														id="falseGenerate" oncomplete="openReportPopUp();" 
+													<p:commandButton onstart="blkReportContent.show();"
+														id="falseGenerate" oncomplete="blkReportContent.hide();"                                                       
 														value="#{lbl['lbl.rpt.generate']}"
 														disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
-														ajax="true" update="@form" process="@this" >
+														ajax="false" update="@form" process="@this" >
+														<p:fileDownload
+															value="#{reportBackingBean.generateReport()}" />
 													</p:commandButton>
 												</c:if>
 												<p:commandButton value="#{lbl['lbl.btn.reset']}"
