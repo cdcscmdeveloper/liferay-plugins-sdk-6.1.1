@@ -227,7 +227,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				}
 				resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
 			}
-			log.info("######## FRN SLA end : "+System.currentTimeMillis()+" : "+new Date());
 			if (resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_745014;
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
@@ -828,7 +827,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
 		getManagedBean().setValidated(Boolean.TRUE);
-		log.info("######## FRN SLA start : "+System.currentTimeMillis()+" : "+new Date());
 		return submitAction(getManagedBean().getButtonAction());
 	}
 	

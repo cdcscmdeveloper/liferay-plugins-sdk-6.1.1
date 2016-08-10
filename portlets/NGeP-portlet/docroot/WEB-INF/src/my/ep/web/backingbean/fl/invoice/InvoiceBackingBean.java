@@ -271,7 +271,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 				resDTO = invoiceSO.saveInvoice(reqDTO);
 			}
-			log.info("######## INVOICE SLA end : "+System.currentTimeMillis()+" : "+new Date());
 			if(resDTO.isSuccessful()) {
 				String messagePrefix = "";
 				String messageId = MessageConst.INFO_700026;

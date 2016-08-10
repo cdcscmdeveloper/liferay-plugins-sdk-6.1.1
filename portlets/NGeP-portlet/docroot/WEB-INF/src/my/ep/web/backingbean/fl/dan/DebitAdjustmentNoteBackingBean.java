@@ -8,7 +8,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -561,7 +560,6 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
 		getManagedBean().setValidated(Boolean.TRUE);
-		log.info("######## FRN SLA start : "+System.currentTimeMillis()+" : "+new Date());
 		return submitAction(getManagedBean().getButtonAction());
 	}
 	

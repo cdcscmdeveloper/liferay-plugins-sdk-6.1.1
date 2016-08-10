@@ -335,7 +335,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 			
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
-			log.info("######## PR SLA end : "+System.currentTimeMillis()+" : "+new Date());
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
@@ -3147,7 +3146,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
 		getManagedBean().setValidated(Boolean.TRUE);
-		log.info("######## PR SLA start : "+System.currentTimeMillis()+" : "+new Date());
 		return fulfillmentRequestAction(getManagedBean().getButtonAction());
 	}
 	
