@@ -2472,21 +2472,51 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 *          
 	 */
 	public void validateDeductionPaymentDtls(List<ScQtDeduction> deductions) {
-		
+
 		if (CollectionUtils.isNotEmpty(deductions)) {
 			for (ScQtDeduction deduction : deductions) {
 				PmParameter deductionType = deduction.getDeductionType();
-				if ( null != deductionType && null == deductionType.getParameterId()) {
+				if (null != deductionType
+						&& null == deductionType.getParameterId()) {
 					throw new EpException(MessageConst.ERROR_740035);
 				} else {
-					if (CollectionUtils.isEmpty(deduction.getScQtDeductionClauses())) {
+					if (CollectionUtils.isEmpty(deduction
+							.getScQtDeductionClauses())) {
 						throw new EpException(MessageConst.ERROR_760324,
 								new String[] { getParameterDesc(
 										deductionType.getParameterType(),
 										deductionType.getParameterCode()) });
 					}
 				}
+
+				// allow multiple Fixed deduction And Others only
+				if (deductions.size() > 1) {
+					for (ScQtDeduction scQtDeduction : deductions) {
+						if (!deduction.equals(scQtDeduction)) {
+							if (!(deductionType.getParameterCode().equals(
+									ParameterConst.DEDUCTION_TYPE_FIXED)
+									|| deductionType
+											.getParameterCode()
+											.equals(ParameterConst.DEDUCTION_TYPE_OTHERS))) {
+								if (deduction.getDeductionType()
+										.getParameterId() == scQtDeduction
+										.getDeductionType().getParameterId()) {
+									throw new EpException(
+											MessageConst.ERROR_700027,
+											new String[] { ResourceBundleUtils
+													.getMessage(
+															getParameterDesc(scQtDeduction
+																	.getDeductionType()),
+															ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+															new FacesScopes()
+																	.getUserLocale()) });
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
+
 }
