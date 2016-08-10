@@ -487,6 +487,11 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 							<p:ajax event="change" partialSubmit="true" process="@this" />
 						</p:selectOneRadio>
+						&#160;
+						<p:graphicImage id="banti" value="/css/images/design/tooltips.png" />
+						<p:tooltip id="bantt" for="banti">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.account.used.for.hq']}"  />
+						</p:tooltip>
 					</td>
 				</tr>
 				<p:outputPanel rendered="#{(backingBean.managedBean.selectedBank.accountPurpose eq 'P' 
@@ -507,6 +512,11 @@
 									value="#{backingBean.managedBean.smAppl.smSupplierBranches}" var="br"
 									itemLabel="#{br.branchName}" itemValue="#{br.supplierBranchId}" />
 							</p:selectManyMenu>
+							&#160;
+							<p:graphicImage id="banti" value="/css/images/design/tooltips.png" />
+							<p:tooltip id="bantt" for="banti">
+								<p:outputLabel escape="false" value="#{lbl['tt.sm.account.no']}"  />
+							</p:tooltip>
 							<p:message id="banBranchValMsg" for="banBranchVal"
 								showSummary="true" showDetail="false" display="icon" />
 						</td>
