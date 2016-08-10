@@ -303,7 +303,7 @@
 								required="#{!empty param['disableValidation']}"
 								disabled="true"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.loginId}">								
-							</p:inputText>&#160;
+							</p:inputText> &#160; 
 								<p:graphicImage id="giLoginId"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giLoginId"  id="ttLoginId"
@@ -466,7 +466,7 @@
 								validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
 								<f:validateRegex disabled="#{empty param['disableValidation']}"
 									pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-							</p:inputText>&#160;<p:graphicImage id="giEmail"
+							</p:inputText> &#160; <p:graphicImage id="giEmail"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giEmail" id="ttEmail"
 								value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}"
