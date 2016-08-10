@@ -1936,10 +1936,13 @@ public class QTCommitteBackingBean extends
 							.getScCommitteeMembers())) {
 					
 						String committeeType = committee.getCommitteeType().getParameterCode();
-						retrieveCommitteeDescription(committeeType,new FacesScopes().getUserLocale());
+						committeeType=retrieveCommitteeDescription(committeeType,new FacesScopes().getUserLocale());
 						isChairpersonRequired(committee.getScCommitteeMembers(),committeeType);
 						isSecretaryRequired(committee.getScCommitteeMembers(),committeeType);
-						isAtleastOneMemebersReq(committee.getScCommitteeMembers());
+						//isAtleastOneMemebersReq(committee.getScCommitteeMembers());
+						if (!isAtleastOneMemebersReq(committee.getScCommitteeMembers())) {
+							throw new EpException(MessageConst.ERROR_760009,new String[]{committeeType});
+						}
 					} else {
 						committee.setApprovalReq(false);
 						int selectedIndex = this.getManagedBean()
@@ -2007,8 +2010,7 @@ public class QTCommitteBackingBean extends
 					.getParameterCode();
 			if (ParameterConst.COMMITTEE_ROLE_MEMBER
 					.equalsIgnoreCase(memberRole)) {
-				i++;
-				if (i >= 1) {
+				if (++i == SourcingConstants.MIN_MEMBERS_MEMBER_ROLE) {
 					return true;
 				}
 			}
