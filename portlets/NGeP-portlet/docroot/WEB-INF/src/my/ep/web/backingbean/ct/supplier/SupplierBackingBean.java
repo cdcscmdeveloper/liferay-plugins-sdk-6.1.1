@@ -15,6 +15,7 @@ import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -184,6 +185,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		PmStatus pmStatus = new PmStatus();
 		pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
 		getManagedBean().getFactoring().setStatus(pmStatus);
+		getManagedBean().getFactoring().setAgreementDate(new Date());
 		getManagedBean().getFactoring().setCtContract(new CtContract());
 		getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
 		getManagedBean().setAccBankName(null);

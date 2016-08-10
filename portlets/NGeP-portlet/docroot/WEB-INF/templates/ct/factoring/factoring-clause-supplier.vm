@@ -42,7 +42,7 @@
 	  <div><strong>Tajuk Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractTitle</strong></div>
 	  <div><strong>No. Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractPhysicalNo</strong></div>
 	  <hr>
-	  <div>Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $factoringStartDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan invois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap invois yang terlibat akan dipindahmilik secara atas talian seperti berikut :-</div>
+	  <div>Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $agreementStartDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan invois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap invois yang terlibat akan dipindahmilik secara atas talian seperti berikut :-</div>
       <div><br/></div>
       <div>Invois ini telah dijual dan pindahmilik kepada</v>
       <div>$factoringCompName.</div>
