@@ -670,10 +670,12 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRacesList(
 					SmApplicationUtil.retrievePmRaceList());
 
-			/*getManagedBean().setDiplomaEduLevel(
-					SmApplicationUtil.retrievePmEduLevelByCode("80"));
-			getManagedBean().setCertEduLevel(
-					SmApplicationUtil.retrievePmEduLevelByCode("60"));*/
+			/*
+			 * getManagedBean().setDiplomaEduLevel(
+			 * SmApplicationUtil.retrievePmEduLevelByCode("80"));
+			 * getManagedBean().setCertEduLevel(
+			 * SmApplicationUtil.retrievePmEduLevelByCode("60"));
+			 */
 			getManagedBean().setGlpCert(
 					SmApplicationUtil.retrievePmParameterByTypeAndCode(
 							SupplierManagementConst.SM_SUPPLIER_PARAM_TYPE_CRT,
@@ -4975,6 +4977,7 @@ public class SmApplicationBackingBean extends
 			validShrHldr = false;
 			throw new EpException(MessageConst.ERROR_722575);
 		}
+		validateOwnerIndividualAcc(getManagedBean().getSelectedShareHolder());
 		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		validShrHldr = SmApplicationUtil.checkValidUser(getManagedBean()
 				.getSelectedShareHolder(), getManagedBean().getSmAppl());
@@ -5099,7 +5102,7 @@ public class SmApplicationBackingBean extends
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
 		} finally {
 			retriveLatestApplAfterUpdate("", "");
-			
+
 			initNonMandatoryAndMandatoryDocs();
 
 			// set section editor VO after update
@@ -7058,23 +7061,24 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-		if(!this.getManagedBean().isPoInquiryRespond()) {			
-		
+		if (!this.getManagedBean().isPoInquiryRespond()) {
+
 			// validate personnel email domain
 			SmApplicationUtil
 					.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
 							.getSmAppl().getSmPersonnels());
-	
+
 			// validate branch
 			SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
 					currentTab, true);
-	
+
 			// validate facility
 			SmApplicationUtil.validateFacilityPanel(getManagedBean(), -1, true);
-	
+
 			// validate machine
-			SmApplicationUtil.validateMachineDetails(true, -1, getManagedBean());
-	
+			SmApplicationUtil
+					.validateMachineDetails(true, -1, getManagedBean());
+
 			// validate equity owner
 			SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
@@ -8271,10 +8275,11 @@ public class SmApplicationBackingBean extends
 							getManagedBean().getSmAppl().getApplId(),
 							ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY,
 							getManagedBean().getOverLappedCategoryRemarks());
-					SmApplicationUtil.manageAndSaveNewSmRemarks(
-							getManagedBean().getSmAppl().getApplId(),
-							ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
-							getManagedBean().getApplnOverLapRemarks());
+					SmApplicationUtil
+							.manageAndSaveNewSmRemarks(
+									getManagedBean().getSmAppl().getApplId(),
+									ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
+									getManagedBean().getApplnOverLapRemarks());
 				}
 
 			}
@@ -11437,6 +11442,23 @@ public class SmApplicationBackingBean extends
 							br.getSupplierBranchId().toString());
 				}
 			}
+		}
+	}
+
+	private void validateOwnerIndividualAcc(SmPersonnel personnel) {
+		boolean retVal = false;
+		if (personnel.getIdentificationType() != null) {
+			PmParameter identificationType = SmApplicationUtil
+					.retrievePmParameterById(personnel
+							.getIdentificationTypeId());
+			retVal = SmCommonUtil
+					.isSupplierOwnerIndividualAcc(
+							identificationType.getParameterCode(),
+							personnel.getIdentificationNo(),
+							my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL);
+		}
+		if (retVal && (personnel.isEquityOwner() || personnel.isAuthorized())) {
+			throw new EpException(MessageConst.ERROR_721052);
 		}
 	}
 
