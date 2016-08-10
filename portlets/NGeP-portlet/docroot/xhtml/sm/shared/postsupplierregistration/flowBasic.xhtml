@@ -10,49 +10,45 @@
 	<ui:param name="step2" value="#{supplierType == g2gType ? '1' : '2'}"  />
 	<ui:param name="step3" value="#{supplierType == g2gType ? '2' : '3'}" />
 
+	<div class="flow-chartbox">
+  	<div class="flow-chart">
 	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
 		<c:if test="#{supplierType != postSupplierRegBB.getG2GBusinessType()}">
-		<div class="flow-chart-left lst">
-			<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.catalogue.upload']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
+		<div class="flow-chart-left active">
+			<div class="bg"><div class="no">1</div></div><p>
+			<p:commandLink styleClass="current-link" value="#{lbl['lbl.sm.basic.catalogue.upload']}" 
+			action="#{postSupplierRegBB.pageNavigate}" /></p>
 		</div>
 		</c:if>
-		<div class="flow-chart-left dlast">
-			<p><strong>#{lbl['lbl.sm.basic.step']} #{step2}</strong><br />#{lbl['lbl.sm.basic.softcert.request']}</p>
+		
+		<div class="flow-chart-left inactive">
+			<div class="bg"><div class="no">#{step2}</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p>
 		</div>
 	</c:if>
 	
 	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 2}">
 		<c:if test="#{supplierType != postSupplierRegBB.getG2GBusinessType()}">
-		<div class="flow-chart-left dlst">
-			<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br />#{lbl['lbl.sm.basic.catalogue.upload']}</p>
+		<div class="flow-chart-left inactive">
+			<div class="bg"><div class="no">1</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p>
 		</div>
 		</c:if>
-		<div class="flow-chart-left last">
-			<p><strong>#{lbl['lbl.sm.basic.step']} #{step2}</strong><br />
+		
+		
+		<div class="flow-chart-left active">
+			<div class="bg"><div class="no">#{step2}</div></div><p>
 			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()) or 
-			(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertIsActiveStatus())}">
+				(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertIsActiveStatus())}">
 				#{lbl['lbl.sm.basic.softcert.request']}
-			</c:if>
+			</c:if></p>
 			
 			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertProsseingStatus()) and 
-					(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertIsActiveStatus())}">
-				<p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.softcert.request']}" action="#{postSupplierRegBB.pageNavigate}" />
+						(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertIsActiveStatus())}">
+				<p><p:commandLink styleClass="current-link" value="#{lbl['lbl.sm.basic.softcert.request']}" 
+				action="#{postSupplierRegBB.pageNavigate}" /></p>
 			</c:if>
-			</p>
+
 		</div>
 	</c:if>
-	
-	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 3}">
-		<c:if test="#{supplierType != postSupplierRegBB.getG2GBusinessType()}">
-		<div class="flow-chart-left dlst">
-			<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br />#{lbl['lbl.sm.basic.catalogue.upload']}</p>
-		</div>
-		</c:if>
-		<div class="flow-chart-left dmid">
-			<p><strong>#{lbl['lbl.sm.basic.step']} #{step2}</strong><br />#{lbl['lbl.sm.basic.softcert.request']}</p>
-		</div>
-		<div class="flow-chart-left last">
-			<p><strong>#{lbl['lbl.sm.basic.step']} #{step3}</strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
-		</div>
-	</c:if>
+	</div>
+	</div>
 </ui:composition>
