@@ -594,6 +594,8 @@ public class ReportsGenerateBean {
 
 	/** The sm gen company name view. */
 	private boolean smGenCompanyNameView = false;
+	
+	private boolean smCPCompanyNameView=false;
 
 	/** The sm supp company name view. */
 	private boolean smSuppCompanyNameView = false;
@@ -3815,6 +3817,33 @@ public class ReportsGenerateBean {
 	// CT
 	/** The ct contract no view. */
 	private boolean ctContractNoView = false;
+	
+	/** The ct contract no cp view. */
+	private boolean ctContractNoCPView = false;
+
+	/** The ct physical contract no cp view. */
+	private boolean ctPhysicalContractNoCPView = false;
+
+	/** The ct loan no cp view. */
+	private boolean ctLoanNoCPView = false;
+
+	/** The ct status three cp view. */
+	private boolean ctStatusThreeCPView = false;	
+
+    /** The ct supplier default cp view. */
+    private boolean ctSupplierDefaultCPView= false;
+
+    /** The ct supplier text cp view. */
+    private boolean ctSupplierTextCPView = false;
+
+    /** The ct supplier name cp view. */
+    private boolean ctSupplierNameCPView= false;
+
+	/** The ct procurement mode cp view. */
+	private boolean ctProcurementModeCPView = false;
+
+	/** The ct loa physical no cp view. */
+	private boolean ctLOAPhysicalNoCPView=false;
 
 	/** The ct agreement view. */
 	private boolean ctAgreementView = false;
@@ -8061,6 +8090,20 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * @return the smCPCompanyNameView
+	 */
+	public boolean isSmCPCompanyNameView() {
+		return smCPCompanyNameView;
+	}
+
+	/**
+	 * @param smCPCompanyNameView the smCPCompanyNameView to set
+	 */
+	public void setSmCPCompanyNameView(boolean smCPCompanyNameView) {
+		this.smCPCompanyNameView = smCPCompanyNameView;
+	}
+
+	/**
 	 * Sets the sm registration no var.
 	 * 
 	 * @param smRegistrationNoVar
@@ -8396,6 +8439,63 @@ public class ReportsGenerateBean {
 	 */
 	public void setScRequestNoteStatusVar(String scRequestNoteStatusVar) {
 		this.scRequestNoteStatusVar = scRequestNoteStatusVar;
+	}
+
+	/**
+	 * Checks if is ct supplier default cp view.
+	 * 
+	 * @return the ctSupplierDefaultCPView
+	 */
+	public boolean isCtSupplierDefaultCPView() {
+		return ctSupplierDefaultCPView;
+	}
+
+	/**
+	 * Sets the ct supplier default cp view.
+	 * 
+	 * @param ctSupplierDefaultCPView
+	 *            the ctSupplierDefaultCPView to set
+	 */
+	public void setCtSupplierDefaultCPView(boolean ctSupplierDefaultCPView) {
+		this.ctSupplierDefaultCPView = ctSupplierDefaultCPView;
+	}
+
+	/**
+	 * Checks if is ct supplier text cp view.
+	 * 
+	 * @return the ctSupplierTextCPView
+	 */
+	public boolean isCtSupplierTextCPView() {
+		return ctSupplierTextCPView;
+	}
+
+	/**
+	 * Sets the ct supplier text cp view.
+	 * 
+	 * @param ctSupplierTextCPView
+	 *            the ctSupplierTextCPView to set
+	 */
+	public void setCtSupplierTextCPView(boolean ctSupplierTextCPView) {
+		this.ctSupplierTextCPView = ctSupplierTextCPView;
+	}
+
+	/**
+	 * Checks if is ct supplier name cp view.
+	 * 
+	 * @return the ctSupplierNameCPView
+	 */
+	public boolean isCtSupplierNameCPView() {
+		return ctSupplierNameCPView;
+	}
+
+	/**
+	 * Sets the ct supplier name cp view.
+	 * 
+	 * @param ctSupplierNameCPView
+	 *            the ctSupplierNameCPView to set
+	 */
+	public void setCtSupplierNameCPView(boolean ctSupplierNameCPView) {
+		this.ctSupplierNameCPView = ctSupplierNameCPView;
 	}
 
 	/**
@@ -14670,6 +14770,120 @@ public class ReportsGenerateBean {
 	 */
 	public String getDeductionTypeTotVar() {
 		return deductionTypeTotVar;
+	}
+
+	/**
+	 * Checks if is ct contract no cp view.
+	 * 
+	 * @return the ctContractNoCPView
+	 */
+	public boolean isCtContractNoCPView() {
+		return ctContractNoCPView;
+	}
+
+	/**
+	 * Sets the ct contract no cp view.
+	 * 
+	 * @param ctContractNoCPView
+	 *            the ctContractNoCPView to set
+	 */
+	public void setCtContractNoCPView(boolean ctContractNoCPView) {
+		this.ctContractNoCPView = ctContractNoCPView;
+	}
+
+	/**
+	 * Checks if is ct physical contract no cp view.
+	 * 
+	 * @return the ctPhysicalContractNoCPView
+	 */
+	public boolean isCtPhysicalContractNoCPView() {
+		return ctPhysicalContractNoCPView;
+	}
+
+	/**
+	 * Sets the ct physical contract no cp view.
+	 * 
+	 * @param ctPhysicalContractNoCPView
+	 *            the ctPhysicalContractNoCPView to set
+	 */
+	public void setCtPhysicalContractNoCPView(boolean ctPhysicalContractNoCPView) {
+		this.ctPhysicalContractNoCPView = ctPhysicalContractNoCPView;
+	}
+
+	/**
+	 * Checks if is ct loan no cp view.
+	 * 
+	 * @return the ctLoanNoCPView
+	 */
+	public boolean isCtLoanNoCPView() {
+		return ctLoanNoCPView;
+	}
+
+	/**
+	 * Sets the ct loan no cp view.
+	 * 
+	 * @param ctLoanNoCPView
+	 *            the ctLoanNoCPView to set
+	 */
+	public void setCtLoanNoCPView(boolean ctLoanNoCPView) {
+		this.ctLoanNoCPView = ctLoanNoCPView;
+	}
+
+	/**
+	 * Checks if is ct status three cp view.
+	 * 
+	 * @return the ctStatusThreeCPView
+	 */
+	public boolean isCtStatusThreeCPView() {
+		return ctStatusThreeCPView;
+	}
+
+	/**
+	 * Sets the ct status three cp view.
+	 * 
+	 * @param ctStatusThreeCPView
+	 *            the ctStatusThreeCPView to set
+	 */
+	public void setCtStatusThreeCPView(boolean ctStatusThreeCPView) {
+		this.ctStatusThreeCPView = ctStatusThreeCPView;
+	}
+
+	/**
+	 * Checks if is ct procurement mode cp view.
+	 * 
+	 * @return the ctProcurementModeCPView
+	 */
+	public boolean isCtProcurementModeCPView() {
+		return ctProcurementModeCPView;
+	}
+
+	/**
+	 * Sets the ct procurement mode cp view.
+	 * 
+	 * @param ctProcurementModeCPView
+	 *            the ctProcurementModeCPView to set
+	 */
+	public void setCtProcurementModeCPView(boolean ctProcurementModeCPView) {
+		this.ctProcurementModeCPView = ctProcurementModeCPView;
+	}
+
+	/**
+	 * Checks if is ct loa physical no cp view.
+	 * 
+	 * @return the ctLOAPhysicalNoCPView
+	 */
+	public boolean isCtLOAPhysicalNoCPView() {
+		return ctLOAPhysicalNoCPView;
+	}
+
+	/**
+	 * Sets the ct loa physical no cp view.
+	 * 
+	 * @param ctLOAPhysicalNoCPView
+	 *            the ctLOAPhysicalNoCPView to set
+	 */
+	public void setCtLOAPhysicalNoCPView(boolean ctLOAPhysicalNoCPView) {
+		this.ctLOAPhysicalNoCPView = ctLOAPhysicalNoCPView;
 	}
 
 	/**

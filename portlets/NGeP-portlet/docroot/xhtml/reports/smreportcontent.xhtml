@@ -1123,6 +1123,16 @@
 								saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
 						</c:if>
 						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smCPCompanyNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
+							<ac:lov id="smCompanyName" readonly="true" style="width:289px;"
+								lovId="PM_ORG_PROFILE_WITH_COMPANY_REPORT" size="40"
+								headerText="#{lbl['lbl.rpt.cmpName']}" 
+								value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
+								postUpdateListener="#{reportBackingBean.onCompanyNameChangeForLOV()}"
+								saveObject="reportBackingBean.managedBean.selectedOrgProfile" />
+						</c:if>
+						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smDOHCompanyNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
 							<ac:lov id="smCompanyName" readonly="true" style="width:289px;"
