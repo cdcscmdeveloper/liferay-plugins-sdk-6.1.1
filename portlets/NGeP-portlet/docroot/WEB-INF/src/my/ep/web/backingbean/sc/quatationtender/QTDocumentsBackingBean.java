@@ -1042,7 +1042,9 @@ public class QTDocumentsBackingBean extends
 			scQtDocReportAttachment.setScQtDocReport(scQtDocReport);
 			scQtDocReportAttachment.setDocNo(scQtDocReport.getScQt().getQtNo());
 			StringBuilder filename = new StringBuilder();
-			filename.append(prefixFileName).append(UNDER_SCORE);
+			if(prefixFileName !=null){
+				filename.append(prefixFileName).append(UNDER_SCORE);
+			}
 			// replace white space due to firefox
 			filename.append(scQtDocReport.getTitle().replaceAll("\\s", UNDER_SCORE));
 
@@ -1159,8 +1161,12 @@ public class QTDocumentsBackingBean extends
 						.getQtNo());
 				if (SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 						.equals(docDefinitionKey)) {
-					StringBuilder fileName = new StringBuilder(prefixFileName)
-							.append(UNDER_SCORE).append(SourcingConstants.DOCNAME_QT_SYARAT_AM);
+					StringBuilder fileName = new StringBuilder();
+					if (prefixFileName != null) {
+						fileName.append(prefixFileName).append(UNDER_SCORE);
+					}
+					fileName.append(SourcingConstants.DOCNAME_QT_SYARAT_AM);
+					
 					scQtDocReportAttachment.setFileName(fileName.toString());
 					generateSyaratSyaratAmPdfFromVelocity(
 							(ScAttachment) scQtDocReportAttachment,
@@ -2046,8 +2052,11 @@ public class QTDocumentsBackingBean extends
 			ScAttachment attachment, ScQt qt, String prefixFileName) throws Exception {
 		debugLogger("generateSamplesamplesalinankontrakPdfFromVelocity");
 		
-		StringBuilder fileName = new StringBuilder(prefixFileName).append(
-				UNDER_SCORE).append(SourcingConstants.DOCNAME_QT_SMPLE_CONTRACT);
+		StringBuilder fileName = new StringBuilder();
+		if(prefixFileName != null){
+			fileName.append(prefixFileName).append(UNDER_SCORE);
+		}
+		fileName.append(SourcingConstants.DOCNAME_QT_SMPLE_CONTRACT);
 		attachment.setFileName(fileName.toString());
 
 		Timestamp date = new Timestamp(System.currentTimeMillis());
