@@ -585,7 +585,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
          	if (ctBB.getManagedBean().getCtAddress() != null) {
          		ctContractVer.getCtContractValue().setSupplierAddress(ctBB.getManagedBean().getCtAddress());
          	}
-            reqDTO.setCtContractVer(ctContractVer);
+         	
+         	if(ctBB.getManagedBean().getCtContractAmount().isBondReq() &&
+         			!ctBB.getManagedBean().isDirectPurchase() && !ctBB.getManagedBean().getCtContractAmount().isBondExempted()){
+                 	for (CtContractAmount contractAmt : ctContractVer.getCtContractAmounts()){
+        		            if (contractAmt.getContractAmountId() != null && ctBB.getManagedBean().getCtContractAmount() != null
+        				           && contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue()){
+        		            	contractAmt.setTotalBondAmt( ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt());
+        		            	contractAmt.setCtPerformanceBonds( ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds());
+        		            }
+        	        }
+         	 }
+           
+         	reqDTO.setCtContractVer(ctContractVer);
             reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
             reqDTO.setUserRole(getUserRole());
             reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
@@ -739,7 +751,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				
 				// Validation for performance bond
 				if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && !ctBB.getManagedBean().isDirectPurchase()
-						&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+						&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted() && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					//In CT Update(bond required): if previously the bond already defined, number of performance bond must be > 0 while submission; 
 					//In CT Update(bond required): if previously no bond defined, system allow submission of FD Update even the number of performance bond entered = 0.
 							if (ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
