@@ -558,6 +558,12 @@ public class SmUpdateGstInfoBackingBean extends
 			for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
 				if (brVO.getGst() != null && brVO.getGst().getIsCurrent()) {
 
+					if (!brVO.isSameWithHq()
+							&& StringUtils.isBlank(brVO.getGst().getGstRegNo())) {
+						throw new EpException(SmCommonUtil.getMessage(
+								"lbl.sm.gst.branch.req.msg", null));
+					}
+
 					// validate HQ Branch reg no. uniqueness
 					SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
 							.getSmSupplier().getRegNo(), brVO.getGst()
