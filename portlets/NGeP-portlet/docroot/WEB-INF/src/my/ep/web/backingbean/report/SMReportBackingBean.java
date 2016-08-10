@@ -742,11 +742,13 @@ public class SMReportBackingBean extends
 			break;			
 		case ReportConst.SM_CDCSS_DEPOSIT_ADJUSTMENT_RPT_VAL:
 			rptGenBean.setSmCPCompanyNameView(true);	
-			rptGenBean.setFromDateView(true);		
+			rptGenBean.setSmNonMandatoryDateView(true);
+			rptGenBean.setSmFromDateView(true);	
 			break;
 		case ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL:
 			rptGenBean.setSmCPCompanyNameView(true);
-			rptGenBean.setFromDateView(true);
+			rptGenBean.setSmNonMandatoryDateView(true);
+			rptGenBean.setSmFromDateView(true);
 			break;			
 		default:
 			throw new EpException(
