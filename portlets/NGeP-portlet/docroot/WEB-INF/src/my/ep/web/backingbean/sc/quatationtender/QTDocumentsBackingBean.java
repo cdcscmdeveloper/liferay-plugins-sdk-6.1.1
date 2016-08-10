@@ -1705,8 +1705,8 @@ public class QTDocumentsBackingBean extends
 	 */
 	private void generateDeliveryAddressPdfFromVelocity(
 			ScAttachment attachment, ScQt qt) throws Exception {
-		attachment
-				.setFileName(SourcingConstants.DOCNAME_QT_DELIVERY_SERVICE_ADDRESS);
+		/*attachment
+				.setFileName(SourcingConstants.DOCNAME_QT_DELIVERY_SERVICE_ADDRESS);*/
 		populateAttachmentDetails(attachment);
 
 		VelocityContext context = new VelocityContext();
