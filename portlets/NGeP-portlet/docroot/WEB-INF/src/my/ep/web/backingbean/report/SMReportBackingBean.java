@@ -739,8 +739,15 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmPSSupplierTypeView(true);
 			rptGenBean.setSmCategoryBySupplierTypeView(true);
 			rptGenBean.setSmExtraTwoColumnView(true);
+			break;			
+		case ReportConst.SM_CDCSS_DEPOSIT_ADJUSTMENT_RPT_VAL:
+			rptGenBean.setSmCPCompanyNameView(true);	
+			rptGenBean.setFromDateView(true);		
 			break;
-			
+		case ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL:
+			rptGenBean.setSmCPCompanyNameView(true);
+			rptGenBean.setFromDateView(true);
+			break;			
 		default:
 			throw new EpException(
 					CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));

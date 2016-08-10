@@ -362,20 +362,20 @@ public class CTReportBackingBean extends
 			break;
 		case ReportConst.CT_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL:
 		case ReportConst.CT_PANEL_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL:
-			rptGenBean.setCtContractNoView(true);
-			rptGenBean.setCtPhysicalContractNoView(true);
+			rptGenBean.setCtContractNoCPView(true);
+			rptGenBean.setCtPhysicalContractNoCPView(true);
 			rptGenBean.setCtAgreementExtraView(true);
-			rptGenBean.setCtStatusThreeView(true);
-			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCtStatusThreeCPView(true);
+			rptGenBean.setCtLoanNoCPView(true);
 			//rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
 			rptGenBean.setCtPtjView(true);
 			rptGenBean.setCtGroupFiveView(true);
-			rptGenBean.setCtProcurementModeView(true);
-			rptGenBean.setCtLOAPhysicalNoView(true);
-			rptGenBean.setCtSupplierNameView(true);
+			rptGenBean.setCtProcurementModeCPView(true);
+			rptGenBean.setCtLOAPhysicalNoCPView(true);
+			rptGenBean.setCtSupplierNameCPView(true);
 			// rptGenBean.setCtUserTypeView(true);
 			// rptGenBean.setCtSubTypeView(true);
 			rptGenBean.setCtContractFromDateView(true);
