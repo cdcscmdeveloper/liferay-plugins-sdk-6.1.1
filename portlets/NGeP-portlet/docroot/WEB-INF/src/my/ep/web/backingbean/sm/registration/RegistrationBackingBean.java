@@ -252,7 +252,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
 		checkExistingBusinessRegNo();
 		
-		if(checkSupplierOwnerIndividualAcc(suppOwner.getIdentificationType().getParameterCode(),suppOwner.getIdentificationNo(),
+		if(SmCommonUtil.isSupplierOwnerIndividualAcc(suppOwner.getIdentificationType().getParameterCode(),suppOwner.getIdentificationNo(),
 				my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)){
 			throw new EpException(MessageConst.ERROR_721050);
 		}
@@ -382,7 +382,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			checkExistingBusinessRegNo();
 		}else{
 			//check whether identification code already registered any business type
-			if(checkSupplierOwnerIndividualAcc(smSuppOwner.getIdentificationType().getParameterCode(),
+			if(SmCommonUtil.isSupplierOwnerIndividualAcc(smSuppOwner.getIdentificationType().getParameterCode(),
 					smSupp.getRegNo(),null)){
 				throw new EpException(MessageConst.ERROR_721050);
 			}
@@ -2551,24 +2551,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
-	private boolean checkSupplierOwnerIndividualAcc(String identificationType, String identificationNo, String businessType){
-		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		reqDTO.setIdentificationType(identificationType);
-		reqDTO.setIdentificationNo(identificationNo);
-		
-		if(businessType != null){
-			reqDTO.setBusinessType(businessType);
-		}
-		
-		IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
-		RegistrationResDTO resDTO = reqSO.retrieveActiveSupplierByOwnerIDAndBusType(reqDTO);
-		
-		if(resDTO.getSmSuppliers().size() > 0){
-			return true;
-		}
-		
-		return false;
-	}
 	
 	private void initHasActiveTransactionStatus() {
 		getManagedBean().setHasActiveTransaction(false);

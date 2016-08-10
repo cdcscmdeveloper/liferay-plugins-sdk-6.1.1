@@ -65,6 +65,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -101,6 +102,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
+import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -4120,6 +4122,27 @@ public class SmCommonUtil {
 							&& current.getPmDistrict() != null && latest
 							.getPmDistrict().getDistrictId()
 							.compareTo(current.getPmDistrict().getDistrictId()) != 0)) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
+
+	public static boolean isSupplierOwnerIndividualAcc(
+			String identificationType, String identificationNo, String bussType) {
+		boolean retVal = false;
+		if (identificationType != null) {
+			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+			reqDTO.setIdentificationType(identificationType);
+			reqDTO.setIdentificationNo(identificationNo);
+			if (bussType != null) {
+				reqDTO.setBusinessType(bussType);
+			}
+			IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
+			RegistrationResDTO resDTO = reqSO
+					.retrieveActiveSupplierByOwnerIDAndBusType(reqDTO);
+
+			if (resDTO.getSmSuppliers().size() > 0) {
 				retVal = true;
 			}
 		}
