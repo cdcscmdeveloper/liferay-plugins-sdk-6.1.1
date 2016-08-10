@@ -35,7 +35,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.address']}">
 				<p:outputLabel style="float : left"
-					value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.address)}" />
+					value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.scAddress)}" />
 			</p:column>
 		</p:dataTable>
 
@@ -72,9 +72,9 @@
 			</tr>
 			<tr valign="top">
 				<td><p:outputLabel value="#{lbl['lbl.sc.address']}" /></td>
-				<td><p:inputTextarea
-						value="#{supplierProposalDetailBackingBean.getFullAddress(supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.address)}"
-						cols="32" rows="3" readonly="true" disabled="true" /></td>
+				<td><p:inputTextarea autoResize="true"
+						value="#{supplierProposalDetailBackingBean.getFullAddress(supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.scAddress)}"
+						cols="32" rows="5" readonly="true" disabled="true" /></td>
 				<td />
 				<td />
 			</tr>
