@@ -12,6 +12,12 @@
 			
 		<table width="100%">
 		<tr>
+		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+					style="float:right;"
+					action="#{scTrackingDiaryBackingBean.goToTrackingDiarySearch(qTDetailBB.managedBean.scTdObj)}"
+					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow}"/></td>
+		</tr>
+		<tr>
 		<td align="right">
 			<c:if test="#{qTDetailBB.managedBean.taskId eq null and qTDetailBB.managedBean.maintanceFlow}">
 				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
@@ -67,11 +73,7 @@
 						action="#{qTDetailBB.checkIsQTAllowCancel}"/>
 				</c:if>
 			</c:if>
-			
-			<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-					style="float:right;"
-					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, qTDetailBB.managedBean.qt.qtId)}"
-					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow}"/>			
+					
 			</td>
 		</tr>
 		</table>
