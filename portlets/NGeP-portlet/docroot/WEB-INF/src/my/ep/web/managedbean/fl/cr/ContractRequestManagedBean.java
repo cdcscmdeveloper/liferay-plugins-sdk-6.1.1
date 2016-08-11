@@ -270,7 +270,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private BigDecimal UomPerDay ; 
 	private BigDecimal pricePerUom;
 	private BigDecimal ctQuantity;
+	private BigDecimal ceilingQuantity;
 	private String uomName;
+	private String uomCode;
 	
 	private boolean emailValidate = false;
 	private boolean queryDisplay=false;
@@ -2945,6 +2947,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setGfmasErrorDesc(String gfmasErrorDesc) {
 		this.gfmasErrorDesc = gfmasErrorDesc;
+	}
+
+	public String getUomCode() {
+		return uomCode;
+	}
+
+	public void setUomCode(String uomCode) {
+		this.uomCode = uomCode;
+	}
+
+	public BigDecimal getCeilingQuantity() {
+		return ceilingQuantity;
+	}
+
+	public void setCeilingQuantity(BigDecimal ceilingQuantity) {
+		this.ceilingQuantity = ceilingQuantity;
 	}
 
 }
