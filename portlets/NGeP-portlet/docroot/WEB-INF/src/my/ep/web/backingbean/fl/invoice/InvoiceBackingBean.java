@@ -29,6 +29,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
+import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
@@ -84,6 +85,7 @@ import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -178,12 +180,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	public String submitAction(String action) {
 		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IInvoiceSO invoiceSO = null;
+		IAdjustmentSO adjustmentSO = null;
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 			// Need to call this as user may not click on summary menu
 			calInvSummary();
 			// Check is it DAN exist
@@ -280,8 +284,24 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					reqDTO.setInvoiceId(resDTO.getInvoice().getInvoiceId());
+					FulfilmentResDTO invResDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 					messageId = MessageConst.INFO_745018;
-					messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
+				    messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
+					if(null !=invResDTO.getInvoice().getFlAdjustments()){
+						for(FlAdjustment adjustment: invResDTO.getInvoice().getFlAdjustments()){
+							if(adjustment.getDocType().equals(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
+								reqDTO.setDanId(Long.valueOf(adjustment.getAdjustmentId()));
+								reqDTO.setDocType(adjustment.getDocType());
+								FulfilmentResDTO adjustmentResDTO  = adjustmentSO.retrieveAdjustmentById(reqDTO);
+								if(adjustmentResDTO.getAdjustment().getFlWorkflowStatus().getPmStatus().getStatusId().longValue()==FulfilmentStatusConst.DN_CANCELLED.longValue()){
+									messageId = MessageConst.INFO_745082;
+									messagePrefix="";
+									break;
+								}
+							}
+						}
+					}
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
 					messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
