@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -18,6 +19,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.MenuModel;
@@ -64,17 +66,20 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private boolean itemized;
 
 	private TplSpecZoneDtl selectedZone;
+	private ScQtRecommend selectedItem;
 
 	private List<ScCommitteeMember> committeeMembers;
 
 	private List<ScQtRecommend> itemsList;
-	private List<ScQtEvaluationResultDtl> packageQualifiedSuppliers;
-	private List<ScQtEvaluationResultDtl> qualifiedSuppliers;
-	private List<ScQtEvaluationResultDtl> toBeSavedQualifiedSuppliers;
+	
+	private List<QtEvaluationResultDtlBean> qualifiedSuppliersCache;
 	private List<ScQtFinalizationReport> selectedFinalizationReports;
+	private List<ScQtFinalizationReport> deletedFinalizationReports;
+	
+	// Qualified Suppliers Paging Data Model
+	private IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersDataModel;	
 
 	private Map<Long, TplSpecZoneDtl> zoneMap;
-	private Map<Long, List<ScQtEvaluationResultDtl>> qualifiedSupppliersByZone;
 
 	private List<SmPersonnel> boardofDirectors;
 
@@ -381,6 +386,21 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the selectedItem
+	 */
+	public ScQtRecommend getSelectedItem() {
+		return selectedItem;
+	}
+
+	/**
+	 * @param selectedItem
+	 *            the selectedItem to set
+	 */
+	public void setSelectedItem(ScQtRecommend selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	/**
 	 * @return the committeeMembers
 	 */
 	public List<ScCommitteeMember> getCommitteeMembers() {
@@ -410,53 +430,37 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		this.itemsList = itemsList;
 	}
 
-	/**
-	 * @return the packageQualifiedSuppliers
-	 */
-	public List<ScQtEvaluationResultDtl> getPackageQualifiedSuppliers() {
-		return packageQualifiedSuppliers;
-	}
+//	/**
+//	 * @return the qualifiedSuppliers
+//	 */
+//	public List<ScQtEvaluationResultDtl> getQualifiedSuppliers() {
+//		return qualifiedSuppliers;
+//	}
+//
+//	/**
+//	 * @param qualifiedSuppliers
+//	 *            the qualifiedSuppliers to set
+//	 */
+//	public void setQualifiedSuppliers(
+//			List<ScQtEvaluationResultDtl> qualifiedSuppliers) {
+//		this.qualifiedSuppliers = qualifiedSuppliers;
+//	}
 
-	/**
-	 * @param packageQualifiedSuppliers
-	 *            the packageQualifiedSuppliers to set
-	 */
-	public void setPackageQualifiedSuppliers(
-			List<ScQtEvaluationResultDtl> packageQualifiedSuppliers) {
-		this.packageQualifiedSuppliers = packageQualifiedSuppliers;
-	}
-
-	/**
-	 * @return the qualifiedSuppliers
-	 */
-	public List<ScQtEvaluationResultDtl> getQualifiedSuppliers() {
-		return qualifiedSuppliers;
-	}
-
-	/**
-	 * @param qualifiedSuppliers
-	 *            the qualifiedSuppliers to set
-	 */
-	public void setQualifiedSuppliers(
-			List<ScQtEvaluationResultDtl> qualifiedSuppliers) {
-		this.qualifiedSuppliers = qualifiedSuppliers;
-	}
-
-	/**
-	 * @return the toBeSavedQualifiedSuppliers
-	 */
-	public List<ScQtEvaluationResultDtl> getToBeSavedQualifiedSuppliers() {
-		return toBeSavedQualifiedSuppliers;
-	}
-
-	/**
-	 * @param toBeSavedQualifiedSuppliers
-	 *            the toBeSavedQualifiedSuppliers to set
-	 */
-	public void setToBeSavedQualifiedSuppliers(
-			List<ScQtEvaluationResultDtl> toBeSavedQualifiedSuppliers) {
-		this.toBeSavedQualifiedSuppliers = toBeSavedQualifiedSuppliers;
-	}
+//	/**
+//	 * @return the toBeSavedQualifiedSuppliers
+//	 */
+//	public List<ScQtEvaluationResultDtl> getToBeSavedQualifiedSuppliers() {
+//		return toBeSavedQualifiedSuppliers;
+//	}
+//
+//	/**
+//	 * @param toBeSavedQualifiedSuppliers
+//	 *            the toBeSavedQualifiedSuppliers to set
+//	 */
+//	public void setToBeSavedQualifiedSuppliers(
+//			List<ScQtEvaluationResultDtl> toBeSavedQualifiedSuppliers) {
+//		this.toBeSavedQualifiedSuppliers = toBeSavedQualifiedSuppliers;
+//	}
 
 	/**
 	 * @return the selectedFinalizationReports
@@ -475,6 +479,54 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the deletedFinalizationReports
+	 */
+	public List<ScQtFinalizationReport> getDeletedFinalizationReports() {
+		return deletedFinalizationReports;
+	}
+
+	/**
+	 * @param deletedFinalizationReports
+	 *            the deletedFinalizationReports to set
+	 */
+	public void setDeletedFinalizationReports(
+			List<ScQtFinalizationReport> deletedFinalizationReports) {
+		this.deletedFinalizationReports = deletedFinalizationReports;
+	}
+
+	/**
+	 * @return the qualifiedSuppliersCache
+	 */
+	public List<QtEvaluationResultDtlBean> getQualifiedSuppliersCache() {
+		return qualifiedSuppliersCache;
+	}
+
+	/**
+	 * @param qualifiedSuppliersCache
+	 *            the qualifiedSuppliersCache to set
+	 */
+	public void setQualifiedSuppliersCache(
+			List<QtEvaluationResultDtlBean> qualifiedSuppliersCache) {
+		this.qualifiedSuppliersCache = qualifiedSuppliersCache;
+	}
+
+	/**
+	 * @return the qualifiedSuppliersDataModel
+	 */
+	public IPagingDataModel<ScQtEvaluationResultDtl> getQualifiedSuppliersDataModel() {
+		return qualifiedSuppliersDataModel;
+	}
+
+	/**
+	 * @param qualifiedSuppliersDataModel
+	 *            the qualifiedSuppliersDataModel to set
+	 */
+	public void setQualifiedSuppliersDataModel(
+			IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersDataModel) {
+		this.qualifiedSuppliersDataModel = qualifiedSuppliersDataModel;
+	}
+
+	/**
 	 * @return the zoneMap
 	 */
 	public Map<Long, TplSpecZoneDtl> getZoneMap() {
@@ -487,22 +539,6 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneMap(Map<Long, TplSpecZoneDtl> zoneMap) {
 		this.zoneMap = zoneMap;
-	}
-
-	/**
-	 * @return the qualifiedSupppliersByZone
-	 */
-	public Map<Long, List<ScQtEvaluationResultDtl>> getQualifiedSupppliersByZone() {
-		return qualifiedSupppliersByZone;
-	}
-
-	/**
-	 * @param qualifiedSupppliersByZone
-	 *            the qualifiedSupppliersByZone to set
-	 */
-	public void setQualifiedSupppliersByZone(
-			Map<Long, List<ScQtEvaluationResultDtl>> qualifiedSupppliersByZone) {
-		this.qualifiedSupppliersByZone = qualifiedSupppliersByZone;
 	}
 
 	/**

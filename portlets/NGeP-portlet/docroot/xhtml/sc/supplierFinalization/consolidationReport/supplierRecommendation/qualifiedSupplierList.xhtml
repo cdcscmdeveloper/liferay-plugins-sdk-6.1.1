@@ -10,12 +10,13 @@
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 	
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
-			<p:dataTable id="supplierListTbl"
+			<p:dataTable id="qualifiedSuppliers"
 				var="qualifiedSupp" widgetVar="shortlistedSuppDtls" 
-				value="#{consolidationReportBackingBean.managedBean.qualifiedSuppliers}"
+				value="#{consolidationReportBackingBean.managedBean.qualifiedSuppliersDataModel}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				editable="true" rowIndexVar="index" style="width:100%;" rowKey="#{qualifiedSupp}">
-				<ac:paginator for="supplierListTbl" />
+				editable="true" lazy="true" rowIndexVar="index" rows="1"  
+				style="width:100%;" rowKey="#{qualifiedSupp}">
+				<ac:paginator for="qualifiedSuppliers" />
 				
 				<p:columnGroup type="header">
 		        	<p:row>
@@ -111,7 +112,8 @@
 							maxIntegerDigits="4" integerOnly="true"  />
 							<f:attribute name="min" value="1" />
 							<f:attribute name="max" value="#{consolidationReportBackingBean.managedBean.maxRank}" />
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierListTblPanel])"/>						
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierListTblPanel])" 
+								listener="#{consolidationReportBackingBean.updateCachedData(qualifiedSupp)}" />						
 					</p:inputText>
 					<p:message id="deskOfficerRankInputErrorMsg" for="deskOfficerRankInput" display="icon"/>					
 				</p:column>
@@ -121,7 +123,8 @@
 								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 								 required="#{!empty qualifiedSupp.deskOfficerRank ? true : false}" 
 								 size="20" autocomplete="false">
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierListTblPanel])" />
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierListTblPanel])" 
+								listener="#{consolidationReportBackingBean.updateCachedData(qualifiedSupp)}" />
 					</p:inputText>
 					<p:message id="deskOfficerRemarksErrorMsg" for="deskOfficerRemarks" display="icon"/>					
 				</p:column>

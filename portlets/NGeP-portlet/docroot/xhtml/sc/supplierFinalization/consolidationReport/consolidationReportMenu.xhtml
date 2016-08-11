@@ -70,16 +70,12 @@
 					src="#{consolidationReportFolderPath}/briefingPaper/briefingPaperReport.xhtml" />
 			</c:if>
 			<c:if test="#{consolidationReportBackingBean.managedBean.activeIndex eq 
-								consolidationReportBackingBean.getPACKAGE_TYPE_TAB_INDEX()}">
-				<ui:include
-					src="#{consolidationReportFolderPath}/supplierRecommendation/supplierRecommendation.xhtml" />
-			</c:if>
-			<c:if test="#{consolidationReportBackingBean.managedBean.activeIndex eq 
+								consolidationReportBackingBean.getPACKAGE_TYPE_TAB_INDEX() or 
+							consolidationReportBackingBean.managedBean.activeIndex eq 
 								consolidationReportBackingBean.getITEMIZED_TYPE_TAB_INDEX()}">
 				<ui:include
 					src="#{consolidationReportFolderPath}/supplierRecommendation/supplierRecommendation.xhtml" />
-			</c:if>		
-			
+			</c:if>
 		</p:panel>
 
 		<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/boardofDirectorsDetails.xhtml" />
@@ -87,7 +83,6 @@
 		<ac:scSingleFileUploadPopup widgetVar="briefingReportAttWidget"
 			fileUploadListener="consolidationReportBackingBean.handleFileUpload"
 			update="@([id$=reportTbl])" />
-			
 		
 	</ui:define>
 
