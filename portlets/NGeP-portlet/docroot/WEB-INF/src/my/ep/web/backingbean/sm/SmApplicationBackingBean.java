@@ -231,7 +231,31 @@ public class SmApplicationBackingBean extends
 		renewSesionObject();
 		log.info("*** renewSesionObjectByApplicationType *** "
 				+ applicationType);
-		SmApplicationUtil.setNavigationForApplTnCPage(applicationType);
+		String errMsg = StringUtils.EMPTY;
+		if (applicationType.equals("DPA")) {
+			errMsg = getDeletePendingApplicationErrorMsg();
+		}
+		if (StringUtils.isBlank(errMsg)) {
+			SmApplicationUtil.setNavigationForApplTnCPage(applicationType);
+		} else {
+			String[] params = null;
+			FacesContext fc = FacesContext.getCurrentInstance();
+			if (errMsg.equals(MessageConst.ERROR_722582)) {
+				params = new String[] { getManagedBean().getSmAppl()
+						.getApplNo() };
+			}
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(errMsg, params,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())
+									+ " (" + errMsg + ")"));
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							SmApplicationUtil.getApplicationErrorPage());
+		}
 	}
 
 	/**
@@ -1141,58 +1165,15 @@ public class SmApplicationBackingBean extends
 	 * @return String - output page to redirect
 	 */
 	public String deletePendingMofApplication() {
-		IMofRegistrationSO mofRegistrationSO = null;
 		try {
-			SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
-			log.info("****** Testing the delete pending *********"
-					+ smSupplier.getSupplierId());
-			getManagedBean().setSmSupplier(smSupplier);
-			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							IMofRegistrationSO.class);
-			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-			reqDto.setSmSupplier(smSupplier);
-			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.retrievePendingApplicationDetails(reqDto);
-			if (resDTO.getSmAppl() == null) {
-				throw new EpException(MessageConst.ERROR_722528);
-			} else {
-				SmAppl smAppl = SmApplicationUtil.defaultSmAppl(resDTO
-						.getSmAppl());
-				if (smAppl.getApplType() != null
-						&& smAppl.getApplType().equalsIgnoreCase(
-								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-					log.info("*** This is cancellation application *****");
-					throw new EpException(MessageConst.ERROR_722581);
-				}
-				getManagedBean().setSmAppl(smAppl);
-				SmWorkflowStatus sts = SmCommonUtil
-						.getCurrentActiveWokFlowStatus(getManagedBean()
-								.getSmAppl().getApplId());
-				if (sts != null && sts.getPmStatus() != null) {
-					if (sts.getPmStatus()
-							.getStatusId()
-							.compareTo(
-									SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) == 0) {
-						log.info("*** This is draft application *****");
-						throw new EpException(MessageConst.ERROR_722569);
-					} else if (sts
-							.getPmStatus()
-							.getStatusId()
-							.compareTo(
-									SupplierManagementConst.PM_STATUS_PENDING_PAYMENT) == 0) {
-						log.info("*** This is application with pending payment *****");
-						throw new EpException(MessageConst.ERROR_722577);
-					} else if (sts
-							.getPmStatus()
-							.getStatusId()
-							.compareTo(
-									SupplierManagementConst.PM_STATUS_PENDING_REVIEW_CANCELLATION) == 0) {
-						log.info("*** This is duplicate request for the delete pending *****");
-						throw new EpException(MessageConst.ERROR_722582,
-								new String[] { smAppl.getApplNo() });
-					}
-					setPmStatusDesc(sts.getPmStatus().getStatusId().toString());
+			String errMsg = getDeletePendingApplicationErrorMsg();
+			if (!StringUtils.isBlank(errMsg)) {
+				if (errMsg.equals(MessageConst.ERROR_722582)) {
+					throw new EpException(errMsg,
+							new String[] { getManagedBean().getSmAppl()
+									.getApplNo() });
+				} else {
+					throw new EpException(errMsg);
 				}
 			}
 			getManagedBean()
@@ -1210,8 +1191,60 @@ public class SmApplicationBackingBean extends
 			return SupplierManagementConst.PROCEED_DEL_PENDING_MOF_APPLN;
 
 		} finally {
-			mofRegistrationSO = null;
+
 		}
+	}
+
+	private String getDeletePendingApplicationErrorMsg() {
+		String errMsg = StringUtils.EMPTY;
+		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
+		log.info("****** Testing the delete pending *********"
+				+ smSupplier.getSupplierId());
+		getManagedBean().setSmSupplier(smSupplier);
+		MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+		reqDto.setSmSupplier(smSupplier);
+		MofRegistrationResDTO resDTO = SmServiceLookup.getMofRegistrationSO()
+				.retrievePendingApplicationDetails(reqDto);
+		if (resDTO.getSmAppl() == null) {
+			errMsg = MessageConst.ERROR_722528;
+		} else {
+			SmAppl smAppl = SmApplicationUtil.defaultSmAppl(resDTO.getSmAppl());
+			if (smAppl.getApplType() != null
+					&& smAppl.getApplType().equalsIgnoreCase(
+							ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				log.info("*** This is cancellation application *****");
+				errMsg = MessageConst.ERROR_722581;
+			}
+			getManagedBean().setSmAppl(smAppl);
+			SmWorkflowStatus sts = SmCommonUtil
+					.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl()
+							.getApplId());
+			if (sts != null && sts.getPmStatus() != null) {
+				if (sts.getPmStatus()
+						.getStatusId()
+						.compareTo(
+								SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) == 0) {
+					log.info("*** This is draft application *****");
+					errMsg = MessageConst.ERROR_722569;
+				} else if (sts
+						.getPmStatus()
+						.getStatusId()
+						.compareTo(
+								SupplierManagementConst.PM_STATUS_PENDING_PAYMENT) == 0) {
+					log.info("*** This is application with pending payment *****");
+					errMsg = MessageConst.ERROR_722577;
+				} else if (sts
+						.getPmStatus()
+						.getStatusId()
+						.compareTo(
+								SupplierManagementConst.PM_STATUS_PENDING_REVIEW_CANCELLATION) == 0) {
+					log.info("*** This is duplicate request for the delete pending *****");
+					errMsg = MessageConst.ERROR_722582;
+				}
+				setPmStatusDesc(sts.getPmStatus().getStatusId().toString());
+			}
+		}
+		return errMsg;
 	}
 
 	/**
