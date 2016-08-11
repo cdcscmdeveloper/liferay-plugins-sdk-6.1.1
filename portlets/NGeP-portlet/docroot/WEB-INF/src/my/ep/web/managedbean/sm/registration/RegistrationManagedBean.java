@@ -111,6 +111,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean aggreeDeclareAdmin;
 	
 	private boolean hasActiveTransaction;
+	private boolean viewMode;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -627,6 +628,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setHasActiveTransaction(boolean hasActiveTransaction) {
 		this.hasActiveTransaction = hasActiveTransaction;
+	}
+
+	public boolean isViewMode() {
+		return viewMode;
+	}
+
+	public void setViewMode(boolean viewMode) {
+		this.viewMode = viewMode;
 	}
 
 }

@@ -2187,6 +2187,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	/**
+	 * Back to application history search page
+	 */
+	public String backToHistory() {
+		return "/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierApplicationHistoryPage.xhtml?faces-redirect=true";
+	}
+	
 	private void setGstDocToMainList(List<SmGstSupplierDoc> mainDocList,
 			SmGstSupplierDoc selectedDoc) {
 		Iterator<SmGstSupplierDoc> docVOIter = mainDocList.iterator();
