@@ -2010,15 +2010,15 @@ public class SmApplicationBackingBean extends
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
-					assignApplicationRegistrationStatus(getManagedBean()
-							.getSmSupplier().getSmAppl().getPmRegStatus());
+//					assignApplicationRegistrationStatus(getManagedBean()
+//							.getSmSupplier().getSmAppl().getPmRegStatus());
 					getHqFacility();
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
-					assignApplicationRegistrationStatus(getManagedBean()
-							.getSmSupplier().getSmAppl().getPmRegStatus());
+//					assignApplicationRegistrationStatus(getManagedBean()
+//							.getSmSupplier().getSmAppl().getPmRegStatus());
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV:
 					log.info("******* This is site visit review page ********");
