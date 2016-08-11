@@ -665,7 +665,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     public void validateCtContractVer(String action) throws EpException {
     	getManagedBean().setAutoUpdate(true);
     	
-    	if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){
+    	if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
+    			!ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
     			if(ctBB.getManagedBean().getContractVer().getCtContractValue().getDeliveryTerm() <= 0){
     				throw new EpException(MessageConst.ERROR_100062);
     			}
