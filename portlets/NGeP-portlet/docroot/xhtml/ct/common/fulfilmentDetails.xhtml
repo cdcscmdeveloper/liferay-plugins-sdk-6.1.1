@@ -168,7 +168,7 @@
 		<h:panelGrid  style="width:265px; margin-left:5px">
 		   <h:panelGrid columns="3" rendered="#{!ctBackingBean.managedBean.directPurchase}">
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContractValue.concession}"
-			 	 disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.ctContractAmount.agreement 
+			 	 disabled="#{ctBackingBean.managedBean.viewContract 
 			 	 or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}">
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{ctBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
