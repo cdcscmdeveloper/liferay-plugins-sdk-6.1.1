@@ -83,7 +83,9 @@
 					<td style="width: 20%"><h:outputLabel
 							value="#{lbl['lbl.ct.loa.no']}" /></td>
 					<td style="width: 13%" class="header-info-text">
-						#{supplierBackingBean.managedBean.contractVer.ctContractValue.loaNo}</td>
+						<p:commandLink value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.loaNo}" 
+							process="@this" partialSubmit="true" styleClass="blue_font"
+					       	action="#{supplierBackingBean.goToLoaView(supplierBackingBean.managedBean.ctContract.loa.loaId)}"/></td>						
 					<td style="width: 10%"><h:outputLabel
 							value="#{lbl['lbl.ct.contract.no']}" /></td>
 					<td style="width: 10%" class="header-info-text">
