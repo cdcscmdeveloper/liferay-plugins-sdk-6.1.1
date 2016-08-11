@@ -210,7 +210,7 @@
 			<p:dataTable id="rejectionRemarks" value="#{receivedNoteBackingBean.managedBean.rejectionRemarkHistory}" var="remarks"
 			rowIndexVar="rowIndex">
 			<ac:paginator for="rejectionRemarks" />
-			<p:column headerText="No." style="text-align:right;width:2%">
+			<p:column headerText="#{lbl['lbl.fl.num']}" style="text-align:right;width:2%">
 				<h:outputText value="#{rowIndex+1}" ></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.remark.by']}" style="text-align:left">
