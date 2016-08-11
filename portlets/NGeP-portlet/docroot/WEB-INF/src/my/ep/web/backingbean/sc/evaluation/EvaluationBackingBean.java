@@ -6629,7 +6629,7 @@ public class EvaluationBackingBean extends
 			}
 
 			if (!this.getManagedBean().isReadOnly()) {
-				saveQtReportDtls();
+				//saveQtReportDtls();
 				setReportAttachment();
 			}
 
@@ -8112,36 +8112,38 @@ public class EvaluationBackingBean extends
 			filename.append(scQtEvaluationReport.getTitle().replaceAll("\\s",
 					"_"));
 
-			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateCoverPdfFromVelocity(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-			} else if (SourcingConstants.DOC_DEF_KEY_MAKLUMAT_TENDER_HARGA
-					.equals(docDefinitionKey)) {
-				// filename.append(".pdf");
-				// scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateMaklumatTenderHargaPdfFromVelocity(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-			} else if (SourcingConstants.DOC_DEF_KEY_MEETING_DTLS
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateMeetingDetailsPdfFromVelocity(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_COMMITTEE_DTLS
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateCommitteeDetailsPdfFromVelocity(
-						(ScAttachment) scQtEvaluationReportAttachment,
-						getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_COMPLIANCE_SHORTLISTED
+//			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
+//				filename.append(".pdf");
+//				scQtEvaluationReportAttachment.setFileName(filename.toString());
+//				generateCoverPdfFromVelocity(
+//						(ScAttachment) scQtEvaluationReportAttachment,
+//						getManagedBean().getScQt());
+//			} else if (SourcingConstants.DOC_DEF_KEY_MAKLUMAT_TENDER_HARGA
+//					.equals(docDefinitionKey)) {
+//				// filename.append(".pdf");
+//				// scQtEvaluationReportAttachment.setFileName(filename.toString());
+//				generateMaklumatTenderHargaPdfFromVelocity(
+//						(ScAttachment) scQtEvaluationReportAttachment,
+//						getManagedBean().getScQt());
+//			} else if (SourcingConstants.DOC_DEF_KEY_MEETING_DTLS
+//					.equals(docDefinitionKey)) {
+//				filename.append(".pdf");
+//				scQtEvaluationReportAttachment.setFileName(filename.toString());
+//				generateMeetingDetailsPdfFromVelocity(
+//						(ScAttachment) scQtEvaluationReportAttachment,
+//						getManagedBean().getScQt());
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_COMMITTEE_DTLS
+//					.equals(docDefinitionKey)) {
+//				filename.append(".pdf");
+//				scQtEvaluationReportAttachment.setFileName(filename.toString());
+//				generateCommitteeDetailsPdfFromVelocity(
+//						(ScAttachment) scQtEvaluationReportAttachment,
+//						getManagedBean().getScQt());
+//
+//			}  
+				
+			if (SourcingConstants.DOC_DEF_KEY_COMPLIANCE_SHORTLISTED
 					.equals(docDefinitionKey)) {
 				filename.append(".pdf");
 				scQtEvaluationReportAttachment.setFileName(filename.toString());
@@ -8961,123 +8963,123 @@ public class EvaluationBackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void generateCommitteeDetailsPdfFromVelocity(
-			ScAttachment attachment, ScQt qt) throws Exception {
-		populateAttachmentDetails(attachment);
-
-		VelocityContext context = new VelocityContext();
-
-		String committeType = getManagedBean().getCommitteeType();
-		List<ScQtCommitteeActivity> committeeActivities = new ArrayList<ScQtCommitteeActivity>();
-		List<ScQtCommitteeActivity> committeeActivitiesList = new ArrayList<ScQtCommitteeActivity>();
-		List<ScQtMeetingAttendance> meetingAttendances = new ArrayList<ScQtMeetingAttendance>();
-		List<ScQtMeetingAttendance> meetingAttendancesList = new ArrayList<ScQtMeetingAttendance>();
-		ScQtCommittee scQtCommittee = new ScQtCommittee();
-		IQTMeetingSO meetingSO = null;
-		MeetingResDTO resDTO = null;
-		try {
-			meetingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
-			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			reqDTO.setQtId(qt.getQtId());
-			reqDTO.setCommitteType(committeType);
-			resDTO = meetingSO.retrieveMeetingDls(reqDTO);
-			scQtCommittee = resDTO.getQtCommittee();
-		} finally {
-			meetingSO = null;
-		}
-		if (null == scQtCommittee) {
-			scQtCommittee = new ScQtCommittee();
-		}
-		if (null != scQtCommittee) {
-			if (null != scQtCommittee.getCommitteeActivities()
-					&& !scQtCommittee.getCommitteeActivities().isEmpty()) {
-				committeeActivitiesList = scQtCommittee
-						.getCommitteeActivities();
-				for (ScQtCommitteeActivity committeeActivity : committeeActivitiesList) {
-					if (committeeActivity.getScCommitteeMember() != null) {
-						if (committeeActivity.getScCommitteeMember()
-								.getMemberName() == null) {
-							committeeActivity.getScCommitteeMember()
-									.setMemberName("");
-						}
-					} else {
-						committeeActivity
-								.setScCommitteeMember(new ScCommitteeMember());
-						committeeActivity.getScCommitteeMember().setMemberName(
-								"");
-					}
-					if (committeeActivity.getScCommitteeMember() != null) {
-						if (committeeActivity.getScCommitteeMember()
-								.getDesignation() == null) {
-							committeeActivity.getScCommitteeMember()
-									.setDesignation("");
-						}
-					} else {
-						committeeActivity
-								.setScCommitteeMember(new ScCommitteeMember());
-						committeeActivity.getScCommitteeMember()
-								.setDesignation("");
-					}
-					if (committeeActivity.getScCommitteeMember() != null) {
-						if (committeeActivity.getScCommitteeMember().getGrade() == null) {
-							committeeActivity.getScCommitteeMember().setGrade(
-									"");
-						}
-					} else {
-						committeeActivity
-								.setScCommitteeMember(new ScCommitteeMember());
-						committeeActivity.getScCommitteeMember().setGrade("");
-					}
-					if (committeeActivity.getScCommitteeMember() != null) {
-						if (committeeActivity.getScCommitteeMember()
-								.getIcPassport() == null) {
-							committeeActivity.getScCommitteeMember()
-									.setIcPassport("");
-						}
-					} else {
-						committeeActivity
-								.setScCommitteeMember(new ScCommitteeMember());
-						committeeActivity.getScCommitteeMember().setIcPassport(
-								"");
-					}
-					if (committeeActivity.isAttended()) {
-						committeeActivities.add(committeeActivity);
-					}
-				}
-			}
-			if (null != scQtCommittee.getMeetingAttendances()
-					&& !scQtCommittee.getMeetingAttendances().isEmpty()) {
-				meetingAttendances = scQtCommittee.getMeetingAttendances();
-				for (ScQtMeetingAttendance attendance : meetingAttendances) {
-					if (attendance.getName() == null) {
-						attendance.setName("");
-					}
-					if (attendance.getIcPassport() == null) {
-						attendance.setIcPassport("");
-					}
-					meetingAttendancesList.add(attendance);
-				}
-			}
-		}
-
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equals(committeType)
-				|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-						.equals(committeType)
-				|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-						.equals(committeType)
-				|| ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-						.equals(committeType)) {
-			context.put("committeeActivities", committeeActivities);
-			context.put("meetingAttendances", meetingAttendancesList);
-			context.put("bean", this);
-		}
-
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_EV_COMMITTEE_DTLS, context,
-				new FileOutputStream(getActualFilePath(attachment)));
-	}
+//	private void generateCommitteeDetailsPdfFromVelocity(
+//			ScAttachment attachment, ScQt qt) throws Exception {
+//		populateAttachmentDetails(attachment);
+//
+//		VelocityContext context = new VelocityContext();
+//
+//		String committeType = getManagedBean().getCommitteeType();
+//		List<ScQtCommitteeActivity> committeeActivities = new ArrayList<ScQtCommitteeActivity>();
+//		List<ScQtCommitteeActivity> committeeActivitiesList = new ArrayList<ScQtCommitteeActivity>();
+//		List<ScQtMeetingAttendance> meetingAttendances = new ArrayList<ScQtMeetingAttendance>();
+//		List<ScQtMeetingAttendance> meetingAttendancesList = new ArrayList<ScQtMeetingAttendance>();
+//		ScQtCommittee scQtCommittee = new ScQtCommittee();
+//		IQTMeetingSO meetingSO = null;
+//		MeetingResDTO resDTO = null;
+//		try {
+//			meetingSO = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+//			MeetingReqDTO reqDTO = new MeetingReqDTO();
+//			reqDTO.setQtId(qt.getQtId());
+//			reqDTO.setCommitteType(committeType);
+//			resDTO = meetingSO.retrieveMeetingDls(reqDTO);
+//			scQtCommittee = resDTO.getQtCommittee();
+//		} finally {
+//			meetingSO = null;
+//		}
+//		if (null == scQtCommittee) {
+//			scQtCommittee = new ScQtCommittee();
+//		}
+//		if (null != scQtCommittee) {
+//			if (null != scQtCommittee.getCommitteeActivities()
+//					&& !scQtCommittee.getCommitteeActivities().isEmpty()) {
+//				committeeActivitiesList = scQtCommittee
+//						.getCommitteeActivities();
+//				for (ScQtCommitteeActivity committeeActivity : committeeActivitiesList) {
+//					if (committeeActivity.getScCommitteeMember() != null) {
+//						if (committeeActivity.getScCommitteeMember()
+//								.getMemberName() == null) {
+//							committeeActivity.getScCommitteeMember()
+//									.setMemberName("");
+//						}
+//					} else {
+//						committeeActivity
+//								.setScCommitteeMember(new ScCommitteeMember());
+//						committeeActivity.getScCommitteeMember().setMemberName(
+//								"");
+//					}
+//					if (committeeActivity.getScCommitteeMember() != null) {
+//						if (committeeActivity.getScCommitteeMember()
+//								.getDesignation() == null) {
+//							committeeActivity.getScCommitteeMember()
+//									.setDesignation("");
+//						}
+//					} else {
+//						committeeActivity
+//								.setScCommitteeMember(new ScCommitteeMember());
+//						committeeActivity.getScCommitteeMember()
+//								.setDesignation("");
+//					}
+//					if (committeeActivity.getScCommitteeMember() != null) {
+//						if (committeeActivity.getScCommitteeMember().getGrade() == null) {
+//							committeeActivity.getScCommitteeMember().setGrade(
+//									"");
+//						}
+//					} else {
+//						committeeActivity
+//								.setScCommitteeMember(new ScCommitteeMember());
+//						committeeActivity.getScCommitteeMember().setGrade("");
+//					}
+//					if (committeeActivity.getScCommitteeMember() != null) {
+//						if (committeeActivity.getScCommitteeMember()
+//								.getIcPassport() == null) {
+//							committeeActivity.getScCommitteeMember()
+//									.setIcPassport("");
+//						}
+//					} else {
+//						committeeActivity
+//								.setScCommitteeMember(new ScCommitteeMember());
+//						committeeActivity.getScCommitteeMember().setIcPassport(
+//								"");
+//					}
+//					if (committeeActivity.isAttended()) {
+//						committeeActivities.add(committeeActivity);
+//					}
+//				}
+//			}
+//			if (null != scQtCommittee.getMeetingAttendances()
+//					&& !scQtCommittee.getMeetingAttendances().isEmpty()) {
+//				meetingAttendances = scQtCommittee.getMeetingAttendances();
+//				for (ScQtMeetingAttendance attendance : meetingAttendances) {
+//					if (attendance.getName() == null) {
+//						attendance.setName("");
+//					}
+//					if (attendance.getIcPassport() == null) {
+//						attendance.setIcPassport("");
+//					}
+//					meetingAttendancesList.add(attendance);
+//				}
+//			}
+//		}
+//
+//		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+//				.equals(committeType)
+//				|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+//						.equals(committeType)
+//				|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+//						.equals(committeType)
+//				|| ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+//						.equals(committeType)) {
+//			context.put("committeeActivities", committeeActivities);
+//			context.put("meetingAttendances", meetingAttendancesList);
+//			context.put("bean", this);
+//		}
+//
+//		DocumentGenerator.getInstance().generatePdfFromVelocity(
+//				SourcingConstants.DOCPATH_EV_COMMITTEE_DTLS, context,
+//				new FileOutputStream(getActualFilePath(attachment)));
+//	}
 
 	/**
 	 * Generate meeting details pdf from velocity.
@@ -9089,186 +9091,186 @@ public class EvaluationBackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void generateMeetingDetailsPdfFromVelocity(ScAttachment attachment,
-			ScQt qt) throws Exception {
-		populateAttachmentDetails(attachment);
-
-		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(
-				commonUtils
-						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-		VelocityContext context = new VelocityContext();
-
-		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() + ":"
-				+ fs.getRequest().getServerPort();
-		String userName = fs.getUserSessionBean().getUserName();
-		context.put("hostUrl", hostUrl);
-		context.put("userName", userName);
-
-		Date newDate = new Date();
-		String date = "";
-		if (newDate != null) {
-			date = dateSDF.format(newDate);
-		}
-		context.put("date", date);
-
-		List<ScQtMeeting> scQtMeetings = new ArrayList<ScQtMeeting>();
-		IQTMeetingSO meetingSO = null;
-		try {
-			meetingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
-			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			reqDTO.setQtId(qt.getQtId());
-			reqDTO.setCommitteType(this.getManagedBean().getCommitteeType());
-			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
-			// scQtMeetings = resDTO.getMeetingDtls();
-			for (ScQtMeeting meeting : resDTO.getMeetingDtls()) {
-				if (QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
-						.getStatusId())) {
-					meeting.setMeetDateStr(dateSDF.format(meeting
-							.getMeetingDate()));
-					DateFormat formatter = DateFormat.getInstance();
-					formatter = DateFormat.getTimeInstance(); // time only
-					meeting.setMeetTimeStr(formatter.format(meeting
-							.getMeetingDate()));
-					scQtMeetings.add(meeting);
-				}
-			}
-			context.put("scQtMeetings", scQtMeetings);
-		} finally {
-			meetingSO = null;
-		}
-
-		boolean commType = false;
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equals(getManagedBean().getCommitteeType())) {
-			commType = true;
-			context.put("ec", commType);
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-				.equals(getManagedBean().getCommitteeType())) {
-			commType = true;
-			context.put("oc", commType);
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equals(getManagedBean().getCommitteeType())) {
-			commType = true;
-			context.put("tec", commType);
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equals(getManagedBean().getCommitteeType())) {
-			commType = true;
-			context.put("fec", commType);
-		}
-
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_EV_MEETING_DTLS, context,
-				new FileOutputStream(getActualFilePath(attachment)));
-	}
+//	private void generateMeetingDetailsPdfFromVelocity(ScAttachment attachment,
+//			ScQt qt) throws Exception {
+//		populateAttachmentDetails(attachment);
+//
+//		CommonUtils commonUtils = new CommonUtils();
+//		SimpleDateFormat dateSDF = new SimpleDateFormat(
+//				commonUtils
+//						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+//		VelocityContext context = new VelocityContext();
+//
+//		FacesScopes fs = new FacesScopes();
+//		String hostUrl = fs.getRequest().getServerName() + ":"
+//				+ fs.getRequest().getServerPort();
+//		String userName = fs.getUserSessionBean().getUserName();
+//		context.put("hostUrl", hostUrl);
+//		context.put("userName", userName);
+//
+//		Date newDate = new Date();
+//		String date = "";
+//		if (newDate != null) {
+//			date = dateSDF.format(newDate);
+//		}
+//		context.put("date", date);
+//
+//		List<ScQtMeeting> scQtMeetings = new ArrayList<ScQtMeeting>();
+//		IQTMeetingSO meetingSO = null;
+//		try {
+//			meetingSO = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+//			MeetingReqDTO reqDTO = new MeetingReqDTO();
+//			reqDTO.setQtId(qt.getQtId());
+//			reqDTO.setCommitteType(this.getManagedBean().getCommitteeType());
+//			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
+//			// scQtMeetings = resDTO.getMeetingDtls();
+//			for (ScQtMeeting meeting : resDTO.getMeetingDtls()) {
+//				if (QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
+//						.getStatusId())) {
+//					meeting.setMeetDateStr(dateSDF.format(meeting
+//							.getMeetingDate()));
+//					DateFormat formatter = DateFormat.getInstance();
+//					formatter = DateFormat.getTimeInstance(); // time only
+//					meeting.setMeetTimeStr(formatter.format(meeting
+//							.getMeetingDate()));
+//					scQtMeetings.add(meeting);
+//				}
+//			}
+//			context.put("scQtMeetings", scQtMeetings);
+//		} finally {
+//			meetingSO = null;
+//		}
+//
+//		boolean commType = false;
+//		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+//				.equals(getManagedBean().getCommitteeType())) {
+//			commType = true;
+//			context.put("ec", commType);
+//		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+//				.equals(getManagedBean().getCommitteeType())) {
+//			commType = true;
+//			context.put("oc", commType);
+//		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+//				.equals(getManagedBean().getCommitteeType())) {
+//			commType = true;
+//			context.put("tec", commType);
+//		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+//				.equals(getManagedBean().getCommitteeType())) {
+//			commType = true;
+//			context.put("fec", commType);
+//		}
+//
+//		DocumentGenerator.getInstance().generatePdfFromVelocity(
+//				SourcingConstants.DOCPATH_EV_MEETING_DTLS, context,
+//				new FileOutputStream(getActualFilePath(attachment)));
+//	}
 
 	/**
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
 	 */
-	private void generateMaklumatTenderHargaPdfFromVelocity(
-			ScAttachment attachment, ScQt qt) throws Exception {
-		debugLogger("generateMaklumatTenderHargaPdfFromVelocity");
-		attachment
-				.setFileName(SourcingConstants.DOCNAME_EV_MAKLUMAT_TENDER_HARGA);
-		populateAttachmentDetails(attachment);
-
-		VelocityContext context = new VelocityContext();
-
-		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(
-				commonUtils
-						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-		DecimalFormat amountDF = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() + ":"
-				+ fs.getRequest().getServerPort();
-		String userName = fs.getUserSessionBean().getUserName();
-		context.put("hostUrl", hostUrl);
-		context.put("userName", userName);
-
-		Date newDate = new Date();
-		String date = "";
-		if (newDate != null) {
-			date = dateSDF.format(newDate);
-		}
-		context.put("date", date);
-
-		StringBuilder openType = new StringBuilder();
-		if (openType != null) {
-			openType.append(getParameterDesc(
-					ParameterTypeConst.QUOTATION_TENDER_TYPE, qt.getQtType()));
-		}
-
-		String estimatedPrice = "";
-		if (qt.getEstimatedAmount() != null) {
-			estimatedPrice = amountDF.format(qt.getEstimatedAmount());
-		}
-
-		String publishDate = "";
-		if (qt.getPublishDate() != null) {
-			publishDate = dateSDF.format(qt.getPublishDate());
-		}
-
-		String closingDate = "";
-		if (qt.getClosingDate() != null) {
-			closingDate = dateSDF.format(qt.getClosingDate());
-		}
-		String totalSuppliers = "0";
-		if (qt.getScQtSuppliers() != null) {
-
-			IQTDetailSO detailsSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTDetailSO.class);
-			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-			tenderReqDTO.setQtId(qt.getQtId());
-			tenderResDTO = detailsSO
-					.retriveQualifiedRestrictedSuppliers(tenderReqDTO);
-			if (CollectionUtils.isNotEmpty(tenderResDTO.getRestrictedSuppliers())
-					
-					) {
-								
-				totalSuppliers = String.valueOf(tenderResDTO.
-						getRestrictedSuppliers().size());
-
-			}
-		}
-
-		boolean commType = false;
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equals(getManagedBean().getCommitteeType())
-				|| ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-						.equals(getManagedBean().getCommitteeType())
-				|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-						.equals(getManagedBean().getCommitteeType())) {
-			commType = true;
-			context.put("ec", commType);
-			context.put("qtType", openType);
-			context.put("estimatedPrice", estimatedPrice);
-			context.put("publishDate", publishDate);
-			context.put("closingDate", closingDate);
-			context.put("totalSuppliers", totalSuppliers);
-
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equals(getManagedBean().getCommitteeType())) {
-			commType = true;
-			context.put("tec", commType);
-			context.put("qtType", openType);
-			context.put("publishDate", publishDate);
-			context.put("closingDate", closingDate);
-			context.put("totalSuppliers", totalSuppliers);
-		}
-
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_EV_MAKLUMAT_TENDER_HARGA, context,
-				new FileOutputStream(getActualFilePath(attachment)));
-	}
+//	private void generateMaklumatTenderHargaPdfFromVelocity(
+//			ScAttachment attachment, ScQt qt) throws Exception {
+//		debugLogger("generateMaklumatTenderHargaPdfFromVelocity");
+//		attachment
+//				.setFileName(SourcingConstants.DOCNAME_EV_MAKLUMAT_TENDER_HARGA);
+//		populateAttachmentDetails(attachment);
+//
+//		VelocityContext context = new VelocityContext();
+//
+//		CommonUtils commonUtils = new CommonUtils();
+//		SimpleDateFormat dateSDF = new SimpleDateFormat(
+//				commonUtils
+//						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+//		DecimalFormat amountDF = new DecimalFormat(
+//				commonUtils
+//						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+//
+//		FacesScopes fs = new FacesScopes();
+//		String hostUrl = fs.getRequest().getServerName() + ":"
+//				+ fs.getRequest().getServerPort();
+//		String userName = fs.getUserSessionBean().getUserName();
+//		context.put("hostUrl", hostUrl);
+//		context.put("userName", userName);
+//
+//		Date newDate = new Date();
+//		String date = "";
+//		if (newDate != null) {
+//			date = dateSDF.format(newDate);
+//		}
+//		context.put("date", date);
+//
+//		StringBuilder openType = new StringBuilder();
+//		if (openType != null) {
+//			openType.append(getParameterDesc(
+//					ParameterTypeConst.QUOTATION_TENDER_TYPE, qt.getQtType()));
+//		}
+//
+//		String estimatedPrice = "";
+//		if (qt.getEstimatedAmount() != null) {
+//			estimatedPrice = amountDF.format(qt.getEstimatedAmount());
+//		}
+//
+//		String publishDate = "";
+//		if (qt.getPublishDate() != null) {
+//			publishDate = dateSDF.format(qt.getPublishDate());
+//		}
+//
+//		String closingDate = "";
+//		if (qt.getClosingDate() != null) {
+//			closingDate = dateSDF.format(qt.getClosingDate());
+//		}
+//		String totalSuppliers = "0";
+//		if (qt.getScQtSuppliers() != null) {
+//
+//			IQTDetailSO detailsSO = BusinessDelegate.getInstance()
+//					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//							IQTDetailSO.class);
+//			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+//			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
+//			tenderReqDTO.setQtId(qt.getQtId());
+//			tenderResDTO = detailsSO
+//					.retriveQualifiedRestrictedSuppliers(tenderReqDTO);
+//			if (CollectionUtils.isNotEmpty(tenderResDTO.getRestrictedSuppliers())
+//					
+//					) {
+//								
+//				totalSuppliers = String.valueOf(tenderResDTO.
+//						getRestrictedSuppliers().size());
+//
+//			}
+//		}
+//
+//		boolean commType = false;
+//		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+//				.equals(getManagedBean().getCommitteeType())
+//				|| ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+//						.equals(getManagedBean().getCommitteeType())
+//				|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+//						.equals(getManagedBean().getCommitteeType())) {
+//			commType = true;
+//			context.put("ec", commType);
+//			context.put("qtType", openType);
+//			context.put("estimatedPrice", estimatedPrice);
+//			context.put("publishDate", publishDate);
+//			context.put("closingDate", closingDate);
+//			context.put("totalSuppliers", totalSuppliers);
+//
+//		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+//				.equals(getManagedBean().getCommitteeType())) {
+//			commType = true;
+//			context.put("tec", commType);
+//			context.put("qtType", openType);
+//			context.put("publishDate", publishDate);
+//			context.put("closingDate", closingDate);
+//			context.put("totalSuppliers", totalSuppliers);
+//		}
+//
+//		DocumentGenerator.getInstance().generatePdfFromVelocity(
+//				SourcingConstants.DOCPATH_EV_MAKLUMAT_TENDER_HARGA, context,
+//				new FileOutputStream(getActualFilePath(attachment)));
+//	}
 
 	/**
 	 * Generate cover pdf from velocity.
@@ -9280,41 +9282,41 @@ public class EvaluationBackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void generateCoverPdfFromVelocity(ScAttachment attachment, ScQt qt)
-			throws Exception {
-		populateAttachmentDetails(attachment);
-
-		VelocityContext context = new VelocityContext();
-
-		boolean commType = false;
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equals(getManagedBean().getCommitteeType())) {
-			commType = true;
-			context.put("ec", commType);
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-				.equals(getManagedBean().getCommitteeType())) {
-			commType = true;
-			context.put("oc", commType);
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equals(getManagedBean().getCommitteeType())) {
-			commType = true;
-			context.put("tec", commType);
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equals(getManagedBean().getCommitteeType())) {
-			commType = true;
-			context.put("fec", commType);
-		}
-		context.put("title", qt.getQtTitle());
-		context.put("procurementMode", qt.getProcurementMode()
-				.getParameterCode());
-		context.put("qtNo", qt.getQtNo());
-		context.put("fileNo", qt.getFileNo());
-		context.put("ptjName", qt.getPmOrgProfile().getOrgName());
-
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_EV_COVER, context,
-				new FileOutputStream(getActualFilePath(attachment)));
-	}
+//	private void generateCoverPdfFromVelocity(ScAttachment attachment, ScQt qt)
+//			throws Exception {
+//		populateAttachmentDetails(attachment);
+//
+//		VelocityContext context = new VelocityContext();
+//
+//		boolean commType = false;
+//		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+//				.equals(getManagedBean().getCommitteeType())) {
+//			commType = true;
+//			context.put("ec", commType);
+//		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+//				.equals(getManagedBean().getCommitteeType())) {
+//			commType = true;
+//			context.put("oc", commType);
+//		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+//				.equals(getManagedBean().getCommitteeType())) {
+//			commType = true;
+//			context.put("tec", commType);
+//		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+//				.equals(getManagedBean().getCommitteeType())) {
+//			commType = true;
+//			context.put("fec", commType);
+//		}
+//		context.put("title", qt.getQtTitle());
+//		context.put("procurementMode", qt.getProcurementMode()
+//				.getParameterCode());
+//		context.put("qtNo", qt.getQtNo());
+//		context.put("fileNo", qt.getFileNo());
+//		context.put("ptjName", qt.getPmOrgProfile().getOrgName());
+//
+//		DocumentGenerator.getInstance().generatePdfFromVelocity(
+//				SourcingConstants.DOCPATH_EV_COVER, context,
+//				new FileOutputStream(getActualFilePath(attachment)));
+//	}
 
 	/**
 	 * Download all reports.download all evaluation reports.
@@ -9781,12 +9783,8 @@ public class EvaluationBackingBean extends
 			reqDTO.setScQtEvaluationReportList(evaluationReportList);
 			evaluationReportSO.saveQTDtl(reqDTO);
 
-//			renewSesionObject();
-			
-//			this.getManagedBean().setScQt(scQt);
-//			this.getManagedBean().setTaskId(taskId);
-//			this.getManagedBean().setOutComes(outComes);
-			retrieveReportTabDtl();
+
+			//retrieveReportTabDtl();
 
 		} finally {
 			evaluationReportSO = null;
