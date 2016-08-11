@@ -2011,14 +2011,14 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					assignApplicationRegistrationStatus(getManagedBean()
-							.getSmAppl().getPmRegStatus());
+							.getSmSupplier().getSmAppl().getPmRegStatus());
 					getHqFacility();
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
 					assignApplicationRegistrationStatus(getManagedBean()
-							.getSmAppl().getPmRegStatus());
+							.getSmSupplier().getSmAppl().getPmRegStatus());
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV:
 					log.info("******* This is site visit review page ********");
@@ -9817,8 +9817,8 @@ public class SmApplicationBackingBean extends
 	 *            - PmRegStatus object
 	 */
 	private void assignApplicationRegistrationStatus(PmRegStatus regStatus) {
-		if (getManagedBean().getSmAppl().getPmRegStatus() != null
-				&& getManagedBean().getSmAppl().getPmRegStatus().getPmStatus() != null) {
+		if (regStatus != null
+				&& regStatus.getPmStatus() != null) {
 			log.info("****** reg Status Id ******"
 					+ regStatus.getPmStatus().getStatusId());
 			StatusReqDTO reqDTO = new StatusReqDTO();
