@@ -2869,15 +2869,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		  centralBB.getManagedBean().setChkCentralCircular(true);
 		  centralBB.gotoCommonPage(contractVerId);
 		  return CENTRAL_CIRCULAR_PAGE;
-	  }	  
-	  
-	  public void gotoLoaPage(Long loaId){
-		  LOADetailBackingBean loaBB = new LOADetailBackingBean();
-			FacesContext fc = FacesContext.getCurrentInstance();
-			loaBB.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-			loaBB.getManagedBean().setTrackingDairyView(true);
-			loaBB.viewLOA(loaId);
 	  }
+	  
+	  /**
+		 * The method used to navigate to contract details screen
+		 * for view purpose.
+		 * 
+		 * @return the navigate URL 
+		 */
+		public void goToLoaView(Long loaId) {
+			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+			loaDetailBackingBean.viewLOA(loaId);
+		}
 	  
 	  /**
 	   * The method used to retrieve the zone object.
