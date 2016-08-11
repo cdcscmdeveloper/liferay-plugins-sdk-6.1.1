@@ -9,8 +9,9 @@
 
 	<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
 		rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal eq 'true'}">
-		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.reqforsample.instruction']}" escape="false" />
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.reqforsample.instruction']}" escape="false" />
 		<br />
 
 		<table>
@@ -40,9 +41,10 @@
 		</p:dataTable>
 
 		<br />
-			
-			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.printlabel.instruction']}" escape="false" />
-			<br />
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.printlabel.instruction']}" escape="false" />
+		<br />
 
 		<table>
 			<tr>
@@ -50,16 +52,19 @@
 				<td><p:inputText
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 						size="30" disabled="true" readonly="true" /></td>
-				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}" /></td>
+				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}"
+						action="#{supplierProposalDetailBackingBean.printLabelAction}"
+						partialSubmit="true" process="@this" /></td>
 				<td />
 			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
 		rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal ne 'true'}">
-		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.reqforsample.instruction']}" escape="false" />
-		
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.reqforsample.instruction']}" escape="false" />
+
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}" /></td>
@@ -79,9 +84,8 @@
 				<td />
 			</tr>
 			<tr>
-				<td colspan="4">
-					<br />
-					<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.printlabel.instruction']}" escape="false" />
+				<td colspan="4"><br /> <h:outputText styleClass="instruction"
+						value="#{lbl['lbl.sc.sp.printlabel.instruction']}" escape="false" />
 				</td>
 			</tr>
 			<tr>
