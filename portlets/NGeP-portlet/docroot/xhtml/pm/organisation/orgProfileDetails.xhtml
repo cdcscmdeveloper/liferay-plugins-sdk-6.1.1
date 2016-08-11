@@ -132,13 +132,13 @@
 								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}"
 								required="#{!empty param['disableValidation']}" rows="3" cols="36"
 								maxlength="255" />
-								&#160;<p:graphicImage id="giOrgName"
+								&#160;<p:graphicImage id="giOrgName" style="vertical-align:top;"
 								value="/css/images/design/ico-tooltips.png" /> <p:tooltip
 								for="giOrgName" id="ttOrgName"
 								showEffect="fade" hideEffect="fade" > 
 									<p:outputLabel escape="false" value="#{lbl['lbl.pm.organisation.orgName.tt']}"/>
 								</p:tooltip></td>
-						<td><p:message id="orgNameMsg" for="orgName" display="icon" /></td>	
+						<td style="vertical-align:top;"><p:message id="orgNameMsg" for="orgName" display="icon"/></td>	
 						
 				<ui:fragment
 					rendered="#{!organisationBackingBean.managedBean.orgProfile.brandNew and (ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType )}">
