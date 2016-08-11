@@ -109,6 +109,7 @@
 
 					<ui:fragment
 						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' or stageTwofunctional.pmDocument.docDefinitionKey  eq null)) or(stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode ne 'TS'))}">
+						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
 						<p:selectOneMenu style="width:100px;" required="true"
 						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							id="finhChecklistTitlenullType" label="#{lbl['lbl.sc.type']}"
@@ -122,6 +123,11 @@
 						</p:selectOneMenu>
 						<p:message id="finChecklistTitlenullType1"
 							for="finhChecklistTitlenullType" display="icon"></p:message>
+							</c:if>
+							<c:if test="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}">
+							<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.definationType)}"></h:outputText>
+							</c:if>
 					</ui:fragment>
 
 
@@ -148,7 +154,7 @@
 					</ui:fragment>
 					<ui:fragment
 						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' or stageTwofunctional.pmDocument.docDefinitionKey  eq null)) or(stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode ne 'TS'))}">
-						
+						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
 						<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
 							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq null}"
@@ -174,6 +180,11 @@
 								update="scoreFinanceView,uploadFinance,financialChecklistSpecificationStatus,financialChecklistsupplier"
 								listener="#{specificationBackingBean.financialCheckListDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 						</p:selectOneMenu>
+						</c:if>
+							<ui:fragment rendered="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and stageTwofunctional.definationType.parameterCode eq 'UP'}">
+								<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
+							</ui:fragment>
 						<h:outputText
 							rendered="#{stageTwofunctional.definationType.parameterCode ne 'UP'}"
 							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>

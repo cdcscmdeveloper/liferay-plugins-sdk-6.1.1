@@ -107,6 +107,7 @@
 
 					<ui:fragment
 						rendered="#{(stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'UP' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'KP' or stageTwoTechnical.pmDocument.docDefinitionKey  eq null))}">
+						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
 						<p:selectOneMenu style="width:100px;" required="true"
 							id="techChecklistTitlenullType" label="#{lbl['lbl.sc.type']}"
 							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
@@ -120,10 +121,16 @@
 						</p:selectOneMenu>
 						<p:message id="techChecklistTitlenullType1"
 							for="techChecklistTitlenullType" display="icon"></p:message>
+							</c:if>
+							<c:if test="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}">
+							<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
+							</c:if>
 					</ui:fragment>
 
 					<ui:fragment
 						rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
+						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
 						<p:selectOneMenu style="width:100px;" required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							id="techChecklistTitletypenotnullType"
@@ -138,6 +145,11 @@
 						</p:selectOneMenu>
 						<p:message id="techChecklistTitletypenotnullType1"
 							for="techChecklistTitletypenotnullType" display="icon"></p:message>
+							</c:if>
+							<c:if test="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}">
+							<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
+							</c:if>
 					</ui:fragment>
 
 
@@ -162,6 +174,7 @@
 
 					<ui:fragment
 						rendered="#{((stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'UP' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'KP' or stageTwoTechnical.pmDocument.docDefinitionKey  eq null)) or(stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode ne 'TS'))}">
+						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
 						<p:selectOneMenu styleClass="sample#{index}" style="width:120px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode eq null}"
@@ -194,6 +207,11 @@
 
 						<p:message id="actionActionTitlenotnullType1"
 							for="actionActionTitlenotnullType" display="icon"></p:message>
+							</c:if>
+							<ui:fragment rendered="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and stageTwoTechnical.definationType.parameterCode eq 'UP'}">
+							<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
+							</ui:fragment>
 						<h:outputText
 							rendered="#{stageTwoTechnical.definationType.parameterCode ne 'UP'}"
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
