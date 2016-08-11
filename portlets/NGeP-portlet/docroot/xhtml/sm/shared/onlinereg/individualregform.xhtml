@@ -28,6 +28,7 @@
 				</td>
 				<td class="tdContent"><p:selectOneMenu required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.individual.service']}"
+						disabled="#{registrationBackingBean.managedBean.viewMode}"
 						value="#{registrationBackingBean.managedBean.smSupp.serviceType}"
 						id="serviceTypeId">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -47,7 +48,10 @@
 					</td>
 					
 					<td class="tdContent">
-						<p:selectOneRadio id="bumiId" label="#{lbl['lbl.sm.person.bumi']}" required="#{!empty param['disableValidation']}" value="#{registrationBackingBean.managedBean.userBumiFlg}">
+						<p:selectOneRadio id="bumiId" label="#{lbl['lbl.sm.person.bumi']}" 
+							required="#{!empty param['disableValidation']}" 
+							disabled="#{registrationBackingBean.managedBean.viewMode}"
+							value="#{registrationBackingBean.managedBean.userBumiFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						</p:selectOneRadio></td>
@@ -58,7 +62,10 @@
 					</td>
 					
 					<td class="tdContent">
-						<p:selectOneRadio id="religionId" label="#{lbl['lbl.sm.person.religion']}" required="#{!empty param['disableValidation']}" value="#{registrationBackingBean.managedBean.userMuslimFlg}">
+						<p:selectOneRadio id="religionId" label="#{lbl['lbl.sm.person.religion']}" 
+							required="#{!empty param['disableValidation']}" 
+							disabled="#{registrationBackingBean.managedBean.viewMode}"
+							value="#{registrationBackingBean.managedBean.userMuslimFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.muslim']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}" itemValue="0" />
 						</p:selectOneRadio>
@@ -89,6 +96,7 @@
 				<td class="tdContent"><p:inputText size="40" maxlength="100"
 						id="individualNameId" required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.individual.nameasperic']}"
+						disabled="#{registrationBackingBean.managedBean.viewMode}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" />
 					&#160; <p:graphicImage id="fNmti" value="/css/images/design/tooltips.png" /> <p:tooltip id="fNmtt" for="fNmti">
 						<p:outputLabel escape="false"
@@ -128,7 +136,8 @@
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="cmbPermState" style="width:80%"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
-						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}">
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}"
+						disabled="#{registrationBackingBean.managedBean.viewMode}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="state"
 							value="#{registrationBackingBean.managedBean.permenantStateLs}"
@@ -151,7 +160,8 @@
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="cmbPermDistrict" style="width:80%"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
-						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDistrict.districtId}">
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDistrict.districtId}"
+						disabled="#{registrationBackingBean.managedBean.viewMode}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.permenantDistrictLs}"
@@ -175,7 +185,8 @@
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="cmbPermCity" style="width:80%"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
-						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCity.cityId}">
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCity.cityId}"
+						disabled="#{registrationBackingBean.managedBean.viewMode}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.permenantCityLs}"
@@ -198,7 +209,7 @@
 								label="#{lbl['lbl.sm.postcode']}" id="txtPermPostcodeMy"
 								value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}"
 								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
-								size="40">
+								size="40" disabled="#{registrationBackingBean.managedBean.viewMode}">
 								<f:validator validatorId="postcodeValidator" />
 							</p:inputText>
 							<p:message id="txtPermPostcodeMyMsg" for="txtPermPostcodeMy"

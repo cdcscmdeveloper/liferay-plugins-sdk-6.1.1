@@ -73,13 +73,13 @@
 		    <ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
 				postUpdateListener="registrationBackingBean.postUpdateBizNature"
 				headerText="Business Nature" buttonLabel="#{lbl['lbl.btn.add']}"
-			    selectionMode="multiple"
+			    selectionMode="multiple" disabled="#{registrationBackingBean.managedBean.viewMode}"
 				saveObject="registrationBackingBean.managedBean.bizNatures"
 				conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
 				update=":form:suppBizNatureId :form:bnmsg" />
 
 			<p:commandButton id="btnRemove" update="natureBusinessId" partialSubmit="true" process="@this,suppBizNatureId"
-				value="#{lbl['lbl.btn.delete']}"
+				value="#{lbl['lbl.btn.delete']}" disabled="#{registrationBackingBean.managedBean.viewMode}"
 				action="#{registrationBackingBean.removeBusinessNature}" />
 		</div>
 	</p:panel>

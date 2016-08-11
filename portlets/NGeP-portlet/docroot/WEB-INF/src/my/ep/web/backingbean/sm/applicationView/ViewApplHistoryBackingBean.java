@@ -21,6 +21,7 @@ import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
+import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.backingbean.sm.virtualcert.VirtualCertBackingBean;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
@@ -39,6 +40,7 @@ public class ViewApplHistoryBackingBean extends
 	public static VirtualCertBackingBean virtualCertInstance;
 	public static CommonApplBackingBean commonApplInstance;
 	public static PmTrackingDiaryBackingBean trackinDiaryInstance;
+	public static RegistrationBackingBean registrationBackingBean;
 
 	/**
 	 * Set tab value
@@ -185,10 +187,16 @@ public class ViewApplHistoryBackingBean extends
 		reqDTO.setApplId(applId);
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
-		viewApplication(smAppl);
-		initBumiRecommendNote();
-		initVirtualCert();
-		initWorkflowStatus(getManagedBean().getSmAppl(), index);
+		if (smAppl.getApplType()
+				.equals(SupplierManagementConst.APPL_TYPE_BASIC)) {
+			getRegistrationBackingBean().getManagedBean().setViewMode(true);
+			getRegistrationBackingBean().viewOnlineAccount();
+		} else {
+			viewApplication(smAppl);
+			initBumiRecommendNote();
+			initVirtualCert();
+			initWorkflowStatus(getManagedBean().getSmAppl(), index);
+		}
 	}
 
 	/**
@@ -260,6 +268,19 @@ public class ViewApplHistoryBackingBean extends
 			trackinDiaryInstance = new PmTrackingDiaryBackingBean();
 		}
 		return trackinDiaryInstance;
+
+	}
+
+	/**
+	 * Get RegistrationBackingBean instance
+	 * 
+	 * @return RegistrationBackingBean
+	 */
+	public static RegistrationBackingBean getRegistrationBackingBean() {
+		if (registrationBackingBean == null) {
+			registrationBackingBean = new RegistrationBackingBean();
+		}
+		return registrationBackingBean;
 
 	}
 

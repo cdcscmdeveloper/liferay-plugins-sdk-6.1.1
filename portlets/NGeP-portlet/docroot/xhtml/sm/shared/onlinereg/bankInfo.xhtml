@@ -21,7 +21,8 @@
 				</f:facet>
 			
 				<p:selectOneMenu id="bankNameId" value="#{bankInfo.pmFinancialOrg.financialOrgId}"
-					style="width: 80% !important;margin-bottom: 5px !important;">
+					style="width: 80% !important;margin-bottom: 5px !important;"
+					disabled="#{registrationBackingBean.managedBean.viewMode}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{registrationBackingBean.managedBean.financialOrgLs}"
@@ -40,21 +41,23 @@
 					</p:tooltip>
 				</f:facet>
 			
-				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" maxlength="18">
+				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" maxlength="18" disabled="#{registrationBackingBean.managedBean.viewMode}">
 				</p:inputText>
 				<p:message id="bankAccNoIdMsg" for="bankAccNoId" display="icon" />
 			</p:column>
 		</p:dataTable>
-
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true" process="@this,bankInfoId"
-				action="#{registrationBackingBean.addSupplierBank}" id="addBnkBtnId"
-				disabled="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks and 
-				registrationBackingBean.managedBean.smAppl.smSupplierBanks.size() eq SupplierManagementConst.MAX_PAYMENT_BANK}"
-				update="deleteBnkBtnId,bankInfoId,@this" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"  partialSubmit="true" process="@this,bankInfoId"
-				action="#{registrationBackingBean.removeSupplierBank}" disabled="#{empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
-				update="bankInfoId,addBnkBtnId,@this" id="deleteBnkBtnId"/>
-		</div>
+		
+		<p:outputPanel rendered="#{!registrationBackingBean.managedBean.viewMode}">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true" process="@this,bankInfoId"
+					action="#{registrationBackingBean.addSupplierBank}" id="addBnkBtnId"
+					disabled="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks and 
+					registrationBackingBean.managedBean.smAppl.smSupplierBanks.size() eq SupplierManagementConst.MAX_PAYMENT_BANK}"
+					update="deleteBnkBtnId,bankInfoId,@this" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"  partialSubmit="true" process="@this,bankInfoId"
+					action="#{registrationBackingBean.removeSupplierBank}" disabled="#{empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
+					update="bankInfoId,addBnkBtnId,@this" id="deleteBnkBtnId"/>
+			</div>
+		</p:outputPanel>
 	</p:panel>
 </ui:composition>

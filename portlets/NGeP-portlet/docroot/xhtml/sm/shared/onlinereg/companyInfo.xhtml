@@ -195,7 +195,7 @@
 						label="#{lbl['lbl.sm.companyname']}" maxlength="100"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 						size="40" id="companyNameId"  
-						disabled="#{registrationBackingBean.managedBean.disabledCompanyNameInMaintenance}" /> 
+						disabled="#{registrationBackingBean.managedBean.disabledCompanyNameInMaintenance or registrationBackingBean.managedBean.viewMode}" /> 
 						<p:message id="companyNameIdMsg" for="companyNameId" display="icon" /></td>
 
 				<td class="tdTitle">
@@ -214,7 +214,7 @@
 				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.incometaxno']}" /></td>
 				<td class="tdContent"><p:inputText
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
-						size="40" id="incomeTaxId" maxlength="30">
+						size="40" id="incomeTaxId" maxlength="30" disabled="#{registrationBackingBean.managedBean.viewMode}">
 						</p:inputText>
 				<p:message for="incomeTaxId" id="incomeTaxIdMsg" display="icon" /></td>
 				<td></td>
@@ -228,7 +228,7 @@
 				<td class="tdContent" >
 					<p:inputText size="40"
 						id="compAdd1" required="#{!empty param['disableValidation']}" maxlength="35"
-						label="#{lbl['lbl.sm.companyaddress']}"
+						label="#{lbl['lbl.sm.companyaddress']}" disabled="#{registrationBackingBean.managedBean.viewMode}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}">
 						<p:ajax event="blur" update=":form:acgmap:gmapInput:gmapInput"></p:ajax>
 					</p:inputText>
@@ -238,7 +238,7 @@
 					<p:outputLabel value="#{lbl['lbl.sm.country']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:selectOneMenu id="compCountryId" disabled="#{registrationBackingBean.managedBean.sabahSarawakType}"
+				<td class="tdContent"><p:selectOneMenu id="compCountryId" disabled="#{registrationBackingBean.managedBean.sabahSarawakType or registrationBackingBean.managedBean.viewMode}"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.country']}"  style="width:80%"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId}">
 						<f:selectItems var="counLs"
@@ -254,14 +254,14 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="compAdd2" maxlength="35"
+						id="compAdd2" maxlength="35" disabled="#{registrationBackingBean.managedBean.viewMode}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address2}" /></td>
 
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.state']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:selectOneMenu id="busState" disabled="#{registrationBackingBean.managedBean.sabahSarawakType}"
+				<td class="tdContent"><p:selectOneMenu id="busState" disabled="#{registrationBackingBean.managedBean.sabahSarawakType or registrationBackingBean.managedBean.viewMode}"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.stateId}"
 						style="width:80%">
@@ -278,7 +278,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="compAdd3" maxlength="35"
+						id="compAdd3" maxlength="35" disabled="#{registrationBackingBean.managedBean.viewMode}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address3}" /></td>
 
 				<td class="tdTitle">
@@ -288,7 +288,7 @@
 				<td class="tdContent"><p:selectOneMenu id="busDistrict"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmDistrict.districtId}"
-						style="width:80%">
+						style="width:80%" disabled="#{registrationBackingBean.managedBean.viewMode}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.businessDistrictLs}"
@@ -302,7 +302,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent" ><p:inputText size="40"
-						id="compAdd4" maxlength="35"
+						id="compAdd4" maxlength="35" disabled="#{registrationBackingBean.managedBean.viewMode}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address4}" /></td>
 
 				<td class="tdTitle">
@@ -312,7 +312,7 @@
 				<td class="tdContent"><p:selectOneMenu id="busCity"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCity.cityId}"
-						style="width:80%">
+						style="width:80%" disabled="#{registrationBackingBean.managedBean.viewMode}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.businessCityLs}"
@@ -332,7 +332,7 @@
 						<p:outputPanel
 							rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId==registrationBackingBean.managedBean.myCountryId}">
 							<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
-								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeMy"
+								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeMy" disabled="#{registrationBackingBean.managedBean.viewMode}"
 								value="#{registrationBackingBean.managedBean.smBusinessAdd.postcode}"
 								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 								size="40">
@@ -346,7 +346,7 @@
 							<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeForeign"
 								value="#{registrationBackingBean.managedBean.smBusinessAdd.postcode}"
-								size="35">
+								size="35" disabled="#{registrationBackingBean.managedBean.viewMode}">
 							</p:inputText>
 							<p:message id="compPostCodeForeignMsg"
 								for="compPostCodeForeign" showSummary="true"
@@ -424,7 +424,7 @@
 						countryCode="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.phoneCountry}" 
 						areaCode="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.phoneArea}" 
 						number="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.phoneNo}"  
-						validatorMessage="#{lbl['lbl.sm.telno']} - #{lbl['lbl.sm.invalidNo']}" /></td>
+						validatorMessage="#{lbl['lbl.sm.telno']} - #{lbl['lbl.sm.invalidNo']}" disabled="#{registrationBackingBean.managedBean.viewMode}"/></td>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.faxno']}" />
 				</td>
@@ -433,7 +433,7 @@
 						countryCode="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.faxCountry}" 
 						areaCode="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.faxArea}" 
 						number="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}"  
-						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" />
+						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" disabled="#{registrationBackingBean.managedBean.viewMode}"/>
 				</td>
 			</tr>
 			
