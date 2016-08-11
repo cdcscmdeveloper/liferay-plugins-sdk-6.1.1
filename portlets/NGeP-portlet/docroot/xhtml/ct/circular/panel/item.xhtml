@@ -279,7 +279,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	   		<h:panelGrid columns="1">
 	    		<p:outputLabel value="#{lbl['lbl.ct.item.name']}" >: #{panelBackingBean.managedBean.selectedItemForSpec.itemName}</p:outputLabel>
 	     	</h:panelGrid>
-	     	<p:spacer  height="5"/>
 	     	<p:dataTable id="itemSpecDt" var="data" value="#{panelBackingBean.managedBean.selectedItemForSpec.ctPanelItemSpecs}"
 				rowKey="#{data}" rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedPanelItemSpecs}" widgetVar="panelItemSpecObj">
 				<ac:paginator for="itemSpecDt" />
