@@ -1123,7 +1123,7 @@ public class QTDocumentsBackingBean extends
 				scQtDocReportAttachment = generateSkopPerkhidmatanPdfFromVelocity(
 						(ScAttachment) scQtDocReportAttachment,
 						getManagedBean().getQt(), docDefinitionKey,
-						scQtDocReport);
+						scQtDocReport,prefixFileName);
 
 			} else if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
 					.equals(docDefinitionKey)) {
@@ -1144,6 +1144,12 @@ public class QTDocumentsBackingBean extends
 						getManagedBean().getQt());
 			} else if (SourcingConstants.DOC_DEF_KEY_DELIVERY_SERVICE_ADDRESS
 					.equals(docDefinitionKey)) {
+				StringBuilder fileName = new StringBuilder();
+				if(prefixFileName != null){
+					fileName.append(prefixFileName).append(UNDER_SCORE);
+				}
+				fileName.append(SourcingConstants.DOCNAME_QT_DELIVERY_SERVICE_ADDRESS);
+				scQtDocReportAttachment.setFileName(fileName.toString());
 				generateDeliveryAddressPdfFromVelocity(
 						(ScAttachment) scQtDocReportAttachment,
 						getManagedBean().getQt());
@@ -1305,7 +1311,7 @@ public class QTDocumentsBackingBean extends
 	 */
 	private ScQtDocReportAttachment generateSkopPerkhidmatanPdfFromVelocity(
 			ScAttachment attachment, ScQt qt, String docDefinitionKey,
-			ScQtDocReport scQtDocReport) throws Exception {
+			ScQtDocReport scQtDocReport,String prefixFileName) throws Exception {
 		debugLogger("generateSkopPerkhidmatanPdfFromVelocity");
 	
 		IQTSpecSO specSo = null;
@@ -1356,8 +1362,13 @@ public class QTDocumentsBackingBean extends
 									 docReportAttachment = new ScQtDocReportAttachment();
 									docReportAttachment
 											.setScQtDocReport(scQtDocReport);
-									docReportAttachment.setFileName(attachment
-											.getFileName());
+									StringBuilder fileName = new StringBuilder();
+									if(prefixFileName != null){
+										fileName.append(prefixFileName).append(UNDER_SCORE);
+									}
+									fileName.append(attachment.getFileName());
+											
+									docReportAttachment.setFileName(fileName.toString());
 									docReportAttachment.setDocNo(qt.getQtNo());
 									
 								 /* Copy doc with content from QCL folder to QD folder
@@ -1705,8 +1716,7 @@ public class QTDocumentsBackingBean extends
 	 */
 	private void generateDeliveryAddressPdfFromVelocity(
 			ScAttachment attachment, ScQt qt) throws Exception {
-		/*attachment
-				.setFileName(SourcingConstants.DOCNAME_QT_DELIVERY_SERVICE_ADDRESS);*/
+		
 		populateAttachmentDetails(attachment);
 
 		VelocityContext context = new VelocityContext();
