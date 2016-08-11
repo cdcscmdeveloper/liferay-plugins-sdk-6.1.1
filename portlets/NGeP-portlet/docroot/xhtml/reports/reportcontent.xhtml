@@ -623,38 +623,35 @@ width:32.5%;
 											<div align="right" style="margin-bottom:-3%;"> 
 												<c:if
 													test="#{reportBackingBean.managedBean.rptGenBean.conditionGenerateButton}">
-													<p:commandButton onstart="blkReportContent.show();"
-														oncomplete="blkReportContent.hide();"
+													
+													<p:commandButton action="#{reportBackingBean.generateReport()}"
+														oncomplete="openReportPopUp();"
 														value="#{lbl['lbl.rpt.generate']}" process="@this"                                                
 														rendered="#{reportBackingBean.valuesEmpty}"
 														disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
 														ajax="true" update="@form" >
-														<p:fileDownload
-															value="#{reportBackingBean.generateReport()}" />
 													</p:commandButton>
 													
-													<p:commandButton onstart="blkReportContent.show();"
-														oncomplete="blkReportContent.hide();"
+													<p:commandButton action="#{reportBackingBean.generateReport()}"
+														oncomplete="openReportPopUp();"
 														value="#{lbl['lbl.rpt.generate']}" process="@this"                                                   														
                                                         rendered="#{!reportBackingBean.valuesEmpty}"
 														disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
-														ajax="false" update="@form" >
-														<p:fileDownload
-															value="#{reportBackingBean.generateReport()}" />
+														ajax="true" update="@form" >
 													</p:commandButton>
 													
 												</c:if>
+												
 												<c:if
 													test="#{reportBackingBean.managedBean.rptGenBean.generateButton}">
-													<p:commandButton onstart="blkReportContent.show();"
-														id="falseGenerate" oncomplete="blkReportContent.hide();"                                                       
+													<p:commandButton action="#{reportBackingBean.generateReport()}"
+														id="falseGenerate" oncomplete="openReportPopUp();" 
 														value="#{lbl['lbl.rpt.generate']}"
 														disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
-														ajax="false" update="@form" process="@this" >
-														<p:fileDownload
-															value="#{reportBackingBean.generateReport()}" />
+														ajax="true" update="@form" process="@this" >
 													</p:commandButton>
 												</c:if>
+												
 												<p:commandButton value="#{lbl['lbl.btn.reset']}"
 													action="#{reportBackingBean.resetReportForm}"
 													update="@form" partialSubmit="true" process="@form" />
