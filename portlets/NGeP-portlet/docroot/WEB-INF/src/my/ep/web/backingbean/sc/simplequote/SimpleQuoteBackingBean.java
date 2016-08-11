@@ -3686,15 +3686,14 @@ public class SimpleQuoteBackingBean extends
 				if(startDate.after(currentDate)) {
 					hours = getHours(startDate, endDate);
 					mins = getMinuts(startDate, endDate);
+					message = getMessage(
+							"lbl.sc.quote.supplier.resp.duration", new String[] {hours, mins});
+					getManagedBean().setConformDlgBtnFlag(Boolean.TRUE);
 				} else {
 					hours = getHours(currentDate, endDate);
 					mins = getMinuts(currentDate, endDate);
+					throw new EpException(MessageConst.ERROR_760428);
 				}
-				
-				message = getMessage(
-						"lbl.sc.quote.supplier.resp.duration", new String[] {hours, mins});
-				getManagedBean().setConformDlgBtnFlag(Boolean.TRUE);
-
 			} else {
 				message = getMessage(
 						"lbl.sc.quote.enddate.cannot.be.lessthan.currentdate", null);
