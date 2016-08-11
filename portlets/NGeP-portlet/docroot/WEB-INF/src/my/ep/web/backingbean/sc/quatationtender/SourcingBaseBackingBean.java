@@ -2025,18 +2025,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 	
-	public List<PmUser> getUsersByRoleCode(String roleCode) {
-		
-		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(roleCode);
-		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-		return userResDTO.getUserList();
-		
-	}
-	
 	/**
 	 * Check if QT Status published.
 	 * 

@@ -28,6 +28,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -48,6 +49,7 @@ import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -90,11 +92,13 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.specification.SpecificationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -371,7 +375,35 @@ public class CreateQtBackingBean extends
 		List<PmUser> ministrySpecApprovers = getManagedBean().getMinistrySpecApprovers();
 		
 		if (ministrySpecApprovers == null || ministrySpecApprovers.size() == 0) {
-			ministrySpecApprovers = getUsersByRoleCode(RoleCode.MSC_SECRETARY.value());
+			IUserSO userSO = null;
+			try {
+				userSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IUserSO.class);
+				
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setRoleCode(RoleCode.MSC_SECRETARY.value());
+				
+				// Filter by - QT ministry
+				PmOrgProfile pmOrgProfile = getManagedBean().getQt()
+						.getPmOrgProfile();
+				if (pmOrgProfile != null) {
+					SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean(
+									"pmUserOrgs.pmOrgProfile."
+											+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()), 
+									SearchOperator.OPERATOR_EQUALS.value(), 
+									retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId())
+										.getOrgProfileId()));
+					reqDTO.setUserSearchBean(searchBean);
+				}
+				
+				ministrySpecApprovers = userSO.retrieveUserListByRole(reqDTO)
+						.getUserList();
+			} finally {
+				userSO = null;
+			}
 			
 			getManagedBean().setMinistrySpecApprovers(ministrySpecApprovers);
 		}
