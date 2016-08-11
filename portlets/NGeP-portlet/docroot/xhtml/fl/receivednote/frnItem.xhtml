@@ -213,10 +213,10 @@
 			<p:column headerText="No." style="text-align:right;width:2%">
 				<h:outputText value="#{rowIndex+1}" ></h:outputText>
 			</p:column>
-			<p:column headerText="Remarks By" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.remark.by']}" style="text-align:left">
 				<h:outputText value="#{remarks.createdUsername}" ></h:outputText>
 			</p:column>
-			<p:column headerText="Remarks" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.txt.remarks']}" style="text-align:left">
 				<h:outputText value="#{remarks.remark}" ></h:outputText>
 			</p:column>
 		</p:dataTable>
