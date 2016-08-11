@@ -6,391 +6,219 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<!-- FLOW STATUS 1 -->
+	<div class="flow-chartbox">
+  	<div class="flow-chart">
 	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
-		<div class="flow-chart-left lst">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 1</strong><br />
-				<p:commandLink styleClass="flowChart-Link"
+		<div class="flow-chart-left flowActive">
+			<div class="bg"><div class="no">1</div></div>
+			<p style="top: 1px"><p:commandLink styleClass="current-link"
 					value="#{lbl['lbl.sm.basic.cont.mof.reg']}"
-					action="#{postSupplierRegBB.pageNavigate}" />
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 2</strong><br />
-				#{lbl['lbl.sm.basic.processing.fee']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 3</strong><br />
-				#{lbl['lbl.sm.basic.gov.process']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 4</strong><br />
-				#{lbl['lbl.sm.basic.registration.fee']}
-			</p>
+					action="#{postSupplierRegBB.pageNavigate}" /></p>
 		</div>
 		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
-				#{lbl['lbl.sm.basic.view.virtual.cert']}
-			</p>
+		<div class="flow-chart-left flowInactive">
+			<div class="bg"><div class="no">2</div></div><p>#{lbl['lbl.sm.basic.processing.fee']}</p>
 		</div>
 		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
-				#{lbl['lbl.sm.basic.catalogue.upload']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">3</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}</p></div>
 		
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				#{lbl['lbl.sm.basic.softcert.request']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">4</div></div><p>#{lbl['lbl.sm.basic.registration.fee']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">5</div></div><p>#{lbl['lbl.sm.basic.view.virtual.cert']}</p></div>
+	
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
 	</c:if>
 	<!-- FLOW STATUS 1 - END -->
 
 	<!-- FLOW STATUS 2 -->
 	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 2}">
-		<div class="flow-chart-left dlst">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 1</strong><br />
-				<nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr>
-			</p>
+		<div class="flow-chart-left flowInactive">
+			<div class="bg"><div class="no">1</div></div><p>#{lbl['lbl.sm.basic.cont.mof.reg']}</p>
 		</div>
-		<div class="flow-chart-left mid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 2</strong><br />
-				<p:commandLink styleClass="flowChart-Link"
+		
+		<div class="flow-chart-left flowActive">
+			<div class="bg"><div class="no">2</div></div><p></p>
+			<p><p:commandLink styleClass="current-link"
 					value="#{lbl['lbl.sm.basic.processing.fee']}"
-					action="#{postSupplierRegBB.pageNavigate}" />
-			</p>
-		</div>
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 3</strong><br />
-				#{lbl['lbl.sm.basic.gov.process']}
-			</p>
-		</div>
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 4</strong><br />
-				#{lbl['lbl.sm.basic.registration.fee']}
-			</p>
+					action="#{postSupplierRegBB.pageNavigate}" /></p>
 		</div>
 		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
-				#{lbl['lbl.sm.basic.view.virtual.cert']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">3</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}</p></div>
 		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">4</div></div><p>#{lbl['lbl.sm.basic.registration.fee']}</p></div>
 		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
-				#{lbl['lbl.sm.basic.catalogue.upload']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">5</div></div><p>#{lbl['lbl.sm.basic.view.virtual.cert']}</p></div>
+	
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
 		
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				#{lbl['lbl.sm.basic.softcert.request']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
 	</c:if>
 	<!-- FLOW STATUS 2 - END -->
 
 	<!-- FLOW STATUS 3 -->
 	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 3}">
-		<div class="flow-chart-left dlst">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 1</strong><br />
-				<nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr>
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 2</strong><br />
-				#{lbl['lbl.sm.basic.processing.fee']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left mid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 3</strong><br />#{lbl['lbl.sm.basic.gov.process']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 4</strong><br />
-				#{lbl['lbl.sm.basic.registration.fee']}
-			</p>
+		<div class="flow-chart-left flowInactive">
+			<div class="bg"><div class="no">1</div></div><p>#{lbl['lbl.sm.basic.cont.mof.reg']}</p>
 		</div>
 		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
-				#{lbl['lbl.sm.basic.view.virtual.cert']}
-			</p>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">2</div></div><p>#{lbl['lbl.sm.basic.processing.fee']}</p></div>
+		
+		<div class="flow-chart-left flowActive">
+			<div class="bg"><div class="no">3</div></div><p></p>
+			<p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}</p>
 		</div>
 		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">4</div></div><p>#{lbl['lbl.sm.basic.registration.fee']}</p></div>
 		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
-				#{lbl['lbl.sm.basic.catalogue.upload']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				#{lbl['lbl.sm.basic.softcert.request']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">5</div></div><p>#{lbl['lbl.sm.basic.view.virtual.cert']}</p></div>
+	
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
 	</c:if>
 	<!-- FLOW STATUS 3 - END -->
 
 	<!-- FLOW STATUS 4 -->
 	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 4}">
-		<div class="flow-chart-left dlst">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 1</strong><br />
-				<nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr>
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 2</strong><br />
-				#{lbl['lbl.sm.basic.processing.fee']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 3</strong><br />
-				#{lbl['lbl.sm.basic.gov.process']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left mid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 4</strong><br />
-				<p:commandLink styleClass="flowChart-Link"
-					value="#{lbl['lbl.sm.basic.registration.fee']}"
-					action="#{postSupplierRegBB.pageNavigate}" />
-			</p>
+		<div class="flow-chart-left flowInactive">
+			<div class="bg"><div class="no">1</div></div><p>#{lbl['lbl.sm.basic.cont.mof.reg']}</p>
 		</div>
 		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
-				#{lbl['lbl.sm.basic.view.virtual.cert']}
-			</p>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">2</div></div><p>#{lbl['lbl.sm.basic.processing.fee']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">3</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}</p></div>
+		
+		<div class="flow-chart-left flowActive">
+			<div class="bg"><div class="no">4</div></div><p></p>
+			<p><p:commandLink styleClass="current-link" 
+				value="#{lbl['lbl.sm.basic.registration.fee']}" 
+				action="#{postSupplierRegBB.pageNavigate}" /></p>
 		</div>
 		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">5</div></div><p>#{lbl['lbl.sm.basic.view.virtual.cert']}</p></div>
+	
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
 		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
-				#{lbl['lbl.sm.basic.catalogue.upload']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				#{lbl['lbl.sm.basic.softcert.request']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
 	</c:if>
 	<!-- FLOW STATUS 4 - END -->
 
 		<!-- FLOW STATUS 5 -->
 	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 5}">
-		<div class="flow-chart-left dlst">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 1</strong><br />
-				<nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr>
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">1</div></div><p>#{lbl['lbl.sm.basic.cont.mof.reg']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">2</div></div><p>#{lbl['lbl.sm.basic.processing.fee']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">3</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">4</div></div><p>#{lbl['lbl.sm.basic.registration.fee']}</p></div>
 
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 2</strong><br />
-				#{lbl['lbl.sm.basic.processing.fee']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 3</strong><br />
-				#{lbl['lbl.sm.basic.gov.process']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 4</strong><br />
-				#{lbl['lbl.sm.basic.registration.fee']}
-			</p>
+		<div class="flow-chart-left flowActive">
+			<div class="bg"><div class="no">5</div></div><p></p>
+			<p><p:commandLink styleClass="current-link" 
+				value="#{lbl['lbl.sm.basic.view.virtual.cert']}" 
+				action="#{postSupplierRegBB.pageNavigate}" /></p>
 		</div>
 		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
 		
-		<div class="flow-chart-left mid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
-				<p:commandLink styleClass="flowChart-Link"
-					value="#{lbl['lbl.sm.basic.view.virtual.cert']}"
-					action="#{postSupplierRegBB.pageNavigate}" />
-			</p>
-		</div>
-		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
-				#{lbl['lbl.sm.basic.catalogue.upload']}
-			</p>
-		</div>
-		
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				#{lbl['lbl.sm.basic.softcert.request']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
 	</c:if>
 	<!-- FLOW STATUS 5 - END -->
 	
 	<!-- FLOW STATUS 6 -->
 	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 6}">
-		<div class="flow-chart-left dlst">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 1</strong><br />
-				<nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr>
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 2</strong><br />
-				#{lbl['lbl.sm.basic.processing.fee']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 3</strong><br />
-				#{lbl['lbl.sm.basic.gov.process']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 4</strong><br />
-				#{lbl['lbl.sm.basic.registration.fee']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">1</div></div><p>#{lbl['lbl.sm.basic.cont.mof.reg']}</p></div>
 		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
-				#{lbl['lbl.sm.basic.view.virtual.cert']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">2</div></div><p>#{lbl['lbl.sm.basic.processing.fee']}</p></div>
 		
-		<div class="flow-chart-left mid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
-				<p:commandLink styleClass="flowChart-Link" 
-					value="#{lbl['lbl.sm.basic.catalogue.upload']}"
-					action="#{postSupplierRegBB.pageNavigate}" />
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">3</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}</p></div>
 		
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				#{lbl['lbl.sm.basic.softcert.request']}
-			</p>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">4</div></div><p>#{lbl['lbl.sm.basic.registration.fee']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">5</div></div><p>#{lbl['lbl.sm.basic.view.virtual.cert']}</p></div>
+	
+		<div class="flow-chart-left flowActive">
+			<div class="bg"><div class="no">6</div></div><p></p>
+			<p><p:commandLink styleClass="current-link" 
+				value="#{lbl['lbl.sm.basic.catalogue.upload']}" 
+				action="#{postSupplierRegBB.pageNavigate}" /></p>
 		</div>
+	
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">7</div></div><p>#{lbl['lbl.sm.basic.softcert.request']}</p></div>
 	</c:if>
 	<!-- FLOW STATUS 6 - END -->
 	
 	<!-- FLOW STATUS 7 -->
 	<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 7}">
-		<div class="flow-chart-left dlst">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 1</strong><br />
-				<nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr>
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 2</strong><br />
-				#{lbl['lbl.sm.basic.processing.fee']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 3</strong><br />
-				#{lbl['lbl.sm.basic.gov.process']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 4</strong><br />
-				#{lbl['lbl.sm.basic.registration.fee']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">1</div></div><p>#{lbl['lbl.sm.basic.cont.mof.reg']}</p></div>
 		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 5</strong><br />
-				#{lbl['lbl.sm.basic.view.virtual.cert']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">2</div></div><p>#{lbl['lbl.sm.basic.processing.fee']}</p></div>
 		
-		<div class="flow-chart-left dmid">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
-				#{lbl['lbl.sm.basic.catalogue.upload']}
-			</p>
-		</div>
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">3</div></div><p style="top: 1px">#{lbl['lbl.sm.basic.gov.process']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">4</div></div><p>#{lbl['lbl.sm.basic.registration.fee']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">5</div></div><p>#{lbl['lbl.sm.basic.view.virtual.cert']}</p></div>
+		
+		<div class="flow-chart-left flowInactive">
+		<div class="bg"><div class="no">6</div></div><p>#{lbl['lbl.sm.basic.catalogue.upload']}</p></div>
 
-		<div class="flow-chart-left last">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()) or 
-					(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertIsActiveStatus())}">
-					#{lbl['lbl.sm.basic.softcert.request']}
-				</c:if>
+		<div class="flow-chart-left flowActive">
+			<div class="bg"><div class="no">7</div></div><p>
+			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()) or 
+				(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertIsActiveStatus())}">
+				#{lbl['lbl.sm.basic.softcert.request']}
+			</c:if>
 			
-				<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertProsseingStatus()) and 
+			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertProsseingStatus()) and 
 						(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertIsActiveStatus())}">
-					<p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.softcert.request']}" action="#{postSupplierRegBB.pageNavigate}" />
-				</c:if>
+				<p:commandLink styleClass="current-link" value="#{lbl['lbl.sm.basic.softcert.request']}" 
+				action="#{postSupplierRegBB.pageNavigate}" />
+			</c:if>
 			</p>
 		</div>
 	</c:if>
+	</div>
+	</div>
 	<!-- FLOW STATUS 6 - END -->
 </ui:composition>
