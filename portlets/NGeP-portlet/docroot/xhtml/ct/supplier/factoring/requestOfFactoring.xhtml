@@ -389,7 +389,7 @@
 				widgetVar="factoringClauseDlg" modal="true" width="820" height="480" resizable="false">
 				<p:editor controls="print" 
 				  id="editorDisplay" value="#{supplierBackingBean.editorValue}" width="800" height="430" />
-				  <p:commandButton value="Close" process="@this" 
+				  <p:commandButton value="#{lbl['lbl.btn.close']}" process="@this" 
 				      onclick="factoringClauseDlg.hide()" style="float:right;"/>
 			</p:dialog>
 		</p:panel>
