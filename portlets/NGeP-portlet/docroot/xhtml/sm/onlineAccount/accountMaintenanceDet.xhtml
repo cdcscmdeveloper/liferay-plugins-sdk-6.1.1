@@ -27,12 +27,23 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}" action="#{registrationBackingBean.updateBasicSupplier}" update="@([id$=Msg])" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
-				<f:param name="disableValidation" value="true" />
-			</p:commandButton>
-		</div>
+		
+		<p:outputPanel rendered="#{registrationBackingBean.managedBean.viewMode}">
+			<div align="left">
+				<p:commandButton id="btnBackId" value="#{lbl['lbl.sm.button.back']}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
+					action="#{registrationBackingBean.backToHistory}" />
+			</div>
+		</p:outputPanel>
+		
+		<p:outputPanel rendered="#{!registrationBackingBean.managedBean.viewMode}">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}" action="#{registrationBackingBean.updateBasicSupplier}" update="@([id$=Msg])" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+			</div>
+		</p:outputPanel>
 		
 		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
 		<p:outputPanel id="outPnlRegForm">
