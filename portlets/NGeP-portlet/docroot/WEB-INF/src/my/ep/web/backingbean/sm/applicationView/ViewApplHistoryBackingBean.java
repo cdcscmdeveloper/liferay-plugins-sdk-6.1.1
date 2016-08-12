@@ -221,7 +221,7 @@ public class ViewApplHistoryBackingBean extends
 		reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
 		try {
 			SmVirtualCertHelper.getInstance().autoGenerateVirtualCert(
-					getManagedBean().getSmAppl().getApplId());
+					getManagedBean().getSmAppl().getApplId(), false);
 			getManagedBean().setMofCertLs(
 					SmServiceLookup.getVirtualCertSO()
 							.retrieveMofCertsByApplId(reqDTO).getSmMofCerts());
