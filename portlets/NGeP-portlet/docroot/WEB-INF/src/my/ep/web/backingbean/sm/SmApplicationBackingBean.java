@@ -7808,7 +7808,8 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
-			if (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1) {
+			if (doc.getPmDocument().isMandatory()
+					&& (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)) {
 				getManagedBean().getMissinDocs().add(doc);
 			}
 		}
