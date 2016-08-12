@@ -2585,16 +2585,16 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 		for (CtCircularPidReason ctCircularPidReasons : getManagedBean().getCircularVer().getCtCircularPidReason()) {
 			if (getManagedBean().isSelectAll() ) {	   
 				ctCircularPidReasons.setSelectedCheckBox(true);
+				if(getManagedBean().isButtonHideActiveDel()){
+					 getManagedBean().setButtonHideActiveDel(false);
+				}
 		       }else {
 		    	   ctCircularPidReasons.setSelectedCheckBox(false);
+		    	   if(!getManagedBean().isButtonHideActiveDel()){
+						 getManagedBean().setButtonHideActiveDel(true);
+					}
 		       }
-	}
-	
-	 if((boolean) e.getComponent().getAttributes().get("value")){
-		 getManagedBean().setButtonHideActiveDel(false);
-	 }else{
-		 getManagedBean().setButtonHideActiveDel(true);
-	 }	
+		}
    }
 	
 
@@ -2603,16 +2603,16 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 	      for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelCircularReq().getCtCancelCircularList()) {
 		       if (getManagedBean().isSelectAll()) {
 			         ctCancelCirculars.setSelectedCheckBox(true);
+			         if(getManagedBean().isButtonHideActiveDel()){
+						 getManagedBean().setButtonHideActiveDel(false);
+					}
 	           }else {
 	    	         ctCancelCirculars.setSelectedCheckBox(false);
+	    	         if(!getManagedBean().isButtonHideActiveDel()){
+						 getManagedBean().setButtonHideActiveDel(true);
+					}
 	           }
-           }
-
-          if((boolean) e.getComponent().getAttributes().get("value")){
-	           getManagedBean().setButtonHideActiveDel(false);
-          }else{
-	           getManagedBean().setButtonHideActiveDel(true);
-          }	
+	      }
      }
 	/**
      * Method to set boolean value for checkbox 
@@ -2641,16 +2641,16 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 		for (CtContactPerson ctContactPersons : getManagedBean().getCircularVer().getCtContactPersons()) {
 			if (getManagedBean().isSelectAll()) {
 				ctContactPersons.setSelectedCheckBox(true);
+				if(getManagedBean().isButtonHideActiveDel()){
+					 getManagedBean().setButtonHideActiveDel(false);
+				}
 		       }else {
 		    	   ctContactPersons.setSelectedCheckBox(false);
+		    	   if(!getManagedBean().isButtonHideActiveDel()){
+						 getManagedBean().setButtonHideActiveDel(true);
+					}
 		       }
-	}
-	
-	 if((boolean) e.getComponent().getAttributes().get("value")){
-		 getManagedBean().setButtonHideActiveDel(false);
-	 }else{
-		 getManagedBean().setButtonHideActiveDel(true);
-	 }		
+	     }
     }
   
     public void selectOnePersonCheckboxSelect(AjaxBehaviorEvent e){
@@ -2674,16 +2674,16 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 		for (CtCancelCircular ctCancelCirculars : getManagedBean().getCircularVer().getCtCancelCircularList()) {
 			if (getManagedBean().isSelectAll()) {
 				ctCancelCirculars.setSelectedCheckBox(true);
+				if(getManagedBean().isButtonHideActiveDel()){
+					 getManagedBean().setButtonHideActiveDel(false);
+				}
 		       }else {
 		    	   ctCancelCirculars.setSelectedCheckBox(false);
+		    	   if(!getManagedBean().isButtonHideActiveDel()){
+						 getManagedBean().setButtonHideActiveDel(true);
+					}
 		       }
-	}
-	
-	 if((boolean) e.getComponent().getAttributes().get("value")){
-		 getManagedBean().setButtonHideActiveDel(false);
-	 }else{
-		 getManagedBean().setButtonHideActiveDel(true);
-	 }		
+	      }
     }
 
     public void selectCancelCheckboxSelect(AjaxBehaviorEvent e){
@@ -2739,16 +2739,16 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 	      for (CtCircularVer ctCircularVers : getManagedBean().getCircularVerList()) {
 		       if (getManagedBean().isSelectAll()) {
 		    	   ctCircularVers.setSelectedCheckBox(true);
+		    	   if(getManagedBean().isButtonHideActiveDel()){
+						 getManagedBean().setButtonHideActiveDel(false);
+					}
 	           }else {
 	        	   ctCircularVers.setSelectedCheckBox(false);
+	        	   if(!getManagedBean().isButtonHideActiveDel()){
+						 getManagedBean().setButtonHideActiveDel(true);
+					}
 	           }
          }
-
-        if((boolean) e.getComponent().getAttributes().get("value")){
-	           getManagedBean().setButtonHideActiveDel(false);
-        }else{
-	           getManagedBean().setButtonHideActiveDel(true);
-        }	
    }
     	/**
     	 * The method used to delete the selected deduction clause.
@@ -2842,27 +2842,32 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 	    		        for (CtPanelSupplier ctPanelSuppliers : getManagedBean().getSelectedPanelZone().getCtPanelSuppliers()) {
 	    			          if (getManagedBean().isSelectAll()) {
 	    				         ctPanelSuppliers.setSelectedCheckBox(true);
+	    				         if(getManagedBean().isButtonHidePanelItemDel()){
+	    				        	 getManagedBean().setButtonHidePanelItemDel(false);
+	    				         }
 	    		               }else {
 	    		    	           ctPanelSuppliers.setSelectedCheckBox(false);
+	    		    	           if(!getManagedBean().isButtonHidePanelItemDel()){
+		    				        	 getManagedBean().setButtonHidePanelItemDel(true);
+		    				         }
 	    		              }
 	    	           }
 	    		}else {
 	    			for (CtPanelSupplier ctPanelSuppliers : getManagedBean().getSelectedPanelItems().getCtPanelSuppliers()) {
 				          if (getManagedBean().isSelectAll()) {
 					         ctPanelSuppliers.setSelectedCheckBox(true);
+					         if(getManagedBean().isButtonHidePanelItemDel()){
+    				        	 getManagedBean().setButtonHidePanelItemDel(false);
+    				         }
 			               }else {
 			    	           ctPanelSuppliers.setSelectedCheckBox(false);
+			    	           if(!getManagedBean().isButtonHidePanelItemDel()){
+	    				        	 getManagedBean().setButtonHidePanelItemDel(true);
+	    				         }
 			              }
 	    		    }
 	    		}
-	    	 if((boolean) e.getComponent().getAttributes().get("value")){
-	    		 getManagedBean().setButtonHidePanelItemDel(false);
-	    	 }else{
-	    		 getManagedBean().setButtonHidePanelItemDel(true);
-	    	 }		
         }
-    	
-    
     	
     	public void selectSupplierCheckboxSelect(AjaxBehaviorEvent e){
         	getManagedBean().setSelectAll(false);
@@ -2893,17 +2898,17 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
     			        for (CtPanelZone ctPanelZones : getManagedBean().getSelectedPanelItems().getCtPanelZones()) {
     			          if (getManagedBean().isSelectAll()) {
     			        	  ctPanelZones.setSelectedCheckBox(true);
+    			        	  if(getManagedBean().isButtonHideActiveDel()){
+    			        		  getManagedBean().setButtonHideActiveDel(false);
+    			        	  }
     		               }else {
     		            	   ctPanelZones.setSelectedCheckBox(false);
+    		            	   if(!getManagedBean().isButtonHideActiveDel()){
+     			        		  getManagedBean().setButtonHideActiveDel(true);
+     			        	  }
     		              }
     	           }
-  
-    	 if((boolean) e.getComponent().getAttributes().get("value")){
-    		 getManagedBean().setButtonHideActiveDel(false);
-    	 }else{
-    		 getManagedBean().setButtonHideActiveDel(true);
-    	 }		
-    }
+        }
 	
 	public void selectPanelZoneCheckboxSelect(AjaxBehaviorEvent e){
     	getManagedBean().setSelectAll(false);
@@ -2941,16 +2946,16 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
     		        for (CtPanelItemSpec ctPanelItemSpecs : getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs()) {
     			          if (getManagedBean().isSelectAll()) {
     			        	  ctPanelItemSpecs.setSelectedCheckBox(true);
+    			        	  if(getManagedBean().isButtonHideActiveDel()){
+    			        		  getManagedBean().setButtonHideActiveDel(false);
+    			        	  }
     		               }else {
     		            	   ctPanelItemSpecs.setSelectedCheckBox(false);
+    		            	   if(!getManagedBean().isButtonHideActiveDel()){
+     			        		  getManagedBean().setButtonHideActiveDel(true);
+     			        	  }
     		              }
     	           }
-		    		
-		    	 if((boolean) e.getComponent().getAttributes().get("value")){
-		    		 getManagedBean().setButtonHideActiveDel(false);
-		    	 }else{
-		    		 getManagedBean().setButtonHideActiveDel(true);
-		    	 }		
         }
     	
     	public void selectSpecificCheckBoxSelect(AjaxBehaviorEvent e){
