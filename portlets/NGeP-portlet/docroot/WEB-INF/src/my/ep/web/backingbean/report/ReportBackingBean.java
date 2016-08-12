@@ -18294,21 +18294,18 @@ public class ReportBackingBean extends
 	 * @param paramConstrString
 	 *            the param constr string
 	 */
-	protected void fileGenerateReport(String reportTitle,
-			
-			
-			
+	protected void fileGenerateReport(String reportTitle,			
 			String paramConstrString) {
 		Timestamp time = DateUtils.getCurrentDate();
-		log.info("ReportBackingBean-fileGenerateReport Time stamp ="+time);
+		log.info("ReportBackingBean-fileGenerateReport Time stamp =" + time);
 		StringBuilder gnrtdURL = new StringBuilder();
 
 		if (this.getManagedBean().getReportUrlValue().equals("1")) {
 			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.EXC_PREV_URL2).trim());
+					EpPropertiesConst.EXC_PREV_URL2));
 		} else if (this.getManagedBean().getReportUrlValue().equals("0")) {
 			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.EXC_PREV_URL).trim());
+					EpPropertiesConst.EXC_PREV_URL));
 		}
 
 		/*
@@ -18318,105 +18315,122 @@ public class ReportBackingBean extends
 		gnrtdURL.append(paramConstrString);
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.EXC_NEXT_URL));
-		
-		//Jimmy add (temporarily workaround for report).
+
+		// Jimmy add (temporarily workaround for report).
 		reportStr = gnrtdURL.toString();
-		
-//		HttpURLConnection urlConnection = null;
-//		URL obj;
-//		BufferedInputStream buf;
-//		try {
-//			obj = new URL(gnrtdURL.toString());
-//			log.info(gnrtdURL.toString());
-//			urlConnection = (HttpURLConnection) obj.openConnection();
-//
-//			urlConnection.setConnectTimeout(306000);
-//			urlConnection.setReadTimeout(306000);
-//			//new Thread(new InterruptThread(urlConnection)).start();
-//			log.info("@@@@ Report URL = " +urlConnection.getURL()+" @@@@ Time stamp ="+time);
-//			buf = new BufferedInputStream(urlConnection.getInputStream());
-//			
-//			log.info("@@@@ Report URL222 = " +urlConnection.getURL() +"@@@@ Response Code222 = "+urlConnection.getResponseCode()+ " @@@@ Time stamp ="+time);
-//			log.info("@@@@ Report getContentLength = " +urlConnection.getContentLength()+ " @@@@ Time stamp ="+time);
-//			
-//			log.info("@@@@ Start the PortletResponse from here"+ " @@@@ Time stamp ="+time);
-//			PortletResponse portletResponse = (PortletResponse) FacesContext
-//					.getCurrentInstance().getExternalContext().getResponse();
-//			log.info("@@@@ PortletResponse = "+portletResponse+ " @@@@ Time stamp ="+time);
-//			
-//			HttpServletResponse res = PortalUtil
-//					.getHttpServletResponse(portletResponse);
-//			log.info("@@@@ HttpServletResponse = "+res+ " @@@@ Time stamp ="+time);
-//			/*
-//			 * int position = reportFile.lastIndexOf(ReportConst.DOTJSP); if
-//			 * (position != -1) { reportFile = reportFile.substring(0,
-//			 * position); }
-//			 */
-//			res.setHeader(ReportConst.CONTENT_DISPOSITION,
-//					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportTitle
-//							+ ReportConst.UNDERSCORE
-//							+ ReportConst.REPORT_DATE_TIME.format(new Date())
-//							+ ReportConst.DOTPDFEIFON);//
-//			res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING,
-//					ReportConst.BINARY);
-//			res.setContentType(ReportConst.APPLICATIONEIFONPDF);
-//			res.flushBuffer();
-//			log.info("@@@@ HttpServletResponse getContentType = "+res.getContentType()+ " @@@@ Time stamp ="+time);
-//			log.info("@@@@ HttpServletResponse getStatus = "+res.getStatus()+ " @@@@ Time stamp ="+time);
-//			for (String headrName : res.getHeaderNames()){
-//				log.info("@@@@ HttpServletResponse getHeaderNames = "+headrName+ " @@@@ Time stamp ="+time);
-//			}
-//			
-//			OutputStream out = res.getOutputStream();
-//			log.info("@@@@ OutputStream = "+out);
-//			byte[] b = new byte[4096];
-//			int size;
-//			while ((size = buf.read(b, 0, b.length)) != -1) {
-//				out.write(b, 0, size);
-//			}
-//			buf.close();
-//			out.close();
-//			
-//		} catch (MalformedURLException e) {
-//			log.info("@@@@ ReportBackingBean-MalformedURLException"+e + " @@@@ Time stamp ="+time);
-//			e.printStackTrace();
-//			ExternalContext externalContext = FacesContext.getCurrentInstance()
-//					.getExternalContext();
-//			externalContext.addResponseCookie(
-//					org.primefaces.util.Constants.DOWNLOAD_COOKIE,
-//					ReportConst.RPT_TRUE,
-//					Collections.<String, Object> emptyMap());
-//			getManagedBean().getRptGenBean().setGenerateButtonView(false);
-//			throw new EpException(MessageConst.ERROR_REPORT_780009);
-//		} catch (IllegalArgumentException e) {
-//			log.info("@@@@ ReportBackingBean-IllegalArgumentException "+e  + " @@@@ Time stamp ="+time);
-//			e.printStackTrace();
-//			ExternalContext externalContext = FacesContext.getCurrentInstance()
-//					.getExternalContext();
-//			externalContext.addResponseCookie(
-//					org.primefaces.util.Constants.DOWNLOAD_COOKIE,
-//					ReportConst.RPT_TRUE,
-//					Collections.<String, Object> emptyMap());
-//			getManagedBean().getRptGenBean().setGenerateButtonView(false);
-//			throw new EpException(MessageConst.ERROR_REPORT_780009);
-//		} catch (IOException e) {
-//			log.info("@@@@ ReportBackingBean-IOException "+e);
-//			e.printStackTrace();
-//			ExternalContext externalContext = FacesContext.getCurrentInstance()
-//					.getExternalContext();
-//			externalContext.addResponseCookie("primefaces.download",
-//					ReportConst.RPT_TRUE,
-//					Collections.<String, Object> emptyMap());
-//			getManagedBean().getRptGenBean().setGenerateButtonView(false);
-//			throw new EpException(MessageConst.ERROR_REPORT_780020);
-//		}catch(Exception e) {
-//			log.info("@@@@ ReportBackingBean-Exception "+e  + " @@@@ Time stamp ="+time);
-//			e.printStackTrace();
-//		}finally {
-//			log.info("@@@@ ReportBackingBean-fileGenerateReport finally block"+ " @@@@ Time stamp ="+time);
-//			urlConnection.disconnect();
-//		}
-		log.info("@@@@ End of ReportBackingBean-fileGenerateReport"+ " @@@@ Time stamp ="+time);
+
+		HttpURLConnection urlConnection = null;
+		URL obj;
+		BufferedInputStream buf;
+		try {
+			obj = new URL(gnrtdURL.toString());
+			log.info(gnrtdURL.toString());
+			urlConnection = (HttpURLConnection) obj.openConnection();
+
+			urlConnection.setConnectTimeout(306000);
+			urlConnection.setReadTimeout(306000);
+			// new Thread(new InterruptThread(urlConnection)).start();
+			log.info("@@@@ Report URL = " + urlConnection.getURL()
+					+ " @@@@ Time stamp =" + time);
+			buf = new BufferedInputStream(urlConnection.getInputStream());
+
+			log.info("@@@@ Report URL222 = " + urlConnection.getURL()
+					+ "@@@@ Response Code222 = "
+					+ urlConnection.getResponseCode() + " @@@@ Time stamp ="
+					+ time);
+			log.info("@@@@ Report getContentLength = "
+					+ urlConnection.getContentLength() + " @@@@ Time stamp ="
+					+ time);
+
+			log.info("@@@@ Start the PortletResponse from here"
+					+ " @@@@ Time stamp =" + time);
+			PortletResponse portletResponse = (PortletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			log.info("@@@@ PortletResponse = " + portletResponse
+					+ " @@@@ Time stamp =" + time);
+
+			HttpServletResponse res = PortalUtil
+					.getHttpServletResponse(portletResponse);
+			log.info("@@@@ HttpServletResponse = " + res + " @@@@ Time stamp ="
+					+ time);
+			/*
+			 * int position = reportFile.lastIndexOf(ReportConst.DOTJSP); if
+			 * (position != -1) { reportFile = reportFile.substring(0,
+			 * position); }
+			 */
+			res.setHeader(ReportConst.CONTENT_DISPOSITION,
+					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportTitle
+							+ ReportConst.UNDERSCORE
+							+ ReportConst.REPORT_DATE_TIME.format(new Date())
+							+ ReportConst.DOTPDFEIFON);//
+			res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING,
+					ReportConst.BINARY);
+			res.setContentType(ReportConst.APPLICATIONEIFONPDF);
+			res.flushBuffer();
+			log.info("@@@@ HttpServletResponse getContentType = "
+					+ res.getContentType() + " @@@@ Time stamp =" + time);
+			log.info("@@@@ HttpServletResponse getStatus = " + res.getStatus()
+					+ " @@@@ Time stamp =" + time);
+			for (String headrName : res.getHeaderNames()) {
+				log.info("@@@@ HttpServletResponse getHeaderNames = "
+						+ headrName + " @@@@ Time stamp =" + time);
+			}
+
+			OutputStream out = res.getOutputStream();
+			log.info("@@@@ OutputStream = " + out);
+			byte[] b = new byte[4096];
+			int size;
+			while ((size = buf.read(b, 0, b.length)) != -1) {
+				out.write(b, 0, size);
+			}
+			buf.close();
+			out.close();
+
+		} catch (MalformedURLException e) {
+			log.info("@@@@ ReportBackingBean-MalformedURLException" + e
+					+ " @@@@ Time stamp =" + time);
+			e.printStackTrace();
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			externalContext.addResponseCookie(
+					org.primefaces.util.Constants.DOWNLOAD_COOKIE,
+					ReportConst.RPT_TRUE,
+					Collections.<String, Object> emptyMap());
+			getManagedBean().getRptGenBean().setGenerateButtonView(false);
+			throw new EpException(MessageConst.ERROR_REPORT_780009);
+		} catch (IllegalArgumentException e) {
+			log.info("@@@@ ReportBackingBean-IllegalArgumentException " + e
+					+ " @@@@ Time stamp =" + time);
+			e.printStackTrace();
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			externalContext.addResponseCookie(
+					org.primefaces.util.Constants.DOWNLOAD_COOKIE,
+					ReportConst.RPT_TRUE,
+					Collections.<String, Object> emptyMap());
+			getManagedBean().getRptGenBean().setGenerateButtonView(false);
+			throw new EpException(MessageConst.ERROR_REPORT_780009);
+		} catch (IOException e) {
+			log.info("@@@@ ReportBackingBean-IOException " + e);
+			e.printStackTrace();
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			externalContext.addResponseCookie("primefaces.download",
+					ReportConst.RPT_TRUE,
+					Collections.<String, Object> emptyMap());
+			getManagedBean().getRptGenBean().setGenerateButtonView(false);
+			throw new EpException(MessageConst.ERROR_REPORT_780020);
+		} catch (Exception e) {
+			log.info("@@@@ ReportBackingBean-Exception " + e
+					+ " @@@@ Time stamp =" + time);
+			e.printStackTrace();
+		} finally {
+			log.info("@@@@ ReportBackingBean-fileGenerateReport finally block"
+					+ " @@@@ Time stamp =" + time);
+			urlConnection.disconnect();
+		}
+		log.info("@@@@ End of ReportBackingBean-fileGenerateReport"
+				+ " @@@@ Time stamp =" + time);
 	}
 
 	/**
