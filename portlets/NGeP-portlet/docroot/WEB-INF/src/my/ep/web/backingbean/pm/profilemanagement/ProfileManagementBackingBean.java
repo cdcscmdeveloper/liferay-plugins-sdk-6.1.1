@@ -5646,8 +5646,14 @@ public class ProfileManagementBackingBean extends
 	
 	public void resetIdType(){
 		PmParameter identityType = new PmParameter();
-		identityType
+		if(isMYCountry()){
+				identityType
 				.setParameterCode(ProfileManagementConst.DEFAULT_IDENTIFY_TYPE);
+		}else{
+			identityType
+			.setParameterCode(ProfileManagementConst.PASSPORT_IDENTIFY_TYPE);
+		}
+
 		getManagedBean().getSelectedUser().setIdentificationCode(identityType);
 		getManagedBean().getSelectedUser().setIdentificationNo(null);
 		getManagedBean().getSelectedUser().setLoginId(null);
@@ -5662,5 +5668,9 @@ public class ProfileManagementBackingBean extends
 		getManagedBean().setSelectedOrgProfile(orgProfile);
 		this.getManagedBean().getUserProfileSearchBean()
 			.setSelectedOrgProfileId(orgProfile.getOrgProfileId());
+	}
+	
+	public void selectPtjActionForCreateUser(PmOrgProfile orgProfile){
+		getManagedBean().getSelectedUserOrg().setPmOrgProfile(orgProfile);
 	}
 }
