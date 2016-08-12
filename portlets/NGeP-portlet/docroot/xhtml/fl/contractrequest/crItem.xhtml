@@ -556,13 +556,22 @@
 			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.standard.price']}" rendered="#{contractRequestBackingBean.managedBean.standardPrice}"/></td>
-				<td><p:inputText disabled="true"  rendered="#{contractRequestBackingBean.managedBean.standardPrice}"
+				<td><p:inputText disabled="true" style="text-align:right;" rendered="#{contractRequestBackingBean.managedBean.standardPrice}"
 						value="#{contractRequestBackingBean.managedBean.standardUnitPrice}" 
 						size="35" >
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>					
 			</tr>
+			<tr>			
+				<td><p:outputLabel value="#{lbl['lbl.ct.ceiling.qty']}" rendered="#{!contractRequestBackingBean.managedBean.serviceItem and !contractRequestBackingBean.managedBean.centralContract}"/></td>
+				<td>
+					<p:inputText disabled="true" style="text-align:right;" rendered="#{!contractRequestBackingBean.managedBean.serviceItem and !contractRequestBackingBean.managedBean.centralContract}"
+						value="#{contractRequestBackingBean.managedBean.ceilingQuantity}" size="35" >
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractRequestBackingBean.managedBean.uomCode)}" />							
+				</p:inputText></td>					
+			</tr>			
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.uom']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
 				<td><p:inputText disabled="true"  rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
@@ -573,34 +582,33 @@
 			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.price.per.uom']}" rendered="#{contractRequestBackingBean.managedBean.standardPrice and contractRequestBackingBean.managedBean.serviceItem}"/></td>
-				<td><p:inputText disabled="true"  rendered="#{contractRequestBackingBean.managedBean.standardPrice and contractRequestBackingBean.managedBean.serviceItem}"
-						value="#{contractRequestBackingBean.managedBean.pricePerUom}" 
-						size="35" >
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText></td>					
+				<td><p:inputText disabled="true" style="text-align:right;" rendered="#{contractRequestBackingBean.managedBean.standardPrice and contractRequestBackingBean.managedBean.serviceItem}"
+						value="#{contractRequestBackingBean.managedBean.pricePerUom}" size="35" >
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>
+				</td>					
 			</tr>				
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.frequency.per.uom']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
-				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
+				<td><p:inputText disabled="true" style="text-align:right;" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
 						value="#{contractRequestBackingBean.managedBean.uomFrequency}" 
 						size="35" /></td>					
 			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.no.uom.per.day']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
-				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
+				<td><p:inputText disabled="true" style="text-align:right;" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
 						value="#{contractRequestBackingBean.managedBean.uomPerDay}" 
 						size="35" /></td>					
 			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.no.uom.per.month']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
-				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
+				<td><p:inputText disabled="true" style="text-align:right;" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
 						value="#{contractRequestBackingBean.managedBean.uomPerMonth}" 
 						size="35" /></td>					
 			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.no.uom.per.year']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
-				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
+				<td><p:inputText disabled="true" style="text-align:right;" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
 						value="#{contractRequestBackingBean.managedBean.uomPerYear}" 
 						size="35" /></td>					
 			</tr>
