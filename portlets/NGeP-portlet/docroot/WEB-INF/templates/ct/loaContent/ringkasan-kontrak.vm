@@ -1,10 +1,11 @@
 <html>
    <head>
       <style>
-         @page { size: A4 portrait;}
-         .footer {
-         display: block; text-align: center;
-         position: running(footer);
+         @page {
+         	size: A4 portrait;
+         	@top-left { content: "$contractName"; }
+         	@bottom-center { content: "Page " counter(page) " / " counter(pages); }
+         	@bottom-left { content: "$contractNo"; }
          }
       </style>
    </head>

@@ -4383,6 +4383,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			context = new VelocityContext();	
 			vmFile = ContractConst.DOCPATH_CT_LOA_CONTRACT_SUMMARY;
 			
+			context.put("contractNo", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+			context.put("contractName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
 			context.put("fileNo",  ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo() + "-" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getFileExtNo());
 			context.put("sourcingTitle",  ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
 			context.put("successfulSupplierName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
@@ -4446,25 +4448,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		else if(ContractConst.DOC_DEF_KEY_INTEGRITY_PACT.equalsIgnoreCase(docDefinitionKey)) {
 			FacesScopes fs = new FacesScopes();
 			String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();				
+			vmFile = ContractConst.DOCPATH_CT_INTEGRITY_PACT;
+			
 			context = new VelocityContext();	
 			context.put("hostUrl", hostUrl);
 			context.put("ptjName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgName());
 			context.put("amendmentTitle", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle());
 			context.put("contractNo", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+			context.put("contractName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
 			context.put("amendmentRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo());				
-			vmFile = ContractConst.DOCPATH_CT_INTEGRITY_PACT;
+			context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+			context.put("supplierMofRegNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
 			
-			if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(
-					CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
-				context.put("supplierName", "________________");
-				context.put("supplierMofRegNo", "________________");
-				context.put("supplierAddress","");
-				context.put("supplierPhoneNo","");
-				context.put("supplierFaxNo","");
-				context.put("supplierUserName", "________________");
-				context.put("supplierUserIcNo", "________________");
-				context.put("supplier",false);
-			} else {
+			context.put("supplierUserName", "________________");
+			context.put("supplierUserIcNo", "________________");
+			context.put("supplier",false);
+			
+			if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME))) {
+				
+				context.put("supplier",true);
 				if (getManagedBean().getTaskName() != null 
 						&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 					context.put("supplierUserName", getFacesScopes().getUserSessionBean().getUserName());
@@ -4473,22 +4477,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					context.put("supplierUserName", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserName());
 					context.put("supplierUserIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
 				}
-				context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-				context.put("supplierMofRegNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
-				
-				if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
-					String supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-					supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-					supplierAddress = supplierAddress.replaceAll("&", "&#38;");
-			    	context.put("supplierAddress", supplierAddress);
-					context.put("supplierPhoneNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNoFull());
-					context.put("supplierFaxNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNoFull());
-				} else {
-					context.put("supplierAddress", "");
-					context.put("supplierPhoneNo", "");
-					context.put("supplierFaxNo", "");
-				}
-				context.put("supplier",true);
 			}
 		}
 		// Format Bon Pelaksanaan
@@ -4496,6 +4484,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			vmFile = ContractConst.DOCPATH_CT_LOA_BOND_LETTER;
 			context = new VelocityContext();
 			int type = 1;
+			
+			context.put("contractNum", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+			context.put("contractName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
 			context.put("type", type);
 			context.put("contractNo", "...........................");
 			context.put("supplierName", "...........................");
@@ -4561,6 +4552,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			context.put("supplierAddress", supplierAddress);			
 			context.put("contractNo",ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+			context.put("contractName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
 			
 			String procurementMode = "";
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
