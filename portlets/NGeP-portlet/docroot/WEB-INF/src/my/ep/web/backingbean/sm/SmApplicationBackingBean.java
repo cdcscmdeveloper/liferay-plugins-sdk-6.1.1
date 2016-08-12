@@ -346,9 +346,7 @@ public class SmApplicationBackingBean extends
 							- rejAppl.getApplSubmitDate().getTime();
 					long diffDays = diff / (24 * 60 * 60 * 1000);
 					if (diffDays > ruleHelper.getApplicationResubmissionDays()) {
-						getManagedBean().setResubmitInValidMsg(
-								SmCommonUtil.getMessage(
-										"lbl.sm.resubmitExpired", null));
+						resubmitErrorKey = "lbl.sm.resubmitExpired";
 						this.getManagedBean().setValidResubmit(false);
 					}
 				}
@@ -429,9 +427,16 @@ public class SmApplicationBackingBean extends
 							mofReqDto = new MofRegistrationReqDTO();
 							mofReqDto.setApplId(Long.parseLong(applId));
 							mofReqDto.setSmSupplier(supplierProfile);
-							MofRegistrationResDTO mofRespDto = mofRegistrationSO
-									.cloneSmApplicationForResubmissionDraft(mofReqDto);
-							latestResubmitAppl = mofRespDto.getSmAppl();
+							try {
+								MofRegistrationResDTO mofRespDto = mofRegistrationSO
+										.cloneSmApplicationForResubmissionDraft(mofReqDto);
+								latestResubmitAppl = mofRespDto.getSmAppl();
+							} catch (EpException ex) {
+								resubmitErrorKey = "lbl.sm.resubmission.invalid";
+								log.info(">>>>>>>>>>ERROR CLONE NEW RESUBMIT APPLICATION:"
+										+ ex.getMessage() + "<<<<<<<<<<<");
+								this.getManagedBean().setValidResubmit(false);
+							}
 						}
 						// have latest resubmit appl, just copy rejected appl to
 						// latest resubmit appl
@@ -490,7 +495,11 @@ public class SmApplicationBackingBean extends
 						redirectToResubmitErrorPage(resubmitErrorKey);
 					}
 				} else {
-					redirectToResubmitErrorPage("lbl.sm.activeDrftExist");
+					if (StringUtils.isBlank(resubmitErrorKey)) {
+						redirectToResubmitErrorPage("lbl.sm.activeDrftExist");
+					} else {
+						redirectToResubmitErrorPage(resubmitErrorKey);
+					}
 				}
 
 			} else {
@@ -2010,15 +2019,15 @@ public class SmApplicationBackingBean extends
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
-//					assignApplicationRegistrationStatus(getManagedBean()
-//							.getSmSupplier().getSmAppl().getPmRegStatus());
+					// assignApplicationRegistrationStatus(getManagedBean()
+					// .getSmSupplier().getSmAppl().getPmRegStatus());
 					getHqFacility();
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
-//					assignApplicationRegistrationStatus(getManagedBean()
-//							.getSmSupplier().getSmAppl().getPmRegStatus());
+					// assignApplicationRegistrationStatus(getManagedBean()
+					// .getSmSupplier().getSmAppl().getPmRegStatus());
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV:
 					log.info("******* This is site visit review page ********");
@@ -9817,8 +9826,7 @@ public class SmApplicationBackingBean extends
 	 *            - PmRegStatus object
 	 */
 	private void assignApplicationRegistrationStatus(PmRegStatus regStatus) {
-		if (regStatus != null
-				&& regStatus.getPmStatus() != null) {
+		if (regStatus != null && regStatus.getPmStatus() != null) {
 			log.info("****** reg Status Id ******"
 					+ regStatus.getPmStatus().getStatusId());
 			StatusReqDTO reqDTO = new StatusReqDTO();
