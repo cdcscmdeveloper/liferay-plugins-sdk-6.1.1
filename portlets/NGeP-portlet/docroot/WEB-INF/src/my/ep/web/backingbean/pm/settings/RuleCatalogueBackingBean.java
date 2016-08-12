@@ -2140,7 +2140,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			}
 			if (exemption.getRequestItemId() != null
 					&& (exemption.getRequestItemId().getRequestNoteItemId() == null 
-					|| exemption.getRequestItemId().getRequestNoteItemId() == 0)) {// clear
+					|| exemption.getRequestItemId().getRequestNoteItemId() <= 0)) {// clear
 				// empty
 				// //
 				// objects
