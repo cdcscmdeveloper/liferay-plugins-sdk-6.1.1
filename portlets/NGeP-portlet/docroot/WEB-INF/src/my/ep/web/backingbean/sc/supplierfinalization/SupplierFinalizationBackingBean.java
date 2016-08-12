@@ -39,6 +39,7 @@ import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -888,8 +889,10 @@ public class SupplierFinalizationBackingBean extends
 			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
 
 			String qtNo = getManagedBean().getScQt().getQtNo().toString();
-			String desc = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_QUOTATION);
+			String desc = ResourceBundleUtils.getMessage(
+					"lbl.sc.sf.supplier.finalization", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -2128,14 +2131,18 @@ public class SupplierFinalizationBackingBean extends
 			resDTO = qtSuppFinalizationSO.submitSupplierFinalization(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
-												    ParameterConst.DOCTYPE_QUOTATION)
-						+ " " + getManagedBean().getScQt().getQtNo();
-				String statusParam = getStatusDescById(
-										getManagedBean().getCurrentStatusId());
-
-				commonMessageAcknowledmentPage(getMessgeConstant(outcome),
-											   qtParam, statusParam);
+				String msgCode = null;
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					msgCode = MessageConst.INFO_700067;
+				} else {
+					msgCode = getMessgeConstant(outcome);
+				}
+				commonMessageAcknowledmentPage(msgCode,
+						ResourceBundleUtils.getMessage(
+								"lbl.sc.sf.supplier.finalization", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()), 
+						getManagedBean().getScQt().getQtNo());
 			}
 
 		} finally {
