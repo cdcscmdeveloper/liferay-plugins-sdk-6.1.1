@@ -433,9 +433,9 @@ public class SmApplicationBackingBean extends
 								latestResubmitAppl = mofRespDto.getSmAppl();
 							} catch (EpException ex) {
 								resubmitErrorKey = "lbl.sm.resubmission.invalid";
+								this.getManagedBean().setValidResubmit(false);
 								log.info(">>>>>>>>>>ERROR CLONE NEW RESUBMIT APPLICATION:"
 										+ ex.getMessage() + "<<<<<<<<<<<");
-								this.getManagedBean().setValidResubmit(false);
 							}
 						}
 						// have latest resubmit appl, just copy rejected appl to
@@ -452,8 +452,10 @@ public class SmApplicationBackingBean extends
 										.cloneExistingResubmitApplication(
 												mofReqDto).getSmAppl();
 							} catch (Exception ex) {
-								resubmitErrorKey = ex.getMessage();
+								resubmitErrorKey = "lbl.sm.resubmission.invalid";
 								this.getManagedBean().setValidResubmit(false);
+								log.info(">>>>>>>>>>ERROR CLONE EXISTING RESUBMIT APPLICATION:"
+										+ ex.getMessage() + "<<<<<<<<<<<");
 							}
 						}
 
