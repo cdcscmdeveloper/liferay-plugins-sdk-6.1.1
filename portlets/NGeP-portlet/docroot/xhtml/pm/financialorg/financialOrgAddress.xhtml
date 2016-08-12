@@ -9,14 +9,14 @@
 	<p:outputPanel id="addManualDelAddrPnl">	
 		<table style="width: 100%">
 			<tr>
-				<td style="width:18%;">
+				<td style="width:15%;">
 					<p:outputLabel
 						value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
 						value="*" styleClass="mandatory" />
 				</td>
-				<td style="width:33%;">
+				<td style="width:35%;">
 					<p:selectOneMenu id="facCountry" tabindex="0"
-						style="width: 275px;"
+						style="width: 297px;"
 						required="true" label="#{lbl['lbl.pm.address.country']}" disabled="true"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmCountry.countryId}"
 						>
@@ -27,15 +27,15 @@
 					</p:selectOneMenu>
 					<p:message for="facCountry" id="facCountryMsg" display="icon" />
 				</td>
-				<td style="width:18%;">
+				<td style="width:15%;">
 					<p:outputLabel
 						value="#{lbl['lbl.pm.address.state']}" /> 
 					<p:outputLabel
 						value="*" styleClass="mandatory" />
 				</td>
-				<td style="width:33%;">
+				<td style="width:35%;">
 					<p:selectOneMenu id="facState" required="true" tabindex="1"
-						label="#{lbl['lbl.pm.address.state']}" style="width:225px;"
+						label="#{lbl['lbl.pm.address.state']}" style="width:297px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateId}"
 						>
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -59,7 +59,7 @@
 						label="#{lbl['lbl.pm.address.address']}" maxlength="255"
 						required="true" styleClass="ppDisplayTextL"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address1}"
-						size="40" />
+						size="52" />
 						<p:message for="address1" id="address1Msg" display="icon" /></td>
 				<td >
 					<p:outputLabel value="#{lbl['lbl.pm.address.division']}" /> 
@@ -71,7 +71,7 @@
 					
 				</td>
 				<td >
-					<p:selectOneMenu id="facDivision" tabindex="8" style="width:122px;"
+					<p:selectOneMenu id="facDivision" tabindex="8" style="width:297px;"
 						disabled="#{not financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}"
 						required="#{financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}"
 						label="#{lbl['lbl.pm.address.division']}"
@@ -90,12 +90,12 @@
 				<td></td>
 				<td ><p:inputText styleClass="ppDisplayTextL"  tabindex="3"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address2}"
-						size="40" maxlength="255" /></td>				
+						size="52" maxlength="255" /></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td >
 					<p:selectOneMenu id="facDistrict" required="true" tabindex="9"
-						label="#{lbl['lbl.pm.address.district']}" style="width:225px;"
+						label="#{lbl['lbl.pm.address.district']}" style="width:297px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDistrict.districtId}"
 						>
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -114,11 +114,11 @@
 				<td></td>
 				<td ><p:inputText maxlength="255" styleClass="ppDisplayTextL"  tabindex="4"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address3}"
-						size="40" /></td>				
+						size="52" /></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:selectOneMenu id="facCity" required="true"  tabindex="10"
-						label="#{lbl['lbl.pm.address.city']}" style="width:225px;"
+						label="#{lbl['lbl.pm.address.city']}" style="width:297px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmCity.cityId}"
 						>
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -136,7 +136,7 @@
 				<td></td>
 				<td class="tdContent"><p:inputText maxlength="255" styleClass="ppDisplayTextL"  tabindex="5"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address4}"
-						size="40" /></td>
+						size="52" /></td>
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td ><p:inputText id="postCode" required="true"

@@ -23,7 +23,14 @@
 						value="#{financialOrgBackingBean.managedBean.financialOrg.bizRegNumber}"						 
 						size="40" maxlength="20" >
 						<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
-						</p:inputText></td>
+						</p:inputText>
+						 &#160; <p:graphicImage id="giBizRegNo" style="vertical-align:top;"
+								value="/css/images/design/ico-tooltips.png" /> <p:tooltip
+								for="giBizRegNo" id="ttBizRegNo"
+								showEffect="fade" hideEffect="fade" > 
+									<p:outputLabel escape="false" value="#{lbl['lbl.pm.financialorg.buzregno.tt']}"/>
+								</p:tooltip>
+						</td>
 				<td><p:message id="bizRegNoMsg" for="bizRegNo" display="icon" /></td>
 			</tr>
 			<tr>
