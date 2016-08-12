@@ -241,7 +241,7 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setReportTabIndex(tabIndex++);
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
 			getManagedBean().setEndorsementReportActiveIndex(tabIndex++);
-			getManagedBean().setCommEndorsementTabIndex(tabIndex++);		
+			getManagedBean().setCommEndorsementTabIndex(tabIndex);		
 		}
 		
 		// Dynamically creating main tab menu
