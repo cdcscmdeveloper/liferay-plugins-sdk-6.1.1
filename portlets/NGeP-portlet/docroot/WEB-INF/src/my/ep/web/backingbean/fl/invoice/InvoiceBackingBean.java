@@ -267,7 +267,23 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverUserList(listOfApprover);
-				
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					if(reqDTO.isDan()){
+						if(null !=getManagedBean().getInvoice().getFlAdjustments()){
+							for(FlAdjustment adjustment: getManagedBean().getInvoice().getFlAdjustments()){
+								if(adjustment.getDocType().equals(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
+									reqDTO.setDanId(Long.valueOf(adjustment.getAdjustmentId()));
+									reqDTO.setDocType(adjustment.getDocType());
+									FulfilmentResDTO adjustmentResDTO  = adjustmentSO.retrieveAdjustmentById(reqDTO);
+									if(adjustmentResDTO.getAdjustment().getFlWorkflowStatus().getPmStatus().getStatusId().longValue()==FulfilmentStatusConst.DN_APPROVED.longValue()){
+										getManagedBean().setDanStatusId(adjustmentResDTO.getAdjustment().getFlWorkflowStatus().getPmStatus().getStatusId().longValue());
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
 				
 				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
@@ -284,22 +300,10 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					reqDTO.setInvoiceId(resDTO.getInvoice().getInvoiceId());
-					FulfilmentResDTO invResDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 					messageId = MessageConst.INFO_745018;
-				    messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
-					if(null !=invResDTO.getInvoice().getFlAdjustments()){
-						for(FlAdjustment adjustment: invResDTO.getInvoice().getFlAdjustments()){
-							if(adjustment.getDocType().equals(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
-								reqDTO.setDanId(Long.valueOf(adjustment.getAdjustmentId()));
-								reqDTO.setDocType(adjustment.getDocType());
-								FulfilmentResDTO adjustmentResDTO  = adjustmentSO.retrieveAdjustmentById(reqDTO);
-								if(adjustmentResDTO.getAdjustment().getFlWorkflowStatus().getPmStatus().getStatusId().longValue()==FulfilmentStatusConst.DN_CANCELLED.longValue()){
-									messageId = MessageConst.INFO_745082;
-									messagePrefix="";
-									break;
-								}
-							}
+					if(null != getManagedBean().getDanStatusId()){
+						if(getManagedBean().getDanStatusId().longValue()==FulfilmentStatusConst.DN_APPROVED.longValue()){
+							messageId = MessageConst.INFO_745082;
 						}
 					}
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
