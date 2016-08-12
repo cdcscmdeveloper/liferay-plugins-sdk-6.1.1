@@ -3558,7 +3558,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setZonalTierPrice(false);
 		getManagedBean().setTariffPrice(false);
 		getManagedBean().setServiceItem(false);
-
+		getManagedBean().setUomCode(flItemAddr.getScRequestItem().getUom() != null ? flItemAddr.getScRequestItem().getUom().getUomCode() : "");
+		getManagedBean().setCentralContract(getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL));
+		
 		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
 		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 		ContractItemResDTO ciItemResDTO = null;
@@ -3578,9 +3580,23 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setPricePerUom(ciItemResDTO.getItemPrice());
 			}
 			getManagedBean().setUomName(flItemAddr.getScRequestItem().getUom() != null ? flItemAddr.getScRequestItem().getUom().getUomName() : "");
+		} else {
+			// Try to get agency ceiling quantity for Item
+			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+			ciItemResDTO = contractItemSO.getItemCeilingQuantity(reqDTO);
+			if(ciItemResDTO.getItemCeilingQuantity()!=null && ciItemResDTO.getItemCeilingQuantity().doubleValue()>0) {
+				getManagedBean().setCeilingQuantity(ciItemResDTO.getItemCeilingQuantity());
+			} else { // have to set Item Ceiling Quantity
+				reqDTO.setFetchQuantityOnly(true);
+				reqDTO.setEffDate(getManagedBean().getFlRequest().getAgApprovedDate());
+				reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				ciItemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
+				getManagedBean().setCeilingQuantity(ciItemResDTO.getItemCeilingQuantity());
+			}
 		}
 		if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
 			getManagedBean().setStandardPrice(true);
+			
 		}else if(ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
 			getManagedBean().setZonalPrice(true);
 		}else if(ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(flItemAddr.getPriceType().getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(flItemAddr.getPriceType().getParameterCode())){
