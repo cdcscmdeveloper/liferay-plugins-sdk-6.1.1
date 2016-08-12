@@ -201,6 +201,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	private boolean deleteButtonHide;
 	private boolean zonal;
+	private boolean centralContract;
 	
 	private String termDays;
 	private int deliveryTerm;
@@ -2963,6 +2964,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setCeilingQuantity(BigDecimal ceilingQuantity) {
 		this.ceilingQuantity = ceilingQuantity;
+	}
+
+	public boolean isCentralContract() {
+		return centralContract;
+	}
+
+	public void setCentralContract(boolean centralContract) {
+		this.centralContract = centralContract;
 	}
 
 }
