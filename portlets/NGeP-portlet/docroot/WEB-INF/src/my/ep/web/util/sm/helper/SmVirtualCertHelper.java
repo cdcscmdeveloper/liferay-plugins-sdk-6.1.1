@@ -49,7 +49,7 @@ public class SmVirtualCertHelper {
 		return instance;
 	}
 	
-	public void autoGenerateVirtualCert(Long applId) throws Exception{
+	public void autoGenerateVirtualCert(Long applId, boolean deleteCategory) throws Exception{
 		log.info("******autoGenerateVirtualCert*****" + applId);
 		//SmSupplier supp = getSmSupplier();
 		List<SmMofCert> mCertLs = retrieveCurrentMofCert(applId);
@@ -60,10 +60,14 @@ public class SmVirtualCertHelper {
 				// if both is null, generate the pdf and save the file name and path
 				if(mCert != null){
 					log.info("****MCert****" + mCert);
-					if(mCert.getFileName() == null || mCert.getFilePath() == null){
-						log.info("****MCert id****" + mCert.getMofCertId());
-						log.info("****MCert bumi****" + mCert.getBumiCertFlg());
+					if(deleteCategory && !mCert.isBumiCert()){
 						genReport(getReportType(mCert.getBumiCertFlg()), getReportParam(mCert), mCert);
+					}else{
+						if(mCert.getFileName() == null || mCert.getFilePath() == null){
+							log.info("****MCert id****" + mCert.getMofCertId());
+							log.info("****MCert bumi****" + mCert.getBumiCertFlg());
+							genReport(getReportType(mCert.getBumiCertFlg()), getReportParam(mCert), mCert);
+						}
 					}
 				}
 			}
