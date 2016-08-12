@@ -1071,7 +1071,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					resDTO = feeExemptionSO.checkForFeeException(reqDTO);
 
 					if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
-						nonExemptedItemList.add(invItem.getInvAmt());
+						if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
+							Double recalculateServiceFee = 100 + getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue();
+							BigDecimal serviceGstAmount = (new BigDecimal((invItem.getInvAmt().doubleValue() * getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue()) / recalculateServiceFee));
+							gstTotalAmount = gstTotalAmount.subtract(serviceGstAmount);
+							nonExemptedItemList.add(invItem.getInvAmt());
+						}
+						
 					}
 				}
 			}
