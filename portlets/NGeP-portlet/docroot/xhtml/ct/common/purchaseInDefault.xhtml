@@ -29,7 +29,7 @@
 			                           </p:selectBooleanCheckbox>
 		                           </p:column>
 				                
-                                  <p:column style="width:50%;" 
+                                  <p:column style="width:50%;white-space:normal;" 
 				                            headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
 		                                    <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" 
 		                                        disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails
@@ -40,7 +40,8 @@
 			                              </p:selectOneMenu>
 			                      </p:column> 
 		             
-		                          <p:column  headerText="#{lbl['lbl.ct.pid.reason.desc']}" id="updatePidPurchase"  styleClass="column-align-center" style="width:45%;">
+		                          <p:column  headerText="#{lbl['lbl.ct.pid.reason.desc']}" 
+		                                 id="updatePidPurchase"  styleClass="column-align-center" style="width:45%;white-space:normal;">
 		                                     <p:inputText  value="#{pidObj.reasonDesc}" maxlength="255"
 		                                            style="width:350px;float:left;text-align:left;"  disabled="#{ctBackingBean.managedBean.viewContract
 		                                        	or ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.contractVer.panel}" 

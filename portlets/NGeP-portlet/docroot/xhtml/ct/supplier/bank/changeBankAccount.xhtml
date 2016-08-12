@@ -33,6 +33,15 @@
 	width: 300px;
 }
 </style>
+<script type="text/javascript">  
+                 $(function(){
+    	                $('form').on('keypress', function(event){
+    	                  if(event.which == 13){
+    	                  event.preventDefault();
+    	                   }
+    	             });
+            	});
+		</script> 
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
