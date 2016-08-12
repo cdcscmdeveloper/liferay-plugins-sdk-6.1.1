@@ -49,6 +49,15 @@
 			padding: 4px 3px;
 		}
 		</style>
+		<script type="text/javascript">  
+    $(function(){
+    	  $('form').on('keypress', function(event){
+    	    if(event.which == 13){
+    	        event.preventDefault();
+    	    }
+    	  });
+    	});
+	</script> 
 	  <ui:param name="isPrepareLoa" value="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaSubmission or
 	  ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaApproval or
 	  ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaRevision or

@@ -11,6 +11,8 @@
 		<script> $('#portlet_ctAgreement_WAR_NGePportlet').find('.portlet-title-text').html('#{agreementBackingBean.getPortletTitle()}'); </script>
 		<style>
 		 .top-aligned-columns td{ vertical-align: top;}
+		 .img1{
+		  vertical-align: top; }
 		.columnWidth150 {
 	        width: 150px;
 	        text-align: right;
@@ -45,6 +47,17 @@
                 padding-left: 0em;
         }
 		</style>
+		
+		   <script type="text/javascript">  
+                 $(function(){
+    	                $('form').on('keypress', function(event){
+    	                  if(event.which == 13){
+    	                  event.preventDefault();
+    	                   }
+    	             });
+            	});
+		</script> 
+		
 		 <p:blockUI id="blockUiId" block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>				
