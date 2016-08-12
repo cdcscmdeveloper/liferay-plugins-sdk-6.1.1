@@ -40,6 +40,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -917,14 +918,13 @@ public class NoticeBoardBackingBean extends
 						ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE, qtId);
 			}
 			if (null != evalCommitte) {
-				 ScCommittee committee = evalCommitte.getScCommittee();
-				 PmParameter pmParameter = committee.getCommitteeType();
-				this.getManagedBean().setCommitteeName(
-						getParameterDesc(pmParameter.getParameterType(),pmParameter.getParameterCode()));
+				
+				ScCommittee committee = evalCommitte.getScCommittee();
+				this.getManagedBean()
+						.setCommitteeName(getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
+										ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE));
 				this.getManagedBean().setScCommitteeMembers(
-						evalCommitte.getScCommittee() != null ? evalCommitte
-								.getScCommittee().getScCommitteeMembers(): null);
-								
+						committee != null ? committee.getScCommitteeMembers(): null);
 			}
 			
 			
@@ -2643,9 +2643,37 @@ public class NoticeBoardBackingBean extends
 			if (!scAttachments.isEmpty()) {
 				downloadAllFiles("NGeP-QT-Documents", scAttachments);
 			} else {
-				throw new EpException("Attachment not found.");
+				throw new EpException(MessageConst.ERROR_760329);
 			}
 		}
 
+	}
+	
+	/**
+	 * Check whether Committee is formed or not
+	 * 
+	 * @param qtId
+	 * @param evalType
+	 * @return 
+	 */
+	public boolean isCommitteeFormed(Long qtId, String evalType) {
+
+		ScQtCommittee evalCommitte = null;
+		Long committeeStatus = null;
+		if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(evalType)) {
+			evalCommitte = getQtCommiteDtlsByQtIdNType(
+					ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE, qtId);
+
+		} else {
+			evalCommitte = getQtCommiteDtlsByQtIdNType(
+					ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE, qtId);
+		}
+
+		if (null != evalCommitte) {
+			ScCommittee committee = evalCommitte.getScCommittee();
+			committeeStatus = committee.getCommitteStatus().getStatusId();
+
+		}
+		return QTStatusConst.CMT_COMPLETED.equals(committeeStatus);
 	}
 }
