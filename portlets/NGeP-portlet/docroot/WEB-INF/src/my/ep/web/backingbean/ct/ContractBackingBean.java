@@ -2066,17 +2066,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					for (CtPerformanceBond bonds : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
 						if (getManagedBean().isSelectAll()) {
 						      bonds.setSelectedCheckBox(true);
+						      if(getManagedBean().isButtonHideActive()){
+						            getManagedBean().setButtonHideActive(false);
+						      }
 					} else{
 						bonds.setSelectedCheckBox(false);
+						if(!getManagedBean().isButtonHideActive()){
+						      getManagedBean().setButtonHideActive(true);
+						}
 					}
-				}
-				
-				if((boolean) e.getComponent().getAttributes().get("value")){
-					getManagedBean().setButtonHideActive(false);
-				}else{
-					getManagedBean().setButtonHideActive(true);
-				}	
-			}
+			  }
+		}
 			
 	  public void selectOnePerformanceCheckboxSelect(AjaxBehaviorEvent e){
 		    	getManagedBean().setSelectAll(false);
@@ -2129,16 +2129,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
 					if (getManagedBean().isSelectAll()) {
 						ctSchedules.setSelectedCheckBox(true);
+						if(getManagedBean().isButtonHideSchActive()){
+					    	 getManagedBean().setButtonHideSchActive(false);
+					    }
 				       }else {
 				    	   ctSchedules.setSelectedCheckBox(false);
+				    	   if(!getManagedBean().isButtonHideSchActive()){
+						    	 getManagedBean().setButtonHideSchActive(true);
+						    }
 				       }
-			}
-			
-			if((boolean) e.getComponent().getAttributes().get("value")){
-				getManagedBean().setButtonHideSchActive(false);
-			}else{
-				getManagedBean().setButtonHideSchActive(true);
-			}	
+			    }
 		}
 			
 		public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e){
@@ -2161,16 +2161,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			for (CtPidReason ctPidReasons : getManagedBean().getContractVer().getCtPidReasons()) {
 				if (getManagedBean().isSelectAll()) {
 					ctPidReasons.setSelectedCheckBox(true);
+					if(getManagedBean().isButtonHideActive()){
+						getManagedBean().setButtonHideActive(false);
+					}
 			       }else {
 			    	   ctPidReasons.setSelectedCheckBox(false);
+			    	   if(!getManagedBean().isButtonHideActive()){
+							getManagedBean().setButtonHideActive(true);
+						}
 			       }
-		}
-		
-		if((boolean) e.getComponent().getAttributes().get("value")){
-			getManagedBean().setButtonHideActive(false);
-		}else{
-			getManagedBean().setButtonHideActive(true);
-		}	
+		    }
 	}
 		
 	public void selectOnePidCheckboxSelect(AjaxBehaviorEvent e){
@@ -2192,18 +2192,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			
 			for (CtProgressivePayment ctProgressivePayments : getManagedBean().getContractVer().getCtProgressivePayments()) {
 				if (getManagedBean().isSelectAll()) {
-					ctProgressivePayments.setSelectedCheckBox(true);
+					   ctProgressivePayments.setSelectedCheckBox(true);
+					   if(getManagedBean().isButtonHideSchActive()){
+						     getManagedBean().setButtonHideSchActive(false);
+					    }
 			       }else {
 			    	   ctProgressivePayments.setSelectedCheckBox(false);
+			    	   if(!getManagedBean().isButtonHideSchActive()){
+							 getManagedBean().setButtonHideSchActive(true);
+						}
 			       }
-		}
-		
-		if((boolean) e.getComponent().getAttributes().get("value")){
-			getManagedBean().setButtonHideSchActive(false);
-		}else{
-			getManagedBean().setButtonHideSchActive(true);
-		}	
-	}
+	    	}
+	 }
 		
 	public void selectOneProPaymentCheckboxSelect(AjaxBehaviorEvent e){
 		    	getManagedBean().setSelectAll(false);
@@ -2219,6 +2219,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().setButtonHideSchActive(true);
 				}	
 		    }
+	
+	public void selectAllAgencyCheckbox(){
+	
+	 	for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
+	 		if (getManagedBean().isSelectAll()) {
+	 			ctAgencies.setSelectedCheckBox(true);
+	 			getManagedBean().setButtonHideActive(false);
+	 		}else{
+	 			ctAgencies.setSelectedCheckBox(false);
+	 			getManagedBean().setButtonHideActive(true);
+	 		}
+	 	}	
+	}
 	
 	public void selectOneAgencyCheckboxSelect(AjaxBehaviorEvent e){
 		getManagedBean().setSelectAll(false);
