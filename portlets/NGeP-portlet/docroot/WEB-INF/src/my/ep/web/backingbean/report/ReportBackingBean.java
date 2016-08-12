@@ -18305,10 +18305,10 @@ public class ReportBackingBean extends
 
 		if (this.getManagedBean().getReportUrlValue().equals("1")) {
 			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.EXC_PREV_URL2));
+					EpPropertiesConst.EXC_PREV_URL2).trim());
 		} else if (this.getManagedBean().getReportUrlValue().equals("0")) {
 			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.EXC_PREV_URL));
+					EpPropertiesConst.EXC_PREV_URL).trim());
 		}
 
 		/*
