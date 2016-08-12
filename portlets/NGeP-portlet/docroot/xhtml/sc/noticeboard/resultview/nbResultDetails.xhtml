@@ -87,11 +87,12 @@
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusClosed}">
-					<p:commandLink
-						action="#{noticeBoardBackingBean.showPriceSchedules(scqt[0])}">
-						<h:outputText value="#{lbl['lbl.sc.notice.board.price.schedule']}"></h:outputText>
-					</p:commandLink>
-				</ui:fragment>
+				<p:commandLink
+					action="#{noticeBoardBackingBean.showPriceSchedules(scqt[0])}">
+					<h:outputText value="#{lbl['lbl.sc.notice.board.price.schedule']}"
+						rendered="#{noticeBoardBackingBean.isCommitteeFormed(scqt[0],scqt[7])}"></h:outputText>
+				</p:commandLink>
+			</ui:fragment>
 				<ui:fragment
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusAwarded}">
 					<p:commandLink
