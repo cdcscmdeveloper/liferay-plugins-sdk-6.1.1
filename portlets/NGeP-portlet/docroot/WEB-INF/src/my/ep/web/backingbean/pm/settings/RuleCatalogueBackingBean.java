@@ -2131,7 +2131,6 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 				.getFeeExemptionsForContract());
 
 		for (PmFeeExemption exemption : exemptionList) {
-			log.info("exemption.getRequestItemId() "+exemption.getRequestItemId());
 			if (exemption.getContractId() != null
 					&& exemption.getContractId().getContractId() == null) {
 				// throw required msg
@@ -2139,12 +2138,10 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 						new String[] {});
 			}
 			if (exemption.getRequestItemId() != null
-					&& (exemption.getRequestItemId().getRequestNoteItemId() == null 
-					|| exemption.getRequestItemId().getRequestNoteItemId() <= 0)) {// clear
+					&& exemption.getRequestItemId().getRequestNoteItemId() == null) {// clear
 				// empty
 				// //
 				// objects
-				log.info("request Item id set null");
 				exemption.setRequestItemId(null);
 			}
 
