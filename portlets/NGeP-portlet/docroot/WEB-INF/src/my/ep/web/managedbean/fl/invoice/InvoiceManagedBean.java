@@ -208,6 +208,9 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private String gfmasErrorCode;
 	private String gfmasErrorDesc;
 	
+	/** The status id. */
+	private Long danStatusId;
+	
 	/**
 	 * Gets the doc type.
 	 *
@@ -1228,6 +1231,20 @@ public class InvoiceManagedBean extends BaseManagedBean {
 
 	public void setGfmasErrorDesc(String gfmasErrorDesc) {
 		this.gfmasErrorDesc = gfmasErrorDesc;
+	}
+
+	/**
+	 * @return the danStatusId
+	 */
+	public Long getDanStatusId() {
+		return danStatusId;
+	}
+
+	/**
+	 * @param danStatusId the danStatusId to set
+	 */
+	public void setDanStatusId(Long danStatusId) {
+		this.danStatusId = danStatusId;
 	}
 
 }
