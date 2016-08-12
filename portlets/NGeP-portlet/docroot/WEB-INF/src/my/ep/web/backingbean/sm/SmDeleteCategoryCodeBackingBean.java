@@ -29,6 +29,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -265,8 +266,12 @@ public class SmDeleteCategoryCodeBackingBean extends
 					selCat.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
 					selCat.setCancelledDate(new Date());
 				}
-				this.getManagedBean().getSmAppl().setQuestionnaire(false);
+				//this.getManagedBean().getSmAppl().setQuestionnaire(false);
 				updateSmAppl();
+				
+				SmVirtualCertHelper.getInstance().
+				autoGenerateVirtualCert(getManagedBean().getSmAppl().getApplId(), true);
+				
 				assignActiveCategoryList();
 				FacesContext
 						.getCurrentInstance()
