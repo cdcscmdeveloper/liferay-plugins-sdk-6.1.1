@@ -48,7 +48,7 @@
 	</table>
 
 	<p:dialog id="uploadComitteDlg" widgetVar="uploadComitteDlg" resizable="false"
-	   modal="true" width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
+	   modal="true" width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
 	   onShow="singleUploadListener(meetingUploadWV);">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" dragDropSupport="false" multiple="false"
@@ -57,7 +57,7 @@
 			mode="advanced" id="CommitteUploadId" widgetVar="meetingUploadWV"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-			update="lampiranComitte" >
+			update="lampiranComitte" label="#{lbl['lbl.btn.choose']}" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">
