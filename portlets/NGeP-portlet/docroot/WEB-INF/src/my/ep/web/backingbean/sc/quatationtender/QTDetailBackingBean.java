@@ -44,6 +44,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -85,6 +86,8 @@ import my.ep.dto.sc.document.QTDocumentReqDTO;
 import my.ep.dto.sc.document.QTDocumentResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
+import my.ep.dto.sc.quationtender.MeetingReqDTO;
+import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -141,6 +144,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
@@ -1882,6 +1886,7 @@ public class QTDetailBackingBean extends
 				} else if (SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 								.equalsIgnoreCase(taskName)) {
 					retrieveCommitteeAppointmentTabDtl(true, true);
+					removeCommitteeActivityDetails(this.getManagedBean().getQt());
 				} else {
 					retrieveCommitteeAppointmentTabDtl(false, false);
 				}
@@ -5287,6 +5292,49 @@ public class QTDetailBackingBean extends
 			return isBiddingActive;
 		} finally {
 			biddingSO = null;
+		}
+	}
+	
+	
+	private void removeCommitteeActivityDetails(ScQt scQt){
+		IQTMeetingSO meetingso=null;
+		try{
+		 meetingso = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTMeetingSO.class);
+		 List<String> committeeType=new ArrayList<String>();
+		 if(ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(scQt.getEvaluationType())){
+			 committeeType.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
+		 }else{
+			 committeeType.add(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE); 
+			 committeeType.add(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE); 
+			 committeeType.add(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE); 
+		 }
+		 for(String type:committeeType){
+		MeetingReqDTO activityReqDTo = new MeetingReqDTO();
+		activityReqDTo.setQtId(scQt.getQtId().longValue());
+		activityReqDTo.setCommitteType(type);
+		MeetingResDTO activityResDTo = meetingso
+				.retriveCommitteActivityDtls(activityReqDTo);
+		if (null != activityResDTo
+				&& !activityResDTo.getCommitteMembers().isEmpty()) {
+			MeetingReqDTO deleteActivityDao = new MeetingReqDTO();
+			List<ScQtCommitteeActivity> deleteActivityList = new ArrayList<ScQtCommitteeActivity>();
+			for (ScQtCommitteeActivity activity : activityResDTo
+					.getCommitteMembers()) {
+				if (!activity.isBrandNew()) {
+					// activity.setScCommitteeMember(null);
+					activity.setDeleted(true);
+					deleteActivityList.add(activity);
+				}
+			}
+			deleteActivityDao
+					.setDeletedCommitteeActivityMembersList(deleteActivityList);
+			meetingso.deleteCommitteeActivityDtls(deleteActivityDao);
+		}
+		}
+		}finally{
+			
 		}
 	}
 	
