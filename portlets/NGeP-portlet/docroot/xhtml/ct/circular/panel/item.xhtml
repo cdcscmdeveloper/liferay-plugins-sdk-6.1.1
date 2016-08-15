@@ -9,7 +9,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 <p:panel id="itemId" header="#{lbl['lbl.ct.panel.item']}" toggleable="true" toggleSpeed="500">
 		<div>
 		          <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.panel.item']}" escape="false"/><br/>
-		          <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mark.panel.item']}" escape="false"/><br/><br/>
+		          <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mark.panel.item']}" 
+		             rendered="#{!panelBackingBean.managedBean.fromCircularNotice}" escape="false"/>
+		             <p:spacer height="10" rendered="#{!panelBackingBean.managedBean.fromCircularNotice}"/>
 		          <h:panelGrid width="100%">
 		          
 		          <p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
