@@ -770,7 +770,7 @@ public class GfMasManagedBean extends BaseManagedBean {
 		
 		if ( this.getSelectedProcess().getLogId() != null) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("dIInterfaceLog.logId",
+					new SearchFilterBean("diInterfaceLog.logId",
 							SearchOperator.OPERATOR_EQUALS.value(), this.getSelectedProcess().getLogId()));
 		}
 		return searchBean;
