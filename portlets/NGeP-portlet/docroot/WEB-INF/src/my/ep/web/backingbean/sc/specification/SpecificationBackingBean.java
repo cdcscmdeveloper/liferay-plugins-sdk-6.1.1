@@ -2672,7 +2672,7 @@ public class SpecificationBackingBean extends
 											.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL) || this
 									.getManagedBean()
 									.getCurrentStatusId()
-									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION))) {
+									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) || !this.getManagedBean().isReadOnly())) {
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
 								.getCurrentWorkFlowStatus(), this
@@ -2700,10 +2700,10 @@ public class SpecificationBackingBean extends
 									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT)
 									|| this.getManagedBean()
 											.getCurrentStatusId()
-											.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL) || this
+											.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL) || (this
 									.getManagedBean()
 									.getCurrentStatusId()
-									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION))) {
+									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && !this.getManagedBean().isReadOnly())|| !this.getManagedBean().isReadOnly())) {
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
 								.getCurrentWorkFlowStatus(), this
@@ -9367,7 +9367,16 @@ public class SpecificationBackingBean extends
 		}
 		List<ScQtSpecificationRemark> remarks = super.finalizeRemarks(this
 				.getManagedBean().getSpecificationRemarks());
-		scQt.setScQtSpecificationRemarks(remarks);
+		if (null != remarks) {
+			for (int i = 0; i < remarks.size(); i++) {
+				String userRemark = remarks.get(i).getRemark();
+				if (null == userRemark || "".equals(userRemark)) {
+					remarks.remove(i);
+				}
+			}
+			scQt.setScQtSpecificationRemarks(remarks);
+		}
+		
 
 		if (null != localChecklist && localChecklist.size() > 0) {
 
@@ -9706,6 +9715,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId());
+				this.getManagedBean().setReadOnly(readonly);
+				this.getManagedBean().setCurrentStatusId(statusId);
 				retriveCommitteeEndorsment();
 				// retriveTechnicalCheckList();
 				break;
@@ -10188,6 +10199,22 @@ public class SpecificationBackingBean extends
                     }
 
 				}
+				List<ScQtSpecificationRemark> remarks = super
+						.finalizeRemarks(getManagedBean().getSpecificationRemarks());
+
+				if (null != remarks) {
+					ScQt localScQt = spReqDTO.getScQt();
+					if (null != remarks) {
+						for (int i = 0; i < remarks.size(); i++) {
+							String userRemark = remarks.get(i).getRemark();
+							if (null == userRemark || "".equals(userRemark)) {
+								remarks.remove(i);
+							}
+						}
+					}
+					localScQt.setScQtSpecificationRemarks(remarks);
+					spReqDTO.setScQt(localScQt);
+				}
 			}
 			spReqDTO.setCommitteActivities(committeActivities);
 			
@@ -10198,6 +10225,14 @@ public class SpecificationBackingBean extends
 
 				if (null != remarks) {
 					ScQt localScQt = spReqDTO.getScQt();
+					if (null != remarks) {
+						for (int i = 0; i < remarks.size(); i++) {
+							String userRemark = remarks.get(i).getRemark();
+							if (null == userRemark || "".equals(userRemark)) {
+								remarks.remove(i);
+							}
+						}
+					}
 					localScQt.setScQtSpecificationRemarks(remarks);
 					spReqDTO.setScQt(localScQt);
 				}
