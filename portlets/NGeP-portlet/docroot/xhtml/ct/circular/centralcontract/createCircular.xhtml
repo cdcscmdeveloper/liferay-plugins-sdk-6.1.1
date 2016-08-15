@@ -249,10 +249,10 @@ rowKey="#{exemptedOrgsVar}" >
 		        
 		                            <h:panelGrid columns="3">
 		                                    <p:selectOneMenu for="OrgTypeId"  style="width:150px" disabled="true" >
-            	                                   <f:selectItem itemLabel="#{lbl['lbl.ct.panel.exempted.type']}" itemValue=""/>
+            	                                   <f:selectItem itemLabel="#{lbl['lbl.ct.panel.exempted.org.type']}" itemValue=""/>
                                             </p:selectOneMenu>
 		                                   <p:spacer height="1"/>
-		                                   <p:selectOneMenu id="OrgTypeId"   label="#{lbl['lbl.ct.panel.exempted.type']}"  
+		                                   <p:selectOneMenu id="OrgTypeId"   label="#{lbl['lbl.ct.panel.exempted.org.type']}"  
 		                                         style="width:300px" value="#{centralContractBackingBean.managedBean.orgTypeCode}">
             	                               <f:selectItems value="#{centralContractBackingBean.retrieveParameterDescListByType()}"/>
             	                                   <p:ajax event="change"  update=":form:exmptedMinistryId,:form:popUpExmptedTable"
