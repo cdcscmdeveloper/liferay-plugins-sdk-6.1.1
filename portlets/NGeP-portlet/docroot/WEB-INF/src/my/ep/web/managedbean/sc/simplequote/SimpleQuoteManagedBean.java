@@ -407,6 +407,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	/** The hours. */
 	private double hours;
 	
+	/** The max date. */
+	private Date maxDate;
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2602,5 +2605,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	public void setHours(double hours) {
 		this.hours = hours;
 	}
-	
+
+	/**
+	 * @return the maxDate
+	 */
+	public Date getMaxDate() {
+		return maxDate;
+	}
+
+	/**
+	 * @param maxDate the maxDate to set
+	 */
+	public void setMaxDate(Date maxDate) {
+		this.maxDate = maxDate;
+	}
 }
