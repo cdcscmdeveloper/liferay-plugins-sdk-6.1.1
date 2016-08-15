@@ -51,7 +51,7 @@
 		<p:selectBooleanCheckbox id="chkTcId" value="#{govtSellerBackingBean.managedBean.agreeTC}" >
 			<p:ajax update="btnProceed" partialSubmit="true" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 		</p:selectBooleanCheckbox>
-		#{lbl['lbl.sm.have.agreed']} #{lbl['lbl.sm.term.and.condition']}
+		#{lbl['lbl.sm.have.agreed.termcondition']}
 		
 		<div class="nav-wrapper" align="justify">
 			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"  style="float:right;"
