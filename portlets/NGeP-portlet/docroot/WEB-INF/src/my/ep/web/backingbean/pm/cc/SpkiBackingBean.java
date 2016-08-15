@@ -145,8 +145,8 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 				default:
 					System.out.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
-					//					throw new EpException(MessageConst.ERROR_776051);
-					//					return;
+					throw new EpException("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
+					
 				}
 
 
