@@ -430,38 +430,6 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		this.itemsList = itemsList;
 	}
 
-//	/**
-//	 * @return the qualifiedSuppliers
-//	 */
-//	public List<ScQtEvaluationResultDtl> getQualifiedSuppliers() {
-//		return qualifiedSuppliers;
-//	}
-//
-//	/**
-//	 * @param qualifiedSuppliers
-//	 *            the qualifiedSuppliers to set
-//	 */
-//	public void setQualifiedSuppliers(
-//			List<ScQtEvaluationResultDtl> qualifiedSuppliers) {
-//		this.qualifiedSuppliers = qualifiedSuppliers;
-//	}
-
-//	/**
-//	 * @return the toBeSavedQualifiedSuppliers
-//	 */
-//	public List<ScQtEvaluationResultDtl> getToBeSavedQualifiedSuppliers() {
-//		return toBeSavedQualifiedSuppliers;
-//	}
-//
-//	/**
-//	 * @param toBeSavedQualifiedSuppliers
-//	 *            the toBeSavedQualifiedSuppliers to set
-//	 */
-//	public void setToBeSavedQualifiedSuppliers(
-//			List<ScQtEvaluationResultDtl> toBeSavedQualifiedSuppliers) {
-//		this.toBeSavedQualifiedSuppliers = toBeSavedQualifiedSuppliers;
-//	}
-
 	/**
 	 * @return the selectedFinalizationReports
 	 */
