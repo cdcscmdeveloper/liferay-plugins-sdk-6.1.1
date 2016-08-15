@@ -38,7 +38,15 @@
                 padding-left: 0em;
         }
 		</style>
-		
+		<script type="text/javascript">  
+	    $(document).on("keypress", 'form', function (e) {
+    	    var code = e.keyCode || e.which;
+    	    if (code == 13) {
+    	        e.preventDefault();
+    	        return false;
+    	    }
+    	});
+		</script> 
 			<p:blockUI block=":form" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif" />
 			</p:blockUI>
