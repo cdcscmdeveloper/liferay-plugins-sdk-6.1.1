@@ -1190,6 +1190,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setFactoring(11);
 		getManagedBean().setSettingIndex(11);		
 		getManagedBean().setPaymentTracking(11);
+		ctBB.getManagedBean().setSelectAll(false);
 		
 		if (outputTab.equalsIgnoreCase(ContractConst.FULFILMENT_DETAIL)) {
 			getManagedBean().setSelectedTabIndex(0);
@@ -1280,6 +1281,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setPaymentTracking(11);
 		getManagedBean().setSettingIndex(11);
 		getManagedBean().setAgencyIndex(111);
+		ctBB.getManagedBean().setSelectAll(false);
 		
 	  	if (outputTab.equalsIgnoreCase(ContractConst.FULFILMENT_DETAIL)) {
 			getManagedBean().setSelectedTabIndex(0);
