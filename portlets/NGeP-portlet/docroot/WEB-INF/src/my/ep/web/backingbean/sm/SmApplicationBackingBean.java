@@ -215,7 +215,7 @@ public class SmApplicationBackingBean extends
 				&& (component == null || component.getValue() == null || StringUtils
 						.isBlank(component.getValue().toString()))) {
 			throw new ValidatorException(new FacesMessage(
-					FacesMessage.SEVERITY_ERROR, "Required filed error",
+					FacesMessage.SEVERITY_ERROR, "Required field error",
 					SmCommonUtil.getMessage("lbl.sm.required.msg",
 							new String[] { labelNameVal })));
 		}
@@ -3870,11 +3870,28 @@ public class SmApplicationBackingBean extends
 	 * Action to Approve all category codes by PO or Approver.
 	 */
 	public void approveAllCategoryCodesByPOorApprover() {
-		for (SmSupplierCategory cat : getManagedBean().getActiveCategoryList()) {
-			if (getManagedBean().isPoUser()) {
-				cat.setPoDecFlg(1);
-			} else if (getManagedBean().isApproverUser()) {
-				cat.setApprvrDecFlg(1);
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getActiveCategoryList())) {
+			for (SmSupplierCategory cat : getManagedBean()
+					.getActiveCategoryList()) {
+				if (getManagedBean().isPoUser()) {
+					cat.setPoDecFlg(1);
+				} else if (getManagedBean().isApproverUser()) {
+					cat.setApprvrDecFlg(1);
+				}
+			}
+		}
+		if (getManagedBean().getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				&& !EntityHelper.isCollectionEmpty(getManagedBean()
+						.getApprovedCategoryList())) {
+			for (SmSupplierCategory cat : getManagedBean()
+					.getApprovedCategoryList()) {
+				if (getManagedBean().isPoUser()) {
+					cat.setPoDecFlg(1);
+				} else if (getManagedBean().isApproverUser()) {
+					cat.setApprvrDecFlg(1);
+				}
 			}
 		}
 	}
