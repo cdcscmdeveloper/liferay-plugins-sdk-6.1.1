@@ -42,7 +42,7 @@
 							qTDetailBB.managedBean.selectedApprovalTabBean.tabType != ParameterConst.approvalCategoryProcurementBoard}">
 						<p:selectOneMenu id="fcApprovalId"
 							value="#{approverSettings.committeeType.parameterId}"
-							style="width: 178px;margin-bottom: 5px;">
+							style="width:75%;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="secretary"
@@ -58,13 +58,13 @@
 					</c:otherwise>
 				</c:choose>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.secretary.name']}">
+			<p:column headerText="#{lbl['lbl.sc.secretary.name']}" width="70%">
 				<h:panelGroup id="commTypes">
 					<c:choose>
 						<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate}">
 							<p:selectOneMenu id="usersSecretaryId"
 								value="#{approverSettings.pmUser.userId}"
-								style="width: 178px;margin-bottom: 5px;">
+								style="width:90%;margin-bottom: 5px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />
 								<f:selectItems var="usersSecretary"
