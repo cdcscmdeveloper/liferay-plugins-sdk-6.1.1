@@ -20,6 +20,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.MenuModel;
@@ -72,7 +73,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 
 	private List<ScQtRecommend> itemsList;
 	
-	private List<QtEvaluationResultDtlBean> qualifiedSuppliersCache;
+//	private List<QtEvaluationResultDtlBean> qualifiedSuppliersCache;
 	private List<ScQtFinalizationReport> selectedFinalizationReports;
 	private List<ScQtFinalizationReport> deletedFinalizationReports;
 	
@@ -80,6 +81,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersDataModel;	
 
 	private Map<Long, TplSpecZoneDtl> zoneMap;
+	private Map<MapKey,List<QtEvaluationResultDtlBean>> qualifiedSuppliersCache;
 
 	private List<SmPersonnel> boardofDirectors;
 
@@ -465,7 +467,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	/**
 	 * @return the qualifiedSuppliersCache
 	 */
-	public List<QtEvaluationResultDtlBean> getQualifiedSuppliersCache() {
+	public Map<MapKey,List<QtEvaluationResultDtlBean>> getQualifiedSuppliersCache() {
 		return qualifiedSuppliersCache;
 	}
 
@@ -474,7 +476,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	 *            the qualifiedSuppliersCache to set
 	 */
 	public void setQualifiedSuppliersCache(
-			List<QtEvaluationResultDtlBean> qualifiedSuppliersCache) {
+			Map<MapKey,List<QtEvaluationResultDtlBean>> qualifiedSuppliersCache) {
 		this.qualifiedSuppliersCache = qualifiedSuppliersCache;
 	}
 

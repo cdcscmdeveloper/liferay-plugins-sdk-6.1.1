@@ -60,12 +60,14 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.sc.ConsolidationReportManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
@@ -92,6 +94,9 @@ public class ConsolidationReportBackingBean extends
 	private final static int BRIEFING_PAPER_TAB_INDEX = 0;
 	private final static int PACKAGE_TYPE_TAB_INDEX = 1;
 	private final static int ITEMIZED_TYPE_TAB_INDEX = 2;
+	
+	private final static Long DEFAULT_ITEM = 0L;
+	private final static Long DEFAULT_ZONE = 0L;
 	
 	/** Default constructor */
 	public ConsolidationReportBackingBean() {}
@@ -246,7 +251,39 @@ public class ConsolidationReportBackingBean extends
 		if (selectedSupplier == null) {
 			return;
 		}
-		populateDataCache(selectedSupplier);
+		
+		Long selectedZoneId = DEFAULT_ZONE;
+		if (getManagedBean().getScQt().isZonal()) {
+			selectedZoneId = getManagedBean().getSelectedZone().getSpecZoneId();
+		}
+		
+		Long selectedItemId = DEFAULT_ITEM;
+		if (getManagedBean().isItemized()) {
+			selectedItemId = getManagedBean().getSelectedItem()
+							 .getRequestItem().getRequestNoteItemId();
+		}
+		
+		List<QtEvaluationResultDtlBean> cachedSuppliersList = 
+				getCachedSuppliersFromMap(selectedZoneId, selectedItemId);
+		
+		QtEvaluationResultDtlBean doRecommendationBean = getCachedBeanFromList(
+				cachedSuppliersList, selectedSupplier.getEvaluationResultDtlId());
+		
+		if (doRecommendationBean == null) {
+			doRecommendationBean = new QtEvaluationResultDtlBean();
+			doRecommendationBean.setQtEvalResDtlId(
+					selectedSupplier.getEvaluationResultDtlId());
+			doRecommendationBean.setDeskOfficerRank(
+					selectedSupplier.getDeskOfficerRank());
+			doRecommendationBean.setDeskOfficerRemark(
+					selectedSupplier.getDeskOfficerRemark());
+			cachedSuppliersList.add(doRecommendationBean);
+		} else {
+			doRecommendationBean.setDeskOfficerRank(
+					selectedSupplier.getDeskOfficerRank());
+			doRecommendationBean.setDeskOfficerRemark(
+					selectedSupplier.getDeskOfficerRemark());
+		}		
 	}
 	
 	/**
@@ -498,9 +535,10 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			
-			SuppFinalizationResDTO resDTO 
-					= qtSuppFinalizationSO.submitConsolidationReport(reqDTO);
-			if (resDTO.isSuccessful()) {
+//			SuppFinalizationResDTO resDTO 
+//					= qtSuppFinalizationSO.submitConsolidationReport(reqDTO);
+			if (true) {
+//			if (resDTO.isSuccessful()) {
 				String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
 													ParameterConst.DOCTYPE_QUOTATION)
 						+ " " + getManagedBean().getScQt().getQtNo();
@@ -926,7 +964,7 @@ public class ConsolidationReportBackingBean extends
 					getQualifiedSuppliersWithDORank(specZoneDtl, null);	
 		
 		List<QtEvaluationResultDtlBean> qualifiedSupplierBeans = 
-						createQtEvaluationResultDtlBeans(qualifiedSuppliers);
+						createQtEvaluationResultDtlBeans(specZoneDtl, null, qualifiedSuppliers);
 		if (CollectionUtils.isNotEmpty(
 						qualifiedSupplierBeans)) {
 			validateRanking(qualifiedSupplierBeans, 
@@ -938,8 +976,8 @@ public class ConsolidationReportBackingBean extends
 			for (ScQtRecommend item : items) {
 				itemQualifiedSuppliers = getQualifiedSuppliersWithDORank(
 													    specZoneDtl, item);
-				qualifiedSupplierBeans = createQtEvaluationResultDtlBeans(
-												   itemQualifiedSuppliers);
+				qualifiedSupplierBeans = createQtEvaluationResultDtlBeans(specZoneDtl,
+											item.getRequestItem(), itemQualifiedSuppliers);
 				if (CollectionUtils.isNotEmpty(
 								qualifiedSupplierBeans)) {
 					validateRanking(qualifiedSupplierBeans, 
@@ -1023,22 +1061,36 @@ public class ConsolidationReportBackingBean extends
 	}
 	
 	private List<QtEvaluationResultDtlBean> createQtEvaluationResultDtlBeans(
-						   	 List<ScQtEvaluationResultDtl> qualifiedSuppliers) {
-		List<QtEvaluationResultDtlBean> beanList = null;
-		List<QtEvaluationResultDtlBean> cachedBeanList = 
-						getManagedBean().getQualifiedSuppliersCache();
+											TplSpecZoneDtl specZoneDtl, ScRequestItem requestItem,
+											List<ScQtEvaluationResultDtl> qualifiedSuppliers) {
+		Long zoneId = null;
+		if (specZoneDtl != null) {
+			zoneId = specZoneDtl.getSpecZoneId();
+		} else {
+			zoneId = DEFAULT_ZONE;
+		}
+		
+		Long itemId = null;
+		if (requestItem != null) {
+			itemId = requestItem.getRequestNoteItemId();
+		} else {
+			itemId = DEFAULT_ITEM;
+		}
+		
+		List<QtEvaluationResultDtlBean> beanList = new ArrayList<QtEvaluationResultDtlBean>();
+		List<QtEvaluationResultDtlBean> cachedSuppliers = 
+						getCachedSuppliersFromMap(zoneId, itemId);
 		
 		if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 			QtEvaluationResultDtlBean resultDtlBean = null;
-			beanList = new ArrayList<QtEvaluationResultDtlBean>(); 
+			if (cachedSuppliers == null) {
+				cachedSuppliers = new ArrayList<QtEvaluationResultDtlBean>(); 
+			}
 			
 			for (ScQtEvaluationResultDtl evalResDtl 
 							   : qualifiedSuppliers) {
-				resultDtlBean = new QtEvaluationResultDtlBean();
-				resultDtlBean.setQtEvalResDtlId(
-						evalResDtl.getEvaluationResultDtlId());
-				
-				resultDtlBean = getBeanFromList(cachedBeanList, resultDtlBean);
+				resultDtlBean = getCachedBeanFromList(cachedSuppliers, 
+									evalResDtl.getEvaluationResultDtlId());
 				if (resultDtlBean == null) {
 					resultDtlBean = new QtEvaluationResultDtlBean();
 					resultDtlBean.setQtEvalResDtlId(
@@ -1048,7 +1100,6 @@ public class ConsolidationReportBackingBean extends
 					resultDtlBean.setDeskOfficerRemark(
 							evalResDtl.getDeskOfficerRemark());
 				}
-
 				beanList.add(resultDtlBean);
 			}
 		}
@@ -1062,8 +1113,19 @@ public class ConsolidationReportBackingBean extends
 				getManagedBean().getScQtFinalization());
 		reqDTO.setRemovedFinalizationReports(
 				getManagedBean().getDeletedFinalizationReports());
-		reqDTO.setCachedSupplierBeans(
-				getManagedBean().getQualifiedSuppliersCache());
+		
+		List<QtEvaluationResultDtlBean> cachedSuppliers = 
+					new ArrayList<QtEvaluationResultDtlBean>();
+		if (MapUtils.isNotEmpty(
+				getManagedBean().getQualifiedSuppliersCache())) {
+			for (List<QtEvaluationResultDtlBean> supplierList 
+						: getManagedBean().getQualifiedSuppliersCache().values()) {
+				if (CollectionUtils.isNotEmpty(supplierList)) {
+					cachedSuppliers.addAll(supplierList);
+				}
+			}
+		}
+		reqDTO.setCachedSupplierBeans(cachedSuppliers);
 
 		finalizeRemarks();
 		
@@ -1362,13 +1424,20 @@ public class ConsolidationReportBackingBean extends
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("tplSpecZoneDtl.specZoneId",
 								SearchOperator.OPERATOR_EQUALS.value(), selectedZoneId));
+			} else {
+				selectedZoneId = DEFAULT_ZONE;
 			}
+			
+			Long selectedItemId = null;
 			if (null != selectedItem) {
+				selectedItemId = selectedItem.getRequestItem().getRequestNoteItemId();
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scRequestItem.requestNoteItemId",
 								SearchOperator.OPERATOR_EQUALS.value(), 
 								selectedItem.getRequestItem().getRequestNoteItemId()));				
-			}			
+			} else {
+				selectedItemId = DEFAULT_ITEM;
+			}
 			
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
@@ -1383,24 +1452,20 @@ public class ConsolidationReportBackingBean extends
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 				if (resDTO.isSuccessful()) {
 					resultBean = resDTO.getQualifiedSuppliersByEvalStage();
-					List<ScQtEvaluationResultDtl> qualifiedSuppliers 
-														= resultBean.getResultList();
-					List<QtEvaluationResultDtlBean> cachedSupplierBeans = 
-										getManagedBean().getQualifiedSuppliersCache();
+					List<ScQtEvaluationResultDtl> qualifiedSuppliers = 
+														resultBean.getResultList();
+					List<QtEvaluationResultDtlBean> cachedSuppliers = 
+							getCachedSuppliersFromMap(selectedZoneId, selectedItemId);
+					
 					if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 						for (ScQtEvaluationResultDtl qualSupplier 
 												: qualifiedSuppliers) {
 							if (selectedItem != null) {
 								calculateOfferedPrice(qualSupplier, selectedItem);
 							}
-							if (cachedSupplierBeans != null) {
-								QtEvaluationResultDtlBean recommendationBean = 
-													new QtEvaluationResultDtlBean();
-								recommendationBean.setQtEvalResDtlId(
-										qualSupplier.getEvaluationResultDtlId());
-								recommendationBean = getBeanFromList(
-										cachedSupplierBeans, recommendationBean);
-								
+							if (cachedSuppliers != null) {
+								QtEvaluationResultDtlBean recommendationBean = getCachedBeanFromList(
+											cachedSuppliers, qualSupplier.getEvaluationResultDtlId());
 								if (recommendationBean != null) {
 									qualSupplier.setDeskOfficerRank(
 											recommendationBean.getDeskOfficerRank());
@@ -1421,44 +1486,41 @@ public class ConsolidationReportBackingBean extends
 		}
 	}
 	
-	private void populateDataCache(ScQtEvaluationResultDtl qualifiedSupplier) {
-		List<QtEvaluationResultDtlBean> cachedSupplierBeans = 
-						getManagedBean().getQualifiedSuppliersCache();
-		QtEvaluationResultDtlBean doRecommendationBean = 
-									new QtEvaluationResultDtlBean();
-		doRecommendationBean.setQtEvalResDtlId(
-						qualifiedSupplier.getEvaluationResultDtlId());
+	private List<QtEvaluationResultDtlBean> getCachedSuppliersFromMap(Long zoneId, Long itemId) {
+		if (zoneId == null && itemId == null) {
+			return null;
+		}
 		
+		List<QtEvaluationResultDtlBean> cachedSuppliersList = null;
+		Map<MapKey, List<QtEvaluationResultDtlBean>> cachedSupplierBeans = 
+								getManagedBean().getQualifiedSuppliersCache();
+		MapKey mapKey = new MapKey(zoneId, itemId);
+
 		if (cachedSupplierBeans == null) {
-			cachedSupplierBeans = new ArrayList<QtEvaluationResultDtlBean>();
-			getManagedBean().setQualifiedSuppliersCache(
-									 cachedSupplierBeans);
+			cachedSupplierBeans = new HashMap<MapKey, List<QtEvaluationResultDtlBean>>();
+			cachedSuppliersList = new ArrayList<QtEvaluationResultDtlBean>();
+			cachedSupplierBeans.put(mapKey, cachedSuppliersList);
+
+			getManagedBean().setQualifiedSuppliersCache(cachedSupplierBeans);
+		} else if (cachedSupplierBeans.containsKey(mapKey)) {
+			cachedSuppliersList = cachedSupplierBeans.get(mapKey);
+		} else {
+			cachedSuppliersList = new ArrayList<QtEvaluationResultDtlBean>();
+			cachedSupplierBeans.put(mapKey, cachedSuppliersList);
 		}
 		
-		doRecommendationBean = getBeanFromList(cachedSupplierBeans, 
-											   doRecommendationBean);
-		if (doRecommendationBean == null) {
-			doRecommendationBean = new QtEvaluationResultDtlBean();
-			doRecommendationBean.setQtEvalResDtlId(
-					qualifiedSupplier.getEvaluationResultDtlId());
-			doRecommendationBean.setDeskOfficerRank(
-					qualifiedSupplier.getDeskOfficerRank());
-			doRecommendationBean.setDeskOfficerRemark(
-					qualifiedSupplier.getDeskOfficerRemark());
-			cachedSupplierBeans.add(doRecommendationBean);
-		} else {
-			doRecommendationBean.setDeskOfficerRank(
-					qualifiedSupplier.getDeskOfficerRank());
-			doRecommendationBean.setDeskOfficerRemark(
-					qualifiedSupplier.getDeskOfficerRemark());
-		}
+		return cachedSuppliersList;
 	}
 	
-	private QtEvaluationResultDtlBean getBeanFromList(List<QtEvaluationResultDtlBean> beanList,
-			   										  QtEvaluationResultDtlBean resultDtlBean) {
-		if (beanList != null && 
-				beanList.contains(resultDtlBean)) {
-			return beanList.get(beanList.indexOf(resultDtlBean));
+	private QtEvaluationResultDtlBean getCachedBeanFromList(List<QtEvaluationResultDtlBean> beanList,
+			   										  Long evaluationResultDtlId) {
+		if (CollectionUtils.isNotEmpty(beanList)) {
+			QtEvaluationResultDtlBean requiredBean = new QtEvaluationResultDtlBean();
+			requiredBean.setQtEvalResDtlId(evaluationResultDtlId);
+			
+			if (beanList.contains(requiredBean)) {
+				return beanList.get(beanList.indexOf(requiredBean));
+			}
 		}
 		
 		return null;
