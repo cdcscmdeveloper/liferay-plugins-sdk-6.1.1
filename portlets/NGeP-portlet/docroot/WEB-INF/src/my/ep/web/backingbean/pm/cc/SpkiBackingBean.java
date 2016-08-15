@@ -132,10 +132,10 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 					// show to the user to allow user answer the challenge
 					if(challs.size() == 0)
 					{
-						System.err.println("No challanges found for the user! ");
-						//						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
-						//						throw new EpException(MessageConst.ERROR_776051);
-						//						return;
+						System.out.println("No challanges found for the user! ");
+						throw new EpException(MessageConst.ERROR_776051);
+					
+
 					}else{
 						setChallengeQues1(challs.get(0));
 						RequestContext.getCurrentInstance().execute("spki_dlg.show()");
@@ -144,7 +144,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 					break;
 
 				default:
-					System.err.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
+					System.out.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
 					//					throw new EpException(MessageConst.ERROR_776051);
 					//					return;
 				}
@@ -152,8 +152,9 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 			} catch (Exception ex)
 			{
-				throw new EpException(MessageConst.ERROR_776051);
-				//				ex.printStackTrace();
+				ex.printStackTrace();
+				throw new EpException(ex.getMessage());
+				
 			}	
 		}
 	}
@@ -308,46 +309,48 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 	public static void main(String[] args) {
 		try{
-			String signedData ;
-			// Create property file
-			String challengeQues1 = new String("In what city you were born?");
-			String challengeAns1 = new String("welcome1");
 			File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
-			// Create KMCClient with the property file
 			KMCClient client = KMCClientFactory.getInstance(f);
-			// Simulate user selected the question and answer accordingly
-			Map<Object, Object> challenges = new HashMap<Object, Object>();
-			challenges.put(challengeQues1, challengeAns1);
 
-			// Simulate the data ready to sign
-			String dataForSigning = "originalText";
-
-			String pin = "efgh1234";
-
-			//		System.out.println("SIGN " + getDigiCertUserId() + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword());
-			// Request service to signData based on the answered challenges and data 
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("890823102233","STRONG HABIS", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
-
-
+			// Request service for user selected question for authentication
+			
+			String test1 = "54322211114333";
+			String test2 = "680410061119";
+			
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions(test2, 1));
+			
+			System.out.println("res.getStatusCode():"+res.getStatusCode());
+			//				List<String> challs = null;
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				//			RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
-				FileOutputStream fos = new FileOutputStream("sign.bin");
-				fos.flush();
-				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
-				fos.close();
-				signedData = new String(Base64.encode(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE))));
-				System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
+				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
+				// show to the user to allow user answer the challenge
+				if(challs.size() == 0)
+				{
+					System.err.println("No challanges found for the user!");
+					//						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
+					//						throw new EpException(MessageConst.ERROR_776051);
+					//						return;
+				}else{
+					//setChallengeQues1(challs.get(0));
+					RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+				}
+
 				break;
 
 			default:
-
-				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
-				//throw new EpException(MessageConst.ERROR_776052);
-				//			signedData = "DEFAULT SIGNED TEXT";
+				System.err.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
+				//					throw new EpException(MessageConst.ERROR_776051);
+				//					return;
 			}
 
+
+		
+			
+			
+			
+			
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
