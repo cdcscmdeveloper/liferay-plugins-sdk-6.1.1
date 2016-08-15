@@ -348,15 +348,26 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if (userResDTO.getUserOrgList().size() > 0)
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("ownerOrgProfile.orgProfileId",SearchOperator.OPERATOR_EQUALS.value(), userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId()));
 			
-			if(getManagedBean().getSearchContractNo()!=null && getManagedBean().getSearchContractNo().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractNo()));	
+			if(getManagedBean().getSearchContractType() != null && getManagedBean().getSearchContractType().equalsIgnoreCase("1")) {
+				    searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractValue()));	
 			
-			}if(getManagedBean().getSearchContractName()!=null && getManagedBean().getSearchContractName().length()>0) {
-				SearchFilterBean filterBean = new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
-												getManagedBean().getSearchContractName());
+			} else if(getManagedBean().getSearchContractType() != null && getManagedBean().getSearchContractType().equalsIgnoreCase("2")) {
+					SearchFilterBean filterBean = new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
+													getManagedBean().getSearchContractValue());
+			    	filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+			}	else if(getManagedBean().getSearchContractType() != null && getManagedBean().getSearchContractType().equalsIgnoreCase("3")) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getSearchContractValue()));
+				
+			}else if(getManagedBean().getSearchContractType() != null && getManagedBean().getSearchContractType().equalsIgnoreCase("4")) {
+				SearchFilterBean filterBean = new SearchFilterBean("smSupplier.companyName",SearchOperator.OPERATOR_LIKE.value(),
+						getManagedBean().getSearchContractValue());
 				filterBean.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(filterBean);
-			}if(getManagedBean().getCircularVer().getCtCircularContracts().size()>0) {
+			}
+				
+			if(getManagedBean().getCircularVer().getCtCircularContracts().size()>0) {
 				List<Long> circularContractIdList = new ArrayList<Long>();
 				for(CtCircularContract circularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
 					circularContractIdList.add(circularContract.getCtContract().getContractId());
@@ -1133,8 +1144,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void addCircularContractListener() {
 		try {
 			getManagedBean().setAutoUpdate(false);
-			getManagedBean().setSearchContractNo(null);
-			getManagedBean().setSearchContractName(null);
+			getManagedBean().setSearchContractType(null);
+			getManagedBean().setSearchContractValue(null);
 			getManagedBean().setContractList(new ArrayList<CtContract>());
 			//getManagedBean().setSelectedContractList(new ArrayList<CtContract>());
 			getManagedBean().setContractList(new ArrayList<CtContract>());
@@ -2013,6 +2024,41 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	     * Set boolean value for user action 
 	     * 
 	     * */
+    	
+    	  /**
+    			 * The method used for generating a list of available ministry
+    			 * for searching agency as selection.
+    			 * 
+    			 * @return the selection list of ministry
+    			 */
+    			public SelectItem[] getCtSearchTypeList() {		
+    				SelectItem[] ctSearchType = null;
+    				
+    				try {
+    				    int i = 1;
+    				    
+    				    List<String> ctSearchList = new ArrayList<String> ();
+    				    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.contract.no", 
+    				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+    				    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.contract.title", 
+    				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+    				    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.physical.no", 
+    				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+    				    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.supplier.name", 
+    				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+    				    ctSearchType = new SelectItem[ctSearchList.size() + 1];
+    				    ctSearchType[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+    				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+    					for (String str : ctSearchList) {
+    						ctSearchType[i] = new SelectItem(i, str);
+    						i++;
+    					}
+    				} catch (Exception e) {
+    					e.printStackTrace();
+    					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+    				}
+    			    return ctSearchType;
+    			}
     	
     	public void deleteContractAttachmentAction(int index){
     		 CtAttachment attachements =  getManagedBean().getCircularVer().getContractAttachments().get(index);
