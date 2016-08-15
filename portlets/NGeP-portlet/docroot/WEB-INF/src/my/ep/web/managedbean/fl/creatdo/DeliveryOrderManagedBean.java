@@ -213,6 +213,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private List <FlDeliveryAddress>selectedDeliveryAddressList;
 	
 	private boolean orderDisabledForSdCheck = false;
+	
+	private boolean delAddressSelected = false;
     
 	/**
 	 * Gets the item selected for cal.
@@ -1294,6 +1296,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setOrderDisabledForSdCheck(boolean orderDisabledForSdCheck) {
 		this.orderDisabledForSdCheck = orderDisabledForSdCheck;
+	}
+
+	/**
+	 * @return the delAddressSelected
+	 */
+	public boolean isDelAddressSelected() {
+		return delAddressSelected;
+	}
+
+	/**
+	 * @param delAddressSelected the delAddressSelected to set
+	 */
+	public void setDelAddressSelected(boolean delAddressSelected) {
+		this.delAddressSelected = delAddressSelected;
 	}
 	
 }
