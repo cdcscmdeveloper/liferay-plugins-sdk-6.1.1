@@ -50,12 +50,12 @@
 		}
 		</style>
 		<script type="text/javascript">  
-    $(function(){
-    	  $('form').on('keypress', function(event){
-    	    if(event.which == 13){
-    	        event.preventDefault();
+	    $(document).on("keypress", 'form', function (e) {
+    	    var code = e.keyCode || e.which;
+    	    if (code == 13) {
+    	        e.preventDefault();
+    	        return false;
     	    }
-    	  });
     	});
 	</script> 
 	  <ui:param name="isPrepareLoa" value="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaSubmission or
