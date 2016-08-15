@@ -16,6 +16,12 @@
 	     });
 	});
 	</script>
+	<style>
+		.tdPmContent {
+			text-align: left;
+			width: 70%;
+		}
+	</style>
 	<p:panel header="#{lbl['lbl.pm.access.app.applicant']}"
 		toggleable="true" id="appInfoPnl">
 		<table style="width:100%">
@@ -23,7 +29,7 @@
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td class="tdContent"><p:selectOneMenu
+				<td class="tdPmContent"><p:selectOneMenu
 						id="somSalutation" style="width:300px;"
 						disabled="#{not isBrandNew}"
 						required="#{!empty param['disableValidation']}" 
@@ -47,7 +53,7 @@
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.resorg.table.name']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td class="tdContent"><p:inputText styleClass="ppDisplayTextL"
+				<td class="tdPmContent"><p:inputText styleClass="ppDisplayTextL"
 						id="itName" maxlength="50"  size="53" 
 						disabled="#{not isBrandNew}"
 						required="#{!empty param['disableValidation']}"
@@ -56,7 +62,7 @@
 						<p:ajax event="blur" partialSubmit="true" process="@this"
 							update="@this" />
 					</p:inputText>
-					 &#160; <p:graphicImage id="giUserUsername"
+					 &#160;<p:graphicImage id="giUserUsername"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giUserUsername" id="ttUserUsername"
 								value="#{lbl['lbl.pm.profiles.userdetails.username.tooltip']}"
@@ -69,7 +75,7 @@
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.userdetails.idno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td class="tdContent"><p:inputText id="itIdentityNo"
+				<td class="tdPmContent"><p:inputText id="itIdentityNo"
 						styleClass="ppDisplayTextL" size="53" 
 						disabled="#{not isBrandNew}"
 						required="#{!empty param['disableValidation']}"
@@ -94,13 +100,13 @@
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.userdetails.designation']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td class="tdContent"><p:inputText styleClass="ppDisplayTextL"
+				<td class="tdPmContent"><p:inputText styleClass="ppDisplayTextL"
 						maxlength="30" id="itDesignation" size="53" 
 						disabled="#{not isBrandNew}"
 						required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.pm.profiles.userdetails.designation']}"
 						value="#{accessApplBackingBean.managedBean.accessAppl.designation}" />
-						 &#160; <p:graphicImage id="giDesignation"
+						 &#160;<p:graphicImage id="giDesignation"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giDesignation" id="ttDesignation"
 								value="#{lbl['lbl.pm.profiles.userdetails.designation.tooltip']}"
@@ -114,7 +120,7 @@
 			<tr>
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.userdetails.grade']}" /></td>
-				<td class="tdContent"><p:inputText 
+				<td class="tdPmContent"><p:inputText 
 						id="userGrade" size="53" 
 						disabled="#{not isBrandNew}"
 						value="#{accessApplBackingBean.managedBean.accessAppl.grade}"
@@ -133,7 +139,7 @@
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.pm.access.app.email']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td class="tdContent"><p:inputText size="53" id="usrEmail"
+				<td class="tdPmContent"><p:inputText size="53" id="usrEmail"
 						disabled="#{not isBrandNew}"
 						required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.pm.access.app.email']}" maxlength="80"
@@ -153,7 +159,7 @@
 					<td class="tdTitle"><p:outputLabel
 							value="#{lbl['lbl.pm.access.app.confirm.email']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
-					<td class="tdContent"><p:inputText size="53" 
+					<td class="tdPmContent"><p:inputText size="53" 
 							id="conEmail"
 							value="#{accessApplBackingBean.managedBean.accessAppl.confirmEmail}"
 							disabled="#{not isBrandNew}"
