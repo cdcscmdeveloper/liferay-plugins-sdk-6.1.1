@@ -125,7 +125,7 @@ BaseBackingBean<VotManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("votFundCode",
 							SearchOperator.OPERATOR_EQUALS.value(), votSearchBean
-							.getVotCode().toUpperCase() , true));
+							.getVotCode().toLowerCase() , true));
 			isEmpty = false;
 
 		}
@@ -134,7 +134,7 @@ BaseBackingBean<VotManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("description",
 							SearchOperator.OPERATOR_LIKE.value(), votSearchBean
-							.getVotName().toUpperCase(), true));
+							.getVotName().toLowerCase(), true));
 			isEmpty = false;
 		}
 
@@ -143,7 +143,7 @@ BaseBackingBean<VotManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmOrgProfile.pmOrgValidity.orgCode",
 							SearchOperator.OPERATOR_EQUALS.value(), votSearchBean
-							.getKumpulanPtjCode().toUpperCase(), true));
+							.getKumpulanPtjCode().toLowerCase(), true));
 			isEmpty = false;
 		}
 
@@ -152,7 +152,7 @@ BaseBackingBean<VotManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmOrgProfile.pmOrgValidity.orgName",
 							SearchOperator.OPERATOR_LIKE.value(), votSearchBean
-							.getVotName().toUpperCase(), true));
+							.getKumpulanPtjDesc().toLowerCase(), true));
 			isEmpty = false;
 		}
 
