@@ -315,6 +315,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	private boolean divisionDisplay = true;
 	
+	private String itemDesc;
+	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
 	
@@ -2972,6 +2974,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setCentralContract(boolean centralContract) {
 		this.centralContract = centralContract;
+	}
+
+	/**
+	 * @return the itemDesc
+	 */
+	public String getItemDesc() {
+		return itemDesc;
+	}
+
+	/**
+	 * @param itemDesc the itemDesc to set
+	 */
+	public void setItemDesc(String itemDesc) {
+		this.itemDesc = itemDesc;
 	}
 
 }
