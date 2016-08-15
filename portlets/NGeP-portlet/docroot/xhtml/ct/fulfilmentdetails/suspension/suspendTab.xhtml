@@ -31,15 +31,15 @@
 	        width: 210px;
          }
 		</style>
-		<script type="text/javascript">  
-	    $(document).on("keypress", 'form', function (e) {
-    	    var code = e.keyCode || e.which;
-    	    if (code == 13) {
-    	        e.preventDefault();
-    	        return false;
-    	    }
-    	});
-		</script> 
+		   <script type="text/javascript">  
+           window.addEventListener('keydown',function(e)
+    		      {
+    	                  if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13)
+    	                       {
+    	            	            e.preventDefault();return false;
+    	                   }
+    	        },  true);
+      </script>
 		<p:blockUI id="blockUiId" block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>	
@@ -63,7 +63,7 @@
 						<ui:repeat var="outcome" value="#{suspensionBackingBean.managedBean.outComes}">
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />		
 							<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
-								update ="@form"
+								update ="@form" onkeypress="if (event.keyCode == 13) { return false; }"
 								styleClass="ui-button" onstart="blockWidget.show();" 
 					  			oncomplete="blockWidget.hide();"  
 								action="#{suspensionBackingBean.gpkiSignAction(outcome)}" />

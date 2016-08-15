@@ -23,7 +23,7 @@
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(action)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
-							update="@form" styleClass="ui-button"
+							update="@form" styleClass="ui-button" onkeypress="if (event.keyCode == 13) { return false; }"
 							action="#{contractDetailsBackingBean.gpkiSignAction(action)}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					</ui:repeat>
