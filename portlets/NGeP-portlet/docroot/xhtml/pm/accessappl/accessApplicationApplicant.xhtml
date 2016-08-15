@@ -43,7 +43,7 @@
 							itemValue="#{salutation.salutationId}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							update="@this" />
-					</p:selectOneMenu>
+					</p:selectOneMenu>&#160;
 					<p:message id="somSalutationMsg" for="somSalutation"
 						display="icon" /></td>
 				<td></td>
@@ -66,7 +66,7 @@
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giUserUsername" id="ttUserUsername"
 								value="#{lbl['lbl.pm.profiles.userdetails.username.tooltip']}"
-								showEffect="fade" hideEffect="fade" />&#160;
+								showEffect="fade" hideEffect="fade" />
 					<p:message id="itNameMsg" for="itName" display="icon" /></td>
 				<td></td>
 
@@ -110,7 +110,7 @@
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giDesignation" id="ttDesignation"
 								value="#{lbl['lbl.pm.profiles.userdetails.designation.tooltip']}"
-								showEffect="fade" hideEffect="fade" />&#160;
+								showEffect="fade" hideEffect="fade" />
 						<p:message id="itDesignationMsg" for="itDesignation"
 						display="icon" />
 				</td>
@@ -129,7 +129,7 @@
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giUserGrade"  id="ttUserGrade"
 								value="#{lbl['lbl.pm.profiles.userdetails.grade.tooltip']}"
-								showEffect="fade" hideEffect="fade" /> &#160;
+								showEffect="fade" hideEffect="fade" />
 						<p:message id="userGradeMsg" for="userGrade" display="icon" />
 				</td>
 				<td></td>
@@ -151,7 +151,7 @@
 						value="/css/images/design/tooltips.png" /> <p:tooltip
 						id="emailtt" for="emailti">
 						<p:outputLabel escape="false" value="#{lbl['lbl.pm.access.app.email.tooltip']}" />
-					</p:tooltip> <p:message id="usrEmailMsg" for="usrEmail" display="icon" /></td>
+					</p:tooltip><p:message id="usrEmailMsg" for="usrEmail" display="icon" /></td>
 			</tr>
 
 			<ui:fragment rendered="#{isBrandNew}">
