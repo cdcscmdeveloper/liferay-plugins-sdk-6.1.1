@@ -352,6 +352,10 @@ public class FacesScopes implements Serializable {
 		}
 		return ctxToken;
 	}
+	
+	public Object removeBPMAuthenticationCtxToken() {
+		return removeFromSession(BPM_AUTH_CONTEXT_TOKEN);
+	}
 
 	public static MethodExpression createMethodExpression(FacesContext context, String methodExpression,
 			Class<?> expectedReturnType, Class<?>[] expectedParamTypes) {
