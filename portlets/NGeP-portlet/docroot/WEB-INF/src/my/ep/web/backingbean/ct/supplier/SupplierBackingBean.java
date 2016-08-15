@@ -60,7 +60,6 @@ import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
-import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -508,14 +507,14 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	    	}
 		}
 		
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+		/*if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 			 CtRemark remark = getManagedBean().getRemarkList().get(0);
 			 if (remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")) {
 				 throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			 }
-	    }
+	    }*/
 	}
 	
     /**
