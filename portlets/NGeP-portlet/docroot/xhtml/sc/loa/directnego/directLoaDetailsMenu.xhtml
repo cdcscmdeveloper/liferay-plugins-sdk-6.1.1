@@ -200,7 +200,7 @@
 						<f:selectItems
 							value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
-					</p:selectOneMenu> <p:message id="procuremnttitleMsg" for="procTypeBoCategory"
+					</p:selectOneMenu> <p:message id="procTypeBoCategoryMsg" for="procTypeBoCategory"
 						display="icon" /></td>
 
 			</tr>
@@ -384,7 +384,7 @@
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
-							value="#{directLOABackingBean.contractTypes}"
+							value="#{directLOABackingBean.getContractTypes(ParameterConst.procurementModeDirectNego)}"
 							var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
 							itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
 						<p:ajax event="change"

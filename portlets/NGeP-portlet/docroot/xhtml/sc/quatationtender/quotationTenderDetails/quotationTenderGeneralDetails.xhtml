@@ -433,7 +433,7 @@
 								label="#{lbl['lbl.sc.loiloa.loa.cont.type']}" required="true">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />
-								<f:selectItems value="#{createQtBB.contractTypes}"
+								<f:selectItems value="#{createQtBB.getContractTypes(scQt.procurementMode.parameterCode)}"
 									var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
 									itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
 								<p:ajax event="change"
