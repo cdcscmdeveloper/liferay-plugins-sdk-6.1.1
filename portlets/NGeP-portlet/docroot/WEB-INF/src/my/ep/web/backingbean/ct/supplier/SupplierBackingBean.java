@@ -578,8 +578,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    	FacesContext.getCurrentInstance().addMessage(null,
 		    			new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 		    					MessageUtils.getMessage(messageId,
-		    							new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
-		    									ParameterConst.DOCTYPE_REQUEST_FACTORING), 
+		    							new String[] {getFactoringLabel(), 
 		    									this.getManagedBean().getFactoring().getLoa().getLoaNo() },
 		    							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			    
@@ -1266,16 +1265,16 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	}
     
 	/**
-	 * The method used to retrieve proper portal name for factoring from property file.
+	 * The method used to retrieve proper label name for factoring from property file.
 	 * 
-	 * @return portletTitle  the name of the portal
+	 * @return labelString  the label string of request/remove factoring
      */
-    public String getPortletTitle() {
-		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.request.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+    public String getFactoringLabel() {
+		String labelString = ResourceBundleUtils.getMessage("lbl.ct.request.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		if (getManagedBean().isRemoveFactoring()) {
-			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.remove.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			labelString = ResourceBundleUtils.getMessage("lbl.ct.remove.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
-		return portletTitle;
+		return labelString;
 	}
     
     /**
