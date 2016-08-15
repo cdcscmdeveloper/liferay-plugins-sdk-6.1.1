@@ -945,10 +945,10 @@ public class DirectLOABackingBean extends
 					scLoa.setSupplierBranch(SourcingConstants.SUPPLIER_BRANCH_HQ);
 					
 					ScAddress supplierAddress = createOrUpdateScAddress(
-														scLoa.getSupplierAddress(),
+														scLoa.getScSupplierAddress(),
 														smCompanyAddress.getSmAddress(), 
 														supplierHQPersonnel, smCompanyBasic);
-					scLoa.setSupplierAddress(supplierAddress);
+					scLoa.setScSupplierAddress(supplierAddress);
 					// Get gst info
 					SupplierGstResDTO resDTO = getGSTInfo(supplierId, null);
 					setGSTInfo(resDTO, scLoa);
@@ -975,11 +975,11 @@ public class DirectLOABackingBean extends
 						}
 					}
 					ScAddress supplierAddress = createOrUpdateScAddress(
-													scLoa.getSupplierAddress(),
+													scLoa.getScSupplierAddress(),
 													supplierBranch.getSmAddress(), 
 													supplierBranch.getSmPersonnel(), 
 													smCompanyBasic);
-					scLoa.setSupplierAddress(supplierAddress);
+					scLoa.setScSupplierAddress(supplierAddress);
 					
 					// Get gst info
 					SupplierGstResDTO resDTO = getGSTInfo(supplierId,supplierBranch.getBranchCode());
@@ -1011,7 +1011,6 @@ public class DirectLOABackingBean extends
 					scLoa.setBankName(supplierBank.getPmFinancialOrg()
 							.getFinOrgName());
 					scLoa.setBankBranch(supplierBank.getBankBranch());
-					scLoa.setBankAddress(supplierBank.getSmAddress());
 					scLoa.setScBankAddress(createOrUpdateScAddress(
 											scLoa.getScBankAddress(),
 											supplierBank.getSmAddress(), null, null));
@@ -1102,7 +1101,7 @@ public class DirectLOABackingBean extends
 					new String[] { ResourceBundleUtils.getMessage("lbl.sc.mof.no", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
-		if (scLoa.getSupplierAddress() == null) {
+		if (scLoa.getScSupplierAddress() == null) {
 			throw new EpException(MessageConst.ERROR_760400,
 					new String[] { ResourceBundleUtils.getMessage("lbl.sc.address", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
@@ -4638,28 +4637,28 @@ public class DirectLOABackingBean extends
 		String supplierPhoneNo = "";
 		String supplierFaxNo = "";
 		String supplierMobNo = "";
-		if (scLoa.getSupplierAddress() != null) {
-			supplierEmail = scLoa.getSupplierAddress().getContactEmail();
+		if (scLoa.getScSupplierAddress() != null) {
+			supplierEmail = scLoa.getScSupplierAddress().getContactEmail();
 			if (supplierEmail == null) {
 				supplierEmail = "";
 			}
 			
-			supplierPhoneNo = scLoa.getSupplierAddress().getPhoneFull();
+			supplierPhoneNo = scLoa.getScSupplierAddress().getPhoneFull();
 			if (supplierPhoneNo == null) {
 				supplierPhoneNo = "";
 			}
 			
-			supplierFaxNo = scLoa.getSupplierAddress().getFaxFull();
+			supplierFaxNo = scLoa.getScSupplierAddress().getFaxFull();
 			if (supplierFaxNo == null) {
 				supplierFaxNo = "";
 			}
 			
-			supplierMobNo = scLoa.getSupplierAddress().getContactMobileFull();
+			supplierMobNo = scLoa.getScSupplierAddress().getContactMobileFull();
 			if (supplierMobNo == null) {
 				supplierMobNo = "";
 			}
 			
-			supplierAddress = getFullAddress(scLoa.getSupplierAddress());
+			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
 			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 		}
@@ -4827,8 +4826,8 @@ public class DirectLOABackingBean extends
 		}
 		context.put("bankBranch", bankBranch);
 		String bankAddress = "";
-		if (scLoa.getBankAddress() != null) {
-			bankAddress = getFullAddress(scLoa.getBankAddress());
+		if (scLoa.getScBankAddress() != null) {
+			bankAddress = getFullAddress(scLoa.getScBankAddress());
 			bankAddress = bankAddress.replaceAll("\r\n", "<br />");
 			bankAddress = bankAddress.replaceAll("&", "&#38;");
 		}
