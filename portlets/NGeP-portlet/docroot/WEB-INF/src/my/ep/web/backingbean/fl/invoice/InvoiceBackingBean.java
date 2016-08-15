@@ -1074,8 +1074,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
 							Double recalculateServiceFee = 100 + getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue();
 							BigDecimal serviceGstAmount = (new BigDecimal((invItem.getInvAmt().doubleValue() * getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue()) / recalculateServiceFee));
-							gstTotalAmount = gstTotalAmount.subtract(serviceGstAmount);
-							nonExemptedItemList.add(invItem.getInvAmt());
+							nonExemptedItemList.add(invItem.getInvAmt().subtract(serviceGstAmount));
 						}
 						
 					}
@@ -1094,7 +1093,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		BigDecimal percentage = new BigDecimal(100);
 		BigDecimal invMulty = new BigDecimal(0.0);
 		BigDecimal feeAmount = new BigDecimal(0.0);
-		nonExemptedItem = nonExemptedItem.subtract(gstTotalAmount);
+//		nonExemptedItem = nonExemptedItem.subtract(gstTotalAmount);
 		invMulty = nonExemptedItem.multiply(serviceFee);
 		feeAmount = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
 		getManagedBean().getInvoice().setFeeAmt(feeAmount);
