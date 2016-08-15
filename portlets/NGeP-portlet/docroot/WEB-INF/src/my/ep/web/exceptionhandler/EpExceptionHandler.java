@@ -18,6 +18,7 @@ import javax.faces.event.ExceptionQueuedEvent;
 import my.ep.constant.MessageConst;
 import my.ep.exception.EpBpmException;
 import my.ep.exception.EpException;
+import my.ep.exception.ExceptionCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.util.FacesScopes;
@@ -150,6 +151,10 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 							MessageConst.ERROR_BPM_CODE
 									+ String.valueOf(bpmcode), params,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale) + " ("+MessageConst.ERROR_BPM_CODE + String.valueOf(bpmcode)+")";
+					
+					if (ExceptionCode.SESSION_TIMEOUT_EXCEPTION == bpmcode) {
+						new FacesScopes().removeBPMAuthenticationCtxToken();
+					}
 				}
 				
 				break;
