@@ -82,10 +82,10 @@
 		<ui:include src="committeeEndorsmentReminderpopup.xhtml" /> -->
 	</p:panel>
 	
-	<c:if test="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL}">
+	<c:if test="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL or !specificationBackingBean.managedBean.readOnly}">
 		<ac:scRemarkAndAttachment
 			remarkList="#{specificationBackingBean.managedBean.specificationRemarks}"
 			showAttachment="false"
-			readonly="#{specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT and specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_MSC_APPROVAL and specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION}" />
+			readonly="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or (specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION and specificationBackingBean.managedBean.readOnly)}" />
 	</c:if>
 </ui:composition>
