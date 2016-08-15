@@ -1224,7 +1224,12 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 		 * 
 		 * } }
 		 */
-		if (!selectedProcess.getLogId().equals(oldCreatedDateLog.getLogId())) {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+		String selectedDate = dateFormat.format(selectedProcess.getCreatedDate());
+		
+		if (!selectedProcess.getLogId().equals(oldCreatedDateLog.getLogId())
+				&& (!selectedDate.equals(createdDate))) {
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, NAV_TO_MAIN);
 			log.info("Label--->"
