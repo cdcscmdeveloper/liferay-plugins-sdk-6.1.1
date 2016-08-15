@@ -35,7 +35,12 @@
 									size="35">
 									<p:ajax process="@this" partialSubmit="true"
 										update="@this,equiPersPermAddrLineMsg" />
-								</p:inputText> 
+								</p:inputText>
+								&#160;
+								<p:graphicImage id="permAddrIcImgId"	value="/css/images/design/tooltips.png" /> 
+								<p:tooltip	id="permAddrIcTtId" for="permAddrIcImgId" >
+									<p:outputLabel escape="false" value="#{lbl['tt.sm.address.as.ic']}" />
+								</p:tooltip> 
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges
 										and not empty backingBean.managedBean.latestPersonnel}"
@@ -44,7 +49,8 @@
 									alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.address1}"/>
 								<p:message id="equiPersPermAddrLineMsg"
 									for="equiPersPermAddrLine" showSummary="true"
-									showDetail="false" display="icon" /></td>
+									showDetail="false" display="icon" />
+							</td>
 						</tr>
 
 						<tr>
