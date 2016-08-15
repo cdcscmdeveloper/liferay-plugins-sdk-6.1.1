@@ -21,7 +21,7 @@
 						value="lbl.btn.#{fn:toLowerCase(action)}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 						update="@form" process="@form" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();"
+						oncomplete="blockWidget.hide();" onkeypress="if (event.keyCode == 13) { return false; }"
 						action="#{centralContractBackingBean.gpkiSignAction(action)}" />
 				</ui:repeat></td>
 			<c:if test='#{centralContractBackingBean.managedBean.action eq "view"}'>

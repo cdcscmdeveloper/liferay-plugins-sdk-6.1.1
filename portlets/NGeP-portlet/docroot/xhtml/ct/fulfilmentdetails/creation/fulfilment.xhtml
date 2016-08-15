@@ -63,15 +63,15 @@
     </style> 
     
       <script type="text/javascript">  
-      $(document).on("keypress", 'form', function (e) {
-    	    var code = e.keyCode || e.which;
-    	    if (code == 13) {
-    	        e.preventDefault();
-    	        return false;
-    	    }
-    	});
-     </script> 
-   	
+           window.addEventListener('keydown',function(e)
+    		      {
+    	                  if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13)
+    	                       {
+    	            	            e.preventDefault();return false;
+    	                   }
+    	        },  true);
+      </script>
+      
 	  <p:blockUI id="blockUiId" block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>		

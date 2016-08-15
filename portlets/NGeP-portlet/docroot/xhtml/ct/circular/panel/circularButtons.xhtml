@@ -21,7 +21,7 @@
 					<ui:param name="buttonLabel"
 						value="lbl.btn.#{fn:toLowerCase(action)}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-						update="@form"
+						update="@form" onkeypress="if (event.keyCode == 13) { return false; }"
 						process="@form"
 						onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"

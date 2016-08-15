@@ -33,15 +33,15 @@
 	width: 300px;
 }
 </style>
-<script type="text/javascript">  
-$(document).on("keypress", 'form', function (e) {
-    var code = e.keyCode || e.which;
-    if (code == 13) {
-        e.preventDefault();
-        return false;
-    }
-});
-		</script> 
+ <script type="text/javascript">  
+           window.addEventListener('keydown',function(e)
+    		      {
+    	                  if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13)
+    	                       {
+    	            	            e.preventDefault();return false;
+    	                   }
+    	        },  true);
+      </script>
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
@@ -70,7 +70,7 @@ $(document).on("keypress", 'form', function (e) {
 							value="lbl.btn.#{fn:toLowerCase(outcome)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
 							styleClass="ui-button" process="@form"
-							onstart="blockWidget.show();"		
+							onstart="blockWidget.show();" onkeypress="if (event.keyCode == 13) { return false; }"
 							oncomplete="blockWidget.hide();" 						
 							action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
 							actionListener="#{spkiBackingBean.getChallengeQuestions}"
