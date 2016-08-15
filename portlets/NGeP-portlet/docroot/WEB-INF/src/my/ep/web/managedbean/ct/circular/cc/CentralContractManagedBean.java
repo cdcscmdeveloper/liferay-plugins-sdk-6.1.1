@@ -50,8 +50,8 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
 	
 	private String action;
-	private String searchContractNo;
-	private String searchContractName;
+	private String searchContractType;
+	private String searchContractValue;
 	private String textBeforeSign;
 	private String gotoPreviewPage;	
 	private String orgTypeCode;
@@ -144,34 +144,23 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.approverModel = approverModel;
 	}
 	
-	/**
-	 * @return the searchContractNo
-	 */
-	public String getSearchContractNo() {
-		return searchContractNo;
+
+	public String getSearchContractType() {
+		return searchContractType;
+	}
+
+	public void setSearchContractType(String searchContractType) {
+		this.searchContractType = searchContractType;
 	}
 	
-	/**
-	 * @param searchContractNo the searchContractNo to set
-	 */
-	public void setSearchContractNo(String searchContractNo) {
-		this.searchContractNo = searchContractNo;
+	public String getSearchContractValue() {
+		return searchContractValue;
 	}
-	
-	/**
-	 * @return the searchContractName
-	 */
-	public String getSearchContractName() {
-		return searchContractName;
+
+	public void setSearchContractValue(String searchContractValue) {
+		this.searchContractValue = searchContractValue;
 	}
-	
-	/**
-	 * @param searchContractName the searchContractName to set
-	 */
-	public void setSearchContractName(String searchContractName) {
-		this.searchContractName = searchContractName;
-	}
-	
+
 	/**
 	 * @return the circular
 	 */
