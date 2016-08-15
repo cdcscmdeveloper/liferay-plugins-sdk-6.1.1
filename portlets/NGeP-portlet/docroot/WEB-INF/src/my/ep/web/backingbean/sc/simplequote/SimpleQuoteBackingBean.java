@@ -34,6 +34,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
@@ -45,6 +46,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -62,6 +64,7 @@ import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -94,6 +97,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
@@ -124,6 +128,7 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
@@ -132,6 +137,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -1259,11 +1265,8 @@ public class SimpleQuoteBackingBean extends
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
 
-			// validate start date and end date
-			validateStartDateAndEndDate(quote);
-			if (null == quote.getStartDate() ||  null == quote.getEndDate()) {
-				throw new EpException(MessageConst.ERROR_760388);
-			}
+			// validate quote
+			validateQuote(quote);
 			
 			if (quote.getRequestItems() == null) {
 				List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
@@ -3589,28 +3592,13 @@ public class SimpleQuoteBackingBean extends
 	public void dateListener() {
 		ScQuote quote = getManagedBean().getScQuote();
 
-		// validate start date and end date
-		validateStartDateAndEndDate(quote);
-
 		// calculate duration
 		calculateDuration(quote);
+		
+		// validate quote
+		validateQuote(quote);
 	}
-
-	/**
-	 * Validate start date and end date.
-	 * 
-	 * @param quote
-	 *            the quote
-	 */
-	private void validateStartDateAndEndDate(ScQuote quote) {
-		if (quote.getStartDate() != null && quote.getEndDate() != null) {
-			if (quote.getEndDate().before(quote.getStartDate())
-					|| quote.getStartDate().equals(quote.getEndDate())) {
-				throw new EpException(MessageConst.ERROR_760164);
-			}
-		}
-	}
-
+	
 	/**
 	 * Calculate duration.
 	 * 
@@ -3650,6 +3638,10 @@ public class SimpleQuoteBackingBean extends
 		debugLogger("submitPromptAction");
 		ScQuote quote = getManagedBean().getScQuote();
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		
+		// validate quote
+		validateQuote(quote);
+		
 		if (quote.getEndDate() != null && quote.getStartDate() != null) {
 			Date currentDate = new Date();
 			Date startDate = quote.getStartDate();
@@ -6511,21 +6503,21 @@ public class SimpleQuoteBackingBean extends
 	 * @param event
 	 *            the event
 	 */
-	 public boolean zoneLocationDeleteBtnDisable(){
+	public boolean zoneLocationDeleteBtnDisable(){
 		List<TreeNode> list = getManagedBean().getZoneTrees();
-		
+
 		if (CollectionUtils.isNotEmpty(list) ) {
 			for (TreeNode node : list) {
 				for (TreeNode childNode : node.getChildren()) {
 					if (childNode.getChildCount() > 0) {
-						
+
 						for (TreeNode state : childNode.getChildren()) {
-							
+
 							if(state.isSelected()){
 								return false;
 							}
 							for(TreeNode district : state.getChildren()){
-								
+
 								if(district.getChildCount()>0){
 									for(TreeNode division : district.getChildren()){
 										if(division.isSelected()){
@@ -6536,26 +6528,126 @@ public class SimpleQuoteBackingBean extends
 												if(anotherDistrict.isSelected()){
 													return false;
 												}
+											}
 										}
 									}
-								}
 								}else{
-								if(district.isSelected()){
-									return false;
-								}
+									if(district.isSelected()){
+										return false;
+									}
 								}
 							}
 						}
 					}else{
-					if(childNode.isSelected()){
-						return false;
-					}
+						if(childNode.isSelected()){
+							return false;
+						}
 					}
 				}
 			}
 		} else {
 			return true;
 		}
-	return true;
-	 }
+		return true;
+	}
+
+	/**
+	 * Validate quote.
+	 *
+	 * @param quote the quote
+	 */
+	private void validateQuote(ScQuote quote){
+		if (quote.getEndDate() != null && quote.getStartDate() != null) {
+			Date currentDate = new Date();
+			Date startDate = quote.getStartDate();
+			Date endDate = quote.getEndDate();
+			Date sDate = null;
+			if(startDate.after(currentDate)) {
+				sDate = startDate;
+			} else {
+				sDate = currentDate;
+			}
+
+			PmConfigRuleValue ruleValue = getDurationRuleValue();
+			int maxDays = 0, minHours = 0;
+			if (ruleValue != null) {
+				int mHours = ruleValue.getFromValue().intValue();
+				int mxDays = ruleValue.getToValue().intValue();
+				minHours = mHours/60;
+				maxDays = (mxDays/60)/24;
+			}
+
+			// max 3 days 
+			getManagedBean().setMaxDate(DateUtils.addDays(sDate, maxDays));
+
+			if (endDate.before(startDate)
+					|| quote.getStartDate().equals(quote.getEndDate())) {
+				throw new EpException(MessageConst.ERROR_760164);
+			}
+
+			long diff = endDate.getTime() - sDate.getTime();
+			long minutes = diff / (60 * 1000) % 60;
+			long hours = diff / (60 * 60 * 1000) % 24;
+			long days = diff / (24 * 60 * 60 * 1000);
+
+			if(days < 1 && hours < minHours){
+				throw new EpException(
+						MessageConst.ERROR_760429,
+						new String[] {Integer.toString(minHours)});
+			}
+			if(days >= maxDays && (hours >0 || minutes >0)){
+				throw new EpException(
+						MessageConst.ERROR_760430,
+						new String[] {Integer.toString(maxDays)});
+			} 
+		} else
+			if (null == quote.getStartDate() ||  null == quote.getEndDate()) {
+				throw new EpException(MessageConst.ERROR_760388);
+			}
+	}
+	
+	/**
+	 * Gets the duration tool tip.
+	 *
+	 * @return the duration tool tip
+	 */
+	public String getDurationToolTip(){
+		PmConfigRuleValue ruleValue = getDurationRuleValue();
+		int maxDays = 0, minHours = 0;
+		if (ruleValue != null) {
+			int mHours = ruleValue.getFromValue().intValue();
+			int mxDays = ruleValue.getToValue().intValue();
+			 minHours = mHours/60;
+			 maxDays = (mxDays/60)/24;
+		}
+		return getMessage(
+				"lbl.sc.sq.end.date.duration.min.max", new String[] {Integer.toString(minHours), Integer.toString(maxDays)});
+	}
+	
+	private PmConfigRuleValue getDurationRuleValue() {
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.DP_SIMPLE_QUOTE_RESPONSE);
+			
+			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
+					.getRuleValueList();
+
+			if (configRuleValues != null && configRuleValues.size() > 0) {
+				PmConfigRuleValue configRuleValue = configRuleValues.get(0);
+				
+				if (configRuleValue != null && configRuleValue.getFromValue() != null && configRuleValue.getToValue() != null) {
+					return configRuleValue;
+				}
+			}
+
+		} finally {
+			ruleSO = null;
+		}
+		
+		return null;
+	}
 }

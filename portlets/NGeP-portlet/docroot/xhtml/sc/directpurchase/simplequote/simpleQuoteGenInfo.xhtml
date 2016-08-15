@@ -36,11 +36,12 @@
 				<td colspan="4">
 					<table>
 						<tr>
-							<td><p:inputTextarea
+							<td>
+							  <p:inputTextarea
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
 									label="#{lbl['lbl.sc.direct.purchase.title']}" maxlength="100"
 									disabled="#{!isEditable}" required="true" id="title" rows="3"
-									autoResize="false" style="margin-bottom: 5px; width: 585px;">
+									style="margin-bottom: 5px; width: 690px;">
 									<p:ajax event="blur" partialSubmit="true" process="@this" />
 								</p:inputTextarea> <p:message id="titleMsg" for="title" display="icon" /></td>
 						</tr>
@@ -201,7 +202,7 @@
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
 						postUpdateListener="simpleQuoteBackingBean.dateListener"
 						modVal="15"
-						update="@([id$=endDate])">
+						update="@([id$=sqinfoId])">
 					</ac:dateTime></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.end.date']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -212,11 +213,12 @@
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"
 						postUpdateListener="simpleQuoteBackingBean.dateListener"
 						modVal="15"
+						maxdate="#{simpleQuoteBackingBean.managedBean.maxDate}"
 						update="@([id$=durationId])">
-					</ac:dateTime></td>
+					</ac:dateTime> </td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sq.duration']}" /></td>
+				<td style="text-align: end;"><ac:iconTooltip value="#{simpleQuoteBackingBean.getDurationToolTip()}" /><p:outputLabel value="#{lbl['lbl.sc.sq.duration']}" /></td>
 				<td colspan="3"><p:outputPanel autoUpdate="true"
 						id="durationId">
 						<p:inputText size="7"
