@@ -1713,10 +1713,10 @@ public class LOIDetailBackingBean extends
 						scLoi.setSupplierBranch(supplierBranchAsHQ);
 						
 						ScAddress supplierAddress = createOrUpdateScAddress(
-														scLoi.getSupplierAddress(),
+														scLoi.getScSupplierAddress(),
 														smCompanyAddress.getSmAddress(), 
 														supplierHQPersonnel, smCompanyBasic);
-						scLoi.setSupplierAddress(supplierAddress);
+						scLoi.setScSupplierAddress(supplierAddress);
 
 						break;
 					}
@@ -1742,10 +1742,10 @@ public class LOIDetailBackingBean extends
 						}
 					}					
 					ScAddress supplierAddress = createOrUpdateScAddress(
-													scLoi.getSupplierAddress(),
+													scLoi.getScSupplierAddress(),
 													supplierBranch.getSmAddress(), 
 													smPersonnel, smCompanyBasic);
-					scLoi.setSupplierAddress(supplierAddress);
+					scLoi.setScSupplierAddress(supplierAddress);
 
 					break;
 				}
@@ -2794,8 +2794,8 @@ public class LOIDetailBackingBean extends
 		context.put("supplierName", supplierName);
 
 		String supplierAddress = null;
-		if (scLoi.getSupplierAddress() != null) {
-			supplierAddress = getFullAddress(scLoi.getSupplierAddress());
+		if (scLoi.getScSupplierAddress() != null) {
+			supplierAddress = getFullAddress(scLoi.getScSupplierAddress());
 			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
 			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 		} else {
@@ -3126,7 +3126,7 @@ public class LOIDetailBackingBean extends
 			}
 
 			// validate supplier contract address
-			if(null == scLoi.getSupplierAddress()){
+			if(null == scLoi.getScSupplierAddress()){
 				throw new EpException("No supplier contact address");
 			}
 		}
