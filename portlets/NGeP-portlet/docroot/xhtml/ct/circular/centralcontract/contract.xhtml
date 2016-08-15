@@ -372,19 +372,21 @@
 		</p:dialog>
 
 		<p:dialog id="contractDlg" header="#{lbl['lbl.ct.contract.list']}" styleClass="pop_up_top"
-			widgetVar="contractDlg" modal="true" width="800" height="450">
-			<p:messages id="agencyMsg" showSummary="false" 
+			widgetVar="contractDlg" modal="true" width="800" height="auto">
+			<p:messages id="contractMsg" showSummary="false" 
 			   showDetail="true"   autoUpdate="true" cosable="true" severity="error, info" />
-					<h:panelGrid columns="6">
-					<h:outputText value="#{lbl['lbl.ct.contract.no']}" />
-					<p:inputText id="contractNo" maxlength="17"  validator="#{webappBean.validateNumbers}"
-						value="#{centralContractBackingBean.managedBean.searchContractNo}"/>
-					<p:spacer width="10" />
-					<h:outputText value="#{lbl['lbl.ct.contract.title']}" />
-					<p:inputText id="contractName" maxlength="1000" 
-						value="#{centralContractBackingBean.managedBean.searchContractName}"/>
-					<p:commandButton value="#{lbl['lbl.btn.search']}"
-						process="contractDlg,contractNo,contractName" 
+				<h:panelGrid columns="4">
+				    <p:selectOneMenu id="contractSearchId" style="width:200px"
+                      value="#{centralContractBackingBean.managedBean.searchContractType}" >
+            	   <f:selectItems value="#{centralContractBackingBean.getCtSearchTypeList()}"/>
+            	   <p:ajax event="change" update="contractDt" process="@this"/>
+                 </p:selectOneMenu>
+	 			<p:spacer width="10" />
+				<p:inputText id="contractName" maxlength="1000" 
+						value="#{centralContractBackingBean.managedBean.searchContractValue}"/>
+				
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+						process="contractDlg" 
 						update="contractDt" actionListener="#{centralContractBackingBean.searchContract()}" />
 				</h:panelGrid>
 				<p:dataTable id="contractDt" var="contractListVar" rowIndexVar="index"
