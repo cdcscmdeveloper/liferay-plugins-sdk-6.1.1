@@ -110,6 +110,13 @@ public class SmVirtualCertHelper {
 	 * @return SmMofCert
 	 */
 	public SmMofCert genReport(String reportFile,Map<String, String> paramMap, SmMofCert cert, boolean isDeleteCategory) {
+		Date fileTimeStamp = new Date();
+		SimpleDateFormat dateFt = new SimpleDateFormat ("_yyyyMMdd_Hmmss");
+		String path = Calendar.getInstance().get(Calendar.YEAR)  + "/" + VIRTUAL_CERT_PATH;  
+		String fileName = String.valueOf(cert.getMofCertId()) + dateFt.format(fileTimeStamp).toString() + CERT_EXT;
+		String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		filePath += "/" + path;
+		
 		try{
 			String reportUrl = generateReportURL(reportFile, paramMap);
 			log.info("reportUrl>>>>>>>" + reportUrl);
@@ -119,17 +126,12 @@ public class SmVirtualCertHelper {
 			urlConnection = (HttpURLConnection) obj.openConnection();
 			urlConnection.setUseCaches(false);
 			
+			
 			if(urlConnection.getContentType().equalsIgnoreCase(HTTP_HEADER_TYPE_PDF)){
 				BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
 				//FileInputStream buf = new FileInputStream("E:/HKS/Mof_1_1402497715752.pdf");
 
 				log.info("Content Type>>>>" + urlConnection.getContentType());
-				Date fileTimeStamp = new Date();
-				SimpleDateFormat dateFt = new SimpleDateFormat ("_yyyyMMdd_Hmmss");
-				String path = Calendar.getInstance().get(Calendar.YEAR)  + "/" + VIRTUAL_CERT_PATH;  
-				String fileName = String.valueOf(cert.getMofCertId()) + dateFt.format(fileTimeStamp).toString() + CERT_EXT;
-				String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-				filePath += "/" + path;
 
 				File dir = new File(filePath);
 				log.info(" dir.exists()" + dir.exists());
@@ -162,6 +164,11 @@ public class SmVirtualCertHelper {
 			//commonDownload(finalFile, fileName);
 		}catch(Exception ex){
 			log.info("******genReport******" + cert.getMofCertId() + " - " + ex.getMessage());
+			if(isDeleteCategory){
+				cert.setFilePath(path);
+				cert.setFileName(fileName);
+				updateMOFCertFilePath(cert);
+			}
 		}
 		
 		return null;
