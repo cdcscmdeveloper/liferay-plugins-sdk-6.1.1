@@ -307,7 +307,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null);
 
 		SearchFilterBean danaFilterBean = new SearchFilterBean(
-				"pmInterfaceDana.dIInterfaceLog",
+				"pmInterfaceDana.diInterfaceLog",
 				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null,
 				SearchCondition.CONDITION_OR.value());
 
