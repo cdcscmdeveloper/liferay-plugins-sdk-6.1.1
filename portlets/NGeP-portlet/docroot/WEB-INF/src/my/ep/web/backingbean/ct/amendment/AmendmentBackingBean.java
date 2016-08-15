@@ -428,9 +428,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						          getManagedBean().setLetterOfAcceptance(true);
 						          getManagedBean().setPrepareLOA(true);
 			         	          getManagedBean().setPbQcApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
-			         	          getManagedBean().setWitnessHeader(ResourceBundleUtils.getMessage("lbl.ct.panel.agency.witness", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-			          	          getManagedBean().setWitnessHeaderTooltip(ResourceBundleUtils.getMessage("lbl.ct.tooltip.agency.witness.dtls", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-			          	        
+			         	          
 			          	           //retrieve approver from CtActor
 			          	           String roleCode = null;
 								   if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
@@ -469,8 +467,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						         this.getManagedBean().setSignUpdateDecision(false);
 					     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 						        this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
-						        this.getManagedBean().setWitnessHeader(ResourceBundleUtils.getMessage("lbl.ct.panel.supplier.witness", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-						        this.getManagedBean().setWitnessHeaderTooltip(ResourceBundleUtils.getMessage("lbl.ct.tooltip.supplier.witness.dtls", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 						          
 						        VelocityContext context = new VelocityContext();
 								String vmFile = ContractConst.DOCPATH_CT_INTEGRITY_PACT;
@@ -1448,7 +1444,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.signer.designation", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
-			if (getManagedBean().getScLoaWitness() != null) {
+			if (getManagedBean().getScLoaWitness() != null && isSupplierRole()) {
 				if (getManagedBean().getScLoaWitness().getIdentificationNo() == null 
 						|| getManagedBean().getScLoaWitness().getIdentificationNo().length() == 0) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException",true);

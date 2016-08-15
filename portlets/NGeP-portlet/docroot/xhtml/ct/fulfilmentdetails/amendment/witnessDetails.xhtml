@@ -5,10 +5,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="witnessDetails" toggleable="true" toggleSpeed="500">
+	<p:panel id="witnessDetails" toggleable="true" toggleSpeed="500"
+		rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}">
 	   <f:facet name="header">
-			<h:outputText value="#{amendmentBackingBean.managedBean.witnessHeader}"/>
-	        <ac:iconTooltip value="#{amendmentBackingBean.managedBean.witnessHeaderTooltip}"/>
+	        <h:outputText value="#{lbl['lbl.ct.panel.supplier.witness']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.witness.dtls']}"/>
 	  	</f:facet>
 	  	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.email']}" escape="false"/><br/><br/>
 		<h:panelGrid columns="2"  columnClasses="columnWidth225">
