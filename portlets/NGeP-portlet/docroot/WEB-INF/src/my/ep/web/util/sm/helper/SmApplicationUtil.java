@@ -8115,11 +8115,10 @@ public class SmApplicationUtil {
 		appl.setSmCompanyBasic(null);
 		appl.setSmCompanyExperiences(new ArrayList<SmCompanyExperience>());
 		appl.setSmFacilities(new ArrayList<SmFacility>());
-		appl.setSmSvTasks(new ArrayList<SmSvTask>());
 		appl.setSmApplInquiries(new ArrayList<SmApplInquiry>());
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSmAppl(appl);
-		appl = SmServiceLookup.getMofRegistrationSO().updateSmAppl(reqDTO)
+		appl = SmServiceLookup.getMofRegistrationSO().removeSmApplChilds(reqDTO)
 				.getSmAppl();
 		return appl;
 	}
