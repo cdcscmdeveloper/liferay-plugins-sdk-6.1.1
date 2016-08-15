@@ -131,9 +131,7 @@
 									value="#{requestNoteDtl.vCmSupplierItem.companyName}"
 									update="@form"
 									rendered="#{requestNoteDtl.brandNew and !requestNoteDtl.reRecommend}"
-									disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' 
-									 	and requestNoteDtl.requestItem.quote.zonal eq 'false'
-									 	or isViewOnly}"
+									disabled="#{isViewOnly}"
 									conditionField="#{requestNoteDtl.conditionField}">
 								</ac:lov>
 								<ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM"
@@ -144,9 +142,7 @@
 									saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
 									value="#{requestNoteDtl.scRequestSupplierItem.supplierName}"
 									update="@form"
-									disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' 
-									 	and requestNoteDtl.requestItem.quote.zonal eq 'false'
-									 	or isViewOnly}"
+									disabled="#{isViewOnly}"
 									conditionField="#{requestNoteDtl.conditionField}"
 									rendered="#{!requestNoteDtl.brandNew or requestNoteDtl.reRecommend}">
 								</ac:lov>
