@@ -2120,12 +2120,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * Contract type drop down values.
 	 * @return the list
 	 */
-	public List<PmParameterDesc> getContractTypes() {
+	public List<PmParameterDesc> getContractTypes(String procurementMode) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		// check logged in user allow central contract.
 		boolean  isAllowCentralContract =  isAllowCentralContract();
-
-		if(!isAllowCentralContract){
+		
+		if(!isAllowCentralContract || procurementMode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmParameter.parameterCode",
 							SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.CONTRACT_TYPE_CENTRAL));

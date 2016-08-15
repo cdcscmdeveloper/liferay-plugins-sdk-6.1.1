@@ -385,6 +385,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
+			<ui:param name="procurementMode" value="#{isDocTypeQuotation ? ParameterConst.procurementModeQuotation : ParameterConst.procurementModeDirectPurchase}" />
 				<c:if test="#{isEditableStatus and !isDocTypeQuotation}">
 					<p:selectOneMenu id="contractType"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterId}"
@@ -394,7 +395,7 @@
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
-							value="#{lOADetailBackingBean.contractTypes}"
+							value="#{lOADetailBackingBean.getContractTypes(procurementMode)}"
 							var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
 							itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
 						<p:ajax event="change"
