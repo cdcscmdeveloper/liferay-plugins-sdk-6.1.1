@@ -1983,6 +1983,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		suppFinalizationReqDTO.setRoleCode(getUserRoleCode());
 		FacesScopes facesScope = new FacesScopes();
 		suppFinalizationReqDTO.setPmUser(facesScope.getUserSessionBean());
+		suppFinalizationReqDTO.setUserLocale(facesScope.getUserLocale());
 		suppFinalizationReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		suppFinalizationReqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
 		
