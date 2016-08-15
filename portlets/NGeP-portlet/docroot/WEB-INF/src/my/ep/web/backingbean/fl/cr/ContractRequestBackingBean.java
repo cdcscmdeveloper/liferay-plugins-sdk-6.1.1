@@ -4294,10 +4294,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		if(!isPIDService){
 			if(flRequest.getScPurchaseInDefault().getQuantity().doubleValue() < sumOrderQty.doubleValue()){
-				throw new EpException(MessageConst.ERROR_745074, new String[]{Double.toString(sumOrderQty.doubleValue()),Double.toString(flRequest.getScPurchaseInDefault().getQuantity().doubleValue())});
+				throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getQuantity().doubleValue())});
 			}
 			if(flRequest.getScPurchaseInDefault().getQuantity().doubleValue() > sumOrderQty.doubleValue()){
-				throw new EpException(MessageConst.ERROR_745074, new String[]{Double.toString(sumOrderQty.doubleValue()),Double.toString(flRequest.getScPurchaseInDefault().getQuantity().doubleValue())});
+				throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getQuantity().doubleValue())});
 			}
 		}
 	}
