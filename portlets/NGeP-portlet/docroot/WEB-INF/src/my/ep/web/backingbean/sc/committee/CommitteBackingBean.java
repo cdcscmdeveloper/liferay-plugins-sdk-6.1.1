@@ -865,6 +865,7 @@ public class CommitteBackingBean extends
 		}
 		FacesScopes facesScopes = new FacesScopes();
 		committeReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+		committeReqDTO.setUserLocale(facesScopes.getUserLocale());
 		return committeReqDTO;
 	}
 
