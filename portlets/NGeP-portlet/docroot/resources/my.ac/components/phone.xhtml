@@ -23,7 +23,7 @@
 
 <cc:implementation>
 	<ui:param name="phonePanelId" value="#{cc.id}"></ui:param>
-	<h:panelGroup id="#{cc.attrs.id}">
+	<h:panelGroup id="#{cc.attrs.id}" style="white-space: nowrap;">
 
 		+
 		<p:inputText value="#{cc.attrs.countryCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.country.code']}" 
@@ -37,7 +37,6 @@
 			<f:attribute name="isMobileName" value="#{cc.attrs.isMobile ? 'Y' : 'N'}" />
 	        <f:attribute name="labelName" value="#{cc.attrs.label}" />
 		</p:inputText>	
-		&#160;
 		<p:graphicImage id="#{phonePanelId}teleno"	value="/css/images/design/ico-tooltips.png" /> 
 		<p:tooltip	id="#{phonePanelId}tfno" for="#{phonePanelId}teleno">
 			<p:outputLabel escape="false" value="#{cc.attrs.isMobile ? lbl['tt.sm.registration.user.mobileno'] : lbl['tt.sm.registration.company.telephoneno']}"  />
