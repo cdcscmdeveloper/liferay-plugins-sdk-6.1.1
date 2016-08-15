@@ -1514,6 +1514,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 				reqDTO.setBiddingMeeting(true);
 			}
 			reqDTO.setScQtCommitte(scQtCommittee);
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			
 			return reqDTO;
 		} finally {
@@ -1657,6 +1658,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			committeSO = (ICommitteSO) BusinessDelegate.getInstance().getServiceObject(
 									   ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			reqDTO.setScQtCommittee(finalizationCommittee);
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			committeSO.validateFcCommitteDetails(reqDTO);
 		} finally {
 			committeSO = null;
