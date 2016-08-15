@@ -8931,7 +8931,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			else{
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_715054, new String[]{supplierItem.getItemName()},
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_715054, null,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 			}
@@ -8942,7 +8942,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 							FacesMessage.SEVERITY_ERROR,
-							null, MessageUtils.getMessage(MessageConst.ERROR_715054, new String[]{vCmSupplierItem.getItemName()},MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+							null, MessageUtils.getMessage(MessageConst.ERROR_715054, null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					found = true;
 					break;
 				}
