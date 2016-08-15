@@ -102,38 +102,38 @@
 					<p:inputTextarea id="suppAddr" label="#{lbl['lbl.sc.address']}" 
 					onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						cols="36" disabled="true" rows="5" style=" margin-bottom:5px; width: 236px" maxlength="200" 
-						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.supplierAddress)}"
+						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.scSupplierAddress)}"
 						required="true" /></td>
 
 				<td width="140px"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 				</td>
 				<td><p:inputText id="suppPhoneNo" size="28" disabled="true" 
-								 value="#{directLOABackingBean.managedBean.scLoa.supplierAddress.phoneFull}" />
+								 value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.phoneFull}" />
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /></td>
 				<td><p:inputText id="suppFaxNo" size="28" disabled="true"
-						value="#{directLOABackingBean.managedBean.scLoa.supplierAddress.faxFull}" />
+						value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.faxFull}" />
 				</td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" /></td>
 				<td><p:inputText id="suppMobNo" size="28" disabled="true"
-						value="#{directLOABackingBean.managedBean.scLoa.supplierAddress.contactMobileFull}" />
+						value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.contactMobileFull}" />
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 				</td>
 				<td><p:inputText id="suppContact" size="35" disabled="true"
-						value="#{directLOABackingBean.managedBean.scLoa.supplierAddress.contactPerson}" />
+						value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.contactPerson}" />
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
 				<td><p:inputText id="suppEmail" size="28"
 						style=" margin-bottom:5px;" disabled="true"
-						value="#{directLOABackingBean.managedBean.scLoa.supplierAddress.contactEmail}" />
+						value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.contactEmail}" />
 				</td>
 			</tr>
 		</table>
