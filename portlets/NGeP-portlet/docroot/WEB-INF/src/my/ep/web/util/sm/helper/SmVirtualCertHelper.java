@@ -159,7 +159,6 @@ public class SmVirtualCertHelper {
 				return mofcert;
 			}else{
 				log.info("****genReport****" + urlConnection.getContentType());
-				return null;
 			}
 			//commonDownload(finalFile, fileName);
 		}catch(Exception ex){
