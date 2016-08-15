@@ -127,8 +127,7 @@ public class SmVirtualCertHelper {
 				Date fileTimeStamp = new Date();
 				SimpleDateFormat dateFt = new SimpleDateFormat ("_yyyyMMdd_Hmmss");
 				String path = Calendar.getInstance().get(Calendar.YEAR)  + "/" + VIRTUAL_CERT_PATH;  
-				String fileName = String.valueOf(cert.getMofCertId()) + 
-						(isDeleteCategory ? dateFt.format(fileTimeStamp).toString() : "") + CERT_EXT;
+				String fileName = String.valueOf(cert.getMofCertId()) + dateFt.format(fileTimeStamp).toString() + CERT_EXT;
 				String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 				filePath += "/" + path;
 
