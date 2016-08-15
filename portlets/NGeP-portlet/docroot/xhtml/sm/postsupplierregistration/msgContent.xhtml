@@ -9,7 +9,7 @@
 
 
 	<ui:define name="contentSection">
-		<h:outputStylesheet library="ep/css" name="tab.css" />
+		<link rel="stylesheet" type="text/css" href="/NGeP-portlet/css/ep/tab.css" />
 		<style>
 			.cTbl{
 				text-align: center;
@@ -42,7 +42,15 @@
 		<!-- MOF Account-->
 		<p:outputPanel
 			rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
-			<p class="title">#{lbl['lbl.sm.basic.mof.title.proceed']}</p>
+			<c:choose>
+				<c:when test="#{postSupplierRegBB.managedBean.rejectedApplExist == true}">
+					<p class="title">#{lbl['lbl.sm.basic.mof.title.rejected']}</p>
+				</c:when>
+				
+				<c:otherwise>
+					<p class="title">#{lbl['lbl.sm.basic.mof.title.proceed']}</p>
+				</c:otherwise>
+			</c:choose>
 		</p:outputPanel>
 
 		<div align="left">
