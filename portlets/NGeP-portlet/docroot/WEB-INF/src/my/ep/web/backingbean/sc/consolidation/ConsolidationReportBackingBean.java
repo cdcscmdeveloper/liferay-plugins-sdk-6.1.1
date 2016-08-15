@@ -92,8 +92,6 @@ public class ConsolidationReportBackingBean extends
 	private final static int BRIEFING_PAPER_TAB_INDEX = 0;
 	private final static int PACKAGE_TYPE_TAB_INDEX = 1;
 	private final static int ITEMIZED_TYPE_TAB_INDEX = 2;
-	private final static Long DEFAULT_ZONE = 0L;
-	private final static Long DEFAULT_ITEM = 0L;
 	
 	/** Default constructor */
 	public ConsolidationReportBackingBean() {}
@@ -161,34 +159,17 @@ public class ConsolidationReportBackingBean extends
 			return;
 		}
 		
-//		List<ScQtEvaluationResultDtl> qualifiedSuppliers = null;
 		TplSpecZoneDtl selectedZone = getManagedBean().getZoneDetails()
 													  .get(selectedZoneTabIndex);
 		getManagedBean().setSelectedZone(selectedZone);
 		getManagedBean().setZoneActiveIndex(selectedZoneTabIndex);
 		
-//		Long selectedZoneId = selectedZone.getSpecZoneId();
-		
 		if (!getManagedBean().isItemized()) {
-//			Map<Long, List<ScQtEvaluationResultDtl>> qualifiedSupppliersByZone 
-//								= getManagedBean().getQualifiedSupppliersByZone();
-//			
-//			if (MapUtils.isNotEmpty(qualifiedSupppliersByZone)) {
-//				qualifiedSuppliers = qualifiedSupppliersByZone
-//										.get(selectedZoneId);
-//			} else {
-//				qualifiedSuppliers = null;
-//			}
-//			if (qualifiedSuppliers != null) {
-//				getManagedBean().setMaxRank(
-//						String.valueOf(qualifiedSuppliers.size()));		
-//			}
 			navigateToPackagewiseTab();
 		} else {
+			getManagedBean().setQualifiedSuppliersDataModel(null);
 			populateScQtRecommendsByZone();
 		}
-		
-//		getManagedBean().setQualifiedSuppliers(qualifiedSuppliers);
 	}	
 	
 	/**
@@ -243,26 +224,6 @@ public class ConsolidationReportBackingBean extends
 
 		ScQtRecommend scQtRecommend = (ScQtRecommend) event.getObject();
 		getManagedBean().setSelectedItem(scQtRecommend);
-		
-//		List<ScQtEvaluationResultDtl> qualifiedSuppliers 
-//						= scQtRecommend.getShortListedSupplierList();
-//		if (CollectionUtils.isEmpty(qualifiedSuppliers)) {
-//			SuppFinalizationResDTO resDTO 
-//					= retrieveQualifiedSuppliersByItem(scQtRecommend);
-//			qualifiedSuppliers = resDTO.getQualifiedByItemSuppliers();
-//			scQtRecommend.setShortListedSupplierList(qualifiedSuppliers);
-//		}
-//		if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
-//			for (ScQtEvaluationResultDtl qualSupp 
-//						: qualifiedSuppliers) {
-//				calculateOfferedPrice(qualSupp, scQtRecommend);
-//			}
-//		}
-//		if (qualifiedSuppliers != null) {
-//			getManagedBean().setMaxRank(
-//					String.valueOf(qualifiedSuppliers.size()));
-//		}
-//		getManagedBean().setQualifiedSuppliers(qualifiedSuppliers);
 		
 		Long selectedZoneId = null;
 		ScQt scQt = getManagedBean().getScQt();
@@ -574,16 +535,6 @@ public class ConsolidationReportBackingBean extends
 			getManagedBean().setSelectedZone(zoneDtl);
 			getManagedBean().setZoneActiveIndex(
 						zoneDtl.getZoneTabIndex());
-			
-//			if (!isItemized) {
-//				Map<Long, List<ScQtEvaluationResultDtl>> qualifiedSupppliersByZone 
-//								= getManagedBean().getQualifiedSupppliersByZone();
-//
-//				if (MapUtils.isNotEmpty(qualifiedSupppliersByZone)) {
-//					getManagedBean().setQualifiedSuppliers(
-//							qualifiedSupppliersByZone.get(zoneDtl.getSpecZoneId()));
-//				}				
-//			}
 		}
 		
 		if (isItemized) {
@@ -678,7 +629,6 @@ public class ConsolidationReportBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 
-			boolean isZonal = scQt.isZonal();
 			PmUser user = new FacesScopes().getUserSessionBean();
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setScQt(scQt);
@@ -699,32 +649,6 @@ public class ConsolidationReportBackingBean extends
 
 			if (scQtFinalization != null) {
 				getManagedBean().setScQtFinalization(scQtFinalization);
-				
-				List<ScQtEvaluationResultDtl> toBeSavedSuppliers 
-							= new ArrayList<ScQtEvaluationResultDtl>();
-//				if (isZonal) {
-//					Map<Long, List<ScQtEvaluationResultDtl>> 
-//							qualifiedSupppliersByZone = resDTO.getQualifiedByPackageMap();
-//					getManagedBean().setQualifiedSupppliersByZone(
-//										qualifiedSupppliersByZone);
-//					if (MapUtils.isNotEmpty(qualifiedSupppliersByZone)) {
-//						for (List<ScQtEvaluationResultDtl> suppliers
-//									: qualifiedSupppliersByZone.values()) {
-//							if (CollectionUtils.isNotEmpty(suppliers)) {
-//								toBeSavedSuppliers.addAll(suppliers);
-//							}
-//						}
-//					}
-//				} else {
-//					List<ScQtEvaluationResultDtl> shortlistedPackageList 
-//								= resDTO.getQualifiedByPackageSuppliers();
-//					getManagedBean().setPackageQualifiedSuppliers(
-//												shortlistedPackageList);
-//					if (CollectionUtils.isNotEmpty(shortlistedPackageList)) {
-//						toBeSavedSuppliers.addAll(shortlistedPackageList);
-//					}
-//				}
-//				getManagedBean().setToBeSavedQualifiedSuppliers(toBeSavedSuppliers);
 			}
 			
 			if (scQt.isZonal()) {
@@ -801,42 +725,6 @@ public class ConsolidationReportBackingBean extends
 			qtSuppFinalizationSO = null;
 		}
 	}	
-	
-//	private SuppFinalizationResDTO retrieveQualifiedSuppliersByItem(
-//											ScQtRecommend scQtRecommend) {
-//		SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
-//		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-//		try {
-//			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-//					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-//							IQTSuppFinalizationSO.class);
-//			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-//			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-//			reqDTO.setScQtFinalization(getManagedBean().getScQtFinalization());
-//			
-//			if (scQtRecommend.getTplSpecZoneDtl() != null) {
-//				reqDTO.setQtZoneCriteriaId(scQtRecommend
-//						.getTplSpecZoneDtl().getSpecZoneId());
-//			}
-//			reqDTO.setRequestItemId(scQtRecommend
-//					.getRequestItem().getRequestNoteItemId());
-//			reqDTO.setRecommendType(
-//					SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM);
-//			
-//			resDTO = qtSuppFinalizationSO.retrieveEvaluationResultsByItem(reqDTO);
-//			if (CollectionUtils.isNotEmpty(
-//					resDTO.getQualifiedByItemSuppliers())) {
-//				getManagedBean().getToBeSavedQualifiedSuppliers()
-//								.addAll(resDTO.getQualifiedByItemSuppliers());
-//			}			
-//		} finally {
-//			qtSuppFinalizationSO = null;
-//		}
-
-//		return resDTO;
-		
-//		return null;
-//	}	
 	
 	private void calculateOfferedPrice(ScQtEvaluationResultDtl evalResultDtl,
 									   ScQtRecommend scQtRecommend) {
@@ -1168,34 +1056,6 @@ public class ConsolidationReportBackingBean extends
 		return beanList;
 	}
 	
-//	private List<QtEvaluationResultDtlBean> getCadfdfgdfgchedSupplierBeans() {
-//		Map<Long,Map<Long,List<QtEvaluationResultDtlBean>>> qualifiedSuppliersCache  
-//											= getManagedBean().getQualifiedSuppliersCache();
-//		List<QtEvaluationResultDtlBean> doRecommendationList = new ArrayList<QtEvaluationResultDtlBean>();
-//		if (MapUtils.isNotEmpty(qualifiedSuppliersCache)) {
-//			Collection<Map<Long, List<QtEvaluationResultDtlBean>>> itemMapList 
-//											= qualifiedSuppliersCache.values();
-//			if (CollectionUtils.isNotEmpty(itemMapList)) {
-//				for (Map<Long, List<QtEvaluationResultDtlBean>> itemMap : itemMapList) {
-//					if (MapUtils.isNotEmpty(itemMap)) {
-//						Collection<List<QtEvaluationResultDtlBean>> recommendedList = itemMap.values();
-//						if (CollectionUtils.isNotEmpty(recommendedList)) {
-//							for (List<QtEvaluationResultDtlBean> _recommendedList 
-//																	: recommendedList) {
-//								if (CollectionUtils.isNotEmpty(
-//												_recommendedList)) {
-//									doRecommendationList.addAll(_recommendedList);
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//		
-//		return doRecommendationList;
-//	}
-	
 	private SuppFinalizationReqDTO prepareDataToSave() {
 		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 		reqDTO.setScQtFinalization(
@@ -1319,20 +1179,11 @@ public class ConsolidationReportBackingBean extends
 	private void navigateToItemizedTab() {
 		getManagedBean().setItemized(true);
 		getManagedBean().setActiveIndex(ITEMIZED_TYPE_TAB_INDEX);
-//		getManagedBean().setQualifiedSuppliers(null);
 		getManagedBean().setQualifiedSuppliersDataModel(null);
 	}
 	
 	private void navigateToPackagewiseTab() {
 		getManagedBean().setItemized(false);
-		
-//		List<ScQtEvaluationResultDtl> qualifiedSuppliers = null;
-//		if (getManagedBean().getScQt().isZonal()) {
-//			qualifiedSuppliers = getShortlistedSuppliersByZone(
-//										getManagedBean().getSelectedZone());
-//		} else {
-//			qualifiedSuppliers = getManagedBean().getPackageQualifiedSuppliers();
-//		}
 		
 		Long selectedZoneId = null;
 		if (getManagedBean().getScQt().isZonal()) {
@@ -1346,11 +1197,6 @@ public class ConsolidationReportBackingBean extends
 						selectedZoneId, null)
 		);			
 		
-//		if (qualifiedSuppliers != null) {
-//			getManagedBean().setMaxRank(
-//					String.valueOf(qualifiedSuppliers.size()));		
-//		}
-//		getManagedBean().setQualifiedSuppliers(qualifiedSuppliers);
 		getManagedBean().setActiveIndex(PACKAGE_TYPE_TAB_INDEX);
 	}
 	
