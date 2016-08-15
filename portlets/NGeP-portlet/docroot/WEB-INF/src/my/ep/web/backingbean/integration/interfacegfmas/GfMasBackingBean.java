@@ -66,7 +66,6 @@ import my.ep.dto.pm.common.interfaceptj.InterfaceVotResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.DIInterfaceLog;
-import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.integration.PmInterfaceAgOff;
 import my.ep.persistence.entity.pm.integration.PmInterfaceBank;
 import my.ep.persistence.entity.pm.integration.PmInterfaceDana;
@@ -1138,7 +1137,7 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			DIInterfaceLog selectedProcess) {
 
 		log.info("getMasterSearchBeanData");
-		searchBean.getDataFilterBeans().add(
+		/*searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("processStatus",
 						SearchOperator.OPERATOR_EQUALS.value(), selectedProcess
 								.getProcessStatus()));
@@ -1156,7 +1155,19 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 							selectedProcess.getProcessId()));
 		}
 		searchBean.getSortColumns().add(
-				new SearchOrderBean("createdDate", true));
+				new SearchOrderBean("createdDate", true));*/
+		getSearchBeanData(searchBean);
+		
+		if (StringUtils.isNotEmpty(selectedProcess.getProcessId())) {
+			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(new SearchFilterBean("processId",
+							SearchOperator.OPERATOR_EQUALS.value(), selectedProcess.getProcessId()
+									.toUpperCase()), new SearchFilterBean(
+							"fileName", SearchOperator.OPERATOR_LIKE.value(),
+							"1000"
+									+ selectedProcess.getProcessId()
+											.toUpperCase() + "400001")));
+		}
 
 		return searchBean;
 	}
