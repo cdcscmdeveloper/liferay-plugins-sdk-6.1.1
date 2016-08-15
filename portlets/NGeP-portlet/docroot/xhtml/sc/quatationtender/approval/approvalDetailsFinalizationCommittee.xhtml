@@ -18,6 +18,14 @@
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(fcrequestdetails.approvalType)}" />
 			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.from.value']}">
+				<h:outputText value="#{fcrequestdetails.originalValue}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.to.value']}">
+				<h:outputText value="#{fcrequestdetails.changedValue}" />
+			</p:column>
 		</p:dataTable>
 	</p:panel>
 
@@ -28,7 +36,7 @@
 			value="#{fcaApprovalTab.scQtApproval.approverSettings}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			var="approverSettings">
-			<p:column headerText="#{lbl['lbl.sc.finalization.committee']}">
+			<p:column headerText="#{lbl['lbl.sc.finalization.committee']}" width="30%">
 				<c:choose>
 					<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate and 
 							qTDetailBB.managedBean.selectedApprovalTabBean.tabType != ParameterConst.approvalCategoryProcurementBoard}">
