@@ -50,8 +50,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String committeeName = null;
 	private String identificationNo = null;
 	private String identificationType;
-	private String witnessHeader;
-	private String witnessHeaderTooltip;
 	private String editorValue;
 	private String fileDirectory;
 	private String pbQcApproved;
@@ -184,30 +182,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setIdentificationType(String identificationType) {
 		this.identificationType = identificationType;
-	}
-	/**
-	 * @return the witnessHeader
-	 */
-	public String getWitnessHeader() {
-		return witnessHeader;
-	}
-	/**
-	 * @param witnessHeader the witnessHeader to set
-	 */
-	public void setWitnessHeader(String witnessHeader) {
-		this.witnessHeader = witnessHeader;
-	}
-	/**
-	 * @return the witnessHeaderTooltip
-	 */
-	public String getWitnessHeaderTooltip() {
-		return witnessHeaderTooltip;
-	}
-	/**
-	 * @param witnessHeaderTooltip the witnessHeaderTooltip to set
-	 */
-	public void setWitnessHeaderTooltip(String witnessHeaderTooltip) {
-		this.witnessHeaderTooltip = witnessHeaderTooltip;
 	}
 	/**
 	 * @return the editorValue
