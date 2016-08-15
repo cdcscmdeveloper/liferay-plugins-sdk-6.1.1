@@ -190,17 +190,21 @@ public class AccountingOfficeBackingBean extends
 		if (StringUtils.isNotBlank(officeSearchBean.getOfficeName())) {
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("officeName",
+					new SearchFilterBean("pmAgValidityList.officeName",
 							SearchOperator.OPERATOR_LIKE.value(), officeSearchBean
 									.getOfficeName().toUpperCase(), true));
 			
 		}
 		if(StringUtils.isNotBlank(officeSearchBean.getStatus())) {
-		
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("recordStatusFlg",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						officeSearchBean.getStatus()));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							officeSearchBean.getStatus()));
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmAgValidityList.recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							officeSearchBean.getStatus()));
 		}		
 		else{
 			List<String> activeAndInActiveStatus = new ArrayList<String>();
@@ -208,6 +212,12 @@ public class AccountingOfficeBackingBean extends
 			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_IN.value(), 
+							activeAndInActiveStatus
+			));
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmAgValidityList.recordStatusFlg",
 							SearchOperator.OPERATOR_IN.value(), 
 							activeAndInActiveStatus
 			));
