@@ -803,6 +803,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					}
 				}
 			}
+			getManagedBean().setDelAddressSelected(false);
 		}
 	}
 	
@@ -1451,6 +1452,17 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_745080,null,MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
+	}
+	
+	public void delAddressSelect(){
+		for(FlDeliveryAddress selectedDelAddress  :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
+				getManagedBean().setDelAddressSelected(true);
+			}else{
+				getManagedBean().setDelAddressSelected(false);
+			}
+		}
+		
 	}
 	
 }
