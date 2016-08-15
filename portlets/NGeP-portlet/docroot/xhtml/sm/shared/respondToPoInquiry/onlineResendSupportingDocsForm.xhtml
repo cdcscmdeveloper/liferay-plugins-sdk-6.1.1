@@ -26,6 +26,7 @@
 				<td>
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.button.resubmit']}" disabled="#{!backingBean.managedBean.claimTask}"
+							onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{backingBean.resubmitSmApplInquiryToBpm(backingBean.managedBean.smAppl.applType)}"
 							style="margin-bottom:5px;" />
 						<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{backingBean.onClickClaimButton}" update="@form" process="@this"
