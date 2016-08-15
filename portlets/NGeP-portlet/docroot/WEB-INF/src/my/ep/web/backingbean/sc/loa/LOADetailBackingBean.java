@@ -1517,28 +1517,28 @@ public class LOADetailBackingBean extends
 		String supplierPhoneNo = "";
 		String supplierFaxNo = "";
 		String supplierMobNo = "";
-		if (scLoa.getSupplierAddress() != null) {
-			supplierEmail = scLoa.getSupplierAddress().getContactEmail();
+		if (scLoa.getScSupplierAddress() != null) {
+			supplierEmail = scLoa.getScSupplierAddress().getContactEmail();
 			if (supplierEmail == null) {
 				supplierEmail = "";
 			}
 			
-			supplierPhoneNo = scLoa.getSupplierAddress().getPhoneFull();
+			supplierPhoneNo = scLoa.getScSupplierAddress().getPhoneFull();
 			if (supplierPhoneNo == null) {
 				supplierPhoneNo = "";
 			}
 			
-			supplierFaxNo = scLoa.getSupplierAddress().getFaxFull();
+			supplierFaxNo = scLoa.getScSupplierAddress().getFaxFull();
 			if (supplierFaxNo == null) {
 				supplierFaxNo = "";
 			}
 			
-			supplierMobNo = scLoa.getSupplierAddress().getContactMobileFull();
+			supplierMobNo = scLoa.getScSupplierAddress().getContactMobileFull();
 			if (supplierMobNo == null) {
 				supplierMobNo = "";
 			}
 			
-			supplierAddress = getFullAddress(scLoa.getSupplierAddress());
+			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
 			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 		}
@@ -1720,8 +1720,8 @@ public class LOADetailBackingBean extends
 		}
 		context.put("bankBranch", bankBranch);
 		String bankAddress = "";
-		if (scLoa.getBankAddress() != null) {
-			bankAddress = getFullAddress(scLoa.getBankAddress());
+		if (scLoa.getScBankAddress() != null) {
+			bankAddress = getFullAddress(scLoa.getScBankAddress());
 			bankAddress = bankAddress.replaceAll("\r\n", "<br />");
 			//bankAddress = bankAddress.replaceAll("&", "&#38;");
 		}
@@ -2101,10 +2101,10 @@ public class LOADetailBackingBean extends
 
 					scLoa.setSupplierBranch(supplierBranchAsHQ);
 					
-					ScAddress supplierAddress = createOrUpdateScAddress(scLoa.getSupplierAddress(),
+					ScAddress supplierAddress = createOrUpdateScAddress(scLoa.getScSupplierAddress(),
 																smCompanyAddress.getSmAddress(), 
 																supplierHQPersonnel, smCompanyBasic);
-					scLoa.setSupplierAddress(supplierAddress);
+					scLoa.setScSupplierAddress(supplierAddress);
 					
 					// Get Gst info for HQ
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier()
@@ -2133,9 +2133,9 @@ public class LOADetailBackingBean extends
 												.getSmCompanyBasic();
 						}
 					}					
-					ScAddress supplierAddress = createOrUpdateScAddress(scLoa.getSupplierAddress(), 
+					ScAddress supplierAddress = createOrUpdateScAddress(scLoa.getScSupplierAddress(), 
 										 supplierBranch.getSmAddress(), smPersonnel, smCompanyBasic);
-					scLoa.setSupplierAddress(supplierAddress);
+					scLoa.setScSupplierAddress(supplierAddress);
 					
 					// Get Gst info based on branch
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
@@ -2168,7 +2168,6 @@ public class LOADetailBackingBean extends
 					scLoa.setBankName(supplierBank.getPmFinancialOrg()
 							.getFinOrgName());
 					scLoa.setBankBranch(supplierBank.getBankBranch());
-					scLoa.setBankAddress(supplierBank.getSmAddress());
 					scLoa.setScBankAddress(createOrUpdateScAddress(
 											scLoa.getScBankAddress(), 
 											supplierBank.getSmAddress(), null, null));				
