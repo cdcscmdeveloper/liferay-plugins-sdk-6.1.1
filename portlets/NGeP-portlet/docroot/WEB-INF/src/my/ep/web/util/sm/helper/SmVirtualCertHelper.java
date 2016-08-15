@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,12 +63,12 @@ public class SmVirtualCertHelper {
 				if(mCert != null){
 					log.info("****MCert****" + mCert);
 					if(deleteCategory && !mCert.isBumiCert()){
-						genReport(getReportType(mCert.getBumiCertFlg()), getReportParam(mCert), mCert);
+						genReport(getReportType(mCert.getBumiCertFlg()), getReportParam(mCert), mCert, true);
 					}else{
 						if(mCert.getFileName() == null || mCert.getFilePath() == null){
 							log.info("****MCert id****" + mCert.getMofCertId());
 							log.info("****MCert bumi****" + mCert.getBumiCertFlg());
-							genReport(getReportType(mCert.getBumiCertFlg()), getReportParam(mCert), mCert);
+							genReport(getReportType(mCert.getBumiCertFlg()), getReportParam(mCert), mCert, false);
 						}
 					}
 				}
@@ -107,7 +109,7 @@ public class SmVirtualCertHelper {
 	 * @param cert
 	 * @return SmMofCert
 	 */
-	public SmMofCert genReport(String reportFile,Map<String, String> paramMap, SmMofCert cert) {
+	public SmMofCert genReport(String reportFile,Map<String, String> paramMap, SmMofCert cert, boolean isDeleteCategory) {
 		try{
 			String reportUrl = generateReportURL(reportFile, paramMap);
 			log.info("reportUrl>>>>>>>" + reportUrl);
@@ -122,8 +124,11 @@ public class SmVirtualCertHelper {
 				//FileInputStream buf = new FileInputStream("E:/HKS/Mof_1_1402497715752.pdf");
 
 				log.info("Content Type>>>>" + urlConnection.getContentType());
+				Date fileTimeStamp = new Date();
+				SimpleDateFormat dateFt = new SimpleDateFormat ("_yyyyMMdd_Hmmss");
 				String path = Calendar.getInstance().get(Calendar.YEAR)  + "/" + VIRTUAL_CERT_PATH;  
-				String fileName = String.valueOf(cert.getMofCertId()) + CERT_EXT;
+				String fileName = String.valueOf(cert.getMofCertId()) + 
+						(isDeleteCategory ? dateFt.format(fileTimeStamp).toString() : "") + CERT_EXT;
 				String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 				filePath += "/" + path;
 
