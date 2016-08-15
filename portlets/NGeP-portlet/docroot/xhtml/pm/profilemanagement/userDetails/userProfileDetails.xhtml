@@ -90,9 +90,10 @@
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}">
 								<f:selectItems
 									value="#{profileManagementBackingBean.getNewOrgTypeDropdownValues()}" />
-								<p:ajax event="change"
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									listener="#{profileManagementBackingBean.changeResOrgType()}"
-									update=":form:lovResOrg:lovResOrg,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+									update=":form:orgProfilePG,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 			     					:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr" />
 							</p:selectOneMenu>  
 							<p:selectOneMenu id="orgTypeOthersList"
@@ -104,9 +105,10 @@
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}">
 								<f:selectItems
 									value="#{profileManagementBackingBean.getNewOrgTypeDropdownValues()}" />
-								<p:ajax event="change"
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									listener="#{profileManagementBackingBean.changeResOrgType()}"
-									update=":form:lovResOrg:lovResOrg,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+									update=":form:orgProfilePG,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 			     					:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr" />
 							</p:selectOneMenu> 
 							</ui:fragment>
@@ -139,52 +141,77 @@
 					</td>
 					<td>
 						<div style="display:inline-block;">
-							<c:if test="#{isFFCOrgType}">
-							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_FFC" size="103" 
+							<h:panelGroup id="orgProfilePG">
+								<ui:fragment rendered="#{isFFCOrgType}">
+							       <ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="103" 
 							    	required="true" 
 							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
-					            	update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+					            	update=":form:orgProfilePG,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
 					            	disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"									
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmFinancialOrg.finOrgName}" 
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" 
-									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />									
-							</c:if>
-							<c:if test="#{isSupplierOrgType}">
-							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="103" 
+									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />	
+							    </ui:fragment>
+							    <ui:fragment rendered="#{isSupplierOrgType}">							    
+							        <ac:lov id="lovSuppOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="103" 
 							    	required="true" 
 							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
-					            	update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+					            	update=":form:orgProfilePG, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
 					            	disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.smSupplier.companyName}" 
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" 
-									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />									
-							</c:if>
-							<c:if test="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode and ParameterConst.orgTypeSupplier ne profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode}">
-							   <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="103"
+									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />
+							    </ui:fragment>
+							     <ui:fragment rendered="#{isPTJOrgType or isKPTJOrgType}">								  
+							    	<h:panelGroup id="lovResOrg">
+							    	<p:inputText 
+										size="103"
+										id="itSelectedPtj" 
+										value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}" 
+										readonly="true"
+									/>
+									&#160;	
+									<p:commandLink id="ptjSearchCL" partialSubmit="true"
+										disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
+										process="@this" update=":form:orgProfileCcId:ptjPopup"
+										action="#{organisationSearchBackingBean.initPtjPopup}"
+										oncomplete="ptjPopup.show();" >
+										<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+									</p:commandLink>
+									</h:panelGroup>
+							    </ui:fragment>
+							    <ui:fragment rendered="#{not isFFCOrgType and not isSupplierOrgType and not isPTJOrgType and not isKPTJOrgType}">		
+							        <ac:lov id="lovOtherOrg" lovId="PM_ORG_PROFILE" size="103"
 												required="true"
 												label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
-												update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+												update=":form:orgProfilePG, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
 												disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
 												headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 												value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
 												saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 												conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}"
-												postUpdateListener="profileManagementBackingBean.changeOrgUnit"  />										
-							</c:if>
-							
+												postUpdateListener="profileManagementBackingBean.changeOrgUnit"  />	
+							    </ui:fragment>
+							</h:panelGroup>
 							</div>
 					
 					</td>
 					
 					</tr>
 				</table>
+				<ac:ptjPopup 
+		  	id="orgProfileCcId"
+		  	orgTypeParamCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode}"
+		  	okAction="profileManagementBackingBean.selectPtjActionForCreateUser"
+		  	update=":form:orgProfilePG, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr" />
 			</p:outputPanel>
 		</h:panelGrid>
 	</p:panel>
@@ -205,7 +232,7 @@
 								value="*" styleClass="mandatory" /></th>
 						<td><p:selectOneMenu styleClass="ppDropDownWidthL"
 								id="somNationality"
-								disabled="#{isSupplierOrgType}"
+								disabled="#{isSupplierOrgType or !profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.nationality']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.pmCountry.countryId}">
@@ -230,7 +257,7 @@
 						<td colspan="2" width="80%"><p:selectOneMenu styleClass="ppDropDownWidthL"
 								id="somIdType" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.idtype']}"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew or (profileManagementBackingBean.managedBean.selectedUser.brandNew and profileManagementBackingBean.isMYCountry())}"
+								disabled="true"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterCode}">
 								<f:selectItems
 									value="#{profileManagementBackingBean.getIdentityTypeList()}" />
@@ -535,6 +562,7 @@
 			</p:outputPanel>
 		</h:panelGrid>
 		<ac:lovPopup />
+		
 	</p:panel>
 
 	<!-- Upload Image Popup -->
