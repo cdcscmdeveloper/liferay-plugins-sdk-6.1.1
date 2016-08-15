@@ -209,12 +209,12 @@
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 						disabled="true"
-						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' and   stageTwofunctional.definationType.parameterCode eq 'NA' and stageTwofunctional.action.parameterCode eq 'U') and (fn:containsIgnoreCase(stageTwofunctional.title,'Annual') or fn:containsIgnoreCase(stageTwofunctional.title,'Verification')))}">
+						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' and   stageTwofunctional.definationType.parameterCode eq 'NA' and stageTwofunctional.action.parameterCode eq 'U') and (fn:containsIgnoreCase(stageTwofunctional.title,'Annual') or fn:containsIgnoreCase(stageTwofunctional.title,'Verification') or fn:containsIgnoreCase(stageTwofunctional.title,'Pengesahan') or fn:containsIgnoreCase(stageTwofunctional.title,'Kunci')))}">
 
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
-						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and stageTwofunctional.action.parameterCode eq 'U' and stageTwofunctional.action.parameterCode ne 'V' and !fn:contains(stageTwofunctional.title,'Annual') and !fn:contains(stageTwofunctional.title,'Verification')}">
+						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and stageTwofunctional.action.parameterCode eq 'U' and stageTwofunctional.action.parameterCode ne 'V' and !fn:contains(stageTwofunctional.title,'Annual') and !fn:contains(stageTwofunctional.title,'Verification') and !fn:contains(stageTwofunctional.title,'Pengesahan') and !fn:contains(stageTwofunctional.title,'Kunci')}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="financialChecklistSpecificationStatus"
 							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
