@@ -1394,7 +1394,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyValues(PmUser pmUser,
-			String actionDesc, PmStatus status) {
+			String actionDesc, Long statusId) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
@@ -1405,7 +1405,7 @@ public class PmCommonUtil {
 		trckVO.setDocNo(pmUser.getUserId() != null ? pmUser.getUserId()
 				.toString() : null);
 		trckVO.setGroupId(null);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
@@ -1419,7 +1419,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForRuleConfig(
-			PmConfigRule rule, String actionDesc, PmStatus status) {
+			PmConfigRule rule, String actionDesc, Long statusId) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
@@ -1429,7 +1429,7 @@ public class PmCommonUtil {
 		trckVO.setDocType(ParameterConst.RULE_CONFIG_PARAM_CODE);
 		trckVO.setDocNo(rule.getRuleType());
 		trckVO.setGroupId(null);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
@@ -1443,7 +1443,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForSignatory(
-			PmCertSignatory pmcertSignatory, String actionDesc, PmStatus status) {
+			PmCertSignatory pmcertSignatory, String actionDesc, Long statusId) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
@@ -1453,7 +1453,7 @@ public class PmCommonUtil {
 		trckVO.setDocType(ParameterConst.VIRTUAL_CERTIFICATE_PARAM_CODE);
 		trckVO.setDocNo(pmcertSignatory.getPmZone().getZoneId().toString());
 		trckVO.setGroupId(null);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
@@ -1467,7 +1467,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForFeeExemption(
-			PmFeeExemption fee, String actionDesc, PmStatus status) {
+			PmFeeExemption fee, String actionDesc, Long statusId) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
@@ -1477,7 +1477,7 @@ public class PmCommonUtil {
 		trckVO.setDocType(ParameterConst.FEE_EXEMPTION_PARAM_CODE);
 		trckVO.setDocNo(fee.getFeeExemptionId().toString());
 		trckVO.setGroupId(null);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
@@ -1491,7 +1491,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForUnplannedThreshold(
-			PmThreshold threshold, String actionDesc, PmStatus status) {
+			PmThreshold threshold, String actionDesc, Long statusId) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
@@ -1501,7 +1501,7 @@ public class PmCommonUtil {
 		trckVO.setDocType(ParameterConst.UNPLANDED_THRESHOLD_PARAM_CODE);
 		trckVO.setDocNo(threshold.getThresholdId().toString());
 		trckVO.setGroupId(null);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
@@ -1515,7 +1515,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForBudgetThreshold(
-			PmThreshold threshold, String actionDesc, PmStatus status) {
+			PmThreshold threshold, String actionDesc, Long statusId) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
@@ -1525,7 +1525,7 @@ public class PmCommonUtil {
 		trckVO.setDocType(ParameterConst.BUDGET_VS_SPENT_THRESHOLD_PARAM_CODE);
 		trckVO.setDocNo(threshold.getThresholdId().toString());
 		trckVO.setGroupId(null);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
@@ -1541,7 +1541,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL1(
-			Long pmCategoryL1Id, String categoryL1Code, PmStatus status,
+			Long pmCategoryL1Id, String categoryL1Code, Long statusId,
 			String actionDesc, String docType) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1552,7 +1552,7 @@ public class PmCommonUtil {
 		trckVO.setDocId(pmCategoryL1Id);
 		trckVO.setDocNo(categoryL1Code);
 		trckVO.setDocType(docType);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupId(null);
 		trckVO.setGroupDocType(null);
 		return trckVO;
@@ -1570,7 +1570,7 @@ public class PmCommonUtil {
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL2(
 			Long pmCategoryL2Id, String pmCategoryL2Code, Long pmCategoryL1Id,
-			PmStatus status, String actionDesc, String docType,
+			Long statusId, String actionDesc, String docType,
 			String groupDocType) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1581,7 +1581,7 @@ public class PmCommonUtil {
 		trckVO.setDocId(pmCategoryL2Id);
 		trckVO.setDocNo(pmCategoryL2Code);
 		trckVO.setDocType(docType);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupId(pmCategoryL1Id);
 		trckVO.setGroupDocType(groupDocType);
 		return trckVO;
@@ -1599,7 +1599,7 @@ public class PmCommonUtil {
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL3(
 			Long pmCategoryL3Id, Long pmCategoryL2Id, String categoryL3Code,
-			PmStatus status, String actionDesc, String docType,
+			Long statusId, String actionDesc, String docType,
 			String groupDocType) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1610,7 +1610,7 @@ public class PmCommonUtil {
 		trckVO.setDocId(pmCategoryL3Id);
 		trckVO.setDocNo(categoryL3Code);
 		trckVO.setDocType(docType);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupId(pmCategoryL2Id);
 		trckVO.setGroupDocType(groupDocType);
 		return trckVO;
@@ -1630,7 +1630,7 @@ public class PmCommonUtil {
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForPmBasicCategory(
 			Long pmCategoryL3Id, Long pmCategoryL2Id, String categoryL3Code,
-			PmStatus status, String actionDesc, String docType,
+			Long statusId, String actionDesc, String docType,
 			String groupDocType) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1641,7 +1641,7 @@ public class PmCommonUtil {
 		trckVO.setDocId(pmCategoryL3Id);
 		trckVO.setDocNo(categoryL3Code);
 		trckVO.setDocType(docType);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupId(pmCategoryL2Id);
 		trckVO.setGroupDocType(groupDocType);
 		return trckVO;
@@ -1657,7 +1657,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForEducation(
-			Long eduFiledId, String eduFieldCode, PmStatus status,
+			Long eduFiledId, String eduFieldCode, Long statusId,
 			String actionDesc) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1668,7 +1668,7 @@ public class PmCommonUtil {
 		trckVO.setDocId(eduFiledId);
 		trckVO.setDocNo(eduFieldCode);
 		trckVO.setDocType(ParameterConst.EDU_PARAM_CODE);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupId(null);
 		trckVO.setGroupDocType(null);
 		return trckVO;
@@ -1684,7 +1684,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForUOM(Long uomId,
-			String uomCode, PmStatus status, String actionDesc) {
+			String uomCode, Long statusId, String actionDesc) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
@@ -1694,7 +1694,7 @@ public class PmCommonUtil {
 		trckVO.setDocId(uomId);
 		trckVO.setDocNo(uomCode);
 		trckVO.setDocType(ParameterConst.UOM_PARAM_CODE);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupId(null);
 		trckVO.setGroupDocType(null);
 		return trckVO;
@@ -1710,7 +1710,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForProfessional(
-			Long certBodyId, String certBodyCode, PmStatus status,
+			Long certBodyId, String certBodyCode,Long statusId,
 			String actionDesc) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
@@ -1721,7 +1721,7 @@ public class PmCommonUtil {
 		trckVO.setDocId(certBodyId);
 		trckVO.setDocNo(certBodyCode);
 		trckVO.setDocType(ParameterConst.PROFESSIONAL_CERT_BODY);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupId(null);
 		trckVO.setGroupDocType(null);
 		return trckVO;
@@ -1737,7 +1737,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForSupportingDocument(
-			Long docId, String docCode, PmStatus status, String actionDesc) {
+			Long docId, String docCode, Long statusId, String actionDesc) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
@@ -1747,7 +1747,7 @@ public class PmCommonUtil {
 		trckVO.setDocId(docId);
 		trckVO.setDocNo(docCode);
 		trckVO.setDocType(ParameterConst.SUPPORTING_DOC_QUOTATION_TENDER);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupId(null);
 		trckVO.setGroupDocType(null);
 		return trckVO;
@@ -1762,7 +1762,7 @@ public class PmCommonUtil {
 	 * @return PmTrackingDairyVO
 	 */
 	public static PmTrackingDairyVO assignTrackingDairyForDesignatedArea(
-			PmDesignatedArea da, String actionDesc, PmStatus status) {
+			PmDesignatedArea da, String actionDesc, Long statusId) {
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
@@ -1773,7 +1773,7 @@ public class PmCommonUtil {
 		trckVO.setDocNo(da.getDesignatedAreaId() != null ? da
 				.getDesignatedAreaId().toString() : null);
 		trckVO.setGroupId(null);
-		trckVO.setStatus(status);
+		trckVO.setStatusId(statusId);
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}

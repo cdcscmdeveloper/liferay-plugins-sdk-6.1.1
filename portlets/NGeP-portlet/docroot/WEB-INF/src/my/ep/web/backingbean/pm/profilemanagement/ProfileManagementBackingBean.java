@@ -33,7 +33,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.fl.IFulfilmentSO;
@@ -91,9 +90,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.logging.LogKey;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -3829,13 +3826,7 @@ public class ProfileManagementBackingBean extends
 			PmUserOrg userOrg, UserReqDTO reqDTO) {
 		
 		boolean isProfileDetailsChanged = false;
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		statusReqDTO.setStatusId(userOrg.getRecordStatusFlg()
-				.longValue());
-		StatusResDTO statusResDTO = statusSO
-				.retrieveStatusByStatusId(statusReqDTO);
+		
 		String oldDesignation = user.getDesignation();
 		String newDesignation = userOrg.getDesignation();
 		if (oldDesignation != null
@@ -3875,8 +3866,8 @@ public class ProfileManagementBackingBean extends
 			reqDTO.setTrackingStatus(true);
 			reqDTO.getTrackDairyVOs().add(
 					PmCommonUtil.assignTrackingDairyValues(user,
-							getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
-									.getPmStatus() : new PmStatus()));
+							getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg()
+							.longValue()));
 		}
 		if (!this.getManagedBean().getPmUserOrgOriginal().getRecordStatusFlg().equals(userOrg
 				.getRecordStatusFlg())) {
@@ -3890,8 +3881,8 @@ public class ProfileManagementBackingBean extends
 			reqDTO.setTrackingStatus(true);
 			reqDTO.getTrackDairyVOs().add(
 					PmCommonUtil.assignTrackingDairyValues(user,
-							getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
-									.getPmStatus() : new PmStatus()));
+							getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg()
+							.longValue()));
 		}
 
 		if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {// ????
@@ -3908,8 +3899,8 @@ public class ProfileManagementBackingBean extends
 					reqDTO.setTrackingStatus(true);
 					reqDTO.getTrackDairyVOs().add(
 							PmCommonUtil.assignTrackingDairyValues(user,
-									getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
-											.getPmStatus() : new PmStatus()));
+									getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg()
+									.longValue()));
 
 				} else if (userRole.isModified()) {// the role's activated
 					logger.info("Tracking diary for user profile: Role is re-activated :saveUserProfile");
@@ -3920,8 +3911,8 @@ public class ProfileManagementBackingBean extends
 					reqDTO.setTrackingStatus(true);
 					reqDTO.getTrackDairyVOs().add(
 							PmCommonUtil.assignTrackingDairyValues(user,
-									getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
-											.getPmStatus() : new PmStatus()));
+									getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg()
+									.longValue()));
 				}
 			}
 			for (PmUserRole userRole : reqDTO.getRemoveRoleList()) {
@@ -3935,8 +3926,8 @@ public class ProfileManagementBackingBean extends
 					reqDTO.setTrackingStatus(true);
 					reqDTO.getTrackDairyVOs().add(
 							PmCommonUtil.assignTrackingDairyValues(user,
-									getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
-											.getPmStatus() : new PmStatus()));
+									getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg()
+									.longValue()));
 				}
 			}
 
@@ -3957,8 +3948,8 @@ public class ProfileManagementBackingBean extends
 						reqDTO.getTrackDairyVOs().add(
 								PmCommonUtil.assignTrackingDairyValues(user,
 										getActionDesc(messageId, msgParam),
-										statusResDTO.getPmStatus() != null ? statusResDTO
-												.getPmStatus() : new PmStatus()));
+										userOrg.getRecordStatusFlg()
+										.longValue()));
 
 					}
 				}
@@ -3979,8 +3970,8 @@ public class ProfileManagementBackingBean extends
 						reqDTO.getTrackDairyVOs().add(
 								PmCommonUtil.assignTrackingDairyValues(user,
 										getActionDesc(messageId, msgParam),
-										statusResDTO.getPmStatus() != null ? statusResDTO
-												.getPmStatus() : new PmStatus()));
+										userOrg.getRecordStatusFlg()
+										.longValue()));
 
 					}
 				}
@@ -4020,17 +4011,11 @@ public class ProfileManagementBackingBean extends
 			String messageId = MessageConst.TD_80015;
 			String[] msgParam = new String[] {pmUser.getUserName()};
 			reqDTO.setTrackingStatus(true);
-			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IStatusSO.class);
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(pmUser.getRecordStatusFlg()
-					.longValue());
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
+			
 			reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyValues(pmUser,
-								getActionDesc(messageId, msgParam),statusResDTO.getPmStatus() != null ? statusResDTO
-										.getPmStatus() : new PmStatus()));
+								getActionDesc(messageId, msgParam),pmUser.getRecordStatusFlg()
+								.longValue()));
 			
 			UserResDTO resDTO = userSO.resendNotificationAndPwd(reqDTO);
 			if (resDTO != null && resDTO.isSuccessful()) {
@@ -4142,13 +4127,7 @@ public class ProfileManagementBackingBean extends
 
 			}
 			fillUserInfoFromUserOrg(user, userOrg);
-			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IStatusSO.class);
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(userOrg.getRecordStatusFlg()
-					.longValue());
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
+			
 			if (isNewUser) {
 				logger.info("Tracking diary for user profile: create new user :saveUserProfile");
 				String orgCode = null;
@@ -4172,8 +4151,8 @@ public class ProfileManagementBackingBean extends
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyValues(user,
-								getActionDesc(messageId, msgParam), statusResDTO.getPmStatus() != null ? statusResDTO
-										.getPmStatus() : new PmStatus()));
+								getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg()
+								.longValue()));
 			}
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);

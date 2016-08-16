@@ -10,7 +10,6 @@
 */
 package my.ep.web.backingbean.pm.common.supportdoc;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -47,8 +45,6 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
@@ -59,9 +55,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmZone;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -78,7 +72,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 /**
  * Backing Bean for Support Document
@@ -1609,7 +1602,7 @@ public class SupportDocumentBackingBean extends
 	 */
 	private void addDocRestrToDocument(PmDocument pmDocument,
 			List<PmDocumentRestr> pmDocumentRestrs, DocumentReqDTO reqDTO,
-			StatusResDTO statusResDTO) {
+			Long statusId) {
 		log.info("addDocRestrToDocument");
 		if (pmDocumentRestrs != null && pmDocumentRestrs.size() > 0) {
 			int activeRecord = 0;
@@ -1626,7 +1619,7 @@ public class SupportDocumentBackingBean extends
 						}
 						pmDocument.addPmDocumentRestrs(documentRestr);
 						getAddedAndDeletedRestrToDocument(pmDocument,
-								documentRestr, reqDTO, statusResDTO);
+								documentRestr, reqDTO, statusId);
 						documentRestr.setSelected(true);
 					}
 				} else {
@@ -1645,7 +1638,7 @@ public class SupportDocumentBackingBean extends
 								if (documentRestr.isDeleted()) {
 									getAddedAndDeletedRestrToDocument(
 											pmDocument, documentRestr, reqDTO,
-											statusResDTO);
+											statusId);
 								}
 								break;
 							}
@@ -1679,7 +1672,7 @@ public class SupportDocumentBackingBean extends
 
 	private void getAddedAndDeletedRestrToDocument(PmDocument pmDocument,
 			PmDocumentRestr documentRestr, DocumentReqDTO reqDTO,
-			StatusResDTO statusResDTO) {
+			Long statusId) {
 
 		String docRestreMessageId = "";
 		// String[] commonMsgParam =null;
@@ -1687,11 +1680,11 @@ public class SupportDocumentBackingBean extends
 		if (pmDocument.isByAppType() && documentRestr.getAppTypeCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80804;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80805;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			}
 		}
@@ -1699,11 +1692,11 @@ public class SupportDocumentBackingBean extends
 				&& documentRestr.getCompanyTypeCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80806;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80807;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			}
 
@@ -1712,11 +1705,11 @@ public class SupportDocumentBackingBean extends
 				&& documentRestr.getSupplierTypeCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80808;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80809;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			}
 		}
@@ -1725,22 +1718,22 @@ public class SupportDocumentBackingBean extends
 				&& documentRestr.getPmCategoryL3() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80810;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80811;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			}
 		}
 		if (pmDocument.isByCertBody() && documentRestr.getPmCertBody() != null) {
 			if (!documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80812;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80813;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			}
 		}
@@ -1748,11 +1741,11 @@ public class SupportDocumentBackingBean extends
 				&& documentRestr.getProcurementCatCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80802;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80803;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
 						docRestreMessageId);
 			}
 
@@ -1760,23 +1753,22 @@ public class SupportDocumentBackingBean extends
 	}
 
 	private void commonTrackingDiaryData(PmDocument pmDocument,
-			DocumentReqDTO reqDTO, StatusResDTO statusResDTO,
+			DocumentReqDTO reqDTO, Long statusId,
 			String docRestreMessageId) {
 		String[] commonMsgParam;
 		commonMsgParam = new String[] { pmDocument.getDocName() };
-		trackingDairyData(pmDocument, reqDTO, statusResDTO, docRestreMessageId,
+		trackingDairyData(pmDocument, reqDTO, statusId, docRestreMessageId,
 				commonMsgParam);
 	}
 
 	private void trackingDairyData(PmDocument pmDocument,
-			DocumentReqDTO reqDTO, StatusResDTO statusResDTO,
+			DocumentReqDTO reqDTO, Long statusId,
 			String docRestreMessageId, String[] commonMsgParam) {
 		reqDTO.getTrackDairyVOs().add(
 				PmCommonUtil.assignTrackingDairyForSupportingDocument(
 						pmDocument.getDocumentId(),
 						pmDocument.getDocCategoryCode().getParameterCode(),
-						statusResDTO.getPmStatus() != null ? statusResDTO
-								.getPmStatus() : new PmStatus(),
+						statusId,
 						getPmActionDesc(docRestreMessageId, commonMsgParam)));
 	}
 
@@ -1812,26 +1804,26 @@ public class SupportDocumentBackingBean extends
 	}
 
 	private void getAllRestrictions(PmDocument pmDocument,
-			DocumentReqDTO reqDTO, StatusResDTO statusResDTO) {
+			DocumentReqDTO reqDTO, Long statusId) {
 		log.info("getAllRestrictions");
 		try {
 
 			// add doc restr to document
 			addDocRestrToDocument(pmDocument, this.getManagedBean()
-					.getAppTypeRestrictions(), reqDTO, statusResDTO);
+					.getAppTypeRestrictions(), reqDTO, statusId);
 			addDocRestrToDocument(pmDocument, this.getManagedBean()
-					.getComTypeRestrictions(), reqDTO, statusResDTO);
+					.getComTypeRestrictions(), reqDTO, statusId);
 			addDocRestrToDocument(pmDocument, this.getManagedBean()
-					.getSuppTypeRestrictions(), reqDTO, statusResDTO);
+					.getSuppTypeRestrictions(), reqDTO, statusId);
 			addDocRestrToDocument(pmDocument, this.getManagedBean()
-					.getCategoryRestrictions(), reqDTO, statusResDTO);
+					.getCategoryRestrictions(), reqDTO, statusId);
 			addDocRestrToDocument(pmDocument, this.getManagedBean()
-					.getCertBodyRestrictions(), reqDTO, statusResDTO);
+					.getCertBodyRestrictions(), reqDTO, statusId);
 			addDocRestrToDocument(pmDocument, this.getManagedBean()
-					.getCheckListRestrictions(), reqDTO, statusResDTO);
+					.getCheckListRestrictions(), reqDTO, statusId);
 			// update delete doc restr to 9
 			addDocRestrToDocument(pmDocument, this.getManagedBean()
-					.getDeleteRestrictions(), reqDTO, statusResDTO);
+					.getDeleteRestrictions(), reqDTO, statusId);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2076,10 +2068,6 @@ public class SupportDocumentBackingBean extends
 			String messageId = "";
 			String[] msgParam = new String[] { pmDocument.getDocName() };
 
-			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IStatusSO.class);
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-
 			reqDTO.setBrandNew(createAction);
 			reqDTO.setTrackDairyVOs((new ArrayList<PmTrackingDairyVO>()));
 
@@ -2089,23 +2077,17 @@ public class SupportDocumentBackingBean extends
 				messageId = MessageConst.TD_80801;
 			}
 
-			statusReqDTO.setStatusId(pmDocument.getRecordStatusFlg()
-					.longValue());
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-			System.out.println("statusResDTO.getPmStatus().getStatusId():"
-					+ statusResDTO.getPmStatus().getStatusId());
-			log.info("statusResDTO.getPmStatus().getStatusId():"
-					+ statusResDTO.getPmStatus().getStatusId());
+			
 
-			getAllRestrictions(pmDocument, reqDTO, statusResDTO);
+			getAllRestrictions(pmDocument, reqDTO, pmDocument.getRecordStatusFlg()
+					.longValue());
 			reqDTO.setTrackingStatus(true);
 			reqDTO.getTrackDairyVOs().add(
 					PmCommonUtil.assignTrackingDairyForSupportingDocument(
 							pmDocument.getDocumentId(),
 							pmDocument.getDocCategoryCode().getParameterCode(),
-							statusResDTO.getPmStatus() != null ? statusResDTO
-									.getPmStatus() : new PmStatus(),
+							pmDocument.getRecordStatusFlg()
+							.longValue(),
 							getPmActionDesc(messageId, msgParam)));
 
 			reqDTO.setPmDocument(pmDocument);

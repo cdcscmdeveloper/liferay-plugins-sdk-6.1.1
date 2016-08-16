@@ -88,7 +88,6 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
-import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -1525,10 +1524,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
-			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
-			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			StatusReqDTO statusReqDTO = null;
+			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());			
 			for (PmConfigRule ruleType : this.getManagedBean()
 					.getConfigRuleList()) {
 
@@ -1570,19 +1566,15 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 							}
 						}
 					}
-					statusReqDTO = new StatusReqDTO();
-					statusReqDTO.setStatusId(ruleTypeValue.getRecordStatusFlg()
-							.longValue());
-					StatusResDTO statusResDTO = statusSO
-							.retrieveStatusByStatusId(statusReqDTO);
+					
 					if (messageId != null & msgParam != null) {
 						reqDTO.setTrackingStatus(true);
 						reqDTO.getTrackDairyVOs()
 								.add(PmCommonUtil.assignTrackingDairyForRuleConfig(
 										ruleType,
 										getActionDesc(messageId, msgParam),
-										statusResDTO.getPmStatus() != null ? statusResDTO
-												.getPmStatus() : new PmStatus()));
+										ruleTypeValue.getRecordStatusFlg()
+										.longValue()));
 					}
 
 				}
@@ -1802,10 +1794,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 				
 			}
-			statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(fee.getRecordStatusFlg().longValue());
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
+			
 			if (messageId != null & msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs()
@@ -1813,8 +1802,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 								.assignTrackingDairyForFeeExemption(
 										fee,
 										getActionDesc(messageId, msgParam),
-										statusResDTO.getPmStatus() != null ? statusResDTO
-												.getPmStatus() : new PmStatus()));
+										fee.getRecordStatusFlg().longValue()));
 			}
 
 		}
@@ -1940,10 +1928,6 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 							fee.getItemId().getItemName() };
 				}
 			}
-			statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(fee.getRecordStatusFlg().longValue());
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
 			if (messageId != null & msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs()
@@ -1951,8 +1935,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 								.assignTrackingDairyForFeeExemption(
 										fee,
 										getActionDesc(messageId, msgParam),
-										statusResDTO.getPmStatus() != null ? statusResDTO
-												.getPmStatus() : new PmStatus()));
+										fee.getRecordStatusFlg().longValue()));
 			}
 
 		}
@@ -2203,10 +2186,6 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 							fee.getRequestItemId().getItemName() };
 				}
 			}
-			statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(fee.getRecordStatusFlg().longValue());
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
 			if (messageId != null & msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs()
@@ -2214,8 +2193,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 								.assignTrackingDairyForFeeExemption(
 										fee,
 										getActionDesc(messageId, msgParam),
-										statusResDTO.getPmStatus() != null ? statusResDTO
-												.getPmStatus() : new PmStatus()));
+										fee.getRecordStatusFlg().longValue()));
 			}
 
 		}
@@ -2364,10 +2342,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 							fee.getTypeId().getTypeName() };
 				}
 			}
-			statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(fee.getRecordStatusFlg().longValue());
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
+			
 			if (messageId != null & msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs()
@@ -2375,8 +2350,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 								.assignTrackingDairyForFeeExemption(
 										fee,
 										getActionDesc(messageId, msgParam),
-										statusResDTO.getPmStatus() != null ? statusResDTO
-												.getPmStatus() : new PmStatus()));
+										fee.getRecordStatusFlg().longValue()));
 			}
 
 		}
@@ -2687,19 +2661,14 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 							centralizedLevelThreshold.getS2Unplanned()
 									.toString() };
 					reqDTO.setTrackingStatus(true);
-					statusReqDTO = new StatusReqDTO();
-					statusReqDTO.setStatusId(centralizedLevelThreshold
-							.getRecordStatusFlg().longValue());
-					StatusResDTO statusResDTO = statusSO
-							.retrieveStatusByStatusId(statusReqDTO);
+					
 					reqDTO.getTrackDairyVOs()
 							.add(PmCommonUtil
 									.assignTrackingDairyForUnplannedThreshold(
 											centralizedLevelThreshold,
 											getActionDesc(messageId, msgParam),
-											statusResDTO.getPmStatus() != null ? statusResDTO
-													.getPmStatus()
-													: new PmStatus()));
+											centralizedLevelThreshold
+											.getRecordStatusFlg().longValue()));
 				}
 			}
 			for (PmThreshold threshold : this.getManagedBean()
@@ -2719,20 +2688,15 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 								originalUnplanndthreshold.toString(),
 								threshold.getS2Unplanned().toString() };
 						reqDTO.setTrackingStatus(true);
-						statusReqDTO = new StatusReqDTO();
-						statusReqDTO.setStatusId(threshold.getRecordStatusFlg()
-								.longValue());
-						StatusResDTO statusResDTO = statusSO
-								.retrieveStatusByStatusId(statusReqDTO);
+						
 						reqDTO.getTrackDairyVOs()
 								.add(PmCommonUtil
 										.assignTrackingDairyForUnplannedThreshold(
 												threshold,
 												getActionDesc(messageId,
 														msgParam),
-												statusResDTO.getPmStatus() != null ? statusResDTO
-														.getPmStatus()
-														: new PmStatus()));
+														threshold.getRecordStatusFlg()
+														.longValue()));
 					}
 				}
 			}
@@ -2753,19 +2717,14 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 							centralizedLevelThreshold.getBudgetSpent()
 									.toString() };
 					reqDTO.setTrackingStatus(true);
-					statusReqDTO = new StatusReqDTO();
-					statusReqDTO.setStatusId(centralizedLevelThreshold
-							.getRecordStatusFlg().longValue());
-					StatusResDTO statusResDTO = statusSO
-							.retrieveStatusByStatusId(statusReqDTO);
+					
 					reqDTO.getTrackDairyVOs()
 							.add(PmCommonUtil
 									.assignTrackingDairyForBudgetThreshold(
 											centralizedLevelThreshold,
 											getActionDesc(messageId, msgParam),
-											statusResDTO.getPmStatus() != null ? statusResDTO
-													.getPmStatus()
-													: new PmStatus()));
+											centralizedLevelThreshold
+											.getRecordStatusFlg().longValue()));
 				}
 			}
 			for (PmThreshold threshold : this.getManagedBean()
@@ -2785,17 +2744,13 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 								originalUnplanndthreshold.toString(),
 								threshold.getBudgetSpent().toString() };
 						reqDTO.setTrackingStatus(true);
-						statusReqDTO = new StatusReqDTO();
-						statusReqDTO.setStatusId(threshold.getRecordStatusFlg()
-								.longValue());
-						StatusResDTO statusResDTO = statusSO
-								.retrieveStatusByStatusId(statusReqDTO);
+						
 						reqDTO.getTrackDairyVOs()
 								.add(PmCommonUtil.assignTrackingDairyForBudgetThreshold(
 										threshold,
 										getActionDesc(messageId, msgParam),
-										statusResDTO.getPmStatus() != null ? statusResDTO
-												.getPmStatus() : new PmStatus()));
+										threshold.getRecordStatusFlg()
+										.longValue()));
 					}
 				}
 			}
@@ -3747,21 +3702,12 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					.getDeletedDaValidityList());
 			reqDTO.setDaValidityList(designatedAreaList);
 			// /////////////////////////////////////////add to Tracking Dairy
-			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IStatusSO.class);
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-
+			
 			for (PmDaValidity daValidity : designatedAreaList) {
 				PmDesignatedArea da = daValidity.getDesignatedArea();
 				String messageId = null;
 				String[] msgParam = null;
-				statusReqDTO.setStatusId(da.getRecordStatusFlg().longValue());
-				StatusResDTO statusResDTO = statusSO
-						.retrieveStatusByStatusId(statusReqDTO);
-				log.info("statusResDTO.getPmStatus().getStatusId():"
-						+ statusResDTO.getPmStatus().getStatusId());
-				log.info("statusResDTO.getPmStatus().getStatusId():"
-						+ statusResDTO.getPmStatus().getStatusId());
+				
 
 				if (!da.isBrandNew() && da.isModified()) {
 					// if (da.getRecordStatusFlg() ==
@@ -3793,22 +3739,10 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 									.assignTrackingDairyForDesignatedArea(
 											da,
 											getActionDesc(messageId, msgParam),
-											statusResDTO.getPmStatus() != null ? statusResDTO
-													.getPmStatus()
-													: new PmStatus()));
+											da.getRecordStatusFlg().longValue()));
 				}
 
 			}
-			statusReqDTO.setStatusId(Long
-					.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-			log.info("statusResDTO.getPmStatus().getStatusId():"
-					+ statusResDTO.getPmStatus().getStatusId());
-			log.info("statusResDTO.getPmStatus().getStatusId():"
-					+ statusResDTO.getPmStatus().getStatusId());
-			reqDTO.setStatus(statusResDTO.getPmStatus() != null ? statusResDTO
-					.getPmStatus() : new PmStatus());
 			reqDTO.setUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
 			// /////////////////////////
