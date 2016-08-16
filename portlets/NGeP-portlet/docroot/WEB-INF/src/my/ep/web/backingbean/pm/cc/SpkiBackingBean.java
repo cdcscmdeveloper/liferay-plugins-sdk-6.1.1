@@ -209,7 +209,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 			String pin = getPassword();
 
-			System.out.println("SIGN " + getDigiCertUserId() + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword() + dataForSigning);
+			System.out.println("SIGN " + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword() + dataForSigning);
 			// Request service to signData based on the answered challenges and data 
 			
 			String loginId = new FacesScopes().getUserScreenName();
