@@ -134,7 +134,7 @@
 					               		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.email']}"/>
 					               	</f:facet>	
 			                        <c:if test="#{!panelBackingBean.managedBean.viewContract}">
-				                      <p:inputText id="email" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}" 
+				                      <p:inputText id="email"  label="#{lbl['lbl.ct.email']}" 
 				                            style="width:95%;" 
 				                           onkeypress="if (event.keyCode == 13) { return false; }"  maxlength="100" value="#{data.email}" />
 				                     </c:if>
@@ -150,7 +150,7 @@
 					               	</f:facet>
 			                         <c:if test="#{!panelBackingBean.managedBean.viewContract}">
 				                       <p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:95%;" 
-				                             validator="#{webappBean.checkPhoneNumber}" label="#{lbl['lbl.ct.tel']}" maxlength="100"
+				                             label="#{lbl['lbl.ct.tel']}" maxlength="100"
 				                             disabled="#{panelBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }"/>
 				                         </c:if>
 							   	                      <c:if test="#{panelBackingBean.managedBean.viewContract}">

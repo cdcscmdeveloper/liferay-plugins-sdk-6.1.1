@@ -137,7 +137,7 @@
 							                      <c:if test="#{!centralContractBackingBean.managedBean.viewContract}">
 							                
 							                      <p:inputText id="validateEmail" value="#{contactPersonsVar.email}" maxlength="100"
-							                             style="width:90%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}"
+							                             style="width:90%;"  label="#{lbl['lbl.ct.email']}"
 							                             disabled="#{centralContractBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }"/>
 							                       </c:if>
 							   	                      <c:if test="#{centralContractBackingBean.managedBean.viewContract}">
@@ -152,7 +152,7 @@
 								               	</f:facet>
 						                       <c:if test="#{!centralContractBackingBean.managedBean.viewContract}">
 							                     <p:inputText id="validPhone" style="width:90%;" label="#{lbl['lbl.ct.tel']}" maxlength="100"
-							                           value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"
+							                           value="#{contactPersonsVar.phoneNo}" 
 							                           disabled="#{centralContractBackingBean.managedBean.viewContract}"
 							                           onkeypress="if (event.keyCode == 13) {  return false; }"/>
 							                             </c:if>
