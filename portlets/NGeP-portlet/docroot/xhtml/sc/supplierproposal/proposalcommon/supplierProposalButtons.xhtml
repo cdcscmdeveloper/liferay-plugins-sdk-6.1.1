@@ -15,7 +15,7 @@
 			oncomplete="blockWidget.hide()" action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
 			update="spkiOutputPanel" process="@form" 
-			actionListener="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}" />
+			actionListener="#{supplierProposalDetailBackingBean.validateProposalDetailsNdPopulateSpkiDtls}" />
 	</div>
 
 	<p:outputPanel id="spkiOutputPanel">
