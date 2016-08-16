@@ -13,12 +13,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.log4j.Logger;
-import org.bouncycastle.util.encoders.Base64;
-import org.primefaces.context.RequestContext;
-
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -28,6 +28,9 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.augtech.kmc.client.IKMCAPIResponse;
 import com.augtech.kmc.client.IKMCAPIResponse.GenSecToken;
@@ -123,7 +126,17 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 				KMCClient client = getClient();
 
 				// Request service for user selected question for authentication
-				IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions(getDigiCertUserId(), 1));
+				
+				String loginId = new FacesScopes().getUserScreenName();
+				
+				IUserSO userSO =(IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setLoginId(loginId);
+				UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+				if(resDTO.getPmUser()==null){
+					throw new EpException("PM User is null");
+				}
+				IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions(resDTO.getPmUser().getIdentificationNo(), 1));
 				//				List<String> challs = null;
 				switch(res.getStatusCode())
 				{
@@ -334,6 +347,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 					//						return;
 				}else{
 					//setChallengeQues1(challs.get(0));
+					System.out.println("****"+challs.get(0));
 					RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 				}
 
@@ -530,5 +544,8 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 		return signedData;
 	}
+	
+	
+	
 
 }
