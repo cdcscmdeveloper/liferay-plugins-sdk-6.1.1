@@ -1265,8 +1265,17 @@ public class SimpleQuoteBackingBean extends
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
 
-			// validate quote
-			validateQuote(quote);
+			// validate start date and end date
+			if (quote.getStartDate() != null && quote.getEndDate() != null) {
+				if (quote.getEndDate().before(quote.getStartDate())
+						|| quote.getStartDate().equals(quote.getEndDate())) {
+					throw new EpException(MessageConst.ERROR_760164);
+				}
+			} else {
+				if (null == quote.getStartDate() ||  null == quote.getEndDate()) {
+					throw new EpException(MessageConst.ERROR_760388);
+				}
+			}
 			
 			if (quote.getRequestItems() == null) {
 				List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
@@ -6556,16 +6565,9 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private void validateQuote(ScQuote quote){
 		if (quote.getEndDate() != null && quote.getStartDate() != null) {
-			Date currentDate = new Date();
 			Date startDate = quote.getStartDate();
 			Date endDate = quote.getEndDate();
-			Date sDate = null;
-			if(startDate.after(currentDate)) {
-				sDate = startDate;
-			} else {
-				sDate = currentDate;
-			}
-
+			
 			PmConfigRuleValue ruleValue = getDurationRuleValue();
 			int maxDays = 0, minHours = 0;
 			if (ruleValue != null) {
@@ -6576,14 +6578,14 @@ public class SimpleQuoteBackingBean extends
 			}
 
 			// max 3 days 
-			getManagedBean().setMaxDate(DateUtils.addDays(sDate, maxDays));
+			getManagedBean().setMaxDate(DateUtils.addDays(startDate, maxDays));
 
 			if (endDate.before(startDate)
 					|| quote.getStartDate().equals(quote.getEndDate())) {
 				throw new EpException(MessageConst.ERROR_760164);
 			}
 
-			long diff = endDate.getTime() - sDate.getTime();
+			long diff = endDate.getTime() - startDate.getTime();
 			long minutes = diff / (60 * 1000) % 60;
 			long hours = diff / (60 * 60 * 1000) % 24;
 			long days = diff / (24 * 60 * 60 * 1000);
