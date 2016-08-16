@@ -211,7 +211,20 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 			System.out.println("SIGN " + getDigiCertUserId() + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword() + dataForSigning);
 			// Request service to signData based on the answered challenges and data 
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(getDigiCertUserId(),getSupplierEpNo(), pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+			
+			String loginId = new FacesScopes().getUserScreenName();
+			
+			IUserSO userSO =(IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setLoginId(loginId);
+			UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+			if(resDTO.getPmUser()==null){
+				throw new EpException("PM User is null");
+			}
+			
+			
+			
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(resDTO.getPmUser().getIdentificationNo(),getSupplierEpNo(), pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 
 
 			switch(res.getStatusCode())
