@@ -24,21 +24,17 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -355,9 +351,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	public String saveEducationDtls() throws Exception {
 		debugLogger("saveEducationDtls");
 		PmEduField eduField = this.getManagedBean().getPmEduField();
-		IStatusSO statusSO = null;
-		IEducationFieldSO educationfieldSO = null;
-		StatusReqDTO statusReqDTO = new StatusReqDTO();		
+		IEducationFieldSO educationfieldSO = null;	
 		String returnUrl = null;
 		try {
 			validationMessage(eduField);
@@ -367,14 +361,6 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 					.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
 							IEducationFieldSO.class);
-			
-			statusSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			statusReqDTO.setStatusId(eduField.getRecordStatusFlg().longValue());
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-			debugLogger("statusResDTO.getPmStatus().getStatusId():"
-					+ statusResDTO.getPmStatus().getStatusId());
 			
 			
 			EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
@@ -387,8 +373,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 					PmCommonUtil.assignTrackingDairyForEducation(
 							eduField.getEduFieldId(),
 							eduField.getFieldCode(),
-							statusResDTO.getPmStatus() != null ? statusResDTO
-									.getPmStatus() : new PmStatus(),
+							eduField.getRecordStatusFlg().longValue(),
 							getPmActionDesc(eduField.isBrandNew() ? MessageConst.TD_81000 :MessageConst.TD_81001,
 									new String[] { this.getManagedBean().getPmEduField().getFieldName()})));
 
@@ -430,7 +415,6 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 			throw (e);
 		} finally {
 			educationfieldSO = null;
-			statusSO = null;
 		}
 		return returnUrl;
 	}

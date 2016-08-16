@@ -66,7 +66,6 @@ import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -1278,17 +1277,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-
-		statusReqDTO.setStatusId(this.getManagedBean().getPmCategoryL1()
-				.getRecordStatusFlg().longValue());
-		StatusResDTO statusResDTO = statusSO
-				.retrieveStatusByStatusId(statusReqDTO);
-		System.out.println("statusResDTO.getPmStatus().getStatusId():"
-				+ statusResDTO.getPmStatus().getStatusId());
-		debugLogger("statusResDTO.getPmStatus().getStatusId():"
-				+ statusResDTO.getPmStatus().getStatusId());
-
+	
 		if (this.getManagedBean().isNewCategory()) {
 			messageId = MessageConst.TD_80700;
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
@@ -1319,8 +1308,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 								.getCategoryL1Id(),
 						this.getManagedBean().getPmCategoryL1()
 								.getCategoryL1Code(),
-						statusResDTO.getPmStatus() != null ? statusResDTO
-								.getPmStatus() : new PmStatus(),
+								this.getManagedBean().getPmCategoryL1()
+								.getRecordStatusFlg().longValue(),
 						getPmActionDesc(messageId, msgParam),
 						ParameterConst.MAIN_CATEGORY_PARAM_CODE));
 	}
@@ -1516,19 +1505,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		String messageId = "";
 
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-
-		statusReqDTO.setStatusId(this.getManagedBean().getPmCategoryL2()
-				.getRecordStatusFlg().longValue());
-		StatusResDTO statusResDTO = statusSO
-				.retrieveStatusByStatusId(statusReqDTO);
-		System.out.println("statusResDTO.getPmStatus().getStatusId():"
-				+ statusResDTO.getPmStatus().getStatusId());
-		debugLogger("statusResDTO.getPmStatus().getStatusId():"
-				+ statusResDTO.getPmStatus().getStatusId());
-
 		if (this.getManagedBean().isNewCategory()) {
 
 			messageId = MessageConst.TD_80704;
@@ -1563,8 +1539,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 								.getCategoryL2Code(),
 						this.getManagedBean().getPmCategoryL2()
 								.getPmCategoryL1().getCategoryL1Id(),
-						statusResDTO.getPmStatus() != null ? statusResDTO
-								.getPmStatus() : new PmStatus(),
+								this.getManagedBean().getPmCategoryL2()
+								.getRecordStatusFlg().longValue(),
 						getPmActionDesc(messageId, msgParam),
 						ParameterConst.SUB_CATEGORY_PARAM_CODE,
 						ParameterConst.MAIN_CATEGORY_PARAM_CODE));
@@ -1660,12 +1636,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			PmCategoryL3 pmCategoryL3 = this.getManagedBean().getPmCategoryL3();
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			
 
-			StatusResDTO statusResDTO = trackingDiaryForCreateAndUpdateOfSubDivision(
-					reqDTO, pmCategoryL3, statusSO, statusReqDTO);
+			trackingDiaryForCreateAndUpdateOfSubDivision(
+					reqDTO, pmCategoryL3, statusSO);
 
-			getAllCategoryDetailsForTracking(reqDTO, statusResDTO);
+			getAllCategoryDetailsForTracking(reqDTO, this.getManagedBean().getPmCategoryL3()
+					.getRecordStatusFlg().longValue());
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
 
 			PmCategoryL3 oldCategoryL3 = (PmCategoryL3) BeanUtils
@@ -1768,9 +1745,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 *            the status req dto
 	 * @return the status res dto
 	 */
-	private StatusResDTO trackingDiaryForCreateAndUpdateOfSubDivision(
+	private void trackingDiaryForCreateAndUpdateOfSubDivision(
 			CategoryCodeReqDTO reqDTO, PmCategoryL3 pmCategoryL3,
-			IStatusSO statusSO, StatusReqDTO statusReqDTO) {
+			IStatusSO statusSO) {
 		String messageId;
 		String[] msgParam = new String[] { pmCategoryL3.getCategoryL3Code(),
 				this.getManagedBean().getPmCategoryL1().getCategoryL1Code(),
@@ -1785,14 +1762,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		}
 
-		statusReqDTO.setStatusId(this.getManagedBean().getPmCategoryL3()
-				.getRecordStatusFlg().longValue());
-		StatusResDTO statusResDTO = statusSO
-				.retrieveStatusByStatusId(statusReqDTO);
-		System.out.println("statusResDTO.getPmStatus().getStatusId():"
-				+ statusResDTO.getPmStatus().getStatusId());
-		debugLogger("statusResDTO.getPmStatus().getStatusId():"
-				+ statusResDTO.getPmStatus().getStatusId());
 
 		reqDTO.setTrackingStatus(true);
 
@@ -1804,12 +1773,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 								.getCategoryL2Id(),
 						this.getManagedBean().getPmCategoryL3()
 								.getCategoryL3Code(),
-						statusResDTO.getPmStatus() != null ? statusResDTO
-								.getPmStatus() : new PmStatus(),
+								this.getManagedBean().getPmCategoryL3()
+								.getRecordStatusFlg().longValue(),
 						getPmActionDesc(messageId, msgParam),
 						ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 						ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE));
-		return statusResDTO;
+		
 	}
 
 	/**
@@ -1907,16 +1876,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * @return the all category details for tracking
 	 */
 	private void getAllCategoryDetailsForTracking(CategoryCodeReqDTO reqDTO,
-			StatusResDTO statusResDTO) {
+			Long statusId) {
 
 		String[] commonMsgParam = new String[] {
 				this.getManagedBean().getPmCategoryL1().getCategoryL1Code(),
 				this.getManagedBean().getPmCategoryL2().getCategoryL2Code(),
 				this.getManagedBean().getPmCategoryL3().getCategoryL3Code() };
 
-		getBasicCategoryForTrackingDairy(reqDTO, statusResDTO, commonMsgParam);
-		getMachineCategoryForTrackingDairy(reqDTO, statusResDTO, commonMsgParam);
-		getCategoryRestrForTrackingDiary(reqDTO, statusResDTO, commonMsgParam);
+		getBasicCategoryForTrackingDairy(reqDTO, statusId, commonMsgParam);
+		getMachineCategoryForTrackingDairy(reqDTO, statusId, commonMsgParam);
+		getCategoryRestrForTrackingDiary(reqDTO, statusId, commonMsgParam);
 
 	}
 
@@ -1932,7 +1901,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * @return the category restr for tracking diary
 	 */
 	private void getCategoryRestrForTrackingDiary(CategoryCodeReqDTO reqDTO,
-			StatusResDTO statusResDTO, String[] commonMsgParam) {
+			Long statusId, String[] commonMsgParam) {
 		String statusMessageId;
 		if (CollectionUtils.isNotEmpty(this.getManagedBean()
 				.getCategoryRestrList())
@@ -1947,7 +1916,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 						statusMessageId = MessageConst.TD_80713;
 						reqDTO.setTrackingStatus(true);
-						trackingDairyData(reqDTO, statusResDTO,
+						trackingDairyData(reqDTO, statusId,
 								statusMessageId, commonMsgParam);
 					}
 				}
@@ -1961,7 +1930,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						if (pmCategoryRestr.isBrandNew()) {
 							statusMessageId = MessageConst.TD_80712;
 							reqDTO.setTrackingStatus(true);
-							trackingDairyData(reqDTO, statusResDTO,
+							trackingDairyData(reqDTO, statusId,
 									statusMessageId, commonMsgParam);
 						}
 					}
@@ -1971,7 +1940,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						if (pmCategoryRestr.isBrandNew()) {
 							statusMessageId = MessageConst.TD_80712;
 							reqDTO.setTrackingStatus(true);
-							trackingDairyData(reqDTO, statusResDTO,
+							trackingDairyData(reqDTO, statusId,
 									statusMessageId, commonMsgParam);
 						}
 					}
@@ -1992,7 +1961,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * @return the machine category for tracking dairy
 	 */
 	private void getMachineCategoryForTrackingDairy(CategoryCodeReqDTO reqDTO,
-			StatusResDTO statusResDTO, String[] commonMsgParam) {
+			Long statusId, String[] commonMsgParam) {
 		String statusMessageId;
 		if (CollectionUtils.isNotEmpty(this.getManagedBean()
 				.getPmMachineCategoryList())
@@ -2006,7 +1975,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 							.contains(deleMachine)) {
 						statusMessageId = MessageConst.TD_80715;
 						reqDTO.setTrackingStatus(true);
-						trackingDairyData(reqDTO, statusResDTO,
+						trackingDairyData(reqDTO, statusId,
 								statusMessageId, commonMsgParam);
 					}
 				}
@@ -2020,7 +1989,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						if (deleMachine.isBrandNew()) {
 							statusMessageId = MessageConst.TD_80714;
 							reqDTO.setTrackingStatus(true);
-							trackingDairyData(reqDTO, statusResDTO,
+							trackingDairyData(reqDTO, statusId,
 									statusMessageId, commonMsgParam);
 						}
 					}
@@ -2030,7 +1999,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						if (deleMachine.isBrandNew()) {
 							statusMessageId = MessageConst.TD_80714;
 							reqDTO.setTrackingStatus(true);
-							trackingDairyData(reqDTO, statusResDTO,
+							trackingDairyData(reqDTO, statusId,
 									statusMessageId, commonMsgParam);
 						}
 					}
@@ -2051,7 +2020,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * @return the basic category for tracking dairy
 	 */
 	private void getBasicCategoryForTrackingDairy(CategoryCodeReqDTO reqDTO,
-			StatusResDTO statusResDTO, String[] commonMsgParam) {
+			Long statusId, String[] commonMsgParam) {
 		String statusMessageId;
 		if (CollectionUtils.isNotEmpty(this.getManagedBean()
 				.getBasicCategoryList())
@@ -2066,7 +2035,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 						statusMessageId = MessageConst.TD_80717;
 						reqDTO.setTrackingStatus(true);
-						trackingDairyData(reqDTO, statusResDTO,
+						trackingDairyData(reqDTO, statusId,
 								statusMessageId, commonMsgParam);
 					}
 				}
@@ -2080,7 +2049,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						if (pmBasicCategory.isBrandNew()) {
 							statusMessageId = MessageConst.TD_80716;
 							reqDTO.setTrackingStatus(true);
-							trackingDairyData(reqDTO, statusResDTO,
+							trackingDairyData(reqDTO, statusId,
 									statusMessageId, commonMsgParam);
 						}
 					}
@@ -2090,7 +2059,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						if (pmBasicCategory.isBrandNew()) {
 							statusMessageId = MessageConst.TD_80716;
 							reqDTO.setTrackingStatus(true);
-							trackingDairyData(reqDTO, statusResDTO,
+							trackingDairyData(reqDTO, statusId,
 									statusMessageId, commonMsgParam);
 						}
 					}
@@ -2112,7 +2081,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 *            the common msg param
 	 */
 	private void trackingDairyData(CategoryCodeReqDTO reqDTO,
-			StatusResDTO statusResDTO, String statusMessageId,
+			Long statusId, String statusMessageId,
 			String[] commonMsgParam) {
 		reqDTO.getTrackDairyVOs().add(
 				PmCommonUtil.assignTrackingDairyForPmBasicCategory(
@@ -2122,8 +2091,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 								.getCategoryL2Id(),
 						this.getManagedBean().getPmCategoryL3()
 								.getCategoryL3Code(),
-						statusResDTO.getPmStatus() != null ? statusResDTO
-								.getPmStatus() : new PmStatus(),
+								statusId,
 						getPmActionDesc(statusMessageId, commonMsgParam),
 						ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 						ParameterConst.SUB_CATEGORY_PARAM_CODE));
