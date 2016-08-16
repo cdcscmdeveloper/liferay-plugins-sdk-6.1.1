@@ -9,7 +9,6 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,15 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -121,15 +129,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
-
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for invoice.
@@ -716,9 +715,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
 			ContractReqDTO contractReqDTO = new ContractReqDTO();
 			contractReqDTO.setContractVerId(getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
-			contractReqDTO.setAsAtDate(new Date());
+			contractReqDTO.setAsAtDate(getManagedBean().getInvoice().getFlRequest().getAgApprovedDate());
 			contractValue = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount().getContractAmount();
-			
 			for(CtDeduction deduction : getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
 				if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
 					haveAdvancedPmyt = true;
@@ -760,51 +758,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}
 	}
 
-	/**
-	 * Gets the amount and quantity  details for invoice tab.
-	 *
-	 * @param resDTO the res dto
-	 * @return the invoice table
-	 */
-//	private void getInvoiceTable1(FulfilmentResDTO resDTO){
-//		BigDecimal invoiceAmt = new BigDecimal(0);
-//		log.info("SIR6070 line579: "+resDTO.getFlFulfilmentRequest().getFlFulfilmentItems().size());
-//		for(FlFulfilmentItem item : resDTO.getFlFulfilmentRequest().getFlFulfilmentItems()){
-//			FlInvoiceItem invoiceItem = new FlInvoiceItem();
-//			invoiceItem.setFlInvoice(getManagedBean().getInvoice());
-////			BigDecimal sumOrderedQty = new BigDecimal(0);
-////			BigDecimal sumOrderedAmt = new BigDecimal(0);
-//			BigDecimal sumRecalledQty = new BigDecimal(0);
-//			BigDecimal sumRecalledAmt = new BigDecimal(0);
-////			BigDecimal sumReceivedQty = new BigDecimal(0);
-////			BigDecimal sumReceivedAmt = new BigDecimal(0);
-//			invoiceItem.setFlFulfilmentItem(item);
-//			for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
-////				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
-////				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
-////				sumReceivedQty = sumReceivedQty.add(itemAddr.getChargeReceivedQty());
-////				sumReceivedAmt = sumReceivedAmt.add(itemAddr.getChargeReceivedAmt());
-//				if(itemAddr.getTempStopInstrItems()!=null && !itemAddr.getTempStopInstrItems().isEmpty()){
-//					for(FlStopInstrItem stopInstrItem : itemAddr.getTempStopInstrItems()){
-//						sumRecalledQty = sumRecalledQty.add(stopInstrItem.getRecalledQty());
-//						sumRecalledAmt = sumRecalledAmt.add(stopInstrItem.getRecalledAmt());
-//					}
-//				}
-//			}
-////			invoiceItem.setOrderedQty(sumOrderedQty);
-////			invoiceItem.setOrderedAmt(sumOrderedAmt);
-//			invoiceItem.setRecalledQty(sumRecalledQty);
-//			invoiceItem.setRecalledAmt(sumRecalledAmt);
-////			invoiceItem.setReceivedQty(sumReceivedQty);
-////			invoiceItem.setReceivedAmt(sumReceivedAmt);
-//			invoiceItem.setInvAmt(sumReceivedAmt);
-//			getManagedBean().getInvoice().getFlInvoiceItem().add(invoiceItem);
-//			invoiceAmt = invoiceAmt.add(sumReceivedAmt);
-//		}
-//		getManagedBean().getInvoice().setInvoiceAmtOri(invoiceAmt);
-//		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceAmt);
-//	}
-	
 	private void getInvoiceTable(FulfilmentResDTO resDTO){
 
 		IReceivedNoteSO receivedNoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
@@ -893,104 +846,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}
 	}
 	
-	
-	/**
-	 * Calculate invoice total amount.
-	 * <p>if invoice amount is greater than received amount,we raise the exception
-	 *
-	 * @param flInvoiceItem the fl invoice item
-	 */
-//	public void retrieveInvTotalAmount1(FlInvoiceItem flInvoiceItem){
-//		if(flInvoiceItem.getInvAmt().doubleValue()>flInvoiceItem.getReceivedAmt().doubleValue()) {
-//			flInvoiceItem.setInvAmt(flInvoiceItem.getReceivedAmt());
-//			throw new EpException(MessageConst.ERROR_100032, new String[]{
-//					ResourceBundleUtils.getMessage("lbl.fl.amount.invoice",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
-//					ResourceBundleUtils.getMessage("lbl.fl.received.amount.message",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-//		}
-//	   BigDecimal totalInvoiceAmt = new BigDecimal(0);
-//	   for(TreeNode childNode : getManagedBean().getChargeLineItemRoot().getChildren()){
-//		   FlInvoiceItem data= (FlInvoiceItem) childNode.getData();
-//		   
-//		   if(flInvoiceItem.getFlFulfilmentItem().getItemCode().equalsIgnoreCase(data.getFlFulfilmentItem().getItemCode())){
-//			   BigDecimal invoiceAmount=new BigDecimal(0);
-//			   for(TreeNode subNode:childNode.getChildren()){
-//				   FlInvoiceItem subData=(FlInvoiceItem)subNode.getData();
-//				   invoiceAmount=invoiceAmount.add(subData.getInvAmt());
-//			   }
-//			   data.setInvAmt(invoiceAmount);
-//			   totalInvoiceAmt = totalInvoiceAmt.add(invoiceAmount);			  
-//		   } else {
-//			   totalInvoiceAmt = totalInvoiceAmt.add(data.getInvAmt());	
-//		   }
-//	   }
-//	   getManagedBean().setInvAmtGrandTotal(totalInvoiceAmt);
-//	}
-	
-	/**
-	 * Calculate invoice total amount.
-	 * <p>if invoice amount is greater than received amount,we raise the exception
-	 *
-	 * @param invItemSumm the fl invoice item
-	 */
-//	public void retrieveInvTotalAmount(InvoiceChargeLineLvl3VO invChargeLineLv3VO){
-//		getManagedBean().setInvAmtGrandTotal(BigDecimal.ZERO);
-//		if(invChargeLineLv3VO.getInvoiceAmt().doubleValue()>invChargeLineLv3VO.getReceivedAmt().doubleValue()) {
-//			invChargeLineLv3VO.setInvoiceAmt(invChargeLineLv3VO.getReceivedAmt());
-//			BigDecimal totalInvoiceAmt = BigDecimal.ZERO;
-//			for(TreeNode lv1 : getManagedBean().getChargeLineItemRoot().getChildren()){
-//				totalInvoiceAmt = BigDecimal.ZERO;
-//				for(TreeNode lv2 : lv1.getChildren()){
-//					for(TreeNode lv3 : lv2.getChildren()){
-//						InvoiceChargeLineLvl3VO dataLv3= (InvoiceChargeLineLvl3VO) lv3.getData();
-//
-//						if(invChargeLineLv3VO.getParent().getParent().getItemCode().equalsIgnoreCase(dataLv3.getParent().getParent().getItemCode())){
-//							BigDecimal invoiceAmount=new BigDecimal(0);
-//							invoiceAmount=invoiceAmount.add(dataLv3.getInvoiceAmt());
-//							dataLv3.setInvoiceAmt(invoiceAmount);
-//							totalInvoiceAmt = totalInvoiceAmt.add(invoiceAmount);
-//							dataLv3.getParent().setInvoiceAmt(totalInvoiceAmt);
-//						} else {
-//							totalInvoiceAmt = totalInvoiceAmt.add(dataLv3.getInvoiceAmt());
-//							dataLv3.getParent().setInvoiceAmt(totalInvoiceAmt);
-//						}
-//						getManagedBean().setInvAmtGrandTotal(getManagedBean().getInvAmtGrandTotal().add(dataLv3.getInvoiceAmt()));
-//					}
-//				}
-//			}
-//			throw new EpException(MessageConst.ERROR_100032, new String[]{
-//					ResourceBundleUtils.getMessage("lbl.fl.amount.invoice",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
-//					ResourceBundleUtils.getMessage("lbl.fl.received.amount.message",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-//		}
-//		BigDecimal totalInvoiceAmt = BigDecimal.ZERO;
-//		for(TreeNode lv1 : getManagedBean().getChargeLineItemRoot().getChildren()){
-//			for(TreeNode lv2 : lv1.getChildren()){
-//				totalInvoiceAmt = BigDecimal.ZERO;
-//				for(TreeNode lv3 : lv2.getChildren()){
-//					InvoiceChargeLineLvl3VO dataLv3= (InvoiceChargeLineLvl3VO) lv3.getData();
-//					if(invChargeLineLv3VO.getParent().getParent().getItemCode().equalsIgnoreCase(dataLv3.getParent().getParent().getItemCode())){
-//						totalInvoiceAmt = totalInvoiceAmt.add(dataLv3.getInvoiceAmt());
-//						dataLv3.getParent().setInvoiceAmt(totalInvoiceAmt);
-//					}
-//					getManagedBean().setInvAmtGrandTotal(getManagedBean().getInvAmtGrandTotal().add(dataLv3.getInvoiceAmt()));
-//				}
-//			}
-//		}
-//		String key = invChargeLineLv3VO.getGstUnitPrice()+invChargeLineLv3VO.getGstFlag();
-//		for(FlInvoiceItemSummary invItemSumm : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
-//			totalInvoiceAmt = BigDecimal.ZERO;
-//			if(invItemSumm.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId() == invChargeLineLv3VO.getItemId()){
-//				for(FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()){
-//					String key1 = invItem.getGstUnitPrice().toString()+invItem.getGstFlag().getParameterCode();
-//					if(key.equalsIgnoreCase(key1)){
-//						invItem.setInvAmt(invChargeLineLv3VO.getInvoiceAmt());
-//					}
-//					totalInvoiceAmt = totalInvoiceAmt.add(invItem.getInvAmt());
-//				}
-//				invItemSumm.setInvAmt(totalInvoiceAmt);
-//			}
-//		}
-//	}
-	
 	/**
 	 * call this method  as user click on summary menu
 	 * <p>to calculate invoice summary.
@@ -1078,7 +933,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						}else{
 							nonExemptedItemList.add(invItem.getInvAmt()); 
 						}
-						
 					}
 				}
 			}
@@ -1089,6 +943,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			for(BigDecimal normalItemAmt : nonExemptedItemList){
 				nonExemptedItem = nonExemptedItem.add(normalItemAmt);
 			}
+		}else{
+			serviceFee = new BigDecimal(0);
 		}
 		
 		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
