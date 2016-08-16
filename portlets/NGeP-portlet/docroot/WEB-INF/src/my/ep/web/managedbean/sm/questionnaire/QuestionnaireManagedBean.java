@@ -33,6 +33,7 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 	private String targetUrl;
 	private SmAppl smAppl;
 	private SmAppl rejectedAppl;
+	private boolean resetLatestResubmitAppl;
 	
 	public List<SmQuestion> getSmQuestionLs() {
 		return smQuestionLs;
@@ -146,5 +147,13 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 
 	public void setRejectedAppl(SmAppl rejectedAppl) {
 		this.rejectedAppl = rejectedAppl;
+	}
+
+	public boolean isResetLatestResubmitAppl() {
+		return resetLatestResubmitAppl;
+	}
+
+	public void setResetLatestResubmitAppl(boolean resetLatestResubmitAppl) {
+		this.resetLatestResubmitAppl = resetLatestResubmitAppl;
 	}
 }
