@@ -32,7 +32,10 @@
 		<ui:param name="isChangesTab"
 			value="#{noticeBoardBackingBean.managedBean.selectedTab == ParameterConst.noticeBoardStatusChanges}" />
 		<ui:include src="/xhtml/sc/noticeboard/qtdetails/nbQtGeneralDetails.xhtml" />
-		<ui:param name="isZonal" value="#{noticeBoardBackingBean.managedBean.scQt.zonal}"></ui:param>
+		<ui:param name="scQt" value="#{noticeBoardBackingBean.managedBean.scQt}"/>
+		<ui:param name="isZonal" value="#{scQt.zonal}"/>
+		<ui:param name="isBsvRequired" value="#{scQt.bsvRequired}"/>
+		<ui:param name="isSampleReq" value="#{scQt.sampleReq}"/>
 		
 		<p:panel header="#{lbl['lbl.sc.supplier.qulification.criteria']}"
 			toggleable="true">
@@ -40,21 +43,21 @@
 				columnClasses="columnWidth20,columnWidth50,columnWidth30">
 				<h:outputLabel value="#{lbl['lbl.sc.supplier.status']}" styleClass="outputLabel-view-label"/>
 				<h:outputText value="#{lbl['lbl.sc.supplier.status.open']}"
-					rendered="#{noticeBoardBackingBean.managedBean.scQt.openFor eq 'A'}" />
+					rendered="#{scQt.openFor eq 'A'}" />
 				<h:outputText value="#{lbl['lbl.sc.supplier.status.bumiputra']}"
-					rendered="#{noticeBoardBackingBean.managedBean.scQt.openFor eq 'B'}" />
+					rendered="#{scQt.openFor eq 'B'}" />
 				<h:outputLabel value="" />
 
 				<c:if
-					test="#{null ne noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}">
+					test="#{null ne scQt.scQtSupplierCriteria.minPaidUpCapital}">
 					<h:outputLabel value="#{lbl['lbl.sc.paidup']}" styleClass="outputLabel-view-label"/>
 					<h:outputText
-						value="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}" />
+						value="#{scQt.scQtSupplierCriteria.minPaidUpCapital}" />
 					<h:outputLabel value="" />
 				</c:if>
 
 				<c:if
-					test="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
+					test="#{scQt.scQtSupplierCriteria.allState}">
 					<h:outputLabel value="#{lbl['lbl.sc.location.level']}" styleClass="outputLabel-view-label"/>
 					<h:outputText value="#{lbl['lbl.sc.all.states']}" />
 					<h:outputLabel value="" />
@@ -94,7 +97,7 @@
 			</c:if>
 			<p:spacer height="30px" />
 			<c:if
-				test="#{isZonal and !noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
+				test="#{isZonal and !(isBsvRequired or isSampleReq)}">
 				<h:outputText value="#{lbl['lbl.sc.qt.zone.location.info']}"
 					style="font-weight:bold;text-align: left;font-size:14px;" />
 				<p:spacer height="10px"></p:spacer>
@@ -130,7 +133,7 @@
 		<c:if test="#{!isZonal}">
 			<ui:param name="bsvDetails"
 				value="#{noticeBoardBackingBean.managedBean.normalBsvBean}" />
-			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
+			<c:if test="#{isBsvRequired}">
 				<ui:include src="/xhtml/sc/noticeboard/qtdetails/nbBSVDetails.xhtml" />
 				<ui:include
 					src="/xhtml/sc/noticeboard/share/nbLocationPopUp.xhtml"></ui:include>
@@ -140,7 +143,7 @@
 		</c:if>
 
 		<c:if
-			test="#{isZonal and noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
+			test="#{isZonal and (isBsvRequired or isSampleReq)}">
 			<ui:include src="nbZones.xhtml" />
 		</c:if>
 
