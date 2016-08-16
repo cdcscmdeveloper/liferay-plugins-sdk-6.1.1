@@ -524,6 +524,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/** The ordered amt grand total. */
 	private BigDecimal orderSummaryOrderedAmtGrandTotal ;
 	
+	private String itemDesc;
+	
 /**
  * Gets the charge line item root.
  *
@@ -3396,6 +3398,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setGfmasErrorDesc(String gfmasErrorDesc) {
 		this.gfmasErrorDesc = gfmasErrorDesc;
+	}
+
+	/**
+	 * @return the itemDesc
+	 */
+	public String getItemDesc() {
+		return itemDesc;
+	}
+
+	/**
+	 * @param itemDesc the itemDesc to set
+	 */
+	public void setItemDesc(String itemDesc) {
+		this.itemDesc = itemDesc;
 	}
 
 }
