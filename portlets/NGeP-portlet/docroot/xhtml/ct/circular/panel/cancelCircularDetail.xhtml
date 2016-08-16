@@ -55,7 +55,7 @@
 		</div>				
 		</p:outputPanel>	
 		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.active.circular']}" widgetVar="activeCircularDlg" 
-			styleClass="pop_up_top" modal="true" width="700" height="400" resizable="false">
+			styleClass="pop_up_top" modal="true" width="700" height="auto">
 				<p:dataTable id="circularVerDt" var="dataList" rowKey="#{dataList.circularVerId}" 
 				    widgetVar="CancelCircularObj" filteredValue="#{panelBackingBean.managedBean.filterCircularVerList}"
 					value="#{panelBackingBean.managedBean.circularVerList}" rows="10">
