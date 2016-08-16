@@ -17,9 +17,9 @@
 
 		<p:panel header="#{lbl['lbl.gfmas.gldanadef']}" id="childPage"
 			toggleable="true">
-			<p:dataTable id="gfMasDanaId" var="pmInterfacceDana" rows="10"
+			<p:dataTable id="gfMasDanaId" var="pmInterfaceDana" rows="10"
 				rowIndexVar="index" lazy="true"				
-				rowKey="#{pmInterfacceDana}"
+				rowKey="#{pmInterfaceDana}"
 				value="#{gfMasBackingBean.managedBean.searchDana}">				
 				<ac:paginator for="gfMasDanaId"></ac:paginator>
 				
@@ -31,46 +31,46 @@
 								listener="#{gfMasBackingBean.selectAllDana}"></p:ajax>
 						</p:selectBooleanCheckbox>
 					</f:facet>
-					<p:selectBooleanCheckbox value="#{pmInterfacceDana.selected}"
-						disabled="#{pmInterfacceDana.processStatus eq '1' or pmInterfacceDana.processStatus eq '2'}">
+					<p:selectBooleanCheckbox value="#{pmInterfaceDana.selected}"
+						disabled="#{pmInterfaceDana.processStatus eq '1' or pmInterfaceDana.processStatus eq '2'}">
 						<p:ajax partialSubmit="true" process="@this" update="@form"
-							listener="#{gfMasBackingBean.selectDanaSingleRow(pmInterfacceDana)}" />
+							listener="#{gfMasBackingBean.selectDanaSingleRow(pmInterfaceDana)}" />
 					</p:selectBooleanCheckbox>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.gfmas.interface.log.id']}"
 					style="width:5%;white-space: normal;word-wrap: break-word;">
-					<h:outputText value="#{pmInterfacceDana.diInterfaceLog.logId}" />
+					<h:outputText value="#{pmInterfaceDana.diInterfaceLog.logId}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.gfmas.financial.year']}"
 					style="width:15%;white-space: normal;word-wrap: break-word;">
-					<h:outputText value="#{pmInterfacceDana.financialYear}" />
+					<h:outputText value="#{pmInterfaceDana.financialYear}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.dana.code']}"
 					style="width:10%;white-space: normal;word-wrap: break-word;">
-					<h:outputText value="#{pmInterfacceDana.danaCode}" />
+					<h:outputText value="#{pmInterfaceDana.danaCode}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.gfmas.dana.desc']}"
 					style="width:30%;white-space: normal;word-wrap: break-word;">
-					<h:outputText value="#{pmInterfacceDana.danaDesc}" />
+					<h:outputText value="#{pmInterfaceDana.danaDesc}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.code.status']}"
 					style="width:20%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{lbl['lbl.gfmas.codestatus.valid']}"
-						rendered="#{pmInterfacceDana.codeStatus=='V'}" />
+						rendered="#{pmInterfaceDana.codeStatus=='V'}" />
 					<h:outputText value="#{lbl['lbl.gfmas.codestatus.inValid']}"
-						rendered="#{pmInterfacceDana.codeStatus=='X'}" />
+						rendered="#{pmInterfaceDana.codeStatus=='X'}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.process.status']}"
 					style="width:15%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
-						rendered="#{pmInterfacceDana.processStatus==0}" />
+						rendered="#{pmInterfaceDana.processStatus==0}" />
 					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
-						rendered="#{pmInterfacceDana.processStatus==1}" />
+						rendered="#{pmInterfaceDana.processStatus==1}" />
 					<h:outputText value="#{lbl['lbl.gfmas.process.fail']}"
-						rendered="#{pmInterfacceDana.processStatus==2}" />
+						rendered="#{pmInterfaceDana.processStatus==2}" />
 				</p:column>
 			</p:dataTable>
 
