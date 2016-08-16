@@ -6365,7 +6365,6 @@ public class SimpleQuoteBackingBean extends
 		}
 	}
 	
-	
 	/**
 	 * Update work flow and remarks.
 	 *
@@ -6495,7 +6494,6 @@ public class SimpleQuoteBackingBean extends
 		}
 		return true;
 	}
-
 	
 	/**
 	 * based on treenode selection button enable/disable.
@@ -6621,7 +6619,7 @@ public class SimpleQuoteBackingBean extends
 			 maxDays = (mxDays/60)/24;
 		}
 		return getMessage(
-				"lbl.sc.sq.end.date.duration.min.max", new String[] {Integer.toString(minHours), Integer.toString(maxDays)});
+				"lbl.sc.sq.resp.duration.min.max", new String[] {Integer.toString(minHours), Integer.toString(maxDays)});
 	}
 	
 	private PmConfigRuleValue getDurationRuleValue() {
