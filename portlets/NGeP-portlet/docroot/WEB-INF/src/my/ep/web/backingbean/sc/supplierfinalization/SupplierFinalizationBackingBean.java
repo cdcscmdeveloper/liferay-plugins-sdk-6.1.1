@@ -2916,7 +2916,7 @@ public class SupplierFinalizationBackingBean extends
 					.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 				secretaryName = commMember.getMemberName().toUpperCase();
 			}*/ else if (commMember.getMemberRole().getParameterCode()
-					.equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
+					.equals(ParameterConst.COMMITTEE_ROLE_MEMBER) && scQtCommitteeActivity.isAttended()) {
 				memberName = commMember.getMemberName().toUpperCase();
 				commMembers.add(commMember);
 			}
