@@ -3728,7 +3728,9 @@ public class QTDetailBackingBean extends
 						scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls());	
 			}
 		}
-		
+		if(null!=this.getManagedBean().getCtContract()){
+			this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
+		}
 		this.getManagedBean().setActiveIndex(activeIndex);
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
