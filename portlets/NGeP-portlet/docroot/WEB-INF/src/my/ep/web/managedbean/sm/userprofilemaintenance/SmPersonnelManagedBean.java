@@ -92,6 +92,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private Date currDate;
 	private String logoutUrl;
 	private List<WorklistItemVO> taskList;
+	private String userLimitTooltips;
+	private int maxUserLimit;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -639,6 +641,22 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setTaskList(List<WorklistItemVO> taskList) {
 		this.taskList = taskList;
+	}
+
+	public String getUserLimitTooltips() {
+		return userLimitTooltips;
+	}
+
+	public void setUserLimitTooltips(String userLimitTooltips) {
+		this.userLimitTooltips = userLimitTooltips;
+	}
+
+	public int getMaxUserLimit() {
+		return maxUserLimit;
+	}
+
+	public void setMaxUserLimit(int maxUserLimit) {
+		this.maxUserLimit = maxUserLimit;
 	}
 
 }
