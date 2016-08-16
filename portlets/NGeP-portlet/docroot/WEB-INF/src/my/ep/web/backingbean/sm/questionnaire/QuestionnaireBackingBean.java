@@ -112,6 +112,7 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 		useList.add(loginUser.getLoginId());
 		reqDTO.setUserList(useList);
 		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
+		reqDTO.setResetLatestResubmitAppl(getManagedBean().isResetLatestResubmitAppl());
 
 		reqSO.questionnaireSubmission(reqDTO);
 		
