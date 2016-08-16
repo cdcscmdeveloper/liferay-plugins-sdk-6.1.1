@@ -3550,6 +3550,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
+		getManagedBean().setItemDesc(flItemAddr.getScRequestItem().getItemDesc());
 		flItemAddr.setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setStandardUnitPrice(flItemAddr.getUnitPrice().doubleValue());
