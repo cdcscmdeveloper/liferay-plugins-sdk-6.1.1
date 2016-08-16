@@ -81,6 +81,7 @@
 										value="#{simpleQuoteBackingBean.procTypeCategories}"
 										var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
 										itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
+										<p:ajax event="change" update="procTypeCategory" process="@this" />
 								</p:selectOneMenu> <p:message id="procTypeCategoryMsg" for="procTypeCategory"
 									display="icon" /></td>
 						</tr>
@@ -145,7 +146,9 @@
 											id="justificationRmk" label="#{lbl['lbl.sc.justification']}"
 											maxlength="100" disabled="#{!isEditable}"
 											required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A'}"
-											rows="3" cols="58" style="margin-bottom: 5px; width: 230px;" />
+											rows="3" cols="58" style="margin-bottom: 5px; width: 230px;" >
+											<f:ajax></f:ajax>
+											</p:inputTextarea>
 										<p:message id="justRmksMsg" for="justificationRmk"
 											display="icon" /></td>
 								</ui:fragment>
