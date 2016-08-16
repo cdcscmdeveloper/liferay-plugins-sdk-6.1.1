@@ -119,14 +119,13 @@
 				<ac:paginator for="offSdList" />
 
 				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 70%;">
-					<p:outputLabel value="#{table.pmDocument.docName}"
-						rendered="#{table.verifiedFlg != 1}"
-						style="float: left;white-space: normal;" />
+					<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" 
+						rendered="#{table.verifiedFlg != 1}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.sectionPoRmrk']}" style="width : 30%;">
-					<p:inputTextarea value="#{table.poRemarks}" readonly="true"
-						disabled="true" rendered="#{table.verifiedFlg != 1}" />
+					<h:outputText value="#{table.poRemarks}" style="float: left;white-space: normal;" 
+						rendered="#{table.verifiedFlg != 1}" />
 				</p:column>
 
 			</p:dataTable>
