@@ -214,7 +214,7 @@
 					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}" value="#{item.scRequestItem.cmItem.extensionCode}" />
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%">
-					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;" title="#{item.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.scRequestItem.itemDesc}"/>
+					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 					<h:outputText value="#{item.scRequestItem.uom.uomName}" style="float:left;"/>
@@ -543,16 +543,25 @@
 		modal="true" width="900" resizable="false">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.item']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{contractRequestBackingBean.managedBean.itemName}"
 						size="60" /></td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.item.desc']}" /></td>
+				<td><p:inputTextarea cols="61" rows="4" id="itemDesc"
+						autoResize="false"
+						style=" margin-bottom:5px;" 
+						disabled="true"
+						value="#{contractRequestBackingBean.managedBean.itemDesc == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.itemDesc}" /> 
+				</td>
 			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.price.type']}" /></td>
 				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.priceType != null}"
 						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.priceType)}" 
-						size="35" /></td>					
+						size="60" /></td>					
 			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.standard.price']}" rendered="#{contractRequestBackingBean.managedBean.standardPrice}"/></td>
@@ -564,9 +573,9 @@
 							</p:inputText></td>					
 			</tr>
 			<tr>			
-				<td><p:outputLabel value="#{lbl['lbl.ct.ceiling.qty']}" rendered="#{!contractRequestBackingBean.managedBean.serviceItem and !contractRequestBackingBean.managedBean.centralContract}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.ct.ceiling.qty']}" rendered="#{!contractRequestBackingBean.managedBean.centralContract}"/></td>
 				<td>
-					<p:inputText disabled="true" style="text-align:right;" rendered="#{!contractRequestBackingBean.managedBean.serviceItem and !contractRequestBackingBean.managedBean.centralContract}"
+					<p:inputText disabled="true" style="text-align:right;" rendered="#{!contractRequestBackingBean.managedBean.centralContract}"
 						value="#{contractRequestBackingBean.managedBean.ceilingQuantity}" size="35" >
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractRequestBackingBean.managedBean.uomCode)}" />							

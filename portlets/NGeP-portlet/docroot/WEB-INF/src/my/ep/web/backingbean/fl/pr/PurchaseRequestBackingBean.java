@@ -2806,6 +2806,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 */
 	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
+		getManagedBean().setItemDesc(flItemAddr.getScRequestItem().getItemDesc());
 		if(null == flItemAddr.getScRequestItem().getQuantity()){
 			getManagedBean().setQuantity(new Double(0));
 		}else{

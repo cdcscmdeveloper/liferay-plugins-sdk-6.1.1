@@ -162,7 +162,7 @@
 					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" style="float:left;"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%">
-					<h:outputText value="#{flItem.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;" title="#{flItem.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : flItem.scRequestItem.itemDesc}"/>
+					<h:outputText value="#{flItem.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.uom']}">
 					<h:outputText value="#{flItem.scRequestItem.uom.uomName}"/>
@@ -468,10 +468,19 @@
 		modal="true" width="900" resizable="false">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.item']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.itemName}"
 						size="60" /></td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.item.desc']}" /></td>
+				<td><p:inputTextarea cols="61" rows="4" id="itemDesc"
+						autoResize="false"
+						style=" margin-bottom:5px;" 
+						disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.itemDesc == null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.managedBean.itemDesc}" /> 			
+				</td>
 			</tr>
 			<tr>		
 				<td><p:outputLabel value="#{lbl['lbl.fl.requested.qty']}" style="text-align:right"/></td>
