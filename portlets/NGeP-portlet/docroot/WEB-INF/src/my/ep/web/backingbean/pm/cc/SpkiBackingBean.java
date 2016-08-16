@@ -46,9 +46,9 @@ import com.augtech.kmc.client.KMCRequestBuilder;
 @ManagedBean(name = "spkiBackingBean")
 @SessionScoped
 public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final String PATH = "NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties";
 	//	public static final int OPERATION_FAILED  = 0;
 	//	public static final int OPERATION_SUCCESSFUL = 1;
@@ -126,9 +126,9 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 				KMCClient client = getClient();
 
 				// Request service for user selected question for authentication
-				
+
 				String loginId = new FacesScopes().getUserScreenName();
-				
+
 				IUserSO userSO =(IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setLoginId(loginId);
@@ -147,7 +147,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 					{
 						System.out.println("No challanges found for the user! ");
 						throw new EpException(MessageConst.ERROR_776051);
-					
+
 
 					}else{
 						setChallengeQues1(challs.get(0));
@@ -159,7 +159,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 				default:
 					System.out.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
 					throw new EpException("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
-					
+
 				}
 
 
@@ -167,7 +167,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 			{
 				ex.printStackTrace();
 				throw new EpException(ex.getMessage());
-				
+
 			}	
 		}
 	}
@@ -177,7 +177,17 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 		try{
 			KMCClient client = getClient();
 
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken(getDigiCertUserId(),getSupplierEpNo()));
+			String loginId = new FacesScopes().getUserScreenName();
+
+			IUserSO userSO =(IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setLoginId(loginId);
+			UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+			if(resDTO.getPmUser()==null){
+				throw new EpException("PM User is null");
+			}
+
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken(getDigiCertUserId(),getSupplierEpNo(resDTO.getPmUser().getUserId())));
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -209,11 +219,11 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 			String pin = getPassword();
 
-			System.out.println("SIGN " + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword() + dataForSigning);
+			System.out.println("SIGN " + getChallengeQues1() + getChallengeAns1() + getPassword() + dataForSigning);
 			// Request service to signData based on the answered challenges and data 
-			
+
 			String loginId = new FacesScopes().getUserScreenName();
-			
+
 			IUserSO userSO =(IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setLoginId(loginId);
@@ -221,10 +231,10 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 			if(resDTO.getPmUser()==null){
 				throw new EpException("PM User is null");
 			}
-			
-			
-			
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(resDTO.getPmUser().getIdentificationNo(),getSupplierEpNo(), pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+
+
+
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(resDTO.getPmUser().getIdentificationNo(),getSupplierEpNo(resDTO.getPmUser().getUserId()), pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 
 
 			switch(res.getStatusCode())
@@ -279,17 +289,17 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 		return facesScope.getUserSessionBean().getEmail();
 	}
 
-	public String getSupplierEpNo() {
+	public String getSupplierEpNo(Long userId) {
 		ISupplierSearchSO smSupplierSO = null;
 		System.out.println("ISearchResultBean<SmSupplier> pageChangeListener");
 		smSupplierSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISupplierSearchSO.class);
-		Long userId = facesScope.getUserSessionBean().getUserId();
+		//Long userId = facesScope.getUserSessionBean().getUserId();
 
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setUserId(userId);
 		SupplierSearchResDTO res = smSupplierSO.retriveSupplierProfiles(reqDTO);
-
+		System.out.println("res.getResultBean().getResultList():"+res.getResultBean().getResultList());
 		return res.getResultBean().getResultList().get(0).getEpNo();	
 	}
 
@@ -339,12 +349,12 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 			KMCClient client = KMCClientFactory.getInstance(f);
 
 			// Request service for user selected question for authentication
-			
+
 			String test1 = "54322211114333";
 			String test2 = "680410061119";
-			
+
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions(test2, 1));
-			
+
 			System.out.println("res.getStatusCode():"+res.getStatusCode());
 			//				List<String> challs = null;
 			switch(res.getStatusCode())
@@ -373,11 +383,11 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 			}
 
 
-		
-			
-			
-			
-			
+
+
+
+
+
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -526,10 +536,10 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
 				//				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
-				
+
 
 				signedData = (byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
-				
+
 				IKMCAPIResponse res1 = client.requestService(KMCRequestBuilder.verifyData(new ByteArrayInputStream(dataForSigning.getBytes()),signedData));
 				switch(res.getStatusCode())
 				{
@@ -538,7 +548,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 					break;
 				default:
 					System.err.println("API return error. Code was "+res1.getStatusCode()+" Message was : "+res1.getStatusMessage());
-					
+
 				}
 
 				break;
@@ -557,8 +567,8 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 		return signedData;
 	}
-	
-	
-	
+
+
+
 
 }
