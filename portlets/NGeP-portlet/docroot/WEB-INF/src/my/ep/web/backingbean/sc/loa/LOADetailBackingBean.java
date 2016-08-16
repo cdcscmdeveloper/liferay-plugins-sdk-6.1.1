@@ -4191,7 +4191,7 @@ public class LOADetailBackingBean extends
 		log.info("backToPrevious");
 		
 		// back to qt loa list
-		if(getManagedBean().getScQt() != null){
+		if(getManagedBean().getScQt() != null && getManagedBean().getSourceId() != null){
 			retrieveLOILOAList(getManagedBean().getSourceId());	
 		} else{
 			// back to dp loa list
