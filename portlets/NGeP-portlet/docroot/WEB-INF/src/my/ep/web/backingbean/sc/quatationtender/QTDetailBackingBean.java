@@ -1592,8 +1592,6 @@ public class QTDetailBackingBean extends
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
 		
-		Long currentStatus = scQt.getQtStatus().getStatusId();
-		this.getManagedBean().setCurrentStatusId(currentStatus);
 		if (null == this.getManagedBean().getQt().getFinalizationCommitte()) {
 			this.getManagedBean().getQt()
 					.setFinalizationCommitte(new PmParameter());
@@ -1861,7 +1859,7 @@ public class QTDetailBackingBean extends
 							.equalsIgnoreCase(taskName)) {
 				
 				boolean isCommitteeAppointmentRemark = !SCProcessNameConst.ASSIGN_FC_SECRETARY.equalsIgnoreCase(taskName);
-				
+				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 				if (!SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 						.equalsIgnoreCase(taskName)
 						&& !SCProcessNameConst.ASSIGN_FC_SECRETARY
@@ -1899,7 +1897,7 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setCommitteeAppointment(true);
 				this.getManagedBean().setCommitteeAppointmentRemark(isCommitteeAppointmentRemark);
 				this.getManagedBean().setActiveIndex(2);
-				
+				this.getManagedBean().setCurrentStatusId(currentStatusId);
 			} else {
 				// qtId = quotationTenderDataType.getQtId().longValue();
 				SCQuotationTenderDataType quationDataType = (SCQuotationTenderDataType) payLoad;
@@ -3592,8 +3590,7 @@ public class QTDetailBackingBean extends
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
 		Object payLoad = this.getManagedBean().getPayLoad();
-		Long currentStatus = this.getManagedBean().getQt().getQtStatus()
-				.getStatusId();
+		Long currentStatus = this.getManagedBean().getCurrentStatusId();
 		List<TplSpecZoneDtl> specZoneDtls = this.getManagedBean()
 				.getTemplateSpecZoneDtls();
 		QuationTenderReqDTO reqDTO = prepareQTInfo();
@@ -3631,6 +3628,7 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setSelectedCommitteeTabIndex(
 					committeeTabIndex);
 			retrieveCommitteeAppointmentTabDtl(false, false);
+			this.getManagedBean().setCurrentStatusId(currentStatus);
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				initializeRemarksForCommitteeApproval();
 			}
