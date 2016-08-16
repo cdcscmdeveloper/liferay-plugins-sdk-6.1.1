@@ -105,8 +105,8 @@
 
 				<p:column style="text-align:center;">
 					<p:inputText id="deskOfficerRankInput" value="#{qualifiedSupp.deskOfficerRank}" 
-								 size="5" maxlength="3" required="false" 
-								 autocomplete="false" label="#{lbl['lbl.sc.consolidation.report.do.ranking']}">
+								 size="5" maxlength="3" required="false" autocomplete="false" 
+								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}">
 						<ac:validateNumber 
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="4" integerOnly="true"  />
@@ -121,8 +121,7 @@
 				<p:column style="text-align:left;">
 					<p:inputText id="deskOfficerRemarks" value="#{qualifiedSupp.deskOfficerRemark}" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
-								 required="#{!empty qualifiedSupp.deskOfficerRank ? true : false}" 
-								 size="20" autocomplete="false">
+								 required="false" size="20" autocomplete="false">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=supplierListTblPanel])" 
 								listener="#{consolidationReportBackingBean.updateCachedData(qualifiedSupp)}" />
 					</p:inputText>
