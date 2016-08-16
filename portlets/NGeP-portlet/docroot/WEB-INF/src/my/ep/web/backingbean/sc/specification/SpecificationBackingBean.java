@@ -9042,6 +9042,10 @@ public class SpecificationBackingBean extends
 		}
 		
 		scQt = saveZonesBeforeTemplateSpec(scQt);
+		if(null!=this.getManagedBean().getCtContract()){
+		scQt.setExistingContractNo(this.getManagedBean().getCtContract()
+				.getContractNo());
+	}
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
 
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
@@ -9737,6 +9741,9 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setPayLoad(quotationTenderDataType);
 			this.getManagedBean().setAssignedState(isAssignedState);
 			this.getManagedBean().setLoginRoleType(loginRoleType);
+			if(null!=this.getManagedBean().getCtContract()){
+				this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
+			}
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
 		 */
@@ -10689,6 +10696,9 @@ public class SpecificationBackingBean extends
 			ScQt qt = resDTO.getScQt();
 			if (qt != null) {
 				this.getManagedBean().setQt(qt);
+				if(null!=this.getManagedBean().getCtContract()){
+					this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
+				}
 				if (qt.getEstimatedAmount() != null && qt.getEstimatedAmount().intValue()>0) {
 					new CreateQtBackingBean().setProcurementMode(qt,qt.getEstimatedAmount());
 				}
@@ -11267,6 +11277,9 @@ public class SpecificationBackingBean extends
 			ScQt qt = resDTO.getScQt();
 			if (qt != null) {
 				this.getManagedBean().setQt(qt);
+				if(null!=this.getManagedBean().getCtContract()){
+					this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
+				}
 				if(qt.getEstimatedAmount() != null  && qt.getEstimatedAmount().intValue()>0){
 					new CreateQtBackingBean().setProcurementMode(qt, qt.getEstimatedAmount());
 				}
