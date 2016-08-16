@@ -414,6 +414,7 @@ public class SmApplicationBackingBean extends
 						this.getManagedBean().setValidResubmit(false);
 					}
 					if (this.getManagedBean().isValidResubmit()) {
+						boolean resetLatestResubmitAppl = false;
 						SmAppl rejectedAppl = SmApplicationUtil
 								.retriveApplicationById(
 										Integer.parseInt(applId)).getSmAppl();
@@ -438,25 +439,10 @@ public class SmApplicationBackingBean extends
 										+ ex.getMessage() + "<<<<<<<<<<<");
 							}
 						}
-						// have latest resubmit appl, just copy rejected appl to
-						// latest resubmit appl
+						// have latest resubmit appl, need to reset existing
+						// value and clone from rejected application
 						else {
-							try {
-								latestResubmitAppl = SmApplicationUtil
-										.deleteApplChildEntities(latestResubmitAppl);
-								mofReqDto = new MofRegistrationReqDTO();
-								mofReqDto.setSmAppl(latestResubmitAppl);
-								mofReqDto.setSrcAppl(rejectedAppl);
-								latestResubmitAppl = SmServiceLookup
-										.getMofRegistrationSO()
-										.cloneExistingResubmitApplication(
-												mofReqDto).getSmAppl();
-							} catch (Exception ex) {
-								resubmitErrorKey = "lbl.sm.resubmission.invalid";
-								this.getManagedBean().setValidResubmit(false);
-								log.info(">>>>>>>>>>ERROR CLONE EXISTING RESUBMIT APPLICATION:"
-										+ ex.getMessage() + "<<<<<<<<<<<");
-							}
+							resetLatestResubmitAppl = true;
 						}
 
 						if (getManagedBean().isValidResubmit()) {
@@ -483,6 +469,9 @@ public class SmApplicationBackingBean extends
 										latestResubmitAppl);
 								quesBackingBean.getManagedBean()
 										.setRejectedAppl(rejectedAppl);
+								quesBackingBean.getManagedBean()
+										.setResetLatestResubmitAppl(
+												resetLatestResubmitAppl);
 								quesBackingBean.retrieveQuestionnaire();
 								fc.getApplication()
 										.getNavigationHandler()
