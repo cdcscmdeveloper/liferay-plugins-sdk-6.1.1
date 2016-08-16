@@ -28,13 +28,6 @@
 							value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
 				</tr>
 			</table>
-               
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.one.tier.instruction']}" escape="false" rendered="#{isQtScheduleAndDocAfter and evaluationType eq 1}"/>
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.oc.instruction']}" escape="false" rendered="#{isQtScheduleAndDocAfter and evaluationType eq 2}"/> 
-		<c:if test="#{isQtScheduleAndDocAfter and evaluationType eq 2}"><BR/></c:if>   
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.tec.fec.instruction']}" escape="false" rendered="#{isQtScheduleAndDocAfter and evaluationType eq 2}"/>
-		<BR/>	
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.instruction']}" escape="false" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.clone']}"
 					rendered="#{isCommitteeInfoEditable and qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization}"
@@ -44,8 +37,11 @@
 			</div>
 			<ui:include src="clonecommitteeappointment.xhtml" />
 		</c:if>
-		
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.sc.instruction']}" escape="false" rendered="#{statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}"/>
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.qt.committee.appointment.sc.instruction']}" escape="false" />
+		<BR />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.qt.committee.appointment.instruction']}" escape="false" rendered="#{isQTStatusChecklistAndAfter}" />
 			
 		<p:tabMenu id="committeTabMenu"
 			activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}">
