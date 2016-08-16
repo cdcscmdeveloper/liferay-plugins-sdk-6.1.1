@@ -23,8 +23,6 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
-import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -82,6 +80,8 @@ public class SmPersonnelBackingBean extends
 	 * Pre-render and redirect to Supplier User Maintenance screen
 	 */
 	public void preRenderSmPersonnel() {
+		getManagedBean().setMaxUserLimit(
+				SmRuleHelper.getInstance().getMaxBasicAuthorizedUser());
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 		getManagedBean().setSmSupplier(smSupplier);
 		CountryReqDTO reqDTO = new CountryReqDTO();
@@ -92,6 +92,11 @@ public class SmPersonnelBackingBean extends
 				resDTO.getPmCountry().getCountryId());
 
 		initAuthorizedPersonnels(smSupplier);
+		getManagedBean().setUserLimitTooltips(
+				SmCommonUtil
+						.getMessage("lbl.sm.userprofile.search.userlimit",
+								new String[] { getManagedBean()
+										.getMaxUserLimit() + "" }));
 		getManagedBean().setDisableAddNewUser(validatePersonLimit(smSupplier));
 		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 		SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "", null);
@@ -265,8 +270,7 @@ public class SmPersonnelBackingBean extends
 						count++;
 					}
 				}
-				if (count >= SmRuleHelper.getInstance()
-						.getMaxBasicAuthorizedUser()) {
+				if (count >= getManagedBean().getMaxUserLimit()) {
 					validPerCount = true;
 				}
 			}
