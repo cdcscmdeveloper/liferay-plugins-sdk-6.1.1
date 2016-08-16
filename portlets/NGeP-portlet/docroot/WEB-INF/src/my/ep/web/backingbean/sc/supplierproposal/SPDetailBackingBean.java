@@ -373,43 +373,76 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(4);
 		generateDeclarationFromVelocity(getManagedBean().getQt());
 	}
+	
+	public void validateProposalDetailsNdPopulateSpkiDtls(){
+		retrievePaidUpCapitalNdDeclarationDtls();
+		IQTProposalSO proposalSO = null;
+		try {
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			proposalSO.validateProposalDetailsBeforeSPkiSign(populateProposalDetailsTosave());
+			this.getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+		}finally{
+			 proposalSO = null;
+		}
+	}
 
+	private ProposalReqDTO populateProposalDetailsTosave(){
+		
+		ProposalReqDTO reqDTO = null;
+		List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
+		List<ScQtProposalChecklist> technicalChecklist = getManagedBean()
+				.getTecCheckDetailsList();
+		List<ScQtProposalChecklist> financialChecklist = getManagedBean()
+				.getFinanceCheckDetailsList();
+		ScQtProposal scQtProposal = getManagedBean().getQtProposal();
+		setUserDetails(scQtProposal);
+		scQtProposal.setLastSubmitDate(new Date());
+		scQtProposal.setSubmitted(true);
+		scQtProposal.setProposalSubmitBy(new FacesScopes()
+				.getUserSessionBean().getUserId());
+
+		scQtProposalChecklists.addAll(technicalChecklist);
+		scQtProposalChecklists.addAll(financialChecklist);
+		scQtProposal
+				.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
+						scQtProposalChecklists));
+
+		reqDTO = new ProposalReqDTO();
+		reqDTO.setSupplierId(getManagedBean().getSupplierId());
+		reqDTO.setQtSupplierId(getManagedBean().getQtProposal()
+				.getScQtSupplier().getQtSupplierId());
+		reqDTO.setScQtProposal(scQtProposal);
+		reqDTO.setTechnicalChecklist(new ArrayList<ScQtProposalChecklist>(
+				technicalChecklist));
+		reqDTO.setFinancialChecklist(new ArrayList<ScQtProposalChecklist>(
+				financialChecklist));
+		reqDTO.setAgreeWithIntegrityPact(getManagedBean()
+				.isAgreeWithIntegrityPact());
+		reqDTO.setAgreeWithOthersTermsConditions(getManagedBean()
+				.isAgreeWithOthersTermsConditions());
+		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setRoleCode(super.getUserRoleCode());
+
+		return reqDTO;
+	}
 	/**
 	 * Method to submit the Supplier Proposal details
 	 */
 	public void submitSupplierProposal(PmDigiSign digiSign) {
 
 		debugLogger("submitSupplierProposal");
-
-		retrievePaidUpCapitalNdDeclarationDtls();
-
+		if(getManagedBean().getSmSupplier() == null || getManagedBean().getSmAppl() == null ){
+			retrievePaidUpCapitalNdDeclarationDtls();
+		}
 		IQTProposalSO proposalSO = null;
 		ProposalReqDTO reqDTO = null;
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-
+			reqDTO = populateProposalDetailsTosave();
 			this.getManagedBean().setScQtPRPExperiences(null);
-
-			List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
-			List<ScQtProposalChecklist> technicalChecklist = getManagedBean()
-					.getTecCheckDetailsList();
-			List<ScQtProposalChecklist> financialChecklist = getManagedBean()
-					.getFinanceCheckDetailsList();
-
-			ScQtProposal scQtProposal = getManagedBean().getQtProposal();
-			setUserDetails(scQtProposal);
-			scQtProposal.setLastSubmitDate(new Date());
-			scQtProposal.setSubmitted(true);
-			scQtProposal.setProposalSubmitBy(new FacesScopes()
-					.getUserSessionBean().getUserId());
-
-			scQtProposalChecklists.addAll(technicalChecklist);
-			scQtProposalChecklists.addAll(financialChecklist);
-			scQtProposal
-					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
-							scQtProposalChecklists));
-
+			ScQtProposal scQtProposal = reqDTO.getScQtProposal();
 			// spki
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
@@ -425,24 +458,9 @@ public class SPDetailBackingBean extends
 						scQtProposal.getQtProposalId(),
 						scQtProposal.getProposalNo(), originalText);
 			}
-
-			reqDTO = new ProposalReqDTO();
-			reqDTO.setSupplierId(getManagedBean().getSupplierId());
-			reqDTO.setQtSupplierId(getManagedBean().getQtProposal()
-					.getScQtSupplier().getQtSupplierId());
 			reqDTO.setScQtProposal(scQtProposal);
-			reqDTO.setTechnicalChecklist(new ArrayList<ScQtProposalChecklist>(
-					technicalChecklist));
-			reqDTO.setFinancialChecklist(new ArrayList<ScQtProposalChecklist>(
-					financialChecklist));
-			reqDTO.setAgreeWithIntegrityPact(getManagedBean()
-					.isAgreeWithIntegrityPact());
-			reqDTO.setAgreeWithOthersTermsConditions(getManagedBean()
-					.isAgreeWithOthersTermsConditions());
 			reqDTO.setDigiSignData(digiSign);
-			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			reqDTO.setRoleCode(super.getUserRoleCode());
-
+			
 			ProposalResDTO resDTO = proposalSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
 				String variable1 = getMessageCommon("lbl.sc.proposal.no");
@@ -3932,7 +3950,7 @@ public class SPDetailBackingBean extends
 
 		ScSlAttachment slAttachment = new ScSlAttachment();
 		slAttachment.setDocNo(getManagedBean().getQt().getQtNo());
-		generateSampleLabelsFromVelocityToPdf(slAttachment);
+		generateSampleLabelsFromVelocityToPdf(slAttachment,getManagedBean().getQt());
 		StreamedContent slStreamContent = getAttachmentStreamContent(
 				slAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 		getManagedBean().setSampleLabelStreamContent(slStreamContent);
@@ -3940,7 +3958,7 @@ public class SPDetailBackingBean extends
 				"supplierSampleLabelDlg.show();");
 	}
 
-	private void generateSampleLabelsFromVelocityToPdf(ScAttachment attachment)
+	private void generateSampleLabelsFromVelocityToPdf(ScAttachment attachment, ScQt scQt)
 			throws Exception {
 		attachment.setFileName("sample Labels.pdf");
 		populateAttachmentDetails(attachment);
@@ -3952,6 +3970,12 @@ public class SPDetailBackingBean extends
 				.getSampleItems());
 		context.put("lableNo", getManagedBean().getScQtSampleLable()
 				.getLableNo());
+		context.put("PTJCode",scQt.getPmOrgProfile().getOrgCode());
+		context.put("PTJName", scQt.getPmOrgProfile().getOrgName());
+		context.put("QTNo", scQt.getQtNo());
+		context.put("QTTitle", scQt.getQtTitle());
+		context.put("SupplierCode", getManagedBean().getSupplierId());
+		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.SUPPLIER_PROPOSAL_PRINT_LABEL, context,
 				new FileOutputStream(getActualFilePath(attachment)));
