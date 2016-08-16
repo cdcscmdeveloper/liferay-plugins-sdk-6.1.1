@@ -273,10 +273,13 @@ public class ConsolidationReportBackingBean extends
 			doRecommendationBean = new QtEvaluationResultDtlBean();
 			doRecommendationBean.setQtEvalResDtlId(
 					selectedSupplier.getEvaluationResultDtlId());
+			doRecommendationBean.setEvaluationRank(
+					selectedSupplier.getEvalRank());			
 			doRecommendationBean.setDeskOfficerRank(
 					selectedSupplier.getDeskOfficerRank());
 			doRecommendationBean.setDeskOfficerRemark(
 					selectedSupplier.getDeskOfficerRemark());
+
 			cachedSuppliersList.add(doRecommendationBean);
 		} else {
 			doRecommendationBean.setDeskOfficerRank(
@@ -951,7 +954,7 @@ public class ConsolidationReportBackingBean extends
 			for (TplSpecZoneDtl specZoneDtl 
 						: getManagedBean().getZoneDetails()) {
 				Long specZoneId = specZoneDtl.getSpecZoneId();
-				validateDORanking(specZoneDtl, itemsByZone.get(specZoneId));				
+				validateDORanking(specZoneDtl, itemsByZone.get(specZoneId));		
 			}
 		} else {
 			validateDORanking(null, scQtFinalization.getScQtRecommends());
@@ -1038,21 +1041,31 @@ public class ConsolidationReportBackingBean extends
 			for (QtEvaluationResultDtlBean qualifiedSupp 
 									: qualifiedSupplierBeans) {
 				BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
+				
 				if (deskOfficerRank != null) {
 					int doRank = deskOfficerRank.intValue();
-					if (doRank == currentRank) { 
-						epException = new EpException(MessageConst.ERROR_760381, 
-									new String[] {String.valueOf(currentRank), expMsgForItem});
-					} else if (doRank > totalQualifiedSuppliers) {
-						epException = new EpException(MessageConst.ERROR_760382, 
-									new String[] {String.valueOf(totalQualifiedSuppliers), expMsgForItem});
-					} else if (doRank != (currentRank + 1)) {
-						if (currentRank == 0) {
-							epException = new EpException(MessageConst.ERROR_760427, 
-														  new String[] {expMsgForItem});						
-						} else {
-							epException = new EpException(MessageConst.ERROR_760383, 
-									new String[] {String.valueOf(currentRank), expMsgForItem});
+					int evaluationRank = qualifiedSupp.getEvaluationRank();
+					if (evaluationRank != doRank && 
+							StringUtils.isBlank(qualifiedSupp.getDeskOfficerRemark())) {
+						epException = new EpException(MessageConst.ERROR_760431, 
+													  new String[] { expMsgForItem });
+					}
+					
+					if (epException == null) {
+						if (doRank == currentRank) { 
+							epException = new EpException(MessageConst.ERROR_760381, 
+										new String[] {String.valueOf(currentRank), expMsgForItem});
+						} else if (doRank > totalQualifiedSuppliers) {
+							epException = new EpException(MessageConst.ERROR_760382, 
+										new String[] {String.valueOf(totalQualifiedSuppliers), expMsgForItem});
+						} else if (doRank != (currentRank + 1)) {
+							if (currentRank == 0) {
+								epException = new EpException(MessageConst.ERROR_760427, 
+															  new String[] {expMsgForItem});						
+							} else {
+								epException = new EpException(MessageConst.ERROR_760383, 
+										new String[] {String.valueOf(currentRank), expMsgForItem});
+							}
 						}
 					}
 					if (epException != null) {
@@ -1106,8 +1119,10 @@ public class ConsolidationReportBackingBean extends
 					resultDtlBean = new QtEvaluationResultDtlBean();
 					resultDtlBean.setQtEvalResDtlId(
 							evalResDtl.getEvaluationResultDtlId());
+					resultDtlBean.setEvaluationRank(
+							evalResDtl.getEvalRank());
 					resultDtlBean.setDeskOfficerRank(
-							evalResDtl.getDeskOfficerRank());
+							evalResDtl.getDeskOfficerRank());					
 					resultDtlBean.setDeskOfficerRemark(
 							evalResDtl.getDeskOfficerRemark());
 				}
@@ -1476,7 +1491,7 @@ public class ConsolidationReportBackingBean extends
 							if (selectedItem != null) {
 								calculateOfferedPrice(qualSupplier, selectedItem);
 							}
-							if (cachedSuppliers != null) {
+							if (CollectionUtils.isNotEmpty(cachedSuppliers)) {
 								QtEvaluationResultDtlBean recommendationBean = getCachedBeanFromList(
 											cachedSuppliers, qualSupplier.getEvaluationResultDtlId());
 								if (recommendationBean != null) {
