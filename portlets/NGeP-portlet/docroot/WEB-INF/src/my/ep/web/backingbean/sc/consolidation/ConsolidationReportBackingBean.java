@@ -870,9 +870,8 @@ public class ConsolidationReportBackingBean extends
 		}
 	}	
 	
-	private List<ScQtEvaluationResultDtl> getQualifiedSuppliersWithDORank(TplSpecZoneDtl specZone, 
-																	  ScQtRecommend scQtRecommend) {
-		List<ScQtEvaluationResultDtl> qualifiedSuppliers = null;
+	private SuppFinalizationResDTO getQualifiedSuppliersWithDORank(TplSpecZoneDtl specZone, 
+																   ScQtRecommend scQtRecommend) {
 		SuppFinalizationResDTO resDTO = null;
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
@@ -881,6 +880,7 @@ public class ConsolidationReportBackingBean extends
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 			reqDTO.setDoRankRequired(true);
+			reqDTO.setCountOfQualiedSuppliersReq(true);
 			
 			if (specZone != null) {
 				reqDTO.setSpecZoneId(specZone.getSpecZoneId());
@@ -894,13 +894,13 @@ public class ConsolidationReportBackingBean extends
 			resDTO = qtSuppFinalizationSO.retrieveQtEvaluationResultDtls(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
-				qualifiedSuppliers = resDTO.getQualifiedSupplierDetails();
+				return resDTO;
 			}
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
 		
-		return qualifiedSuppliers;
+		return null;
 	}
 	
 	private void initializeRemarks() {
@@ -960,60 +960,55 @@ public class ConsolidationReportBackingBean extends
 	}
 	
 	private void validateDORanking(TplSpecZoneDtl specZoneDtl, List<ScQtRecommend> items) {
-		List<ScQtEvaluationResultDtl> qualifiedSuppliers = 
-					getQualifiedSuppliersWithDORank(specZoneDtl, null);	
+		List<ScQtEvaluationResultDtl> qualifiedSuppliers = null;
+		SuppFinalizationResDTO resDTO = getQualifiedSuppliersWithDORank(specZoneDtl, null);	
 		
-		List<QtEvaluationResultDtlBean> qualifiedSupplierBeans = 
-						createQtEvaluationResultDtlBeans(specZoneDtl, null, qualifiedSuppliers);
-		if (CollectionUtils.isNotEmpty(
-						qualifiedSupplierBeans)) {
-			validateRanking(qualifiedSupplierBeans, 
-							false, null, specZoneDtl);
+		int totalQualifiedSuppliers = 0;
+		if (resDTO != null) {
+			qualifiedSuppliers = resDTO.getQualifiedSupplierDetails();
+			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
 		}
 		
+		// Package wise validation
+		List<QtEvaluationResultDtlBean> qualifiedSupplierBeans = 
+				getQtEvaluationResultDtlBeansWithRank(specZoneDtl, null, qualifiedSuppliers);
+		validateRanking(qualifiedSupplierBeans, false, null, 
+						specZoneDtl, totalQualifiedSuppliers);
+		
+		// End of // Package wise validation
+		
+		
+		// Item wise validation
 		List<ScQtEvaluationResultDtl> itemQualifiedSuppliers = null;
 		if (CollectionUtils.isNotEmpty(items)) {
 			for (ScQtRecommend item : items) {
-				itemQualifiedSuppliers = getQualifiedSuppliersWithDORank(
-													    specZoneDtl, item);
-				qualifiedSupplierBeans = createQtEvaluationResultDtlBeans(specZoneDtl,
-											item.getRequestItem(), itemQualifiedSuppliers);
-				if (CollectionUtils.isNotEmpty(
-								qualifiedSupplierBeans)) {
-					validateRanking(qualifiedSupplierBeans, 
-									true, item, specZoneDtl);
+				totalQualifiedSuppliers = 0;
+				resDTO = getQualifiedSuppliersWithDORank(specZoneDtl, item);
+				
+				if (resDTO != null) {
+					itemQualifiedSuppliers = resDTO.getQualifiedSupplierDetails();
+					totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
 				}
+				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(specZoneDtl,
+											 item.getRequestItem(), itemQualifiedSuppliers);
+				validateRanking(qualifiedSupplierBeans, true, item, 
+								specZoneDtl, totalQualifiedSuppliers);
 			}
 		}
+		
+		// End of item wise validation
 	}
 	
 	private void validateRanking(List<QtEvaluationResultDtlBean> qualifiedSupplierBeans, 
-								   boolean isItemized, ScQtRecommend item, 
-								   TplSpecZoneDtl specZoneDtl) {
+								 boolean isItemized, ScQtRecommend item, TplSpecZoneDtl specZoneDtl,
+								 int totalQualifiedSuppliers) {
 		int totalRanksCount = 0;
-		int totalQualifiedSuppliers = qualifiedSupplierBeans.size();
 		int minRankCount = totalQualifiedSuppliers;
 		if (totalQualifiedSuppliers == 2) {
 			minRankCount = 1;
 		} else if (totalQualifiedSuppliers > 2) {
 			minRankCount = 3;
 		}
-		
-		// Sort the suppliers as per the rank given by the desk officer
-		Collections.sort(qualifiedSupplierBeans, 
-							new Comparator<QtEvaluationResultDtlBean>() {
-								public int compare(QtEvaluationResultDtlBean supplier1, 
-										QtEvaluationResultDtlBean supplier2) {
-									if (supplier1.getDeskOfficerRank() != null && 
-											supplier2.getDeskOfficerRank() != null) {
-										
-										// Ascending order
-										return supplier1.getDeskOfficerRank().intValue() - 
-													supplier2.getDeskOfficerRank().intValue();
-									}
-									return -1;
-								}
-							});
 		
 		int currentRank = 0;
 		EpException epException = null;
@@ -1023,33 +1018,52 @@ public class ConsolidationReportBackingBean extends
 			expMsgForItem = "- Item : " + item.getRequestItem().getItemName();
 		}
 		
-		for (QtEvaluationResultDtlBean qualifiedSupp 
-								: qualifiedSupplierBeans) {
-			BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
-			if (deskOfficerRank != null) {
-				int doRank = deskOfficerRank.intValue();
-				if (doRank == currentRank) { 
-					epException = new EpException(MessageConst.ERROR_760381, 
-								new String[] {String.valueOf(currentRank), expMsgForItem});
-				} else if (doRank > totalQualifiedSuppliers) {
-					epException = new EpException(MessageConst.ERROR_760382, 
-								new String[] {String.valueOf(totalQualifiedSuppliers), expMsgForItem});
-				} else if (doRank != (currentRank + 1)) {
-					if (currentRank == 0) {
-						epException = new EpException(MessageConst.ERROR_760427, 
-													  new String[] {expMsgForItem});						
-					} else {
-						epException = new EpException(MessageConst.ERROR_760383, 
-								new String[] {String.valueOf(currentRank), expMsgForItem});
+		if (CollectionUtils.isNotEmpty(qualifiedSupplierBeans)) {
+			
+			// Sort the suppliers as per the rank given by the desk officer
+			Collections.sort(qualifiedSupplierBeans, 
+								new Comparator<QtEvaluationResultDtlBean>() {
+									public int compare(QtEvaluationResultDtlBean supplier1, 
+											QtEvaluationResultDtlBean supplier2) {
+										if (supplier1.getDeskOfficerRank() != null && 
+												supplier2.getDeskOfficerRank() != null) {
+											
+											// Ascending order
+											return supplier1.getDeskOfficerRank().intValue() - 
+														supplier2.getDeskOfficerRank().intValue();
+										}
+										return -1;
+									}
+								});
+			
+			for (QtEvaluationResultDtlBean qualifiedSupp 
+									: qualifiedSupplierBeans) {
+				BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
+				if (deskOfficerRank != null) {
+					int doRank = deskOfficerRank.intValue();
+					if (doRank == currentRank) { 
+						epException = new EpException(MessageConst.ERROR_760381, 
+									new String[] {String.valueOf(currentRank), expMsgForItem});
+					} else if (doRank > totalQualifiedSuppliers) {
+						epException = new EpException(MessageConst.ERROR_760382, 
+									new String[] {String.valueOf(totalQualifiedSuppliers), expMsgForItem});
+					} else if (doRank != (currentRank + 1)) {
+						if (currentRank == 0) {
+							epException = new EpException(MessageConst.ERROR_760427, 
+														  new String[] {expMsgForItem});						
+						} else {
+							epException = new EpException(MessageConst.ERROR_760383, 
+									new String[] {String.valueOf(currentRank), expMsgForItem});
+						}
 					}
+					if (epException != null) {
+						setZoneAndTabIndexOnException(isItemized, specZoneDtl);
+						throw epException;
+					}
+					
+					currentRank = doRank;
+					++totalRanksCount;
 				}
-				if (epException != null) {
-					setZoneAndTabIndexOnException(isItemized, specZoneDtl);
-					throw epException;
-				}
-				
-				currentRank = doRank;
-				++totalRanksCount;
 			}
 		}
 		
@@ -1060,7 +1074,7 @@ public class ConsolidationReportBackingBean extends
 		}
 	}
 	
-	private List<QtEvaluationResultDtlBean> createQtEvaluationResultDtlBeans(
+	private List<QtEvaluationResultDtlBean> getQtEvaluationResultDtlBeansWithRank(
 											TplSpecZoneDtl specZoneDtl, ScRequestItem requestItem,
 											List<ScQtEvaluationResultDtl> qualifiedSuppliers) {
 		Long zoneId = null;
@@ -1077,15 +1091,13 @@ public class ConsolidationReportBackingBean extends
 			itemId = DEFAULT_ITEM;
 		}
 		
-		List<QtEvaluationResultDtlBean> beanList = new ArrayList<QtEvaluationResultDtlBean>();
+		List<QtEvaluationResultDtlBean> beanList = null;
 		List<QtEvaluationResultDtlBean> cachedSuppliers = 
 						getCachedSuppliersFromMap(zoneId, itemId);
 		
 		if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 			QtEvaluationResultDtlBean resultDtlBean = null;
-			if (cachedSuppliers == null) {
-				cachedSuppliers = new ArrayList<QtEvaluationResultDtlBean>(); 
-			}
+			beanList = new ArrayList<QtEvaluationResultDtlBean>();
 			
 			for (ScQtEvaluationResultDtl evalResDtl 
 							   : qualifiedSuppliers) {
@@ -1102,6 +1114,8 @@ public class ConsolidationReportBackingBean extends
 				}
 				beanList.add(resultDtlBean);
 			}
+		} else {
+			beanList = cachedSuppliers;
 		}
 		
 		return beanList;
