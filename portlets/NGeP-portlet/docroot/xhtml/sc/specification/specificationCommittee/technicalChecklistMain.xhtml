@@ -9,8 +9,12 @@
 	<p:panel id="techCommitteeChecklist"
 		header="#{lbl['lbl.sc.spec.tech.check.list']}" toggleable="true">
 
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" rendered="#{!specificationBackingBean.managedBean.qt.panel}"
 			value="#{lbl['lbl.sc.spec.tech.check.list.instruction']}"
+			escape="false" />
+			
+			<h:outputText styleClass="instruction" rendered="#{specificationBackingBean.managedBean.qt.panel}"
+			value="#{lbl['lbl.sc.spec.tech.check.list.panel.instruction']}"
 			escape="false" />
 
 		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
