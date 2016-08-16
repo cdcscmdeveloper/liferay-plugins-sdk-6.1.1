@@ -226,8 +226,8 @@
                       </p:confirmDialog>
 	       </p:panel>
 	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" 
-		styleClass="pop_up_top" modal="true" width="550" height="350">
-			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" 
+		styleClass="pop_up_top" modal="true" width="550" height="auto">
+			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" widgetVar="cancelledCirObj"
 			    rowIndexVar="index" value="#{panelBackingBean.managedBean.cancelledCircularList}"
 			    selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}">
 				<ac:paginator for="cancelledCclDt" />
@@ -238,7 +238,8 @@
                  <p:column selectionMode="multiple" style="width:3%" 
 				          rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 				       
-				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
+				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center"
+				     filterBy="#{data.circularVer.circularNo}"   filterMatchMode="contains" >
 					<h:outputText value="#{data.circularVer.circularNo}" style="text-align:left;float:left;width:200px;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center" >

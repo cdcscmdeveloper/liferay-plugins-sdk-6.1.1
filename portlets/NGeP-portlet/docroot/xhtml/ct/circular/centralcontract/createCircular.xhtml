@@ -241,7 +241,7 @@ rowKey="#{exemptedOrgsVar}" >
                  </p:confirmDialog>
 	    
 	              <p:dialog id="dialogExemptedMinistry"  header="#{lbl['lbl.ct.panel.exempted.org.dlg']}" 
-	                     widgetVar="dlgExemptedMinistry" styleClass="pop_up_top" modal="true" width="670" height="550">
+	                     widgetVar="dlgExemptedMinistry" styleClass="pop_up_top" modal="true" width="670" height="auto">
 			            <p:panel id="popUpExmptedDlg" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500">
 			                  <p:messages id="exemptedMsgId" showSummary="false"
 			                         showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
@@ -406,9 +406,9 @@ rowKey="#{exemptedOrgsVar}" >
 	</p:panel>
 	
 	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" 
-		styleClass="pop_up_top" modal="true" width="550" height="350">
+		styleClass="pop_up_top" modal="true" width="550" height="auto">
 			<p:dataTable id="cancelledCclDt" var="cancelledCircularDlgVar" rowKey="#{cancelledCircularDlgVar}" rowIndexVar="index"
-				value="#{centralContractBackingBean.managedBean.cancelledCircularList}" 
+				value="#{centralContractBackingBean.managedBean.cancelledCircularList}" widgetVar="cancelledCircularObj"
 				selection="#{centralContractBackingBean.managedBean.selectedCancelledCircularList}" >
 				<ac:paginator for="cancelledCclDt" />
 				<p:column  style="width:3%">
@@ -425,7 +425,8 @@ rowKey="#{exemptedOrgsVar}" >
 		           		                  update=":form:cancelledCclDt,:form:popUpSlectButtonId" listener="#{centralContractBackingBean.selectCancelCheckboxSelectList}"></p:ajax>
 			                     </p:selectBooleanCheckbox>     
 				              </p:column>
-				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center">
+				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center"
+				      filterBy="#{cancelledCircularDlgVar.circularVer.circularNo}"   filterMatchMode="contains">
 					<h:outputText value="#{cancelledCircularDlgVar.circularVer.circularNo}" style="float:left;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center">
