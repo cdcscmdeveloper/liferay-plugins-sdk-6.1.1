@@ -33,14 +33,11 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmCertBody;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -411,15 +408,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			String messageId = null;
 			// String recordStatusMessageId=null;
 			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-
-			statusReqDTO.setStatusId(certBody.getRecordStatusFlg().longValue());
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-			System.out.println("statusResDTO.getPmStatus().getStatusId():"
-					+ statusResDTO.getPmStatus().getStatusId());
-			debugLogger("statusResDTO.getPmStatus().getStatusId():"
-					+ statusResDTO.getPmStatus().getStatusId());
+			
 
 			String[] msgParam = new String[] { certBody.getBodyName() };
 
@@ -450,8 +439,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 					PmCommonUtil.assignTrackingDairyForProfessional(
 							certBody.getCertBodyId(),
 							certBody.getBodyCode(),
-							statusResDTO.getPmStatus() != null ? statusResDTO
-									.getPmStatus() : new PmStatus(),
+							certBody.getRecordStatusFlg().longValue(),
 							getPmActionDesc(messageId, msgParam)));
 
 			certBodyReqDTO.setCertBody(certBody);
