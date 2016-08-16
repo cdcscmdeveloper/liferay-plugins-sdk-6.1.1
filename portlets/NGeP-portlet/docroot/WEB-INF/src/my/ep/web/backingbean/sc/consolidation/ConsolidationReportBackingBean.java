@@ -535,10 +535,9 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			
-//			SuppFinalizationResDTO resDTO 
-//					= qtSuppFinalizationSO.submitConsolidationReport(reqDTO);
-			if (true) {
-//			if (resDTO.isSuccessful()) {
+			SuppFinalizationResDTO resDTO 
+					= qtSuppFinalizationSO.submitConsolidationReport(reqDTO);
+			if (resDTO.isSuccessful()) {
 				String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
 													ParameterConst.DOCTYPE_QUOTATION)
 						+ " " + getManagedBean().getScQt().getQtNo();
