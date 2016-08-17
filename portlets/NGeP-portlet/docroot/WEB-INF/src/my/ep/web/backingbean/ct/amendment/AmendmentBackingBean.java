@@ -367,7 +367,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 					/*Retrieve bpm details*/
 					getManagedBean().setSelectedTabIndex(0);
-					FacesScopes face = new FacesScopes();
 				 	CTContractAmendmentDataType dataType =  super.getBpmTaskDetails(CTContractAmendmentDataType.class, null);		
 	     	
 			     	/* Setting save button as per requirement*/
@@ -3182,6 +3181,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
 		changeAmendmentEffDate();
+	}
+	
+	/**
+	 * The method used to set default value of additional contract amount
+	 * when is additional contract amount is null
+	 */
+	public void changeAdditionalValue() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount() == null) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+		}
 	}
 	
 	/**
