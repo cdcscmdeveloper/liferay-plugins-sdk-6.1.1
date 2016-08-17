@@ -148,6 +148,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
@@ -1587,7 +1588,7 @@ public class QTDetailBackingBean extends
 	 * @param isApprovalReq
 	 *            the is approval req
 	 */
-	public void retrieveCommitteeAppointmentTabDtl(boolean isApprovalReq, boolean isReformCommitteeReq) {
+	public void retrieveCommitteeAppointmentTabDtl(boolean isApprovalReq, boolean isReformOC, boolean isReformTEC, boolean isReformFEC) {
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
@@ -1635,8 +1636,12 @@ public class QTDetailBackingBean extends
 						if ((committee.getCommitteStatus() != null &&
 								committee.getCommitteStatus().getStatusId() != null &&
 								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
-								isReformCommitteeReq) {
-							committee.setModified(true);	
+								(isReformOC || isReformTEC || isReformFEC)) {
+							committee.setModified(true);
+							
+							if ((isReformOC || isReformTEC || isReformFEC)) {
+								committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
+							}
 						}
 					}
 					committeTabs.add(new TabBean(parameterHelper
@@ -1654,8 +1659,12 @@ public class QTDetailBackingBean extends
 						if ((committee.getCommitteStatus() != null &&
 								committee.getCommitteStatus().getStatusId() != null &&
 								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
-								isReformCommitteeReq) {
+								isReformOC) {
 							committee.setModified(true);
+							
+							if (isReformOC) {
+								committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
+							}
 						}
 					}
 					committeTabs.add(new TabBean(parameterHelper
@@ -1671,8 +1680,12 @@ public class QTDetailBackingBean extends
 						if ((committee.getCommitteStatus() != null &&
 								committee.getCommitteStatus().getStatusId() != null &&
 								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
-								isReformCommitteeReq) {
+								isReformTEC) {
 							committee.setModified(true);
+							
+							if (isReformTEC) {
+								committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
+							}
 						}
 					}
 					committeTabs.add(new TabBean(parameterHelper
@@ -1688,8 +1701,12 @@ public class QTDetailBackingBean extends
 						if ((committee.getCommitteStatus() != null &&
 								committee.getCommitteStatus().getStatusId() != null &&
 								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
-								isReformCommitteeReq) {
+								isReformFEC) {
 							committee.setModified(true);
+							
+							if (isReformFEC) {
+								committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
+							}
 						}
 					}
 					committeTabs.add(new TabBean(parameterHelper
@@ -1880,13 +1897,30 @@ public class QTDetailBackingBean extends
 				retrieveQuationTenderDetails(new Long(qtId));
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 						.equalsIgnoreCase(taskName)) {
-					retrieveCommitteeAppointmentTabDtl(true, false);
+					retrieveCommitteeAppointmentTabDtl(true, false, false, false);
 				} else if (SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 								.equalsIgnoreCase(taskName)) {
-					retrieveCommitteeAppointmentTabDtl(true, true);
-					removeCommitteeActivityDetails(this.getManagedBean().getQt());
+					IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+					try {
+						qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+
+						SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+						reqDTO.setQtId(qtId);
+						ScQtFinalization scQtFinalization = qtSuppFinalizationSO.retrieveSupplierFinalizationByQtId(reqDTO)
+							.getScQtFinalization();
+						retrieveCommitteeAppointmentTabDtl(true, 
+								scQtFinalization.isReEvaluateCompReq(), 
+								scQtFinalization.isReEvaluateTechReq(), 
+								scQtFinalization.isReEvaluateFinReq());
+						removeCommitteeActivityDetails(this.getManagedBean().getQt());
+
+					} finally {
+						qtSuppFinalizationSO = null;
+					}
+					
 				} else {
-					retrieveCommitteeAppointmentTabDtl(false, false);
+					retrieveCommitteeAppointmentTabDtl(false, false, false, false);
 				}
 				
 				if (isCommitteeAppointmentRemark) {
@@ -2166,7 +2200,7 @@ public class QTDetailBackingBean extends
 		List<TabBean> tabList = this.getManagedBean()
 				.getScCommitteeMemberTabList();
 		if (CollectionUtils.isEmpty(tabList)) {
-			retrieveCommitteeAppointmentTabDtl(false, false);
+			retrieveCommitteeAppointmentTabDtl(false, false, false, false);
 		}
 		updateQtDtls();
 		IQTDetailSO detailSO;
@@ -3627,7 +3661,7 @@ public class QTDetailBackingBean extends
 			// this.getManagedBean().setActiveIndex(0);
 			this.getManagedBean().setSelectedCommitteeTabIndex(
 					committeeTabIndex);
-			retrieveCommitteeAppointmentTabDtl(false, false);
+			retrieveCommitteeAppointmentTabDtl(false, false, false, false);
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				initializeRemarksForCommitteeApproval();
@@ -3848,7 +3882,7 @@ public class QTDetailBackingBean extends
 
 			case 2:
 				// detailSO.validateSupplierQualificationDtls(reqDTO);
-				retrieveCommitteeAppointmentTabDtl(false, false);
+				retrieveCommitteeAppointmentTabDtl(false, false, false, false);
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
@@ -4543,7 +4577,7 @@ public class QTDetailBackingBean extends
 
 			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
 				if (null == approvalRequest.getSubmissionDate()
-						|| (null != approvalRequest.getApproverAction() && "V"
+						|| (null != approvalRequest.getApproverAction() && ParameterConst.APPROVAL_DECISION_TYPE_REVISED
 								.equalsIgnoreCase(approvalRequest
 										.getApproverAction().getParameterCode()))) {
 					return (this.getManagedBean().isReadOnly());
@@ -4666,7 +4700,7 @@ public class QTDetailBackingBean extends
 							PmParameter approvalAction = approvalRequests
 									.get(j).getApproverAction();
 							if (null != approvalAction
-									&& "V".equalsIgnoreCase(approvalAction
+									&& ParameterConst.APPROVAL_DECISION_TYPE_REVISED.equalsIgnoreCase(approvalAction
 											.getParameterCode())) {
 								approvalRequests.get(j).setSubmissionDate(null);
 								approvalRequests.get(j).setApproverAction(null);
