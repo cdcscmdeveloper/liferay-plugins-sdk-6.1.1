@@ -219,7 +219,10 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 			String pin = getPassword();
 
-			System.out.println("SIGN " + getChallengeQues1() + getChallengeAns1() + getPassword() + dataForSigning);
+			System.out.println("getChallengeQues1: " + getChallengeQues1());
+			System.out.println("getChallengeAns1: " + getChallengeAns1());
+			System.out.println("getPassword: " + getPassword());
+			System.out.println("dataForSigning: " + dataForSigning);
 			// Request service to signData based on the answered challenges and data 
 
 			String loginId = new FacesScopes().getUserScreenName();
@@ -257,8 +260,8 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 		} catch (Exception ex)
 		{
-			FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "SPKIs Signing error."));	
-			throw new EpException(MessageConst.ERROR_776052);
+			//FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "SPKIs Signing error."));	
+			throw new EpException(MessageConst.ERROR_776052 + ":"+ex.getMessage());
 
 		}
 		return signedData;
