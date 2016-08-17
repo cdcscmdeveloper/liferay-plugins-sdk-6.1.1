@@ -1476,6 +1476,10 @@ public class ConsolidationReportBackingBean extends
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				reqDTO.setSearchBean(searchBean);
 				
+				if (!DEFAULT_ZONE.equals(selectedZoneId)) {
+					reqDTO.setSpecZoneId(selectedZoneId);
+				}
+				
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 				if (resDTO.isSuccessful()) {
