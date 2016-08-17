@@ -24,7 +24,6 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
-//import my.ep.biz.service.pm.common.educationlevel.IEducationLevelSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.race.IRaceSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -60,8 +59,6 @@ import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
-//import my.ep.dto.pm.common.educationlevel.EducationLevelReqDTO;
-//import my.ep.dto.pm.common.educationlevel.EducationLevelResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.race.RaceResDTO;
@@ -106,7 +103,6 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
-//import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
@@ -176,6 +172,10 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 
 import com.liferay.portal.kernel.util.StringUtil;
+//import my.ep.biz.service.pm.common.educationlevel.IEducationLevelSO;
+//import my.ep.dto.pm.common.educationlevel.EducationLevelReqDTO;
+//import my.ep.dto.pm.common.educationlevel.EducationLevelResDTO;
+//import my.ep.persistence.entity.pm.common.PmEduLevel;
 
 // TODO: Auto-generated Javadoc
 public class SmApplicationUtil {
@@ -4938,7 +4938,17 @@ public class SmApplicationUtil {
 	public static void setSiteVisitData(SmApplicationManagedBean bean) {
 		if (!SmCommonUtil.isCollectionEmpty(bean.getSiteVisitFacVOList())) {
 			bean.setSvTaskList(new ArrayList<SmSvTask>());
-			bean.getSmAppl().setSmSvTasks(new ArrayList<SmSvTask>());
+
+			// only set new list if svTask is empty
+			if (EntityHelper.isCollectionEmpty(bean.getSmAppl().getSmSvTasks())) {
+				bean.getSmAppl().setSmSvTasks(new ArrayList<SmSvTask>());
+			} else {
+				bean.setSvTaskIdsNeedToDelete(new ArrayList<Long>());
+				for (SmSvTask svTask : bean.getSmAppl().getSmSvTasks()) {
+					bean.getSvTaskIdsNeedToDelete().add(svTask.getSvTaskId());
+				}
+			}
+
 			SmSvTask svTask = null;
 			PmParameter bumiType = SmCommonUtil.retrieveParameterByTypeAndCode(
 					ParameterTypeConst.CATEGORY_TYPE,
@@ -8118,8 +8128,8 @@ public class SmApplicationUtil {
 		appl.setSmApplInquiries(new ArrayList<SmApplInquiry>());
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSmAppl(appl);
-		appl = SmServiceLookup.getMofRegistrationSO().removeSmApplChilds(reqDTO)
-				.getSmAppl();
+		appl = SmServiceLookup.getMofRegistrationSO()
+				.removeSmApplChilds(reqDTO).getSmAppl();
 		return appl;
 	}
 

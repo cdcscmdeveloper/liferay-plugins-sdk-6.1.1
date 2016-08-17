@@ -314,6 +314,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> bankStates;
 	private List<SelectItem> bankDistricts;
 	private List<SelectItem> bankCities;
+	
+	private List<Long> svTaskIdsNeedToDelete;
 
 	private List<PmCertBody> certBodyLs;
 	private List<PmCertBody> profBodyLs;
@@ -3602,5 +3604,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setNonMandatoryDocs(List<SmApplSupportDoc> nonMandatoryDocs) {
 		this.nonMandatoryDocs = nonMandatoryDocs;
+	}
+
+	public List<Long> getSvTaskIdsNeedToDelete() {
+		return svTaskIdsNeedToDelete;
+	}
+
+	public void setSvTaskIdsNeedToDelete(List<Long> svTaskIdsNeedToDelete) {
+		this.svTaskIdsNeedToDelete = svTaskIdsNeedToDelete;
 	}
 }
