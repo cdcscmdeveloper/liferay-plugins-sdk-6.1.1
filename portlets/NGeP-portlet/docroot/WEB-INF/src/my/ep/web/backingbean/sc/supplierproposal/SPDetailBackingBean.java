@@ -444,8 +444,6 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setScQtPRPExperiences(null);
 			ScQtProposal scQtProposal = reqDTO.getScQtProposal();
 			// spki
-			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
-			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
 			String originalText = prepareOriginalText(getManagedBean()
 					.getSmSupplier());
 			byte[] signedData = getManagedBean().getSpkiBackingBean()
@@ -458,6 +456,8 @@ public class SPDetailBackingBean extends
 						scQtProposal.getQtProposalId(),
 						scQtProposal.getProposalNo(), originalText);
 			}
+			
+			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 			reqDTO.setScQtProposal(scQtProposal);
 			reqDTO.setDigiSignData(digiSign);
 			

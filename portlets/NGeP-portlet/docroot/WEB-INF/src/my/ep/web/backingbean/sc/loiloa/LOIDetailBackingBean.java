@@ -2093,9 +2093,6 @@ public class LOIDetailBackingBean extends
 
 			// spki
 			if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
-				RequestContext.getCurrentInstance().execute(
-						"blockWidget.hide();");
-				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
 				String originalText = prepareOriginalText(scLoi.getScLoiLoa()
 						.getSmSupplier());
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
@@ -2106,6 +2103,9 @@ public class LOIDetailBackingBean extends
 							ParameterConst.DOCTYPE_LETTER_OF_INTENT,
 							scLoi.getLoiId(), scLoi.getLoiNo(), originalText);
 				}
+				
+				RequestContext.getCurrentInstance().execute(
+						"blockWidget.hide();");
 			} else {
 				// gpki
 				if (null != digiSign) {
