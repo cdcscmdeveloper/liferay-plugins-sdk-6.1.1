@@ -2026,16 +2026,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public List<PmUser> getPreparedBy(ScRequestNoteDtl requestNoteDtl) {
 		debugLogger("getPreparedBy"); 
 		UserReqDTO reqDTO = new UserReqDTO();
-		List<PmUser> userlist = new ArrayList<PmUser>();
+		List<PmUser> userlist = null;
 		if(requestNoteDtl.getFulfilmentType() != null ){
 			if (requestNoteDtl.getFulfilmentType().getParameterCode().
 					equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
 				reqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
-
+				
 			} else {
-				List<String> roleCodes= new ArrayList<String>();
-				roleCodes.add(RoleCode.DESK_OFFICER.value());
-				reqDTO.setRoleCodes(roleCodes);
+				reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 			}
 
 			if(getManagedBean().getRequestNote().getPmOrgProfile()!= null){
