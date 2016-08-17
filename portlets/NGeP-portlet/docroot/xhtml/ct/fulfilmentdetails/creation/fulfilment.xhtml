@@ -128,6 +128,7 @@
 		  	 
 		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			 rendered="#{contractDetailsBackingBean.isApproverSetting()}"
 			actionListener="#{contractDetailsBackingBean.setTabValue('SE')}" update=":form" />
 		</p:tabMenu>
 		</p:outputPanel>
@@ -161,6 +162,7 @@
 		 
 	      <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			 rendered="#{contractDetailsBackingBean.isApproverSetting()}"
 			actionListener="#{contractDetailsBackingBean.setTabCentralValue('SE')}" update=":form" />
 		</p:tabMenu>
 		</p:outputPanel>
@@ -221,7 +223,9 @@
 				             	<ui:include src="/xhtml/ct/common/paymentTracking.xhtml"/>
 				   </p:outputPanel>
 				
-				<p:outputPanel id="ctMenuId12" rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.settingIndex}">
+				<p:outputPanel id="ctMenuId12"
+				    rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.settingIndex
+				     and contractDetailsBackingBean.isApproverSetting()}">
 					<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />
 				   <ui:include	src="/xhtml/ct/common/fulfilmentSetting.xhtml" />
 				</p:outputPanel>
