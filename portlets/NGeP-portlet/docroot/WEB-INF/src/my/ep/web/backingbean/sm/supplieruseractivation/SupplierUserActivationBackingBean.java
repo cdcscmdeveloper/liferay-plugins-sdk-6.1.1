@@ -328,7 +328,8 @@ public class SupplierUserActivationBackingBean extends
 		
 		String suppTypeLbl = null;
 		
-		if(supplierType.equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+		if(supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
+				supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
 			suppTypeLbl = "lbl.sm.basic.account.mof";
 		}else if(supplierType.equalsIgnoreCase(SupplierManagementConst.ACC_GOVT_SELLER)){
 			suppTypeLbl = "lbl.sm.basic.account.govt";
