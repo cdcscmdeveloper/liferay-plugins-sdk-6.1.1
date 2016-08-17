@@ -12666,6 +12666,10 @@ public class ReportBackingBean extends
 		reportNameList.add(ReportConst.CT_LST_OF_CONTRACT_ALL_RPT_VAL);
 		reportNameList
 				.add(ReportConst.CT_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL);
+		reportNameList
+		.add(ReportConst.CT_PANEL_LIST_OF_CONTRACT_CC_RPT_VAL);
+		reportNameList
+		.add(ReportConst.CT_PANEL_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL);
 
 	}
 
