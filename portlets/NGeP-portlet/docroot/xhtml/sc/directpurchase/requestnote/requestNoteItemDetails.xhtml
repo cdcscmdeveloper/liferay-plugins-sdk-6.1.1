@@ -210,7 +210,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
-							value="#{requestNoteBackingBean.managedBean.userList}" var="user"
+							value="#{requestNoteBackingBean.getPreparedBy(requestNoteDtl)}" var="user"
 							itemLabel="#{user.userName}" itemValue="#{user.userId}"></f:selectItems>
 						<p:ajax event="change" update="prepareBy" partialSubmit="true"
 							process="@this"

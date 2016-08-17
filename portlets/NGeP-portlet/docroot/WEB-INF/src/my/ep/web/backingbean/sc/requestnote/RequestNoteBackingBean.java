@@ -241,7 +241,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		String [] outcomes = getManagedBean().getOutComes();
 		String taskId  = getManagedBean().getTaskId();
-		List<PmUser> userList = getManagedBean().getUserList();
 		RequestNoteResDTO requestNoteResDTO = null;
     try {
     	
@@ -302,7 +301,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    		scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 	    		getManagedBean().setOutComes(outcomes);
 	    		getManagedBean().setTaskId(taskId);
-	    		getManagedBean().setUserList(userList);
 	    		reloadRequestNote(scRequestNote);
 	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
 	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
@@ -911,8 +909,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
 				requestNoteDtls.add(scRequestNoteDtl);
 			}
-
-			fulfilmentTypeEvent(requestNote.getRequestNoteDtls().get(0));
 			getManagedBean().setRequestNoteDtl(requestNote.getRequestNoteDtls().get(0));
 		}
 
@@ -1776,7 +1772,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		updateWorkFlowAndRemarks(requestNote);
 
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-		fulfilmentTypeEvent(scRequestNoteDtl);
 		getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		getManagedBean().setRequestNote(requestNote);
 
@@ -2024,13 +2019,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Event for fulfillment type drop down in request note.
+	 * get Prepared By method to get drop down in request note.
 	 * to get PR/LOA Prepared By users based on Fulfillment type
 	 * @param requestNoteDtl the request note dtl
 	 */
-	public void fulfilmentTypeEvent(ScRequestNoteDtl requestNoteDtl) {
-		debugLogger("fulfilmentTypeEvent"); 
-		
+	public List<PmUser> getPreparedBy(ScRequestNoteDtl requestNoteDtl) {
+		debugLogger("getPreparedBy"); 
 		UserReqDTO reqDTO = new UserReqDTO();
 		List<PmUser> userlist = new ArrayList<PmUser>();
 		if(requestNoteDtl.getFulfilmentType() != null ){
@@ -2041,10 +2035,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			} else {
 				List<String> roleCodes= new ArrayList<String>();
 				roleCodes.add(RoleCode.DESK_OFFICER.value());
-				//roleCodes.add(RoleCode.REQUISITIONER.value());
 				reqDTO.setRoleCodes(roleCodes);
 			}
-			
+
 			if(getManagedBean().getRequestNote().getPmOrgProfile()!= null){
 				reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 			}
@@ -2054,10 +2047,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if(userlist != null && !userlist.isEmpty()){
 				Collections.sort(userlist, new usersComparator());
 			}
-			getManagedBean().setUserList(userlist);
 		}
+		return userlist;
 	}
-	
+
 	// sorting prepared by users
     /**
 	 * The Class usersComparator.
@@ -2234,7 +2227,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 					// request Note Items
 					requestNoteItems.add(requestItem);
-					//fulfilmentTypeEvent(scRequestNoteDtl);
 				}
 			}
 			this.getManagedBean().setRequestNoteDtls(requestNoteDtls);
