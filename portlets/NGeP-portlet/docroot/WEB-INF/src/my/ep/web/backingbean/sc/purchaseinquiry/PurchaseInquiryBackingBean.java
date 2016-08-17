@@ -1101,9 +1101,8 @@ public class PurchaseInquiryBackingBean extends
 					reqNoteBackingBean.priceTypeChangeListener(scRequestNoteDtl
 							.getPriceType().getParameterId(), scRequestNoteDtl);
 
-					// fulfilmentTypeEvent
 					reqNoteBackingBean.getManagedBean().setRequestNote(requestNote);
-					reqNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
+					reqNoteBackingBean.getPreparedBy(scRequestNoteDtl);
 					reqNoteBackingBean.getManagedBean().setRequestNoteDtl(
 							scRequestNoteDtl);
 					
