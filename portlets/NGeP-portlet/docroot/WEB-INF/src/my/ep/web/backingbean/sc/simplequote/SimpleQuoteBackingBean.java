@@ -5047,6 +5047,7 @@ public class SimpleQuoteBackingBean extends
 		} finally {
 			// quoteSO = null;
 		}
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		return null;
 	}
 
@@ -6415,7 +6416,8 @@ public class SimpleQuoteBackingBean extends
 	 * The method to used auto update of request.
 	 */
 	public void enableAutoUpdate() {
-		RequestContext.getCurrentInstance().update("@form");
+		//RequestContext.getCurrentInstance().update("@form");
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
 	/**
