@@ -22,6 +22,8 @@
 							value="#{lbl['lbl.sm.resubmit']}"/>&#160;&#160;
 					</p:outputPanel>
 					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+						rendered="#{viewSmApplBackingBean.managedBean.smSupplier.smAppl.supplierType eq 'J' 
+						or viewSmApplBackingBean.managedBean.smSupplier.smAppl.supplierType eq 'K'}"
 						action="#{viewSmApplBackingBean.redirectToSupplierProfileOrHistoryPage()}" 
 						process="@this" partialSubmit="true" update=":form" 
 						value="#{viewSmApplBackingBean.managedBean.portletUrlLabel}"/>&#160;&#160;
