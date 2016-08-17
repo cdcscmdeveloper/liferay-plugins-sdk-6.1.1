@@ -73,14 +73,14 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.circular.no']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 
-						<td><c:choose>
+						<td colspan="3"><c:choose>
 								<c:when
 									test="#{qtStatusChecklistScoringAndBefore and !isReadOnly}">
 									<ac:lov id="ctCircularPanel" lovId="CT_CIRCULAR_PANEL"
 										headerText="#{lbl['lbl.sc.spec.circular.list']}"
 										update=":form:panelItemId"
 										saveObject="createQtBB.managedBean.qt.circularVer"
-										value="#{scQt.circularVer.circularNo}" size="24"
+										value="#{scQt.circularVer.circularNo}" size="105"
 										readonly="true"
 										conditionField="#{createQtBB.constrcutFieldsForPanel()}"
 										postUpdateListener="createQtBB.circularListSelect(createQtBB.managedBean.qt.circularVer)"
@@ -88,14 +88,16 @@
 								</c:when>
 								<c:otherwise>
 									<p:inputText id="cirPanelTxt"
-										value="#{scQt.circularVer.circularNo}" style="width:195px;"
+										value="#{scQt.circularVer.circularNo}" style="width:653px;"
 										disabled="true" />
 								</c:otherwise>
 							</c:choose></td>
-						<td><p:outputLabel value="#{lbl['lbl.sc.spec.group.item']}" />
+						
+					</tr>
+					<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.group.item']}" />
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
-
-						<td><c:choose>
+						<td colspan="3"><c:choose>
 								<c:when
 									test="#{qtStatusChecklistScoringAndBefore and !isReadOnly}">
 									<p:selectOneMenu id="panelItemId" required="true"
@@ -119,7 +121,6 @@
 										disabled="true" />
 								</c:otherwise>
 							</c:choose></td>
-
 					</tr>
 				</ui:fragment>
 			</h:panelGroup>
@@ -144,7 +145,7 @@
 					<td colspan="3"><ac:lov id="ptjProfAuthId"
 							lovId="PM_ORG_PROFILE_AUTH_TYPE"
 							headerText="#{lbl['lbl.sc.ptj']}" saveObject="scQt.pmOrgProfile"
-							value="#{scQt.pmOrgProfile.orgName}" size="98" readonly="true"
+							value="#{scQt.pmOrgProfile.orgName}" size="105" readonly="true"
 							conditionField="recordStatus^1" /> <p:message id="ptjMsg"
 							for="ptjProfAuthId" display="icon" /></td>
 				</tr>
@@ -154,28 +155,26 @@
 				<td style="width: 270px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td style="width: 250px;"><table>
-						<tr>
-							<td><p:inputText id="fileno"
+				<td colspan="3">
+							<p:inputText id="fileno"
 									label="#{lbl['lbl.sc.qt.fileno']}" required="true"
-									value="#{scQt.fileNo}" style="width:350px;" maxlength="50"
+									value="#{scQt.fileNo}" style="width:653px;" maxlength="50"
 									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FILE_NO) or isReadOnly}">
 									<p:ajax event="blur" partialSubmit="true" update="@this"
 										listener="#{createQtBB.setFileNo(scQt)}"></p:ajax>
-								</p:inputText></td>
-							<td><p:message id="filenoMsg" for="fileno" display="icon" />
-							</td>
-						</tr>
-					</table></td>
-				<td style="width: 260px;"><p:outputLabel
-						value="#{lbl['lbl.sc.created.date']}" /></td>
-				<td><p:inputText value="#{scQt.createdDate}" disabled="true"
-						style="width:200px;">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+								</p:inputText>
+							<p:message id="filenoMsg" for="fileno" display="icon" />
+					</td>
 			</tr>
-
+			<tr>
+			<td style="width: 260px;"><p:outputLabel
+					value="#{lbl['lbl.sc.created.date']}" /></td>
+			<td colspan="3"><p:inputText value="#{scQt.createdDate}" disabled="true"
+					style="width:200px;">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText></td>
+			</tr>
 			<c:choose>
 				<c:when
 					test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
