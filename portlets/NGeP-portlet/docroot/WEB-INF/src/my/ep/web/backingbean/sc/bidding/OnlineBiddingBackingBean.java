@@ -91,7 +91,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private String remainingSeconds;
 	private int index;
 
-	private BigDecimal tolerancePrice;
+	private BigDecimal tolerancePriceLowerBound;
+	 private BigDecimal tolerancePriceUpperBound;
 
 	private Long servicetype = Long.parseLong(ParameterConst.ITEM_TYPE_SERVICE);
 
@@ -131,9 +132,13 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 						.getRuleValueList().get(0);
 				BigDecimal tolerancePercentage = new BigDecimal(
 						configRulevalue.getRuleValue());
-				BigDecimal tolerancePrice = (new BigDecimal(100))
+				BigDecimal tolerancePriceLowerBound = (new BigDecimal(100))
 						.subtract(tolerancePercentage);
-				this.setTolerancePrice(tolerancePrice);
+				this.setTolerancePriceLowerBound(tolerancePriceLowerBound);
+				
+				BigDecimal tolerancePriceUpperBound = (new BigDecimal(100))
+						.add(tolerancePercentage);
+				this.setTolerancePriceUpperBound(tolerancePriceUpperBound);
 			}
 
 		} finally {
@@ -512,13 +517,19 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 		if (this.getScBidSchedule().getScBid().getRecommendedTypeId()
 				.getParameterCode().equals("P")) {
-			BigDecimal dividend = this.getScBidSchedule()
-					.getPackageEstimateCost().multiply(this.tolerancePrice);
-			BigDecimal tolerancePrice = dividend.divide(new BigDecimal(100));
-			System.out.println("Tolerance price" + tolerancePrice);
-			if (getItemNewBidPriceTotal().doubleValue() < tolerancePrice
+			BigDecimal dividendLB = this.getScBidSchedule()
+					.getPackageEstimateCost().multiply(this.tolerancePriceLowerBound);
+			BigDecimal tolerancePriceLB = dividendLB.divide(new BigDecimal(100));
+			if (getItemNewBidPriceTotal().doubleValue() < tolerancePriceLB
 					.doubleValue()) {
 				throw new EpException(MessageConst.ERROR_760369);
+			}
+			BigDecimal dividendUB = this.getScBidSchedule()
+					.getPackageEstimateCost().multiply(this.tolerancePriceUpperBound);
+			BigDecimal tolerancePriceUB = dividendUB.divide(new BigDecimal(100));
+			if (getItemNewBidPriceTotal().doubleValue() > tolerancePriceUB
+					.doubleValue()) {
+				throw new EpException(MessageConst.ERROR_760433);
 			}
 		}
 
@@ -1229,20 +1240,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		this.index = index;
 	}
 
-	/**
-	 * @return the tolerancePrice
-	 */
-	public BigDecimal getTolerancePrice() {
-		return tolerancePrice;
-	}
-
-	/**
-	 * @param tolerancePrice
-	 *            the tolerancePrice to set
-	 */
-	public void setTolerancePrice(BigDecimal tolerancePrice) {
-		this.tolerancePrice = tolerancePrice;
-	}
+	
 
 	/**
 	 * @return the isBidPaused
@@ -1273,4 +1271,34 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	public void setPreviousStatusId(Long previousStatusId) {
 		this.previousStatusId = previousStatusId;
 	}
+
+	/**
+	 * @return the tolerancePriceUpperBound
+	 */
+	public BigDecimal getTolerancePriceUpperBound() {
+		return tolerancePriceUpperBound;
+	}
+
+	/**
+	 * @param tolerancePriceUpperBound the tolerancePriceUpperBound to set
+	 */
+	public void setTolerancePriceUpperBound(BigDecimal tolerancePriceUpperBound) {
+		this.tolerancePriceUpperBound = tolerancePriceUpperBound;
+	}
+
+	/**
+	 * @return the tolerancePriceLowerBound
+	 */
+	public BigDecimal getTolerancePriceLowerBound() {
+		return tolerancePriceLowerBound;
+	}
+
+	/**
+	 * @param tolerancePriceLowerBound the tolerancePriceLowerBound to set
+	 */
+	public void setTolerancePriceLowerBound(BigDecimal tolerancePriceLowerBound) {
+		this.tolerancePriceLowerBound = tolerancePriceLowerBound;
+	}
+	
+	
 }
