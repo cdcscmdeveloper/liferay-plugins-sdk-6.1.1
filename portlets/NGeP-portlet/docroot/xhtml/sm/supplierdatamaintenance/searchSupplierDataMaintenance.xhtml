@@ -91,7 +91,7 @@
 					<tr>
 						<td>
 							<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-								action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}" update="@this" process="@this"/>
+								action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}" update="@form" process="@this"/>
 						</td>
 						<td style="white-space: nowrap; float: right;">
 						    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@form"
