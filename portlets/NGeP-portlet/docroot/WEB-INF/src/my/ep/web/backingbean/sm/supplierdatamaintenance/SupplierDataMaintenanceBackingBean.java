@@ -91,7 +91,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		setCategoryTypeConfirm();
 		getManagedBean().setDisplaySearchPage(false);
 		setLoginUserAllowedToDoMaintenance();
-		checkIfSupplierHasActiveTransaction(true);
+		checkIfSupplierHasActiveTransaction(false);
 		getManagedBean().setExistingRegStatus(
 				getManagedBean().getSmAppl().getPmRegStatus());
 		if (getManagedBean().getSmMofAccount() != null) {
