@@ -235,7 +235,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	private boolean required;
 	private boolean zoneLocation;
-	private boolean autoUpdate;
+	private boolean autoUpdate = true;
 	private String zoneName;
 	private String tempZoneName;
 	private int index;

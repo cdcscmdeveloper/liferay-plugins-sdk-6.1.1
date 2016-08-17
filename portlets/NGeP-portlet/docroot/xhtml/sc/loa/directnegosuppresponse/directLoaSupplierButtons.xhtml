@@ -45,6 +45,7 @@
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 									<f:setPropertyActionListener value="#{bpmAction}"
 										target="#{directLOABackingBean.managedBean.action}" />
+									<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.autoUpdate}" value="false" />
 								</p:commandButton>
 							</h:panelGroup>
 
