@@ -54,10 +54,10 @@
 						value="#{lbl['lbl.pm.address.address']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="address1"
-						label="#{lbl['lbl.pm.address.address']}" maxlength="255"
+						label="#{lbl['lbl.pm.address.address']}" maxlength="100"
 						required="true" 
 						value="#{organisationBackingBean.managedBean.officeAddress.address1}"
-						size="30">
+						size="45">
 						<p:ajax event="blur"
 							update=":form:addressTabs:acgmap:gmapInput:gmapInput"></p:ajax>
 					</p:inputText>
@@ -92,7 +92,7 @@
 				<td></td>
 				<td><p:inputText id="address2"
 						value="#{organisationBackingBean.managedBean.officeAddress.address2}"
-						size="30" maxlength="255" /></td>				
+						size="45" maxlength="100" /></td>				
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="orgDistrict" required="true"
@@ -113,10 +113,10 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText maxlength="255"
+				<td><p:inputText maxlength="100"
 						id="address3"
 						value="#{organisationBackingBean.managedBean.officeAddress.address3}"
-						size="30" /></td>				
+						size="45" /></td>				
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="orgCity" required="true"						
@@ -137,10 +137,10 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText maxlength="255"
+				<td><ui:remove><p:inputText maxlength="255"
 						id="address4"
 						value="#{organisationBackingBean.managedBean.officeAddress.address4}"
-						size="30" /></td>				
+						size="30" /></ui:remove></td>				
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="postCode" required="true" size="10"
@@ -166,9 +166,7 @@
 						var addr3 = document
 								.getElementById('#{p:component(&quot;address3&quot;)}').value
 								+ ',';
-						var addr4 = document
-								.getElementById('#{p:component(&quot;address4&quot;)}').value
-								+ ',';
+						
 
 						var cityName = document
 								.getElementById('#{p:component(&quot;orgCity&quot;)}_input').options[document
@@ -188,7 +186,7 @@
 						var stateName = '';
 						var countryName = '';
 						 */
-						var address = addr1 + addr2 + addr3 + addr4 + cityName
+						var address = addr1 + addr2 + addr3 + cityName
 								+ ',' + districtName + ',' + stateName + ','
 								+ countryName;
 
