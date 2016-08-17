@@ -1278,6 +1278,19 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	}
     
     /**
+	 * The method used to retrieve proper portal name for factoring from property file.
+	 * 
+	 * @return portletTitle  the name of the portal
+     */
+    public String getTaskListPortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.request.factoring.approval", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		if (getManagedBean().isRemoveFactoring()) {
+			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.remove.factoring.approval", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		}
+		return portletTitle;
+	}
+    
+    /**
 	 * The method used to retrieve proper portal name for change bank request from property file.
 	 * 
 	 * @return portletTitle  the name of the portal
