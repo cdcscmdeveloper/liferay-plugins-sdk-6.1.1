@@ -136,7 +136,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isZoneTabChange;
 	private boolean disableSupplierSelection;
 	private boolean itemFwdToHighAuthority;
-	private boolean isInitialSelectionItemized;
 	private boolean isInitialDecisionFwdHighAuth;
 	private boolean isInitialDecisionFwdToBPK;
 	private boolean isSelectedItemAlreadyAwarded;
@@ -144,9 +143,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean hasPreviousMeeting;
 	private boolean hasItemWithPriceTypeTier;
 	private boolean itemCancelled;
-	private Boolean qtRefinalized;
 	private boolean refinalizedAndBiddingAward;
 	private boolean disableFwdToHighAuthorityOption;
+	private Boolean qtRefinalized;
+	private boolean isInitialSelectionItemized;
 	
 	private StreamedContent endorsementReportStream;
 	
