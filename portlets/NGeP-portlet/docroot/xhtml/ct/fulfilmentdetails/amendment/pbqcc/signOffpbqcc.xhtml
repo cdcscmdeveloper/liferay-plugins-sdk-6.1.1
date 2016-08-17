@@ -13,7 +13,7 @@
 		    <p:outputLabel value="#{lbl['lbl.ct.decision']}"    />
 		  </h:panelGrid>
              <p:selectOneMenu id="pqQcDecisionId"  style="width:190px;margin-bottom: 10px;"
-               required="true" label="#{lbl['lbl.ct.decision']}" disabled="#{isPrepareLoa
+                    label="#{lbl['lbl.ct.decision']}" disabled="#{isPrepareLoa
                      or amendmentBackingBean.managedBean.disableFinalAmendDetails}"
                  value="#{amendmentBackingBean.managedBean.pbQcApproved}" >
 			     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""/>
@@ -32,7 +32,7 @@
                <p:inputTextarea id="justificationPbQCC"   rows="4" disabled="#{isPrepareLoa
                or amendmentBackingBean.managedBean.disableFinalAmendDetails}"
                    style="width:180px;margin-bottom: 4px;"   maxlength="200"  autoResize="false" 
-                    required="true" label="#{lbl['lbl.txt.remarks']}"
+                    label="#{lbl['lbl.txt.remarks']}"
                     onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
                    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"/>
             </h:panelGrid>
