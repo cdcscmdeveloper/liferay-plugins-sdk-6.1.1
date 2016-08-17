@@ -736,7 +736,6 @@ public class PurchaseInquiryBackingBean extends
 			byte[] signedData = getManagedBean().getSpkiBackingBean()
 					.spkiSignTransaction(originalText);
 			pmDigiSign.setSpkiSignedData(signedData);
-			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
 		}
 
 		RequestContext.getCurrentInstance().execute("blockWidget.hide();");
