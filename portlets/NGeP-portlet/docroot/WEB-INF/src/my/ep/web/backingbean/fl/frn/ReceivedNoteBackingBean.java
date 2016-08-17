@@ -608,17 +608,64 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(getManagedBean().getFulfilmentNote().getReceivedDate()==null) {
 			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.act.received.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
-		for(FlSupplierEvaluation supplierEvaluation : getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()) {
-			if(supplierEvaluation.getScore()==null ||  supplierEvaluation.getScore()==0) {
-				throw new EpException(MessageConst.ERROR_100051, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.score",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),getCriteriaDesc(supplierEvaluation.getPmCriteria())});
+		
+		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
+			List<PmUser> orderApproverList = new ArrayList<PmUser>();
+			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
+			if(getManagedBean().getPmUserList().isEmpty()){
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
+			if(getManagedBean().getUserLoginId() == null) {
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_100022, new String[]{
+						ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+			for(PmUser user : getManagedBean().getPmUserList()){
+				if(getManagedBean().getUserLoginId().equals(user.getUserId())){
+					orderApproverList.add(user);
+				} else if (orderApproverList.size() > 0) {
+					orderApproverList.add(user);
+				} else if (orderApproverList.size() == 0) {
+					pendingApproverList.add(user);
+				}
+			}
+			orderApproverList.addAll(pendingApproverList);
+			getManagedBean().getApproverList().addAll(orderApproverList);
 		}
 		BigDecimal sumReceiveQty = new BigDecimal(0);
 		for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
 			sumReceiveQty = sumReceiveQty.add(frnItem.getReceivedQty());
 		}
 		if(sumReceiveQty.doubleValue() == 0){
+			getManagedBean().setSelectedTabIndex(1);
 			throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.fl.received.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+		}
+		int scoreNotSelectedCount=0;
+		for(FlSupplierEvaluation supplierEvaluation : getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()) {
+			if(supplierEvaluation.getScore()==null ||  supplierEvaluation.getScore()==0) {
+				scoreNotSelectedCount++;
+				if(scoreNotSelectedCount==3){
+					getManagedBean().setSelectedTabIndex(2);
+					throw new EpException(MessageConst.ERROR_745083, new String[]{null,null});
+				}
+				
+			}
+		}
+		if(scoreNotSelectedCount > 0 && scoreNotSelectedCount < 3 ){
+			for(FlSupplierEvaluation supplierEvaluation : getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()) {
+				if(supplierEvaluation.getScore()==null ||  supplierEvaluation.getScore()==0) {
+					String messageId = MessageConst.ERROR_100051;
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,	null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.score",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()), getCriteriaDesc(supplierEvaluation.getPmCriteria())}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+					
+				}
+			}
+			getManagedBean().setSelectedTabIndex(2);
+			throw new EpException("");
 		}
 		
 		for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
@@ -661,28 +708,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 		}
 		
-		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
-			List<PmUser> orderApproverList = new ArrayList<PmUser>();
-			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
-			if(getManagedBean().getPmUserList().isEmpty()){
-				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-			}
-			if(getManagedBean().getUserLoginId() == null) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{
-						ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-			}
-			for(PmUser user : getManagedBean().getPmUserList()){
-				if(getManagedBean().getUserLoginId().equals(user.getUserId())){
-					orderApproverList.add(user);
-				} else if (orderApproverList.size() > 0) {
-					orderApproverList.add(user);
-				} else if (orderApproverList.size() == 0) {
-					pendingApproverList.add(user);
-				}
-			}
-			orderApproverList.addAll(pendingApproverList);
-			getManagedBean().getApproverList().addAll(orderApproverList);
-		}
+		
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
 //			IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 //			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
