@@ -1065,9 +1065,13 @@ public class DirectLOABackingBean extends
 
 			// validate deduction payamment for Others
 			validateDeductionPaymentDtls(scLoa);
+			
+			// validate repo attachements
+			validateRepoAttachment(scLoa);
 		}
 
 	}
+	
 
 	/**
 	 * Validate deduction payment dtls.
@@ -3580,10 +3584,9 @@ public class DirectLOABackingBean extends
 	 */
 	public void addLoaContentAction() {
 		debugLogger("addLoaContentAction");
-
 		ScLoa scLoa = this.getManagedBean().getScLoa();
+		validateRepoAttachment(scLoa);
 		List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
-
 		if (scLoaReports == null) {
 			scLoaReports = new ArrayList<ScLoaReport>();
 			scLoa.setScLoaReports(scLoaReports);
@@ -6388,21 +6391,21 @@ public class DirectLOABackingBean extends
 	 * @param event
 	 *            the event
 	 */
-	 public boolean zoneLocationDeleteBtnDisable(){
+	public boolean zoneLocationDeleteBtnDisable(){
 		List<TreeNode> list = getManagedBean().getZoneTrees();
-		
+
 		if (CollectionUtils.isNotEmpty(list) ) {
 			for (TreeNode node : list) {
 				for (TreeNode childNode : node.getChildren()) {
 					if (childNode.getChildCount() > 0) {
-						
+
 						for (TreeNode state : childNode.getChildren()) {
-							
+
 							if(state.isSelected()){
 								return false;
 							}
 							for(TreeNode district : state.getChildren()){
-								
+
 								if(district.getChildCount()>0){
 									for(TreeNode division : district.getChildren()){
 										if(division.isSelected()){
@@ -6413,26 +6416,38 @@ public class DirectLOABackingBean extends
 												if(anotherDistrict.isSelected()){
 													return false;
 												}
+											}
 										}
 									}
-								}
 								}else{
-								if(district.isSelected()){
-									return false;
-								}
+									if(district.isSelected()){
+										return false;
+									}
 								}
 							}
 						}
 					}else{
-					if(childNode.isSelected()){
-						return false;
-					}
+						if(childNode.isSelected()){
+							return false;
+						}
 					}
 				}
 			}
 		} else {
 			return true;
 		}
-	return true;
-	 }
+		return true;
+	}
+
+	private void validateRepoAttachment(ScLoa scLoa){
+		for (ScLoaReport scLoaReport : scLoa.getScLoaReports()) {
+			if(scLoaReport.getDefinationType() != null && 
+					scLoaReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)){
+				if(null == scLoaReport.getScLoaReportAttachment()){
+					throw new EpException(MessageConst.ERROR_760432,
+							new String[] {scLoaReport.getTitle()});
+				}
+			}
+		}
+	}
 }
