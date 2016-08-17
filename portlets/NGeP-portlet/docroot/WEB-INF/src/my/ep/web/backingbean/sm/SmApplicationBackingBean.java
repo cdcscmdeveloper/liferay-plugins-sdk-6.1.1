@@ -8433,6 +8433,9 @@ public class SmApplicationBackingBean extends
 					reqDTO.setServerPort(fs.getRequest().getServerPort());
 					reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
+					reqDTO.setSvTaskIdsNeedToBeRemoved(getManagedBean()
+							.getSvTaskIdsNeedToDelete());
+
 					ReviewApplicationResDTO revApplicationResDTO = reqSO
 							.submitPOorApproverReviewToBPM(reqDTO);
 
