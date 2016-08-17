@@ -12326,7 +12326,8 @@ public class ReportBackingBean extends
 		pmReportBackingBean = new PMReportBackingBean();
 		if (rptGenBean.isReportCategoryView() == true
 				|| (this.getModuleValue().equalsIgnoreCase(
-						ModuleCodeConst.ORDER_FULFILLMENT) && this
+						ModuleCodeConst.ORDER_FULFILLMENT)|| this.getModuleValue().equalsIgnoreCase(
+								ModuleCodeConst.CONTRACT_MANAGEMENT) && this
 						.getReportCategory() != null)) {
 			rptGenBean = new ReportsGenerateBean();
 			rptGenBean.setReportCategoryView(true);
