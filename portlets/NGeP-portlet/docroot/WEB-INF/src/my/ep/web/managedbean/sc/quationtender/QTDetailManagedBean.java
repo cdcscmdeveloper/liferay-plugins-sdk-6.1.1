@@ -812,9 +812,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The is save flow. */
 	private boolean isSaveFlow;
 
-	/** The clone needed. */
-	private boolean cloneNeeded;
-
 	/** The qt activity beans. */
 	private List<QTActivityBean> qtActivityBeans;
 
@@ -6418,25 +6415,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setToday(Date today) {
 		this.today = today;
-	}
-
-	/**
-	 * Checks if is clone needed.
-	 * 
-	 * @return true, if is clone needed
-	 */
-	public boolean isCloneNeeded() {
-		return cloneNeeded;
-	}
-
-	/**
-	 * Sets the clone needed.
-	 * 
-	 * @param cloneNeeded
-	 *            the new clone needed
-	 */
-	public void setCloneNeeded(boolean cloneNeeded) {
-		this.cloneNeeded = cloneNeeded;
 	}
 
 	/**
