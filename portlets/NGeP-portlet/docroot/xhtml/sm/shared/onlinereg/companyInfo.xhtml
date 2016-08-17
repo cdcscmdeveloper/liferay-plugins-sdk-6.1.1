@@ -8,6 +8,7 @@
 	
 	<h:outputScript library="js" name="smGstCalendar.js" />
 	<script type="application/javascript">
+	
 		$(document).ready(function(e){
 			  $("input[id$=compAdd1]").keydown(function(e){
 				if(e.which==9 || e.keycode==9){
@@ -63,6 +64,8 @@
 					e.preventDefault();
 				} 
 			  });
+			  //alert($("input[id$=upload_input]").get(0).type);
+			  //$('input[id$=upload_input]').get(0).onchange = function(){alert(12336);};
 		});
 	</script>
 	<p:panel header="#{lbl['lbl.sm.companyinfo']}" toggleable="true" id="pnlCompInfo">
@@ -400,7 +403,7 @@
 				    	  
 				    	  //var address = addr1 + addr2 + addr3 + addr4 + postcode + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
 				    	  //var address = stateName + ',' + districtName + ',' + postcode + ' ' + cityName + addr4 + addr3 + addr2 + addr1;
-				    	  var address = countryName + ',' + districtName + ',' + cityName + addr4 + addr3 + addr2 + addr1;
+				    	  var address = countryName + ',' + stateName + ',' + districtName + ',' + cityName + addr4 + addr3 + addr2 + addr1;
 				      	return address;
 				      }
 				      </SCRIPT>
