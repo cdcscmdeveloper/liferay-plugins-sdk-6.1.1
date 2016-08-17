@@ -113,9 +113,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The request note dtl. */
     private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
     
-    /** The user list. */
-    private List<PmUser> userList = new ArrayList<PmUser>();
-    
     /** The price type code. */
     private String priceTypeCode;
     
@@ -631,24 +628,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSelectedRequestNoteDtls(
 			List<ScRequestNoteDtl> selectedRequestNoteDtls) {
 		this.selectedRequestNoteDtls = selectedRequestNoteDtls;
-	}
-	
-	/**
-	 * Gets the user list.
-	 *
-	 * @return the userList
-	 */
-	public List<PmUser> getUserList() {
-		return userList;
-	}
-	
-	/**
-	 * Sets the user list.
-	 *
-	 * @param userList the userList to set
-	 */
-	public void setUserList(List<PmUser> userList) {
-		this.userList = userList;
 	}
 	
 	/**
