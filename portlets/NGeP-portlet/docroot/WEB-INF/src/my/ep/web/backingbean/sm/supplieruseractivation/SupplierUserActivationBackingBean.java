@@ -254,7 +254,7 @@ public class SupplierUserActivationBackingBean extends
 						this.getManagedBean().setValidActivation(false);
 //							this.getManagedBean().setSmPersonnel(null);
 //							renewSesionObject();
-						return navigateToAck(resDTO.getNewEpNo());
+						return navigateToAck(resDTO.getNewEpNo(),resDTO.getSmSupplier().getSmAppl().getSupplierType());
 
 					}catch(Exception ex){
 						throw new EpException(ex.getMessage());
@@ -288,7 +288,7 @@ public class SupplierUserActivationBackingBean extends
 							this.getManagedBean().setValidActivation(false);
 							//this.getManagedBean().setSmPersonnel(null);
 							//renewSesionObject();
-							return navigateToAck(resDTO.getNewEpNo());
+							return navigateToAck(resDTO.getNewEpNo(),resDTO.getSmSupplier().getSmAppl().getSupplierType());
 							
 						}catch(Exception ex){
 							log.info("activateSupplierUser>>>>>>" + ex.getMessage());
@@ -320,17 +320,29 @@ public class SupplierUserActivationBackingBean extends
 				new FacesMessage(FacesMessage.SEVERITY_ERROR,errMsg, errMsg));
 	}
 	
-	public String navigateToAck(String epNo) {
+	public String navigateToAck(String epNo, String supplierType) {
 		// FacesScopes fs = new FacesScopes();
 		// String server = "http://" + fs.getRequest().getServerName() + ":" +
 		// fs.getRequest().getServerPort();
 		// String loginUrl = "<a href='" + server + "'>" + "login" + "</a>";
 		
+		String suppTypeLbl = null;
+		
+		if(supplierType.equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+			suppTypeLbl = "lbl.sm.basic.account.mof";
+		}else if(supplierType.equalsIgnoreCase(SupplierManagementConst.ACC_GOVT_SELLER)){
+			suppTypeLbl = "lbl.sm.basic.account.govt";
+		}else{
+			suppTypeLbl = "lbl.sm.basic.account.basic";
+		}
+		
+		String suppTypeLblParam = SmCommonUtil.getMessage(suppTypeLbl, null);
+		
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 						.getMessage(MessageConst.INFO_721001,
-								new String[] { epNo },
+								new String[] { suppTypeLblParam, epNo },
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
