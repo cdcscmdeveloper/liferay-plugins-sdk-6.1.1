@@ -4228,9 +4228,6 @@ public class DirectLOABackingBean extends
 
 			// spki
 			if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
-				RequestContext.getCurrentInstance().execute(
-						"blockWidget.hide();");
-				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
 				String originalText = prepareOriginalText(scLoa.getScLoiLoa()
 						.getSmSupplier());
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
@@ -4242,6 +4239,9 @@ public class DirectLOABackingBean extends
 							ParameterConst.DOCTYPE_DIRECT_NEGO,
 							scLoa.getLoaId(), scLoa.getLoaNo(), originalText);
 				}
+				
+				RequestContext.getCurrentInstance().execute(
+						"blockWidget.hide();");
 			} else {
 				// gpki
 				if (null != digiSign) {

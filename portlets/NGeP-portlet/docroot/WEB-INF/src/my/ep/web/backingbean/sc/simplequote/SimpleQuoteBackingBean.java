@@ -4965,8 +4965,6 @@ public class SimpleQuoteBackingBean extends
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
 						.spkiSignTransaction(originalText);
 				pmDigiSign.setSpkiSignedData(signedData);
-				
-				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
 			}
 
 			

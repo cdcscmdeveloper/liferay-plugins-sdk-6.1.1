@@ -2506,7 +2506,6 @@ public class LOADetailBackingBean extends
 					}
 
 					RequestContext.getCurrentInstance().execute("blockWidget.hide();");
-					RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
 				}
 
 				// Insert reports when supplier accept Loa
