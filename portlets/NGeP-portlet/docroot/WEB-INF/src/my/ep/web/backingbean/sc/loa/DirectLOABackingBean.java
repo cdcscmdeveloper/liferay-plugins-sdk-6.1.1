@@ -4250,6 +4250,7 @@ public class DirectLOABackingBean extends
 							scLoa.getLoaId(), scLoa.getLoaNo());
 				}
 			}
+			getManagedBean().setAutoUpdate(true);
 
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
