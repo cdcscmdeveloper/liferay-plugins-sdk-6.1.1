@@ -213,6 +213,11 @@ public class QTDetailBackingBean extends
 			.getLogger(QTDetailBackingBean.class);
 	
 	private static final String CAP_CHAR = "^";
+	private static final int REFORM_NO_ACTION = 0;
+	private static final int REFORM_SC = 1;
+	private static final int REFORM_OC = 2;
+	private static final int REFORM_TEC = 4;
+	private static final int REFORM_FEC = 8;
 
 	/**
 	 * Instantiates a new QT detail backing bean.
@@ -1588,7 +1593,7 @@ public class QTDetailBackingBean extends
 	 * @param isApprovalReq
 	 *            the is approval req
 	 */
-	public void retrieveCommitteeAppointmentTabDtl(boolean isApprovalReq, boolean isReformOC, boolean isReformTEC, boolean isReformFEC) {
+	public void retrieveCommitteeAppointmentTabDtl(boolean isApprovalReq, int reformCommitteeFlag) {
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
@@ -1615,16 +1620,17 @@ public class QTDetailBackingBean extends
 			String tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
 			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(tabType,
 					qtId);
-			if (QTStatusConst.CMT_COMPLETED.equals(specCommitte
-					.getScCommittee().getCommitteStatus().getStatusId())) {
-				this.getManagedBean().setCloneNeeded(true);
+			ScCommittee committee = specCommitte.getScCommittee();
+			if ((reformCommitteeFlag & REFORM_SC) == REFORM_SC) {
+				committee.setModified(true);
+				committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
 			}
 
 			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 					parameterType, tabType), tabType, specCommitte));
 
 			if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
-				ScCommittee committee = null;
+				boolean reformCommittee;
 				// evaluation type is one tier only oc is added..
 				if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evaluationType)) {
 					tabType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
@@ -1633,13 +1639,17 @@ public class QTDetailBackingBean extends
 					if (isApprovalReq) {
 						committee = evalCommitte.getScCommittee();
 						committee.setApprovalReq(isApprovalReq);
+						reformCommittee = (reformCommitteeFlag & REFORM_OC) == REFORM_OC ||
+								(reformCommitteeFlag & REFORM_TEC) == REFORM_TEC ||
+								(reformCommitteeFlag & REFORM_FEC) == REFORM_FEC;
+						
 						if ((committee.getCommitteStatus() != null &&
 								committee.getCommitteStatus().getStatusId() != null &&
 								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
-								(isReformOC || isReformTEC || isReformFEC)) {
+								reformCommittee) {
 							committee.setModified(true);
 							
-							if ((isReformOC || isReformTEC || isReformFEC)) {
+							if (reformCommittee) {
 								committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
 							}
 						}
@@ -1656,13 +1666,15 @@ public class QTDetailBackingBean extends
 					if (isApprovalReq) {
 						committee = openingCommitte.getScCommittee();
 						committee.setApprovalReq(isApprovalReq);
+						reformCommittee = (reformCommitteeFlag & REFORM_OC) == REFORM_OC;
+								
 						if ((committee.getCommitteStatus() != null &&
 								committee.getCommitteStatus().getStatusId() != null &&
 								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
-								isReformOC) {
+								reformCommittee) {
 							committee.setModified(true);
 							
-							if (isReformOC) {
+							if (reformCommittee) {
 								committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
 							}
 						}
@@ -1677,13 +1689,15 @@ public class QTDetailBackingBean extends
 					if (isApprovalReq) {
 						committee = tecCommitte.getScCommittee();
 						committee.setApprovalReq(isApprovalReq);
+						reformCommittee = (reformCommitteeFlag & REFORM_TEC) == REFORM_TEC;
+						
 						if ((committee.getCommitteStatus() != null &&
 								committee.getCommitteStatus().getStatusId() != null &&
 								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
-								isReformTEC) {
+								reformCommittee) {
 							committee.setModified(true);
 							
-							if (isReformTEC) {
+							if (reformCommittee) {
 								committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
 							}
 						}
@@ -1698,13 +1712,15 @@ public class QTDetailBackingBean extends
 					if (isApprovalReq) {
 						committee = fecCommitte.getScCommittee();
 						committee.setApprovalReq(isApprovalReq);
+						reformCommittee = (reformCommitteeFlag & REFORM_FEC) == REFORM_FEC;
+						
 						if ((committee.getCommitteStatus() != null &&
 								committee.getCommitteStatus().getStatusId() != null &&
 								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
-								isReformFEC) {
+								reformCommittee) {
 							committee.setModified(true);
 							
-							if (isReformFEC) {
+							if (reformCommittee) {
 								committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
 							}
 						}
@@ -1897,7 +1913,7 @@ public class QTDetailBackingBean extends
 				retrieveQuationTenderDetails(new Long(qtId));
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 						.equalsIgnoreCase(taskName)) {
-					retrieveCommitteeAppointmentTabDtl(true, false, false, false);
+					retrieveCommitteeAppointmentTabDtl(true, REFORM_NO_ACTION);
 				} else if (SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 								.equalsIgnoreCase(taskName)) {
 					IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -1909,18 +1925,30 @@ public class QTDetailBackingBean extends
 						reqDTO.setQtId(qtId);
 						ScQtFinalization scQtFinalization = qtSuppFinalizationSO.retrieveSupplierFinalizationByQtId(reqDTO)
 							.getScQtFinalization();
+						int reformCommitteeFlag = REFORM_NO_ACTION;
+						if (scQtFinalization.isReEvaluateCompReq()) {
+							reformCommitteeFlag += REFORM_OC;
+						}
+						if (scQtFinalization.isReEvaluateTechReq()) {
+							reformCommitteeFlag += REFORM_TEC;
+						}
+						if (scQtFinalization.isReEvaluateFinReq()) {
+							reformCommitteeFlag += REFORM_FEC;
+						}
 						retrieveCommitteeAppointmentTabDtl(true, 
-								scQtFinalization.isReEvaluateCompReq(), 
-								scQtFinalization.isReEvaluateTechReq(), 
-								scQtFinalization.isReEvaluateFinReq());
+								reformCommitteeFlag);
 						removeCommitteeActivityDetails(this.getManagedBean().getQt());
 
 					} finally {
 						qtSuppFinalizationSO = null;
 					}
 					
+				} else if (SCProcessNameConst.ASSIGN_SCORING_COMMITTEE
+						.equalsIgnoreCase(taskName)) {
+					retrieveCommitteeAppointmentTabDtl(true, REFORM_SC);
+					
 				} else {
-					retrieveCommitteeAppointmentTabDtl(false, false, false, false);
+					retrieveCommitteeAppointmentTabDtl(false, REFORM_NO_ACTION);
 				}
 				
 				if (isCommitteeAppointmentRemark) {
@@ -2200,7 +2228,7 @@ public class QTDetailBackingBean extends
 		List<TabBean> tabList = this.getManagedBean()
 				.getScCommitteeMemberTabList();
 		if (CollectionUtils.isEmpty(tabList)) {
-			retrieveCommitteeAppointmentTabDtl(false, false, false, false);
+			retrieveCommitteeAppointmentTabDtl(false, REFORM_NO_ACTION);
 		}
 		updateQtDtls();
 		IQTDetailSO detailSO;
@@ -3661,7 +3689,7 @@ public class QTDetailBackingBean extends
 			// this.getManagedBean().setActiveIndex(0);
 			this.getManagedBean().setSelectedCommitteeTabIndex(
 					committeeTabIndex);
-			retrieveCommitteeAppointmentTabDtl(false, false, false, false);
+			retrieveCommitteeAppointmentTabDtl(false, REFORM_NO_ACTION);
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				initializeRemarksForCommitteeApproval();
@@ -3882,7 +3910,7 @@ public class QTDetailBackingBean extends
 
 			case 2:
 				// detailSO.validateSupplierQualificationDtls(reqDTO);
-				retrieveCommitteeAppointmentTabDtl(false, false, false, false);
+				retrieveCommitteeAppointmentTabDtl(false, REFORM_NO_ACTION);
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
