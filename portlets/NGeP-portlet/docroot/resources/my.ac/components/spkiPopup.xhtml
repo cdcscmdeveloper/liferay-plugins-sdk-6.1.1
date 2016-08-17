@@ -65,7 +65,8 @@
 						<p:inputText value="#{cc.attrs.challengeAns1}" />
 
 						<h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
-						<p:inputText id="password" value="#{cc.attrs.password}" />
+						<p:password id="password"
+							value="#{cc.attrs.password}" />
 						<p:commandButton id="spkiSign" value="#{lbl['lbl.btn.sign']}" onstart="spkiSign();" 
 							oncomplete="spkiBlockWidget.hide();" />
 					</h:panelGrid>
