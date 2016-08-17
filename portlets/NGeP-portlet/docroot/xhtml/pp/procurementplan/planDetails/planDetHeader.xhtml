@@ -17,7 +17,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="#{lbl['lbl.pp.ministry']}" />
 			</td>
 			<td colspan ="3">
-				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.retrieveMinistry()}"></p:inputText>
+				<p:inputText disabled="true" style="width:100%;" value="#{pPlanBackingBean.retrieveMinistry()}"></p:inputText>
 			</td>
 		</tr>
 		<tr>
@@ -25,7 +25,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="#{lbl['lbl.pp.pegawai.pengawal']}" />
 			</td>
 			<td colspan ="3">
-				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.retrievePegawaiPengawal()}"></p:inputText>
+				<p:inputText disabled="true" style="width:100%;" value="#{pPlanBackingBean.retrievePegawaiPengawal()}"></p:inputText>
 			</td>
 		</tr>
 		<tr>
@@ -33,7 +33,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="#{lbl['lbl.pp.kumpulan.ptj']}" />
 			</td>
 			<td colspan ="3">
-				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.retrieveKumpulanPtj()}"></p:inputText>
+				<p:inputText disabled="true" style="width:100%;" value="#{pPlanBackingBean.retrieveKumpulanPtj()}"></p:inputText>
 			</td>
 		</tr>
 		<tr>
@@ -41,7 +41,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="#{lbl['lbl.pp.ptj']}" />
 			</td>
 			<td colspan ="3">
-				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgCode} / #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgName}"></p:inputText>
+				<p:inputText disabled="true" style="width:100%;" value="#{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgCode} / #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgName}"></p:inputText>
 			</td>
 		</tr>
 		<c:if test="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeProcurement}">
