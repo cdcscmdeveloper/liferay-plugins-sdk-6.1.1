@@ -47,7 +47,7 @@
 					<h:outputText value="#{pmInterfaceKPTJ.financialYear}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.kptj.code']}"
-					style="width:15%;white-space: normal;word-wrap: break-word;">
+					style="width:10%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceKPTJ.kptjCode}" />
 				</p:column>
 
@@ -55,15 +55,29 @@
 					style="width:25%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfaceKPTJ.kptjDesc}" />
 				</p:column>
+				<p:column headerText="#{lbl['lbl.gfmas.effDate']}"
+					style="width:10%;white-space: normal;word-wrap: break-word;">
+					<h:outputText value="#{pmInterfaceKPTJ.effDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.gfmas.expDate']}"
+					style="width:10%;white-space: normal;word-wrap: break-word;">
+					<h:outputText value="#{pmInterfaceKPTJ.expDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.code.status']}"
-					style="width:20%;white-space: normal;word-wrap: break-word;">
+					style="width:10%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{lbl['lbl.gfmas.codestatus.valid']}"
 						rendered="#{pmInterfaceKPTJ.codeStatus=='V'}" />
 					<h:outputText value="#{lbl['lbl.gfmas.codestatus.inValid']}"
 						rendered="#{pmInterfaceKPTJ.codeStatus=='X'}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.process.status']}"
-					style="width:15%;white-space: normal;word-wrap: break-word;">
+					style="width:10%;white-space: normal;word-wrap: break-word;">
 
 					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
 						rendered="#{pmInterfaceKPTJ.processStatus==0}" />
