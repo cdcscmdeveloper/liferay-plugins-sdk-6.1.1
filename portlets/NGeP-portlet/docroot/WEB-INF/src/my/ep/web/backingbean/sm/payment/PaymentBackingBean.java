@@ -635,14 +635,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				status = SupplierManagementConst.PAYMENT_INVALID_RES;
 			}
 
-			String billType = StringUtils.EMPTY;
-			if(resDTO.getPyPayment() != null){
-				billType = resDTO.getPyPayment().getPyBill().getBillType();
-			}
-			showPaymentResponse(status,Long.valueOf(orderId),errorDesc,billType);
+			showPaymentResponse(status,Long.valueOf(orderId),errorDesc);
 
 		} else {
-			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
+			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null);
 		}
 
 		this.renewSesionObject();
@@ -689,10 +685,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 * @param Long
 	 *            paymentId
 	 */
-	public void showPaymentResponse(String status, Long paymentId, String errorDesc, String billType) {
+	public void showPaymentResponse(String status, Long paymentId, String errorDesc) {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		boolean paymentStatus = false;
-		log.info("*********showPaymentResponse*************" + billType);
 		switch (status) {
 		case SupplierManagementConst.MOL_SUCCESS:
 			String msgCode = null;
@@ -751,12 +746,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			paymentAckBB.getManagedBean().setPaymentStatus(false);
 			//paymentAckBB.getManagedBean().setPaymentMessage(fsMsg);
 		}
-		
-		paymentAckBB.getManagedBean().setBillTypeLbl(getPaymentMsgLabel(billType,false));
-/*		fc.getApplication()
-				.getNavigationHandler()
-				.handleNavigation(fc, null,
-						"/xhtml/sm/payment/paymentAcknowledge.xhtml");*/
 		
 	}
 
@@ -910,7 +899,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 		
-			showPaymentResponse(status, ordId, null,null);
+			showPaymentResponse(status, ordId, null);
 			this.renewSesionObject();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1166,29 +1155,5 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		
 		return feeType;
 	}
-	
-	/**
-	 * get Payment Msg Label
-	 * @param paymentType
-	 * @return String
-	 */
-	private String getPaymentMsgLabel(String billType, boolean isMessage){
-		String pType = null;
-		
-		if(billType != null){
-			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
-				pType = "lbl.sm.payment.response.type.proccessing";
-			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)){
-				pType = "lbl.sm.payment.response.type.registration";
-			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
-				pType = "lbl.sm.payment.response.type.softcert";
-			}
-		}
-		
-		if(isMessage){
-			return SmCommonUtil.getMessage(pType, null);
-		}
-		
-		return pType;
-	}
+
 }
