@@ -46,6 +46,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:selectOneMenu  required="#{!empty param['disableValidation']}"
 				     	disabled="#{!supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 						id="somDocDefinition" label="#{lbl['lbl.pm.document.definition']}" 
+						style="width:210px;"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.docDefinitionTypeCode.parameterId}"	>
 						<f:selectItems  value="#{supportDocBackingBean.managedBean.docDefinitionOptions}" />						
 						 <p:ajax event="change" process="@this" partialSubmit="true" 
@@ -67,9 +68,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu required="#{!empty param['disableValidation']}"  id="somSupplierAction" 
+					<p:selectOneMenu required="#{!empty param['disableValidation']}"  
+						id="somSupplierAction" 
+						style="width:210px;"
 				        disabled="#{!supportDocBackingBean.managedBean.selectedDocument.brandNew}"
-						styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.action']}"
+						label="#{lbl['lbl.pm.supplier.action']}"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.checklistActionCode.parameterId}">
 						<f:selectItems value="#{supportDocBackingBean.managedBean.supplierActionItems}" />
 					</p:selectOneMenu>
@@ -93,7 +96,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM" id="somDocStatus" required="#{!empty param['disableValidation']}"
+					<p:selectOneMenu style="width:210px;" id="somDocStatus" required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.pm.status']}"  disabled="#{supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.recordStatusFlg}">
 						<f:selectItems  value="#{supportDocBackingBean.getActiveAndInactiveStatusOptions()}"/>
