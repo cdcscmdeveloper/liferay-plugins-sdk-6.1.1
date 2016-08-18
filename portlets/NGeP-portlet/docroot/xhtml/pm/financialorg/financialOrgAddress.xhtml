@@ -56,7 +56,7 @@
 					<p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td ><p:inputText id="address1" tabindex="2"
-						label="#{lbl['lbl.pm.address.address']}" maxlength="255"
+						label="#{lbl['lbl.pm.address.address']}" maxlength="100"
 						required="true" styleClass="ppDisplayTextL"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address1}"
 						size="52" />
@@ -90,7 +90,7 @@
 				<td></td>
 				<td ><p:inputText styleClass="ppDisplayTextL"  tabindex="3"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address2}"
-						size="52" maxlength="255" /></td>				
+						size="52" maxlength="100" /></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td >
@@ -112,7 +112,7 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td ><p:inputText maxlength="255" styleClass="ppDisplayTextL"  tabindex="4"
+				<td ><p:inputText maxlength="100" styleClass="ppDisplayTextL"  tabindex="4"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address3}"
 						size="52" /></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
@@ -134,9 +134,9 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td class="tdContent"><p:inputText maxlength="255" styleClass="ppDisplayTextL"  tabindex="5"
+				<td class="tdContent"><ui:remove><p:inputText maxlength="255" styleClass="ppDisplayTextL"  tabindex="5"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address4}"
-						size="52" /></td>
+						size="52" /></ui:remove></td>
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td ><p:inputText id="postCode" required="true"

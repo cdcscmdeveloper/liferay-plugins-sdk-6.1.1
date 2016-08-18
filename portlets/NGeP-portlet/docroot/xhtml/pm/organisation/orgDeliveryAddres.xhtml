@@ -104,6 +104,7 @@
 				<td>
 					<p:selectOneMenu id="dState" required="#{!empty param['dialogValidation']}"
 						label="#{lbl['lbl.pm.address.state']}"
+						style="width: 225px;"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -136,6 +137,7 @@
 				</td>
 				<td>
 					<p:selectOneMenu id="dDivision" 
+						style="width: 225px;"
 						disabled="#{not organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.adoptDivision}"
 						required="#{!empty param['dialogValidation']
 							and organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.adoptDivision}" 
@@ -160,6 +162,7 @@
 				<td>
 					<p:selectOneMenu id="dDistrict" required="#{!empty param['dialogValidation']}" 
 						label="#{lbl['lbl.pm.address.district']}"
+						style="width: 225px;"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDistrict.districtId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -179,6 +182,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="dCity" required="#{!empty param['dialogValidation']}"
+						style="width: 225px;"
 						label="#{lbl['lbl.pm.address.city']}"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmCity.cityId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
