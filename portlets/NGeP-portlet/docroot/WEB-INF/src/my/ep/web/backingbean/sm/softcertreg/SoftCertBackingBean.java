@@ -350,6 +350,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 			reqDTO.setSoftcertDocNo(getManagedBean().getSoftcertDocNo());
 			reqDTO.setFreeSofcertPersonnelList(getFinalFreePersonnels());
+			reqDTO.setDigiSign(getManagedBean().getDigiSign());
 
 			PersonnelResDTO resDTO = new PersonnelResDTO();
 			resDTO = SmServiceLookup.getPersonnelSO()
@@ -530,10 +531,12 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				: "SC", getManagedBean().getLoginUserPersonnelInfo()
 				.getSmAppl().getApplId(), getManagedBean().getSoftcertDocNo(),
 				prepareOriginalText());
-		SpkiBackingBean spkiBackingBean = this.getManagedBean().getSpkiBackingBean();
+		SpkiBackingBean spkiBackingBean = this.getManagedBean()
+				.getSpkiBackingBean();
 		byte[] signedData = spkiBackingBean
 				.spkiSignTransaction(prepareOriginalText());
 		pmDigiSign.setSpkiSignedData(signedData);
+		getManagedBean().setDigiSign(pmDigiSign);
 		RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 		RequestContext.getCurrentInstance().update("@form");
