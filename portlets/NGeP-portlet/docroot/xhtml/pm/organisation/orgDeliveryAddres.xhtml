@@ -70,9 +70,9 @@
 					<td style="width:15%;"><p:outputLabel value="#{lbl['lbl.pm.address.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td style="width:35%;"><p:inputText id="addressname"
-							label="#{lbl['lbl.pm.address.name']}" maxlength="255"
+							label="#{lbl['lbl.pm.address.name']}" maxlength="100"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.addressName}"
-							size="31" /></td>
+							size="43" /></td>
 					<td style="width:15%;"><p:message for="addressname" id="addressnameMsg"
 							display="icon" /></td>
 
@@ -122,10 +122,10 @@
 					<p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="daddress1" 
-						label="#{lbl['lbl.pm.address.address']}" maxlength="255"
+						label="#{lbl['lbl.pm.address.address']}" maxlength="100"
 						required="#{!empty param['dialogValidation']}"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address1}"
-						size="31" /><p:message for="daddress1" id="daddress1Msg" display="icon" /></td>				
+						size="43" /><p:message for="daddress1" id="daddress1Msg" display="icon" /></td>				
 				<td>
 					<p:outputLabel value="#{lbl['lbl.pm.address.division']}" /> 
 					<p:outputPanel id="olDelDivisionMandatory">
@@ -154,7 +154,7 @@
 				<td></td>
 				<td><p:inputText
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address2}"
-						size="31" maxlength="255" /></td>
+						size="43" maxlength="100" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
@@ -173,9 +173,9 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText maxlength="255"
+				<td><p:inputText maxlength="100"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address3}"
-						size="31" /></td>				
+						size="43" /></td>				
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="dCity" required="#{!empty param['dialogValidation']}"
@@ -192,9 +192,9 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText maxlength="255"
+				<td><ui:remove><p:inputText maxlength="255"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address4}"
-						size="31" /></td>				
+						size="31" /></ui:remove></td>				
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="dpostCode" required="#{!empty param['dialogValidation']}"
