@@ -39,6 +39,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td>
 					<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}" 
 						required="#{!empty param['disableValidation']}"
+						style="width:210px;"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.pmZone}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 						<f:selectItems  value="#{supportDocBackingBean.supplierZoneOptions()}"  
@@ -57,7 +58,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pm.supplier.type']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthM"
+					<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthM" style="width:210px;"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.suppTypeParam}">
 						<f:selectItems  value="#{supportDocBackingBean.supplierTypeOptions()}"/>
 					</p:selectOneMenu>
@@ -66,7 +67,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pm.application.type']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM" style="width:400px;"
+					<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM" style="width:95%;"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.appTypeParam}">
 						<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
 					</p:selectOneMenu>
@@ -78,6 +79,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:selectOneMenu id="somComType" styleClass="ppDropDownWidthM"
+						style="width:210px;"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.comTypeParam}">
 						<f:selectItems  value="#{supportDocBackingBean.companyTypeOptions()}"/>
 					</p:selectOneMenu>
@@ -87,7 +89,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:inputText id="itBusinessCategory" styleClass="ppDisplayTextM" maxlength="255"
-						style="width:365px;"
+						style="width:85%;"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.businessCategory}"
 						disabled="true" />
 					&#160;
@@ -106,7 +108,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<tr>
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.suppdoc.status']}" /></th>
-				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+				<td><p:selectOneMenu styleClass="ppDropDownWidthM" style="width:210px;"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.docStatus}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -118,7 +120,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:selectOneMenu id="somGlp" styleClass="ppDropDownWidthM" 
-						label="#{lbl['lbl.pm.suppdoc.certified.body']}" style="width:400px;"
+						label="#{lbl['lbl.pm.suppdoc.certified.body']}" style="width:95%;"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.glpCertBodyId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 						<f:selectItems  value="#{supportDocBackingBean.retrieveGlpList()}"  
@@ -127,7 +129,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</td>
 			</tr>
 			<tr>
-				<td colspan="4">
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<td colspan="4" >
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}" 
 							process="pSupportDocSearch"
