@@ -9,8 +9,7 @@
 	
     <ui:define name="contentSection">
     	<ui:param name="lblPaymentBillType"
-					value="#{paymentBackingBean.managedBean.paymentType eq 'PF' ? 'lbl.sm.payment.receipt.payment.type.proc' : 
-						(paymentBackingBean.managedBean.paymentType eq 'SF' ? 'lbl.rpt.smSoftCertificateFee' : 'lbl.sm.payment.receipt.payment.type.reg' )}" />
+					value="#{empty paymentAcknowledgeBackingBean.managedBean.billTypeLbl ? 'lbl.sm.payment.process' : paymentAcknowledgeBackingBean.managedBean.billTypeLbl}" />
 		<p:panel id="acknowledge" header="#{lbl[lblPaymentBillType]}">
 			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" escape="false" />
 
