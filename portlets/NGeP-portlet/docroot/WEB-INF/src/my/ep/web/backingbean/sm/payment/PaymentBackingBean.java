@@ -634,11 +634,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			} else {
 				status = SupplierManagementConst.PAYMENT_INVALID_RES;
 			}
-
-			showPaymentResponse(status,Long.valueOf(orderId),errorDesc);
+			
+			String billType = StringUtils.EMPTY;
+			if(resDTO.getPyPayment() != null){
+				billType = resDTO.getPyPayment().getPyBill().getBillType();
+			}
+			showPaymentResponse(status,Long.valueOf(orderId),errorDesc,billType);
 
 		} else {
-			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null);
+			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
 		}
 
 		this.renewSesionObject();
@@ -685,15 +689,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 * @param Long
 	 *            paymentId
 	 */
-	public void showPaymentResponse(String status, Long paymentId, String errorDesc) {
+	public void showPaymentResponse(String status, Long paymentId, String errorDesc, String billType) {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		boolean paymentStatus = false;
 		switch (status) {
 		case SupplierManagementConst.MOL_SUCCESS:
 			String msgCode = null;
-			if(getManagedBean().getPaymentType().equals(SupplierManagementConst.PROCESSING_PAYMENT)){
+			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
 				msgCode = MessageConst.INFO_721058;
-			}else if(getManagedBean().getPaymentType().equals(SupplierManagementConst.SOFTCERT_PAYMENT)){
+			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
 				msgCode = MessageConst.INFO_721065;
 			}else{
 				msgCode = MessageConst.INFO_721064;
@@ -746,8 +750,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			paymentAckBB.getManagedBean().setPaymentStatus(false);
 			//paymentAckBB.getManagedBean().setPaymentMessage(fsMsg);
 		}
-		paymentAckBB.getManagedBean().setBillTypeLbl(getPaymentMsgLabel(false));
 		
+		paymentAckBB.getManagedBean().setBillTypeLbl(getPaymentMsgLabel(billType,false));
 	}
 
 	private FacesScopes getFacesScopes() {
@@ -900,7 +904,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 		
-			showPaymentResponse(status, ordId, null);
+			showPaymentResponse(status, ordId, null,null);
 			this.renewSesionObject();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1156,22 +1160,22 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		
 		return feeType;
 	}
-	
+
 	/**
 	 * get Payment Msg Label
 	 * @param paymentType
 	 * @return String
 	 */
-	private String getPaymentMsgLabel(boolean isMessage){
+	private String getPaymentMsgLabel(String billType, boolean isMessage){
 		String pType = null;
 		
-		if(getManagedBean().getPaymentType() != null){
-			if(getManagedBean().getPaymentType().equalsIgnoreCase(SupplierManagementConst.PROCESSING_PAYMENT)){
+		if(billType != null){
+			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
 				pType = "lbl.sm.payment.response.type.proccessing";
-			}else if(getManagedBean().getPaymentType().equalsIgnoreCase(SupplierManagementConst.SOFTCERT_PAYMENT)){
-				pType = "lbl.sm.payment.response.type.softcert";
-			}else{
+			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)){
 				pType = "lbl.sm.payment.response.type.registration";
+			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
+				pType = "lbl.sm.payment.response.type.softcert";
 			}
 		}
 		
@@ -1181,5 +1185,4 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		
 		return pType;
 	}
-
 }
