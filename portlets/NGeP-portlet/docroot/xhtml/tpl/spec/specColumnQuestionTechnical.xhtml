@@ -5,14 +5,16 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:column style="width:#{isItemTypeService ? '52px' : '85px'};">
+	<ui:param name="widthPixes"
+		value="#{(isSpecificationReq and !isItemTypeService)?'110px':'85px'}" />
+	<p:column style="width:#{isItemTypeService ? '52px' : widthPixes};">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}" />
 		</f:facet>
 		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
 			<p:inputText id="qty"
-				style="min-width:0px !important;width:35px; text-align:right;"
+				style="min-width:0px !important;text-align:right;width:#{(isSpecificationReq and !isItemTypeService)?'60px':'45px'};"
 				value="#{question.clQuantity}" required="#{isValidationReq}"
 				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
 				rendered="#{empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone}">
