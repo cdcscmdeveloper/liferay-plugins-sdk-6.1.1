@@ -205,7 +205,7 @@
 						value="#{lbl['lbl.pm.address.address']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="itAddress1"
-						label="#{lbl['lbl.pm.address.address']}" maxlength="255"
+						label="#{lbl['lbl.pm.address.address']}" maxlength="100"
 						disabled="#{not isBrandNew}"
 						required="#{!empty param['disableValidation']}"
 						value="#{accessApplBackingBean.managedBean.accessAppl.address1}"
@@ -220,7 +220,7 @@
 				<td><p:inputText
 						disabled="#{not isBrandNew}"
 						value="#{accessApplBackingBean.managedBean.accessAppl.address2}"
-						size="53" maxlength="255" /></td>
+						size="53" maxlength="100" /></td>
 				<td></td>
 			</tr>
 			<tr>
@@ -228,7 +228,7 @@
 				<td><p:inputText
 						disabled="#{not isBrandNew}"
 						value="#{accessApplBackingBean.managedBean.accessAppl.address3}"
-						size="53" maxlength="255" /></td>
+						size="53" maxlength="100" /></td>
 				<td></td>
 			</tr>
 			<tr>
