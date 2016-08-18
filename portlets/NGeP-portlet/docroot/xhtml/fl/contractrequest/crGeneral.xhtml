@@ -298,31 +298,31 @@
 						value="#{lbl['lbl.fl.telno']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
-							<td style="width: 25px;"><p:inputText size="15"
+							<td style="width: 25px;"><p:inputText size="25"
 									disabled="true" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.phoneNoFull)}"
 									/></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
-							<td><p:inputText size="15" disabled="true" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.faxNoFull)}"
+							<td><p:inputText size="25" disabled="true" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.faxNoFull)}"
 									/></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPerson)}"
+				<td><p:inputText disabled="true" size="70" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPerson)}"
 						 /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
-				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactEmail)}"
+				<td><p:inputText disabled="true" size="70" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactEmail)}"
 						 /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
-				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}"
+				<td><p:inputText disabled="true" size="25" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}"
 						 /></td>
 			</tr>
 			
@@ -357,13 +357,13 @@
 						value="#{lbl['lbl.fl.telno']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
-							<td style="width: 25px;"><p:inputText size="15"
+							<td style="width: 25px;"><p:inputText size="25"
 									disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
 															contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringAddress.phoneNoFull : 
 															contractRequestBackingBean.managedBean.phoneNo}" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
-							<td><p:inputText size="15" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+							<td><p:inputText size="25" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
 															contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringAddress.faxNoFull :
 															contractRequestBackingBean.managedBean.faxNo}" /></td>
 						</tr>
@@ -372,20 +372,20 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+				<td><p:inputText disabled="true" size="70" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
 															contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringAddress.contactPerson :
 															contractRequestBackingBean.managedBean.contactPerson}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
-				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+				<td><p:inputText disabled="true" size="70" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
 															contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringAddress.contactEmail :
 															contractRequestBackingBean.managedBean.contactEmail}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
-				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+				<td><p:inputText disabled="true" size="25" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
 															contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringAddress.contactPhoneNoFull :
 															contractRequestBackingBean.managedBean.contactPhoneNo}"/></td>
 			</tr>
