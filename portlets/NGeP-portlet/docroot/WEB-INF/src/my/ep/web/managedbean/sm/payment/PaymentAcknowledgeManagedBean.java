@@ -13,6 +13,7 @@ public class PaymentAcknowledgeManagedBean extends BaseManagedBean{
 	
 	private Long paymentId;
 	private boolean paymentStatus;
+	private String billTypeLbl;
 
 	public Long getPaymentId() {
 		return paymentId;
@@ -27,6 +28,13 @@ public class PaymentAcknowledgeManagedBean extends BaseManagedBean{
 	public void setPaymentStatus(boolean paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
+	public String getBillTypeLbl() {
+		return billTypeLbl;
+	}
+	public void setBillTypeLbl(String billTypeLbl) {
+		this.billTypeLbl = billTypeLbl;
+	}
+
 	
 	
 }
