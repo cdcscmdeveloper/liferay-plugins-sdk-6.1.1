@@ -1709,8 +1709,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public String gotoBackPage() {
 		String url = getManagedBean().getGotoPreviewPage();
-		renewSesionObject();
-		return url;
+		Long contractId =  ctBB.getManagedBean().getContractVer().getCtContract().getContractId();
+		boolean isTrue =  getManagedBean().isBackPageAmendment();
+		String taskId = getManagedBean().getTaskId();
+	     renewSesionObject();
+	     if(isTrue && taskId == null){
+	    	 return gotoAmendPage(contractId);
+	     }else{
+	    		return url;
+	     }
 	}
 	
 	/**
