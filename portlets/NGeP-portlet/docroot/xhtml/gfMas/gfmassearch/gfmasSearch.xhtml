@@ -99,10 +99,11 @@
 					rendered="#{gfMasList.direction=='I'}" />
 				<h:outputText value="#{lbl['lbl.gfmas.direction.outbound']}"
 					rendered="#{gfMasList.direction=='O'}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.gfmas.targetSystem']}"
+			</p:column>			
+			
+			<p:column headerText="#{lbl['lbl.gfmas.fileName']}"
 				style="width:10%;white-space: normal;word-wrap: break-word;">
-				<h:outputText value="#{gfMasList.targetSystem}" />
+				<h:outputText value="#{gfMasList.fileName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.gfmas.createdDate']}"
