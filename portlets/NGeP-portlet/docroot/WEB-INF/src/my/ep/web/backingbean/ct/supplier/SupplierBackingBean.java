@@ -709,8 +709,14 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		} else  if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
 			validateChangeBankRequest(outcome);	
 			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);			
-			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			getManagedBean().setAutoUpdate(Boolean.FALSE);		
+			if(hasGovtSellerRole()) {
+				getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			} else {
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			}
 			return null;
 		} else {
 			return saveChangeBankRequest(outcome);
@@ -727,7 +733,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @see    Exception
      */
 	public String preSubmitChangeBankRequest(PmDigiSign pmDigiSign) throws Exception {
-		if (pmDigiSign != null && isSupplierRole()) {
+		if (pmDigiSign != null && isSupplierRole() && !hasGovtSellerRole()) {
 			pmDigiSign.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
 		    pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		    pmDigiSign.setOriginalData(prepareSupplierOriginalText());
@@ -776,10 +782,16 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			          RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		}  else if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
-					validateFactoringRequest(outcome);	
-					getManagedBean().setButtonAction(outcome);
-					getManagedBean().setAutoUpdate(Boolean.FALSE);			
-					RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			validateFactoringRequest(outcome);	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);		
+			if(hasGovtSellerRole()) {
+				getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			} else {
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			}					
 			return null;
 		} else {
 				// No GPKI for CA acknowledge
@@ -800,7 +812,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @see    Exception
      */
 	public String preSubmitFactoringRequest(PmDigiSign pmDigiSign) throws Exception {
-		if (pmDigiSign != null && isSupplierRole()) {
+		if (pmDigiSign != null && isSupplierRole() && !hasGovtSellerRole()) {
 			pmDigiSign.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
 		    pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		    pmDigiSign.setOriginalData(prepareSupplierOriginalText());
