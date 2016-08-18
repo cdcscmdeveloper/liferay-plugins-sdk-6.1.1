@@ -98,6 +98,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private HashMap<String, PmUserGroupUser> approverMap;
 		private PmDigiSign pmDigiSign;	
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
+	public boolean backPageAmendment;
 	
 	public int deductionIndex =99;
 	public int scheduleIndex =99;
@@ -750,6 +751,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchPtjProfile(PmOrgProfile searchPtjProfile) {
 		this.searchPtjProfile = searchPtjProfile;
+	}
+
+	public boolean isBackPageAmendment() {
+		return backPageAmendment;
+	}
+
+	public void setBackPageAmendment(boolean backPageAmendment) {
+		this.backPageAmendment = backPageAmendment;
 	}
 
 	/**
