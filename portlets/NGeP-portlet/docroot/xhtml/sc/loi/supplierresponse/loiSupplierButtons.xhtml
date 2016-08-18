@@ -33,7 +33,6 @@
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" update="spkiOutputPanel"
 									action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
-									actionListener="#{lOIDetailBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
 									onstart="blockWidget.show();">
 									<f:setPropertyActionListener value="#{bpmAction}"
 										target="#{lOIDetailBackingBean.managedBean.action}" />

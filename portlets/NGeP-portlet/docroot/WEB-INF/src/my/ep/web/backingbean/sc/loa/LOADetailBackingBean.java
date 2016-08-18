@@ -2620,6 +2620,7 @@ public class LOADetailBackingBean extends
 
 			}  else {
 				// spki
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 				RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 			}
 
