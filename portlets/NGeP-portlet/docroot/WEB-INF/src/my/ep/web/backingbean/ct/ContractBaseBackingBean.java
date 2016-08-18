@@ -187,7 +187,19 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()));
+				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				||getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())
+				||getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
+				||getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()));
+	}
+	
+	/**
+	 * Check is it login user is Government Seller
+	 * 
+	 * @return true, if user is Governement Seller
+	 */
+	public boolean hasGovtSellerRole() {
+		return getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value());
 	}
 	
 	/**
