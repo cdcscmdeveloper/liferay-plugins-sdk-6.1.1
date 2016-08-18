@@ -47,7 +47,6 @@
 							styleClass="ui-button"
 							disabled="#{!amendmentBackingBean.managedBean.bpmActionFlag}"
 							action="#{amendmentBackingBean.gpkiSignAction(outcome)}"
-							actionListener="#{spkiBackingBean.getChallengeQuestions}"
 							rendered="#{!amendmentBackingBean.managedBean.memberSignOff and amendmentBackingBean.isSupplierRole()}" />
 					</ui:repeat>
 					</ui:define>
