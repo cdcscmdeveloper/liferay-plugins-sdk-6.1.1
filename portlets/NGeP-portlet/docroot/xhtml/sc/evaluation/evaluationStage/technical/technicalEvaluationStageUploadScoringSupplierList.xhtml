@@ -64,7 +64,7 @@
 				<p:inputText value="#{complianceTechnicalSupplier.totalUserScore}"
 					id="technicaluploadNoActionUserScoreId"
 					label="#{lbl['lbl.tpl.spec.content.user.score']}"
-					style="text-align:right;" size="40" maxlength="18" required="true"
+					style="text-align:right;" size="35" maxlength="18" required="true"
 					disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}">
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
