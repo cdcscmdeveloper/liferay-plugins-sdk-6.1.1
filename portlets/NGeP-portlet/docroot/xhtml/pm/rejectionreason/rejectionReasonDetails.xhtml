@@ -125,7 +125,7 @@
 										value="* " styleClass="mandatory" /></th>
 								<td><p:selectOneMenu id="circularCategory" required="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode == ParameterConst.purchaseInDefault}"
 										label="#{lbl['lbl.pm.reason.circular.criteria']}"
-										styleClass="ppDropDownWidthM"
+										style="width:210px;"
 										value="#{rejectionReasonBackingBean.managedBean.selectedReason.conditionField.parameterId}">
 										<f:selectItems
 											value="#{rejectionReasonBackingBean.contractCircularConditionOptions()}" />
@@ -141,7 +141,7 @@
 								<td><p:selectOneMenu id="sourcingMethod"
 										disabled="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}"
 										label="#{lbl['lbl.pm.reason.sourcing.method']}"
-										styleClass="ppDropDownWidthM"
+										style="width:210px;"
 										value="#{rejectionReasonBackingBean.managedBean.selectedSourceMethodId}">
 										<f:selectItems
 											value="#{rejectionReasonBackingBean.sourcingMethodOptions()}" />
