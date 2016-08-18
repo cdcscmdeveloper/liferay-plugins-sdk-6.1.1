@@ -1725,8 +1725,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
 			validateContractAmendment(outcome);	
 			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);			
-			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			if(hasGovtSellerRole()) {
+				getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			} else {
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			}
 			return null;
 		}
 		else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
@@ -1747,7 +1753,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see    Exception
      */
 	public String preSubmitContractAmendment(PmDigiSign pmDigiSign) throws Exception {
-		if (pmDigiSign != null && isSupplierRole()) {
+		if (pmDigiSign != null && isSupplierRole() && !hasGovtSellerRole()) {
 			FacesScopes facesScope = new FacesScopes();
 			pmDigiSign.setCreatedBy(facesScope.getUserSessionBean().getUserId());
 		    pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
