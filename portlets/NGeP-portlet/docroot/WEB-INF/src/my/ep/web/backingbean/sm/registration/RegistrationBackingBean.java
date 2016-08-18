@@ -2126,6 +2126,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().setDisabledCompanyNameInMaintenance(true);
 			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
 		}
+		
 		if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
 				.contains(getManagedBean().getSmSupp().getBusinessType())) {
 			getManagedBean().setDisabledCompanyNameInMaintenance(true);
@@ -2134,12 +2135,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				.contains(getManagedBean().getSmSupp().getBusinessType())) {
 			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
 		}
-		if (SmApplicationUtil
+
+		SmAppl isActieveAppl = SmCommonUtil.getActiveApplBySupplier(getManagedBean().getSmSupp());
+		if(isActieveAppl != null){
+			getManagedBean().setDisabledCompanyNameInMaintenance(true);
+			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
+		}
+		
+		/*if (SmApplicationUtil
 				.isApplHasSoftcertProcessingNotComplete(getManagedBean()
 						.getSmSupp().getSmAppl())) {
 			getManagedBean().setDisabledCompanyNameInMaintenance(true);
 			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
-		}
+		}*/
+
 	}
 	
 	/**
