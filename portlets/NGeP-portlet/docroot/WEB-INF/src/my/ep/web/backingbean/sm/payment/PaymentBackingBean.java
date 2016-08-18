@@ -746,6 +746,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			paymentAckBB.getManagedBean().setPaymentStatus(false);
 			//paymentAckBB.getManagedBean().setPaymentMessage(fsMsg);
 		}
+		paymentAckBB.getManagedBean().setBillTypeLbl(getPaymentMsgLabel(false));
 		
 	}
 
@@ -1154,6 +1155,31 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		}
 		
 		return feeType;
+	}
+	
+	/**
+	 * get Payment Msg Label
+	 * @param paymentType
+	 * @return String
+	 */
+	private String getPaymentMsgLabel(boolean isMessage){
+		String pType = null;
+		
+		if(getManagedBean().getPaymentType() != null){
+			if(getManagedBean().getPaymentType().equalsIgnoreCase(SupplierManagementConst.PROCESSING_PAYMENT)){
+				pType = "lbl.sm.payment.response.type.proccessing";
+			}else if(getManagedBean().getPaymentType().equalsIgnoreCase(SupplierManagementConst.SOFTCERT_PAYMENT)){
+				pType = "lbl.sm.payment.response.type.softcert";
+			}else{
+				pType = "lbl.sm.payment.response.type.registration";
+			}
+		}
+		
+		if(isMessage){
+			return SmCommonUtil.getMessage(pType, null);
+		}
+		
+		return pType;
 	}
 
 }
