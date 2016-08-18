@@ -131,6 +131,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
+import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -171,6 +172,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
     
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
+	private static final String CONTRACT_COMMON_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml?faces-redirect=true";
 	private String editorValue;
 	private ContractBackingBean ctBackingBean = null;
 	private CtMeeting[] selectedMeetingUser;
@@ -5274,4 +5276,40 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			 ctBackingBean.getManagedBean().setButtonHideActive(true);
 		 }		
 	    }
+	
+	/**
+	 * The method used to navigate to contract details screen
+	 * for view purpose.
+	 * This method is used by fulfillment module.
+	 * 
+	 * @return the navigate URL 
+	 */
+	public String gotoCommonViewPage(Long contractId) {	
+		ContractDetailsBackingBean ctDT = null;
+		try{
+		        ctDT =  new ContractDetailsBackingBean();
+		    	IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				reqDTO.setContractId(contractId);
+				reqDTO.setContractVerId( contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
+				reqDTO.setViewOnly(true); 
+				reqDTO.setCommonView(true);
+				ctBackingBean.getManagedBean().setViewContract(true);
+				ctDT.getManagedBean().setTaskId(getManagedBean().getTaskId());
+				ctDT.setValidateContractField(reqDTO);
+			    getManagedBean().setSelectedTabIndex(0); 
+			    ctDT.getManagedBean().setBackPageAmendment(true);
+			    ctDT.getManagedBean().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
+			    reqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
+			    ctDT.getManagedBean().setWarningPercentage(contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage());
+		        FacesContext fc = FacesContext.getCurrentInstance();
+		        ctDT.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
+		        ctDT.getManagedBean().setBackPageAmendment(true);
+		       return CONTRACT_COMMON_PAGE;
+	   }finally{
+		   ctDT = null;
+	   }
+	}
 }
