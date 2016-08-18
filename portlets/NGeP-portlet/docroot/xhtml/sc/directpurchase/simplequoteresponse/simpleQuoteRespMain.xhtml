@@ -36,7 +36,6 @@
 				<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@form"
 					partialSubmit="true"
 					action="#{simpleQuoteBackingBean.supplierSubmit}"
-					actionListener="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
 					update="spkiOutputPanel" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					rendered="#{simpleQuoteBackingBean.managedBean.submitButtonFlg}">

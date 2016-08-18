@@ -4170,6 +4170,7 @@ public class DirectLOABackingBean extends
 
 			}  else {
 				// spki
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 				RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 			}
 			
@@ -4250,7 +4251,6 @@ public class DirectLOABackingBean extends
 							scLoa.getLoaId(), scLoa.getLoaNo());
 				}
 			}
-			getManagedBean().setAutoUpdate(true);
 
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -6450,5 +6450,12 @@ public class DirectLOABackingBean extends
 				}
 			}
 		}
+	}
+	
+	/**
+	 * To enable auto update flag
+	 */
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(true);
 	}
 }

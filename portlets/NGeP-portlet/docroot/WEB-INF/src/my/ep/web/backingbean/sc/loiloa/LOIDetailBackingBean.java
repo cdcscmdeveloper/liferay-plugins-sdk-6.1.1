@@ -2182,6 +2182,7 @@ public class LOIDetailBackingBean extends
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
 		} else if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
+			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 		} else {

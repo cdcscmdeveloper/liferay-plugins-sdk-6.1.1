@@ -70,7 +70,6 @@
 						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button" update="spkiPopup"
 							action="#{purchaseInquiryBackingBean.supplierSubmit}"
-							actionListener="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<f:setPropertyActionListener value="#{bpmAction}"
 								target="#{purchaseInquiryBackingBean.managedBean.action}" />

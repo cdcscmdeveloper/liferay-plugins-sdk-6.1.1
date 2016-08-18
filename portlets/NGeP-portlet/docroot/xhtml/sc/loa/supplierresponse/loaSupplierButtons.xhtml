@@ -50,7 +50,6 @@
 									styleClass="ui-button" update="spkiOutputPanel"
 									partialSubmit="true" process="@form"
 									action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
-									actionListener="#{lOADetailBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 									<f:setPropertyActionListener value="#{bpmAction}"
 										target="#{lOADetailBackingBean.managedBean.action}" />
