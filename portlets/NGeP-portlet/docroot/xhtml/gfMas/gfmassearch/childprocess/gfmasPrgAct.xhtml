@@ -45,24 +45,36 @@
 					<h:outputText value="#{pmInterfacePrgAct.financialYear}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.prg.act.code']}"
-					style="width:15%;white-space: normal;word-wrap: break-word;">
+					style="width:10%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfacePrgAct.prgActCode}" />
 				</p:column>
-
 				<p:column headerText="#{lbl['lbl.gfmas.prg.act.desc']}"
 					style="width:30%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{pmInterfacePrgAct.prgActDesc}" />
 				</p:column>
-
+				<p:column headerText="#{lbl['lbl.gfmas.effDate']}"
+					style="width:10%;white-space: normal;word-wrap: break-word;">
+					<h:outputText value="#{pmInterfacePrgAct.effDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.gfmas.expDate']}"
+					style="width:10%;white-space: normal;word-wrap: break-word;">
+					<h:outputText value="#{pmInterfacePrgAct.expDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.code.status']}"
-					style="width:20%;white-space: normal;word-wrap: break-word;">
+					style="width:10%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{lbl['lbl.gfmas.codestatus.valid']}"
 						rendered="#{pmInterfacePrgAct.codeStatus=='V'}" />
 					<h:outputText value="#{lbl['lbl.gfmas.codestatus.inValid']}"
 						rendered="#{pmInterfacePrgAct.codeStatus=='X'}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.gfmas.process.status']}"
-					style="width:15%;white-space: normal;word-wrap: break-word;">
+					style="width:10%;white-space: normal;word-wrap: break-word;">
 					<h:outputText value="#{lbl['lbl.gfmas.process.ready']}"
 						rendered="#{pmInterfacePrgAct.processStatus==0}" />
 					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
