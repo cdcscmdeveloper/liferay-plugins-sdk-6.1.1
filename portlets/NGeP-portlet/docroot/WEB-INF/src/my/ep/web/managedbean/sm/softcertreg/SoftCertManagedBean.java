@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.backingbean.pm.cc.SoftCertMaintenanceBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -57,6 +58,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private boolean renderRevokeButton;
 	private boolean allAuthSuppUserAlreadyRequested;
 	private boolean basicAppl;
+	private PmDigiSign digiSign;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -311,6 +313,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setBasicAppl(boolean basicAppl) {
 		this.basicAppl = basicAppl;
+	}
+
+	public PmDigiSign getDigiSign() {
+		return digiSign;
+	}
+
+	public void setDigiSign(PmDigiSign digiSign) {
+		this.digiSign = digiSign;
 	}
 
 }
