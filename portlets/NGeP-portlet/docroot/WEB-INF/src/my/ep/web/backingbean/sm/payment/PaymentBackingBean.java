@@ -714,7 +714,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			fc.addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.ERROR_721051,new String[]{getPaymentMsgLabel(billType,true),errorDesc},
+							MessageUtils.getMessage(MessageConst.ERROR_721051,new String[]{errorDesc},
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 			break;
