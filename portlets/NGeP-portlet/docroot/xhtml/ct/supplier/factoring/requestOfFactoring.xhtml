@@ -55,7 +55,8 @@
 				<p:graphicImage value="/css/images/ajax-loader.gif" />
 			</p:blockUI>
 			<ac:gpkiPopup textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
-				postSignAction="#{supplierBackingBean.preSubmitFactoringRequest(gpkiBackingBean.pmDigiSign)}" />
+				postSignAction="#{supplierBackingBean.preSubmitFactoringRequest(gpkiBackingBean.pmDigiSign)}" 
+				enableAutoUpdate="#{supplierBackingBean.enableAutoUpdate()}" />
 			<ac:spkiPopup password="#{supplierBackingBean.managedBean.spkiBackingBean.password}"
 				challengeAns1="#{supplierBackingBean.managedBean.spkiBackingBean.challengeAns1}"
 				challengeQues1="#{supplierBackingBean.managedBean.spkiBackingBean.challengeQues1}"
@@ -82,8 +83,7 @@
 								<p:commandButton value="#{lbl[buttonLabel]}" update="@form,@([id$=messages])"
 									styleClass="ui-button" process="@form" onstart="blockWidget.show();"	
 									onkeypress="if (event.keyCode == 13) { return false; }"	
-									oncomplete="blockWidget.hide();"  action="#{supplierBackingBean.factoringRequestSignAction(outcome)}"
-									actionListener="#{spkiBackingBean.getChallengeQuestions}"
+									oncomplete="blockWidget.hide();"  action="#{supplierBackingBean.factoringRequestSignAction(outcome)}"									
 									rendered="#{!supplierBackingBean.managedBean.viewOnly and supplierBackingBean.isSupplierRole()}"/>
 					    </ui:repeat>
 			     </td>
