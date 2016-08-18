@@ -254,7 +254,7 @@ public class SupplierUserActivationBackingBean extends
 						this.getManagedBean().setValidActivation(false);
 //							this.getManagedBean().setSmPersonnel(null);
 //							renewSesionObject();
-						return navigateToAck(resDTO.getNewEpNo(),resDTO.getSmSupplier().getSmAppl().getSupplierType());
+						return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
 
 					}catch(Exception ex){
 						throw new EpException(ex.getMessage());
@@ -288,7 +288,7 @@ public class SupplierUserActivationBackingBean extends
 							this.getManagedBean().setValidActivation(false);
 							//this.getManagedBean().setSmPersonnel(null);
 							//renewSesionObject();
-							return navigateToAck(resDTO.getNewEpNo(),resDTO.getSmSupplier().getSmAppl().getSupplierType());
+							return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
 							
 						}catch(Exception ex){
 							log.info("activateSupplierUser>>>>>>" + ex.getMessage());
