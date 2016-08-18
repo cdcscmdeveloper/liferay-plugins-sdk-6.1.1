@@ -8,10 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -243,9 +241,9 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
 				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 				signedData = (byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
+				logger.info("Data signing successful. SIGNEDTEXT " +  signedData);
 				break;
 
 			default:
