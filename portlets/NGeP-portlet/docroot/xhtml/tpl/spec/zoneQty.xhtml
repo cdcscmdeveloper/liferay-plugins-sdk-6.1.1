@@ -27,8 +27,9 @@
 				value="#{tplSpecZoneQty.qty}" required="true"
 				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
 				disabled="#{!isQuestion or !editable or (isSpecificationReq and !isSpecTypeTechnical)}">
-				<p:ajax partialSubmit="true" process="@this"
-					update="@this, zoneQtyMsg" />
+				<p:ajax partialSubmit="true" process="@this" 
+				    listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, templateSpecBean.selectedSpecQuestion.tplSpecAnswers[0], isItemTypeService)}"
+					update="@this, zoneQtyMsg, @(.calcAmount)" />
 				<ac:validateNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, templateSpecBean.selectedSpecQuestion.clUom.uomCode)}"
 					maxIntegerDigits="10" />
