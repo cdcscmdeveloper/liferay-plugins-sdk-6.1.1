@@ -5047,7 +5047,6 @@ public class SimpleQuoteBackingBean extends
 		} finally {
 			// quoteSO = null;
 		}
-		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		return null;
 	}
 
