@@ -374,18 +374,6 @@ public class SPDetailBackingBean extends
 		generateDeclarationFromVelocity(getManagedBean().getQt());
 	}
 	
-	public void validateProposalDetailsNdPopulateSpkiDtls(){
-		retrievePaidUpCapitalNdDeclarationDtls();
-		IQTProposalSO proposalSO = null;
-		try {
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			proposalSO.validateProposalDetailsBeforeSPkiSign(populateProposalDetailsTosave());
-			this.getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-		}finally{
-			 proposalSO = null;
-		}
-	}
 
 	private ProposalReqDTO populateProposalDetailsTosave(){
 		
@@ -4051,6 +4039,16 @@ public class SPDetailBackingBean extends
 	 * Spki sign action.
 	 */
 	public void spkiSignAction() {
+		retrievePaidUpCapitalNdDeclarationDtls();
+		IQTProposalSO proposalSO = null;
+		try {
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			proposalSO.validateProposalDetailsBeforeSPkiSign(populateProposalDetailsTosave());
+			this.getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+		}finally{
+			 proposalSO = null;
+		}
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
 

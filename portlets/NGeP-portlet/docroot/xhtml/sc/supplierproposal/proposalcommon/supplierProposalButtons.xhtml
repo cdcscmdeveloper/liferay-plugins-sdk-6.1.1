@@ -10,12 +10,13 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}" 
+		<p:commandButton value="#{lbl['lbl.btn.submit']}"
 			styleClass="BtnSpacing" onstart="blockWidget.show()"
-			oncomplete="blockWidget.hide()" action="#{supplierProposalDetailBackingBean.spkiSignAction}"
+			oncomplete="blockWidget.hide()"
+			action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
-			update="spkiOutputPanel" process="@form" 
-			actionListener="#{supplierProposalDetailBackingBean.validateProposalDetailsNdPopulateSpkiDtls}" />
+			update="spkiOutputPanel" process="@form">
+		</p:commandButton>
 	</div>
 
 	<p:outputPanel id="spkiOutputPanel">
