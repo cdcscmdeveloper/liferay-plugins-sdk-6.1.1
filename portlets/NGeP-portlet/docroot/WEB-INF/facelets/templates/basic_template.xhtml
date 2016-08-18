@@ -40,6 +40,7 @@
 		
 		function addChooseOnchange(upload_widget) {
 			if(upload_widget.buttonBar.find('input[type=file]').get(0).type == 'file') {
+				upload_widget.buttonBar.find('input[type=file]').get(0).title = '#{lbl['lbl.btn.upload.tooltip']}';
 				upload_widget.buttonBar.find('input[type=file]').change(function() {
 					clearInvalidFiles(upload_widget);
 					//var files = upload_widget.uploadContent.find('.files .template-upload');
