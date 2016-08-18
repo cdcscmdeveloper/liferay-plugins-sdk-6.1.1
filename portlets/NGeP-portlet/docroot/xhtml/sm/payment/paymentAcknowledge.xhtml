@@ -8,8 +8,10 @@
 	xmlns:p="http://primefaces.org/ui" >
 	
     <ui:define name="contentSection">
-		<p:panel id="acknowledge" header="#{lbl['lbl.sm.paymentLbl']}">
-			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" />
+    	<ui:param name="lblPaymentBillType"
+					value="#{empty paymentAcknowledgeBackingBean.managedBean.billTypeLbl ? 'lbl.sm.payment.process' : paymentAcknowledgeBackingBean.managedBean.billTypeLbl}" />
+		<p:panel id="acknowledge" header="#{lbl[lblPaymentBillType]}">
+			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" escape="false" />
 
 			<p:outputPanel rendered="#{(paymentAcknowledgeBackingBean.managedBean.paymentId != null) and (paymentAcknowledgeBackingBean.managedBean.paymentStatus)}">
 				<h:outputText value="#{lbl['lbl.sm.payment.click']} " />
