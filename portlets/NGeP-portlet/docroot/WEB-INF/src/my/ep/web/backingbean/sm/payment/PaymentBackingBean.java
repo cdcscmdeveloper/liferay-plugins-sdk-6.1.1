@@ -696,12 +696,13 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		switch (status) {
 		case SupplierManagementConst.MOL_SUCCESS:
 			String msgCode = null;
-			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
+			if(getManagedBean().getPaymentType().equals(SupplierManagementConst.PROCESSING_PAYMENT)){
 				msgCode = MessageConst.INFO_721058;
+			}else if(getManagedBean().getPaymentType().equals(SupplierManagementConst.SOFTCERT_PAYMENT)){
+				msgCode = MessageConst.INFO_721064;
 			}else{
-				msgCode = MessageConst.INFO_721059;
+				msgCode = MessageConst.INFO_721065;
 			}
-			
 			fc.addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
