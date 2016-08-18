@@ -530,7 +530,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				: "SC", getManagedBean().getLoginUserPersonnelInfo()
 				.getSmAppl().getApplId(), getManagedBean().getSoftcertDocNo(),
 				prepareOriginalText());
-		SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+		SpkiBackingBean spkiBackingBean = this.getManagedBean().getSpkiBackingBean();
 		byte[] signedData = spkiBackingBean
 				.spkiSignTransaction(prepareOriginalText());
 		pmDigiSign.setSpkiSignedData(signedData);
