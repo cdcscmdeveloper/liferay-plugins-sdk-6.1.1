@@ -457,15 +457,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			resDTO = changeBankAccSO.saveChangeBankAccRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
-				String messageId = MessageConst.INFO_700043;
+				String messageId = MessageConst.INFO_758005;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-					messageId = MessageConst.INFO_700011;
+					messageId = MessageConst.INFO_758006;
 				}
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(messageId,
-										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
-												this.getManagedBean().getContractVer().getDocType()), 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,this.getManagedBean().getContractVer().getDocType()),
+												ResourceBundleUtils.getMessage("lbl.ct.bank.ack.message", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),
 												getManagedBean().getContractVer().getCtContract().getContractNo()},
 										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			    if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
