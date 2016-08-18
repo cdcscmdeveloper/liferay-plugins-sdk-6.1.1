@@ -47,7 +47,8 @@
 		</p:blockUI>
 		<ac:gpkiPopup
 			textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
-			postSignAction="#{supplierBackingBean.preSubmitChangeBankRequest(gpkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{supplierBackingBean.preSubmitChangeBankRequest(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{supplierBackingBean.enableAutoUpdate()}" />
 		<ac:spkiPopup
 			password="#{supplierBackingBean.managedBean.spkiBackingBean.password}"
 			challengeAns1="#{supplierBackingBean.managedBean.spkiBackingBean.challengeAns1}"
@@ -72,8 +73,7 @@
 							styleClass="ui-button" process="@form"
 							onstart="blockWidget.show();" onkeypress="if (event.keyCode == 13) { return false; }"
 							oncomplete="blockWidget.hide();" 						
-							action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
-							actionListener="#{spkiBackingBean.getChallengeQuestions}"
+							action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 							
 							rendered="#{supplierBackingBean.isSupplierRole()}"/>
 						<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
 							styleClass="ui-button" process="@form"
