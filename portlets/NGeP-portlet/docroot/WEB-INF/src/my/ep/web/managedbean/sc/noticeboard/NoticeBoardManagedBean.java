@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.bean.sc.SupplierQualificationBean;
@@ -21,7 +20,6 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
@@ -29,7 +27,6 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sc.quatationtender.AwardedItemsBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
@@ -173,10 +170,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private boolean  disableRegisterBtn;
 	private boolean isNavigateFromNoticeBoard = true;
 	private List<TreeNode> zoneTree;
-	private List<ScQtBsvRegistration> bsvRegistrations;
-	/** The spki backing bean. */
-	@ManagedProperty(value = "#{spkiBackingBean}")
-	private SpkiBackingBean spkiBackingBean;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1238,34 +1231,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneTree(List<TreeNode> zoneTree) {
 		this.zoneTree = zoneTree;
-	}
-
-	/**
-	 * @return the spkiBackingBean
-	 */
-	public SpkiBackingBean getSpkiBackingBean() {
-		return spkiBackingBean;
-	}
-
-	/**
-	 * @param spkiBackingBean the spkiBackingBean to set
-	 */
-	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
-		this.spkiBackingBean = spkiBackingBean;
-	}
-
-	/**
-	 * @return the bsvRegistrations
-	 */
-	public List<ScQtBsvRegistration> getBsvRegistrations() {
-		return bsvRegistrations;
-	}
-
-	/**
-	 * @param bsvRegistrations the bsvRegistrations to set
-	 */
-	public void setBsvRegistrations(List<ScQtBsvRegistration> bsvRegistrations) {
-		this.bsvRegistrations = bsvRegistrations;
 	}
 
 
