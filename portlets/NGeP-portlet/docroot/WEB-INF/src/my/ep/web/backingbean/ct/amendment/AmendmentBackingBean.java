@@ -512,25 +512,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						
 					     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)) {
 						           this.getManagedBean().setBpkSaSkApprover(true);
-					     } 
-			        
-				    if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null
-				    		&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() != null) {		    	  
-				    	for (ScLoaWitness scLoaWitness : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses()) {
-				    		if ((getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
-				    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
-				    				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))
-				    				    && scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_AGENCY)) {
-				    			          getManagedBean().setScLoaWitness(scLoaWitness);
-				    			         break;
-				    		 }
-				    		if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
-				    				&& scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_SUPPLIER)) {
-				    			    getManagedBean().setScLoaWitness(scLoaWitness);
-				    			    break;
-				    		}		    		
-				    	}
-				    }
+					     }
 				    
 				    if (this.getManagedBean().isLetterOfAcceptance()) {
 				    	getLoaDocumentList();
@@ -617,6 +599,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						   for(ScLoaWitness witness : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses()){
 							        if(witness.getPartyType().equalsIgnoreCase(ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER)){
 							        	getManagedBean().setScLoaWitness(witness);
+							        	break;
 							        }
 						   }
 					}
@@ -913,10 +896,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     	     }
 	     	  
 	     	     if (getManagedBean().isPrepareLOA()) {
-	     		       if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() == null) {
-	     			         ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaWitnesses(new ArrayList<ScLoaWitness>());
-	     			         ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
-	     		       }
 	     		      int contractDuration = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() 
      					   + ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod();
      			      ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractDuration(new BigDecimal(contractDuration));
