@@ -119,7 +119,7 @@
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
 						<p:ajax event="change"
-							update="docTypeSearch,docStatusSearch,docDoStatusSearch,docInvStatusSearch"
+							update="docTypeSearch,docTypeSearch1,docStatusSearch,docDoStatusSearch,docInvStatusSearch,searchPhysContractNo"
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu></td>
 			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
@@ -202,18 +202,24 @@
 						value="#{flDocumentBackingBean.managedBean.searchPhysLoaNo}"></p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phyloa']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
 					</tr>
+				</table>	
+			</h:panelGroup>
+				<table>
 					<tr>
 						<td style="width: 190px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
 								value="#{lbl['lbl.fl.doc.maintain.contract.no']}" /></td>
-						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}" 
 						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
 						<td style="width: 340px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
 								value="#{lbl['lbl.fl.physical.contract.no']}" /></td>
-						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}" id="searchPhysContractNo"
 						value="#{flDocumentBackingBean.managedBean.searchPhysContractNo}"></p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
 					</tr>
+				</table>
+			<h:panelGroup id="docTypeSearch1">	
+				<table>	
 					<tr>
 						<td style="width: 190px;"><p:outputLabel
 								rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
