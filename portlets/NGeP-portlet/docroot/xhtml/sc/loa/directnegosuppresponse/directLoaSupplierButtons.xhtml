@@ -34,14 +34,14 @@
 										password="#{directLOABackingBean.managedBean.spkiBackingBean.password}"
 										challengeAns1="#{directLOABackingBean.managedBean.spkiBackingBean.challengeAns1}"
 										challengeQues1="#{directLOABackingBean.managedBean.spkiBackingBean.challengeQues1}"
-										postSignAction="#{directLOABackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" />
+										postSignAction="#{directLOABackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}"
+										enableAutoUpdate="#{directLOABackingBean.enableAutoUpdate}" />
 								</p:outputPanel>
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" update="spkiOutputPanel"
 									partialSubmit="true" process="@form"
 									disabled="#{!directLOABackingBean.managedBean.agreeWithTermsConditions}"
 									action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
-									actionListener="#{directLOABackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 									<f:setPropertyActionListener value="#{bpmAction}"
 										target="#{directLOABackingBean.managedBean.action}" />
