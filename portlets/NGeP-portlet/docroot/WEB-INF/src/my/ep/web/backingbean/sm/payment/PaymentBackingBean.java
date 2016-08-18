@@ -238,6 +238,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		this.getManagedBean().setDefaultCertPaymentMap(
 				new HashMap<Long, PyBillDtl>());
 		for (PyBillDtl billDtl : pyBillDtlLs) {
+			getManagedBean().setPaymentType(billDtl.getItemCode().getParameterCode());
 			if (billDtl.getItemCode().getParameterCode()
 					.equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
 				getManagedBean().setSoftcertPayment(true);
@@ -247,7 +248,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 						.put(billDtl.getBillDtlRefId(), billDtl);
 						
 			} else {
-				getManagedBean().setPaymentType(billDtl.getItemCode().getParameterCode());
 				this.getManagedBean().setApplicationPayment(billDtl);
 			}
 		}
@@ -699,9 +699,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			if(getManagedBean().getPaymentType().equals(SupplierManagementConst.PROCESSING_PAYMENT)){
 				msgCode = MessageConst.INFO_721058;
 			}else if(getManagedBean().getPaymentType().equals(SupplierManagementConst.SOFTCERT_PAYMENT)){
-				msgCode = MessageConst.INFO_721064;
-			}else{
 				msgCode = MessageConst.INFO_721065;
+			}else{
+				msgCode = MessageConst.INFO_721064;
 			}
 			fc.addMessage(
 					null,
