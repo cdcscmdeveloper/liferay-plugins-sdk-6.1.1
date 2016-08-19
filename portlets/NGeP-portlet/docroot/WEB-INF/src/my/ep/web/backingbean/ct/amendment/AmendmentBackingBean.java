@@ -4546,14 +4546,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			context.put("contractNo",ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
 			context.put("contractName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
 			
-			String procurementMode = "";
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
-				procurementMode = "Tawaran Pelawaan Harga";
-			} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
-				procurementMode = "Sebut Harga";
-			} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER)) {
-				procurementMode = "Tender";
-			}
+			String procurementMode = getParameterDesc(ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode());
 			context.put("procurementMode", procurementMode);
 			
 			if (scLoa.getBondAmt() != null && scLoa.isBondReq()
