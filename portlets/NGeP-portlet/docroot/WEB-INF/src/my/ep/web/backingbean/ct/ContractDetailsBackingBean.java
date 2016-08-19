@@ -21,6 +21,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
@@ -32,6 +33,10 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.ct.IContractSO;
@@ -1706,18 +1711,40 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * The method used to navigate to previous screen.
 	 * 
 	 * @return the navigate URL 
+	 * @throws IOException 
 	 */
-	public String gotoBackPage() {
-		String url = getManagedBean().getGotoPreviewPage();
-		Long contractId =  ctBB.getManagedBean().getContractVer().getCtContract().getContractId();
-		boolean isTrue =  getManagedBean().isBackPageAmendment();
-		String taskId = getManagedBean().getTaskId();
-	     renewSesionObject();
-	     if(isTrue && taskId == null){
-	    	 return gotoAmendPage(contractId);
-	     }else{
+	public String gotoBackPage() throws IOException {
+		try {
+		             String url = getManagedBean().getGotoPreviewPage();
+		             Long contractId =  ctBB.getManagedBean().getContractVer().getCtContract().getContractId();
+		             boolean isTrue =  getManagedBean().isBackPageAmendment();
+		             String taskId = getManagedBean().getTaskId();
+	                renewSesionObject();
+	                if(isTrue && taskId == null){
+	    	               return gotoAmendPage(contractId);
+	                 }else if (isTrue && taskId != null){
+	    		              FacesScopes facesScope = new FacesScopes();
+				              ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+				              String commonUrl = themeDisplay.getURLCurrent().substring(
+						           0,themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup()
+								.getFriendlyURL())	+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+			                 	System.out.println("commonUrl" + commonUrl);
+
+				               ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+				               externalContext.redirect(commonUrl + "/" +ContractConst.NAV_TO_CONTRACT_AMENDMENT + "?taskId="+ taskId);
+	     }	else{
+	
 	    		return url;
 	     }
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	/**
