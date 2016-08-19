@@ -11011,10 +11011,10 @@ public class ReportBackingBean extends
 							&& (getManagedBean().getRptGenBean()
 									.isCtSupplierNameCPView())) {
 						getManagedBean().getRptGenBean()
-								.setCtSupplierDefaultView(true);					
+								.setCtSupplierDefaultView(true);
 					} else if ((this.getSupplCompanyList().size() == 0)
 							&& (getManagedBean().getRptGenBean()
-									.isFlSupplierView())) {					
+									.isFlSupplierView())) {
 						getManagedBean().getRptGenBean().setCtSupplierTextView(
 								true);
 					}
@@ -11023,7 +11023,8 @@ public class ReportBackingBean extends
 								.setCtGroupFiveWithoutSupplView(true);
 					}
 				} else {
-					if (getManagedBean().getRptGenBean().isCtSupplierNameCPView()) {
+					if (getManagedBean().getRptGenBean()
+							.isCtSupplierNameCPView()) {
 						getManagedBean().getRptGenBean().setCtSupplierTextView(
 								true);
 					}
@@ -11032,6 +11033,32 @@ public class ReportBackingBean extends
 								.setCtGroupFiveWithSupplView(true);
 					}
 				}
+			} else if (this
+					.getReportValue()
+					.equals(ReportConst.CT_PANEL_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL)) {
+				getParameterCodeTypeString();
+				if (StringUtils.isNotEmpty(parameterCodeType)
+						&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+					retrieveSupplierCompName();
+					if ((this.getSupplCompanyList().size() > 0)
+							&& (getManagedBean().getRptGenBean()
+									.isCtSupplierNameCPView())) {
+						getManagedBean().getRptGenBean()
+								.setCtSupplierDefaultView(true);
+					} else if ((this.getSupplCompanyList().size() == 0)
+							&& (getManagedBean().getRptGenBean()
+									.isFlSupplierView())) {
+						getManagedBean().getRptGenBean().setCtSupplierTextView(
+								true);
+					}
+				} else {
+					if (getManagedBean().getRptGenBean()
+							.isCtSupplierNameCPView()) {
+						getManagedBean().getRptGenBean().setCtSupplierTextView(
+								true);
+					}
+				}
+
 			}
 
 		}
