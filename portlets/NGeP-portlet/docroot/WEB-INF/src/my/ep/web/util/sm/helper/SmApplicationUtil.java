@@ -1519,7 +1519,9 @@ public class SmApplicationUtil {
 			}
 			if (errMsg != null && errMsg.length() > 0) {
 				validSave = false;
-				setNavigationBackToCurrentPage(currentTab, managedBean);
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_ERROR, null, errMsg.toString()));
@@ -1529,7 +1531,9 @@ public class SmApplicationUtil {
 				SupplierManagementConst.STYPE_CONTRACTOR)) {
 			if (staffCount < 1) {
 				validSave = false;
-				setNavigationBackToCurrentPage(currentTab, managedBean);
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
 				throw new EpException(MessageConst.ERROR_722513, new String[] {
 						ResourceBundleUtils.getMessage(
 								"lbl.sm.personnel.comprole.staff",
@@ -1555,7 +1559,9 @@ public class SmApplicationUtil {
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT))
 				&& directorCount < 1) {
 			validSave = false;
-			setNavigationBackToCurrentPage(currentTab, managedBean);
+			if (currentTab != -1) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+			}
 			throw new EpException(MessageConst.ERROR_722513, new String[] {
 					ResourceBundleUtils.getMessage(
 							"lbl.sm.personnel.comprole.director",
@@ -1573,7 +1579,9 @@ public class SmApplicationUtil {
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
 				&& directorCount < 2) {
 			validSave = false;
-			setNavigationBackToCurrentPage(currentTab, managedBean);
+			if (currentTab != -1) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+			}
 			throw new EpException(MessageConst.ERROR_722513, new String[] {
 					ResourceBundleUtils.getMessage(
 							"lbl.sm.personnel.comprole.director",
@@ -1587,7 +1595,9 @@ public class SmApplicationUtil {
 		}
 		if (mgmtCount < 1) {
 			validSave = false;
-			setNavigationBackToCurrentPage(currentTab, managedBean);
+			if (currentTab != -1) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+			}
 			throw new EpException(MessageConst.ERROR_722513, new String[] {
 					ResourceBundleUtils.getMessage(
 							"lbl.sm.personnel.mngmnt.staff",
