@@ -3867,6 +3867,8 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
 				case "70032":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
+				case "70004":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				default:
 					log.info("MyIDENTITY ERROR: " + identificationNo + " - "
 							+ resDTO.getStatusCode() + " - "
