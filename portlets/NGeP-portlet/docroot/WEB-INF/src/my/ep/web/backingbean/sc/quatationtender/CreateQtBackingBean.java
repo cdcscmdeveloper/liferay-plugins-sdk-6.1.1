@@ -1349,12 +1349,22 @@ public class CreateQtBackingBean extends
 			//throw new EpException(MessageConst.ERROR_760146);
 		}
 		if (!rootTrees.isEmpty()) {
-			getManagedBean()
-					.getQt()
-					.getScQtSupplierCriteria()
-					.getQtZoneCriterias()
-					.setTplSpecZoneDtls(
+			
+			ScQtZoneCriteria zonCriteria = getManagedBean().getQt()
+					.getScQtSupplierCriteria().getQtZoneCriterias();
+			zonCriteria.setTplSpecZoneDtls(
 							convertTreeNodesToZoneCriteria(rootTrees, zoneDtl));
+			// setting into zones bean to validate zones while adding 
+			if (CollectionUtils.isNotEmpty(zonCriteria.getTplSpecZoneDtls())) {
+				List<ZonesBean> zonBeansList = new ArrayList<ZonesBean>();
+				for (TplSpecZoneDtl tplSpecZoneDtl : zonCriteria
+						.getTplSpecZoneDtls()) {
+					ZonesBean bean = new ZonesBean();
+					bean.setTplSpecZoneDtl(tplSpecZoneDtl);
+					zonBeansList.add(bean);
+				}
+				this.getManagedBean().setBeans(zonBeansList);
+			}
 		}
 		ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt()
 				.getScQtSupplierCriteria();
