@@ -245,7 +245,6 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 				signedData = (byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
 				logger.info("Data signing successful. SIGNEDTEXT " +  signedData);
 				break;
@@ -274,8 +273,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 		if(getSpkiEnabledProperty().equalsIgnoreCase("true")){
 			return 	spkiEnabledSignTransaction(originalText);
-		}else{		
-			RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
+		}else{
 			return  null;
 		}
 	}
@@ -322,19 +320,19 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 		
 		Object returnObj = null;
 		
-		try {
-			if (postSignActionMtdExpr != null) {
-				returnObj = postSignActionMtdExpr.invoke(
-						FacesContext.getCurrentInstance().getELContext(),
-						new Object[] { pmDigiSign });
-			}
-		} finally {
-			if (enableAutoUpdateMtdExpr != null) {
-				enableAutoUpdateMtdExpr.invoke(
-						FacesContext.getCurrentInstance().getELContext(),
-						new Object[] {});
-			}
+		if (postSignActionMtdExpr != null) {
+			returnObj = postSignActionMtdExpr.invoke(
+					FacesContext.getCurrentInstance().getELContext(),
+					new Object[] { pmDigiSign });
 		}
+		
+		if (enableAutoUpdateMtdExpr != null) {
+			enableAutoUpdateMtdExpr.invoke(
+					FacesContext.getCurrentInstance().getELContext(),
+					new Object[] {});
+		}
+		
+		RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 		
 		if (returnObj != null) {
 			return returnObj.toString();
