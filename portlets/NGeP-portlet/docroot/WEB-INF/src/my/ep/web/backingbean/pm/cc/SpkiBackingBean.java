@@ -322,16 +322,18 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 		
 		Object returnObj = null;
 		
-		if (postSignActionMtdExpr != null) {
-			returnObj = postSignActionMtdExpr.invoke(
-					FacesContext.getCurrentInstance().getELContext(),
-					new Object[] { pmDigiSign });
-		}
-		
-		if (enableAutoUpdateMtdExpr != null) {
-			enableAutoUpdateMtdExpr.invoke(
-					FacesContext.getCurrentInstance().getELContext(),
-					new Object[] {});
+		try {
+			if (postSignActionMtdExpr != null) {
+				returnObj = postSignActionMtdExpr.invoke(
+						FacesContext.getCurrentInstance().getELContext(),
+						new Object[] { pmDigiSign });
+			}
+		} finally {
+			if (enableAutoUpdateMtdExpr != null) {
+				enableAutoUpdateMtdExpr.invoke(
+						FacesContext.getCurrentInstance().getELContext(),
+						new Object[] {});
+			}
 		}
 		
 		if (returnObj != null) {
