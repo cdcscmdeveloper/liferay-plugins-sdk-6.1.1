@@ -7117,6 +7117,9 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil
 					.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
 							.getSmAppl().getSmPersonnels());
+			
+			//validate personnel
+			SmApplicationUtil.validatePersonnelBeforeSave(true, -1, getManagedBean());
 
 			// validate branch
 			SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
