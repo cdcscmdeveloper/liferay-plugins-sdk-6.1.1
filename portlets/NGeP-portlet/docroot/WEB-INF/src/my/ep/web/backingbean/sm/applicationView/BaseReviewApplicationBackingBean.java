@@ -93,6 +93,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.eclipse.persistence.exceptions.ValidationException;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
@@ -160,6 +161,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				SmApplRevisionResDTO resDTO = applRevisionSO
 						.readApplicationHist(reqDTO);
 				setApplication(resDTO.getSmAppl());
+				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 			}
 
 		} catch (NullPointerException ne) {
@@ -451,7 +453,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	private void initStep0BaseInfo(SmAppl smAppl) {
 		getManagedBean().setSmAppl(smAppl);
-		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
+		
+		if(getManagedBean().getSmSupplier()==null){
+			try{
+				getManagedBean().setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
+			}catch(ValidationException ex){
+				log.debug(ex.getMessage());
+			}
+		}
+
 		getManagedBean().setBusinessTypeVal(
 				SmApplicationUtil.assignSupplierBusinessType(getManagedBean()
 						.getSmSupplier()));
