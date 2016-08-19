@@ -43,7 +43,7 @@
 		         <p:column style="width:10%; white-space:normal;" styleClass="column-align-center">
 		            <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
-	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
+	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.min.order.qty']}"/>
 	               	</f:facet>	               	
 	               	<p:inputText value="#{ctItemVar.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;width:130px;" label="#{lbl['lbl.ct.min.order.qty']}"
 		        		maxlength="#{ctItemVar.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{ctBackingBean.managedBean.viewContract}">
@@ -581,7 +581,7 @@
 		      <p:column style="width:10%; white-space:normal;" styleClass="column-align-center">
 	            <f:facet name="header">
 		            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
-               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
+               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.min.order.qty']}"/>
                	</f:facet>	               	
                	<p:inputText value="#{data.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;width:130px;" label="#{lbl['lbl.ct.min.order.qty']}"
 	        		maxlength="#{data.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{ctBackingBean.managedBean.viewContract}">
