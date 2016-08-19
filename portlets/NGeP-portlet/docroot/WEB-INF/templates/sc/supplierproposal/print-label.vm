@@ -15,7 +15,22 @@
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	#foreach( $sampleItem in $sampleItems )
 		<tr style="width : 100%">
-         <td style="width : 10%"></td><td style="width : 80%"><h1>$lableNo - $sampleItem.subLableNo</h1></td><td style="width : 10%"></td>
+         <td style="width : 10%"></td><td style="width : 80%"><h3>PTJ Code - $PTJCode</h3></td><td style="width : 10%"></td>
+        </tr>
+		<tr style="width : 100%">
+         <td style="width : 10%"></td><td style="width : 80%"><h3>PTJ Name - $PTJName</h3></td><td style="width : 10%"></td>
+        </tr>
+		<tr style="width : 100%">
+         <td style="width : 10%"></td><td style="width : 80%"><h3>QT No - $QTNo</h3></td><td style="width : 10%"></td>
+        </tr>
+		<tr style="width : 100%">
+         <td style="width : 10%"></td><td style="width : 80%"><h4>QT Title - $QTTitle</h4></td><td style="width : 10%"></td>
+        </tr>
+        <tr style="width : 100%">
+         <td style="width : 10%"></td><td style="width : 80%"><h3>Item Name - $sampleItem.scRequestItem.itemName</h3></td><td style="width : 10%"></td>
+        </tr>
+		<tr style="width : 100%">
+         <td style="width : 10%"></td><td style="width : 80%"><h2>$lableNo - $sampleItem.subLableNo</h2></td><td style="width : 10%"></td>
         </tr>
 	#end
 	</table>
