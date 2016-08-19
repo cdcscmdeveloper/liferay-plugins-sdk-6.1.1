@@ -20,32 +20,40 @@
 	</cc:interface>
 
 	<cc:implementation>
-		
-	<script>
-		$(document).keypress(
+		<c:choose>
+			<c:when test="#{not empty cc.getValueExpression('enableAutoUpdate')}">
+				<p:remoteCommand name="spkiAutoUpdateAction"
+					action="#{cc.attrs.enableAutoUpdate}" />
+			</c:when>
+			<c:otherwise>
+				<p:remoteCommand name="spkiAutoUpdateAction" />
+			</c:otherwise>
+		</c:choose>
+		<p:remoteCommand name="spkiPostSignAction"
+			action="#{cc.attrs.postSignAction}" />
+			
+				<script>
+	$(document).keypress(
 		    function(event){
 		     if (event.which == '13') {
 		        event.preventDefault();
 		      }
-		});
-		
-		var runEnableAutoUpdate = true;
-		function setRunEnableAutoUpdate(runEnableAutoUpdate) {
-		  this.runEnableAutoUpdate = runEnableAutoUpdate;
-		}
 
-		function isRunEnableAutoUpdate() {
-		  return this.runEnableAutoUpdate;
-		}
+
+		});
+	</script>
+		<script>
+			function spkiSign() {
+				spkiAutoUpdateAction();
+				spkiPostSignAction();
+				spkiBlockWidget.show();
+			}
+			
+		
 	</script>
 		<p:dialog header="#{lbl['lbl.cc.spki.title']}" widgetVar="spki_dlg"
 			resizable="false" modal="true">
-			
-			<p:ajax event="close" listener="#{cc.attrs.enableAutoUpdate}" 
-				onstart="return isRunEnableAutoUpdate()" 
-				oncomplete="setRunEnableAutoUpdate(true);"
-				disabled="#{empty cc.getValueExpression('enableAutoUpdate')}" />
-			
+
 			<p:blockUI block="spkiPopup" widgetVar="spkiBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
@@ -59,9 +67,7 @@
 						<h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
 						<p:password id="password"
 							value="#{cc.attrs.password}" />
-						<p:commandButton id="spkiSign" value="#{lbl['lbl.btn.sign']}" 
-							onstart="spkiBlockWidget.show(); setRunEnableAutoUpdate(false);"
-							action="#{spkiBackingBean.spkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}"
+						<p:commandButton id="spkiSign" value="#{lbl['lbl.btn.sign']}" onstart="spkiSign();" 
 							oncomplete="spkiBlockWidget.hide();" />
 					</h:panelGrid>
 				</span>
