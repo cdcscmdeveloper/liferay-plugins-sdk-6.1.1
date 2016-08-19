@@ -21,18 +21,25 @@
 			<ac:paginator for="zStanPriceTableId"></ac:paginator>
 
 
-			<p:column>
+			<p:column width="30%">
 				<f:facet name="header">
 					#{lbl['lbl.cm.zm.name']}
 				</f:facet>
 				<p:selectOneMenu value="#{standard.cmSupplierZone.suppZoneId}" disabled="true"
-					style="width: 100%;">
+					style="width: 90%;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
 						var="zone" itemLabel="#{zone.suppZoneName}"
 						itemValue="#{zone.suppZoneId}"></f:selectItems>
 				</p:selectOneMenu>
+				
+				<p:commandLink id="viewAllId" title="#{lbl['lbl.cm.view']}"
+					disabled="#{standard.cmSupplierZone.suppZoneId==0}" update=":form:zoneDtlsId"
+					oncomplete="zoneDtlspopUp.show()"
+					action="#{catalogueBackingBean.viewAllZone(standard.cmSupplierZone.suppZoneId)}">
+					<p:graphicImage value="/css/images/design/document.png"></p:graphicImage>
+				</p:commandLink>
 
 			</p:column>
 

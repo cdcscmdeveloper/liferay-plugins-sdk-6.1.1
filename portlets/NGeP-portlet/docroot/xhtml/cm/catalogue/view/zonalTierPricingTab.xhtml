@@ -24,12 +24,19 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.zm.name']}
 				</f:facet>
-				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}" style="width: 100%;" disabled="true">
+				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}" style="width: 90%;" disabled="true">
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
 						var="zone" itemLabel="#{zone.suppZoneName}"
 						itemValue="#{zone.suppZoneId}"></f:selectItems>
 				 </p:selectOneMenu>
+				 
+				 <p:commandLink id="viewAllTierId" title="#{lbl['lbl.cm.view']}"
+					disabled="#{tier.cmSupplierZone.suppZoneId==0}" update=":form:zoneDtlsId"
+					oncomplete="zoneDtlspopUp.show()"
+					action="#{catalogueBackingBean.viewAllZone(tier.cmSupplierZone.suppZoneId)}">
+					<p:graphicImage value="/css/images/design/document.png"></p:graphicImage>
+				</p:commandLink>
 
 			</p:column>
 
