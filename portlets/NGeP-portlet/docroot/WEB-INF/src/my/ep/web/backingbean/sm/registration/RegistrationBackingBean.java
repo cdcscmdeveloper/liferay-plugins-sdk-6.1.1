@@ -1183,8 +1183,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			List<SelectItem> stateLs = SmCommonUtil.getStateList(this.getManagedBean().getSmPermenantAdd().getPmCountry().getCountryId());
 			this.getManagedBean().setPermenantStateLs(stateLs);
 			//registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId
-			getManagedBean().getSmPermenantAdd().getPmDistrict().setDistrictId(null);
-			getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
+			if(getManagedBean().getSmPermenantAdd().isBrandNew()){
+				getManagedBean().getSmPermenantAdd().getPmDistrict().setDistrictId(null);
+				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
+			}
 		}
 	}
 
