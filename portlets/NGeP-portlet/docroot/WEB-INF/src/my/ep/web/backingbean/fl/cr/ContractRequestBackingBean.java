@@ -3905,7 +3905,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(quantityMap.containsKey(ctContractItem.getScRequestItem().getRequestNoteItemId())){
 					BigDecimal flOrederedQty =  quantityMap.get(ctContractItem.getScRequestItem().getRequestNoteItemId());
 					if(flOrederedQty.doubleValue() <  ctContractItem.getMinimumOrderQty()){
-						throw new EpException(MessageConst.ERROR_745075, new String[]{flOrederedQty.toString(),ctContractItem.getScRequestItem().getItemName(),Double.toString(ctContractItem.getMinimumOrderQty())});
+						throw new EpException(MessageConst.ERROR_745075, new String[]{ctContractItem.getScRequestItem().getItemName()});
 					}
 				}
 			}
@@ -4273,7 +4273,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			CircularDetailResDTO resDTO = circularDetailSO.getCircularItemMinQtyAndOrderAmt(reqDTO);
 			
 			if(new Double(entryQty.getValue().get(0)) < resDTO.getMinimumOrderQty().doubleValue()){
-				throw new EpException(MessageConst.ERROR_745075, new String[]{entryQty.getValue().get(0).toString(),entryQty.getValue().get(2),resDTO.getMinimumOrderQty().toString()});
+				throw new EpException(MessageConst.ERROR_745075, new String[]{entryQty.getValue().get(2)});
 			}
 			if(new Double(entryQty.getValue().get(1)) < resDTO.getMinimumOrderAmt().doubleValue()){
 				throw new EpException(MessageConst.ERROR_745076, new String[]{entryQty.getValue().get(1).toString(),entryQty.getValue().get(2),resDTO.getMinimumOrderAmt().toString()});
