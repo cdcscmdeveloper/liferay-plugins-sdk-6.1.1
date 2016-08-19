@@ -172,6 +172,7 @@ import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
@@ -3106,6 +3107,16 @@ public class QTDetailBackingBean extends
 									scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
 								List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
 								populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+								// setting into zones bean to validate zones while adding 
+								if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+									List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
+									for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
+										ZonesBean bean = new ZonesBean();
+										bean.setTplSpecZoneDtl(specZoneDtl);
+										zoneBeanLst.add(bean);
+									}
+									this.getManagedBean().setBeans(zoneBeanLst);
+								}
 							}
 						}
 
