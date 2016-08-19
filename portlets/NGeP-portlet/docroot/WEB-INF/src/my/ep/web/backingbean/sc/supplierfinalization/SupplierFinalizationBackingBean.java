@@ -2075,8 +2075,10 @@ public class SupplierFinalizationBackingBean extends
 						Set<String> committeeSet = new HashSet<String>();
 						for (String committee : 
 										higherAuthoritiesMap.keySet()) {
-							committee = committee.replace("_EX", StringUtils.EMPTY);
-							committee = committee.replace("_NU", StringUtils.EMPTY);
+							committee = committee.replace(SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_OTHERS, 
+														  StringUtils.EMPTY);
+							committee = committee.replace(SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_NON_UNANIMOUS, 
+														  StringUtils.EMPTY);
 							committeeSet.add(committee);
 						}
 						
@@ -4150,11 +4152,13 @@ public class SupplierFinalizationBackingBean extends
 							= getManagedBean().getHigherAuthoritiesMap();
 				
 				// 1 - Non Unanimous decision
-				// 2 - Awarded price exceeded committee authority
+				// != 1 - Other decision(s)
 				if ("1".equals(reason.getReasonCode())) {
-					higherCommittees = higherAuthoritiesMap.get(committeeType + "_NU");
-				} else if ("2".equals(reason.getReasonCode())) {
-					higherCommittees = higherAuthoritiesMap.get(committeeType + "_EX");
+					higherCommittees = higherAuthoritiesMap.get(committeeType + 
+							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_NON_UNANIMOUS);
+				} else {
+					higherCommittees = higherAuthoritiesMap.get(committeeType + 
+							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_OTHERS);
 				}
 			}
 		}
@@ -4557,8 +4561,8 @@ public class SupplierFinalizationBackingBean extends
 			}
 			if (MapUtils.isNotEmpty(
 					higherAuthoritiesMap) && 
-						!higherAuthoritiesMap
-							.containsKey(committeeType + "_EX")) {
+						!higherAuthoritiesMap.containsKey(committeeType + 
+							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_OTHERS)) {
 				disableFwdToHighAuthorityOption = true;
 				getManagedBean().setDisableFwdToHighAuthorityOption(
 									disableFwdToHighAuthorityOption);
