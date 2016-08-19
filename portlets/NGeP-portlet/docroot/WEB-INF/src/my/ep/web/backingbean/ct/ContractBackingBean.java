@@ -81,6 +81,7 @@ import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -137,6 +138,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
@@ -3098,5 +3100,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().setButtonHideActive(true);
 				}	
 			}
+		}
+		
+		
+		/**
+		 * Get Full Delivery Address based on CtAddress
+		 * @param ctAddress
+		 * @return full delivery address
+		 */
+		public String getFullDeliveryAddress(CtAddress ctAddress) {
+			String separator = ", ";
+			StringBuilder address = new StringBuilder();
+			if (ctAddress != null) {
+				if (StringUtils.isNotBlank(
+						ctAddress.getAddressName())) {
+					address.append(ctAddress.getAddressName());
+					address.append(separator);
+				}
+				address.append(getFullAddress(ctAddress));
+			}
+			return address.toString();
 		}
 }
