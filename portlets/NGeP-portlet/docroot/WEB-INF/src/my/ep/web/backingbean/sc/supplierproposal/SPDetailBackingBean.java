@@ -3958,7 +3958,7 @@ public class SPDetailBackingBean extends
 				.getSampleItems());
 		context.put("lableNo", getManagedBean().getScQtSampleLable()
 				.getLableNo());
-		context.put("PTJCode",scQt.getPmOrgProfile().getOrgCode());
+		context.put("PTJCode",scQt.getPmOrgProfile().getPmOrgValidity().getOrgCode());
 		context.put("PTJName", scQt.getPmOrgProfile().getOrgName());
 		context.put("QTNo", scQt.getQtNo());
 		context.put("QTTitle", scQt.getQtTitle());
