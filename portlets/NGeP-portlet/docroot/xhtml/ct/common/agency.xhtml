@@ -189,7 +189,7 @@
 					<p:column selectionMode="multiple" style="width:3%"  disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails}"
 						rendered="#{!ctBackingBean.managedBean.viewContract}"/>
 					<p:column headerText="#{lbl['lbl.ct.delivery.address']}" style="width:100%; white-space:normal;">
-					   <h:outputText value="#{ctBackingBean.getFullAddress(deliveryAddress.deliveryAddress)}" />
+					   <h:outputText value="#{ctBackingBean.getFullDeliveryAddress(deliveryAddress.deliveryAddress)}" />
 					</p:column>
 				</p:dataTable>
 				<div class="ppRightBtn">
