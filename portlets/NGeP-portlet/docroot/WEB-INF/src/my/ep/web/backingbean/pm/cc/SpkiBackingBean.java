@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -36,6 +37,7 @@ import com.augtech.kmc.client.KMCAPIException;
 import com.augtech.kmc.client.KMCClient;
 import com.augtech.kmc.client.KMCClientFactory;
 import com.augtech.kmc.client.KMCRequestBuilder;
+import com.sun.faces.facelets.el.ContextualCompositeMethodExpression;
 
 /**
  * @author Alvin
@@ -167,7 +169,9 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 				throw new EpException(ex.getMessage());
 
 			}	
-		}
+		} /*else {
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+		}*/
 	}
 
 	public String generateSecurityToken(){
@@ -302,6 +306,40 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 		SupplierSearchResDTO res = smSupplierSO.retriveSupplierProfiles(reqDTO);
 		System.out.println("res.getResultBean().getResultList():"+res.getResultBean().getResultList());
 		return res.getResultBean().getResultList().get(0).getEpNo();	
+	}
+	
+	/**
+	 * To perform SPKI Signing Action
+	 * 
+	 * @param postSignActionMtdExpr
+	 * 		the postSignAction method expression to invoke
+	 * @param enableAutoUpdateMtdExpr
+	 * 		the enableAutoUpdate method expression to invoke
+	 * @return
+	 */
+	public String spkiSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr, ContextualCompositeMethodExpression enableAutoUpdateMtdExpr) {
+		logger.info("spkiSignAction");
+		
+		Object returnObj = null;
+		
+		if (postSignActionMtdExpr != null) {
+			returnObj = postSignActionMtdExpr.invoke(
+					FacesContext.getCurrentInstance().getELContext(),
+					new Object[] { pmDigiSign });
+		}
+		
+		if (enableAutoUpdateMtdExpr != null) {
+			enableAutoUpdateMtdExpr.invoke(
+					FacesContext.getCurrentInstance().getELContext(),
+					new Object[] {});
+		}
+		
+		if (returnObj != null) {
+			return returnObj.toString();
+		} else {
+			return null;
+		}
+
 	}
 
 	public static void main2(String[] args) {
