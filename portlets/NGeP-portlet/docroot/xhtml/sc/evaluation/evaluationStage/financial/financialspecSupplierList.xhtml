@@ -17,8 +17,12 @@
 		<p:panel header="#{lbl['lbl.sc.supplier.list']}"
 			id="evaluationStageFinancialSpecsFinancialSupplierListsDatatableIds"
 			toggleable="true">
-			<h:outputText styleClass="instruction"
+			<!-- <h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.eva.evaluation.supplier.list.instruction']}"
+				escape="false" /> -->
+				
+				<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.eva.evaluation.financial.spec.offer.price.supplier.list']}"
 				escape="false" />
 
 			<p:dataTable var="finSpec" editable="true" lazy="true"
