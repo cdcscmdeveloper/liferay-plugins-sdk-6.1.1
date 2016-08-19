@@ -160,8 +160,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.getApplicationNoParam()));
 				SmApplRevisionResDTO resDTO = applRevisionSO
 						.readApplicationHist(reqDTO);
-				setApplication(resDTO.getSmAppl());
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
+				setApplication(resDTO.getSmAppl());
 			}
 
 		} catch (NullPointerException ne) {
@@ -453,11 +453,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	private void initStep0BaseInfo(SmAppl smAppl) {
 		getManagedBean().setSmAppl(smAppl);
-		
-		if(getManagedBean().getSmSupplier()==null){
-			try{
-				getManagedBean().setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
-			}catch(ValidationException ex){
+
+		if (getManagedBean().getSmSupplier() == null) {
+			try {
+				getManagedBean().setSmSupplier(
+						getManagedBean().getSmAppl().getSmSupplier());
+			} catch (ValidationException ex) {
 				log.debug(ex.getMessage());
 			}
 		}
