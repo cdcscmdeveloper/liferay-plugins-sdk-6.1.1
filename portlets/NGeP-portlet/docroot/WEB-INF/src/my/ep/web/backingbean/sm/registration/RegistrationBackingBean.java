@@ -474,7 +474,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//smPersonnel.setBumiFlg(SupplierManagementConst.REG_BUMI);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
 		smPersonnel.setEpRole(RoleCode.SUPPLIER_TEMP.value());
+		
+		//check if supplier admin is supplier owner set clerical false and equityOwner true
 		smPersonnel.setClerical(true);
+		if(smSuppOwner!=null && smSuppOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())){
+			smPersonnel.setClerical(false);
+			smPersonnel.setEquityOwner(true);
+		}
 		
 		String trimmedName = smPersonnel.getName().trim();
 		smPersonnel.setName(trimmedName);
