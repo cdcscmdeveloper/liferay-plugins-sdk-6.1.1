@@ -261,7 +261,7 @@
 									<h:outputText value="#{lbl['lbl.sc.location']}" />
 								</f:facet>
 								<p:tree value="#{zoneTree}" var="location"
-									selectionMode="checkbox">
+									selectionMode="checkbox" style="width:500px;">
 									<p:ajax event="select" update="@([id$=supplierQualificationcriteriaNonpanelDelBtnId])"
 										listener="#{qTSupplierQulCriteriaBackingBean.selectLocationTreeNode}" />
 									<p:ajax event="unselect" update="@([id$=supplierQualificationcriteriaNonpanelDelBtnId])"
