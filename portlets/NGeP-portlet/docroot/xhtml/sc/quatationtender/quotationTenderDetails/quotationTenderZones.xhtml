@@ -60,7 +60,7 @@
 							<h:outputText value="#{lbl['lbl.sc.zone.location']}" />
 						</f:facet>
 						<p:tree value="#{zoneTree}" var="location"
-							selectionMode="#{!zoneCoverageReadonly ? 'checkbox' : 'null'}">
+							selectionMode="#{!zoneCoverageReadonly ? 'checkbox' : 'null'}" style="width:500px;">
 							<p:ajax event="select" update="@([id$=quotationTndrorspecCommitteezonesBtnDeleteId])"
 								listener="#{createQtBB.selectZoneTreeNode}" />
 							<p:ajax event="unselect" update="@([id$=quotationTndrorspecCommitteezonesBtnDeleteId])"
