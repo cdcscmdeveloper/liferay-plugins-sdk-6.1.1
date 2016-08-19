@@ -197,7 +197,7 @@
 	  	<h:panelGrid style="width:270px; margin-left:5px">
 	  	 <h:panelGrid columns="3" rendered="#{!ctBackingBean.managedBean.directPurchase}">
 			  <p:selectBooleanCheckbox id="exemptCentralId" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
-			    	disabled="#{true or ctBackingBean.managedBean.chkConceValue or ctBackingBean.managedBean.viewContract}" style="text-align:top;">
+			    	disabled="#{ctBackingBean.managedBean.chkConceValue or ctBackingBean.managedBean.viewContract}" style="text-align:top;">
 			     <p:ajax event="change" update=":form:justificationCentralPanel" listener="#{ctBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
@@ -250,7 +250,7 @@
 		     </h:panelGrid> 
 	 	</h:panelGrid>
 	 </h:panelGrid>
-	 <p:outputPanel id="justificationCentralPanel" rendered="false">
+	 <p:outputPanel id="justificationCentralPanel">
   		<h:panelGrid columns="2" style="width:740px;" 
   			rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
    			<p:outputLabel id="justificationOutputLbls" value="#{lbl['lbl.ct.justification.ap201']}" style="width:120px;" />
