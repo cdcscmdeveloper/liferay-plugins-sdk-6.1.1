@@ -119,8 +119,8 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		try {
 			items = new SelectItem[5];
 			int i = 0;
-			items[i++] = new SelectItem(0, ResourceBundleUtils.getMessage("lbl.txt.select", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(0, ResourceBundleUtils.getMessage("lbl.bpm.all", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			items[i++] = new SelectItem(ContractConst.CIRCULAR_STATUS_EFFECTIVE,  
 					ResourceBundleUtils.getMessage("lbl.ct.effective", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			items[i++] = new SelectItem(ContractConst.CIRCULAR_STATUS_INACTIVE,  
