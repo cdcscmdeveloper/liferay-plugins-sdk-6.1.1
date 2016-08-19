@@ -64,9 +64,9 @@
 	#if ( $gstRegFlag == 'true' )
 	<tr>
 		<td>
-			GST Registration No: $gstRegNo <br />
-			GST Registration Effective Date : $gstEffectiveDate <br />
-			 GST Declared Date : $gstDeclaredDate <br /><br />
+			No. Pendaftaran CBP : $gstRegNo <br />
+			Tarikh Kuatkuasa Pendaftaran CBP : $gstEffectiveDate <br />
+			Tarikh Pengisytiharan di eP : $gstDeclaredDate <br /><br />
 		</td>
 	</tr>
 	#end
