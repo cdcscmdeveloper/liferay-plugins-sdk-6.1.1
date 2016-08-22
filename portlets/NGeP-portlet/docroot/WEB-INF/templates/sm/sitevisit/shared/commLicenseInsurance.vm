@@ -8,7 +8,7 @@
 		#if($licenseInsurance.size() != $null && $licenseInsurance.size() > 0)
 			#foreach($licenseIns in $licenseInsurance)
 				<tr>
-					<td>$licenseIns.pmParameter.pmParameterDescs.get(0).codeDesc</td>
+					<td>$!licenseIns.pmParameter.pmParameterDescs.get(0).codeDesc</td>
 					<td>$!smVmUtil.formatDate($!licenseIns.expDate)</td>
 				</tr>
 			#end
