@@ -937,7 +937,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 			}
 		}
-		
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 		BigDecimal nonExemptedItem = new BigDecimal(0);
 		if(!nonExemptedItemList.isEmpty()){
 			for(BigDecimal normalItemAmt : nonExemptedItemList){
@@ -954,8 +954,33 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 //		nonExemptedItem = nonExemptedItem.subtract(gstTotalAmount);
 		invMulty = nonExemptedItem.multiply(serviceFee);
 		feeAmount = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
-		getManagedBean().getInvoice().setFeeAmt(feeAmount);
 		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
+		
+		BigDecimal ruleFee = new BigDecimal(0);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+			ruleReqDTO.setRuleType(FulfilmentConst.FLONE);
+			ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
+			if(feeAmount.doubleValue() > ruleFee.doubleValue()){
+				feeAmount = ruleFee;
+			}
+		}else{
+			if(getManagedBean().getInvoice().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
+				ruleReqDTO.setRuleType(FulfilmentConst.FLONE);
+				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
+				if(feeAmount.doubleValue() > ruleFee.doubleValue()){
+					feeAmount = ruleFee;
+				}
+			}else{
+				ruleReqDTO.setRuleType(FulfilmentConst.FLPER);
+				ruleFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList().get(0).getRuleValue());
+				if(feeAmount.doubleValue() > ruleFee.doubleValue()){
+					feeAmount = ruleFee;
+				}
+			}
+		}
+		
+		getManagedBean().getInvoice().setFeeAmt(feeAmount);
 		getManagedBean().getInvoice().setServiceFee(serviceFee);
 		getTaxinvoice();
 	
