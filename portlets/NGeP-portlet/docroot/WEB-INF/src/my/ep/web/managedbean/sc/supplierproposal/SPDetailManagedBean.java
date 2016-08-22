@@ -198,6 +198,9 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	private Map<Long, TemplateSpecBean> zoneTplSpecBeanMap;
 	private StreamedContent sampleLabelStreamContent;
+	
+	/** The auto update. */
+	private boolean autoUpdate = Boolean.TRUE;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -1748,5 +1751,21 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public void setSelectedBank(SmSupplierBank selectedBank) {
 		this.selectedBank = selectedBank;
 	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+	
+	
 
 }

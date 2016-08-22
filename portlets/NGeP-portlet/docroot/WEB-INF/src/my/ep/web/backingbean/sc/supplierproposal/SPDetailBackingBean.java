@@ -373,10 +373,9 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(4);
 		generateDeclarationFromVelocity(getManagedBean().getQt());
 	}
-	
 
-	private ProposalReqDTO populateProposalDetailsTosave(){
-		
+	private ProposalReqDTO populateProposalDetailsTosave() {
+
 		ProposalReqDTO reqDTO = null;
 		List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
 		List<ScQtProposalChecklist> technicalChecklist = getManagedBean()
@@ -387,8 +386,8 @@ public class SPDetailBackingBean extends
 		setUserDetails(scQtProposal);
 		scQtProposal.setLastSubmitDate(new Date());
 		scQtProposal.setSubmitted(true);
-		scQtProposal.setProposalSubmitBy(new FacesScopes()
-				.getUserSessionBean().getUserId());
+		scQtProposal.setProposalSubmitBy(new FacesScopes().getUserSessionBean()
+				.getUserId());
 
 		scQtProposalChecklists.addAll(technicalChecklist);
 		scQtProposalChecklists.addAll(financialChecklist);
@@ -414,13 +413,15 @@ public class SPDetailBackingBean extends
 
 		return reqDTO;
 	}
+
 	/**
 	 * Method to submit the Supplier Proposal details
 	 */
 	public void submitSupplierProposal(PmDigiSign digiSign) {
 
 		debugLogger("submitSupplierProposal");
-		if(getManagedBean().getSmSupplier() == null || getManagedBean().getSmAppl() == null ){
+		if (getManagedBean().getSmSupplier() == null
+				|| getManagedBean().getSmAppl() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
 		}
 		IQTProposalSO proposalSO = null;
@@ -444,11 +445,11 @@ public class SPDetailBackingBean extends
 						scQtProposal.getQtProposalId(),
 						scQtProposal.getProposalNo(), originalText);
 			}
-			
+
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 			reqDTO.setScQtProposal(scQtProposal);
 			reqDTO.setDigiSignData(digiSign);
-			
+
 			ProposalResDTO resDTO = proposalSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
 				String variable1 = getMessageCommon("lbl.sc.proposal.no");
@@ -502,7 +503,7 @@ public class SPDetailBackingBean extends
 		orginalText = sb.toString();
 		return orginalText;
 	}
-	
+
 	private void commonMessageAcknowledmentPage(String messageId,
 			String variable1, String variable2) {
 		FacesContext.getCurrentInstance().addMessage(
@@ -1520,6 +1521,7 @@ public class SPDetailBackingBean extends
 					updateQtProposalCheckList(getManagedBean()
 							.getQtProposalChecklist(),
 							resDTO.getProposalChecklist());
+					// RequestContext.getCurrentInstance().execute("checklistUploadDlg.hide();");
 				}
 
 			} finally {
@@ -1541,6 +1543,11 @@ public class SPDetailBackingBean extends
 			throws FileNotFoundException, IOException {
 		try {
 			String fileName = file.getFileName();
+			if (fileName.contains("\\")) {
+				int lastIndex = fileName.lastIndexOf("\\");
+				fileName = fileName.substring(lastIndex + 1, fileName.length());
+			}
+
 			// byte[] fileBytes = file.getContents();
 			FileInputStream fis = (FileInputStream) file.getInputstream();
 			attachment.setFileName(fileName);
@@ -3938,7 +3945,8 @@ public class SPDetailBackingBean extends
 
 		ScSlAttachment slAttachment = new ScSlAttachment();
 		slAttachment.setDocNo(getManagedBean().getQt().getQtNo());
-		generateSampleLabelsFromVelocityToPdf(slAttachment,getManagedBean().getQt());
+		generateSampleLabelsFromVelocityToPdf(slAttachment, getManagedBean()
+				.getQt());
 		StreamedContent slStreamContent = getAttachmentStreamContent(
 				slAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 		getManagedBean().setSampleLabelStreamContent(slStreamContent);
@@ -3946,8 +3954,8 @@ public class SPDetailBackingBean extends
 				"supplierSampleLabelDlg.show();");
 	}
 
-	private void generateSampleLabelsFromVelocityToPdf(ScAttachment attachment, ScQt scQt)
-			throws Exception {
+	private void generateSampleLabelsFromVelocityToPdf(ScAttachment attachment,
+			ScQt scQt) throws Exception {
 		attachment.setFileName("sample Labels.pdf");
 		populateAttachmentDetails(attachment);
 		// CommonUtils commonUtils = new CommonUtils();
@@ -3958,12 +3966,12 @@ public class SPDetailBackingBean extends
 				.getSampleItems());
 		context.put("lableNo", getManagedBean().getScQtSampleLable()
 				.getLableNo());
-		context.put("PTJCode",scQt.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+		context.put("PTJCode", scQt.getPmOrgProfile().getPmOrgValidity()
+				.getOrgCode());
 		context.put("PTJName", scQt.getPmOrgProfile().getOrgName());
 		context.put("QTNo", scQt.getQtNo());
 		context.put("QTTitle", scQt.getQtTitle());
-		context.put("SupplierCode", getManagedBean().getSupplierId());
-		
+
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.SUPPLIER_PROPOSAL_PRINT_LABEL, context,
 				new FileOutputStream(getActualFilePath(attachment)));
@@ -4044,12 +4052,21 @@ public class SPDetailBackingBean extends
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			proposalSO.validateProposalDetailsBeforeSPkiSign(populateProposalDetailsTosave());
+			proposalSO
+					.validateProposalDetailsBeforeSPkiSign(populateProposalDetailsTosave());
 			this.getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-		}finally{
-			 proposalSO = null;
+		} finally {
+			proposalSO = null;
 		}
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+	}
+
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		// RequestContext.getCurrentInstance().update("@form");
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
 	private String getPrefixFileName(int increment) {
