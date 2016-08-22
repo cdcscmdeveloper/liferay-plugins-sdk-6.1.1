@@ -4029,9 +4029,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(flRequest.getFulfilmentReqId() == null){
 				haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
 			}
-//			if(haveFlRecord){
-//				throw new EpException(MessageConst.ERROR_740030);
-//			}
+			if(haveFlRecord){
+				throw new EpException(MessageConst.ERROR_740030);
+			}
 		}
 		
 		if(flRequest.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
