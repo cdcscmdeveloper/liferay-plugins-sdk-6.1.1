@@ -13,25 +13,25 @@
 		<table cellspacing="100%" style="width: 100%;">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mr.procurement.title']}" /></td>
-				<td colspan="3"><p:inputText id="procuTitleId" maxlength="255"
+				<td colspan="3"><p:inputText id="procuTitleId" maxlength="255" size="38"
 					value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.procurementTitle}"/>
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mr.item.name']}" /></td>
-				<td colspan="3"><p:inputText id="itemNameId" maxlength="255"
+				<td colspan="3"><p:inputText id="itemNameId" maxlength="255" size="38"
 					value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.itemName}"/>
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mr.specification']}" /></td>
-				<td colspan="3"><p:inputText id="specId" maxlength="255"
+				<td colspan="3"><p:inputText id="specId" maxlength="255" size="38"
 					value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.spec}"/>
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu style="width:226px;"
 						requiredMessage="#{lbl['lbl.sc.mr.val.proc.type.msg']}"
 						value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.selectedProcurementMethod}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -46,14 +46,14 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.no']}" /></td>
-				<td><p:inputText id="loaNoId" maxlength="255"
+				<td><p:inputText id="loaNoId" maxlength="255" size="38"
 					value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.loaNo}"/>
 				</td>
 				<td colspan="2"></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mr.loa.ack.date.from']}" /></td>
-				<td><p:calendar  navigator="true"
+				<td><p:calendar  navigator="true" size="38"
 					showOn="button" id="ackStartDate"
 					label="#{lbl['lbl.sc.mr.loa.ack.date.from']}"
 					readonlyInput="true"
@@ -64,7 +64,7 @@
 				</p:calendar>
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mr.loa.ack.date.to']}" /></td>
-				<td><p:calendar  navigator="true"
+				<td><p:calendar  navigator="true" size="38"
 					showOn="button" id="ackEndDate"
 					label="#{lbl['lbl.sc.mr.loa.ack.date.to']}"
 					readonlyInput="true"
