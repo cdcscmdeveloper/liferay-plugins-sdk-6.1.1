@@ -170,6 +170,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private boolean  disableRegisterBtn;
 	private boolean isNavigateFromNoticeBoard = true;
 	private List<TreeNode> zoneTree;
+	private Map<Long,Boolean> committeeFormed;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1231,6 +1232,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneTree(List<TreeNode> zoneTree) {
 		this.zoneTree = zoneTree;
+	}
+
+	/**
+	 * @return the committeeFormed
+	 */
+	public Map<Long, Boolean> getCommitteeFormed() {
+		return committeeFormed;
+	}
+
+	/**
+	 * @param committeeFormed the committeeFormed to set
+	 */
+	public void setCommitteeFormed(Map<Long, Boolean> committeeFormed) {
+		this.committeeFormed = committeeFormed;
 	}
 
 
