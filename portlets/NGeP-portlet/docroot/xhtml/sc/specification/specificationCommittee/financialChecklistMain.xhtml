@@ -69,14 +69,14 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
-				style="width:41%;white-space: normal;">
+				style="width:24%;white-space: normal;">
 
 
 				<ui:fragment rendered="#{stageTwofunctional.title !=null}">
-					<h:outputText value="#{stageTwofunctional.title}" size="30" />
+					<h:outputText value="#{stageTwofunctional.title}"  />
 				</ui:fragment>
 				<ui:fragment rendered="#{stageTwofunctional.title ==null}">
-					<p:inputText value="#{stageTwofunctional.title}" size="30"
+					<p:inputText value="#{stageTwofunctional.title}" size="35"
 						maxlength="1000" required="true" id="finChecklistTitle"
 						label="#{lbl['lbl.sc.spec.checklist.title']}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
@@ -90,7 +90,7 @@
 
 			</p:column>
 
-			<p:column style="width:10%;white-space: normal;">
+			<p:column style="width:20%;white-space: normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.type']}" />
 					<ac:iconTooltip id="financialChecklistType#{index}Sc"
@@ -110,7 +110,7 @@
 					<ui:fragment
 						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' or stageTwofunctional.pmDocument.docDefinitionKey  eq null)) or(stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode ne 'TS'))}">
 						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
-						<p:selectOneMenu style="width:100px;" required="true"
+						<p:selectOneMenu style="width:150px;" required="true"
 						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							id="finhChecklistTitlenullType" label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwofunctional.definationType.parameterId}">
@@ -139,7 +139,7 @@
 
 			</p:column>
 			<p:column 
-				style="width:15%;white-space: normal;">
+				style="width:20%;white-space: normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.spec.supplier.action']}" />
 					<ac:iconTooltip id="financialChecklistsupplieractionchecklist#{index}Scall"
@@ -160,7 +160,7 @@
 							rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq null}"
 							required="true" id="financialactionnull"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
-							style="width:140px;">
+							style="width:150px;">
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.financialChecklistAction}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
@@ -173,7 +173,7 @@
 							rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode ne null}"
 							required="true" id="financialactionnotnullvalue"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
-							style="width:140px;">
+							style="width:150px;">
 							<f:selectItems
 								value="#{specificationBackingBean.PTJUploadDropDownActionValues}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
@@ -198,7 +198,7 @@
 						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and   stageTwofunctional.action.parameterCode ne 'U') and !(stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I') and !(stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq 'V'))}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="financialChecklistSpecificationStatus"
+							update="financialChecklistSpecificationStatus,actionView"
 							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 					</p:selectBooleanCheckbox>
 
@@ -216,7 +216,7 @@
 						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and stageTwofunctional.action.parameterCode eq 'U' and stageTwofunctional.action.parameterCode ne 'V' and !fn:contains(stageTwofunctional.title,'Annual') and !fn:contains(stageTwofunctional.title,'Verification') and !fn:contains(stageTwofunctional.title,'Pengesahan') and !fn:contains(stageTwofunctional.title,'Kunci')}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="financialChecklistSpecificationStatus"
+							update="financialChecklistSpecificationStatus,actionView"
 							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
@@ -271,25 +271,7 @@
 				<h:panelGroup id="actionView">
 					<p:commandLink
 						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
-						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD') and (stageTwofunctional.definationType.parameterCode eq 'WF' or stageTwofunctional.definationType.parameterCode eq 'SD' or stageTwofunctional.definationType.parameterCode eq 'TS'))}">
-
-						<ui:fragment
-							rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
-						!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()}">
-							<h:graphicImage value="/css/images/design/edit.png" />
-						</ui:fragment>
-						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}">
-							<h:graphicImage value="/css/images/design/ico-view.png" />
-						</ui:fragment>
-						<f:setPropertyActionListener value="#{stageTwofunctional}"
-							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
-
-					</p:commandLink>
-
-					<p:commandLink
-						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
-						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.definationType.parameterCode eq 'SD' and stageTwofunctional.scoringReq}">
+						rendered="#{(stageTwofunctional.definationType.parameterCode eq 'WF' or stageTwofunctional.definationType.parameterCode eq 'SD' or stageTwofunctional.definationType.parameterCode eq 'TS') and stageTwofunctional.scoringReq}">
 
 						<ui:fragment
 							rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
