@@ -7117,9 +7117,10 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil
 					.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
 							.getSmAppl().getSmPersonnels());
-			
-			//validate personnel
-			SmApplicationUtil.validatePersonnelBeforeSave(true, -1, getManagedBean());
+
+			// validate personnel
+			SmApplicationUtil.validatePersonnelBeforeSave(true, -1,
+					getManagedBean());
 
 			// validate branch
 			SmApplicationUtil.validateBranchWithoutBankAcc(getManagedBean(),
@@ -11513,7 +11514,7 @@ public class SmApplicationBackingBean extends
 							personnel.getIdentificationNo(),
 							my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL);
 		}
-		if (retVal && (personnel.isEquityOwner() || personnel.isAuthorized())) {
+		if (retVal && personnel.isEquityOwner()) {
 			throw new EpException(MessageConst.ERROR_721052);
 		}
 	}
