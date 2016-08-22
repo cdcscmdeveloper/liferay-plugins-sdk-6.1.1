@@ -452,9 +452,43 @@ public class SmApplicationBackingBean extends
 
 							// already answer questionnaire, redirect to
 							// application page
-							if (rejectedAppl.isQuestionnaire()) {
+							if (rejectedAppl.isQuestionnaire()
+									|| rejectedAppl
+											.getApplType()
+											.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+
+								if (resetLatestResubmitAppl) {
+									FacesScopes fs = new FacesScopes();
+									List<String> useList = new ArrayList<String>();
+									PmUser loginUser = fs.getUserSessionBean();
+									useList.add(loginUser.getLoginId());
+									getManagedBean()
+											.setSmAppl(
+													SmApplicationUtil
+															.resetAndCloneResubmitApplication(
+																	fs.getBPMAuthenticationCtxToken(),
+																	useList,
+																	rejectedAppl,
+																	latestResubmitAppl));
+									FacesContext
+											.getCurrentInstance()
+											.addMessage(
+													null,
+													new FacesMessage(
+															FacesMessage.SEVERITY_INFO,
+															null,
+															MessageUtils
+																	.getMessage(
+																			"lbl.sm.submit.questionaire.msg",
+																			null,
+																			MessageUtils.BUNDLE_COMMON_MESSAGES,
+																			new FacesScopes()
+																					.getUserLocale())));
+								}
+
 								prerenderApplicationForResubmission();
 							}
+
 							// not yet answer questionnaire, redirect to
 							// questionnaire page
 							else {

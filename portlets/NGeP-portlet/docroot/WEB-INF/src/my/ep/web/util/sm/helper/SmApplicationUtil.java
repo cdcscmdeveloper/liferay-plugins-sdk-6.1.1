@@ -8295,6 +8295,17 @@ public class SmApplicationUtil {
 		return sb.length() > 0 ? sb.toString() : StringUtils.EMPTY;
 	}
 
+	public static SmAppl resetAndCloneResubmitApplication(Object token,
+			List<String> userList, SmAppl originalAppl, SmAppl latesResubmitAppl) {
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSmAppl(latesResubmitAppl);
+		reqDTO.setSrcAppl(originalAppl);
+		reqDTO.setUserList(userList);
+		reqDTO.setToken(token);
+		return SmServiceLookup.getMofRegistrationSO()
+				.resetAndCloneResubmitApplication(reqDTO).getSmAppl();
+	}
+
 	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {
 		if (categoryCodeBbInstance == null) {
 			try {
