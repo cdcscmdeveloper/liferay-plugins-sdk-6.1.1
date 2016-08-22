@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
@@ -2520,5 +2521,31 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		SmApplicationUtil.initGstSuppDocs(gst);
 		return gst;
+	}
+
+	public void onClickClone() {
+		RequestContext.getCurrentInstance().execute("cloneDialog.show()");
+	}
+
+	public void cloneApplication() {
+		if (!StringUtils.isBlank(getManagedBean().getSrcApplNo())
+				&& !StringUtils.isBlank(getManagedBean().getTargetApplNo())) {
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setApplNo(getManagedBean().getSrcApplNo());
+			SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl();
+			reqDTO.setApplNo(getManagedBean().getTargetApplNo());
+			SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl();
+			reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSmAppl(smAppl);
+			reqDTO.setSrcAppl(srcAppl);
+			SmAppl retVal = SmServiceLookup.getMofRegistrationSO()
+					.cloneApplicationExcludeApplNo(reqDTO).getSmAppl();
+		}
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+				"Clone Success!!!"));
+		RequestContext.getCurrentInstance().execute("cloneDialog.hide()");
 	}
 }
