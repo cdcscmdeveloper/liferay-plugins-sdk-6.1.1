@@ -16,6 +16,8 @@
 			action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
 			update="spkiOutputPanel" process="@form">
+			<f:setPropertyActionListener value="false"
+				target="#{supplierProposalDetailBackingBean.managedBean.autoUpdate}" />
 		</p:commandButton>
 	</div>
 
@@ -24,7 +26,8 @@
 			password="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.password}"
 			challengeAns1="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
 			challengeQues1="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-			postSignAction="#{supplierProposalDetailBackingBean.submitSupplierProposal(spkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{supplierProposalDetailBackingBean.submitSupplierProposal(spkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{supplierProposalDetailBackingBean.enableAutoUpdate()}" />
 	</p:outputPanel>
 
 </ui:composition>
