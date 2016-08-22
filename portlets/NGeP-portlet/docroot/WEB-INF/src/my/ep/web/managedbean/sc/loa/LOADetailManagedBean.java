@@ -253,6 +253,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
     /** The ministry condition field. */
     private String ministryConditionField;
     
+    /** Property to hide or display messages */
+    private boolean autoUpdate = Boolean.TRUE;
+    
     /**
      * Gets the spki backing bean.
      *
@@ -1412,6 +1415,21 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setMinistryConditionField(String ministryConditionField) {
 		this.ministryConditionField = ministryConditionField;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate
+	 *            the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 	
 }

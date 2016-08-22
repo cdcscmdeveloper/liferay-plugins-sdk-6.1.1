@@ -9,7 +9,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="#{lOADetailBackingBean.managedBean.autoUpdate}" 
+					closable="true" showSummary="false" />
 		<ui:param name="isEditableStatus" value="false" />
 		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 	    <ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
