@@ -23,19 +23,14 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
 							<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
-								<p:outputPanel id="spkiOutputPanel">
-									<ac:spkiPopup id="spkiPopup"
-										password="#{lOIDetailBackingBean.managedBean.spkiBackingBean.password}"
-										challengeAns1="#{lOIDetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
-										challengeQues1="#{lOIDetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-										postSignAction="#{lOIDetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" />
-								</p:outputPanel>
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" update="spkiOutputPanel"
+								<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
+									styleClass="ui-button" update="@form"
 									action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
 									onstart="blockWidget.show();">
 									<f:setPropertyActionListener value="#{bpmAction}"
 										target="#{lOIDetailBackingBean.managedBean.action}" />
+										<f:setPropertyActionListener value="false"
+						target="#{lOIDetailBackingBean.managedBean.autoUpdate}" />
 								</p:commandButton>
 							</h:panelGroup>
 
@@ -48,6 +43,12 @@
 							</h:panelGroup>
 
 						</ui:repeat>
+						<ac:spkiPopup id="spkiPopup"
+										password="#{lOIDetailBackingBean.managedBean.spkiBackingBean.password}"
+										challengeAns1="#{lOIDetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+										challengeQues1="#{lOIDetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+										postSignAction="#{lOIDetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" 
+										enableAutoUpdate="#{lOIDetailBackingBean.enableAutoUpdate()}" />	
 					</ui:define>
 				</ui:decorate>
 			</c:when>
