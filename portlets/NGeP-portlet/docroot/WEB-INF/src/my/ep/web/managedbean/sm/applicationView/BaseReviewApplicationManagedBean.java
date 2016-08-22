@@ -144,6 +144,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String resubmitUrl;
 	private String localAuthority;
 	private String currRegStatus;
+	private String srcApplNo;
+	private String targetApplNo;
 
 	private Long[] chequeSingPerId;
 	private Long selBankBranchId;
@@ -1346,6 +1348,22 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setApplStatusItems(List<SelectItem> applStatusItems) {
 		this.applStatusItems = applStatusItems;
+	}
+
+	public String getSrcApplNo() {
+		return srcApplNo;
+	}
+
+	public void setSrcApplNo(String srcApplNo) {
+		this.srcApplNo = srcApplNo;
+	}
+
+	public String getTargetApplNo() {
+		return targetApplNo;
+	}
+
+	public void setTargetApplNo(String targetApplNo) {
+		this.targetApplNo = targetApplNo;
 	}
 
 }
