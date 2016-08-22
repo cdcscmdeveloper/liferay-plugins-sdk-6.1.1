@@ -88,13 +88,13 @@
 			<p:column
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<p:inputTextarea id="otherDesc" maxlength="100"
-					style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
+					style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 					value="#{catBean.otherDesc}" rows="5" cols="20"
 					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
 						update=":form:tt:catCodeInfPan" />
-				</p:inputTextarea>
+				</p:inputTextarea><br/>
 				<p:graphicImage id="prevOtherDesc"
 					value="/css/images/design/icon_alert.png"
 					style="padding-left : 3px;"
