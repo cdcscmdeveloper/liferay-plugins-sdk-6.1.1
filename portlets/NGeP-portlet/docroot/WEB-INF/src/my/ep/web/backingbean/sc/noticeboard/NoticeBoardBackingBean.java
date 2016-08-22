@@ -1345,7 +1345,7 @@ public class NoticeBoardBackingBean extends
 				} else {
 					getManagedBean().setAmendmentClosingDateMap(null);
 				}
-				
+				getManagedBean().setCommitteeFormed(resDTO.getCommitteeFormed());
 				return resDTO.getQtResultBean();
 			} finally {
 				qtNoticeBoardSO = null;
@@ -2656,24 +2656,8 @@ public class NoticeBoardBackingBean extends
 	 * @param evalType
 	 * @return 
 	 */
-	public boolean isCommitteeFormed(Long qtId, String evalType) {
-
-		ScQtCommittee evalCommitte = null;
-		Long committeeStatus = null;
-		if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(evalType)) {
-			evalCommitte = getQtCommiteDtlsByQtIdNType(
-					ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE, qtId);
-
-		} else {
-			evalCommitte = getQtCommiteDtlsByQtIdNType(
-					ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE, qtId);
-		}
-
-		if (null != evalCommitte) {
-			ScCommittee committee = evalCommitte.getScCommittee();
-			committeeStatus = committee.getCommitteStatus().getStatusId();
-
-		}
-		return QTStatusConst.CMT_COMPLETED.equals(committeeStatus);
+	public boolean isCommitteeFormed(Long qtId) {
+		return this.getManagedBean().getCommitteeFormed().get(qtId);
 	}
+	
 }
