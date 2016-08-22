@@ -332,11 +332,6 @@ public class AddressUtils {
 				address.append(ctAddress.getAddress3());
 				address.append(separator);
 			}
-			if (StringUtils.isNotBlank(
-					ctAddress.getAddress4())) {
-				address.append(ctAddress.getAddress4());
-				address.append(separator);
-			}
 			
 			if (ctAddress.getPmDistrict() != null && 
 					StringUtils.isNotBlank(
