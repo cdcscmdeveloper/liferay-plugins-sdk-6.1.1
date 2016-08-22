@@ -515,7 +515,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public void onDisplaySpkiPopup() {
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+//		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 	}
 
 	/**
@@ -524,7 +524,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * @param PmDigiSign
 	 *            pmDigiSign
 	 */
-	public void onClickSignSpki() {
+	public void onClickSignSpki(PmDigiSign pds) {
 		PmDigiSign pmDigiSign = new PmDigiSign();
 		setSpkiInformation(pmDigiSign, StringUtils.isNotBlank(getManagedBean()
 				.getLoginUserPersonnelInfo().getSmAppl().getApplNo()) ? "SR"
