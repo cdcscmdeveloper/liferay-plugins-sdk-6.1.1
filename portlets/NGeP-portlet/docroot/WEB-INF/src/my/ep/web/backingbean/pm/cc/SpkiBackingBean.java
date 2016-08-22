@@ -158,7 +158,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 				default:
 					System.out.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
-					throw new EpException("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
+					throw new EpException(res.getStatusMessage());
 
 				}
 
@@ -252,7 +252,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 			default:
 				//				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "SPKI Signing error."));	
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
-				throw new EpException("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
+				throw new EpException(res.getStatusMessage());
 				//TODO Please remove this line if want to turn on the SPKI
 				//				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 				//				signedData = "DEFAULT SIGNED TEXT1";
