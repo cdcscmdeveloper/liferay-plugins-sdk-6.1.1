@@ -60,7 +60,7 @@
 						showOn="button" size="10"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						mindate="#{doDelAddress.startDate}" 
-						disabled="#{createDOBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq 'true' or createDOBackingBean.managedBean.delAddressSelected eq 'false'}"
+						disabled="#{createDOBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq 'true' or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
 						value="#{doDelAddress.flTempDoAddr.estDeliveryDate}">
 						<p:ajax event="dateSelect" process="@this" update="@this,:form:messages" listener="#{createDOBackingBean.validateEstDate(doDelAddress)}"/>
 					</p:calendar><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.exp.del.date']}"/>
@@ -72,13 +72,13 @@
 				<p:inputText size="37" maxlength="30" id="supplierDoRefNo"
 					value="#{doDelAddress.flTempDoAddr.supplierDoRef}"
 					style="text-align:left" 
-					disabled="#{doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq true or createDOBackingBean.managedBean.delAddressSelected eq 'false'}"
+					disabled="#{doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq true or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
 					onkeypress="if (event.keyCode == 13) { orderNo.jq.click(); return false; }" widgetVar="orderNo">
 					<p:ajax update="@this"/> </p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.order.no']}"/>
 				<p:commandLink oncomplete="addRemarks.show();" id="addRemarkBtn"
 					action="#{fulfilmentBackingBean.openAttachmentPage(doDelAddress)}"
-					disabled="#{doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq 'true' or createDOBackingBean.managedBean.delAddressSelected eq 'false'}"
+					disabled="#{doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq 'true' or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
 					update=":form:addRemarmAttachmentDialog">
 					<f:setPropertyActionListener
 						target="#{createDOBackingBean.managedBean.selectedDelAddr}"
@@ -146,7 +146,7 @@
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.qty']}"/>
     				</f:facet>
 						<h:panelGroup id="delQtyTxt" styleClass="delQtyTxt">
-							<p:inputText value="#{doItems.deliveredQty}" size="5" id="delOrderedQty" label="#{lbl['lbl.fl.do.delivery.qty']}" styleClass="colFloatRight" maxlength="14"	disabled="#{doItems.delQtyDisabled or createDOBackingBean.managedBean.isOrderDisabledForSdCheck() or createDOBackingBean.managedBean.delAddressSelected eq 'false'}"
+							<p:inputText value="#{doItems.deliveredQty}" size="5" id="delOrderedQty" label="#{lbl['lbl.fl.do.delivery.qty']}" styleClass="colFloatRight" maxlength="14"	disabled="#{doItems.delQtyDisabled or createDOBackingBean.managedBean.isOrderDisabledForSdCheck() or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
 								rendered="#{createDOBackingBean.managedBean.docProcess ne 'DO'}"  style="text-align:right"
 								onkeypress="if (event.keyCode == 13) { delQty.jq.click(); return false; }" widgetVar="delQty">
 								<p:ajax event="blur" update="delQtyTxt,delAmountTxt,remaingQtyTxt" process="@this"
@@ -174,7 +174,7 @@
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</h:outputText>
 							<p:inputText value="#{doItems.deliveredAmt}" size="17"
-								disabled="#{doItems.delQtyDisabled or createDOBackingBean.managedBean.delAddressSelected eq 'false'}"
+								disabled="#{doItems.delQtyDisabled or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
 								maxlength="15" style="text-align:right" styleClass="colFloatRight"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
 								<f:convertNumber
