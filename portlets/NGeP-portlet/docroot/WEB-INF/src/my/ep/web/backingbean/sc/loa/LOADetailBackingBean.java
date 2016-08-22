@@ -4921,6 +4921,13 @@ public class LOADetailBackingBean extends
 		
 	}
 	
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+	}	
+	
 	private PmDocument getDocumentDtls(String docCategoryCode){
 		IDocumentSO documentSO = null;
 		PmDocument document = null;

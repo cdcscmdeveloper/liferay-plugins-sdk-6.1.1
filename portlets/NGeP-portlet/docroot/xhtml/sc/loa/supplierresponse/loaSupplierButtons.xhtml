@@ -37,22 +37,17 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
 							<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
-								<p:outputPanel id="spkiOutputPanel">
-									<ac:spkiPopup id="spkiPopup"
-										password="#{lOADetailBackingBean.managedBean.spkiBackingBean.password}"
-										challengeAns1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
-										challengeQues1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-										postSignAction="#{lOADetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" />
-								</p:outputPanel>
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									rendered="#{validityDaysExpiredQt}"
 									disabled="#{!lOADetailBackingBean.managedBean.agreeWithTermsConditions}"
-									styleClass="ui-button" update="spkiOutputPanel"
+									styleClass="ui-button" update="@form"
 									partialSubmit="true" process="@form"
 									action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 									<f:setPropertyActionListener value="#{bpmAction}"
 										target="#{lOADetailBackingBean.managedBean.action}" />
+									<f:setPropertyActionListener value="false"
+										target="#{lOADetailBackingBean.managedBean.autoUpdate}" />										
 								</p:commandButton>
 							</h:panelGroup>
 
@@ -65,6 +60,13 @@
 									partialSubmit="true" process="@this" update="@this" />
 							</h:panelGroup>
 						</ui:repeat>
+						
+						<ac:spkiPopup id="spkiPopup"
+							password="#{lOADetailBackingBean.managedBean.spkiBackingBean.password}"
+							challengeAns1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+							challengeQues1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+							postSignAction="#{lOADetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" 
+							enableAutoUpdate="#{lOADetailBackingBean.enableAutoUpdate()}" />
 					</c:when>
 				</c:choose>
 			</ui:define>
