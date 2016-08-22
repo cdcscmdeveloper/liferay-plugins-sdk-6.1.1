@@ -166,7 +166,7 @@
 		 </h:panelGrid>
          <p:spacer height="15"/>
          <h:panelGrid style="width:100%">
-         	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.termination.clause']}" escape="false"/><br/>      
+         	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.termination.clause']}" escape="false"/>
 		   <p:dataTable id="terminationReason" var="data" widgetVar="terminationReasonWidget"
 		             value="#{terminationBackingBean.managedBean.contractVer.ctTermination.ctTerminationReasons}" 
 			         dynamic="true" rowKey="#{data}" selection="#{terminationBackingBean.selectedTerminationReasonsList}">
