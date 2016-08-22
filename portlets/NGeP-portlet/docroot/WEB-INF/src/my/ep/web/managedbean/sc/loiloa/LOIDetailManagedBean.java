@@ -384,6 +384,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The is refinalized bidding. */
 	private boolean  refinalizedBidding = Boolean.FALSE;
 	
+	/** The auto update. */
+	private boolean autoUpdate = Boolean.TRUE;
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2247,6 +2250,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setRefinalizedBidding(boolean refinalizedBidding) {
 		this.refinalizedBidding = refinalizedBidding;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 	
 	
