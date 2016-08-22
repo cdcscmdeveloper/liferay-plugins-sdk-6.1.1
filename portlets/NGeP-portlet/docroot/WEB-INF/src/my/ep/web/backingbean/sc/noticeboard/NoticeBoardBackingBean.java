@@ -2664,7 +2664,7 @@ public class NoticeBoardBackingBean extends
 				&& qtId != null) {
 			isCommitteeFormed = committeeFormedMap.get(qtId);
 		}
-		return isCommitteeFormed;
+		return isCommitteeFormed!= null?isCommitteeFormed:false;
 	}
 	
 }
