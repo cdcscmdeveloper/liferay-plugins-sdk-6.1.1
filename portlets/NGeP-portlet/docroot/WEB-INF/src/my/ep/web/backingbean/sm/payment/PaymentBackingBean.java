@@ -645,7 +645,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
 		}
 
-		this.renewSesionObject();
+		//this.renewSesionObject();
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		//fc.addMessage(null,getManagedBean().getPaymentMessage());
