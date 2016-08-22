@@ -31,7 +31,8 @@
    		 	challengeAns1="#{stopInstrBB.managedBean.spkiBackingBean.challengeAns1}"
   		 	challengeQues1="#{stopInstrBB.managedBean.spkiBackingBean.challengeQues1}"
 			textBeforeSign="#{stopInstrBB.managedBean.textBeforeSign}"
-			postSignAction="#{stopInstrBB.preSubmitStopInstruction(spkiBackingBean.pmDigiSign)}"/>
+			postSignAction="#{stopInstrBB.preSubmitStopInstruction(spkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{stopInstrBB.enableAutoUpdate()}"/>
 		<c:if test="#{stopInstrBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
 					  stopInstrBB.managedBean.isHyperLinkPage()}">
 			<ac:title value="#{stopInstrBB.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeStopDelivery)}" />
