@@ -159,7 +159,7 @@
 				<p:inputText style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" maxlength="3"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
-					<p:ajax event="blur" update="extStartDate, extEndDate, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}" 
+					<p:ajax event="keyup" update="extStartDate, extEndDate, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}" 
 					 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 					</p:inputText>
 				<p:spacer width="2" />
