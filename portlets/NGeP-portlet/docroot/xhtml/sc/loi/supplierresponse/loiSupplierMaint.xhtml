@@ -8,8 +8,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
-		<p:messages id="loiMaintMsg" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" />
+		<p:messages id="loiMaintMsg" showDetail="true" autoUpdate="#{lOIDetailBackingBean.managedBean.autoUpdate}"
+			closable="true" showSummary="false" severity="error, info" />
 		<ui:param name="isSupplierAckStatus" value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		
 		<ui:include src="loiSupplierButtons.xhtml" />
