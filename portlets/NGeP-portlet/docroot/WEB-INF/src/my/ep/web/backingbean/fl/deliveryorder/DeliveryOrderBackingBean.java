@@ -803,7 +803,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					}
 				}
 			}
-			getManagedBean().setDelAddressSelected(false);
+			//getManagedBean().setDelAddressSelected(false);
 		}
 	}
 	
@@ -1456,9 +1456,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	
 	public void delAddressSelect(FlDeliveryAddress deliveryAddress){
 		if(deliveryAddress.getFlTempDoAddr().isSelected()) {
-			getManagedBean().setDelAddressSelected(true);
+			deliveryAddress.getFlTempDoAddr().setDelAddressSelected(true);
 		}else{
-			getManagedBean().setDelAddressSelected(false);
+			deliveryAddress.getFlTempDoAddr().setDelAddressSelected(false);
 		}
 	}
 	
