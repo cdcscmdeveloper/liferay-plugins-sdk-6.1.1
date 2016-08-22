@@ -412,7 +412,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		flAddress.setAddress1(ctAddress.getAddress1());
 		flAddress.setAddress2(ctAddress.getAddress2());
 		flAddress.setAddress3(ctAddress.getAddress3());
-		flAddress.setAddress4(ctAddress.getAddress4());
 		flAddress.setMapLatitude(ctAddress.getMapLatitude());
 		flAddress.setMapLongitude(ctAddress.getMapLongitude());
 		flAddress.setPmCity(ctAddress.getPmCity());
