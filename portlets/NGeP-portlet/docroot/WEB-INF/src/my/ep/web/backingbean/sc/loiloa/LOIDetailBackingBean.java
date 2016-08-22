@@ -5224,4 +5224,13 @@ public class LOIDetailBackingBean extends
 		return message;
 		
 	}
+	
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		//RequestContext.getCurrentInstance().update("@form");
+		
+	}
 }
