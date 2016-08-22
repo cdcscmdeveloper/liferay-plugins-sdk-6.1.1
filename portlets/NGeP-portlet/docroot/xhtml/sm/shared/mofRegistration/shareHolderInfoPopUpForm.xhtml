@@ -396,6 +396,7 @@
 				<td colspan="3">
 					<p:outputPanel id="muslimRadioOutPanelId">
 						<p:selectOneRadio 
+							label="#{lbl['lbl.sm.person.religion']}"
 							rendered="#{not empty backingBean.managedBean.selectedShareHolder.pmCountry 
 							and backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}"
 							value="#{backingBean.managedBean.selectedShareHolder.muslimFlgTrans}" required="true">
