@@ -112,7 +112,7 @@
 					<ui:fragment
 						rendered="#{(stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'UP' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'KP' or stageTwoTechnical.pmDocument.docDefinitionKey  eq null))}">
 						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
-						<p:selectOneMenu style="width:150px;" required="true"
+						<p:selectOneMenu style="width:170px;" required="true"
 							id="techChecklistTitlenullType" label="#{lbl['lbl.sc.type']}"
 							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							value="#{stageTwoTechnical.definationType.parameterId}">
@@ -135,7 +135,7 @@
 					<ui:fragment
 						rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
 						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
-						<p:selectOneMenu style="width:150px;" required="true"
+						<p:selectOneMenu style="width:170px;" required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							id="techChecklistTitletypenotnullType"
 							label="#{lbl['lbl.sc.type']}"
@@ -179,7 +179,7 @@
 					<ui:fragment
 						rendered="#{((stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'UP' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'KP' or stageTwoTechnical.pmDocument.docDefinitionKey  eq null)) or(stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode ne 'TS'))}">
 						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
-						<p:selectOneMenu styleClass="sample#{index}" style="width:150px;"
+						<p:selectOneMenu styleClass="sample#{index}" style="width:170px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode eq null}"
 							required="true" id="actionTitleActionnullType"
@@ -201,7 +201,7 @@
 							rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode ne null}"
 							required="true" id="actionActionTitlenotnullType"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
-							style="width:150px;">
+							style="width:170px;">
 							<f:selectItems
 								value="#{specificationBackingBean.PTJUploadDropDownActionValues}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
