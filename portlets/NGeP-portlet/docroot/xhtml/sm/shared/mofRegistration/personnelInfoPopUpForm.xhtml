@@ -95,7 +95,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 					</p:selectOneRadio></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.religion']}" title="For Malaysian Only" /></td>
-				<td><p:selectOneRadio
+				<td><p:selectOneRadio label="#{lbl['lbl.sm.person.religion']}"
 						value="#{backingBean.managedBean.selectedPersonnel.muslimFlg}">
 						<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.muslim']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}" itemValue="0" />
