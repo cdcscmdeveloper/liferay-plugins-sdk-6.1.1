@@ -383,7 +383,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
-			
+			orderBackingBean.getManagedBean().getFlRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(orderBackingBean.getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId(),orderBackingBean.getManagedBean().getFlRequest().getAgApprovedDate()));
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
