@@ -26,7 +26,7 @@
 			<p:column rowspan="2" width="2%">
 				<p:selectBooleanCheckbox
 					value="#{doDelAddress.flTempDoAddr.selected}" disabled="#{doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq 'true'}">
-					<p:ajax onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{createDOBackingBean.delAddressSelect}" update="expDelDate,supplierDoRefNo,addRemarkBtn,@(.delQtyTxt)"/>	
+					<p:ajax onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{createDOBackingBean.delAddressSelect(doDelAddress)}" update="expDelDate,supplierDoRefNo,addRemarkBtn,@(.delQtyTxt)"/>	
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" 
