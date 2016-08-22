@@ -110,7 +110,7 @@
 					<ui:fragment
 						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' or stageTwofunctional.pmDocument.docDefinitionKey  eq null)) or(stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode ne 'TS'))}">
 						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
-						<p:selectOneMenu style="width:150px;" required="true"
+						<p:selectOneMenu style="width:170px;" required="true"
 						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							id="finhChecklistTitlenullType" label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwofunctional.definationType.parameterId}">
@@ -160,7 +160,7 @@
 							rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq null}"
 							required="true" id="financialactionnull"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
-							style="width:150px;">
+							style="width:170px;">
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.financialChecklistAction}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
@@ -173,7 +173,7 @@
 							rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode ne null}"
 							required="true" id="financialactionnotnullvalue"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
-							style="width:150px;">
+							style="width:170px;">
 							<f:selectItems
 								value="#{specificationBackingBean.PTJUploadDropDownActionValues}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
