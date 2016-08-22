@@ -2657,7 +2657,14 @@ public class NoticeBoardBackingBean extends
 	 * @return 
 	 */
 	public boolean isCommitteeFormed(Long qtId) {
-		return this.getManagedBean().getCommitteeFormed().get(qtId);
+		
+		Map<Long, Boolean> committeeFormedMap = this.getManagedBean().getCommitteeFormed();
+		Boolean isCommitteeFormed = false;
+		if (committeeFormedMap != null && committeeFormedMap.size() > 0
+				&& qtId != null) {
+			isCommitteeFormed = committeeFormedMap.get(qtId);
+		}
+		return isCommitteeFormed;
 	}
 	
 }
