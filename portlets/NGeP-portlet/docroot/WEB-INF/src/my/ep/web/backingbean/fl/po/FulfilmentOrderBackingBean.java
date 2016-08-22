@@ -1145,6 +1145,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						}
 					}
 				}
+				crBB.getManagedBean().getFlRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(crBB.getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId(),crBB.getManagedBean().getFlRequest().getAgApprovedDate()));
 				return NAV_CR;
 			}if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
@@ -1169,7 +1170,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				prBB.getManagedBean().setDeclarationCheck(true);
 				flBB.getManagedBean().setHideRemarks(true);
 				prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-				
+				prBB.getManagedBean().getFulfilmentRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(prBB.getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId(),prBB.getManagedBean().getFulfilmentRequest().getAgApprovedDate()));
 				return NAV_PR;
 			}
 			return null;
