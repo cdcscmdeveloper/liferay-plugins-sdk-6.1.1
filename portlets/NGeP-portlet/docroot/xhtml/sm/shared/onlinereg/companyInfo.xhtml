@@ -235,6 +235,10 @@
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}">
 						<p:ajax event="blur" update=":form:acgmap:gmapInput:gmapInput"></p:ajax>
 					</p:inputText>
+					<p:graphicImage id="ttImageCompAdd1" value="/css/images/design/tooltips.png" />
+					<p:tooltip for="ttImageCompAdd1" id="ttCompAdd1">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.address.without.dash']}"  />
+					</p:tooltip>
 					<p:message id="compAdd1Msg" for="compAdd1" display="icon" /></td>
 
 				<td class="tdTitle">
