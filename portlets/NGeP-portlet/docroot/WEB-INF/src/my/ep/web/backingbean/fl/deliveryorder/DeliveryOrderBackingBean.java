@@ -1454,15 +1454,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		}
 	}
 	
-	public void delAddressSelect(){
-		for(FlDeliveryAddress selectedDelAddress  :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-			if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
-				getManagedBean().setDelAddressSelected(true);
-			}else{
-				getManagedBean().setDelAddressSelected(false);
-			}
+	public void delAddressSelect(FlDeliveryAddress deliveryAddress){
+		if(deliveryAddress.getFlTempDoAddr().isSelected()) {
+			getManagedBean().setDelAddressSelected(true);
+		}else{
+			getManagedBean().setDelAddressSelected(false);
 		}
-		
 	}
 	
 }
