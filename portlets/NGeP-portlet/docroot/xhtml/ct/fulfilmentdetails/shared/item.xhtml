@@ -27,7 +27,7 @@
 		  			style="width:45%; white-space:normal;" filterMatchMode="contains" >
 		 			<f:facet name="header">
 		      			<h:outputText id="productItemDesc" value="#{lbl['lbl.ct.item.desc']}" escape="false"/>
-		    			<ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}" />
+		    			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.search']}" />
 		     		</f:facet>
 		              
                 	<h:outputText id="itemNameID" value="#{ctItemVar.scRequestItem.itemName}" style="text-align:left;float:left;"/>
@@ -549,7 +549,7 @@
 		          style="width:40%; white-space:normal;" filterMatchMode="contains" styleClass="column-align-center">
 		             <f:facet name="header">
 		                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.desc']}"/>
-		                    <ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}"/>
+		                    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.search']}"/>
 		               </f:facet>
 		         <h:outputText id="serviceNameID" value="#{data.scRequestItem.itemName}" style="text-align:left;float:left;"/>
            		 <p:commandLink id="serviceSpec" update=":form:itemSpecDlg" action="#{ctBackingBean.viewItemSpecDlg(data)}">
