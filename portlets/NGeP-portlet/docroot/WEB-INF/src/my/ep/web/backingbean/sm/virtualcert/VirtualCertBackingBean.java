@@ -91,7 +91,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 							supp.getSmAppl().getSupplierType());
 			if (mofAcc != null) {
 				Date today = new Date();
-				if (!(today.compareTo(mofAcc.getExpDate()) < 0)) {
+				/*if (!(today.compareTo(mofAcc.getExpDate()) < 0)) {
 					fc.addMessage(
 							null,
 							new FacesMessage(
@@ -101,7 +101,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 											.getMessage(
 													"lbl.sm.alert.expired.mof.view.virtualcert",
 													null)));
-				}
+				}*/
 			}
 		}
 	}
