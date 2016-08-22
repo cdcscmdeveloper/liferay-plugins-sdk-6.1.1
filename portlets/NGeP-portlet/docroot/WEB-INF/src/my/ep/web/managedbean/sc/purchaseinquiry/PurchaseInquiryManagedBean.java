@@ -138,6 +138,9 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
      
      /** The supplier item prices. */
      private List<ScSupplierItemPrice>	supplierItemPrices;
+     
+     /** The auto update. */
+ 	private boolean autoUpdate = Boolean.TRUE;
     
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -717,5 +720,24 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setSupplierItemPrices(List<ScSupplierItemPrice> supplierItemPrices) {
 		this.supplierItemPrices = supplierItemPrices;
+	}
+	
+	/**
+	 * Checks if is auto update.
+	 * 
+	 * @return true, if is auto update
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * Sets the auto update.
+	 * 
+	 * @param autoUpdate
+	 *            the new auto update
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 }

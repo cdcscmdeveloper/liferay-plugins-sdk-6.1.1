@@ -1767,4 +1767,12 @@ public class PurchaseInquiryBackingBean extends
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
+	
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		//RequestContext.getCurrentInstance().update("@form");
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+	}
 }

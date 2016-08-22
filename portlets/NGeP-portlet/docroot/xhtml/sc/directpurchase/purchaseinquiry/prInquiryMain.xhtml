@@ -15,7 +15,7 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		<p:messages showDetail="true" autoUpdate="true" closable="true"
+		<p:messages showDetail="true" autoUpdate="#{purchaseInquiryBackingBean.managedBean.autoUpdate}" closable="true"
 			showSummary="false" severity="error, info" id="mainMsg" />
 			
 		<ui:param name="isTrackingDairyView" value="#{purchaseInquiryBackingBean.managedBean.trackingDairyView}" />

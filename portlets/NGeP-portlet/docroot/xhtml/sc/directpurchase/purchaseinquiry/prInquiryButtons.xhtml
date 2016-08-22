@@ -60,24 +60,28 @@
 						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
 					<c:if test="#{isPendingSupplierRespStatus}">
-						<p:outputPanel id="spkiPopup">
-							<ac:spkiPopup
-								password="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.password}"
-								challengeAns1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeAns1}"
-								challengeQues1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-								postSignAction="#{purchaseInquiryBackingBean.updateSupplierResponse(spkiBackingBean.pmDigiSign)}" />
-						</p:outputPanel>
 						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button" update="spkiPopup"
+							styleClass="ui-button" update="@([id$=spkiOutputPanel])"
 							action="#{purchaseInquiryBackingBean.supplierSubmit}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<f:setPropertyActionListener value="false"
+								target="#{purchaseInquiryBackingBean.managedBean.autoUpdate}" />
 							<f:setPropertyActionListener value="#{bpmAction}"
 								target="#{purchaseInquiryBackingBean.managedBean.action}" />
 						</p:commandButton>
 
 					</c:if>
 				</ui:repeat>
+				<p:outputPanel id="spkiOutputPanel">
+					<ac:spkiPopup id="spkiPopup"
+						password="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.password}"
+						challengeAns1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+						challengeQues1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+						postSignAction="#{purchaseInquiryBackingBean.updateSupplierResponse(spkiBackingBean.pmDigiSign)}"
+						enableAutoUpdate="#{purchaseInquiryBackingBean.enableAutoUpdate()}" />
+				</p:outputPanel>
 			</div>
 		</c:if>
+		
 	</h:panelGroup>
 </ui:composition>
