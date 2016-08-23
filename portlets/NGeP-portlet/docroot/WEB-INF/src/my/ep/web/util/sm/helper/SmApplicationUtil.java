@@ -8295,15 +8295,33 @@ public class SmApplicationUtil {
 		return sb.length() > 0 ? sb.toString() : StringUtils.EMPTY;
 	}
 
-	public static SmAppl resetAndCloneResubmitApplication(Object token,
-			List<String> userList, SmAppl originalAppl, SmAppl latesResubmitAppl) {
+	public static SmAppl resetAndCloneResubmitApplication(SmAppl originalAppl,
+			SmAppl latesResubmitAppl) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSmAppl(latesResubmitAppl);
 		reqDTO.setSrcAppl(originalAppl);
-		reqDTO.setUserList(userList);
-		reqDTO.setToken(token);
 		return SmServiceLookup.getMofRegistrationSO()
 				.resetAndCloneResubmitApplication(reqDTO).getSmAppl();
+	}
+
+	/**
+	 * Initiate MOF application new BPM Task
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @return
+	 */
+	public static SmAppl initiateMofApplNewBpmTask(SmAppl smAppl) {
+		FacesScopes fs = new FacesScopes();
+		List<String> userList = new ArrayList<String>();
+		PmUser loginUser = fs.getUserSessionBean();
+		userList.add(loginUser.getLoginId());
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSmAppl(smAppl);
+		reqDTO.setUserList(userList);
+		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
+		return SmServiceLookup.getMofRegistrationSO()
+				.initiateMofApplNewBpmTask(reqDTO).getSmAppl();
 	}
 
 	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {
