@@ -2598,7 +2598,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setQtProposalCheckListId(scQtProposalChecklist
 					.getQtProposalChecklistId());
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			log.info(" List Size : " + list.size());
