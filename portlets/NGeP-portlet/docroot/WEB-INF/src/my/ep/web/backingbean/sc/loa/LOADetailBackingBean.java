@@ -367,6 +367,17 @@ public class LOADetailBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			if(scQt != null){
 				getManagedBean().setScQt(resDTO.getScQt());
+				if(checkQTCancelRuquested(scQt)) {
+					getManagedBean().setQtCancelRequested(true);
+					Locale userLocale = new FacesScopes().getUserLocale();
+
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(MessageConst.ERROR_760434,
+											null,
+											MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale)));
+				}
 			}
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			

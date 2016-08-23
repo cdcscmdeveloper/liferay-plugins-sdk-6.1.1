@@ -38,7 +38,7 @@
 
 							<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
 								<p:commandButton value="#{lbl[buttonLabel]}"
-									rendered="#{validityDaysExpiredQt}"
+									rendered="#{validityDaysExpiredQt and !lOADetailBackingBean.managedBean.qtCancelRequested}"
 									disabled="#{!lOADetailBackingBean.managedBean.agreeWithTermsConditions}"
 									styleClass="ui-button" update="@form"
 									partialSubmit="true" process="@form"
