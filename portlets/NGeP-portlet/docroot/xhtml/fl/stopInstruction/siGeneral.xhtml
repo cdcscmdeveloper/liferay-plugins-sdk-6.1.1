@@ -191,7 +191,6 @@
 							<f:selectItems value="#{stopInstrBB.populateReasonList}" var="reason"
 								itemLabel="#{reason.reasonDesc}"
 								itemValue="#{reason.pmReason.reasonCode}"/>
-							<p:ajax event="change" update="otherId"/>
 						</p:selectOneMenu> 
 					</td>
 					<td><p:message for="reasonId" display="icon" /></td>
@@ -208,7 +207,7 @@
 					</td>
 					<td>
 						<p:inputText size="53" maxlength="255" value="#{stopInstrBB.managedBean.stopInstr.reasonDesc}" id="otherId" 
-							disabled="#{stopInstrBB.managedBean.buttonVal==BpmOutcomeConstant.bpmView or stopInstrBB.managedBean.stopInstr.pmReason.reasonCode ne 'OTHERS'
+							disabled="#{stopInstrBB.managedBean.buttonVal==BpmOutcomeConstant.bpmView 
 								or stopInstrBB.managedBean.taskName eq 'Review SD'}" />
 					</td>
 				</tr>
