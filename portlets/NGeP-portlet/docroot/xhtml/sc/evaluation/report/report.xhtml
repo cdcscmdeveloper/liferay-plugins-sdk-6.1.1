@@ -32,14 +32,14 @@
 					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
 								target="#{evaluationBackingBean.managedBean.selectedReport}" />					
 					<h:graphicImage value="/css/images/design/edit.png"
-						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'TD'}" />
+						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
 				</p:commandLink>
 				<p:commandLink rendered="#{evaluationBackingBean.managedBean.readOnly}" process="@this" 
 					update="@([id$=reportContentPopupDlgId])" oncomplete="reportContentPopupDlg.show(); return false;">
 					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
 								target="#{evaluationBackingBean.managedBean.selectedReport}" />						
 					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
-						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'TD'}" />
+						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
