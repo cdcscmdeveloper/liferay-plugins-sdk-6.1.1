@@ -7,6 +7,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
+	<h:head>
+		<h:outputStylesheet library="ep/css" name="ep.css" />
+	</h:head>
+	
 	<ui:define name="contentSection">
 
 		<h:panelGroup id="tasksBarId">
@@ -27,54 +31,63 @@
 							
 							<p:panel toggleable="true">
 						 	
-						 	<p:dataTable styleClass="taskFirstDatatable" var="task" value="#{bpmTaskDashSumBackingBean.dashboardSummary}">
-			
-							 	<p:column style="width:5px">
-						            
-									<p:rowToggler/>
-						            
-						        </p:column>
-						        
-						        <p:column>
-						        
-						        	#{bpmTaskDashSumBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, task.docTypeId)}
-						        
-						        </p:column>
-						        
-						        <p:column style="width:20px; text-align: left;">
-						           
-						            <p:commandLink action="#{bpmTaskDashSumBackingBean.goToTaskListFilterDocType(task.docTypeId)}">
-										<p:graphicImage styleClass="taskView" value="/css/images/design/next-icon2.png" style="width:16px"/>
-									</p:commandLink>
-									
-						        </p:column>
-					        
-						        <p:rowExpansion styleClass="taskRowExpansion">
-						        
-				                    <p:dataTable styleClass="taskSecondDatatable" var="status" value="#{task.bpmTaskStatusList}">
-					    	          	
-					    	          	<p:column>
-					    	          		#{bpmTaskDashSumBackingBean.applicationStatus(status.statusId)}
-					    	        		
-					    	        		<p:spacer width="50" />
-					    	        		
-			    	        				<h:outputFormat rendered="#{status.critical > 0}"
-												value="(#{lbl['lbl.cc.task.summary.urgent.request']})">
-												<f:param value="#{status.critical}" />
-											</h:outputFormat>
-					    	        
-					    	          	</p:column>
-									
-					    	          	<p:column style="width:4%; text-align: right;">
-					    	          		#{status.total}
-					    	          	</p:column>
-					    	          	
-											
-					    	        </p:dataTable>
-					    	        
-						        </p:rowExpansion>
-						        
-						    </p:dataTable>
+						 		<table class="taskFirstTable">
+						 		
+						 			<ui:repeat value="#{bpmTaskDashSumBackingBean.dashboardSummary}" var="task">
+						 			
+							 			<tr>
+							 			
+							 				<td>
+							 					#{bpmTaskDashSumBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, task.docTypeId)}
+							 				</td>
+				
+											<td>
+	
+									            <p:commandLink action="#{bpmTaskDashSumBackingBean.goToTaskListFilterDocType(task.docTypeId)}">
+													<p:graphicImage styleClass="taskView" value="/css/images/design/next-icon2.png" style="width:16px"/>
+												</p:commandLink>
+						
+											</td>			 			
+							 			</tr>
+						 		
+						 				<tr>
+						 					
+						 					<td colspan="2">
+						 						
+						 						<table class="taskSecondTable">
+						 						
+						 							<ui:repeat var="status" value="#{task.bpmTaskStatusList}" varStatus="loopStatus">
+						 							
+							 							<tr>
+							 								
+							 								<td>
+							 									#{bpmTaskDashSumBackingBean.applicationStatus(status.statusId)}
+							 								</td>
+							 								
+							 								<td>
+								 								<h:outputFormat rendered="#{status.critical > 0}"
+																	value="(#{lbl['lbl.cc.task.summary.urgent.request']})">
+																	<f:param value="#{status.critical}" />
+																</h:outputFormat>
+															</td>
+							 								
+							 								<td>
+							 									#{status.total}
+							 								</td>
+							 							
+							 							</tr>
+						 						
+						 							</ui:repeat>
+						 							
+						 						</table>
+						 						
+						 					</td>
+					 					
+					 					</tr>
+					 					
+						 			</ui:repeat>
+						 			
+						 		</table>
 						    
 						    </p:panel>
 						    
