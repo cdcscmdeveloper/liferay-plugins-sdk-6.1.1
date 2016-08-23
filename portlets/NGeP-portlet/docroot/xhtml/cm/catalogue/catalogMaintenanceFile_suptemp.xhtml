@@ -14,6 +14,11 @@
 
 	<ui:define name="contentSection">
 		<script>
+			var emptyText = document.createTextNode("");
+			$('#breadcrumbs').find('.last').append(emptyText);
+			if(emptyText.parentNode != null) {
+				emptyText.parentNode.children[0].text = "#{lbl['lbl.cm.item.code.search']}";
+			}
 			$('#portlet_CatalogueMaintenance_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
 					"#{lbl['lbl.cm.item.code.search']}");
