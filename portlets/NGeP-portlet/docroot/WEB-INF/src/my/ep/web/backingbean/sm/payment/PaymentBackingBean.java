@@ -431,25 +431,24 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 */
 	public void responsePreRender() throws NoSuchMethodException,SecurityException, IllegalAccessException,
 	IllegalArgumentException, InvocationTargetException {
-		
-		SmAppl appl = null;
-		String paymentTaskId = null;
-		Object paymentBpmPojo = null;
-
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		HttpSession session = httpServletRequest.getSession();
-
-		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
-		paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
-		appl = (SmAppl)session.getAttribute("smAppl");
 		
 		int localCounter = (int)session.getAttribute("paymentCounter");
 		log.info("int localCounter>>>>>>"  + localCounter);
 		localCounter = localCounter +1;
 		session.setAttribute("paymentCounter",localCounter);
 		
+		SmAppl appl = null;
+		String paymentTaskId = null;
+		Object paymentBpmPojo = null;
+
+		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
+		paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
+		appl = (SmAppl)session.getAttribute("smAppl");
+	
 		log.info("paymentTaskId>>>>>>>" + paymentTaskId);
 		log.info("paymentBpmPojo>>>>>>>" + paymentBpmPojo);
 		log.info("localCounter>>>>>>"  + localCounter);
