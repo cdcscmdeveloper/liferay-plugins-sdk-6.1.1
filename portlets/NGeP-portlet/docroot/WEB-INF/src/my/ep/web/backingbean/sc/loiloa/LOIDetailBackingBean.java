@@ -335,6 +335,19 @@ public class LOIDetailBackingBean extends
 
 				if(finalization != null){
 					scQt  = finalization.getScQt();
+					if(scQt != null) {
+						if(checkQTCancelRuquested(scQt)) {
+							getManagedBean().setQtCancelRequested(true);
+							Locale userLocale = new FacesScopes().getUserLocale();
+
+							FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+											MessageUtils.getMessage(MessageConst.ERROR_760434,
+													null,
+													MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale)));
+						}
+					}
 				}
 				
 				//check wheather refinalization bidding or not
