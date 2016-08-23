@@ -23,6 +23,53 @@
 		
 		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" />
 		
+		<ui:remove>
+		<div align="left">
+			<p:commandButton value="Clone" 
+				action="#{viewSmApplBackingBean.onClickClone}" update="@form"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+			</p:commandButton>
+			
+			<p:dialog width="400px" height="200px"
+				header="Clone Application" widgetVar="cloneDialog"
+				resizable="false" showEffect="fade" closable="false" hideEffect="fade"
+				modal="true" id="cloneDialog">
+				
+				<p:messages id="cloneMsg" showSummary="false"
+				showDetail="true" autoUpdate="true" closable="true" />
+				
+				<table style="width: 100%">
+					<tr>
+						<td>Source Application No :</td>
+						<td>
+							<p:inputText maxlength="25"
+								label="Source Application No" id="srcApplNoId"
+								value="#{viewSmApplBackingBean.managedBean.srcApplNo}"
+								size="25">
+							</p:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>Target Application No :</td>
+						<td>
+							<p:inputText maxlength="25"
+								label="Target Application No" id="targetApplNoId"
+								value="#{viewSmApplBackingBean.managedBean.targetApplNo}"
+								size="25">
+							</p:inputText>
+						</td>
+					</tr>
+				</table>
+				<div align="right">
+					<p:commandButton value="Submit" update="@form"
+						action="#{viewSmApplBackingBean.cloneApplication}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+					</p:commandButton>
+				</div>
+			</p:dialog>
+		</div>
+		</ui:remove>
+		
 		<p:panel header="#{lbl['lbl.sm.search.supp.appl.history']}" toggleable="true" id="searchSupplierProfilePanelId">
 			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/supplierApplicationSearchCriteria.xhtml" />
 		</p:panel>
