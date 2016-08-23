@@ -5723,10 +5723,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						.getResultBean().getResultList().get(0).getSupplierId(), null);
 
 			}
-
+			
+			String nextNavigation = "catalogMaintenanceFile";
+			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
+				nextNavigation = "catalogMaintenanceFile_suptemp";
+			}
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, "catalogMaintenanceFile");
+			.handleNavigation(fc, null, nextNavigation);
 
 		}catch(Exception ex){
 			FacesScopes.preRenderErrorMessage(ex.getMessage());
