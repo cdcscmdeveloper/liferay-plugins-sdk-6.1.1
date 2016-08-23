@@ -3044,10 +3044,10 @@ public class SmApplicationUtil {
 	 */
 	public static void checkEquityOwnerUpdateAllowance(
 			SmApplicationManagedBean managedBean) {
-		managedBean.setDisAllowOwnerEdit(true);
-		if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
-			managedBean.setDisAllowOwnerEdit(false);
-		}
+		 managedBean.setDisAllowOwnerEdit(true);
+		 if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
+		 managedBean.setDisAllowOwnerEdit(false);
+		 }
 	}
 
 	/**
@@ -8155,33 +8155,30 @@ public class SmApplicationUtil {
 		}
 	}
 
+
 	/**
 	 * Get current registration status description by smAppl
 	 * 
 	 * @param SmAppl
 	 *            appl
-	 * @return String
+	 * @return PmStatusDesc
 	 */
-	public static String getCurrRegStatusDescBySmAppl(SmAppl appl) {
-		String retVal = StringUtils.EMPTY;
+	public static PmStatusDesc getCurrRegStatusDesc(SmAppl appl) {
+		PmStatusDesc retVal = null;
 		String language = new FacesScopes().getUserLocale().getLanguage();
-		try {
-			if (appl.getSmSupplier().getSmAppl().getPmRegStatus() != null
-					&& appl.getSmSupplier().getSmAppl().getPmRegStatus()
-							.getPmStatus() != null
-					&& !EntityHelper.isCollectionEmpty(appl.getSmSupplier()
-							.getSmAppl().getPmRegStatus().getPmStatus()
-							.getPmStatusDescs())) {
-				for (PmStatusDesc sd : appl.getSmSupplier().getSmAppl()
-						.getPmRegStatus().getPmStatus().getPmStatusDescs()) {
-					if (language.equals(sd.getLanguageCode())) {
-						retVal = sd.getStatusName();
-						break;
-					}
+		if (appl.getSmSupplier().getSmAppl().getPmRegStatus() != null
+				&& appl.getSmSupplier().getSmAppl().getPmRegStatus()
+						.getPmStatus() != null
+				&& !EntityHelper.isCollectionEmpty(appl.getSmSupplier()
+						.getSmAppl().getPmRegStatus().getPmStatus()
+						.getPmStatusDescs())) {
+			for (PmStatusDesc sd : appl.getSmSupplier().getSmAppl()
+					.getPmRegStatus().getPmStatus().getPmStatusDescs()) {
+				if (language.equals(sd.getLanguageCode())) {
+					retVal = sd;
+					break;
 				}
 			}
-		} catch (Exception e) {
-
 		}
 		return retVal;
 	}

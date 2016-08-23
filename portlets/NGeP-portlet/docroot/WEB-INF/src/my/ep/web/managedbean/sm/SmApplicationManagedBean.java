@@ -448,6 +448,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String physicalConsulting;
 	private String personType;
 	private String currRegStatus;
+	private Long approvedStatusId;
 
 	private BigDecimal currBumiEquity;
 	private BigDecimal currNonBumiEquity;
@@ -3612,5 +3613,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSvTaskIdsNeedToDelete(List<Long> svTaskIdsNeedToDelete) {
 		this.svTaskIdsNeedToDelete = svTaskIdsNeedToDelete;
+	}
+
+	public Long getApprovedStatusId() {
+		return approvedStatusId;
+	}
+
+	public void setApprovedStatusId(Long approvedStatusId) {
+		this.approvedStatusId = approvedStatusId;
 	}
 }

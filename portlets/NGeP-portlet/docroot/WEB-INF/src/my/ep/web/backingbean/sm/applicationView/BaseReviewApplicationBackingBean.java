@@ -493,9 +493,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 		}
 		// init current regsitration status description
-		getManagedBean().setCurrRegStatus(
-				SmApplicationUtil.getCurrRegStatusDescBySmAppl(getManagedBean()
-						.getSmAppl()));
+		PmStatusDesc statusDesc = SmApplicationUtil
+				.getCurrRegStatusDesc(getManagedBean().getSmAppl());
+		if (statusDesc != null) {
+			getManagedBean().setCurrRegStatus(statusDesc.getStatusName());
+		}
 		getManagedBean().setReviewApplicationExist(true);
 	}
 

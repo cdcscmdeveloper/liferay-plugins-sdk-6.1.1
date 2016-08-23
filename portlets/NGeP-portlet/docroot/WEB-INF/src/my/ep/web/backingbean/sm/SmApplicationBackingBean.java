@@ -91,6 +91,7 @@ import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
@@ -1147,9 +1148,14 @@ public class SmApplicationBackingBean extends
 						.getSmAppl()));
 
 		// init current registration status description
-		getManagedBean().setCurrRegStatus(
-				SmApplicationUtil.getCurrRegStatusDescBySmAppl(getManagedBean()
-						.getSmAppl()));
+		PmStatusDesc currentStatusDesc = SmApplicationUtil
+				.getCurrRegStatusDesc(getManagedBean().getSmAppl());
+		if (currentStatusDesc != null) {
+			getManagedBean().setApprovedStatusId(
+					currentStatusDesc.getPmStatus().getStatusId());
+			getManagedBean()
+					.setCurrRegStatus(currentStatusDesc.getStatusName());
+		}
 
 		// set business type parameter type
 		getManagedBean()
@@ -8166,8 +8172,7 @@ public class SmApplicationBackingBean extends
 
 		try {
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
-					.getStatusId();
+			Long pmStatId = getManagedBean().getApprovedStatusId();
 			retriveCurrentAppl();
 
 			// validate personnels email domain
@@ -8305,32 +8310,26 @@ public class SmApplicationBackingBean extends
 								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
 				} else {
+
 					// set SME Status
 					SmApplicationUtil
 							.setSmeStatus(getManagedBean().getSmAppl());
 
 					if (pmStatId != null) {
-						for (PmStatusDesc desc : getManagedBean()
-								.getRegStatusDescList()) {
-							if (pmStatId.equals(desc.getPmStatus()
-									.getStatusId())) {
-								getManagedBean().getSmAppl().setPmStatus(
-										desc.getPmStatus());
-								if (desc.getPmStatus().getPmRegStatus() != null) {
-									getManagedBean().getSmAppl()
-											.setPmRegStatus(
-													desc.getPmStatus()
-															.getPmRegStatus());
-									getManagedBean().getSmSupplier().setBumi(
-											desc.getPmStatus().getPmRegStatus()
-													.isBumiAppl());
-									getManagedBean().getSmAppl().setBumi(
-											getManagedBean().getSmSupplier()
-													.isBumi());
-									break;
-								}
-							}
+						// Load PmRegStatus
+						PmStatus regStatus = SmCommonUtil.getInstance()
+								.retrievePmStatusById(pmStatId);
+						if (regStatus != null
+								&& regStatus.getPmRegStatus() != null) {
+							getManagedBean().getSmAppl().setPmStatus(regStatus);
+							getManagedBean().getSmAppl().setPmRegStatus(
+									regStatus.getPmRegStatus());
+							getManagedBean().getSmSupplier().setBumi(
+									regStatus.getPmRegStatus().isBumiAppl());
+							getManagedBean().getSmAppl().setBumi(
+									getManagedBean().getSmSupplier().isBumi());
 						}
+
 					}
 					reqDTO.setPaymentReqd(setPaymentMode());
 				}
@@ -8358,7 +8357,12 @@ public class SmApplicationBackingBean extends
 						} else {
 							cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 						}
-
+						
+						// if PO direct approved, delete Approver Flag
+						if (getManagedBean().isPoUser()) {
+							cat.setApprvrDecFlg(null);
+							cat.setApproverRemarks(null);
+						}
 					}
 				}
 
