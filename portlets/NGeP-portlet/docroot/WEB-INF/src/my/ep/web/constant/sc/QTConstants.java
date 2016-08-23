@@ -168,13 +168,6 @@ public interface QTConstants {
 	public static final String RECOMMENDATION_PREFERENCE_MARGIN = "RPM";
 	public static final String FINANCIAL_PREFERENCE_MARGIN = "FPM";
 	public static final String FINANCIAL_EVALUATION = "F";
-	
-	public static final int SETTING_TYPE_TECHNICAL = 1;
-	public static final int SETTING_TYPE_FINANCIAL_BY_PACKAGE = 2;
-	public static final int SETTING_TYPE_DEMO = 3;
-	public static final int SETTING_TYPE_RECOMMENDATION_BY_PACKAGE = 4;
-	public static final int SETTING_TYPE_RECOMMENDATION_BY_ITEM = 5;
-	public static final int SETTING_TYPE_FINANCIAL_BY_ITEM = 6;
 
 	public static final int CHECKLIST_USER_SCORE = 2;
 
