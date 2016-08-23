@@ -387,6 +387,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The auto update. */
 	private boolean autoUpdate = Boolean.TRUE;
 	
+	/** The QT is cancel requested. */
+    private boolean qtCancelRequested;
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2251,6 +2254,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setRefinalizedBidding(boolean refinalizedBidding) {
 		this.refinalizedBidding = refinalizedBidding;
 	}
+	
 
 	/**
 	 * @return the autoUpdate
@@ -2264,6 +2268,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the qtCancelRequested
+	 */
+	public boolean isQtCancelRequested() {
+		return qtCancelRequested;
+	}
+
+	/**
+	 * @param qtCancelRequested the qtCancelRequested to set
+	 */
+	public void setQtCancelRequested(boolean qtCancelRequested) {
+		this.qtCancelRequested = qtCancelRequested;
 	}
 	
 	

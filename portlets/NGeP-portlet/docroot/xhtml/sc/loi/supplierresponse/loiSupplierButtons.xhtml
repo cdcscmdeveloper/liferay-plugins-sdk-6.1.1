@@ -25,6 +25,7 @@
 							<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
 								<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
 									styleClass="ui-button" update="@form"
+									rendered="#{!lOIDetailBackingBean.managedBean.qtCancelRequested}"
 									action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
 									onstart="blockWidget.show();">
 									<f:setPropertyActionListener value="#{bpmAction}"

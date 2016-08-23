@@ -256,6 +256,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
     /** Property to hide or display messages */
     private boolean autoUpdate = Boolean.TRUE;
     
+    /** The QT is cancel requested. */
+    private boolean qtCancelRequested;
+    
     /**
      * Gets the spki backing bean.
      *
@@ -1430,6 +1433,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the qtCancelRequested
+	 */
+	public boolean isQtCancelRequested() {
+		return qtCancelRequested;
+	}
+
+	/**
+	 * @param qtCancelRequested the qtCancelRequested to set
+	 */
+	public void setQtCancelRequested(boolean qtCancelRequested) {
+		this.qtCancelRequested = qtCancelRequested;
 	}
 	
 }
