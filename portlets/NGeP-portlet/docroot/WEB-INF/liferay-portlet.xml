@@ -554,14 +554,6 @@
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>noticeBoard-portlet</css-class-wrapper>
 	</portlet>
-	<portlet>
-		<portlet-name>scSupplierReview</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
-		<css-class-wrapper>spreview-portlet</css-class-wrapper>
-	</portlet>
 
 	<portlet>
 		<portlet-name>scSpecificationBusinessOwner</portlet-name>
