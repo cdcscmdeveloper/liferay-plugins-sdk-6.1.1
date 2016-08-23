@@ -3869,11 +3869,8 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
 				case "70004":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
-				default:
-					log.info("MyIDENTITY ERROR: " + identificationNo + " - "
-							+ resDTO.getStatusCode() + " - "
-							+ resDTO.getStatusDesc());
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70099);
+				case "70005":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				}
 			}
 		} catch (Exception ex) {
