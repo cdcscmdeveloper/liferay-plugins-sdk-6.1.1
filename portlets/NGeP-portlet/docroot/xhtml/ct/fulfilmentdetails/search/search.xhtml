@@ -150,14 +150,6 @@
 					<p:column headerText="#{lbl['lbl.ct.contract.status']}" styleClass="column-align-center"  style="width:8%; white-space:normal;">
 						<h:outputText value="#{contractDetailsBackingBean.getContractStatusDesc(data.contractStatus)}" style="text-align:left; float:left;"/>
 					</p:column>
-					<p:column style="width:6%; white-space:normal;" styleClass="column-align-center">
-						<f:facet name="header" >
-					   		<h:outputText value="#{lbl['lbl.ct.doc.contract.status']}"/>
-               		   		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" />
-               	    	</f:facet>
-               	    	<div align="left">
-						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" /></div>						
-					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.fulfilment.details.status']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
 					<div align="left">
 						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.fdStatus)}" /></div>
@@ -166,6 +158,14 @@
 					<div align="left">
 						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.agStatus)}" /></div>
 					</p:column>
+					<p:column style="width:6%; white-space:normal;" styleClass="column-align-center">
+						<f:facet name="header" >
+					   		<h:outputText value="#{lbl['lbl.ct.doc.contract.status']}"/>
+               		   		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" />
+               	    	</f:facet>
+               	    	<div align="left">
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" /></div>						
+					   </p:column>
 					 	<p:column headerText="#{lbl['lbl.ct.action']}" 
 					 	    styleClass="column-align-center"  style="width:7%;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
 					 	 	
