@@ -1,0 +1,187 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<script type="text/javascript">
+		function clearInvalidFileMsg() {
+			fileUploadWidget.uploadContent.find("tr.ui-state-error").remove();
+		}
+	</script>
+
+	<div style="text-align: right;">
+		<p:commandButton value="#{lbl['lbl.cm.upload']}"
+			onclick="excelDialog.show(); clearInvalidFileMsg();" />
+
+		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}"
+			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
+			update=":form" ajax="false">
+			<p:fileDownload value="#{catalogueBackingBean.file}" />
+		</p:commandButton>
+
+		<ui:remove>
+			<p:commandButton id="reportLink"
+				value="#{lbl['lbl.cm.download']} Report" update=":form" ajax="false">
+				<p:fileDownload value="#{reportBackingBean.reportPdf}" />
+			</p:commandButton>
+		</ui:remove>
+
+
+		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
+			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
+			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
+	</div>
+
+	<ac:lovPopup />
+
+
+	<p:remoteCommand name="refreshDraftSuppItem" id="refreshDraftSuppItem"
+		action="#{catalogueBackingBean.checkingCheckAll}"
+		update=":form:draftSupplierItemID:selectAllCheckBoxId"></p:remoteCommand>
+
+
+	<table style="width: 100%; height: 100%;">
+			<tr>
+				<td width="100%"><h:outputText styleClass="instruction"
+						style="float:left;margin-left:5px;"
+						value="#{lbl['lbl.cm.insturction']}" /></td>
+			</tr>
+		</table>
+	<p:dataTable id="draftSupplierItemID" lazy="true" style="width:100%;"
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+		value="#{catalogueBackingBean.managedBean.draftSearchDataModel}"
+		rowIndexVar="rowIndex" var="selectedSuppCat"
+		rowKey="#{selectedSuppCat.supplierItemId}" rows="10">
+
+		<ac:paginator for="draftSupplierItemID"></ac:paginator>
+
+		<p:column style="text-align: left;width:2%;">
+			<f:facet name="header">
+				<p:selectBooleanCheckbox id="selectAllCheckBoxId"
+					value="#{catalogueBackingBean.managedBean.supplierItemcheckBoxAll}">
+					<p:ajax event="change"
+						listener="#{catalogueBackingBean.cloneAllSupplierItemSelection()}"
+						update=":form:downloadLink, :form:submitLink, @(.ui-chkbox[id$=singleCheckBoxID])"></p:ajax>
+				</p:selectBooleanCheckbox>
+			</f:facet>
+			<p:selectBooleanCheckbox id="singleCheckBoxID"
+				value="#{selectedSuppCat.selected}">
+				<p:ajax event="change"
+					listener="#{catalogueBackingBean.cloneItemSelection(rowIndex)}"
+					update=":form:downloadLink, :form:submitLink,  @(.ui-chkbox[id$=selectAllCheckBoxId])  "></p:ajax>
+			</p:selectBooleanCheckbox>
+		</p:column>
+
+		<p:column width="3%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.item.code']}
+			</f:facet>
+			<h:outputText value="#{selectedSuppCat.cmItem.extensionCode}"
+				style="white-space: normal" />
+		</p:column>
+
+		<p:column width="20%" style="white-space: normal;">
+			<f:facet name="header">
+				#{lbl['lbl.cm.item.name']}     
+			</f:facet>
+			<h:outputText value="#{selectedSuppCat.cmItem.itemName}" />
+
+		</p:column>
+		<p:column width="2%">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.cm.price']}" />
+			</f:facet>
+			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}"
+				maxlength="18" label="#{lbl['lbl.cm.price']}" size="10"
+				style="text-align:right">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</p:inputText>
+
+		</p:column>
+		<p:column width="5%">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.cm.uom']}" />
+			</f:facet>
+			<ui:param name="correctionIndexRow" value="#{rowIndex % 10}" />
+			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="16"
+				headerText="#{lbl['lbl.cm.item.table.uom']}" readonly="true"
+				saveObject="catalogueBackingBean.managedBean.draftSearchDataModel.list[#{correctionIndexRow}].pmUom"
+				value="#{selectedSuppCat.pmUom.uomName}"
+				conditionField="recordStatus^1">
+			</ac:lov>
+		</p:column>
+		<p:column width="2%">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.cm.start.date']}" />
+			</f:facet>
+			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}"
+				navigator="true" showOn="button" size="10"
+				mindate="#{catalogueBackingBean.managedBean.currentDate}"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+		</p:column>
+		<p:column width="2%">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.cm.end.date']}" />
+			</f:facet>
+			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}"
+				navigator="true" showOn="button" size="10"
+				mindate="#{catalogueBackingBean.managedBean.currentDate}"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+		</p:column>
+		<p:column width="2%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.action']}
+			</f:facet>
+
+			<h:panelGroup rendered="#{!unspscCodeBackingBean.supplierTemp}">
+				<p:commandLink title="#{lbl['lbl.cm.zm.edit']}"
+					action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
+					<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
+				</p:commandLink>
+			</h:panelGroup>
+			<p:commandLink style="margin-left: 10px;"
+				title="#{lbl['lbl.btn.delete']}" oncomplete="confirmation1.show();"
+				action="#{catalogueBackingBean.setItemToDelete(selectedSuppCat.supplierItemId, rowIndex)}">
+				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:param name="index" value="#{rowIndex}"></f:param>
+			</p:commandLink>
+
+		</p:column>
+	</p:dataTable>
+
+	<div class="clear"></div>
+
+	<div style="text-align: right;">
+		<p:commandButton value="#{lbl['lbl.cm.add.new.item']}"
+			action="#{catalogueBackingBean.navigateToSearchCode}" />
+
+	</div>
+
+
+	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
+		width="500px" onShow="singleUploadListener(fileUploadWidget);"
+		resizable="false" styleClass="pop_up_top">
+
+
+		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}"
+			cancelLabel="#{lbl['lbl.btn.cancel']}" multiple="false"
+			uploadLabel="#{lbl['lbl.btn.upload']}" showButtons="false"
+			label="#{lbl['lbl.btn.choose']}" widgetVar="fileUploadWidget"
+			mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx)$/"
+			update="@form" invalidFileMessage="#{lbl['lbl.cm.only.xls']}">
+		</p:fileUpload>
+
+	</p:dialog>
+
+</ui:composition>
