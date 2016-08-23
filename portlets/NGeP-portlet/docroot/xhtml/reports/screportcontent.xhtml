@@ -17,8 +17,8 @@
 							<p:outputLabel value="#{lbl['lbl.rpt.scProcurementMethod']}"
 								style="margin-top:5px;width:160px;" />
 							<p:selectManyCheckbox id="procureAllChk"
-								value="#{reportBackingBean.scProcureAllList}">
-								<f:selectItem itemLabel="All" itemValue="A"
+								value="#{reportBackingBean.scProcureAllList}"> 
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.sc.chkall']}" itemValue="A"
 									itemDisabled="#{scReportBackingBean.managedBean.rptGenBean.scProcureAllEditView}" />
 								<p:ajax event="change"
 									listener="#{reportBackingBean.onSelectEffectedValues()}"
@@ -31,7 +31,7 @@
 							<p:outputLabel value="" style="margin-top:5px;width:160px;" />
 							<p:selectManyCheckbox id="quotationChk"
 								value="#{reportBackingBean.scQuotationList}">
-								<f:selectItem itemLabel="Quotation" itemValue="Q"
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.sc.quotation']}" itemValue="Q" 
 									itemDisabled="#{scReportBackingBean.managedBean.rptGenBean.scProcureQuoteEditView}" />
 								<p:ajax event="change"
 									listener="#{reportBackingBean.onSelectEffectedValues()}"
@@ -44,7 +44,7 @@
 							<p:outputLabel value="" style="margin-top:5px;width:160px;" />
 							<p:selectManyCheckbox id="tenderChk"
 								value="#{reportBackingBean.scTenderList}">
-								<f:selectItem itemLabel="Tender" itemValue="T"
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.sc.tender']}" itemValue="T"
 									itemDisabled="#{scReportBackingBean.managedBean.rptGenBean.scProcureTenderEditView}" />
 								<p:ajax event="change"
 									listener="#{reportBackingBean.onSelectEffectedValues()}"
@@ -57,7 +57,7 @@
 							<p:outputLabel value="" style="margin-top:5px;width:160px;" />
 							<p:selectManyCheckbox id="restrctdTenderChk"
 								value="#{reportBackingBean.scRstrctdTndrList}">
-								<f:selectItem itemLabel="Restricted Tender" itemValue="R"
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.sc.restrict.tender']}" itemValue="R"
 									itemDisabled="#{scReportBackingBean.managedBean.rptGenBean.scProcureRestrctdEditView}" />
 								<p:ajax event="change"
 									listener="#{reportBackingBean.onSelectEffectedValues()}"
@@ -176,7 +176,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText value="#{reportBackingBean.scLOANo}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" listener="#{reportBackingBean.onChangeScLOANo()}" process="@form" update="@form" />
+								<p:ajax event="blur" partialSubmit="true" listener="#{reportBackingBean.onChangeScLOANo()}"  update="@form" />
 							</p:inputText>
 						</c:if>
 						<c:if
@@ -395,7 +395,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText maxlength="40" value="#{reportBackingBean.scPIno}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" listener="#{reportBackingBean.onChangeScPiNo()}" process="@form" partialSubmit="true" update="@form" />
+								<p:ajax event="blur" listener="#{reportBackingBean.onChangeScPiNo()}" partialSubmit="true" update="@form" />
 							</p:inputText>
 						</c:if>
 
@@ -410,7 +410,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText value="#{reportBackingBean.scRequestQuoteNo}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@form" process="@form" listener="#{reportBackingBean.onChangeScRequestQuoteNo()}" />
+								<p:ajax event="blur" partialSubmit="true" update="@form" listener="#{reportBackingBean.onChangeScRequestQuoteNo()}" />
 							</p:inputText>
 						</c:if>
 						<c:if
@@ -419,7 +419,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText value="#{reportBackingBean.scPIDNo}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" listener="#{reportBackingBean.onChangeScPidNo()}" process="@form" partialSubmit="true" update="@form" />
+								<p:ajax event="blur" listener="#{reportBackingBean.onChangeScPidNo()}"  partialSubmit="true" update="@form" />
 							</p:inputText>
 						</c:if>
 						<c:if
@@ -446,7 +446,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText value="#{reportBackingBean.scContractOrPKPNo}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur"  listener="#{reportBackingBean.onChangeScContractOrPKPNo()}" process="@form" partialSubmit="true" update="@form" />
+								<p:ajax event="blur"  listener="#{reportBackingBean.onChangeScContractOrPKPNo()}"  partialSubmit="true" update="@form" />
 							</p:inputText>
 						</c:if>
 						<c:if
@@ -455,7 +455,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText value="#{reportBackingBean.scContractOrPKPName}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur"  listener="#{reportBackingBean.onChangeScContractOrPKPName()}" process="@form" partialSubmit="true" update="@form" />
+								<p:ajax event="blur"  listener="#{reportBackingBean.onChangeScContractOrPKPName()}"  partialSubmit="true" update="@form" />
 							</p:inputText>
 						</c:if>
 
