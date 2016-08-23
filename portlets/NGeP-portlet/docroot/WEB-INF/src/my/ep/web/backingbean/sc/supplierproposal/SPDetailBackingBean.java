@@ -30,6 +30,7 @@ import my.ep.biz.bean.sc.EncryptDataBean.EncryptTableName;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -45,6 +46,7 @@ import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -78,6 +80,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -2519,6 +2522,7 @@ public class SPDetailBackingBean extends
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(supplierId);
+			reqDTO.setScQtProposal(getManagedBean().getQtProposal());
 			ProposalResDTO resDTO = proposalSO
 					.retrivePaidUpCapitalBySupplierById(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
@@ -2634,6 +2638,7 @@ public class SPDetailBackingBean extends
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(supplierId);
+			reqDTO.setScQtProposal(getManagedBean().getQtProposal());
 			ProposalResDTO resDTO = proposalSO.retriveSupplierById(reqDTO);
 			getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
@@ -4069,9 +4074,37 @@ public class SPDetailBackingBean extends
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
-	private String getPrefixFileName(int increment) {
-
-		return (String) (increment <= 9 ? "0" + (increment) : Integer
-				.toString(increment));
+	/**
+	 * Get SmMofAccount By mof account number
+	 * 
+	 * @param mofNo
+	 *            the mof account number
+	 * @return the SmMofAccount instance
+	 */
+	public SmMofAccount getSmMofAccountByMofNo(String mofNo) {
+		SmMofAccount mofAccount = null;
+		
+		if (StringUtils.isNotBlank(mofNo)) {
+			IMofAccountSO mofAccountSO;
+			try {
+				mofAccountSO = BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								IMofAccountSO.class);
+				MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+				reqDTO.setMofNo(mofNo);
+				mofAccount = mofAccountSO
+						.retriveMofAccountByMofNo(reqDTO)
+						.getMofAccount();
+			} finally {
+				mofAccountSO = null;
+			}	
+		}
+		
+		if (mofAccount != null) {
+			return mofAccount;
+		} else {
+			return new SmMofAccount();
+		}
 	}
 }
