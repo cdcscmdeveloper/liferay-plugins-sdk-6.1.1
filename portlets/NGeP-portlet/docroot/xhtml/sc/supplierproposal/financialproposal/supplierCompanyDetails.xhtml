@@ -44,13 +44,13 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.eff.date']}" /></td>
-				<td><p:inputText value="#{smSupplier.smMofAccounts[0].effDate}"
+				<td><p:inputText value="#{supplierProposalDetailBackingBean.getSmMofAccountByMofNo(qtProposal.mofNo).effDate}"
 						size="30" readonly="true" disabled="true">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expired.date']}" /></td>
-				<td><p:inputText value="#{smSupplier.smMofAccounts[0].expDate}"
+				<td><p:inputText value="#{supplierProposalDetailBackingBean.getSmMofAccountByMofNo(qtProposal.mofNo).expDate}"
 						size="30" readonly="true" disabled="true">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
