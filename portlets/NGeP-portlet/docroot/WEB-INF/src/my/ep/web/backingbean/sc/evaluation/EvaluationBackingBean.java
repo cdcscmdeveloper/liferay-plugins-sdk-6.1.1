@@ -507,21 +507,21 @@ public class EvaluationBackingBean extends
 		// }
 
 		if (StringUtils.equals(recommendBy, QTConstants.TECHNICAL_EVALUATION)) {
-			return QTConstants.SETTING_TYPE_TECHNICAL;
+			return SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL;
 		} else if (StringUtils.equals(recommendBy,
 				QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE)) {
-			return QTConstants.SETTING_TYPE_FINANCIAL_BY_PACKAGE;
+			return SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_PACKAGE;
 		} else if (StringUtils.equals(recommendBy,
 				QTConstants.PRESENTATION_DEMO_EVALUATION)) {
-			return QTConstants.SETTING_TYPE_DEMO;
+			return SourcingConstants.SCORE_SETTING_TYPE_DEMO;
 		} else if (StringUtils.equals(recommendBy,
 				QTConstants.RECOMMENDATION_BY_PACKAGE)) {
-			return QTConstants.SETTING_TYPE_RECOMMENDATION_BY_PACKAGE;
+			return SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_PACKAGE;
 		} else if (StringUtils.equals(recommendBy,
 				QTConstants.FINANCIAL_EVALUATION_BY_ITEM)) {
-			return QTConstants.SETTING_TYPE_FINANCIAL_BY_ITEM;
+			return SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM;
 		} else {
-			return QTConstants.SETTING_TYPE_RECOMMENDATION_BY_ITEM;
+			return SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM;
 		}
 	}
 
@@ -1899,11 +1899,11 @@ public class EvaluationBackingBean extends
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
 
 					evalReqDTO
-							.setRecomandationType(QTConstants.SETTING_TYPE_DEMO);
+							.setRecomandationType(SourcingConstants.SCORE_SETTING_TYPE_DEMO);
 				} else {
 
 					evalReqDTO
-							.setRecomandationType(QTConstants.SETTING_TYPE_TECHNICAL);
+							.setRecomandationType(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL);
 				}
 				List<String> resultStg = new ArrayList<String>();
 				resultStg.add(QTConstants.TECHNICAL_EVALUATION);
@@ -2058,7 +2058,7 @@ public class EvaluationBackingBean extends
 							.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 					evalReqDTO.setEvalStage(QTConstants.COMPLIANCE_CHECK);
 					evalReqDTO
-							.setRecomandationType(QTConstants.SETTING_TYPE_TECHNICAL);
+							.setRecomandationType(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL);
 					List<String> resultStg = new ArrayList<String>();
 					resultStg.add(QTConstants.TECHNICAL_EVALUATION);
 					evalReqDTO.setResultStages(resultStg);
@@ -5177,7 +5177,7 @@ public class EvaluationBackingBean extends
 			evalReqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 			// evalReqDTO.setRecomandationType(3);
-			evalReqDTO.setRecomandationType(QTConstants.SETTING_TYPE_TECHNICAL);
+			evalReqDTO.setRecomandationType(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL);
 			List<String> resultStg = new ArrayList<String>();
 			resultStg.add(SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO);
 			evalReqDTO.setResultStages(resultStg);
