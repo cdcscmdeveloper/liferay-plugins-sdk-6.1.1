@@ -404,8 +404,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					.getPaymentAmt();
 			this.setvCode(vc);
 			this.getManagedBean().setTotalAmount(ttlAmt);
-			getManagedBean().setCounter(0);
 			
+			//new FacesScopes().setSessionScope("paymentCounter", 0);
 			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo());
 			
 /*			List paymentDtls = new ArrayList();
@@ -431,13 +431,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 */
 	public void responsePreRender() throws NoSuchMethodException,SecurityException, IllegalAccessException,
 	IllegalArgumentException, InvocationTargetException {
-		int localCounter;
-		int counter = getManagedBean().getCounter();
-		getManagedBean().setCounter(counter +1);
-
-		localCounter = getManagedBean().getCounter();
-
-		log.info("*******responsePreRender*******" + getManagedBean().getCounter());
+		
 		SmAppl appl = null;
 		String paymentTaskId = null;
 		Object paymentBpmPojo = null;
@@ -450,10 +444,16 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
 		paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
 		appl = (SmAppl)session.getAttribute("smAppl");
-
+		
+		int localCounter = (int)session.getAttribute("paymentCounter");
+		log.info("int localCounter>>>>>>"  + localCounter);
+		localCounter = localCounter +1;
+		session.setAttribute("paymentCounter",localCounter);
+		
 		log.info("paymentTaskId>>>>>>>" + paymentTaskId);
 		log.info("paymentBpmPojo>>>>>>>" + paymentBpmPojo);
 		log.info("localCounter>>>>>>"  + localCounter);
+		log.info("web localCounter>>>>>>"  + session.getAttribute("paymentCounter"));
 
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
@@ -1015,6 +1015,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		session.setAttribute("paymentBpmTaskId", taskId);
 		session.setAttribute("paymentBpmPojo", bpmPojo);
 		session.setAttribute("smAppl", getManagedBean().getSmAppl());
+		session.setAttribute("paymentCounter", 0);
 	}
 	
 	//TODO: new payment design
