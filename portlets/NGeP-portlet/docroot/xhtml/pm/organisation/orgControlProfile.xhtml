@@ -39,7 +39,11 @@
 					styleClass="ppDisplayTextL" disabled="true" />
 		</h:panelGrid>
 		<h:panelGrid columns="2" rendered="#{organisationBackingBean.managedBean.orgType eq 'FPP'}">
-				<h:outputLabel value="#{lbl['lbl.pm.org.ministryName']}"></h:outputLabel>
+				<h:panelGroup id="minLabelPnlGroup">
+					<p:outputLabel value="#{lbl['lbl.pm.org.ministryName']}"/>
+					<p:outputLabel
+						value="*" styleClass="mandatory" />
+				</h:panelGroup>
 				<p:selectOneMenu disabled="#{(organisationBackingBean.managedBean.orgProfile.recordStatusFlg == 1 )? 'false': 'true'}"
 					label="#{lbl['lbl.pm.org.ministryName']}" 
 					value="#{organisationBackingBean.managedBean.orgProfile.parentOrgProfile.orgProfileId}"
