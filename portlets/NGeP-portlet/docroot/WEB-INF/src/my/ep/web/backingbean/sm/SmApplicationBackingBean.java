@@ -5536,6 +5536,13 @@ public class SmApplicationBackingBean extends
 				&& personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
 			personnel.setEpRole(RoleCode.MOF_SUPPLIER_USER.value());
 		}
+		// if not authorized and current role is MOF_SUPPLIER_USER, set to null
+		else if (personnel.getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+				&& StringUtils.isNotBlank(personnel.getEpRole())
+				&& personnel.getEpRole().equals(
+						RoleCode.MOF_SUPPLIER_USER.value())) {
+			personnel.setEpRole(StringUtils.EMPTY);
+		}
 
 		// add MOF_SUPPLIER_USER role
 		if (!StringUtils.isBlank(personnel.getEpRole())
@@ -5543,7 +5550,8 @@ public class SmApplicationBackingBean extends
 						RoleCode.MOF_SUPPLIER_USER.value())) {
 			addRoles(roles, RoleCode.MOF_SUPPLIER_USER.value(), false);
 		} else {
-			if (!getManagedBean().isValidSmUserLimit()) {
+			if (!getManagedBean().isValidSmUserLimit()
+					&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				addRoles(roles, RoleCode.MOF_SUPPLIER_USER.value(), false);
 			}
 		}
@@ -5570,12 +5578,14 @@ public class SmApplicationBackingBean extends
 			}
 		}
 
-		// only add CM_USER for contractor that transact with federal govt
+		// only add CM_USER for contractor that transact with federal govt and
+		// not authorized
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)
 				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
 				&& getManagedBean().getSmAppl().getSmCompanyBasic()
-						.isWithFederal()) {
+						.isWithFederal()
+				&& personnel.getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 			addRoles(roles, RoleCode.CM_USER.value(), false);
 		}
 
@@ -5692,7 +5702,10 @@ public class SmApplicationBackingBean extends
 		// reset previous approved personnel because not exist for new personnel
 		getManagedBean().setLatestPersonnel(null);
 
-		getManagedBean().setDisableRoleSelection(false);
+		getManagedBean()
+				.setDisableRoleSelection(
+						disableEpRoleDropDown(getManagedBean()
+								.getSelectedShareHolder()));
 
 	}
 
