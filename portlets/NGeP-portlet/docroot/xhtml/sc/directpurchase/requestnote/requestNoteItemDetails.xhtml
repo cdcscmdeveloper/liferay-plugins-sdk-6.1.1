@@ -290,13 +290,15 @@
 				disabled="#{requestNoteBackingBean.deleteselectedList(requestNoteBackingBean.managedBean.requestNoteDtls)}"
 				partialSubmit="true" process="@this"
 				rendered="#{!isViewOnly and isSourcheMethodAsSC}"
-				onclick="applyAllPopUp.show();" />
+				action="#{requestNoteBackingBean.applyAllAction}"
+				onstart="applyAllPopUp.show();" />
 
 			<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
 				disabled="#{requestNoteBackingBean.deleteselectedList(requestNoteBackingBean.managedBean.requestNoteDtls)}"
 				partialSubmit="true" process="@this"
 				rendered="#{!(isViewOnly or isSourcheMethodAsSC)}"
-				onclick="applyAllPopUpSQ.show();" />
+				action="#{requestNoteBackingBean.applyAllAction}"
+				onstart="applyAllPopUpSQ.show();" />
 
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
@@ -318,9 +320,6 @@
 			update="@([id$=requestNoteItemDetails])" />
 	</p:panel>
 	
-
-	
-
 	<p:dialog id="applyAllItems" widgetVar="applyAllPopUp"
 		header="#{lbl['lbl.sc.request.note.apply.all.items']}" modal="true"
 		dynamic="true" closable="false" position="center" resizable="false"
@@ -336,7 +335,7 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems
-								value="#{requestNoteBackingBean.managedBean.userList}"
+								value="#{requestNoteBackingBean.managedBean.preparedBys}"
 								var="user" itemLabel="#{user.userName}"
 								itemValue="#{user.userId}"></f:selectItems>
 						</h:selectOneMenu></td>
@@ -396,11 +395,11 @@
 							value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" /></td>
 					<td><h:selectOneMenu style="width:200px;"
 							value="#{requestNoteBackingBean.managedBean.assignedToUserId}"
-							disabled="false">
+							disabled="#{requestNoteBackingBean.managedBean.fulFillmentType}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems
-								value="#{requestNoteBackingBean.managedBean.userList}"
+								value="#{requestNoteBackingBean.managedBean.preparedBys}"
 								var="user" itemLabel="#{user.userName}"
 								itemValue="#{user.userId}"></f:selectItems>
 						</h:selectOneMenu></td>
