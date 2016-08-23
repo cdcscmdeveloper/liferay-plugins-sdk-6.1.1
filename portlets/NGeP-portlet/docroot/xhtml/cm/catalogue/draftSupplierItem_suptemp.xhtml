@@ -12,24 +12,7 @@
 			fileUploadWidget.uploadContent.find("tr.ui-state-error").remove();
 		}
 	</script>
-
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.cm.upload']}"
-			onclick="excelDialog.show(); clearInvalidFileMsg();" />
-
-		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}"
-			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
-			update=":form" ajax="false">
-			<p:fileDownload value="#{catalogueBackingBean.file}" />
-		</p:commandButton>
-
-		<ui:remove>
-			<p:commandButton id="reportLink"
-				value="#{lbl['lbl.cm.download']} Report" update=":form" ajax="false">
-				<p:fileDownload value="#{reportBackingBean.reportPdf}" />
-			</p:commandButton>
-		</ui:remove>
-
 
 		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
 			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
@@ -65,14 +48,14 @@
 					value="#{catalogueBackingBean.managedBean.supplierItemcheckBoxAll}">
 					<p:ajax event="change"
 						listener="#{catalogueBackingBean.cloneAllSupplierItemSelection()}"
-						update=":form:downloadLink, :form:submitLink, @(.ui-chkbox[id$=singleCheckBoxID])"></p:ajax>
+						update=":form:submitLink, @(.ui-chkbox[id$=singleCheckBoxID])"></p:ajax>
 				</p:selectBooleanCheckbox>
 			</f:facet>
 			<p:selectBooleanCheckbox id="singleCheckBoxID"
 				value="#{selectedSuppCat.selected}">
 				<p:ajax event="change"
 					listener="#{catalogueBackingBean.cloneItemSelection(rowIndex)}"
-					update=":form:downloadLink, :form:submitLink,  @(.ui-chkbox[id$=selectAllCheckBoxId])  "></p:ajax>
+					update=":form:submitLink,  @(.ui-chkbox[id$=selectAllCheckBoxId])  "></p:ajax>
 			</p:selectBooleanCheckbox>
 		</p:column>
 
@@ -139,25 +122,7 @@
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
-		<p:column width="2%">
-			<f:facet name="header">
-				#{lbl['lbl.cm.action']}
-			</f:facet>
-
-			<h:panelGroup rendered="#{!unspscCodeBackingBean.supplierTemp}">
-				<p:commandLink title="#{lbl['lbl.cm.zm.edit']}"
-					action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
-					<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
-				</p:commandLink>
-			</h:panelGroup>
-			<p:commandLink style="margin-left: 10px;"
-				title="#{lbl['lbl.btn.delete']}" oncomplete="confirmation1.show();"
-				action="#{catalogueBackingBean.setItemToDelete(selectedSuppCat.supplierItemId, rowIndex)}">
-				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-				<f:param name="index" value="#{rowIndex}"></f:param>
-			</p:commandLink>
-
-		</p:column>
+		
 	</p:dataTable>
 
 	<div class="clear"></div>
