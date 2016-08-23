@@ -3866,10 +3866,6 @@ public class SimpleQuoteBackingBean extends
 		TplSpecMaster cloneSpecMaster = null;
 		TplSpecMaster prodSpecMaster = null;
 		TplSpecMaster serviceSpecMaster = null;
-		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-						ITemplateSpecSO.class);
 		TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 		TemplateSpecBean productTplSpecBean = getManagedBean()
 				.getProductTemplateSpecBean();
@@ -3905,7 +3901,7 @@ public class SimpleQuoteBackingBean extends
 				}
 
 				reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-				TemplateSpecResDTO resDTO = templateSpecSO
+				TemplateSpecResDTO resDTO = getTemplateSpecSO()
 						.getTemplateMaster(reqDTO);
 				cloneSpecMaster = resDTO.getSpecMaster();
 
@@ -3992,7 +3988,6 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		} finally {
-			templateSpecSO = null;
 		}
 		getManagedBean().setSelectedQuote(null);
 	}
@@ -4910,6 +4905,21 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public void supplierSubmit() {
 		debugLogger("supplierSubmit");
+		
+		// validate tpl spec - product before spki authenticate
+		List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean()
+				.getSpecAnswerList();
+		Locale locale = new FacesScopes().getUserLocale();
+		if (CollectionUtils.isNotEmpty(specAnswerList)) {
+			getTemplateSpecSO().validateSpecAnwer(specAnswerList.get(0).getTplSpecQuestion().getTplSpecMaster(), specAnswerList, locale);	
+		}
+
+		specAnswerList = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+		// validate tpl spec - service before spki authenticate
+		if (CollectionUtils.isNotEmpty(specAnswerList)) {
+			getTemplateSpecSO().validateSpecAnwer(specAnswerList.get(0).getTplSpecQuestion().getTplSpecMaster(), specAnswerList, locale);	
+		}
+		
 		//gpki for only govt seller
 		if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -6416,7 +6426,6 @@ public class SimpleQuoteBackingBean extends
 	 * The method to used auto update of request.
 	 */
 	public void enableAutoUpdate() {
-		//RequestContext.getCurrentInstance().update("@form");
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
@@ -6439,7 +6448,17 @@ public class SimpleQuoteBackingBean extends
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 	}
-
+	
+	/**
+	 * Gets the template spec so.
+	 *
+	 * @return the template spec so
+	 */
+	private ITemplateSpecSO getTemplateSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+	}
+	
 	/**
 	 * Gets the parameter so.
 	 * 
