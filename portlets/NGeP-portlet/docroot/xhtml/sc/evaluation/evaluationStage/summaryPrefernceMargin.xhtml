@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 
 
@@ -51,11 +52,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
 				style="width:15%">
-
-				<h:outputText
-					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi ? 'Bumi' : 'Non Bumi'}"></h:outputText>
-
-
+				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+																	  		fn:toUpperCase(prefQualSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
@@ -168,11 +166,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
 				style="width:25%">
-
-				<h:outputText
-					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi ? 'Bumi' : 'Non Bumi'}"></h:outputText>
-
-
+				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+																	  		fn:toUpperCase(disQualifiedSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
 			</p:column>
 
 

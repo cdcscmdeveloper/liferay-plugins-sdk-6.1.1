@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="resourceSection">
 	</ui:define>
@@ -42,11 +43,8 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
 					style="width:10%">
-
-					<h:outputText
-						value="#{finSpec.scQtProposal.scQtSupplier.smSupplier.bumi ? 'Bumi' : 'Non Bumi'}"></h:outputText>
-
-
+					<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+																	  		fn:toUpperCase(finSpec.scQtProposal.bumi))}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.package.offered.price']}"
 					style="width:15%;text-align:right;">
