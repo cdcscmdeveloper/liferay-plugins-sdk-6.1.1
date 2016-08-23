@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<p:panel header="#{lbl['lbl.sc.spec.supplier.info']}" toggleable="true">
 		<h:outputText styleClass="instruction"
@@ -33,7 +34,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{smSupplier.smMofAccounts[0].mofNo}" /></td>
+						value="#{qtProposal.mofNo}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.date']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.establishDate}">
@@ -48,21 +49,23 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.bumiputra.status']}" /></td>
-				<td><p:inputText value="#{(smSupplier.bumi)? 'Yes' : 'No' }"
-						disabled="true" readonly="true" size="30" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.business.type']}" /></td>
-				<td><p:inputText
-						value="#{(smSupplier.manufacturer)? 'Manufacturer' : 'Distributor' }"
-						disabled="true" readonly="true" size="30" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expired.date']}" /></td>
 				<td><p:inputText value="#{smSupplier.smMofAccounts[0].expDate}"
 						size="30" readonly="true" disabled="true">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.business.type']}" /></td>
+				<td><p:inputText
+						value="#{supplierProposalDetailBackingBean.getParameterDesc(ParameterTypeConst.businessTypes, 
+											smSupplier.manufacturer ? ParameterConst.businessTypeManufacturer : ParameterConst.businessTypeDistributor)}"
+						disabled="true" readonly="true" size="30" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.bumiputra.status']}" /></td>
+				<td><p:inputText value="#{supplierProposalDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(qtProposal.bumi))}"
+						disabled="true" readonly="true" size="30" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.address']}" /></td>
