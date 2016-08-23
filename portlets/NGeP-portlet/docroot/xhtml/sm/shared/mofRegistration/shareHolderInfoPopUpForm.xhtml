@@ -465,7 +465,7 @@
 				<td><p:selectOneMenu id="smPersnEpRole"
 						label="#{lbl['lbl.sm.userprofile.eprole']}"
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
-						disabled="#{backingBean.managedBean.disableRoleSelection}"
+						disabled="#{backingBean.managedBean.disableRoleSelection or empty backingBean.managedBean.ePRoleList}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems
