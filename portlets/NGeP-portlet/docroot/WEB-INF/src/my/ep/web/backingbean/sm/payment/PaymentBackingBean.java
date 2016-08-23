@@ -404,6 +404,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					.getPaymentAmt();
 			this.setvCode(vc);
 			this.getManagedBean().setTotalAmount(ttlAmt);
+			getManagedBean().setCounter(0);
 			
 			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo());
 			
