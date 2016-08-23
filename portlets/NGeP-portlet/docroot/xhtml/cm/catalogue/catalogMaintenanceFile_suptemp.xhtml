@@ -1,0 +1,72 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+
+
+	<ui:define name="contentSection">
+
+		<script>
+			$('#portlet_CatalogueMaintenance_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					"#{lbl['lbl.cm.catalogue.maintenance']}");
+		</script>
+
+		<p:messages id="catalogFileMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false"></p:messages>
+
+		<h:panelGroup
+			rendered="#{unspscCodeBackingBean.supplierTemp}">
+			<table style="width: 80%">
+				<tr>
+					<td style="width: 80%;"><div class="navDiv" id="menuDiv"
+							align="center">
+							<ul class="menu-text" style="margin: 5px 0 0 -50px;">
+								<li style="width: 210px;"><h:outputText
+										value="#{lbl['lbl.cm.choose.unspsc']}" /></li>
+
+								<li style="width: 210px;"><h:outputText
+										value="#{lbl['lbl.cm.choose.product.service']}" /></li>
+
+								<li style="width: 210px;"><h:outputText
+										value="#{lbl['lbl.cm.complete.product.details']}" /></li>
+							</ul>
+							<ul id="tripMeter" class="menu-line">
+								<li class="black-dot" style="margin-right: 200px;" />
+								<li class="black-dot" style="margin-right: 200px;" />
+								<li class="red-dot" />
+
+							</ul>
+						</div></td>
+					<td></td>
+				</tr>
+			</table>
+		</h:panelGroup>
+
+		<p:blockUI block="form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+
+		<h:panelGroup>
+			<p:tabMenu id="maintenanceTabId"
+				activeIndex="#{catalogueBackingBean.managedBean.tabActiveIndex}">
+
+				<p:menuitem value="#{lbl['lbl.cm.draft']}"
+					action="#{catalogueBackingBean.onTabChange1('Draft')}"
+					update="@form" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" />
+			</p:tabMenu>
+
+			<ui:include src="draftSupplierItem_suptemp.xhtml"></ui:include>
+
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>
