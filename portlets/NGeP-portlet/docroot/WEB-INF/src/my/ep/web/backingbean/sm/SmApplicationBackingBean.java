@@ -458,16 +458,10 @@ public class SmApplicationBackingBean extends
 											.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 
 								if (resetLatestResubmitAppl) {
-									FacesScopes fs = new FacesScopes();
-									List<String> useList = new ArrayList<String>();
-									PmUser loginUser = fs.getUserSessionBean();
-									useList.add(loginUser.getLoginId());
 									getManagedBean()
 											.setSmAppl(
 													SmApplicationUtil
 															.resetAndCloneResubmitApplication(
-																	fs.getBPMAuthenticationCtxToken(),
-																	useList,
 																	rejectedAppl,
 																	latestResubmitAppl));
 									FacesContext
@@ -485,6 +479,14 @@ public class SmApplicationBackingBean extends
 																			new FacesScopes()
 																					.getUserLocale())));
 								}
+
+								// for application that is not yet active, will
+								// automatically initiate new BPM task
+								getManagedBean()
+										.setSmAppl(
+												SmApplicationUtil
+														.initiateMofApplNewBpmTask(getManagedBean()
+																.getSmAppl()));
 
 								prerenderApplicationForResubmission();
 							}
