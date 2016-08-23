@@ -113,6 +113,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The request note dtl. */
     private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
     
+    /** The prepared bys. */
+    private List<PmUser> preparedBys = new ArrayList<PmUser>();
+    
     /** The price type code. */
     private String priceTypeCode;
     
@@ -297,6 +300,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	/** The pid no for request note */
 	private String pidNo;
+	
+	/** The ful fillment type. */
+	private boolean fulFillmentType;
 	
     /**
      * Instantiates a new request note managed bean.
@@ -630,6 +636,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.selectedRequestNoteDtls = selectedRequestNoteDtls;
 	}
 	
+	/**
+	 * @return the preparedBys
+	 */
+	public List<PmUser> getPreparedBys() {
+		return preparedBys;
+	}
+
+	/**
+	 * @param preparedBys the preparedBys to set
+	 */
+	public void setPreparedBys(List<PmUser> preparedBys) {
+		this.preparedBys = preparedBys;
+	}
+
 	/**
 	 * Gets the price types.
 	 *
@@ -1756,5 +1776,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setPidNo(String pidNo) {
 		this.pidNo = pidNo;
 	}
-	
+
+	/**
+	 * @return the fulFillmentType
+	 */
+	public boolean isFulFillmentType() {
+		return fulFillmentType;
+	}
+
+	/**
+	 * @param fulFillmentType the fulFillmentType to set
+	 */
+	public void setFulFillmentType(boolean fulFillmentType) {
+		this.fulFillmentType = fulFillmentType;
+	}
 }

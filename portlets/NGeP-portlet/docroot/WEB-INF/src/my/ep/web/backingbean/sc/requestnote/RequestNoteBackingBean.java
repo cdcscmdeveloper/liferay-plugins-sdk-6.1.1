@@ -470,6 +470,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteReqDTO.setToken(ctxToken);
 				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 				requestNoteReqDTO.setSubmit(Boolean.TRUE);
+				requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				requestNoteResDTO = getDirectPurchaseSO().saveRequestNote(requestNoteReqDTO);
 			} else {
 				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
@@ -544,6 +545,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 				scRequestNote.setRequestNoteDtls(requestNoteDtls);
 				requestNoteReqDTO.setRequestNote(scRequestNote);
+				requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				isDeliveryTermPrompt  = getDirectPurchaseSO().validateDeliveryTerm(requestNoteReqDTO);
 
 				if(isDeliveryTermPrompt){
@@ -983,8 +985,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPidApprovers(getManagedBean().getPidApprovers());
 			requestNoteReqDTO.setPidNo(getManagedBean().getPidNo());
 			requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
-			 requestNoteReqDTO.setDeletedRequestNoteDtls(getManagedBean().getDeleteRequestNoteDtls());
-			
+			requestNoteReqDTO.setDeletedRequestNoteDtls(getManagedBean().getDeleteRequestNoteDtls());
+			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
 			if (requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
@@ -1050,7 +1052,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		//set new requestnotedtl to request note (without deleted requestnoteDtl
 		scRequestNote.setNewRequestNoteDtls(nonDeletedDtls);
-		
+		requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		getDirectPurchaseSO().validateRNBeforeSubmitting(requestNoteReqDTO);
 		
 		updateBPMTask(outcome);
@@ -1119,7 +1121,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					// prepare by
 					if(assignedUser != null){
 						selectedReqDtl.setAssignedUser(assignedUser);
-						//applyPrepareByForSupplierRecs(selectedReqDtl, getManagedBean().getAssignedToUserId());
 					} 
 					
 					if(selectedReqDtl.getScRequestNote().getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SC)){
@@ -2046,6 +2047,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				Collections.sort(userlist, new usersComparator());
 			}
 		}
+		getManagedBean().setPreparedBys(userlist);
 		return userlist;
 	}
 
@@ -3578,6 +3580,42 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}	
+	}
+	
+	/**
+	 * Apply all action.
+	 */
+	public void applyAllAction(){
+		boolean isFullFillMentTypePeriodic = Boolean.FALSE;
+		boolean isFullFillMentTypeOneOff = Boolean.FALSE;
+		List<ScRequestNoteDtl>	selectedRequestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
+
+		if (CollectionUtils.isNotEmpty(getManagedBean().getRequestNoteDtls())) {
+		
+			for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getRequestNoteDtls()) {
+				if(selectedReqDtl.isSelected()){
+					
+					if (selectedReqDtl.getFulfilmentType().getParameterCode().
+							equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+						isFullFillMentTypeOneOff = Boolean.TRUE;
+					} if (selectedReqDtl.getFulfilmentType().getParameterCode().
+							equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						isFullFillMentTypePeriodic = Boolean.TRUE;
+					}
+					selectedRequestNoteDtls.add(selectedReqDtl);
+				}
+			}
+		}
+		
+		// disabled get preparedBy for both fullfillment types
+		if(isFullFillMentTypeOneOff && isFullFillMentTypePeriodic){
+			getManagedBean().setFulFillmentType(Boolean.TRUE);
+		} else{
+			if (CollectionUtils.isNotEmpty(selectedRequestNoteDtls)) {
+				getPreparedBy(selectedRequestNoteDtls.get(0));
+			}
+			getManagedBean().setFulFillmentType(Boolean.FALSE);
+		}
 	}
 	
 	/**
