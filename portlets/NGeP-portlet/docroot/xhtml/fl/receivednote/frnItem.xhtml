@@ -178,7 +178,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td valign="top" style="width:110px;"><p:outputLabel value="Remark History" /></td>
+					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.fl.remark.history']}" /></td>
 					<td>
 						<p:commandLink id="remarkHistory"
 							oncomplete="rejectionRemarksHistory.show();"
@@ -192,7 +192,7 @@
 			</table>
 		</h:panelGroup>
 	</p:panel>	
-	<p:dialog id="rejectionRemarksHistory" header="Rejections Remarks"
+	<p:dialog id="rejectionRemarksHistory" header="#{lbl['lbl.fl.remark.history']}"
 		widgetVar="rejectionRemarksHistory" showEffect="fade" hideEffect="fade"
 		 modal="true" width="900px"
 		 resizable="false">
@@ -203,8 +203,8 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.item.code']}" /></td>
 					<td><p:inputText value="#{receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.itemCode}" disabled="true"/></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.item.code']}" /></td>
-					<td><p:inputText value="#{receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" disabled="true"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.pm.bn.itemname']}" /></td>
+					<td><p:inputText value="#{receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" size="51" disabled="true"/></td>
 				</tr>
 			</table>
 			<p:dataTable id="rejectionRemarks" value="#{receivedNoteBackingBean.managedBean.rejectionRemarkHistory}" var="remarks"
@@ -213,7 +213,7 @@
 			<p:column headerText="#{lbl['lbl.fl.num']}" style="text-align:right;width:2%">
 				<h:outputText value="#{rowIndex+1}" ></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.remark.by']}" style="text-align:left">
+			<p:column headerText="#{lbl['lbl.fl.remark.by']}" style="text-align:left;width:28%">
 				<h:outputText value="#{remarks.createdUsername}" ></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.txt.remarks']}" style="text-align:left">
