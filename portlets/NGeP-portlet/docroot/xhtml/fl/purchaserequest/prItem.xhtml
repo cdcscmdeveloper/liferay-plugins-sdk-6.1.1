@@ -784,5 +784,11 @@
 				</div>
 			</div>			
 		</p:panel>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
+				oncomplete="taxGuideLineInfo.hide()" partialSubmit="true">
+			</p:commandButton>
+		</div>
 	</p:dialog>		
 </ui:composition>
