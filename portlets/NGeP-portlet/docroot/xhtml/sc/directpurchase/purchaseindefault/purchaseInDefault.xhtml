@@ -317,7 +317,7 @@
 				headerText="#{lbl['lbl.sc.purchase.in.default.supplier.mof.no']}"
 				style="width:8%">
 				<h:outputText
-					value="#{panelSupplier.supplier.smMofAccounts[0].mofNo}" />
+					value="#{purchaseInDefaultBackingBean.getMofNoBySupplierId(panelSupplier.supplier.supplierId)}" />
 			</p:column>
 			<p:column style="width:14%">
 				<f:facet name="header">
