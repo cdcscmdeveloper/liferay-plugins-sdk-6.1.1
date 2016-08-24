@@ -118,10 +118,7 @@
 		<p:panel header="#{lbl['lbl.sm.userinfo']}" toggleable="true" id="pnlUsrInfo">
 			<table class="customTbl">
 				<tr>
-					<td class="tdTitle">
-						&#160;
-					</td>
-					<td class="tdContent"><p:selectBooleanCheckbox
+					<td colspan="4"><p:selectBooleanCheckbox
 							value="#{registrationBackingBean.managedBean.sameAsOwner}">
 							<p:ajax event="change" update="@([id$=pnlUsrInfo])"
 								partialSubmit="true"
