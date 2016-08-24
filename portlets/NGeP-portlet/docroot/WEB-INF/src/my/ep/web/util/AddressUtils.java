@@ -209,11 +209,7 @@ public class AddressUtils {
 				address.append(pmAddress.getAddress3());
 				address.append(separator);
 			}
-			if (pmAddress.getAddress4() != null && pmAddress.getAddress4().length() > 0) {
-				address.append(System.getProperty("line.separator"));
-				address.append(pmAddress.getAddress4());
-				address.append(separator);
-			}
+			
 			if (pmAddress.getPostcode() != null && pmAddress.getPostcode().length() > 0) {
 				address.append(System.getProperty("line.separator"));
 				address.append(pmAddress.getPostcode());
@@ -287,11 +283,7 @@ public class AddressUtils {
 				address.append(ppAddress.getAddress3());
 				address.append(separator);
 			}
-			if (ppAddress.getAddress4() != null && ppAddress.getAddress4().length() > 0) {
-				address.append(System.getProperty("line.separator"));
-				address.append(ppAddress.getAddress4());
-				address.append(separator);
-			}
+			
 			if (ppAddress.getPostcode() != null && ppAddress.getPostcode().length() > 0) {
 				address.append(System.getProperty("line.separator"));
 				address.append(ppAddress.getPostcode());
