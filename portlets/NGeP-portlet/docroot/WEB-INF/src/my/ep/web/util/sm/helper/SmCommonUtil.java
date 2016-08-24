@@ -2361,6 +2361,16 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Get application portal base URL from properties
+	 * 
+	 * @return String
+	 */
+	public static String getBasePortalAppUrlFromProperties() {
+		return EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.PORTAL_APPLICATION_URL);
+	}
+
+	/**
 	 * Show faces message based on severity level and component id (optional).
 	 * 
 	 * @param FacesContext

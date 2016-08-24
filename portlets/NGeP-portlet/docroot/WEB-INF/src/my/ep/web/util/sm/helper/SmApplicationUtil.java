@@ -39,6 +39,7 @@ import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -6884,7 +6885,8 @@ public class SmApplicationUtil {
 	 * @param SmSupplierBank
 	 *            selectedBank
 	 */
-	public static void validateBankLimitForHq(SmAppl smAppl, SmSupplierBank selectedBank) {
+	public static void validateBankLimitForHq(SmAppl smAppl,
+			SmSupplierBank selectedBank) {
 		SmAppl cloneAppl = (SmAppl) SerializationUtils.clone(smAppl);
 		EntityHelper.addOrUpdateEntityToList(selectedBank,
 				cloneAppl.getSmSupplierBanks());
@@ -8350,6 +8352,59 @@ public class SmApplicationUtil {
 		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 		return SmServiceLookup.getMofRegistrationSO()
 				.initiateMofApplNewBpmTask(reqDTO).getSmAppl();
+	}
+
+	/**
+	 * Get all MOF application type save as draft application URL
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @return String
+	 */
+	public static String getMofApplicationSaveDraftUrl(SmAppl smAppl) {
+		String parameter = StringUtils.EMPTY;
+		String urlParam = SmCommonUtil.getBasePortalAppUrlFromProperties()
+				+ "task-list";
+		
+		try{
+			WorklistItemVO item = SmCommonUtil.getBpmAssignedTaskByDocNo(smAppl
+					.getApplNo());
+			if (item != null && !StringUtils.isBlank(item.getTaskId())) {
+				parameter = "taskId=" + item.getTaskId() + "&claim=false";
+				urlParam = SmCommonUtil.getBasePortalAppUrlFromProperties()
+						+ "mof-application?" + parameter;
+			} else {
+				SmPersonnel adminPersonnel = SmApplicationUtil
+						.getAdminPersonnel(smAppl.getSmPersonnels());
+				if (adminPersonnel != null
+						&& adminPersonnel.getPmUser() != null
+						&& !StringUtils.isBlank(adminPersonnel.getPmUser()
+								.getLoginId())) {
+					List<WorklistItemVO> workList = SmCommonUtil
+							.getBpmTaskListByLoginId(adminPersonnel.getPmUser()
+									.getLoginId());
+					if (!EntityHelper.isCollectionEmpty(workList)) {
+						for (WorklistItemVO tmp : workList) {
+							if (tmp.getDocNumber().equals(smAppl.getApplNo())) {
+								item = tmp;
+								break;
+							}
+						}
+						if (item != null) {
+							parameter = "taskId=" + item.getTaskId()
+									+ "&claim=false";
+							urlParam = SmCommonUtil
+									.getBasePortalAppUrlFromProperties()
+									+ "mof-application?" + parameter;
+						}
+					}
+				}
+			}
+		}catch(Exception ex){
+			log.debug(ex.getMessage());
+		}
+		
+		return urlParam;
 	}
 
 	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {
