@@ -3588,11 +3588,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(ciItemResDTO.getItemCeilingQuantity()!=null && ciItemResDTO.getItemCeilingQuantity().doubleValue()>0) {
 				getManagedBean().setCeilingQuantity(ciItemResDTO.getItemCeilingQuantity());
 			} else { // have to set Item Ceiling Quantity
-				reqDTO.setFetchQuantityOnly(true);
-				reqDTO.setEffDate(getManagedBean().getFlRequest().getAgApprovedDate());
-				reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
-				ciItemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
-				getManagedBean().setCeilingQuantity(ciItemResDTO.getItemCeilingQuantity());
+				getManagedBean().setCeilingQuantity(BigDecimal.ZERO);
+//				reqDTO.setFetchQuantityOnly(true);
+//				reqDTO.setEffDate(getManagedBean().getFlRequest().getAgApprovedDate());
+//				reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+//				ciItemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
+//				getManagedBean().setCeilingQuantity(ciItemResDTO.getItemCeilingQuantity());
 			}
 		}
 		if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
