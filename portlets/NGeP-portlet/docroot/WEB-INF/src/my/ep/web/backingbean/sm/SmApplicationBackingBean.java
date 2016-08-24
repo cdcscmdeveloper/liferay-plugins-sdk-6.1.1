@@ -7218,48 +7218,12 @@ public class SmApplicationBackingBean extends
 		String msgConst = "";
 		String urlParam = SmCommonUtil.getBasePortalUrl()
 				+ "/web/epapp/task-list";
-		String parameter = StringUtils.EMPTY;
 		if ((applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW))
 				&& !getManagedBean().getSmAppl().isResubmit()) {
 			msgConst = MessageConst.INFO_700053;
-			WorklistItemVO item = SmCommonUtil
-					.getBpmAssignedTaskByDocNo(getManagedBean().getSmAppl()
-							.getApplNo());
-			if (item != null && !StringUtils.isBlank(item.getTaskId())) {
-				parameter = "taskId=" + item.getTaskId() + "&claim=false";
-				urlParam = SmCommonUtil.getBasePortalUrl()
-						+ "/web/epapp/mof-application?" + parameter;
-			} else {
-				SmPersonnel adminPersonnel = SmApplicationUtil
-						.getAdminPersonnel(getManagedBean().getSmAppl()
-								.getSmPersonnels());
-				if (adminPersonnel != null
-						&& adminPersonnel.getPmUser() != null
-						&& !StringUtils.isBlank(adminPersonnel.getPmUser()
-								.getLoginId())) {
-					List<WorklistItemVO> workList = SmCommonUtil
-							.getBpmTaskListByLoginId(adminPersonnel.getPmUser()
-									.getLoginId());
-					if (!EntityHelper.isCollectionEmpty(workList)) {
-						for (WorklistItemVO tmp : workList) {
-							if (tmp.getDocNumber().equals(
-									getManagedBean().getSmAppl().getApplNo())) {
-								item = tmp;
-								break;
-							}
-						}
-						if (item != null) {
-							parameter = "taskId=" + item.getTaskId()
-									+ "&claim=false";
-							urlParam = SmCommonUtil.getBasePortalUrl()
-									+ "/web/epapp/mof-application?" + parameter;
-						}
-					}
-				}
-			}
-			log.info(">>>>>>>>>>>>>>>>>>>>>URL PAYMENT:" + urlParam
-					+ "<<<<<<<<<<<<<<<<<<<<");
+			urlParam = SmApplicationUtil
+					.getMofApplicationSaveDraftUrl(getManagedBean().getSmAppl());
 		} else {
 			msgConst = MessageConst.INFO_721225;
 		}
@@ -7684,7 +7648,10 @@ public class SmApplicationBackingBean extends
 															.getSmAppl()
 															.getApplType()),
 											getManagedBean().getSmAppl()
-													.getApplNo() });
+													.getApplNo(),
+											SmApplicationUtil
+													.getMofApplicationSaveDraftUrl(getManagedBean()
+															.getSmAppl()) });
 					renewSesionObject();
 				}
 			}
