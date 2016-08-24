@@ -97,17 +97,11 @@
 					</td>
 					<td class="TableFieldLeft" width="250px">
 						<p:outputLabel value="#{lbl['lbl.tpl.spec.specification.type']}" />
-						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="TableFieldRight" width="*">
-						<p:selectOneMenu id="specType" style="width:289px" 
-							value="#{specMaster.specTypeCode.parameterId}"
-							required="true"
-							label="#{lbl['lbl.tpl.spec.specification.type']}" disabled="#{isReadOnly}">
-							<f:selectItems value="#{templateSpecBackingBean.getSpecTypeDropdownList()}" />
-							<p:ajax event="change" partialSubmit="true" process="@this" update="spg" listener="#{templateSpecBackingBean.specTypeChange()}" />
-						</p:selectOneMenu>
-						<p:message id="specTypeMsg" for="specType" display="icon" />
+						<p:inputText id="specType"
+							value="#{templateSpecBackingBean.getParameterDesc(specMaster.specTypeCode)}"
+							style="width:280px;" disabled="true" />
 					</td>
 				</tr>				
 				<tr>
