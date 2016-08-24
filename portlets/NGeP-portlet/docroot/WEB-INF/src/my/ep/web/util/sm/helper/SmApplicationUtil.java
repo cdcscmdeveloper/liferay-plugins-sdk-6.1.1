@@ -95,6 +95,8 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -2967,7 +2969,31 @@ public class SmApplicationUtil {
 					.getServiceObject("pm", IUserSO.class);
 			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 			if (userResDTO != null && userResDTO.getPmUser() != null) {
-				poLogin = userResDTO.getPmUser().getLoginId();
+
+				// check whether the PO is still active
+				PmUser poUser = userResDTO.getPmUser();
+				if (poUser.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+						&& !EntityHelper.isCollectionEmpty(poUser
+								.getPmUserOrgs())) {
+					for (PmUserOrg userOrg : poUser.getPmUserOrgs()) {
+						if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+								&& !EntityHelper.isCollectionEmpty(userOrg
+										.getPmUserRoles())) {
+							for (PmUserRole userRole : userOrg.getPmUserRoles()) {
+								if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+										&& userRole.getPmRole() != null
+										&& userRole
+												.getPmRole()
+												.getRoleCode()
+												.equals(RoleCode.UPS_PO.value())) {
+									poLogin = userResDTO.getPmUser()
+											.getLoginId();
+									break;
+								}
+							}
+						}
+					}
+				}
 				log.info("******* After retrieve po details ******** ");
 			}
 		}
@@ -8365,8 +8391,8 @@ public class SmApplicationUtil {
 		String parameter = StringUtils.EMPTY;
 		String urlParam = SmCommonUtil.getBasePortalAppUrlFromProperties()
 				+ "task-list";
-		
-		try{
+
+		try {
 			WorklistItemVO item = SmCommonUtil.getBpmAssignedTaskByDocNo(smAppl
 					.getApplNo());
 			if (item != null && !StringUtils.isBlank(item.getTaskId())) {
@@ -8400,10 +8426,10 @@ public class SmApplicationUtil {
 					}
 				}
 			}
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			log.debug(ex.getMessage());
 		}
-		
+
 		return urlParam;
 	}
 
