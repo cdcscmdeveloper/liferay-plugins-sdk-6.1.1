@@ -356,7 +356,9 @@ public class TemplateSpecBackingBean extends
 		specMaster.setProcurementCategory(new PmParameter());
 		specMaster.setItemTypeCode(new PmParameter());
 		specMaster.setTemplateTypeCode(new PmParameter());
-		specMaster.setSpecTypeCode(new PmParameter());
+		specMaster.setSpecTypeCode(getParameterByTypeAndCode(
+				ParameterTypeConst.SPECIFICATION_TYPE, 
+				ParameterConst.SPECIFICATION_TYPE_TECHNICAL));
 		specMaster.setOrgProfile(new PmOrgProfile());
 		setUserDetails(specMaster);
 		specMaster.setCreatedUser(facesScopes.getUserSessionBean());
@@ -522,23 +524,6 @@ public class TemplateSpecBackingBean extends
 		}
 
 		return newQuestion;
-	}
-
-	/**
-	 * Get specification type dropdown list
-	 * 
-	 * @return the list of SelectItem instance
-	 */
-	public SelectItem[] getSpecTypeDropdownList() {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_EQUALS.value(),
-						ParameterConst.SPECIFICATION_TYPE_FINANCIAL));
-
-		return super.getDropdownValuesBySearchBean(
-				ParameterTypeConst.SPECIFICATION_TYPE, searchBean);
 	}
 
 	/**

@@ -29,24 +29,16 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="TableFieldLeft"><p:outputLabel value="#{lbl['lbl.sc.procurement.category']}" /></td>
-					<td class="TableFieldRight" colspan="3">
+					<td class="TableFieldLeft" width="250px"><p:outputLabel value="#{lbl['lbl.sc.procurement.category']}" /></td>
+					<td class="TableFieldRight" width="350px">
 						<p:selectOneMenu style="width:289px" value="#{templateSpecBackingBean.managedBean.searchProcurementCategoryId}">
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						</p:selectOneMenu>
 					</td>
-				</tr>
-				<tr>
 					<td class="TableFieldLeft" width="250px"><p:outputLabel value="#{lbl['lbl.sc.item.type']}" /></td>
-					<td class="TableFieldRight" width="350px">
+					<td class="TableFieldRight" width="*">
 						<p:selectOneMenu style="width:289px" value="#{templateSpecBackingBean.managedBean.searchItemTypeId}" >
 							<f:selectItems value="#{templateSpecBackingBean.itemTypeDropdownList}" />
-						</p:selectOneMenu>
-					</td>
-					<td class="TableFieldLeft" width="250px"><p:outputLabel value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
-					<td class="TableFieldRight" width="*">
-						<p:selectOneMenu style="width:289px" value="#{templateSpecBackingBean.managedBean.searchSpecTypeId}">
-							<f:selectItems value="#{templateSpecBackingBean.getSpecTypeDropdownList()}" />
 						</p:selectOneMenu>
 					</td>
 				</tr>				
