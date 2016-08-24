@@ -1745,14 +1745,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 *            the sc loa
 	 * @return the big decimal
 	 */
-	public ScLoa calcBondAmount(ScLoa scLoa,boolean isDirectLoa) {
-	/*	The formula for bond should be as follow
-		LOA Amount/duration (in year) = x
-		x is being checked against the rate either 2.5% or 5%, if X >=RM 500,000, the rate being used is 5%
-
-		In the sample below - the calculation should be
-		2,482,400/0.25 yr ( since the duration is 3 month) - 9933600
-		Bond amount - 9933600 * 0.05 = 496680*/
+	public ScLoa calcBondAmount(ScLoa scLoa, boolean isDirectLoa) {
+		/*
+		 * i) The formula for bond should be as follow LOA Amount/duration (in
+		 * year) = x x is being checked against the rate either 2.5% or 5%, if X
+		 * >=RM 500,000, the rate being used is 5%
+		 * 
+		 * In the sample below - the calculation should be 2,482,400/0.25 yr (
+		 * since the duration is 3 month) - 9933600 Bond amount - 9933600 * 0.05 = 496680 
+		 * 
+		 * redmine Bug #11021
+		 * ii) 1. Scenario 1 : If Contract Period is equal or less than
+		 *  years - Bond calculation base on total contract value multiple by
+		 * 2.5% or 5%
+		 * 
+		 * 2. Scenario 2 : If Contract Period is more than 2 years - Bond
+		 * calculation base on total contract value per year multiple by 2.5% or
+		 * 5%
+		 */
 
 		if(isDirectLoa){
 			scLoa.setBondReq(isPerformanceBondRequired(scLoa.getLoaAmt()));
@@ -1761,32 +1771,38 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (scLoa.isBondReq()) {
 			BigDecimal bondAmt = BigDecimal.ZERO;
 			BigDecimal totalDuration = BigDecimal.ZERO;
-			BigDecimal bondPercentageLoaAmt = BigDecimal.ZERO;
+			BigDecimal bondTotalAmt = BigDecimal.ZERO;
 			BigDecimal bondPercentage = BigDecimal.ZERO;
 			if (scLoa.getLoaAmt() != null && scLoa.getContractDuration() != null) {
 				BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
 						scLoa.getGstAmt());
 				BigDecimal duration = scLoa.getContractDuration();
 				duration = duration.setScale(4, BigDecimal.ROUND_HALF_UP);
+				
 				// Duration in years
-				totalDuration = duration.divide(new BigDecimal(12), 4,
+			/*	totalDuration = duration.divide(new BigDecimal(12), 4,
 						BigDecimal.ROUND_HALF_UP);
-				
 				double ceilingDuration = Math.ceil(totalDuration.doubleValue());
-				
-				totalDuration = BigDecimal.valueOf(ceilingDuration);
+				totalDuration = BigDecimal.valueOf(ceilingDuration);*/
 
 				// Total amount to get bond percentage
-				bondPercentageLoaAmt = overallCtAmount.divide(
-						totalDuration, 4, BigDecimal.ROUND_HALF_UP);
-				
+				if(totalDuration.intValue()<= 24){
+					bondAmt = overallCtAmount;
+					
+				} else{
+					// bond amt per year
+					BigDecimal bondAmtPerYear = overallCtAmount.divide(new BigDecimal("30"), 4,
+							BigDecimal.ROUND_HALF_UP);
+					bondAmt = bondAmtPerYear.multiply(new BigDecimal("12"));
+				}
+
 				// Get performance bond rule percentage
 				IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IRuleSO.class);
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
 				ruleReqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
-				ruleReqDTO.setCompareValue(bondPercentageLoaAmt.toString());
+				ruleReqDTO.setCompareValue(bondAmt.toString());
 				RuleResDTO roleResDTO = ruleSO
 						.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
 
@@ -1803,9 +1819,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 				}
 				if (bondPercentage.doubleValue() > 0) {
-					bondAmt = bondPercentageLoaAmt.multiply(bondPercentage);
-					bondAmt = bondAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
-					scLoa.setBondAmt(bondAmt);
+					bondTotalAmt = bondAmt.multiply(bondPercentage);
+					bondTotalAmt = bondTotalAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
+					scLoa.setBondAmt(bondTotalAmt);
 				}
 			}
 
@@ -2533,6 +2549,27 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			workFlowStatusSO = null;
 		}
 		return isQTCancelRequested;
+	}
+	
+	/**
+	 * Gets the mof no by supplier id.
+	 *
+	 * @param supplierId the supplier id
+	 * @return the mof no by supplier id
+	 */
+	public String getMofNoBySupplierId(Long supplierId) {
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IMofAccountSO.class);
+		MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
+		accountReqDTO.setSupplierId(supplierId);
+		MofAccountResDTO mofAccountResDTO = mofAccountSO
+				.retrieveMofNoBySupplierId(accountReqDTO);
+		if (mofAccountResDTO.getMofAccount() != null) {
+			return mofAccountResDTO.getMofAccount().getMofNo();
+		}
+		return null;
 	}
 
 }
