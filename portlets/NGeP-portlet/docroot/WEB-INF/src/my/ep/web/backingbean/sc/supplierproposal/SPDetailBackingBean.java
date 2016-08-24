@@ -1212,10 +1212,10 @@ public class SPDetailBackingBean extends
 			CriteriaValue totalContractsVal = new CriteriaValue(
 					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV,
 					BigDecimal.valueOf(getManagedBean().getTotalContracts()));
-			CriteriaValue totalYearsVal = new CriteriaValue(
-					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV,
-					BigDecimal.valueOf(getManagedBean().getTotalYears())
-							.divide(BigDecimal.valueOf(12), mc));
+			//CriteriaValue totalYearsVal = new CriteriaValue(
+					//SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV,
+					//BigDecimal.valueOf(getManagedBean().getTotalYears())
+							//.divide(BigDecimal.valueOf(12), mc));
 			scQtProposalChecklist.setSubmitted(isCompleted);
 
 			for (ScQtPRPExperience prpExperience : experiences) {
@@ -1261,8 +1261,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setMultiEncryptBeanList(encryptExpriencList);
 			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
 					scQtProposalChecklist, this.getManagedBean()
-							.getScQtProposalScoreList(), totalContractsVal,
-					totalYearsVal);
+							.getScQtProposalScoreList(), totalContractsVal);
 
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
@@ -1743,7 +1742,7 @@ public class SPDetailBackingBean extends
 					resDTO.getPrpExperience());
 
 			ScQtProposalScore totalContractScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV);
-			ScQtProposalScore contractYearsScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
+			//ScQtProposalScore contractYearsScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
 
 			int totalContracts = 0;
 			if (totalContractScore != null
@@ -1991,7 +1990,7 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			this.getManagedBean().setScLoaList(list);
-			int total = 0;
+			/*int total = 0;
 			for (int i = 0; i < getManagedBean().getScLoaList().size(); i++) {
 				ScLoa loa = getManagedBean().getScLoaList().get(i);
 				if (loa.getContractDuration() == null) {
@@ -1999,7 +1998,7 @@ public class SPDetailBackingBean extends
 				}
 				total = total + loa.getContractDuration().intValue();
 			}
-			this.getManagedBean().setNoOfYears(total);
+			this.getManagedBean().setNoOfYears(total);*/
 			this.getManagedBean().setContractSize(list.size());
 
 			return NAV_TO_FEDERAL_GOVT_PAGE;

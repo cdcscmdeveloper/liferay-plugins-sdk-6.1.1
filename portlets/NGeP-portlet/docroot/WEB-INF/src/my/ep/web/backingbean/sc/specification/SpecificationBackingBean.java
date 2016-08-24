@@ -4180,7 +4180,7 @@ public class SpecificationBackingBean extends
 						checkList.setScQtCheckListValue(checkListValue);
 					}
 					   this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV);
-	                   this.getManagedBean().setOtherCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV);
+	                  // this.getManagedBean().setOtherCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/technicalCheckListGovCompanyExperience.xhtml?faces-redirect=true";
 				} else if (QTConstants.TECHNICAL_PRIVATE_CODE
@@ -4287,7 +4287,7 @@ public class SpecificationBackingBean extends
 						checkList.setScQtCheckListValue(checkListValue);
 					}
 					 this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV);
-	                   this.getManagedBean().setOtherCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
+	                   //this.getManagedBean().setOtherCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/technicalCheckListPrivateCompanyExperience.xhtml?faces-redirect=true";
 				}
@@ -6898,13 +6898,7 @@ public class SpecificationBackingBean extends
 				}
 
 				if ((null != checkList && null != checkList.getPmDocument())
-						&& (QTConstants.TECHNICAL_GOV_CODE
-								.equalsIgnoreCase(checkList.getPmDocument()
-										.getDocDefinitionKey())
-								|| QTConstants.TECHNICAL_PRIVATE_CODE
-										.equalsIgnoreCase(checkList
-												.getPmDocument()
-												.getDocDefinitionKey()) || QTConstants.FINANCIAL_ASSET_LIABILITY_CODE
+						&& (QTConstants.FINANCIAL_ASSET_LIABILITY_CODE
 									.equalsIgnoreCase(checkList.getPmDocument()
 											.getDocDefinitionKey()))) {
 
@@ -6971,12 +6965,7 @@ public class SpecificationBackingBean extends
 				}
 			}
 			if ((null != checkList && null != checkList.getPmDocument())
-					&& (QTConstants.TECHNICAL_GOV_CODE
-							.equalsIgnoreCase(checkList.getPmDocument()
-									.getDocDefinitionKey())
-							|| QTConstants.TECHNICAL_PRIVATE_CODE
-									.equalsIgnoreCase(checkList.getPmDocument()
-											.getDocDefinitionKey()) || QTConstants.FINANCIAL_ASSET_LIABILITY_CODE
+					&& (QTConstants.FINANCIAL_ASSET_LIABILITY_CODE
 								.equalsIgnoreCase(checkList.getPmDocument()
 										.getDocDefinitionKey()))) {
 				if (((QTConstants.AUTO_SCORE
