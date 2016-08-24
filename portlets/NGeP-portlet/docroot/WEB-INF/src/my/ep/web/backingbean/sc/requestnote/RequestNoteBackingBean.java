@@ -1229,7 +1229,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			SmSupplier smSupplier = cmSupplierItem.getSmSupplier();
 			requestSupplierItem.setSupplierId(smSupplier.getSupplierId());
 			requestSupplierItem.setSupplierName(smSupplier.getCompanyName());
-			requestSupplierItem.setMofNumber(getMofNor(smSupplier.getSupplierId()));
+			requestSupplierItem.setMofNumber(getMofNoBySupplierId(smSupplier.getSupplierId()));
 
 			// check supplier is government seller or not 
 			if(cmSupplierItem.getSmSupplier().getPmOrgProfile() != null &&
@@ -2426,7 +2426,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				
 				if(requestSupplierItem.getSupplierName() == null && smSupplier != null) {
 					requestSupplierItem.setSupplierName(smSupplier.getCompanyName());
-					requestSupplierItem.setMofNumber(getMofNor(smSupplier.getSupplierId()));
+					requestSupplierItem.setMofNumber(getMofNoBySupplierId(smSupplier.getSupplierId()));
 				}
 				
 				requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
@@ -3529,29 +3529,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 		}
-	}
-	
-	/**
-	 * Gets the mof nor.
-	 * 
-	 * @param supplierId
-	 *            the supplier id
-	 * @return the mof nor
-	 */
-	private String getMofNor(Long supplierId) {
-		String mofNo = "";
-		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IMofAccountSO.class);
-		MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
-		accountReqDTO.setSupplierId(supplierId);
-		MofAccountResDTO mofAccountResDTO = mofAccountSO
-				.retrieveMofNoBySupplierId(accountReqDTO);
-		if (mofAccountResDTO.getMofAccount() != null) {
-			mofNo = mofAccountResDTO.getMofAccount().getMofNo();
-		}
-		return mofNo;
 	}
 	
 	/**
