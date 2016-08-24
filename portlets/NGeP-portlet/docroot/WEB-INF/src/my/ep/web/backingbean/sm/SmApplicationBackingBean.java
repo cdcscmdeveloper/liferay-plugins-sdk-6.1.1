@@ -7257,7 +7257,7 @@ public class SmApplicationBackingBean extends
 			log.info(">>>>>>>>>>>>>>>>>>>>>URL PAYMENT:" + urlParam
 					+ "<<<<<<<<<<<<<<<<<<<<");
 		} else {
-			msgConst = MessageConst.INFO_700005;
+			msgConst = MessageConst.INFO_721225;
 		}
 		log.info("Message value === " + msgConst);
 		FacesContext
