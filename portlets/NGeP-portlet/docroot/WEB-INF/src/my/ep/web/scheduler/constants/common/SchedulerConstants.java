@@ -180,10 +180,10 @@ public class SchedulerConstants {
 	public static final String UPDATE_GOVERNMENT_INFO_JOB = "UPDATE GOVERNMENT INFO CRM OUTBOUND JOB";
 
 	// Sourcing Job description
-	public static final String UPDATE_GOVERNMENT_USER_INFO_JOB_DESCRIPTION = "";
-	public static final String UPDATE_SUPPLIER_USER_INFO_JOB_DESCRIPTION = "";
-	public static final String UPDATE_SUPPLIER_INFO_JOB_DESCRIPTION = "";
-	public static final String UPDATE_GOVERNMENT_INFO_JOB_DESCRIPTION = "";
+	public static final String UPDATE_GOVERNMENT_USER_INFO_JOB_DESCRIPTION = "Job to run every 5 minutes";
+	public static final String UPDATE_SUPPLIER_USER_INFO_JOB_DESCRIPTION = "Job to run every 5 minutes";
+	public static final String UPDATE_SUPPLIER_INFO_JOB_DESCRIPTION = "Job to run every 5 minutes";
+	public static final String UPDATE_GOVERNMENT_INFO_JOB_DESCRIPTION = "Job to run every 5 minutes";
 
 	// NOTIFICATIONS
 	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB = "NOTIFICATION JOB GROUP";
