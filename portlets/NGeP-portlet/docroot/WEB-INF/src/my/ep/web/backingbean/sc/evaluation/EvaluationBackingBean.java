@@ -23,8 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,7 +66,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -157,7 +154,6 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -166,7 +162,6 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.velocity.VelocityContext;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -3928,6 +3923,7 @@ public class EvaluationBackingBean extends
 							proposalCheckList.getScQtProposal()
 									.getScQtSupplier().getSmSupplier()
 									.getSupplierId());
+					detailBackingBean.getManagedBean().setQtProposal(proposalCheckList.getScQtProposal());
 					/*
 					 * detailBackingBean.getManagedBean().setSmSupplier(
 					 * proposalCheckList.getScQtProposal()
@@ -4024,6 +4020,7 @@ public class EvaluationBackingBean extends
 									this.getManagedBean()
 											.getTechGovProposalScore());
 					this.getManagedBean().setStatusHide(true);
+					detailBackingBean.getManagedBean().setQtProposal(proposalCheckList.getScQtProposal());
 					proposalPage = detailBackingBean
 							.retrieveEmployeeDtls(proposalCheckList);
 					evaluationPage = "/xhtml/sc/evaluation/evaluationStage/technical/technicalNoOfEmployees.xhtml";
@@ -4881,6 +4878,7 @@ public class EvaluationBackingBean extends
 					detailBackingBean.getManagedBean().setSmSupplier(
 							proposalCheckList.getScQtProposal()
 									.getScQtSupplier().getSmSupplier());
+					detailBackingBean.getManagedBean().setQtProposal(proposalCheckList.getScQtProposal());
 					proposalPage = detailBackingBean
 							.retrievePaidUpCapitalNdDeclarationDtls();
 
@@ -4969,6 +4967,7 @@ public class EvaluationBackingBean extends
 							proposalCheckList.getScQtProposal()
 									.getScQtSupplier().getSmSupplier()
 									.getSupplierId());
+					detailBackingBean.getManagedBean().setQtProposal(proposalCheckList.getScQtProposal());
 
 					/*
 					 * detailBackingBean.getManagedBean().setSmSupplier(
