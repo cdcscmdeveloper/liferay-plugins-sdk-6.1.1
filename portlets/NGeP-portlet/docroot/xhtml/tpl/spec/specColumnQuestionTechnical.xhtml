@@ -6,7 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:param name="widthPixes"
-		value="#{(isSpecificationReq and !isItemTypeService)?'110px':'85px'}" />
+		value="#{(isSpecificationReq and !isItemTypeService)?'100px':'85px'}" />
 	<p:column style="width:#{isItemTypeService ? '52px' : widthPixes};">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
