@@ -1750,21 +1750,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public ScLoa calcBondAmount(ScLoa scLoa, boolean isDirectLoa) {
 		/*
-		 * i) The formula for bond should be as follow LOA Amount/duration (in
+		 * The formula for bond should be as follow LOA Amount/duration (in
 		 * year) = x x is being checked against the rate either 2.5% or 5%, if X
 		 * >=RM 500,000, the rate being used is 5%
 		 * 
 		 * In the sample below - the calculation should be 2,482,400/0.25 yr (
-		 * since the duration is 3 month) - 9933600 Bond amount - 9933600 * 0.05 = 496680 
+		 * since the duration is 3 month) - 9933600 Bond amount - 9933600 * 0.05
+		 * = 496680
 		 * 
-		 * redmine Bug #11021 and Bug #11494
-		 * ii) 1. Scenario 1 : If Contract Period is equal or less than
-		 *  years - Bond calculation base on total contract value multiple by
-		 * 2.5% or 5%
+		 * redmine Bug #11021 and Bug #11494 
 		 * 
-		 * 2. Scenario 2 : If Contract Period is more than 2 years - Bond
-		 * calculation base on total contract value per year multiple by 2.5% or
-		 * 5%
+		 * If less than 2 years: 
+		 * Bond calculation base on total contract value multiple by 2.5% or 5%
+		 * 900,000 * 5% = 45,000
+		 * -------------------------------------------------------------------
+		 * If more than 2 years: 
+		 * Bond calculation base on contract value per year, multiple
+		 * by 2.5% or 5%. 900,000/30 bulan = 30,000
+		 * 
+		 * Setahun : 30,000*12 = 360,000
+		 * 
+		 * Nilai Bon : 360,000 * 2.5% = 9,000 
+		 * 
 		 */
 
 		if(isDirectLoa){
@@ -1785,7 +1792,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					bondAmt = overallCtAmount;
 					
 				} else{
-					// bond amt per year
+					// bond amt per month and year
 					BigDecimal bondAmtPerYear = overallCtAmount.divide(new BigDecimal(duration.intValue()), 4,
 							BigDecimal.ROUND_HALF_UP);
 					bondAmt = bondAmtPerYear.multiply(new BigDecimal(ONE_YEAR));
