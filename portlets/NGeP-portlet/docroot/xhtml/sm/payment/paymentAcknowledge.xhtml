@@ -10,8 +10,7 @@
     <ui:define name="contentSection">
 		<p:panel id="acknowledge" header="#{lbl['lbl.sm.paymentLbl']}">
 			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" />
-
-			<p:outputPanel rendered="#{(paymentAcknowledgeBackingBean.managedBean.paymentId != null) and (paymentAcknowledgeBackingBean.managedBean.paymentStatus)}">
+			<p:outputPanel rendered="#{(paymentResponseBB.managedBean.paymentId != null) and (paymentResponseBB.managedBean.paymentStatus)}">
 				<h:outputText value="#{lbl['lbl.sm.payment.click']} " />
 				<p:commandLink value="#{lbl['lbl.sm.payment.here']} " ajax="false">
 					<p:fileDownload value="#{paymentAcknowledgeBackingBean.printReceipt()}" />

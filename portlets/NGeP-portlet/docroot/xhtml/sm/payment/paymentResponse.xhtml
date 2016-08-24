@@ -8,6 +8,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-	<f:event listener="#{paymentBackingBean.responsePreRender}" type="preRenderView"></f:event>
+		#{paymentResponseBB.getData()}
+		<p:remoteCommand autoRun="true" name="paymentRespRemote" action="#{paymentResponseBB.responseRedirect}">
+		</p:remoteCommand>
+
 	</ui:define>
 </ui:composition>
