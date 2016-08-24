@@ -183,6 +183,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public static Logger log = EpLogger
 			.getLogger(SourcingBaseBackingBean.class);
+	
+	private int TWO_YEARS = 24; // in months
+	private int ONE_YEAR = 12; // in months
 
 	/**
 	 * To upload the attachment.
@@ -1754,7 +1757,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		 * In the sample below - the calculation should be 2,482,400/0.25 yr (
 		 * since the duration is 3 month) - 9933600 Bond amount - 9933600 * 0.05 = 496680 
 		 * 
-		 * redmine Bug #11021
+		 * redmine Bug #11021 and Bug #11494
 		 * ii) 1. Scenario 1 : If Contract Period is equal or less than
 		 *  years - Bond calculation base on total contract value multiple by
 		 * 2.5% or 5%
@@ -1770,30 +1773,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		if (scLoa.isBondReq()) {
 			BigDecimal bondAmt = BigDecimal.ZERO;
-			BigDecimal totalDuration = BigDecimal.ZERO;
 			BigDecimal bondTotalAmt = BigDecimal.ZERO;
 			BigDecimal bondPercentage = BigDecimal.ZERO;
 			if (scLoa.getLoaAmt() != null && scLoa.getContractDuration() != null) {
 				BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
 						scLoa.getGstAmt());
 				BigDecimal duration = scLoa.getContractDuration();
-				duration = duration.setScale(4, BigDecimal.ROUND_HALF_UP);
-				
-				// Duration in years
-			/*	totalDuration = duration.divide(new BigDecimal(12), 4,
-						BigDecimal.ROUND_HALF_UP);
-				double ceilingDuration = Math.ceil(totalDuration.doubleValue());
-				totalDuration = BigDecimal.valueOf(ceilingDuration);*/
 
 				// Total amount to get bond percentage
-				if(totalDuration.intValue()<= 24){
+				if(duration.intValue()<= TWO_YEARS){
 					bondAmt = overallCtAmount;
 					
 				} else{
 					// bond amt per year
-					BigDecimal bondAmtPerYear = overallCtAmount.divide(new BigDecimal("30"), 4,
+					BigDecimal bondAmtPerYear = overallCtAmount.divide(new BigDecimal(duration.intValue()), 4,
 							BigDecimal.ROUND_HALF_UP);
-					bondAmt = bondAmtPerYear.multiply(new BigDecimal("12"));
+					bondAmt = bondAmtPerYear.multiply(new BigDecimal(ONE_YEAR));
 				}
 
 				// Get performance bond rule percentage
