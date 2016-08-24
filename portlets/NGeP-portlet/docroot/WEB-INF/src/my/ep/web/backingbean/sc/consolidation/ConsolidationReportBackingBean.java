@@ -1452,9 +1452,7 @@ public class ConsolidationReportBackingBean extends
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("tplSpecZoneDtl.specZoneId",
 								SearchOperator.OPERATOR_EQUALS.value(), selectedZoneId));
-			} else {
-				selectedZoneId = DEFAULT_ZONE;
-			}
+			} 
 			
 			Long selectedItemId = null;
 			if (null != selectedItem) {
@@ -1463,9 +1461,7 @@ public class ConsolidationReportBackingBean extends
 						new SearchFilterBean("scRequestItem.requestNoteItemId",
 								SearchOperator.OPERATOR_EQUALS.value(), 
 								selectedItem.getRequestItem().getRequestNoteItemId()));				
-			} else {
-				selectedItemId = DEFAULT_ITEM;
-			}
+			} 
 			
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
@@ -1486,9 +1482,11 @@ public class ConsolidationReportBackingBean extends
 					resultBean = resDTO.getQualifiedSuppliersByEvalStage();
 					List<ScQtEvaluationResultDtl> qualifiedSuppliers = 
 														resultBean.getResultList();
+					Long zoneId = (selectedZoneId == null ? DEFAULT_ZONE : selectedZoneId);
+					Long itemId = (selectedItemId == null ? DEFAULT_ITEM : selectedItemId);					
 					List<QtEvaluationResultDtlBean> cachedSuppliers = 
-							getCachedSuppliersFromMap(selectedZoneId, selectedItemId);
-					
+													getCachedSuppliersFromMap(zoneId, itemId);
+
 					if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 						for (ScQtEvaluationResultDtl qualSupplier 
 												: qualifiedSuppliers) {
