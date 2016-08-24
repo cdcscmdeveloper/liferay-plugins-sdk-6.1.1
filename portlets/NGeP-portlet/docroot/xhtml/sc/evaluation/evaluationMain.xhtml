@@ -10,6 +10,16 @@
 
 
 	<ui:define name="contentSection">
+	  <script type="text/javascript">  
+           window.addEventListener('keydown',function(e)
+    		      {
+    	                  if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13)
+    	                       {
+    	            	            e.preventDefault();return false;
+    	                   }
+    	        },  true);
+      </script>
+      
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
@@ -68,7 +78,7 @@
 				<tr>
 					<td align="center">
 						<p:inputTextarea value="#{evaluationBackingBean.managedBean.selectedReport.reportContent}" 
-								 		 scrollHeight="0" rows="15" cols="145" autoResize="false" 
+								 		 scrollHeight="0" rows="15" cols="145" autoResize="false"
 								 		 disabled="#{evaluationBackingBean.managedBean.readOnly}"
 								 		 rendered="#{evaluationBackingBean.managedBean.selectedReport ne null}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
@@ -78,7 +88,7 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.close']}" action="#{evaluationBackingBean.saveEditTemplateDocContent(evaluationBackingBean.managedBean.selectedReport)}"
+				<p:commandButton value="#{lbl['lbl.btn.close']}" style="text-align: right; padding-right: 8%;" action="#{evaluationBackingBean.saveEditTemplateDocContent(evaluationBackingBean.managedBean.selectedReport)}"
 					oncomplete="reportContentPopupDlg.hide();" process="@this" partialSubmit="true" />
 			</div>			
 		</p:dialog>
