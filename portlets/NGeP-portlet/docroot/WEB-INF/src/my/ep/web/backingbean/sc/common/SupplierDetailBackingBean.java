@@ -129,7 +129,7 @@ public class SupplierDetailBackingBean extends
 			this.getManagedBean().setSupplierName(
 						scQtProposal.getSupplierName());
 			this.getManagedBean().setSmApplId(
-					scQtProposal.getSmAppl().getApplId());
+					scQtProposal.getSupplierApplId());
 			
 			setSmSupplier(scQtProposal.getScQtSupplier().getSmSupplier());
 		} else if (scQtProposal == null) {
