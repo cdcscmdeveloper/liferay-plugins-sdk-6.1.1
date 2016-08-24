@@ -1002,7 +1002,7 @@ public class SimpleQuoteBackingBean extends
 				scQuoteSupplier.setQuote(quote);
 				scQuoteSupplier.setTplSpecZoneDtl(tplSpecZoneDtl);
 				
-				String mofNo = getMofNor(smSupplier.getSupplierId());
+				String mofNo = getMofNoBySupplierId(smSupplier.getSupplierId());
 				scQuoteSupplier.setSupplierName(smSupplier.getCompanyName());
 				scQuoteSupplier.setMofNumber(mofNo);
 
@@ -4072,7 +4072,7 @@ public class SimpleQuoteBackingBean extends
 				} else{
 					ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
 					quoteSupplier.setSmSupplier(supplier);
-					quoteSupplier.setMofNumber(getMofNor(supplier.getSupplierId()));
+					quoteSupplier.setMofNumber(getMofNoBySupplierId(supplier.getSupplierId()));
 					quoteSupplier.setSupplierName(supplier.getCompanyName());
 					quoteSupplier.setQuote(quote);
 
@@ -4193,7 +4193,7 @@ public class SimpleQuoteBackingBean extends
 						.retrieveGovSellerById(reqDTO).getSmSupplier();
 				scQuoteSupplier.setSmSupplier(smSupplier);
 				scQuoteSupplier.setQuote(getManagedBean().getScQuote());
-				scQuoteSupplier.setMofNumber(getMofNor(smSupplier.getSupplierId()));
+				scQuoteSupplier.setMofNumber(getMofNoBySupplierId(smSupplier.getSupplierId()));
 				scQuoteSupplier.setSupplierName(smSupplier.getCompanyName());
 				
 				getManagedBean().setGovtSellers(govtSuppliers);
@@ -4248,7 +4248,7 @@ public class SimpleQuoteBackingBean extends
 				scQuoteSupplier.setSmSupplier(smSupplier);
 				scQuoteSupplier.setQuote(quote);
 				
-				String mofNo = getMofNor(smSupplier.getSupplierId());
+				String mofNo = getMofNoBySupplierId(smSupplier.getSupplierId());
 				scQuoteSupplier.setSupplierName(smSupplier.getCompanyName());
 				scQuoteSupplier.setMofNumber(mofNo);
 				
@@ -5525,29 +5525,6 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		return userName;
-	}
-
-	/**
-	 * Gets the mof nor.
-	 * 
-	 * @param supplierId
-	 *            the supplier id
-	 * @return the mof nor
-	 */
-	private String getMofNor(Long supplierId) {
-		String mofNo = "";
-		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IMofAccountSO.class);
-		MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
-		accountReqDTO.setSupplierId(supplierId);
-		MofAccountResDTO mofAccountResDTO = mofAccountSO
-				.retrieveMofNoBySupplierId(accountReqDTO);
-		if (mofAccountResDTO.getMofAccount() != null) {
-			mofNo = mofAccountResDTO.getMofAccount().getMofNo();
-		}
-		return mofNo;
 	}
 
 	/**
