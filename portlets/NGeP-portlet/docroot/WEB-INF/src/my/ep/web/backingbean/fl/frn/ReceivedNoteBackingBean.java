@@ -1118,7 +1118,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		boolean amtChanged = reCalculateGstUnitPrice(fulfilmentNote);
 		if(amtChanged == true){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_745009, new String[]{getManagedBean().getFulfilmentNote().getFlRequest().getDocNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+					MessageUtils.getMessage(MessageConst.INFO_745009, new String[]{getManagedBean().getFulfilmentRequest().getFlFulfilmentOrder().getDocNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
 	}
 	
