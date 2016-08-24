@@ -158,14 +158,15 @@
 			</h:panelGroup>
 		</p:column>
 	</c:if>
-	
-	<p:column style="width:100px;" rendered="#{!isItemTypeService}">
+	<ui:param name="widthPixes"
+		value="#{(isSpecificationReq and !isItemTypeService)?'170px':'100px'}" />
+	<p:column style="width:#{widthPixes}" rendered="#{!isItemTypeService}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.price.type']}"/>
 			<ac:iconTooltip id="priceType#{row}TP" value="#{lbl['lbl.tpl.spec.content.price.type.tooltip']}" />
 		</f:facet>
-		<h:selectOneMenu id="priceType" value="#{question.clPriceTypeCode.parameterId}" required="#{isValidationReq}" style="width:100px;"
+		<h:selectOneMenu id="priceType" value="#{question.clPriceTypeCode.parameterId}" required="#{isValidationReq}" style="width:#{widthPixes}"
 			rendered="#{isQuestionTypeItem}"
 			label="#{lbl['lbl.tpl.spec.content.price.type']}">
 			<f:selectItems value="#{templateSpecBackingBean.getPriceTypeDropdownList(templateSpecBean.specMaster)}" />
