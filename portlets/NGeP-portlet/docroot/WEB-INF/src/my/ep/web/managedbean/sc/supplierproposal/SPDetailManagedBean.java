@@ -119,7 +119,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	// Non-Federal Government
 	private List<ScQtPRPExperience> scQtPRPExperiences;
 	private List<ScQtPRPExperience> selectedPRPExperiences;
-	private ScQtProposal scQtProposal;
 	private int totalContracts;
 	private int totalYears;
 	private BigDecimal totalContractAmount;
@@ -423,21 +422,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierId(Long supplierId) {
 		this.supplierId = supplierId;
-	}
-
-	/**
-	 * @return the scQtProposal
-	 */
-	public ScQtProposal getScQtProposal() {
-		return scQtProposal;
-	}
-
-	/**
-	 * @param scQtProposal
-	 *            the scQtProposal to set
-	 */
-	public void setScQtProposal(ScQtProposal scQtProposal) {
-		this.scQtProposal = scQtProposal;
 	}
 
 	/**
