@@ -170,6 +170,21 @@ public class SchedulerConstants {
 	public static final String GFMAS_SM_RECEIPT_IN_JOB_DESC = "Job run once daily 7 AM";
 	public static final String GFMAS_MASTERDATA_MATERIAL_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
 
+	// CRM Job Group ID
+	public static final String CRM_INTEGRATION_JOB_GROUP = "CRM INTEGRATION JOB GROUP";
+
+	// CRM Job Key Id
+	public static final String UPDATE_GOVERNMENT_USER_INFO_JOB = "UPDATE GOVERNMENT USER INFO CRM OUTBOUND JOB";
+	public static final String UPDATE_SUPPLIER_USER_INFO_JOB = "UPDATE SUPPLIER USER INFO CRM OUTBOUND JOB";
+	public static final String UPDATE_SUPPLIER_INFO_JOB = "UPDATE SUPPLIER INFO CRM OUTBOUND JOB";
+	public static final String UPDATE_GOVERNMENT_INFO_JOB = "UPDATE GOVERNMENT INFO CRM OUTBOUND JOB";
+
+	// Sourcing Job description
+	public static final String UPDATE_GOVERNMENT_USER_INFO_JOB_DESCRIPTION = "";
+	public static final String UPDATE_SUPPLIER_USER_INFO_JOB_DESCRIPTION = "";
+	public static final String UPDATE_SUPPLIER_INFO_JOB_DESCRIPTION = "";
+	public static final String UPDATE_GOVERNMENT_INFO_JOB_DESCRIPTION = "";
+
 	// NOTIFICATIONS
 	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB = "NOTIFICATION JOB GROUP";
 	public static final String NOTIFICATION_INTEGRATION_JOB_GROUP = "NOTIFICATION INTEGRATION JOB";
