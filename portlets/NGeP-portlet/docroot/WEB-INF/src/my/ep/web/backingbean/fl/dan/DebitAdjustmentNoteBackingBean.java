@@ -81,8 +81,23 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	
 	/** The Constant NAV_INVOICE. */
 	private static final String NAV_INVOICE = "/xhtml/fl/invoice/invBasePage.xhtml";
+	private String className="@(.myDanClassName)";
 	
 	
+	/**
+	 * @return the className
+	 */
+	public String getClassName() {
+		return className;
+	}
+
+	/**
+	 * @param className the className to set
+	 */
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
 	/**
 	 * save,submit the Debit Adjustment Note
 	 * 
@@ -457,7 +472,9 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			sortItems(getManagedBean().getAdjustment().getFlAdjustmentItem());
-			populateChargeLineData();
+			populateChargeLineData(false);
+			setClassName("@(.danChargeLinePnlClass)");
+			selectDanItem();
 		}
 		
 	}
@@ -519,9 +536,9 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		}
 	}
 	
-	private void populateChargeLineData() {
+	private void populateChargeLineData(boolean retainPreviousSelection) {
 		getManagedBean().setDanChargeLineTree(new DefaultTreeNode("root", null));
-		
+		int i=0;
 		AdjustmentItemNodeVO adjustmentItemNodeVO = null;
 		TreeNode childItemNode = null;
 		for(FlAdjustmentItem adjustmentItem : getManagedBean().getAdjustment().getFlAdjustmentItem()) {
@@ -529,6 +546,18 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			adjustmentItemNodeVO.setLevel(1);
 			adjustmentItemNodeVO.setFlAdjustmentItem(adjustmentItem);
 			childItemNode = new DefaultTreeNode(adjustmentItem.getAdjustmentItemId().toString(), adjustmentItemNodeVO, getManagedBean().getDanChargeLineTree());
+			if(retainPreviousSelection){
+				if(childItemNode.getType().equals(getManagedBean().getSelectedNode().getType())){
+					retainPreviousSelection = false;
+					getManagedBean().setSelectedNode(childItemNode);
+					childItemNode.setSelected(true);
+					i++;
+				}
+			} else if(i==0) {
+				getManagedBean().setSelectedNode(childItemNode);
+				childItemNode.setSelected(true);
+				i++;
+			}
 			
 			for(FlInvoiceItem invoiceItem : adjustmentItem.getFlInvoiceItemSummary().getFlInvoiceItem()) {
 				adjustmentItemNodeVO = new AdjustmentItemNodeVO();
