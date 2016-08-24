@@ -736,7 +736,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		
 		if(getManagedBean().isGstAmtChanged()) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-				MessageUtils.getMessage(MessageConst.INFO_745009, new String[]{getManagedBean().getFulfilmentRequest().getDocNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				MessageUtils.getMessage(MessageConst.INFO_745009, new String[]{getManagedBean().getFulfilmentOrder().getDocNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			getManagedBean().setGstAmtChanged(false);
 		}
 	}
