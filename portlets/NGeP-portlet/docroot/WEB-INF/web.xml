@@ -159,6 +159,11 @@
 		<servlet-name>FLSchedulerServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.fl.FLSchedulerServlet</servlet-class>
 		<load-on-startup>4</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>FLSchedulerServlet</servlet-name>
+		<servlet-class>my.ep.web.scheduler.servlet.crm.CRMSchedulerServlet</servlet-class>
+		<load-on-startup>4</load-on-startup>
 	</servlet>	-->
 	
 </web-app>
