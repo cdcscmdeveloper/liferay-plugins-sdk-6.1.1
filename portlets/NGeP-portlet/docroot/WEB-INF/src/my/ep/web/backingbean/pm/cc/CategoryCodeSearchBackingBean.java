@@ -570,11 +570,11 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		reqDTO.setBumiPercentage(bumiPerc);
 		reqDTO.setMainCatCode(catcodeL1);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
-		System.out.println("resDTO.getCategoryL1List(): " + resDTO.getCategoryL1List());		
+//		System.out.println("resDTO.getCategoryL1List(): " + resDTO.getCategoryL1List());		
 		
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		for(PmCategoryL1 l1 : resDTO.getCategoryL1List()) {
-			System.out.println("l1.getCategoryName(): " + l1.getCategoryName());
+			log.info("l1.getCategoryName(): " + l1.getCategoryName());
 			selectItems.add(new SelectItem(l1.getCategoryL1Id(), l1.getCategoryL1Code() + " - " + l1.getCategoryName()));
 		}		
 		return selectItems;
