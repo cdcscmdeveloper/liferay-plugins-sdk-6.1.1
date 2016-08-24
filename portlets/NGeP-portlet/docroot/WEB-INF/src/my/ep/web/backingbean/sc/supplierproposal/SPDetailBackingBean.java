@@ -623,7 +623,7 @@ public class SPDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setDeletedPRPExperiences(null);
 				ScQtProposal qtProPosal = resDTO.getScQtProposal();
-				this.getManagedBean().setScQtProposal(qtProPosal);
+				this.getManagedBean().setQtProposal(qtProPosal);
 				debugLogger("*****save successfull*****"
 						+ resDTO.isSuccessful());
 
@@ -1285,7 +1285,7 @@ public class SPDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setDeletedPRPExperiences(null);
 				// Encrypt the data & Save
-				this.getManagedBean().setScQtProposal(resDTO.getScQtProposal());
+				this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
 
 				updateQtFinNdTechProposalCheckList(
 						finProposalChecklist,
@@ -2267,7 +2267,7 @@ public class SPDetailBackingBean extends
 				mindate.set(getManagedBean().getYear().intValue(), 0, 1);
 				getManagedBean().setNonFedEffMinDate(mindate.getTime());
 				getManagedBean().setNonFedMinDate(mindate.getTime());
-				this.getManagedBean().setScQtProposal(
+				this.getManagedBean().setQtProposal(
 						scQtProposalChecklist.getScQtProposal());
 				resDTO = proposalSO.retrieveNonGovCompanyExpDtls(reqDTO);
 			} else {
@@ -2522,7 +2522,7 @@ public class SPDetailBackingBean extends
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(supplierId);
-			reqDTO.setScQtProposal(getManagedBean().getQtProposal());
+			reqDTO.setApplId(getManagedBean().getQtProposal().getSupplierApplId());
 			ProposalResDTO resDTO = proposalSO
 					.retrivePaidUpCapitalBySupplierById(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
@@ -2638,7 +2638,7 @@ public class SPDetailBackingBean extends
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(supplierId);
-			reqDTO.setScQtProposal(getManagedBean().getQtProposal());
+			reqDTO.setApplId(getManagedBean().getQtProposal().getSupplierApplId());
 			ProposalResDTO resDTO = proposalSO.retriveSupplierById(reqDTO);
 			getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
