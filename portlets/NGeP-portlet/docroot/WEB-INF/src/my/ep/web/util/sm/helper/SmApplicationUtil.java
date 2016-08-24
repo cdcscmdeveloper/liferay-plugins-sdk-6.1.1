@@ -3044,10 +3044,10 @@ public class SmApplicationUtil {
 	 */
 	public static void checkEquityOwnerUpdateAllowance(
 			SmApplicationManagedBean managedBean) {
-		 managedBean.setDisAllowOwnerEdit(true);
-		 if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
-		 managedBean.setDisAllowOwnerEdit(false);
-		 }
+		managedBean.setDisAllowOwnerEdit(true);
+		if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
+			managedBean.setDisAllowOwnerEdit(false);
+		}
 	}
 
 	/**
@@ -6876,6 +6876,38 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Validate if added associate to HQ already reach maximum bank account for
+	 * payment purpose
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @param SmSupplierBank
+	 *            selectedBank
+	 */
+	public static void validateBankLimitForHq(SmAppl smAppl, SmSupplierBank selectedBank) {
+		SmAppl cloneAppl = (SmAppl) SerializationUtils.clone(smAppl);
+		EntityHelper.addOrUpdateEntityToList(selectedBank,
+				cloneAppl.getSmSupplierBanks());
+		int maxPaymentBank = SmServiceLookup.getSmRuleSO()
+				.retrieveMaxPaymentBank().getMaxPaymentBank();
+		int paymentBankCount = 0;
+
+		for (SmSupplierBank bank : cloneAppl.getSmSupplierBanks()) {
+			if (bank.getForHqFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					&& bank.getAccountPurpose() != null
+					&& (bank.getAccountPurpose().equals("B") || bank
+							.getAccountPurpose().equals("P"))) {
+				paymentBankCount++;
+			}
+		}
+
+		if (paymentBankCount > maxPaymentBank) {
+			throw new EpException(MessageConst.ERROR_721049,
+					new String[] { String.valueOf(maxPaymentBank) });
+		}
+	}
+
+	/**
 	 * Check whether gst is empty or not
 	 * 
 	 * @param SmGstSupplier
@@ -8154,7 +8186,6 @@ public class SmApplicationUtil {
 			return null;
 		}
 	}
-
 
 	/**
 	 * Get current registration status description by smAppl
