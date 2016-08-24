@@ -46,39 +46,7 @@
 		</h:panelGroup>
 
 		<p:spacer height="25"></p:spacer>
-		<h:panelGroup id="noOfYears">
-			<ui:param name="scoringPnlId" value="noOfyearsId" />
-			<ui:param name="scoringList"
-				value="#{evaluationBackingBean.managedBean.technicalGovNoOfYears}"></ui:param>
-			<ui:param name="scoringPnlName"
-				value="#{lbl['lbl.sc.spec.score.total.no.years']}"></ui:param>
-			<p:panel header="#{scoringPnlName}" toggleable="true"
-				id="technicalSupplierNoofYearsGovernmentEvaluationAutoScoringId"
-				rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
-				<p:dataTable id="#{scoringPnlId}" rowIndexVar="index"
-				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{scoringList}" var="checkListScoring" rows="10"
-					rowKey="#{checkListScoring}">
-					<ac:paginator for="#{scoringPnlId}"></ac:paginator>
-					<!-- 	<p:column selectionMode="multiple" style="width:2px;"></p:column> -->
-					<p:column headerText="#{lbl['lbl.sc.from']}"
-						style="width:40%;text-align:right;"
-						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
-						<h:outputText value="#{checkListScoring.rangeFrom}"></h:outputText>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.to']}"
-						style="width:30%;text-align:right;"
-						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
-						<h:outputText value="#{checkListScoring.rangeTo}"></h:outputText>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.score']}"
-						style="width:30%;text-align:right;">
-						<h:outputText value="#{checkListScoring.score}"></h:outputText>
-					</p:column>
-
-				</p:dataTable>
-			</p:panel>
-		</h:panelGroup>
+	
 		<ui:param name="technicalNoofContractsCheckListScoreType" value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
 	<ui:param name="technicalNoofYearsCheckListScoreType" value="#{evaluationBackingBean.managedBean.companyScoreType}"></ui:param>
 	

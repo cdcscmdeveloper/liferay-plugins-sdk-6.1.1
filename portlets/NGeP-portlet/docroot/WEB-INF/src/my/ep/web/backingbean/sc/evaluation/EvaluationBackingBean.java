@@ -3582,7 +3582,7 @@ public class EvaluationBackingBean extends
 
 								}
 
-							} else if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV) {
+							} /*else if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV) {
 
 								this.getManagedBean().setCompanyScoreType(
 										String.valueOf(checklistScore
@@ -3609,7 +3609,7 @@ public class EvaluationBackingBean extends
 
 								}
 
-							}
+							}*/
 
 						}
 					}
@@ -3628,7 +3628,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean()
 												.getNoOfContractsProposalScore());
 							}
-							if (proposalScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV
+							/*if (proposalScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV
 									|| proposalScore.getCriteriaType() == 0) {
 								this.getManagedBean()
 										.setNoOfyearsProposalScore(
@@ -3637,7 +3637,7 @@ public class EvaluationBackingBean extends
 										.getTechGovProposalScore()
 										.add(this.getManagedBean()
 												.getNoOfyearsProposalScore());
-							}
+							}*/
 
 						}
 
@@ -3647,23 +3647,23 @@ public class EvaluationBackingBean extends
 								.getManagedBean().getQtProposalChecklist());
 						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV);
 						setUserDetails(proposalScore);
-						ScQtProposalScore proposalScoreyears = new ScQtProposalScore();
+						/*ScQtProposalScore proposalScoreyears = new ScQtProposalScore();
 						proposalScoreyears.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
 						proposalScoreyears.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV);
-						setUserDetails(proposalScoreyears);
+						setUserDetails(proposalScoreyears);*/
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
-						this.getManagedBean().setNoOfyearsProposalScore(
-								proposalScoreyears);
+						//this.getManagedBean().setNoOfyearsProposalScore(
+								//proposalScoreyears);
 						this.getManagedBean()
 								.getTechGovProposalScore()
 								.add(this.getManagedBean()
 										.getNoOfContractsProposalScore());
-						this.getManagedBean()
+					/*	this.getManagedBean()
 								.getTechGovProposalScore()
 								.add(this.getManagedBean()
-										.getNoOfyearsProposalScore());
+										.getNoOfyearsProposalScore());*/
 
 					}
 					this.getManagedBean()
@@ -3728,7 +3728,7 @@ public class EvaluationBackingBean extends
 
 								}
 
-							} else if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV) {
+							} /*else if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV) {
 
 								this.getManagedBean().setCompanyScoreType(
 										String.valueOf(checklistScore
@@ -3755,7 +3755,7 @@ public class EvaluationBackingBean extends
 
 								}
 
-							}
+							}*/
 
 						}
 					}
@@ -3779,7 +3779,7 @@ public class EvaluationBackingBean extends
 												.getManagedBean()
 												.getNoOfContractsProposalScore());
 							}
-							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV 
+							/*if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV 
 									|| proposalScore.getCriteriaType() == 0) {
 								this.getManagedBean()
 										.setNoOfyearsProposalScore(
@@ -3788,7 +3788,7 @@ public class EvaluationBackingBean extends
 										.getTechGovProposalScore()
 										.add(this.getManagedBean()
 												.getNoOfyearsProposalScore());
-							}
+							}*/
 
 						}
 
@@ -3798,23 +3798,23 @@ public class EvaluationBackingBean extends
 								.getManagedBean().getQtProposalChecklist());
 						proposalScore.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV);
 						setUserDetails(proposalScore);
-						ScQtProposalScore proposalScoreyears = new ScQtProposalScore();
+						/*ScQtProposalScore proposalScoreyears = new ScQtProposalScore();
 						proposalScoreyears.setProposalChecklist(this
 								.getManagedBean().getQtProposalChecklist());
 						proposalScoreyears.setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
-						setUserDetails(proposalScoreyears);
+						setUserDetails(proposalScoreyears);*/
 						this.getManagedBean().setNoOfContractsProposalScore(
 								proposalScore);
-						this.getManagedBean().setNoOfyearsProposalScore(
-								proposalScoreyears);
+						//this.getManagedBean().setNoOfyearsProposalScore(
+								//proposalScoreyears);
 						this.getManagedBean()
 								.getTechGovProposalScore()
 								.add(this.getManagedBean()
 										.getNoOfContractsProposalScore());
-						this.getManagedBean()
+						/*this.getManagedBean()
 								.getTechGovProposalScore()
 								.add(this.getManagedBean()
-										.getNoOfyearsProposalScore());
+										.getNoOfyearsProposalScore());*/
 
 					}
 					this.getManagedBean()
