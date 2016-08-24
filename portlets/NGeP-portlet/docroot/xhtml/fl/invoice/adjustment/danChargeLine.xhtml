@@ -41,16 +41,16 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.fl.dan.charge.line.items']}">
+	<p:panel header="#{lbl['lbl.fl.dan.charge.line.items']}" styleClass="danChargeLinePnlClass">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.line.summary']}" escape="false"/>
 		<p:treeTable id="danItemDt" var="danItem" selectionMode="single" style="width: 100%"
 			selection="#{danBackingBean.managedBean.selectedNode}"
 			value="#{danBackingBean.managedBean.danChargeLineTree}" >
 			<p:ajax event="expand" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
-			<p:ajax event="select" update=":form:chargeLineSection"
+			<p:ajax event="select" update="danItemDt,@(.chargeLineSection)" 
 				listener="#{danBackingBean.selectDanItem()}" disabled="#{danItem.level == 2}" />
 			<p:ajax event="unselect" listener="#{danBackingBean.onNodeUnSelect()}"
-				update=":form:chargeLineSection" disabled="#{danItem.level == 2}" />				
+				update="danItemDt,@(.chargeLineSection)"  disabled="#{danItem.level == 2}" />				
 			<p:column>
 			<f:facet name="header" style="width:8%;">
 					<h:outputText value="#{lbl['lbl.fl.item.code']}" />
