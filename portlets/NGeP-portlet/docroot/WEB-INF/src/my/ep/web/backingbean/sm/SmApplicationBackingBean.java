@@ -6778,6 +6778,10 @@ public class SmApplicationBackingBean extends
 				}
 			}
 
+			// validate HQ
+			SmApplicationUtil.validateBankLimitForHq(getManagedBean()
+					.getSmAppl(), getManagedBean().getSelectedBank());
+
 			EntityHelper.addOrUpdateEntityToList(getManagedBean()
 					.getSelectedBank(), getManagedBean().getSmAppl()
 					.getSmSupplierBanks());
@@ -8357,7 +8361,7 @@ public class SmApplicationBackingBean extends
 						} else {
 							cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 						}
-						
+
 						// if PO direct approved, delete Approver Flag
 						if (getManagedBean().isPoUser()) {
 							cat.setApprvrDecFlg(null);
@@ -10907,8 +10911,13 @@ public class SmApplicationBackingBean extends
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				&& !getManagedBean().getSmAppl().getApplType()
 						.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-			int maxCatAllowed = ruleHelper.getMaxCategoryAllowed();
-			if (getManagedBean().getApprovedCategoryList().size() == maxCatAllowed) {
+			int maxCatSize = ruleHelper.getMaxCategoryAllowed();
+			int currentApprovedCatSize = getManagedBean()
+					.getApprovedCategoryList().size();
+			int additionalCatSize = (!EntityHelper
+					.isCollectionEmpty(getManagedBean().getActiveCategoryList()) ? getManagedBean()
+					.getActiveCategoryList().size() : 0) + 1;
+			if ((currentApprovedCatSize + additionalCatSize) > maxCatSize) {
 				validCatCode = false;
 				throw new EpException(MessageConst.ERROR_722517);
 			}
