@@ -1,6 +1,5 @@
 package my.ep.web.managedbean.sm.payment;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -15,8 +14,8 @@ public class PaymentResponseManagedBean extends BaseManagedBean{
 	private boolean paymentStatus;
 	private String billTypeLbl;
 	private String messageId;
-	private String successMsgId;
 	private Severity messageSeverity;
+	private String errDesc;
 	
 	public Long getPaymentId() {
 		return paymentId;
@@ -36,12 +35,6 @@ public class PaymentResponseManagedBean extends BaseManagedBean{
 	public void setBillTypeLbl(String billTypeLbl) {
 		this.billTypeLbl = billTypeLbl;
 	}
-	public String getSuccessMsgId() {
-		return successMsgId;
-	}
-	public void setSuccessMsgId(String successMsgId) {
-		this.successMsgId = successMsgId;
-	}
 	public String getMessageId() {
 		return messageId;
 	}
@@ -53,6 +46,12 @@ public class PaymentResponseManagedBean extends BaseManagedBean{
 	}
 	public void setMessageSeverity(Severity messageSeverity) {
 		this.messageSeverity = messageSeverity;
+	}
+	public String getErrDesc() {
+		return errDesc;
+	}
+	public void setErrDesc(String errDesc) {
+		this.errDesc = errDesc;
 	}
 
 }
