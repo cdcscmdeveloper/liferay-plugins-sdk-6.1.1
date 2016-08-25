@@ -126,7 +126,6 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_LOCATION_COVERAGE,
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_BSVDETAILS,
-						QTFieldConst.FILED_QT_PUBLISH_DATE,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FILED_QT_DOCUMENTS }),
 						
