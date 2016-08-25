@@ -523,7 +523,20 @@ public class ApprovalBackingBean extends
 					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes, null);
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			IScWorkFlowStatusSO workFlowStatusSO;
+			try {
+				workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+				ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+				reqDTO.setDocType(ParameterConst.DOCTYPE_QT_CANCELLATION);
+				reqDTO.setDocId(qtId);
 
+				currentStatus = workFlowStatusSO.
+						retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+			}
+			finally {
+				workFlowStatusSO = null;
+			}
 		}
 		
 		if (currentStatus == null) {
