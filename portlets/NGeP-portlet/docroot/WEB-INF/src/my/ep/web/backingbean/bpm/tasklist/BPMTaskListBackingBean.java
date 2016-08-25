@@ -232,7 +232,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					"debit-adjustment-note");
 			temp.put(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME,
 					"stop-delivery");
-
+			temp.put(FLProcessNameConst.STOP_FULFILLMENT_INIT_PROCESS_NAME,
+					"stop-delivery");
 			temp.put(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME
 					+ FLProcessNameConst.SUBMIT_PR_HT, "purchase-request");
 			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME
