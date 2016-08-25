@@ -1,0 +1,136 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<cc:interface>
+		<cc:attribute name="okAction" required="false" default="" />		
+		<cc:attribute name="id" required="true" />
+	</cc:interface>
+
+	<cc:implementation>
+		<style>
+.ui-selectonemenu.pmGoPopupSomWidth {
+	width: 400px !important;
+}
+
+.ui-selectonemenu.pmGoPopupSomWidth label {
+	width: 400px !important;
+	max-width: 400% !important;
+}
+</style>
+
+	<p:remoteCommand name="resetAllData" update="goPnlId pmGoResultPnlId" partialSubmit="true" action="#{pmGoSearchBackingBean.resetAction()}" process="@this" />
+		<p:dialog id="pmGoPopup" header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.pm.gl.account']}" onHide="resetAllData();"
+			widgetVar="pmGoPopup" modal="true" width="680" position="top">
+
+			<p:outputPanel id="goDoPanelId">
+			<h:panelGroup id="goPnlGrp">
+				<p:panel id="goPnlId"
+					header="#{lbl['lbl.pm.header.general.org.search']}"
+					toggleable="true">
+					<h:panelGrid columns="3" id="orgProfilePg">
+						<p:inputText id="itAccType" readonly="true" style="width:170px"
+							value="#{lbl['lbl.pm.go.search.acc.type']}" />
+						<p:spacer height="1" />
+						<p:selectOneMenu id="somAccType" styleClass="pmGoPopupSomWidth"
+							value="#{pmGoSearchBackingBean.managedBean.selectedAccType}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{pmGoSearchBackingBean.retrieveAccountType()}"
+								var="parameter" itemLabel="#{parameter.codeName}"
+								itemValue="#{parameter.pmParameter.parameterCode}" />
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="somAccClass,somGoCode" />
+						</p:selectOneMenu>
+
+						<p:inputText id="itAccClass" readonly="true" style="width:170px"
+							value="#{lbl['lbl.pm.go.search.acc.class']}" />
+						<p:spacer height="1" />
+						<p:selectOneMenu id="somAccClass" styleClass="pmGoPopupSomWidth"
+							value="#{pmGoSearchBackingBean.managedBean.selectedAccClass}">
+							<f:selectItems
+								value="#{pmGoSearchBackingBean.retrieveAccountClass()}" />
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="@this,somGoCode" />
+						</p:selectOneMenu>
+
+						<p:inputText id="itGoCode" readonly="true" style="width:170px"
+							value="#{lbl['lbl.pm.go.search.gen.obj.code']}" />
+						<p:spacer height="1" />
+						<p:selectOneMenu id="somGoCode" styleClass="pmGoPopupSomWidth"
+							value="#{pmGoSearchBackingBean.managedBean.selectedGenObjCode}">
+							<f:selectItems
+								value="#{pmGoSearchBackingBean.retrieveGoCodeList()}" />
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="@this" />
+						</p:selectOneMenu>
+
+						<p:inputText id="itDesc" readonly="true" style="width:170px"
+							value="#{lbl['lbl.pm.go.search.desc']}" />
+						<p:spacer height="1" />
+						<p:inputText id="itSearchDesc"  style="width:300px"
+							maxlength="100" value="#{pmGoSearchBackingBean.managedBean.desc}" >
+							<p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/>
+						</p:inputText>
+
+					</h:panelGrid>
+					<div class="ppRightBtn">
+						<p:commandButton id="searcbBtnId" widgetVar="ptjSearchBtnWV"
+							value="#{lbl['lbl.btn.search']}" update="pmGoDt"
+							action="#{pmGoSearchBackingBean.searchGoView()}" process="@this" />
+						<p:commandButton
+							value="#{lbl['lbl.btn.reset']}"
+							action="#{pmGoSearchBackingBean.resetAction()}"
+							partialSubmit="true"
+							process="goPnlId"
+							update="goPnlId pmGoResultPnlId">
+						</p:commandButton>
+					</div>
+				</p:panel>
+			</h:panelGroup>
+			<p:panel id="pmGoResultPnlId"
+				header="#{lbl['lbl.pm.organisation.result']}" toggleable="true">
+				<h:panelGroup id="resultPanel" style="width:100%;">
+					<p:dataTable id="pmGoDt" var="pmGo" rows="10"
+						selection="#{pmGoSearchBackingBean.managedBean.vPmGo}"
+						selectionMode="single"
+						value="#{pmGoSearchBackingBean.pmGoDataModel}" rowIndexVar="index" lazy="true">
+						<ac:paginator for="pmGoDt"></ac:paginator>
+						<p:ajax event="rowUnselect" update="@this" process="@this" partialSubmit="true"/>
+						<p:ajax event="rowSelect" update="@this" process="@this" partialSubmit="true"/>
+						<p:ajax event="toggleSelect" update="@this" process="@this" partialSubmit="true"/>
+						<p:column headerText="#{lbl['lbl.pm.go.search.acc.code']}"
+							style="width :15%">
+							<h:outputText value="#{pmGo.glAccCode}" />
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.pm.go.search.desc']}"
+							style="width :60%">
+							<h:outputText value="#{pmGo.desc}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGroup>
+				<table style="width: 100%;">
+				<tr>
+					<TD style="text-align: right;"><p:commandButton id="slbtn"
+							value="#{lbl['lbl.btn.select']}" partialSubmit="true"
+							action="#{pmGoSearchBackingBean.okAction(cc.attrs.okAction)}"
+							process="@this" update="#{pmGoSearchBackingBean.managedBean.update}" styleClass="BtnSpacing" /> 
+						<p:commandButton
+							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
+							process="@this" update="@this"
+							oncomplete="pmGoPopup.hide()"  styleClass="BtnSpacing" /></TD>
+				</tr>
+			</table>
+				</p:panel>
+				</p:outputPanel>
+		</p:dialog>
+	</cc:implementation>
+</ui:composition>
