@@ -153,6 +153,9 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	
 	/** The is contract type as ministry. */
 	private boolean isContractTypeAsMinistry;
+	
+	/** The codify flag for selected contract / panel item */
+	private boolean isCodified = true;
 
 	/**
 	 * Instantiates a new purchase in default managed bean.
@@ -787,6 +790,20 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	 */
 	public void setContractTypeAsMinistry(boolean isContractTypeAsMinistry) {
 		this.isContractTypeAsMinistry = isContractTypeAsMinistry;
+	}
+
+	/**
+	 * @return the isCodified
+	 */
+	public boolean isCodified() {
+		return isCodified;
+	}
+
+	/**
+	 * @param isCodified the isCodified to set
+	 */
+	public void setCodified(boolean isCodified) {
+		this.isCodified = isCodified;
 	}
 	
 	

@@ -186,6 +186,7 @@ public class PurchaseInDefaultBackingBean extends
 				if(contractItem.getScRequestItem() == null ||
 						(contractItem.getScRequestItem() != null && 
 						contractItem.getScRequestItem().getCmItem() == null)) {
+					this.getManagedBean().setCodified(false);
 					Locale userLocale = new FacesScopes().getUserLocale();
 					String message = MessageUtils.getMessage(MessageConst.ERROR_760405,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
@@ -226,6 +227,7 @@ public class PurchaseInDefaultBackingBean extends
 				if(ctPanelItem.getScRequestItem() == null ||
 						(ctPanelItem.getScRequestItem() != null && 
 								ctPanelItem.getScRequestItem().getCmItem() == null)) {
+					this.getManagedBean().setCodified(false);
 					Locale userLocale = new FacesScopes().getUserLocale();
 					String message = MessageUtils.getMessage(MessageConst.ERROR_760405,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
@@ -969,6 +971,12 @@ public class PurchaseInDefaultBackingBean extends
 			if(isMethodSelected) {
 				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 				if(sourceMethod == null) {
+					if(!getManagedBean().isCodified()) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("pmParameter.parameterCode",
+										SearchOperator.OPERATOR_NOT_EQUALS.value(),
+										ParameterConst.PID_SOURCE_METHOD_RN));
+					}
 
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("pmParameter.parameterCode",
