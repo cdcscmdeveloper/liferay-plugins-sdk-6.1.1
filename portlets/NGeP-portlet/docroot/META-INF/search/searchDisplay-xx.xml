@@ -800,12 +800,6 @@
 					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add3" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="pmAddress.address4" />
-					<property name="bundleFile"
-						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add4" />
-				</bean>
-				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="pmAddress.pmState.stateName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
@@ -1613,12 +1607,6 @@
 					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add3" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="pmAddress.address4" />
-					<property name="bundleFile"
-						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add4" />
-				</bean>
-				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="pmAddress.pmState.stateName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
@@ -1663,12 +1651,6 @@
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add3" />
-				</bean>
-				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="addressType.pmAddress.address4" />
-					<property name="bundleFile"
-						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add4" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="addressType.pmAddress.pmState.stateName" />
