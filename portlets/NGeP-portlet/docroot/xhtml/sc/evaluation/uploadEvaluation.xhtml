@@ -15,12 +15,14 @@
 		<ac:scSingleFileUploadPopup widgetVar="demoSupplierListUpload"
 		fileUploadListener="evaluationBackingBean.preSentationDemoFileUpload"
 		readonly="#{evaluationBackingBean.managedBean.readOnly}"
+		autoUpdateValue="#{evaluationBackingBean.managedBean.autoUpdate}" 
 		update="@([id$=evaluationPresentationDemoTechnicalQualifiedSupplierListDatatableIds])" />
 
 	
 
 <ac:scSingleFileUploadPopup widgetVar="demoChecklistAttachDlg"
 		fileUploadListener="evaluationBackingBean.demoChecklistUpload"
+		autoUpdateValue="#{evaluationBackingBean.managedBean.autoUpdate}" 
 		readonly="#{evaluationBackingBean.managedBean.readOnly}"
 		update="@([id$=demoremarksupdtls])" />
 </ui:composition>
