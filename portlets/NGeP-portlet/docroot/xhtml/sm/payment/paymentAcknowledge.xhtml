@@ -8,12 +8,14 @@
 	xmlns:p="http://primefaces.org/ui" >
 	
     <ui:define name="contentSection">
-		<p:panel id="acknowledge" header="#{lbl['lbl.sm.paymentLbl']}">
-			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" />
+		<ui:param name="lblPaymentBillType"
+		  value="#{empty paymentResponseBB.managedBean.billTypeLbl ? 'lbl.sm.payment.process' : paymentResponseBB.managedBean.billTypeLbl}" />
+		<p:panel id="acknowledge" header="#{lbl[lblPaymentBillType]}">
+			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" escape="false" />
 			<p:outputPanel rendered="#{(paymentResponseBB.managedBean.paymentId != null) and (paymentResponseBB.managedBean.paymentStatus)}">
 				<h:outputText value="#{lbl['lbl.sm.payment.click']} " />
 				<p:commandLink value="#{lbl['lbl.sm.payment.here']} " ajax="false">
-					<p:fileDownload value="#{paymentAcknowledgeBackingBean.printReceipt()}" />
+					<p:fileDownload value="#{paymentResponseBB.printReceipt()}" />
 				</p:commandLink>
 				<h:outputText value=" #{lbl['lbl.sm.payment.to.download.receipt']}" />
 			</p:outputPanel>
