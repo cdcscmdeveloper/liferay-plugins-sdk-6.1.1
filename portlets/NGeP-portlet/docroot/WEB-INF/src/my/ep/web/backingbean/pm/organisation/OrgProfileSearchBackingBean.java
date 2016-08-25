@@ -160,6 +160,7 @@ public class OrgProfileSearchBackingBean extends
 	}
 	
 	public void resetOrgProfiles(){
+		this.renewSesionObject();
 		getOrgProfileDataModel().resetData();
 	}
 
