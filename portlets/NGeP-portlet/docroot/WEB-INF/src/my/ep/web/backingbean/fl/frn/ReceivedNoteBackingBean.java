@@ -1313,6 +1313,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	}
 	
 	public void checkLastTaxFRN(){
+		IFulfilmentSO iFulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		getManagedBean().setLastFRNTaxInv(false);
 		BigDecimal sumTotalReceivedQty = BigDecimal.ZERO;
 		BigDecimal sumTotalOrderQty = BigDecimal.ZERO;
@@ -1320,16 +1321,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
 			sumTotalReceivedQty = sumTotalReceivedQty.add(noteItem.getReceivedQty());
 		}
-		System.out.println("**checkLastTaxFRN**");
 		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
-				System.out.println("Item Addr id : "+itemAddr.getFulfilmentItemAddrId());
-				System.out.println("received qty : "+itemAddr.getReceivedQty());
 				sumTotalOrderQty = sumTotalOrderQty.add(itemAddr.getOrderedQty());
-				sumTotalOrderReceivedQty = sumTotalOrderReceivedQty.add(itemAddr.getReceivedQty());
 			}
 		}
-		System.out.println("sumTotalOrderReceivedQty: "+sumTotalOrderReceivedQty + " **sumTotalReceivedQty: "+sumTotalReceivedQty);
+		sumTotalOrderReceivedQty = iFulfilmentSO.getSumTotalItemsReceivedQtyByReqId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+		
 		sumTotalReceivedQty = sumTotalOrderReceivedQty.add(sumTotalReceivedQty);
 		if(sumTotalReceivedQty.doubleValue() == sumTotalOrderQty.doubleValue()){
 			getManagedBean().setLastFRNTaxInv(true); 
