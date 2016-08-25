@@ -16,11 +16,11 @@
 	<ui:param name="isRefinalizedAndBiddingAward" 
 			  value="#{suppFinalizationBackingBean.managedBean.refinalizedAndBiddingAward}"/>			  
 	
-	<p:spacer height="15px" rendered="#{suppFinalizationBackingBean.managedBean.itemize}"/>	
-	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
-	<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.package.instructions']}"
-			escape="false" />
+		<p:spacer height="15px" rendered="#{suppFinalizationBackingBean.managedBean.itemize}"/>	
+		<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+		<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.sf.finalization.supplier.selection.package.instructions']}"
+				escape="false" rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding}" />
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 			columnClasses="columnWidth20"
 			rendered="#{suppFinalizationBackingBean.managedBean.scQt.zonal and 
