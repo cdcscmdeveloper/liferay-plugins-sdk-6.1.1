@@ -515,7 +515,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public void onDisplaySpkiPopup() {
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-//		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 	}
 
 	/**
