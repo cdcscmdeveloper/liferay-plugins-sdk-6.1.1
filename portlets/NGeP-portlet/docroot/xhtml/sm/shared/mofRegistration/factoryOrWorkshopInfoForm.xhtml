@@ -83,13 +83,6 @@
 			<br />
 		</p:outputPanel>
 		
-		<ac:gmapDialog id="gmapDialog" 
-			latitude="#{cc.attrs.latitude}" 
-			longitude="#{cc.attrs.longitude}" 
-			locationName="#{cc.attrs.locationName}" />
-	
-		<ac:gmapScript />
-		
 		<p:outputPanel rendered="#{!backingBean.managedBean.showFactoryPanel}"
 			layout="block">
 			<table style="width: 100%">
