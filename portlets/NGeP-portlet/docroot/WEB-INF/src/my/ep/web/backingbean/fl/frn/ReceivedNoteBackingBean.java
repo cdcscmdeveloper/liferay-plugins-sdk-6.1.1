@@ -726,6 +726,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			if(personnelResDTO.getSmPersonnelList().isEmpty()){
 				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.supplierUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
+			System.out.println("issuance cogst: "+getManagedBean().isIssuanceCogstrCheck() + " **isLastFRNTaxInv: " +getManagedBean().isLastFRNTaxInv());
 			if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isLastFRNTaxInv()){
 				getManagedBean().setSelectedTabIndex(0);
 				onTabChange(getManagedBean().getSelectedTabIndex());
@@ -1319,12 +1320,16 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
 			sumTotalReceivedQty = sumTotalReceivedQty.add(noteItem.getReceivedQty());
 		}
+		System.out.println("**checkLastTaxFRN**");
 		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+				System.out.println("Item Addr id : "+itemAddr.getFulfilmentItemAddrId());
+				System.out.println("received qty : "+itemAddr.getReceivedQty());
 				sumTotalOrderQty = sumTotalOrderQty.add(itemAddr.getOrderedQty());
 				sumTotalOrderReceivedQty = sumTotalOrderReceivedQty.add(itemAddr.getReceivedQty());
 			}
 		}
+		System.out.println("sumTotalOrderReceivedQty: "+sumTotalOrderReceivedQty + " **sumTotalReceivedQty: "+sumTotalReceivedQty);
 		sumTotalReceivedQty = sumTotalOrderReceivedQty.add(sumTotalReceivedQty);
 		if(sumTotalReceivedQty.doubleValue() == sumTotalOrderQty.doubleValue()){
 			getManagedBean().setLastFRNTaxInv(true); 
@@ -1336,8 +1341,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			GstItemReqDTO gstItemReqDTO = new GstItemReqDTO();
 			GstItemResDTO gstItemResDTO = null;
 			gstItemReqDTO.setG2g(false);
-			if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType()!=null) {
-				if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+					if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+		if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType()!=null) {
 					gstItemReqDTO.setG2g(true);
 				}
 			}
