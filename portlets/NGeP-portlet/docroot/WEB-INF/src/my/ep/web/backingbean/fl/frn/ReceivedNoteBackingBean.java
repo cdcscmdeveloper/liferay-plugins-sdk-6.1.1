@@ -1339,8 +1339,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			GstItemReqDTO gstItemReqDTO = new GstItemReqDTO();
 			GstItemResDTO gstItemResDTO = null;
 			gstItemReqDTO.setG2g(false);
-					if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-		if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType()!=null) {
+			if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType()!=null) {
+				if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 					gstItemReqDTO.setG2g(true);
 				}
 			}
