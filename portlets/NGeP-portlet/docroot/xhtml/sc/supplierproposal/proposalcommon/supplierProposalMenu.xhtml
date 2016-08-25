@@ -62,5 +62,6 @@
 	<ac:scSingleFileUploadPopup widgetVar="checklistUploadDlg"
 		fileUploadListener="supplierProposalDetailBackingBean.handleFileUpload"
 		update="@([id$=proposalMenuContent])"
-		readonly="#{supplierProposalDetailBackingBean.managedBean.closed}" />
+		readonly="#{supplierProposalDetailBackingBean.managedBean.closed}"
+		autoUpdateValue="#{supplierProposalDetailBackingBean.managedBean.autoUpdate}" />
 </ui:composition>
