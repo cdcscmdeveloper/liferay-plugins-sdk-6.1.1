@@ -60,12 +60,14 @@
 						 							
 							 							<tr>
 							 								
-							 								<td width="100%">
+							 								<td width="90%">
 							 									#{bpmTaskDashSumBackingBean.applicationStatus(status.statusId)}
 							 									<h:outputFormat rendered="#{status.critical > 0}"
 																	value="(#{lbl['lbl.cc.task.summary.urgent.request']})">
 																	<f:param value="#{status.critical}" />
 																</h:outputFormat>
+							 								</td>
+							 								<td align="right">
 																#{status.total}
 							 								</td>
 							 							
