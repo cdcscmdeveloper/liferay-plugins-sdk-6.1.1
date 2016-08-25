@@ -177,12 +177,12 @@
 			</tr>
 			
 			<tr>
-				<td width="18%" valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
+				<td width="18%" valign="top"><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputTextarea
 						id="title" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-						label="#{lbl['lbl.sc.title']}" required="true" size="110"
+						label="#{lbl['lbl.sc.loiloa.loa.title']}" required="true" size="110"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}"
 						cols="110" rows="3" style="margin-bottom:5px;width: 670px;" maxlength="500">
 						<p:ajax event="blur" process="title" update="title" />
@@ -395,23 +395,11 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><h:panelGroup id="contractAgencyPG" rendered="#{isContractTypeAsMinistry}">
-						 <ac:lov 
-							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" lovId="PM_ORG_PROFILE"
-							postUpdateListener="directLOABackingBean.contractAgencyChanged()"
-							headerText="#{lbl['lbl.sc.loiloa.loa.agency']}" selectionMode="single"
-							readonly="true" size="106"
-							saveObject="directLOABackingBean.managedBean.scLoa.contractAgency"
-							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgName}"
-							required="true"
-							update="@form" />
-					</h:panelGroup>
-					<p:inputText id="contractAgency" disabled="true" size="106" style="margin-bottom:5px;"
-									 value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgName}" 
-									 rendered="#{!isContractTypeAsMinistry}" />	
-					</td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" /></td>
+				<td colspan="3">
+					<p:inputText id="contractAgency" disabled="true" size="106"
+						value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgName}" />	
+				</td>
 			</tr>
 
 			<tr>

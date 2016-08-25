@@ -130,14 +130,14 @@
 		<table style="width: 100%">
 			<tr>
 				<td width="21%" style="vertical-align: top;"><p:outputLabel
-						value="#{lbl['lbl.sc.title']}" /></td>
+						value="#{lbl['lbl.sc.loiloa.loi.title']}" /></td>
 				<td colspan="3"><c:if
 						test="#{lOIDetailBackingBean.managedBean.scLoi.brandNew}">
 						<p:inputTextarea id="title"
 							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}"
 							maxlength="500" rows="3"
 							readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
-							label="#{lbl['lbl.sc.title']}"
+							label="#{lbl['lbl.sc.loiloa.loi.title']}"
 							style="width: 670px;margin-bottom: 5px;">
 							<f:ajax></f:ajax>
 						</p:inputTextarea>
@@ -146,7 +146,7 @@
 						<p:inputTextarea id="title"
 							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}"
 							maxlength="500" rows="3" disabled="true"
-							label="#{lbl['lbl.sc.title']}" 
+							label="#{lbl['lbl.sc.loiloa.loi.title']}" 
 							style="width: 670px;margin-bottom: 5px;">
 						</p:inputTextarea>
 					</c:if></td>
