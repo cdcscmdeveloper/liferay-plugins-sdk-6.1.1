@@ -114,8 +114,29 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:selectBooleanCheckbox disabled="#{!epItem.brandNew}" value="#{epItem.deleted}"/>
 			</p:column>
 	        <p:column style="white-space:nowrap;">
-	        
-	       		<ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" 
+	        	<p:inputText 
+						size="10"
+						id="itSelectedGlAccount" 
+						value="#{epItem.pmGlAccount.glAccCode}" 
+						readonly="true"
+						required="#{!empty param['disableValidation']}"
+						/>
+					&#160;	
+					<p:commandLink id="glAccountSearchCL" 
+						partialSubmit="true"
+						disabled="#{!epItem.brandNew}"
+						process="@this" 
+						readonly="true" 
+						action="#{pmGoSearchBackingBean.initPmGoPopup}"
+						oncomplete="pmGoPopup.show();"
+						update=":form:glAccountCcId:goDoPanelId" >
+						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+						<f:param name="index" 	value="#{index}" />
+						<f:param name="type" 	value="h" />
+						<f:param name="update" 	value=":form:dtExpenditurePlanH :form:hGlAccMsg" />						
+					</p:commandLink>
+					
+	       		<ui:remove><ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" 
 	       			update=":form:dtExpenditurePlanH :form:hGlAccMsg" 
    					disabled="#{!epItem.brandNew}"
 			    	required="#{!empty param['disableValidation']}"
@@ -125,9 +146,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					value="#{epItem.pmGlAccount.glAccCode}" 
 					saveObject="pPlanBackingBean.managedBean.epItemsH[#{index}].pmGlAccount"
 					conditionField="recordStatus^1" 
-				/>
-   		
-				<p:message id="lovGOSOMsg" for="lovGlAccount" display="icon" />	 
+				/></ui:remove>
+				
 	        </p:column>	 
 	        <p:column>
 		  		#{epItem.pmGlAccount.description}
