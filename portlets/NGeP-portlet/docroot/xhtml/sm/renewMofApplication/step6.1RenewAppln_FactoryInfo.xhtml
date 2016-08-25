@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<table style="width: 100%">
 		<tr>
@@ -55,6 +56,13 @@
 						</p:outputPanel>
 					</table>
 					<p:outputPanel id="facInfPan" layout="block">
+					
+		<ac:gmapDialog id="gmapDialog" 
+			latitude="#{cc.attrs.latitude}" 
+			longitude="#{cc.attrs.longitude}" 
+			locationName="#{cc.attrs.locationName}" />
+	
+		<ac:gmapScript />
 						<p:blockUI block=":form:tt:facInfPan" widgetVar="buiPoFac"
 							id="poFacBlc"
 							blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.factoryVerify : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.factoryVerify : false)}" />
