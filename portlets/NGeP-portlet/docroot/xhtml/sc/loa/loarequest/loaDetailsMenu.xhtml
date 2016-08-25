@@ -192,14 +192,14 @@
 			</tr>
 
 			<tr>
-				<td style="vertical-align: top;"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
+				<td style="vertical-align: top;"><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{isEditableStatus}" /></td>
 				<td colspan="3">
 					<p:inputTextarea id="sqTitle"
 						value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}"
 						required="true" maxlength="500" rows="3"
-						label="#{lbl['lbl.sc.title']}"
+						label="#{lbl['lbl.sc.loiloa.loa.title']}"
 						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" 
 						style="margin-bottom: 5px; width: 670px;">
 						<f:ajax></f:ajax>
@@ -415,25 +415,11 @@
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td colspan="3"><h:panelGroup id="contractAgencyLov"
-						rendered="#{isContractTypeAsMinistry}">
-						<ac:lov
-							disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
-							lovId="PM_ORG_PROFILE"
-							postUpdateListener="lOADetailBackingBean.contractAgencyChanged()"
-							headerText="Contract Agency" selectionMode="single"
-							readonly="true" size="106"
-							saveObject="lOADetailBackingBean.managedBean.scLoa.contractAgency"
-							value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}"
-							required="true" update="@form" />
-					</h:panelGroup> 
-				 <p:inputText id="contractAgency" disabled="true"
-						style="margin-bottom:5px;" size="106"
-						value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}"
-						rendered="#{isContractTypeCentral}" /></td>
-				
+			<td colspan="3">
+				 <p:inputText id="contractAgency" disabled="true" size="106"
+					value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}" />
+			</td>
 		</tr>
 		<tr>
 			<td>
