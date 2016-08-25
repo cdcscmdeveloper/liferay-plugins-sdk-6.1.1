@@ -14,8 +14,10 @@ import java.net.URLConnection;
 import java.util.List;
 
 import javax.el.MethodExpression;
+import javax.el.ValueExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +49,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	public static Logger log = EpLogger
 			.getLogger(ScRemarkAndAttachmentBackingBean.class);
 	
+	private Exception fileUploadException;
 	private String selectedComponentId;
 	private BaseEntity selectedAttachment;
 	private List<? extends BaseEntity> attachmentList;
@@ -62,8 +65,13 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	 */
 	public void handleFileUploadListener(FileUploadEvent event) {
 		try {
-			String widgetComponent = (String)event.getComponent().getAttributes().get("widgetComponent");
+			fileUploadException = null;
+			
 			String fileUploadListenerMethod = (String)event.getComponent().getAttributes().get("fileUploadListenerMethod");
+			UIComponent cc = UIComponent.getCompositeComponentParent(event.getComponent());
+			
+			// update autoUpdate = false
+			setAttributeValue(cc, "autoUpdateValue", false);
 			
 			if (StringUtils.isNotBlank(fileUploadListenerMethod)) {
 				MethodExpression methodExp = FacesScopes
@@ -76,15 +84,43 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 						new Object[]{event});
 			}
 			
+		} catch (Exception e) {
+			fileUploadException = e;
+		}
+	}
+	
+	/**
+	 * Post Upload Action If Success
+	 * 
+	 * @param cc
+	 * 		the composite component
+	 * @param widgetComponent
+	 * 		the widget component string
+	 * @throws Exception
+	 */
+	public void postUploadActionIfSuccess(UIComponent cc, String widgetComponent) throws Exception {
+		if (fileUploadException == null) {
+			// update autoUpdate = true
+			setAttributeValue(cc, "autoUpdateValue", true);
+			
 			if (StringUtils.isNotBlank(widgetComponent)) {
 				RequestContext.getCurrentInstance().execute(
 						widgetComponent + "reRender();");
 				RequestContext.getCurrentInstance().execute(
-						widgetComponent + ".hide();");
-			}	
-			
-		} catch (Exception e) {
-			handleException(e);
+						widgetComponent + ".hide();");	
+			}
+		} else {
+			throw fileUploadException;
+		}
+	}
+	
+	private void setAttributeValue(UIComponent cc, String attribute, Object value) {
+		ValueExpression attributeVE = cc.getValueExpression(attribute);
+		
+		if (attributeVE != null) {
+			attributeVE.setValue(
+					FacesContext.getCurrentInstance().getELContext(), 
+					value);	
 		}
 	}
 	
