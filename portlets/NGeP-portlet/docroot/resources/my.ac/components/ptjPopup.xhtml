@@ -105,7 +105,15 @@
 			  	<div class="ppRightBtn">
        		         <p:commandButton id="searcbBtnId" 
        		         	widgetVar="ptjSearchBtnWV" value="#{lbl['lbl.btn.search']}" update=":form:#{cc.attrs.id}:dtOrgProfile"  
-       		            action="#{organisationSearchBackingBean.searchOrgProfiles(cc.attrs.orgTypeParamCode)}" process="@this" /> 
+       		            action="#{organisationSearchBackingBean.searchOrgProfiles(cc.attrs.orgTypeParamCode)}" process="@this" />
+       		            
+       		      <p:commandButton
+							value="#{lbl['lbl.btn.reset']}"
+							action="#{organisationSearchBackingBean.resetOrgProfiles()}"
+							partialSubmit="true"
+							process="orgProfilePnlId"
+							update="orgProfilePnlId resultPanel">
+						</p:commandButton> 
 			         
 		       </div>
 		       </p:panel>
