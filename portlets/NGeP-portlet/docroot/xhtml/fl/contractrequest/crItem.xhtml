@@ -412,23 +412,6 @@
 					<td><p:message for="manCity" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="" /></td>
-					<td><p:inputText maxlength="255" size="38" 
-							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.address4}"
-							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
-					<td></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.postcode']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="postCode"
-							required="#{contractRequestBackingBean.managedBean.required}"
-							label="Post Code" maxlength="5"
-							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.postcode}"
-							validatorMessage="#{lbl['lbl.fl.postal.code.msg']}"
-							size="10"
-							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
-					<td><p:message for="postCode" display="icon" /></td>
-				</tr>
-				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="contactPerson"
@@ -439,19 +422,16 @@
 							size="34"></p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person']}"/></td>
 					<td><p:message for="contactPerson" display="icon" /></td>	
-					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add']}" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.fl.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="manAddress" label="#{lbl['lbl.fl.manual.add.delivery.add']}"
+					<td><p:inputText id="postCode"
 							required="#{contractRequestBackingBean.managedBean.required}"
-							value="#{contractRequestBackingBean.managedBean.flManualAddress.receivingGrp.addressTypeId}"
-							style="width: 180px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems var="delAddByDistrict"
-								value="#{contractRequestBackingBean.managedBean.manualAddrList}" />
-						</p:selectOneMenu>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address']}"/>
-					</td>
-					<td><p:message for="manAddress" display="icon" /></td>
+							label="Post Code" maxlength="5"
+							value="#{contractRequestBackingBean.managedBean.flManualAddress.flAddress.postcode}"
+							validatorMessage="#{lbl['lbl.fl.postal.code.msg']}"
+							size="10"
+							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+					<td><p:message for="postCode" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.email']}" /> <p:outputLabel value="*"
@@ -468,6 +448,19 @@
        					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.email']}"/>
        				</td>
        				<td><p:message for="email" display="icon" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="manAddress" label="#{lbl['lbl.fl.manual.add.delivery.add']}"
+							required="#{contractRequestBackingBean.managedBean.required}"
+							value="#{contractRequestBackingBean.managedBean.flManualAddress.receivingGrp.addressTypeId}"
+							style="width: 180px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="delAddByDistrict"
+								value="#{contractRequestBackingBean.managedBean.manualAddrList}" />
+						</p:selectOneMenu>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address']}"/>
+					</td>
+					<td><p:message for="manAddress" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.telno']}" /> <p:outputLabel
