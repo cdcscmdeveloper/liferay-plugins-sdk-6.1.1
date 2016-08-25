@@ -6879,27 +6879,13 @@ public class SmApplicationUtil {
 	 * @param SmSupplierBranch
 	 *            br
 	 */
-	public static void validateBankBranchLimit(SmSupplierBranch br) {
+	public static int getBranchPaymentBankCount(SmSupplierBranch br) {
 		int paymntBankCount = 0;
-		if (!SmCommonUtil.isCollectionEmpty(br.getSmSupplierBranchBanks())) {
-			for (SmSupplierBranchBank bankBranch : br
-					.getSmSupplierBranchBanks()) {
-				if (bankBranch.getSmSupplierBank().getAccountPurpose() != null
-						&& (bankBranch.getSmSupplierBank().getAccountPurpose()
-								.equals("B") || bankBranch.getSmSupplierBank()
-								.getAccountPurpose().equals("P"))) {
-					paymntBankCount++;
-				}
-			}
-			// Branch already reached maximum bank accounts
-			// allowed
-			int maxPaymentBankForBranch = SmRuleHelper.getInstance()
-					.getMaxPaymentBankForEachBranch();
-			if (paymntBankCount > maxPaymentBankForBranch) {
-				throw new EpException(MessageConst.ERROR_722620, new String[] {
-						br.getBranchName(), maxPaymentBankForBranch + "" });
-			}
-		}
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setBranchId(br.getSupplierBranchId());
+		paymntBankCount = SmServiceLookup.getMofRegistrationSO()
+				.countBranchPaymentBank(reqDTO).getCount();
+		return paymntBankCount;
 	}
 
 	/**
@@ -8262,10 +8248,12 @@ public class SmApplicationUtil {
 							&& !StringUtils.isBlank(doc.getSmApplDocFiles()
 									.get(0).getFileName())) {
 						retVal = false;
+						break;
 					}
 				} else {
 					if (doc.getPmDocument().isMandatory()) {
 						retVal = false;
+						break;
 					}
 				}
 

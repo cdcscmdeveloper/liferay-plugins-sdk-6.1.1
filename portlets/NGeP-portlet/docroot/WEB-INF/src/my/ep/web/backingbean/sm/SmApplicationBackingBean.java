@@ -6717,11 +6717,20 @@ public class SmApplicationBackingBean extends
 			// set associatedBranches
 			if (getManagedBean().getSelectedBankBranchIds() != null
 					&& getManagedBean().getSelectedBankBranchIds().length > 0) {
+
+				// validate branch bank account limit
+				int maxPaymentBankForBranch = SmRuleHelper.getInstance()
+						.getMaxPaymentBankForEachBranch();
+				int paymntBankCount = 0;
+
 				for (Long brId : getManagedBean().getSelectedBankBranchIds()) {
 					for (SmSupplierBranch br : getManagedBean().getSmAppl()
 							.getSmSupplierBranches()) {
 						if (br.getSupplierBranchId().equals(brId)) {
-							SmApplicationUtil.validateBankBranchLimit(br);
+
+							paymntBankCount = SmApplicationUtil
+									.getBranchPaymentBankCount(br);
+
 							SmSupplierBranchBank brBank = SmApplicationUtil
 									.getBranchBankFromListByBranchIdAndBankId(
 											br.getSupplierBranchId(),
@@ -6731,12 +6740,31 @@ public class SmApplicationBackingBean extends
 													.getSmSupplierBranchBanks());
 							// newly added
 							if (brBank == null) {
+								if (getManagedBean().getSelectedBank()
+										.getAccountPurpose() != null
+										&& (getManagedBean().getSelectedBank()
+												.getAccountPurpose()
+												.equals("B") || getManagedBean()
+												.getSelectedBank()
+												.getAccountPurpose()
+												.equals("P"))) {
+									paymntBankCount++;
+								}
+
 								brBank = new SmSupplierBranchBank();
 								brBank.setSmSupplierBranch(br);
 								brBank.setSmSupplierBank(getManagedBean()
 										.getSelectedBank());
 								getManagedBean().getSelectedBank()
 										.getSmSupplierBranchBanks().add(brBank);
+							}
+
+							// validate branch bank account limit
+							if (paymntBankCount > maxPaymentBankForBranch) {
+								throw new EpException(
+										MessageConst.ERROR_722620,
+										new String[] { br.getBranchName(),
+												maxPaymentBankForBranch + "" });
 							}
 						}
 					}
