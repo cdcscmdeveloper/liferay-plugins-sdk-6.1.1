@@ -318,7 +318,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			flAddress.setAddress1(smAddress.getAddress1());
 			flAddress.setAddress2(smAddress.getAddress2());
 			flAddress.setAddress3(smAddress.getAddress3());
-			flAddress.setAddress4(smAddress.getAddress4());
 			flAddress.setMapLatitude(smAddress.getMapLatitude());
 			flAddress.setMapLongitude(smAddress.getMapLongitude());
 			flAddress.setPmCity(smAddress.getPmCity());
@@ -363,7 +362,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				flAddress.setAddress1(smAddress.getAddress1());
 				flAddress.setAddress2(smAddress.getAddress2());
 				flAddress.setAddress3(smAddress.getAddress3());
-				flAddress.setAddress4(smAddress.getAddress4());
 				flAddress.setMapLatitude(smAddress.getMapLatitude());
 				flAddress.setMapLongitude(smAddress.getMapLongitude());
 				flAddress.setPmCity(smAddress.getPmCity());
@@ -451,7 +449,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		flAddress.setAddress1(pmAddress.getAddress1());
 		flAddress.setAddress2(pmAddress.getAddress2());
 		flAddress.setAddress3(pmAddress.getAddress3());
-		flAddress.setAddress4(pmAddress.getAddress4());
 		flAddress.setMapLatitude(pmAddress.getMapLatitude());
 		flAddress.setMapLongitude(pmAddress.getMapLongitude());
 		flAddress.setPmCity(pmAddress.getPmCity());
@@ -477,7 +474,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				flAddress.setAddress1(pmAddress.getAddress1());
 				flAddress.setAddress2(pmAddress.getAddress2());
 				flAddress.setAddress3(pmAddress.getAddress3());
-				flAddress.setAddress4(pmAddress.getAddress4());
 				flAddress.setMapLatitude(pmAddress.getMapLatitude());
 				flAddress.setMapLongitude(pmAddress.getMapLongitude());
 				flAddress.setPmCity(pmAddress.getPmCity());
@@ -521,7 +517,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		flAddress.setAddress1(smAddress.getAddress1());
 		flAddress.setAddress2(smAddress.getAddress2());
 		flAddress.setAddress3(smAddress.getAddress3());
-		flAddress.setAddress4(smAddress.getAddress4());
 		flAddress.setMapLatitude(smAddress.getMapLatitude());
 		flAddress.setMapLongitude(smAddress.getMapLongitude());
 		flAddress.setPmCity(smAddress.getPmCity());
@@ -563,11 +558,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				address.append(flAddress.getAddress3());
 				address.append(separator);
 			}
-			if (flAddress.getAddress4() != null && flAddress.getAddress4().length() > 0) {
-				address.append(System.getProperty("line.separator"));
-				address.append(flAddress.getAddress4());
-				address.append(separator);
-			}
 			if (flAddress.getPostcode() != null && flAddress.getPostcode().length() > 0) {
 				address.append(System.getProperty("line.separator"));
 				address.append(flAddress.getPostcode());
@@ -607,10 +597,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			if (pmAddress.getAddress3() != null && pmAddress.getAddress3().length() > 0) {
 				address.append(System.getProperty("line.separator"));
 				address.append(pmAddress.getAddress3());
-				address.append(separator);
-			}
-			if (pmAddress.getAddress4() != null && pmAddress.getAddress4().length() > 0) {
-				address.append(pmAddress.getAddress4());
 				address.append(separator);
 			}
 			
