@@ -12,6 +12,7 @@
 	<cc:attribute name="readonly" default="false" />
 	<cc:attribute name="update" default="@form" />
 	<cc:attribute name="fileUploadListener" required="true" />
+	<cc:attribute name="autoUpdateValue" />
 </cc:interface>
 
 <cc:implementation>
@@ -30,7 +31,8 @@
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 				label="#{lbl['lbl.btn.choose']}" 
-				showButtons="false">
+				showButtons="false"
+				oncomplete="#{cc.attrs.widgetVar}postUploadActionIfSuccess();">
 				<f:attribute name="widgetComponent" value="#{cc.attrs.widgetVar}" />
 				<f:attribute name="fileUploadListenerMethod" value="#{cc.attrs.fileUploadListener}" />
 			</p:fileUpload>
@@ -38,6 +40,10 @@
 			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="#{cc.attrs.widgetVar}.hide();" />
 			</div>
 		</p:dialog>
+		
+		<p:remoteCommand name="#{cc.attrs.widgetVar}postUploadActionIfSuccess"
+			partialSubmit="true" process="@this" update="@this"
+			action="#{scRemarkAndAttachmentBackingBean.postUploadActionIfSuccess(cc, cc.attrs.widgetVar)}" />
 		
 		<p:remoteCommand name="#{cc.attrs.widgetVar}reRender"
 			partialSubmit="true" process="@this" update="#{cc.attrs.update}" />
