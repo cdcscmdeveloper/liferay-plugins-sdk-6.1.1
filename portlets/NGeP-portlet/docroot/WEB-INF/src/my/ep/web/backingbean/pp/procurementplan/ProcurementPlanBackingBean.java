@@ -89,6 +89,7 @@ import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.pp.common.PpCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -3902,6 +3903,37 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}else{
 					RequestContext.getCurrentInstance().execute("hide"+type+"LovMsg();");
 				}
+			}
+		}
+	}
+	
+	public void selectGlAccountAction(PmGlAccount glAccount,Integer index,String type){
+		if(StringUtils.isNotBlank(type)){
+			List<PpExpenditureItem> epItems = null;
+			switch (type) {
+			case "b" :
+				epItems = getManagedBean().getEpItemsB();
+				break;
+			case "h":
+				epItems = getManagedBean().getEpItemsH();
+				break;
+			case "p":
+				epItems = getManagedBean().getEpItemsP();
+				break;
+			case "s":
+				epItems = getManagedBean().getEpItemsS();
+				break;
+			case "t":
+				epItems = getManagedBean().getEpItemsT();
+				break;
+			default:
+				epItems = new ArrayList<PpExpenditureItem>();
+				break;
+			}
+			
+			if(CollectionUtils.isNotEmpty(epItems)){
+				epItems.get(index).setPmGlAccount(glAccount);
+				validateEpItems(epItems, glAccount,index,type);
 			}
 		}
 	}
