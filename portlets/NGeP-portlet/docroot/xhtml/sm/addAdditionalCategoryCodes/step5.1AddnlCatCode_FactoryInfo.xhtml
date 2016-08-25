@@ -55,6 +55,13 @@
 							</tr>
 						</p:outputPanel>
 					</table> <p:outputPanel id="facInfPan" layout="block">
+					zxcv
+		<ac:gmapDialog id="gmapDialog" 
+			latitude="#{cc.attrs.latitude}" 
+			longitude="#{cc.attrs.longitude}" 
+			locationName="#{cc.attrs.locationName}" />
+	
+		<ac:gmapScript />
 						<p:blockUI block=":form:tt:facInfPan" widgetVar="buiPoFac"
 							id="poFacBlc"
 							blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.factoryVerify : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.factoryVerify : false)}" />
