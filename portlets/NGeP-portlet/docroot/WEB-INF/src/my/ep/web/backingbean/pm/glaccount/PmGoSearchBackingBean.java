@@ -52,7 +52,8 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 	}
 
 	public void initPmGoPopup(){
-		resetAction();		
+		this.renewSesionObject();
+		getPmGoDataModel().resetData();	
 		FacesScopes facesScopes = new FacesScopes();
 		Integer index = Integer.parseInt(facesScopes.getParameter("index"));
 		String type = facesScopes.getParameter("type");
@@ -64,7 +65,10 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 	}
 	
 	public void resetAction(){
-		this.renewSesionObject();
+		getManagedBean().setDesc(null);
+		getManagedBean().setSelectedAccClass(null);
+		getManagedBean().setSelectedAccType(null);
+		getManagedBean().setSelectedGenObjCode(null);
 		getPmGoDataModel().resetData();
 	}
 	
