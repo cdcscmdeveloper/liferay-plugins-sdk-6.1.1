@@ -4215,12 +4215,15 @@ public class QTDetailBackingBean extends
 						.retrieveApprovalsByQtIdNType(quationTenderReqDTO);
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				ScQtApproval qtApproval = resDTO.getQtApproval();
-
-				qtApproval.setScQtApprovalRemarks(initializeRemarks(qtApproval,
+				
+				List<ScQtApprovalRemark> qtRemarks = initializeRemarks(qtApproval, 
 						this.getManagedBean().getQt()
-								.getCurrentWorkFlowStatus(),
-						qtApproval.getScQtApprovalRemarks(),
-						ScQtApprovalRemark.class));
+						.getCurrentWorkFlowStatus(),
+						qtApproval.getScQtApprovalRemarks(), ScQtApprovalRemark.class);
+				for(ScQtApprovalRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(false);
+				}
+				qtApproval.setScQtApprovalRemarks(qtRemarks);
 				TabBean tabBean = new TabBean(null, null, qtApproval,
 						retrieveFinalizationCommitteeType());
 				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
@@ -5128,6 +5131,28 @@ public class QTDetailBackingBean extends
 		Long statusId = scQt.getQtStatus().getStatusId();
 		boolean isQTAwarded = false;
 		boolean isBiddingActive = false;
+		boolean isQTPendingCancellation = false;
+		
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QT_CANCELLATION);
+			reqDTO.setDocId(scQt.getQtId());
+
+			ScWorkFlowStatus cancellationStatus = workFlowStatusSO.
+					retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+			
+			if(cancellationStatus != null && 
+					cancellationStatus.getPmStatus().getStatusId().equals(QTStatusConst.QC_PENDING_CANCELATON)) {
+				isQTPendingCancellation = true;
+			}
+		}
+		finally {
+			workFlowStatusSO = null;
+		}
+		
 		if(statusId.equals(QTStatusConst.QT_PENDING_LOI) || statusId.equals(QTStatusConst.QT_PENDING_LOA) ||
 				statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION) || statusId.equals(QTStatusConst.QT_RE_FINALIZATION)) {
 			isQTAwarded = checkIsQTAwarded(scQt);
@@ -5140,6 +5165,8 @@ public class QTDetailBackingBean extends
 			throw new EpException(MessageConst.ERROR_760425);
 		} else if(isBiddingActive) {
 			throw new EpException(MessageConst.ERROR_760424);
+		} else if(isQTPendingCancellation) {
+			throw new EpException(MessageConst.ERROR_760435);
 		} else {
 			RequestContext.getCurrentInstance().execute("cancelQTDlg.show()");
 		}
