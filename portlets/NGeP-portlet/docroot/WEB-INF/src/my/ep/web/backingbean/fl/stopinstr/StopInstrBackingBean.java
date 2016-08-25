@@ -72,6 +72,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.type.pm.GSLType;
 import my.ep.type.pm.RoleCode;
@@ -148,26 +149,20 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		
 		if(resDTO.isSuccessful()) {
 			String messageId = MessageConst.INFO_700005;
-			if(reqDTO.isApprover()) {
-				if(checkTaxInvoice(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId())){
-					messageId = MessageConst.INFO_745011;
-				}else{
-					messageId = MessageConst.INFO_745015;
-				}
-			}
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-				messageId = MessageConst.INFO_700008;
-			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				if(checkTaxInvoice(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId())){
-					messageId = MessageConst.INFO_745011;
-				}else{
-					messageId = MessageConst.INFO_745015;
-				}
-				
-			}
+
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				messageId = MessageConst.INFO_700004;
-			}	
+			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				messageId = MessageConst.INFO_700008;
+			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				messageId = MessageConst.INFO_700010;
+			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || reqDTO.isApprover()) {
+				if(checkTaxInvoice(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId())){
+					messageId = MessageConst.INFO_745011;
+				}else{
+					messageId = MessageConst.INFO_745015;
+				}
+			} 
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(messageId, 
@@ -176,27 +171,28 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		} else {
 			throw new EpException(MessageConst.ERROR_700020);
 		}
-		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
-		renewSesionObject();
-		/*if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
-			Map<String, String> paramMap = new HashMap<String, String>();
-			paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFlStopInstr().getStopInstrNo());
-			paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-			CommonBackingBean commonBackingBean = new CommonBackingBean();
-			commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_STOP_DELIVERY);
-			commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.rpt.StopInstructionNo",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
-			commonBackingBean.getManagedBean().setParamMap(paramMap);
-			return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
-		}*/
-		return CommonUIConst.ACKNOWLEDGE_PAGE;
+		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || getManagedBean().getTaskId() == null) { 
+			renewSesionObject();
+			/*if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+				Map<String, String> paramMap = new HashMap<String, String>();
+				paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFlStopInstr().getStopInstrNo());
+				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+				CommonBackingBean commonBackingBean = new CommonBackingBean();
+				commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_STOP_DELIVERY);
+				commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.rpt.StopInstructionNo",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+				commonBackingBean.getManagedBean().setParamMap(paramMap);
+				return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
+			}*/
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}else{
 			reqDTO.setFlOrderId(resDTO.getFlStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
 			reqDTO.setStopRequestId(resDTO.getFlStopInstr().getStopInstrId());
 			resDTO=getFulfilmentOrderSO().retrieveStopInstruction(reqDTO);
+			String buttonVal = getManagedBean().getButtonVal();
 			setStopInstrFields(resDTO);
+			getManagedBean().setButtonVal(buttonVal);
 			return null;
 		}
-		
 	}
 
 	public void setStopInstrFields(FulfilmentResDTO resDTO) {
@@ -242,6 +238,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			flReqDTO.setStopRequestId(stopFlData.getStopRequestId().longValue());
 			
 			FulfilmentResDTO resDTO = getFulfilmentOrderSO().retrieveStopInstruction(flReqDTO);
+			if(resDTO.getFlStopInstr().getPmReason()==null) {
+				resDTO.getFlStopInstr().setPmReason(new PmReason());
+			}
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 			populateChargeLineData();
@@ -439,18 +438,20 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		if(getManagedBean().getStopInstr().getPmReason().getReasonCode() == null){
-			throw new EpException(MessageConst.ERROR_100022, new String[]{
-					ResourceBundleUtils.getMessage("lbl.fl.stop.instuc.reason.justification",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-		}
-		if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason().getReasonCode())) {
-			if(null == getManagedBean().getStopInstr().getReasonDesc() || getManagedBean().getStopInstr().getReasonDesc().isEmpty()){
-				throw new EpException(MessageConst.ERROR_740026);
-			}
-		}
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+			}
+		} else {
+			if(getManagedBean().getStopInstr().getPmReason().getReasonCode() == null){
+				throw new EpException(MessageConst.ERROR_100022, new String[]{
+						ResourceBundleUtils.getMessage("lbl.fl.stop.instuc.reason.justification",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+			if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason().getReasonCode())) {
+				if(null == getManagedBean().getStopInstr().getReasonDesc() || getManagedBean().getStopInstr().getReasonDesc().isEmpty()){
+					throw new EpException(MessageConst.ERROR_740026);
+				}
 			}
 		}
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
@@ -471,36 +472,40 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			}
 		}
 
-		if(hasSupplierRole() && !hasGovtSellerRole()) { // Supplier stop delivery
-			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-			// set action
-			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-			return null;
-		} else {
-			if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && 
-				(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))){
-				if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isCoGstr()){
-					getManagedBean().setSelectedTabIndex(1);
-					throw new EpException(MessageConst.ERROR_745078);
+		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+			if(hasSupplierRole() && !hasGovtSellerRole()) { // Supplier stop delivery
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				// set action
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+				return null;
+			} else {
+				if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && 
+					(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))){
+					if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isCoGstr()){
+						getManagedBean().setSelectedTabIndex(1);
+						throw new EpException(MessageConst.ERROR_745078);
+					}
+					
+					IPersonnelSO personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+					PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+					personnelReqDTO.setSmSupplierId(getManagedBean().getStopInstr().getFlRequest().getSmSupplier().getSupplierId());
+					PersonnelResDTO personnelResDTO = personnelSO.retrievePersonnelBySupplierId(personnelReqDTO);
+					
+					if(personnelResDTO.getSmPersonnelList().isEmpty()){
+						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.supplierUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					}
 				}
-				
-				IPersonnelSO personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
-				PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
-				personnelReqDTO.setSmSupplierId(getManagedBean().getStopInstr().getFlRequest().getSmSupplier().getSupplierId());
-				PersonnelResDTO personnelResDTO = personnelSO.retrievePersonnelBySupplierId(personnelReqDTO);
-				
-				if(personnelResDTO.getSmPersonnelList().isEmpty()){
-					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.supplierUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-				}
+				// set action
+				setTextBeforeSign(outcome);
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
 			}
-			// set action
-			setTextBeforeSign(outcome);
-			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			return null;
+		} else {
+			return saveStopInstruction(outcome);
 		}
 	}
 	
