@@ -5284,4 +5284,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		   ctDT = null;
 	   }
 	}
+	
+
+
+	/**
+	 * The method used to check whether exist previous extension history
+	 * and the extend start date is already started.
+	 * 
+	 * @return true, if valid to perform contract extension
+	 *         false, if not valid to perform contract extension
+	 */
+	public boolean validExtensionDate() {
+		List<CtContractVer> extensionHistoryList = getManagedBean().getAmendHistoryList();
+		if (extensionHistoryList != null && extensionHistoryList.size() > 0) {
+			CtContractVer latestExtensionVer = extensionHistoryList.get(extensionHistoryList.size() - 1);
+			if (latestExtensionVer.getCtAmendment().getExtendStartDate().after(DateUtils.getCurrentDateWithoutTime())) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return true;
+	}
 }
