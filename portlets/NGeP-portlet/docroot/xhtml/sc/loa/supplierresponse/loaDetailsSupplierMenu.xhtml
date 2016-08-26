@@ -98,7 +98,8 @@
 						widgetVar="loaSuppUploadDlg"
 						fileUploadListener="lOADetailBackingBean.uploadBranchInfo"
 						update="@([id$=loaSuppUploadBtn])"
-						readonly="#{lOADetailBackingBean.managedBean.readOnly}" /> 
+						readonly="#{lOADetailBackingBean.managedBean.readOnly}" 
+						autoUpdateValue="#{lOADetailBackingBean.managedBean.autoUpdate}"/> 
 				<ac:iconTooltip
 						value="#{lbl['lbl.sc.gst.branch.attachment.tooltip']}" />
 				</td>

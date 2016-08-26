@@ -505,11 +505,13 @@
 				<td class="TableFieldRight"><ac:scSingleFileUploadButton
 						id="pidUploadBtn" popupWidgetVar="pidUploadDlg"
 						attachment="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}"
-						readonly="#{!isPendingSubmissionStatus}" /> <ac:scSingleFileUploadPopup
+						readonly="#{!isPendingSubmissionStatus}" /> 
+					 <ac:scSingleFileUploadPopup
 						widgetVar="pidUploadDlg"
 						fileUploadListener="purchaseInDefaultBackingBean.handleFileUpload"
 						update="@([id$=pidUploadBtn])"
-						readonly="#{!isPendingSubmissionStatus}" /></td>
+						readonly="#{!isPendingSubmissionStatus}" 
+						autoUpdateValue="#{purchaseInDefaultBackingBean.managedBean.autoUpdate}"/></td>
 			</tr>
 		</table>
 	</p:panel>

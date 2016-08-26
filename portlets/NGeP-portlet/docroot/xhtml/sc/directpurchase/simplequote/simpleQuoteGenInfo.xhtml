@@ -58,7 +58,8 @@
 						<ac:scSingleFileUploadPopup widgetVar="sqUploadDlg"
 							fileUploadListener="simpleQuoteBackingBean.handleFileUpload"
 							update="@([id$=sqUploadBtn])"
-							readonly="#{!isEditable}" />
+							readonly="#{!isEditable}" 
+							autoUpdateValue="#{simpleQuoteBackingBean.managedBean.autoUpdate}"/>
 					</td>
 			</tr>
 			<tr>
