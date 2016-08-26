@@ -123,7 +123,8 @@
 
 		<ac:scSingleFileUploadPopup widgetVar="loiReportAttWidget"
 			fileUploadListener="lOIDetailBackingBean.handleFileUpload"
-			update="@([id$=reportContentsTbl])" />		
+			update="@([id$=reportContentsTbl])" 
+			autoUpdateValue="#{lOIDetailBackingBean.managedBean.autoUpdate}"/>		
 
 	</ui:define>
 </ui:composition>

@@ -110,7 +110,8 @@
 		<ac:scSingleFileUploadPopup widgetVar="scDocUploadDlg"
 			fileUploadListener="lOADetailBackingBean.handleFileUpload"
 			readonly="#{lOADetailBackingBean.managedBean.readOnly}"
-			update="@([id$=scDocUploadBtn])" />
+			update="@([id$=scDocUploadBtn])" 
+			autoUpdateValue="#{lOADetailBackingBean.managedBean.autoUpdate}"/>
 		
 		<p:confirmDialog widgetVar="gstSignerConfirmPopupWin"
 			id="gstSignerConfirmPopup" width="500px"
