@@ -118,7 +118,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
-				<td><p:inputText size="25" disabled="true"
+				<td><p:inputText size="25" disabled="true" style="width: 176px"
 						value="#{flOrderBB.managedBean.flRequest.startDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -126,7 +126,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
-				<td><p:inputText size="25" disabled="true"
+				<td><p:inputText size="25" disabled="true" style="width: 176px"
 						value="#{flOrderBB.managedBean.flRequest.endDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
