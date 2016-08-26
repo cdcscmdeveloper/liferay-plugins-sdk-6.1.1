@@ -21,9 +21,10 @@
 			modal="true" dynamic="true"
 			resizable="false" width="700px" height="350px"
 			styleClass="pop_up_top" 
-			header="#{lbl['lbl.txt.choose.files']}">
+			header="#{lbl['lbl.txt.choose.files']}"
+			onShow="uploadListener(#{cc.attrs.widgetVar}FU); #{cc.attrs.widgetVar}setAutoUpdateValue([{name:'enableAutoUpdate', value:false}]);">
 			<p:messages id="#{cc.id}Msg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
-			<p:ajax event="close" />
+			<p:ajax event="close" oncomplete="#{cc.attrs.widgetVar}setAutoUpdateValue([{name:'enableAutoUpdate', value:true}]);" />
 			<p:fileUpload id="#{cc.id}FU" style="display:inline;"
 				fileUploadListener="#{scRemarkAndAttachmentBackingBean.handleFileUploadListener}"
 				mode="advanced" 
@@ -32,6 +33,8 @@
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 				label="#{lbl['lbl.btn.choose']}" 
 				showButtons="false"
+				multiple="false"
+				widgetVar="#{cc.attrs.widgetVar}FU"
 				oncomplete="#{cc.attrs.widgetVar}postUploadActionIfSuccess();">
 				<f:attribute name="widgetComponent" value="#{cc.attrs.widgetVar}" />
 				<f:attribute name="fileUploadListenerMethod" value="#{cc.attrs.fileUploadListener}" />
@@ -47,6 +50,10 @@
 		
 		<p:remoteCommand name="#{cc.attrs.widgetVar}reRender"
 			partialSubmit="true" process="@this" update="#{cc.attrs.update}" />
+			
+		<p:remoteCommand name="#{cc.attrs.widgetVar}setAutoUpdateValue"
+			partialSubmit="true" process="@this" update="@this"
+			action="#{scRemarkAndAttachmentBackingBean.setAutoUpdateValue(cc)}" />
 			
 		<p:dialog id="#{cc.attrs.widgetVar}delAttPopupId" widgetVar="#{cc.attrs.widgetVar}delAttPopup"
 			header="#{lbl['lbl.sc.supporting.document']}" resizable="false"
