@@ -11,6 +11,7 @@
 		attachmentList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachments}"
 		readonly="#{approvalBackingBean.managedBean.readOnly}"
 		fileUploadListener="approvalBackingBean.handleFileUpload"
-		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}" />
+		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
+		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
 		
 </ui:composition>
