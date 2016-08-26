@@ -3938,4 +3938,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 
+	public Long retrieveKptjId(){		
+		PmOrgProfile orgProfile = retrieveJabatanOrgProfile(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+		return orgProfile != null && orgProfile.getOrgProfileId() != null ? orgProfile.getOrgProfileId() : null;
+		
+	}
 }

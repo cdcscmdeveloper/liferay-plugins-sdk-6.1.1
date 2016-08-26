@@ -22,6 +22,8 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	private Integer index;
 	private String type;
 	private String update;
+	private boolean isLazy;
+	private Long kptjId;
 	
 	public PmGoSearchManagedBean(){
 		
@@ -137,6 +139,34 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	 */
 	public void setUpdate(String update) {
 		this.update = update;
+	}
+
+	/**
+	 * @return the isLazy
+	 */
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	/**
+	 * @param isLazy the isLazy to set
+	 */
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
+	}
+
+	/**
+	 * @return the kptjId
+	 */
+	public Long getKptjId() {
+		return kptjId;
+	}
+
+	/**
+	 * @param kptjId the kptjId to set
+	 */
+	public void setKptjId(Long kptjId) {
+		this.kptjId = kptjId;
 	}
 	
 	
