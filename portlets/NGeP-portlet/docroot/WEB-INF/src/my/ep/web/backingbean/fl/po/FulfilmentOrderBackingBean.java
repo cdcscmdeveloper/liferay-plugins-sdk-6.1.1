@@ -428,7 +428,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
-
+				getManagedBean().getFlRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId(),getManagedBean().getFlRequest().getAgApprovedDate()));
 				if(getManagedBean().getFlRequest().getCtContract().isFactored()){
 					IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 
@@ -575,7 +575,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				getManagedBean().setDocType(resDTO.getFlOrder().getFlFulfilmentRequest().getDocType());
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
-				
+				getManagedBean().getFlRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId(),getManagedBean().getFlRequest().getAgApprovedDate()));
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}  

@@ -394,7 +394,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean(ParameterConst.DOCTYPE_PURCHASE_REQUEST, resDTO.getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 		flBB.initializeRemarkAndAttachement(resDTO.getFlFulfilmentRequest().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 		getManagedBean().setSelectedTabIndex(0);
-
+		getManagedBean().getFulfilmentRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId(),getManagedBean().getFulfilmentRequest().getAgApprovedDate()));
 		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
 		if(resDTO.getFlFulfilmentRequest().getApproverId() != null){
 			getManagedBean().setSelectedApprover(resDTO.getFlFulfilmentRequest().getApproverId());
