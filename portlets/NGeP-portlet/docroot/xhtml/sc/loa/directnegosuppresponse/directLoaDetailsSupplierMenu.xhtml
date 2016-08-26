@@ -99,7 +99,8 @@
 						widgetVar="dnSuppUploadDlg"
 						fileUploadListener="directLOABackingBean.uploadBranchInfo"
 						update="@([id$=dnSuppUploadBtn])"
-						readonly="#{directLOABackingBean.managedBean.readOnly}" /> 
+						readonly="#{directLOABackingBean.managedBean.readOnly}" 
+						autoUpdateValue="#{directLOABackingBean.managedBean.autoUpdate}"/> 
 				 <ac:iconTooltip
 						value="#{lbl['lbl.sc.gst.branch.attachment.tooltip']}" />
 				</td>

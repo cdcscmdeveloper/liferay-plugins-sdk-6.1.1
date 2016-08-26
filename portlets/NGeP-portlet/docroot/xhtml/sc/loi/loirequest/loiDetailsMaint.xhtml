@@ -152,7 +152,8 @@
 		<ac:scSingleFileUploadPopup widgetVar="supportDocUploadDlg"
 			fileUploadListener="lOIDetailBackingBean.handleSuppDocFileUpload"
 			readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
-			update="@([id$=supportDocUploadBtn])" />
+			update="@([id$=supportDocUploadBtn])" 
+			autoUpdateValue="#{lOIDetailBackingBean.managedBean.autoUpdate}"/>
 
 		<ui:include src="loiPreviewLetterPopup.xhtml" />
 
