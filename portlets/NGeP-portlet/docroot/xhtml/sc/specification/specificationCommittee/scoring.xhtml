@@ -44,7 +44,7 @@
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_fromRangeTN"
 					style="text-align:right"
-					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'AL' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'TG' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'TN' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'FG' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'FN'}"
+					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'AL' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'TG' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'TN' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'FG' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'FN' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'CF'}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					label="#{lbl['lbl.sc.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="14">
@@ -70,7 +70,7 @@
 
 				<p:inputText id="#{scoringPnlId}_fromRangeFG"
 					style="text-align:right"
-					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'TG' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'TN' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'FG' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'FN'}"
+					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'TG' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'TN' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'FG' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'FN' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'CF'}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					label="#{lbl['lbl.sc.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="14">
