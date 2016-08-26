@@ -68,10 +68,6 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 			fileUploadException = null;
 			
 			String fileUploadListenerMethod = (String)event.getComponent().getAttributes().get("fileUploadListenerMethod");
-			UIComponent cc = UIComponent.getCompositeComponentParent(event.getComponent());
-			
-			// update autoUpdate = false
-			setAttributeValue(cc, "autoUpdateValue", false);
 			
 			if (StringUtils.isNotBlank(fileUploadListenerMethod)) {
 				MethodExpression methodExp = FacesScopes
@@ -99,18 +95,36 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	 * @throws Exception
 	 */
 	public void postUploadActionIfSuccess(UIComponent cc, String widgetComponent) throws Exception {
-		if (fileUploadException == null) {
-			// update autoUpdate = true
-			setAttributeValue(cc, "autoUpdateValue", true);
-			
+		if (fileUploadException == null) {			
 			if (StringUtils.isNotBlank(widgetComponent)) {
 				RequestContext.getCurrentInstance().execute(
 						widgetComponent + "reRender();");
 				RequestContext.getCurrentInstance().execute(
-						widgetComponent + ".hide();");	
+						widgetComponent + ".hide();");
 			}
 		} else {
+			if (StringUtils.isNotBlank(widgetComponent)) {
+				RequestContext.getCurrentInstance().execute(
+						widgetComponent + "FU.buttonBar.find('input[type=file]').get(0).disabled=false;");	
+			}
 			throw fileUploadException;
+		}
+	}
+	
+	/**
+	 * set Auto Update Value
+	 * 
+	 * @param cc
+	 * 		the composite component
+	 */
+	public void setAutoUpdateValue(UIComponent cc) {
+		String enableAutoUpdate = (String)FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("enableAutoUpdate");
+		
+		if (StringUtils.isNotBlank(enableAutoUpdate)) {
+			setAttributeValue(cc,
+					"autoUpdateValue",
+					Boolean.valueOf(enableAutoUpdate));	
 		}
 	}
 	
