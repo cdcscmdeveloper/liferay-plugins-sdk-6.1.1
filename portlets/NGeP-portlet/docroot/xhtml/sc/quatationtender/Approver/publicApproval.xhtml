@@ -137,6 +137,7 @@
 		remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
 		showAttachment="false"
 		readonly="#{approvalBackingBean.managedBean.readOnly}"
-		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}" />
+		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
+		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
 		
 </ui:composition>
