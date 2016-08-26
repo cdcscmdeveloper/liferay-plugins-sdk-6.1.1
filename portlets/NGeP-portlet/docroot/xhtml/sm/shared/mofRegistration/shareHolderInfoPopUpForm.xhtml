@@ -439,7 +439,7 @@
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
-				<td><p:selectOneRadio disabled="#{backingBean.disableAuthorizedRadio(backingBean.managedBean.selectedShareHolder)}"
+				<td><p:selectOneRadio disabled="#{backingBean.managedBean.disableAuthorizedRadio}"
 						value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
@@ -460,46 +460,48 @@
 		</table>
 		<table>
 			<tr><td></td></tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
-				<td><p:selectOneMenu id="smPersnEpRole"
-						label="#{lbl['lbl.sm.userprofile.eprole']}"
-						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
-						disabled="#{backingBean.managedBean.disableRoleSelection or empty backingBean.managedBean.ePRoleList}"
-						style="width: 207px;margin: 5px 0px 5px 0px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems
-							value="#{backingBean.managedBean.ePRoleList}" />
-						<p:ajax event="change" update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}" 
-							process="@this" listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" partialSubmit="true"/>
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestPersonnel}"
-						oriValue="#{backingBean.managedBean.latestPersonnel.epRole}" 
-						currValue="#{backingBean.managedBean.selectedShareHolder.epRole}" 
-						alertValue="#{backingBean.getEpRoleLabelByRole(backingBean.managedBean.latestPersonnel.epRole)}"/>
-					<p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
-						showSummary="true" showDetail="false" display="icon" /></td>
-				<ui:remove>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sm.person.justification']}"
-							style="width: 50%; white-space: pre-wrap;"
-							rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
-							and backingBean.managedBean.selectedShareHolder.justificationReqd}" />
-						<p:outputLabel value="*" styleClass="mandatory"
-							rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
-							and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
-					<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-							required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
-							and backingBean.managedBean.selectedShareHolder.justificationReqd}"
-							id="persJust" label="#{lbl['lbl.sm.person.justification']}"
-							value="#{backingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}"
-							disabled="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}"
-							rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
-							and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
-				</ui:remove>
-			</tr>
+			<p:outputPanel rendered="#{not empty backingBean.managedBean.ePRoleList}">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
+					<td><p:selectOneMenu id="smPersnEpRole"
+							label="#{lbl['lbl.sm.userprofile.eprole']}"
+							value="#{backingBean.managedBean.selectedShareHolder.epRole}"
+							disabled="#{backingBean.managedBean.disableRoleSelection or empty backingBean.managedBean.ePRoleList}"
+							style="width: 207px;margin: 5px 0px 5px 0px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems
+								value="#{backingBean.managedBean.ePRoleList}" />
+							<p:ajax event="change" update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}" 
+								process="@this" listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" partialSubmit="true"/>
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.latestPersonnel}"
+							oriValue="#{backingBean.managedBean.latestPersonnel.epRole}" 
+							currValue="#{backingBean.managedBean.selectedShareHolder.epRole}" 
+							alertValue="#{backingBean.getEpRoleLabelByRole(backingBean.managedBean.latestPersonnel.epRole)}"/>
+						<p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
+							showSummary="true" showDetail="false" display="icon" /></td>
+					<ui:remove>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.person.justification']}"
+								style="width: 50%; white-space: pre-wrap;"
+								rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+								and backingBean.managedBean.selectedShareHolder.justificationReqd}" />
+							<p:outputLabel value="*" styleClass="mandatory"
+								rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+								and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
+						<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+								required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+								and backingBean.managedBean.selectedShareHolder.justificationReqd}"
+								id="persJust" label="#{lbl['lbl.sm.person.justification']}"
+								value="#{backingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}"
+								disabled="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}"
+								rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+								and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
+					</ui:remove>
+				</tr>
+			</p:outputPanel>
 			<p:outputPanel
 				rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
 							and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')}">

@@ -2635,6 +2635,9 @@ public class SmApplicationBackingBean extends
 					.getSelectedShareHolder());
 		}
 		buildRoleList(getManagedBean().getSelectedShareHolder());
+		getManagedBean().setDisableAuthorizedRadio(
+				disableAuthorizedRadio(getManagedBean()
+						.getSelectedShareHolder()));
 	}
 
 	private int getCurrAuthPersonnelCount() {
@@ -2674,6 +2677,10 @@ public class SmApplicationBackingBean extends
 				.setDisableRoleSelection(
 						disableEpRoleDropDown(getManagedBean()
 								.getSelectedShareHolder()));
+
+		getManagedBean().setDisableAuthorizedRadio(
+				disableAuthorizedRadio(getManagedBean()
+						.getSelectedShareHolder()));
 	}
 
 	/**
@@ -5297,7 +5304,7 @@ public class SmApplicationBackingBean extends
 						&& !StringUtils.isBlank(personnel.getEpRole())
 						&& personnel.getEpRole().equals(
 								RoleCode.FL_USER.value())) {
-
+					retVal = true;
 				}
 			}
 		} else {
@@ -5306,6 +5313,7 @@ public class SmApplicationBackingBean extends
 				retVal = true;
 			}
 		}
+		getManagedBean().setDisableAuthorizedRadio(retVal);
 		return retVal;
 	}
 
@@ -5431,6 +5439,11 @@ public class SmApplicationBackingBean extends
 		// disable or enable role selection
 		getManagedBean().setDisableRoleSelection(
 				disableEpRoleDropDown(shareHolderBean));
+
+		// disable or enable authorized flag
+		getManagedBean().setDisableAuthorizedRadio(
+				disableAuthorizedRadio(getManagedBean()
+						.getSelectedShareHolder()));
 
 	}
 
@@ -5567,7 +5580,8 @@ public class SmApplicationBackingBean extends
 				&& personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
 			addRoles(roles, RoleCode.FL_USER.value(), false);
 		} else {
-			if (getManagedBean().isValidSmUserLimit()) {
+			if (getManagedBean().isValidSmUserLimit()
+					&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				// add if already reach limit and personnel role is empty
 				if (StringUtils.isBlank(personnel.getEpRole())) {
 					addRoles(roles, RoleCode.FL_USER.value(), false);
@@ -5585,13 +5599,13 @@ public class SmApplicationBackingBean extends
 		}
 
 		// only add CM_USER for contractor that transact with federal govt and
-		// not authorized
+		// is authorized
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)
 				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
 				&& getManagedBean().getSmAppl().getSmCompanyBasic()
 						.isWithFederal()
-				&& personnel.getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+				&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			addRoles(roles, RoleCode.CM_USER.value(), false);
 		}
 
@@ -5712,6 +5726,9 @@ public class SmApplicationBackingBean extends
 				.setDisableRoleSelection(
 						disableEpRoleDropDown(getManagedBean()
 								.getSelectedShareHolder()));
+		getManagedBean().setDisableAuthorizedRadio(
+				disableAuthorizedRadio(getManagedBean()
+						.getSelectedShareHolder()));
 
 	}
 
@@ -9795,7 +9812,11 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmStaffTotals(),
 				getManagedBean().getSmAppl().getSupplierType());
 		getManagedBean().setPersonCalc(calcVO);
+		calcAuthorizedPersonnel();
+		log.info("*** END calcPersonnelListCount**** ");
+	}
 
+	private void calcAuthorizedPersonnel() {
 		// set already reach valid max authorized personnel and justification
 		SmAuthorizedPersonnelCountVO countVO = SmApplicationUtil
 				.getSmAuthorizedPersonnelCountVO(getManagedBean()
@@ -9804,8 +9825,6 @@ public class SmApplicationBackingBean extends
 						.getSmAppl().getApplId(), false);
 		getManagedBean().setValidSmUserLimit(
 				countVO.isReachAuthorizedPersonnelLimit());
-
-		log.info("*** END calcPersonnelListCount**** ");
 	}
 
 	/**

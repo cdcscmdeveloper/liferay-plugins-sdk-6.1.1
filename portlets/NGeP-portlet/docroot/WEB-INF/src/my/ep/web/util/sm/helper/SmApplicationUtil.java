@@ -6699,7 +6699,9 @@ public class SmApplicationUtil {
 		}
 		// pending activation
 		else {
-			if (currPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
+			if (currPersonnel.getEpRole() != null
+					&& currPersonnel.getEpRole().equals(
+							RoleCode.CM_USER.value())) {
 				currPersonnel.setSoftcertFlg(0);
 				currPersonnel.setContractSignerFlg(0);
 			} else {
