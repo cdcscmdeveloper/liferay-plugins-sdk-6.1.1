@@ -10,16 +10,6 @@
 
 
 	<ui:define name="contentSection">
-	  <script type="text/javascript">  
-           window.addEventListener('keydown',function(e)
-    		      {
-    	                  if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13)
-    	                       {
-    	            	            e.preventDefault();return false;
-    	                   }
-    	        },  true);
-      </script>
-      
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
@@ -71,7 +61,7 @@
 		</p:dialog>
 
 		<p:dialog id="reportContentPopupDlgId" widgetVar="reportContentPopupDlg" closable="false"
-				  modal="true" resizable="false" width="900" height="400" styleClass="pop_up_top" 
+				  modal="true" resizable="false" width="875" height="400" styleClass="pop_up_top" 
 				  header="#{evaluationBackingBean.managedBean.selectedReport.title}">
 	
 			<table>
