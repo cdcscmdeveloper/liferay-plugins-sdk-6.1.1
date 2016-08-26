@@ -12,6 +12,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.constant.ModuleCodeConst;
@@ -23,6 +24,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.VPmGo;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -54,17 +56,23 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 	public void initPmGoPopup(){
 		this.renewSesionObject();
 		getPmGoDataModel().resetData();	
-		FacesScopes facesScopes = new FacesScopes();
-		Integer index = Integer.parseInt(facesScopes.getParameter("index"));
-		String type = facesScopes.getParameter("type");
-		String update = facesScopes.getParameter("update");
-		getManagedBean().setIndex(index);
-		getManagedBean().setType(type);
-		getManagedBean().setUpdate(update);
-		
+		try{
+			FacesScopes facesScopes = new FacesScopes();
+			Integer index = Integer.parseInt(facesScopes.getParameter("index"));
+			String type = facesScopes.getParameter("type");
+			String update = facesScopes.getParameter("update");
+			Long kptjId = Long.parseLong(facesScopes.getParameter("kptjId"));
+			getManagedBean().setIndex(index);
+			getManagedBean().setType(type);
+			getManagedBean().setUpdate(update);
+			getManagedBean().setKptjId(kptjId);
+		}catch(Exception e){
+			throw new EpException(e.getMessage());
+		}	
 	}
 	
 	public void resetAction(){
+		getManagedBean().setLazy(false);
 		getManagedBean().setDesc(null);
 		getManagedBean().setSelectedAccClass(null);
 		getManagedBean().setSelectedAccType(null);
@@ -182,6 +190,7 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 	}
 
 	public void searchGoView(){
+		this.getManagedBean().setLazy(true);
 		getPmGoDataModel().reloadData();
 	}
 	
@@ -189,7 +198,7 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		private static final long serialVersionUID = 1L;
 
 		public PmGoPagingDataModel() {
-			super("pmGoDt",true);
+			super("pmGoDt",getManagedBean().isLazy());
 		}
 
 		@Override
@@ -245,6 +254,17 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 					new SearchFilterBean("desc",
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getDesc().toLowerCase(),true));
+		}
+		
+		if (getManagedBean().getKptjId() != null) {
+			searchBean.getDataFilterBeans().add(
+			new SearchMultiFilterBean(new SearchFilterBean(
+					"ptjGroupId",
+					SearchOperator.OPERATOR_EQUALS.value(),
+					getManagedBean().getKptjId()), new SearchFilterBean(
+					"ptjGroupId",
+					SearchOperator.OPERATOR_IS_NULL.value(), null,
+					SearchCondition.CONDITION_OR.value())));
 		}
 		
 		searchBean.getDataFilterBeans().add(
