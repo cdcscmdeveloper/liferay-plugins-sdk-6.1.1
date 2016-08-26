@@ -17,6 +17,7 @@ import javax.persistence.PersistenceException;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -25,13 +26,17 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -772,7 +777,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * 
 	 * @return
 	 */
-	private boolean isLoginUserTheApproverForAppl() {
+	private boolean isLoginUserAllowedToEdit() {
 		boolean retVal = false;
 		PmUser user = new FacesScopes().getUserSessionBean();
 		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
@@ -814,6 +819,59 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 			}
 		}
+
+		retVal = isLoginUserZoneSameAsSupplier();
+		return retVal;
+	}
+
+	/**
+	 * Check if the login user has the same zone as supplier zone
+	 * 
+	 * @return boolean
+	 */
+	private boolean isLoginUserZoneSameAsSupplier() {
+		boolean retVal = false;
+		FacesScopes fs = new FacesScopes();
+		PmUser user = fs.getUserSessionBean();
+		List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
+				.getUserId());
+		String ePRole = StringUtils.EMPTY;
+		if (!EntityHelper.isCollectionEmpty(userRoles)) {
+			for (PmUserRole userRole : userRoles) {
+				if (userRole.getPmRole().getRoleCode()
+						.equals(RoleCode.UPS_APPROVER.value())
+						|| userRole.getPmRole().getRoleCode()
+								.equals(RoleCode.UPS_PO.value())) {
+					ePRole = userRole.getPmRole().getRoleCode();
+					break;
+				}
+			}
+		}
+		PmZone supplierZone = null;
+		Long userZoneId = SmCommonUtil.getUserZoneIdByLoginIdAndEpRole(
+				user.getLoginId(), ePRole);
+		if (userZoneId != null
+				&& getManagedBean().getSmAppl() != null
+				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
+				&& !EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getSmCompanyAddresses())
+				&& getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress() != null) {
+			SmAddress compAddress = getManagedBean().getSmAppl()
+					.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+					.getSmAddress();
+			if (compAddress.getPmState() != null) {
+				ZoneReqDTO reqDTO = new ZoneReqDTO();
+				reqDTO.setStateId(compAddress.getPmState().getStateId());
+				supplierZone = SmServiceLookup.getZoneSO()
+						.retrieveZoneByStateId(reqDTO).getPmZone();
+			}
+
+			if (supplierZone != null && supplierZone.getZoneId() != null
+					&& supplierZone.getZoneId().compareTo(userZoneId) == 0) {
+				retVal = true;
+			}
+		}
 		return retVal;
 	}
 
@@ -822,7 +880,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	private void setLoginUserAllowedToDoMaintenance() {
 		getManagedBean().setAllowedToDoMaintenance(false);
-		if (isLoginUserTheApproverForAppl()) {
+		if (isLoginUserAllowedToEdit()) {
 			getManagedBean().setAllowedToDoMaintenance(true);
 		}
 	}

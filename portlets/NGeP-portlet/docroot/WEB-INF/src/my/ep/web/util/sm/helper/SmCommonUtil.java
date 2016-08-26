@@ -106,6 +106,7 @@ import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -4156,6 +4157,43 @@ public class SmCommonUtil {
 			}
 		}
 		return retVal;
+	}
+
+	/**
+	 * Get user zone ID by login ID and eP Role
+	 * 
+	 * @param String
+	 *            loginId
+	 * @param String
+	 *            epRole
+	 * @return Long
+	 */
+	public static Long getUserZoneIdByLoginIdAndEpRole(String loginId,
+			String epRole) {
+		if (StringUtils.isBlank(loginId) || StringUtils.isBlank(epRole)) {
+			return null;
+		} else {
+			SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+			reqDTO.setLoginId(loginId);
+			reqDTO.setEpRole(epRole);
+			return SmServiceLookup.getSupplierDataMaintenanceSO()
+					.getUserZoneIdByLoginIdAndEpRole(reqDTO).getZoneId();
+		}
+	}
+
+	/**
+	 * Get user roles by user ID
+	 * 
+	 * @param Long
+	 *            userId
+	 * @return List<PmUserRole>
+	 */
+	public static List<PmUserRole> getUserRolesByUserId(Long userId) {
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserIds(new ArrayList<Long>());
+		reqDTO.getUserIds().add(userId);
+		return SmServiceLookup.getUserSO()
+				.retrieveUserRoleListByUserIds(reqDTO).getUserRoleList();
 	}
 
 	private static SelectItem getLhdnSelectItem() {

@@ -438,6 +438,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> addrSameAsItems;
 	private boolean claimTask;
 	private boolean disableRoleSelection;
+	private boolean disableAuthorizedRadio;
 	private boolean siteVisitAfterApproval;
 	private boolean poInquiryRespond;
 	private boolean changeCurrRegStatus;
@@ -3621,5 +3622,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setApprovedStatusId(Long approvedStatusId) {
 		this.approvedStatusId = approvedStatusId;
+	}
+
+	public boolean isDisableAuthorizedRadio() {
+		return disableAuthorizedRadio;
+	}
+
+	public void setDisableAuthorizedRadio(boolean disableAuthorizedRadio) {
+		this.disableAuthorizedRadio = disableAuthorizedRadio;
 	}
 }
