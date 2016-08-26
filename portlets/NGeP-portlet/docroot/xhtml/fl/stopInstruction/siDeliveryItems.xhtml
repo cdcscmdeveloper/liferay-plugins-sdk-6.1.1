@@ -28,6 +28,11 @@
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" style="float:left;"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:center;white-space:normal">
+						<h:outputText value="#{newItems.unitPrice}" style="float:right;">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="text-align:center;white-space:normal">
 						<h:outputText value="#{newItems.gstUnitPrice}" style="float:right;">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
@@ -38,14 +43,14 @@
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, newItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.do.delivery.qty']}" style="text-align:center">
-						<h:outputText value="#{newItems.deliveredQty}" style="float:right;">
+					<p:column headerText="#{lbl['lbl.fl.received.qty']}" style="text-align:center">
+						<h:outputText value="#{newItems.flFulfilmentItem.sumReceivedQty}" style="float:right;">
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, newItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.delivery.amount']}" style="text-align:center">
-						<h:outputText value="#{newItems.deliveredAmt}" style="float:right;">
+					<p:column headerText="#{lbl['lbl.fl.received.amount']}" style="text-align:center">
+						<h:outputText value="#{newItems.flFulfilmentItem.sumReceivedAmt}" style="float:right;">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
