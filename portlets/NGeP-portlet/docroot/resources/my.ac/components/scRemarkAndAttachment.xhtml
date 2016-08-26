@@ -17,6 +17,7 @@
 	<cc:attribute name="instruction" default="" />
 	<cc:attribute name="header" default="#{lbl['lbl.sc.remarks']}" />
 	<cc:attribute name="fileUploadListener" required="#{cc.attrs.showAttachment}" />
+	<cc:attribute name="autoUpdateValue" />
 </cc:interface>
 
 <cc:implementation>	
@@ -36,9 +37,10 @@
 			modal="true" dynamic="true" 
 			resizable="false" width="700px" height="350px"
 			styleClass="pop_up_top" 
-			header="#{lbl['lbl.txt.choose.files']}">
+			header="#{lbl['lbl.txt.choose.files']}"
+			onShow="uploadListener(uploadDlgFU); uploadDlgsetAutoUpdateValue([{name:'enableAutoUpdate', value:false}]);">
 			<p:messages id="uploadDlgMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
-			<p:ajax event="close" />
+			<p:ajax event="close" oncomplete="uploadDlgsetAutoUpdateValue([{name:'enableAutoUpdate', value:true}]);" />
 			<p:fileUpload id="fileUploadId" style="display:inline;"
 				fileUploadListener="#{scRemarkAndAttachmentBackingBean.handleFileUploadListener}"
 				mode="advanced" multiple="true"
@@ -48,6 +50,7 @@
 				label="#{lbl['lbl.btn.choose']}" 
 				uploadLabel="#{lbl['lbl.btn.upload.all']}" 
 				cancelLabel="#{lbl['lbl.btn.remove.all']}"
+				widgetVar="uploadDlgFU"
 				update="attachmentTbId">
 				<f:attribute name="fileUploadListenerMethod" value="#{cc.attrs.fileUploadListener}" />
 			</p:fileUpload>
@@ -55,6 +58,10 @@
 			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadDlg.hide();" />
 	   		</div>
 		</p:dialog>
+		
+		<p:remoteCommand name="uploadDlgsetAutoUpdateValue"
+			partialSubmit="true" process="@this" update="@this"
+			action="#{scRemarkAndAttachmentBackingBean.setAutoUpdateValue(cc)}" />
 	</c:if>
 </cc:implementation>
 </ui:composition>
