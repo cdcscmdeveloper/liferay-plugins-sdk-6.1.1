@@ -1802,7 +1802,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}else if(docType.equalsIgnoreCase(FulfilmentConst.CONTRACT)){
 				ContractDetailsBackingBean ctDetBB = new ContractDetailsBackingBean();
 				FacesContext fc = FacesContext.getCurrentInstance();
-				ctDetBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
+				ctDetBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 				return ctDetBB.gotoCommonViewPage(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
 			}
 			return null;
