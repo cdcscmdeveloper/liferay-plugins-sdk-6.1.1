@@ -10,6 +10,19 @@
 		autoUpdate="true" closable="true" showSummary="true"></p:messages>
 
 	<p:remoteCommand name="refreshId" id="refreshId" update=":form"></p:remoteCommand>
+	
+		 <style>
+      .dashboarTable {
+             color: #000 !important;
+             font-family: Arial,Helvetica,sans-serif;
+              font-size: 12px;
+              border-color: #ddd;
+              border-width:1px;
+              padding-left: 5px;
+              border-style:solid;
+      }  
+    
+    </style>
 
 	<h:panelGroup id="catalogueTaskListId">
 
@@ -31,8 +44,8 @@
 						value="#{reviewCatBackingBean.managedBean.rejectSize}" /></td>
 			</tr>
 			<tr>
-				<td></td>
-				<td style="text-align: center;"><p:commandLink
+				
+				<td class="dashboarTable" colspan="2" style="text-align:right;padding-right: 6%;"><p:commandLink
 						action="#{reviewCatBackingBean.navigateToCatalgoueURL}"
 						value="#{lbl['lbl.pm.profiles.more.details']}" /></td>
 			</tr>
