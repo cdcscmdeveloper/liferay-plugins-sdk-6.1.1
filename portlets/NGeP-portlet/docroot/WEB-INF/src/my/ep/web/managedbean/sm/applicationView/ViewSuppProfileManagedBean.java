@@ -89,6 +89,7 @@ public class ViewSuppProfileManagedBean extends
 				SmApplRevisionReqDTO reqDTO) {
 			reqDTO.setSmSupplier(getSearchSupplier());
 			reqDTO.setMofAccountNo(getSearchMofNo());
+			reqDTO.setEpNo(getSearchEpNo());
 			reqDTO.setPmRegStatusId(getSearchPmRegStatusId());
 			reqDTO.setSupplierType(getSearchSuppType());
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
