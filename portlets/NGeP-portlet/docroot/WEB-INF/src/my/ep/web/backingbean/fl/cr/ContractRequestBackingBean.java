@@ -625,7 +625,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			return false;
 		}
 		for(FlDeliveryAddress flAddress:flDeliveryAddresses){
-			if(addrType.getPmAddress().getAddressId()==flAddress.getPmAddressId()){
+			if(addrType.getPmAddress().getAddressId().longValue()==flAddress.getPmAddressId().longValue()){
 				isContains=true;
 			}
 		}
