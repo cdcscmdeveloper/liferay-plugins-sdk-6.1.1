@@ -6,16 +6,16 @@
 			<td class="txtBold" width="30%"></td>
 			<td class="txtBold">
 				#if($review)
-					$licenseIns.pmParameter.pmParameterDescs.get(0).codeDesc
+					$!licenseIns.pmParameter.pmParameterDescs.get(0).codeDesc
 				#else
-					$licenseIns.codeDesc
+					$!licenseIns.codeDesc
 				#end
 				,Expiry Date
 			</td>
 				
 
 			#if($review)
-				<td>$licenseIns.pppmmNo, 
+				<td>$!licenseIns.pppmmNo, 
 				#if($licenseIns.expDate != $null)
 					$smVmUtil.formatDate($licenseIns.expDate)
 				#end</td>
