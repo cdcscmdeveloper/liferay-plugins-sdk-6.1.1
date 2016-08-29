@@ -711,7 +711,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			return false;
 		}
 		for(FlDeliveryAddress flDelAddress:flDeliveryAddresses){
-			if(addrType.getPmAddress().getAddressId()==flDelAddress.getPmAddressId()){
+			if(addrType.getPmAddress().getAddressId().longValue()==flDelAddress.getPmAddressId().longValue()){
 				isContains=true;
 			}
 		}
