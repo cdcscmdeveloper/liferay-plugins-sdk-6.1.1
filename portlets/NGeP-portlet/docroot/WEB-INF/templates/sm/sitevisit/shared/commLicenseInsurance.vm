@@ -5,7 +5,7 @@
 			<th class="txtBold">License/ Insurance</th>
 			<th>Closing Date/ Expiry Date</th>
 		</tr>
-		#if($licenseInsurance.size() != $null && $licenseInsurance.size() > 0)
+		#if($licenseInsurance != $null && $licenseInsurance.size() > 0)
 			#foreach($licenseIns in $licenseInsurance)
 				<tr>
 					<td>$!licenseIns.pmParameter.pmParameterDescs.get(0).codeDesc</td>
@@ -14,7 +14,7 @@
 			#end
 		#end
 	#else	
-		#if($licenseInsurance.size() != $null && $licenseInsurance.size() > 0)
+		#if($licenseInsurance != $null && $licenseInsurance.size() > 0)
 			#foreach($licenseIns in $licenseInsurance)
 			<tr>
 				<td width="40%" class="txtBold"><br /></td>
