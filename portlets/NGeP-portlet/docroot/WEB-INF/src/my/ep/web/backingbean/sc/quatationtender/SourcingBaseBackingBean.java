@@ -1698,7 +1698,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		attachment.setFileName("Bond Letter.pdf");
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
-		String contractNo = "Contract Number";
+		String contractNo = "...........................";
 		String supplierName = null;
 		String sourcingTitle = null;
 		String bondAmount = null;
@@ -1721,11 +1721,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		} else {
 			type = 0;
-			supplierName = "Supplier Name";
-			sourcingTitle = "Sourcing Title";
-			bondAmount = "Bond Amount";
-			expiryPeriod = "Expiry Period";
-			bondAmountWord = "Bond Amount Word";
+			supplierName = "...........................";
+			sourcingTitle = "...........................";
+			bondAmount = "..............................";
+			expiryPeriod = "..........................";
+			bondAmountWord = "..................................................";
 		}
 
 		context.put("type", type);
