@@ -4093,9 +4093,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			checkContractValidity(getManagedBean().getFlRequest());
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 				if(flRequest.getTitle() == null || flRequest.getTitle().trim().length() < 1){
+					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.title",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				if(getManagedBean().getFlRequest().getFlDeliveryAddresses().size()==0) {
+					getManagedBean().setSelectedTabIndex(1);
 					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}else{
 					checkReceivingOfficerList();
@@ -4449,7 +4451,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public String navigateDocument(Long docId){
 		ContractDetailsBackingBean ctDetBB = new ContractDetailsBackingBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
-		ctDetBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
+		ctDetBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 		return ctDetBB.gotoCommonViewPage(docId);
 	}
 	

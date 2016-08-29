@@ -1470,7 +1470,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}if(docType.equalsIgnoreCase(ParameterConst.CONTRACT)){
 			ContractDetailsBackingBean ctDetBB = new ContractDetailsBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
-			ctDetBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
+			ctDetBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			return ctDetBB.gotoCommonViewPage(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
 		}
 		return null;
