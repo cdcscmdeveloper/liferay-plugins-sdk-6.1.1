@@ -1546,7 +1546,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    getManagedBean().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
 	    reqDTO.setCtContractVer(ctBB.getManagedBean().getContractVer());
 	    getManagedBean().setWarningPercentage(contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage());
-		return CONTRACT_COMMON_PAGE;
+	    
+	    FacesContext fc = FacesContext.getCurrentInstance();
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTRACT_COMMON_PAGE);
+	    
+		return null;
 	}
 	
 	/**
