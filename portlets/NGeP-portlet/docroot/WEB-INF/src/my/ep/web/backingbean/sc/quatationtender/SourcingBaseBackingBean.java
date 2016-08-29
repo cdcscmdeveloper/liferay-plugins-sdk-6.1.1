@@ -1699,34 +1699,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
 		String contractNo = "...........................";
-		String supplierName = null;
-		String sourcingTitle = null;
-		String bondAmount = null;
-		String bondAmountWord = null;
-		String expiryPeriod = null;
+		String supplierName = "...........................";
+		String sourcingTitle = "...........................";
+		String bondAmount = "..............................";
+		String expiryPeriod = "..........................";
+		String bondAmountWord = "..................................................";
 		int type = 0;
-
+		
 		if (scLoa != null) {
 			type = 1;
-			supplierName = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa()
-					.getSupplierName() : " ";
-			sourcingTitle = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa()
-					.getTitle() : " ";
-			bondAmount = scLoa.getBondAmt() != null ? amountDF.format(scLoa
-					.getBondAmt()) : " ";
-			expiryPeriod = scLoa.getBondResDueDate() != null ? dateFormat
-					.format(scLoa.getBondResDueDate()) : " ";
-			bondAmountWord = scLoa.getBondAmt() != null ? NumberWordUtil
-					.convert(scLoa.getBondAmt().longValue()) : " ";
-
-		} else {
-			type = 0;
-			supplierName = "...........................";
-			sourcingTitle = "...........................";
-			bondAmount = "..............................";
-			expiryPeriod = "..........................";
-			bondAmountWord = "..................................................";
-		}
+			
+            if(scLoa.getScLoiLoa() != null){
+            	if(StringUtils.isNotEmpty(scLoa.getScLoiLoa().getSupplierName())){
+            		supplierName =  scLoa.getScLoiLoa().getSupplierName() ;
+            	}
+            	if(StringUtils.isNotEmpty(scLoa.getScLoiLoa().getTitle())){
+            		sourcingTitle =  scLoa.getScLoiLoa().getTitle() ;
+            	}
+            }
+            if(scLoa.getBondAmt() != null){
+            	bondAmount = amountDF.format(scLoa.getBondAmt());
+            	bondAmountWord = NumberWordUtil.convert(scLoa.getBondAmt().longValue());
+            }
+            if(scLoa.getBondResDueDate() != null){
+            	expiryPeriod = dateFormat.format(scLoa.getBondResDueDate());
+            }
+		} 
 
 		context.put("type", type);
 		context.put("contractNo", contractNo);
