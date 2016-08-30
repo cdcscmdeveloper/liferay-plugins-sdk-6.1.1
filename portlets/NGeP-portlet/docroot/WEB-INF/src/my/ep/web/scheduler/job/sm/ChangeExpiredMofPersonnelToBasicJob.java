@@ -60,7 +60,8 @@ public class ChangeExpiredMofPersonnelToBasicJob implements Job{
 										newEpRole = RoleCode.BASIC_SUPPLIER_USER.value();
 									}
 									PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
-									personnelReqDTO.setSmPersonnel(personnel);
+									//personnelReqDTO.setSmPersonnel(personnel);
+									personnelReqDTO.setPersonnelId(personnel.getPersonnelId());
 									personnelReqDTO.setNewEpRole(newEpRole);
 
 									log.info("Personnel ID >>>>" + personnel.getPersonnelId());
