@@ -8,7 +8,14 @@
 	
 	<p:spacer height="15px" rendered="#{consolidationReportBackingBean.managedBean.itemized}"/>	
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
-	
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
+			escape="false" />
+		<h:outputText styleClass="instruction"
+			value="#{consolidationReportBackingBean.managedBean.scQt.closingDate}">
+			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+		</h:outputText>
+				
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
 			<p:dataTable id="qualifiedSuppliers"
 				var="qualifiedSupp" widgetVar="shortlistedSuppDtls" 
@@ -48,7 +55,7 @@
 	
 				<p:column>
 					<h:outputText value="#{consolidationReportBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-											fn:toUpperCase(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
+											fn:toUpperCase(qualifiedSupp.qtEvaluationResult.scQtProposal.bumi))}" />
 				</p:column>
 				
 				<p:column style="text-align:right;">

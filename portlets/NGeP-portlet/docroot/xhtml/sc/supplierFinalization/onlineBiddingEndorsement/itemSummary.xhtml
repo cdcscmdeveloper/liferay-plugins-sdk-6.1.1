@@ -50,6 +50,13 @@
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
+			escape="false" />
+		<h:outputText styleClass="instruction"
+			value="#{suppFinalBiddingBackingBean.managedBean.scQt.closingDate}">
+			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+		</h:outputText>	
 		<p:dataTable id="supplierItemTbl" var="itemSupplier"
 			value="#{suppFinalBiddingBackingBean.managedBean.bidItemSuppliers}"
 			rows="10" rowKey="#{itemSupplier}" rowIndexVar="rowIndex" 
