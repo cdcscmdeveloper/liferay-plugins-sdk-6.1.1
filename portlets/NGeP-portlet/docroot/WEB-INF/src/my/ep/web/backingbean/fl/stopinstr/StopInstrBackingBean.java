@@ -484,7 +484,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && 
 					(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))){
 					if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isCoGstr()){
-						getManagedBean().setSelectedTabIndex(1);
+						getManagedBean().setSelectedTabIndex(0);
 						throw new EpException(MessageConst.ERROR_745078);
 					}
 					
