@@ -83,7 +83,13 @@ public class ChangeExpiredMofPersonnelToBasicJob implements Job{
 					MofAccountReqDTO mofAccountReqDTO = new MofAccountReqDTO();
 					mofAccountReqDTO.setMofAccount(mofAccount);
 					
-					SmServiceLookup.getMofAccountSO().updateMofAccount(mofAccountReqDTO);
+					try{
+						SmServiceLookup.getMofAccountSO().updateMofAccount(mofAccountReqDTO);
+					}catch(Exception ex){
+						log.info("ChangeExpiredMofPersonnel updateMoFAcc -  Exception>>>>" + 
+								ex.getMessage());
+					}
+					
 					
 				}
 			}
