@@ -651,7 +651,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE_ITEM);
 					resDTO = receivedNoteSO.retrieveRejectionRemarksHistory(reqDTO);
 					noteItem.setRejectionRemarks(resDTO.getFNIRejectionRemarks());
-					recNoteBB.initializeRejectionRemarks(recNoteBB.getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
+					if(!buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+						recNoteBB.initializeRejectionRemarks(recNoteBB.getManagedBean().getFulfilmentNote().getFlWorkflowStatus() ,resDTO.getFNIRejectionRemarks(),noteItem,false);
+					}
 				}else{
 					noteItem.getRejectionRemarks().add(new FlRemark());
 				}
