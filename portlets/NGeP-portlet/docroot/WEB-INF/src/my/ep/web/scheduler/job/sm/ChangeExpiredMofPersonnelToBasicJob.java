@@ -68,8 +68,12 @@ public class ChangeExpiredMofPersonnelToBasicJob implements Job{
 									log.info("Personnel ID >>>>" + personnel.getPersonnelId());
 									log.info("Personnel NewEpRole >>>>" + newEpRole);
 									log.info("Personnel OldEpRole >>>>" + personnel.getEpRole());
-
-									SmServiceLookup.getPersonnelSO().updatePersonnelAndPmRole(personnelReqDTO);
+									try{
+										SmServiceLookup.getPersonnelSO().updatePersonnelAndPmRole(personnelReqDTO);
+									}catch(Exception ex){
+										log.info("ChangeExpiredMofPersonnelToBasicJob Exception>>>>" + 
+												ex.getMessage());
+									}
 								}
 							}
 						}
