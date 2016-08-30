@@ -80,7 +80,7 @@ public class SmSchedulerServlet extends HttpServlet {
 						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_APP_SOFTCERT_RENEW_REMINDER));
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE));
 
 		// Sm Payment Reminder Job
 		EpSchedulerHelper
