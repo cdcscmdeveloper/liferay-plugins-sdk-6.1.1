@@ -46,22 +46,31 @@
 					rendered="#{!empty scLoiReport.pmDocument}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:30%; white-space:normal; text-align:center;">
-				<ac:scSingleFileUploadButton id="scLoiReportUploadBtn"
-					popupWidgetVar="loiReportAttWidget"
-					attachment="#{scLoiReport.scLoiReportAttachment}" 
-					readonly="#{!isPendingNegotiationStatus or !empty scLoiReport.pmDocument or 
-					  				scLoiReport.docCategory eq ParameterConst.documentCategoryEndorsementReport or 
-					  					lOIDetailBackingBean.managedBean.readOnly}" 
-					rowIndex="#{rowIndex}">
-
-					<f:setPropertyActionListener for="actionEvent" value="#{scLoiReport}"
-							target="#{lOIDetailBackingBean.managedBean.selectedScLoiReport}" />
-
-					<f:setPropertyActionListener for="actionEvent" value="LIR"
-							target="#{lOIDetailBackingBean.managedBean.attachmentDocType}" />
-				</ac:scSingleFileUploadButton>
-			</p:column>				
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%; white-space:normal; text-align: center;">
+				<ui:fragment rendered="#{scLoiReport.definationType ne null and
+											scLoiReport.definationType.parameterCode ne 'UP'}">
+					<p:commandButton id="download" icon="ui-icon-download" 
+						style="background-color:transparent !important; border:0px none;"
+						ajax="true" action="#{lOIDetailBackingBean.downloadReport(scLoiReport)}" />
+				</ui:fragment>
+				<ui:fragment rendered="#{scLoiReport.definationType eq null or
+											scLoiReport.definationType.parameterCode eq 'UP'}">						
+					<ac:scSingleFileUploadButton id="scLoiReportUploadBtn"
+						popupWidgetVar="loiReportAttWidget" 
+						attachment="#{scLoiReport.scLoiReportAttachment}" 
+						readonly="#{!isPendingNegotiationStatus or 
+										lOIDetailBackingBean.managedBean.readOnly}" 
+						rowIndex="#{rowIndex}">
+	
+						<f:setPropertyActionListener for="actionEvent" value="#{scLoiReport}"
+								target="#{lOIDetailBackingBean.managedBean.selectedScLoiReport}" />
+	
+						<f:setPropertyActionListener for="actionEvent" value="LIR"
+								target="#{lOIDetailBackingBean.managedBean.attachmentDocType}" />
+	
+					</ac:scSingleFileUploadButton>
+				</ui:fragment>				
+			</p:column>						
 
 		</p:dataTable>
 		
