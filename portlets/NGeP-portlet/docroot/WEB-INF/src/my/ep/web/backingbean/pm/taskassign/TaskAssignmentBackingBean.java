@@ -1310,7 +1310,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			reqDTO.setDocType(task.getDocType());
 			reqDTO.setDocNo(task.getDocNumber());
 			reqDTO.setStatusId(task.getDocStatus().longValue());
-			SourcingIntegrationResDTO resDTO = scIntegrationSO.retrieveRoleForTaskAssignment(reqDTO);
+			SourcingIntegrationResDTO resDTO = scIntegrationSO.retrieveTaskReassignmentDetail(reqDTO);
 			if(StringUtils.isNotBlank(resDTO.getRoleCode())){
 				roleList.add(resDTO.getRoleCode());
 			}
