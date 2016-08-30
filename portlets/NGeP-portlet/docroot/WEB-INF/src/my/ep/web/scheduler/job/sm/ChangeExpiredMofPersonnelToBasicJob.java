@@ -27,10 +27,11 @@ public class ChangeExpiredMofPersonnelToBasicJob implements Job{
 		ISmSchedulerSO reqSO = SmServiceLookup.getSmSchedulerSO();
 		SmSchedulerResDTO resDTO = reqSO.retrieveExpiredMof();
 		List<SmMofAccount> mofAccountLs = resDTO.getMofAccountLs();
-
+		
+		log.info("**********ChangeExpiredMofPersonnelToBasicJob - Start************");
 		if(mofAccountLs.size() > 0){
 			for(SmMofAccount mofAccount : mofAccountLs){
-
+				log.info("Supplier ID >>>>" + mofAccount.getSmSupplier().getSupplierId());
 				boolean isChangeStatus = false;
 				boolean activeAppl = SmApplicationUtil.checkActiveSmApplForSupp(mofAccount.getSmSupplier());
 
@@ -84,5 +85,7 @@ public class ChangeExpiredMofPersonnelToBasicJob implements Job{
 			}
 
 		}
+		
+		log.info("**********ChangeExpiredMofPersonnelToBasicJob - End************");
 	}
 }
