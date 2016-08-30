@@ -262,7 +262,7 @@
 											<tbody>
 												<tr>
 													<td width="11%" class="title left">Kod Pembekal</td>
-													<td width="12%" class="title left">Bumiputra Status</td>
+													<td width="12%" class="title left">Status Bumiputra</td>
 													<td width="17%" class="title left">Jumlah Harga (RM)</td>
 													<td width="11%" class="title left">Jumlah Harga Dalam Perkataan (RM)</td>
 												</tr>
@@ -322,7 +322,7 @@
 									<tr>
 										<td width="15%" class="title border left">Kod Pembekal</td>
 										<td width="10%" class="title border left">SSM No.</td>
-										<td width="15%" class="title border left">Bumiputra</td>
+										<td width="15%" class="title border left">Status Bumiputra</td>
 										<td width="23%" class="title border left">Jumlah Harga (RM)</td>
 										<td width="23%" class="title border left-right">Jumlah Harga Dalam Perkataan (RM)</td>
 									</tr>
@@ -371,7 +371,7 @@
 									<tbody>
 										<tr>
 											<td width="11%" class="title left">Kod Pembekal</td>
-											<td width="12%" class="title left">Bumiputra Status</td>
+											<td width="12%" class="title left">Status Bumiputra</td>
 											<td width="13%" class="title left">SSM No.</td>
 											<td width="17%" class="title left">Jumlah Harga (RM)</td>
 											<td width="17%" class="title left">Jumlah Harga Dalam Perkataan (RM)</td>
@@ -436,7 +436,7 @@
 							<tr>
 								<td width="15%" class="title border left">Kod Pembekal</td>
 								<td width="10%" class="title border left">SSM No.</td>
-								<td width="15%" class="title border left">Bumiputra</td>
+								<td width="15%" class="title border left">Status Bumiputra</td>
 								<td width="23%" class="title border left-right">Jumlah Harga (RM)</td>
 								<td width="40%" class="title border left-right">Jumlah Harga Dalam Perkataan (RM)</td>
 							</tr>
