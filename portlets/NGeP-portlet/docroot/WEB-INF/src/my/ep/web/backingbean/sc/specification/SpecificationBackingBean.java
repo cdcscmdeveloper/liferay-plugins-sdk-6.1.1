@@ -6869,7 +6869,7 @@ public class SpecificationBackingBean extends
 					for (int i = 0; i < checkListScore.size(); i++) {
 						ScQtCheckListScore Score = checkListScore.get(i);
 						if (null == Score.getScore()
-								|| Score.getScore().intValue() <= 0) {
+								|| Score.getScore().intValue() <0) {
 							throw new EpException(MessageConst.ERROR_760139);
 
 						}
@@ -6928,7 +6928,7 @@ public class SpecificationBackingBean extends
 						for (int i = 0; i < scoreYears.size(); i++) {
 							ScQtCheckListScore Score = scoreYears.get(i);
 							if (null == Score.getScore()
-									|| Score.getScore().intValue() <= 0) {
+									|| Score.getScore().intValue() <0) {
 								throw new EpException(MessageConst.ERROR_760139);
 
 							}
@@ -7093,7 +7093,7 @@ public class SpecificationBackingBean extends
 					for (int i = 0; i < checkListScore.size(); i++) {
 						ScQtCheckListScore Score = checkListScore.get(i);
 						if (null == Score.getScore()
-								|| Score.getScore().intValue() <= 0) {
+								|| Score.getScore().intValue() <0) {
 							throw new EpException(MessageConst.ERROR_760139);
 
 						}
