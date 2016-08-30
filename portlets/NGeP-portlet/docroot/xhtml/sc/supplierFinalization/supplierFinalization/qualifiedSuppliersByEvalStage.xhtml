@@ -53,7 +53,7 @@
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
 					  style="width:5%; white-space:normal;" rendered="#{isFinancialEvalStageByPkg}">
 				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-										fn:toUpperCase(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
+										fn:toUpperCase(qualifiedSupp.qtEvaluationResult.scQtProposal.bumi))}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
