@@ -82,7 +82,7 @@
 			      </p:commandButton>
 			      <p:commandButton value="#{lbl['lbl.ct.delete']}" process="@form" onsuccess="dlgDel.show()"  />     
 			   </div>
-			 <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
+			 <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title" resizable="false"  
               	modal="true" width="330">  
            <h:panelGrid columns="3">
             <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
@@ -97,7 +97,7 @@
         </p:dialog>  
        
          </p:panel>
-		 <p:dialog id="modelDialog" header="#{lbl['lbl.ct.search.contract']}" 
+		 <p:dialog id="modelDialog" header="#{lbl['lbl.ct.search.contract']}" resizable="false"  
 		    widgetVar="dlg2" modal="true" styleClass="pop_up_top" width="800" height="425">
 		   <p:panel id="advancePanel">
                <h:panelGrid columns="3">

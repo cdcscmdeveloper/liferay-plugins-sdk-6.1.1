@@ -240,7 +240,7 @@ rowKey="#{exemptedOrgsVar}" >
 		             </div>
                  </p:confirmDialog>
 	    
-	              <p:dialog id="dialogExemptedMinistry"  header="#{lbl['lbl.ct.panel.exempted.org.dlg']}" 
+	              <p:dialog id="dialogExemptedMinistry"  header="#{lbl['lbl.ct.panel.exempted.org.dlg']}" resizable="false"
 	                     widgetVar="dlgExemptedMinistry" styleClass="pop_up_top" modal="true" width="670" height="auto">
 			            <p:panel id="popUpExmptedDlg" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500">
 			                  <p:messages id="exemptedMsgId" showSummary="false"
@@ -405,7 +405,7 @@ rowKey="#{exemptedOrgsVar}" >
                  </p:confirmDialog>
 	</p:panel>
 	
-	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" 
+	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" resizable="false" 
 		styleClass="pop_up_top" modal="true" width="550" height="auto">
 			<p:dataTable id="cancelledCclDt" var="cancelledCircularDlgVar" rowKey="#{cancelledCircularDlgVar}" rowIndexVar="index"
 				value="#{centralContractBackingBean.managedBean.cancelledCircularList}" widgetVar="cancelledCircularObj"
