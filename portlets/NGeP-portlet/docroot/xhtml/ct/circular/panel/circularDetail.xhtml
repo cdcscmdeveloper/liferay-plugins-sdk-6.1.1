@@ -225,7 +225,7 @@
 		                   </div>
                       </p:confirmDialog>
 	       </p:panel>
-	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" 
+	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" resizable="false" 
 		styleClass="pop_up_top" modal="true" width="550" height="auto">
 			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" widgetVar="cancelledCirObj"
 			    rowIndexVar="index" value="#{panelBackingBean.managedBean.cancelledCircularList}"

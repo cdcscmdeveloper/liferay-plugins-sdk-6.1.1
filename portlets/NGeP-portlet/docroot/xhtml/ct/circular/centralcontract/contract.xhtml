@@ -345,7 +345,7 @@
 			</h:panelGroup>
 		</p:outputPanel>
 
-		<p:dialog id="itemZoneDlg" header="#{lbl['lbl.ct.panel.zone']}" styleClass="pop_up_top"
+		<p:dialog id="itemZoneDlg" header="#{lbl['lbl.ct.panel.zone']}" styleClass="pop_up_top" resizable="false"
 			widgetVar="itemZoneDlg" modal="true" width="350" height="200">
 			<p:outputPanel id="itemZoneId">
 				<p:treeTable id="itemZoneDt" style="height:160px;"
@@ -371,7 +371,7 @@
 	      </div>
 		</p:dialog>
 
-		<p:dialog id="contractDlg" header="#{lbl['lbl.ct.contract.list']}" styleClass="pop_up_top"
+		<p:dialog id="contractDlg" header="#{lbl['lbl.ct.contract.list']}" styleClass="pop_up_top" resizable="false"
 			widgetVar="contractDlg" modal="true" width="800" height="auto">
 			<p:messages id="contractMsg" showSummary="false" 
 			   showDetail="true"   autoUpdate="true" cosable="true" severity="error, info" />
