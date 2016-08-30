@@ -13,9 +13,11 @@
 		}
 	</style>
 	<br/>
-	<h:outputLabel value="#{lbl['lbl.sc.instruction.select.item']}" style="float:left;"/><br/>
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
-		
+		<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.select.item.instruction']} "
+				escape="false" />
+				
 		<p:dataTable id="itemListTbl" var="item"
 			value="#{suppFinalizationBackingBean.managedBean.itemList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
