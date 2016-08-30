@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -700,6 +702,18 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					    	   getManagedBean().setSelectedTabIndex(0);
 						        throw new EpException(MessageConst.ERROR_100022, new String[]{"Contact Person Details"});
 					      }
+					       
+					       if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
+					    		    && isNotValidEmailAddress( contrartPerson.getEmail())){
+					    	   throw new EpException( 
+					    			   ResourceBundleUtils.getMessage("lbl.ct.validation.email",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
+					       }
+					       
+					       if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
+					    		   && isNotValidMobileNo(contrartPerson.getPhoneNo())){
+					    	   throw new EpException( 
+					    			   ResourceBundleUtils.getMessage("lbl.ct.validation.mobile.number",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
+					       }
 				     }
 			    }
 			
@@ -2084,4 +2098,23 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	    public void onRowUnselect(UnselectEvent event) {
 	    	getManagedBean().setButtonHideActive(true);
 	    }
+	    
+	    public boolean isNotValidEmailAddress(String email) {
+			Pattern mask = null;
+			String pattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+			mask = Pattern.compile(pattern);
+			Matcher matcher = mask.matcher(email);
+			if (!matcher.matches()) {
+				return true;
+			}
+			return false;
+	    }
+	    
+	    public boolean isNotValidMobileNo(String phoneNo) {
+	    	String pattern = "\\d+";
+			if (!phoneNo.matches(pattern)) {
+				return true;
+			}
+			return false;
+		}
 }

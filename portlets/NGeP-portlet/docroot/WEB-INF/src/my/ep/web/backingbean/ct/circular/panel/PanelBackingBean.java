@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -686,13 +688,25 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			if (getManagedBean().getCircularVer().getCtContactPersons() != null 
 					&& getManagedBean().getCircularVer().getCtContactPersons().size() >= 1) {				
-			        for(CtContactPerson CtPerson : getManagedBean().getCircularVer().getCtContactPersons()){
-				        if(CtPerson.getName() == null  || CtPerson.getName().isEmpty()){
+			        for(CtContactPerson contrartPerson : getManagedBean().getCircularVer().getCtContactPersons()){
+				        if(contrartPerson.getName().isEmpty() ||contrartPerson.getAddress().isEmpty() 
+							    || contrartPerson.getEmail().isEmpty() || contrartPerson.getPhoneNo().isEmpty()){
 				        	 getManagedBean().setSelectedTabIndex(0);
 					       throw new EpException(MessageConst.ERROR_100022, 
 							 new String[]{ResourceBundleUtils.getMessage("lbl.ct.contact.person.name", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				        }
+				        } if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+				        		   && isNotValidEmailAddress( contrartPerson.getEmail())){
+					    	   throw new EpException( 
+					    			   ResourceBundleUtils.getMessage("lbl.ct.validation.email",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
+					       }
+					       
+					       if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
+					    		   && isNotValidMobileNo(contrartPerson.getPhoneNo())){
+					    	   throw new EpException( 
+					    			   ResourceBundleUtils.getMessage("lbl.ct.validation.mobile.number",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
+					 
+					       }
 			       }
 			}
 			
@@ -3110,4 +3124,23 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 		 }
 		 getManagedBean().getCircularVer().getItemAttachments().remove(index);
 	 }
+	 
+	   public boolean isNotValidEmailAddress(String email) {
+				Pattern mask = null;
+				String pattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+				mask = Pattern.compile(pattern);
+				Matcher matcher = mask.matcher(email);
+				if (!matcher.matches()) {
+					return true;
+				}
+				return false;
+		    }
+		    
+		    public boolean isNotValidMobileNo(String phoneNo) {
+		    	String pattern = "\\d+";
+				if (!phoneNo.matches(pattern)) {
+					return true;
+				}
+				return false;
+			}
 }
