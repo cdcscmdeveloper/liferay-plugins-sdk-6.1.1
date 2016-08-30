@@ -50,6 +50,7 @@ import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -290,6 +291,10 @@ public class QTScheduleDetailBackingBean extends
 							IUserSO.class);
 			UserReqDTO userReqDto = new UserReqDTO();
 			userReqDto.setRoleCode(RoleCode.DESK_ASSISTANT.value());
+			PmOrgProfile pmOrgProfile = getManagedBean().getQt().getPmOrgProfile();
+			if (pmOrgProfile != null) {
+				userReqDto.setOrgProfileId(pmOrgProfile.getOrgProfileId());	
+			}
 			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 			List<PmUser> deskOfficer = userResDTO.getUserList();
 			getManagedBean().setDeskOfficerAdmin(deskOfficer);
