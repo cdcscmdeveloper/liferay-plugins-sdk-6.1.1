@@ -30,6 +30,24 @@
 		</c:if>				
 		<p:messages id="messages" showDetail="true" autoUpdate="#{invoiceBackingBean.managedBean.autoUpdate}"
 			showSummary="false" closable="true" severity="error, info, warn" />
+		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{invoiceBackingBean.managedBean.gfmasError}" >		
+			<table>
+				<tr>
+					<td>
+						<p:commandLink oncomplete="gfmasError.show();" immediate="true"
+							action="#{invoiceBackingBean.show1GFMASError()}"
+							rendered="#{invoiceBackingBean.managedBean.gfmasError}">
+							<p:graphicImage value="/css/images/design/exclamation.png" />
+						</p:commandLink>
+						<p:spacer width="2" />
+					</td>
+					<td>
+						<p:outputLabel value="#{invoiceBackingBean.managedBean.gfmasErrorDesc} #{lbl['lbl.fl.integration.click.for.exception.details']} (ERR-#{invoiceBackingBean.managedBean.gfmasErrorCode})" style="color: #C55751 !important; font-weight: normal !important"
+							rendered="#{invoiceBackingBean.managedBean.gfmasError}" />
+					</td>					
+				</tr>
+			</table>
+		</p:panel>					
 		<ac:gpkiPopup 
 			textBeforeSign="#{invoiceBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{invoiceBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
@@ -129,5 +147,17 @@
 					</p:outputPanel></td>
 			</tr>
 		</table>
+		<p:dialog id="gfmasErrorDlg" header="#{lbl['lbl.fl.integration.exception.details']}" widgetVar="gfmasError" width="80%"
+			showEffect="fade" hideEffect="fade" modal="true" resizable="false">
+			<table style="width: 100%">
+				<tr>
+					<td><p:messages id="gfmasMsg" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				</tr>
+			</table>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
+			</div>
+		</p:dialog>			
 	</ui:define>
 </ui:composition>

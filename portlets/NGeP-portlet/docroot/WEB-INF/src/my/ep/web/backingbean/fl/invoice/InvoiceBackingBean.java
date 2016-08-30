@@ -472,6 +472,19 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				getManagedBean().setModificationCancel(true);
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+				
+				if(invCanObj.getErrorId() != null && invCanObj.getErrorId() > 0){
+					getManagedBean().setAutoUpdate(Boolean.FALSE);
+					getManagedBean().setGfmasError(true);
+					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+					errReq.setErrorId(invCanObj.getErrorId());
+					IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+					FulfilmentResDTO errRes = requestSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				}
+				
 			}else if(FLProcessNameConst.RESUBMIT_AP59_ORDER.equals(this.getManagedBean().getTaskName())){
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 				FLOrderCancelReqType reqType = (FLOrderCancelReqType)obj;
