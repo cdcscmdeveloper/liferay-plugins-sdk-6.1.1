@@ -1427,7 +1427,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			reqDTO.setApproverUserList(listOfApprover);
 			resDTO = invoiceSO.updateInvoiceWithAP59(reqDTO);
 			if(resDTO.isSuccessful()) {
-				String messageId = MessageConst.INFO_745007;
+				String messageId = MessageConst.INFO_745019;
+					
+				if(getManagedBean().getStatusId().equals(FulfilmentStatusConst.AP59_PAYMENT_VIA_AP59)){
+					messageId = MessageConst.INFO_745007;
+				}
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
 				} 
