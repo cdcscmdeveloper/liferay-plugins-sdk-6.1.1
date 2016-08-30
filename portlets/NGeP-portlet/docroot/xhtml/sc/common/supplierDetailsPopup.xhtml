@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<!--  Supplier Details dialog -->
 	<p:dialog id="suppDetailsPopupId" widgetVar="suppDetailsPopup"
@@ -52,11 +53,14 @@
 						value="#{lbl['lbl.sc.gst.effective.date.tooltip']}" id="_supplierGstEffDate"/></td>
 			</tr>
 			<tr>
-				<td rowspan="4" valign="top"><p:outputLabel
-						value="#{lbl['lbl.sc.comp.address']}" /></td>
-				<td><p:inputText id="suppAddr1"
-						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}"
-						size="30" disabled="true" /></td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.bumiputra.status']}" />
+				</td>
+				<td><p:inputText id="isBumiFlg"
+						value="#{supplierDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(supplierDetailBackingBean.managedBean.smSupplier.bumi))}"
+						size="30" disabled="true" />
+				</td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
 				<td><p:inputText disabled="true" size="30"
@@ -67,8 +71,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:inputText id="suppAddr2"
-						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}"
+				<td rowspan="4" valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.comp.address']}" /></td>
+				<td><p:inputText id="suppAddr1"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}"
 						size="30" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.post.code']}" /></td>
 				<td><p:inputText id="suppPostcode"
@@ -76,8 +82,8 @@
 						size="30" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:inputText id="suppAddr3"
-						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}"
+				<td><p:inputText id="suppAddr2"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}"
 						size="30" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.state']}" /></td>
 				<td><p:inputText id="suppState"
@@ -85,12 +91,17 @@
 						size="30" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:inputText id="suppAddr4"
-						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}"
+				<td><p:inputText id="suppAddr3"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}"
 						size="30" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /></td>
 				<td><p:inputText id="suppCity"
 						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}"
+						size="30" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td colspan="3"><p:inputText id="suppAddr4"
+						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}"
 						size="30" disabled="true" /></td>
 			</tr>
 			<tr>
