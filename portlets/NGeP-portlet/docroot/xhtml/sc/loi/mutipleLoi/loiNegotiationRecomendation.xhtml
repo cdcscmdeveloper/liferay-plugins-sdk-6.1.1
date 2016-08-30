@@ -38,6 +38,14 @@
 						</td>
 					</c:if>
 					<td class="tdWidth">
+						<h:outputText styleClass="instruction"
+							value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
+							escape="false" />
+						<h:outputText styleClass="instruction"
+							value="#{lOIDetailBackingBean.managedBean.scQt.closingDate}">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+						</h:outputText>
+			
 						<p:dataTable id="recommendTblPkg"
 							var="supplierDtl"
 							value="#{lOIDetailBackingBean.managedBean.recommendedSupplierList}"
@@ -75,7 +83,7 @@
 							<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
 								<h:outputText
 									value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-																	  		fn:toUpperCase(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
+																	  		fn:toUpperCase(supplierDtl.qtEvaluationResult.scQtProposal.bumi))}" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sc.offered.price']}"
@@ -199,7 +207,7 @@
 									value="#{item.awardSupplierList}">
 									<h:outputText
 										value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-												fn:toUpperCase(recommendedSuppl.scQtRecommendDtl.get(0).scQtProposalAmount.scQtProposal.scQtSupplier.smSupplier.bumi))}"
+												fn:toUpperCase(recommendedSuppl.scQtRecommendDtl.get(0).scQtProposalAmount.scQtProposal.bumi))}"
 										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
 									<h:outputText escape="false" value="&#60;br &#47;&#62;"
 										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
