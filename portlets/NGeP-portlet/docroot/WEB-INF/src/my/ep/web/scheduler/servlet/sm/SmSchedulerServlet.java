@@ -24,6 +24,7 @@ import my.ep.web.scheduler.job.gfmas.ErrorReceiptInformationJob;
 import my.ep.web.scheduler.job.gfmas.MasterDataVendorInboundJob;
 import my.ep.web.scheduler.job.gfmas.MasterDataVendorOutboundJob;
 import my.ep.web.scheduler.job.gfmas.ReceiptInformationJob;
+import my.ep.web.scheduler.job.sm.ChangeExpiredMofPersonnelToBasicJob;
 import my.ep.web.scheduler.job.sm.CheckBasicAccountExpirationJob;
 import my.ep.web.scheduler.job.sm.DeletePendingActivationJob;
 import my.ep.web.scheduler.job.sm.MOFApplicationPaymentReminderJob;
@@ -73,9 +74,9 @@ public class SmSchedulerServlet extends HttpServlet {
 		EpSchedulerHelper
 				.scheduleJob(
 						new JobKey(
-								SchedulerConstants.SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE,
+								SchedulerConstants.SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB,
 								SchedulerConstants.SM_JOB_GROUP),
-						SoftCertRenewalReminderJob.class,
+								ChangeExpiredMofPersonnelToBasicJob.class,
 						SchedulerConstants.SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB_DESC,
 						SchedulerPropertiesUtils
 								.getInstance()
