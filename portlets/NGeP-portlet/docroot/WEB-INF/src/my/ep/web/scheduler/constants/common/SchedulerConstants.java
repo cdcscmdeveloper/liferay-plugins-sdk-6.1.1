@@ -89,7 +89,7 @@ public class SchedulerConstants {
 	public static final String SM_APP_PAYMENT_REMINDER = "Payment Reminder";
 	public static final String SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER = "Offline Supporting Document Reminder";
 	public static final String SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB = "Check or Terminate Basic Account Expiration";
-	public static final String SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE = "Change MOF Expired Personnel Role";
+	public static final String SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB = "Change MOF Expired Personnel Role";
 
 	// Sm Job Description
 	public static final String SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB_DESC = "Job run every day at 11:55 PM to delete pending activation personnel";
