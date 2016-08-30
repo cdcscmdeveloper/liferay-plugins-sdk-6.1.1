@@ -89,6 +89,7 @@ public class SchedulerConstants {
 	public static final String SM_APP_PAYMENT_REMINDER = "Payment Reminder";
 	public static final String SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER = "Offline Supporting Document Reminder";
 	public static final String SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB = "Check or Terminate Basic Account Expiration";
+	public static final String SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE = "Change MOF Expired Personnel Role";
 
 	// Sm Job Description
 	public static final String SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB_DESC = "Job run every day at 11:55 PM to delete pending activation personnel";
@@ -96,7 +97,8 @@ public class SchedulerConstants {
 	public static final String SM_PAYMENT_REMINDER_JOB_DESC = "Job run every day at 03:00 AM to send the payment reminder.";
 	public static final String SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC = "Job run every day at 03:30 AM to send offline supporting document reminder.";
 	public static final String SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB_DESC = "Job run every day at 1 AM to check or deactivate Basic Account";
-
+	public static final String SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB_DESC = "Job run every day at 04:00 AM to Change MOF Expired Personnel Role";
+	
 	// Payment Reminder
 	public static final int PAYMENT_REMINDER_DAY = 3;
 	public static final Long STATUS_PROCESSING_PAYMENT = 20114L;
