@@ -131,6 +131,7 @@
 					maxlength="14">
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 					<p:ajax  event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
+					<f:attribute name="min" value="0"></f:attribute>
 				</p:inputText>
 
 			</p:column>
