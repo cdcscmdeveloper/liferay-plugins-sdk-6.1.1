@@ -219,7 +219,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			              rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 	 </div>
 	  </h:panelGroup>
-	  <p:dialog id="addItemGroupDlg" header="#{lbl['lbl.ct.add.item.group']}" styleClass="pop_up_top"
+	  <p:dialog id="addItemGroupDlg" header="#{lbl['lbl.ct.add.item.group']}" styleClass="pop_up_top" resizable="false"
 		widgetVar="addItemGroupDlg"  modal="true" width="500" height="150">  
 		<p:messages id="itemGroupMsg" showSummary="false" showDetail="true" autoUpdate="true" cosable="true" severity="error, info" />
  			<table style="width:100%;">
@@ -241,7 +241,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 	<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="addItemGroupDlg.hide();" type="button" />
 		   	</div>
         </p:dialog>
-	    <p:dialog id="bulkUpdateDlg" header="#{lbl['lbl.ct.bulk.update']}" styleClass="pop_up_top"
+	    <p:dialog id="bulkUpdateDlg" header="#{lbl['lbl.ct.bulk.update']}" styleClass="pop_up_top" resizable="false"
 		    widgetVar="bulkUpdateDlg"  modal="true" width="300" height="120">  
             <h:panelGrid columns="3">
                <f:verbatim></f:verbatim>
@@ -428,7 +428,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				   </div>
         </p:confirmDialog>
 	  </h:panelGroup>
-	  <p:dialog id="ZoneGeneral" header="#{lbl['lbl.ct.add.location']}" widgetVar="ZoneGeneral" 
+	  <p:dialog id="ZoneGeneral" header="#{lbl['lbl.ct.add.location']}" widgetVar="ZoneGeneral" resizable="false" 
 	  	styleClass="pop_up_top" modal="true" width="600" height="500">
 	  	 <p:panel id="zonePopupGeneral">
 	  	 	<table styleClass="noBorders tr,noBorders td">
