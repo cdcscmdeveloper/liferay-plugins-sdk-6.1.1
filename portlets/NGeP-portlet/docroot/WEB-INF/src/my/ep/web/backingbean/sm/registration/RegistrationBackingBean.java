@@ -25,6 +25,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -42,10 +43,12 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -71,6 +74,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -2600,6 +2604,70 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		}
 
+	}
+	
+	public void updateMOFExpiredPersonnel(){
+		ISmSchedulerSO reqSO = SmServiceLookup.getSmSchedulerSO();
+		SmSchedulerResDTO resDTO = reqSO.retrieveExpiredMof();
+		List<SmMofAccount> mofAccountLs = resDTO.getMofAccountLs();
+
+		log.info("**********RegistrationBackingBean - ChangeExpiredMofPersonnelToBasicJob - Start************");
+		if(mofAccountLs.size() > 0){
+			for(SmMofAccount mofAccount : mofAccountLs){
+				log.info("Supplier ID >>>>" + mofAccount.getSmSupplier().getSupplierId());
+				boolean isChangeStatus = false;
+				boolean activeAppl = SmApplicationUtil.checkActiveSmApplForSupp(mofAccount.getSmSupplier());
+
+				if(!activeAppl){
+					isChangeStatus = true;
+				}
+
+				if(!isChangeStatus){
+					boolean isHasActiveTransaction = SmApplicationUtil.hasActiveTransactions(mofAccount.getSmSupplier());
+					if(!isHasActiveTransaction){
+						isChangeStatus = true;
+					}
+				}
+
+				//change role to basic
+				if(isChangeStatus){
+					List<SmPersonnel> personnelLs = mofAccount.getSmSupplier().getSmAppl().getSmPersonnels();
+					if(personnelLs.size() > 0){
+						for(SmPersonnel personnel : personnelLs){
+							if(personnel.getEpRole() != null){
+								if(personnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) || 
+										personnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_USER.value())){
+									String newEpRole = null;
+									if(personnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+										newEpRole = RoleCode.BASIC_SUPPLIER_ADMIN.value();
+									}else{
+										newEpRole = RoleCode.BASIC_SUPPLIER_USER.value();
+									}
+									PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+									//personnelReqDTO.setSmPersonnel(personnel);
+									personnelReqDTO.setPersonnelId(personnel.getPersonnelId());
+									personnelReqDTO.setNewEpRole(newEpRole);
+
+									log.info("Personnel ID >>>>" + personnel.getPersonnelId());
+									log.info("Personnel NewEpRole >>>>" + newEpRole);
+									log.info("Personnel OldEpRole >>>>" + personnel.getEpRole());
+
+									SmServiceLookup.getPersonnelSO().updatePersonnelAndPmRole(personnelReqDTO);
+								}
+							}
+						}
+					}
+
+					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_EXPIRED);
+					MofAccountReqDTO mofAccountReqDTO = new MofAccountReqDTO();
+					mofAccountReqDTO.setMofAccount(mofAccount);
+
+					SmServiceLookup.getMofAccountSO().updateMofAccount(mofAccountReqDTO);
+
+				}
+			}
+
+		}
 	}
 }
 
