@@ -68,6 +68,19 @@ public class SmSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_APP_SOFTCERT_RENEW_REMINDER));
+		
+		// Sm MOF Expired - Personnel Change Role
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(
+								SchedulerConstants.SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE,
+								SchedulerConstants.SM_JOB_GROUP),
+						SoftCertRenewalReminderJob.class,
+						SchedulerConstants.SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB_DESC,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SM_APP_SOFTCERT_RENEW_REMINDER));
 
 		// Sm Payment Reminder Job
 		EpSchedulerHelper
