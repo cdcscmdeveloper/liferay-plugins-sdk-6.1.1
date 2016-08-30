@@ -283,7 +283,7 @@
 																#if ($evalResultDtl.awareded == "true" || $evalResultDtl.shortListed == "true")
 																	<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 																	<td width="12%" class="standard left">
-																		#if ($evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
+																		#if ($evalResultDtl.qtEvaluationResult.scQtProposal.bumi == "true")
 																			Ya
 																		#else
 																			Tiada
@@ -336,7 +336,7 @@
 												$supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.regNo
 											</td>
 											<td width="12%" class="standard border-bottom left">
-												#if ($supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
+												#if ($supplierDtl.qtEvaluationResult.scQtProposal.bumi == "true")
 													Ya
 												#else
 													Tiada
@@ -393,7 +393,7 @@
 														#if ($evalResultDtl.awareded == "true" || $evalResultDtl.shortListed == "true")
 															<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 															<td width="12%" class="standard left">
-																#if ($evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
+																#if ($evalResultDtl.qtEvaluationResult.scQtProposal.bumi == "true")
 																	Ya
 																#else
 																	Tiada
@@ -450,7 +450,7 @@
 										$supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.regNo
 									</td>
 									<td width="12%" class="standard border-bottom left">
-										#if ($supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
+										#if ($supplierDtl.qtEvaluationResult.scQtProposal.bumi == "true")
 											Ya
 										#else
 											Tiada
