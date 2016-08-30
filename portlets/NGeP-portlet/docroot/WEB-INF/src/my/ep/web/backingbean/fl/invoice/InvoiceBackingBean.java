@@ -1115,7 +1115,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			
 			if (populateBankAccountList.size()==0) {
 				supplierSearchReqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
-				SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierSearchReqDTO);
+				SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSmSupplierBankHQBySupplier(supplierSearchReqDTO);
 				for (SmSupplierBank obj : resDTO.getSmSupplierBankList()) {
 					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
 						String account = obj.getAccountNo();
