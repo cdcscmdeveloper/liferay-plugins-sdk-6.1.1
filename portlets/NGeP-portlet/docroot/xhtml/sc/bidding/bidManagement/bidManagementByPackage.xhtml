@@ -88,7 +88,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
 				<h:outputText
-					value="#{(item.scBidSupplier.smSupplier.bumi)? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
+					value="#{(item.scBidSupplier.bumi)? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}">
 				<h:outputText style="float : right"
@@ -108,7 +108,7 @@
 			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
 
 				<h:outputText style="float : right"
-					rendered="#{item.scBidSupplier.smSupplier.bumi and biddingBB.managedBean.nonBumiAvail}"
+					rendered="#{item.scBidSupplier.bumi and biddingBB.managedBean.nonBumiAvail}"
 					value="#{item.bidPriceTotal - biddingBB.managedBean.lowestNonBumiOfferedPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -118,7 +118,7 @@
 			<p:column headerText="#{lbl['lbl.sc.difference.perc']}">
 
 				<h:outputText style="float : right"
-					rendered="#{item.scBidSupplier.smSupplier.bumi and biddingBB.managedBean.nonBumiAvail}"
+					rendered="#{item.scBidSupplier.bumi and biddingBB.managedBean.nonBumiAvail}"
 					value="#{item.diffPercentage}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
@@ -127,7 +127,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.pref.margin']}">
 				<h:outputText style="float : right" value="#{item.prefMargin}"
-					rendered="#{item.scBidSupplier.smSupplier.bumi}">
+					rendered="#{item.scBidSupplier.bumi}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</h:outputText>

@@ -19,7 +19,7 @@
 		<p:spacer height="15px" rendered="#{suppFinalizationBackingBean.managedBean.itemize}"/>	
 		<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 		<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.sf.finalization.supplier.selection.package.instructions']}"
+				value="#{lbl['lbl.sc.sf.finalization.supplier.selection.package.instruction']}"
 				escape="false" rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding}" />
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 			columnClasses="columnWidth20"
@@ -56,6 +56,13 @@
 		               			  			 				
 			<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{suppFinalizationBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>		    
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
+				escape="false" />
+			<h:outputText styleClass="instruction"
+				value="#{suppFinalizationBackingBean.managedBean.scQt.closingDate}">
+				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+			</h:outputText>
 			           			  			 				
 			<p:dataTable id="supplierListTblSingle"
 				var="shortlistedSupp" widgetVar="shortlistedSuppDtls" 
@@ -121,7 +128,7 @@
 	
 				<p:column>
 					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-											fn:toUpperCase(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
+											fn:toUpperCase(shortlistedSupp.qtEvaluationResult.scQtProposal.bumi))}" />
 				</p:column>
 				
 				<p:column style="text-align:right;">
@@ -256,7 +263,7 @@
 	
 				<p:column>
 					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-											fn:toUpperCase(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
+											fn:toUpperCase(shortlistedSupp.qtEvaluationResult.scQtProposal.bumi))}" />
 				</p:column>
 				
 				<p:column style="text-align:right;">
@@ -419,7 +426,7 @@
 	
 				<p:column>
 					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-												fn:toUpperCase(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
+												fn:toUpperCase(shortlistedSupp.qtEvaluationResult.scQtProposal.bumi))}" />
 				</p:column>
 				
 				<p:column style="text-align:right;">

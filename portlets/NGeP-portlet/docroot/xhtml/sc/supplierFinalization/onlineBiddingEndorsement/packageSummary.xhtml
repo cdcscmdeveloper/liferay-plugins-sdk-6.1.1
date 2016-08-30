@@ -15,7 +15,14 @@
 		<h:outputText style="color:red;" value="#{lbl['lbl.sc.cancelled']}" 
 					  rendered="#{suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}" 
 					  styleClass="leftMargin"/>
-		<br/>			  
+		<br/>	
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
+			escape="false" />
+		<h:outputText styleClass="instruction"
+			value="#{suppFinalBiddingBackingBean.managedBean.scQt.closingDate}">
+			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+		</h:outputText>		  
 		<p:dataTable id="supplierPackageTbl" value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceList}" 
 					 var="price" rowKey="#{price}" rowIndexVar="rowIndex" 
 					 emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -40,7 +47,7 @@
 			</p:column>			
 			
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;">
-				<h:outputText value="#{(price.scBidSupplier.smSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
+				<h:outputText value="#{(price.scBidSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}" style="width:10%; white-space:normal; text-align:right;">
@@ -67,7 +74,7 @@
 			
 			<p:column headerText="#{lbl['lbl.sc.difference.rm']}" style="width:10%; white-space:normal; text-align:right;">
 				<h:outputText value="#{price.bidPriceTotal - suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice}"
-					rendered="#{price.scBidSupplier.smSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
+					rendered="#{price.scBidSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -75,7 +82,7 @@
 			
 			<p:column headerText="#{lbl['lbl.sc.difference.perc']}" style="width:10%; white-space:normal;">
 				<h:outputText style="float : right;" value="#{price.diffPercentage}"
-					rendered="#{price.scBidSupplier.smSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
+					rendered="#{price.scBidSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</h:outputText>
@@ -83,7 +90,7 @@
 			
 			<p:column headerText="#{lbl['lbl.sc.pref.margin']}" style="width:5%; white-space:normal;">
 				<h:outputText style="float : right;" value="#{price.prefMargin}" 
-							  rendered="#{price.scBidSupplier.smSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
+							  rendered="#{price.scBidSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</h:outputText>
 			</p:column>
