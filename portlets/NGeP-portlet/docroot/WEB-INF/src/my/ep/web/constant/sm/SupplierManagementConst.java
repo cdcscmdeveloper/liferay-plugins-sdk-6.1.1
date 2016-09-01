@@ -99,6 +99,7 @@ public class SupplierManagementConst {
 	public static final int RECORD_DELETED = 1;
 	public static final String COUNTRY_MALAYSIA_CODE = "MY";
 	public static final String ICT_CATEGORY_L1_CODE = "21";
+	public static final String ICT_L2_COMMUNICATION_CODE = "02";
 
 	// Panel Names
 	public static final String SM_BASIC_INFO_PANEL = "BasicInfoPanel";
