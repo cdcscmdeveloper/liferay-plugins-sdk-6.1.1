@@ -130,6 +130,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
@@ -1773,58 +1774,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		 */
 
 		if(isDirectLoa){
-			scLoa.setBondReq(isPerformanceBondRequired(scLoa.getLoaAmt()));
+//			scLoa.setBondReq(isPerformanceBondRequired(scLoa.getLoaAmt()));
+			scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(scLoa.getLoaAmt(), null));
 		}
 		
 		if (scLoa.isBondReq()) {
-			BigDecimal bondAmt = BigDecimal.ZERO;
-			BigDecimal bondTotalAmt = BigDecimal.ZERO;
-			BigDecimal bondPercentage = BigDecimal.ZERO;
 			if (scLoa.getLoaAmt() != null && scLoa.getContractDuration() != null) {
 				BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
 						scLoa.getGstAmt());
-				BigDecimal duration = scLoa.getContractDuration();
+				BigDecimal contractPeriod = scLoa.getContractDuration();
 
-				// Total amount to get bond percentage
-				if(duration.intValue()<= TWO_YEARS){
-					bondAmt = overallCtAmount;
-					
-				} else{
-					// bond amt per month and year
-					BigDecimal bondAmtPerYear = overallCtAmount.divide(new BigDecimal(duration.intValue()), 4,
-							BigDecimal.ROUND_HALF_UP);
-					bondAmt = bondAmtPerYear.multiply(new BigDecimal(ONE_YEAR));
-				}
-
-				// Get performance bond rule percentage
-				IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IRuleSO.class);
-				RuleReqDTO ruleReqDTO = new RuleReqDTO();
-				ruleReqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
-				ruleReqDTO.setCompareValue(bondAmt.toString());
-				RuleResDTO roleResDTO = ruleSO
-						.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
-
-				if (roleResDTO.isSuccessful()) {
-					if (roleResDTO.getRuleValueStrList() != null
-							&& roleResDTO.getRuleValueStrList().size() > 0) {
-						String percentage = roleResDTO.getRuleValueStrList().get(0);
-						BigDecimal res = new BigDecimal(percentage);
-						bondPercentage = res.divide(new BigDecimal(100), 4,
-								BigDecimal.ROUND_HALF_UP);
-						scLoa.setBondPercentage(new BigDecimal(percentage));
-					} else {
-						throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-					}
-				}
-				if (bondPercentage.doubleValue() > 0) {
-					bondTotalAmt = bondAmt.multiply(bondPercentage);
-					bondTotalAmt = bondTotalAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
-					scLoa.setBondAmt(bondTotalAmt);
-				}
+				PerformanceBondUtil.calculatePerformanceBondAmt(overallCtAmount, contractPeriod, scLoa);
 			}
-
 		}else{
 			scLoa.setBondAmt(null);
 			scLoa.setBondPercentage(null);
@@ -1877,7 +1838,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @return boolean isPerformanceBondRequired
 	 */
-	public boolean isPerformanceBondRequired(BigDecimal loaAmount) {
+	/*public boolean isPerformanceBondRequired(BigDecimal loaAmount) {
 		if (null != loaAmount) {
 			IRuleSO ruleSO = null;
 			try {
@@ -1906,7 +1867,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		
 		return false;
-	}
+	}*/
 
 	/**
 	 * To check whether proposalValidityDatereached or not..
@@ -2570,6 +2531,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return mofAccountResDTO.getMofAccount().getMofNo();
 		}
 		return null;
+	}
+	
+	/**
+	 * To check is performance bond required
+	 * 
+	 * @return boolean isPerformanceBondRequired
+	 */
+	public boolean isPerformanceBondRequired(BigDecimal loaAmount, List<ScQtCategory> qtCategories) {
+		return PerformanceBondUtil.isPerformanceBondRequired(loaAmount, qtCategories);
 	}
 
 }

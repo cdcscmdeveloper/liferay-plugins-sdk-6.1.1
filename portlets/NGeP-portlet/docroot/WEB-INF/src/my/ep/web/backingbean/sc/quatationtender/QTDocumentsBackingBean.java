@@ -103,6 +103,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -2195,7 +2196,9 @@ public class QTDocumentsBackingBean extends
 		}
 		context.put("estimatedPrice", estimatedPrice);
 		boolean isPerformanceBondReq = false;
-		if (qt.getEstimatedAmount() != null && isPerformanceBondRequired(qt.getEstimatedAmount())) {
+		List<ScQtCategory> qtCategories = qt.getScQtCategorys();
+		if (qt.getEstimatedAmount() != null && PerformanceBondUtil.isPerformanceBondRequired(
+				qt.getEstimatedAmount(), qtCategories)) {
 			isPerformanceBondReq = true;
 		}
 		context.put("isPerformanceBondReq", isPerformanceBondReq);
