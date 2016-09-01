@@ -33,7 +33,7 @@
 				<c:if test="#{isEditableStatus}">
 					<h:selectOneMenu id="deductionType"
 						disabled="#{directLOABackingBean.managedBean.readOnly}"
-						style="width: 170px;" label="#{lbl['lbl.sc.deduction.type']}"
+						style="width: 170px;float: left;" label="#{lbl['lbl.sc.deduction.type']}"
 						value="#{scQtDeduction.deductionType.parameterId}">
 						<f:selectItems
 							value="#{directLOABackingBean.getDeductionItemTypeDropdownList()}" />
@@ -44,9 +44,9 @@
 					</h:selectOneMenu>
 					<p:message id="deductionTypeMsg" for="deductionType" display="icon" />
 
-					<p:spacer width="5" />
+					<p:spacer width="5px" />
 					<p:inputText value="#{scQtDeduction.deductionDesc}"
-						style="width:400px;float:left;" maxlength="255"
+						style="width:450px;float:left;" maxlength="255"
 						disabled="#{directLOABackingBean.managedBean.readOnly}"
 						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed
 						or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}" >
