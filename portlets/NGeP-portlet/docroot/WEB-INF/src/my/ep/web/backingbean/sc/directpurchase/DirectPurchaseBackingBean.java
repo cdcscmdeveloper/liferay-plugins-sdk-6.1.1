@@ -127,7 +127,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 *
 	 * @return true, if is supplier
 	 */
-	private boolean isSupplier() {
+	public boolean isSupplier() {
 		if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()) // supplier and govt seller
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
@@ -374,8 +374,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)){
 			reportName = ReportConst.DP_LOA_DTL_REPORT_NAME;
-			paramMap.put(ReportConst.PARAM_LOA_N0, docNo);
-			paramMap.put("ReportConst.PARAM_REPORT_ID", ReportConst.SC_S1_LOA_RPT_VAL);
+			paramMap.put(ReportConst.PARAM_LOA_NO, docNo);
+			paramMap.put(ReportConst.PARAM_REPORT_ID, ReportConst.SC_S1_LOA_RPT_VAL);
 		}
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 		

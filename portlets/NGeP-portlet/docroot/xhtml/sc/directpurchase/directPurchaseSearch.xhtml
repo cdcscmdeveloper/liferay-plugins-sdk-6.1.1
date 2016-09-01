@@ -169,7 +169,7 @@
 							icon="ui-icon-view"
 							action="#{directPurchaseBackingBean.viewDoc(Obj)}" />
 
-						<p:menuitem id="printBtnIcon" value="#{lbl['lbl.btn.print']}" ajax="false"
+						<p:menuitem id="printBtnIcon" value="#{lbl['lbl.btn.print']}" ajax="false" rendered="#{directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeLetterOfAward : false}"
 							icon="ui-icon-print"
 							action="#{directPurchaseBackingBean.generateReport(Obj)}" />
 
