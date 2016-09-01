@@ -35,9 +35,9 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -62,11 +62,10 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
-import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -80,14 +79,10 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmCategoryL1;
-import my.ep.persistence.entity.pm.common.PmCategoryL2;
-import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -4249,31 +4244,20 @@ public class LOADetailBackingBean extends
 	 * @return boolean isPerformanceBondRequired
 	 */
 	public void checkPerformanceBondMandatory() {
-		boolean isPerformanceBondMandatory = false;
+//		boolean isPerformanceBondMandatory = false;
 		ScLoa loa = getManagedBean().getScLoa();
 		BigDecimal overallContractAmtOrLoaAmt = overallCtAmtOrLoaAmt(loa);
-		
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		String ruleType = RuleTypeConst.BOND;
-		ruleReqDTO.setRuleType(ruleType);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
-
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			if(overallContractAmtOrLoaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && !isbondExceptionCategory(loa)) {
-				isPerformanceBondMandatory = true;
-				loa.setBondReq(true);
-			}
-			else if(overallContractAmtOrLoaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) <= 0) {
-				isPerformanceBondMandatory = true;
-				loa.setBondReq(false);
-			}
-		} else {
-			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleType)});
+		List<ScQtCategory> qtCategories = null;
+		if(loa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(loa.getScLoiLoa().getDocId());
+			qtCategories = getQtDetailSO().getQtCategoryByQtId(reqDTO).getCategories();
 		}
-		getManagedBean().setPerformanceBondMandatory(isPerformanceBondMandatory);
+		
+		boolean isBondReq = isPerformanceBondRequired(overallContractAmtOrLoaAmt, qtCategories);
+		
+		loa.setBondReq(isBondReq);
+		getManagedBean().setPerformanceBondMandatory(isBondReq);
 	}
 	
 	/**
@@ -4313,50 +4297,6 @@ public class LOADetailBackingBean extends
 		}
 		return overallContractAmtOrLoaAmt;
 	}
-
-	private boolean isbondExceptionCategory(ScLoa loa) {
-		ScQt scQt = null;
-		if(ParameterConst.DOCTYPE_QUOTATION.equals(loa.getScLoiLoa().getDocType())) {
-			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			reqDTO.setQtId(loa.getScLoiLoa().getDocId());
-			scQt = getQtSuppFinalizationSO().retrieveQTDtls(reqDTO).getScQt();
-			List<String> excepCategoryCodes = getBondExceptionCategory();
-			if(!CollectionUtils.isEmpty(scQt.getScQtCategorys())) {
-				for(ScQtCategory category : scQt.getScQtCategorys()) {
-					String categoryCode = null;
-					categoryCode = category.getPmCategoryL1().getCategoryL1Code().
-							concat(category.getPmCategoryL2().getCategoryL2Code()).
-							concat(category.getPmCategoryL3().getCategoryL3Code());
-					if(excepCategoryCodes.contains(categoryCode)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
-	private List<String> getBondExceptionCategory() {
-		// Get performance bond exception category
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(ParameterTypeConst.RULE_BOND_CATEGORY);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
-		List<String> categoryCodes = new ArrayList<String>();
-		for(PmConfigRuleValue ruleValue : ruleValueList) {
-			StringBuilder sb = new StringBuilder();
-			PmCategoryL3 l3 = ruleValue.getCategoryL3Id();
-			PmCategoryL2 l2 = l3.getPmCategoryL2();
-			PmCategoryL1 l1 = l2.getPmCategoryL1();
-			String l3Code = l3.getCategoryL3Code();
-			String l2Code = l2.getCategoryL2Code();
-			String l1Code = l1.getCategoryL1Code();
-			sb.append(l1Code).append(l2Code).append(l3Code);
-			categoryCodes.add(sb.toString());
-		}
-		return categoryCodes;
-	}
 	
 	/**
 	 * Gets the qt award so.
@@ -4366,6 +4306,16 @@ public class LOADetailBackingBean extends
 	private IQTAwardSO getQtAwardSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
+	
+	/**
+	 * Gets the qt detail so.
+	 *
+	 * @return the qt detail so
+	 */
+	private IQTDetailSO getQtDetailSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	
 	/**

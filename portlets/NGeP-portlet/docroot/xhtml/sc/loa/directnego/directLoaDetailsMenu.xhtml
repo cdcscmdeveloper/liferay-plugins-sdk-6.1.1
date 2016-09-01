@@ -345,7 +345,7 @@
 						value="#{directLOABackingBean.managedBean.scLoa.bondReq}"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
-						disabled="#{directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.scLoa.loaAmt) or directLOABackingBean.managedBean.readOnly}">
+						disabled="#{directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.scLoa.loaAmt, null) or directLOABackingBean.managedBean.readOnly}">
 
 						<f:selectItems
 							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
