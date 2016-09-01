@@ -1212,7 +1212,8 @@ public class ReportBackingBean extends
 
 	/** Report url string. */
 	private String reportStr;
-	
+
+	boolean testing = false;
 	/**
 	 * Gets the select cat deletion list.
 	 * 
@@ -14183,6 +14184,11 @@ public class ReportBackingBean extends
 		}
 
 	}
+	
+	public void generateReportTesting(){
+		testing = true;
+		generateReport();
+	}
 
 	/**
 	 * generateReport - Generate all modules reports.
@@ -18351,6 +18357,11 @@ public class ReportBackingBean extends
 		// Jimmy add (temporarily workaround for report).
 		reportStr = gnrtdURL.toString();
 
+		if(testing){
+			RequestContext.getCurrentInstance()
+		    .execute("window.open('"+reportStr+"'); window.focus();");
+		} else {
+		
 		HttpURLConnection urlConnection = null;
 		URL obj;
 		BufferedInputStream buf;
@@ -18463,6 +18474,7 @@ public class ReportBackingBean extends
 		}
 		log.info("@@@@ End of ReportBackingBean-fileGenerateReport"
 				+ " @@@@ Time stamp =" + time);
+		}
 	}
 
 	/**
@@ -19894,5 +19906,17 @@ public class ReportBackingBean extends
 	 */
 	public void setReportStr(String reportStr) {
 		this.reportStr = reportStr;
+	}
+	
+	public void preRenderViewTesting() {
+		log.info("ReportBackingBean-preRenderView");
+		rptGenBean = new ReportsGenerateBean();
+		rptGenBean.setStrLanguage(strLanguage);
+		getManagedBean().setRptGenBean(rptGenBean);
+		getManagedBean().setReportList(new ArrayList<SelectItem>());
+		getManagedBean().setReportValue(null);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "reportcontenttestingmain");
 	}
 }
