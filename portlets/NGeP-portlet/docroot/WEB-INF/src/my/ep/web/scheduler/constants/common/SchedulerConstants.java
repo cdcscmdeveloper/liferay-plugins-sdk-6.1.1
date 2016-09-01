@@ -97,7 +97,7 @@ public class SchedulerConstants {
 	public static final String SM_PAYMENT_REMINDER_JOB_DESC = "Job run every day at 03:00 AM to send the payment reminder.";
 	public static final String SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC = "Job run every day at 03:30 AM to send offline supporting document reminder.";
 	public static final String SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB_DESC = "Job run every day at 1 AM to check or deactivate Basic Account";
-	public static final String SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB_DESC = "Job run every day at 03:00 AM to Change MOF Expired Personnel Role";
+	public static final String SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB_DESC = "Job run every hour to Change MOF Expired Personnel Role";
 	
 	// Payment Reminder
 	public static final int PAYMENT_REMINDER_DAY = 3;
