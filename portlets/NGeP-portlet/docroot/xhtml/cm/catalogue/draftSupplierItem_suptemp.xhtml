@@ -123,6 +123,20 @@
 
 		</p:column>
 		
+		<p:column width="2%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.action']}
+			</f:facet>
+
+			<p:commandLink style="margin-left: 10px;"
+				title="#{lbl['lbl.btn.delete']}" oncomplete="confirmation1.show();"
+				action="#{catalogueBackingBean.setItemToDelete(selectedSuppCat.supplierItemId, rowIndex)}">
+				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:param name="index" value="#{rowIndex}"></f:param>
+			</p:commandLink>
+
+		</p:column>
+		
 	</p:dataTable>
 
 	<div class="clear"></div>
