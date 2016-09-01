@@ -697,12 +697,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				        } if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
 				        		   && isNotValidEmailAddress( contrartPerson.getEmail())){
+				        	getManagedBean().setSelectedTabIndex(0);
 					    	   throw new EpException( 
 					    			   ResourceBundleUtils.getMessage("lbl.ct.validation.email",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
 					       }
 					       
 					       if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
 					    		   && isNotValidMobileNo(contrartPerson.getPhoneNo())){
+					    	   getManagedBean().setSelectedTabIndex(0);
 					    	   throw new EpException( 
 					    			   ResourceBundleUtils.getMessage("lbl.ct.validation.mobile.number",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
 					 

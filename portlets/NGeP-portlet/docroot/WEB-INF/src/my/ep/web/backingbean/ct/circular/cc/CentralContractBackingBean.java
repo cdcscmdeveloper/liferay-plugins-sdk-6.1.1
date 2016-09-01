@@ -653,6 +653,30 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					              }
 				           }
 			          } 
+			       
+			       if (getManagedBean().getCircularVer().getCtContactPersons() != null && getManagedBean().getCircularVer().getCtContactPersons().size() >= 1) {
+				       for(CtContactPerson contrartPerson : getManagedBean().getCircularVer().getCtContactPersons()) {	
+					       if(contrartPerson.getName().isEmpty() ||contrartPerson.getAddress().isEmpty() 
+							    || contrartPerson.getEmail().isEmpty() || contrartPerson.getPhoneNo().isEmpty()) {
+					    	   getManagedBean().setSelectedTabIndex(0);
+						        throw new EpException(MessageConst.ERROR_100022, new String[]{"Contact Person Details"});
+					      }
+					       
+					       if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
+					    		    && isNotValidEmailAddress( contrartPerson.getEmail())){
+					    	   getManagedBean().setSelectedTabIndex(0);
+					    	   throw new EpException( 
+					    			   ResourceBundleUtils.getMessage("lbl.ct.validation.email",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
+					       }
+					       
+					       if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
+					    		   && isNotValidMobileNo(contrartPerson.getPhoneNo())){
+					    	   getManagedBean().setSelectedTabIndex(0);
+					    	   throw new EpException( 
+					    			   ResourceBundleUtils.getMessage("lbl.ct.validation.mobile.number",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
+					       }
+				     }
+			    }
 			
 		          	if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 							
@@ -694,28 +718,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					         }
 				      }
 		   	     }
-			
-			    if (getManagedBean().getCircularVer().getCtContactPersons() != null && getManagedBean().getCircularVer().getCtContactPersons().size() >= 1) {
-				       for(CtContactPerson contrartPerson : getManagedBean().getCircularVer().getCtContactPersons()) {	
-					       if(contrartPerson.getName().isEmpty() ||contrartPerson.getAddress().isEmpty() 
-							    || contrartPerson.getEmail().isEmpty() || contrartPerson.getPhoneNo().isEmpty()) {
-					    	   getManagedBean().setSelectedTabIndex(0);
-						        throw new EpException(MessageConst.ERROR_100022, new String[]{"Contact Person Details"});
-					      }
-					       
-					       if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
-					    		    && isNotValidEmailAddress( contrartPerson.getEmail())){
-					    	   throw new EpException( 
-					    			   ResourceBundleUtils.getMessage("lbl.ct.validation.email",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
-					       }
-					       
-					       if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
-					    		   && isNotValidMobileNo(contrartPerson.getPhoneNo())){
-					    	   throw new EpException( 
-					    			   ResourceBundleUtils.getMessage("lbl.ct.validation.mobile.number",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
-					       }
-				     }
-			    }
 			
 			  /* if((getManagedBean().isUpdateAction() || (getManagedBean().getCircular() != null && getManagedBean().getCircular().getLatestCircularVer() != null)) && 
 					  outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
