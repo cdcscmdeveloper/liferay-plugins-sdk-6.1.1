@@ -41,6 +41,8 @@
 				               </tr>
 				
 				               <tr>
+				               	<h:panelGroup rendered="#{!ctBackingBean.managedBean.commonView and 
+				                	ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral}">
 					                   <td>
 			                                  <p:outputLabel value="#{lbl['lbl.ct.proc.mode']}" />
 			                           </td>
@@ -48,6 +50,7 @@
 		                                     <p:inputTextarea  style="width:170px;" disabled="true" maxlength="50" rows="2" autoResize="false" 
 		                                          value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.procurementMode)}" />
 		                               </td>
+		                             </h:panelGroup>
 		                               <td>
 		                                      <p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
 			                           </td>
