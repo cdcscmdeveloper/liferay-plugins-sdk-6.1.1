@@ -969,7 +969,7 @@ public class ReportConst {
 	public static final String PARAM_PI_NO = "PINO";
 	public static final String PARAM_PID_NO = "PIDNO";
 	public static final String PARAM_QUOTE_NO = "QUOTENO";
-	public static final String PARAM_LOA_N0 = "LOANUM";
+	public static final String PARAM_LOA_NO = "LOANUM";
 	public static final String PARAM_QUOTE_GROUP = "SIMPLE QUOTE NO";
 	public static final String PARAM_PID_GROUP = "CONTRACT PKP NO";
 
