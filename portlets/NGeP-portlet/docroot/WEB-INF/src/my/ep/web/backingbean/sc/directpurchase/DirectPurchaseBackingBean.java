@@ -3,8 +3,11 @@
  */
 package my.ep.web.backingbean.sc.directpurchase;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -54,6 +57,7 @@ import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.directpurchase.DirectPurchaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -329,6 +333,60 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			loaDetailBackingBean.viewLOA(docId);
 			loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
 			loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		}
+	}
+	
+	/**
+	 * Generate report.
+	 *
+	 * @param dpObj the dp obj
+	 */
+	public void generateReport(Object[] dpObj){
+		debugLogger("generateReport");
+		String docNo = (String) dpObj[1];
+		String docType = (String) dpObj[3];
+		
+		Map<String, String> paramMap = new HashMap<String, String>();
+		String reportName = null;
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)){
+			reportName = ReportConst.DP_REQUEST_NOTE_DTL_REPORT_NAME;
+			paramMap.put(ReportConst.PARAM_RN_NO, docNo);
+			paramMap.put(ReportConst.PARAM_REPORT_ID, ReportConst.SC_SUMMARY_REQUEST_NOTE_S1_RPT_VAL);
+			paramMap.put(ReportConst.PARAM_GROUP, ReportConst.PARAM_STATUS);
+			
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_INQUIRY)){
+			reportName = ReportConst.DP_ITEM_INQUIRY_DTL_REPORT_NAME;
+			paramMap.put(ReportConst.PARAM_PI_NO, docNo);
+			paramMap.put(ReportConst.PARAM_REPORT_ID, ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL);
+			paramMap.put(ReportConst.PARAM_GROUP, ReportConst.PARAM_STATUS);
+			
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
+			reportName = ReportConst.DP_PID_DTL_REPORT_NAME;
+			paramMap.put(ReportConst.PARAM_PID_NO, docNo);
+			paramMap.put(ReportConst.PARAM_REPORT_ID, ReportConst.SC_S1_PURCHASE_DEFAULT_DTLS_RPT_VAL);
+			paramMap.put(ReportConst.PARAM_GROUP, ReportConst.PARAM_PID_GROUP);
+			
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
+			reportName = ReportConst.DP_SIMPLE_QUOTE_REPORT_NAME;
+			paramMap.put(ReportConst.PARAM_QUOTE_NO, docNo);
+			paramMap.put(ReportConst.PARAM_REPORT_ID, ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL);
+			paramMap.put(ReportConst.PARAM_GROUP, ReportConst.PARAM_QUOTE_GROUP);
+
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)){
+			reportName = ReportConst.DP_LOA_DTL_REPORT_NAME;
+			paramMap.put(ReportConst.PARAM_LOA_N0, docNo);
+			paramMap.put("ReportConst.PARAM_REPORT_ID", ReportConst.SC_S1_LOA_RPT_VAL);
+		}
+		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		
+		if(reportName!=null) {
+			try {
+				generateReport(reportName, paramMap);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			throw new EpException("Report is not available for this document.");
 		}
 	}
 
