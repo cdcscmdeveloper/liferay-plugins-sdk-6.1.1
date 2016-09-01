@@ -49,7 +49,7 @@
 						lovId="PM_VOT_FUND" headerText="#{lbl['lbl.fl.payment.match.amanah']}"
 						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmVotFund"
 						readonly="true" size="4"
-						conditionField="recordStatusFlg^1|votFundType^A|votFundCode^#{paymentMatchBackingBean.managedBean.feeVotFund.votFundCode}^2"
+						conditionField="recordStatusFlg^1|votFundType^A"
 						value="#{deduction.pmVotFund.votFundCode}">
 					</ac:lov>
 				</p:outputPanel>
