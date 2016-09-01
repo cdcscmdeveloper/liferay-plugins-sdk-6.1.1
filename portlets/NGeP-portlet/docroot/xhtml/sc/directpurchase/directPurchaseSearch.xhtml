@@ -19,7 +19,7 @@
 				<h:panelGroup
 					rendered="#{directPurchaseBackingBean.managedBean.government}">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.ministry']}" /></td>
+						<td><p:outputLabel id="searchMinistryLbL" value="#{lbl['lbl.sc.ministry']}" /></td>
 						<td colspan="3"><ac:lov id="searchMinistry"
 								lovId="PM_ORG_PROFILE_MINSTRY" size="148" readonly="true"
 								disabled="#{directPurchaseBackingBean.disableMinistryLov()}"
@@ -32,7 +32,7 @@
 					</tr>
 
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
+						<td><p:outputLabel id="searchPtjGroupLbL" value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
 						<td colspan="3"><ac:lov id="searchPtjGroup"
 								lovId="PM_ORG_PROFILE_PTJ_GROUP" size="148" readonly="true"
 								disabled="#{directPurchaseBackingBean.isReqOrApprover()}"
@@ -45,7 +45,7 @@
 					</tr>
 
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+						<td><p:outputLabel id="searchPtjLbL" value="#{lbl['lbl.sc.ptj']}" /></td>
 						<td colspan="3"><ac:lov id="searchPtj"
 								lovId="PM_ORG_PROFILE_PTJ" size="148" readonly="true"
 								headerText="#{lbl['lbl.sc.ptj']}"
@@ -151,21 +151,7 @@
 					<h:outputText value="#{Obj[5]}"
 						style="white-space: normal;word-wrap: break-word;" />
 				</p:column>
-
-				<!-- 	<p:column width="6%">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.created.by']}" />
-					</f:facet>
-						#{directPurchaseBackingBean.getUserName(Obj[6])}
-				</p:column>
-
-				<p:column width="6%">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.created.date']}" />
-					</f:facet>
-					<ac:labelDateTime value="#{Obj[2]}" />
-				</p:column>
-             -->
+				
 				<p:column width="12%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.status']}" />
@@ -177,10 +163,19 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
 					</f:facet>
-					<p:commandLink action="#{directPurchaseBackingBean.viewDoc(Obj)}">
-						<p:graphicImage value="/css/images/design/ico-view.png" />
-					</p:commandLink>
+
+					<p:menuButton value="#{lbl['lbl.btn.option']}">
+						<p:menuitem id="viewBtnIcon" value="#{lbl['lbl.btn.view']}"
+							icon="ui-icon-view"
+							action="#{directPurchaseBackingBean.viewDoc(Obj)}" />
+
+						<p:menuitem id="printBtnIcon" value="#{lbl['lbl.btn.print']}" ajax="false"
+							icon="ui-icon-print"
+							action="#{directPurchaseBackingBean.generateReport(Obj)}" />
+
+					</p:menuButton>
 				</p:column>
+
 			</p:dataTable>
 
 		</p:panel>
