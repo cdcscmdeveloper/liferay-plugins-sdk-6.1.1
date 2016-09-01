@@ -44,6 +44,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String fileDirectory;
 	private int attachFileIndex;
 	private boolean viewContract = false;
+	private boolean commonView;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtAttachment> deleteAttachmentList;
@@ -1015,5 +1016,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedItemForSpec(CtContractItem selectedItemForSpec) {
 		this.selectedItemForSpec = selectedItemForSpec;
+	}
+
+	public boolean isCommonView() {
+		return commonView;
+	}
+
+	public void setCommonView(boolean commonView) {
+		this.commonView = commonView;
 	}
 }
