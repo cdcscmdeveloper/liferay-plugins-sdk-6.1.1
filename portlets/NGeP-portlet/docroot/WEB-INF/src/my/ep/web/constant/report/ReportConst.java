@@ -314,6 +314,12 @@ public class ReportConst {
 	
 	//Tracking Diary - JSP
 	public static final String PM_TRACKING_DAIRY_REPORT_NAME = "TRACKING_DAIRY.jsp";
+	public static final String DP_LOA_DTL_REPORT_NAME = "SC_S1_LOA.jsp";
+	public static final String DP_PID_DTL_REPORT_NAME = "SC_S1_PID_DTL.jsp";
+	public static final String DP_ITEM_INQUIRY_DTL_REPORT_NAME = "SC_S1_ITEM_INQUIRY_DTL.jsp";
+	public static final String DP_REQUEST_NOTE_DTL_REPORT_NAME = "SC_S1_REQUEST_NOTE_DTL.jsp";
+	public static final String DP_SIMPLE_QUOTE_REPORT_NAME = "SC_S1_SIMPLE_QUOTE_DTL.jsp";
+	
 
 	// JSP
 	public static final String FL_NGEP_PURCHASE_ORDER = "FL_NGEP_PURCHASE_ORDER.jsp";
@@ -956,6 +962,16 @@ public class ReportConst {
 	public static final String COMMITTEE_APPROVER = "COMMITTEE_APPROVER";
 	public static final String PUBLICATION_APPROVER = "PUBLICATION_APPROVER";
 	public static final String PARAM_QUANTITY = "PQTY";
+	public static final String PARAM_STATUS = "STATUS";
+	public static final String PARAM_REPORT_ID = "PREPORTID";
+	public static final String PARAM_GROUP = "PGROUP";
+	public static final String PARAM_RN_NO = "RQNO";
+	public static final String PARAM_PI_NO = "PINO";
+	public static final String PARAM_PID_NO = "PIDNO";
+	public static final String PARAM_QUOTE_NO = "QUOTENO";
+	public static final String PARAM_LOA_N0 = "LOANUM";
+	public static final String PARAM_QUOTE_GROUP = "SIMPLE QUOTE NO";
+	public static final String PARAM_PID_GROUP = "CONTRACT PKP NO";
 
 	// Supplier Management
 	public static final String DOTJSP = ".jsp";
