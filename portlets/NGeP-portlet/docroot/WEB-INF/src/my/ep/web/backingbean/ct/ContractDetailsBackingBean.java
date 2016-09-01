@@ -1541,6 +1541,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setViewOnly(true); 
 		reqDTO.setCommonView(true);
         ctBB.getManagedBean().setViewContract(true);
+        ctBB.getManagedBean().setCommonView(true);
 	    setValidateContractField(reqDTO);
 	    getManagedBean().setSelectedTabIndex(0); 
 	    getManagedBean().setAsAtDate(DateUtils.getCurrentDateWithoutTime());

@@ -18,7 +18,8 @@
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
 	   	</f:facet>
-	   	<h:panelGrid columns="2">
+	   	<h:panelGrid columns="2" rendered="#{!ctBackingBean.managedBean.commonView and 
+	         ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral}">
 		   	<p:outputLabel id="bondAmount" value="#{lbl['lbl.ct.pb.amount']}" />
 			<p:inputText for="bondAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  				value="#{ctBackingBean.managedBean.ctContractAmount.totalBondAmt}"  disabled="true">
