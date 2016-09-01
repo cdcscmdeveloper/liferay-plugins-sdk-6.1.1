@@ -2612,7 +2612,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmSchedulerResDTO resDTO = reqSO.retrieveExpiredMof();
 		List<SmMofAccount> mofAccountLs = resDTO.getMofAccountLs();
 		
-		log.info("**********ChangeExpiredMofPersonnelToBasicJob - Start************");
+		log.info("**********RegistrationBB - ChangeExpiredMofPersonnelToBasicJob - Start************");
 		if(mofAccountLs.size() > 0){
 			for(SmMofAccount mofAccount : mofAccountLs){
 				log.info("Supplier ID >>>>" + mofAccount.getSmSupplier().getSupplierId());
@@ -2647,7 +2647,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		}
 		
-		log.info("**********ChangeExpiredMofPersonnelToBasicJob - End************");
+		log.info("**********RegistrationBB - ChangeExpiredMofPersonnelToBasicJob - End************");
 	}
 }
 
