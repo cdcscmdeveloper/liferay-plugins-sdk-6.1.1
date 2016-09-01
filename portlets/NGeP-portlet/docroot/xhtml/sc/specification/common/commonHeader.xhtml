@@ -10,17 +10,17 @@
 	<div align="left" class="header-info header-spacing">
 		<table style="width: 100%">
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
-				<td class="header-info-text">#{specificationBackingBean.managedBean.qt.qtNo}</td>
+				<td style="width: 13%"><h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
+				<td style="width: 27%"  class="header-info-text">#{specificationBackingBean.managedBean.qt.qtNo}</td>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.qt.ppPlan.planNo ne null}">
 					<td><h:outputLabel value="#{lbl['lbl.sc.planno']}" /></td>
 					<td class="header-info-text">#{specificationBackingBean.managedBean.qt.ppPlan.planNo}</td>
 				</ui:fragment>
-				<td><h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td class="header-info-text">#{specificationBackingBean.managedBean.qt.pmOrgProfile.orgName}</td>
-				<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-				<td class="header-info-text">
+				<td  style="width: 8%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+				<td style="width: 29%" class="header-info-text">#{specificationBackingBean.managedBean.qt.pmOrgProfile.orgName}</td>
+				<td style="width: 3%"><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+				<td style="width: 20%" class="header-info-text">
 					#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.currentStatusId)}
 				</td>
 			</tr>
