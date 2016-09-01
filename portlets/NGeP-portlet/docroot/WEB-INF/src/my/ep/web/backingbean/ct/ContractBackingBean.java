@@ -1970,6 +1970,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			 ContractReqDTO reqDTO = new ContractReqDTO();
 			 reqDTO.setOverallContractAmt(getManagedBean().getGstTotalAmount());
 			 reqDTO.setContractPeriod(new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()));
+			 reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
 			 
 			 ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);			 
 			 getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
