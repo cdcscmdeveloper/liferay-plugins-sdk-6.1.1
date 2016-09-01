@@ -1,0 +1,225 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="cc" toggleable="true" collapsed="false" toggleSpeed="500">
+	<f:facet name="header">
+		<h:outputText value="#{lbl['lbl.ct.panel.contract']}"/>
+		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fulfilment.dtls']}"/>
+   	</f:facet>
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
+	<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
+		<h:panelGroup style="width:1000px;" >
+			<table style="width: 100%">
+				<tr>
+					<td class="columnWidth150">
+						<p:outputLabel id="centralNo" value="#{lbl['lbl.ct.contract.no']}" />
+					</td>
+					<td>
+						<p:inputText for="centralNo"  disabled="true" maxlength="17" style="width:130px;"
+							value="#{ctBackingBean.managedBean.contractVer.ctContract.contractNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
+					</td>
+					<td class="columnWidth150">
+						<p:outputLabel id="centralphyNo" value="#{lbl['lbl.ct.physical.no']}" />
+					</td> 
+					<td>
+						<p:inputText for="centralphyNo" maxlength="30" style="width:130px;"
+						disabled="#{ctBackingBean.getConditionalValue()}"
+		 	    		value="#{ctBackingBean.managedBean.contractVer.contractPhysicalNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
+					</td>
+				</tr>
+				<tr>
+					<td class="columnWidth150">
+						<p:outputLabel id="centralEfDate" value="#{lbl['lbl.ct.effective.date']}" />
+					</td>
+					<td>
+						<p:inputText for="centralEfDate" disabled="true" style="width:80px;"
+							value="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			  			</p:inputText>
+			  		</td>
+			  		   <td class="columnWidth150">
+						<p:outputLabel id="centralExpDate" value="#{lbl['lbl.ct.expiry.date']}" />
+					</td> 
+					<td>
+						<p:inputText for="centralExpDate" disabled="true" style="width:80px;"
+							value="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			  			</p:inputText>
+			  		</td>
+					</tr>				
+	
+                	<tr>
+                	<h:panelGroup rendered="#{!ctBackingBean.managedBean.contractVer.ctContract.zonalPricing}">
+					<td class="columnWidth150">
+	     	             	<p:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%"  styleClass="required" />
+					</td> 
+					<td><p:inputText id="centralDelPeriod" styleClass="ppRightBtn"  style="width:45px;"
+		              		maxlength="4" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"
+		              		disabled="#{ctBackingBean.managedBean.viewContract
+		              			or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}" label="#{lbl['lbl.ct.delivery.period']}" />
+                		<p:spacer width="3"/>
+                		<h:outputText value="#{lbl['lbl.ct.days']}" />
+                	</td>                	
+                	</h:panelGroup>  
+                		<h:panelGroup rendered="#{!ctBackingBean.managedBean.ctContractAmount.agreement
+                		and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractCreation}">
+                	<td class="columnWidth150">
+						<p:outputLabel id="centralSignDate1" value="#{lbl['lbl.ct.signed.date']}" />
+					</td> 
+					<td>
+						<p:calendar value="#{ctBackingBean.managedBean.contractVer.signedDate}" id="popupButtonCal" 
+			   				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+			       			navigator="true" size="7" showOn="button" readonlyInput="true" label="#{lbl['lbl.ct.signed.date']}"
+			      			disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}">
+			      		</p:calendar>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.date']}" />
+					</td>					
+					</h:panelGroup> 
+                </tr>
+              
+				<h:panelGroup rendered="#{ctBackingBean.managedBean.ctContractAmount.agreement}">
+				<tr rowspan="2">
+					<h:panelGroup rendered="#{ctBackingBean.managedBean.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.acComplete and
+						ctBackingBean.managedBean.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.saComplete}">
+					<td class="columnWidth150">
+						<p:outputLabel for="centralAstatus" value="#{lbl['lbl.ct.agreement.status']}" />
+					</td>
+					<td>
+						<p:inputTextarea id="centralAstatus" autoResize="false" maxlength="1000" 
+							disabled="true" rows="2" style="width:130px;margin-bottom:5px;"
+							value="#{ctBackingBean.getStatusDescById(ctBackingBean.managedBean.ctContractAmount.ctAgreement.status.statusId)}" />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.status']}" />
+					</td>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{ctBackingBean.managedBean.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.acComplete or
+						ctBackingBean.managedBean.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.saComplete}">
+					<td styleClass="columnWidth150">
+						<p:outputLabel id="centralAgreement" value="#{lbl['lbl.ct.agreement']}" />
+					</td>
+					<td>
+						<h:commandLink for="centralAgreement" styleClass="blue_font"
+							title="#{ctBackingBean.managedBean.ctContractAmount.ctAgreement.fileName}"
+							value="#{ctBackingBean.getShortFileName(ctBackingBean.managedBean.ctContractAmount.ctAgreement.fileName)}"
+							action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.ctContractAmount.ctAgreement.filePath,
+							ctBackingBean.managedBean.ctContractAmount.ctAgreement.fileName)}" />
+					</td>
+					</h:panelGroup>
+					<td class="columnWidth150">
+						<p:outputLabel id="centralSignDate" value="#{lbl['lbl.ct.signed.date']}" />
+					</td> 
+					<td>
+						<p:inputText for="centralSignDate" disabled="true" style="width:80px;"
+							value="#{ctBackingBean.managedBean.agreementContractVer.signedDate}">
+			   				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.date']}" />
+					</td>
+				</tr>
+				</h:panelGroup>
+				<tr>
+					<h:panelGroup rendered="#{ctBackingBean.chkCircularActiveRecord()}">
+					<td class="columnWidth150">
+						<p:outputLabel id="centralCicularId" value="#{lbl['lbl.ct.circular.no']}" />
+					</td>
+					<td>
+						<h:commandLink for="centralCicularId" styleClass="blue_font"
+							title="#{ctBackingBean.managedBean.ctCircularVer.ctCircular.circularNo}"
+							value="#{ctBackingBean.managedBean.ctCircularVer.ctCircular.circularNo}"
+							action="#{ctBackingBean.gotoCicularPage(ctBackingBean.managedBean.ctCircularVer.circularVerId)}" />
+					</td>
+                	</h:panelGroup>
+                	<td></td><td></td>
+				</tr>
+				
+				<tr rowspan="4">
+					<td class="columnWidth150">
+						<p:outputLabel for="centralContractName" value="#{lbl['lbl.ct.contract.title']}" />
+					</td>
+					<td colspan="3">
+						<p:inputTextarea id="centralContractName" autoResize="false" maxlength="1000"
+							disabled="true" rows="4" style="width:455px; margin-bottom:5px;" 
+							value="#{ctBackingBean.managedBean.contractVer.ctContract.contractName}" />
+					</td>					
+				</tr>
+			</table>
+		</h:panelGroup>
+	 </h:panelGrid>
+	 <p:outputPanel id="justificationCentralPanel">
+  		<h:panelGrid columns="2" style="width:740px;" 
+  			rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
+   			<p:outputLabel id="justificationOutputLbls" value="#{lbl['lbl.ct.justification.ap201']}" style="width:120px;" />
+			<p:inputTextarea id="justificationCentralLbl" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.justification}"
+  				rows="3" style="width:455px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
+      			autoResize="false" disabled="#{ctBackingBean.managedBean.viewContract
+      				or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}"></p:inputTextarea>	
+   		</h:panelGrid> 
+ 	</p:outputPanel>
+ 	
+ 	<p:outputPanel>
+	 <h:panelGrid columns="2" style="width:765px;"  columnClasses="columnWidth150"
+ 		rendered="#{!ctBackingBean.managedBean.directPurchase 
+ 			and ctBackingBean.managedBean.ctContractAmount.bondReq
+ 			and ctBackingBean.managedBean.ctContractAmount.bondExempted}">
+			<p:outputLabel value="#{lbl['lbl.ct.bond.exempted.letter']}"  styleClass="required"/>
+	  		 <h:panelGroup id="centralUploadBondExemptedPg">
+			 <p:commandButton oncomplete="centralUploadBondExemptedDlg.show();return false;"
+				update="centralUploadBondExemptedPg"  icon="ui-icon-upload"
+				rendered="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath == null}"
+				disabled="#{ctBackingBean.managedBean.viewContract
+					or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
+					or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}"/>	
+		     <h:commandLink value="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName}" 
+		   		rendered="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath != null}"
+		   		styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath, ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName)}" />					
+		     <p:spacer width="3"/>
+			 <p:commandLink onclick="centralBondExemptedDocDlg.show();" 
+				rendered="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath != null}"
+			 	disabled="#{ctBackingBean.managedBean.viewContract
+					or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
+					or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}">
+				<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 </p:commandLink>
+		</h:panelGroup>
+    </h:panelGrid>
+	 
+	  
+	</p:outputPanel>	
+	<p:dialog id="centralUploadBondExemptedDlg" widgetVar="centralUploadBondExemptedDlg"  resizable="false"
+  		modal="true" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
+  		onShow="singleUploadListener(centralBondUploadWV);">
+   		<p:ajax event="close" />
+   		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
+     		sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
+    		fileUploadListener="#{ctBackingBean.uploadBondExemptedFile}"  multiple="false"
+       		allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="centralBondUploadWV"
+         	invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update="centralUploadBondExemptedPg"
+ 			label="#{lbl['lbl.btn.choose']}">
+      	</p:fileUpload>
+      	<f:facet name="footer">
+   		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="centralUploadBondExemptedDlg.hide();" />
+   		</div> 
+   		</f:facet>
+   	</p:dialog>
+	<p:confirmDialog id="centralBondExemptedDocId" widgetVar="centralBondExemptedDocDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+	   		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+				update=":form:centralUploadBondExemptedPg, :form:centralUploadBondExemptedDlg" 
+	 			action="#{ctBackingBean.delBondExemptedDoc()}" oncomplete="centralBondExemptedDocDlg.hide();"/>
+	 		<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="centralBondExemptedDocDlg.hide();" type="button" />
+	 	</div>
+    </p:confirmDialog>
+  </p:panel>
+</ui:composition>
+
+
+
+
+
