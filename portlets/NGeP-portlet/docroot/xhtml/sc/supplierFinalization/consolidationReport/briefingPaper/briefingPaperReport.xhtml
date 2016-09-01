@@ -8,6 +8,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel id="reportPanel" header="#{lbl['lbl.sc.report.section']}" toggleable="true">
+		<h:outputText styleClass="instruction" 
+			value="#{lbl['lbl.sc.consolidation.report.brefing.papaer.instructions']}"
+			escape="false" />
 		
 		<p:dataTable id="reportTbl" value="#{consolidationReportBackingBean.managedBean.finalizationReports}" 
 			widgetVar="reportWidget" var="report" rows="10" rowKey="#{report}" 
