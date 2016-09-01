@@ -4612,22 +4612,29 @@ public class LOADetailBackingBean extends
 	 * @param gstAmount
 	 */
 	public void calculateOverallAmount(BigDecimal gstAmount) {
-		
+		ScLoa scLoa = getManagedBean().getScLoa();
 		getManagedBean().setOverallContractAmt(
-				overallCtAmount(getManagedBean().getScLoa().getLoaAmt(), gstAmount));
+				overallCtAmount(scLoa.getLoaAmt(), gstAmount));
 		if (null != getManagedBean().getContractSignerUser()
 				&& getManagedBean().getContractSignerUser().getUserId() != null) {
 
-			getManagedBean().getScLoa().setLoaSignerDesig(null);
+			scLoa.setLoaSignerDesig(null);
+			scLoa.setContractSigner(null);
 			getManagedBean().setContractSignerUser(null);
-			getManagedBean().getScLoa().setContractSigner(null);
 			prepareSignerInfo();
 			RequestContext.getCurrentInstance().execute(
 					"gstSignerConfirmPopupWin.show()");
 		} else {
 			prepareSignerInfo();
 		}
-		getManagedBean().getScLoa().setOverallContractAmt(getManagedBean().getOverallContractAmt());
+		
+		calcBondAmount(scLoa, Boolean.FALSE);
+		// bond amount in words
+		if (scLoa.getBondAmt() != null) {
+			getManagedBean().setBondAmountWord(
+					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		}
+		scLoa.setOverallContractAmt(getManagedBean().getOverallContractAmt());
 		checkPerformanceBondMandatory();
 		checkAgreementMandatory();
 	}
