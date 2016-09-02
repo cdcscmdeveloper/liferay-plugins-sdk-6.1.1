@@ -84,7 +84,7 @@
 						selectionMode="multiple" 
 						saveObject="purchaseRequestBackingBean.managedBean.selectedDeliveryFullAddr"
 						conditionField="ORG_PROFILE_ID^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}"
-						update=":form:addressDataTable,:form:itemDetPanelGroup"
+						update=":form:addressDataTable,:form:itemDetPanelGroup,:form:messages"
 						rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 						/>
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" 
