@@ -21,7 +21,9 @@
 					<h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 				</td>
 				<td style="width:32%;" class="header-info-text">
-					#{scQt.pmOrgProfile.orgName}
+					#{suppFinalMeetingBackingBean.retrievePTJByOrgProfileId
+(scQt.pmOrgProfile.orgProfileId,
+suppFinalMeetingBackingBean.isQTStatusPublished(suppFinalMeetingBackingBean.managedBean.currentStatusId)?scQt.publishDate : scQt.createdDate)}
 				</td>
 				<td style="width:5%;">
 					<h:outputLabel value="#{lbl['lbl.sc.status']}" />
