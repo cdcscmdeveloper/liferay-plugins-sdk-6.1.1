@@ -20,7 +20,10 @@
 				<td style="width: 5%;"><h:outputLabel
 						value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td style="width: 32%;" class="header-info-text">
-					#{scQt.pmOrgProfile.orgName}</td>
+				#{consolidationReportBackingBean.retrievePTJByOrgProfileId
+(scQt.pmOrgProfile.orgProfileId,
+consolidationReportBackingBean.isQTStatusPublished(consolidationReportBackingBean.managedBean.currentStatusId)?scQt.publishDate : scQt.createdDate)}
+					</td>
 
 				<td style="width: 5%;"><h:outputLabel
 						value="#{lbl['lbl.sc.qt.proposal.validity']}" /></td>
