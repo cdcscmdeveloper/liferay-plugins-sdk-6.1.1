@@ -325,6 +325,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	              if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 		                   ctBB.getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 					       ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+		                   ctBB.getManagedBean().setCommonView(false);
 	              }
 		
 	              // Retrieve Items
