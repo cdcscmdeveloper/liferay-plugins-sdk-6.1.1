@@ -19,11 +19,11 @@
 				</ui:fragment>
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td class="header-info-text">
-				<c:if test="#{qTDetailBB.managedBean.qt.brandNew or !qTDetailBB.managedBean.maintanceFlow}">
+				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
 					<h:outputText id="orgName" value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}" />
 					</c:if>
-					<c:if test="#{!qTDetailBB.managedBean.qt.brandNew and qTDetailBB.managedBean.maintanceFlow}">
-					#{qTDetailBB.getPtjNameByOrgProfileIdAndCreatedDate(qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId, qTDetailBB.managedBean.qt.createdDate)}
+					<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+					#{qTDetailBB.retrievePTJByOrgProfileId(qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId,qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.currentStatusId)?qTDetailBB.managedBean.qt.publishDate : qTDetailBB.managedBean.qt.createdDate)}
 					</c:if>
 				</td>
 				

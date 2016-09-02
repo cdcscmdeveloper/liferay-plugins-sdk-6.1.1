@@ -25,7 +25,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td colspan="3"><p:inputText
-						value="#{approvalBackingBean.managedBean.qt.pmOrgProfile.orgName}"
+						value="#{approvalBackingBean.retrievePTJByOrgProfileId(approvalBackingBean.managedBean.qt.pmOrgProfile.orgProfileId,approvalBackingBean.isQTStatusPublished(approvalBackingBean.managedBean.currentStatusId)?approvalBackingBean.managedBean.qt.publishDate : approvalBackingBean.managedBean.qt.createdDate)}"
 						disabled="true" readonly="true" style="width:866px;" /></td>
 			</tr>
 			<tr>
