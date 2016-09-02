@@ -18,7 +18,9 @@
 					<td class="header-info-text">#{specificationBackingBean.managedBean.qt.ppPlan.planNo}</td>
 				</ui:fragment>
 				<td  style="width: 8%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td style="width: 29%" class="header-info-text">#{specificationBackingBean.managedBean.qt.pmOrgProfile.orgName}</td>
+				<td style="width: 29%" class="header-info-text">
+				#{specificationBackingBean.retrievePTJByOrgProfileId(specificationBackingBean.managedBean.qt.pmOrgProfile.orgProfileId,specificationBackingBean.isQTStatusPublished(specificationBackingBean.managedBean.currentStatusId)?specificationBackingBean.managedBean.qt.publishDate : specificationBackingBean.managedBean.qt.createdDate)}
+				</td>
 				<td style="width: 3%"><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 				<td style="width: 20%" class="header-info-text">
 					#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.currentStatusId)}

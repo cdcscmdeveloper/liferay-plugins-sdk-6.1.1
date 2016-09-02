@@ -16,7 +16,11 @@
 
 				<td style="width: 8%"><h:outputLabel
 						value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td style="width: 29%" class="header-info-text">#{evaluationMeetingBackingBean.managedBean.qt.pmOrgProfile.orgName}</td>
+				<td style="width: 29%" class="header-info-text">
+				#{evaluationMeetingBackingBean.retrievePTJByOrgProfileId
+(evaluationMeetingBackingBean.managedBean.qt.pmOrgProfile.orgProfileId,
+evaluationMeetingBackingBean.isQTStatusPublished(evaluationMeetingBackingBean.managedBean.currentStatusId)?evaluationMeetingBackingBean.managedBean.qt.publishDate : evaluationMeetingBackingBean.managedBean.qt.createdDate)}
+				</td>
 				<td style="width: 3%"><h:outputLabel
 						value="#{lbl['lbl.sc.status']}" /></td>
 				<td style="width: 20%" class="header-info-text">
