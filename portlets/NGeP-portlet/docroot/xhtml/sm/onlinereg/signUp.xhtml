@@ -75,5 +75,11 @@
 				action="#{registrationBackingBean.proceedToTermAndCondition}" />
 		</div>
 		
+		<div align="right">
+			<p:commandButton id="btnTestSche" value="Test MOF Expired Sche" 
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			action="#{registrationBackingBean.updateMOFExpiredPersonnel()}" />
+		</div>
+		
 	</ui:define>
 </ui:composition>
