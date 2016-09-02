@@ -72,4 +72,14 @@ public class DateTimeInput extends UIOutput implements ClientBehaviorHolder {
 		
 		super.encodeBegin(context);
 	}
+	
+	public void resetDateTime(){
+		FacesScopes facesScopes = new FacesScopes();
+		org.primefaces.component.calendar.Calendar dateComponent = ((org.primefaces.component.calendar.Calendar)facesScopes.findComponentById(this, "calDate"));
+		HtmlSelectOneMenu hourComponent = ((HtmlSelectOneMenu)facesScopes.findComponentById(this, "calHour"));
+		HtmlSelectOneMenu minuteComponent = ((HtmlSelectOneMenu)facesScopes.findComponentById(this, "calMin"));	
+		dateComponent.resetValue();
+		hourComponent.resetValue();;
+		minuteComponent.resetValue();
+	}
 }
