@@ -252,7 +252,8 @@
 		<portlet id="templateSpec"></portlet>
 	</category>
 	<category name="reports">
-		<portlet id="reports"></portlet>	
+		<portlet id="reports"></portlet>
+		<portlet id="reportstesting"></portlet>
 	</category>
 	<category name="Supplier Management">
 		<portlet id="sdoreview"></portlet>
