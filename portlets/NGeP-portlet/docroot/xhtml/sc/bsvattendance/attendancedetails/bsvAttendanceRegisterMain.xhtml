@@ -43,9 +43,10 @@
 					<td style="width: 10%"><h:outputLabel
 							value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td class="header-info-text">
-						#{bsvAttendanceBackingBean.managedBean.scQt.pmOrgProfile.orgCode}
-						-
-						#{bsvAttendanceBackingBean.managedBean.scQt.pmOrgProfile.orgName}
+					#{bsvAttendanceBackingBean.retrievePTJByOrgProfileId
+(bsvAttendanceBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId,
+bsvAttendanceBackingBean.isQTStatusPublished(bsvAttendanceBackingBean.managedBean.scQt.qtStatus.statusId)?bsvAttendanceBackingBean.managedBean.scQt.publishDate :bsvAttendanceBackingBean.managedBean.scQt.createdDate)}
+						
 					</td>
 					<td style="width: 10%"><h:outputLabel
 							value="#{lbl['lbl.sc.status']}" /></td>
