@@ -539,11 +539,13 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		
 		if (this.getManagedBean().getSearchPtjGroupProfile() != null) {
 			condition = OrgProfileUtil.getFromToSearchBeanParentString(
-	   				OrganizationType.DIVISION.value(), OrganizationType.DEPARTMENT.value())+"^"+
-	   				this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId();
+					OrganizationType.DIVISION.value(), OrganizationType.DEPARTMENT.value())+"^"+
+					this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId();
 		} else {
-			condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
-				this.getManagedBean().getSearchMinistryProfile().getOrgProfileId();
+			if(this.getManagedBean().getSearchMinistryProfile() != null){
+				condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
+						this.getManagedBean().getSearchMinistryProfile().getOrgProfileId();
+			}
 		}
 		return condition;
 	}
