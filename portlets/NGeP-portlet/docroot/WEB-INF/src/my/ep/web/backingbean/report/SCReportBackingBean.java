@@ -389,6 +389,12 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	            break;
+	            
+		    case ReportConst.SC_BRIEFING_PAPER_RPT_VAL:
+		        	rptGenBean.setScQuotationNoView(true);
+			        rptGenBean.setExtraTwoColumnView(true);
+			break;	
+			
 	        case ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL:
 	        	rptGenBean.setGenerateButton(false);
 	        	rptGenBean.setConditionGenerateButton(true);
