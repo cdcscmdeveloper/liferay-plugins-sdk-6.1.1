@@ -25,7 +25,8 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.ptj']}"
 				style="width:20%;white-space: normal;">
-				<h:outputText value="#{noticeBoardBackingBean.getPtjNameByOrgProfileIdAndCreatedDate(scqt[2], scqt[6])}" />
+				<ui:param name="date" value="#{noticeBoardBackingBean.retriveDatesforOrgProfile(scqt[3],scqt[6])}"></ui:param>
+				<h:outputText value="#{noticeBoardBackingBean.retrievePTJByOrgProfileId(scqt[2], date)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.publish.date']}"
 				style="width:11%;white-space: normal;">

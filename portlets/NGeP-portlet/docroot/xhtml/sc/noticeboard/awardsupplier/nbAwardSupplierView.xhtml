@@ -34,8 +34,9 @@
 					readonly="true" />
 
 				<h:outputLabel value="#{lbl['lbl.sc.ptj']}" styleClass="outputLabel-view-label" ></h:outputLabel>
+				<ui:param name="date" value="#{noticeBoardBackingBean.retriveDatesforOrgProfile(noticeBoardBackingBean.managedBean.scQt.publishDate,noticeBoardBackingBean.managedBean.scQt.createdDate)}"></ui:param>
 				<h:outputText
-					value="#{noticeBoardBackingBean.getPtjNameByOrgProfileIdAndCreatedDate(noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId,  noticeBoardBackingBean.managedBean.scQt.createdDate)}"
+					value="#{noticeBoardBackingBean.retrievePTJByOrgProfileId(noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId,date)}"
 					readonly="true" />
 
 
