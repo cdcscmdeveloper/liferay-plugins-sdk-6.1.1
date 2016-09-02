@@ -15,7 +15,7 @@
 			<ac:paginator for="deductionDataTable" />
 			<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
 			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.type']}" style="width:15%">
-				<p:selectOneMenu id="deductionList" value="#{deduction.deductionType.parameterId}" disabled="#{paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}">
+				<p:selectOneMenu id="deductionList" value="#{deduction.ctDeduction.deductionId}" disabled="#{paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="ctDeduction"
 						value="#{paymentMatchBackingBean.getDropdownValuesByCtDetails()}"/>
@@ -24,7 +24,7 @@
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.desc']}">
-				<p:inputText id="descId" value="#{deduction.deductionDesc}" disabled="#{deduction.deductionType.parameterId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}">
+				<p:inputText id="descId" value="#{deduction.deductionDesc}" disabled="#{deduction.ctDeduction.deductionId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}">
 				<p:ajax process="@this" />
 				</p:inputText>
 			</p:column>
@@ -45,7 +45,7 @@
 				</f:facet>
 				<p:outputPanel id="danaPnl">
 					<ac:lov id="dana" update=":form:deductionDataTable"
-						disabled="#{deduction.deductionType.parameterId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}"
+						disabled="#{deduction.ctDeduction.deductionId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}"
 						lovId="PM_VOT_FUND" headerText="#{lbl['lbl.fl.payment.match.amanah']}"
 						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmVotFund"
 						readonly="true" size="4"
@@ -61,7 +61,7 @@
 				</f:facet>
 				<p:outputPanel id="gosodoPnl">
 					<ac:lov id="gosodo" update=":form:deductionDataTable"
-						disabled="#{deduction.deductionType.parameterId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}"
+						disabled="#{deduction.ctDeduction.deductionId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView}"
 						lovId="PM_GL_ACCOUNT" headerText="#{lbl['lbl.fl.gosodo']}"
 						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmGlAccount"
 						conditionField="pmOrgProfile.orgProfileId^#{paymentMatchBackingBean.retrieveJabatanOrgProfile(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgProfileId).orgProfileId}*pmOrgProfile^1^11"
@@ -74,13 +74,13 @@
 				<p:outputPanel id="deductionAmtPnl">
 					<h:outputText styleClass="colFloatRight"
 						value="#{deduction.deductionAmt}"
-						rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeFixed}">
+						rendered="#{deduction.ctDeduction.deductionType.parameterCode==ParameterConst.deductionTypeFixed}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
-					<p:inputText styleClass="colFloatRight" disabled="#{deduction.deductionType.parameterId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView }"
+					<p:inputText styleClass="colFloatRight" disabled="#{deduction.ctDeduction.deductionId == null or paymentMatchBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView }"
 						value="#{deduction.deductionAmt}"
-						rendered="#{!(deduction.deductionType.parameterCode==ParameterConst.deductionTypeFixed)}">
+						rendered="#{!(deduction.ctDeduction.deductionType.parameterCode==ParameterConst.deductionTypeFixed)}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							<p:ajax event="blur" listener="#{paymentMatchBackingBean.validateDeductionAmt}" update="@form"></p:ajax>
@@ -91,8 +91,10 @@
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right" id="deductionButton">
 			<p:commandButton id="addButton" rendered="#{paymentMatchBackingBean.managedBean.buttonVal != BpmOutcomeConstant.bpmView}"
+			disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
 			value="#{lbl['lbl.btn.add']}" action="#{paymentMatchBackingBean.addDeductionRow()}" update="@form" />
 			<p:commandButton rendered="#{paymentMatchBackingBean.managedBean.buttonVal != BpmOutcomeConstant.bpmView}"
+				disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
 			id="deleteDeductionBtn" value="#{lbl['lbl.btn.delete']}" action="#{paymentMatchBackingBean.removeAddRow()}" update="@form"/>
 		</div>
 	</p:panel>
