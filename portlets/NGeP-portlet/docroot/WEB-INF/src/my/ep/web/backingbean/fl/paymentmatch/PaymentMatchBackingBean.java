@@ -23,6 +23,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -39,6 +46,7 @@ import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -46,6 +54,7 @@ import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
@@ -57,6 +66,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -104,13 +114,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
 
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
-
 // TODO: Auto-generated Javadoc
 /**
  * Payment Match Backing Bean.
@@ -136,6 +139,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	private static final String NAV_INVOICE = "/xhtml/fl/invoice/invBasePage.xhtml";
 	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/deliveryorder/doBasePage.xhtml";
 	private static final String NAV_FULFILMENTNOTE_PAGE= "/xhtml/fl//receivednote/frnBasePage.xhtml";
+	
 	
 	/**
 	 * Gets the class name.
@@ -460,7 +464,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 		}
 		for(FlPaymentDeduction paymentDeduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
-			if(paymentDeduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
+			if(paymentDeduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
+				if(paymentDeduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
+					
+				}
 				currentDeductionAmt = currentDeductionAmt.add(paymentDeduction.getDeductionAmt());	
 			}
 		}
@@ -612,6 +619,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 */
 	public void calPmSummary(){
 		IFeeExemptionSO feeExemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
 		FeeExemptionResDTO resDTO = new FeeExemptionResDTO();
 		List<BigDecimal> nonExemptedItemList = new ArrayList<BigDecimal>();
@@ -638,13 +646,15 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}
 		getManagedBean().setInvoiceAmountWithoutGST(invoiceTotalAmount.subtract(getManagedBean().getGstAmount()));
 		BigDecimal serviceFee = new BigDecimal(0);
-		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
+		if(getManagedBean().getPaymentAdvice().getFlRequest().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+			RuleReqDTO req = new RuleReqDTO();
+			req.setRuleType(RuleTypeConst.TRANSACTION_FEE_ONE_OFF);
+			serviceFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(req).getRuleValueList().get(0).getRuleValue());
+		} else {
 			if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee() != null){
 				serviceFee = getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee();
 			}
-		}else{
-			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);;
-		}		
+		}
 
 		if(getManagedBean().getPaymentAdvice().getFlRequest().getProcurementType()!=null && getManagedBean().getPaymentAdvice().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			serviceFee = new BigDecimal(0);
@@ -660,41 +670,55 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}
 
 		if(serviceFee.doubleValue()>0){
-			for (FlInvoiceItemSummary data : getManagedBean().getPaymentAdvice().getFlInvoice().getFlInvoiceItemSummary()) {
-				//check item whther is exempted for this supplier.
+			for(FlInvoiceItemSummary invSummary : getManagedBean().getPaymentAdvice().getFlInvoice().getFlInvoiceItemSummary()){
+				for(FlInvoiceItem invItem : invSummary.getFlInvoiceItem()){
+					if(invSummary.getFlFulfilmentItem().getCmItem() != null){
+						reqDTO.setItemId(invSummary.getFlFulfilmentItem().getCmItem().getItemId());
+					}
+					reqDTO.setRequestItemId(invSummary.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
+					reqDTO.setOrgProfileId(getManagedBean().getPaymentAdvice().getFlRequest().getSmSupplier().getSupplierId());
+					if(getManagedBean().getPaymentAdvice().getFlInvoice().getFlRequest().getCtContract() != null){
+						reqDTO.setContractId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
+					}
+					resDTO = feeExemptionSO.checkForFeeException(reqDTO);
 
-				if(data.getFlFulfilmentItem().getCmItem()!=null) {
-					reqDTO.setItemId(data.getFlFulfilmentItem().getCmItem().getItemId());
-				} 
-				reqDTO.setRequestItemId(data.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
-				reqDTO.setOrgProfileId(getManagedBean().getPaymentAdvice().getFlRequest().getSmSupplier().getSupplierId());
-				if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
-					reqDTO.setContractId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
-				}
-				resDTO = feeExemptionSO.checkForFeeException(reqDTO);
-				if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
-					nonExemptedItemList.add(data.getInvAmt());
+					if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){//item not exempted
+						if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
+							Double recalculateServiceFee = 100 + getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().doubleValue();
+							BigDecimal serviceGstAmount = (new BigDecimal((invItem.getInvAmt().doubleValue() * getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().doubleValue()) / recalculateServiceFee));
+							nonExemptedItemList.add(invItem.getInvAmt().subtract(serviceGstAmount));
+						}else{
+							nonExemptedItemList.add(invItem.getInvAmt()); 
+						}
+					}
 				}
 			}
 		}
-
-		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
-
+		
 		BigDecimal nonExemptedItemAmt = new BigDecimal(0);
-		BigDecimal percentage = new BigDecimal(100);
-		BigDecimal invMulty = new BigDecimal(0.0);
 		if(!nonExemptedItemList.isEmpty()){
 			for(BigDecimal normalItemAmt : nonExemptedItemList){
 				nonExemptedItemAmt = nonExemptedItemAmt.add(normalItemAmt);
 			}
+		}else{
+			serviceFee = new BigDecimal(0);
 		}
+
+		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
+
+		BigDecimal percentage = new BigDecimal(100);
+		BigDecimal invMulty = new BigDecimal(0.0);
 
 		boolean haveDeduction = false;
 		BigDecimal calPaymentAmt = new BigDecimal(0.0);
 		BigDecimal totalDeductionAmt = new BigDecimal(0);
 		for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()) {
-			if(deduction.getDeductionType().getParameterCode()!=null && 
-					!deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)) {
+			if(deduction.getCtDeduction().getDeductionType().getParameterCode()!=null && 
+					!deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)) {
+				if(deduction.getCtDeduction().getDeductionType().getParameterCode()!=null && 
+						!deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
+					
+				}
 				if(deduction.getDeductionAmt() == null){
 					deduction.setDeductionAmt(new BigDecimal(0));
 				}
@@ -712,7 +736,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		if(haveDeduction && nonExemptedItemAmt.doubleValue() > 0){
 			if(totalDeductionAmt != null && totalDeductionAmt.doubleValue() > 0){
 				
-				newInvoiceAmt = nonExemptedItemAmt.subtract(totalDeductionAmt).subtract(getManagedBean().getGstAmount());
+				newInvoiceAmt = nonExemptedItemAmt.subtract(totalDeductionAmt);
 				if(newInvoiceAmt.doubleValue() <= 0){
 					getManagedBean().getPaymentAdvice().setFeeAmt(new BigDecimal(0));
 				}else{
@@ -732,7 +756,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 		}else if(nonExemptedItemAmt.doubleValue() >= 0 && haveDeduction == false){
 			if(nonExemptedItemAmt.doubleValue() > 0){
-				nonExemptedItemAmt = nonExemptedItemAmt.subtract(getManagedBean().getGstAmount());
 				invMulty = nonExemptedItemAmt.multiply(serviceFee);
 				transFee = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
 				getManagedBean().getPaymentAdvice().setFeeAmt(transFee);
@@ -944,7 +967,8 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		
 		FlPaymentDeduction paymentDeduction = new FlPaymentDeduction();
 		paymentDeduction.setFlPaymentAdvice(getManagedBean().getPaymentAdvice());
-		paymentDeduction.setDeductionType(new PmParameter());
+		paymentDeduction.setCtDeduction(new CtDeduction());
+		paymentDeduction.getCtDeduction().setDeductionType(new PmParameter());
 		paymentDeduction.setDeductionDesc("");
 		paymentDeduction.setPmVotFund(new PmVotFund());
 		paymentDeduction.setPmGlAccount(new PmGlAccount());
@@ -957,9 +981,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 * @param deduction the deduction
 	 */
 	public void retrieveClauses(FlPaymentDeduction deduction){
-		if(deduction.getDeductionType().getParameterCode() != null){
+		if(deduction.getCtDeduction().getDeductionType().getParameterCode() != null){
 			for(CtDeduction ctDeduction : getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
-				if(ctDeduction.getDeductionType().getParameterCode().equals(deduction.getDeductionType().getParameterCode())){
+				if(ctDeduction.getDeductionType().getParameterCode().equals(deduction.getCtDeduction().getDeductionType().getParameterCode())){
 					getManagedBean().setCtDeductionClauseList(ctDeduction.getCtDeductionClauses());
 				}
 			}
@@ -1004,18 +1028,24 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	public void checkDeductionList(FlPaymentDeduction deduction){
 		IParameterSO parameterSO = null;
 		ParameterReqDTO reqDTO = null;
-		if(deduction.getDeductionType().getParameterId() != null){
+		CtDeduction mapDeduction  = null;
+		if(deduction.getCtDeduction().getDeductionId() != null){
+			if(getManagedBean().getCtDeductionMap().containsKey(deduction.getCtDeduction().getDeductionId())){
+				mapDeduction = getManagedBean().getCtDeductionMap().get(deduction.getCtDeduction().getDeductionId());
+			}
 			reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(deduction.getDeductionType().getParameterId());
+//			reqDTO.setParameterId(deduction.getDeductionType().getParameterId());
+			reqDTO.setParameterId(mapDeduction.getDeductionType().getParameterId());
 			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			deduction.setDeductionType(resDTO.getPmParameter());
+//			deduction.setDeductionType(resDTO.getPmParameter());
+			deduction.getCtDeduction().setDeductionType(resDTO.getPmParameter());
 		}
-			deduction.setDeductionDesc(null);
+			deduction.setDeductionDesc(mapDeduction.getDeductionDesc());
 			deduction.setPmGlAccount(null);
 			deduction.setPmVotFund(null);
 
-		if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)){
+		if(deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)){
 			for(CtDeduction ctDeduction : getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
 				if(ctDeduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)){
 					deduction.setDeductionAmt(new BigDecimal(ctDeduction.getAmount()));
@@ -1036,8 +1066,16 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			if (this.getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions() != null) {
 				for (CtDeduction obj : this.getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()) {
 					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
-						getManagedBean().getPopulateDeductionList().add(new SelectItem(obj.getDeductionType().getParameterId(),getParameterDesc(obj.getDeductionType().getParameterType(), obj.getDeductionType().getParameterCode())));
-
+						if(getManagedBean().getCtDeductionMap().get(obj.getDeductionId()) != null){
+							continue;
+						}else{
+							getManagedBean().getCtDeductionMap().put(obj.getDeductionId(), obj);
+						}
+						if(obj.getDeductionDesc() == null){
+							getManagedBean().getPopulateDeductionList().add(new SelectItem(obj.getDeductionId(),getParameterDesc(obj.getDeductionType().getParameterType(), obj.getDeductionType().getParameterCode())));
+						}else{
+							getManagedBean().getPopulateDeductionList().add(new SelectItem(obj.getDeductionId(),getParameterDesc(obj.getDeductionType().getParameterType(), obj.getDeductionType().getParameterCode())+" - "+obj.getDeductionDesc()));
+						}
 					}
 				}
 			}
@@ -1067,30 +1105,30 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
 
 					if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){//save function
-						if(deduction.getDeductionType().getParameterCode() == null && 
+						if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null && 
 								(deduction.getPmVotFund() == null || deduction.getPmVotFund().getVotFundCode() == null) &&
 								(deduction.getPmGlAccount() == null || deduction.getPmGlAccount().getGlAccCode() == null)){
 							emptyDeductionList.add(deduction);
-						}else if(deduction.getDeductionType().getParameterCode() == null){
+						}else if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null){
 							throw new EpException(MessageConst.ERROR_740035);
 						}
 						if(deduction.getDeductionAmt() == null){
 							deduction.setDeductionAmt(new BigDecimal(0));
 						}
 					}else{
-						if(deduction.getDeductionType().getParameterCode() == null){
+						if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null){
 							throw new EpException(MessageConst.ERROR_740035);
 						}
 
-						if(deduction.getDeductionType().getParameterId() == null){
+						if(deduction.getCtDeduction().getDeductionId() == null){
 							throw new EpException(MessageConst.ERROR_740035);
 						}
-						if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)){
+						if(deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)){
 							if(deduction.getDeductionDesc().trim().equalsIgnoreCase("") || deduction.getDeductionDesc() == null){
 								searchBean.getDataFilterBeans().add(new SearchFilterBean(
 										"pmParameter.parameterCode",
 										SearchOperator.OPERATOR_EQUALS.value(),
-										deduction.getDeductionType().getParameterCode()));
+										deduction.getCtDeduction().getDeductionType().getParameterCode()));
 								reqType.setParameterDescSearchBean(searchBean);
 
 								resType = parameterSO.retrieveParameterDescListByType(reqType);
@@ -1102,7 +1140,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 							searchBean.getDataFilterBeans().add(new SearchFilterBean(
 									"pmParameter.parameterCode",
 									SearchOperator.OPERATOR_EQUALS.value(),
-									deduction.getDeductionType().getParameterCode()));
+									deduction.getCtDeduction().getDeductionType().getParameterCode()));
 							reqType.setParameterDescSearchBean(searchBean);
 
 							resType = parameterSO.retrieveParameterDescListByType(reqType);
@@ -1112,7 +1150,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 							searchBean.getDataFilterBeans().add(new SearchFilterBean(
 									"pmParameter.parameterCode",
 									SearchOperator.OPERATOR_EQUALS.value(),
-									deduction.getDeductionType().getParameterCode()));
+									deduction.getCtDeduction().getDeductionType().getParameterCode()));
 							reqType.setParameterDescSearchBean(searchBean);
 
 							resType = parameterSO.retrieveParameterDescListByType(reqType);
@@ -1122,17 +1160,17 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 							searchBean.getDataFilterBeans().add(new SearchFilterBean(
 									"pmParameter.parameterCode",
 									SearchOperator.OPERATOR_EQUALS.value(),
-									deduction.getDeductionType().getParameterCode()));
+									deduction.getCtDeduction().getDeductionType().getParameterCode()));
 							reqType.setParameterDescSearchBean(searchBean);
 
 							resType = parameterSO.retrieveParameterDescListByType(reqType);
 							throw new EpException(MessageConst.ERROR_745061,new String[]{resType.getParameterDescList().get(0).getCodeName()});
 						}
-						String unique = deduction.getDeductionType().getParameterId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode();
+						String unique = deduction.getCtDeduction().getDeductionId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode();
 						if(deductionList.contains(unique)){
 							throw new EpException(MessageConst.ERROR_740036);
 						}else{
-							deductionList.add(deduction.getDeductionType().getParameterId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode());
+							deductionList.add(deduction.getCtDeduction().getDeductionId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode());
 						}
 					}
 				}
@@ -1212,6 +1250,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					paymentAdvice.setDescription(" ");
 				}else{
+					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, new String[]{
 							ResourceBundleUtils.getMessage("lbl.fl.payment.match.payment.desc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
@@ -1287,9 +1326,15 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	public List<FlPaymentDeduction> getDeductionTable(){
 		List<FlPaymentDeduction> deductionTable = new ArrayList<FlPaymentDeduction>();
 		for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
-			if(deduction.getDeductionType().getParameterCode() == null){
+			if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null){
+				if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null){
+					
+				}
 				deductionTable.add(deduction);
-			}else if(!deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
+			}else if(!deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
+				if(!deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
+					
+				}
 				deductionTable.add(deduction);
 			}
 		}
@@ -1303,8 +1348,8 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	public void validateDeductionAmt(){
 		BigDecimal totalDeductionAmt = new BigDecimal(0);
 		for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()) {
-			if(deduction.getDeductionType().getParameterCode()!=null && 
-					!deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)) {
+			if(deduction.getCtDeduction().getDeductionType().getParameterCode()!=null && 
+					!deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)) {
 				if(deduction.getDeductionAmt() == null){
 					deduction.setDeductionAmt(new BigDecimal(0));
 				}
@@ -1637,6 +1682,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "pmBasePage?faces-redirect=true");
 		}
-	}	
+	}
+
 }
 
