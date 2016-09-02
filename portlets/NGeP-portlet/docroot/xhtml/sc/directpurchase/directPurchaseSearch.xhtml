@@ -16,45 +16,43 @@
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
 			<table style="width: 100%;">
-				<h:panelGroup
-					rendered="#{directPurchaseBackingBean.managedBean.government}">
-					<tr>
-						<td><p:outputLabel id="searchMinistryLbL" value="#{lbl['lbl.sc.ministry']}" /></td>
-						<td colspan="3"><ac:lov id="searchMinistry"
-								lovId="PM_ORG_PROFILE_MINSTRY" size="148" readonly="true"
-								disabled="#{directPurchaseBackingBean.disableMinistryLov()}"
-								headerText="#{lbl['lbl.sc.ministry']}"
-								value="#{directPurchaseBackingBean.managedBean.searchMinistryProfile.orgName}"
-								postUpdateListener="directPurchaseBackingBean.resetPtjGroupProfile()"
-								update="@form"
-								saveObject="directPurchaseBackingBean.managedBean.searchMinistryProfile">
-							</ac:lov></td>
-					</tr>
+				<tr>
+					<td><p:outputLabel id="searchMinistryLbL"
+							value="#{lbl['lbl.sc.ministry']}" /></td>
+					<td colspan="3"><ac:lov id="searchMinistry"
+							lovId="PM_ORG_PROFILE_MINSTRY" size="148" readonly="true"
+							headerText="#{lbl['lbl.sc.ministry']}"
+							value="#{directPurchaseBackingBean.managedBean.searchMinistryProfile.orgName}"
+							postUpdateListener="directPurchaseBackingBean.resetPtjGroupProfile()"
+							update="@form"
+							saveObject="directPurchaseBackingBean.managedBean.searchMinistryProfile">
+						</ac:lov></td>
+				</tr>
 
-					<tr>
-						<td><p:outputLabel id="searchPtjGroupLbL" value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
-						<td colspan="3"><ac:lov id="searchPtjGroup"
-								lovId="PM_ORG_PROFILE_PTJ_GROUP" size="148" readonly="true"
-								disabled="#{directPurchaseBackingBean.isReqOrApprover()}"
-								headerText="#{lbl['lbl.sc.kumpulan.ptj']}"
-								value="#{directPurchaseBackingBean.managedBean.searchPtjGroupProfile.orgName}"
-								postUpdateListener="directPurchaseBackingBean.resetPtjProfile()"
-								update="@form"
-								saveObject="directPurchaseBackingBean.managedBean.searchPtjGroupProfile"
-								conditionField="#{directPurchaseBackingBean.getPTJGroupCondition()}"></ac:lov></td>
-					</tr>
+				<tr>
+					<td><p:outputLabel id="searchPtjGroupLbL"
+							value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
+					<td colspan="3"><ac:lov id="searchPtjGroup"
+							lovId="PM_ORG_PROFILE_PTJ_GROUP" size="148" readonly="true"
+							headerText="#{lbl['lbl.sc.kumpulan.ptj']}"
+							value="#{directPurchaseBackingBean.managedBean.searchPtjGroupProfile.orgName}"
+							postUpdateListener="directPurchaseBackingBean.resetPtjProfile()"
+							update="@form"
+							saveObject="directPurchaseBackingBean.managedBean.searchPtjGroupProfile"
+							conditionField="#{directPurchaseBackingBean.getPTJGroupCondition()}"></ac:lov></td>
+				</tr>
 
-					<tr>
-						<td><p:outputLabel id="searchPtjLbL" value="#{lbl['lbl.sc.ptj']}" /></td>
-						<td colspan="3"><ac:lov id="searchPtj"
-								lovId="PM_ORG_PROFILE_PTJ" size="148" readonly="true"
-								headerText="#{lbl['lbl.sc.ptj']}"
-								value="#{directPurchaseBackingBean.managedBean.searchPtjProfile.orgName}"
-								saveObject="directPurchaseBackingBean.managedBean.searchPtjProfile"
-								conditionField="#{directPurchaseBackingBean.getPtjCondition()}">
-							</ac:lov></td>
-					</tr>
-				</h:panelGroup>
+				<tr>
+					<td><p:outputLabel id="searchPtjLbL"
+							value="#{lbl['lbl.sc.ptj']}" /></td>
+					<td colspan="3"><ac:lov id="searchPtj"
+							lovId="PM_ORG_PROFILE_PTJ" size="148" readonly="true"
+							headerText="#{lbl['lbl.sc.ptj']}"
+							value="#{directPurchaseBackingBean.managedBean.searchPtjProfile.orgName}"
+							saveObject="directPurchaseBackingBean.managedBean.searchPtjProfile"
+							conditionField="#{directPurchaseBackingBean.getPtjCondition()}">
+						</ac:lov></td>
+				</tr>
 				<tr>
 					<td width="22%"><p:outputLabel
 							value="#{lbl['lbl.sc.document.type']}" /> <p:outputLabel
@@ -147,11 +145,11 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.document.title']}" />
 					</f:facet>
-					
+
 					<h:outputText value="#{Obj[5]}"
 						style="white-space: normal;word-wrap: break-word;" />
 				</p:column>
-				
+
 				<p:column width="12%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.status']}" />
@@ -169,7 +167,9 @@
 							icon="ui-icon-view"
 							action="#{directPurchaseBackingBean.viewDoc(Obj)}" />
 
-						<p:menuitem id="printBtnIcon" value="#{lbl['lbl.btn.print']}" ajax="false" rendered="#{directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeLetterOfAward : true}"
+						<p:menuitem id="printBtnIcon" value="#{lbl['lbl.btn.print']}"
+							ajax="false"
+							rendered="#{directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeLetterOfAward : true}"
 							icon="ui-icon-print"
 							action="#{directPurchaseBackingBean.generateReport(Obj)}" />
 
