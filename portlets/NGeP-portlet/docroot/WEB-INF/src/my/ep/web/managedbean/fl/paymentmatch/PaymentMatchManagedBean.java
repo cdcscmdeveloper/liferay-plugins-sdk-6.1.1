@@ -5,7 +5,9 @@ package my.ep.web.managedbean.fl.paymentmatch;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -243,6 +245,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private BigDecimal gstAmount;
 	private BigDecimal invoiceAmountWithoutGST;
 	private List<TaxInvoiceVO> taxInvoiceList;
+	Map<Long, CtDeduction> ctDeductionMap = new HashMap<Long, CtDeduction>();
 	
 	private boolean hyperLinkPage = false;
 	private boolean taxInvoice = false;
@@ -1509,4 +1512,12 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	public void setGfmasErrorDesc(String gfmasErrorDesc) {
 		this.gfmasErrorDesc = gfmasErrorDesc;
 	}
+	
+	public Map<Long, CtDeduction> getCtDeductionMap() {
+		return ctDeductionMap;
+	}
+
+	public void setCtDeductionMap(Map<Long, CtDeduction> ctDeductionMap) {
+		this.ctDeductionMap = ctDeductionMap;
+	}	
 }
