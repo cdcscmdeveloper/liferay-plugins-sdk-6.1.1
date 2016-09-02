@@ -48,8 +48,9 @@
 			<h:outputLabel value="" />
 
 			<h:outputLabel value="#{lbl['lbl.sc.ptj']}" styleClass="outputLabel-view-label"/>
+			<ui:param name="date" value="#{noticeBoardBackingBean.retriveDatesforOrgProfile(noticeBoardBackingBean.managedBean.scQt.publishDate,noticeBoardBackingBean.managedBean.scQt.createdDate)}"></ui:param>
 			<h:outputText
-				value="#{noticeBoardBackingBean.getPtjNameByOrgProfileIdAndCreatedDate(noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId,  noticeBoardBackingBean.managedBean.scQt.createdDate)}" />
+				value="#{noticeBoardBackingBean.retrievePTJByOrgProfileId(noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId,date)}" />
 			<h:outputLabel value="" />
 			<h:outputLabel value="" />
 			<h:outputLabel value="#{lbl['lbl.sc.publish.date']}" styleClass="outputLabel-view-label"/>
@@ -187,8 +188,9 @@
 			<h:outputLabel value="" />
 
 			<h:outputLabel value="#{lbl['lbl.sc.ptj']}" styleClass="outputLabel-view-label"/>
+			<ui:param name="date" value="#{noticeBoardBackingBean.retriveDatesforOrgProfile(noticeBoardBackingBean.managedBean.scQt.publishDate,noticeBoardBackingBean.managedBean.scQt.createdDate)}"></ui:param>
 			<h:outputText
-				value="#{noticeBoardBackingBean.getPtjNameByOrgProfileIdAndCreatedDate(noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId,  noticeBoardBackingBean.managedBean.scQt.createdDate)}" />
+				value="#{noticeBoardBackingBean.retrievePTJByOrgProfileId(noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId,date)}" />
 			<h:outputLabel value="" />
 			
 			<h:outputLabel value="#{lbl['lbl.sc.publish.date']}" styleClass="outputLabel-view-label"/>
