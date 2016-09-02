@@ -4,7 +4,7 @@
  * Product nextgen
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -91,6 +91,7 @@ public class ReportConst {
 	public static final String SC_COMMITTEE_DTLS_TD_RPT_VAL = "SC_045";
 	public static final String SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL = "SC_046";
 	public static final String SC_PROPOSAL_DTLS_SERVICE_RPT_VAL = "SC_047";
+	public static final String SC_BRIEFING_PAPER_RPT_VAL = "SC_048";
 
 	public static final String SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL = "SC_050";
 	public static final String SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL = "SC_051";
@@ -213,7 +214,7 @@ public class ReportConst {
 	public static final String YEP_RPT_MIN_NAME = "lbl.rpt.fl.YEP_RPT_MIN_NAME";
 	public static final String YEP_RPT_MIN_VAL = "YEPReport-Min";
 	public static final String YEP_AUTO_CMT_CON_ORD_RPT_MIN_NAME = "lbl.rpt.fl.YEP_AUTO_CMT_CON_ORD_RPT_MIN_NAME";
-	public static final String YEP_AUTO_CMT_CON_ORD_RPT_MIN_VAL = "YEP–AutoBudgetCommitmentforContractOrder-Min";
+	public static final String YEP_AUTO_CMT_CON_ORD_RPT_MIN_VAL = "YEPï¿½AutoBudgetCommitmentforContractOrder-Min";
 	public static final String DEL_ORD_REJ_RPT_CEN_PEN_NAME = "lbl.rpt.fl.DEL_ORD_REJ_RPT_CEN_PEN_NAME";
 	public static final String DEL_ORD_REJ_RPT_CEN_PEN_VAL = "DeliveryOrderRejectionReport-Cen/Pan";
 	public static final String DED_RPT_CEN_PEN_NAME = "lbl.rpt.fl.DED_RPT_CEN_PEN_NAME";
@@ -221,13 +222,13 @@ public class ReportConst {
 	public static final String YEP_RPT_CEN_PEN_NAME = "lbl.rpt.fl.YEP_RPT_CEN_PEN_NAME";
 	public static final String YEP_RPT_CEN_PEN_VAL = "YEPReport-Cen/Pan";
 	public static final String YEP_AUTO_CMT_CON_ORD_RPT_CEN_PEN_NAME = "lbl.rpt.fl.YEP_AUTO_CMT_CON_ORD_RPT_CEN_PEN_NAME";
-	public static final String YEP_AUTO_CMT_CON_ORD_RPT_CEN_PEN_VAL = "YEP–AutoBudgetCommitmentforContractOrder-Cen/Pan";
+	public static final String YEP_AUTO_CMT_CON_ORD_RPT_CEN_PEN_VAL = "YEPï¿½AutoBudgetCommitmentforContractOrder-Cen/Pan";
 	public static final String DEL_ORD_REJ_RPT_PO_NAME = "lbl.rpt.fl.DEL_ORD_REJ_RPT_PO_NAME";
 	public static final String DEL_ORD_REJ_RPT_PO_VAL = "DeliveryOrderRejectionReport-PO";
 	public static final String YEP_RPT_PO_NAME = "lbl.rpt.fl.YEP_RPT_PO_NAME";
 	public static final String YEP_RPT_PO_VAL = "YEPReport-PO";
 	public static final String YEP_AP58A_RPT_PO_NAME = "lbl.rpt.fl.YEP_AP58A_RPT_PO_NAME";
-	public static final String YEP_AP58A_RPT_PO_VAL = "YEPReport–AP58A-PO";
+	public static final String YEP_AP58A_RPT_PO_VAL = "YEPReportï¿½AP58A-PO";
 
 	public static final String CON_REQ_RPT_MIN_VAL = "FL_001";
 	public static final String CON_ORD_RPT_MIN_VAL = "FL_002";
@@ -979,9 +980,12 @@ public class ReportConst {
 	public static final String ATTACHMENTNFILENAMEEQUIFON = "attachment; filename=\"";
 	public static final String UNDERSCORE = "_";
 	public static final String DOTPDFEIFON = ".pdf\"";
+	public static final String DOTXLSEIFON = ".xls\"";
 	public static final String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
 	public static final String BINARY = "binary";
 	public static final String APPLICATIONEIFONPDF = "application/pdf";
+	public static final String APPLICATIONEIFONXLS = "application/vnd.ms-excel";
+	//public static final String APPLICATIONEIFONXLS = "application/vnd.openxmlformats-officedocument.spreadsheetml.â€Œâ€‹sheet";
 	// SM - JSP
 	public static final String SM_PAYMENT_RECEIPT_JSP = "sm_payment_receipt.jsp";
 

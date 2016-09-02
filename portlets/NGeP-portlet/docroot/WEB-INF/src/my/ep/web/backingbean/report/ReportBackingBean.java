@@ -12747,6 +12747,7 @@ public class ReportBackingBean extends
 		reportNameList.add(ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL);
 		reportNameList.add(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_APPL_STATUS);
+		reportNameList.add(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL);
 	}
 
 	/**
@@ -18334,8 +18335,11 @@ public class ReportBackingBean extends
 	 */
 	protected void fileGenerateReport(String reportTitle,			
 			String paramConstrString) {
+		
 		Timestamp time = DateUtils.getCurrentDate();
+		
 		log.info("ReportBackingBean-fileGenerateReport Time stamp =" + time);
+		
 		StringBuilder gnrtdURL = new StringBuilder();
 
 		if (this.getManagedBean().getReportUrlValue().equals("1")) {
@@ -18345,14 +18349,17 @@ public class ReportBackingBean extends
 			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.EXC_PREV_URL));
 		}
-
-		/*
-		 * gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
-		 * EpPropertiesConst.EXC_PREV_URL));
-		 */
+		
 		gnrtdURL.append(paramConstrString);
-		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.EXC_NEXT_URL));
+		
+		if (this.getManagedBean().getReportValue()
+				.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL)) {
+			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.EXC_NEXT_URL_XLS));
+		} else {
+			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.EXC_NEXT_URL));
+		}
 
 		// Jimmy add (temporarily workaround for report).
 		reportStr = gnrtdURL.toString();
@@ -18396,39 +18403,9 @@ public class ReportBackingBean extends
 					.getHttpServletResponse(portletResponse);
 			log.info("@@@@ HttpServletResponse = " + res + " @@@@ Time stamp ="
 					+ time);
-			/*
-			 * int position = reportFile.lastIndexOf(ReportConst.DOTJSP); if
-			 * (position != -1) { reportFile = reportFile.substring(0,
-			 * position); }
-			 */
-			res.setHeader(ReportConst.CONTENT_DISPOSITION,
-					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportTitle
-							+ ReportConst.UNDERSCORE
-							+ ReportConst.REPORT_DATE_TIME.format(new Date())
-							+ ReportConst.DOTPDFEIFON);//
-			res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING,
-					ReportConst.BINARY);
-			res.setContentType(ReportConst.APPLICATIONEIFONPDF);
-			res.flushBuffer();
-			log.info("@@@@ HttpServletResponse getContentType = "
-					+ res.getContentType() + " @@@@ Time stamp =" + time);
-			log.info("@@@@ HttpServletResponse getStatus = " + res.getStatus()
-					+ " @@@@ Time stamp =" + time);
-			for (String headrName : res.getHeaderNames()) {
-				log.info("@@@@ HttpServletResponse getHeaderNames = "
-						+ headrName + " @@@@ Time stamp =" + time);
-			}
-
-			OutputStream out = res.getOutputStream();
-			log.info("@@@@ OutputStream = " + out);
-			byte[] b = new byte[4096];
-			int size;
-			while ((size = buf.read(b, 0, b.length)) != -1) {
-				out.write(b, 0, size);
-			}
-			buf.close();
-			out.close();
-
+			
+		     writeReportDataToPDFOrExcel(reportTitle, time, buf, res);
+		     
 		} catch (MalformedURLException e) {
 			log.info("@@@@ ReportBackingBean-MalformedURLException" + e
 					+ " @@@@ Time stamp =" + time);
@@ -18475,6 +18452,63 @@ public class ReportBackingBean extends
 		log.info("@@@@ End of ReportBackingBean-fileGenerateReport"
 				+ " @@@@ Time stamp =" + time);
 		}
+	}
+
+	/**
+	 * Write report data to pdf or excel.
+	 *
+	 * @param reportTitle the report title
+	 * @param time the time
+	 * @param buf the buf
+	 * @param res the res
+	 * @throws Exception the exception
+	 */
+	private void writeReportDataToPDFOrExcel(String reportTitle,
+			Timestamp time, BufferedInputStream buf, HttpServletResponse res)
+			throws Exception{
+		
+		log.info("In writeReportDataToPDFOrExcel method");
+		
+		if (this.getManagedBean().getReportValue()
+				.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL)) {
+			log.info("For Excel Data");
+			res.setHeader(ReportConst.CONTENT_DISPOSITION,
+					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportTitle
+							+ ReportConst.UNDERSCORE
+							+ ReportConst.REPORT_DATE_TIME.format(new Date())
+							+ ReportConst.DOTXLSEIFON);//
+			res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING,
+					ReportConst.BINARY);
+			res.setContentType(ReportConst.APPLICATIONEIFONXLS);
+		} else {
+			log.info("for PDF Data");
+			res.setHeader(ReportConst.CONTENT_DISPOSITION,
+					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportTitle
+							+ ReportConst.UNDERSCORE
+							+ ReportConst.REPORT_DATE_TIME.format(new Date())
+							+ ReportConst.DOTPDFEIFON);//
+			res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING,
+					ReportConst.BINARY);
+			res.setContentType(ReportConst.APPLICATIONEIFONPDF);
+		}
+		res.flushBuffer();
+		log.info("@@@@ HttpServletResponse getContentType = "
+				+ res.getContentType() + " @@@@ Time stamp =" + time);
+		log.info("@@@@ HttpServletResponse getStatus = " + res.getStatus()
+				+ " @@@@ Time stamp =" + time);
+		for (String headrName : res.getHeaderNames()) {
+			log.info("@@@@ HttpServletResponse getHeaderNames = " + headrName
+					+ " @@@@ Time stamp =" + time);
+		}
+		OutputStream out = res.getOutputStream();
+
+		byte[] b = new byte[4096];
+		int size;
+		while ((size = buf.read(b, 0, b.length)) != -1) {
+			out.write(b, 0, size);
+		}
+		buf.close();
+		out.close();
 	}
 
 	/**
