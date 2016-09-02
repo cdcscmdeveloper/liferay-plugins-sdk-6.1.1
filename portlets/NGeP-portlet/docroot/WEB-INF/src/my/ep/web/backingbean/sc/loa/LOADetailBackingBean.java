@@ -4628,14 +4628,13 @@ public class LOADetailBackingBean extends
 			prepareSignerInfo();
 		}
 		scLoa.setOverallContractAmt(getManagedBean().getOverallContractAmt());
+		checkPerformanceBondMandatory();
 		calcBondAmount(scLoa, Boolean.FALSE);
 		// bond amount in words
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 		}
-		
-		checkPerformanceBondMandatory();
 		checkAgreementMandatory();
 	}
 	
