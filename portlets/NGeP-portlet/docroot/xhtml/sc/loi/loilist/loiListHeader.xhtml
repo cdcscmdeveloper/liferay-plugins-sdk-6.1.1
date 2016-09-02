@@ -15,7 +15,10 @@
 					<td width="8%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 					</td>
 					<td class="header-info-text" width="35%">
-						#{lOIDetailBackingBean.managedBean.scQtFinalization.scQt.pmOrgProfile.orgName}</td>
+					#{lOIDetailBackingBean.retrievePTJByOrgProfileId
+(lOIDetailBackingBean.managedBean.scQtFinalization.scQt.pmOrgProfile.orgProfileId,
+lOIDetailBackingBean.isQTStatusPublished(lOIDetailBackingBean.managedBean.currentStatusId)?lOIDetailBackingBean.managedBean.scQtFinalization.scQt.publishDate : lOIDetailBackingBean.managedBean.scQtFinalization.scQt.createdDate)}
+					</td>
 					<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" />
 					</td>
 					<td class="header-info-text" width="20%">

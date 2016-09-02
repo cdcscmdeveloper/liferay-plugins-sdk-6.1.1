@@ -20,7 +20,10 @@
 				<td style="width: 5%"><h:outputLabel
 						value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td style="width: 32%" class="header-info-text">
-					#{scQt.pmOrgProfile.orgName}</td>
+					#{suppFinalBiddingBackingBean.retrievePTJByOrgProfileId
+(scQt.pmOrgProfile.orgProfileId,
+suppFinalBiddingBackingBean.isQTStatusPublished(suppFinalBiddingBackingBean.managedBean.currentStatusId)?scQt.publishDate : scQt.createdDate)}
+					</td>
 				<td style="width: 5%;"><h:outputLabel
 						value="#{lbl['lbl.sc.qt.proposal.validity']}" /></td>
 				<td style="width: 22%;" class="header-info-text">#{scQt.qtValidityPeriod}</td>
