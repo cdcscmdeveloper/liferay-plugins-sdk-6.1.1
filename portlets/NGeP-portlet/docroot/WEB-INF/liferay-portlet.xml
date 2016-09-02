@@ -22,6 +22,8 @@
 		<portlet-name>ctContractDashBoard</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
+		<render-weight>0</render-weight>
+		<ajaxable>true</ajaxable>
 		<ajaxable>false</ajaxable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
@@ -463,6 +465,8 @@
 		<portlet-name>flPendingDeliveryListDashBoard</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
+		<render-weight>0</render-weight>
+		<ajaxable>true</ajaxable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>fldopendingdashboard-portlet</css-class-wrapper>
 	</portlet>
@@ -470,6 +474,8 @@
 		<portlet-name>flPendingFlListDashBoard</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
+		<render-weight>0</render-weight>
+		<ajaxable>true</ajaxable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>flpendingdashboard-portlet</css-class-wrapper>
 	</portlet>
@@ -1598,6 +1604,8 @@
 			<portlet-name>quickLinks</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
+			<render-weight>0</render-weight>
+			<ajaxable>true</ajaxable>
 			<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
@@ -2046,7 +2054,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<render-weight>0</render-weight>
-		<ajaxable>false</ajaxable>
+		<ajaxable>true</ajaxable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
@@ -2444,6 +2452,8 @@
 		<portlet-name>SvcTasklist</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
+		<render-weight>0</render-weight>
+		<ajaxable>true</ajaxable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>svctasklist-portlet</css-class-wrapper>
 	</portlet>
@@ -2597,6 +2607,8 @@
 	 	<portlet-name>supplierDashboard</portlet-name>
 	 	<icon>/icon.png</icon>
 	 	<instanceable>false</instanceable>
+		<render-weight>0</render-weight>
+		<ajaxable>true</ajaxable>
 	 	<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 	 	<footer-portlet-javascript>
 	 		/js/main.js
@@ -2621,6 +2633,8 @@
 	 	<portlet-name>scSupplierInvitation</portlet-name>
 	 	<icon>/icon.png</icon>
 	 	<instanceable>false</instanceable>
+		<render-weight>0</render-weight>
+		<ajaxable>true</ajaxable>
 	 	<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 	 	<footer-portlet-javascript>
 	 		/js/main.js
@@ -2659,6 +2673,8 @@
 		<portlet-name>OnlineBiddingStatus</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
+		<render-weight>0</render-weight>
+		<ajaxable>true</ajaxable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
