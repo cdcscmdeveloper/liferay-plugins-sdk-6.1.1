@@ -5700,9 +5700,22 @@ public class SpecificationBackingBean extends
 		if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
 			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			
+			OrgProfileReqDTO ptjreqDTO = new OrgProfileReqDTO();
+			ptjreqDTO.setOrgProfileId(this.getManagedBean().getQt().getPmOrgProfile().getOrgProfileId());
+			boolean value=isQTStatusPublished(this.getManagedBean().getCurrentStatusId());
+			log.info("====publish date==="+this.getManagedBean().getQt().getPublishDate());
+			log.info("====created date==="+this.getManagedBean().getQt().getCreatedDate());
+			Date date=value?this.getManagedBean().getQt().getPublishDate() : this.getManagedBean().getQt().getCreatedDate();
+			log.info("====passing date==="+date);
+			ptjreqDTO.setCreateDate(date);
+			PmOrgProfile orgProfileptj = orgProfileSO.retrieveOrgProfileByProfileId(
+					ptjreqDTO).getPmOrgProfile();
+			if(null!=orgProfileptj){
 			this.getManagedBean().setPtjId(
-					this.getManagedBean().getQt().getPmOrgProfile()
+					orgProfileptj
 							.getOrgProfileId());
+			}
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgProfileId(this.getManagedBean().getQt()
 					.getPmOrgProfile().getOrgProfileId());
