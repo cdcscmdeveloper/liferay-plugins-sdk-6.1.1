@@ -271,7 +271,7 @@
 				<h:panelGroup id="actionView">
 					<p:commandLink
 						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
-						rendered="#{(stageTwofunctional.definationType.parameterCode eq 'WF' or stageTwofunctional.definationType.parameterCode eq 'SD' or stageTwofunctional.definationType.parameterCode eq 'TS') and stageTwofunctional.scoringReq}">
+						rendered="#{stageTwofunctional.definationType.parameterCode eq 'TS' or ((stageTwofunctional.pmDocument ne null) and (stageTwofunctional.pmDocument.docDefinitionKey eq 'FG' or stageTwofunctional.pmDocument.docDefinitionKey eq 'FN' or stageTwofunctional.pmDocument.docDefinitionKey eq 'BS' or ((stageTwofunctional.pmDocument.docDefinitionKey eq 'CH' or stageTwofunctional.pmDocument.docDefinitionKey eq 'AL' or stageTwofunctional.pmDocument.docDefinitionKey eq 'PC' or stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' or stageTwofunctional.pmDocument.docDefinitionKey eq 'CF') and stageTwofunctional.scoringReq)))}">
 
 						<ui:fragment
 							rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 

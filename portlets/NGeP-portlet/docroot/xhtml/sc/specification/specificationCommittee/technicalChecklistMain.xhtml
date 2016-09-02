@@ -279,9 +279,9 @@
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
 				</f:facet>
-<h:panelGroup id="technicalChecklistEditActionView">
+              <h:panelGroup id="technicalChecklistEditActionView">
 				<p:commandLink
-					rendered="#{(stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SD' or stageTwoTechnical.definationType.parameterCode eq 'WF') and stageTwoTechnical.scoringReq}"
+					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or ((stageTwoTechnical.pmDocument ne null) and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE' or (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' and stageTwoTechnical.scoringReq)))}"
 					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
 					<ui:fragment
 						rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
