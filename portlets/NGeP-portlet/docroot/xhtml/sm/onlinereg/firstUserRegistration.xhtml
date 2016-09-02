@@ -172,8 +172,8 @@
 								value="#{registrationBackingBean.managedBean.countryLs}"
 								itemLabel="#{counLs.countryName}"
 								itemValue="#{counLs.countryId}" />
-							<p:ajax event="change" listener="#{registrationBackingBean.personnelNationalityOnChange}" 
-							update="cmbUsrIdenType,txtIdNumber,pnlFirstUserIdenType,pnlPersonnelAddress" />
+							<p:ajax event="change" listener="#{registrationBackingBean.personnelNationalityOnChange}" process="@form"
+							update="cmbUsrIdenType,txtIdNumber,pnlFirstUserIdenType,pnlPersonnelAddress,pnlUsrInfo" />
 						</p:selectOneMenu>
 						<p:selectOneMenu disabled="true" value="" rendered="#{registrationBackingBean.managedBean.sameAsOwner}"
 							style="width: 207px;margin-bottom: 5px;">
@@ -195,6 +195,8 @@
 					</td>
 				</tr>
 				
+				<p:outputPanel id="pnlBumiIslam"
+					rendered="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryCode == SupplierManagementConst.COUNTRY_MALAYSIA_CODE}">
 				<tr>
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.person.bumi']}" />
@@ -224,6 +226,7 @@
 						<p:message id="religionIdMsg" for="religionId" showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>
+				</p:outputPanel>
 				
 
 				<tr>
