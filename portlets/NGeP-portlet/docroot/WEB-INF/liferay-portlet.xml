@@ -2632,8 +2632,6 @@
 	 	<portlet-name>scSupplierInvitation</portlet-name>
 	 	<icon>/icon.png</icon>
 	 	<instanceable>false</instanceable>
-		<render-weight>0</render-weight>
-		<ajaxable>true</ajaxable>
 	 	<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 	 	<footer-portlet-javascript>
 	 		/js/main.js
@@ -2658,6 +2656,8 @@
 		<portlet-name>PendingResponseDpQt</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
+		<render-weight>0</render-weight>
+		<ajaxable>true</ajaxable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
