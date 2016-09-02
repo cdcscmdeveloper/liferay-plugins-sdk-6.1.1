@@ -353,6 +353,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				
 				if(resDTO.isSuccessful()) {
 					if(null != resDTO.getResultBean()){
+						log.info("FlDocumentManagedBean resDTO.getResultBean().getTotalRecord(): "+resDTO.getResultBean().getTotalRecord());
 						if(resDTO.getResultBean().getTotalRecord() >0){
 							filterSearchResults(resDTO.getResultBean().getResultList());
 						}
