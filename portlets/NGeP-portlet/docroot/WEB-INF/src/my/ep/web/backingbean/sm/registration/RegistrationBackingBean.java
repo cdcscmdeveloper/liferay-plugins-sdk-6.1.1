@@ -480,6 +480,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
 		smPersonnel.setEpRole(RoleCode.SUPPLIER_TEMP.value());
 		
+		if(!smPersonnel.getPmCountry().getCountryCode().
+				equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+			smPersonnel.setBumiFlg(0);
+			smPersonnel.setMuslimFlg(0);
+		}
+		
 		//check if supplier admin is supplier owner set clerical false and equityOwner true
 		smPersonnel.setClerical(true);
 		if(smSuppOwner!=null && smSuppOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())){
@@ -2568,6 +2574,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
 			}
+			personnel.setPmCountry(country);
 		}else{
 			PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 			personnel.setPmCountry(defaultNationality);
@@ -2640,7 +2647,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						SmServiceLookup.getSmSchedulerSO().updateMOFSupplierPersonnelToBasic(schedulerReqDTO);
 					}catch(Exception ex){
 						log.info("ChangeExpiredMofPersonnel updateMoFAcc -  Exception>>>>" + 
-								ex.getMessage());
+								ex.getMessage() + "- supplier ID -" + mofAccount.getSmSupplier());
 					}
 				}
 			}
