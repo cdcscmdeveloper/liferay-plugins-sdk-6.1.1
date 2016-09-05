@@ -336,6 +336,7 @@ public class LOIDetailBackingBean extends
 				if(finalization != null){
 					scQt  = finalization.getScQt();
 					if(scQt != null) {
+						this.getManagedBean().setScQt(scQt);
 						if(checkQTCancelRuquested(scQt)) {
 							getManagedBean().setQtCancelRequested(true);
 							Locale userLocale = new FacesScopes().getUserLocale();
@@ -1775,6 +1776,7 @@ public class LOIDetailBackingBean extends
 		debugLogger("saveAction");
 		try {
 			ScLoi scLoi = this.getManagedBean().getScLoi();
+			ScQt scQt=this.getManagedBean().getScQt();
 			String outcome = BpmOutcomeConst.BPM_SAVE;
 			
 			parseLOIDetails(scLoi, outcome);
@@ -1796,6 +1798,7 @@ public class LOIDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				scLoi = resDTO.getScLoi();
 				reloadLOI(scLoi);
+				this.getManagedBean().setScQt(scQt);
 				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, 
 						ParameterConst.DOCTYPE_LETTER_OF_INTENT, scLoi.getLoiNo(), Boolean.FALSE);
 			}
@@ -1847,6 +1850,7 @@ public class LOIDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				renewSesionObject();
+				this.getManagedBean().setScQt(scQt);
 				successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQt.getQtNo(), Boolean.TRUE);
 			}
 
@@ -1898,6 +1902,9 @@ public class LOIDetailBackingBean extends
 					getManagedBean().setPayLoad(payLoadData);
 					getManagedBean().setLoiRequired(isLoiRequired);
 					reloadLOIList(sourceId);
+				}
+				if(null!=scQtFinalization){
+				this.getManagedBean().setScQt(scQtFinalization.getScQt());
 				}
 				successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQtFinalization.getScQt().getQtNo(), Boolean.FALSE);
 				FacesContext fc = FacesContext.getCurrentInstance();
@@ -1984,7 +1991,7 @@ public class LOIDetailBackingBean extends
 
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
-			
+			ScQt scQt=this.getManagedBean().getScQt();
 			parseLOIDetails(scLoi, outcome);
 			
 			scLoi.setScLoiWorkFlowStatuses(null);
@@ -2020,6 +2027,7 @@ public class LOIDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				scLoi = resDTO.getScLoi();
 				renewSesionObject();
+				this.getManagedBean().setScQt(scQt);
 				successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_INTENT, scLoi.getLoiNo(), Boolean.TRUE);
 			}
 
@@ -3195,6 +3203,9 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setRecSupplierList(recSupplierList);
 		getManagedBean().setSelectedTabIndex(selectedTabIndex);
 		getManagedBean().setSecretaryUser(isSecretaryUser);
+		if(null!=scQtFinalization){
+		this.getManagedBean().setScQt(scQtFinalization.getScQt());
+		}
 	}
 
 	/**
