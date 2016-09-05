@@ -28,8 +28,9 @@
 				</td>
 
 				<td><p:outputLabel id="ptjNameLbl" value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td class="header-info-text">#{biddingBB.getPtjNameByOrgProfileIdAndCreatedDate(biddingBB.managedBean.scheduledBid.scBid.pmOrgProfile.orgProfileId,
-					biddingBB.managedBean.scheduledBid.scBid.createdDate)}</td>
+				<td class="header-info-text">
+				#{biddingBB.retrievePTJByOrgProfileId(biddingBB.managedBean.scheduledBid.scBid.pmOrgProfile.orgProfileId,
+					biddingBB.isQTStatusPublished(biddingBB.managedBean.scheduledBid.pmStatus.statusId)?biddingBB.managedBean.scQt.publishDate : biddingBB.managedBean.scQt.createdDate)}</td>
 
 				<td><p:outputLabel id="bidStatusLbl"
 						value="#{lbl['lbl.sc.status']}" /></td>
