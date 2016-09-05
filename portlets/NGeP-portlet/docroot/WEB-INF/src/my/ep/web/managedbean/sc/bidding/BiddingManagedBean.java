@@ -26,6 +26,7 @@ import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -123,6 +124,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private String reBidding = BiddingConst.BID_ACTION_TYPE_REBIDDING;
 	private String reschedule = BiddingConst.BID_ACTION_TYPE_RESCHEDULE;
 	private Long remainingTimeForTimers;
+	private ScQt scQt;
 
 	/**
 	 * Default Constructor
@@ -1152,6 +1154,20 @@ public class BiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setLastBidAction(ScBidAction lastBidAction) {
 		this.lastBidAction = lastBidAction;
+	}
+
+	/**
+	 * @return the scQt
+	 */
+	public ScQt getScQt() {
+		return scQt;
+	}
+
+	/**
+	 * @param scQt the scQt to set
+	 */
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
 	}
 	
 	
