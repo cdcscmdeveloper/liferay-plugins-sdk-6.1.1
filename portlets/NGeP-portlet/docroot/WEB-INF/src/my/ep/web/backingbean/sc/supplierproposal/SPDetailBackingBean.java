@@ -192,7 +192,7 @@ public class SPDetailBackingBean extends
 	 * @param qtID
 	 * @param userId
 	 */
-	public void retrieveProposalChecklistDtls(Long qtID, Long userId, boolean validationReq, boolean isReadonly) {
+	public void retrieveProposalChecklistDtls(Long qtID, Long userId, boolean isReadonly) {
 		debugLogger("retrieveProposalChecklistDtls");
 
 		try {
@@ -266,7 +266,7 @@ public class SPDetailBackingBean extends
 
 			}
 			
-			if (validationReq) {
+			if (!isReadonly) {
 				// checking for proposal validity
 				reqDTO.setScQt(resDTO.getScQt());
 				getProposalSO().validateSupplierProposal(reqDTO);	
@@ -3409,7 +3409,6 @@ public class SPDetailBackingBean extends
 
 		retrieveProposalChecklistDtls(qtId,
 				new FacesScopes().getUserSessionBean().getUserId(),
-				false,
 				isReadonly);
 		
 		getManagedBean().setPrepareActiveIndex(0);
@@ -3431,7 +3430,6 @@ public class SPDetailBackingBean extends
 
 		retrieveProposalChecklistDtls(this.getManagedBean().getQt().getQtId(),
 				new FacesScopes().getUserSessionBean().getUserId(),
-				true,
 				false);
 	}
 
