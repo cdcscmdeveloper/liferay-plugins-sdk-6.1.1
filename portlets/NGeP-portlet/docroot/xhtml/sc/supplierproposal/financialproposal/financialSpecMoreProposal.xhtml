@@ -46,7 +46,7 @@
 				</p:column>
 			</p:dataTable>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
 					action="#{supplierProposalDetailBackingBean.deleteMultipleProposal}"
 					update="proposalid" styleClass="BtnSpacing"
 					process="@this,proposalid" partialSubmit="true" />

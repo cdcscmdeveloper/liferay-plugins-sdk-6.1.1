@@ -12,12 +12,12 @@
 		<h:outputText styleClass="instruction"
 			value="1. #{lbl['lbl.sc.sp.btn.complete.instruction']}"
 			escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 		<br></br>
 		<h:outputText styleClass="instruction"
 			value="2. #{lbl['lbl.sc.spec.bank.statement.supplier.instruction']}"
 			escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 
 		<p:dataTable id="bankstatmentsid" var="bankstmt"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPBankStmts}"

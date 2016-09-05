@@ -13,7 +13,7 @@
 	<ui:param name="chkDefinationKey"
 		value="#{supplierProposalDetailBackingBean.managedBean.checkListDefintionKey}"></ui:param>
 
-	<c:if test="#{!supplierProposalDetailBackingBean.managedBean.closed}">
+	<c:if test="#{!supplierProposalDetailBackingBean.managedBean.readOnly}">
 
 		<c:if test="#{'TS' eq docDefinationKey}">
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
