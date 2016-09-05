@@ -21,6 +21,11 @@
 				listener="#{onlineBiddingBB.pollListener}"
 				update="itemWiseBidListOB,packageRankingPanelOB,onlineBiddingNotification" />
 		</h:panelGroup>
+		
+		<p:commandButton value="#{lbl['lbl.btn.back']}"
+			immediate="true" 
+			action="#{onlineBiddingBB.backAction}"
+			rendered="#{!empty onlineBiddingBB.previousPageUrl}" />
 
 		<ui:include
 			src="/xhtml/sc/bidding/onlineBidding/onlineBiddingHeader.xhtml" />
