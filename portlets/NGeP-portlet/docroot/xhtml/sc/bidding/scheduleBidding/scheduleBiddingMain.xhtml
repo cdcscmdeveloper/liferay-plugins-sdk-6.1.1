@@ -53,7 +53,10 @@
 							value="#{lbl['lbl.sc.ptj']}" /></td>
 
 					<td class="header-info-text">
-						#{scheduleBiddingBB.managedBean.scQt.pmOrgProfile.orgName}</td>
+						#{scheduleBiddingBB.retrievePTJByOrgProfileId
+(scheduleBiddingBB.managedBean.scQt.pmOrgProfile.orgProfileId,
+scheduleBiddingBB.isQTStatusPublished(scheduleBiddingBB.managedBean.currentStatusId)?scheduleBiddingBB.managedBean.scQt.publishDate : scheduleBiddingBB.managedBean.scQt.createdDate)}
+						</td>
 
 					<td><p:outputLabel id="statusMain"
 							value="#{lbl['lbl.sc.status']}" /></td>
