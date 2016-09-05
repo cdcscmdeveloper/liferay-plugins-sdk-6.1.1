@@ -94,6 +94,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private BigDecimal tolerancePriceLowerBound;
 	private BigDecimal tolerancePriceUpperBound;
 	private boolean toleranceCheck = Boolean.FALSE;
+	private String previousPageUrl = null;
 
 	private Long servicetype = Long.parseLong(ParameterConst.ITEM_TYPE_SERVICE);
 
@@ -167,17 +168,40 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				.getOriginalServletRequest(servletRequest);
 		String bidScheduleIdStr = originalServletRequest
 				.getParameter("bidScheduleId");
+		String previousPageUrl = originalServletRequest
+				.getParameter("previousPageUrl");
 
 		Long bidScheduleId = null;
-
 		if (StringUtils.isNotBlank(bidScheduleIdStr)) {
 			bidScheduleId = Long.parseLong(bidScheduleIdStr);
 		}
-		PmUser supplierUser = (PmUser) (new FacesScopes().getUserSessionBean());
+		this.previousPageUrl = previousPageUrl;
+		
+		PmUser supplierUser = (new FacesScopes().getUserSessionBean());
 		retrieveOnlineBiddingDtls(bidScheduleId, supplierUser.getUserId());
 		fetchTolerancePrice();
 	}
+	
+	/**
+	 * Back to previous page
+	 * 
+	 * @return	the previous page
+	 */
+	public String backAction() {
+		return this.previousPageUrl;
+	}
 
+	/**
+	 * Get Online Bidding Dtls
+	 * 
+	 * @param bidScheduleId
+	 * 		the bid schedule id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * @return the supplier online bidding page
+	 */
 	private void retrieveOnlineBiddingDtls(Long bidScheduleId, Long userId) {
 
 		log.info("retrieveOnlineBiddingDtls");
@@ -1313,6 +1337,20 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 */
 	public void setToleranceCheck(boolean toleranceCheck) {
 		this.toleranceCheck = toleranceCheck;
+	}
+
+	/**
+	 * @return the previousPageUrl
+	 */
+	public String getPreviousPageUrl() {
+		return previousPageUrl;
+	}
+
+	/**
+	 * @param previousPageUrl the previousPageUrl to set
+	 */
+	public void setPreviousPageUrl(String previousPageUrl) {
+		this.previousPageUrl = previousPageUrl;
 	}
 	
 
