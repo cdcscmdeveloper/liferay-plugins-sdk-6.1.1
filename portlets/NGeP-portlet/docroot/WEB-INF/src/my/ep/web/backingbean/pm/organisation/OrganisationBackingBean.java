@@ -257,6 +257,7 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setSupplierUserList(null);
 		this.getManagedBean().setSupplierUsers(null);
 		this.getManagedBean().setSelectedSupplierUsers(null);
+		this.getManagedBean().setSelectedZoneId(null);
 		this.getManagedBean().setOfficeAddress(null);
 		this.getManagedBean().setOfficeContactPerson(new PmContact());
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
@@ -620,6 +621,9 @@ public class OrganisationBackingBean extends
 			getManagedBean().getOrgProfile().setPmZone(
 					orgProfile.getPmZone() == null ? new PmZone() : orgProfile
 							.getPmZone());
+			if(getManagedBean().getOrgProfile().getPmZone() != null && getManagedBean().getOrgProfile().getPmZone().getZoneId() != null){
+				getManagedBean().setSelectedZoneId(getManagedBean().getOrgProfile().getPmZone().getZoneId() );
+			}
 		}
 		// PTJ, GLC, LAT, STG and STB
 
@@ -965,6 +969,14 @@ public class OrganisationBackingBean extends
 				if(getManagedBean().getOrgProfile().getBpk() !=null && 
 						getManagedBean().getOrgProfile().getBpk() == false){
 					getManagedBean().getOrgProfile().setPmZone(null);
+				}else{
+					if(getManagedBean().getSelectedZoneId() != null){
+						if(getManagedBean().getOrgProfile().getPmZone() == null){
+							getManagedBean().getOrgProfile().setPmZone(new PmZone());
+						}
+						getManagedBean().getOrgProfile().getPmZone().setZoneId(
+								getManagedBean().getSelectedZoneId() );
+					}
 				}
 				
 			}
@@ -2569,7 +2581,7 @@ public class OrganisationBackingBean extends
 	public void bpkChangeListener(){
 		if(getManagedBean().getOrgProfile().getBpk() !=null && 
 				getManagedBean().getOrgProfile().getBpk() == false){
-			getManagedBean().getOrgProfile().setPmZone(new PmZone());
+			getManagedBean().setSelectedZoneId(null);
 		}
 		
 	}

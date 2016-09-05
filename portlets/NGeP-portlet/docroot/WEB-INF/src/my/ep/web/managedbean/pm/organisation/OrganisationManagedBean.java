@@ -105,6 +105,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private PmProfileGroup selectedDeleteOrgUnit;
 	
 	private boolean notFirstRun;
+	private Long selectedZoneId;
 
 	public OrganisationManagedBean() {
 
@@ -860,5 +861,19 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	 */
 	public void setNotFirstRun(boolean notFirstRun) {
 		this.notFirstRun = notFirstRun;
+	}
+
+	/**
+	 * @return the selectedZoneId
+	 */
+	public Long getSelectedZoneId() {
+		return selectedZoneId;
+	}
+
+	/**
+	 * @param selectedZoneId the selectedZoneId to set
+	 */
+	public void setSelectedZoneId(Long selectedZoneId) {
+		this.selectedZoneId = selectedZoneId;
 	}
 }
