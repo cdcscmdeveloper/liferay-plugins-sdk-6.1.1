@@ -6574,7 +6574,7 @@ public class EvaluationBackingBean extends
 				ScAttachment attachment = this.getManagedBean().getScQt()
 						.getScFinancialEvaluationReportAttachment();
 				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-FinacialEvaluation-Committee-Report");
+						"NGeP-QT-FinancialEvaluation-Committee-Report");
 
 				this.getManagedBean().setScAttachment(attachment);
 
