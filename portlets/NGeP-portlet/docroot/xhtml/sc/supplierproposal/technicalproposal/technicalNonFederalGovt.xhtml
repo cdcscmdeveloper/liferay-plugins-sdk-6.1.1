@@ -12,7 +12,7 @@
 
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 
 		<table>
 			<tr>
@@ -188,14 +188,14 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
 				process="@all" styleClass="BtnSpacing"
-				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
 				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
 				update="@([id$=technongovtid])" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				partialSubmit="true" process="@this" styleClass="BtnSpacing"
 				disabled="#{supplierProposalDetailBackingBean.deleteselectedList(supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences)}"
-				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
 				oncomplete="techNonFedDelete.show();"
 				update="@([id$=nonFedExpPanel])" >
 				<f:setPropertyActionListener target="#{supplierProposalDetailBackingBean.managedBean.selectedAll}" value="#{false}"></f:setPropertyActionListener>

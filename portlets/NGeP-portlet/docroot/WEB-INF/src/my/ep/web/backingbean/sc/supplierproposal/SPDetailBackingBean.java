@@ -91,6 +91,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -191,7 +192,7 @@ public class SPDetailBackingBean extends
 	 * @param qtID
 	 * @param userId
 	 */
-	public void retrieveProposalChecklistDtls(Long qtID, Long userId) {
+	public void retrieveProposalChecklistDtls(Long qtID, Long userId, boolean validationReq, boolean isReadonly) {
 		debugLogger("retrieveProposalChecklistDtls");
 
 		try {
@@ -235,21 +236,18 @@ public class SPDetailBackingBean extends
 				if (new Date(System.currentTimeMillis()).after(closingDate)
 						|| (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION
 								.equals(qtStatus.getStatusId()))) {
-					getManagedBean().setClosed(true);
+					getManagedBean().setReadOnly(true);
 					getManagedBean().setClosingTime("0");
 				} else {
-					getManagedBean().setClosed(false);
+					getManagedBean().setReadOnly(isReadonly);
 					Date today = new Date();
 					long days = DateUtils.getDaysDifference(today,
 							getManagedBean().getQt().getClosingDate());
 					DecimalFormat dF = new DecimalFormat("#00");
-					if (getDisplayLanguage().equalsIgnoreCase("english")) {
-						getManagedBean().setClosingTime(
-								dF.format(days) + " Days");
-					} else {
-						getManagedBean().setClosingTime(
-								dF.format(days) + " Hari");
-					}
+					getManagedBean().setClosingTime(
+							dF.format(days) + " " + ResourceBundleUtils.getMessage(
+									"lbl.sc.days", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()));
 
 					if (days == 0) {
 						long durationInMills = DateUtils.getDateDiffInMillis(
@@ -267,9 +265,12 @@ public class SPDetailBackingBean extends
 				}
 
 			}
-			// checking for proposal validity
-			reqDTO.setScQt(resDTO.getScQt());
-			getProposalSO().validateSupplierProposal(reqDTO);
+			
+			if (validationReq) {
+				// checking for proposal validity
+				reqDTO.setScQt(resDTO.getScQt());
+				getProposalSO().validateSupplierProposal(reqDTO);	
+			}
 
 		} finally {
 		}
@@ -1208,7 +1209,7 @@ public class SPDetailBackingBean extends
 					.getScQtPRPExperiences();
 			int index = getManagedBean().getTecCheckDetailsList().indexOf(
 					scQtProposalChecklist);
-			MathContext mc = new MathContext(4);
+			//MathContext mc = new MathContext(4);
 			CriteriaValue totalContractsVal = new CriteriaValue(
 					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV,
 					BigDecimal.valueOf(getManagedBean().getTotalContracts()));
@@ -3346,12 +3347,8 @@ public class SPDetailBackingBean extends
 					.getOriginalServletRequest(servletRequest);
 			String qtId = originalServletRequest
 					.getParameter(SourcingConstants.NAV_PARAM_QUOTATION_TENDER_ID);
-			super.renewSesionObject();
-
-			retrieveProposalChecklistDtls(Long.parseLong(qtId),
-					((PmUser) (new FacesScopes().getUserSessionBean()))
-							.getUserId());
-			getManagedBean().setPrepareActiveIndex(0);
+			
+			retriveSupplierProposalDtl(Long.parseLong(qtId), null, false);
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -3395,11 +3392,47 @@ public class SPDetailBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
 	}
+	
+	/**
+	 * Get supplier proposal details.
+	 * 
+	 * @param qtId
+	 * 		the quotation / tender id.
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * @return the supplier proposal page
+	 */
+	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl, boolean isReadonly) {
+		super.renewSesionObject();
+
+		retrieveProposalChecklistDtls(qtId,
+				new FacesScopes().getUserSessionBean().getUserId(),
+				false,
+				isReadonly);
+		
+		getManagedBean().setPrepareActiveIndex(0);
+		getManagedBean().setPreviousPageUrl(previousPageUrl);
+		
+		return NAV_TO_PROPOSAL_MAIN_PAGE;
+	}
+	
+	/**
+	 * Back to previous page
+	 * 
+	 * @return	the previous page
+	 */
+	public String backAction() {
+		return getManagedBean().getPreviousPageUrl();
+	}
 
 	private void loadDataFromCache() {
 
 		retrieveProposalChecklistDtls(this.getManagedBean().getQt().getQtId(),
-				((PmUser) (new FacesScopes().getUserSessionBean())).getUserId());
+				new FacesScopes().getUserSessionBean().getUserId(),
+				true,
+				false);
 	}
 
 	/**

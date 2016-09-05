@@ -95,7 +95,7 @@
 						attachment="#{financeList.scQtProposalChecklistAttachment}"
 						encrypted="true"
 						encryptionKey="#{supplierProposalDetailBackingBean.encryptionKey}"
-						readonly="#{supplierProposalDetailBackingBean.managedBean.closed}"
+						readonly="#{supplierProposalDetailBackingBean.managedBean.readOnly}"
 						rowIndex="#{rowIndex}"
 						deleteFileUploadListener="supplierProposalDetailBackingBean.deleteProposalChecklistAttachmentAction">
 						<f:setPropertyActionListener for="actionEvent"

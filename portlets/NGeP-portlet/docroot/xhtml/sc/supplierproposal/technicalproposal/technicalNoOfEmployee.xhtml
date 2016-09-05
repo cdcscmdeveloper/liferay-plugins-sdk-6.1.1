@@ -10,7 +10,7 @@
 		toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed and !supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
 
 		<p:spacer height="2"></p:spacer>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">

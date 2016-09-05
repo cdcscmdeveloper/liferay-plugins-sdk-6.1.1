@@ -10,14 +10,14 @@
 			<TD><h:outputText styleClass="instruction"
 					value="1. #{lbl['lbl.sc.spec.financial.title.instruction']}"
 					escape="false"
-					rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 			</TD>
 		</tr>
 		<tr>
 			<TD><h:outputText styleClass="instruction"
 					value="2. #{lbl['lbl.sc.sp.btn.complete.instruction']}"
 					escape="false"
-					rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 			</TD>
 		</tr>
 	</table>

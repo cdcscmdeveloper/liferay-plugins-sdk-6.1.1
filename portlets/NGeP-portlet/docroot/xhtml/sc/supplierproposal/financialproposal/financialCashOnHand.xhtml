@@ -141,13 +141,13 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
 				process="@all" partialSubmit="true" styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.addCashOnHand}"
 				update="@([id$=cashOnHandPanel])" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
 				partialSubmit="true" process="@this" styleClass="BtnSpacing"
 				update="@([id$=finCashOnHandDeleteId])"
 				action="#{supplierProposalDetailBackingBean.deleteCashOnHand}" />
