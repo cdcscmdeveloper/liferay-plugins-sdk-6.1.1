@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,17 +24,22 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.BiddingConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
@@ -435,10 +441,13 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getManagedBean().setScheduledBid(bid);
 
 		IBiddingSO biddingSO = null;
+		IQTDetailSO qTDetailSO = null;
 
 		try {
 			biddingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+			qTDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			BiddingReqDTO reqDto = new BiddingReqDTO();
 
 			reqDto.setBidScheduleId(bid.getBidScheduleId());
@@ -448,13 +457,25 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				getManagedBean().setScheduledBid(resDto.getScBidSchedule());
 				getManagedBean().setBidPackages(resDto.getBidPackages());
 			}
+			QuationTenderReqDTO qtreqDTO=new QuationTenderReqDTO();
+			QuationTenderResDTO qtresDTO=new QuationTenderResDTO();
+			if(null!=bid.getScBid()){
+			qtreqDTO.setQtTndrNo(bid.getScBid().getDocNo());
+			qtresDTO=qTDetailSO.retriveQtByQtNumber(qtreqDTO);
 		}
+			if(null!=qtresDTO.getQtDetail()){
+				this.getManagedBean().setScQt(qtresDTO.getQtDetail());
+			}
+		}
+		
 
 		finally {
 
 			biddingSO = null;
+			qTDetailSO=null;
 		}
 
+		
 		getManagedBean().setRemainingTime(
 				remainingTimeCalculator(new Date(), getManagedBean()
 						.getScheduledBid().getEndDate()));
@@ -939,5 +960,31 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
 						"bidManagementMain.xhtml?faces-redirect=true");
+	}
+	
+	/**
+	 * Check if QT Status published.
+	 * 
+	 * @param currentStatusId
+	 * 		the current status id
+	 * @return	the indicator qt status published.
+	 */
+	public boolean isQTStatusPublished(Long currentStatusId) {
+		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT);
+	}
+	
+	/**
+	 * Check if QT Status greater than or equals from status.
+	 * 
+	 * @param currentStatusId
+	 * 		the current status id
+	 * @param fromStatusId
+	 * 		the from status id
+	 * @return	the indicator qt status greater than or equals from status.
+	 */
+	public boolean isQTStatusGreaterThanOrEquals(Long currentStatusId, Long fromStatusId) {
+		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		
+		return orderedStatuses.indexOf(currentStatusId) >= orderedStatuses.indexOf(fromStatusId);
 	}
 }
