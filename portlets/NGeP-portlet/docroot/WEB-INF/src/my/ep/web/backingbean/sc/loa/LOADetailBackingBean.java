@@ -4615,6 +4615,9 @@ public class LOADetailBackingBean extends
 		ScLoa scLoa = getManagedBean().getScLoa();
 		getManagedBean().setOverallContractAmt(
 				overallCtAmount(scLoa.getLoaAmt(), gstAmount));
+		
+		scLoa.setOverallContractAmt(getManagedBean().getOverallContractAmt());
+		
 		if (null != getManagedBean().getContractSignerUser()
 				&& getManagedBean().getContractSignerUser().getUserId() != null) {
 
@@ -4627,15 +4630,17 @@ public class LOADetailBackingBean extends
 		} else {
 			prepareSignerInfo();
 		}
-		scLoa.setOverallContractAmt(getManagedBean().getOverallContractAmt());
+		
+		checkAgreementMandatory();
+		
 		checkPerformanceBondMandatory();
+		
 		calcBondAmount(scLoa, Boolean.FALSE);
 		// bond amount in words
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 		}
-		checkAgreementMandatory();
 	}
 	
 	public boolean isGSTRegActive() {
