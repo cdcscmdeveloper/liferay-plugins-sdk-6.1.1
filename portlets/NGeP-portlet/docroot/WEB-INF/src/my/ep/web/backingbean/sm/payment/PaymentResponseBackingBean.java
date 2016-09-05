@@ -321,8 +321,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		case SupplierManagementConst.MOL_FAIL:
 			getManagedBean().setMessageId(MessageConst.ERROR_721051);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_ERROR);
-			getManagedBean().setErrDesc(errorDesc);
-			
+			getManagedBean().setErrDesc(getPaymentMsgLabel(billType,true));
 			break;
 
 		case SupplierManagementConst.MOL_PENDING:
