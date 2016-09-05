@@ -26,7 +26,10 @@
 			<p:column rowspan="2" width="2%">
 				<p:selectBooleanCheckbox
 					value="#{doDelAddress.flTempDoAddr.selected}" disabled="#{doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq 'true'}">
-					<p:ajax onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{createDOBackingBean.delAddressSelect(doDelAddress)}" update="expDelDate,supplierDoRefNo,addRemarkBtn,@(.delQtyTxt)"/>	
+					<p:ajax onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					listener="#{createDOBackingBean.delAddressSelect(doDelAddress)}" 
+					update="expDelDate,supplierDoRefNo,addRemarkBtn,@(.delQtyTxt)"/>	
+					<p:ajax update="@(.delAmountTxt)"/>
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" 
@@ -173,7 +176,7 @@
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</h:outputText>
-							<p:inputText value="#{doItems.deliveredAmt}" size="17"
+							<p:inputText value="#{doItems.deliveredAmt}" size="17" 
 								disabled="#{doItems.delQtyDisabled or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
 								maxlength="15" style="text-align:right" styleClass="colFloatRight"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
