@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import my.ep.constant.pm.ParameterConst;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 
 /**
  * The Class QtnTenderSearchBean.
@@ -62,8 +63,20 @@ public class QtnTenderSearchBean implements Serializable {
 	/** The docType. */
 	private String docType = ParameterConst.DOCTYPE_QUOTATION;
 	
+	/** The resultDocType. */
+	private String resultDocType = docType;
+	
 	/** The docNo. */
 	private String docNo;
+	
+	/** The ministryProfile */
+	private PmOrgProfile ministryProfile;
+	
+	/** The ptjGroupProfile */
+	private PmOrgProfile ptjGroupProfile;
+	
+	/** The ptjProfile */
+	private PmOrgProfile ptjProfile;
 	
 	/**
 	 * Instantiates a new qtn tender search bean.
@@ -298,6 +311,20 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * @return the resultDocType
+	 */
+	public String getResultDocType() {
+		return resultDocType;
+	}
+
+	/**
+	 * @param resultDocType the resultDocType to set
+	 */
+	public void setResultDocType(String resultDocType) {
+		this.resultDocType = resultDocType;
+	}
+
+	/**
 	 * @return the docNo
 	 */
 	public String getDocNo() {
@@ -309,6 +336,48 @@ public class QtnTenderSearchBean implements Serializable {
 	 */
 	public void setDocNo(String docNo) {
 		this.docNo = docNo;
+	}
+
+	/**
+	 * @return the ministryProfile
+	 */
+	public PmOrgProfile getMinistryProfile() {
+		return ministryProfile;
+	}
+
+	/**
+	 * @param ministryProfile the ministryProfile to set
+	 */
+	public void setMinistryProfile(PmOrgProfile ministryProfile) {
+		this.ministryProfile = ministryProfile;
+	}
+
+	/**
+	 * @return the ptjGroupProfile
+	 */
+	public PmOrgProfile getPtjGroupProfile() {
+		return ptjGroupProfile;
+	}
+
+	/**
+	 * @param ptjGroupProfile the ptjGroupProfile to set
+	 */
+	public void setPtjGroupProfile(PmOrgProfile ptjGroupProfile) {
+		this.ptjGroupProfile = ptjGroupProfile;
+	}
+
+	/**
+	 * @return the ptjProfile
+	 */
+	public PmOrgProfile getPtjProfile() {
+		return ptjProfile;
+	}
+
+	/**
+	 * @param ptjProfile the ptjProfile to set
+	 */
+	public void setPtjProfile(PmOrgProfile ptjProfile) {
+		this.ptjProfile = ptjProfile;
 	}
 	
 }
