@@ -9,17 +9,28 @@
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
-	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}"
-			styleClass="BtnSpacing" onstart="blockWidget.show()"
-			oncomplete="blockWidget.hide()"
-			action="#{supplierProposalDetailBackingBean.spkiSignAction}"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
-			update="spkiOutputPanel" process="@form">
-			<f:setPropertyActionListener value="false"
-				target="#{supplierProposalDetailBackingBean.managedBean.autoUpdate}" />
-		</p:commandButton>
-	</div>
+	
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td>
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+				immediate="true" 
+				action="#{supplierProposalDetailBackingBean.backAction}"
+				rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
+			</td>
+		<td align="right">
+			<p:commandButton value="#{lbl['lbl.btn.submit']}"
+				styleClass="BtnSpacing" onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				action="#{supplierProposalDetailBackingBean.spkiSignAction}"
+				rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
+				update="spkiOutputPanel" process="@form">
+				<f:setPropertyActionListener value="false"
+					target="#{supplierProposalDetailBackingBean.managedBean.autoUpdate}" />
+			</p:commandButton>
+		</td>
+	</tr>
+	</table>
 
 	<p:outputPanel id="spkiOutputPanel">
 		<ac:spkiPopup id="spkiPopup"

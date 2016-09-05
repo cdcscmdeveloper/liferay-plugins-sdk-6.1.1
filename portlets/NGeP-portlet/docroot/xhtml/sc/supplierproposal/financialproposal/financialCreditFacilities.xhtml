@@ -13,7 +13,7 @@
 
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 
 		<p:dataTable id="creditfaciitiesid" var="creditfacilities"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities}"
@@ -160,7 +160,7 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
 				process="@all" partialSubmit="true" styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.addCreditFacilities}"
 				update="@([id$=creditFacilitiesPanel])" />
@@ -168,7 +168,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
 				disabled="#{supplierProposalDetailBackingBean.deleteselectedList(supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities)}"
 				partialSubmit="true" styleClass="BtnSpacing"
-				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
 				oncomplete="finCreditFacilityDelete.show();"
 				update="@([id$=finCreditFacilityDeleteId])">
 				<f:setPropertyActionListener
