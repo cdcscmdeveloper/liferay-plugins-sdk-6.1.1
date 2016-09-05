@@ -1123,7 +1123,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						selectedReqDtl.setAssignedUser(assignedUser);
 					} 
 					
-					if(selectedReqDtl.getScRequestNote().getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SC)){
+//					if(selectedReqDtl.getScRequestNote().getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SC)){
 						// procurement type category
 						if(getManagedBean().getProcTypeCategoryId() != null && getManagedBean().getProcTypeCategoryId()>0){
 							ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
@@ -1141,13 +1141,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						if( getManagedBean().getPeriodValue() != null && getManagedBean().getPeriodValue() >0){
 							selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());  
 						}
-					}
+//					}
 					// rec supplier
-					if(getManagedBean().getSmSupplier() != null && getManagedBean().getSmSupplier().getSupplierId() > 0 ){
-
+//					if(getManagedBean().getSmSupplier() != null && getManagedBean().getSmSupplier().getSupplierId() > 0 ){
+					if(getManagedBean().getRecommendSupplierId() != null){
 						if(selectedReqDtl.getRequestItem() != null){							
 							reqDTO.setRequestItemId(selectedReqDtl.getRequestItem().getRequestNoteItemId());
-							reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+							reqDTO.setSupplierId(getManagedBean().getRecommendSupplierId() );
 							RequestNoteResDTO resDTO = getDirectPurchaseSO().getSuppItemByReqItemIdAndSupplierId(reqDTO);
 							ScRequestSupplierItem supplierItem = resDTO.getSupplierItem();
 							
@@ -2049,6 +2049,36 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		getManagedBean().setPreparedBys(userlist);
 		return userlist;
+	}
+	
+	/**
+	 * get Prepared By method to get drop down in request note.
+	 * to get PR/LOA Prepared By users based on Fulfillment type
+	 * @param requestNoteDtl the request note dtl
+	 */
+	public List<Object[]> getRecommendedSupplierList() {
+		debugLogger("getRecommendedSupplierList"); 
+		
+		List<Long>	requestItemIds= new ArrayList<Long>();
+
+		if (CollectionUtils.isNotEmpty(getManagedBean().getRequestNoteDtls())) {
+			for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getRequestNoteDtls()) {
+				Long requestItemId = selectedReqDtl.getRequestItem().getRequestNoteItemId();
+				if(!requestItemIds.contains(requestItemId)) {
+					requestItemIds.add(requestItemId);
+				}
+			}
+		}
+		
+		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+		reqDTO.setRequestItemIds(requestItemIds);
+		RequestNoteResDTO resDTO = getDirectPurchaseSO().retrieveIntersectSupplierofRequestItems(reqDTO);
+		List<Object[]> supplierIdNames = resDTO.getSupplierIdandNameList();
+		if(resDTO.isSuccessful()) {
+			getManagedBean().setRecommendSupplierList(supplierIdNames);
+		}
+		
+		return supplierIdNames;
 	}
 
 	// sorting prepared by users

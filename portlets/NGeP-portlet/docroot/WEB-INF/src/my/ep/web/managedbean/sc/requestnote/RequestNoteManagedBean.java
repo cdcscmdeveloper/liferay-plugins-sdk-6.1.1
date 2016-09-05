@@ -265,6 +265,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	/** The Proc type category id. */
 	private Long procTypeCategoryId;
 	
+	/** The recommended supplier id. */
+	private Long recommendSupplierId;
+	
 	/** The is exceeded amount alerted. */
 	private boolean isExceededAmountAlerted = Boolean.FALSE;
 	
@@ -303,6 +306,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	/** The ful fillment type. */
 	private boolean fulFillmentType;
+	
+	/** The recommended supplier */
+	private List<Object[]> recommendSupplierList;
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1590,6 +1596,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * @return the recommendSupplierId
+	 */
+	public Long getRecommendSupplierId() {
+		return recommendSupplierId;
+	}
+
+	/**
+	 * @param recommendSupplierId the recommendSupplierId to set
+	 */
+	public void setRecommendSupplierId(Long recommendSupplierId) {
+		this.recommendSupplierId = recommendSupplierId;
+	}
+
+	/**
 	 * @return the itemSearchBackBtn
 	 */
 	public boolean isItemSearchBackBtn() {
@@ -1789,5 +1809,19 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setFulFillmentType(boolean fulFillmentType) {
 		this.fulFillmentType = fulFillmentType;
+	}
+
+	/**
+	 * @return the recommendSupplierList
+	 */
+	public List<Object[]> getRecommendSupplierList() {
+		return recommendSupplierList;
+	}
+
+	/**
+	 * @param recommendSupplierList the recommendSupplierList to set
+	 */
+	public void setRecommendSupplierList(List<Object[]> recommendSupplierList) {
+		this.recommendSupplierList = recommendSupplierList;
 	}
 }

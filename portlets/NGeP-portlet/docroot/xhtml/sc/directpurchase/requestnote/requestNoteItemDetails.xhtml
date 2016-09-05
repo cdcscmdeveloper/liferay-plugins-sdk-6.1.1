@@ -387,7 +387,7 @@
 	<p:dialog id="applyAllItemsSQ" widgetVar="applyAllPopUpSQ"
 		header="#{lbl['lbl.sc.request.note.apply.all.items']}" modal="true"
 		dynamic="true" closable="false" position="center" resizable="false"
-		styleClass="pop_up_top" width="500">
+		styleClass="pop_up_top" width="1000">
 		<p:panel id="applyAllSQ">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
@@ -402,6 +402,51 @@
 								value="#{requestNoteBackingBean.managedBean.preparedBys}"
 								var="user" itemLabel="#{user.userName}"
 								itemValue="#{user.userId}"></f:selectItems>
+						</h:selectOneMenu></td>
+						
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.request.note.delivery.term']}" /></td>
+					<td><p:inputText id="sqPeriodId"
+							disabled="#{requestNoteBackingBean.managedBean.fulFillmentType}"
+							style="width:300px;text-align:right;margin-top: 7px;"
+							label="#{lbl['lbl.sc.request.note.delivery.term']}"
+							value="#{requestNoteBackingBean.managedBean.periodValue}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.procurment.type.category']}" /></td>
+					<td><h:selectOneMenu id="sqProcTypeCategoryId"
+							value="#{requestNoteBackingBean.managedBean.procTypeCategoryId}"
+							style="width:200px;"
+							label="#{lbl['lbl.sc.procurment.type.category']}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{requestNoteBackingBean.procTypeCategories}"
+								var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
+								itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
+						</h:selectOneMenu></td>
+
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.direct.purchase.title']}" /></td>
+					<td><p:inputTextarea id="sqProcTitle" rows="2"
+							label="#{lbl['lbl.sc.direct.purchase.title']}" maxlength="100"
+							value="#{requestNoteBackingBean.managedBean.procTitle}"
+							autoResize="false" style="width:300px;" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.request.note.rec.suppier']}" /></td>
+					<td><h:selectOneMenu id="sqRecSupplierId"
+							value="#{requestNoteBackingBean.managedBean.recommendSupplierId}"
+							style="width:200px;"
+							label="#{lbl['lbl.sc.request.note.rec.suppier']}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{requestNoteBackingBean.getRecommendedSupplierList()}" var="bulkRecommendedSupplier"
+								itemLabel="#{bulkRecommendedSupplier[1]}" 
+								itemValue="#{bulkRecommendedSupplier[0]}" />
 						</h:selectOneMenu></td>
 				</tr>
 			</table>
