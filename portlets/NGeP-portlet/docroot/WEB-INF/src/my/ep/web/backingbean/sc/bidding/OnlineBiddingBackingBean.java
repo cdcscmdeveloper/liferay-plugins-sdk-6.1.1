@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -28,6 +29,8 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
@@ -35,6 +38,7 @@ import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.util.CommonUtils;
@@ -99,6 +103,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private Long servicetype = Long.parseLong(ParameterConst.ITEM_TYPE_SERVICE);
 
 	private TemplateSpecHelper tplSpecHelper = TemplateSpecHelper.getInstance();
+	private ScQt scQt;
 
 	private static Logger log = Logger
 			.getLogger(OnlineBiddingBackingBean.class);
@@ -226,6 +231,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				setActiveBidSchedules(resDTO.getActiveBidSchedules());
 				setScBidSchedule(bidSchedule);
 				if (null != bidSchedule) {
+					retriveQtDetails(bidSchedule);
 					this.previousStatusId = bidSchedule.getPmStatus()
 							.getStatusId();
 					setSelectedBidScheduleId(bidSchedule.getBidScheduleId());
@@ -953,6 +959,44 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 		return tplSpecHelper;
 	}
+	
+	
+	private void retriveQtDetails(ScBidSchedule bid){
+		IQTDetailSO qTDetailSO = null;
+		try{
+			
+			qTDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		QuationTenderReqDTO qtreqDTO=new QuationTenderReqDTO();
+		QuationTenderResDTO qtresDTO=new QuationTenderResDTO();
+		if(null!=bid && null!=bid.getScBid()){
+		qtreqDTO.setQtTndrNo(bid.getScBid().getDocNo());
+		qtresDTO=qTDetailSO.retriveQtByQtNumber(qtreqDTO);
+	}
+		if(null!=qtresDTO.getQtDetail()){
+			setScQt(qtresDTO.getQtDetail());
+		}
+		}finally{
+			qTDetailSO = null;
+		}
+	}
+	
+	/**
+	 * Check whether Date is null or not
+	 * 
+	 * @param publishDate
+	 * @param createdDate
+	 * @return Date
+	 */
+	public Date retriveDatesforOrgProfile(Date publishDate,Date createdDate){
+		if(publishDate==null){
+			log.info("===========createdDate====="+createdDate);
+			return createdDate;
+		}
+		log.info("===========publishDate====="+publishDate);
+		return publishDate;
+		
+	}
 
 	/**
 	 * @return the newScBidPrice
@@ -1352,6 +1396,22 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	public void setPreviousPageUrl(String previousPageUrl) {
 		this.previousPageUrl = previousPageUrl;
 	}
+
 	
+	
+
+	/**
+	 * @return the scQt
+	 */
+	public ScQt getScQt() {
+		return scQt;
+	}
+
+	/**
+	 * @param scQt the scQt to set
+	 */
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
+	}
 
 }

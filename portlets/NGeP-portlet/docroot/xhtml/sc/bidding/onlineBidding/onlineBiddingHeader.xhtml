@@ -67,8 +67,10 @@
 							<tr>
 								<td style="width: 120px"><p:outputLabel
 										value="#{lbl['lbl.sc.ptj']}" /></td>
-								<td colspan="3"><p:inputText id="ptjName"
-										value="#{onlineBiddingBB.scBidSchedule.scBid.pmOrgProfile.orgName}"
+								<td colspan="3">
+								<ui:param name="date" value="#{onlineBiddingBB.retriveDatesforOrgProfile(onlineBiddingBB.scQt.publishDate,onlineBiddingBB.scQt.createdDate)}"></ui:param>
+								<p:inputText id="ptjName"
+										value="#{onlineBiddingBB.retrievePTJByOrgProfileId(onlineBiddingBB.scBidSchedule.scBid.pmOrgProfile.orgProfileId,date)}"
 										disabled="true" size="88" /></td>
 							</tr>
 							<tr>
