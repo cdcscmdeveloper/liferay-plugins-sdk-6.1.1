@@ -4177,6 +4177,7 @@ public class ProfileManagementBackingBean extends
 				reqDTO.setSupplierUser(true);
 			}
 			
+			reqDTO.setDeactivateRequired(true);
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
