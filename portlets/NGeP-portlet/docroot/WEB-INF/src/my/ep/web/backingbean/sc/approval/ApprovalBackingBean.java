@@ -1097,6 +1097,10 @@ public class ApprovalBackingBean extends
 		tenderReqDTO.setApprovalReqTypes(reqTypes);
 		tenderReqDTO.setApprovalCategory(approvalCategory);
 		tenderReqDTO.setApproverAction(approverAction);
+		tenderReqDTO
+				.setSuppAcceptedQtChange(SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE
+						.equalsIgnoreCase(this.getManagedBean().getTaskName()) ? true
+						: false);
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
