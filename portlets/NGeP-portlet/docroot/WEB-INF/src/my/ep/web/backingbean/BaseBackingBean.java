@@ -1700,29 +1700,5 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 	
-	/**
-	 * Gets the historical ptj name by org profile id and created date.
-	 *
-	 * @param orgProfileId the org profile id
-	 * @param createdDate the created date
-	 * @return the historical ptj name by org profile id and created date
-	 */
-	public String getPtjNameByOrgProfileIdAndCreatedDate(Long orgProfileId, Date createdDate){
-		String orgName = null;
-		if (orgProfileId != null && createdDate != null) {
-			OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-			profileReqDTO.setOrgProfileId(orgProfileId);
-			profileReqDTO.setCreateDate(createdDate);
-			
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			OrgProfileResDTO orgProfileResDTO = orgProfileSO
-					.retrieveOrgProfileByProfileId(profileReqDTO);
-			
-			if(orgProfileResDTO.getPmOrgProfile().getPmOrgValidity() != null){
-				orgName = orgProfileResDTO.getPmOrgProfile().getPmOrgValidity().getOrgName();
-			}
-		}
-		return orgName;
-	}
+	
 }
