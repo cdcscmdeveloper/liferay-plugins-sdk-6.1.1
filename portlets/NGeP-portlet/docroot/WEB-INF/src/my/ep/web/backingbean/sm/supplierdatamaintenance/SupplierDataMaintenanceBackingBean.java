@@ -762,14 +762,27 @@ public class SupplierDataMaintenanceBackingBean extends
 	private void initDataForSearchSupplier() {
 		renewSesionObject();
 		initLogin();
+		initLoginUserZone();
 		getManagedBean().setDisplaySearchPage(true);
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(false);
-		getManagedBean().setRegStatusDescList(retrieveRegistrationStatusList());
+		getManagedBean().setRegStatusDescList(
+				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
+						null, null));
 		getManagedBean().setZoneList(
 				SmServiceLookup.getZoneSO().retrieveActiveZoneList()
 						.getZoneList());
+
+		// for login user not semenanjung, only can select contractor
+		if (getManagedBean().getLoginUserZone() != null
+				&& !getManagedBean()
+						.getLoginUserZone()
+						.getZoneCode()
+						.equals(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SEMENANJUNG)) {
+			getManagedBean().setSearchSuppType(
+					SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
+		}
 	}
 
 	/**
@@ -778,8 +791,21 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * @return
 	 */
 	private boolean isLoginUserAllowedToEdit() {
+		boolean retVal = isLoginUserTheApplApprover();
+
+		// Contractor always allowed due to already filter zone
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			retVal = true;
+		}
+
+		return retVal;
+	}
+
+	private boolean isLoginUserTheApplApprover() {
 		boolean retVal = false;
 		PmUser user = new FacesScopes().getUserSessionBean();
+
 		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
 				.getSmApplSectionReviews())) {
 			// if review size equals to 1 means direct approve by PO
@@ -819,8 +845,6 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 			}
 		}
-
-		retVal = isLoginUserZoneSameAsSupplier();
 		return retVal;
 	}
 
@@ -831,25 +855,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	private boolean isLoginUserZoneSameAsSupplier() {
 		boolean retVal = false;
-		FacesScopes fs = new FacesScopes();
-		PmUser user = fs.getUserSessionBean();
-		List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
-				.getUserId());
-		String ePRole = StringUtils.EMPTY;
-		if (!EntityHelper.isCollectionEmpty(userRoles)) {
-			for (PmUserRole userRole : userRoles) {
-				if (userRole.getPmRole().getRoleCode()
-						.equals(RoleCode.UPS_APPROVER.value())
-						|| userRole.getPmRole().getRoleCode()
-								.equals(RoleCode.UPS_PO.value())) {
-					ePRole = userRole.getPmRole().getRoleCode();
-					break;
-				}
-			}
-		}
 		PmZone supplierZone = null;
-		Long userZoneId = SmCommonUtil.getUserZoneIdByLoginIdAndEpRole(
-				user.getLoginId(), ePRole);
+		Long userZoneId = getManagedBean().getSearchPmZoneId();
 		if (userZoneId != null
 				&& getManagedBean().getSmAppl() != null
 				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
@@ -876,6 +883,39 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	/**
+	 * Initialized login user zone
+	 */
+	private void initLoginUserZone() {
+		FacesScopes fs = new FacesScopes();
+		PmUser user = fs.getUserSessionBean();
+		List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
+				.getUserId());
+		String ePRole = StringUtils.EMPTY;
+		if (!EntityHelper.isCollectionEmpty(userRoles)) {
+			for (PmUserRole userRole : userRoles) {
+				if (userRole.getPmRole().getRoleCode()
+						.equals(RoleCode.UPS_APPROVER.value())
+						|| userRole.getPmRole().getRoleCode()
+								.equals(RoleCode.UPS_PO.value())) {
+					ePRole = userRole.getPmRole().getRoleCode();
+					break;
+				}
+			}
+		}
+		getManagedBean().setSearchPmZoneId(
+				SmCommonUtil.getUserZoneIdByLoginIdAndEpRole(user.getLoginId(),
+						ePRole));
+		ZoneReqDTO reqDTO = new ZoneReqDTO();
+		reqDTO.setZoneId(getManagedBean().getSearchPmZoneId());
+
+		getManagedBean()
+				.setLoginUserZone(
+						SmServiceLookup.getZoneSO().retriveZoneByID(reqDTO)
+								.getPmZone());
+
+	}
+
+	/**
 	 * Set whether the login user is allowed to do data maintenance
 	 */
 	private void setLoginUserAllowedToDoMaintenance() {
@@ -896,7 +936,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (isCancelMof) {
 			if (SmApplicationUtil.hasActiveTransactions(getManagedBean()
 					.getSmSupplier())) {
-				getManagedBean().setAllowedToDoMaintenance(false);
+				getManagedBean().setHasActiveTransaction(true);
 				alreadyHasMsg = true;
 				SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_ERROR,
 						MessageUtils.getMessage(MessageConst.ERROR_722609,
@@ -908,7 +948,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (!alreadyHasMsg
 				&& SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
 						.getSmSupplier())) {
-			getManagedBean().setAllowedToDoMaintenance(false);
+			getManagedBean().setHasActiveTransaction(true);
 			SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_ERROR,
 					MessageUtils.getMessage(MessageConst.ERROR_722608,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,

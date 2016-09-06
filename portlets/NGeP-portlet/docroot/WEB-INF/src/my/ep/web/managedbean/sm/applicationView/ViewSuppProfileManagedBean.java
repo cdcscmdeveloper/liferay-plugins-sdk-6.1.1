@@ -39,6 +39,7 @@ public class ViewSuppProfileManagedBean extends
 	private String applnApprovalRemarks;
 	private boolean showParentMsg;
 	private boolean allowedToDoMaintenance;
+	private boolean hasActiveTransaction;
 	private boolean editDisciplinaryAction;
 	private PmRegStatus existingRegStatus;
 	private Date existingMofExpiryDate;
@@ -237,6 +238,14 @@ public class ViewSuppProfileManagedBean extends
 	public void setSelectedPendingApprovedCategories(
 			List<SmSupplierCategory> selectedPendingApprovedCategories) {
 		this.selectedPendingApprovedCategories = selectedPendingApprovedCategories;
+	}
+
+	public boolean isHasActiveTransaction() {
+		return hasActiveTransaction;
+	}
+
+	public void setHasActiveTransaction(boolean hasActiveTransaction) {
+		this.hasActiveTransaction = hasActiveTransaction;
 	}
 
 }
