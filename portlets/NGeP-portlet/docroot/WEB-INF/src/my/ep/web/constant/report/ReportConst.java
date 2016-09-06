@@ -92,6 +92,7 @@ public class ReportConst {
 	public static final String SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL = "SC_046";
 	public static final String SC_PROPOSAL_DTLS_SERVICE_RPT_VAL = "SC_047";
 	public static final String SC_BRIEFING_PAPER_RPT_VAL = "SC_048";
+	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL = "SC_049";
 
 	public static final String SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL = "SC_050";
 	public static final String SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL = "SC_051";
@@ -114,6 +115,9 @@ public class ReportConst {
 	public static final String SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL = "SC_068";
 	public static final String SC_S1_LOA_RPT_VAL = "SC_069";
 	public static final String SC_S1_LOA_CONTENT_RPT_VAL = "SC_070";
+	public static final String SC_OPENING_COMMITTEE_RPT_VAL = "SC_071";
+	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_072";
+	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_073";
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
 	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";
 	// S1 Report
