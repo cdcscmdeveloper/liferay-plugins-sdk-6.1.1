@@ -2433,4 +2433,20 @@ public class CommitteBackingBean extends
 		return items;
 	}
 
+	/**
+	 * Check whether Date is null or not
+	 * 
+	 * @param publishDate
+	 * @param createdDate
+	 * @return Date
+	 */
+	public Date retriveDatesforOrgProfile(Date publishDate,Date createdDate){
+		if(publishDate==null){
+			log.info("===========createdDate====="+createdDate);
+			return createdDate;
+		}
+		log.info("===========publishDate====="+publishDate);
+		return publishDate;
+		
+	}
 }

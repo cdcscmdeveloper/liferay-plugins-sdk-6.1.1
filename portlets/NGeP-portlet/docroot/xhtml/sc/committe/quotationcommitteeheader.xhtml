@@ -11,7 +11,10 @@
 				<td style="width: 5%"><h:outputLabel
 						value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td style="width: 30%" class="header-info-text">
-					#{committeBackingBean.managedBean.qtCommittee.scQt.pmOrgProfile.orgName}</td>
+					<ui:param name="date" value="#{committeBackingBean.retriveDatesforOrgProfile(committeBackingBean.managedBean.qtCommittee.scQt.publishDate,committeBackingBean.managedBean.qtCommittee.scQt.createdDate)}"></ui:param>
+					#{committeBackingBean.retrievePTJByOrgProfileId(committeBackingBean.managedBean.qtCommittee.scQt.pmOrgProfile.orgProfileId,date)}
+					
+					</td>
 				<td style="width: 5%"><h:outputLabel
 						value="#{lbl['lbl.sc.created.date']}" /></td>
 				<td style="width: 10%" class="header-info-text"><h:outputText
