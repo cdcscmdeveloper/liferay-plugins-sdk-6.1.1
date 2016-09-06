@@ -21,7 +21,7 @@
 						 #{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgName}
 				     </h:panelGroup>
 				     <h:panelGroup rendered="#{!purchaseInquiryBackingBean.managedBean.scPrInquiry.isBrandNew()}">
-						 #{requestNoteBackingBean.getPtjNameByOrgProfileIdAndCreatedDate(purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgProfileId, purchaseInquiryBackingBean.managedBean.scPrInquiry.createdDate)}
+						 #{purchaseInquiryBackingBean.retrievePTJByOrgProfileId(purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgProfileId, purchaseInquiryBackingBean.managedBean.scPrInquiry.createdDate)}
 				     </h:panelGroup>
 					</td>
 					<td style="width: 6%"><h:outputLabel
