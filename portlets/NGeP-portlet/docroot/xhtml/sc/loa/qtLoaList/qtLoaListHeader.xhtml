@@ -18,7 +18,9 @@
 					<td width="10%">
 						<h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td class="header-info-text" width="35%">
-						#{qtLOABackingBean.managedBean.qt.pmOrgProfile.orgName}
+						#{qtLOABackingBean.retrievePTJByOrgProfileId
+(qtLOABackingBean.managedBean.qt.pmOrgProfile.orgProfileId,
+qtLOABackingBean.isQTStatusPublished(qtLOABackingBean.managedBean.currentStatusId)?qtLOABackingBean.managedBean.qt.publishDate : qtLOABackingBean.managedBean.qt.createdDate)}
 					</td>
 					<td width="10%">
 						<h:outputLabel value="#{lbl['lbl.sc.status']}" />

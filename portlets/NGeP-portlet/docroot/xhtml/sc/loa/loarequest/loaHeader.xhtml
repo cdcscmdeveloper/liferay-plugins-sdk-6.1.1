@@ -21,8 +21,11 @@
 				<c:if test="#{lOADetailBackingBean.managedBean.scLoa.brandNew}">
 					#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgName}
 					</c:if>
-					<c:if test="#{!lOADetailBackingBean.managedBean.scLoa.brandNew}">
-					#{lOADetailBackingBean.getPtjNameByOrgProfileIdAndCreatedDate(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgProfileId, lOADetailBackingBean.managedBean.scLoa.scLoiLoa.createdDate)}
+					<c:if test="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and isDocTypeQuotation}">
+					#{lOADetailBackingBean.retrievePTJByOrgProfileId(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgProfileId, lOADetailBackingBean.isQTStatusPublished(lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId)?lOADetailBackingBean.managedBean.scQt.publishDate : lOADetailBackingBean.managedBean.scQt.createdDate)}
+					</c:if>
+					<c:if test="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !isDocTypeQuotation}">
+					#{lOADetailBackingBean.retrievePTJByOrgProfileId(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgProfileId,lOADetailBackingBean.managedBean.scLoa.scQuote.createdDate)}
 					</c:if>
 				</td>
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" />

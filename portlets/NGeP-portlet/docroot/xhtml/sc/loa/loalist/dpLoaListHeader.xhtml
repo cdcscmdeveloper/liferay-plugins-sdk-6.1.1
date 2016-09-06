@@ -18,7 +18,7 @@
 					<td width="10%">
 						<h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td class="header-info-text" width="35%">
-						#{dpLOABackingBean.managedBean.scRequestNote.pmOrgProfile.orgName}
+						#{dpLOABackingBean.retrievePTJByOrgProfileId(dpLOABackingBean.managedBean.scRequestNote.pmOrgProfile.orgProfileId, dpLOABackingBean.managedBean.scRequestNote.quote.createdDate)}
 					</td>
 					<td width="10%">
 						<h:outputLabel value="#{lbl['lbl.sc.status']}" />
