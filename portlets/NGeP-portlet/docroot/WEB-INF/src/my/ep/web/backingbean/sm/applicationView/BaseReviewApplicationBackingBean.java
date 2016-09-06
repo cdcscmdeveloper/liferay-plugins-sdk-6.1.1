@@ -1872,6 +1872,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSearchApplNo(StringUtils.EMPTY);
 		getManagedBean().setSearchApplStatusId(null);
 	}
+	
+	/**
+	 * On change supplier type selection
+	 */
+	public void onChangeSupplierType() {
+		getManagedBean().setRegStatusDescList(
+				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
+						getManagedBean().getSearchSuppType(), null));
+	}
 
 	/**
 	 * Set login role

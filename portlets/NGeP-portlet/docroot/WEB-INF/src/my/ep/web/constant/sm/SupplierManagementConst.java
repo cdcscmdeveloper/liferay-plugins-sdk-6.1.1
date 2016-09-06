@@ -399,6 +399,10 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT = "ROC";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT = "LLP";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_UNKNOWN = "UNKNOW";
+	
+	public static final String MOF_STATUS_ACTIVE = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_ACTIVE;
+	public static final String MOF_STATUS_EXPIRED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED;
+	public static final String MOF_STATUS_NOT_AVAILABLE = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE;
 
 	public static final String RESUBMIT_APPL_PATH = "resubmit-application?";
 
@@ -1080,6 +1084,17 @@ public class SupplierManagementConst {
 
 	public int getMAX_PAYMENT_BANK() {
 		return SmRuleHelper.getInstance().getMaxPaymentBankForEachBranch();
+	}
+	
+	public String getMOF_STATUS_ACTIVE() {
+		return MOF_STATUS_ACTIVE;
+	}
+	
+	public String getMOF_STATUS_EXPIRED() {
+		return MOF_STATUS_EXPIRED;
+	}
+	public String getMOF_STATUS_NOT_AVAILABLE() {
+		return MOF_STATUS_NOT_AVAILABLE;
 	}
 
 }

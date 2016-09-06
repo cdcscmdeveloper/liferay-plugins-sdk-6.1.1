@@ -193,6 +193,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private Long searchApplStatusId;
 	private Long searchPmRegStatusId;
 	private Long searchPmZoneId;
+	private PmZone loginUserZone;
 	private Date currDate;
 	private SmGstSupplier hqGst;
 
@@ -1364,6 +1365,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setTargetApplNo(String targetApplNo) {
 		this.targetApplNo = targetApplNo;
+	}
+
+	public PmZone getLoginUserZone() {
+		return loginUserZone;
+	}
+
+	public void setLoginUserZone(PmZone loginUserZone) {
+		this.loginUserZone = loginUserZone;
 	}
 
 }

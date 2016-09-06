@@ -43,24 +43,30 @@
 			<p:outputPanel rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.pm.supplier.zone']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu label="#{lbl['lbl.pm.supplier.zone']}" required="true"
+						<td>
+							<p:selectOneMenu label="#{lbl['lbl.pm.supplier.zone']}" required="true"
 								id="zoneId" value="#{viewSuppProfileBackingBean.managedBean.searchPmZoneId}"
-								style="width: 207px;margin-bottom: 5px;">
+								style="width: 207px;margin-bottom: 5px;" disabled="#{not empty viewSuppProfileBackingBean.managedBean.loginUserZone}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{viewSuppProfileBackingBean.managedBean.zoneList}" var="zone"
 									itemLabel="#{zone.zoneName}"
-									itemValue="#{zone.zoneId}" /></p:selectOneMenu>
+									itemValue="#{zone.zoneId}" />
+							</p:selectOneMenu>
 							<p:message id="zoneIdMsg" for="zoneId" display="icon" />
 						</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu required="true" id="searchSuppTypeId" label="#{lbl['lbl.rpt.supplierType']}"
-								value="#{viewSuppProfileBackingBean.managedBean.searchSuppType}">
+								value="#{viewSuppProfileBackingBean.managedBean.searchSuppType}"
+								disabled="#{not empty viewSuppProfileBackingBean.managedBean.loginUserZone and viewSuppProfileBackingBean.managedBean.loginUserZone.zoneCode ne '1'}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="K" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="J" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="J"/>
+								<p:ajax event="change" process="@this"
+									listener="#{viewSuppProfileBackingBean.onChangeSupplierType()}"
+									update="approveSelBox" />
 							</p:selectOneMenu>
 							<p:message id="searchSuppTypeIdMsg" for="searchSuppTypeId" display="icon" />
 						</td>
