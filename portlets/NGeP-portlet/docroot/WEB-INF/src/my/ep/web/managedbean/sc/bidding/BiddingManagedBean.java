@@ -124,6 +124,13 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private String reBidding = BiddingConst.BID_ACTION_TYPE_REBIDDING;
 	private String reschedule = BiddingConst.BID_ACTION_TYPE_RESCHEDULE;
 	private Long remainingTimeForTimers;
+	
+	private Long bidMinDuration;
+	private Long bidMaxDuration;
+	private SelectItem[] selectItems;
+	
+	private boolean autoUpdate = Boolean.TRUE;
+	
 	private ScQt scQt;
 
 	/**
@@ -476,6 +483,10 @@ public class BiddingManagedBean extends BaseManagedBean {
 	 * @return the bidAction
 	 */
 	public ScBidAction getBidAction() {
+		
+		if(this.bidAction == null){
+			bidAction = new ScBidAction();
+		}
 		return bidAction;
 	}
 
@@ -1156,6 +1167,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 		this.lastBidAction = lastBidAction;
 	}
 
+
 	/**
 	 * @return the scQt
 	 */
@@ -1170,6 +1182,61 @@ public class BiddingManagedBean extends BaseManagedBean {
 		this.scQt = scQt;
 	}
 	
-	
+
+	/**
+	 * @return the bidMinDuration
+	 */
+	public Long getBidMinDuration() {
+		return bidMinDuration;
+	}
+
+	/**
+	 * @param bidMinDuration the bidMinDuration to set
+	 */
+	public void setBidMinDuration(Long bidMinDuration) {
+		this.bidMinDuration = bidMinDuration;
+	}
+
+	/**
+	 * @return the bidMaxDuration
+	 */
+	public Long getBidMaxDuration() {
+		return bidMaxDuration;
+	}
+
+	/**
+	 * @param bidMaxDuration the bidMaxDuration to set
+	 */
+	public void setBidMaxDuration(Long bidMaxDuration) {
+		this.bidMaxDuration = bidMaxDuration;
+	}
+
+	/**
+	 * @return the selectItems
+	 */
+	public SelectItem[] getSelectItems() {
+		return selectItems;
+	}
+
+	/**
+	 * @param selectItems the selectItems to set
+	 */
+	public void setSelectItems(SelectItem[] selectItems) {
+		this.selectItems = selectItems;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
 
 }
