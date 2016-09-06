@@ -19,7 +19,10 @@
 					<td style="width: 6%"><h:outputLabel
 							value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td class="header-info-text">
-						#{simpleQuoteBackingBean.managedBean.scQuote.requestNotes[0].pmOrgProfile.orgName}
+						#{simpleQuoteBackingBean.retrievePTJByOrgProfileId
+(simpleQuoteBackingBean.managedBean.scQuote.requestNotes[0].pmOrgProfile.orgProfileId,
+simpleQuoteBackingBean.managedBean.scQuote.createdDate)}
+						
 					</td>
 					<td style="width: 8%"><h:outputLabel
 							value="#{lbl['lbl.sc.sq.request.date']}" /></td>
