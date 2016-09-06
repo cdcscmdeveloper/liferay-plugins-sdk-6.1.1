@@ -33,36 +33,36 @@
 				<p:row>
 					<!-- 1 -->
 					<p:column style="width:2%"
-						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or 
-							(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
 					<!-- 2 -->
 					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 						style="width : 2%;"
-						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or
-							(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
 					<!-- 3 -->
 					<p:column style="width :350px;white-space : normal"
 						headerText="#{lbl['lbl.sm.catCodes.cate']}"
-						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or
-							(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
 					<!-- 4 -->
 					<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}"
-						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or
-							(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
 					<!-- 5 -->
 					<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}"
-						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or
-							(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
 					<!-- 6 -->
 					<p:column headerText="#{lbl['lbl.sm.status']}"
-						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or
-							(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
+						disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}" />
 				</p:row>
 			</p:columnGroup>
 			<!-- 1 -->
 			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or
-					(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
+				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
 			<!-- 2 -->
 			<p:column style="width : 2%;">
 				<p:outputLabel value="#{index + 1}"
@@ -70,8 +70,8 @@
 			</p:column>
 			<!-- 3 -->
 			<p:column style="width :350px;white-space : normal"
-				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or
-					catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<h:outputText
 					value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
 				<br />
@@ -83,8 +83,8 @@
 			</p:column>
 			<!-- 4 -->
 			<p:column
-				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or 
-					catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<p:inputTextarea id="otherDesc" maxlength="100"
 					style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 					value="#{catBean.otherDesc}" rows="5" cols="20"
@@ -107,8 +107,8 @@
 			</p:column>
 			<!-- 5 -->
 			<p:column
-				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or
-					catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 					rendered="#{!catBean.specialCategory}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
@@ -116,8 +116,8 @@
 			</p:column>
 			<!-- 6 -->
 			<p:column
-				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or
-					catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction 
+							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
@@ -135,7 +135,8 @@
 				rendered="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType eq 'J'}"></p:commandLink>
 			#{lbl['lbl.sm.download.categorycode']}
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-				partialSubmit="true" process="@this" disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
+				partialSubmit="true" process="@this" 
+				disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction}"
 				oncomplete="catCodePopup.show();">
 			</p:commandButton>
 
@@ -150,7 +151,7 @@
 			
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedBtnId" 
 				disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories or 
-					!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
+					!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance or supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction}"
 				action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories)}" 
 				update=":#{p:component('catCodeInfPan')}" partialSubmit="true" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"

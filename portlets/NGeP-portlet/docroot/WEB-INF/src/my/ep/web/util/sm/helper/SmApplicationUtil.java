@@ -3781,7 +3781,8 @@ public class SmApplicationUtil {
 		List<PmStatusDesc> descList = new ArrayList<PmStatusDesc>();
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		if (applType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+		if (!StringUtils.isBlank(applType)
+				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 			descList = SmServiceLookup.getStatusSO()
 					.retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
 		} else {
