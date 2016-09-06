@@ -14098,7 +14098,7 @@ public class ReportBackingBean extends
 								this.getManagedBean()
 										.getSelectedPegwaiPengawal()
 										.getPmOrgValidity().getOrgName());
-			}
+           }
 			if (this.getManagedBean().getSelectedKumpulanPTJ() != null
 					&& this.getManagedBean().getSelectedKumpulanPTJ()
 							.getPmOrgValidity() != null) {
@@ -14107,6 +14107,7 @@ public class ReportBackingBean extends
 						.put("2",
 								this.getManagedBean().getSelectedKumpulanPTJ()
 										.getPmOrgValidity().getOrgName());
+		
 			}
 			if (this.getManagedBean().getSelectedPTJ() != null
 					&& this.getManagedBean().getSelectedPTJ()
@@ -14116,6 +14117,7 @@ public class ReportBackingBean extends
 						.put("3",
 								this.getManagedBean().getSelectedPTJ()
 										.getPmOrgValidity().getOrgName());
+			
 			}
 
 		}
@@ -14702,7 +14704,7 @@ public class ReportBackingBean extends
 					}
 				}
 			}
-			// reloadLovsValues();
+			 reloadLovsValues();
 			// this.setCmCompanyName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
 
 			if (this.getModuleValue().equalsIgnoreCase(
@@ -17704,6 +17706,9 @@ public class ReportBackingBean extends
 			this.setFlSst(null);
 			this.setFlJabatan(null);
 			this.setCommonMinistry(null);
+			this.setCommonPegaWaiPengawal(null);
+			this.setCommonKumpulanPTJ(null);
+			this.setCommonPtj(null);
 			this.setFlSupplier(null);
 			this.setFlStatus(null);
 			this.setFlDuration(null);
