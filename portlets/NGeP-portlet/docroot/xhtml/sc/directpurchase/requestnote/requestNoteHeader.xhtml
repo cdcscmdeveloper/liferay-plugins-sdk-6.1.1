@@ -21,7 +21,7 @@
 						#{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}
 				     </h:panelGroup>
 				     <h:panelGroup rendered="#{!requestNoteBackingBean.managedBean.requestNote.isBrandNew()}">
-						#{requestNoteBackingBean.getPtjNameByOrgProfileIdAndCreatedDate(requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgProfileId, requestNoteBackingBean.managedBean.requestNote.createdDate)}
+						#{requestNoteBackingBean.retrievePTJByOrgProfileId(requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgProfileId, requestNoteBackingBean.managedBean.requestNote.createdDate)}
 				     </h:panelGroup>
 					</td>
 					<td style="width:5%"><h:outputLabel
