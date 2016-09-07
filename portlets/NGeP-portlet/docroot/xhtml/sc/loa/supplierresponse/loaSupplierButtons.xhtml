@@ -20,17 +20,23 @@
 		postSignAction="#{lOADetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
 	<div class="ppRightBtn">
+		<p:commandButton immediate="true"
+			value="#{lbl['lbl.btn.back']}"
+			action="#{lOADetailBackingBean.backToPrevious}"
+			style="float:left;" 
+			rendered="#{!empty lOADetailBackingBean.managedBean.backToPreviousPage}" />
+						
 	<ui:param name="readOnlyTask" value="#{lOADetailBackingBean.managedBean.readOnly}" />
 		<ui:decorate
 			template="/WEB-INF/facelets/templates/claim_template.xhtml">
 			<ui:define name="outComeSection">
-				<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
-					partialSubmit="true" update="@form" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();"
-					action="#{lOADetailBackingBean.saveAction}" />
-
 				<c:choose>
 					<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
+						<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+							partialSubmit="true" update="@form" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();"
+							action="#{lOADetailBackingBean.saveAction}" />
+							
 						<ui:repeat var="bpmAction"
 							value="#{lOADetailBackingBean.managedBean.outComes}">
 							<ui:param name="buttonLabel"
