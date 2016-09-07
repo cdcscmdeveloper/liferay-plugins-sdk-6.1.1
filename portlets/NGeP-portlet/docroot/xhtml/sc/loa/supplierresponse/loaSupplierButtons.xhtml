@@ -19,63 +19,77 @@
 	<ac:gpkiPopup textBeforeSign="#{lOADetailBackingBean.textBeforeSign}"
 		postSignAction="#{lOADetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
-	<div class="ppRightBtn">
-		<p:commandButton immediate="true"
-			value="#{lbl['lbl.btn.back']}"
-			action="#{lOADetailBackingBean.backToPrevious}"
-			style="float:left;" 
-			rendered="#{!empty lOADetailBackingBean.managedBean.backToPreviousPage}" />
-						
-	<ui:param name="readOnlyTask" value="#{lOADetailBackingBean.managedBean.readOnly}" />
-		<ui:decorate
-			template="/WEB-INF/facelets/templates/claim_template.xhtml">
-			<ui:define name="outComeSection">
-				<c:choose>
-					<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
-						<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
-							partialSubmit="true" update="@form" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
-							action="#{lOADetailBackingBean.saveAction}" />
-							
-						<ui:repeat var="bpmAction"
-							value="#{lOADetailBackingBean.managedBean.outComes}">
-							<ui:param name="buttonLabel"
-								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-
-							<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									rendered="#{validityDaysExpiredQt and !lOADetailBackingBean.managedBean.qtCancelRequested}"
-									disabled="#{!lOADetailBackingBean.managedBean.agreeWithTermsConditions}"
-									styleClass="ui-button" update="@form"
-									partialSubmit="true" process="@form"
-									action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-									<f:setPropertyActionListener value="#{bpmAction}"
-										target="#{lOADetailBackingBean.managedBean.action}" />
-									<f:setPropertyActionListener value="false"
-										target="#{lOADetailBackingBean.managedBean.autoUpdate}" />										
-								</p:commandButton>
-							</h:panelGroup>
-
-							<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									rendered="#{!isMultipleLOI and validityDaysExpiredQt}"
-									styleClass="ui-button" onstart="blockWidget.show();"
+	<table style="width: 100%">
+	<tr>
+		<td>
+			<div align="left" style="width: 100%">
+			    <p:commandButton immediate="true"
+					value="#{lbl['lbl.btn.back']}"
+					action="#{lOADetailBackingBean.backToPrevious}"
+					style="float:left;" 
+					rendered="#{!empty lOADetailBackingBean.managedBean.backToPreviousPage}" />
+			 </div>
+			 </td>
+			 <td>
+			 <div align="right" style="width: 100%">
+				<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeLetterOfAward, lOADetailBackingBean.managedBean.scLoa.loaId)}"
+					immediate="true" 
+					rendered="#{!empty lOADetailBackingBean.managedBean.backToPreviousPage}" />
+								
+				<ui:param name="readOnlyTask" value="#{lOADetailBackingBean.managedBean.readOnly}" />
+				<ui:decorate
+					template="/WEB-INF/facelets/templates/claim_template.xhtml">
+					<ui:define name="outComeSection">
+						<c:choose>
+							<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
+								<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+									partialSubmit="true" update="@form" onstart="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
-									action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
-									partialSubmit="true" process="@this" update="@this" />
-							</h:panelGroup>
-						</ui:repeat>
-						
-						<ac:spkiPopup id="spkiPopup"
-							password="#{lOADetailBackingBean.managedBean.spkiBackingBean.password}"
-							challengeAns1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
-							challengeQues1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-							postSignAction="#{lOADetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" 
-							enableAutoUpdate="#{lOADetailBackingBean.enableAutoUpdate()}" />
-					</c:when>
-				</c:choose>
-			</ui:define>
-		</ui:decorate>
-	</div>
+									action="#{lOADetailBackingBean.saveAction}" />
+									
+								<ui:repeat var="bpmAction"
+									value="#{lOADetailBackingBean.managedBean.outComes}">
+									<ui:param name="buttonLabel"
+										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+		
+									<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											rendered="#{validityDaysExpiredQt and !lOADetailBackingBean.managedBean.qtCancelRequested}"
+											disabled="#{!lOADetailBackingBean.managedBean.agreeWithTermsConditions}"
+											styleClass="ui-button" update="@form"
+											partialSubmit="true" process="@form"
+											action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+											<f:setPropertyActionListener value="#{bpmAction}"
+												target="#{lOADetailBackingBean.managedBean.action}" />
+											<f:setPropertyActionListener value="false"
+												target="#{lOADetailBackingBean.managedBean.autoUpdate}" />										
+										</p:commandButton>
+									</h:panelGroup>
+		
+									<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											rendered="#{!isMultipleLOI and validityDaysExpiredQt}"
+											styleClass="ui-button" onstart="blockWidget.show();"
+											oncomplete="blockWidget.hide();"
+											action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+											partialSubmit="true" process="@this" update="@this" />
+									</h:panelGroup>
+								</ui:repeat>
+								
+								<ac:spkiPopup id="spkiPopup"
+									password="#{lOADetailBackingBean.managedBean.spkiBackingBean.password}"
+									challengeAns1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+									challengeQues1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+									postSignAction="#{lOADetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" 
+									enableAutoUpdate="#{lOADetailBackingBean.enableAutoUpdate()}" />
+							</c:when>
+						</c:choose>
+					</ui:define>
+				</ui:decorate>
+			 </div>
+		</td>
+	</tr>
+	</table>
 </ui:composition>
