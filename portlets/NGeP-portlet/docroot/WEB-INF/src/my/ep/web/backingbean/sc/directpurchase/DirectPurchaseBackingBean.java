@@ -25,10 +25,12 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -38,14 +40,18 @@ import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
@@ -90,7 +96,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			getManagedBean().setGovernment(Boolean.TRUE);
 			
 			// show default Ministry, Kumpulan PTJ and PTJ
-			getDefaultPtjAndMinistryAndKumpulanPtj();
+			getDefaultPtjAndMinistryValues();
 
 		} else if(isSupplier()){
 			getDocumentTypes(Boolean.FALSE);
@@ -400,7 +406,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		this.getManagedBean().setSearchDocumentTitle(null);
 		this.getManagedBean().setSearchDocumentToDuration(null);
 		this.getManagedBean().setSearchDocumentFromDuration(null);
-		getManagedBean().setSearchPtjProfile(null);
+		getManagedBean().setSearchMinistryProfile(null);
 		getManagedBean().setSearchPtjGroupProfile(null);
 		getManagedBean().setSearchPtjProfile(null);
 		this.getManagedBean().resetDocumentDataModel();
@@ -516,53 +522,105 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		return null;
 	}
 	
-	 /**
-   	 * Get PTJ Group condition for construct the LOV listing
-   	 * @return String
-   	 */
+	/**
+	 * Get PTJ Group condition for construct the LOV listing
+	 * 
+	 * @return String
+	 */
 	public String getPTJGroupCondition() {
-		if(getManagedBean().getSearchMinistryProfile() != null){
-			String condition = OrgProfileUtil.getFromToSearchBeanParentString(
-					OrganizationType.DEPARTMENT.value(), OrganizationType.MINISTRY.value())+"^"+
-					this.getManagedBean().getSearchMinistryProfile().getOrgProfileId();
-			return condition;
-		}
-		return null;
+		debugLogger("getPTJGroupCondition");
+		StringBuffer condition = new StringBuffer("recordStatus" + SourcingConstants.LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
+		PmOrgProfile searchMinistryProfile = this.getManagedBean().getSearchMinistryProfile();
+		if (null != searchMinistryProfile && searchMinistryProfile.getOrgProfileId() != null) {
+			String minLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_MINISTRY);
+			String ptjGrpLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_PTJGROUP);
+			if (minLevel != null && ptjGrpLevel != null) {
+				int ministryLevel = Integer.valueOf(minLevel);
+				int ptjGroupLevel = Integer.valueOf(ptjGrpLevel);
+				int orgLevel = ministryLevel - ptjGroupLevel;
+
+				condition.append(SourcingConstants.LOV_FIELD_SEPARATOR);
+				for (int i = 0; i < orgLevel; i++) {
+					condition.append("parentOrgProfile.");
+				}
+				condition.append("orgProfileId");
+				condition.append(SourcingConstants.LOV_CONDITION_SEPARATOR);
+				condition.append(searchMinistryProfile.getOrgProfileId());
+
+			}
+
+		} 
+		return condition.toString();
 	}
-	
+
 	/**
 	 * Get PTJ condition for construct the LOV listing
+	 * 
 	 * @return String
 	 */
 	public String getPtjCondition() {
-		String condition = null;
+		debugLogger("getPTJCondition");
+		StringBuffer condition = new StringBuffer("recordStatus" + SourcingConstants.LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
+		PmOrgProfile searchMinistryProfile = this.getManagedBean().getSearchMinistryProfile();
+		PmOrgProfile searchPtjGroupProfile = this.getManagedBean().getSearchPtjGroupProfile();
+		if (null != searchPtjGroupProfile && searchPtjGroupProfile.getOrgProfileId() != null) {
+			condition.append(SourcingConstants.LOV_FIELD_SEPARATOR);
+			condition.append(OrgProfileUtil
+					.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
+					+ SourcingConstants.LOV_CONDITION_SEPARATOR + searchPtjGroupProfile.getOrgProfileId());
+		} else if (null != searchMinistryProfile && searchMinistryProfile.getOrgProfileId() != null) {
+			condition.append(SourcingConstants.LOV_FIELD_SEPARATOR);
+			condition.append(OrgProfileUtil
+					.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+					+ SourcingConstants.LOV_CONDITION_SEPARATOR + searchMinistryProfile.getOrgProfileId());
+		} 
+		return condition.toString();
+	}
+	
+	/**
+	 * The method used set parent profile and reset child profile value
+	 * 
+	 * @param orgProfile
+	 * 		the PmOrgProfile instance
+	 */
+	public void postUpdateOrgProfileListener(BaseEntity orgProfile) {
+		debugLogger("postUpdateOrgProfileListener");
 		
-		if (this.getManagedBean().getSearchPtjGroupProfile() != null) {
-			condition = OrgProfileUtil.getFromToSearchBeanParentString(
-					OrganizationType.DIVISION.value(), OrganizationType.DEPARTMENT.value())+"^"+
-					this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId();
-		} else {
-			if(this.getManagedBean().getSearchMinistryProfile() != null){
-				condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
-						this.getManagedBean().getSearchMinistryProfile().getOrgProfileId();
+		if (orgProfile instanceof PmOrgProfile) {
+			PmOrgProfile pmOrgProfile = (PmOrgProfile)orgProfile;
+			String orgType = pmOrgProfile.getOrgTypeCode().getParameterCode();
+			
+			if (ParameterConst.ORG_TYPE_MINISTRY.equals(orgType)) {
+				PmOrgProfile ministryOrgProfile = new PmOrgProfile();
+				PmParameter orgTypeCode = new PmParameter();
+				orgTypeCode.setParameterCode(ParameterConst.ORG_TYPE_PTJ_GROUP);
+				ministryOrgProfile.setOrgTypeCode(orgTypeCode);
+				getManagedBean().setSearchPtjGroupProfile(ministryOrgProfile);
+				
+				postUpdateOrgProfileListener(ministryOrgProfile);
+				
+			} else { 
+				if (getManagedBean().getSearchMinistryProfile() == null || 
+						getManagedBean().getSearchMinistryProfile().getOrgProfileId() == null) {
+					getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(
+							pmOrgProfile.getOrgProfileId()));	
+				}
+				
+				if (ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)) {
+					getManagedBean().setSearchPtjProfile(new PmOrgProfile());
+					
+				} else if (ParameterConst.ORG_TYPE_PTJ.equals(orgType)) {
+					if (getManagedBean().getSearchPtjGroupProfile() == null || 
+							getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == null) {
+						getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(
+								pmOrgProfile.getOrgProfileId()));	
+					}
+				}
 			}
+				
 		}
-		return condition;
-	}
-	
-	/**
-	 * The method used reset PTJ/PTJ Group profile value once select the Ministry
-	 */
-	public void resetPtjGroupProfile() {
-		getManagedBean().setSearchPtjProfile(null);
-		getManagedBean().setSearchPtjGroupProfile(null);
-	}
-	
-	/**
-	 * The method used reset PTJ profile value once select the Ministry
-	 */
-	public void resetPtjProfile() {
-		getManagedBean().setSearchPtjProfile(null);
 	}
     
     /**
@@ -610,47 +668,69 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()));
 	}
-   
+    
     /**
-     * Gets the default ptj and ministry and kumpulan ptj.
-     *
-     * @return the default ptj and ministry and kumpulan ptj
-     */
-    private void getDefaultPtjAndMinistryAndKumpulanPtj() {
-    	if (isSupplier()) {
-    		this.getManagedBean().setSearchMinistryProfile(null);
-    		this.getManagedBean().setSearchPtjGroupProfile(null);
-    		this.getManagedBean().setSearchPtjProfile(null);
-			
-		} else {
-			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-			PmOrgProfile orgProfile = null;
-			if (userResDTO.getUserOrgList()!=null && userResDTO.getUserOrgList().size()>0) {
-				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+	 * Gets the default ptj and ministry search values based on user role.
+	 */
+	private void getDefaultPtjAndMinistryValues() {
+
+		debugLogger("getDefaultPtjAndMinistryValues");
+		PmOrgProfile ministryProfile = new PmOrgProfile();
+		PmOrgProfile ptjGroupProfile = new PmOrgProfile();
+		PmOrgProfile ptjProfile = new PmOrgProfile();
+		
+		PmOrgProfile orgProfile = getOrgProfileByLoginUser();
+		if (orgProfile != null) {
+			String orgType = orgProfile.getOrgTypeCode().getParameterCode();
+			if (ParameterConst.ORG_TYPE_MINISTRY.equals(orgType)) {
+				ministryProfile = orgProfile;
+			} else if (ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)) {
+				ptjGroupProfile = orgProfile;
+				ministryProfile = retrieveMinistryOrgProfile(
+						orgProfile.getOrgProfileId());
+			} else if (ParameterConst.ORG_TYPE_PTJ.equals(orgType)) {
+				ptjProfile = orgProfile;
+				ptjGroupProfile = retrieveJabatanOrgProfile(
+						orgProfile.getOrgProfileId());
+				ministryProfile = retrieveMinistryOrgProfile(
+						orgProfile.getOrgProfileId());
 			}
-			
-			this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
-			this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
-			this.getManagedBean().setSearchPtjProfile(orgProfile);
-		/*	
-			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {			
-				this.getManagedBean().setSearchMinistryProfile(orgProfile);
-				this.getManagedBean().setSearchPtjGroupProfile(null);
-				this.getManagedBean().setSearchPtjProfile(null);
-			} else if (isContractAdminOrInternalAudit()) {
-				this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
-				this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
-				this.getManagedBean().setSearchPtjProfile(orgProfile);
-			} else if (isReqOrApprover()) {
-				this.getManagedBean().setSearchMinistryProfile(null);
-    			this.getManagedBean().setSearchPtjGroupProfile(null);
-    			this.getManagedBean().setSearchPtjProfile(orgProfile);
-			}*/
 		}
-    }
+		
+		getManagedBean().setSearchMinistryProfile(ministryProfile);
+		getManagedBean().setSearchPtjGroupProfile(ptjGroupProfile);
+		getManagedBean().setSearchPtjProfile(ptjProfile);
+	}
+	
+	private PmOrgProfile getOrgProfileByLoginUser() {
+		PmOrgProfile pmOrgProfile = null;
+		Long userId = new FacesScopes().getUserSessionBean().getUserId();
+		
+		if (userId != null) {
+			IUserSO userSO = null;
+			try {
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(userId);
+				userSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+				if (resDTO.getUserOrgList() != null
+						&& resDTO.getUserOrgList().size() > 0) {
+					for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
+						if (pmUserOrg.getPmOrgProfile() != null) {
+							pmOrgProfile = pmUserOrg.getPmOrgProfile();
+							break;
+						}
+					}
+				}
+			} finally {
+				userSO = null;
+			}	
+		}
+		
+		return pmOrgProfile;
+	}
 
 }
 
