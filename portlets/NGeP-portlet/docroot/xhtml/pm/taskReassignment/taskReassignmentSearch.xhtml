@@ -1,0 +1,172 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:param name="isSysOrgType" value="#{ParameterConst.orgTypeSys eq taskReassignmentBackingBean.managedBean.currentActiveOrg.orgTypeCode.parameterCode}" />
+	<p:panel id="pTaskAssignSearch" header="#{lbl['lbl.pm.ta.search']}"
+		toggleable="true">
+		<table class="ppTwoTable">
+			<tr>
+				<th width="15%"><p:outputLabel
+						value="#{lbl['lbl.pm.ta.org.type']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></th>
+				<td width="55%" style="white-space: nowrap;"><p:selectOneMenu
+						disabled="#{not isSysOrgType}"
+						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId}"
+						styleClass="ppDropDownWidthM" id="somOrgType"
+						label="#{lbl['lbl.pm.ta.org.type.name']}">
+						<f:selectItems
+							value="#{taskReassignmentBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.organisationTypes, taskReassignmentBackingBean.orgTypeSearchBean)}" />
+						<p:ajax event="change"
+							listener="#{taskReassignmentBackingBean.changeOrgType()}"
+							update=":form:pTaskAssignSearch" />
+					</p:selectOneMenu></td>
+				<td width="30%"></td>
+			</tr>
+			<tr>
+				<th width="15%"><p:outputLabel
+						value="#{lbl['lbl.pm.ta.org.name']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></th>
+				<td width="55%" style="white-space: nowrap;"><p:outputPanel
+						id="opPtjOrgCode"
+						rendered="#{ParameterConst.orgTypePtj eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">
+						<p:inputText size="60" id="itSelectedPtj"
+							value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.pmOrgValidity.orgName}"
+							readonly="true"
+							disabled="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
+							or !taskReassignmentBackingBean.managedBean.orgProfileRequired}" />
+					&#160;	
+					<p:commandLink id="ptjSearchCL" partialSubmit="true"
+							disabled="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
+							or !taskReassignmentBackingBean.managedBean.orgProfileRequired}"
+							process="@this" update=":form:orgProfileCcId:ptjPopup"
+							action="#{organisationSearchBackingBean.initPtjPopup}"
+							oncomplete="ptjPopup.show();">
+							<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+						</p:commandLink>
+					</p:outputPanel> <p:outputPanel id="opSysOrgCode"
+						rendered="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null or 
+					ParameterConst.orgTypeSys eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">
+						<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="60"
+							disabled="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
+							or !taskReassignmentBackingBean.managedBean.orgProfileRequired}"
+							update=":form:pTaskAssignSearch" readonly="true"
+							headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+							value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.pmOrgValidity.orgName}"
+							saveObject="taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile"
+							conditionField="#{taskReassignmentBackingBean.constructConditionFields()}"
+							postUpdateListener="taskReassignmentBackingBean.onChangeOrg" />
+					</p:outputPanel></td>
+				<td width="30%"></td>
+			</tr>
+			<tr>
+				<th width="10%"><p:outputLabel
+						value="#{lbl['lbl.pm.ta.username']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></th>
+				<td width="55%"><ac:lov id="lovUser" lovId="PM_USER_ID"
+						size="55"
+						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile!=null
+						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId!=null
+						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgName !='')}"
+						update=":form:pTaskAssignSearch" readonly="true"
+						headerText="#{lbl['lbl.pm.ta.user.lov']}"
+						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.loginId} &#160; #{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userName}"
+						saveObject="taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user"
+						conditionField="#{taskReassignmentBackingBean.constructUserConditionFields()}"
+						postUpdateListener="taskReassignmentBackingBean.onChangeUser" /></td>
+
+				<td width="30%"></td>
+			</tr>
+			<tr>
+				<th width="10%">
+					<p:outputLabel value="#{lbl['lbl.pm.ta.role']}"/>
+				</th>
+				<td width="55%">
+					<div style="overflow-y: scroll; height:100px; width:400px;border: 1px solid #DDD;margin-bottom: 5px; ">
+						<p:selectManyCheckbox id="rolecheckboxes" 
+						    value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.selectedRoles}" 
+						    layout="pageDirection" 
+					    disabled="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo !=null 
+						    and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo !=''}">
+	            			<f:selectItems value="#{taskReassignmentBackingBean.getRoleList()}" />
+	            			<p:ajax event="change" process="@this"  partialSubmit ="true" update="@this,:form:lovDocType:lovDocType"/> 
+	       				 </p:selectManyCheckbox>
+       				</div>
+				</td>
+				
+				<td width="30%">
+					
+				</td>
+			</tr>
+			<tr>
+				<th width="10%">
+					<p:outputLabel value="#{lbl['lbl.pm.ta.process.doctype']}"/>
+				</th>
+				<td width="55%">
+					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="55" 
+						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null
+						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userId!=null
+						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userName !='')
+						or (taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo !=''
+						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo != null)}" 
+		            	update="@this" readonly="true" 
+						headerText="#{lbl['lbl.pm.ta.document.type']}"
+						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType.codeDesc}"
+						saveObject="taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType"
+						conditionField="#{taskReassignmentBackingBean.constuctConditionFields()}"/>
+				</td>
+				
+				<td width="30%">
+					
+				</td>
+			</tr>
+				<tr>
+				<th width="10%">
+					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}"/>
+				</th>
+				<td width="55%">
+					<p:inputText id="docNo"  styleClass="ppDisplayTextL"
+							label="#{lbl['lbl.pm.ta.doc.no']}" maxlength="20"
+							value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo}"
+							size="30" >
+						<p:ajax event="blur" listener="#{taskReassignmentBackingBean.onChangeUser(null)}" 
+				     		update=":form:pTaskAssignSearch"/> 
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.pm.ta.docno.tooltips']}" />
+				</td>
+				
+				<td width="30%">
+					
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}" 
+							id="cbSearchTask" widgetVar="cbSearchTask"
+							process="pTaskAssignSearch" action="#{taskReassignmentBackingBean.searchTaskAssign}"
+							update="dtTaskAssignResult,:form:somTaskListType" 
+							onclick="cbSearchTask.disable();cbResetTask.disable()"  
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
+							/>
+						<p:commandButton id="cbResetTask" widgetVar="cbResetTask"
+							onclick="cbSearchTask.disable();cbResetTask.disable()"  
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
+							value="#{lbl['lbl.btn.reset']}" 
+							action="#{taskReassignmentBackingBean.resetTaskAssignSearchBean}"
+							update="pTaskAssignSearch,:form:taskListID" 
+							/> 
+					</div>
+				</td>
+			</tr>
+		</table>
+		<ac:ptjPopup id="orgProfileCcId"
+			orgTypeParamCode="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}"
+			okAction="taskReassignmentBackingBean.selectPtjAction"
+			update=":form:pTaskAssignSearch" />
+	</p:panel>
+
+</ui:composition>
