@@ -67,7 +67,7 @@
 						value="#{lbl['lbl.pm.ta.username']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></th>
 				<td width="55%"><ac:lov id="lovUser" lovId="PM_USER_ID"
-						size="55"
+						size="60"
 						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgName !='')}"
@@ -106,7 +106,7 @@
 					<p:outputLabel value="#{lbl['lbl.pm.ta.process.doctype']}"/>
 				</th>
 				<td width="55%">
-					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="55" 
+					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="60" 
 						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userId!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userName !='')
