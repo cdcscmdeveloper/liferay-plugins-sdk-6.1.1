@@ -4267,4 +4267,28 @@ public class SmCommonUtil {
 		return isSmObjectPropsDifference(latest, current, excludeProps);
 	}
 
+	public String getPaymentGatewayVKeyByBillType(String billType){
+		String vKey = null;
+		
+		if (billType.equalsIgnoreCase(
+				my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+			vKey = EpPropertiesUtils.getInstance().getProperty("molpay.cdc.vkey");
+		}else{
+			vKey = EpPropertiesUtils.getInstance().getProperty("molpay.gov.vkey");
+		}
+		return vKey;
+	}
+	
+	public String getPaymentGatewayMerchantIdByBillType(String billType){
+		String vCode = null;
+		
+		if (billType.equalsIgnoreCase(
+				my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+			vCode = EpPropertiesUtils.getInstance().getProperty("molpay.cdc.merchantid");
+		}else{
+			vCode = EpPropertiesUtils.getInstance().getProperty("molpay.gov.merchantid");
+		}
+		
+		return vCode;
+	}
 }
