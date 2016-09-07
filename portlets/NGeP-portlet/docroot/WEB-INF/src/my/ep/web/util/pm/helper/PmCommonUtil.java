@@ -2201,5 +2201,33 @@ public class PmCommonUtil {
 		}
 		return items;
 	}
+	
+
+	/**
+	 * retrieve org profile dtl
+	 * 
+	 * @param id
+	 * @return PmOrgProfile
+	 */
+	public static PmOrgProfile retrievePmOrgProfileDtl(Long id) {
+		log.info("retrievePmOrgProfileDtl - Start");
+		PmOrgProfile pmOrgProfile = new PmOrgProfile();
+		IOrgProfileSO orgProfileSO = null;
+		try {
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			OrgProfileResDTO resDTO = null;
+			reqDTO.setOrgProfileId(id);
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
+			if (resDTO.isSuccessful()) {
+				pmOrgProfile = resDTO.getPmOrgProfile();
+			}
+		} finally {
+			orgProfileSO = null;
+		}
+		log.info("retrievePmOrgProfileDtl - End");
+		return pmOrgProfile;
+	}
 
 }
