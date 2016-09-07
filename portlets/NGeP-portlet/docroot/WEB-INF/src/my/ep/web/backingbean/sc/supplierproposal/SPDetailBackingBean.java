@@ -352,11 +352,16 @@ public class SPDetailBackingBean extends
 	 */
 	public void retrieveDeclarationList() throws Exception {
 		debugLogger("retrieveDeclarationList");
+		log.info("retrieveDeclarationList");
 		this.getManagedBean().setPrepareActiveIndex(3);
 
 		VelocityContext context = new VelocityContext();
-		String ptjName = this.getManagedBean().getQt().getPmOrgProfile()
-				.getOrgName();
+		Date date=retriveDatesforOrgProfile( this.getManagedBean().getQt().getPublishDate(), this.getManagedBean().getQt().getCreatedDate());
+		String ptjName=retrievePTJByOrgProfileId( this.getManagedBean().getQt().getPmOrgProfile().getOrgProfileId(),date);
+		log.info("date"+date);
+		log.info("ptjName"+ptjName);
+		//String ptjName = this.getManagedBean().getQt().getPmOrgProfile()
+				//.getOrgName();
 		context.put("ptjName", ptjName);
 		String othersTermsConditions = DocumentGenerator.getInstance()
 				.getHtmlFromVelocity(
@@ -3478,7 +3483,7 @@ public class SPDetailBackingBean extends
 	}
 
 	private String generateDeclarationFromVelocity(ScQt scQt) throws Exception {
-
+log.info("generateDeclarationFromVelocity");
 		if (getManagedBean().getSmSupplier() == null
 				|| getManagedBean().getSmSupplier().getCompanyName() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
@@ -3488,6 +3493,10 @@ public class SPDetailBackingBean extends
 		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
 		SmSupplier smSupplier = getManagedBean().getSmSupplier();
 		VelocityContext context = new VelocityContext();
+		Date date=retriveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
+		log.info("date"+date);
+		String ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),date);
+		log.info("ptjName"+ptjName);
 		if (scQt != null) {
 			context.put("title", scQt.getQtTitle());
 		}
@@ -3511,7 +3520,7 @@ public class SPDetailBackingBean extends
 			}
 		}
 		if (pmOrgProfile != null) {
-			context.put("agency", pmOrgProfile.getOrgName());
+			context.put("agency", ptjName);
 		}
 
 		String integrityPact = DocumentGenerator.getInstance()
@@ -3977,7 +3986,7 @@ public class SPDetailBackingBean extends
 	 * @throws Exception
 	 */
 	public void printLabelAction() throws Exception {
-
+log.info("===printLabelAction");
 		ScSlAttachment slAttachment = new ScSlAttachment();
 		slAttachment.setDocNo(getManagedBean().getQt().getQtNo());
 		generateSampleLabelsFromVelocityToPdf(slAttachment, getManagedBean()
@@ -3991,11 +4000,16 @@ public class SPDetailBackingBean extends
 
 	private void generateSampleLabelsFromVelocityToPdf(ScAttachment attachment,
 			ScQt scQt) throws Exception {
+		
 		attachment.setFileName("sample Labels.pdf");
 		populateAttachmentDetails(attachment);
 		// CommonUtils commonUtils = new CommonUtils();
 
 		VelocityContext context = new VelocityContext();
+		log.info("======currentstatusid generateSampleLabelsFromVelocityToPdf===="+this.getManagedBean().getCurrentStatusId());
+			Date date=retriveDatesforOrgProfile(scQt.getPublishDate(),scQt.getCreatedDate());
+			String ptjName=retrievePTJByOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId(),date);
+		log.info("=======ptjName====="+ptjName);
 
 		context.put("sampleItems", getManagedBean().getScQtSampleLable()
 				.getSampleItems());
@@ -4003,7 +4017,7 @@ public class SPDetailBackingBean extends
 				.getLableNo());
 		context.put("PTJCode", scQt.getPmOrgProfile().getPmOrgValidity()
 				.getOrgCode());
-		context.put("PTJName", scQt.getPmOrgProfile().getOrgName());
+		context.put("PTJName", ptjName);
 		context.put("QTNo", scQt.getQtNo());
 		context.put("QTTitle", scQt.getQtTitle());
 
@@ -4136,5 +4150,22 @@ public class SPDetailBackingBean extends
 		} else {
 			return new SmMofAccount();
 		}
+	}
+	
+	/**
+	 * Check whether Date is null or not
+	 * 
+	 * @param publishDate
+	 * @param createdDate
+	 * @return Date
+	 */
+	public Date retriveDatesforOrgProfile(Date publishDate,Date createdDate){
+		if(publishDate==null){
+			log.info("===========createdDate====="+createdDate);
+			return createdDate;
+		}
+		log.info("===========publishDate====="+publishDate);
+		return publishDate;
+		
 	}
 }
