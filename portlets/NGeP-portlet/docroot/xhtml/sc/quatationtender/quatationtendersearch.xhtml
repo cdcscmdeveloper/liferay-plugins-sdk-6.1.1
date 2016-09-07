@@ -25,7 +25,7 @@
 							size="135" readonly="true"
 							headerText="#{lbl['lbl.sc.ministry']}" 
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ministryProfile.orgName}"
-							postUpdateListener="qTDetailBB.resetPtjGroupProfile()"
+							postUpdateListener="qTDetailBB.postUpdateOrgProfileListener"
 							update="@form"
 							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ministryProfile">
 						</ac:lov>
@@ -40,7 +40,7 @@
 							size="135" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj.group']}" 
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjGroupProfile.orgName}"
-							postUpdateListener="qTDetailBB.resetPtjProfile()"
+							postUpdateListener="qTDetailBB.postUpdateOrgProfileListener"
 							update="@form"
 							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjGroupProfile"
 							conditionField="#{qTDetailBB.getPTJGroupCondition()}"/>
@@ -55,12 +55,16 @@
 							size="135" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}" 
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile.orgName}"
+							postUpdateListener="qTDetailBB.postUpdateOrgProfileListener"
+							update="@form"
 							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
 							conditionField="#{qTDetailBB.getPTJCondition()}" />
 						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" 
 							size="135" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile.orgName}"
+							postUpdateListener="qTDetailBB.postUpdateOrgProfileListener"
+							update="@form"
 							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
 							conditionField="#{qTDetailBB.getPTJCondition()}" >
 						</ac:lov>
