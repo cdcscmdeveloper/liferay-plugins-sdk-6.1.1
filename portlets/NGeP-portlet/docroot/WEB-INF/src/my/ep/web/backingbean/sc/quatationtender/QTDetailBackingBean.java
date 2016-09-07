@@ -1811,8 +1811,10 @@ public class QTDetailBackingBean extends
 		
 		ScQt scQt = getManagedBean().getQt();
 		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
-				
-		if (finalizationSecratary == null) {
+		Long currentStatusId = scQt.getQtStatus().getStatusId();
+		
+		if (finalizationSecratary == null
+				&& isQTStatusLessThanOrEquals(currentStatusId, QTStatusConst.QT_PENDING_LOA)) {
 			ICommitteSO committeSO;
 			try {
 				committeSO = BusinessDelegate.getInstance().getServiceObject(
