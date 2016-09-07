@@ -38,7 +38,7 @@
 			<tr>
 				<TD style="width: 20%"><h:outputLabel id="bidStartLblBRS"
 						value="#{lbl['lbl.sc.original.bid.start']}" /></TD>
-				<TD style="width: 35%"><p:inputText id="bidStartTime"
+				<TD style="width: 40%"><p:inputText id="bidStartTime"
 						value="#{biddingBB.managedBean.bidAction.scBidSchedule.startDate}"
 						size="14" disabled="true">
 						<f:convertDateTime
@@ -46,7 +46,7 @@
 					</p:inputText></TD>
 				<TD style="width: 20%"><h:outputLabel id="bidEndLblBRS"
 						value="#{lbl['lbl.sc.original.bid.end']}" /></TD>
-				<TD style="width: 25%"><p:inputText id="bidEndTime"
+				<TD style="width: 20%"><p:inputText id="bidEndTime"
 						value="#{biddingBB.managedBean.bidAction.scBidSchedule.endDate}"
 						size="14" disabled="true">
 						<f:convertDateTime
@@ -59,7 +59,7 @@
 				<tr>
 					<TD style="width: 20%"><h:outputLabel id="pausedTimeLblBRS"
 							value="#{lbl['lbl.sc.bid.paused.time']}" /></TD>
-					<TD style="width: 35%"><p:inputText id="bidPausedTime"
+					<TD style="width: 40%"><p:inputText id="bidPausedTime"
 							value="#{biddingBB.managedBean.lastBidAction.createdDate}"
 							size="14" disabled="true">
 							<f:convertDateTime
@@ -67,7 +67,7 @@
 						</p:inputText></TD>
 					<TD style="width: 20%"><h:outputLabel id="remainingTimeBRS"
 							value="#{lbl['lbl.sc.remaining.time']}" /></TD>
-					<TD style="width: 25%"><p:inputText id="remainTime" size="14"
+					<TD style="width: 20%"><p:inputText id="remainTime" size="14"
 							disabled="true" value="#{biddingBB.managedBean.duration}" /></TD>
 				</tr>
 			</c:if>
@@ -76,7 +76,7 @@
 				<TD style="width: 20%; text-align: right;"><h:outputText
 						value="* " styleClass="mandatory" /> <h:outputLabel
 						id="newBidStartDateLbl" value="#{lbl['lbl.sc.new.bidding.start']}" /></TD>
-				<TD style="width: 35%"><ac:dateTime id="newBidStart"
+				<TD style="width: 40%"><ac:dateTime id="newBidStart"
 						style="width:92%" mindate="#{biddingBB.managedBean.mindate}"
 						postUpdateListener="#{biddingBB.resumeBidNewStartDateSelectListener()}"
 						label="#{lbl['lbl.sc.bidding.start']}" modVal="1"
@@ -86,7 +86,7 @@
 					</ac:dateTime></TD>
 				<TD style="width: 20%; text-align: right;"><h:outputLabel
 						id="newBidEndDateLbl" value="#{lbl['lbl.sc.new.bidding.end']}" /></TD>
-				<TD style="width: 25%"><p:inputText id="newReBidEndDate"
+				<TD style="width: 20%"><p:inputText id="newReBidEndDate"
 						disabled="true" size="14"
 						value="#{biddingBB.managedBean.bidAction.newEndDate}">
 						<f:convertDateTime
@@ -100,11 +100,11 @@
 						rendered="#{!(biddingBB.managedBean.bidAction.actionType eq BiddingConst.BID_ACTION_TYPE_RESUME)}" />
 					<h:outputLabel id="newBidDurationLbl"
 						value="#{lbl['lbl.sc.new.bid.duration']}" /></TD>
-				<TD style="width: 35%"><p:inputText id="newBidDuration"
+				<TD style="width: 40%"><p:inputText id="newBidDuration"
 						value="#{biddingBB.managedBean.newBidDuration}" size="14"
 						disabled="true"
 						rendered="#{biddingBB.managedBean.bidAction.actionType eq BiddingConst.BID_ACTION_TYPE_RESUME}" />
-					<p:selectOneMenu id="bidDurationByItem"
+					<p:selectOneMenu id="bidDurationByItem" style="width : 120px;"
 						rendered="#{!(biddingBB.managedBean.bidAction.actionType eq BiddingConst.BID_ACTION_TYPE_RESUME)}"
 						value="#{biddingBB.managedBean.bidAction.rebidDuration}">
 						<f:selectItems value="#{biddingBB.managedBean.selectItems}"
@@ -115,7 +115,7 @@
 							listener="#{biddingBB.reBidDurationSelectListener(biddingBB.managedBean.bidAction)}" />
 					</p:selectOneMenu></TD>
 				<TD style="width: 20%"></TD>
-				<TD style="width: 25%"></TD>
+				<TD style="width: 20%"></TD>
 			</tr>
 
 			<tr>
@@ -125,7 +125,7 @@
 				<TD style="width: 80%" colspan="3"><p:inputTextarea
 						id="reBidOrResumeSupplierNotes" 
 						value="#{biddingBB.managedBean.bidAction.remark}" rows="5"
-						label="#{lbl['lbl.sc.notes.to.supplier']}" cols="68"
+						label="#{lbl['lbl.sc.notes.to.supplier']}" cols="80"
 						onkeyup="limitTextArea(this,200);"
 						onkeydown="limitTextArea(this,200);" maxLength="200">
 						<p:ajax event="change" process="@this" partialSubmit="true"
