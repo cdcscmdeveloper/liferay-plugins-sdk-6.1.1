@@ -19,6 +19,12 @@
 				rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
 			</td>
 		<td align="right">
+			<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+				style="float:right;"
+				action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, supplierProposalDetailBackingBean.managedBean.qt.qtId)}"
+				immediate="true" 
+				rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
+					
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 				styleClass="BtnSpacing" onstart="blockWidget.show()"
 				oncomplete="blockWidget.hide()"
