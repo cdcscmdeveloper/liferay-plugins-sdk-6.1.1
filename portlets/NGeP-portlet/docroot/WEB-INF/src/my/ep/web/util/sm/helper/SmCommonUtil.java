@@ -2961,17 +2961,18 @@ public class SmCommonUtil {
 	 */
 	public static void copyHqGstToBranch(SmGstSupplier hqGst,
 			SmGstSupplier branchGst, boolean isSameWithHq, Long branchCode) {
-		if (hqGst != null && hqGst.getIsCurrent()) {
+		if (hqGst != null) {
 			if (isSameWithHq) {
 				branchGst.setGstRegNo(hqGst.getGstRegNo());
 				branchGst.setGstEffDate(hqGst.getGstEffDate());
 				branchGst.setGstEndDate(hqGst.getGstEndDate());
+				branchGst.setIsCurrent(hqGst.getIsCurrent());
 			} else {
 				branchGst.setGstRegNo(null);
 				branchGst.setGstEffDate(null);
 				branchGst.setGstEndDate(null);
+				branchGst.setIsCurrent(false);
 			}
-			branchGst.setIsCurrent(true);
 			branchGst.setBranchCode(branchCode);
 			branchGst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
 			copyHqSuppDocToBranch(hqGst, branchGst, isSameWithHq);
