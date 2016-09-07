@@ -440,14 +440,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
      */
 	public void retrieveSupplierAddress(AjaxBehaviorEvent event) {
 		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
-			 getManagedBean().setCtAddress(CtAddressUtil.retrieveSupplierAddress(
-					 getManagedBean().getContractVer().getCtContract().getSmSupplier()));
+			 getManagedBean().setCtAddress(CtAddressUtil.retrieveSupplierAddress(getManagedBean().getContractVer().getCtContract().getSmSupplier()));
 		}
 		else {
 			if (getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null) {
 				getManagedBean().setCtAddress(
 						getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress());
-			} else {
+				} else {
 				getManagedBean().setCtAddress(
 						getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 			} 
@@ -2224,6 +2223,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	public void selectAllAgencyCheckbox(){
 	
+		  FacesContext context = FacesContext.getCurrentInstance();
+          Map<String, String> map = context.getExternalContext().getRequestParameterMap();
+          String onSaleAllStr = (String) map.get("onCheckAllRow");
+          boolean   onAgencyAllRow = Boolean.valueOf(onSaleAllStr.toLowerCase());
+          getManagedBean().setSelectAll(onAgencyAllRow);
+       
 	 	for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
 	 		if (getManagedBean().isSelectAll()) {
 	 			ctAgencies.setSelectedCheckBox(true);
