@@ -46,34 +46,29 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseManagedBean>{
 	public static Logger log = Logger.getLogger(PaymentResponseBackingBean.class);
-	private final String merchantId = EpPropertiesUtils.getInstance()
-			.getProperty("molpay.merchantid");
-	private final String vKey = EpPropertiesUtils.getInstance().getProperty(
-			"molpay.vkey");
-
 	private final String molIpnUrl = EpPropertiesUtils.getInstance()
 			.getProperty("molpay.ipnurl");
-	
+
 	public PaymentResponseBackingBean(){
-		
+
 	}
-	
+
 	@PostConstruct
 	public void init() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		HttpSession session = httpServletRequest.getSession();
-		
+
 		String paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
 		Object paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
-		
+
 		if(paymentTaskId != null && paymentBpmPojo != null){
 			responsePreRender();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Payment gateway processing and response status
 	 * 
@@ -97,7 +92,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
 		paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
 		appl = (SmAppl)session.getAttribute("smAppl");
-	
+
 		log.info("paymentTaskId>>>>>>>" + paymentTaskId);
 		log.info("paymentBpmPojo>>>>>>>" + paymentBpmPojo);
 
@@ -128,34 +123,35 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("error_desc:" + errorDesc);
 		log.info("channel:" + channel);
 
-		// To verify the data integrity sending by MOLPay
-		String key0 = SmCommonUtil.md5(tranID + orderId + status + domain
-				+ amount + currency);
-		String key1 = SmCommonUtil
-				.md5(paydate + domain + key0 + appcode + vKey);
+		Long ordId = Long.valueOf(orderId);
+		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+		PaymentReqDTO reqDTO = new PaymentReqDTO();
+		reqDTO.setPaymentId(ordId);
+		PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
 
-		log.info("SKey>>>>" + skey);
-		log.info("Key1>>>>" + key1);
-		if (skey.equals(key1)) {
-			//if(paymentTaskId != null && paymentBpmPojo != null){
-			log.info("SKey & Key1 Are Match>>>>");
-			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
-					.getServiceObject("sm", IPaymentSO.class);
-			PaymentReqDTO reqDTO = new PaymentReqDTO();
-			Long ordId = Long.valueOf(orderId);
-			BigDecimal txAmount = new BigDecimal(amount);
-			Long txID = Long.valueOf(tranID);
-			reqDTO.setPaymentId(ordId);
-			PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
-			boolean validPayment = false;
+		if(resDTO.getPyPayment() != null && ordId != null){
+			String vKey = SmCommonUtil.getInstance().getPaymentGatewayVKeyByBillType(resDTO.getPyPayment().getPyBill().getBillType());
+			// To verify the data integrity sending by MOLPay
+			String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
+			String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
 
-			if (resDTO.getPyPayment() != null) {
+			log.info("SKey>>>>" + skey);
+			log.info("Key1>>>>" + key1);
+			if (skey.equals(key1)) {
+				//if(paymentTaskId != null && paymentBpmPojo != null){
+				log.info("SKey & Key1 Are Match>>>>");
+
+				BigDecimal txAmount = new BigDecimal(amount);
+				Long txID = Long.valueOf(tranID);
+
+
+				boolean validPayment = false;
+
 
 				session.removeAttribute("paymentBpmTaskId");
 				session.removeAttribute("paymentBpmPojo");
 
 				PyPayment pyPayment = resDTO.getPyPayment();
-
 				PyPaymentResponse smPaymentRes = new PyPaymentResponse();
 				PyPaymentOrder paymentOrder = pyPayment.getPyPaymentOrder();
 				Long statusCode = null;
@@ -271,6 +267,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 							}
 						}*/
 					try {
+						String merchantId = SmCommonUtil.getInstance().getPaymentGatewayMerchantIdByBillType(pyPayment.getPyBill().getBillType());
 						SmCommonUtil.paymentCurlIPN(httpServletRequest,true,merchantId,molIpnUrl);
 					} catch (Exception ex) {
 						log.error("curlIPN: " + ex.getMessage());
@@ -279,18 +276,17 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			} else {
 				status = SupplierManagementConst.PAYMENT_INVALID_RES;
 			}
-			
+
 			String billType = StringUtils.EMPTY;
 			if(resDTO.getPyPayment() != null){
 				billType = resDTO.getPyPayment().getPyBill().getBillType();
 			}
 			showPaymentResponse(status,Long.valueOf(orderId),errorDesc,billType);
-
-		} else {
+		}else{
 			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null);
 		}
 	}
-	
+
 	/**
 	 * Get payment gateway response status
 	 * 
@@ -304,15 +300,15 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		switch (status) {
 		case SupplierManagementConst.MOL_SUCCESS:
 			String msgCode = null;
-			
-				if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
-					msgCode = MessageConst.INFO_721058;
-				}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
-					msgCode = MessageConst.INFO_721065;
-				}else{
-					msgCode = MessageConst.INFO_721064;
-				}
-			
+
+			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
+				msgCode = MessageConst.INFO_721058;
+			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
+				msgCode = MessageConst.INFO_721065;
+			}else{
+				msgCode = MessageConst.INFO_721064;
+			}
+
 			getManagedBean().setMessageId(msgCode);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
 			paymentStatus = true;
@@ -335,7 +331,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		}
-		
+
 		if (paymentStatus && paymentId != null) {
 			//PaymentAcknowledgeBackingBean paymentAckBB = new PaymentAcknowledgeBackingBean();
 			getManagedBean().setPaymentId(paymentId);
@@ -346,11 +342,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			getManagedBean().setPaymentStatus(false);
 			//paymentAckBB.getManagedBean().setPaymentMessage(fsMsg);
 		}
-		
-		
+
+
 		getManagedBean().setBillTypeLbl(getPaymentMsgLabel(billType,false));
 	}
-	
+
 	/**
 	 * get Payment Msg Label
 	 * @param paymentType
@@ -358,7 +354,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	 */
 	private String getPaymentMsgLabel(String billType, boolean isMessage){
 		String pType = null;
-		
+
 		if(billType != null){
 			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
 				pType = "lbl.sm.payment.response.type.proccessing";
@@ -368,14 +364,14 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				pType = "lbl.sm.payment.response.type.softcert";
 			}
 		}
-		
+
 		if(isMessage){
 			return SmCommonUtil.getMessage(pType, null);
 		}
-		
+
 		return pType;
 	}
-	
+
 	/**
 	 * get Payment Fee Type
 	 * @param paymentType
@@ -383,36 +379,36 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	 */
 	private String getPaymentFeeTypeByBillType(String billType){
 		String feeType = null;
-		
+
 		if (billType.equalsIgnoreCase(
-						my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)) {
+				my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)) {
 			feeType = SupplierManagementConst.MOF_PAYMENT;
 		} else if (billType.equalsIgnoreCase(
-						my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)) {
+				my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)) {
 			feeType = SupplierManagementConst.PROCESSING_PAYMENT;
 		} else if (billType.equalsIgnoreCase(
-						my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+				my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
 			feeType = SupplierManagementConst.SOFTCERT_PAYMENT;
 		}
-		
+
 		return feeType;
 	}
-	
+
 	public String getData(){
 		return "";
 	}
-	
+
 	public void responseRedirect(){
 		log.info("*************responseRedirect*********");
-		
+
 		//this.renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
-		
+
 		log.info("Severity >>>>>>>>" + getManagedBean().getMessageSeverity().toString());
 		log.info("Message Id >>>>>>>>" + getManagedBean().getMessageId().toString());
 		log.info("Payment Id >>>>>>>>" + getManagedBean().getPaymentId());
 		log.info("Payment Status >>>>>>>>" + getManagedBean().isPaymentStatus());
-		
+
 		String errorDesc = getManagedBean().getErrDesc() != null ? getManagedBean().getErrDesc() : "";
 		fc.addMessage(
 				null,
@@ -420,23 +416,23 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						MessageUtils.getMessage(getManagedBean().getMessageId(),new String[]{errorDesc},
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-		
+
 		fc.getApplication()
 		.getNavigationHandler()
 		.handleNavigation(fc, null,
 				"/xhtml/sm/payment/paymentAcknowledge.xhtml");
 	}
-	
+
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-	
+
 	public void printReceipt() throws IOException{
 		log.info("printReceipt>>>>" + this.getManagedBean().getPaymentId());
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_PAYMENT_ID, this.getManagedBean().getPaymentId() + "");
-		
+
 		generateReport(ReportConst.SM_PAYMENT_RECEIPT_JSP, paramMap);
 	}
 }
