@@ -78,6 +78,7 @@
            	<portlet id="pmUserCommonDetails"></portlet>
            	<portlet id="pmUserCommonDetailsR"></portlet>
            	<portlet id="pmResendAccessApplicationActivation"></portlet>
+           	<portlet id="pmTaskReassignment"></portlet>
 		</category>
 		<!-- Profile Management - END -->		
 
