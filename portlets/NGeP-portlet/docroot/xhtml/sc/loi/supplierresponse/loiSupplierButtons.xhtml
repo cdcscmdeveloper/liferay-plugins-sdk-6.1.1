@@ -11,6 +11,11 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
+		
+		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
+			rendered="#{!empty lOIDetailBackingBean.managedBean.backToPreviousPage}"
+			style="float:left;" action="#{lOIDetailBackingBean.backToPrevious}" />
+			
 		<c:choose>
 			<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
 			<ui:param name="readOnlyTask" value="#{lOIDetailBackingBean.managedBean.readOnly}" />
