@@ -1115,7 +1115,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						if(deduction.getDeductionAmt() == null){
 							deduction.setDeductionAmt(new BigDecimal(0));
 						}
-					}else{
+					}else if(deduction.getCtDeduction() != null){
 						if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null){
 							throw new EpException(MessageConst.ERROR_740035);
 						}
