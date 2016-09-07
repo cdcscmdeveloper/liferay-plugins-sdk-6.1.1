@@ -218,8 +218,6 @@ public class QTDetailBackingBean extends
 	private static final Logger log = EpLogger
 			.getLogger(QTDetailBackingBean.class);
 	
-	private static final String LOV_CONDITION_SEPARATOR = "^";
-	private static final String LOV_FIELD_SEPARATOR = "|";
 	private static final int REFORM_NO_ACTION = 0;
 	private static final int REFORM_SC = 1;
 	private static final int REFORM_OC = 2;
@@ -4663,7 +4661,7 @@ public class QTDetailBackingBean extends
 	 */
 	public String getPTJGroupCondition() {
 		debugLogger("getPTJGroupCondition");
-		StringBuffer condition = new StringBuffer("recordStatus" + LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
+		StringBuffer condition = new StringBuffer("recordStatus" + SourcingConstants.LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
 		Long MinistryOrgProfileId = this.getManagedBean().getQtnTenderSearchBean().getMinistryProfile()
 				.getOrgProfileId();
 		if (null != MinistryOrgProfileId) {
@@ -4676,12 +4674,12 @@ public class QTDetailBackingBean extends
 				int ptjGroupLevel = Integer.valueOf(ptjGrpLevel);
 				int orgLevel = ministryLevel - ptjGroupLevel;
 
-				condition.append(LOV_FIELD_SEPARATOR);
+				condition.append(SourcingConstants.LOV_FIELD_SEPARATOR);
 				for (int i = 0; i < orgLevel; i++) {
 					condition.append("parentOrgProfile.");
 				}
 				condition.append("orgProfileId");
-				condition.append(LOV_CONDITION_SEPARATOR);
+				condition.append(SourcingConstants.LOV_CONDITION_SEPARATOR);
 				condition.append(MinistryOrgProfileId);
 
 			}
@@ -4697,22 +4695,22 @@ public class QTDetailBackingBean extends
 	 */
 	public String getPTJCondition() {
 		debugLogger("getPTJCondition");
-		StringBuffer condition = new StringBuffer("recordStatus" + LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
+		StringBuffer condition = new StringBuffer("recordStatus" + SourcingConstants.LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
 		QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
 		Long MinistryOrgProfileId = qtnTenderSearchBean.getMinistryProfile()
 				.getOrgProfileId();
 		Long PTJGroupOrgProfileId = qtnTenderSearchBean.getPtjGroupProfile()
 				.getOrgProfileId();
 		if (null != PTJGroupOrgProfileId) {
-			condition.append(LOV_FIELD_SEPARATOR);
+			condition.append(SourcingConstants.LOV_FIELD_SEPARATOR);
 			condition.append(OrgProfileUtil
 					.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
-					+ LOV_CONDITION_SEPARATOR + PTJGroupOrgProfileId);
+					+ SourcingConstants.LOV_CONDITION_SEPARATOR + PTJGroupOrgProfileId);
 		} else if (null != MinistryOrgProfileId) {
-			condition.append(LOV_FIELD_SEPARATOR);
+			condition.append(SourcingConstants.LOV_FIELD_SEPARATOR);
 			condition.append(OrgProfileUtil
 					.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
-					+ LOV_CONDITION_SEPARATOR + MinistryOrgProfileId);
+					+ SourcingConstants.LOV_CONDITION_SEPARATOR + MinistryOrgProfileId);
 		} 
 		return condition.toString();
 	}
