@@ -15,6 +15,10 @@
        <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
 	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>	   
 	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false"/><br/><br/>
+        <p:remoteCommand name="callRemoteCommand" 
+			         actionListener="#{ctBackingBean.selectAllAgencyCheckbox}" partialSubmit="true" process="@this" 
+			         update="@([id$=tableAgencyDetails],[id$=delBtn])" />
+     
        <p:dataTable id="tableAgencyDetails" var="agencyData"  widgetVar="tableAgencyWidget"
        		value="#{ctBackingBean.managedBean.contractVer.ctAgencies}" 
   			selectionMode="single" rowKey="#{agencyData}" selection="#{ctBackingBean.managedBean.selectedAgency}" 
@@ -26,7 +30,14 @@
 				<p:columnGroup type="header"> 
 					<p:row> 
 						<p:column rowspan="2"
-							 style="width:10px;"  rendered="#{!ctBackingBean.managedBean.viewContract}" />
+							 style="width:10px;"  rendered="#{!ctBackingBean.managedBean.viewContract}" >			 
+							 <f:facet name="header">
+							        <p:selectBooleanCheckbox id="onSaleAll"
+                                              widgetVar="onAgencyAllCheckbox"
+                                              value="#{ctBackingBean.managedBean.selectAll}"
+                                              onchange="callRemoteCommand([{name: 'onCheckAllRow', value: onAgencyAllCheckbox.isChecked()}])" />
+                              </f:facet>
+						</p:column>
 							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.ministry']}" styleClass="column-align-center"/> 
 							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.jabatan']}" styleClass="column-align-center"/> 	
 							 <p:column rowspan="2" headerText="#{lbl['lbl.ct.ptj']}" styleClass="column-align-center"/> 						
@@ -68,9 +79,10 @@
 						
 							<p:column style="width:10px;" 
 							    rendered="#{!ctBackingBean.managedBean.viewContract}">
+
 	     		                   <p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}" 
 	     		                     disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
-			  		               <p:ajax event="change" update=":form:delBtn" listener="#{ctBackingBean.selectOneAgencyCheckboxSelect}"></p:ajax>
+			  		               <p:ajax event="change" update=":form:tableAgencyDetails,:form:delBtn" listener="#{ctBackingBean.selectOneAgencyCheckboxSelect}"></p:ajax>
 		       	                   </p:selectBooleanCheckbox>
 	      	                 </p:column>
 	      	                 
@@ -139,9 +151,9 @@
 		        <p:column>
 		   	         <h:outputText id="agenyStatus" value="#{agencyData.chkStatus ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
 		       </p:column>
-                  
            
 			</p:dataTable> 
+		
        	<div class="ppRightBtn">
        		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"   oncomplete="dlgAgency.show();" 
        	         partialSubmit="true" process="@this"	action="#{ctBackingBean.resetAgencyDetails}" 
@@ -225,7 +237,7 @@
                    
 	   </p:panel>  
 		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" 
-			styleClass="pop_up_top" modal="true" width="700" height="525px" resizable="false">
+			styleClass="pop_up_top" modal="true" width="700" height="auto" resizable="false">
 			<p:messages id="agencyMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
 		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
 		   <h:panelGroup  id="agencyies">
@@ -455,6 +467,6 @@
       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg1.hide();" type="button" />
      </div>
      </p:confirmDialog>
-		
+		   	
 	</p:panel>		
 </ui:composition>                                      
