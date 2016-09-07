@@ -29,6 +29,7 @@ public class TaskAssignmentSearchBean implements Serializable {
 	private List<String> selectedRoles;
 	private PmUser excludeUser;
 	private int selectedTaskListType = 0;
+	private boolean isSearched;
 	
 //	private PmOrgProfile ptj;
 //	private Long ministryId;
@@ -136,6 +137,20 @@ public class TaskAssignmentSearchBean implements Serializable {
 	 */
 	public void setSelectedTaskListType(int selectedTaskListType) {
 		this.selectedTaskListType = selectedTaskListType;
+	}
+
+	/**
+	 * @return the isSearched
+	 */
+	public boolean isSearched() {
+		return isSearched;
+	}
+
+	/**
+	 * @param isSearched the isSearched to set
+	 */
+	public void setSearched(boolean isSearched) {
+		this.isSearched = isSearched;
 	}
 
 	
