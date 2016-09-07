@@ -51,7 +51,7 @@
 											scLoiReport.definationType.parameterCode ne 'UP'}">
 					<p:commandButton id="download" icon="ui-icon-download" 
 						style="background-color:transparent !important; border:0px none;"
-						ajax="false" action="#{lOIDetailBackingBean.downloadReport(scLoiReport)}" />
+						ajax="false" immediate="true" action="#{lOIDetailBackingBean.downloadReport(scLoiReport)}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{scLoiReport.definationType eq null or
 											scLoiReport.definationType.parameterCode eq 'UP'}">						
