@@ -297,12 +297,25 @@ public class LOADetailBackingBean extends
 	
 	/**
 	 * Edits the supplier loa action.
-	 * page navigate to loa supplier page.
-	 * @param loaId the loa id
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loaId 
+	 * 		the loa id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * 
+	 * @return the supplier loa page
 	 */
-	public void editSupplierLOAAction(Long loaId) {
-		debugLogger("editSupplierLOAAction");
+	public String retrieveSupplierLOADtl(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly) {
+		debugLogger("retrieveSupplierLOADtl");
 		try {
+			getManagedBean().setSourceId(sourceId);
+			getManagedBean().setBackToPreviousPage(previousPageUrl);
+			getManagedBean().setReadOnly(isReadonly);
+			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(loaId);
 
@@ -426,16 +439,16 @@ public class LOADetailBackingBean extends
 			
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(scQt);
-
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, QTConstants.SUPPLIER_LOA_PAGE);
+			
+			return QTConstants.SUPPLIER_LOA_PAGE;
 
 		} catch (Exception e) {
 			handleException(e);
 		} finally {
 			//qtAwardSO = null;
 		}
+		
+		return null;
 	}
 
 	/**
@@ -521,16 +534,19 @@ public class LOADetailBackingBean extends
 	 */
 	public void preRenderSupplierView() {
 		debugLogger("preRenderSupplierView");
-		try {
-			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
-			Long sourceId = Long.valueOf(dpDataType.getSourceId());
-			Long loaId = Long.valueOf(dpDataType.getAwardId());
+		SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
+		Long sourceId = Long.valueOf(dpDataType.getSourceId());
+		Long loaId = Long.valueOf(dpDataType.getAwardId());
 
-			getManagedBean().setSourceId(sourceId);
-			getManagedBean().setPayLoad(dpDataType);
+		getManagedBean().setPayLoad(dpDataType);
+	
+		String redirectUrl = retrieveSupplierLOADtl(sourceId, 
+				loaId, null, getManagedBean().isReadOnly());
 		
-			editSupplierLOAAction(loaId);
-		} finally {
+		if (StringUtils.isNotBlank(redirectUrl)) {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, redirectUrl);	
 		}
 	}
 
@@ -2383,7 +2399,7 @@ public class LOADetailBackingBean extends
 
 				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(statusId)) {
-					editSupplierLOAAction(scLoa.getLoaId());
+					retrieveSupplierLOADtl(getManagedBean().getSourceId(), scLoa.getLoaId(), null, false);
 				} else {
 					editLOAAction(scLoa);
 				}
