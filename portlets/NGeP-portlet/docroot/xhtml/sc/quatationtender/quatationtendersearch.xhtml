@@ -24,10 +24,10 @@
 						<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" 
 							size="135" readonly="true"
 							headerText="#{lbl['lbl.sc.ministry']}" 
-							value="#{qTDetailBB.managedBean.ministryProfile.orgName}"
+							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ministryProfile.orgName}"
 							postUpdateListener="qTDetailBB.resetPtjGroupProfile()"
 							update="@form"
-							saveObject="qTDetailBB.managedBean.ministryProfile">
+							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ministryProfile">
 						</ac:lov>
 					</td>
 				</tr>
@@ -39,10 +39,10 @@
 						<ac:lov id="searchPtjGroup" lovId="PM_ORG_PROFILE_PTJ_GROUP" 
 							size="135" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj.group']}" 
-							value="#{qTDetailBB.managedBean.ptjGroupProfile.orgName}"
+							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjGroupProfile.orgName}"
 							postUpdateListener="qTDetailBB.resetPtjProfile()"
 							update="@form"
-							saveObject="qTDetailBB.managedBean.ptjGroupProfile"
+							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjGroupProfile"
 							conditionField="#{qTDetailBB.getPTJGroupCondition()}"/>
 					</td>
 				</tr>
@@ -51,11 +51,17 @@
 						<p:outputLabel id="searchPtjLbL" value="#{lbl['lbl.sc.ptj']}" />
 					</td>
 					<td colspan="3">
+						<ac:lov id="searchPtjAuth" lovId="PM_ORG_PROFILE_AUTH_TYPE"
+							size="135" readonly="true"
+							headerText="#{lbl['lbl.sc.ptj']}" 
+							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile.orgName}"
+							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
+							conditionField="#{qTDetailBB.getPTJCondition()}" />
 						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" 
 							size="135" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}"
-							value="#{qTDetailBB.managedBean.ptjProfile.orgName}"
-							saveObject="qTDetailBB.managedBean.ptjProfile"
+							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile.orgName}"
+							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
 							conditionField="#{qTDetailBB.getPTJCondition()}" >
 						</ac:lov>
 					</td>
@@ -234,6 +240,20 @@
 							style="margin-right:20px;" partialSubmit="true" process="@this">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+						</p:commandLink>
+						<p:commandLink id="viewSupplierQTIcon" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}"
+							style="margin-right:20px;" partialSubmit="true" process="@this"
+							rendered="#{qTDetailBB.managedBean.qtnTenderSearchBean.resultDocType != ParameterConst.doctypeBidding}">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
+								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+						</p:commandLink>
+						<p:commandLink id="viewSupplierBidIcon" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}"
+							style="margin-right:20px;" partialSubmit="true" process="@this"
+							rendered="#{qTDetailBB.managedBean.qtnTenderSearchBean.resultDocType == ParameterConst.doctypeBidding}">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
+								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+							<f:param name="bidScheduleId" value="#{qTDetailBB.findDocIdByDocType(scQt.qtId)}"  />
+							<f:param name="previousPageUrl" value="#{view.viewId}" />
 						</p:commandLink>
 						<p:commandLink id="publishQTIcon" action="#{qTDetailBB.publishQT(scQt)}"
 							style="margin-right:20px;" partialSubmit="true" process="@this"
