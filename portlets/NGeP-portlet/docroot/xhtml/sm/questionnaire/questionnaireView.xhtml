@@ -38,7 +38,9 @@
 
 				<tr>
 					<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.application.ref.no']}" /></td>
-					<td class="header-info-text">#{questionnaireBackingBean.managedBean.rejectedAppl.applNo}</td>
+					<td class="header-info-text">
+						#{empty questionnaireBackingBean.managedBean.rejectedAppl ? questionnaireBackingBean.managedBean.smAppl.applNo : questionnaireBackingBean.managedBean.rejectedAppl.applNo}
+					</td>
 
 					<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.questionaire.type.application']}" /></td>
 					<td class="header-info-text">#{lbl[questionnaireBackingBean.getsupplierApplTypeDesc(questionnaireBackingBean.managedBean.smAppl.applType)]}</td>
