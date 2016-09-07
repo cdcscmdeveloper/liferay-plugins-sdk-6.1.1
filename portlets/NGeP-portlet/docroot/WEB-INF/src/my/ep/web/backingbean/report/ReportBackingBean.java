@@ -12633,7 +12633,12 @@ public class ReportBackingBean extends
 				ModuleCodeConst.SUPPLIER_MANAGEMENT)) {
 			// for SM Defaul Dates
 			getDefaultDatesforSM(reportNameList);
-		} else if (this.getModuleValue().equalsIgnoreCase(
+		}else if (this.getModuleValue().equalsIgnoreCase(
+				ModuleCodeConst.SUPPLIER_SELECTION)) {
+			// for SC Defaul Dates
+			getDefaultDatesforSC(reportNameList);
+		}		
+		else if (this.getModuleValue().equalsIgnoreCase(
 				ModuleCodeConst.CONTRACT_MANAGEMENT)) {
 			// for CT Default Dates
 			getDefaultDatesforCT(reportNameList);
@@ -12651,7 +12656,8 @@ public class ReportBackingBean extends
 				if (code.equalsIgnoreCase(reportCode)) {
 					this.setFromDate(fromDate.getTime());
 					this.setToDate(currentDate);
-
+					if(this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))
+						this.setScPublishFromDate(fromDate.getTime());this.setScPublishToDate(currentDate);
 				}
 			}
 		}
@@ -12748,6 +12754,19 @@ public class ReportBackingBean extends
 		reportNameList.add(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_APPL_STATUS);
 		reportNameList.add(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL);
+	}
+	
+	
+	private void getDefaultDatesforSC(List<String> reportNameList) {
+		log.info("ReportBackingBean-getDefaultDatesforSC");
+		reportNameList.add(ReportConst.SC_SUMMRY_SRC_OR_RPT_VAL);
+		reportNameList.add(ReportConst.SC_BRIF_SITE_VISIT_OR_RPT_VAL);
+		reportNameList.add(ReportConst.SC_QUOT_TENDER_MONITOR_OR_RPT_VAL);
+		reportNameList.add(ReportConst.SC_PRAPOSAL_SUB_LST_OR_RPT_VAL);
+		reportNameList.add(ReportConst.SC_PRICE_SCHEDULE_OR_RPT_VAL);
+		reportNameList.add(ReportConst.SC_LETTER_OF_ACCPT_OR_RPT_VAL);
+		reportNameList.add(ReportConst.SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL);
+		reportNameList.add(ReportConst.SC_PROPOSAL_DTLS_SERVICE_RPT_VAL);		
 	}
 
 	/**
