@@ -1282,7 +1282,15 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			if(paymentAdvice.getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				if(getManagedBean().getTaskId()==null) {
 					if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction().size()>0) {
-						getManagedBean().setShowDeductionTab(true);
+						for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
+							if(deduction.getCtDeduction() == null){
+								getManagedBean().setShowDeductionTab(false);
+								break;
+							}else{
+								getManagedBean().setShowDeductionTab(true);
+							}
+						}
+						
 					} 
 				} else { // on going task
 					if(paymentAdvice.getFlRequest().getCtContract().getLatestContractVer().getCtDeductions().size()>0) { 
@@ -1326,6 +1334,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	public List<FlPaymentDeduction> getDeductionTable(){
 		List<FlPaymentDeduction> deductionTable = new ArrayList<FlPaymentDeduction>();
 		for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
+			if(deduction.getCtDeduction() == null){
+				return null;
+			}
 			if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null){
 				if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null){
 					
