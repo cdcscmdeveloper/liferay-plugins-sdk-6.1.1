@@ -107,6 +107,7 @@ import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -4685,9 +4686,7 @@ public class QTDetailBackingBean extends
 
 			}
 
-		} else {
-			condition.append("  ");
-		}
+		} 
 		return condition.toString();
 	}
 
@@ -4717,22 +4716,50 @@ public class QTDetailBackingBean extends
 		} 
 		return condition.toString();
 	}
-	
-	/**
-	 * The method used reset PTJ Group profile value once select the Ministry
-	 */
-	public void resetPtjGroupProfile() {
-		debugLogger("resetPtjGroupProfile");
-		getManagedBean().getQtnTenderSearchBean().setPtjGroupProfile(new PmOrgProfile());
-		resetPtjProfile();
-	}
 
 	/**
-	 * The method used reset PTJ profile value once select the PTJ Group
+	 * The method used set parent profile and reset child profile value
+	 * 
+	 * @param orgProfile
+	 * 		the PmOrgProfile instance
 	 */
-	public void resetPtjProfile() {
-		debugLogger("resetPtjProfile");
-		getManagedBean().getQtnTenderSearchBean().setPtjProfile(new PmOrgProfile());
+	public void postUpdateOrgProfileListener(BaseEntity orgProfile) {
+		debugLogger("postUpdateOrgProfileListener");
+		
+		if (orgProfile instanceof PmOrgProfile) {
+			PmOrgProfile pmOrgProfile = (PmOrgProfile)orgProfile;
+			String orgType = pmOrgProfile.getOrgTypeCode().getParameterCode();
+			QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
+			
+			if (ParameterConst.ORG_TYPE_MINISTRY.equals(orgType)) {
+				PmOrgProfile ministryOrgProfile = new PmOrgProfile();
+				PmParameter orgTypeCode = new PmParameter();
+				orgTypeCode.setParameterCode(ParameterConst.ORG_TYPE_PTJ_GROUP);
+				ministryOrgProfile.setOrgTypeCode(orgTypeCode);
+				qtnTenderSearchBean.setPtjGroupProfile(ministryOrgProfile);
+				
+				postUpdateOrgProfileListener(ministryOrgProfile);
+				
+			} else { 
+				if (qtnTenderSearchBean.getMinistryProfile() == null || 
+						qtnTenderSearchBean.getMinistryProfile().getOrgProfileId() == null) {
+					qtnTenderSearchBean.setMinistryProfile(retrieveMinistryOrgProfile(
+							pmOrgProfile.getOrgProfileId()));	
+				}
+				
+				if (ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)) {
+					qtnTenderSearchBean.setPtjProfile(new PmOrgProfile());
+					
+				} else if (ParameterConst.ORG_TYPE_PTJ.equals(orgType)) {
+					if (qtnTenderSearchBean.getPtjGroupProfile() == null || 
+							qtnTenderSearchBean.getPtjGroupProfile().getOrgProfileId() == null) {
+						qtnTenderSearchBean.setPtjGroupProfile(retrieveJabatanOrgProfile(
+								pmOrgProfile.getOrgProfileId()));	
+					}
+				}
+			}
+				
+		}
 	}
 
 	/**
