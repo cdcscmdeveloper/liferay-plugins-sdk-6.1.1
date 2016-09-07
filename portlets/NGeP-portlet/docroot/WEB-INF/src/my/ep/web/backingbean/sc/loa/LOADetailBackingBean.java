@@ -1460,7 +1460,34 @@ public class LOADetailBackingBean extends
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
 		VelocityContext context = new VelocityContext();
-		
+		String ptjName=" ";
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			//procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
+			log.info("=====if dp generateAgreementLetterPdfFromVelocity");
+			 ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),scLoa.getScQuote().getCreatedDate());
+			 if(null==ptjName || "".equals(ptjName)){
+				 ptjName= pmOrgProfile.getOrgName();
+			 }
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			if (scQt != null) {
+				if(null!=scLoa.getPmStatus() && null!=scLoa.getPmStatus().getStatusId()){
+					log.info("=====if qt generateAgreementLetterPdfFromVelocity");
+					log.info("publish date qt "+scQt.getPublishDate());
+					log.info("current date qt "+scQt.getCreatedDate());
+				 ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),isQTStatusPublished(scLoa.getPmStatus().getStatusId())?scQt.getPublishDate() : scQt.getCreatedDate());
+				}else{
+					log.info("=====else qtnot null generateAgreementLetterPdfFromVelocity");
+					ptjName=pmOrgProfile.getOrgName();
+				}
+				
+			}else{
+				log.info("=====else qt null generateAgreementLetterPdfFromVelocity");
+				ptjName=pmOrgProfile.getOrgName();
+			}
+		}
+		log.info("ptjName"+ptjName);
 		FacesScopes fs = new FacesScopes();
 		String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
 		context.put("hostUrl", hostUrl);
@@ -1490,8 +1517,7 @@ public class LOADetailBackingBean extends
 					.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
 
 			if (orgProfileResDTO.getPmOrgProfile() != null) {
-				context.put("agency", orgProfileResDTO.getPmOrgProfile()
-						.getOrgName());
+				context.put("agency", ptjName);
 				context.put("ministry", orgProfileResDTO.getPmOrgProfile()
 						.getParentOrgProfile().getOrgName());
 			}
@@ -1811,12 +1837,27 @@ public class LOADetailBackingBean extends
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
 		VelocityContext context = new VelocityContext();
 		String procurementMode = null;
+		String ptjName=" ";
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
+			log.info("=====if dp generateDeclarationFromVelocity");
+			 ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),scLoa.getScQuote().getCreatedDate());
+			 if(null==ptjName || "".equals(ptjName)){
+				 ptjName= pmOrgProfile.getOrgName();
+			 }
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			if (scQt != null) {
+				if(null!=scLoa.getPmStatus() && null!=scLoa.getPmStatus().getStatusId()){
+					log.info("=====if qt generateDeclarationFromVelocity");
+					log.info("publish date qt "+scQt.getPublishDate());
+					log.info("current date qt "+scQt.getCreatedDate());
+				 ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),isQTStatusPublished(scLoa.getPmStatus().getStatusId())?scQt.getPublishDate() : scQt.getCreatedDate());
+				}else{
+					log.info("=====else generateOfferedAndQTDtlsPdf");
+					ptjName=pmOrgProfile.getOrgName();
+				}
 				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
 						.getProcurementMode().getParameterCode())) {
 					procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
@@ -1848,7 +1889,7 @@ public class LOADetailBackingBean extends
 				context.put("mofNo", smSupplier.getRegNo());
 			}
 		}
-		context.put("agency", pmOrgProfile.getOrgName());
+		context.put("agency", ptjName);
 
 		String termsConditions = DocumentGenerator
 				.getInstance()
