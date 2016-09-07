@@ -35,6 +35,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
@@ -52,6 +53,7 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -85,6 +87,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
@@ -1284,13 +1287,21 @@ public class QTDocumentsBackingBean extends
 
 		FacesScopes facesScopes = new FacesScopes();
 		String officerName = facesScopes.getUserSessionBean().getUserName();
+		log.info("======currentstatusid generateSyaratSyaratAmFromVelocity===="+this.getManagedBean().getCurrentStatusId());
+		String ptjName=" ";
+		if(null!=this.getManagedBean().getCurrentStatusId()){
+		 ptjName=retrievePTJByOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?scQt.getPublishDate() : scQt.getCreatedDate());
+		}else{
+			ptjName=scQt.getPmOrgProfile().getOrgName();
+		}
+		log.info("=======ptjName====="+ptjName);
 
 		html = html.replaceAll("&lt;&lt;Agency Name&gt;&gt;",
-				pmOrgProfile.getOrgName());
+				ptjName);
 		html = html.replaceAll("&lt;&lt;Agency name&gt;&gt;",
-				pmOrgProfile.getOrgName());
+				ptjName);
 		html = html.replaceAll("&lt;&lt;Department Name&gt;&gt;",
-				pmOrgProfile.getOrgName());
+				ptjName);
 		html = html.replaceAll("&lt;&lt;Agency Address&gt;&gt;", agencyAddress);
 		html = html.replaceAll("&lt;&lt;Officer Name&gt;&gt;", officerName);
 		html = html.replaceAll("&lt;&lt;Tel No&gt;&gt;", agencyPhoneNo);
@@ -1459,8 +1470,15 @@ public class QTDocumentsBackingBean extends
 		populateAttachmentDetails(attachment);
 
 		VelocityContext context = new VelocityContext();
-
-		context.put("ptj", qt.getPmOrgProfile().getOrgName());
+		log.info("======currentstatusid generateSampleComplianceChecklistPdfFromVelocity===="+this.getManagedBean().getCurrentStatusId());
+		String ptjName=" ";
+		if(null!=this.getManagedBean().getCurrentStatusId()){
+		 ptjName=retrievePTJByOrgProfileId(qt.getPmOrgProfile().getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?qt.getPublishDate() : qt.getCreatedDate());
+		}else{
+			ptjName=qt.getPmOrgProfile().getOrgName();
+		}
+		log.info("=======ptjName====="+ptjName);
+		context.put("ptj", ptjName);
 		String title = qt.getQtTitle();
 		if (title == null) {
 			title = "";
@@ -1734,17 +1752,44 @@ public class QTDocumentsBackingBean extends
 					.retrieveDeliverSeriviceAddress(reqDTO);
 			List<TplSpecZoneDtl> zones = resDTO.getSpecZoneDtls();
 			if (zones != null && !zones.isEmpty()) {
+				Date date=null;
+				if(null!=this.getManagedBean().getCurrentStatusId()){
+				boolean value=isQTStatusPublished(this.getManagedBean().getCurrentStatusId());
+				date=value?qt.getPublishDate():qt.getCreatedDate();
+				}
+				else{
+					date=qt.getCreatedDate();
+				}
+				PmOrgProfile changedOrgprofile=retriveOrgprofileByIdAndDate(qt.getPmOrgProfile().getOrgProfileId(),date);
+				log.info("=========changed orgprofile===="+changedOrgprofile.getOrgName());
 				isOneOff = true;
 				for (TplSpecZoneDtl specZoneDtl : zones) {
 					reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 					reqDTO.setZoneId(specZoneDtl.getSpecZoneId());
 					resDTO = specSo.retrieveDeliveryAddressDtls(reqDTO);
+					for(ScQtDeliveryLoc deliveryLoc:resDTO.getAddressResultBean()){
+						deliveryLoc.getPmAddressType().setPmOrgProfile(changedOrgprofile);
+					}
 					BriefingZoneBean bean = new BriefingZoneBean(specZoneDtl,
 							resDTO.getAddressResultBean());
 					deliveryAddressBean.add(bean);
 				}
 			} else {
 				// isOneOff = true;
+				Date date=null;
+				if(null!=this.getManagedBean().getCurrentStatusId()){
+				boolean value=isQTStatusPublished(this.getManagedBean().getCurrentStatusId());
+				date=value?qt.getPublishDate():qt.getCreatedDate();
+				}
+				else{
+					date=qt.getCreatedDate();
+				}
+				PmOrgProfile changedOrgprofile=retriveOrgprofileByIdAndDate(qt.getPmOrgProfile().getOrgProfileId(),date);
+				log.info("=========changed orgprofile===="+changedOrgprofile.getOrgName());
+				for(ScQtDeliveryLoc deliveryLoc:resDTO.getAddressResultBean()){
+					//changedOrgprofile.setOrgName("manga");
+					deliveryLoc.getPmAddressType().setPmOrgProfile(changedOrgprofile);
+				}
 				BriefingZoneBean bean = new BriefingZoneBean(null,
 						resDTO.getAddressResultBean());
 				deliveryAddressBean.add(bean);
@@ -2161,7 +2206,15 @@ public class QTDocumentsBackingBean extends
 		} finally {
 			addressSO = null;
 		}
-		context.put("agency", pmOrgProfile.getOrgName());
+		log.info("======currentstatusid generateSampleSuratSetujuTerimaPdfFromVelocity===="+this.getManagedBean().getCurrentStatusId());
+		String ptjName=" ";
+		if(null!=this.getManagedBean().getCurrentStatusId()){
+		 ptjName=retrievePTJByOrgProfileId(qt.getPmOrgProfile().getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?qt.getPublishDate() : qt.getCreatedDate());
+		}else{
+			ptjName=qt.getPmOrgProfile().getOrgName();
+		}
+		log.info("=======ptjName====="+ptjName);
+		context.put("agency", ptjName);
 		context.put("ministry", pmOrgProfile.getParentOrgProfile().getOrgName());
 
 		String agencyAddress = "";
@@ -2273,7 +2326,15 @@ public class QTDocumentsBackingBean extends
 		context.put("ministry", ministryOrgName);
 		// context.put("ministry",
 		// qt.getPmOrgProfile().getParentOrgProfile().getOrgName());
-		context.put("ptj", qt.getPmOrgProfile().getOrgName());
+		log.info("======currentstatusid generateKenyataanTawaranPembekalPdfFromVelocity===="+this.getManagedBean().getCurrentStatusId());
+		String ptjName=" ";
+		if(null!=this.getManagedBean().getCurrentStatusId()){
+		 ptjName=retrievePTJByOrgProfileId(qt.getPmOrgProfile().getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?qt.getPublishDate() : qt.getCreatedDate());
+		}else{
+			ptjName=qt.getPmOrgProfile().getOrgName();
+		}
+		log.info("=======ptjName====="+ptjName);
+		context.put("ptj", ptjName);
 		String title = qt.getQtTitle();
 		if (title == null) {
 			title = "";
@@ -2575,5 +2636,19 @@ public class QTDocumentsBackingBean extends
 		return (String) (increment <= 9 ? "0" + (increment) : Integer
 				.toString(increment));
 	}
+	
+private PmOrgProfile retriveOrgprofileByIdAndDate(Long orgProfileId,Date date){
+	IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+			.getInstance()
+			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IOrgProfileSO.class);
+	OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+	reqDTO.setOrgProfileId(orgProfileId);
+	reqDTO.setCreateDate(date);
+	PmOrgProfile orgProfile = profileSO.retrieveOrgProfileByProfileId(
+			reqDTO).getPmOrgProfile();
+	return orgProfile;
+	
+}
 
 }
