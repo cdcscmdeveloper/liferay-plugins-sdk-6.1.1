@@ -9,12 +9,11 @@
 		<p:dataTable id="supplierPriceDtls"
 			value="#{noticeBoardBackingBean.managedBean.qualificationBean}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			var="supplierBean" rows="10">
+			var="supplierBean" rows="10" rowIndexVar="rowIndex">
 			<ac:paginator for="supplierPriceDtls"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.sc.no']}">
-				<h:outputText
-					value="#{supplierBean.supplierId}" />
+				<h:outputText value="#{rowIndex+1}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}">
