@@ -62,22 +62,13 @@ import com.liferay.portal.util.PortalUtil;
 public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 	public static Logger log = Logger.getLogger(PaymentBackingBean.class);
-	private final String merchantId = EpPropertiesUtils.getInstance()
-			.getProperty("molpay.merchantid");
-	private final String vKey = EpPropertiesUtils.getInstance().getProperty(
-			"molpay.vkey");
-	private final String paymentGatewayUrl = EpPropertiesUtils.getInstance()
-			.getProperty("molpay.url") + merchantId + "/";
-	private final String molIpnUrl = EpPropertiesUtils.getInstance()
-			.getProperty("molpay.ipnurl");
+	private String paymentGatewayUrl;
+	private String merchantId;
 	private String vCode;
 	private final String paymentGatewayOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.molpay.onoff");
 
 	private Map<String, PmParameterDesc> supplierPaymentItemMap;
 
-	/*@ManagedProperty(value = "#{paymentBean}")
-	private PaymentBean paymentBean;*/
-	
 	public void preRenderApplicationPayment(){
 		CommonApplBackingBean applBackingBean = new CommonApplBackingBean();
 		applBackingBean.preRenderView();
@@ -89,27 +80,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	public PaymentBackingBean() {
 		this.getManagedBean().setCountry("MY");
 		SmCommonUtil.setMDCUserId();
-	}
-
-	/**
-	 * @return the merchantId
-	 */
-	public String getMerchantId() {
-		return merchantId;
-	}
-
-	/**
-	 * @return the vKey
-	 */
-	public String getvKey() {
-		return vKey;
-	}
-
-	/**
-	 * @return the paymentGatewayUrl
-	 */
-	public String getPaymentGatewayUrl() {
-		return paymentGatewayUrl;
 	}
 
 	/**
@@ -127,6 +97,18 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		this.vCode = vCode;
 	}
 	
+	
+	
+	public String getPaymentGatewayUrl() {
+		paymentGatewayUrl = getPaymentGateUrlByMerchantId(merchantId);
+		
+		return paymentGatewayUrl;
+	}
+
+	public void setPaymentGatewayUrl(String paymentGatewayUrl) {
+		this.paymentGatewayUrl = paymentGatewayUrl;
+	}
+
 	/**
 	 * @return the paymentGatewayOnOff
 	 */
@@ -166,17 +148,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		 * for testing Purpose
 		 */
 		log.debug(">>>>>>>InitPayment Stert>>>>");
-		/*
-		 * MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
-		 * mofReqDTO.setApplId(1009); IMofRegistrationSO mofRegistrationSO =
-		 * (IMofRegistrationSO)
-		 * BusinessDelegate.getInstance().getServiceObject("sm",
-		 * IMofRegistrationSO.class); MofRegistrationResDTO mofResDTO =
-		 * mofRegistrationSO.retrieveSupplierProfileByApplId(mofReqDTO);
-		 * this.getManagedBean().setSmAppl(mofResDTO.getSmAppl());
-		 * this.getManagedBean().setAppId(mofReqDTO.getApplId());
-		 */// dummy test
-
 		// this.getManagedBean().setAppId(2997L);
 		log.info("*******retrieveBillInfo Start******" + getManagedBean().getDocNo());
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
@@ -190,37 +161,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		log.info("*******Bill Object**********"
 				+ resDTO.getPyBill().getBillId());
 		this.getManagedBean().setPyBill(resDTO.getPyBill());
-		Long billId = resDTO.getPyBill().getBillId();
 		List<PyBillDtl> smBillDtls = resDTO.getPyBill().getPyBillDtls();
 
-		if (resDTO.getPyBill().getPyPayments().size() > 0) {
-			// System.out.println("******check is it Offline Payment*****");
-			/*
-			 * if(checkOfflinePayment(billId)){
-			 * //this.getManagedBean().setOfflinePayment(true);
-			 * System.out.println("*****is Offline Payment*****"); BigDecimal
-			 * ttlAmount = new BigDecimal(0);
-			 * 
-			 * this.getManagedBean().setNewSmBillDtlLs(new
-			 * ArrayList<SmBillDtl>()); for(SmBillDtl billDtl : smBillDtls){
-			 * ttlAmount = ttlAmount.add(billDtl.getItemPrice());
-			 * this.getManagedBean().getNewSmBillDtlLs().add(billDtl); }
-			 * 
-			 * System.out.println("TotalAmount>>>>>>" + ttlAmount);
-			 * this.getManagedBean().setTotalAmount(ttlAmount);
-			 * 
-			 * FacesContext fc = FacesContext.getCurrentInstance();
-			 * fc.getApplication().getNavigationHandler().handleNavigation(fc,
-			 * null,"/xhtml/sm/payment/paymentSummary.xhtml"); }else{
-			 */
-			// this.getManagedBean().setOfflinePayment(false);
-			log.debug("*****is Online Payment*****");
-
-			proceedToItemList(smBillDtls);
-			// }
-		} else {
-			proceedToItemList(smBillDtls);
-		}
+		proceedToItemList(smBillDtls);
+	
 	}
 
 	/**
@@ -394,9 +338,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			// this.getManagedBean().
 			String orderId = resDTO.getPyBill().getPyPayments().get(0)
 					.getPaymentId().toString();
-			String vc = SmCommonUtil.md5(totalAmount + merchantId + orderId
-					+ vKey);
-			log.info("******VC********" + vc);
+			merchantId = SmCommonUtil.getInstance().getPaymentGatewayMerchantIdByBillType(pyBill.getBillType());
+			String vKey = SmCommonUtil.getInstance().getPaymentGatewayVKeyByBillType(pyBill.getBillType());
+			String vc = SmCommonUtil.md5(totalAmount + merchantId + orderId + vKey);
+			
 			BigDecimal ttlAmt = resDTO.getPyBill().getPyPayments().get(0)
 					.getPaymentAmt();
 			this.setvCode(vc);
@@ -951,5 +896,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		}
 		
 		return pType;
+	}
+	
+	private String getPaymentGateUrlByMerchantId(String merchantId){
+		return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/";
 	}
 }
