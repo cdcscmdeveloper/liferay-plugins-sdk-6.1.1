@@ -139,7 +139,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 						.getRuleValueList().get(0);
 				BigDecimal tolerancePercentage = new BigDecimal(
 						configRulevalue.getRuleValue());
-				if (!tolerancePercentage.equals(0)) {
+				Date ruleExpiryDate = configRulevalue.getExpDate();
+				if (!tolerancePercentage.equals(0) && (ruleExpiryDate == null || !ruleExpiryDate.before(new Date()))) {
 					this.toleranceCheck = true;
 					BigDecimal tolerancePriceLowerBound = (new BigDecimal(100))
 							.subtract(tolerancePercentage);
@@ -181,16 +182,16 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			bidScheduleId = Long.parseLong(bidScheduleIdStr);
 		}
 		this.previousPageUrl = previousPageUrl;
-		
+
 		PmUser supplierUser = (new FacesScopes().getUserSessionBean());
 		retrieveOnlineBiddingDtls(bidScheduleId, supplierUser.getUserId());
 		fetchTolerancePrice();
 	}
-	
+
 	/**
 	 * Back to previous page
 	 * 
-	 * @return	the previous page
+	 * @return the previous page
 	 */
 	public String backAction() {
 		return this.previousPageUrl;
@@ -200,11 +201,11 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 * Get Online Bidding Dtls
 	 * 
 	 * @param bidScheduleId
-	 * 		the bid schedule id
+	 *            the bid schedule id
 	 * @param previousPageUrl
-	 * 		the previous page url.
+	 *            the previous page url.
 	 * @param isReadonly
-	 * 		the readonly flag
+	 *            the readonly flag
 	 * @return the supplier online bidding page
 	 */
 	private void retrieveOnlineBiddingDtls(Long bidScheduleId, Long userId) {
@@ -550,8 +551,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 		}
 
-		if (this.toleranceCheck && this.getScBidSchedule().getScBid().getRecommendedTypeId()
-				.getParameterCode().equals("P")) {
+		if (this.toleranceCheck
+				&& this.getScBidSchedule().getScBid().getRecommendedTypeId()
+						.getParameterCode().equals("P")) {
 			BigDecimal dividendLB = this.getScBidSchedule()
 					.getPackageEstimateCost()
 					.multiply(this.tolerancePriceLowerBound);
@@ -959,28 +961,27 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 		return tplSpecHelper;
 	}
-	
-	
-	private void retriveQtDetails(ScBidSchedule bid){
+
+	private void retriveQtDetails(ScBidSchedule bid) {
 		IQTDetailSO qTDetailSO = null;
-		try{
-			
+		try {
+
 			qTDetailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		QuationTenderReqDTO qtreqDTO=new QuationTenderReqDTO();
-		QuationTenderResDTO qtresDTO=new QuationTenderResDTO();
-		if(null!=bid && null!=bid.getScBid()){
-		qtreqDTO.setQtTndrNo(bid.getScBid().getDocNo());
-		qtresDTO=qTDetailSO.retriveQtByQtNumber(qtreqDTO);
-	}
-		if(null!=qtresDTO.getQtDetail()){
-			setScQt(qtresDTO.getQtDetail());
-		}
-		}finally{
+			QuationTenderReqDTO qtreqDTO = new QuationTenderReqDTO();
+			QuationTenderResDTO qtresDTO = new QuationTenderResDTO();
+			if (null != bid && null != bid.getScBid()) {
+				qtreqDTO.setQtTndrNo(bid.getScBid().getDocNo());
+				qtresDTO = qTDetailSO.retriveQtByQtNumber(qtreqDTO);
+			}
+			if (null != qtresDTO.getQtDetail()) {
+				setScQt(qtresDTO.getQtDetail());
+			}
+		} finally {
 			qTDetailSO = null;
 		}
 	}
-	
+
 	/**
 	 * Check whether Date is null or not
 	 * 
@@ -988,14 +989,14 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 * @param createdDate
 	 * @return Date
 	 */
-	public Date retriveDatesforOrgProfile(Date publishDate,Date createdDate){
-		if(publishDate==null){
-			log.info("===========createdDate====="+createdDate);
+	public Date retriveDatesforOrgProfile(Date publishDate, Date createdDate) {
+		if (publishDate == null) {
+			log.info("===========createdDate=====" + createdDate);
 			return createdDate;
 		}
-		log.info("===========publishDate====="+publishDate);
+		log.info("===========publishDate=====" + publishDate);
 		return publishDate;
-		
+
 	}
 
 	/**
@@ -1377,7 +1378,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @param toleranceCheck the toleranceCheck to set
+	 * @param toleranceCheck
+	 *            the toleranceCheck to set
 	 */
 	public void setToleranceCheck(boolean toleranceCheck) {
 		this.toleranceCheck = toleranceCheck;
@@ -1391,14 +1393,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @param previousPageUrl the previousPageUrl to set
+	 * @param previousPageUrl
+	 *            the previousPageUrl to set
 	 */
 	public void setPreviousPageUrl(String previousPageUrl) {
 		this.previousPageUrl = previousPageUrl;
 	}
-
-	
-	
 
 	/**
 	 * @return the scQt
@@ -1408,7 +1408,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @param scQt the scQt to set
+	 * @param scQt
+	 *            the scQt to set
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
