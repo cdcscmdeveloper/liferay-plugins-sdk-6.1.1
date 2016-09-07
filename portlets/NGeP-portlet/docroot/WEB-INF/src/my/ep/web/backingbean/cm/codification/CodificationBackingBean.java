@@ -166,6 +166,15 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		@Override
 		protected ISearchResultBean<Object[]> pageChangeListener(
 				ISearchBean<Object[]> searchBean) {
+			
+			
+			if (StringUtils.isBlank((String) colorFilterBean.getSearchValue())
+					&& StringUtils.isBlank((String) typeFilterBean.getSearchValue())
+					&& StringUtils.isBlank((String) brandFilterBean.getSearchValue())
+					&& StringUtils.isBlank((String) measurementFilterBean.getSearchValue())) {
+				return new SearchResultBean();
+			}
+			
 
 			System.out.println("........search extension combination 11.................");
 			log.info("Unspsc Code:"+ getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
