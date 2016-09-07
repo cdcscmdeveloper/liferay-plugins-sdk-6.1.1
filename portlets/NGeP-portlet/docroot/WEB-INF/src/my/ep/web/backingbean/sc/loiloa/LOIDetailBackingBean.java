@@ -307,13 +307,44 @@ public class LOIDetailBackingBean extends
 	 */
 	public void preRenderSupplierView() {
 		debugLogger("preRenderSupplierView");
-		ScQt scQt = null;
-		try {
-			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
+		
+		SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 
-			Long sourceId = Long.valueOf(dpDataType.getSourceId());
-			Long loiId = Long.valueOf(dpDataType.getAwardId());
+		Long sourceId = Long.valueOf(dpDataType.getSourceId());
+		Long loiId = Long.valueOf(dpDataType.getAwardId());
+		
+		String redirectUrl = retrieveSupplierLOIDtl(sourceId, loiId, null, false);
+
+		if (StringUtils.isNotBlank(redirectUrl)) {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, redirectUrl);	
+		}
+	}
+	
+	/**
+	 * Edits the supplier loi action.
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loiId 
+	 * 		the loi id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * 
+	 * @return the supplier loi page
+	 */
+	public String retrieveSupplierLOIDtl(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly) {
+		ScQt scQt = null;
+		
+		try { 
 			getManagedBean().setSourceId(sourceId);
+			if (previousPageUrl != null) {
+				getManagedBean().setBackToPreviousPage(previousPageUrl);	
+			}
+			getManagedBean().setReadOnly(isReadonly);
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO.setLoiId(loiId);
@@ -358,15 +389,14 @@ public class LOIDetailBackingBean extends
 				getQtProposalValidExpiredMessage(scQt);
 				
 				//generateDeclarationFromVelocity(scLoi, scQt);
+				
+				return QTConstants.SUPPLIER_LOI_PAGE;
 			}
-
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, QTConstants.SUPPLIER_LOI_PAGE);
-        
 		} catch (Exception e) {
 			handleException(e);
 		}
+		
+		return null;
 	}
 	
 	/**
