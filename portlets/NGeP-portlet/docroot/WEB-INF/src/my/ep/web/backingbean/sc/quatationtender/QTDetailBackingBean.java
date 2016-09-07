@@ -3738,6 +3738,7 @@ public class QTDetailBackingBean extends
 				retrieveActivitiesTabDtl();
 				setAmmendMentBean(resDTO.getAmendMentBean());
 			}
+			this.getManagedBean().setCurrentStatusId(currentStatus);
 			break;
 		case 5:
 			if (isinvokeValidations(getManagedBean().getQt())) {
