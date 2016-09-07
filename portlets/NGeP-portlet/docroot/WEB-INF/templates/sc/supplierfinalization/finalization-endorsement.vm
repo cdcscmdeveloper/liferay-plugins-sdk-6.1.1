@@ -1,6 +1,14 @@
 <html>
 <head>
 	<style>
+	@page {
+	size: A4 portrait;
+}
+@page { 
+	@bottom-center { 
+		content: "Page " counter(page) " / " counter(pages);
+	}
+}
 		.header {
 			font-family:'Arial', sans-serif;
 			font-size:16px;
