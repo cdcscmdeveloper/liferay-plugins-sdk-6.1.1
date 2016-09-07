@@ -23,7 +23,7 @@
 							lovId="PM_ORG_PROFILE_MINSTRY" size="148" readonly="true"
 							headerText="#{lbl['lbl.sc.ministry']}"
 							value="#{directPurchaseBackingBean.managedBean.searchMinistryProfile.orgName}"
-							postUpdateListener="directPurchaseBackingBean.resetPtjGroupProfile()"
+							postUpdateListener="directPurchaseBackingBean.postUpdateOrgProfileListener"
 							update="@form"
 							saveObject="directPurchaseBackingBean.managedBean.searchMinistryProfile">
 						</ac:lov></td>
@@ -36,7 +36,7 @@
 							lovId="PM_ORG_PROFILE_PTJ_GROUP" size="148" readonly="true"
 							headerText="#{lbl['lbl.sc.kumpulan.ptj']}"
 							value="#{directPurchaseBackingBean.managedBean.searchPtjGroupProfile.orgName}"
-							postUpdateListener="directPurchaseBackingBean.resetPtjProfile()"
+							postUpdateListener="directPurchaseBackingBean.postUpdateOrgProfileListener"
 							update="@form"
 							saveObject="directPurchaseBackingBean.managedBean.searchPtjGroupProfile"
 							conditionField="#{directPurchaseBackingBean.getPTJGroupCondition()}"></ac:lov></td>
@@ -49,6 +49,8 @@
 							lovId="PM_ORG_PROFILE_PTJ" size="148" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}"
 							value="#{directPurchaseBackingBean.managedBean.searchPtjProfile.orgName}"
+							postUpdateListener="directPurchaseBackingBean.postUpdateOrgProfileListener"
+							update="@form"
 							saveObject="directPurchaseBackingBean.managedBean.searchPtjProfile"
 							conditionField="#{directPurchaseBackingBean.getPtjCondition()}">
 						</ac:lov></td>
