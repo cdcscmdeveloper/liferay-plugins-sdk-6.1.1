@@ -649,7 +649,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		Long supplierId = getManagedBean().getLoginUserPersonnelInfo()
 				.getSmAppl().getSmSupplier().getSupplierId();
 		getManagedBean().setAllAuthSuppUserAlreadyRequested(true);
-		getManagedBean().setAlreadyHadFreeSoftcert(false);
 		getManagedBean().setSoftCertSelectList(new ArrayList<SmPersonnel>());
 		for (SmPersonnel personnel : personnels) {
 			// check for supplier tmp
@@ -668,10 +667,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED
 					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 				personnel.setDisableRowSelection(true);
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
-					getManagedBean().setAlreadyHadFreeSoftcert(true);
-				}
 			}
 			// check for softcert flg that pending request or rejected or failed
 			else {
@@ -680,7 +675,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
 						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 					personnel.setDisableRowSelection(false);
-					getManagedBean().setAlreadyHadFreeSoftcert(true);
 					SmCommonUtil.setRejectedPersonnelSoftcert(personnel,
 							supplierId);
 
@@ -711,9 +705,32 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 			setPersonnelSoftcertInformation(personnel);
 		}
+		setAlreadyHadFreeSoftcert();
 		setDisableFlUserRowSelection(personnels);
 		setDisableRowSelectionIfSuppTmpNotRequestSoftCert(personnels);
 		initDisableRevokeButton();
+	}
+
+	/**
+	 * Set whether this supplier already given free softcert
+	 */
+	private void setAlreadyHadFreeSoftcert() {
+		getManagedBean().setAlreadyHadFreeSoftcert(false);
+		if (getManagedBean().getLoginUserPersonnelInfo() != null
+				&& getManagedBean().getLoginUserPersonnelInfo().getSmAppl() != null
+				&& !EntityHelper.isCollectionEmpty(getManagedBean()
+						.getLoginUserPersonnelInfo().getSmAppl()
+						.getSmPersonnels())) {
+			for (SmPersonnel personnel : getManagedBean()
+					.getLoginUserPersonnelInfo().getSmAppl().getSmPersonnels()) {
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED
+						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
+						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
+					getManagedBean().setAlreadyHadFreeSoftcert(true);
+				}
+			}
+		}
 	}
 
 	/**
