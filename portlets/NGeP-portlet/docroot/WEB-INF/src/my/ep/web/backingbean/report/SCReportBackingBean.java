@@ -391,12 +391,12 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	            
 		    case ReportConst.SC_BRIEFING_PAPER_RPT_VAL:
-		        	rptGenBean.setScQuotationNoView(true);
+		        	rptGenBean.setScCommitteQuotationNoView(true);
 			        rptGenBean.setExtraTwoColumnView(true);
 			break;	
 			
 		    case ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
+	        	rptGenBean.setScCommitteQuotationNoView(true);
 		        rptGenBean.setExtraTwoColumnView(true);
 		     break;	
 			
@@ -653,17 +653,17 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 			break;
 			
 		   case ReportConst.SC_OPENING_COMMITTEE_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
+	        	rptGenBean.setScCommitteQuotationNoView(true);
 		        rptGenBean.setExtraTwoColumnView(true);
 		     break;	
 		     
 		   case ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
+	        	rptGenBean.setScCommitteQuotationNoView(true);
 		        rptGenBean.setExtraTwoColumnView(true);
 		     break;	
 		     
 		   case ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
+	        	rptGenBean.setScCommitteQuotationNoView(true);
 		        rptGenBean.setExtraTwoColumnView(true);
 		     break;	
 			

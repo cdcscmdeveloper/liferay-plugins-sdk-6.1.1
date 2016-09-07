@@ -302,6 +302,8 @@ public class ReportsGenerateBean {
 
 	/** The sc quotation no view. */
 	private boolean scQuotationNoView = false;
+	
+	private boolean scCommitteQuotationNoView = false;
 
 	/** The sc created from view. */
 	private boolean scCreatedFromView = false;
@@ -13635,6 +13637,14 @@ public class ReportsGenerateBean {
 	 */
 	public void setCmBusinessRegNoView(boolean cmBusinessRegNoView) {
 		this.cmBusinessRegNoView = cmBusinessRegNoView;
+	}
+
+	public boolean isScCommitteQuotationNoView() {
+		return scCommitteQuotationNoView;
+	}
+
+	public void setScCommitteQuotationNoView(boolean scCommitteQuotationNoView) {
+		this.scCommitteQuotationNoView = scCommitteQuotationNoView;
 	}
 
 	/**
