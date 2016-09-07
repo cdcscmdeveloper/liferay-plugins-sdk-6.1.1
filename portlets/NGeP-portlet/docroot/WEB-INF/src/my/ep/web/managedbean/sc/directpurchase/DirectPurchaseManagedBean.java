@@ -148,11 +148,11 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 					paramTitle ="scLoiLoa.title";
 				}
 				
-				if (getSearchPtjProfile() != null) {
+				if (getSearchPtjProfile() != null && getSearchPtjProfile().getOrgProfileId() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtj, SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjProfile().getOrgProfileId()));
 					
-				} else if (getSearchPtjGroupProfile() != null) {
+				} else if (getSearchPtjGroupProfile() != null && getSearchPtjGroupProfile().getOrgProfileId() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean(
 							paramPtjGroupAndMinistry+"."
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT
@@ -160,7 +160,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjGroupProfile().getOrgProfileId()));
 					
-				} else if (getSearchMinistryProfile() != null) {
+				} else if (getSearchMinistryProfile() != null && getSearchMinistryProfile().getOrgProfileId() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean(
 							paramPtjGroupAndMinistry+"."
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY
