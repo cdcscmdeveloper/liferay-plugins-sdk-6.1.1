@@ -713,6 +713,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		BigDecimal calPaymentAmt = new BigDecimal(0.0);
 		BigDecimal totalDeductionAmt = new BigDecimal(0);
 		for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()) {
+			if(deduction.getCtDeduction() == null){
+				break;
+			}
 			if(deduction.getCtDeduction().getDeductionType().getParameterCode()!=null && 
 					!deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)) {
 				if(deduction.getCtDeduction().getDeductionType().getParameterCode()!=null && 
@@ -1103,7 +1106,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				
 				List<FlPaymentDeduction> emptyDeductionList = new ArrayList<FlPaymentDeduction>();
 				for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
-
+					if(deduction.getCtDeduction() == null){
+						break;
+					}
 					if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){//save function
 						if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null && 
 								(deduction.getPmVotFund() == null || deduction.getPmVotFund().getVotFundCode() == null) &&
@@ -1115,7 +1120,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						if(deduction.getDeductionAmt() == null){
 							deduction.setDeductionAmt(new BigDecimal(0));
 						}
-					}else if(deduction.getCtDeduction() != null){
+					}else {
 						if(deduction.getCtDeduction().getDeductionType().getParameterCode() == null){
 							throw new EpException(MessageConst.ERROR_740035);
 						}
@@ -1359,6 +1364,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	public void validateDeductionAmt(){
 		BigDecimal totalDeductionAmt = new BigDecimal(0);
 		for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()) {
+			if(deduction.getCtDeduction() == null){
+				break;
+			}
 			if(deduction.getCtDeduction().getDeductionType().getParameterCode()!=null && 
 					!deduction.getCtDeduction().getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)) {
 				if(deduction.getDeductionAmt() == null){
