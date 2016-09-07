@@ -89,6 +89,36 @@
 									process="@form" partialSubmit="true" update="@form" />
 							</p:inputText>
 						</c:if>
+						
+						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.scCommitteQuotationNoView}">
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td style="width:168px;"><p:outputLabel
+												value="#{lbl['lbl.rpt.qtNo']}" />
+											<p:outputLabel value="*" styleClass="mandatory" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 84%"><p:inputText
+												label="#{lbl['lbl.rpt.qtNo']}"
+												id="rptQuotationCommitte" maxlength="40"
+												value="#{reportBackingBean.scQuotationNo}"
+												required="true" style="margin-top:5px;width:290px;">
+												<p:ajax event="blur"
+													listener="#{reportBackingBean.quotationNumberValidation()}"
+													process="@form" partialSubmit="true" update="@form" />
+											</p:inputText></td>
+										<td><p:message id="rptQuotationCommitteMsg"
+												for="rptQuotationCommitte" display="icon" showDetail="false" /></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
 
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.scMandatoryProcessRptQuotationNoView}">
