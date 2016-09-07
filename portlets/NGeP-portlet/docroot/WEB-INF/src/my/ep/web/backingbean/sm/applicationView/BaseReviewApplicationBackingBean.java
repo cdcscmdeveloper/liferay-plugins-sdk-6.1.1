@@ -1872,7 +1872,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSearchApplNo(StringUtils.EMPTY);
 		getManagedBean().setSearchApplStatusId(null);
 	}
-	
+
 	/**
 	 * On change supplier type selection
 	 */
@@ -1977,6 +1977,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			baseUrlLabel = SmCommonUtil.getMessage(
 					"lbl.sm.supplier.application.history", null);
 		}
+
+		// reset previous session redirect to personnel private page
+		getManagedBean().setRedirectToPersonPage(false);
 
 		SmAppl smAppl = getApplByLoginRole(selectedSmAppl);
 		setApplication(smAppl);
