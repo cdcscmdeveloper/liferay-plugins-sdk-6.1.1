@@ -4207,8 +4207,18 @@ public class LOIDetailBackingBean extends
 			contractDuration.append(this.getManagedBean().getScQt().getContractDuration() + " " + getMessageCommon("lbl.sc.sp.month")); 
 		}
 		context.put("contractDuration", contractDuration);
-		
-		context.put("ptj", pmOrgProfile.getOrgName());
+		String ptjName=" ";
+		if(null!=this.getManagedBean().getCurrentStatusId()){
+			log.info("=====if generateOfferedAndQTDtlsPdf"+this.getManagedBean().getCurrentStatusId());
+			log.info("publish date"+this.getManagedBean().getScQtFinalization().getScQt().getPublishDate());
+			log.info("current date"+this.getManagedBean().getScQtFinalization().getScQt().getCreatedDate());
+		 ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?this.getManagedBean().getScQtFinalization().getScQt().getPublishDate() : this.getManagedBean().getScQtFinalization().getScQt().getCreatedDate());
+		}else{
+			log.info("=====else generateOfferedAndQTDtlsPdf");
+			ptjName=pmOrgProfile.getOrgName();
+		}
+		log.info("ptjName generateOfferedAndQTDtlsPdf"+ptjName);
+		context.put("ptj", ptjName);
 		String totalSuppliers = "";
 		if (this.getManagedBean().getLois() != null) {
 			totalSuppliers = String.valueOf(this.getManagedBean().getLois()
@@ -4261,7 +4271,18 @@ public class LOIDetailBackingBean extends
 
 		// context.put("ministry",
 		// pmOrgProfile.getParentOrgProfile().getOrgName());
-		context.put("agency", pmOrgProfile.getOrgName());
+		String ptjName=" ";
+		if(null!=this.getManagedBean().getCurrentStatusId()){
+			log.info("=====if generateCoverPdfFromVelocity"+this.getManagedBean().getCurrentStatusId());
+			log.info("publish date"+this.getManagedBean().getScQtFinalization().getScQt().getPublishDate());
+			log.info("current date"+this.getManagedBean().getScQtFinalization().getScQt().getCreatedDate());
+		 ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?this.getManagedBean().getScQtFinalization().getScQt().getPublishDate() : this.getManagedBean().getScQtFinalization().getScQt().getCreatedDate());
+		}else{
+			log.info("=====else generateCoverPdfFromVelocity");
+			ptjName=pmOrgProfile.getOrgName();
+		}
+		log.info("ptjName generateCoverPdfFromVelocity"+ptjName);
+		context.put("agency",ptjName);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOI_COVER, context,
