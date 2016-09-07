@@ -342,6 +342,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			String vKey = SmCommonUtil.getInstance().getPaymentGatewayVKeyByBillType(pyBill.getBillType());
 			String vc = SmCommonUtil.md5(totalAmount + merchantId + orderId + vKey);
 			
+			log.info("******billType********" + pyBill);
+			log.info("******merchantId********" + merchantId);
+			log.info("******VKey********" + vKey);
+			log.info("******VC********" + vc);
 			BigDecimal ttlAmt = resDTO.getPyBill().getPyPayments().get(0)
 					.getPaymentAmt();
 			this.setvCode(vc);
