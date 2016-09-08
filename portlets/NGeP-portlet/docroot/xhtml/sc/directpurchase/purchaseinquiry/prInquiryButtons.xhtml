@@ -20,7 +20,7 @@
 		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 			style="float:right;"
 			rendered="#{purchaseInquiryBackingBean.managedBean.trackingDairyView}"
-			action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypePurchaseInquiry, purchaseInquiryBackingBean.managedBean.scPrInquiry.prInquiryId)}"
+			action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypePurchaseInquiry, purchaseInquiryBackingBean.managedBean.scPrInquiry.prInquiryId, true)}"
 			immediate="true" />
 
 	</div>
