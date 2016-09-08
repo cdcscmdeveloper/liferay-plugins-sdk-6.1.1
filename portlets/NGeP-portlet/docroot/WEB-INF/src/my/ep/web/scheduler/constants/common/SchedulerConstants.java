@@ -175,17 +175,34 @@ public class SchedulerConstants {
 	// CRM Job Group ID
 	public static final String CRM_INTEGRATION_JOB_GROUP = "CRM INTEGRATION JOB GROUP";
 
-	// CRM Job Key Id
+	// CRM Job Key ID
 	public static final String UPDATE_GOVERNMENT_USER_INFO_JOB = "UPDATE GOVERNMENT USER INFO CRM OUTBOUND JOB";
 	public static final String UPDATE_SUPPLIER_USER_INFO_JOB = "UPDATE SUPPLIER USER INFO CRM OUTBOUND JOB";
 	public static final String UPDATE_SUPPLIER_INFO_JOB = "UPDATE SUPPLIER INFO CRM OUTBOUND JOB";
 	public static final String UPDATE_GOVERNMENT_INFO_JOB = "UPDATE GOVERNMENT INFO CRM OUTBOUND JOB";
 
-	// Sourcing Job description
+	// CRM Job Description
 	public static final String UPDATE_GOVERNMENT_USER_INFO_JOB_DESCRIPTION = "Job to run every 5 minutes";
 	public static final String UPDATE_SUPPLIER_USER_INFO_JOB_DESCRIPTION = "Job to run every 5 minutes";
 	public static final String UPDATE_SUPPLIER_INFO_JOB_DESCRIPTION = "Job to run every 5 minutes";
 	public static final String UPDATE_GOVERNMENT_INFO_JOB_DESCRIPTION = "Job to run every 5 minutes";
+
+	// EPOL Job Group ID
+	public static final String EPOL_INTEGRATION_JOB_GROUP = "EPOL INTEGRATION JOB GROUP";
+
+	// EPOL Job Key ID
+	public static final String EPOL_GOVERNMENT_ENTITY_INFO_JOB = "GOVERNMENT ENTITY INFO JOB (Outbound)";
+	public static final String EPOL_GOVERNMENT_USER_INFO_JOB = "GOVERNMENT USER INFO JOB (Outbound)";
+	public static final String EPOL_COMPANY_INFO_JOB = "COMPANY INFO JOB (Outbound)";
+	public static final String EPOL_CONTACT_INFO_JOB = "CONTACT INFO JOB (Outbound)";
+	public static final String EPOL_SUPPLIER_USER_INFO_JOB = "SUPPLIER USER INFO JOB (Outbound)";
+
+	// EPOL Job Description
+	public static final String EPOL_GOVERNMENT_ENTITY_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
+	public static final String EPOL_GOVERNMENT_USER_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
+	public static final String EPOL_COMPANY_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
+	public static final String EPOL_CONTACT_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
+	public static final String EPOL_SUPPLIER_USER_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
 
 	// NOTIFICATIONS
 	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB = "NOTIFICATION JOB GROUP";

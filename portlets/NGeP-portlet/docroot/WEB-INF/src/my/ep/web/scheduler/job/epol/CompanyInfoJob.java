@@ -20,12 +20,12 @@ public class CompanyInfoJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
-		log.info("CompanyInfoJob start");
+		log.info("EPOL CompanyInfoJob start");
 		IEpolServiceSO  epolServiceSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.INTEGRATION,
 						IEpolServiceSO.class);
 		epolServiceSO.createCompanyInfo();
-		log.info("CompanyInfoJob end");
+		log.info("EPOL CompanyInfoJob end");
 
 	}
 
