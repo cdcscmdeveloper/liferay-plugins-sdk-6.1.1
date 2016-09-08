@@ -36,6 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -136,6 +137,11 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
@@ -1209,9 +1215,6 @@ public class ReportBackingBean extends
 
 	/** The supplier sub child cat list. */
 	private List<PmCategoryL3> supplierSubChildCatList;
-
-	/** Report url string. */
-	private String reportStr;
 
 	boolean testing = false;
 	/**
@@ -18386,11 +18389,37 @@ public class ReportBackingBean extends
 		}
 
 		// Jimmy add (temporarily workaround for report).
-		reportStr = gnrtdURL.toString();
+		String reportStr = gnrtdURL.toString();
 
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
+				.getRequestScope(WebKeys.THEME_DISPLAY);
+
+
+		String commonUrl = "";
+		
+		try {
+			commonUrl = themeDisplay.getURLCurrent().substring(
+					0,
+					themeDisplay.getURLCurrent().indexOf(
+							themeDisplay.getLayout().getGroup()
+									.getFriendlyURL())
+							+ themeDisplay.getLayout().getGroup()
+									.getFriendlyURL().length());
+		} catch (PortalException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SystemException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		String reportPopup = //this.getServerUrl() + "docroot/xhtml/reports/reportpopup.xhtml";
+				commonUrl + "/" + "report-popup";
+		
 		if(testing){
 			RequestContext.getCurrentInstance()
-		    .execute("window.open('"+reportStr+"'); window.focus();");
+		    .execute("document.getElementById('reportUrl').value = '"+reportStr+"'; window.open('"+reportPopup+"', 'Resource', 'toolbar=no ,location=0, status=no,titlebar=no,menubar=no,width='+  screen.width +',height=' +  screen.height);e.preventDefault(); window.focus();");			//.execute("ex.show();");
 		} else {
 		
 		HttpURLConnection urlConnection = null;
@@ -19951,20 +19980,6 @@ public class ReportBackingBean extends
 			.getUserProfileSearchBean().setUserRole(getManagedBean().getSelectedRoleDesc().getPmRole().getRoleCode());*/
 		}
 	}
-
-	/**
-	 * @return the reportStr
-	 */
-	public String getReportStr() {
-		return reportStr;
-	}
-	
-	/**
-	 * @param reportStr the reportStr to set
-	 */
-	public void setReportStr(String reportStr) {
-		this.reportStr = reportStr;
-	}
 	
 	public void preRenderViewTesting() {
 		log.info("ReportBackingBean-preRenderView");
@@ -19976,5 +19991,20 @@ public class ReportBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "reportcontenttestingmain");
+	}
+	
+	/**
+	 * The method used to retrieve the base URL.
+	 * 
+	 * @return url  the base URL
+	 */
+	private String getServerUrl() {
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+		String requestURL = httpServletRequest.getRequestURL().toString();
+		String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/";
+
+		return url;
 	}
 }
