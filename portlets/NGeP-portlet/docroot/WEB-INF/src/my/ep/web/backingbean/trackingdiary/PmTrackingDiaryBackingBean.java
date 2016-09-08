@@ -373,7 +373,11 @@ public class PmTrackingDiaryBackingBean extends
 
 	
 	public void redirectToTrackingDiary(String docType, Long docId)  throws IOException,PortalException, SystemException{
-		setTrackingDiaryParam(docType, docId);
+		redirectToSupplierTrackingDiary(docType, docId, false);
+	}
+	
+	public void redirectToSupplierTrackingDiary(String docType, Long docId, boolean isFilterBySupplier)  throws IOException,PortalException, SystemException{
+		setTrackingDiaryParam(docType, docId, isFilterBySupplier);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
@@ -386,9 +390,10 @@ public class PmTrackingDiaryBackingBean extends
 		
 	}
 	
-	public void setTrackingDiaryParam(String docType, Long docId){
+	public void setTrackingDiaryParam(String docType, Long docId, boolean isFilterBySupplier){
 		this.getManagedBean().setSelectedDocType(docType);
 		this.getManagedBean().setSelectedDocId(docId);
+		this.getManagedBean().setFilterBySupplier(isFilterBySupplier);
 	}
 	
 	public void onFunctionSelect() {
