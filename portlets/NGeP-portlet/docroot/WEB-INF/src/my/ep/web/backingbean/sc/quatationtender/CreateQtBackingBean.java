@@ -1773,7 +1773,7 @@ public class CreateQtBackingBean extends
 					.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)) {
 				// check whether state exists or not
 				if (!getManagedBean().getBeans().isEmpty()) {
-					checkDuplicateStateOrDivOrDist(zone);
+					checkDuplicateStateOrDivOrDist(zone,-1);
 				}
 				// zonesBean.setTplSpecZoneLocs(allNodes);
 			}
@@ -1782,7 +1782,7 @@ public class CreateQtBackingBean extends
 					.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
 				// check whether division exists or not
 				if (!getManagedBean().getBeans().isEmpty()) {
-					checkDuplicateStateOrDivOrDist(zone);
+					checkDuplicateStateOrDivOrDist(zone,-1);
 				}
 				// zonesBean.setTplSpecZoneLocs(allNodes);
 			}
@@ -1791,7 +1791,7 @@ public class CreateQtBackingBean extends
 					.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)) {
 				// check whether district exists or not
 				if (!getManagedBean().getBeans().isEmpty()) {
-					checkDuplicateStateOrDivOrDist(zone);
+					checkDuplicateStateOrDivOrDist(zone,-1);
 				}
 				// zonesBean.setTplSpecZoneLocs(allNodes);
 			}
@@ -1898,7 +1898,7 @@ public class CreateQtBackingBean extends
 		 * @param tplSpecZoneLocs
 		 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
 		 */
-		public void checkDuplicateStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl) {
+		public void checkDuplicateStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl,int index) {
 			List<Long> stateIds = null;
 			List<Long> divIds = null;
 			List<Long> distIds = null;
@@ -1911,8 +1911,14 @@ public class CreateQtBackingBean extends
 				divIds = getPmDivisionIds(currentTplSpecLocs);
 				distIds = getPmDistrictsIds(currentTplSpecLocs);
 			}
-
+			
 			List<ZonesBean> list = getManagedBean().getBeans();
+			ZonesBean bean  = null;
+			// skip the validation for current edited zone under the supplier Qualification tab 
+			if(index >= 0){
+				 bean = getManagedBean().getBeans().get(index);
+				getManagedBean().getBeans().remove(index);
+			}
 
 			if (list != null && list.size() > 0) {
 
@@ -1933,6 +1939,9 @@ public class CreateQtBackingBean extends
 
 										if (stateIds.contains(TplSpecZoneLoc
 												.getPmState().getStateId())) {
+											if(bean != null){
+												getManagedBean().getBeans().add(index, bean);
+											}
 											throw new EpException(
 													MessageConst.ERROR_760168,
 													new String[] {
@@ -1949,6 +1958,9 @@ public class CreateQtBackingBean extends
 									if (divIds != null && divIds.size() > 0) {
 										if (divIds.contains(TplSpecZoneLoc
 												.getPmDivision().getDivisionId())) {
+											if(bean != null){
+												getManagedBean().getBeans().add(index, bean);
+											}
 											throw new EpException(
 													MessageConst.ERROR_760167,
 													new String[] {
@@ -1964,6 +1976,9 @@ public class CreateQtBackingBean extends
 									if (distIds != null && distIds.size() > 0) {
 										if (distIds.contains(TplSpecZoneLoc
 												.getPmDistrict().getDistrictId())) {
+											if(bean != null){
+												getManagedBean().getBeans().add(index, bean);
+											}
 											throw new EpException(
 													MessageConst.ERROR_760166,
 													new String[] {
@@ -1978,6 +1993,9 @@ public class CreateQtBackingBean extends
 						}
 						if (prevsZone.getZoneName().equals(
 								tplSpecZoneDtl.getZoneName())) {
+							if(bean != null){
+								getManagedBean().getBeans().add(index, bean);
+							}
 							throw new EpException(
 									MessageConst.ERROR_700027,
 									new String[] { ResourceBundleUtils.getMessage(
