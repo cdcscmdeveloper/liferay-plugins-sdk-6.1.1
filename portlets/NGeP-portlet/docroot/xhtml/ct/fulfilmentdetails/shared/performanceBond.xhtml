@@ -18,6 +18,7 @@
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
 	   	</f:facet>
+	   	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.performance.bond']}" escape="false" /><br/><br/>		
 	   	<h:panelGrid columns="2" rendered="#{!ctBackingBean.managedBean.commonView and 
 	         ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral}">
 		   	<p:outputLabel id="bondAmount" value="#{lbl['lbl.ct.pb.amount']}" />
