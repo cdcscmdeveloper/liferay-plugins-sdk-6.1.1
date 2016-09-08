@@ -18,7 +18,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<th style="width:15%;">
 						<p:outputLabel value="#{lbl['lbl.pm.ta.doc.type']}"/>
 					</th>
-					<td style="width:45%;">
+					<td style="width:35%;">
 						<p:inputText label="#{lbl['lbl.pm.ta.doc.type']}" disabled="true" size="40"
 							value="#{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, taskReassignmentBackingBean.managedBean.selectedTask.docType)}" />
 
@@ -27,7 +27,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}"/>
 					</th>
 					<td style="width:25%;"> 
-						<p:inputText label="#{lbl['lbl.pm.ta.doc.no']}"  disabled="true" size="16"
+						<p:inputText label="#{lbl['lbl.pm.ta.doc.no']}"  disabled="true" size="25"
 							value="#{taskReassignmentBackingBean.managedBean.selectedTask.docNumber}"/>
 					</td>
 				</tr>
