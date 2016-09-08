@@ -2019,6 +2019,22 @@ public class SmCommonUtil {
 		return taskList;
 	}
 
+	public static WorklistItemVO getSingleBpmWorkListByTaskTitleAndToken(
+			String taskTitle, Object token) {
+		WorklistItemVO retVal = null;
+		List<WorklistItemVO> taskList = SmCommonUtil
+				.getBpmTaskListByAuthToken(token);
+		if (taskList != null && !taskList.isEmpty()) {
+			for (WorklistItemVO worklistItemVO : taskList) {
+				if (worklistItemVO.getTitle().equalsIgnoreCase(taskTitle)) {
+					retVal = worklistItemVO;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
 	/**
 	 * Redirect to page with message as optional.
 	 * 
@@ -4268,28 +4284,32 @@ public class SmCommonUtil {
 		return isSmObjectPropsDifference(latest, current, excludeProps);
 	}
 
-	public String getPaymentGatewayVKeyByBillType(String billType){
+	public String getPaymentGatewayVKeyByBillType(String billType) {
 		String vKey = null;
-		
-		if (billType.equalsIgnoreCase(
-				my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
-			vKey = EpPropertiesUtils.getInstance().getProperty("molpay.cdc.vkey");
-		}else{
-			vKey = EpPropertiesUtils.getInstance().getProperty("molpay.gov.vkey");
+
+		if (billType
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+			vKey = EpPropertiesUtils.getInstance().getProperty(
+					"molpay.cdc.vkey");
+		} else {
+			vKey = EpPropertiesUtils.getInstance().getProperty(
+					"molpay.gov.vkey");
 		}
 		return vKey;
 	}
-	
-	public String getPaymentGatewayMerchantIdByBillType(String billType){
+
+	public String getPaymentGatewayMerchantIdByBillType(String billType) {
 		String vCode = null;
-		
-		if (billType.equalsIgnoreCase(
-				my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
-			vCode = EpPropertiesUtils.getInstance().getProperty("molpay.cdc.merchantid");
-		}else{
-			vCode = EpPropertiesUtils.getInstance().getProperty("molpay.gov.merchantid");
+
+		if (billType
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+			vCode = EpPropertiesUtils.getInstance().getProperty(
+					"molpay.cdc.merchantid");
+		} else {
+			vCode = EpPropertiesUtils.getInstance().getProperty(
+					"molpay.gov.merchantid");
 		}
-		
+
 		return vCode;
 	}
 }
