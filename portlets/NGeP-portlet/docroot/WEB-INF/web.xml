@@ -161,8 +161,13 @@
 		<load-on-startup>4</load-on-startup>
 	</servlet>
 	<servlet>
-		<servlet-name>FLSchedulerServlet</servlet-name>
+		<servlet-name>CRMSchedulerServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.crm.CRMSchedulerServlet</servlet-class>
+		<load-on-startup>4</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>EPOLSchedulerServlet</servlet-name>
+		<servlet-class>my.ep.web.scheduler.servlet.epol.EPOLSchedulerServlet</servlet-class>
 		<load-on-startup>4</load-on-startup>
 	</servlet>	-->
 	

@@ -25,10 +25,10 @@ public class GovernmentEntityInfoJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
-		log.info("CreateGovernmentEntityInfoJob start");
+		log.info("EPOL GovernmentEntityInfoJob start");
 		epolServiceSO.createGovernmentEntityInfo();
 
-		log.info("CreateGovernmentEntityInfoJob End");
+		log.info("EPOL GovernmentEntityInfoJob End");
 
 	}
 
