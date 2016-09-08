@@ -1,8 +1,6 @@
 package my.ep.web.managedbean.trackingdiary;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +24,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -69,6 +68,7 @@ import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
 import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -113,6 +113,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private Long selectedDocId;
 	private List<PmZone> zoneList;
 	private String backURL;
+	private boolean isFilterBySupplier;
 
 	public String getBackURL() {
 		return backURL;
@@ -468,6 +469,20 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	 */
 	public void resetFOrgResultBean() {
 		this.setFinancialOrgDataModel(new FinancialOrgPagingDataModel());
+	}
+
+	/**
+	 * @return the isFilterBySupplier
+	 */
+	public boolean isFilterBySupplier() {
+		return isFilterBySupplier;
+	}
+
+	/**
+	 * @param isFilterBySupplier the isFilterBySupplier to set
+	 */
+	public void setFilterBySupplier(boolean isFilterBySupplier) {
+		this.isFilterBySupplier = isFilterBySupplier;
 	}
 
 	// pagination for user profile search list
@@ -1050,6 +1065,14 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					.println("TrackingDiaryReqDTO-docId" + getSelectedDocId());
 			if (isSearchBeanEmpty) {
 				reqDTO.setSearchBean(searchBean);
+				
+				if (isFilterBySupplier()) {
+					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser();
+					if (ParameterConst.ORG_TYPE_SUPPLIER.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())) {
+						reqDTO.setSupplierId(pmOrgProfile.getOrgProfileId());
+					}	
+				}
+				
 				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 				try {
 					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
@@ -1099,4 +1122,33 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		}
 	}
 
+	private PmOrgProfile getOrgProfileByLoginUser() {
+		PmOrgProfile pmOrgProfile = null;
+		Long userId = new FacesScopes().getUserSessionBean().getUserId();
+		
+		if (userId != null) {
+			IUserSO userSO = null;
+			try {
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(userId);
+				userSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+				if (resDTO.getUserOrgList() != null
+						&& resDTO.getUserOrgList().size() > 0) {
+					for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
+						if (pmUserOrg.getPmOrgProfile() != null) {
+							pmOrgProfile = pmUserOrg.getPmOrgProfile();
+							break;
+						}
+					}
+				}
+			} finally {
+				userSO = null;
+			}	
+		}
+		
+		return pmOrgProfile;
+	}
 }
