@@ -418,8 +418,7 @@ public class EpSchedulerHelper {
 			try {
 				instance = StdSchedulerFactory.getDefaultScheduler();
 				if (!instance.isStarted()) {
-					throw new EpException(
-							"Quartz scheduler instance not started!!!");
+					instance.start();
 				}
 			} catch (SchedulerException e) {
 				log.error(e.getMessage());
