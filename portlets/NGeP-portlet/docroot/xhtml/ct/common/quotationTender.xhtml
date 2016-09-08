@@ -41,7 +41,7 @@
 				               </tr>
 				
 				               <tr>
-				               	<h:panelGroup rendered="#{!ctBackingBean.managedBean.commonView and 
+				               	<h:panelGroup rendered="#{!ctBackingBean.managedBean.commonView or 
 				                	ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral}">
 					                   <td>
 			                                  <p:outputLabel value="#{lbl['lbl.ct.proc.mode']}" />

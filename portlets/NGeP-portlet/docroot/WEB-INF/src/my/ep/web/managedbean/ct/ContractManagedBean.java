@@ -44,7 +44,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String fileDirectory;
 	private int attachFileIndex;
 	private boolean viewContract = false;
-	private boolean commonView;
+	private boolean commonView = false;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtAttachment> deleteAttachmentList;
