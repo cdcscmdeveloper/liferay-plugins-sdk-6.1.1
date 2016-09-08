@@ -96,6 +96,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
@@ -727,7 +728,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param rootZoneLocation the root zone location
 	 * @param index the index
 	 */
-	public void editZoneLocation(TreeNode rootZoneLocation, int index) {
+	public void editZoneLocation() {
 		debugLogger("editZoneLocation");
 		IParameterSO parameterSo = null;
 		ICountrySO countrySo = null;
@@ -983,15 +984,19 @@ public class QTSupplierQulCriteriaBackingBean extends
 			
 			if (CollectionUtils.isNotEmpty(allNodes)) {				
 				specZoneDtl.setTplSpecZoneLocs(allNodes);
-
+				
 				// check whether state exists or not
-				new CreateQtBackingBean().checkDuplicateStateOrDivOrDist(specZoneDtl);
+				new CreateQtBackingBean().checkDuplicateStateOrDivOrDist(specZoneDtl,index);
 
 				zoneSuppQualTrees.remove(index);
 				zoneSuppQualTrees.add(
 						index,
 						LocationSingleton.getInstance().constuctTreeNode(
 								specZoneDtl, specZoneDtl.getTplSpecZoneLocs()));
+				
+				ZonesBean bean = new ZonesBean();
+				bean.setTplSpecZoneDtl(specZoneDtl);
+				getManagedBean().getBeans().add(index, bean);
 			}
 			
 			specZoneDtl.setDeletedSpecZoneLocs(deletedNodes);
