@@ -665,8 +665,6 @@ width:32.5%;
 						</tr>
 					</table>
 					
-					<input type="hidden" id="reportStr" value="#{reportBackingBean.reportStr}" />
-					
 					<p:dialog id="statusDialog" modal="true" widgetVar="statusDialog" width="376" 
 						draggable="false" closable="true"  header="#{lbl['lbl.rpt.reportstatus']}"
 						resizable="false">	
@@ -674,29 +672,6 @@ width:32.5%;
 						<p:graphicImage value="/css/images/ajax-loader.gif" />						
 					</p:dialog>
 					
-					<script type="text/javascript">
-						/*Function to hide the Iframe*/
-						
-						function openReportPopUp(){
-							
-							var reportStr = document.getElementById("reportStr").value;
-							
-							if(reportStr!=""){
-								window.open(reportStr);
-					        	window.focus();
-					        	reportStr = "";
-							}
-						}
-						
-						function start() {
-                           statusDialog.show();
-                        }
- 
-                       function stop() {
-                    	   statusDialog.hide();
-                         }
-						
-					</script>
 				</p:panel></td>
 		</tr>
 	</table>

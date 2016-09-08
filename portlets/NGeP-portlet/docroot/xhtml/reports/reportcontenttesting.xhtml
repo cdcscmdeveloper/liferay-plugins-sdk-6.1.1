@@ -653,6 +653,7 @@ width:32.5%;
 												<p:commandButton value="#{lbl['lbl.btn.reset']}"
 													action="#{reportBackingBean.resetReportForm}"
 													update="@form" partialSubmit="true" process="@form" />
+												
 											</div>
 										</h:panelGroup>
 									</p:panel>
@@ -660,14 +661,23 @@ width:32.5%;
 						</tr>
 					</table>
 					
-					<input type="hidden" id="reportStr" value="#{reportBackingBean.reportStr}" />
-					
 					<p:dialog id="statusDialog" modal="true" widgetVar="statusDialog" width="376" 
 						draggable="false" closable="true"  header="#{lbl['lbl.rpt.reportstatus']}"
 						resizable="false">	
 						<h:outputText  value="#{lbl['lbl.rpt.warninformation']}" />					
 						<p:graphicImage value="/css/images/ajax-loader.gif" />						
 					</p:dialog>
+					
+					<p:dialog id="dialog1"  widgetVar="ex"  onHide="jQuery('#someId').hide();" onShow="jQuery('#someId').show();">
+					    <iframe frameborder="0" align="left"
+					         src="http://www.primefaces.org"
+					         name="someName" id="someId" scrolling="auto" width="750"
+					         height="500" marginheight="5" marginwidth="10">
+					     </iframe>
+					</p:dialog>
+					
+					<input type="hidden" id="reportUrl" value="" />
+					
 				</p:panel></td>
 		</tr>
 	</table>
