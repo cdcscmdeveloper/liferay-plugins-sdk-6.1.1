@@ -59,7 +59,8 @@ public class ViewApplHistoryBackingBean extends
 						.equals(my.ep.web.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)) {
 			getManagedBean().getTrackingDiary().setTrackingDiaryParam(
 					SmTrackingDiaryConst.SM_DEFAULT_DOC_TYPE,
-					getManagedBean().getSmAppl().getApplId());
+					getManagedBean().getSmAppl().getApplId(),
+					false);
 		}
 	}
 

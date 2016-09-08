@@ -21,7 +21,7 @@
 		<td align="right">
 			<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 				style="float:right;"
-				action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, supplierProposalDetailBackingBean.managedBean.qt.qtId)}"
+				action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeQuotation, supplierProposalDetailBackingBean.managedBean.qt.qtId, true)}"
 				immediate="true" 
 				rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
 					
