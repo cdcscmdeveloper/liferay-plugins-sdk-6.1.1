@@ -24,7 +24,7 @@
 			 <div align="right" style="width: 100%">
 			 	<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 					style="float:right;"
-					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeLetterOfIntent, lOIDetailBackingBean.managedBean.scLoi.loiId)}"
+					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeLetterOfIntent, lOIDetailBackingBean.managedBean.scLoi.loiId, true)}"
 					immediate="true" 
 					rendered="#{!empty lOIDetailBackingBean.managedBean.backToPreviousPage}" />
 					
