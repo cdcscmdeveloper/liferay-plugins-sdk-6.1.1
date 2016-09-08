@@ -278,22 +278,6 @@
 		
 								</p:tree>
 							</p:column>
-		
-							<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%"
-								rendered="#{!locCoverageReadonly}">
-								<p:commandLink
-								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel ne null and  ((qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterCode ne 'ST') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterCode eq 'ST' and index eq'0'))}"
-									actionListener="#{qTSupplierQulCriteriaBackingBean.editZoneLocation(zoneTree,index)}"
-									process="@this" update="@([id$=zonePopupPanel])"
-									oncomplete="ZoneLocation.show();">
-									<h:graphicImage
-										value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
-										styleClass="tasklist_title1" />
-								</p:commandLink>
-								
-							
-							</p:column>
-		
 						</p:dataTable>
 					</h:panelGrid>
 		
@@ -311,6 +295,14 @@
 							<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 								update="@([id$=zonePopupPanel])"
 								actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}" />
+								
+							<p:commandButton value="#{lbl['lbl.btn.edit']}" id="locEditBtnId"
+								action="#{qTSupplierQulCriteriaBackingBean.editZoneLocation}"
+								process="@all" update="@([id$=zonePopupPanel])"
+								oncomplete="ZoneLocation.show();"
+								disabled="#{empty qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}">
+							</p:commandButton>
+							
 							<p:commandButton value="#{lbl['lbl.btn.delete']}" id="supplierQualificationcriteriaNonpanelDelBtnId"
 							disabled="#{qTSupplierQulCriteriaBackingBean.checkLocationDeleteButtonDisable()}"
 								process="@this,zoneLocationDataTable" partialSubmit="true"
@@ -376,7 +368,7 @@
 														style="float:left;margin-top: 12px;;margin-left: 10px;" />
 													<p:commandButton value="#{lbl['lbl.btn.ok']}"
 														onclick="ZoneLocation.hide();" process="@all"
-														update="@this, zoneLocationDataTable, zonePopupPanel"
+														update="@this, zoneLocationDataTable, zonePopupPanel, locEditBtnId"
 														action="#{qTSupplierQulCriteriaBackingBean.updateLocation}">
 													</p:commandButton>
 													<p:commandButton value="#{lbl['lbl.btn.cancel']}"
