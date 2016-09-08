@@ -255,6 +255,7 @@
 	<category name="reports">
 		<portlet id="reports"></portlet>
 		<portlet id="reportstesting"></portlet>
+		<portlet id="reportpopup"></portlet>
 	</category>
 	<category name="Supplier Management">
 		<portlet id="sdoreview"></portlet>
