@@ -42,7 +42,6 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -67,8 +66,6 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -281,7 +278,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	requestNoteReqDTO.setSubmit(Boolean.FALSE);
 			requestNoteReqDTO.setToken(token);
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
-		    requestNoteResDTO = getDirectPurchaseSO().saveRequestNote(requestNoteReqDTO);
+		    requestNoteResDTO = getDirectPurchaseSO().submitRequestNote(requestNoteReqDTO);
 		    
 	     } else if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
 	    	 requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
@@ -471,7 +468,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 				requestNoteReqDTO.setSubmit(Boolean.TRUE);
 				requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-				requestNoteResDTO = getDirectPurchaseSO().saveRequestNote(requestNoteReqDTO);
+				requestNoteResDTO = getDirectPurchaseSO().submitRequestNote(requestNoteReqDTO);
 			} else {
 				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 				requestNoteReqDTO.setToken(ctxToken);
