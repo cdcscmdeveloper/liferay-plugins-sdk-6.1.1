@@ -18430,8 +18430,6 @@ public class ReportBackingBean extends
 			log.info(gnrtdURL.toString());
 			urlConnection = (HttpURLConnection) obj.openConnection();
 
-			urlConnection.setConnectTimeout(306000);
-			urlConnection.setReadTimeout(306000);
 			// new Thread(new InterruptThread(urlConnection)).start();
 			log.info("@@@@ Report URL = " + urlConnection.getURL()
 					+ " @@@@ Time stamp =" + time);
