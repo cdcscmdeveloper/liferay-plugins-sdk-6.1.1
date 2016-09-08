@@ -459,7 +459,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setScQtProposal(scQtProposal);
 			reqDTO.setDigiSignData(digiSign);
 
-			ProposalResDTO resDTO = proposalSO.saveQTDtl(reqDTO);
+			ProposalResDTO resDTO = proposalSO.submitSupplierProposal(reqDTO);
 			if (resDTO.isSuccessful()) {
 				String variable1 = getMessageCommon("lbl.sc.proposal.no");
 				String variable2 = scQtProposal.getProposalNo();
