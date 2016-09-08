@@ -2229,5 +2229,42 @@ public class PmCommonUtil {
 		log.info("retrievePmOrgProfileDtl - End");
 		return pmOrgProfile;
 	}
+	
+	/**
+	 * retrieve user list (by applying group org type)
+	 * 
+	 * @param ptjOrgProfileId
+	 * @param roleCodeList
+	 * @param isNaikTaraf
+	 * @param excludedUserIds
+	 * @return List<PmUser>
+	 */
+	public static List<PmUser> retrieveUserListFromGroupOrgType(Long ptjOrgProfileId,
+			List<String> roleCodeList,boolean isNaikTaraf,String groupOrgType,List<Long> excludedUserIds,ISearchBean<PmUser> searchBean) {
+		log.info("retrieveUserListFromGroupOrgType - Start");
+		List<PmUser> pmUsers = new ArrayList<PmUser>();
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = new UserResDTO();
+			reqDTO.setOrgProfileId(ptjOrgProfileId);
+			reqDTO.setRoleCodes(roleCodeList);
+			reqDTO.setWithProfileGroup(isNaikTaraf);
+			reqDTO.setUserIds(excludedUserIds);
+			reqDTO.setUserSearchBean(searchBean);
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.retrieveUserListFromGroupOrgType(reqDTO);
+
+			if (resDTO.isSuccessful() && resDTO.getUserList() != null) {
+				pmUsers = resDTO.getUserList();
+			}
+
+		} finally {
+			userSO = null;
+		}
+		log.info("retrieveUserListFromGroupOrgType - End");
+		return pmUsers;
+	}
 
 }
