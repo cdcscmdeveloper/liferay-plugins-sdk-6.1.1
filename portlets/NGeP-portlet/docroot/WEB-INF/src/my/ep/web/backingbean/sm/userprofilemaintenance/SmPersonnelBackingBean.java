@@ -1278,10 +1278,12 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setHasActiveAppl(getManagedBean().isUpgradeMofDraftAppl());
 		reqDTO.setBasicSmAppl(getManagedBean().getBasicSmAppl());
 		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+		if (reqDTO.getAccountStatus() == DbValueConst.RECORD_STATUS_SUSPENDED
+				|| reqDTO.getAccountStatus() == DbValueConst.RECORD_STATUS_DELETED) {
+			reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
+		}
 		if (reqDTO.isHasActiveAppl()) {
 			reqDTO.setDraftApplId(getManagedBean().getCurrSmAppl().getApplId());
-		} else {
-			reqDTO.setDraftApplId(null);
 		}
 		return SmServiceLookup.getPersonnelSO()
 				.updatePersonnelAccountStatusOrEpRole(reqDTO);
