@@ -94,6 +94,9 @@ public class ReportMangedBean extends BaseManagedBean {
 	/** The sm supplier. */
 	private SmSupplier smSupplier;
 
+	/** Report url string. */
+	private String reportStr;
+
 	/** The month map. */
 	private HashMap<String, String> monthMap = new HashMap<String, String>();
 
@@ -1016,4 +1019,17 @@ public class ReportMangedBean extends BaseManagedBean {
 		this.ministryId = ministryId;
 	}
 
+	/**
+	 * @return the reportStr
+	 */
+	public String getReportStr() {
+		return reportStr;
+	}
+	
+	/**
+	 * @param reportStr the reportStr to set
+	 */
+	public void setReportStr(String reportStr) {
+		this.reportStr = reportStr;
+	}
 }
