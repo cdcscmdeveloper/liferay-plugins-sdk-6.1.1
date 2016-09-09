@@ -987,7 +987,12 @@ public class TaskReassignmentBackingBean extends
 					}
 					
 					if(userGroupId != null){
-						pmUsers = retrieveUserGroupUserListByUserGroupId(userGroupId,null);
+						pmUsers = retrieveUserGroupUserListByUserGroupId(
+								userGroupId,
+								null,
+								new ArrayList<Long>(Arrays.asList(userId,
+								getFacesScopes().getUserSessionBean()
+								.getUserId())));
 					}else{
 						// not allow to search
 						searchBean.getDataFilterBeans().add(
@@ -1282,7 +1287,7 @@ public class TaskReassignmentBackingBean extends
 
 	}
 	
-	private List<PmUser> retrieveUserGroupUserListByUserGroupId(Long userGroupId, BigDecimal approvalLimit) {
+	private List<PmUser> retrieveUserGroupUserListByUserGroupId(Long userGroupId, BigDecimal approvalLimit, List<Long> excludeUserIds) {
 		log.info("retrieveUserGroupUserListByUserGroupId");
 		List<PmUser> pmUserList = new ArrayList<PmUser>();
 		IUserGroupSO userGroupSO = null;
@@ -1293,6 +1298,7 @@ public class TaskReassignmentBackingBean extends
 					IUserGroupSO.class);
 			reqDTO.setApprovalLimit(approvalLimit);
 			reqDTO.setGroupId(userGroupId);
+			reqDTO.setExcludeUserIds(excludeUserIds);
 			UserGroupResDTO resDTO = userGroupSO.retrieveUserGroupUserListByGroupId(reqDTO);
 			if (resDTO.isSuccessful() && !resDTO.getPmUserList().isEmpty()) {
 				pmUserList = resDTO.getPmUserList();
