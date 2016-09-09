@@ -53,11 +53,11 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price.uom']}
 				</f:facet>
-				<p:inputText value="#{tier.price}" size="10" maxlength="18"
+				<p:inputText id="zTierPromoPriceId" value="#{tier.price}" size="10" maxlength="18"
 					style="text-align:right">
 					<p:ajax event="keyup"
 						listener="#{catalogueBackingBean.validateZonalPromotionTierPrice(rowIndex)}"
-						update="zPromoTierPriceId" />
+						update="zPromoTierPriceId zTierPromoPriceId" />
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
