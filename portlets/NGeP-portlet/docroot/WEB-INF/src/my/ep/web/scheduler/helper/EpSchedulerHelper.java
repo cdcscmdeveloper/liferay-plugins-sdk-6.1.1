@@ -198,7 +198,7 @@ public class EpSchedulerHelper {
 							.withSchedule(
 									CronScheduleBuilder
 											.cronSchedule(cronExpression)
-											.withMisfireHandlingInstructionDoNothing())
+											.withMisfireHandlingInstructionFireAndProceed())
 							.build();
 					log.info(">>>>>>>>>>>ADD JOB:" + jobKey.getName()
 							+ "   MISFIRE POLICY:"
@@ -250,7 +250,7 @@ public class EpSchedulerHelper {
 											CronScheduleBuilder
 													.cronSchedule(
 															cronExpression)
-													.withMisfireHandlingInstructionDoNothing())
+													.withMisfireHandlingInstructionFireAndProceed())
 									.build();
 							log.info(">>>>>>>>>>>UPDATE JOB:"
 									+ jobKey.getName() + "   MISFIRE POLICY:"
@@ -268,13 +268,13 @@ public class EpSchedulerHelper {
 						// do nothing
 						if ((!newTrigger.getCronExpression().equals(
 								cronExpression) && !isJobRunningNow(jobKey))
-								|| newTrigger.getMisfireInstruction() != newTrigger.MISFIRE_INSTRUCTION_DO_NOTHING) {
+								|| newTrigger.getMisfireInstruction() != newTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
 							newTrigger = (CronTrigger) tb
 									.withSchedule(
 											CronScheduleBuilder
 													.cronSchedule(
 															cronExpression)
-													.withMisfireHandlingInstructionDoNothing())
+													.withMisfireHandlingInstructionFireAndProceed())
 									.build();
 							EpSchedulerHelper.getScheduler().rescheduleJob(
 									newTrigger.getKey(), newTrigger);
