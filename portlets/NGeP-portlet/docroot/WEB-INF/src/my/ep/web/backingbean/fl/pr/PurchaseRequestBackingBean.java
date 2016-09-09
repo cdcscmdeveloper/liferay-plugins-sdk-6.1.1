@@ -2203,8 +2203,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @param flItemAddress the fl item address
 	 */
 	public void showItemQuery(FlFulfilmentItemAddr flItemAddress){
-		flItemAddress.getScRequestItem().getItemName();
-		setQueryItemCode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString());
+		if(flItemAddress.getScRequestItem().getCmItem()!=null) {
+			setQueryItemCode(flItemAddress.getScRequestItem().getCmItem().getExtensionCode());
+		} else {
+			setQueryItemCode(flItemAddress.getScRequestItem().getTempUnspscCode());
+		}
 		setQueryItemName(flItemAddress.getScRequestItem().getItemName());
 		if(null != flItemAddress.getFlFulfilmentItem().getFlQuery()){
 			setQueryDesc(flItemAddress.getFlFulfilmentItem().getFlQuery().getQueryDesc());
