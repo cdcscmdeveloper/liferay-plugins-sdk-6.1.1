@@ -114,7 +114,7 @@
 							label="#{lbl['lbl.ct.min.order.qty']}">
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemVar.ctContractItem.scRequestItem.uom.uomCode)}" />
-							<p:ajax event="blur" update="@this, :form:messages"  />
+						 <p:ajax event="blur" process="@this" update=":form:messages"  />
 						</p:inputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.min.order.amount']}" style="width:13%;white-space:pre-line;" styleClass="column-align-center">
