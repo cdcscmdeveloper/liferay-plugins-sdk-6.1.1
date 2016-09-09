@@ -6,6 +6,7 @@ import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -13,6 +14,7 @@ import org.quartz.JobExecutionException;
 /*
  * @author Mohd Yusri
  */
+@DisallowConcurrentExecution
 public class CompanyInfoJob implements Job {
 	
 	public static Logger log = EpLogger.getLogger(CompanyInfoJob.class);
@@ -21,10 +23,21 @@ public class CompanyInfoJob implements Job {
 			throws JobExecutionException {
 
 		log.info("EPOL CompanyInfoJob start");
-		IEpolServiceSO  epolServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
-						IEpolServiceSO.class);
-		epolServiceSO.createCompanyInfo();
+		IEpolServiceSO epolServiceSO = null;
+		try {
+			epolServiceSO = EpEjbBusinessDelegate.getInstance().
+					getServiceObject(ModuleCodeConst.INTEGRATION,
+							IEpolServiceSO.class);
+			epolServiceSO.createCompanyInfo();
+
+			// please add resDTO to log better
+			
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+			// error handling follows here
+		} finally {
+			epolServiceSO = null;
+		}
 		log.info("EPOL CompanyInfoJob end");
 
 	}
