@@ -145,6 +145,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 			reqDTO.setReportUrl("<a href='"+generateReportURL(ReportConst.FL_NGEP_STOP_DELIVERY,paramMap)+ "'>"+getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo()+"</a>");
 		}
+		if(getManagedBean().isCoGstr() && getManagedBean().isIssuanceCogstrCheck()){
+			reqDTO.setCoGstr(true);
+			}
 		resDTO = getFulfilmentOrderSO().stopFulfilment(reqDTO);
 		
 		if(resDTO.isSuccessful()) {
