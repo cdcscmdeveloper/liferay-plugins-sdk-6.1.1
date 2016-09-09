@@ -37,23 +37,23 @@
 				style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
 				<ac:paginator for="dtTaskAssignResult"></ac:paginator>
 
-				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="25%;">
+				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
 					<h:outputText value="#{tasks.createDate.time}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"
-					width="25%;">  
+					width="13%;">  
 	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, tasks.docType)}
 	        </p:column>
-				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="25%;">  
+				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="34%;">  
 	            #{tasks.docNumber}
 	        </p:column>
-				<p:column headerText="#{lbl['lbl.pm.ta.document.amt']}" width="15%;"
+				<p:column headerText="#{lbl['lbl.pm.ta.document.amt']}" width="34%;"
 					rendered="false">
 				</p:column>
-				<p:column headerText="#{lbl['lbl.pm.ta.status']}" width="20%;">  
+				<p:column headerText="#{lbl['lbl.pm.ta.status']}" width="5%;">  
 				  #{taskReassignmentBackingBean.applicationStatus(tasks.docStatus)}	
 				             
 	        </p:column>
