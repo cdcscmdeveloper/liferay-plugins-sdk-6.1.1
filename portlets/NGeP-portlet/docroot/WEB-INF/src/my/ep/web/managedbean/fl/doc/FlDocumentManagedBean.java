@@ -23,6 +23,7 @@ import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.order.IReliefOrderSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -567,15 +568,14 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		        			}
 		        		}
 		        	}
-		        	if(resDTO.getFlOrder().getFlReliefOrders() != null && !resDTO.getFlOrder().getFlReliefOrders().isEmpty()){
+		        	
+		        	IReliefOrderSO reliefOrderSO = (IReliefOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReliefOrderSO.class);
+		        	reqDTO.setFulfilmentOrderId(resDTO.getFlOrder().getFulfilmentOrderId());
+		        	resDTO = reliefOrderSO.retrieveReliefOrderByOrderId(reqDTO);
+		        	if(resDTO.getReliefOrder() != null){
 		        		if(isFlFulfilmentApprover() || isFlFulfilmentSupplier() || isAcknowledgeOfficer()) {
 		        			orderInfo.setCoGSTR(true);
-		        			for(FlReliefOrder reliefOrder : resDTO.getFlOrder().getFlReliefOrders()) {
-		        				if(reliefOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
-		        					orderInfo.setCoGSTRNo(reliefOrder.getReliefOrderNo());
-		        					break;
-		        				}
-		        			}
+		        			orderInfo.setCoGSTRNo(resDTO.getReliefOrder().getReliefOrderNo());
 		        		}
 		        	}
 		        }

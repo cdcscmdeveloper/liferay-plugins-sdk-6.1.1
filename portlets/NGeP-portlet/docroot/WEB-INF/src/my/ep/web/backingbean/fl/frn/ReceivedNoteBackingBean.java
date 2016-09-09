@@ -216,6 +216,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				if(getManagedBean().getApproverList() == null || getManagedBean().getApproverList().isEmpty()){
 					getAcknowledgeOfficer();
 				}
+				if(getManagedBean().isLastFRNTaxInv() && getManagedBean().isIssuanceCogstrCheck()){
+					reqDTO.setCoGstr(true);
+				}
 			}
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || 
@@ -976,10 +979,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(selectedTabIndex==1){
 			sortItems(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem());
 			if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0).getFulfilmentNoteItemId() != null){
+				getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
 			}
-			
-		    getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
-			
 			selectedItemRow();
 		}
 		
