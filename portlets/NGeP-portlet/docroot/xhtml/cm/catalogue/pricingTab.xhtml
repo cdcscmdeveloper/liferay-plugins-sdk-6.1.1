@@ -36,9 +36,10 @@
 		<p:row>
 			
 			<p:column>
-				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
+				<p:inputText id="normalPriceId" readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}" maxlength="18" style="text-align:right">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<p:ajax process="@this" update="normalPriceId"></p:ajax>
 				</p:inputText>
 			</p:column>
 			<p:column>
