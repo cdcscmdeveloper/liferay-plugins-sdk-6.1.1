@@ -82,7 +82,9 @@
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true">
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.bond.waiver.cr.creation']}" rendered="#{contractRequestBackingBean.isFlFulfilmentRequisitioner()}" escape="false"/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.bond.waiver.cr.approval']}" rendered="#{contractRequestBackingBean.isApprover()}" escape="false"/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}" escape="false"/>
 		<table style="width: 100%">
 			<tr>
 				<td rowspan="3" valign="top" style="width: 142px;"><p:outputLabel
