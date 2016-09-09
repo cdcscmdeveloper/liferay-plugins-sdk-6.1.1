@@ -3307,7 +3307,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(reqDTO);
 		List<SelectItem> supplierBranches = new ArrayList<SelectItem>();
 		for (SmSupplierBranch supplierBranch : resDTO.getSmSupplierBranchList()) {
-			supplierBranches.add(new SelectItem(supplierBranch.getSupplierBranchId(),supplierBranch.getBranchName()));
+			supplierBranches.add(new SelectItem(supplierBranch.getBranchCode(),supplierBranch.getBranchName()));
 		}
 		getManagedBean().setSupplierBranchesList(supplierBranches);
 	}
