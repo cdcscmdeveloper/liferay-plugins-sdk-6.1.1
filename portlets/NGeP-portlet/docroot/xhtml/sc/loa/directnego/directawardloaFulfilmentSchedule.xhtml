@@ -14,13 +14,24 @@
 					rendered="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled}">
 					<td width="150px"><h:outputLabel
 							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
-					<td><p:selectOneRadio disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-							value="#{directLOABackingBean.managedBean.scQt.scheduleType}" >
-							<f:selectItems value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
-							<p:ajax event="change" update="progressive,schedule"
-								partialSubmit="true"
-								listener="#{directLOABackingBean.scheduleTypeChange}"></p:ajax>
-						</p:selectOneRadio></td>
+					<td>
+						<c:choose>
+							<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+								<p:selectOneRadio 
+									value="#{directLOABackingBean.managedBean.scQt.scheduleType}" >
+									<f:selectItems value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
+									<p:ajax event="change" update="progressive,schedule"
+										partialSubmit="true"
+										listener="#{directLOABackingBean.scheduleTypeChange}"></p:ajax>
+								</p:selectOneRadio>
+							</c:when>
+							<c:otherwise>
+								<p:inputText id="scheduleTypeTxt"
+									value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.periodicScheduleType, directLOABackingBean.managedBean.scQt.scheduleType)}"
+									size="30" disabled="true" />
+							</c:otherwise>
+						</c:choose>
+					</td>
 					<td style="margin-top: -3px"><ac:iconTooltip
 							value="#{lbl['lbl.sc.periodic.fullfillent.type.tooltip']}" /></td>
 				</h:panelGroup>
