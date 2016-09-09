@@ -266,6 +266,18 @@ public class SvcSiteAssignBackingBean extends
 	}
 	
 	/**
+	 * Get Label Desc
+	 * @param label
+	 * @param param
+	 * @return
+	 */
+	public String getLabelWithParam(String label, String param){
+		String labelDesc = SmCommonUtil.getMessage(label, new String[]{param});
+		
+		return labelDesc;
+	}
+	
+	/**
 	 * to get User Role - SVC
 	 * @return String
 	 */
