@@ -2561,7 +2561,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		
 		List<SelectItem> supplierBranches = new ArrayList<SelectItem>();
 		for (SmSupplierBranch supplierBranch : resDTO.getSmSupplierBranchList()) {
-			supplierBranches.add(new SelectItem(supplierBranch.getSupplierBranchId(),supplierBranch.getBranchName()));
+			supplierBranches.add(new SelectItem(supplierBranch.getBranchCode(),supplierBranch.getBranchName()));
 		}
 		getManagedBean().setSupplierBranchesList(supplierBranches);
 	}
@@ -2584,14 +2584,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
 			supplierDtl.setBranchName(supplierBranch.getBranchName());
 			supplierDtl.setBranchCode(supplierBranch.getBranchCode());
-//			supplierDtl.setFaxNo(supplierBranch.getFaxNo());
-//			supplierDtl.setPhoneNo(supplierBranch.getPhoneNo());
-//			supplierDtl.setSmAddress(supplierBranch.getSmAddress());//TODO remove if no error
-//			supplierDtl.setContactEmail(supplierBranch.getSmPersonnel().getEmail());
-//			supplierDtl.setContactFaxNo(supplierBranch.getSmPersonnel().getFaxNo());
-//			supplierDtl.setContactMobileNo(supplierBranch.getSmPersonnel().getMobileNo());
-//			supplierDtl.setContactPerson(supplierBranch.getSmPersonnel().getName());
-//			supplierDtl.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
 			//TODO NEW
 			updateSupplierBranchAddress(supplierBranch,supplierDtl);
 			//
@@ -2606,24 +2598,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			supplierDtl.setSupplierName(supplier.getCompanyName());		
 			supplierDtl.setBranchCode(null);
 			supplierDtl.setBranchName(null);
-//			supplierDtl.setFaxNo(supplier.getSmAppl().getSmCompanyBasic().getFaxNo());
-//			supplierDtl.setPhoneNo(supplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
-			
-//			for(SmPersonnel smPersonnel: supplier.getSmAppl().getSmPersonnels()){
-//				if(smPersonnel.isContactPerson()){
-//					supplierDtl.setContactEmail(smPersonnel.getEmail());
-//					supplierDtl.setContactFaxNo(smPersonnel.getFaxNo());
-//					supplierDtl.setContactMobileNo(smPersonnel.getMobileNo());
-//					supplierDtl.setContactPerson(smPersonnel.getName());
-//					supplierDtl.setContactPhoneNo(smPersonnel.getPhoneNo());
-//					break;
-//				}
-//			}
-//			for(SmCompanyAddress smCompanyAddress : supplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
-//				if(smCompanyAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
-//					supplierDtl.setSmAddress(smCompanyAddress.getSmAddress());
-//				}
-//			}
 			//TODO NEW
 			updateSupplierHqAddress(supplierDtl,supplier);
 		}
