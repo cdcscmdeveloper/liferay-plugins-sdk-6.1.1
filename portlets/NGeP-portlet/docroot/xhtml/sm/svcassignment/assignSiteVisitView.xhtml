@@ -16,7 +16,9 @@
 	<ui:define name="contentSection">
 		<div class="nav-wrapper" align="justify">
 			<p:commandButton id="btnSubmit" value="#{lbl['lbl.btn.submit']}"  style="float:right;"
-				action="#{svcSiteAssignBackingBean.validateForm}" />
+				action="#{svcSiteAssignBackingBean.validateForm}">
+				<f:param name="disableValidation" value="true" />
+			</p:commandButton>
 
 			<p:commandButton id="btnBack" value="#{lbl['lbl.btn.back']}"  style="float:left;"
 				action="#{svcSiteAssignBackingBean.navigateToSvcTaskList}" />
@@ -92,9 +94,10 @@
 		<p:panel header="#{lbl['lbl.sm.siteassign.pnl.siteassign']}">
 			<p:dataTable var="svc"
 				value="#{svcSiteAssignBackingBean.managedBean.svcTaskVOLs}" rowIndexVar="rowIndex">
-				
+				<ui:param name="facilityType" 
+				value="#{svcSiteAssignBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svc.smSvTask.smSvAddress.facilityType)}" />
 				<p:column headerText="#{lbl['lbl.sm.facility.type']}">
-					#{svcSiteAssignBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svc.smSvTask.smSvAddress.facilityType)}
+					#{facilityType}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.facility.name']}"
@@ -118,7 +121,8 @@
 						value="#{svc.smSvTask.scheduleDate}"
 						mindate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-						required="#{!empty param['disableValidation']}"
+						required="#{!empty param['disableValidation']}" 
+						requiredMessage="#{svcSiteAssignBackingBean.getLabelWithParam('lbl.sm.siteassign.expected.visiting.date.validation.msg', facilityType)}"
 						size="30" showOn="button" /><br />
 					<p:pickList id="pickList"
 							value="#{svc.svoUserList}"
