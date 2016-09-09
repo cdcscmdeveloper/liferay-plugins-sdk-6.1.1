@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
@@ -346,6 +347,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			reqDTO.setSoftCertPaymentTaskId(getManagedBean()
 					.getSoftCertBpmTask() == null ? null : getManagedBean()
 					.getSoftCertBpmTask().getTaskId());
+			reqDTO.setSoftCertPaymentDocNo(getManagedBean()
+					.getSoftCertBpmTask() == null ? null : getManagedBean()
+					.getSoftCertBpmTask().getDocNumber());
 			reqDTO.setSoftcertDocList(getUploadedSoftcertDocs());
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 			reqDTO.setSoftcertDocNo(getManagedBean().getSoftcertDocNo());
@@ -608,17 +612,10 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			getManagedBean().setToken(
 					new FacesScopes().getBPMAuthenticationCtxToken());
 		}
-		List<WorklistItemVO> taskList = SmCommonUtil
-				.getBpmTaskListByAuthToken(getManagedBean().getToken());
-		if (taskList != null && !taskList.isEmpty()) {
-			for (WorklistItemVO worklistItemVO : taskList) {
-				if (worklistItemVO.getTitle().equalsIgnoreCase(
-						"lbl.sm.addAdditional.makePayment")) {
-					getManagedBean().setSoftCertBpmTask(worklistItemVO);
-					break;
-				}
-			}
-		}
+		getManagedBean().setSoftCertBpmTask(
+				SmCommonUtil.getSingleBpmWorkListByTaskTitleAndToken(
+						"lbl.sm.addAdditional.makePayment", getManagedBean()
+								.getToken()));
 	}
 
 	/**
