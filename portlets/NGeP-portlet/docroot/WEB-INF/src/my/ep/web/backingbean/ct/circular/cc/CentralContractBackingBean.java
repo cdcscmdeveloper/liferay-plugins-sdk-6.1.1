@@ -685,6 +685,17 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					        	throw new EpException(MessageConst.ERROR_100023, 
 								        new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.list", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					        }
+					        
+					        for(CtCircularContract circularContract: getManagedBean().getCircularVer().getCtCircularContracts()){
+					        	      for(CtCircularItem circularItem: circularContract.getCtCircularItems()){
+					        	    	  if(circularItem.getMinimumOrderQty() == null){
+					        	    		  throw new EpException(MessageConst.ERROR_755021, 
+												        new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+								
+					        	    	  }
+					        	      }
+					        }
+					        
 					
 					       if(getManagedBean().getApproverModel().getTarget().size()==0) {
 					    	   getManagedBean().setSelectedTabIndex(2);
@@ -972,6 +983,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			for(CtContractItem contractItem : getManagedBean().getSelectedCircularContract().getCtContract().getLatestContractVer().getCtContractItems()){
 				if (circularItem.getCtContractItem().getScRequestItem().getRequestNoteItemId().equals(contractItem.getScRequestItem().getRequestNoteItemId())) {
 					if(contractItem.getRecordStatusFlg() == 1 || (contractItem.getRecordStatusFlg() == 0 && (currentDate.before(contractItem.getEffDate()) || currentDate.after(contractItem.getExpDate())))) {
+						circularItem.setMinimumOrderQty(new BigDecimal(1.0));
 						activeItemList.add(circularItem);						
 					}
 					break;
