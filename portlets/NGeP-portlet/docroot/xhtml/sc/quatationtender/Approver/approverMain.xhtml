@@ -18,7 +18,8 @@
 			closable="true" showSummary="false" severity="error, info" />
 
 		<ac:gpkiPopup textBeforeSign="#{approvalBackingBean.textBeforeSign}"
-			postSignAction="#{approvalBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{approvalBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{approvalBackingBean.enableAutoUpdate()}" />
 
 		<div class="ppRightBtn">
 			<h:panelGroup id="approverBtns">
