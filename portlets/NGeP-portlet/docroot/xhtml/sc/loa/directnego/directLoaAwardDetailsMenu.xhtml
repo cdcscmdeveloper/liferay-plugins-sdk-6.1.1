@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
 		toggleable="true">
@@ -18,27 +19,47 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
-				<td><p:selectOneRadio id="estimated" styleClass="commonLabel"
-						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-						value="#{directLOABackingBean.managedBean.prodscQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
-						<f:selectItems
-							value="#{directLOABackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
-						<p:ajax event="change" partialSubmit="true" process="@this" />
-					</p:selectOneRadio></td>
+				<td>
+					<c:choose>
+						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneRadio id="itemOrigin" styleClass="commonLabel"
+								value="#{directLOABackingBean.managedBean.prodscQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
+								<f:selectItems
+									value="#{directLOABackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
+								<p:ajax event="change" partialSubmit="true" process="@this" />
+							</p:selectOneRadio>
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="itemOriginTxt"
+								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.prodscQtDoc.tplSpecMaster.itemOriginCode)}"
+								size="30" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr>
 			<tr>
 				<td valign="top" width="18%"><h:outputLabel
 						value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-				<td colspan="3"><p:selectOneRadio  styleClass="commonLabel"
-						value="#{directLOABackingBean.managedBean.scQt.zonal}"
-						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
-						<f:selectItems
-							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-
-						<p:ajax event="change" partialSubmit="true" process="@this"
-							update="@this,generalLocationList,productAndServiceId"
-							listener="#{directLOABackingBean.zoneRadioChange}"></p:ajax>
-					</p:selectOneRadio></td>
+				<td colspan="3">
+					<c:choose>
+						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneRadio id="zoneLocFlg" styleClass="commonLabel"
+								value="#{directLOABackingBean.managedBean.scQt.zonal}">
+								<f:selectItems
+									value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+		
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									update="@this,generalLocationList,productAndServiceId"
+									listener="#{directLOABackingBean.zoneRadioChange}"></p:ajax>
+							</p:selectOneRadio>
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="zoneLocFlgTxt"
+								value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scQt.zonal))}"
+								size="30" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr>
 		</table>
 	</p:panel>
@@ -55,12 +76,12 @@
 		<ac:templateSpec
 			templateSpecBean="#{directLOABackingBean.managedBean.prodTemplateSpecBean}"
 			title="#{lbl['lbl.txt.product']}"
-			newable="#{!isPendingApprovalStatus}" />
+			newable="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}" />
 
 		<ac:templateSpec
 			templateSpecBean="#{directLOABackingBean.managedBean.specTemplateSpecBean}"
 			title="#{lbl['lbl.txt.service']}"
-			newable="#{!isPendingApprovalStatus}" />
+			newable="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}" />
 
 	</h:panelGroup>
 
