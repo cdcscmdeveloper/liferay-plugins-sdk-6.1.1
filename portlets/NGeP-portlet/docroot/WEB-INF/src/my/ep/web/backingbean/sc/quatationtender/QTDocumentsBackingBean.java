@@ -281,6 +281,16 @@ public class QTDocumentsBackingBean extends
 						new SearchFilterBean("procurementMode.parameterCode",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								procurementMode));
+			} else {
+				// Filter By - procurementMode
+				List<String> procurementModes = new ArrayList<String>();
+				procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+				procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"procurementMode.parameterCode",
+								SearchOperator.OPERATOR_IN.value(), 
+								procurementModes));
 			}
 
 			Date fromCreatedDate = cloneDocumentSearchBean.getFromCreatedDate();

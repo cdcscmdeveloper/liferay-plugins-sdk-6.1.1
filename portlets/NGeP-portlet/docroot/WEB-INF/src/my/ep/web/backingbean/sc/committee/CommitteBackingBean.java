@@ -1231,6 +1231,16 @@ public class CommitteBackingBean extends
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(procurementMode);
 				searchFilterBean.add(bean);
+			} else {
+				// Filter By - procurementMode
+				List<String> procurementModes = new ArrayList<String>();
+				procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+				procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
+				searchFilterBean.add(
+						new SearchFilterBean(
+								"procurementMode.parameterCode",
+								SearchOperator.OPERATOR_IN.value(), 
+								procurementModes));
 			}
 
 			Date fromCreatedDate = cloneQtnTenderSearchBean
