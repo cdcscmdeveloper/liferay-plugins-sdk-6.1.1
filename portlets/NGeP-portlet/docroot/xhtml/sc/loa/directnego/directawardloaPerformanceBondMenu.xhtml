@@ -9,7 +9,6 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
 		toggleable="true">
 		<p:commandLink value="#{lbl['lbl.sc.loiloa.bond.letter']}"
-		disabled="#{directLOABackingBean.managedBean.readOnly}"
 			process="@this" style="float:left;" styleClass="blue_font"
 			action="#{directLOABackingBean.getBondLetterStreamContent}"
 			oncomplete="bdLetterDlg.show();"
