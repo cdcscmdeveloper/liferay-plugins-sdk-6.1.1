@@ -30,9 +30,9 @@
 					<ac:iconTooltip value="#{lbl['lbl.sc.deduction.type.tooltip']}" />
 				</f:facet>
 
-				<c:if test="#{isEditableStatus}">
+				<c:choose>
+					<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 					<h:selectOneMenu id="deductionType"
-						disabled="#{directLOABackingBean.managedBean.readOnly}"
 						style="width: 170px;float: left;" label="#{lbl['lbl.sc.deduction.type']}"
 						value="#{scQtDeduction.deductionType.parameterId}">
 						<f:selectItems
@@ -47,30 +47,43 @@
 					<p:spacer width="5px" />
 					<p:inputText value="#{scQtDeduction.deductionDesc}"
 						style="width:450px;float:left;" maxlength="255"
-						disabled="#{directLOABackingBean.managedBean.readOnly}"
 						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed
 						or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}" >
 						<f:ajax></f:ajax>
 					</p:inputText>
-				</c:if>
-				<c:if test="#{!isEditableStatus}">
+					</c:when>
+					<c:otherwise>
 					#{directLOABackingBean.getParameterDesc(scQtDeduction.deductionType)}
-				</c:if>
+					<h:outputText value=" - #{scQtDeduction.deductionDesc}"
+						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed
+						or scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}" />
+					</c:otherwise>
+				</c:choose>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.deduction.amount']}"  style="width:150px;">
 				<h:panelGroup id="deductionPayAmtId">
-					<p:inputText id="amtid" size="30" maxlength="18" required="true"
-						label="#{lbl['lbl.sc.deduction.amount']}"
-						value="#{scQtDeduction.deductionAmount}"
-						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus) or directLOABackingBean.managedBean.readOnly}"
-						style="margin-right:5px;text-align:right;"
-						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}">
-						<ac:validateNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
-							maxIntegerDigits="14"></ac:validateNumber>
-					</p:inputText>
-					<p:message id="amtidMsg" for="amtid" display="icon" />
+					<c:choose>
+						<c:when test="#{(isPendingSubmissionStatus or isPendingRevisionStatus) and !directLOABackingBean.managedBean.readOnly}">
+							<p:inputText id="amtid" size="30" maxlength="18" required="true"
+								label="#{lbl['lbl.sc.deduction.amount']}"
+								value="#{scQtDeduction.deductionAmount}"
+								style="margin-right:5px;text-align:right;"
+								rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}">
+								<ac:validateNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+									maxIntegerDigits="14"></ac:validateNumber>
+							</p:inputText>
+							<p:message id="amtidMsg" for="amtid" display="icon" />
+						</c:when>
+						<c:otherwise>
+							<h:outputText value="#{scQtDeduction.deductionAmount}"
+								style="float:right;"
+								rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}">
+								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</h:outputText>
+						</c:otherwise>
+					</c:choose>
 				</h:panelGroup>
 			</p:column>
 		</p:dataTable>
@@ -78,13 +91,14 @@
 		<c:if test="#{isEditableStatus}">
 			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
-				disabled="#{directLOABackingBean.managedBean.readOnly}"
+					rendered="#{!directLOABackingBean.managedBean.readOnly}"
 					process="@this, deductTbl"
 					action="#{directLOABackingBean.addDeductionPaymentAction}"
 					oncomplete="deductTblWidget.paginator.endLink.click();"
 					update="deductTbl,deductionPayId" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				disabled="#{directLOABackingBean.managedBean.readOnly or null eq directLOABackingBean.managedBean.selectedScQtDeduction}"
+					disabled="#{null eq directLOABackingBean.managedBean.selectedScQtDeduction}"
+					rendered="#{!directLOABackingBean.managedBean.readOnly}"
 					process="@this, deductTbl"
 					oncomplete="deductionPayDeletePopUp.show();"
 					update="@([id$=#{deductionPayDeleteId}])" />
@@ -117,7 +131,7 @@
 			<p:ajax event="rowUnselectCheckbox" update="@([id$=clausePnl])" />
 			<p:ajax event="toggleSelect" update="@([id$=clausePnl])" />
 				<p:column selectionMode="multiple" style="width:2%"
-					rendered="#{isEditableStatus}" />
+					rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}" />
 
 				<p:column style="white-space:normal;">
 					<f:facet name="header">
@@ -126,24 +140,25 @@
 						<h:outputText value="#{lbl['lbl.sc.deduction.clause']}" />
 					</f:facet>
 
-					<h:panelGroup rendered="#{empty scQtDeductionClause.pmClause}">
-						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
-						onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
-						disabled="#{directLOABackingBean.managedBean.readOnly}"
-							id="clauseId" label="#{lbl['lbl.sc.deduction.clause']}" rows="2"
-							maxlength="500" style=" margin-bottom:5px; width:790px"
-							rendered="#{isEditableStatus}" required="true">
-							<p:ajax event="keyup" />
-						</p:inputTextarea>
-						<p:message id="clauseIdMsg" for="clauseId" display="icon" />
-						<h:outputText value="#{scQtDeductionClause.clauseDesc}"
-							rendered="#{!isEditableStatus}" />
-					</h:panelGroup>
-
-					<h:outputText escape="false"
-						value="#{scQtDeductionClause.pmClause.clauseDesc}"
-						rendered="#{!empty scQtDeductionClause.pmClause}" />
-
+					<c:choose>
+						<c:when test="#{!directLOABackingBean.managedBean.readOnly and isEditableStatus}">
+							<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
+								onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
+								id="clauseId" label="#{lbl['lbl.sc.deduction.clause']}" rows="2"
+								maxlength="500" style=" margin-bottom:5px; width:790px"
+								required="true"
+								rendered="#{empty scQtDeductionClause.pmClause}">
+								<p:ajax event="keyup" />
+							</p:inputTextarea>
+							<p:message id="clauseIdMsg" for="clauseId" display="icon" />
+							<h:outputText value="#{scQtDeductionClause.clauseDesc}"
+								rendered="#{!empty scQtDeductionClause.pmClause}" />
+						</c:when>
+						<c:otherwise>
+							<h:outputText escape="false"
+								value="#{scQtDeductionClause.clauseDesc}" />
+						</c:otherwise>
+					</c:choose>
 				</p:column>
 
 			</p:dataTable>
@@ -152,13 +167,14 @@
 				<h:panelGroup
 					rendered="#{!empty directLOABackingBean.managedBean.selectedScQtDeduction and isEditableStatus}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"
-					disabled="#{directLOABackingBean.managedBean.readOnly}"
+						rendered="#{!directLOABackingBean.managedBean.readOnly}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						action="#{directLOABackingBean.addDeductionClauseAction}"
 						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
 						update="deductClauseTbl" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					disabled="#{directLOABackingBean.managedBean.readOnly or empty directLOABackingBean.managedBean.selectedDeductionClauses}"
+						disabled="#{empty directLOABackingBean.managedBean.selectedDeductionClauses}"
+						rendered="#{!directLOABackingBean.managedBean.readOnly}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						oncomplete="deductionClauseDeletePopUp.show();"
 						update="@([id$=#{deductionClauseDeleteId}])" />
