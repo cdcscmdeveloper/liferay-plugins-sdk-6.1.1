@@ -1274,6 +1274,16 @@ public class EvaluationMeetingBackingBean extends
 									SearchOperator.OPERATOR_EQUALS.value(),
 									procurementMode, true));
 
+				} else {
+					// Filter By - procurementMode
+					List<String> procurementModes = new ArrayList<String>();
+					procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+					procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean(
+									"procurementMode.parameterCode",
+									SearchOperator.OPERATOR_IN.value(), 
+									procurementModes));
 				}
 
 				String status = getManagedBean().getCloneQtnTenderSearchBean()
