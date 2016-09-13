@@ -29,6 +29,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
@@ -1275,6 +1276,32 @@ public class PmCommonUtil {
 		}
 		return pmUsers;
 	}
+	
+	/**
+	 * search user by search bean
+	 * 
+	 * @param searchBean
+	 * @return ISearchResultBean<PmUser>
+	 */
+	public static ISearchResultBean<PmUser> searchUsersResultBeanBySearchBean(
+			ISearchBean<PmUser> searchBean) {
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = new UserResDTO();
+			reqDTO.setUserSearchBean(searchBean);
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.searchUserProfile(reqDTO);
+
+			if (resDTO.isSuccessful() && resDTO.getUserResultBean() != null) {
+				return resDTO.getUserResultBean();
+			}
+		} finally {
+			userSO = null;
+		}
+		return null;
+	}
 
 	/**
 	 * retrieve the Ministry by ptj org profile id
@@ -2239,14 +2266,17 @@ public class PmCommonUtil {
 	 * @param excludedUserIds
 	 * @return List<PmUser>
 	 */
-	public static List<PmUser> retrieveUserListFromGroupOrgType(Long ptjOrgProfileId,
+	public static ISearchResultBean<PmUser> retrieveUserListFromGroupOrgType(Long ptjOrgProfileId,
 			List<String> roleCodeList,boolean isNaikTaraf,String groupOrgType,List<Long> excludedUserIds,ISearchBean<PmUser> searchBean) {
 		log.info("retrieveUserListFromGroupOrgType - Start");
-		List<PmUser> pmUsers = new ArrayList<PmUser>();
 		IUserSO userSO = null;
 		try {
 			UserReqDTO reqDTO = new UserReqDTO();
 			UserResDTO resDTO = new UserResDTO();
+			
+			// Order by user name
+			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
+			
 			reqDTO.setOrgProfileId(ptjOrgProfileId);
 			reqDTO.setRoleCodes(roleCodeList);
 			reqDTO.setWithProfileGroup(isNaikTaraf);
@@ -2256,15 +2286,14 @@ public class PmCommonUtil {
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			resDTO = userSO.retrieveUserListFromGroupOrgType(reqDTO);
 
-			if (resDTO.isSuccessful() && resDTO.getUserList() != null) {
-				pmUsers = resDTO.getUserList();
+			if (resDTO.isSuccessful() && resDTO.getUserResultBean() != null) {
+				return resDTO.getUserResultBean();
 			}
 
 		} finally {
 			userSO = null;
-		}
-		log.info("retrieveUserListFromGroupOrgType - End");
-		return pmUsers;
+		}		
+		return null;
 	}
 
 }
