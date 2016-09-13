@@ -329,7 +329,7 @@ rowKey="#{exemptedOrgsVar}" >
 			                      <p:ajax event="rowSelectCheckbox"  update=":form:tablePtjCode,:form:exmptedPopUpButton" />
                                   <p:ajax event="rowUnselectCheckbox"  update=":form:tablePtjCode,:form:exmptedPopUpButton" />
                                   <p:column selectionMode="multiple" style="width:3%" 
-				                         rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				                         rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
                              <p:column headerText="#{lbl['lbl.ct.org.code']}" >
                                 	#{pmVar.orgCode}
 					         </p:column>
