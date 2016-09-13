@@ -33,6 +33,7 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAccessAppl;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -270,7 +271,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   if(mofResDto.getCompanyName() != null){
 						    		   	   sb.append(" ( ");
 								    	   sb.append(mofResDto.getCompanyName());
-								    	   sb.append(" ) ");					    	   
+								    	   sb.append(" ) ");
 						    	   }
 						    	   
 						        worklistItemVO.setTitle(sb.toString());
@@ -398,6 +399,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
+						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
@@ -422,7 +424,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   if(mofResDto.getCompanyName() != null){
 						    		   	   sb.append(" ( ");
 								    	   sb.append(mofResDto.getCompanyName());
-								    	   sb.append(" ) ");					    	   
+								    	   sb.append(" ) ");
+								    	   if(viewGlpFlag && mofResDto.isGlp()) {
+								    		   sb.append("<font color=\"red\">&#x26A0;GLP </font>");
+								    	   }
 						    	   }
 						    	   
 						        worklistItemVO.setTitle(sb.toString());
@@ -563,6 +568,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
+						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
@@ -587,7 +593,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   if(mofResDto.getCompanyName() != null){
 						    		   	   sb.append(" ( ");
 								    	   sb.append(mofResDto.getCompanyName());
-								    	   sb.append(" ) ");					    	   
+								    	   sb.append(" ) ");
+								    	   if(viewGlpFlag && mofResDto.isGlp()) {
+								    		   sb.append("<font color=\"red\">&#x26A0;GLP </font>");
+								    	   }
 						    	   }
 						    	   
 						        worklistItemVO.setTitle(sb.toString());
@@ -833,8 +842,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.docStatusGroup = docStatusGroup;
 	}
 	
-	
-	
+	private boolean viewGlpFlag() {
+		FacesScopes fs = new FacesScopes();
+		if (fs.hasRoleUser(RoleCode.UPS_APPROVER.value())
+				|| fs.hasRoleUser(RoleCode.UPS_PO.value())
+				|| fs.hasRoleUser(RoleCode.UPS_SDO.value())) {
+			return true;
+		}
+		return false;
+	}
+		
 	
 	
 	
