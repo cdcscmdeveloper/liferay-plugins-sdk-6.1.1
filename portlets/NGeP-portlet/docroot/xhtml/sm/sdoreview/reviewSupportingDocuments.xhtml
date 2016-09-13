@@ -23,6 +23,7 @@
 		<!-- HEADER -->
 		<ui:param name="supplierName" value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.companyName}" />
 		<ui:param name="applNo" value="#{sdoReviewBackingBean.managedBean.smAppl.applNo}" />
+		<ui:param name="showGlpAlert" value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplierCerts.size() > 0}" />
 		<ui:param name="applType" value="#{sdoReviewBackingBean.getsupplierApplTypeDesc(sdoReviewBackingBean.managedBean.smAppl.applType)}" />
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 		
