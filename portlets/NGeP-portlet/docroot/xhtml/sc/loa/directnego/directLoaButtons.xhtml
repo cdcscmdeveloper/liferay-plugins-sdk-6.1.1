@@ -9,8 +9,19 @@
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif" />
 	</p:blockUI>
+	
+	<p:commandButton immediate="true"
+		value="#{lbl['lbl.btn.back']}"
+		action="#{directLOABackingBean.backToPrevious}"
+		style="float:left;" 
+		rendered="#{!empty directLOABackingBean.managedBean.backToPreviousPage}" />
 
 	<div class="ppRightBtn">
+		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+			action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeLetterOfAward, directLOABackingBean.managedBean.scLoa.loaId, true)}"
+			immediate="true" 
+			rendered="#{!empty directLOABackingBean.managedBean.backToPreviousPage}" />
+					
 		<ui:param name="readOnlyTask" value="#{directLOABackingBean.managedBean.readOnly}" />
 		<ui:decorate
 			template="/WEB-INF/facelets/templates/claim_template.xhtml">
@@ -19,12 +30,13 @@
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						action="#{directLOABackingBean.saveAction}" process="@form"
 						update="@form" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();" />
+						oncomplete="blockWidget.hide();"
+						rendered="#{!directLOABackingBean.managedBean.readOnly}" />
 
 
 					<c:choose>
 						<c:when
-							test="#{isEditableStatus and empty directLOABackingBean.managedBean.taskId}">
+							test="#{isEditableStatus and empty directLOABackingBean.managedBean.taskId and !directLOABackingBean.managedBean.readOnly}">
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								action="#{directLOABackingBean.submitAction}"
 								process="@form" update="@form" onstart="blockWidget.show();"
