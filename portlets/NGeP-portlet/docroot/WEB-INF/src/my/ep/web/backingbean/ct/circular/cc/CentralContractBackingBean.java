@@ -1251,8 +1251,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		 * Method to popup window to upload circular letter
 	    */
 	public void setCentralDetailsValue() {
-		if(getManagedBean().getCircularVer().getCircularNo() == null || getManagedBean().getCircularVer().getName() == null
-		 ||getManagedBean().getCircularVer().getStartDate() == null || getManagedBean().getCircularVer().getEndDate() == null) {
+		if(getManagedBean().getCircularVer().getCircularNo() == null || getManagedBean().getCircularVer().getName() == null) {
 		         RequestContext.getCurrentInstance().update(":form:centralCircularId");
 		} else {
 	    	RequestContext.getCurrentInstance().execute("uploadCircularDlg.show()");
