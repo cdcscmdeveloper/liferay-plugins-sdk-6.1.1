@@ -72,22 +72,32 @@
 				<td width="23%"><p:outputLabel
 						value="#{lbl['lbl.sc.approver']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="loaApprover"
-						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-						value="#{directLOABackingBean.managedBean.approverUser.userId}"
-						required="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
-						label="#{lbl['lbl.sc.approver']}"
-						style="width: 276px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />
-						<f:selectItems
-							value="#{directLOABackingBean.managedBean.approverList}"
-							var="pmUser" itemLabel="#{pmUser.userName}"
-							itemValue="#{pmUser.userId}" />
-						<p:ajax event="change"
-							listener="#{directLOABackingBean.approverChanged()}"
-							partialSubmit="true" process="@this" update="@this" />
-					</p:selectOneMenu> <p:message id="loaApproverMsg" for="loaApprover" display="icon" />
+				<td>
+					<c:choose>
+						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="loaApprover"
+								value="#{directLOABackingBean.managedBean.approverUser.userId}"
+								required="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
+								label="#{lbl['lbl.sc.approver']}"
+								style="width: 276px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItems
+									value="#{directLOABackingBean.managedBean.approverList}"
+									var="pmUser" itemLabel="#{pmUser.userName}"
+									itemValue="#{pmUser.userId}" />
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.approverChanged()}"
+									partialSubmit="true" process="@this" update="@this" />
+							</p:selectOneMenu>
+							<p:message id="loaApproverMsg" for="loaApprover" display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="loaApproverTxt"
+								value="#{directLOABackingBean.managedBean.approverUser.userName}"
+								size="40" disabled="true" />
+						</c:otherwise>
+					</c:choose>
 				</td>
 			</tr>
 		</table>
