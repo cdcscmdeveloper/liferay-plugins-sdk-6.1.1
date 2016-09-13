@@ -170,6 +170,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
@@ -773,10 +774,30 @@ public class QTDetailBackingBean extends
 	}
 	
 	/**
+	 * Method to view Direct LOA Details.
+	 * 
+	 * @param scQt
+	 *            the ScQt instance
+	 * @param previousPageUrl
+	 * 				the previous page url.
+	 * @return the navigation page
+	 */
+	public String viewDirectLOADetails(ScQt scQt, String previousPageUrl) {
+		debugLogger("viewDirectLOADetails");
+		
+		Long qtId = scQt.getQtId();
+		Long loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
+		
+		return new DirectLOABackingBean().retriveLoaDetails(loaId, previousPageUrl, true);
+	}
+	
+	/**
 	 * Method to view Supplier Proposal Details.
 	 * 
 	 * @param scQt
 	 *            the ScQt instance
+	 * @param previousPageUrl
+	 * 				the previous page url.
 	 * @return the navigation page
 	 */
 	public String viewSupplierProposalDetails(ScQt scQt, String previousPageUrl) {
@@ -791,7 +812,7 @@ public class QTDetailBackingBean extends
 		} else if (ParameterConst.DOCTYPE_BIDDING.equals(docType)) {
 			return QTConstants.ONLINE_BIDDING_MAIN_PAGE; 
 		} else {
-			Long docId = findDocIdByDocType(qtId);			
+			Long docId = findDocIdByDocType(qtId, null);			
 			if (docId != null) {
 				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
 					return new LOIDetailBackingBean().retrieveSupplierLOIDtl(
@@ -813,14 +834,20 @@ public class QTDetailBackingBean extends
 	 * 		the quotation / tender id
 	 * @return	the document id
 	 */
-	public Long findDocIdByDocType(Long qtId) {
+	public Long findDocIdByDocType(Long qtId, String docType) {
 		IQTDetailSO qtDetailSO;
 		try {
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(qtId);
-			populateQTSearchCriteria(reqDTO, getManagedBean().getQtnTenderSearchBean(), new SearchBean<ScQt>());
+			
+			QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
+			populateQTSearchCriteria(reqDTO, qtnTenderSearchBean, new SearchBean<ScQt>());
+			if (StringUtils.isNotEmpty(docType)) {
+				reqDTO.setDocType(docType);
+				reqDTO.setDocNo(null);
+			}
 			return qtDetailSO.findDocumentNoByDocType(reqDTO);
 		} finally {
 			qtDetailSO = null;
@@ -1285,7 +1312,21 @@ public class QTDetailBackingBean extends
 						new SearchFilterBean("procurementMode.parameterCode",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								procurementMode));
+			} else {
+				// Filter By - procurementMode
+				List<String> procurementModes = new ArrayList<String>();
+				procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+				procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
+				if (!isQTMaintenanceScreen()) {
+					procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
+				}
+				searchFilterBean.add(
+						new SearchFilterBean(
+								"procurementMode.parameterCode",
+								SearchOperator.OPERATOR_IN.value(), 
+								procurementModes));
 			}
+			
 			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
 			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
 			if (null != fromCreatedDate || toCreatedDate != null) {
@@ -1398,7 +1439,7 @@ public class QTDetailBackingBean extends
 					
 					// Only DO Actor with edit access right. 
 					// Otherwise (Audit Search), user can view QT based on user roles match with actor.
-					if (QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())) {
+					if (isQTMaintenanceScreen()) {
 						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 					}
 				}
@@ -1441,6 +1482,10 @@ public class QTDetailBackingBean extends
 			
 			reqDTO.setQtSearchBean(qtSearchBean);
 		}
+	}
+	
+	private boolean isQTMaintenanceScreen() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 
 	/**
@@ -3533,7 +3578,9 @@ public class QTDetailBackingBean extends
 	public SelectItem[] getProcurementModeDropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
-		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);
+		if (isQTMaintenanceScreen()) {
+			recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
+		}
 		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE);
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
