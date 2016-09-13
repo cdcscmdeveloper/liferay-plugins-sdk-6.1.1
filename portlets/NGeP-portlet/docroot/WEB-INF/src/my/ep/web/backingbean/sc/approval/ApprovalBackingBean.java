@@ -588,6 +588,7 @@ public class ApprovalBackingBean extends
 	 */
 	public void approvalBpmTask(String action) {
 		String showDialog = null;
+		boolean isGpkiPopup = false;
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
@@ -626,6 +627,7 @@ public class ApprovalBackingBean extends
 			} else if (isApproved) {
 				action = BpmOutcomeConst.BPM_APPROVE;
 				showDialog = "gpki_dlg.show()";
+				isGpkiPopup = true;
 			} else if (isRejected) {
 				action = BpmOutcomeConst.BPM_REJECT;
 				showDialog = "rejectApprovalDlg.show()";
@@ -668,6 +670,7 @@ public class ApprovalBackingBean extends
 					committeSO.validateAppointCommitteDtls(committeReqDTO);
 				}
 				showDialog = "gpki_dlg.show()";
+				isGpkiPopup = true;
 			}
 			
 			
@@ -676,6 +679,9 @@ public class ApprovalBackingBean extends
 		if (StringUtils.isNotBlank(showDialog)) {
 			reqDTO.setOutcome(action);
 			detailSO.validateQtApprovalDtl(reqDTO);
+			if (isGpkiPopup) {
+				getManagedBean().setAutoUpdate(false);	
+			}
 			RequestContext.getCurrentInstance().execute(showDialog);	
 		}
 	}
@@ -1511,6 +1517,13 @@ public class ApprovalBackingBean extends
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);		
 	}
 	
 }
