@@ -18,18 +18,17 @@
 
 			<ac:paginator for="contentsTbl" />
 
-			<p:column style="width:2%">
+			<p:column style="width:2%" rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllNegoLoc" disabled="true"
-						value="#{directLOABackingBean.flag}"
-						rendered="#{isEditableStatus}">
+						value="#{directLOABackingBean.flag}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=directLoaLetterOfAcceptancePanel])"
 							listener="#{directLOABackingBean.selectAllDocuments}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{scLoaReport.selected}"
-					disabled="#{!empty scLoaReport.pmDocument or directLOABackingBean.managedBean.readOnly}">
+					disabled="#{!empty scLoaReport.pmDocument}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@([id$=directLoaLetterOfAcceptancePanel])" />
 				</p:selectBooleanCheckbox>
@@ -39,6 +38,7 @@
 				<h:inputText style="width:96%" label="#{lbl['lbl.sc.content']}"
 				    id="contendId"
 					value="#{scLoaReport.title}" required="true"
+					disabled="#{directLOABackingBean.managedBean.readOnly}"
 					rendered="#{empty scLoaReport.pmDocument}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</h:inputText> 
@@ -48,7 +48,7 @@
 			</p:column>
 
 			<p:column style="width:15%;text-align: center;"
-				headerText="#{lbl['lbl.sc.upload']}" disabled="#{!isEditableStatus}">
+				headerText="#{lbl['lbl.sc.upload']}" rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 			   <h:panelGroup id="docUploadId">
 				<ui:fragment
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
@@ -72,7 +72,6 @@
 			<p:column style="width:10%;text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
 				<p:commandButton id="download" icon="ui-icon-download"
-					disabled="#{directLOABackingBean.managedBean.readOnly}"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{directLOABackingBean.downloadReport(scLoaReport)}"
@@ -82,20 +81,17 @@
 
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton rendered="#{!isPendingVerification}"
-				disabled="#{directLOABackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.btn.download.all']}" ajax="false"
 				styleClass="ui-button"
 				action="#{directLOABackingBean.downloadAllReports}" />
 
 			<p:commandButton rendered="#{isPendingVerification}"
-				disabled="#{directLOABackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"
 				styleClass="ui-button" update="@([id$=loaButtonsId])"
 				onclick="printBtn.jq.click();"
 				actionListener="#{directLOABackingBean.showVerifyButton()}" />
 
 			<p:commandButton rendered="#{isPendingVerification}"
-				disabled="#{directLOABackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}" ajax="false"
 				partialSubmit="true" process="@form" styleClass="ui-button"
 				widgetVar="printBtn" style="display:none;"
@@ -103,16 +99,15 @@
 
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				disabled="#{directLOABackingBean.managedBean.readOnly}"
-				rendered="#{isEditableStatus}" process="@this, contentsTbl"
+				rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}" process="@this, contentsTbl"
 				partialSubmit="true"
 				action="#{directLOABackingBean.addLoaContentAction}"
 				oncomplete="contentsTblWidget.paginator.endLink.click();"
 				update="contentsTbl" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				disabled="#{directLOABackingBean.managedBean.readOnly or directLOABackingBean.deleteselectedList(directLOABackingBean.managedBean.scLoa.scLoaReports)}"
-				rendered="#{isEditableStatus}" process="@this, contentsTbl"
+				disabled="#{directLOABackingBean.deleteselectedList(directLOABackingBean.managedBean.scLoa.scLoaReports)}"
+				rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}" process="@this, contentsTbl"
 				partialSubmit="true" oncomplete="loaReportDeletePopUp.show();"
 				update="@([id$=#{loaReportDeleteId}])" />
 
@@ -138,10 +133,9 @@
 			selection="#{directLOABackingBean.managedBean.selectedScLoaSuppDocs}">
 
 			<ac:paginator for="suppDocTbl" />
-			<p:column style="width:2%">
+			<p:column style="width:2%" rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllNegoLoc"
-						disabled="#{directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.suppDocFlag}"
 						rendered="#{isEditableStatus}">
 						<p:ajax partialSubmit="true" process="@this"
@@ -149,8 +143,7 @@
 							listener="#{directLOABackingBean.selectAllSuppDocuments}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{scLoaSuppDoc.selected}"
-					disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
+				<p:selectBooleanCheckbox value="#{scLoaSuppDoc.selected}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@([id$=directLoaSupportingPanelId])" />
 				</p:selectBooleanCheckbox>
@@ -184,16 +177,15 @@
 
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				disabled="#{directLOABackingBean.managedBean.readOnly}"
 				process="@this, suppDocTbl" partialSubmit="true"
-				rendered="#{isEditableStatus}"
+				rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}"
 				action="#{directLOABackingBean.addLoaSuppDocAction}"
 				oncomplete="suppDocTblWidget.paginator.endLink.click();"
 				update="suppDocTbl" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				disabled="#{directLOABackingBean.managedBean.readOnly or directLOABackingBean.deleteselectedList(directLOABackingBean.managedBean.scLoa.scLoaSupportingDocs)}"
-				rendered="#{isEditableStatus}" process="@this, suppDocTbl"
+				disabled="#{directLOABackingBean.deleteselectedList(directLOABackingBean.managedBean.scLoa.scLoaSupportingDocs)}"
+				rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}" process="@this, suppDocTbl"
 				partialSubmit="true" oncomplete="supporingDocDeletePopUp.show();"
 				update="@([id$=#{supporingDocDeleteId}])" />
 		</div>
