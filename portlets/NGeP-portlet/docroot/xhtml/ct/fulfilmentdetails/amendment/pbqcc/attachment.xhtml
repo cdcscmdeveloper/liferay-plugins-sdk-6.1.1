@@ -57,7 +57,7 @@
 			mode="advanced" id="CommitteUploadId" widgetVar="meetingUploadWV"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-			update="lampiranComitte" label="#{lbl['lbl.btn.choose']}" >
+			update="lampiranComitte" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadComitteDlg.hide();" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">

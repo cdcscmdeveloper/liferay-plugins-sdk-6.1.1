@@ -350,7 +350,7 @@
 					fileUploadListener="#{supplierBackingBean.fileUpload}"  showButtons="false"
 					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="factoringUploadWV"
 					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-					update="factoringPanel" label="#{lbl['lbl.btn.choose']}" >
+					update="factoringPanel" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadFactoringDlg.hide();" >
 				</p:fileUpload>
 				<f:facet name="footer">
 				<div class="ppRightBtn">

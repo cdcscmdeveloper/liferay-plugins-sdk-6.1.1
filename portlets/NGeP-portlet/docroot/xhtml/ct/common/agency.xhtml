@@ -418,7 +418,7 @@
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="agencyUploadWV"
-			update=":form:tableAgencyDetails" label="#{lbl['lbl.btn.choose']}">
+			update=":form:tableAgencyDetails" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadDlg1.hide();" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">

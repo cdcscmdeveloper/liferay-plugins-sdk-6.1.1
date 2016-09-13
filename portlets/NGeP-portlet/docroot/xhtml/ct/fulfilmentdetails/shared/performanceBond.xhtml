@@ -157,7 +157,7 @@
 			 	sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"  showButtons="false"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="performanceBondUploadWV"
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  
-				update=":form:tableBond" label="#{lbl['lbl.btn.choose']}">
+				update=":form:tableBond" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadBondDlg.hide();" >
 			</p:fileUpload>
 			<f:facet name="footer">
 			<div class="ppRightBtn">

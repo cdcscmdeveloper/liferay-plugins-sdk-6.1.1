@@ -73,7 +73,7 @@
 			    fileUploadListener="#{amendmentBackingBean.contentLetterUpload}" multiple="false"
 				allowTypes="/(\.|\/)(pdf)$/" widgetVar="letterUploadWV"
 				invalidFileMessage="#{lbl['lbl.txt.upload.pdf.only']}"  update=":form:loaContentDt"
-				label="#{lbl['lbl.btn.choose']}" >
+				label="#{lbl['lbl.btn.choose']}" oncomplete="uploadLetterDlg.hide();" >
 			</p:fileUpload>
 			<f:facet name="footer">
 			<div class="ppRightBtn">
