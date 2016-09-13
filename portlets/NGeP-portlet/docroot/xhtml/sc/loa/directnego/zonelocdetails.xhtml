@@ -12,19 +12,38 @@
 				<td width="20%"><p:outputLabel
 						value="#{lbl['lbl.sc.zone.location.level']}" /> <p:outputLabel
 						value="*" styleClass="mandatory"></p:outputLabel></td>
-				<td><p:selectOneMenu id="locationLevels" styleClass="commonLabel"
-						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" required="true"
-						label="#{lbl['lbl.sc.zone.location.level']}"
-						value="#{directLOABackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
-						style="width: 209px;">
-
-						<f:selectItems
-							value="#{directLOABackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-						<p:ajax event="change" update="generalLocationList"
-							listener="#{directLOABackingBean.selectZoneLocationLevel}"></p:ajax>
-					</p:selectOneMenu> <ac:iconTooltip
-						value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /> <p:message
-						id="withzone" for="locationLevels" display="icon"></p:message></td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<c:choose>
+									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+										<p:selectOneMenu id="locationLevels" styleClass="commonLabel"
+											required="true"
+											label="#{lbl['lbl.sc.zone.location.level']}"
+											value="#{directLOABackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
+											style="width: 209px;">
+					
+											<f:selectItems
+												value="#{directLOABackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
+											<p:ajax event="change" update="generalLocationList"
+												listener="#{directLOABackingBean.selectZoneLocationLevel}"></p:ajax>
+										</p:selectOneMenu> 
+										<p:message id="withzone" for="locationLevels" display="icon"></p:message>
+									</c:when>
+									<c:otherwise>
+										<p:inputText id="locationLevelsTxt"
+											value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scQt.zoneLocationLevel)}"
+											size="30" disabled="true" />
+									</c:otherwise>
+								</c:choose>
+							</td>
+							<td style="margin-top: -3px">
+								<ac:iconTooltip value="#{lbl['lbl.sc.zone.location.level.tooltip']}" />
+							</td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 		</table>
 		<p:spacer height="5px"></p:spacer>
@@ -39,7 +58,7 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.zone.location']}" />
 					</f:facet>
-					<p:tree value="#{zoneTree}" var="location" selectionMode="checkbox"
+					<p:tree value="#{zoneTree}" var="location" selectionMode="#{(isEditableStatus and !directLOABackingBean.managedBean.readOnly) ? 'checkbox' : 'null'}"
 						style="width:85%;">
 						<p:ajax event="select" update="@([id$=directLoaZoneLocationDeleteBtnId])"
 							listener="#{directLOABackingBean.selectZoneTreeNode}" />
@@ -62,9 +81,8 @@
 					</p:tree>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%;text-align: center;"
-					rendered="#{isEditableStatus}">
+					rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 					<p:commandLink
-					disabled="#{directLOABackingBean.managedBean.readOnly}"
 						actionListener="#{directLOABackingBean.editZones(zoneTree,index)}"
 						process="@this" update="@([id$=dlgId])"
 						oncomplete="ZoneGeneral.show();">
@@ -75,14 +93,13 @@
 		</h:panelGrid>
 		<div class="ppRightBtn BtnSpacing" style="width: 100%">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
-			disabled="#{directLOABackingBean.managedBean.readOnly}"
-				rendered="#{isEditableStatus}" update="@([id$=zonePopupGeneral])"
+				rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}" update="@([id$=zonePopupGeneral])"
 				actionListener="#{directLOABackingBean.showGeneralZonesPopup}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" id="directLoaZoneLocationDeleteBtnId"
-			disabled="#{directLOABackingBean.managedBean.readOnly or directLOABackingBean.zoneLocationDeleteBtnDisable()}"
+				disabled="#{directLOABackingBean.zoneLocationDeleteBtnDisable()}"
 				partialSubmit="true" oncomplete="zonesNonpanelDeletePopUp.show();"
 				update="@([id$=#{zonesNonpanelDeleteId}])"
-				rendered="#{isEditableStatus}" />
+				rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}" />
 		</div>
 		<ui:param name="zonesNonpanelDeleteId" value="zonesNonpanelDeleteId"></ui:param>
 		<ac:confirmationPopup id="#{zonesNonpanelDeleteId}"
