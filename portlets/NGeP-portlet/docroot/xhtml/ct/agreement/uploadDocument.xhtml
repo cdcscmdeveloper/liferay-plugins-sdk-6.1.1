@@ -68,7 +68,7 @@
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" multiple="false"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="singedUploadWV"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-			update="upAgrSignedPagePg" label="#{lbl['lbl.btn.choose']}">
+			update="upAgrSignedPagePg" label="#{lbl['lbl.btn.choose']}" oncomplete="upAgrSignedPageDlg.hide();">
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">
@@ -95,7 +95,7 @@
 			fileUploadListener="#{agreementBackingBean.uploadStampedPage}" multiple="false"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="stampedUploadWV"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-			update="upStampedPagePg"  label="#{lbl['lbl.btn.choose']}">
+			update="upStampedPagePg"  label="#{lbl['lbl.btn.choose']}" oncomplete="upStampedPageDlg.hide();" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">

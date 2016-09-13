@@ -255,7 +255,7 @@
 			fileUploadListener="#{terminationBackingBean.fileUpload}" multiple="false"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="terminationUploadWV"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-			update=":form:uploadTerminationPg" label="#{lbl['lbl.btn.choose']}">
+			update=":form:uploadTerminationPg" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadTerminatinDlg.hide();" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">
