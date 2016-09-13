@@ -15,7 +15,10 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -26,6 +29,7 @@ import my.ep.web.backingbean.sm.virtualcert.VirtualCertBackingBean;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
@@ -59,8 +63,7 @@ public class ViewApplHistoryBackingBean extends
 						.equals(my.ep.web.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)) {
 			getManagedBean().getTrackingDiary().setTrackingDiaryParam(
 					SmTrackingDiaryConst.SM_DEFAULT_DOC_TYPE,
-					getManagedBean().getSmAppl().getApplId(),
-					false);
+					getManagedBean().getSmAppl().getApplId(), false);
 		}
 	}
 
@@ -91,6 +94,28 @@ public class ViewApplHistoryBackingBean extends
 				getManagedBean().setSearchSupplier(new SmSupplier());
 				getManagedBean().getSearchSupplier().setRegNo(
 						paramSupplier.getRegNo());
+				if (paramSupplier.getSmAppl() != null) {
+					getManagedBean().setSearchSuppType(
+							paramSupplier.getSmAppl().getSupplierType());
+					if (paramSupplier.getSmAppl().getSmCompanyBasic() != null
+							&& !EntityHelper.isCollectionEmpty(paramSupplier
+									.getSmAppl().getSmCompanyBasic()
+									.getSmCompanyAddresses())) {
+						SmAddress address = paramSupplier.getSmAppl()
+								.getSmCompanyBasic().getSmCompanyAddresses()
+								.get(0).getSmAddress();
+						if (address != null && address.getPmState() != null) {
+							PmZone zone = SmApplicationUtil
+									.retrieveZoneByStateId(address.getPmState()
+											.getStateId());
+							if (zone != null) {
+								getManagedBean().setSearchPmZoneId(
+										zone.getZoneId());
+							}
+						}
+					}
+				}
+
 				getManagedBean().searchSupplier();
 			}
 		}
