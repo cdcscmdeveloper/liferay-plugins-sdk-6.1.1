@@ -296,7 +296,7 @@ public class LOADetailBackingBean extends
 	
 	
 	/**
-	 * Edits the supplier loa action.
+	 * Get the supplier loa details.
 	 * 
 	 * @param sourceId 
 	 * 		the source id (qt id / rn id
