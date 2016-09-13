@@ -12,8 +12,6 @@
 		<cc:attribute name="beforeSignText" />
 		<cc:attribute name="postSignAction"
 			method-signature="void action(my.ep.persistence.entity.pm.common.PmDigiSign)" />
-		<cc:attribute name="postCancelAction" method-signature="void action()"
-			required="false" />
 		<cc:attribute name="enableAutoUpdate" required="false"
 			method-signature="void action()" />
 	</cc:interface>
@@ -21,20 +19,12 @@
 
 	<cc:implementation>
 		<p:remoteCommand name="postSignAction"
-			action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction)}" />
+			onstart="setRunGPKIEnableAutoUpdate(false);"
+			action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" />
 		<p:remoteCommand name="errorAction"
 			action="#{gpkiBackingBean.showError}" />
 		<h:inputHidden id="inputTextBeforeSign" binding="#{textBeforeSign}"
 			value="#{cc.attrs.textBeforeSign}" />
-		<c:choose>
-			<c:when test="#{not empty cc.getValueExpression('enableAutoUpdate')}">
-				<p:remoteCommand name="autoUpdateAction"
-					action="#{cc.attrs.enableAutoUpdate}" />
-			</c:when>
-			<c:otherwise>
-				<p:remoteCommand name="autoUpdateAction" />
-			</c:otherwise>
-		</c:choose>
 		<h:outputScript library="ep/gpki_js" name="gpki-api.js" />
 		
 			
@@ -141,7 +131,6 @@
 										// 										Gpki.alert(signedText);
 
 										// 										Gpki.alert(signedData);
-										autoUpdateAction();
 										postSignAction([ {
 											name : 'textBeforeSign',
 											value : textBeforeSign
@@ -178,13 +167,28 @@
 									}
 								});
 			}
+			
+			var runGPKIEnableAutoUpdate = true;
+			function setRunGPKIEnableAutoUpdate(runGPKIEnableAutoUpdate) {
+			  this.runGPKIEnableAutoUpdate = runGPKIEnableAutoUpdate;
+			}
+
+			function isRunGPKIEnableAutoUpdate() {
+			  return this.runGPKIEnableAutoUpdate;
+			}
 		</script>
 
 	<p:dialog header="#{lbl['lbl.cc.gpki.title']}" widgetVar="gpki_dlg"
-			resizable="false" modal="true">
+		resizable="false" modal="true">
+		
+		<p:ajax event="close" listener="#{cc.attrs.enableAutoUpdate}" 
+			onstart="return isRunGPKIEnableAutoUpdate()" 
+			oncomplete="setRunGPKIEnableAutoUpdate(true);"
+			disabled="#{empty cc.getValueExpression('enableAutoUpdate')}" />
+				
 		<p:blockUI block="gpkiPopup" widgetVar="gpkiBlockWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 
 		<p:panel id="gpkiPopup" >
 			<p:messages id="dlgMessages" for="gpki" showDetail="true"
@@ -203,9 +207,6 @@
 				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="DigiSign();" />
 				
 			</h:panelGrid>
-			<c:if test="#{not empty cc.getValueExpression('postCancelAction')} ">
-				<p:ajax event="close" listener="#{cc.attrs.postCancelAction}" />
-			</c:if>
 		</p:panel>
 	</p:dialog>
 	</cc:implementation>
