@@ -119,13 +119,13 @@
 			<f:facet name="header">
 					#{lbl['lbl.bpm.description']}
 				</f:facet>
-			<p:commandLink value="#{tasks.title}"
-				action="#{bpmTasklistBackingBean.navigateToURL}">
+			<p:commandLink action="#{bpmTasklistBackingBean.navigateToURL}">
 				<f:param name="taskId" value="#{tasks.taskId}" />
 				<f:param name="process" value="#{tasks.process}" />
 				<f:param name="taskName" value="#{tasks.taskName}" />
 				<f:param name="docType" value="#{tasks.docType}" />
 				<f:param name="isClaim" value="#{tasks.claimed}" />
+				<h:outputText value="#{tasks.title}" escape="false" />
 			</p:commandLink>
 
 		</p:column>
