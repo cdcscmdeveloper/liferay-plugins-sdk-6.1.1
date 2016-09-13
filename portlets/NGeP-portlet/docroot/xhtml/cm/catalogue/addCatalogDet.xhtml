@@ -10,40 +10,15 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-
-	<!-- <p:remoteCommand name="updateCoinSlider" update="imageUploadID2" ></p:remoteCommand> -->
-
 	<h:outputScript library="jquery/slides" name="jquery.slides.js" />
-
-	<h:panelGroup
-		rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
-		<script>
-			$(function() {
-				$('#slides').slidesjs({
-					width : 940,
-					height : 528,
-					navigation : {
-						effect : "fade"
-					},
-					pagination : {
-						effect : "fade"
-					},
-					effect : {
-						fade : {
-							speed : 400
-						}
-					}
-				});
-			});
-		</script>
-	</h:panelGroup>
-
+	
 	<style type="text/css">
-.ui-state-hover,.ui-state-active {
-	box-shadow: none;
-	background: none;
-}
-</style>
+		.ui-state-hover,.ui-state-active {
+			box-shadow: none;
+			background: none;
+			}
+	</style>
+
 
 	<p:messages id="catalogDetMsgId" showDetail="true" autoUpdate="true"
 		closable="true" showSummary="true"></p:messages>
@@ -100,8 +75,33 @@
 										value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
 								</ui:repeat>
 							</div>
-						</h:panelGroup> <h:panelGroup
+						</h:panelGroup> 
+						
+						<h:panelGroup
 							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 1 }">
+
+							
+								<script>
+			$(function() {
+				$('#slides').slidesjs({
+					width : 940,
+					height : 528,
+					navigation : {
+						effect : "fade"
+					},
+					pagination : {
+						effect : "fade"
+					},
+					effect : {
+						fade : {
+							speed : 400
+						}
+					}
+				});
+			});
+		</script>
+						
+
 							<div id="slides" style="width: 250px;">
 								<ui:repeat var="cmImage"
 									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
@@ -115,12 +115,13 @@
 					<td><p:outputLabel styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:outputLabel></td>
 				</tr>
-				
+
 				<tr style="height: 30px;">
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.cm.unspsc.title']}" /></td>
-					<td style="overflow-wrap: break-word; width: 20%;">
-						<p:outputLabel styleClass="outputLabel-view" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}" /></td>
+					<td style="overflow-wrap: break-word; width: 20%;"><p:outputLabel
+							styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.cm.item.name.contract.panel']}" /></td>
 					<td style="overflow-wrap: break-word; width: 20%;"><p:outputLabel
@@ -131,7 +132,7 @@
 							update=":form:itemSpecDlg" oncomplete="itemSpecDlg.show();">
 							<p:graphicImage value="/css/images/design/ico-view.png"
 								title="#{lbl['lbl.ct.specification']}" />
-						</p:commandLink></td>				
+						</p:commandLink></td>
 				</tr>
 
 				<tr style="height: 30px;">
@@ -213,9 +214,6 @@
 					onclick="itemSpecDlg.hide();" />
 			</div>
 		</p:dialog>
-
-		<p:remoteCommand name="refresh" id="refresh"
-			action="#{catalogueBackingBean.refreshImage}" />
 
 		<p:tabView id="pricingTabID" orientation="left"
 			style="margin-top: 10px;"
@@ -354,14 +352,14 @@
 			</p:tab>
 
 		</p:tabView>
-		
-		<p:dialog id="zoneDtlsId" widgetVar="zoneDtlspopUp" modal="true" 
-		header="#{lbl['lbl.cm.zm.details']}" width="500" height="400">
+
+		<p:dialog id="zoneDtlsId" widgetVar="zoneDtlspopUp" modal="true"
+			header="#{lbl['lbl.cm.zm.details']}" width="500" height="400">
 
 			<p:dataTable id="zoneDetailsDataTable"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{catalogueBackingBean.managedBean.zoneTrees}"
-				var="zoneTree" rowIndexVar="index">
+				value="#{catalogueBackingBean.managedBean.zoneTrees}" var="zoneTree"
+				rowIndexVar="index">
 				<p:column headerText="#{lbl['lbl.cm.zm.details']}">
 					<p:tree id="treeZoneDetails" value="#{zoneTree}" var="zN">
 						<p:treeNode type="cmSupplierZone">
@@ -378,9 +376,9 @@
 						</p:treeNode>
 					</p:tree>
 				</p:column>
-				
+
 			</p:dataTable>
-	</p:dialog>
+		</p:dialog>
 
 
 
