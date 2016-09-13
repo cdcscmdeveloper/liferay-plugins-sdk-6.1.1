@@ -19,22 +19,34 @@
 				<td width="23%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="contractSigner" disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}"
-						value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userId}"
-						style="width: 276px;margin-bottom: 5px; " required="true"
-						label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />
-						<f:selectItems
-							value="#{directLOABackingBean.managedBean.contractSignerList}"
-							var="contractUser" itemLabel="#{contractUser.userName}"
-							itemValue="#{contractUser.userId}" />
-
-						<p:ajax event="change"
-							listener="#{directLOABackingBean.contractSignerEvent}"
-							partialSubmit="true" process="@this" update="@this loaSignerId" />
-					</p:selectOneMenu> <p:message id="contractSignerMsg" for="contractSigner"
-						display="icon" /></td>
+				<td>
+					<c:choose>
+						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="contractSigner" disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}"
+								value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userId}"
+								style="width: 276px;margin-bottom: 5px; " required="true"
+								label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItems
+									value="#{directLOABackingBean.managedBean.contractSignerList}"
+									var="contractUser" itemLabel="#{contractUser.userName}"
+									itemValue="#{contractUser.userId}" />
+		
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.contractSignerEvent}"
+									partialSubmit="true" process="@this" update="@this loaSignerId" />
+							</p:selectOneMenu>
+							<p:message id="contractSignerMsg" for="contractSigner"
+								display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="contractSignerTxt"
+								value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userName}"
+								size="40" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
