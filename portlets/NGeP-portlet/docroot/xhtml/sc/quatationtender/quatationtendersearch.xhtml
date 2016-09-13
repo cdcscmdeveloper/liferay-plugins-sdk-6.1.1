@@ -241,13 +241,20 @@
 								title="#{lbl['lbl.sc.qt.search.edit.tooltip']}" />
 						</p:commandLink>
 						<p:commandLink id="viewQTIcon" action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}"
-							style="margin-right:20px;" partialSubmit="true" process="@this">
+							style="margin-right:20px;" partialSubmit="true" process="@this"
+							rendered="#{scQt.procurementMode.parameterCode != ParameterConst.procurementModeDirectNego}">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
+								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
+						</p:commandLink>
+						<p:commandLink id="viewDNIcon" action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}"
+							style="margin-right:20px;" partialSubmit="true" process="@this"
+							rendered="#{scQt.procurementMode.parameterCode == ParameterConst.procurementModeDirectNego}">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
 						</p:commandLink>
 						<p:commandLink id="viewSupplierQTIcon" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}"
 							style="margin-right:20px;" partialSubmit="true" process="@this"
-							rendered="#{qTDetailBB.managedBean.qtnTenderSearchBean.resultDocType != ParameterConst.doctypeBidding}">
+							rendered="#{qTDetailBB.managedBean.qtnTenderSearchBean.resultDocType != ParameterConst.doctypeBidding and scQt.procurementMode.parameterCode != ParameterConst.procurementModeDirectNego}">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
 						</p:commandLink>
@@ -256,7 +263,7 @@
 							rendered="#{qTDetailBB.managedBean.qtnTenderSearchBean.resultDocType == ParameterConst.doctypeBidding}">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
-							<f:param name="bidScheduleId" value="#{qTDetailBB.findDocIdByDocType(scQt.qtId)}"  />
+							<f:param name="bidScheduleId" value="#{qTDetailBB.findDocIdByDocType(scQt.qtId, null)}"  />
 							<f:param name="previousPageUrl" value="#{view.viewId}" />
 						</p:commandLink>
 						<p:commandLink id="publishQTIcon" action="#{qTDetailBB.publishQT(scQt)}"
