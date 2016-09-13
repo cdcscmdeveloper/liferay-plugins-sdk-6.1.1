@@ -96,8 +96,8 @@
 				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false" 
 				    fileUploadListener="#{agreementBackingBean.fileUpload}" multiple="false"
 					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="agUploadWV"
-					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update=":form:contentTable"
-					label="#{lbl['lbl.btn.choose']}">
+					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update=":form:contentTable"					
+					label="#{lbl['lbl.btn.choose']}" oncomplete="uploadUserDefineDlg.hide();" >
 				</p:fileUpload>
 				<f:facet name="footer">
 				<div class="ppRightBtn">

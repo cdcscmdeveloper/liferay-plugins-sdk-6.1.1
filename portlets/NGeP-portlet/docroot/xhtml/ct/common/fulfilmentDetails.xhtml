@@ -297,7 +297,7 @@
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
 			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" widgetVar="ap201UploadWV"
-			update="uploadAp201Pg" label="#{lbl['lbl.btn.choose']}" >
+			update="uploadAp201Pg" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadAp201Dlg.hide();" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">
@@ -350,7 +350,7 @@
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
 			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" widgetVar="bondUploadWV"
-			update="uploadBondExemptedPg" label="#{lbl['lbl.btn.choose']}">
+			update="uploadBondExemptedPg" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadBondExemptedDlg.hide();" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">
