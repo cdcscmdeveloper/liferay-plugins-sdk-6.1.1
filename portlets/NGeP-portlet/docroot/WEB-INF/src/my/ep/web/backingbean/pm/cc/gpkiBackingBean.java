@@ -2,30 +2,24 @@ package my.ep.web.backingbean.pm.cc;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.service.IBpmSO;
-import my.ep.constant.MessageConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.logging.LogKey;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
+
+import com.sun.faces.facelets.el.ContextualCompositeMethodExpression;
 
 @ManagedBean(name = "gpkiBackingBean")
 @SessionScoped
@@ -73,8 +67,7 @@ public class gpkiBackingBean implements Serializable {
 		this.pmDigiSign = pmDigiSign;
 	}
 
-	public String gpkiSignAction(
-			com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
+	public String gpkiSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr, ContextualCompositeMethodExpression enableAutoUpdateMtdExpr) {
 		System.out.println("ContextualCompositeMethodExpression");
 		
 		String textBeforeSign = FacesContext.getCurrentInstance()
@@ -109,45 +102,70 @@ public class gpkiBackingBean implements Serializable {
 		System.out.println("getIdentificationNo=====================================: "
 				+ resDTO.getPmUser().getLoginId());
 		System.out.println("ContextualCompositeMethodExpression  2");
-		System.out.println("reflectAction=====================================: "
-				+ obj);
+		System.out.println("postSignActionMtdExpr=====================================: "
+				+ postSignActionMtdExpr);
+		System.out.println("enableAutoUpdateMtdExpr=====================================: "
+				+ enableAutoUpdateMtdExpr);
 		Object returnObj = null;
 		System.out.println("textBeforeSign:"+textBeforeSign);
 		System.out.println("signedText:"+signedText);
-		if (getGpkiEnabledProperty().equalsIgnoreCase("true")) {
-			if (subjectDN.substring(subjectDN.indexOf("=") + 1,
-					subjectDN.indexOf(",")).equals(
-					resDTO.getPmUser().getIdentificationNo())) {
+		
+		try {
+			if (getGpkiEnabledProperty().equalsIgnoreCase("true")) {
+				if (subjectDN.substring(subjectDN.indexOf("=") + 1,
+						subjectDN.indexOf(",")).equals(
+						resDTO.getPmUser().getIdentificationNo())) {
+					pmDigiSign.setCreatedBy(userId);
+					pmDigiSign.setCreatedDate(date);
+					pmDigiSign.setOriginalData(textBeforeSign);
+					pmDigiSign.setGpkiSignedData(signedText);
+					System.out.println("=================================Same IC No");
+					
+					returnObj = postSignActionMtdExpr.invoke(
+							FacesContext.getCurrentInstance().getELContext(),
+							new Object[] { pmDigiSign });
+					
+					if (enableAutoUpdateMtdExpr != null) {
+						enableAutoUpdateMtdExpr.invoke(
+								FacesContext.getCurrentInstance().getELContext(),
+								new Object[] {});
+					}
+					
+					RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
+					
+				} else {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									"gpki",
+									new FacesMessage(FacesMessage.SEVERITY_ERROR,
+											"",
+											"Token's certificate not match with signer identity."));
+				}
+			} else {
 				pmDigiSign.setCreatedBy(userId);
 				pmDigiSign.setCreatedDate(date);
 				pmDigiSign.setOriginalData(textBeforeSign);
 				pmDigiSign.setGpkiSignedData(signedText);
-				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
-				System.out.println("=================================Same IC No");
-				returnObj = obj.invoke(
+
+				returnObj = postSignActionMtdExpr.invoke(
 						FacesContext.getCurrentInstance().getELContext(),
 						new Object[] { pmDigiSign });
-			} else {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								"gpki",
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										"",
-										"Token's certificate not match with signer identity."));
+				
+				if (enableAutoUpdateMtdExpr != null) {
+					enableAutoUpdateMtdExpr.invoke(
+							FacesContext.getCurrentInstance().getELContext(),
+							new Object[] {});
+				}
+				
+				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
+				
 			}
-		} else {
-			pmDigiSign.setCreatedBy(userId);
-			pmDigiSign.setCreatedDate(date);
-			pmDigiSign.setOriginalData(textBeforeSign);
-			pmDigiSign.setGpkiSignedData(signedText);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
-
-			returnObj = obj.invoke(
-					FacesContext.getCurrentInstance().getELContext(),
-					new Object[] { pmDigiSign });
-			
+		} catch (Exception e) {
+			RequestContext.getCurrentInstance().execute("setRunGPKIEnableAutoUpdate(true);");	
+			throw e;
 		}
+		
 		RequestContext.getCurrentInstance().execute("gpkiBlockWidget.hide()");
 
 		if (returnObj != null) {
