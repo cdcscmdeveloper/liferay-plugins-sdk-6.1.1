@@ -83,11 +83,12 @@
 						title="#{lbl['lbl.quartz.state.error.tooltips']}" />
 				</p:column>
 				
-				
-				<p:column headerText="#{lbl['lbl.quartz.misfire.policy']}" style="width : 10% !important;">
-					<h:outputText value="#{schedulerManagerBB.showMisFiredInstruction(jobBean.trigger.misfireInstruction)}" 
-						style="white-space: normal;"/>
-				</p:column>
+				<ui:remove>
+					<p:column headerText="#{lbl['lbl.quartz.misfire.policy']}" style="width : 10% !important;">
+						<h:outputText value="#{schedulerManagerBB.showMisFiredInstruction(jobBean.trigger.misfireInstruction)}" 
+							style="white-space: normal;"/>
+					</p:column>
+				</ui:remove>
 				
 				<p:column headerText="#{lbl['lbl.quartz.jobclass']}" style="width : 10% !important;">
 					<h:outputText value="#{jobBean.jobClassSimpleName}" 
