@@ -266,7 +266,7 @@ public class DirectLOABackingBean extends
 				this.getManagedBean().setPayLoad(awardSupplierDataType);
 				if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(scLoa.getPmStatus().getStatusId())) {
-					retriveLoaDetails(scLoa.getLoaId());
+					retriveLoaDetails(scLoa.getLoaId(), null, false);
 
 					contractTypeChanged();
 					constructStartNEndMonth();
@@ -1978,7 +1978,7 @@ public class DirectLOABackingBean extends
 		debugLogger("preRenderDirectNegoView");
 		renewSesionObject();
 
-		retriveLoaDetails(null);
+		String redirectUrl = retriveLoaDetails(null, null, false);
 		ScQt scQt = getManagedBean().getScQt();
 		PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
 		scQt.setPmOrgProfile(pmOrgProfile);
@@ -1994,7 +1994,7 @@ public class DirectLOABackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
-				.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
+				.handleNavigation(fc, null, redirectUrl);
 	}
 
 	/**
@@ -3865,14 +3865,14 @@ public class DirectLOABackingBean extends
 		
 		try {
 			SCAwardSupplierDataType awardSupplierDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
-			retriveLoaDetails(awardSupplierDataType.getAwardId());
+			String redirectUrl = retriveLoaDetails(awardSupplierDataType.getAwardId(), null, false);
 	
 			contractTypeChanged();
 			constructStartNEndMonth();
 			this.getManagedBean().setPayLoad(awardSupplierDataType);
 			fc.getApplication()
 					.getNavigationHandler()
-					.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
+					.handleNavigation(fc, null, redirectUrl);
 		} catch (Exception e) {
 			handleException(e);
 			fc.getApplication().getNavigationHandler()
@@ -3880,10 +3880,25 @@ public class DirectLOABackingBean extends
 		}
 	}
 
-	private void retriveLoaDetails(Long loaId) {
+	/**
+	 * Get the loa details.
+	 * 
+	 * @param loaId 
+	 * 		the loa id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * 
+	 * @return the loa page
+	 */
+	public String retriveLoaDetails(Long loaId, String previousPageUrl, boolean isReadonly) {
 		IQTDirectAwardSO directAwardSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDirectAwardSO.class);
+		
+		getManagedBean().setBackToPreviousPage(previousPageUrl);
+		getManagedBean().setReadOnly(isReadonly);
 
 		DirectAwardReqDTO awardReqDTO = new DirectAwardReqDTO();
 		if (null == loaId) {
@@ -4014,6 +4029,16 @@ public class DirectLOABackingBean extends
 					scLoa.getScQtDeductions().get(0));
 		}
 
+		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
+	}
+	
+	/**
+	 * Page navigation from loa details page to qt loa list or dp loa list.
+	 */
+	public String backToPrevious() {
+		log.info("backToPrevious");
+		
+		return getManagedBean().getBackToPreviousPage();
 	}
 
 	private String getMonth(String month) {
