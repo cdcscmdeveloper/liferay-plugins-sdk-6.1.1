@@ -13,29 +13,33 @@
 				<td width="18%"><h:outputLabel
 						value="#{lbl['lbl.sc.account.no']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" rendered="#{isSupplierAckStatus}" /></td>
-				<td width="82%"><c:if test="#{isSupplierAckStatus}">
-						<p:selectOneMenu id="accountNoId"
-							value="#{directLOABackingBean.managedBean.selectedBankId}"
-							style="width:277px;margin-bottom: 5px;"
-							disabled="#{directLOABackingBean.managedBean.readOnly}"
-							required="true" label="#{lbl['lbl.sc.account.no']}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{directLOABackingBean.managedBean.bankList}"
-								var="smSupplierBank"
-								itemValue="#{smSupplierBank.supplierBankId}"
-								itemLabel="#{smSupplierBank.accountNo}" />
-							<p:ajax event="change"
-								listener="#{directLOABackingBean.handleBankDetailsChanged}"
-								partialSubmit="true" process="@this"
-								update="bankName, bankBranch, bankAddress" />
-						</p:selectOneMenu>
-						<p:message id="accountNoIdMsg" for="accountNoId" display="icon" />
-					</c:if> <c:if test="#{!isSupplierAckStatus}">
-						<p:inputText
-							value="#{directLOABackingBean.managedBean.scLoa.bankAccNo}"
-							disabled="true" size="40" />
-					</c:if></td>
+				<td width="82%">
+					<c:choose>
+						<c:when test="#{isSupplierAckStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="accountNoId"
+								value="#{directLOABackingBean.managedBean.selectedBankId}"
+								style="width:277px;margin-bottom: 5px;"
+								required="true" label="#{lbl['lbl.sc.account.no']}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems
+									value="#{directLOABackingBean.managedBean.bankList}"
+									var="smSupplierBank"
+									itemValue="#{smSupplierBank.supplierBankId}"
+									itemLabel="#{smSupplierBank.accountNo}" />
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.handleBankDetailsChanged}"
+									partialSubmit="true" process="@this"
+									update="bankName, bankBranch, bankAddress" />
+							</p:selectOneMenu>
+							<p:message id="accountNoIdMsg" for="accountNoId" display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText
+								value="#{directLOABackingBean.managedBean.scLoa.bankAccNo}"
+								disabled="true" size="40" />
+						</c:otherwise>
+					</c:choose>
+				</td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.bank.name']}" /></td>
