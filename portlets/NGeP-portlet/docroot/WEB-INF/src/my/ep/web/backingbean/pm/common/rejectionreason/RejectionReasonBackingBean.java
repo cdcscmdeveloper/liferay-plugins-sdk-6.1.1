@@ -981,7 +981,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
     PmParameter contractRequestParam = getParameterByTypeAndCode(ParameterTypeConst.SOURCING_METHOD, ParameterConst.PID_SOURCE_METHOD_CR);
 	List<String> parameterCodes = new ArrayList<String>();
 	parameterCodes.add(ParameterConst.CONTRACT_TYPE_MINISTRY);
-	if(!getManagedBean().getSelectedReason().getSourceMethod().getParameterId().equals(contractRequestParam.getParameterId())){
+	if(getManagedBean().getSelectedReason().getSourceMethod() != null && getManagedBean().getSelectedReason().getSourceMethod().getParameterId() != null && 
+			!getManagedBean().getSelectedReason().getSourceMethod().getParameterId().equals(contractRequestParam.getParameterId())){
 		parameterCodes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 	}
 	parameterCodes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
@@ -1309,9 +1310,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void sourceMethodChange(){
 		log.info("conditionFieldChange");
 		boolean invalid = false;
-		if(getManagedBean().getSelectedReason().getSourceMethod() != null){
+		if(getManagedBean().getSelectedReason().getSourceMethod() != null && getManagedBean().getSelectedReason().getSourceMethod().getParameterId() != null){
 			PmParameter contractRequestParam = getParameterByTypeAndCode(ParameterTypeConst.SOURCING_METHOD, ParameterConst.PID_SOURCE_METHOD_CR);
-			if(getManagedBean().getSelectedSourceMethodId().equals(contractRequestParam.getParameterId()) 
+			if(getManagedBean().getSelectedSourceMethodId() != null && getManagedBean().getSelectedSourceMethodId().equals(contractRequestParam.getParameterId()) 
 					&& getManagedBean().getSelectedReason().getPmPIDReasonList() != null){
 				for(PmPIDReason reason : getManagedBean().getSelectedReason().getPmPIDReasonList()){
 					if(reason.getDocType() != null && reason.getDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)){
