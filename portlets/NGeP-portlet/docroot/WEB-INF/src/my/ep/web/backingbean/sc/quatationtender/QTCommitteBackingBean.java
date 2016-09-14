@@ -1930,7 +1930,7 @@ public class QTCommitteBackingBean extends
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (isQTStatusInBetween(currentQtStatus,
 					QTStatusConst.QT_PENDING_PB_APPROVAL,
-					QTStatusConst.QT_CLOSED)) {
+					QTStatusConst.QT_CONSOLIDATION_REPORT)) {
 				return !this.getManagedBean().isReadOnly();
 			} 
 		}else {
