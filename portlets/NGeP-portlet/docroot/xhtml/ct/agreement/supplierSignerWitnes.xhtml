@@ -54,7 +54,7 @@
                        </p:selectOneMenu>
                      </p:column>  
              
-                     <p:column style="width:15%;" headerText="#{lbl['lbl.ct.ic.no']}" styleClass="column-align-center"> 
+                     <p:column style="width:15%;" headerText="#{lbl['lbl.ct.identification.no']}" styleClass="column-align-center"> 
                           <h:outputText id="suOfId" value="#{signSupplierVar.officerIc}" style="float:left;"/>
                      </p:column> 	
                
@@ -123,8 +123,8 @@
                            		disabled="#{agreementBackingBean.managedBean.uploadFinalAgreement}" />
                         </p:column>
                        
-                        <p:column style="width:20%;" headerText="#{lbl['lbl.ct.ic.no']}" styleClass="column-align-center"> 
-                            <p:inputText value="#{supplierWitnessVar.officerIc}" label="#{lbl['lbl.ct.ic.no']}"  style="width:95%;" maxlength="20"
+                        <p:column style="width:20%;" headerText="#{lbl['lbl.ct.identification.no']}" styleClass="column-align-center"> 
+                            <p:inputText value="#{supplierWitnessVar.officerIc}" label="#{lbl['lbl.ct.identification.no']}"  style="width:95%;" maxlength="20"
                             	disabled="#{agreementBackingBean.managedBean.uploadFinalAgreement}">
                             	<p:ajax event="change" listener="#{agreementBackingBean.checkDuplicateAgreementParty()}"/>
                               </p:inputText>
