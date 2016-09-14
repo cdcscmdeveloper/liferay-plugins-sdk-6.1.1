@@ -117,7 +117,7 @@
 							<h:panelGrid columns="1">
 								<h:panelGrid columns="2">
 									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" style="text-align: top" />
-									<p:selectOneMenu style="width:350px; margin-bottom:5px;"
+									<p:selectOneMenu style="width:450px; margin-bottom:5px;"
 										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}" >
 										<p:ajax event="change" process="@this" update="approverDropdown"
@@ -130,7 +130,7 @@
 									<p:selectOneMenu id="approverDropdown"
 										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{purchaseRequestBackingBean.managedBean.selectedApprover}"
-										style="width:350px;">
+										style="width:450px;">
 										<f:selectItems
 											value="#{purchaseRequestBackingBean.getApproverListDropDown()}" />
 									</p:selectOneMenu>
