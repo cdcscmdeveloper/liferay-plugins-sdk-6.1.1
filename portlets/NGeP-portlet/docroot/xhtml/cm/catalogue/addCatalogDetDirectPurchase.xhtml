@@ -305,8 +305,8 @@
 
 					</p:tab>
 
-
-					<c:if test="#{!unspscCodeBackingBean.catalogueAdmin}">
+					<ui:remove>
+					<!-- <c:if test="#{!unspscCodeBackingBean.catalogueAdmin}">
 						<p:tab title="#{lbl['lbl.cm.tariff']}"
 							rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70 and catalogueBackingBean.managedBean.priceTypeTariff}">
 							<p:tabView id="tariffId">
@@ -330,7 +330,8 @@
 								</p:tab>
 							</p:tabView>
 						</p:tab>
-					</c:if>
+					</c:if> -->
+					</ui:remove>
 
 				</p:tabView>
 
@@ -341,14 +342,6 @@
 
 			<p:tab id="supplierInfoId" title="#{lbl['lbl.cm.supplier.info']}">
 				<ui:include src="supplierInfoTab.xhtml"></ui:include>
-			</p:tab>
-
-			<p:tab id="remarkId" title="#{lbl['lbl.cm.reject.reason']}"
-				rendered="#{(unspscCodeBackingBean.catalogueAdmin or unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier)
-				and (catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' )}">
-
-				<ui:include src="remark.xhtml"></ui:include>
-
 			</p:tab>
 
 		</p:tabView>
