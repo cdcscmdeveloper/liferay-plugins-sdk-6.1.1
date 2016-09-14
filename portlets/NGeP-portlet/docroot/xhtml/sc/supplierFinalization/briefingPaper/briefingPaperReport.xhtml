@@ -33,7 +33,7 @@
 										 		.contains(report.pmDocument.docDefinitionKey)}">
 					<p:commandButton id="download" icon="ui-icon-download" 
 						style="background-color:transparent !important; border:0px none;"
-						ajax="false" action="#{suppFinalizationBackingBean.downloadReport(report)}" />
+						ajax="false" immediate="true" action="#{suppFinalizationBackingBean.downloadReport(report)}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{(report.pmDocument ne null and
 											!suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
@@ -58,7 +58,7 @@
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}"
 				action="#{suppFinalizationBackingBean.downloadAllReports}" 
-				ajax="false" rendered="#{!readOnlyTask}" />
+				ajax="false" immediate="true" rendered="#{!readOnlyTask}" />
 		</div>
 	</p:panel>
 	
