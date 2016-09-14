@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
@@ -33,6 +34,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.MenuModel;
@@ -162,10 +164,15 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/** Qualified suppliers by evaluation stage */
 	private IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;	
 	
-	private List<ScQtEvaluationResultDtl> shortlistedPackageList;
-	private List<ScQtEvaluationResultDtl> shortlistedSupplierList;
-	private List<ScQtEvaluationResultDtl> recommendedSupplierList;
-	private List<ScQtEvaluationResultDtl> unRecommendedSupplierList;
+	/** Qualified suppliers by evaluation stage */
+	private IPagingDataModel<ScQtEvaluationResultDtl> shortlistedSuppliersByRecommendType;	
+	
+	private Map<MapKey,List<QtEvaluationResultDtlBean>> qualifiedSuppliersCache;
+	
+//	private List<ScQtEvaluationResultDtl> shortlistedPackageList;
+//	private List<ScQtEvaluationResultDtl> shortlistedSupplierList;
+//	private List<ScQtEvaluationResultDtl> recommendedSupplierList;
+//	private List<ScQtEvaluationResultDtl> unRecommendedSupplierList;
 	private Set<ScQtEvaluationResultDtl> resetSupplierList;
 	private List<ScQtRecommend> selectedItemList; 
 	private List<ScQtRecommend> itemList;
@@ -173,8 +180,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<Long> rejectedScQtRecommendIds;
 	
 	private Map<Long, TplSpecZoneDtl> zoneMap;
-	private Map<Long, List<ScQtEvaluationResultDtl>> pkgShortlistedSupppliersByZone;
-	private Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone;
+//	private Map<Long, List<ScQtEvaluationResultDtl>> pkgShortlistedSupppliersByZone;
+//	private Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone;
 	
 	private Map<String,String[]> higherAuthoritiesMap;
 	
@@ -921,37 +928,37 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disableFwdToHighAuthorityOption = disableFwdToHighAuthorityOption;
 	}
 
-	/**
-	 * @return the shortlistedSupplierList
-	 */
-	public List<ScQtEvaluationResultDtl> getShortlistedSupplierList() {
-		return shortlistedSupplierList;
-	}
-
-	/**
-	 * @param shortlistedSupplierList 
-	 * 						the shortlistedSupplierList to set
-	 */
-	public void setShortlistedSupplierList(
-			List<ScQtEvaluationResultDtl> shortlistedSupplierList) {
-		this.shortlistedSupplierList = shortlistedSupplierList;
-	}
-
-	/**
-	 * @return the recommendedSupplierList
-	 */
-	public List<ScQtEvaluationResultDtl> getRecommendedSupplierList() {
-		return recommendedSupplierList;
-	}
-
-	/**
-	 * @param recommendedSupplierList 
-	 * 						the recommendedSupplierList to set
-	 */
-	public void setRecommendedSupplierList(
-			List<ScQtEvaluationResultDtl> recommendedSupplierList) {
-		this.recommendedSupplierList = recommendedSupplierList;
-	}
+//	/**
+//	 * @return the shortlistedSupplierList
+//	 */
+//	public List<ScQtEvaluationResultDtl> getShortlistedSupplierList() {
+//		return shortlistedSupplierList;
+//	}
+//
+//	/**
+//	 * @param shortlistedSupplierList 
+//	 * 						the shortlistedSupplierList to set
+//	 */
+//	public void setShortlistedSupplierList(
+//			List<ScQtEvaluationResultDtl> shortlistedSupplierList) {
+//		this.shortlistedSupplierList = shortlistedSupplierList;
+//	}
+//
+//	/**
+//	 * @return the recommendedSupplierList
+//	 */
+//	public List<ScQtEvaluationResultDtl> getRecommendedSupplierList() {
+//		return recommendedSupplierList;
+//	}
+//
+//	/**
+//	 * @param recommendedSupplierList 
+//	 * 						the recommendedSupplierList to set
+//	 */
+//	public void setRecommendedSupplierList(
+//			List<ScQtEvaluationResultDtl> recommendedSupplierList) {
+//		this.recommendedSupplierList = recommendedSupplierList;
+//	}
 
 	/**
 	 * @return the selectionMode
@@ -1058,37 +1065,37 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.zoneMap = zoneMap;
 	}
 
-	/**
-	 * @return the pkgShortlistedSupppliersByZone
-	 */
-	public Map<Long, List<ScQtEvaluationResultDtl>> getPkgShortlistedSupppliersByZone() {
-		return pkgShortlistedSupppliersByZone;
-	}
+//	/**
+//	 * @return the pkgShortlistedSupppliersByZone
+//	 */
+//	public Map<Long, List<ScQtEvaluationResultDtl>> getPkgShortlistedSupppliersByZone() {
+//		return pkgShortlistedSupppliersByZone;
+//	}
+//
+//	/**
+//	 * @param pkgShortlistedSupppliersByZone the pkgShortlistedSupppliersByZone to set
+//	 */
+//	public void setPkgShortlistedSupppliersByZone(
+//			Map<Long, List<ScQtEvaluationResultDtl>> pkgShortlistedSupppliersByZone) {
+//		this.pkgShortlistedSupppliersByZone = pkgShortlistedSupppliersByZone;
+//	}
 
-	/**
-	 * @param pkgShortlistedSupppliersByZone the pkgShortlistedSupppliersByZone to set
-	 */
-	public void setPkgShortlistedSupppliersByZone(
-			Map<Long, List<ScQtEvaluationResultDtl>> pkgShortlistedSupppliersByZone) {
-		this.pkgShortlistedSupppliersByZone = pkgShortlistedSupppliersByZone;
-	}
-
-	/**
-	 * @return the recommendedSupppliersByZone
-	 */
-	public Map<Long, List<ScQtEvaluationResultDtl>> 
-				getRecommendedSupppliersByZone() {
-		return recommendedSupppliersByZone;
-	}
-
-	/**
-	 * @param recommendedSupppliersByZone 
-	 * 				the recommendedSupppliersByZone to set
-	 */
-	public void setRecommendedSupppliersByZone(
-			Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone) {
-		this.recommendedSupppliersByZone = recommendedSupppliersByZone;
-	}
+//	/**
+//	 * @return the recommendedSupppliersByZone
+//	 */
+//	public Map<Long, List<ScQtEvaluationResultDtl>> 
+//				getRecommendedSupppliersByZone() {
+//		return recommendedSupppliersByZone;
+//	}
+//
+//	/**
+//	 * @param recommendedSupppliersByZone 
+//	 * 				the recommendedSupppliersByZone to set
+//	 */
+//	public void setRecommendedSupppliersByZone(
+//			Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone) {
+//		this.recommendedSupppliersByZone = recommendedSupppliersByZone;
+//	}
 
 	/**
 	 * @return the scQtFinalization
@@ -1605,21 +1612,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.zoneDetails = zoneDetails;
 	}
 
-	/**
-	 * @return the unRecommendedSupplierList
-	 */
-	public List<ScQtEvaluationResultDtl> getUnRecommendedSupplierList() {
-		return unRecommendedSupplierList;
-	}
-
-	/**
-	 * @param unRecommendedSupplierList 
-	 * 					the unRecommendedSupplierList to set
-	 */
-	public void setUnRecommendedSupplierList(
-			List<ScQtEvaluationResultDtl> unRecommendedSupplierList) {
-		this.unRecommendedSupplierList = unRecommendedSupplierList;
-	}
+//	/**
+//	 * @return the unRecommendedSupplierList
+//	 */
+//	public List<ScQtEvaluationResultDtl> getUnRecommendedSupplierList() {
+//		return unRecommendedSupplierList;
+//	}
+//
+//	/**
+//	 * @param unRecommendedSupplierList 
+//	 * 					the unRecommendedSupplierList to set
+//	 */
+//	public void setUnRecommendedSupplierList(
+//			List<ScQtEvaluationResultDtl> unRecommendedSupplierList) {
+//		this.unRecommendedSupplierList = unRecommendedSupplierList;
+//	}
 
 	/**
 	 * @return the resetSupplierList
@@ -1653,12 +1660,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 //		this.qualifiedSuppliersByEvalStage = qualifiedSuppliersByEvalStage;
 //	}
 
-	/**
-	 * @return the shortlistedPackageList
-	 */
-	public List<ScQtEvaluationResultDtl> getShortlistedPackageList() {
-		return shortlistedPackageList;
-	}
+//	/**
+//	 * @return the shortlistedPackageList
+//	 */
+//	public List<ScQtEvaluationResultDtl> getShortlistedPackageList() {
+//		return shortlistedPackageList;
+//	}
 
 	/**
 	 * @return the qualifiedSuppliersByEvalStage
@@ -1677,13 +1684,45 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param shortlistedPackageList 
-	 * 						the shortlistedPackageList to set
+	 * @return the shortlistedSuppliersByRecommendType
 	 */
-	public void setShortlistedPackageList(
-			List<ScQtEvaluationResultDtl> shortlistedPackageList) {
-		this.shortlistedPackageList = shortlistedPackageList;
+	public IPagingDataModel<ScQtEvaluationResultDtl> getShortlistedSuppliersByRecommendType() {
+		return shortlistedSuppliersByRecommendType;
 	}
+
+	/**
+	 * @param shortlistedSuppliersByRecommendType
+	 *            the shortlistedSuppliersByRecommendType to set
+	 */
+	public void setShortlistedSuppliersByRecommendType(
+			IPagingDataModel<ScQtEvaluationResultDtl> shortlistedSuppliersByRecommendType) {
+		this.shortlistedSuppliersByRecommendType = shortlistedSuppliersByRecommendType;
+	}
+
+	/**
+	 * @return the qualifiedSuppliersCache
+	 */
+	public Map<MapKey, List<QtEvaluationResultDtlBean>> getQualifiedSuppliersCache() {
+		return qualifiedSuppliersCache;
+	}
+
+	/**
+	 * @param qualifiedSuppliersCache
+	 *            the qualifiedSuppliersCache to set
+	 */
+	public void setQualifiedSuppliersCache(
+			Map<MapKey, List<QtEvaluationResultDtlBean>> qualifiedSuppliersCache) {
+		this.qualifiedSuppliersCache = qualifiedSuppliersCache;
+	}
+
+//	/**
+//	 * @param shortlistedPackageList 
+//	 * 						the shortlistedPackageList to set
+//	 */
+//	public void setShortlistedPackageList(
+//			List<ScQtEvaluationResultDtl> shortlistedPackageList) {
+//		this.shortlistedPackageList = shortlistedPackageList;
+//	}
 
 	/**
 	 * @return the isCancel

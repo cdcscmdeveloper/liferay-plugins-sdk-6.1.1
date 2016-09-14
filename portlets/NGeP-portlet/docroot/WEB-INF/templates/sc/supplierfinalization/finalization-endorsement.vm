@@ -1,14 +1,14 @@
 <html>
 <head>
 	<style>
-	@page {
-	size: A4 portrait;
-}
-@page { 
-	@bottom-center { 
-		content: "Page " counter(page) " / " counter(pages);
-	}
-}
+		@page {
+			size: A4 portrait;
+		}
+		@page { 
+			@bottom-center { 
+				content: "Page " counter(page) " / " counter(pages);
+			}
+		}	
 		.header {
 			font-family:'Arial', sans-serif;
 			font-size:16px;
@@ -278,30 +278,31 @@
 										</table>
 									</td>
 								</tr>
-								#foreach( $item in $zoneReportDTO.recommendedItems )
+								#foreach( $item in $zoneReportDTO.recommendedSuppliersByItem.keySet() )
 									<tr class="ui-content">
 										<td width="15%" class="standard border-bottom left">$item.requestItem.itemName</td>
-										#if ($!item.awardSupplierList && $item.awardSupplierList.size() > 0)
+										#if ($!zoneReportDTO.recommendedSuppliersByItem.get($item) && 
+														$zoneReportDTO.recommendedSuppliersByItem.get($item).size() > 0)
 											<td class="standard border-bottom right">
 												#set ($count = 0)
-												#foreach( $evalResultDtl in $item.awardSupplierList )
+												#foreach( $evalResultDtlBean in $zoneReportDTO.recommendedSuppliersByItem.get($item) )
 													<table width="100%" border="0" cellpadding="0" cellspacing="0">
 														<tbody>
 															<tr>
-																#if ($evalResultDtl.awareded == "true" || $evalResultDtl.shortListed == "true")
-																	<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
+																#if ($evalResultDtlBean.awarded == "true" || $evalResultDtlBean.shortlisted == "true")
+																	<td width="11%" class="standard left">$evalResultDtlBean.scQtProposal.supplierNo</td>
 																	<td width="12%" class="standard left">
-																		#if ($evalResultDtl.qtEvaluationResult.scQtProposal.bumi == "true")
+																		#if ($evalResultDtlBean.scQtProposal.bumi == "true")
 																			Ya
 																		#else
 																			Tiada
 																		#end
 																	</td>
 																	<td width="17%" class="number left">
-																		$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)
+																		$numberFormatter.format($evalResultDtlBean.offeredPrice)
 																	</td>
 																	<td width="11%" class="standard left">
-																		$evalResultDtl.amountInWords
+																		$evalResultDtlBean.amountInWords
 																	</td>																	
 																#else 
 																	#set ($count = $count + 1)
@@ -310,7 +311,7 @@
 														</tbody>
 													</table>
 												#end
-												#if ($count == $item.awardSupplierList.size())
+												#if ($count == $zoneReportDTO.recommendedSuppliersByItem.get($item).size())
 													No shortlisted supplier(s) for this item
 												#end										
 											</td>
@@ -334,27 +335,27 @@
 										<td width="23%" class="title border left">Jumlah Harga (RM)</td>
 										<td width="23%" class="title border left-right">Jumlah Harga Dalam Perkataan (RM)</td>
 									</tr>
-									#foreach($supplierDtl in $zoneReportDTO.recommendedSuppliers)
+									#foreach($evalResDtlBean in $zoneReportDTO.recommendedSuppliers)
 										#set($String = "formatter")
 										<tr class="ui-content">
 											<td width="15%" class="standard border-bottom left">
-												$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo
+												$evalResDtlBean.scQtProposal.supplierNo
 											</td>
 											<td width="15%" class="standard border-bottom left">
-												$supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.regNo
+												$evalResDtlBean.scQtProposal.scQtSupplier.smSupplier.regNo
 											</td>
 											<td width="12%" class="standard border-bottom left">
-												#if ($supplierDtl.qtEvaluationResult.scQtProposal.bumi == "true")
+												#if ($evalResDtlBean.scQtProposal.bumi == "true")
 													Ya
 												#else
 													Tiada
 												#end
 											</td>
 											<td width="10%" class="number border-bottom left">
-												$numberFormatter.format($supplierDtl.proposalAmount.proposalAmt)
+												$numberFormatter.format($evalResDtlBean.scQtProposalAmount.proposalAmt)
 											</td>
 											<td width="10%" class="standard border-bottom left-right">
-												$supplierDtl.amountInWords
+												$evalResDtlBean.amountInWords
 											</td>											
 										</tr>
 									#end
@@ -388,33 +389,33 @@
 								</table>
 							</td>
 						</tr>
-						#foreach ($item in $reportDTO.recommendedItems)
+						#foreach ($item in $reportDTO.recommendedSuppliersByItem.keySet())
 							<tr class="ui-content">
 								<td width="15%" class="standard border-bottom left">$item.requestItem.itemName</td>
-								#if ($item.awardSupplierList.size() > 0)
+								#if ($reportDTO.recommendedSuppliersByItem.get($item).size() > 0)
 									<td class="standard border-bottom right">
 										#set ($count = 0)
-										#foreach ($evalResultDtl in $item.awardSupplierList)
+										#foreach ($evalResultDtlBean in $reportDTO.recommendedSuppliersByItem.get($item))
 											<table width="100%" border="0" cellpadding="0" cellspacing="0">
 												<tbody>
 													<tr>
-														#if ($evalResultDtl.awareded == "true" || $evalResultDtl.shortListed == "true")
-															<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
+														#if ($evalResultDtlBean.awarded == "true" || $evalResultDtlBean.shortlisted == "true")
+															<td width="11%" class="standard left">$evalResultDtlBean.scQtProposal.supplierNo</td>
 															<td width="12%" class="standard left">
-																#if ($evalResultDtl.qtEvaluationResult.scQtProposal.bumi == "true")
+																#if ($evalResultDtlBean.scQtProposal.bumi == "true")
 																	Ya
 																#else
 																	Tiada
 																#end
 															</td>
 															<td width="13%" class="standard left alignRight">
-																$evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.regNo
+																$evalResultDtlBean.scQtProposal.scQtSupplier.smSupplier.regNo
 															</td>
 															<td width="17%" class="standard left alignRight">
-																$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)
+																$numberFormatter.format($evalResultDtlBean.offeredPrice)
 															</td>	
 															<td width="17%" class="standard left">
-																$!evalResultDtl.amountInWords
+																$!evalResultDtlBean.amountInWords
 															</td>										
 														#else 
 															#set ($count = $count + 1)
@@ -423,7 +424,7 @@
 												</tbody>
 											</table>
 									    #end
-										#if ($count == $item.awardSupplierList.size())
+										#if ($count == 0)
 											No shortlisted supplier(s) for this item
 										#end							    
 									</td>
@@ -448,27 +449,27 @@
 								<td width="23%" class="title border left-right">Jumlah Harga (RM)</td>
 								<td width="40%" class="title border left-right">Jumlah Harga Dalam Perkataan (RM)</td>
 							</tr>
-							#foreach($supplierDtl in $reportDTO.recommendedSuppliers)
+							#foreach($evalResDtlBean in $reportDTO.recommendedSuppliers)
 								#set($String = "formatter")
 								<tr class="ui-content">
 									<td width="15%" class="standard border-bottom left">
-										$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo
+										$evalResDtlBean.scQtProposal.supplierNo
 									</td>
 									<td width="12%" class="standard border-bottom left">
-										$supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.regNo
+										$evalResDtlBean.scQtProposal.scQtSupplier.smSupplier.regNo
 									</td>
 									<td width="12%" class="standard border-bottom left">
-										#if ($supplierDtl.qtEvaluationResult.scQtProposal.bumi == "true")
+										#if ($evalResDtlBean.scQtProposal.bumi == "true")
 											Ya
 										#else
 											Tiada
 										#end
 									</td>
 									<td width="23%" class="number border-bottom left" >
-										$numberFormatter.format($supplierDtl.proposalAmount.proposalAmt)
+										$numberFormatter.format($evalResDtlBean.scQtProposalAmount.proposalAmt)
 									</td>
 									<td width="23%" class="standard border-bottom left-right" style="white-space:normal;">
-										$!supplierDtl.amountInWords
+										$!evalResDtlBean.amountInWords
 									</td>									
 								</tr>
 							#end
