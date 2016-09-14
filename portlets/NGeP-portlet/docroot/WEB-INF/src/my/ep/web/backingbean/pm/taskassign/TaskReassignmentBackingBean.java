@@ -1087,7 +1087,7 @@ public class TaskReassignmentBackingBean extends
 
 	private List<String> retrieveSourcingRoles(WorklistItemVO task) {
 		log.info("retrieveSourcingRoles");
-		List<String> roleList = new ArrayList<>();
+		List<String> roleList = new ArrayList<String>();
 		SourcingIntegrationResDTO resDTO = retrieveSourcingTaskReassignmentDetail(task);
 		if (resDTO != null && StringUtils.isNotBlank(resDTO.getRoleCode())) {
 			roleList.add(resDTO.getRoleCode());
@@ -1172,8 +1172,8 @@ public class TaskReassignmentBackingBean extends
 
 	private List<String> retrieveCtRoles(WorklistItemVO task) {
 		log.info("retrieveCtRoles");
-		List<String> roleList = new ArrayList<>();
 		IContractIntegrationSO ctIntegrationSO = null;
+		List<String> roleList = new ArrayList<String>();
 		try {
 			ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
 			ctIntegrationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1189,7 +1189,6 @@ public class TaskReassignmentBackingBean extends
 		} finally {
 			ctIntegrationSO = null;
 		}
-
 		return roleList;
 	}
 
@@ -1355,222 +1354,25 @@ public class TaskReassignmentBackingBean extends
 				PmStatus status = PmCommonUtil.getPmStatusById(task.getDocStatus()
 						.longValue());
 				if (status != null) {
-					boolean isSearched = false;
 					ISearchResultBean<PmUser> resultBean = null;
 					List<String> roleList = new ArrayList<String>();
-					Long userId = getManagedBean()
-							.getTaskAssignmentSearchBean().getUser().getUserId();
-					Long orgProfileId = getManagedBean()
-							.getTaskAssignmentSearchBean().getOrgProfile()
-							.getOrgProfileId();
-					
-					PmOrgProfile orgProfile = null;
-					String moduleCode = status.getModuleCode();
 					int reassignType = status.getReasssignType() != null ? status
 							.getReasssignType() : 0;
-
-					// filter by user name
-					if(StringUtils.isNotBlank(getManagedBean().getSearchUserName())){
-						searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(
-									"userName",
-									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getSearchUserName(),true));
-					}
 					
-					switch (reassignType) {
-					//1 - Normal Reassignment
-					case 1:
-						if (ModuleCodeConst.CONTRACT_MANAGEMENT
-								.equalsIgnoreCase(moduleCode)) {
-							roleList = retrieveCtRoles(task);
-						} else if (ModuleCodeConst.SUPPLIER_SELECTION
-								.equalsIgnoreCase(moduleCode)) {
-							roleList = retrieveSourcingRoles(task);
-						}
-
-						// same org profile id
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"pmUserOrgs.pmOrgProfile.orgProfileId",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										orgProfileId));
-						break;
-					// case 2:
-					//
-					// break;
-					case 3:
-						//3 - Cross PTJ
-						if (ModuleCodeConst.SUPPLIER_SELECTION
-								.equalsIgnoreCase(moduleCode)) {
-							orgProfile = retrieveSourcingOrgProfile(task);
-						}
-
-						if (orgProfile != null) {
-							if (OrganizationType.MINISTRY.value().equals(
-									orgProfile.getOrgTypeCode().getParameterCode())) {
-								// PTJ under same ministry
-								searchBean
-										.getDataFilterBeans()
-										.add(new SearchFilterBean(
-												OrgProfileUtil
-														.getSearchBeanParentString(OrganizationType.MINISTRY
-																.value()),
-												SearchOperator.OPERATOR_EQUALS
-														.value(), orgProfile
-														.getOrgProfileId()));
-							} else if (OrganizationType.DIVISION.value().equals(
-									orgProfile.getOrgTypeCode().getParameterCode())) {
-								// same org profile id
-								searchBean
-										.getDataFilterBeans()
-										.add(new SearchFilterBean(
-												"pmUserOrgs.pmOrgProfile.orgProfileId",
-												SearchOperator.OPERATOR_EQUALS
-														.value(), orgProfile
-														.getOrgProfileId()));
+					// 99 - MIXTURE(Sub Reassign Type)
+					if(reassignType == ProfileManagementConst.REASSIGN_TYPE_MIXTURE){
+						roleList = retrieveSourcingRoles(task);
+						if(!roleList.isEmpty()){
+							PmStatusRole statusRole = PmCommonUtil.retrieveStatusRoleByStatusIdAndRoleCode(task.getDocStatus().longValue(), roleList.get(0));
+							if(statusRole != null && statusRole.getReasssignType() !=null){
+								reassignType = statusRole.getReasssignType();
+								resultBean = generateUserResultBean(status , searchBean, task,reassignType);
 							}
-						} else {
-							// not allow to search
-							searchBean.getDataFilterBeans().add(
-									new SearchFilterBean(
-											"pmUserOrgs.pmOrgProfile.orgProfileId",
-											SearchOperator.OPERATOR_EQUALS.value(),
-											0));
 						}
-
-						break;
-					case 4:
-						//4 - Include User under Ministry, Kumpulan PTJ & PTJ
-						Long actualOrgProfileId = null;
-						if (ModuleCodeConst.PROCUREMENT_PLAN
-								.equalsIgnoreCase(moduleCode)) {
-							actualOrgProfileId = retrievePpOrgProfile(task);
-						}
-						if(actualOrgProfileId != null){
-							roleList = retrieveAvailableRoles(task.getDocStatus()
-								.longValue(),reassignType);
-							resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
-									actualOrgProfileId,
-									roleList,
-									false,
-									null,
-									new ArrayList<Long>(Arrays.asList(userId,
-											getFacesScopes().getUserSessionBean()
-													.getUserId())),searchBean);
-							isSearched = true;
-						}else{
-							// not allow to search
-							searchBean.getDataFilterBeans().add(
-									new SearchFilterBean(
-											"pmUserOrgs.pmOrgProfile.orgProfileId",
-											SearchOperator.OPERATOR_EQUALS.value(),
-											0));
-						}
-						
-						break;
-					case 5:
-						//5 - Include User for Naik Taraf & PTJ
-						roleList = retrieveAvailableRoles(task.getDocStatus()
-								.longValue(),reassignType);
-						resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
-								orgProfileId,
-								roleList,
-								true,
-								ParameterConst.ORG_AUTH_TYPE_ORG_GROUP,
-								new ArrayList<Long>(Arrays.asList(userId,
-										getFacesScopes().getUserSessionBean()
-												.getUserId())),searchBean);
-						isSearched = true;
-						break;
-					case 6:
-						//6 - User Group
-						Long userGroupId = null;
-						if (ModuleCodeConst.SUPPLIER_SELECTION
-								.equalsIgnoreCase(moduleCode)) {
-							userGroupId = retrieveSourcingUserGroupId(task);
-						}else if (ModuleCodeConst.ORDER_FULFILLMENT
-								.equalsIgnoreCase(moduleCode)) {
-							
-						}
-						
-						if(userGroupId != null){
-							resultBean = retrieveUserGroupUserListByUserGroupId(
-									userGroupId,
-									null,
-									new ArrayList<Long>(Arrays.asList(userId,
-									getFacesScopes().getUserSessionBean()
-									.getUserId())));
-							isSearched = true;
-						}else{
-							// not allow to search
-							searchBean.getDataFilterBeans().add(
-									new SearchFilterBean(
-											"pmUserOrgs.pmOrgProfile.orgProfileId",
-											SearchOperator.OPERATOR_EQUALS.value(),
-											0));
-						}
-						break;
-					case 7:
-						//7 - Delivery Address
-						// not allow to search
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"pmUserOrgs.pmOrgProfile.orgProfileId",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										0));
-						break;
-
-					default:
-						throw new EpException(MessageConst.ERROR_770095,
-								new String[] {"reassignType:"+ reassignType +" is not valid." });
-					}
-
-					if(!isSearched){
-						// Filter By user status
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("recordStatusFlg",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										DbValueConst.RECORD_STATUS_ACTIVE));
-						
-						// Filter By user org status
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmUserOrgs.recordStatusFlg",
-											SearchOperator.OPERATOR_EQUALS.value(),
-											DbValueConst.RECORD_STATUS_ACTIVE));		
-
-						// Filter By role status
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmUserOrgs.pmUserRoles.recordStatusFlg",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										DbValueConst.RECORD_STATUS_ACTIVE));	
-
-						// not current selected user and not current login user
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("userId",
-										SearchOperator.OPERATOR_NOT_IN.value(),
-										new ArrayList<Long>(Arrays.asList(userId,
-												getFacesScopes().getUserSessionBean()
-														.getUserId()))));
-
-						if (roleList.isEmpty()) {
-							roleList = retrieveAvailableRoles(task.getDocStatus()
-									.longValue(),reassignType);
-						}
-
-						// in applicable to roles
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"pmUserOrgs.pmUserRoles.pmRole.roleCode",
-										SearchOperator.OPERATOR_IN.value(), roleList));
-						
-						// Order by user name
-						searchBean.getSortColumns().add(new SearchOrderBean("userName"));
-
-						resultBean = PmCommonUtil.searchUsersResultBeanBySearchBean(searchBean);
+					}else{
+						resultBean = generateUserResultBean(status, searchBean, task,reassignType);
 					}
 					return resultBean;
-
 				}
 			
 		}catch(Exception e){
@@ -1595,6 +1397,243 @@ public class TaskReassignmentBackingBean extends
 			.setSearched(false);
 		this.getManagedBean().setTaskLazy(false);
 		taskListDataModel.resetData();
+	}
+	
+	private ISearchResultBean<PmUser> generateUserResultBean(
+			PmStatus status , ISearchBean<PmUser> searchBean,WorklistItemVO task ,int reassignType){
+		PmOrgProfile orgProfile = null;
+		List<String> roleList = new ArrayList<>();
+		String moduleCode = status.getModuleCode();
+		ISearchResultBean<PmUser> resultBean = null;
+		boolean isSearched = false;
+		Long orgProfileId = getManagedBean()
+						.getTaskAssignmentSearchBean().getOrgProfile()
+						.getOrgProfileId();
+		Long userId = getManagedBean()
+				.getTaskAssignmentSearchBean().getUser().getUserId();
+		
+		// filter by user name
+		if(StringUtils.isNotBlank(getManagedBean().getSearchUserName())){
+			searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(
+						"userName",
+						SearchOperator.OPERATOR_LIKE.value(),
+						getManagedBean().getSearchUserName(),true));
+		}
+		
+		switch (reassignType) {
+		case ProfileManagementConst.REASSIGN_TYPE_COMMON:
+			//1 - Normal Reassignment
+			if (ModuleCodeConst.CONTRACT_MANAGEMENT
+					.equalsIgnoreCase(moduleCode)) {
+				roleList = retrieveCtRoles(task);
+			} else if (ModuleCodeConst.SUPPLIER_SELECTION
+					.equalsIgnoreCase(moduleCode)) {
+				roleList = retrieveSourcingRoles(task);
+			}
+
+			// same org profile id
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrgs.pmOrgProfile.orgProfileId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							orgProfileId));
+			break;
+		// case 2:
+		//
+		// break;
+		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
+			//3 - Cross PTJ
+			if (ModuleCodeConst.SUPPLIER_SELECTION
+					.equalsIgnoreCase(moduleCode)) {
+				orgProfile = retrieveSourcingOrgProfile(task);
+			}
+
+			if (orgProfile != null) {
+				if (OrganizationType.MINISTRY.value().equals(
+						orgProfile.getOrgTypeCode().getParameterCode())) {
+					// PTJ under same ministry
+					searchBean
+							.getDataFilterBeans()
+							.add(new SearchFilterBean(
+									OrgProfileUtil
+											.getSearchBeanParentString(OrganizationType.MINISTRY
+													.value()),
+									SearchOperator.OPERATOR_EQUALS
+											.value(), orgProfile
+											.getOrgProfileId()));
+				} else if (OrganizationType.DIVISION.value().equals(
+						orgProfile.getOrgTypeCode().getParameterCode())) {
+					// same org profile id
+					searchBean
+							.getDataFilterBeans()
+							.add(new SearchFilterBean(
+									"pmUserOrgs.pmOrgProfile.orgProfileId",
+									SearchOperator.OPERATOR_EQUALS
+											.value(), orgProfile
+											.getOrgProfileId()));
+				}
+			} else {
+				// not allow to search
+				disableSearchForSearchBean(searchBean);
+			}
+
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
+			//4 - Include User under Ministry, Kumpulan PTJ & PTJ
+			Long actualOrgProfileId = null;
+			if (ModuleCodeConst.PROCUREMENT_PLAN
+					.equalsIgnoreCase(moduleCode)) {
+				actualOrgProfileId = retrievePpOrgProfile(task);
+			}
+			if(actualOrgProfileId != null){
+				roleList = retrieveAvailableRoles(task.getDocStatus()
+					.longValue(),reassignType);
+				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
+						actualOrgProfileId,
+						roleList,
+						false,
+						null,
+						new ArrayList<Long>(Arrays.asList(userId,
+								getFacesScopes().getUserSessionBean()
+										.getUserId())),searchBean);
+				isSearched = true;
+			}else{
+				// not allow to search
+				disableSearchForSearchBean(searchBean);
+			}
+			
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_NAIK_TARAF_PTJ:
+			//5 - Include User for Naik Taraf & PTJ
+			roleList = retrieveAvailableRoles(task.getDocStatus()
+					.longValue(),reassignType);
+			resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
+					orgProfileId,
+					roleList,
+					true,
+					ParameterConst.ORG_AUTH_TYPE_ORG_GROUP,
+					new ArrayList<Long>(Arrays.asList(userId,
+							getFacesScopes().getUserSessionBean()
+									.getUserId())),searchBean);
+			isSearched = true;
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_USER_GROUP:
+			//6 - User Group
+			Long userGroupId = null;
+			if (ModuleCodeConst.SUPPLIER_SELECTION
+					.equalsIgnoreCase(moduleCode)) {
+				userGroupId = retrieveSourcingUserGroupId(task);
+			}else if (ModuleCodeConst.ORDER_FULFILLMENT
+					.equalsIgnoreCase(moduleCode)) {
+				
+			}
+			
+			if(userGroupId != null){
+				resultBean = retrieveUserGroupUserListByUserGroupId(
+						userGroupId,
+						null,
+						new ArrayList<Long>(Arrays.asList(userId,
+						getFacesScopes().getUserSessionBean()
+						.getUserId())));
+				isSearched = true;
+			}else{
+				// not allow to search
+				disableSearchForSearchBean(searchBean);
+			}
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_DEL_ADDRESS:
+			//7 - Delivery Address
+			// not allow to search
+			disableSearchForSearchBean(searchBean);
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ_NAIK_TARAF:
+			//8 - Include user for Ministry, Kumpulan PTJ, PTJ & Naik Taraf
+		
+			if (ModuleCodeConst.SUPPLIER_SELECTION
+					.equalsIgnoreCase(moduleCode)) {
+				orgProfile = retrieveSourcingOrgProfile(task);
+			}
+			if(orgProfile != null){
+				roleList = retrieveAvailableRoles(task.getDocStatus()
+					.longValue(),reassignType);
+				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
+						orgProfile.getOrgProfileId(),
+						roleList,
+						true,
+						null,
+						new ArrayList<Long>(Arrays.asList(userId,
+								getFacesScopes().getUserSessionBean()
+										.getUserId())),searchBean);
+				isSearched = true;
+			}else{
+				// not allow to search
+				disableSearchForSearchBean(searchBean);
+			}
+			break;
+		default:
+			// not allow to search
+			disableSearchForSearchBean(searchBean);
+		}
+		
+		if(!isSearched){
+			// Filter By user status
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+			
+			// Filter By user org status
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));		
+
+			// Filter By role status
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmUserRoles.recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));	
+
+			// not current selected user and not current login user
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("userId",
+							SearchOperator.OPERATOR_NOT_IN.value(),
+							new ArrayList<Long>(Arrays.asList(userId,
+									getFacesScopes().getUserSessionBean()
+											.getUserId()))));
+
+			if (roleList.isEmpty()) {
+				roleList = retrieveAvailableRoles(task.getDocStatus()
+						.longValue(),reassignType);
+			}
+
+			if (!roleList.isEmpty()) {
+				// in applicable to roles
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmUserOrgs.pmUserRoles.pmRole.roleCode",
+								SearchOperator.OPERATOR_IN.value(), roleList));
+			}
+		
+			
+			// Order by user name
+			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
+
+			resultBean = PmCommonUtil.searchUsersResultBeanBySearchBean(searchBean);
+		}
+		
+		return resultBean;
+		
+	}
+	
+	private void disableSearchForSearchBean(ISearchBean<PmUser> searchBean){
+		// not allow to search
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(
+				"pmUserOrgs.pmOrgProfile.orgProfileId",
+				SearchOperator.OPERATOR_EQUALS.value(),
+				0));
 	}
 	
 	
