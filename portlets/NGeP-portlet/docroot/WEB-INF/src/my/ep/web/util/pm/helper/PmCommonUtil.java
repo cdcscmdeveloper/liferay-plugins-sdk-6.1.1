@@ -107,6 +107,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusRole;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDesignatedArea;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
@@ -2293,6 +2294,35 @@ public class PmCommonUtil {
 		} finally {
 			userSO = null;
 		}		
+		return null;
+	}
+	
+	/**
+	 * retrieve status roles by status id and role code
+	 * 
+	 * @param statusId
+	 * @param roleCode
+	 * @return List<String>
+	 */
+	public static PmStatusRole retrieveStatusRoleByStatusIdAndRoleCode(Long statusId,String roleCode) {
+		log.info("retrieveStatusRoleByStatusIdAndRoleCode");
+		IStatusSO statusSO = null;	
+		try {
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			statusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			reqDTO.setStatusId(statusId);
+			reqDTO.setRoleCode(roleCode);
+			StatusResDTO resDTO = statusSO.retrieveStatusRoleByStatusIdAndRoleCode(reqDTO);
+			if (resDTO.isSuccessful()) {
+				return resDTO.getPmStatusRole();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			statusSO = null;
+		}
 		return null;
 	}
 
