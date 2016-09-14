@@ -417,10 +417,10 @@ public class SmSideMenuIconUtil {
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
 							.getMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode())
+							.getSupportingDocMode(),bean.isApproverUser())
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
 							.getNonMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode())) {
+							.getSupportingDocMode(),bean.isApproverUser())) {
 				retVal = ICON_TICK;
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)

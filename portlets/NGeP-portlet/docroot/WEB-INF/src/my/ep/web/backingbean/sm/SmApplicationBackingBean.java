@@ -43,7 +43,6 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -2354,6 +2353,7 @@ public class SmApplicationBackingBean extends
 					.isApproverUser()) && currentTab < outputTab) {
 				validSave = SmApplicationUtil.checkSupportDocsValidity(
 						validSave, getManagedBean(), currentTab);
+				copyPoVerifiedDocsToApprover();
 			}
 
 		default:
@@ -3941,7 +3941,12 @@ public class SmApplicationBackingBean extends
 		if (!SmCommonUtil
 				.isCollectionEmpty(getManagedBean().getMandatoryDocs())) {
 			for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
-				doc.setVerifiedFlg(1);
+				if (getManagedBean().isPoUser()) {
+					doc.setVerifiedFlg(1);
+				}
+				if (getManagedBean().isApproverUser()) {
+					doc.setApproverVerifiedFlg(1);
+				}
 			}
 		}
 	}
@@ -4045,17 +4050,16 @@ public class SmApplicationBackingBean extends
 							.equalsIgnoreCase(
 									SupplierManagementConst.ICT_CATEGORY_L1_CODE)) {
 				if (!(getManagedBean().getSelectedCategory().getPmCategoryL2()
-						.getCategoryL2Code() != null
-						&& getManagedBean()
-								.getSelectedCategory()
-								.getPmCategoryL2()
-								.getCategoryL2Code()
-								.equalsIgnoreCase(
-										SupplierManagementConst.ICT_L2_COMMUNICATION_CODE))) {
+						.getCategoryL2Code() != null && getManagedBean()
+						.getSelectedCategory()
+						.getPmCategoryL2()
+						.getCategoryL2Code()
+						.equalsIgnoreCase(
+								SupplierManagementConst.ICT_L2_COMMUNICATION_CODE))) {
 					validCat = SmApplicationUtil.validateIctCatCode(
-							getManagedBean().getBusinessTypeVal(), getManagedBean()
-									.getSmAppl(), getManagedBean()
-									.getSelectedCategory());	
+							getManagedBean().getBusinessTypeVal(),
+							getManagedBean().getSmAppl(), getManagedBean()
+									.getSelectedCategory());
 				}
 			}
 		}
@@ -10580,6 +10584,26 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getMandatoryDocs().add(doc);
 					} else {
 						getManagedBean().getNonMandatoryDocs().add(doc);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Initialized and copy PO doc verified flag to Approver Verified flag for
+	 * first time
+	 */
+	private void copyPoVerifiedDocsToApprover() {
+		// set copy po verified to approver verified
+		if (getManagedBean().isApproverUser()) {
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+					.getSmApplSupportDocs())) {
+				for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+						.getSmApplSupportDocs()) {
+					if (doc.getApproverVerifiedFlg() == null
+							&& doc.getVerifiedFlg() != null) {
+						doc.setApproverVerifiedFlg(doc.getVerifiedFlg());
 					}
 				}
 			}
