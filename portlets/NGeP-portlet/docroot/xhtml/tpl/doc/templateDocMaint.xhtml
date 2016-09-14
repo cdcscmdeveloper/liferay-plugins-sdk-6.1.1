@@ -152,7 +152,7 @@
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
 						</p:commandLink>
 						<p:spacer width="5px" />
-						<p:commandLink action="#{templateDocBackingBean.deleteNode}" update=":form" disabled="#{templateDocBackingBean.managedBean.readOnlyFlag}" >
+						<p:commandLink  update=":form" disabled="#{templateDocBackingBean.managedBean.readOnlyFlag}" oncomplete="confirmation1.show();" >
 							<!-- oncomplete="popupsEdit.show();return false;" update=":form:popupsEdit"> -->							 
 							<h:graphicImage value="/css/images/design/delete.png" />
 							<f:setPropertyActionListener value="#{document}"
@@ -173,6 +173,20 @@
 				</h:panelGroup>
 			</h:panelGrid>
 		</p:panel>
+		
+		
+		<p:confirmDialog message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}"
+				header="#{lbl['lbl.cm.dialog.cofirm.header']}"
+				widgetVar="confirmation1">
+				<p:commandButton id="conf"
+					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+					actionListener="#{templateDocBackingBean.deleteNode}"
+					update="@form" oncomplete="confirmation1.hide()" />
+				<p:commandButton id="decline"
+					value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+					onclick="confirmation1.hide()" />
+				<h:inputHidden id="rowIndex"></h:inputHidden>
+			</p:confirmDialog>
 
 		<p:dialog id="popupEdit" widgetVar="popupEdit" modal="false"
 			resizable="false" header="#{lbl['lbl.tpl.doc.edit.content']}" width="650" height="460">
