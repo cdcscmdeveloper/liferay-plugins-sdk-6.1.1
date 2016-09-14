@@ -6108,10 +6108,10 @@ public class SupplierFinalizationBackingBean extends
 					resultBean = resDTO.getQualifiedSuppliersByEvalStage();
 					List<ScQtEvaluationResultDtl> qualifiedSuppliers = 
 												    	resultBean.getResultList();
-					selectedZoneId = (selectedZoneId == null ? DEFAULT_ZONE : selectedZoneId);
+					Long zoneId = (selectedZoneId == null ? DEFAULT_ZONE : selectedZoneId);
 					selectedItemId = (selectedItemId == null ? DEFAULT_ITEM : selectedItemId);
 					List<QtEvaluationResultDtlBean> cachedSuppliers = 
-							getCachedSuppliersFromMap(selectedZoneId, selectedItemId);
+							getCachedSuppliersFromMap(zoneId, selectedItemId);
 					
 					if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 						if (selectedItem != null) {
@@ -6137,15 +6137,15 @@ public class SupplierFinalizationBackingBean extends
 									getManagedBean().setRecommendedSupplier(qualSupplier);
 								} else {
 									recommendationBean = updateCachedData(qualSupplier, 
-															selectedZoneId, selectedItemId);
+											zoneId, selectedItemId);
 								}
 							} else if (qualSupplier.isAwareded()) {
 								recommendationBean = updateCachedData(qualSupplier, 
-														selectedZoneId, selectedItemId);
+										zoneId, selectedItemId);
 								getManagedBean().setRecommendedSupplier(qualSupplier);
 							} else {
 								recommendationBean = updateCachedData(qualSupplier, 
-														selectedZoneId, selectedItemId);
+										zoneId, selectedItemId);
 							}
 							
 							if (selectedItem != null) {
@@ -6170,12 +6170,12 @@ public class SupplierFinalizationBackingBean extends
 										recommendationBean.getBidRank() != null) {
 									
 									List<ScQtRecommend> items = null;
-									if (DEFAULT_ZONE.equals(selectedZoneId)) {
+									if (DEFAULT_ZONE.equals(zoneId)) {
 										items = getManagedBean().getScQtFinalization()
 															    .getScQtRecommends();
 									} else {
 										items = getManagedBean().getScQtFinalization()
-											    	.getScQtRecommendsByZone().get(selectedZoneId);									
+											    	.getScQtRecommendsByZone().get(zoneId);									
 									}
 									calculateBidPrice(items, recommendationBean);
 								}
