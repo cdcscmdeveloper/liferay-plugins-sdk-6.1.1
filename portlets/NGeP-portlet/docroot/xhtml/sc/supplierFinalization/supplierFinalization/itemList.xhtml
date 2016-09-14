@@ -87,16 +87,16 @@
 					<h:outputText value="#{lbl['lbl.sc.recommended.supplier']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.recommended.supplier.tooltip']}" />
 				</f:facet>
-				<p:outputPanel id="selectedSupplierListTbl" rendered="#{!empty item.recommendDtls}">
+				<p:outputPanel id="selectedSupplierListTbl" rendered="#{not empty item.selectedSuppliers}">
 								
 					<div class="datalist-noborder">
-						<p:dataList var="recommendDetail" value="#{item.recommendDtls}" type="none">								   
-							<p:column rendered="#{recommendDetail.recordStatusFlg == DbValueConst.recordStatusActive}">
+						<p:dataList var="supplierCode" value="#{suppFinalizationBackingBean.getSupplierCodes(item)}" type="none">								   
+							<p:column>
 								<p:commandLink oncomplete="suppDetailsPopup.show(); return false;" process="@this" 
 							     			   update="@([id$=suppDetailsPopupId])">
-								     <f:setPropertyActionListener value="#{recommendDetail.supplier}" 
+								     <f:setPropertyActionListener value="#{item.selectedSuppliers.get(supplierCode)}" 
 								      							  target="#{supplierDetailBackingBean.smSupplier}" />
-								     <h:outputText value="#{recommendDetail.scQtProposalAmount.scQtProposal.supplierNo}" />
+								     <h:outputText value="#{supplierCode}" />
 							    </p:commandLink>								
 								<br/>
 							</p:column>
