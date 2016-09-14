@@ -493,11 +493,21 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.COORDINATE_FC_MEETING,
 					SourcingConstants.NAV_PAGE_FC_COORDINATE_MEETING);
 
+			// TODO - to be remove after new version 0.5.3 bpm deployed.
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_FC_SECRETARY, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+					+ SCProcessNameConst.ASSIGN_FC_SECRETARY, 
+					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
+					+ SCProcessNameConst.ASSIGN_FC_MEMBER, 
+					SourcingConstants.NAV_PAGE_FC_APPOINT_MEMBERS);
+			
+			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+					+ SCProcessNameConst.ASSIGN_FC_SECRETARY, 
+					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
-			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_FC_MEMBER, "appoint-fc-committee");
+			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+					+ SCProcessNameConst.ASSIGN_FC_MEMBER, 
+					SourcingConstants.NAV_PAGE_FC_APPOINT_MEMBERS);
 
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE,
