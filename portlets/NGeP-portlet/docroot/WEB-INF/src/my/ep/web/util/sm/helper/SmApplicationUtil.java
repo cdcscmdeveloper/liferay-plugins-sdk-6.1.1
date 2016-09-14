@@ -4922,13 +4922,19 @@ public class SmApplicationUtil {
 		if (validForApproval) {
 			if (!EntityHelper.isCollectionEmpty(managedBean.getMandatoryDocs())) {
 				for (SmApplSupportDoc doc : managedBean.getMandatoryDocs()) {
+					
+//					if (managedBean.isApproverUser()
+//							&& doc.getApproverVerifiedFlg() == null
+//							|| (doc.getApproverVerifiedFlg() != null && doc
+//									.getApproverVerifiedFlg().compareTo(0) == 0)) {
+//						validForApproval = false;
+//						break;
+//					}
 					if (doc.getVerifiedFlg() == null
 							|| (doc.getVerifiedFlg() != null && doc
 									.getVerifiedFlg().compareTo(0) == 0)) {
 						validForApproval = false;
 						break;
-					} else {
-						validForApproval = true;
 					}
 				}
 			}
@@ -8239,10 +8245,11 @@ public class SmApplicationUtil {
 	 * @return boolean
 	 */
 	public static boolean isAllSuppDocAlreadyVerified(
-			List<SmApplSupportDoc> docs, String suppDocMode) {
+			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver) {
 		boolean retVal = true;
 		for (SmApplSupportDoc doc : docs) {
-			if (doc.getVerifiedFlg() == null) {
+			if ((approver && doc.getApproverVerifiedFlg() == null)
+					|| (!approver && doc.getVerifiedFlg() == null)) {
 				if (suppDocMode != null
 						&& suppDocMode
 								.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
