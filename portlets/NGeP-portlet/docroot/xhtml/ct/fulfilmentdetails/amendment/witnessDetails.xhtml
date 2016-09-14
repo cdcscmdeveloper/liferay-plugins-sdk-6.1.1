@@ -14,8 +14,8 @@
 	  	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.email']}" escape="false"/><br/><br/>
 		<h:panelGrid columns="2"  columnClasses="columnWidth225">
 		   
-		     <p:outputLabel value="#{lbl['lbl.ct.ic.no']}"  styleClass="required"/>
-             <p:inputText id="icNo"  style="width:300px;"  label="#{lbl['lbl.ct.ic.no']}" maxlength="15"
+		     <p:outputLabel value="#{lbl['lbl.ct.identification.no']}"  styleClass="required"/>
+             <p:inputText id="icNo"  style="width:300px;"  label="#{lbl['lbl.ct.identification.no']}" maxlength="15"
 			       value="#{amendmentBackingBean.managedBean.scLoaWitness.identificationNo}"
 			       disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails
 			       	or !bpmTasklistBackingBean.managedBean.claim}" />

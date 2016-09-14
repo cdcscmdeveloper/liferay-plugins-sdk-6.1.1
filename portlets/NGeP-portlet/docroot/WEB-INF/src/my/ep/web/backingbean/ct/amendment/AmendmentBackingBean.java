@@ -1429,7 +1429,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						|| getManagedBean().getScLoaWitness().getIdentificationNo().length() == 0) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.no", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.identification.no", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				if (getManagedBean().getScLoaWitness().getWitnessName() == null 
