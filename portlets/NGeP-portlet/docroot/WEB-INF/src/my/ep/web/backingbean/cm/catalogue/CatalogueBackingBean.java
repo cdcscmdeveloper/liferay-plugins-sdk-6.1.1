@@ -1770,7 +1770,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			catalogueSO = null;
 		}
 
-		return "addCatalogView?faces-redirect=true";
+		return "addCatalogViewDirectPurchase?faces-redirect=true";
 	}
 
 	/**
