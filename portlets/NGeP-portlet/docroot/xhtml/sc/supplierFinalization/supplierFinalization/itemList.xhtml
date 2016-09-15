@@ -122,8 +122,8 @@
 			
 			<p:column headerText="#{lbl['lbl.sc.req.higher.authority']}" styleClass="td-check-box-spacing" 
 					  rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
-				<p:selectBooleanCheckbox value="#{item.higherAuthReq}" disabled="#{!isSupplierFinalization or item.disabled or 
-					item.awardedItem or (item.higherAuthReq and 
+				<p:selectBooleanCheckbox value="#{item.higherAuthReq}" disabled="#{!isSupplierFinalization or item.cancelled or 
+					item.disabled or item.awardedItem or (item.higherAuthReq and 
 					suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId eq 
 						suppFinalizationBackingBean.managedBean.loggedInUserId)}">
 					<p:ajax partialSubmit="true" process="@this" update="@this"/>
