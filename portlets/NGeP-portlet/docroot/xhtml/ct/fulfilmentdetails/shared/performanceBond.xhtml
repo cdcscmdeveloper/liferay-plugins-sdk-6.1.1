@@ -10,12 +10,7 @@
 	width: 80px;
 }
 </style>
-	<p:panel id="bondId" toggleable="true" toggleSpeed="500"
-		rendered="#{ctBackingBean.managedBean.ctContractAmount.bondReq
-			and !ctBackingBean.managedBean.directPurchase
-			and !ctBackingBean.managedBean.ctContractAmount.bondExempted
-			and (!ctBackingBean.managedBean.commonView
-					or ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)}">
+	<p:panel id="bondId" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
@@ -42,27 +37,27 @@
 						</p:selectBooleanCheckbox>
 				      </p:column>
 					
-					<p:column style="width:10%;"  styleClass="column-align-center">
+					<p:column style="width:15%;"  styleClass="column-align-center">
 						  <f:facet name="header">
 						        <h:outputText value="#{lbl['lbl.ct.ref.no']}"  styleClass="required"/>
 						</f:facet>
-						<p:inputText value="#{varBond.refNo}" maxlength="50" 
-							disabled="#{ctBackingBean.managedBean.viewContract}" style="width:85px;" >
-							<p:ajax process="@this"></p:ajax>
-							</p:inputText>
+						<p:inputTextarea id="bondRefNoId" value="#{varBond.refNo}" maxlength="50" autoResize="false"
+						    rows="2"  disabled="#{ctBackingBean.managedBean.viewContract}" style="width:120px;" 
+						    	onkeyup="limitTextArea(this,50);" onkeydown="limitTextArea(this,50);">
+							</p:inputTextarea>
 					</p:column>
 				
-					<p:column style="width:23%;"  styleClass="column-align-center">
+					<p:column style="width:25%;"  styleClass="column-align-center">
 						<f:facet name="header">
 						        <h:outputText value="#{lbl['lbl.ct.financial.inst']}"  styleClass="required"/>
 						</f:facet>
 						
 						<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
-						    style="width:195px;" rendered="#{!ctBackingBean.managedBean.viewContract}">
+						    style="width:180px;" rendered="#{!ctBackingBean.managedBean.viewContract}" >
 							   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
-							   <p:ajax process="@this"></p:ajax>
-						</p:selectOneMenu>
-						
+							   <p:ajax  process="@this"></p:ajax>
+						</p:selectOneMenu>	  
+						  
 						<p:inputText value="#{varBond.financialOrgName}" style="width:180px;" disabled="true"
 							rendered="#{ctBackingBean.managedBean.viewContract}"/>
 					</p:column>
@@ -100,7 +95,7 @@
 					    </p:calendar>
 					</p:column>
 					
-					<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:35%;">
+					<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:32%;">
 						
 						
 						<h:panelGroup id="uploadBondPg" columns="2">
