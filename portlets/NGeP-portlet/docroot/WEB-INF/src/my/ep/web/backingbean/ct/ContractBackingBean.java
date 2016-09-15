@@ -3126,4 +3126,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			return address.toString();
 		}
+		
+		public boolean isPerformanceBond(){
+			if(getManagedBean().getCtContractAmount().isBondReq() && !getManagedBean().isDirectPurchase()
+					&& !getManagedBean().getCtContractAmount().isBondExempted()
+					&&(!getManagedBean().isCommonView() || 
+							getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().
+							equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) )){
+				     return  true;
+			}
+			return false;
+		}
 }
