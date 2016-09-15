@@ -116,6 +116,11 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled}"
 			actionListener="#{contractDetailsBackingBean.setTabValue('SC')}" update=":form" />
+			
+			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{ctBackingBean.isPerformanceBond()}"
+			actionListener="#{contractDetailsBackingBean.setTabValue('PB')}" update=":form" />
 		
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.factoring']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -181,7 +186,6 @@
 				             <p:outputPanel id="ctMenuIdPid" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		                              <ui:include  src="/xhtml/ct/common/purchaseInDefault.xhtml"  />
 		                       </p:outputPanel>
-				           <ui:include src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml" />
 				        <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml"  />
 				</p:outputPanel>
 				
@@ -207,6 +211,12 @@
 				      rendered="#{ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled
 				       and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.scheduleIndex}">
 					 <ui:include src="/xhtml/ct/common/schedule.xhtml" />
+				</p:outputPanel>
+				
+				<p:outputPanel id="ctMenuId13" 
+				      rendered="#{ctBackingBean.isPerformanceBond() and 
+				       contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.bondIndex}">
+					 <ui:include src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml" />
 				</p:outputPanel>
 				
 				<p:outputPanel id="ctMenuId10" 
