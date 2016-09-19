@@ -377,7 +377,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			throw new EpException(MessageConst.ERROR_721020);
 		}
 		
-		SmCommonUtil.checkEmailDomainWithExceptionMsg(smPersonnel.getName(), smPersonnel.getEmail());
 		
 		if(!smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
@@ -410,15 +409,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		validateBankInfo(this.getManagedBean().getSmAppl().getSmSupplierBanks());
 
 		if (smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)) {
-			PmParameter identificationType = new PmParameter();
-			
-			for (Map.Entry<Long, Object> entry : identityType.entrySet()) {
-					PmParameter identParam = (PmParameter) entry.getValue();
-					if(identParam.getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
-						identificationType = identParam;
-						break;
-					}
-			}
+			PmParameter identificationType = ParameterHelper.getInstance().
+					getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
+			smPersonnel.setIdentificationTypeId(identificationType.getParameterId());
+			smPersonnel.setIdentificationType(identificationType);
 			
 			PmCountry indNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 			smSupp.setServiceCategory(SupplierManagementConst.SPECIAL_SERVICE); //DEFAULT for Individual
@@ -429,26 +423,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSuppOwner.setNationality(indNationality);
 			smPersonnel.setName(smAppl.getSmCompanyBasic().getCompanyName());
 //			smPersonnel.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
-			smPersonnel.setIdentificationTypeId(identificationType.getParameterId());
 			smPersonnel.setIdentificationNo(smSupp.getRegNo());
 			smPersonnel.setPmCountry(indNationality);
+			
+			validateNewIC(smPersonnel);
 			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
 			
 			//set mobileno to company phone no
 			smAppl.getSmCompanyBasic().setPhoneNo(smPersonnel.getMobileNo());
 			
 			getManagedBean().setGstFlag(false);
-		}
-		
-		//Validate IC Length
-		this.retrieveIdentityTypeMap();
-		PmParameter personnelIDType = (PmParameter) identityType.get(smPersonnel.getIdentificationTypeId());
-		this.validateIDFormat(smPersonnel.getIdentificationNo(), personnelIDType.getParameterCode());
-		
-		//validate IC with MyIdentity
-		if(personnelIDType.getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
-			SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
-					this.getManagedBean().getSmPermenantAdd().getPostcode(), null);
 		}
 		
 		/*String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
@@ -630,6 +614,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	public void onCallFirstUserTncDialog(){
 		getManagedBean().setAggreeDeclareAdmin(false);
+		setAdminSameAsOwner();
+		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
+		
+		validateNewIC(smPersonnel);
 		RequestContext.getCurrentInstance().execute("firstUserTncDialog.show()");
 	}
 
@@ -642,8 +630,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
-		
 		if(this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
+			
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmPermenantAdd());
 		}else{
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmBusinessAdd());
@@ -2656,6 +2644,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		log.info("**********RegistrationBB - ChangeExpiredMofPersonnelToBasicJob - End************");
+	}
+	
+	private void validateNewIC(SmPersonnel smPersonnel){
+		//Validate IC Length
+		PmParameter personnelIDType = ParameterHelper.getInstance().getPmParameterById(smPersonnel.getIdentificationTypeId());
+		if(personnelIDType.getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
+			this.validateIDFormat(smPersonnel.getIdentificationNo(), personnelIDType.getParameterCode());
+		
+			//validate IC with MyIdentity
+			SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
+					this.getManagedBean().getSmPermenantAdd().getPostcode(), null);
+		}
+		
 	}
 }
 
