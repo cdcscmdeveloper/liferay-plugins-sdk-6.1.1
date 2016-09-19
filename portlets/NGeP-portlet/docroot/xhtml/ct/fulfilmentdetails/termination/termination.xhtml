@@ -282,7 +282,7 @@
      			<p:commandButton id="searchBtn" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency, selectBtn"  
        		 		action="#{terminationBackingBean.searchRecommendedAgency}" 
        				onstart="blkAgencyTable.show();" oncomplete="blkAgencyTable.hide();" /> 
-				<p:commandButton id="resetBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
+				<p:commandButton id="resetBtn" value="#{lbl['lbl.btn.reset']}" process="@this"
 					action="#{terminationBackingBean.resetSearchAgency}" update=":form:searchAgencyPanel"   />
 			</div>
 			<p:spacer height="2"/>
