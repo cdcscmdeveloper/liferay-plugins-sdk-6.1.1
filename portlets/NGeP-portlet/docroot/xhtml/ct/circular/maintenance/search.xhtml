@@ -52,7 +52,7 @@
 			<div class="ppRightBtn"> 
 				<p:commandButton id="panelSearchId" value="#{lbl['lbl.btn.search']}" action="#{circularBackingBean.searchCircular}"
 				    onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();" update="circularVerDt" />
-				<p:commandButton value="#{lbl['lbl.ct.reset']}" action="#{circularBackingBean.searchReset}"  update=":form" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{circularBackingBean.searchReset}"  update=":form" />
 			</div>		
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.ct.search.result']}" toggleable="true">
