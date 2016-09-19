@@ -311,7 +311,7 @@ rowKey="#{exemptedOrgsVar}" >
        		                              update=":form:tablePtjCode"  action="#{centralContractBackingBean.searchPtjDetails}" process="@this">
        		                        </p:commandButton> 
 			                       <p:commandButton id="resetlBtn"
-			                                  action="#{centralContractBackingBean.flushExempMisntry}"  process="@this"  value="#{lbl['lbl.ct.reset']}" 
+			                                  action="#{centralContractBackingBean.flushExempMisntry}"  process="@this"  value="#{lbl['lbl.btn.reset']}" 
 			                                 disabled="#{centralContractBackingBean.managedBean.orgTypeCode == null}" 
 			                                 update=":form:exmptedMinistryId, :form:tablePtjCode,:form:OrgTypeId" >
 			                       </p:commandButton>
