@@ -1560,13 +1560,16 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		}
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
 			if(null == getManagedBean().getInvoice().getAccountNo() || getManagedBean().getInvoice().getAccountNo().length()==0) {
+				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.bank.acc.no.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			} else if(null == getManagedBean().getInvoice().getSupplierInvoiceRef() || getManagedBean().getInvoice().getSupplierInvoiceRef().length()==0) {
+				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.supp.invoice.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			} else {
 				reqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
@@ -1576,6 +1579,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				FulfilmentResDTO resDTO = invoiceSO.searchDuplicateSupplierInvoiceNo(reqDTO);
 				if(resDTO.isDuplicateSupplierInvNo()){
+					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_740043, new String[]{getManagedBean().getInvoice().getSupplierInvoiceRef(),getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getSupplierName()});
 				}
 			}
