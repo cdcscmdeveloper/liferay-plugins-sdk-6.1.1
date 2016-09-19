@@ -384,6 +384,21 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Retrieve parameter by parameter ID
+	 * 
+	 * @param Long
+	 *            parameterId
+	 * @return PmParameter
+	 */
+	public static PmParameter retrieveParameterById(Long parameterId) {
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterId(parameterId);
+		ParameterResDTO resDTO = SmServiceLookup.getParameterSO()
+				.retrieveParameterById(reqDTO);
+		return resDTO.getPmParameter();
+	}
+
+	/**
 	 * Gets the parameter description by language and pm parameter.
 	 * 
 	 * @param pmParameter
@@ -2458,7 +2473,7 @@ public class SmCommonUtil {
 	 */
 	public static SmSupplierBank getSupplierBankByRevNoAndAccNo(
 			List<SmSupplierBank> mainList, SmSupplierBank param, int revNo) {
-		SmSupplierBank retVal = null;
+		SmSupplierBank retVal = param;
 
 		// main list loop by accNo and recordStatus and revNo
 		for (SmSupplierBank tmp : mainList) {
@@ -2472,8 +2487,6 @@ public class SmCommonUtil {
 				if (tmp.getRevNo() == revNo) {
 					retVal = tmp;
 					break;
-				} else {
-					retVal = tmp;
 				}
 			}
 		}
@@ -2483,7 +2496,7 @@ public class SmCommonUtil {
 
 	public static SmStaffTotal getStaffTotalByRevNoAndCategory(
 			List<SmStaffTotal> list, SmStaffTotal param, int revNo) {
-		SmStaffTotal retVal = null;
+		SmStaffTotal retVal = param;
 
 		for (SmStaffTotal tmp : list) {
 			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
@@ -2495,8 +2508,6 @@ public class SmCommonUtil {
 				if (tmp.getRevNo().compareTo(new BigDecimal(revNo)) == 0) {
 					retVal = tmp;
 					break;
-				} else {
-					retVal = tmp;
 				}
 			}
 		}
@@ -2540,7 +2551,7 @@ public class SmCommonUtil {
 	 */
 	public static SmPersonnel getSmPersonnelByRevNoAndIdentificationNo(
 			List<SmPersonnel> mainList, SmPersonnel param, int revNo) {
-		SmPersonnel retVal = null;
+		SmPersonnel retVal = param;
 
 		// main list loop by identificationNo and recordStatus and revNo
 		for (SmPersonnel tmp : mainList) {
@@ -2551,8 +2562,6 @@ public class SmCommonUtil {
 				if (tmp.getRevNo() == revNo) {
 					retVal = tmp;
 					break;
-				} else {
-					retVal = tmp;
 				}
 			}
 		}
@@ -2572,7 +2581,7 @@ public class SmCommonUtil {
 	 */
 	public static SmChequeSignatory getSmChequeSignatoryByRevNoAndIdentificationNo(
 			List<SmChequeSignatory> mainList, SmChequeSignatory param, int revNo) {
-		SmChequeSignatory retVal = null;
+		SmChequeSignatory retVal = param;
 
 		// main list loop by identificationNo and recordStatus and revNo
 		for (SmChequeSignatory tmp : mainList) {
@@ -2587,8 +2596,6 @@ public class SmCommonUtil {
 				if (tmp.getSmPersonnel().getRevNo() == revNo) {
 					retVal = tmp;
 					break;
-				} else {
-					retVal = tmp;
 				}
 			}
 		}
@@ -2609,7 +2616,7 @@ public class SmCommonUtil {
 	public static SmAssociateCompany getSmAssociateCompanyByRevNoAndRegNo(
 			List<SmAssociateCompany> mainList, SmAssociateCompany param,
 			int revNo) {
-		SmAssociateCompany retVal = null;
+		SmAssociateCompany retVal = param;
 
 		// main list loop by regNo and recordStatus and revNo
 		for (SmAssociateCompany tmp : mainList) {
@@ -2619,8 +2626,6 @@ public class SmCommonUtil {
 				if (tmp.getRevNo() == revNo) {
 					retVal = tmp;
 					break;
-				} else {
-					retVal = tmp;
 				}
 			}
 		}
@@ -2641,7 +2646,7 @@ public class SmCommonUtil {
 	public static SmSupplierCategory getSmSupplierCategoryByRevNoAndCodeLvl(
 			List<SmSupplierCategory> mainList, SmSupplierCategory param,
 			int revNo) {
-		SmSupplierCategory retVal = null;
+		SmSupplierCategory retVal = param;
 
 		// main list loop by regNo and recordStatus and revNo
 		for (SmSupplierCategory tmp : mainList) {
@@ -2654,8 +2659,6 @@ public class SmCommonUtil {
 				if (tmp.getRevNo() == revNo) {
 					retVal = tmp;
 					break;
-				} else {
-					retVal = tmp;
 				}
 			}
 		}
@@ -2675,9 +2678,9 @@ public class SmCommonUtil {
 	 */
 	public static SmSupplierBranch getSmSupplierBranchByRevNoAndName(
 			List<SmSupplierBranch> mainList, SmSupplierBranch param, int revNo) {
-		SmSupplierBranch retVal = null;
+		SmSupplierBranch retVal = param;
 
-		// main list loop by name and recordStatus and revNo
+		// main list loop by name,address and revNo
 		for (SmSupplierBranch tmp : mainList) {
 			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 					&& StringUtils.isNotBlank(tmp.getBranchName())
@@ -2688,8 +2691,6 @@ public class SmCommonUtil {
 								tmp.getSmAddress()) && tmp.getRevNo() == revNo) {
 					retVal = tmp;
 					break;
-				} else {
-					retVal = tmp;
 				}
 			}
 		}
