@@ -3154,14 +3154,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					}
 				}
 				if(getManagedBean().getFulfilmentRequest().getTitle() == null || getManagedBean().getFulfilmentRequest().getTitle().trim().length() < 1){
+					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.title",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 					if(getManagedBean().getSelectedApprover() == null){
+						getManagedBean().setSelectedTabIndex(4);
 						throw new EpException(MessageConst.ERROR_750010);
 					}
 				}
 				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()==0) {
+					getManagedBean().setSelectedTabIndex(1);
 					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}else{
 					checkReceivingOfficerList();
