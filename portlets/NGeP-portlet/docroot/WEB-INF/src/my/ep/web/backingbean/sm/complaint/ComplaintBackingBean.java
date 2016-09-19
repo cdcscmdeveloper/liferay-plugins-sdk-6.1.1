@@ -299,6 +299,10 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 			label = SmCommonUtil.getMessage("lbl.sm.complainant.myidentity.status.invalid", new String[]{});
 		}
 		
+		if(label != null){
+			return SmCommonUtil.getMessage(label, null);
+		}
+		
 		return label;
 	}
 	
@@ -317,6 +321,11 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 				label = SmCommonUtil.getMessage("lbl.sm.complainant.myidentity.residential.non.citizen", new String[]{});
 			}
 		}
+		
+		if(label != null){
+			return SmCommonUtil.getMessage(label, null);
+		}
+
 
 		return label;
 	}
