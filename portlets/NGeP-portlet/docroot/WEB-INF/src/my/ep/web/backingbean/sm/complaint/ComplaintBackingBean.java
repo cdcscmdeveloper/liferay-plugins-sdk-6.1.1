@@ -16,15 +16,21 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.primefaces.event.FileUploadEvent;
+
 import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sm.DisciplinaryActionConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.myidentity.DiMyidentityReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -34,6 +40,7 @@ import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.complaint.ComplaintResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.DiMyidentity;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -60,10 +67,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.primefaces.event.FileUploadEvent;
-
 @ManagedBean(name = "complaintBackingBean")
 @RequestScoped
 public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> {
@@ -81,7 +84,9 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		String complNo = String.valueOf((new Date()).getTime());
 		Date date = new Date();
 		Timestamp currDate = new Timestamp(date.getTime());
-
+		
+		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
+		
 		this.getManagedBean().getSmComplaint().setComplaintDate(currDate);
 		this.getManagedBean().getSmComplaint().setComplaintNo(complNo);
 		this.getManagedBean().getSmComplaint().setComplaintCategory("O");
@@ -98,7 +103,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 			}
 		}
 		
-		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
+		
 		reqDTO.setAttachmentLs(getManagedBean().getComplaintDocs());
 		
 		IComplaintSO reqSO = (IComplaintSO) BusinessDelegate.getInstance()
@@ -107,13 +112,14 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		ComplaintResDTO resDTO = reqSO.lodgeComplaint(reqDTO);
 
 		renewSesionObject();
-/*		FacesContext.getCurrentInstance().addMessage(null,
+		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"Your complaint has been submitted successfully",""));*/
+				"Your complaint has been submitted successfully",""));
 		
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 				MessageUtils.getMessage(MessageConst.INFO_723000 , new String[]{complNo}, 
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+		
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 
@@ -127,20 +133,39 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IComplaintSO.class);
 		reqDTO.setComplaintId(this.getManagedBean().getComplaintId());
 		ComplaintResDTO resDTO = reqSO.retrieveComplaintInfoById(reqDTO);
-
-		log.info("--------------statusId-------------------"
-				+ resDTO.getSmComplaint().getPmStatus().getStatusId());
-
+		
 		getManagedBean().setSmComplaint(resDTO.getSmComplaint());
 		getManagedBean().setSmComplainant(resDTO.getSmComplaint().getSmComplainant());
+		SmComplaint complaint = getManagedBean().getSmComplaint();
+		
+		//retrieve complainant MyIdentity Info
+		DiMyidentityReqDTO diMyidentityReqDTO = new DiMyidentityReqDTO();
+		diMyidentityReqDTO.setDocId(complaint.getSmComplainant().getComplainantId());
+		diMyidentityReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLIER_COMPLAINT);
+		
+		DiMyidentity diMyidentity = 
+				SmServiceLookup.getDiMyidentitySO().retrieveDiMyIdentityByDocIdAndType(diMyidentityReqDTO).getDiMyidentity();
+		getManagedBean().setDiMyidentity(diMyidentity);
+		getManagedBean().setMyIdentityStatusDesc(getMyIdentityStatusDesc());
+		getManagedBean().setMyIdentityResidentialStatus(getMyIdentityResidentialStatusDesc());
+		
+		if(diMyidentity != null){
+			PmState pmState = SmCommonUtil.getInstance().getStateById(Long.valueOf(diMyidentity.getStateCode()));
+			if(pmState != null){
+				diMyidentity.setStateDesc(pmState.getStateName());
+			}
+		}
+		log.info("--------------statusId-------------------"+ resDTO.getSmComplaint().getPmStatus().getStatusId());
+
+
 		/*getManagedBean().setSmComplReview(new SmComplaintReview());*/
 		log.info("--------------complaint Review Ls---------" + getManagedBean().getSmComplaint().getSmComplaintReviews().size());
-		if(getManagedBean().getSmComplaint().getSmComplaintReviews() == null){
-			getManagedBean().getSmComplaint().setSmComplaintReviews(new ArrayList<SmComplaintReview>());
+		if(complaint.getSmComplaintReviews() == null){
+			complaint.setSmComplaintReviews(new ArrayList<SmComplaintReview>());
 		}
 		
-		if(getManagedBean().getSmComplaint().getSmComplaintOffenses() == null){
-			getManagedBean().getSmComplaint().setSmComplaintOffenses(new ArrayList<SmComplaintOffense>());
+		if(complaint.getSmComplaintOffenses() == null){
+			complaint.setSmComplaintOffenses(new ArrayList<SmComplaintOffense>());
 		}
 		
 		getManagedBean().setSelectedOffenses(new ArrayList<String>());
@@ -256,6 +281,44 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		this.getManagedBean().setComplaintId(complId);
 		this.retrieveComplaintInfo();
 		return "complaintMain";
+	}
+	
+	public String getMyIdentityStatusDesc(){
+		String label = null;
+		
+		if(getManagedBean().getDiMyidentity() != null){
+			log.info("***getMyIdentityStatusDesc****" + getManagedBean().getDiMyidentity().getMyidentityStatus());
+			if(my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_RECORD_STATUS_ACTIVE.
+					contains(getManagedBean().getDiMyidentity().getMyidentityStatus())){
+				label = SmCommonUtil.getMessage("lbl.sm.complainant.myidentity.status.active", new String[]{});
+			}else if(my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_RECORD_STATUS_DEAD.
+					contains(getManagedBean().getDiMyidentity().getMyidentityStatus())){
+				label = SmCommonUtil.getMessage("lbl.sm.complainant.myidentity.status.dead", new String[]{});
+			}
+		}else{
+			label = SmCommonUtil.getMessage("lbl.sm.complainant.myidentity.status.invalid", new String[]{});
+		}
+		
+		return label;
+	}
+	
+	public String getMyIdentityResidentialStatusDesc(){
+		String label = null;
+		
+		if(getManagedBean().getDiMyidentity() != null){
+			if(my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_RESIDENTIAL_STATUS_CITIZEN.
+					contains(getManagedBean().getDiMyidentity().getResidentialStatus())){
+				label = SmCommonUtil.getMessage("lbl.sm.complainant.myidentity.residential.citizen", new String[]{});
+			}else if(my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_RESIDENTIAL_STATUS_PERMENANT.
+					contains(getManagedBean().getDiMyidentity().getResidentialStatus())){
+				label = SmCommonUtil.getMessage("lbl.sm.complainant.myidentity.residential.permenant", new String[]{});
+			}else if(my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_RESIDENTIAL_STATUS_NON_CITIZEN.
+					contains(getManagedBean().getDiMyidentity().getResidentialStatus())){
+				label = SmCommonUtil.getMessage("lbl.sm.complainant.myidentity.residential.non.citizen", new String[]{});
+			}
+		}
+
+		return label;
 	}
 
 /*	public String outputMsg(boolean succ, String msg) {
@@ -950,8 +1013,6 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		
 		return jkttReview;
 	}
-	
-	
 	
 }
 	
