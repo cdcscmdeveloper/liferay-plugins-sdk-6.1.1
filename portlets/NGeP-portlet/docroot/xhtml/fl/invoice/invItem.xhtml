@@ -60,16 +60,18 @@
 						value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}"
-				style="white-space:normal;text-align:center">
-				<f:facet name="footer">
-					<h:outputText value=""></h:outputText>
-				</f:facet>
-				<h:outputText value="#{lbl['lbl.txt.na']}"
-					rendered="#{chargeLineNode.level == 3}" style="float:right;">
-				</h:outputText>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.total.amt.gst']}" style="white-space:normal;text-align:center">
+			<ui:remove>
+				<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}"
+					style="white-space:normal;text-align:center">
+					<f:facet name="footer">
+						<h:outputText value=""></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lbl['lbl.txt.na']}"
+						rendered="#{chargeLineNode.level == 3}" style="float:right;">
+					</h:outputText>
+				</p:column>
+			</ui:remove>
+			<p:column headerText="#{lbl['lbl.fl.inv.total.amt']}" style="white-space:normal;text-align:center">
 				<f:facet name="footer">
 					<f:facet name="footer">
 						<h:outputText value="#{invoiceBackingBean.managedBean.invAmtGrandTotal}" style="float:right;">
