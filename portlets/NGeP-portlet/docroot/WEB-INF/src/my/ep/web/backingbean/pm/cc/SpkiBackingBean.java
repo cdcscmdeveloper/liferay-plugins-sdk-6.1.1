@@ -24,6 +24,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -76,6 +77,12 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 	//	public static final int ERROR_FATAL_SIGN_ERROR = 99;
 	//	public static final int ERROR_SERVICE_RUNTIME = 110;
 	//	public static final int ERROR_SERVICE_CONNECTION = 111;
+	
+	public static final String ERROR_CERT_REVOKED = "43";
+	public static final String ERROR_USER_INVALID 	= "12";
+	public static final String ERROR_PIN_BLOCKED = "51";
+	public static final String ERROR_INVALID_PIN = "50";
+	public static final String OPERATION_FAILED  = "0";
 
 	private static List<String> challs = null;
 	private String challengeQues1;
@@ -252,7 +259,23 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 			default:
 				//				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "SPKI Signing error."));	
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
-				throw new EpException(res.getStatusMessage());
+				
+				if(res.getStatusMessage().equalsIgnoreCase(ERROR_CERT_REVOKED)){
+					throw new EpException(MessageConst.ERROR_776057);
+				}else if(res.getStatusMessage().equalsIgnoreCase(ERROR_USER_INVALID)){
+					throw new EpException(MessageConst.ERROR_776058);
+				}else if(res.getStatusMessage().equalsIgnoreCase(ERROR_PIN_BLOCKED)){
+					throw new EpException(MessageConst.ERROR_776059);
+				}else if(res.getStatusMessage().equalsIgnoreCase(ERROR_INVALID_PIN)){
+					throw new EpException(MessageConst.ERROR_776060);
+				}else if(res.getStatusMessage().equalsIgnoreCase(OPERATION_FAILED)){
+					throw new EpException(MessageConst.ERROR_776061);
+				}else{
+					throw new EpException(MessageConst.ERROR_776062);
+				}
+				
+				
+				
 				//TODO Please remove this line if want to turn on the SPKI
 				//				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 				//				signedData = "DEFAULT SIGNED TEXT1";
@@ -400,7 +423,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions(test2, 1));
 
 			System.out.println("res.getStatusCode():"+res.getStatusCode());
-			//				List<String> challs = null;
+			//				List<String> challs = null;	
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
