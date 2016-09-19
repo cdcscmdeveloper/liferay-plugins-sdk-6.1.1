@@ -8,6 +8,26 @@
 
 	<p:panel header="#{lbl['lbl.sm.complainant.details']}" toggleable="true">
 		<table class="customTbl">
+			<c:if test="#{complaintBackingBean.managedBean.smComplainant.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+				<tr>
+					<td class="tdTitle">
+						<p:outputLabel value="Status From MyIdentity" />
+					</td>
+					<td class="tdContent" colspan="3">
+						<h:outputText 
+						value="#{complaintBackingBean.managedBean.myIdentityStatusDesc}"></h:outputText>&#160;
+						
+						<c:if test="#{(complaintBackingBean.managedBean.smComplainant.identityResponseCode eq SupplierMgmtConst.myidentityStatusCodeValid) and 
+								(!empty complaintBackingBean.managedBean.diMyidentity.myidentityStatus)}">
+						(#{lbl['lbl.sm.complainant.please.click']}
+						<p:commandLink value=" #{lbl['lbl.sm.complainant.here']} " onclick="myidentityDlg.show();" 
+						rendered="#{complaintBackingBean.managedBean.smComplainant.identityResponseCode eq SupplierMgmtConst.myidentityStatusCodeValid}"></p:commandLink>
+						#{lbl['lbl.sm.complainant.to.view.complainant']})
+						</c:if>
+					</td>
+				</tr>
+			</c:if>
+			
 			<tr>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.complainant.name']}" />
@@ -238,4 +258,18 @@
 		</table>
 
 	</p:panel>
+	
+	<p:dialog header="MyIdentity Info" widgetVar="myidentityDlg" modal="true" height="250" width="500">
+		<table>
+			<tr><td><p:outputLabel value="Name" styleClass="outputLabel-view-label" /></td><td>#{complaintBackingBean.managedBean.diMyidentity.name}</td></tr>
+			<tr><td><p:outputLabel value="I/C NO." styleClass="outputLabel-view-label" /></td><td>#{complaintBackingBean.managedBean.diMyidentity.identificationNo}</td></tr>
+			<tr><td><p:outputLabel value="Address" styleClass="outputLabel-view-label" /></td><td>#{complaintBackingBean.managedBean.diMyidentity.address1}</td></tr>
+			<tr><td></td><td>#{complaintBackingBean.managedBean.diMyidentity.address2}</td></tr>
+			<tr><td></td><td>#{complaintBackingBean.managedBean.diMyidentity.address3}</td></tr>
+			<tr><td><p:outputLabel value="City" styleClass="outputLabel-view-label" /></td><td>#{complaintBackingBean.managedBean.diMyidentity.cityDesc}</td></tr>
+			<tr><td><p:outputLabel value="State" styleClass="outputLabel-view-label" /></td><td>#{complaintBackingBean.managedBean.diMyidentity.stateDesc}</td></tr>
+			<tr><td><p:outputLabel value="Record Status" styleClass="outputLabel-view-label" /></td><td>#{complaintBackingBean.managedBean.myIdentityStatusDesc}</td></tr>
+			<tr><td><p:outputLabel value="Residential Status" styleClass="outputLabel-view-label" /></td><td>#{complaintBackingBean.managedBean.myIdentityResidentialStatus}</td></tr>
+		</table>
+	</p:dialog>
 </ui:composition>
