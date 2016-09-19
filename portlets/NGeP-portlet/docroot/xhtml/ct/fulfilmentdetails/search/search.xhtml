@@ -102,7 +102,7 @@
         	<p:commandButton
         	 id="searchButtonId" value="#{lbl['lbl.btn.search']}" validateClient="true"  action="#{contractDetailsBackingBean.searchContract}" 
         	 onstart="blkContractSearchTable.show();" oncomplete="blkContractSearchTable.hide();"    update="contractTbl"/>
-             <p:commandButton value="#{lbl['lbl.ct.reset']}" action="#{contractDetailsBackingBean.searchReset}"    update=":form"/>
+             <p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{contractDetailsBackingBean.searchReset}"    update=":form"/>
 	  	</div>	  		  
 	  	<ac:lovPopup />
 	  </p:panel>
