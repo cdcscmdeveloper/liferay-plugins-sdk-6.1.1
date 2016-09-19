@@ -19,7 +19,8 @@
 				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.decision']}" />
 				<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent">
-				<p:selectOneMenu value="#{complaintBackingBean.managedBean.smComplaint.decision}" label="#{lbl['lbl.sm.decision']}" required="true">
+				<p:selectOneMenu value="#{complaintBackingBean.managedBean.smComplaint.decision}" label="#{lbl['lbl.sm.decision']}" 
+				required="#{!empty param['disableValidation']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.decision.valid']}" itemValue="#{DisciplinaryActionConst.decisionValid}" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.decision.invalid']}" itemValue="#{DisciplinaryActionConst.decisionInvalid}" />

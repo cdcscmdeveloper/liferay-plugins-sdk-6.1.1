@@ -12,6 +12,7 @@ import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.constant.sm.DisciplinaryActionConst;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.complaint.ComplaintResDTO;
+import my.ep.persistence.entity.pm.common.DiMyidentity;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmComplainant;
@@ -75,6 +76,10 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	
 	private SmComplaintReview secondReview;
 	private SmComplaintReview jkttReview;
+	
+	private DiMyidentity diMyidentity;
+	private String myIdentityStatusDesc;
+	private String myIdentityResidentialStatus;
 
 	public SmComplaint getSmComplaint() {
 		return smComplaint;
@@ -397,5 +402,29 @@ public class ComplaintManagedBean extends BaseManagedBean {
 
 	public void setJkttDecisionDocs(List<SmAttachment> jkttDecisionDocs) {
 		this.jkttDecisionDocs = jkttDecisionDocs;
+	}
+
+	public DiMyidentity getDiMyidentity() {
+		return diMyidentity;
+	}
+
+	public void setDiMyidentity(DiMyidentity diMyidentity) {
+		this.diMyidentity = diMyidentity;
+	}
+
+	public String getMyIdentityStatusDesc() {
+		return myIdentityStatusDesc;
+	}
+
+	public void setMyIdentityStatusDesc(String myIdentityStatusDesc) {
+		this.myIdentityStatusDesc = myIdentityStatusDesc;
+	}
+
+	public String getMyIdentityResidentialStatus() {
+		return myIdentityResidentialStatus;
+	}
+
+	public void setMyIdentityResidentialStatus(String myIdentityResidentialStatus) {
+		this.myIdentityResidentialStatus = myIdentityResidentialStatus;
 	}
 }
