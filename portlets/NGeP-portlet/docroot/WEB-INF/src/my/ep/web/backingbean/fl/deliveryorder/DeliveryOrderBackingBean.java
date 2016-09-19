@@ -483,15 +483,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		double totalDeliveryQty = 0;
 		double totalDeliveryAmount = 0;
 		if(!anyAddressSelected){
+			getManagedBean().setSelectedTabIndex(1);
 			throw new EpException(MessageConst.ERROR_740045, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}else{
 			if(!FLProcessNameConst.UPDATE_BTN.equalsIgnoreCase(actionName)){
 				for(FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 					if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
 						if(selectedDelAddress.getFlTempDoAddr().getSupplierDoRef()==null || selectedDelAddress.getFlTempDoAddr().getSupplierDoRef().length()==0) {
+							getManagedBean().setSelectedTabIndex(1);
 							throw new EpException(MessageConst.ERROR_100051, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.supp.do.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" ",ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress())});
 						}
 						if(selectedDelAddress.getFlTempDoAddr().getEstDeliveryDate()==null) {
+							getManagedBean().setSelectedTabIndex(1);
 							throw new EpException(MessageConst.ERROR_100051, new String[]{ResourceBundleUtils.getMessage("lbl.fl.exp.del.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" ",ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress())});
 						}
 						totalDeliveryQty = 0;
@@ -503,6 +506,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 									itemAddress.setDeliveredAmt(new BigDecimal(0));
 								}
 								if(itemAddress.getDeliveredAmt().doubleValue() > 0 && itemAddress.getDeliveredQty().doubleValue() <= 0){
+									getManagedBean().setSelectedTabIndex(1);
 									throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress()),ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress()),getFullAddress(selectedDelAddress.getFlAddress())});
 								}else if(itemAddress.getDeliveredAmt().doubleValue() <= 0 && itemAddress.getDeliveredQty().doubleValue() > 0){
 									String messageId = MessageConst.ERROR_740047;
@@ -524,6 +528,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 														MessageUtils.BUNDLE_COMMON_MESSAGES, 
 														new FacesScopes().getUserLocale())));
 									}
+									getManagedBean().setSelectedTabIndex(1);
 									throw new EpException("");
 									//throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress()),ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress()),getFullAddress(selectedDelAddress.getFlAddress()),getFullAddress(selectedDelAddress.getFlAddress())});
 								}
@@ -532,6 +537,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 							totalDeliveryAmount = totalDeliveryAmount + itemAddress.getDeliveredAmt().doubleValue();
 						}
 						if(totalDeliveryQty==0) {
+							getManagedBean().setSelectedTabIndex(1);
 							throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.total.del.quantity",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),getFullAddress(selectedDelAddress.getFlAddress())});
 						}
 						if(totalDeliveryAmount==0) {
@@ -555,7 +561,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 												new FacesScopes().getUserLocale())));
 							}
 							
-							
+							getManagedBean().setSelectedTabIndex(1);
 							throw new EpException("");
 							//throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.total.del.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),getFullAddress(selectedDelAddress.getFlAddress())});
 						}
