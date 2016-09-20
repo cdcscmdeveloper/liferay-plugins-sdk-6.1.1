@@ -23,8 +23,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -38,6 +40,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -49,8 +52,10 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -58,6 +63,7 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.document.QTDocumentReqDTO;
 import my.ep.dto.sc.document.QTDocumentResDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
@@ -79,6 +85,7 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
@@ -667,7 +674,7 @@ public class QTDocumentsBackingBean extends
 				// save clone to db
 				docMaster = saveClonedTplDocMaster(scQtDocReport);
 			}
-
+			retriveTemplateDocParams(tplDocBB,getManagedBean().getQt());
 			this.getManagedBean().getScQtDocReportList().remove(index);
 			this.getManagedBean().getScQtDocReportList()
 					.add(index, this.getManagedBean().getScQtDocReport());
@@ -794,6 +801,7 @@ public class QTDocumentsBackingBean extends
 
 		ScQt scQt = scQtDocReport.getScQt();
 		Long tplMasterId = retrieveStandardTplDocMaster(scQt).getDocMasterId();
+		System.out.println("==========doc master id===="+tplMasterId);
 		TplDocMaster templateDocMaster = retrieveTplDocMasterById(tplMasterId);
 
 		// clone TplDocMaster Details
@@ -828,6 +836,7 @@ public class QTDocumentsBackingBean extends
 				.getTplDocSectionCollection();
 		for (TplDocSection tplDocSection : docSectionCOllection) {
 			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
+			//log.info("===doc section name"+section.getSectionTitle()+"section content"+section.getSectionContent());
 			section.setDocSectionId(null);
 			section.setParent(null); // Temporarily am setting null, need to
 										// confirm once
@@ -906,20 +915,36 @@ public class QTDocumentsBackingBean extends
 	public TplDocMaster retrieveStandardTplDocMaster(ScQt scQt) {
 		debugLogger("retrieveStandardTplDocMaster");
 		ITemplateDocSO templateDocSO = null;
+		IQTDetailSO detailsSO=null;
 		try {
 			templateDocSO = (ITemplateDocSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 							ITemplateDocSO.class);
+			detailsSO =  BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTDetailSO.class);
 			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
-
-			reqDTO.setCategoryId(scQt.getPmProcurementCategory()
-					.getParameterId());
+			PmParameter parameter=getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_CATEGORY,ParameterConst.PROCUREMENT_CATEGORY_OTHERS);
+			log.info("========parametrid===="+parameter.getParameterId());
+			reqDTO.setCategoryId(parameter.getParameterId());
 			PmParameter processType = getPmParameter(
 					ParameterTypeConst.TPL_DOC_PROCESS_TYPE,
 					ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
 			reqDTO.setProcessTypeId(processType.getParameterId());
-			reqDTO.setTitle(SourcingConstants.DOCTITLE_QT);
-
+			PmParameter quotationOrTender=new PmParameter();
+			quotationOrTender.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
+			QuationTenderReqDTO quotationReqDTO=new QuationTenderReqDTO();
+			quotationReqDTO.setQtId(scQt.getQtId());
+			QuationTenderResDTO resDTo=detailsSO.retriveQtById(quotationReqDTO);
+			quotationOrTender.setParameterCode(resDTo.getQtDetail().getProcurementMode().getParameterCode());
+			Locale locale =myLocale;
+			//locale = myLocale;
+			String language=locale.getLanguage();
+			log.info("=====display language====="+language);
+			String paramDesc=getParameterDesc(quotationOrTender,locale);
+			//log.info("=====param quotation or tenderdesc====="+paramDesc);
+			reqDTO.setTitle(TemplateDocConst.PARAM_DOCTITLE_QT+TemplateDocConst.PARAM_SPACE+TemplateDocConst.PARAM_HIGH_FUN+TemplateDocConst.PARAM_SPACE+paramDesc);
+			log.info("====reqDTO.setTitle====="+reqDTO.getTitle());  
 			TemplateDocResDTO resDTO = templateDocSO
 					.getTemplateMasterList(reqDTO);
 			List<TplDocMaster> docMasterList = resDTO.getDocMasterList();
@@ -933,6 +958,7 @@ public class QTDocumentsBackingBean extends
 			}
 		} finally {
 			templateDocSO = null;
+			detailsSO=null;
 		}
 	}
 
@@ -1263,10 +1289,12 @@ public class QTDocumentsBackingBean extends
 			docMaster = saveClonedTplDocMaster(scQtDocReport);
 		}
 		backingBean.goToMaint(docMaster);
+		retriveTemplateDocParams(backingBean,scQt);
 		backingBean.previewAction();
 		String html = backingBean.getManagedBean().getPreviewValue();
-
-		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
+		html=html.replaceAll(TemplateDocConst.PARAM_BREAK_LINE, TemplateDocConst.PARAM_SPACE);
+		html=html.replaceAll(TemplateDocConst.PARAM_PREFIX_POSTFIX, TemplateDocConst.PARAM_SPACE);
+		/*PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
 
 		IAddressSO addressSO = null;
 		PmAddressType pmAddressType = null;
@@ -1290,7 +1318,7 @@ public class QTDocumentsBackingBean extends
 		if (pmAddressType != null) {
 			PmAddress pmAddress = pmAddressType.getPmAddress();
 			agencyAddress = getFullAddress(pmAddress);
-			agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
+			agencyAddress = agencyAddress.replaceAll(TemplateDocConst.NEW_LINE_CHARACTER, TemplateDocConst.HTML_NEW_LINE_CHARACTER);
 			agencyPhoneNo = pmAddress.getPhoneNo();
 			agencyFaxNo = pmAddress.getFaxNo();
 		}
@@ -1317,7 +1345,7 @@ public class QTDocumentsBackingBean extends
 		html = html.replaceAll("&lt;&lt;Tel No&gt;&gt;", agencyPhoneNo);
 		html = html.replaceAll("&lt;&lt;Faks No&gt;&gt;", agencyFaxNo);
 		html = html.replaceAll("&lt;&lt;Validity Period&gt;&gt;",
-				scQt.getQtValidityPeriod() != null ? Integer.toString(scQt.getQtValidityPeriod()) : "");
+				scQt.getQtValidityPeriod() != null ? Integer.toString(scQt.getQtValidityPeriod()) : "");*/
 		return html;
 	}
 
@@ -2659,6 +2687,152 @@ private PmOrgProfile retriveOrgprofileByIdAndDate(Long orgProfileId,Date date){
 			reqDTO).getPmOrgProfile();
 	return orgProfile;
 	
+}
+
+private void retriveTemplateDocParams(TemplateDocBackingBean templateDocBackingBean,ScQt scQt){
+	
+
+	IAddressSO addressSO = null;
+	PmAddressType pmAddressType = null;
+	try {
+		addressSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		AddressReqDTO reqDTO = new AddressReqDTO();
+		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
+		reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+		reqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+		if (resDTO.getAddressTypeList().size() > 0) {
+			pmAddressType = resDTO.getAddressTypeList().get(0);
+		}
+		String agencyAddress = "";
+		String agencyPhoneNo = "";
+		String agencyFaxNo = "";
+		if (pmAddressType != null) {
+			PmAddress pmAddress = pmAddressType.getPmAddress();
+			agencyAddress = getFullAddress(pmAddress);
+			agencyAddress = agencyAddress.replaceAll(TemplateDocConst.PARAM_NEW_LINE_CHARACTER, TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER);
+			agencyPhoneNo = pmAddress.getPhoneNo();
+			agencyFaxNo = pmAddress.getFaxNo();
+		}
+
+		FacesScopes facesScopes = new FacesScopes();
+		String officerName = facesScopes.getUserSessionBean().getUserName();
+		log.info("======currentstatusid generateSyaratSyaratAmFromVelocity===="+this.getManagedBean().getCurrentStatusId());
+		String ptjName=" ";
+		if(null!=this.getManagedBean().getCurrentStatusId()){
+		 ptjName=retrievePTJByOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId(),isQTStatusPublished(this.getManagedBean().getCurrentStatusId())?scQt.getPublishDate() : scQt.getCreatedDate());
+		}else{
+			ptjName=scQt.getPmOrgProfile().getOrgName();
+		}
+		log.info("=======ptjName====="+ptjName);
+	Map<String, String> docParamValues=templateDocBackingBean.getManagedBean().getDocParamValues();
+		if(null==docParamValues){
+			docParamValues=new HashMap<String, String>();
+		}
+		docParamValues.put(TemplateDocConst.PARAM_AGENCY_NAME, ptjName);
+		docParamValues.put(TemplateDocConst.PARAM_AGENCY_ADDRESS, agencyAddress);
+		docParamValues.put(TemplateDocConst.PARAM_OFFICER_NAME, officerName);
+		docParamValues.put(TemplateDocConst.PARAM_TELEPHONE_NUM, agencyPhoneNo);
+		//docParamValues.put(TemplateDocConst.COMPANY_NAME, ptjName);
+		docParamValues.put(TemplateDocConst.PARAM_FAX_NUM, agencyFaxNo);
+		docParamValues.put(TemplateDocConst.PARAM_VALIDITY_PERIOD, scQt.getQtValidityPeriod() != null ? Integer.toString(scQt.getQtValidityPeriod()) : "");
+		docParamValues.put(TemplateDocConst.PARAM_DEPARTMENT_NAME, ptjName);
+		BigDecimal contarctAmount=returnContractAmount();
+		docParamValues.put(TemplateDocConst.PARAM_CONTRACT_AMOUNT, contarctAmount.toString());
+		//docParamValues.put(TemplateDocConst.PARAM_BREAK_LINE, TemplateDocConst.PARAM_SPACE);
+		//docParamValues.put(TemplateDocConst.PARAM_PREFIX_POSTFIX, TemplateDocConst.PARAM_SPACE);
+		PmConfigRuleValue configRuleValue=calculateBondPercentage();
+		if(null!=configRuleValue){
+			log.info("configRuleValue.getFromValue()"+configRuleValue.getFromValue());
+			log.info("configRuleValue.getToValue()"+configRuleValue.getToValue());
+			docParamValues.put(TemplateDocConst.PARAM_PERFORMENCE_BOND_FROM,configRuleValue.getFromValue()!=null ? configRuleValue.getFromValue().toString() : TemplateDocConst.PARAM_PERFORMENCE_BOND_FROM_AMOUNT);
+			docParamValues.put(TemplateDocConst.PARAM_PERFORMENCE_BOND_TO,configRuleValue.getToValue()!=null ? configRuleValue.getToValue().toString() : TemplateDocConst.PARAM_PERFORMENCE_BOND_TO_AMOUNT);
+			docParamValues.put(TemplateDocConst.PARAM_PERFORMENCE_BOND_MAX,configRuleValue.getToValue()!=null ? configRuleValue.getToValue().toString() : TemplateDocConst.PARAM_PERFORMENCE_BOND_TO_AMOUNT);
+		}
+		templateDocBackingBean.getManagedBean().setDocParamValues(docParamValues);
+		/*html = html.replaceAll("&lt;&lt;Agency Name&gt;&gt;",
+				ptjName);
+		html = html.replaceAll("&lt;&lt;Agency name&gt;&gt;",
+				ptjName);
+		html = html.replaceAll("&lt;&lt;Department Name&gt;&gt;",
+				ptjName);
+		html = html.replaceAll("&lt;&lt;Agency Address&gt;&gt;", agencyAddress);
+		html = html.replaceAll("&lt;&lt;Officer Name&gt;&gt;", officerName);
+		html = html.replaceAll("&lt;&lt;Tel No&gt;&gt;", agencyPhoneNo);
+		html = html.replaceAll("&lt;&lt;Faks No&gt;&gt;", agencyFaxNo);
+		html = html.replaceAll("&lt;&lt;Validity Period&gt;&gt;",
+				scQt.getQtValidityPeriod() != null ? Integer.toString(scQt.getQtValidityPeriod()) : "");*/
+	} finally {
+		addressSO = null;
+	}
+}
+
+private BigDecimal returnContractAmount(){
+	log.info("start returnContractAmount");
+	IRuleSO ruleSO = null;
+	BigDecimal contractAmount=new BigDecimal(0);
+	try {
+		ruleSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+		RuleReqDTO reqDTO = new RuleReqDTO();
+		reqDTO.setRuleType(RuleTypeConst.ONE_TIER_EVALUATION_THRESHOLD);
+		
+		List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
+				.getRuleValueList();
+		if (configRuleValues != null && configRuleValues.size() > 0) {
+			PmConfigRuleValue configRuleValue = configRuleValues.get(0);
+			
+			
+				if (configRuleValue != null && configRuleValue.getRuleValue() != null) {
+					contractAmount=new BigDecimal(configRuleValue.getRuleValue());
+				}
+		} else {
+			contractAmount=new BigDecimal(TemplateDocConst.PARAM_CONTRACT_AMOUNT_VALUE);
+		}
+		log.info("contractAmount"+contractAmount);
+		return contractAmount;
+
+	} finally {
+		ruleSO = null;
+	}
+}
+
+/**
+ * Calculate the performance bond percentage
+ * 
+ * @param amountForBondPercentage amount for performance bond percentage
+ * 
+ * @return BigDecimal bondPercentage
+ */
+private PmConfigRuleValue calculateBondPercentage() {
+	log.info("start calculateBondPercentage");
+	IRuleSO ruleSO = null;
+	PmConfigRuleValue configRuleValue=null;
+	try {
+		ruleSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+		RuleReqDTO reqDTO = new RuleReqDTO();
+		reqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
+		
+		List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
+				.getRuleValueList();
+		if (configRuleValues != null && configRuleValues.size() > 0) {
+			 configRuleValue = configRuleValues.get(0);
+			
+		} else {
+			configRuleValue=new PmConfigRuleValue();
+			configRuleValue.setFromValue(new BigDecimal(TemplateDocConst.PARAM_PERFORMENCE_BOND_FROM_AMOUNT));
+			configRuleValue.setToValue(new BigDecimal(TemplateDocConst.PARAM_PERFORMENCE_BOND_TO_AMOUNT));
+		}
+		
+
+	} finally {
+		ruleSO = null;
+	}
+	return configRuleValue;
 }
 
 }
