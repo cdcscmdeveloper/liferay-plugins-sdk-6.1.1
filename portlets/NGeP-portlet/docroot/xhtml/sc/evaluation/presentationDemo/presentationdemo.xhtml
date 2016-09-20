@@ -31,24 +31,6 @@
 
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.document']}"
-				style="width:30%;text-align: center;">
-
-			
-					
-					<ac:scSingleFileUploadButton id="evaluationdemoUploadBtn"
-							popupWidgetVar="demoSupplierListUpload"
-							attachment="#{demoSupplier.scQtProposalChecklistAttachment}"
-							readonly="#{evaluationBackingBean.managedBean.readOnly}"
-							deleteFileUploadListener="evaluationBackingBean.deleteProposalChecklistAttachments"
-							rowIndex="#{index}">
-							<f:setPropertyActionListener for="actionEvent"
-								value="#{demoSupplier}"
-								target="#{evaluationBackingBean.managedBean.qtProposalChecklist}" />
-						</ac:scSingleFileUploadButton>
-
-			</p:column>
-
 
 
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
