@@ -70,8 +70,12 @@
 						value="#{registrationBackingBean.managedBean.sameAddress}">
 						<p:ajax event="change" update="pnlContactInfo"  />
 					</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.sm.sameasabove']}"></h:outputText></td>
+				<td class="tdTitle">&#160;</td>
+				<td class="tdContent">&#160;</td>
+			
 			</tr>
 
+			<c:if test="#{!registrationBackingBean.managedBean.sameAddress}">
 			<tr>
 				<td class="tdTitle"></td>
 				<td class="tdContent" ><p:inputText size="40"
@@ -176,6 +180,7 @@
 								showSummary="true" showDetail="false" display="icon" />
 				</td>
 			</tr>
+			</c:if>
 
 			<!-- <tr>
 				<td class="tdTitle"><p:outputLabel
