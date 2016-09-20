@@ -139,6 +139,9 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private boolean productKeyword =false;
 	private boolean serviceKeyword =false;
 	private boolean refreshPageNoFlag=false;
+	
+	/** The back to previous page. */
+	private String backToPreviousPage;
 
 
 
@@ -329,9 +332,6 @@ public class CodificationManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<Object[]> pageChangeListener(
 				ISearchBean<Object[]> searchBean) {
-			
-			
-			
 
 			if (StringUtils.isBlank((String) colorFilterBean.getSearchValue())
 					&& StringUtils.isBlank((String) typeFilterBean.getSearchValue())
@@ -1369,24 +1369,19 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.setAutoCompleteUnspscCode(null);
 		
 	}
+
+	/**
+	 * @return the backToPreviousPage
+	 */
+	public String getBackToPreviousPage() {
+		return backToPreviousPage;
+	}
+
+	/**
+	 * @param backToPreviousPage the backToPreviousPage to set
+	 */
+	public void setBackToPreviousPage(String backToPreviousPage) {
+		this.backToPreviousPage = backToPreviousPage;
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-
 }
