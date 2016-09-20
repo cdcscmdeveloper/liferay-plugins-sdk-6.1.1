@@ -39,6 +39,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -265,9 +266,23 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				TplDocSection selectedSection = getManagedBean().getSelectedSection();
 				getManagedBean().setSelectedSectionName(selectedSection.getSectionName());
 				getManagedBean().setSelectedSectionTitle(selectedSection.getSectionTitle());
-				getManagedBean().setSelectedSectionText(selectedSection.getSectionContent());
+				String content=selectedSection.getSectionContent();
+				log.info("before replacing editContent content"+content);
+				if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty()){
+					for (Map.Entry<String, String> entry : this.getManagedBean().getDocParamValues().entrySet()) {
+						log.info("entry.getKey()"+entry.getKey());
+						log.info("entry.getValue()"+entry.getValue());
+						String replacekey=TemplateDocConst.PARAM_PREFIX+entry.getKey()+TemplateDocConst.PARAM_POSTFIX;
+						log.info("replacekey"+replacekey);
+						content=content.replaceAll(replacekey, entry.getValue());
+					}
+					content=content.replaceAll(TemplateDocConst.PARAM_BREAK_LINE, TemplateDocConst.PARAM_SPACE);
+					content=content.replaceAll(TemplateDocConst.PARAM_PREFIX_POSTFIX, TemplateDocConst.PARAM_SPACE);
+					}
+				log.info("after replacing editContent content"+content);
+				getManagedBean().setSelectedSectionText(content);
 			}
-
+			
 			if (getManagedBean().getVariableList() != null && !getManagedBean().getVariableList().isEmpty()) {
 				getManagedBean().setSelectedOption("2");
 			} else {
@@ -322,6 +337,15 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			String outputFileName = "Document" + "_"+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
 			String combinedContentHtml = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), outputFileName, "P");
 			System.out.println("**********combinedContentHtml***********"+combinedContentHtml);
+			if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty()){
+			for (Map.Entry<String, String> entry : this.getManagedBean().getDocParamValues().entrySet()) {
+				log.info("entry.getKey()"+entry.getKey());
+				log.info("entry.getValue()"+entry.getValue());
+				String replacekey=TemplateDocConst.PARAM_PREFIX+entry.getKey()+TemplateDocConst.PARAM_POSTFIX;
+				log.info("replacekey"+replacekey);
+				combinedContentHtml=combinedContentHtml.replaceAll(replacekey, entry.getValue());
+			}
+			}
 			getManagedBean().setPreviewValue(combinedContentHtml);
 		} catch (Exception e) {
 			e.printStackTrace();
