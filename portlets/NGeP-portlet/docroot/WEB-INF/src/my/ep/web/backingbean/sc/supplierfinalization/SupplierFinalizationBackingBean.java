@@ -1422,8 +1422,10 @@ public class SupplierFinalizationBackingBean extends
 							detail.setScQtProposalAmount(
 									recommendedSupplier.getScQtProposalAmount());
 							detail.setAwardQty(scQtRecommend.getOrderQty());
-							detail.setScQtProposalItem(
-									recommendedSupplier.getScQtProposalItem());
+							if(recommendedSupplier.getScQtProposalItem() != null){
+								detail.setScQtProposalItem(
+										recommendedSupplier.getScQtProposalItem());
+							}
 							toBeAddedSet.add(detail);
 							
 							break;
