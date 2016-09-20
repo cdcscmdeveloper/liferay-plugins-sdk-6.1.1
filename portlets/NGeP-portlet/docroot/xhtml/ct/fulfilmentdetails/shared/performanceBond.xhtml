@@ -15,6 +15,7 @@
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
 	   	</f:facet>
+	   	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.tooltip.performance.bond.instruction']}" escape="false"/><br/><br/>
 	   	<h:panelGrid columns="2">
 		   	<p:outputLabel id="bondAmount" value="#{lbl['lbl.ct.pb.amount']}" />
 			<p:inputText for="bondAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
@@ -37,38 +38,44 @@
 						</p:selectBooleanCheckbox>
 				      </p:column>
 					
-					<p:column style="width:15%;"  styleClass="column-align-center">
+					<p:column style="width:30%;white-space:normal;"  styleClass="column-align-center">
 						  <f:facet name="header">
 						        <h:outputText value="#{lbl['lbl.ct.ref.no']}"  styleClass="required"/>
 						</f:facet>
-						<p:inputTextarea id="bondRefNoId" value="#{varBond.refNo}" maxlength="50" autoResize="false"
-						    rows="2"  disabled="#{ctBackingBean.managedBean.viewContract}" style="width:120px;" 
-						    	onkeyup="limitTextArea(this,50);" onkeydown="limitTextArea(this,50);">
-							</p:inputTextarea>
+						<p:inputText id="bondRefNoId" value="#{varBond.refNo}" maxlength="50" style="width:95%;" 
+						     rendered="#{!ctBackingBean.managedBean.viewContract}"/>
+					
+						<h:outputText value="#{varBond.refNo}" 
+						      style="float:left;text-align:left;"  rendered="#{ctBackingBean.managedBean.viewContract}"/>
 					</p:column>
 				
-					<p:column style="width:25%;"  styleClass="column-align-center">
+					<p:column style="width:25%;white-space:normal;"  styleClass="column-align-center">
 						<f:facet name="header">
 						        <h:outputText value="#{lbl['lbl.ct.financial.inst']}"  styleClass="required"/>
 						</f:facet>
 						
 						<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
-						    style="width:180px;" rendered="#{!ctBackingBean.managedBean.viewContract}" >
+						    style="width:200px;" rendered="#{!ctBackingBean.managedBean.viewContract}" >
 							   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
 							   <p:ajax  process="@this"></p:ajax>
 						</p:selectOneMenu>	  
-						  
-						<p:inputText value="#{varBond.financialOrgName}" style="width:180px;" disabled="true"
-							rendered="#{ctBackingBean.managedBean.viewContract}"/>
+	
+						<h:outputText value="#{varBond.financialOrgName}"
+						   style="float:left;text-align:left;" rendered="#{ctBackingBean.managedBean.viewContract}"/>
 					</p:column>
 					
 					<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
 						<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" 
-						    disabled="#{ctBackingBean.managedBean.viewContract}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
+						    rendered="#{!ctBackingBean.managedBean.viewContract}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<p:ajax process="@this"></p:ajax>
 						</p:inputText>
+						
+						<h:outputText value="#{varBond.bondAmount}" style="float:right;" rendered="#{ctBackingBean.managedBean.viewContract}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
 					</p:column>
 					
 					<p:column style="width:8%;" styleClass="column-align-center">
@@ -77,25 +84,31 @@
 						</f:facet>
 						
 						<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
-							disabled="#{ctBackingBean.managedBean.viewContract}"
+							rendered="#{!ctBackingBean.managedBean.viewContract}"
 							showOn="button" readonlyInput="true" navigator="true"
 							mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 							maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 							 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
 						</p:calendar>
+						
+							<h:outputText value="#{varBond.effDate}" rendered="#{ctBackingBean.managedBean.viewContract}">
+				                <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 					</p:column>
 					
 					<p:column style="width:8%;" headerText="#{lbl['lbl.ct.expiry.date']}" styleClass="column-align-center">
 						<p:calendar id="bondExpDateCalId"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
-						    readonlyInput="true" disabled="true"  navigator="true" 
+						    readonlyInput="true" disabled="true"  navigator="true" rendered="#{!ctBackingBean.managedBean.viewContract}"
 							size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						    <f:attribute name="startDate" value="#{varBond.effDate}" />
 		                    <f:validator validatorId="primeDateRangeValidator" />
 					    </p:calendar>
+					    
+					     <h:outputText value="#{varBond.expDate}" rendered="#{ctBackingBean.managedBean.viewContract}">
+				            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 					</p:column>
 					
-					<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:32%;">
+					<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:15%;">
 						
 						
 						<h:panelGroup id="uploadBondPg" columns="2">
