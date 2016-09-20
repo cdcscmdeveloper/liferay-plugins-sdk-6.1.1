@@ -86,6 +86,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
@@ -2672,6 +2673,7 @@ public class LOADetailBackingBean extends
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
+		validateLOADetails(getManagedBean().getScLoa(), outcome);
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value()) || isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -2759,17 +2761,27 @@ public class LOADetailBackingBean extends
 
 		if(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
 				&& BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
+			
+			// check to assign UNSPSC code 
+			for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
+				if(scLoiLoaItem.getScRequestItem()!= null && 
+						null == scLoiLoaItem.getScRequestItem().getCmItem()){
+					throw new EpException(MessageConst.ERROR_760436);
+				}
+			}
 
 			if (!getManagedBean().isAgreeWithTermsConditions()) {
 				throw new EpException(MessageConst.ERROR_750002);
 			}
 		}
 
-		if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
+		if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || 
+				QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
 			
 			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 				if(scLoa.isApprovalReq()){
-					if(null == getManagedBean().getApproverUser() || null == getManagedBean().getApproverUser().getUserId()){
+					if(null == getManagedBean().getApproverUser() || 
+							null == getManagedBean().getApproverUser().getUserId()){
 						throw new EpException(
 								MessageConst.ERROR_760315,
 								new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
@@ -5141,6 +5153,25 @@ public class LOADetailBackingBean extends
 		
 		criteria.append("recordStatus^1");
 		getManagedBean().setMinistryConditionField(criteria.toString());
+	}
+	
+	
+	/**
+	 * Update unspsc item.
+	 *
+	 * @param requestItem the request item
+	 */
+	public void updateUnspscItem(ScRequestItem requestItem) {
+		log.info("updateUnspscItem " + requestItem);
+		ScLoa scLoa = getManagedBean().getScLoa();
+
+		if(scLoa.getScLoiLoaItems() != null){
+			for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
+				if(scLoiLoaItem.getScRequestItem()!= null && scLoiLoaItem.getScRequestItem().getRequestNoteItemId().equals(requestItem.getRequestNoteItemId())){
+					scLoiLoaItem.setScRequestItem(requestItem);
+				}
+			}
+		}
 	}
 
 	public boolean isFlag() {
