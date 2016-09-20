@@ -285,7 +285,7 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 		} catch (Exception ex)
 		{
 			//FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "SPKIs Signing error."));	
-			throw new EpException(MessageConst.ERROR_776052 + ":"+ex.getMessage());
+			throw new EpException(ex.getMessage());
 
 		}
 		return signedData;
