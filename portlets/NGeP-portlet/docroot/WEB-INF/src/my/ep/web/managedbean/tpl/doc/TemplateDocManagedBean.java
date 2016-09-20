@@ -78,6 +78,7 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	private TreeNode [] treenode;
 	private boolean createNew = false;
 	private boolean readOnlyFlag = false;
+	private Map<String,String> docParamValues;
 	
 	
 	private TreeNode treenodeObject;
@@ -418,6 +419,22 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	public void setTreenodeObject(TreeNode treenodeObject) {
 		this.treenodeObject = treenodeObject;
 	}
+
+	/**
+	 * @return the docParamValues
+	 */
+	public Map<String, String> getDocParamValues() {
+		return docParamValues;
+	}
+
+	/**
+	 * @param docParamValues the docParamValues to set
+	 */
+	public void setDocParamValues(Map<String, String> docParamValues) {
+		this.docParamValues = docParamValues;
+	}
+
+	
 
 
 	
