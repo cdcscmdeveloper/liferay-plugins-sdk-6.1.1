@@ -36,7 +36,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -52,6 +51,8 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
+import my.ep.biz.dto.rpt.ReportTempInfoReqDTO;
+import my.ep.biz.dto.rpt.ReportTempInfoResDTO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
@@ -61,6 +62,8 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.biz.service.rpt.IReportTempInfoSO;
+import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.EpPropertiesConst;
@@ -248,16 +251,16 @@ public class ReportBackingBean extends
 	private List<SelectItem> procurementList = new ArrayList<SelectItem>();
 
 	/** The sc procure all list. */
-	private List<SelectItem> scProcureAllList = new ArrayList<SelectItem>();
+	private String[] scProcureAllList = null;
 
 	/** The sc quotation list. */
-	private List<SelectItem> scQuotationList = new ArrayList<SelectItem>();
+	private String[] scQuotationList = null;
 
 	/** The sc tender list. */
-	private List<SelectItem> scTenderList = new ArrayList<SelectItem>();
+	private String[] scTenderList = null;
 
 	/** The sc rstrctd tndr list. */
-	private List<SelectItem> scRstrctdTndrList = new ArrayList<SelectItem>();
+	private String[] scRstrctdTndrList = null;
 
 	/** The sc month list. */
 	private List<SelectItem> scMonthList = new ArrayList<SelectItem>();
@@ -516,6 +519,8 @@ public class ReportBackingBean extends
 	// sc
 	/** The sc quotation id. */
 	private String scQuotationId;
+	
+	private String scEstimatedAmount;
 
 	/** The sc quotation no. */
 	private String scQuotationNo;
@@ -5177,83 +5182,7 @@ public class ReportBackingBean extends
 	public void setScPublishToDate(Date scPublishToDate) {
 		this.scPublishToDate = scPublishToDate;
 	}
-
-	/**
-	 * Gets the sc procure all list.
-	 * 
-	 * @return the scProcureAllList
-	 */
-	public List<SelectItem> getScProcureAllList() {
-		return scProcureAllList;
-	}
-
-	/**
-	 * Sets the sc procure all list.
-	 * 
-	 * @param scProcureAllList
-	 *            the new sc procure all list
-	 */
-	public void setScProcureAllList(List<SelectItem> scProcureAllList) {
-		this.scProcureAllList = scProcureAllList;
-	}
-
-	/**
-	 * Gets the sc quotation list.
-	 * 
-	 * @return the scQuotationList
-	 */
-	public List<SelectItem> getScQuotationList() {
-		return scQuotationList;
-	}
-
-	/**
-	 * Sets the sc quotation list.
-	 * 
-	 * @param scQuotationList
-	 *            the new sc quotation list
-	 */
-	public void setScQuotationList(List<SelectItem> scQuotationList) {
-		this.scQuotationList = scQuotationList;
-	}
-
-	/**
-	 * Gets the sc tender list.
-	 * 
-	 * @return the scTenderList
-	 */
-	public List<SelectItem> getScTenderList() {
-		return scTenderList;
-	}
-
-	/**
-	 * Sets the sc tender list.
-	 * 
-	 * @param scTenderList
-	 *            the new sc tender list
-	 */
-	public void setScTenderList(List<SelectItem> scTenderList) {
-		this.scTenderList = scTenderList;
-	}
-
-	/**
-	 * Gets the sc rstrctd tndr list.
-	 * 
-	 * @return the scRstrctdTndrList
-	 */
-	public List<SelectItem> getScRstrctdTndrList() {
-		return scRstrctdTndrList;
-	}
-
-	/**
-	 * Sets the sc rstrctd tndr list.
-	 * 
-	 * @param scRstrctdTndrList
-	 *            the new sc rstrctd tndr list
-	 */
-	public void setScRstrctdTndrList(List<SelectItem> scRstrctdTndrList) {
-		this.scRstrctdTndrList = scRstrctdTndrList;
-	}
-
+	
 	/**
 	 * Gets the sc created to year.
 	 * 
@@ -5916,6 +5845,38 @@ public class ReportBackingBean extends
 	 */
 	public String getFlDeliveryOrderNo() {
 		return flDeliveryOrderNo;
+	}
+
+	public String[] getScProcureAllList() {
+		return scProcureAllList;
+	}
+
+	public void setScProcureAllList(String[] scProcureAllList) {
+		this.scProcureAllList = scProcureAllList;
+	}
+
+	public String[] getScQuotationList() {
+		return scQuotationList;
+	}
+
+	public void setScQuotationList(String[] scQuotationList) {
+		this.scQuotationList = scQuotationList;
+	}
+
+	public String[] getScTenderList() {
+		return scTenderList;
+	}
+
+	public void setScTenderList(String[] scTenderList) {
+		this.scTenderList = scTenderList;
+	}
+
+	public String[] getScRstrctdTndrList() {
+		return scRstrctdTndrList;
+	}
+
+	public void setScRstrctdTndrList(String[] scRstrctdTndrList) {
+		this.scRstrctdTndrList = scRstrctdTndrList;
 	}
 
 	/**
@@ -6876,6 +6837,14 @@ public class ReportBackingBean extends
 	 */
 	public String getGeneratedURL() {
 		return generatedURL;
+	}
+
+	public String getScEstimatedAmount() {
+		return scEstimatedAmount;
+	}
+
+	public void setScEstimatedAmount(String scEstimatedAmount) {
+		this.scEstimatedAmount = scEstimatedAmount;
 	}
 
 	/**
@@ -8609,7 +8578,39 @@ public class ReportBackingBean extends
 		}
 		return this.registrationStatusListOfBusCompType;
 	}
+		
+	private List<Object[]> retrieveQTREncryptedDataList(PMReportReqDTO reqDto) {
+		log.info("ReportBackingBean-retrieveQTRDataList");
 
+		List<Object[]> reqQTRList = null;
+
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+
+			reqQTRList = reportSO.retrieveQuotationTenderRestrictedData(reqDto);
+		}
+
+		return reqQTRList;
+	}
+	
+	private List<Object[]> retrieveSummaryQTREncryptedDataList(
+			PMReportReqDTO reqDto) {
+		
+		log.info("ReportBackingBean-retrieveSummaryQTREncryptedDataList");
+
+		List<Object[]> reqQTRList = null;
+
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			reqQTRList = reportSO.retrieveSummaryTenderRestrictedData(reqDto);
+		}
+		return reqQTRList;
+	}
+	
 	/**
 	 * Retrieve consultant bus company data.
 	 * 
@@ -12756,7 +12757,9 @@ public class ReportBackingBean extends
 		reportNameList.add(ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL);
 		reportNameList.add(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_APPL_STATUS);
+		reportNameList.add(ReportConst.SM_CDCSS_DEPOSIT_ADJUSTMENT_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL);
+		
 	}
 	
 	
@@ -14150,23 +14153,23 @@ public class ReportBackingBean extends
 	 */
 	public void onSelectEffectedValues() {
 		log.info("ReportBackingBean-onSelectEffectedValues");
-		if (this.getScProcureAllList().size() > 0) {
+		if (this.getScProcureAllList()!=null && this.getScProcureAllList().length > 0) {
 			rptGenBean.setScProcureQuoteEditView(true);
 			rptGenBean.setScProcureTenderEditView(true);
 			rptGenBean.setScProcureRestrctdEditView(true);
-			scQuotationList = new ArrayList<SelectItem>();
-			scTenderList = new ArrayList<SelectItem>();
-			scRstrctdTndrList = new ArrayList<SelectItem>();
-		} else if ((this.getScQuotationList().size() > 0)
-				&& (this.getScTenderList().size() > 0)) {
+			scQuotationList = null;
+			scTenderList = null;
+			scRstrctdTndrList = null;
+		} else if ((this.getScQuotationList()!=null && this.getScQuotationList().length > 0)
+				&& (this.getScTenderList()!=null && this.getScTenderList().length > 0)) {
 			rptGenBean.setScProcureAllEditView(true);
 			rptGenBean.setScProcureRestrctdEditView(true);
-		} else if ((this.getScRstrctdTndrList().size() > 0)
-				&& (this.getScTenderList().size() > 0)) {
+		} else if ((this.getScRstrctdTndrList()!=null && this.getScRstrctdTndrList().length > 0)
+				&& (this.getScTenderList()!=null && this.getScTenderList().length > 0)) {
 			rptGenBean.setScProcureAllEditView(true);
 			rptGenBean.setScProcureQuoteEditView(true);
-		} else if ((this.getScRstrctdTndrList().size() > 0)
-				&& (this.getScQuotationList().size() > 0)) {
+		} else if ((this.getScRstrctdTndrList()!=null && this.getScRstrctdTndrList().length > 0)
+				&& (this.getScQuotationList()!=null && this.getScQuotationList().length> 0)) {
 			rptGenBean.setScProcureAllEditView(true);
 			rptGenBean.setScProcureTenderEditView(true);
 		} else {
@@ -14777,7 +14780,21 @@ public class ReportBackingBean extends
 					fileGenerateReport(getManagedBean().getReportTitle(),
 							spaceRemovalParameter);
 				}
+				
+				if (this.getModuleValue().equalsIgnoreCase(
+						ModuleCodeConst.SUPPLIER_SELECTION)) {
+					if (!(this.reportValue
+							.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL) || this.reportValue
+							.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL))) {
 
+						int count = deleteDecryptedDataAfterReportGeneration(
+								lngUserId, this.reportValue);
+						
+						log.info("deleted Decrypted Records Count===> " + count);
+					}
+				}
+			
+				
 				/*
 				 * if (StringUtils.isNotEmpty(strLanguage) &&
 				 * (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
@@ -14831,6 +14848,25 @@ public class ReportBackingBean extends
 			throw new EpException(MessageConst.ERROR_REPORT_780001);
 		}
 
+	}
+
+	private int deleteDecryptedDataAfterReportGeneration(Long createdBy,String reportCode) {
+		
+		log.info("deleteDecryptedDataAfterReportGeneration");
+		 IReportTempInfoSO reportTempInfoSO =null;
+		 
+		 reportTempInfoSO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ReportConst.RPT_MODULE_SER_OBJ,
+							IReportTempInfoSO.class);
+
+			ReportTempInfoReqDTO reqDTO = new ReportTempInfoReqDTO();
+			reqDTO.setCreatedBy(createdBy);
+			reqDTO.setReportCode(reportCode);
+
+			ReportTempInfoResDTO resDTO = reportTempInfoSO
+					.deleteDecryptedDataByReportCodeAndCreateedBy(reqDTO);
+		return resDTO.getCount();
 	}
 
 	/**
@@ -16180,7 +16216,8 @@ public class ReportBackingBean extends
 		 * EpException(MessageConst.ERROR_REPORT_780007); } } else
 		 */
 
-		if (StringUtils.isNotEmpty(getScQuotationNo())
+		if (StringUtils.isNotEmpty(getScQuotationNo()) 
+				|| StringUtils.isNotEmpty(this.getScEstimatedAmount())
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScSoneCrtdFromDate() != null) && (getScSoneCrtdFromDate()
@@ -16191,10 +16228,10 @@ public class ReportBackingBean extends
 				|| StringUtils.isNotEmpty(getScRequisenerId())
 				|| StringUtils.isNotEmpty(getScSupplier())
 				|| StringUtils.isNotEmpty(getScSoneStatus())
-				|| CollectionUtils.isNotEmpty(this.getScProcureAllList())
-				|| CollectionUtils.isNotEmpty(this.getScQuotationList())
-				|| CollectionUtils.isNotEmpty(this.getScTenderList())
-				|| CollectionUtils.isNotEmpty(this.getScRstrctdTndrList())
+				|| this.getScProcureAllList()!=null
+				|| this.getScQuotationList()!=null
+				|| this.getScTenderList()!=null
+				|| this.getScRstrctdTndrList()!=null
 				|| StringUtils.isNotEmpty(getScCreatedToYear())
 				|| StringUtils.isNotEmpty(getScCreatedFromYear())
 				|| StringUtils.isNotEmpty(getScDeskOfficer())
@@ -16246,6 +16283,8 @@ public class ReportBackingBean extends
 						}
 					}
 				}
+				
+				getEncryptedDataByQTR();
 
 				if (StringUtils.isNotEmpty(this.getScCreatedToMonth())
 						&& StringUtils.isNotEmpty(this.getScCreatedFromMonth())) {
@@ -16345,7 +16384,16 @@ public class ReportBackingBean extends
 				quotationNumberValidation();
 				rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ
 						+ this.getScQuotationId());
+			}	
+			if (this.getManagedBean().getReportValue().trim()
+					.equalsIgnoreCase(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)) {
+				if (StringUtils.isNotEmpty(this.getScEstimatedAmount())) {
+					rptGenBean
+							.setEstimatedAmntTotVar(ReportConst.SC_ESTIMATED_AMNT_EQ
+									+ this.getScEstimatedAmount());
+				}
 			}
+			
 			if (StringUtils.isNotEmpty(this.getScDeskOfficer())) {
 				rptGenBean.setScDeskOfficerVar(ReportConst.AMP_DESK_OFFCR_EQ
 						+ this.getScDeskOfficer());
@@ -16374,19 +16422,19 @@ public class ReportBackingBean extends
 								+ this.getScProcurementType());
 			}
 			StringBuilder procureMethod = new StringBuilder();
-			if (this.getScProcureAllList().size() > 0) {
+			if (this.getScProcureAllList()!=null && this.getScProcureAllList().length > 0) {
 				rptGenBean
 						.setScProcureMethodChkVar(ReportConst.AMP_PROCURE_METHOD_EQ
-								+ this.getScProcureAllList().get(0));
+								+ this.scProcureAllList[0]);
 			} else {
-				if (this.getScQuotationList().size() > 0) {
-					procureMethod.append(this.getScQuotationList().get(0));
+				if (this.getScQuotationList()!=null && this.getScQuotationList().length > 0) {
+					procureMethod.append(this.scQuotationList[0]);
 				}
-				if (this.getScTenderList().size() > 0) {
-					procureMethod.append(this.getScTenderList().get(0));
+				if (this.getScTenderList()!=null && this.getScTenderList().length > 0) {
+					procureMethod.append(this.scTenderList[0]);
 				}
-				if (this.getScRstrctdTndrList().size() > 0) {
-					procureMethod.append(this.getScRstrctdTndrList().get(0));
+				if (this.getScRstrctdTndrList()!=null && this.getScRstrctdTndrList().length > 0) {
+					procureMethod.append(this.scRstrctdTndrList[0]);
 				}
 				if ((procureMethod.length() > 0)) {
 					rptGenBean
@@ -16538,6 +16586,215 @@ public class ReportBackingBean extends
 
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
+	}
+
+	private void getEncryptedDataByQTR() {
+
+		log.info("getEncryptedDataByQTR");
+
+		String procALL_A = null;
+		String quotation_Q = null;
+		String tender_T = null;
+		String restricted_R = null;
+		String quotationTender_QT = null;
+		String quotationRestricted_QR = null;
+		String tenderRestricted_TR = null;
+
+		PMReportReqDTO reqDTO = new PMReportReqDTO();
+
+		if (this.getManagedBean().getReportValue()
+				.equals(ReportConst.SC_QUOT_TENDER_OR_RPT_VAL)) {
+
+			getProcurementTypes(procALL_A, quotation_Q, tender_T, restricted_R,
+					quotationTender_QT, quotationRestricted_QR,
+					tenderRestricted_TR, reqDTO);
+			getDecryptedDataByQtId(retrieveQTREncryptedDataList(reqDTO), this
+					.getManagedBean().getReportValue());
+
+		} else if (this.getManagedBean().getReportValue()
+				.equals(ReportConst.SC_SUMMRY_SRC_OR_RPT_VAL)) {
+
+			getProcurementTypes(procALL_A, quotation_Q, tender_T, restricted_R,
+					quotationTender_QT, quotationRestricted_QR,
+					tenderRestricted_TR, reqDTO);
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					CommonConstants.DEFAULT_DATE_FORMAT);
+			
+			reqDTO.setQuotationNo(this.scQuotationNo);			
+
+			reqDTO.setPublishDateFrom(dateFormat.format(this.scPublishFromDate)
+					.toString());
+			reqDTO.setPublishDateTo(dateFormat.format(this.scPublishToDate)
+					.toString());
+
+			getDecryptedDataByQtId(retrieveSummaryQTREncryptedDataList(reqDTO),
+					this.getManagedBean().getReportValue());
+		} else if (this.getManagedBean().getReportValue()
+				.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
+				|| this.getManagedBean().getReportValue()
+						.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)) {
+			BigDecimal quotationId = new BigDecimal(
+					this.scQuotationId != null ? this.scQuotationId.replaceAll(
+							",", "") : null);
+			decryptionByQtId(quotationId, this
+					.getManagedBean().getReportValue());
+		}
+	}
+
+	private void getProcurementTypes(String procALL_A, String quotation_Q,
+			String tender_T, String restricted_R, String quotationTender_QT,
+			String quotationRestricted_QR, String tenderRestricted_TR,
+			PMReportReqDTO reqDTO) {
+
+		log.info("getProcurementTypes");
+
+		String creadtedFrom = null;
+
+		String creadtedTo = null;
+
+		if (this.getScProcureAllList() != null
+				&& this.getScProcureAllList().length > 0) {
+			if (this.scProcureAllList[0].equals("A")) {
+				procALL_A = this.scProcureAllList[0].toString();
+				reqDTO.setQuotationType(procALL_A);
+			}
+		}
+		if (this.getScQuotationList() != null
+				&& this.getScQuotationList().length > 0) {
+			if (this.scQuotationList[0].equals("Q")) {
+				quotation_Q = this.scQuotationList[0].toString();
+				reqDTO.setQuotationType(quotation_Q);
+			}
+		}
+		if (this.getScTenderList() != null && this.getScTenderList().length > 0) {
+			if (this.scTenderList[0].equals("T")) {
+				tender_T = this.scTenderList[0].toString();
+				reqDTO.setQuotationType(tender_T);
+			}
+		}
+		if (this.getScRstrctdTndrList() != null
+				&& this.getScRstrctdTndrList().length > 0) {
+			if (this.scRstrctdTndrList[0].equals("R")) {
+				restricted_R = this.scRstrctdTndrList[0].toString();
+				reqDTO.setQuotationType(restricted_R);
+			}
+		}
+		if (this.getScQuotationList() != null
+				&& this.getScQuotationList().length > 0
+				&& this.getScTenderList() != null
+				&& this.getScTenderList().length > 0) {
+			if (quotation_Q != null && tender_T != null) {
+				quotationTender_QT = quotation_Q + tender_T;
+				reqDTO.setQuotationType(quotationTender_QT);
+			}
+		} else if (this.getScQuotationList() != null
+				&& this.getScQuotationList().length > 0
+				&& this.getScRstrctdTndrList() != null
+				&& this.getScRstrctdTndrList().length > 0) {
+			if (quotation_Q != null && restricted_R != null) {
+				quotationRestricted_QR = quotation_Q + restricted_R;
+				reqDTO.setQuotationType(quotationRestricted_QR);
+			}
+		} else if (this.getScTenderList() != null
+				&& this.getScTenderList().length > 0
+				&& this.getScRstrctdTndrList() != null
+				&& this.getScRstrctdTndrList().length > 0) {
+			if (tender_T != null && restricted_R != null) {
+				tenderRestricted_TR = tender_T + restricted_R;
+				reqDTO.setQuotationType(tenderRestricted_TR);
+			}
+		}
+		if (this.getScCreatedFromMonth() != null
+				|| this.getScCreatedToMonth() != null) {
+			creadtedFrom = this.getScCreatedFromMonth()
+					+ this.getScCreatedFromYear();
+			creadtedTo = this.getScCreatedToMonth() + this.getScCreatedToYear();
+		} else {
+			creadtedFrom = "01" + this.getScCreatedFromYear();
+			creadtedTo = "12" + this.getScCreatedToYear();
+		}
+		reqDTO.setFromDate(creadtedFrom);
+		reqDTO.setToDate(creadtedTo);
+
+		log.info("procALL_A=" + procALL_A + ", quotation_Q= " + quotation_Q
+				+ ", tender_T= " + tender_T + ", restricted_R= " + restricted_R
+				+ ", creadtedFrom= " + creadtedFrom + ", creadtedTo= "
+				+ creadtedTo);
+
+		log.info("quotationTender_QT=" + quotationTender_QT
+				+ ", quotationRestricted_QR= " + quotationRestricted_QR
+				+ ", tenderRestricted_TR= " + tenderRestricted_TR);
+	}
+
+	private void getDecryptedDataByQtId(List<Object[]> encryptedData,String reportCode) {
+
+		log.info("getDecryptedDataByQtId");
+
+		if (CollectionUtils.isNotEmpty(encryptedData)) {
+			log.info("total records of encryption data==> "
+					+ encryptedData.size());
+			for (Object[] _objArr : encryptedData) {
+				decryptionByQtId(((BigDecimal) _objArr[1]),reportCode);
+			}
+		}
+	}
+
+	private void decryptionByQtId(BigDecimal qtId,
+			String reportCode) {
+		log.info("decryptionByQtId");
+		IQTDetailSO QtDetailsSO;	
+
+		try {
+			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+
+			tenderReqDTO.setQtId(qtId.longValue());
+			BigDecimal estimatedAmount = QtDetailsSO
+					.getdecryptedEstAmount(tenderReqDTO.getQtId());
+			
+			if (reportCode.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
+					|| reportCode
+							.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)) {
+				this.setScEstimatedAmount(estimatedAmount != null ? estimatedAmount
+						.toString() : null);
+			} else {
+				ReportTempInfoResDTO resDTO = toSaveDecryptedAmountWithQNoAndQId(
+						qtId, estimatedAmount);
+				if (resDTO.isSuccessful()) {
+					log.info("saved Record in DB " + resDTO.isSuccessful());
+				}
+			}
+			
+		} catch (Exception e) {
+			throw (e);
+		} finally {
+			QtDetailsSO = null;
+		}
+
+	}
+
+	private ReportTempInfoResDTO toSaveDecryptedAmountWithQNoAndQId(
+			BigDecimal qtId, BigDecimal estimatedAmount) {
+		IReportTempInfoSO reportTempSO;
+		reportTempSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IReportTempInfoSO.class);
+
+		ReportTempInfo rptTmp = new ReportTempInfo();
+		rptTmp.setReportCode(this.getReportValue());		
+		rptTmp.setQtId(qtId.toString());
+		rptTmp.setEstimatedAmt(estimatedAmount != null ? estimatedAmount
+				.toString() : null);		
+
+		ReportTempInfoReqDTO reqDTO = new ReportTempInfoReqDTO();
+		reqDTO.setReportTempInfo(rptTmp);
+
+		ReportTempInfoResDTO resDTO = reportTempSO
+				.saveDecryptedAmountWithQuotationNoAndQuotationId(reqDTO);
+		reportTempSO=null;
+		return resDTO;
 	}
 
 	/**
@@ -17684,7 +17941,8 @@ public class ReportBackingBean extends
 			this.setFromDate(null);
 			this.setToDate(null);
 			this.setScQuotationId(null);
-			this.setScQuotationNo(null);
+			this.setScQuotationNo(null);			
+			this.setScEstimatedAmount(null);			
 			this.setScPaymentId(null);
 			this.getManagedBean().setLoaReportDocumentList(
 					new ArrayList<ScLoaReport>());
@@ -17878,10 +18136,10 @@ public class ReportBackingBean extends
 			this.setScSOAStatus(null);
 			this.setScSimpleQuoteType(null);
 			this.setScLOANo(null);
-			scProcureAllList = new ArrayList<SelectItem>();
-			scQuotationList = new ArrayList<SelectItem>();
-			scTenderList = new ArrayList<SelectItem>();
-			scRstrctdTndrList = new ArrayList<SelectItem>();
+			this.setScProcureAllList(null);
+			this.setScQuotationList(null);
+			this.setScTenderList(null);
+			this.setScRstrctdTndrList(null);
 			this.setCtContractNo(null);
 			this.setCtPhysicalContractNo(null);
 			this.setCtAgreement(null);
@@ -18389,38 +18647,39 @@ public class ReportBackingBean extends
 		}
 
 		// Jimmy add (temporarily workaround for report).
-		String reportStr = gnrtdURL.toString();
+		// Jimmy add (temporarily workaround for report).
+				String reportStr = gnrtdURL.toString();
 
-		FacesScopes facesScope = new FacesScopes();
-		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
-				.getRequestScope(WebKeys.THEME_DISPLAY);
+				FacesScopes facesScope = new FacesScopes();
+				ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
+						.getRequestScope(WebKeys.THEME_DISPLAY);
 
 
-		String commonUrl = "";
-		
-		try {
-			commonUrl = themeDisplay.getURLCurrent().substring(
-					0,
-					themeDisplay.getURLCurrent().indexOf(
-							themeDisplay.getLayout().getGroup()
-									.getFriendlyURL())
-							+ themeDisplay.getLayout().getGroup()
-									.getFriendlyURL().length());
-		} catch (PortalException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SystemException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+				String commonUrl = "";
+				
+				try {
+					commonUrl = themeDisplay.getURLCurrent().substring(
+							0,
+							themeDisplay.getURLCurrent().indexOf(
+									themeDisplay.getLayout().getGroup()
+											.getFriendlyURL())
+									+ themeDisplay.getLayout().getGroup()
+											.getFriendlyURL().length());
+				} catch (PortalException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SystemException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
-		String reportPopup = //this.getServerUrl() + "docroot/xhtml/reports/reportpopup.xhtml";
-				commonUrl + "/" + "report-popup";
-		
-		if(testing){
-			RequestContext.getCurrentInstance()
-		    .execute("document.getElementById('reportUrl').value = '"+reportStr+"'; window.open('"+reportPopup+"', 'Resource', 'toolbar=no ,location=0, status=no,titlebar=no,menubar=no,width='+  screen.width +',height=' +  screen.height);e.preventDefault(); window.focus();");			//.execute("ex.show();");
-		} else {
+				String reportPopup = //this.getServerUrl() + "docroot/xhtml/reports/reportpopup.xhtml";
+						commonUrl + "/" + "report-popup";
+				
+				if(testing){
+					RequestContext.getCurrentInstance()
+				    .execute("document.getElementById('reportUrl').value = '"+reportStr+"'; window.open('"+reportPopup+"', 'Resource', 'toolbar=no ,location=0, status=no,titlebar=no,menubar=no,width='+  screen.width +',height=' +  screen.height);e.preventDefault(); window.focus();");			//.execute("ex.show();");
+				} else {
 		
 		HttpURLConnection urlConnection = null;
 		URL obj;
@@ -18429,7 +18688,7 @@ public class ReportBackingBean extends
 			obj = new URL(gnrtdURL.toString());
 			log.info(gnrtdURL.toString());
 			urlConnection = (HttpURLConnection) obj.openConnection();
-
+			
 			// new Thread(new InterruptThread(urlConnection)).start();
 			log.info("@@@@ Report URL = " + urlConnection.getURL()
 					+ " @@@@ Time stamp =" + time);

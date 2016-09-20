@@ -3998,6 +3998,8 @@ public class ReportsGenerateBean {
 	// URL variables start
 	/** The quotation id tot var. */
 	private String quotationIdTotVar = ReportConst.EMPTY_VAL;
+	
+	private String estimatedAmntTotVar = ReportConst.EMPTY_VAL;
 
 	/** The item type tot var. */
 	private String itemTypeTotVar = ReportConst.EMPTY_VAL;
@@ -8678,6 +8680,14 @@ public class ReportsGenerateBean {
 	 */
 	public String getCtLOAPhysicalNoVar() {
 		return ctLOAPhysicalNoVar;
+	}
+
+	public String getEstimatedAmntTotVar() {
+		return estimatedAmntTotVar;
+	}
+
+	public void setEstimatedAmntTotVar(String estimatedAmntTotVar) {
+		this.estimatedAmntTotVar = estimatedAmntTotVar;
 	}
 
 	/**
