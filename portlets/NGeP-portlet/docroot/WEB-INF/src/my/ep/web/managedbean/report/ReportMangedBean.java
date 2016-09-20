@@ -93,6 +93,8 @@ public class ReportMangedBean extends BaseManagedBean {
 	
 	/** The sm supplier. */
 	private SmSupplier smSupplier;
+	
+	private String estimatedAmount;
 
 	/** Report url string. */
 	private String reportStr;
@@ -401,6 +403,14 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public CmUnspsc getSelectedUnspscItem() {
 		return selectedUnspscItem;
+	}
+
+	public String getEstimatedAmount() {
+		return estimatedAmount;
+	}
+
+	public void setEstimatedAmount(String estimatedAmount) {
+		this.estimatedAmount = estimatedAmount;
 	}
 
 	/**

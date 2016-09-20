@@ -751,6 +751,7 @@ public class ReportConst {
 	public static final String SC_AMP_DESK_OFFICER_EQ = "&DESK_OFFICER=";
 	public static final String SC_AMP_SIMPL_QUOTE_TYPE_EQ = "&SQTYPE=";
 	public static final String SC_AMP_LOA_NO_EQ = "&LOANUM=";
+	public static final String SC_ESTIMATED_AMNT_EQ = "&PESTAMT=";
 	public static final String DESKOFFR = "DESKOFFR";
 	public static final String APPROVERNT = "APPROVERNT";
 	public static final String REQUISITIONER = "REQUISITIONER";
