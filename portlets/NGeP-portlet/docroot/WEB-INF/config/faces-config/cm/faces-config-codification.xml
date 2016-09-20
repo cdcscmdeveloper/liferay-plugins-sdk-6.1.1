@@ -33,6 +33,11 @@
 			<to-view-id>/xhtml/cm/codification/extensionSearch.xhtml</to-view-id>
 		</navigation-case>
 
+       <navigation-case>
+			<from-outcome>searchUnspscToAssign</from-outcome>
+			<to-view-id>/xhtml/cm/codification/searchUnspscToAssign.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
 
 		<navigation-case>
 			<from-outcome>codificationView</from-outcome>
