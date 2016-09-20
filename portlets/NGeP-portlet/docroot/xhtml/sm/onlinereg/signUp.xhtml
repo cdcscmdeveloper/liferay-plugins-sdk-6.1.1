@@ -30,6 +30,9 @@
 		<p:panel header="#{lbl['lbl.sm.header.new.registration']}">
 			<table>
 				<tr>
+					<td colspan="2"><h:outputText value="#{lbl['lbl.sm.basic.select.account']}" /></td>
+				</tr>
+				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.account.type.header']}" /></td>
 					<td><p:selectOneRadio
 							value="#{registrationBackingBean.managedBean.applType}">
