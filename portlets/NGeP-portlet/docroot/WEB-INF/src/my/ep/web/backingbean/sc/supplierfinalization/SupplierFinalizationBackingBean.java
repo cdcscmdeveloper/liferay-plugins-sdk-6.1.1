@@ -833,14 +833,13 @@ public class SupplierFinalizationBackingBean extends
 					 } else {
 						 evaluationStage = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
 					 }
-					 if (getManagedBean().getCurrentZone() != null) {
-						 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
-					 }
 					 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage";
 			 		 break;
 		}
 		getManagedBean().setEvaluationHeader(evaluationHeader);
-		
+		if (getManagedBean().getCurrentZone() != null) {
+			 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
+		 }
 		getManagedBean().setQualifiedSuppliersByEvalStage(
 				new QualifiedSuppliersPagingDataModel(
 						"evaluationQualifiedSuppliers", qtId,
@@ -3196,7 +3195,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 		
 		String componentId = "supplierListTblSingle";
-		if (QTConstants.SF_SINGLE.equals(
+		if (QTConstants.SF_MULTIPLE.equals(
 				getManagedBean().getSelectionMode())) {
 			componentId = "supplierListTblMultiple";
 		}
@@ -4468,7 +4467,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setDisableSupplierSelection(false);
 		this.getManagedBean().setRecommendedSupplier(null);
 		this.getManagedBean().setShortlistedSuppliersByRecommendType(null);
-		
+		this.getManagedBean().setZoneActiveIndex(0);
 		populateRecommendTypeEventDetails(true);
 	}
 
@@ -5903,7 +5902,7 @@ public class SupplierFinalizationBackingBean extends
 				
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				reqDTO.setSearchBean(searchBean);
-				
+				reqDTO.setSpecZoneId(selectedZoneId);
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 				if (resDTO.isSuccessful()) {
