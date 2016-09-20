@@ -147,8 +147,32 @@ public class ConsolidationReportBackingBean extends
 				navigateToItemizedTab();
 				break;
 		}
+		onTabMenuChangeAction(tabIndex,true);
 	}	
-	
+	private void onTabMenuChangeAction(int tabIndex,boolean isEventTriggered) {
+		
+		if (isEventTriggered) {
+			ScQt scQt = this.getManagedBean().getScQt();
+			if (scQt.isZonal()
+					&& CollectionUtils.isNotEmpty(this.getManagedBean()
+							.getZoneDetails())) {
+				this.getManagedBean().setSelectedZone(
+						this.getManagedBean().getZoneDetails().get(0));
+				this.getManagedBean().setZoneActiveIndex(0);
+			}
+		}
+		switch (tabIndex) {
+			case 0:
+				navigateToBriefingPaperTab();
+				break;
+			case 1:
+				navigateToPackagewiseTab();
+				break;
+			case 2:
+				navigateToItemizedTab();
+				break;
+		}
+	}	
 	/**
 	 * To navigate to the selected zone tab, under Supplier Finalization tab
 	 * 
@@ -624,7 +648,7 @@ public class ConsolidationReportBackingBean extends
 
 		loadInitialData();
 
-		onTabMenuChangeAction(activeIndex);
+		onTabMenuChangeAction(activeIndex,false);
 	}	
 	
 	/**
@@ -858,17 +882,22 @@ public class ConsolidationReportBackingBean extends
 	}	
 	
 	private void populateScQtRecommendsByZone() {
+		
 		ScQtFinalization scQtFinalization = 
 				getManagedBean().getScQtFinalization();
 		TplSpecZoneDtl selectedZone = getManagedBean().getSelectedZone();
 		if (scQtFinalization != null) {
-			log.info("scQtFinalization.getScQtRecommendsByZone() : " + 
-							scQtFinalization.getScQtRecommendsByZone());
-		}
-		if (selectedZone != null) {
-			getManagedBean().setItemsList(
-					scQtFinalization.getScQtRecommendsByZone()
-							.get(selectedZone.getSpecZoneId()));
+			Map<Long, List<ScQtRecommend>> scQtRecommendsByZone = scQtFinalization
+					.getScQtRecommendsByZone();
+			log.info("scQtFinalization.getScQtRecommendsByZone() : "
+					+ scQtRecommendsByZone);
+
+			if (selectedZone != null && scQtRecommendsByZone != null
+					&& scQtRecommendsByZone.size() > 0) {
+				getManagedBean().setItemsList(
+						scQtRecommendsByZone.get(
+								selectedZone.getSpecZoneId()));
+			}
 		}
 	}	
 	
