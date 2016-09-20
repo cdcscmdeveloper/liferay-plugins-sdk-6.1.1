@@ -48,6 +48,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.cm.CmConst;
@@ -59,6 +60,7 @@ import my.ep.web.vo.CommoditiesVO;
 import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.NameNode;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -87,6 +89,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public static final String NAV_TO_CONTRACTED_ITEM = "contractedItem";
 	public static final String NAV_TO_ASSIGN_PRODUCT_CODE = "assignProductCode";
 	public static final String NO_69 = "69";
+	public static final String NAV_SEARCH_UNSPC_TO_ASSIGN = "searchUnspscToAssign";
 
 	private static Logger log = Logger.getLogger(CodificationBackingBean.class);
 
@@ -989,9 +992,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public String assignProductCode(ScRequestItem requestItem) {
 		log.info(">>>>>>>>>requestItem= " + requestItem);
 		this.getManagedBean().setSelectedRequestItem(requestItem);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 
 		clearContractedCodePopUp();
-		return "searchUnspscToAssign.xhtml";
+		return NAV_SEARCH_UNSPC_TO_ASSIGN;
 
 	}
 
@@ -1328,10 +1333,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				item = codeResDTO.getCmItem();
 
 			}
-
-			this.getManagedBean().getSelectedRequestItem().setCmItem(item);
+			ScRequestItem scRequestItem = this.getManagedBean().getSelectedRequestItem();
+			scRequestItem.setCmItem(item);
 			List<ScRequestItem> tempRequestItemList = new ArrayList<ScRequestItem>();
-			tempRequestItemList.add(this.getManagedBean().getSelectedRequestItem());
+			tempRequestItemList.add(scRequestItem);
 			// update RequestItem
 			RequestItemReqDTO requestItemReqDTO = new RequestItemReqDTO();
 			requestItemReqDTO.setRequestItems(tempRequestItemList);
@@ -1344,78 +1349,90 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			// status of PendingCodifiedItem to Completed and update its
 			// RequestItemList
 			boolean allCodeItemsAssigned = true;
-			for (ScRequestItem requestItem : this.getManagedBean()
-					.getSelectedVPendingRequestItemList()) {
-				if (requestItem.getCmItem() != null) {
-					if (requestItem.getCmItem().getExtensionCode() == null
-							|| requestItem.getCmItem().getExtensionCode()
-							.isEmpty()) {
+			if(CollectionUtils.isNotEmpty(this.getManagedBean()
+					.getSelectedVPendingRequestItemList())){
+				for (ScRequestItem requestItem : this.getManagedBean()
+						.getSelectedVPendingRequestItemList()) {
+					if (requestItem.getCmItem() != null) {
+						if (requestItem.getCmItem().getExtensionCode() == null
+								|| requestItem.getCmItem().getExtensionCode()
+								.isEmpty()) {
+							allCodeItemsAssigned = false;
+							break;
+						}
+					} else {// requestItem.getCmItem()==null
 						allCodeItemsAssigned = false;
 						break;
 					}
-				} else {// requestItem.getCmItem()==null
-					allCodeItemsAssigned = false;
-					break;
 				}
 			}
 			
 			// update status of pendingCodifiedItem
-			PendingCodifiedItemReqDTO codifiedItemReqDTO = new PendingCodifiedItemReqDTO();
-			codifiedItemReqDTO.setPendingCodifiedItemId(this
-					.getManagedBean().getSelectedVPendingCodifiedItem()
-					.getPendingCodifiedItemId());
-			log.info("........getPendingCodifiedItemId()"
-					+ this.getManagedBean()
-					.getSelectedVPendingCodifiedItem()
-					.getPendingCodifiedItemId());
-			PendingCodifiedItemResDTO codifiedItemResDTO = codifiedItemSO
-					.retrievePendingCodifiedItemById(codifiedItemReqDTO);
-			CmPendingCodifiedItem codifiedItem = codifiedItemResDTO
-					.getPendingCodifiedItem();
-
-			if (allCodeItemsAssigned) {
-				// update status of PendingCodifiedItem to Completed and
-
-				codifiedItem.setStatusId(CmConst.COMPLETED); // status set
-				// to
-				// Completed
-
-				codifiedItemReqDTO.setPendingCodifiedItem(codifiedItem);
-				codifiedItemResDTO = codifiedItemSO.updatePendingCodifiedItem(codifiedItemReqDTO);
-				this.getManagedBean().getSelectedVPendingCodifiedItem().setStatusId(codifiedItemResDTO.getPendingCodifiedItem().getStatusId());
-
-				facesContext = FacesContext.getCurrentInstance();
-				facesContext.addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_710009,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-				System.out
-				.println("***************RequestItem List and status have been updated*****************");
-
+			if(null == getManagedBean().getSelectedVPendingCodifiedItem()){
+				LOADetailBackingBean loaBackingBean = new LOADetailBackingBean();
+				loaBackingBean.updateUnspscItem(scRequestItem);
+				
 			} else {
-				
-				
-				codifiedItem.setStatusId(CmConst.IN_PROGRESS); // status set
-				// to
-				// In Progress
+				PendingCodifiedItemReqDTO codifiedItemReqDTO = new PendingCodifiedItemReqDTO();
+				codifiedItemReqDTO.setPendingCodifiedItemId(this
+						.getManagedBean().getSelectedVPendingCodifiedItem()
+						.getPendingCodifiedItemId());
+				log.info("........getPendingCodifiedItemId()"
+						+ this.getManagedBean()
+						.getSelectedVPendingCodifiedItem()
+						.getPendingCodifiedItemId());
+				PendingCodifiedItemResDTO codifiedItemResDTO = codifiedItemSO
+						.retrievePendingCodifiedItemById(codifiedItemReqDTO);
+				CmPendingCodifiedItem codifiedItem = codifiedItemResDTO
+						.getPendingCodifiedItem();
 
-				codifiedItemReqDTO.setPendingCodifiedItem(codifiedItem);
-				codifiedItemResDTO = codifiedItemSO.updatePendingCodifiedItem(codifiedItemReqDTO);
-				this.getManagedBean().getSelectedVPendingCodifiedItem().setStatusId(codifiedItemResDTO.getPendingCodifiedItem().getStatusId());
-				facesContext = FacesContext.getCurrentInstance();
-				facesContext.addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_710010,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			}
+				if (allCodeItemsAssigned) {
+					// update status of PendingCodifiedItem to Completed and
+
+					codifiedItem.setStatusId(CmConst.COMPLETED); // status set
+					// to
+					// Completed
+
+					codifiedItemReqDTO.setPendingCodifiedItem(codifiedItem);
+					codifiedItemResDTO = codifiedItemSO.updatePendingCodifiedItem(codifiedItemReqDTO);
+					this.getManagedBean().getSelectedVPendingCodifiedItem().setStatusId(codifiedItemResDTO.getPendingCodifiedItem().getStatusId());
+
+					facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_710009,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					System.out
+					.println("***************RequestItem List and status have been updated*****************");
+
+				} else {
+
+
+					codifiedItem.setStatusId(CmConst.IN_PROGRESS); // status set
+					// to
+					// In Progress
+
+					codifiedItemReqDTO.setPendingCodifiedItem(codifiedItem);
+					codifiedItemResDTO = codifiedItemSO.updatePendingCodifiedItem(codifiedItemReqDTO);
+					this.getManagedBean().getSelectedVPendingCodifiedItem().setStatusId(codifiedItemResDTO.getPendingCodifiedItem().getStatusId());
+					facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_710010,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}
+			} 
 			log.info("..............redirect to assign product code page....................");
-			return NAV_TO_ASSIGN_PRODUCT_CODE;
+			
+			String backToPreviousPage = getManagedBean().getBackToPreviousPage();
+			return backToPreviousPage.isEmpty() ? NAV_TO_ASSIGN_PRODUCT_CODE : backToPreviousPage;
+			
 		} else if (isSelectedRequestItemProduct()) {// for service don't show
 			// this message
 			facesContext = FacesContext.getCurrentInstance();
@@ -1745,7 +1762,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	}
 
 	public String backToPendingCodified() {
-		return "assignProductCode?faces-redirect=true";
+		return getManagedBean().getBackToPreviousPage();
+		//return "assignProductCode?faces-redirect=true";
 	}
 
 	public String backToSearchUnspscToAssign() {
