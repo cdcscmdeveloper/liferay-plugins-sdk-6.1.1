@@ -71,6 +71,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultMenuModel;
@@ -546,6 +547,11 @@ public class ConsolidationReportBackingBean extends
 	public void submitAction() {
 		// Validate Desk officer ranking
 		validateConsolidationReport();
+		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+			
+	}
+	
+	public void submitConsolidationReport(){
 		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		SuppFinalizationReqDTO reqDTO = prepareDataToSave();
@@ -577,7 +583,7 @@ public class ConsolidationReportBackingBean extends
 			
 		} finally {
 			qtSuppFinalizationSO = null;
-		}		
+		}	
 	}
 	
 	/** End of Public Methods **/
