@@ -24,6 +24,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
+import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.taskassginment.ITaskAssignmentSO;
@@ -43,6 +44,8 @@ import my.ep.constants.BpmConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -1105,16 +1108,6 @@ public class TaskReassignmentBackingBean extends
 		}
 		return orgProfile;
 	}
-	
-	private Long retrieveSourcingUserGroupId(WorklistItemVO task) {
-		log.info("retrieveSourcingUserGroupId");
-		Long userGroupId = null;
-		SourcingIntegrationResDTO resDTO = retrieveSourcingTaskReassignmentDetail(task);
-		if (resDTO != null && resDTO.getUserGroupId() != null) {
-			userGroupId = resDTO.getUserGroupId();
-		}
-		return userGroupId;
-	}
 
 	private SourcingIntegrationResDTO retrieveSourcingTaskReassignmentDetail(
 			WorklistItemVO task) {
@@ -1190,6 +1183,28 @@ public class TaskReassignmentBackingBean extends
 			ctIntegrationSO = null;
 		}
 		return roleList;
+	}
+	
+	private FulfilmentResDTO retrieveFLTaskReassignmentDetail(
+			WorklistItemVO task) {
+		IFulfilmentSO fulfilmentSO = null;
+		FulfilmentReqDTO reqDTO = null;
+		FulfilmentResDTO resDTO = null;
+		try {
+			reqDTO = new FulfilmentReqDTO();
+			fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT,
+					IFulfilmentSO.class);
+			reqDTO.setDocType(task.getDocType());
+			reqDTO.setFlDocNo(task.getDocNumber());
+			reqDTO.setStatusId(task.getDocStatus().longValue());
+			reqDTO.setTaskName(task.getTaskName());
+			resDTO = fulfilmentSO.retrieveTaskReassignmentDetail(reqDTO);
+
+		} finally {
+			fulfilmentSO = null;
+		}
+		return resDTO;
 	}
 
 	/**
@@ -1411,6 +1426,9 @@ public class TaskReassignmentBackingBean extends
 						.getOrgProfileId();
 		Long userId = getManagedBean()
 				.getTaskAssignmentSearchBean().getUser().getUserId();
+		Long actualOrgProfileId = null;
+		Long userGroupId = null;
+		Long addressId = null;
 		
 		// filter by user name
 		if(StringUtils.isNotBlank(getManagedBean().getSearchUserName())){
@@ -1481,7 +1499,6 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
 			//4 - Include User under Ministry, Kumpulan PTJ & PTJ
-			Long actualOrgProfileId = null;
 			if (ModuleCodeConst.PROCUREMENT_PLAN
 					.equalsIgnoreCase(moduleCode)) {
 				actualOrgProfileId = retrievePpOrgProfile(task);
@@ -1520,19 +1537,26 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_GROUP:
 			//6 - User Group
-			Long userGroupId = null;
+			BigDecimal approvalLimit = null;
 			if (ModuleCodeConst.SUPPLIER_SELECTION
 					.equalsIgnoreCase(moduleCode)) {
-				userGroupId = retrieveSourcingUserGroupId(task);
+				SourcingIntegrationResDTO resDTO = retrieveSourcingTaskReassignmentDetail(task);
+				if(resDTO != null && resDTO.getUserGroupId() != null){
+					userGroupId = resDTO.getUserGroupId();
+				}
 			}else if (ModuleCodeConst.ORDER_FULFILLMENT
 					.equalsIgnoreCase(moduleCode)) {
-				
+				FulfilmentResDTO resDTO = retrieveFLTaskReassignmentDetail(task);
+				if(resDTO != null && resDTO.getUserGroupId() != null){
+					userGroupId = resDTO.getUserGroupId();
+					approvalLimit = resDTO.getOrderAmount();
+				}
 			}
 			
 			if(userGroupId != null){
 				resultBean = retrieveUserGroupUserListByUserGroupId(
 						userGroupId,
-						null,
+						approvalLimit,
 						new ArrayList<Long>(Arrays.asList(userId,
 						getFacesScopes().getUserSessionBean()
 						.getUserId())));
@@ -1544,8 +1568,28 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_DEL_ADDRESS:
 			//7 - Delivery Address
-			// not allow to search
-			disableSearchForSearchBean(searchBean);
+			if (ModuleCodeConst.ORDER_FULFILLMENT
+					.equalsIgnoreCase(moduleCode)) {
+				FulfilmentResDTO resDTO = retrieveFLTaskReassignmentDetail(task);
+				if(resDTO != null && resDTO.getAddressId() != null){
+					addressId = resDTO.getAddressId();
+				}
+			}
+			
+			if(addressId != null){
+				// same address id
+				searchBean
+						.getDataFilterBeans()
+						.add(new SearchFilterBean(
+								"pmAddressTypes.pmAddress.addressId",
+								SearchOperator.OPERATOR_EQUALS
+										.value(), addressId));
+				
+			}else{
+				// not allow to search
+				disableSearchForSearchBean(searchBean);
+			}
+			
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ_NAIK_TARAF:
 			//8 - Include user for Ministry, Kumpulan PTJ, PTJ & Naik Taraf
@@ -1569,6 +1613,21 @@ public class TaskReassignmentBackingBean extends
 			}else{
 				// not allow to search
 				disableSearchForSearchBean(searchBean);
+			}
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_SUPPLIER_OR_PTJ:
+			//10 - Supplier(multiple roles) / PTJ(single)
+			
+			if (ModuleCodeConst.ORDER_FULFILLMENT
+					.equalsIgnoreCase(moduleCode)) {
+				FulfilmentResDTO resDTO = retrieveFLTaskReassignmentDetail(task);
+				if(resDTO != null ){
+				   boolean isSupplier = resDTO.isSupplier();
+				   String roleCode =resDTO.getRoleCode();				   
+				   if(!isSupplier && StringUtils.isNotBlank(roleCode)){
+					   roleList.add(roleCode);
+				   }				
+				}
 			}
 			break;
 		default:
