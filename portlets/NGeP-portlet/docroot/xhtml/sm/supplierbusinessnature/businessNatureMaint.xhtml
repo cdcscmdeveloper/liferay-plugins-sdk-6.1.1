@@ -19,7 +19,6 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.save']}"  onclick="submissionConfirmDlg.show();"/>
 		</div>
-		
 	<p:panel header="#{lbl['lbl.sm.natureofbusiness']}" id="natureBusinessId">
 		<p:dataTable var="suppBizNature" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{supplierBusinessNatureBackingBean.managedBean.smSupplier.smSupplierBusinesses}"
@@ -79,8 +78,7 @@
 				update=":form:suppBizNatureId" />
 
 			<p:commandButton id="btnRemove" update="natureBusinessId" partialSubmit="true" process="@this,suppBizNatureId"
-				value="#{lbl['lbl.btn.delete']}"
-				action="#{supplierBusinessNatureBackingBean.removeBusinessNature}" />
+				value="#{lbl['lbl.btn.delete']}" oncomplete="businessNatureDeletePopUp.show();" />
 		</div>
 		
 		<ac:lovPopup />
@@ -93,5 +91,13 @@
 			</div>
 		</p:dialog>
 	</p:panel>
+	
+	<ac:confirmationPopup id="businessNatureDeletePopUpId"
+		widget="businessNatureDeletePopUp"
+		okAction="supplierBusinessNatureBackingBean.removeBusinessNature()"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":#{p:component('natureBusinessId')}"/>
 	</ui:define>
 </ui:composition>
