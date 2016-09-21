@@ -11,7 +11,13 @@
 			value="#{registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
 			selection="#{registrationBackingBean.managedBean.selectedSuppBanks}"
 			id="bankInfoId" rowKey="#{bankInfo}">
-
+			
+			<p:ajax event="rowSelectCheckbox" update=":#{p:component('deleteBnkBtnId')}" />
+			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('deleteBnkBtnId')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('deleteBnkBtnId')}" />   
+            <p:ajax event="rowUnselect" update=":#{p:component('deleteBnkBtnId')}" />  
+            <p:ajax event="toggleSelect" update=":#{p:component('deleteBnkBtnId')}" />     
+                
 			<p:column selectionMode="multiple" style="width:2%"  
 			rendered="#{not empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}"  />
 
@@ -56,7 +62,7 @@
 					registrationBackingBean.managedBean.smAppl.smSupplierBanks.size() eq SupplierManagementConst.MAX_PAYMENT_BANK}"
 					update="deleteBnkBtnId,bankInfoId,@this" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"  partialSubmit="true" process="@this,bankInfoId"
-					disabled="#{empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
+					disabled="#{empty registrationBackingBean.managedBean.selectedSuppBanks}"
 					update="bankInfoId,addBnkBtnId,@this" id="deleteBnkBtnId" oncomplete="bankDeletePopUp.show();"/>
 			</div>
 		</p:outputPanel>
