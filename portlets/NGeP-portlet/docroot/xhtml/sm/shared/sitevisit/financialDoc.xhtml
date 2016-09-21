@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel header="#{lbl['lbl.sm.sitevisit.licenseinsurance']}"> 
 		<p:dataTable id="dtFinanceDoc" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -96,10 +97,18 @@
 					action="#{svoSiteVisitBackingBean.addFinancialDoc}"
 					update="dtAddFinDocId" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" rendered="#{!viewFlag}"
-					action="#{svoSiteVisitBackingBean.removeFinancialDoc}"
+					oncomplete="financialDocDeletePopUp.show();"
 					update="dtAddFinDocId">
 					<f:param name="disabledValidation" value="true" />
 				</p:commandButton>
 			</div>
 	</p:panel>
+	
+	<ac:confirmationPopup id="financialDocDeletePopUpId"
+		widget="financialDocDeletePopUp"
+		okAction="svoSiteVisitBackingBean.removeFinancialDoc()"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":#{p:component('dtAddFinDocId')}"/>
 </ui:composition>
