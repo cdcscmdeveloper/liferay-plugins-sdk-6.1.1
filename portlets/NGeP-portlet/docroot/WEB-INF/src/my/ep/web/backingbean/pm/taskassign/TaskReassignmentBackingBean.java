@@ -1098,14 +1098,25 @@ public class TaskReassignmentBackingBean extends
 		return roleList;
 	}
 
-	private PmOrgProfile retrieveSourcingOrgProfile(WorklistItemVO task) {
-		log.info("retrieveSourcingOrgProfile");
+	private PmOrgProfile retrieveOrgProfile(WorklistItemVO task,String moduleCode) {
+		log.info("retrieveOrgProfile");
 		PmOrgProfile orgProfile = null;
-		SourcingIntegrationResDTO resDTO = retrieveSourcingTaskReassignmentDetail(task);
-		if (resDTO != null && resDTO.getOrgProfileId() != null) {
-			orgProfile = PmCommonUtil.retrievePmOrgProfileDtl(resDTO
-					.getOrgProfileId());
+		if (ModuleCodeConst.SUPPLIER_SELECTION
+				.equalsIgnoreCase(moduleCode)) {
+			SourcingIntegrationResDTO resDTO = retrieveSourcingTaskReassignmentDetail(task);
+			if (resDTO != null && resDTO.getOrgProfileId() != null) {
+				orgProfile = PmCommonUtil.retrievePmOrgProfileDtl(resDTO
+						.getOrgProfileId());
+			}
+		}else if (ModuleCodeConst.ORDER_FULFILLMENT
+				.equalsIgnoreCase(moduleCode)) {
+			FulfilmentResDTO resDTO = retrieveFLTaskReassignmentDetail(task);
+			if(resDTO != null && resDTO.getOrgProfileId() != null){
+				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(resDTO
+						.getOrgProfileId());
+			}
 		}
+		
 		return orgProfile;
 	}
 
@@ -1462,11 +1473,8 @@ public class TaskReassignmentBackingBean extends
 		// break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
 			//3 - Cross PTJ
-			if (ModuleCodeConst.SUPPLIER_SELECTION
-					.equalsIgnoreCase(moduleCode)) {
-				orgProfile = retrieveSourcingOrgProfile(task);
-			}
-
+			orgProfile = retrieveOrgProfile(task, moduleCode);
+			
 			if (orgProfile != null) {
 				if (OrganizationType.MINISTRY.value().equals(
 						orgProfile.getOrgTypeCode().getParameterCode())) {
@@ -1593,11 +1601,7 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ_NAIK_TARAF:
 			//8 - Include user for Ministry, Kumpulan PTJ, PTJ & Naik Taraf
-		
-			if (ModuleCodeConst.SUPPLIER_SELECTION
-					.equalsIgnoreCase(moduleCode)) {
-				orgProfile = retrieveSourcingOrgProfile(task);
-			}
+			orgProfile = retrieveOrgProfile(task, moduleCode);		
 			if(orgProfile != null){
 				roleList = retrieveAvailableRoles(task.getDocStatus()
 					.longValue(),reassignType);
