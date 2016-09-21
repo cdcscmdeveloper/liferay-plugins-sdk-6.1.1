@@ -154,6 +154,11 @@
 		    <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{contractDetailsBackingBean.setTabCentralValue('IT')}" update=":form" />
+			
+			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{ctBackingBean.isPerformanceBond()}"
+			actionListener="#{contractDetailsBackingBean.setTabCentralValue('PB')}" update=":form" />
 		
 		   <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.factoring']}"
 			    onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
