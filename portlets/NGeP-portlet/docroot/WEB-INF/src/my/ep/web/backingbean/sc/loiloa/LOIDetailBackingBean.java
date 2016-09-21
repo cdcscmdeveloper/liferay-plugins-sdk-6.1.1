@@ -1874,6 +1874,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setQtId(scQt.getQtId());
 			reqDTO.setDocType(getManagedBean().getDocType());
 			reqDTO.setLoiLoaList(getManagedBean().getRecSupplierList());
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().completeLoiListBPMTask(
 					reqDTO);
@@ -1912,6 +1913,7 @@ public class LOIDetailBackingBean extends
 			Object payLoadData = getManagedBean().getPayLoad();
 			boolean isLoiRequired  = getManagedBean().isLoiRequired();
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			List<ScLoiLoa> recSupplierList =getManagedBean().getRecSupplierList();
 			isLoiLoasUpdate = updatePendingLoiLoas(recSupplierList, docType);
 			if(isLoiLoasUpdate){
@@ -5305,7 +5307,27 @@ public class LOIDetailBackingBean extends
 	 */
 	public void enableAutoUpdate() {
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
-		//RequestContext.getCurrentInstance().update("@form");
-		
+	}
+	
+	/**
+	 * Checks if is loi required disabled.
+	 *
+	 * @param scLoiLoa the sc loi loa
+	 * @return true, if is loi required disabled
+	 */
+	public boolean isLoiRequiredDisabled(ScLoiLoa scLoiLoa){
+		if(CollectionUtils.isNotEmpty(scLoiLoa.getScLois())){
+			ScLoi scLoi =  scLoiLoa.getScLois().get(0);
+			if(scLoi.getScWorkFlowStatus() != null){
+				Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
+						.longValue();
+				
+				if(QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) ||
+						QTStatusConst.LOI_PENDING_APPROVAL.equals(statusId)){
+					return Boolean.TRUE;
+				}
+			}
+		}
+		return Boolean.FALSE;
 	}
 }
