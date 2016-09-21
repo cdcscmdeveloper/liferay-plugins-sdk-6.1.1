@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.bankinformation']}" toggleable="true" id="pnlBankInfo">
 		<p:dataTable var="bankInfo" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -55,9 +56,17 @@
 					registrationBackingBean.managedBean.smAppl.smSupplierBanks.size() eq SupplierManagementConst.MAX_PAYMENT_BANK}"
 					update="deleteBnkBtnId,bankInfoId,@this" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"  partialSubmit="true" process="@this,bankInfoId"
-					action="#{registrationBackingBean.removeSupplierBank}" disabled="#{empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
-					update="bankInfoId,addBnkBtnId,@this" id="deleteBnkBtnId"/>
+					disabled="#{empty registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
+					update="bankInfoId,addBnkBtnId,@this" id="deleteBnkBtnId" oncomplete="bankDeletePopUp.show();"/>
 			</div>
 		</p:outputPanel>
 	</p:panel>
+	
+	<ac:confirmationPopup id="bankDeletePopUpId"
+		widget="bankDeletePopUp"
+		okAction="registrationBackingBean.removeSupplierBank()"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":#{p:component('bankInfoId')}"/>
 </ui:composition>
