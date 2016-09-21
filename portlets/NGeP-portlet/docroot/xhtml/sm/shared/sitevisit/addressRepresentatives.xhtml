@@ -35,7 +35,7 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}"  update="dtIntRepTbl" action="#{svoSiteVisitBackingBean.addInterviewee}" />
-			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" update="dtIntRepTbl" oncomplete="representativeDeletePopUp.show()">
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" update="dtIntRepTbl" oncomplete="representativeDeletePopUp.show();">
 				<f:param name="disabledValidation" value="true" />
 			</p:commandButton>
 		</div>
