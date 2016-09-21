@@ -8,7 +8,6 @@
 
 <!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/categoryCodeByTemplate.xhtml" /> -->
 <!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/assistingOfficer.xhtml" /> -->
-	
 	<p:panel header="#{lbl['lbl.sm.companyinfo.intvw.represent']}" id="pnlIntRep">
 		<p:dataTable id="dtIntRepTbl" var="interviewee" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}"
@@ -36,9 +35,17 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}"  update="dtIntRepTbl" action="#{svoSiteVisitBackingBean.addInterviewee}" />
-			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" update="dtIntRepTbl" action="#{svoSiteVisitBackingBean.removeInterviewee}">
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" update="dtIntRepTbl" oncomplete="representativeDeletePopUp.show()">
 				<f:param name="disabledValidation" value="true" />
 			</p:commandButton>
 		</div>
 	</p:panel>
+	
+	<ac:confirmationPopup id="representativeDeletePopUpId"
+		widget="representativeDeletePopUp"
+		okAction="svoSiteVisitBackingBean.removeInterviewee()"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":#{p:component('dtIntRepTbl')}"/>
 </ui:composition>
