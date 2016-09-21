@@ -31,17 +31,19 @@
 				value="#{consolidationReportBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel" 
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-					
+
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-					action="#{consolidationReportBackingBean.managedBean.setOutcome(bpmAction)}"
-					process="@this" oncomplete="submissionPopup.show();"
-					rendered="#{validityDaysExpiredQt}" />
+					action="#{consolidationReportBackingBean.submitAction}"
+					actionListener="#{consolidationReportBackingBean.managedBean.setOutcome(bpmAction)}"
+					process="@this" rendered="#{validityDaysExpiredQt}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					update="@form" />
 			</ui:repeat>
 
 			<ac:confirmationPopup id="submissionPopupId"
 					title="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 					width="450" height="100" widget="submissionPopup" 
-					okAction="consolidationReportBackingBean.submitAction" 
+					okAction="consolidationReportBackingBean.submitConsolidationReport" 
 					content="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit']}" 
 					update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide(); submissionPopup.hide();" />				
 		</div>
