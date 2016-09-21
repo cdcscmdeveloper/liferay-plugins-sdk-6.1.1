@@ -4,7 +4,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel header="#{lbl['lbl.sm.worker.employee']}" id="pnlSvWorkerId">
 	<p:dataTable id="dtWorkerId" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvWorkers}" var="svWorker"
@@ -49,10 +50,18 @@
 				action="#{svoSiteVisitBackingBean.addWorkshopWorker}" rendered="#{!viewFlag}"
 				update="pnlSvWorkerId" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				action="#{svoSiteVisitBackingBean.removeWorkshopWorker}" rendered="#{!viewFlag}"
+				rendered="#{!viewFlag}" oncomplete="workerDeletePopUp.show();"
 				update="pnlSvWorkerId">
 				<f:param name="disabledValidation" value="true" />
 			</p:commandButton>
 		</div>
 	</p:panel>
+	
+	<ac:confirmationPopup id="workerDeletePopUpId"
+		widget="workerDeletePopUp"
+		okAction="svoSiteVisitBackingBean.removeWorkshopWorker()"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":#{p:component('dtWorkerId')}"/>
 </ui:composition>
