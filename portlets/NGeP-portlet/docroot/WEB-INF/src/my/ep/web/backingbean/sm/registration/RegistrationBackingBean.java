@@ -1180,6 +1180,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(getManagedBean().getSmBusinessAdd().isBrandNew()){
 				getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
 				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+				getManagedBean().setBusinessDistrictLs(new ArrayList<SelectItem>());
+				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			}
 		} else if (typeAdd.equals("residential")) {
 			List<SelectItem> stateLs = SmCommonUtil.getStateList(this.getManagedBean().getSmResAdd().getPmCountry().getCountryId());
@@ -1191,6 +1193,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(getManagedBean().getSmPermenantAdd().isBrandNew()){
 				getManagedBean().getSmPermenantAdd().getPmDistrict().setDistrictId(null);
 				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
+				getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());
+				getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
 			}
 		}
 	}
