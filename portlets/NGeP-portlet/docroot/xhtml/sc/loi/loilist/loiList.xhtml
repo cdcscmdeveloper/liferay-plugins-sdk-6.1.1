@@ -56,7 +56,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" rendered="#{!isMultipleLoi}">
 					<h:selectOneMenu value="#{loiLoa.loiRequired}" required="true"
-					    disabled="#{loiLoa.loiCreated}"
+					    disabled="#{lOIDetailBackingBean.isLoiRequiredDisabled(loiLoa)}"
 					    label="#{loiLoa.smSupplier.companyName} : #{lbl['lbl.sc.loiloa.is.loi.required']}" 
 						id="isLoiReq">
 					    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
