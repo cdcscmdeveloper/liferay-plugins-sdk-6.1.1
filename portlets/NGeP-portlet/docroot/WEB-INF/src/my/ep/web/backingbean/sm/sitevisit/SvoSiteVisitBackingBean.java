@@ -561,7 +561,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void removeWorkshopWorker(){
 		//this.getManagedBean().getSelectedInterviewees() != null && 
-		log.info("**********removeWorkshopWorker*****" + this.getManagedBean().getSelectedWorkers().length);
 		if(this.getManagedBean().getSelectedWorkers().length > 0){
 			for (SmSvWorker svWorker : this.getManagedBean().getSelectedWorkers()) {
 				log.info("---removeSvWorker---" + svWorker);
