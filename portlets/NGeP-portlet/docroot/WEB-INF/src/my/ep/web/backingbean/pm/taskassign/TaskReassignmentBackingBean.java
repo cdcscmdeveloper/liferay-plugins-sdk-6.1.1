@@ -1619,6 +1619,9 @@ public class TaskReassignmentBackingBean extends
 				disableSearchForSearchBean(searchBean);
 			}
 			break;
+		case ProfileManagementConst.REASSIGN_TYPE_SUPPLIER:
+			
+			break;
 		case ProfileManagementConst.REASSIGN_TYPE_SUPPLIER_OR_PTJ:
 			//10 - Supplier(multiple roles) / PTJ(single)
 			
