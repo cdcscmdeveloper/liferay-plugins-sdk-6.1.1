@@ -10,7 +10,8 @@
 					 update="@form" action="#{suppFinalizationBackingBean.navigateToEndorsementReportTab}" />
 					 
 	<ac:scRemarkAndAttachment remarkList="#{suppFinalizationBackingBean.managedBean.finalizationEndorsementRemarks}"
-							  showAttachment="false" />				
+							  showAttachment="false" readonly="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"
+							  numberOfCols="80"/>				
 
 	<p:commandButton value="#{lbl['lbl.sc.btn.refresh']}" process="@form" update="@([id$=endorsementReportContentId])" 
 					 action="#{suppFinalizationBackingBean.getSuppFinalizationEndorsementReportStreamContent}" 
