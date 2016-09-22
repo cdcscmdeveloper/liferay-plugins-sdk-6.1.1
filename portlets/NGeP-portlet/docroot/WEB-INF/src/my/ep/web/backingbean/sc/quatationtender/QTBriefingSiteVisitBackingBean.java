@@ -934,9 +934,9 @@ public class QTBriefingSiteVisitBackingBean extends
 		if (newAddress.getAddress3().equals("")) {
 			newAddress.setAddress3(null);
 		}
-		if (newAddress.getAddress4().equals("")) {
+		/*if (newAddress.getAddress4().equals("")) {
 			newAddress.setAddress4(null);
-		}
+		}*/
 		// address1
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_1, 
@@ -950,9 +950,9 @@ public class QTBriefingSiteVisitBackingBean extends
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_3, 
 				oldAddress.getAddress3(), newAddress.getAddress3());
 		// address4
-		putIntoAmendMentBeanIfChanged(amendMentBean, 
+	/*	putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_4, 
-				oldAddress.getAddress4(), newAddress.getAddress4());
+				oldAddress.getAddress4(), newAddress.getAddress4());*/
 		// postcode
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_ADDRESS_POSTCODE, 

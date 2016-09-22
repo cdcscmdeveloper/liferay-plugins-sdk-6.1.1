@@ -9,7 +9,7 @@
 	
 	<c:if test="#{noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
 		<c:if test="#{bsvDetails.scQtBsv.sameBsv}">
-			<p:panel header="#{lbl['lbl.sc.notice.board.briefing.and.sv.dtls']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.notice.board.briefing.and.sv.dtls']}" toggleable="true">
 
 				<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
 				 <h:outputText value="* " styleClass="mandatory" />
@@ -66,8 +66,6 @@
 						<ui:param name="bsvAddress2ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress2Field]}" />
 						<ui:param name="bsvAddress3Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_3}" />
 						<ui:param name="bsvAddress3ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress3Field]}" />
-						<ui:param name="bsvAddress4Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_4}" />
-						<ui:param name="bsvAddress4ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress4Field]}" />
 						<ui:param name="bsvAddressPostcodeField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_POSTCODE}" />
 						<ui:param name="bsvAddressPostcodeChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressPostcodeField]}" />
 						<ui:param name="bsvAddressCityField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_CITY}" />
@@ -75,7 +73,6 @@
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress1ChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress2ChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress3ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress4ChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressPostcodeChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressCityChangeDate}" />
 						<h:panelGroup rendered="#{!empty bsvLocationChangeDate}">
@@ -182,8 +179,6 @@
 						<ui:param name="bsvAddress2ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress2Field]}" />
 						<ui:param name="bsvAddress3Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_3}" />
 						<ui:param name="bsvAddress3ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress3Field]}" />
-						<ui:param name="bsvAddress4Field" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_4}" />
-						<ui:param name="bsvAddress4ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress4Field]}" />
 						<ui:param name="bsvAddressPostcodeField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_POSTCODE}" />
 						<ui:param name="bsvAddressPostcodeChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressPostcodeField]}" />
 						<ui:param name="bsvAddressCityField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_CITY}" />
@@ -191,7 +186,6 @@
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress1ChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress2ChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress3ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress4ChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressPostcodeChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressCityChangeDate}" />
 						<h:panelGroup rendered="#{!empty bsvLocationChangeDate}">
@@ -256,7 +250,7 @@
 						style="font-weight:bold;text-align: left;" />
 
 				</h:panelGroup>
-
+                 
 				<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}"
 				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					style="width:100%">
@@ -307,8 +301,6 @@
 						<ui:param name="bsvAddress2ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress2Field]}" />
 						<ui:param name="bsvAddress3Field" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_3}" />
 						<ui:param name="bsvAddress3ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress3Field]}" />
-						<ui:param name="bsvAddress4Field" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_4}" />
-						<ui:param name="bsvAddress4ChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddress4Field]}" />
 						<ui:param name="bsvAddressPostcodeField" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_POSTCODE}" />
 						<ui:param name="bsvAddressPostcodeChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvAddressPostcodeField]}" />
 						<ui:param name="bsvAddressCityField" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_ADDRESS_CITY}" />
@@ -316,7 +308,6 @@
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress1ChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress2ChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress3ChangeDate}" />
-						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddress4ChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressPostcodeChangeDate}" />
 						<ui:param name="bsvLocationChangeDate" value="#{!empty bsvLocationChangeDate ? bsvLocationChangeDate : bsvAddressCityChangeDate}" />
 						<h:panelGroup rendered="#{!empty bsvLocationChangeDate}">
