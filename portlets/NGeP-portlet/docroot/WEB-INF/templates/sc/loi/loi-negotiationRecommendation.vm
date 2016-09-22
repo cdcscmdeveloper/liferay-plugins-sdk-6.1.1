@@ -87,13 +87,13 @@
 								<table width="100%" border="0" cellpadding="0" cellspacing="0">
 									<tbody>
 										<tr>
-											<td width="11%" bgcolor="#6d839b" class="title left">Supplier Code</td>
-											<td width="12%" bgcolor="#6d839b" class="title left">Bumiputra Status</td>
-											<td width="13%" bgcolor="#6d839b" class="title left">Total Score</td>
-											<td width="11%" bgcolor="#6d839b" class="title left">Ranking</td>
-											<td width="11%" bgcolor="#6d839b" class="title left">Unit Price</td>
-											<td width="11%" bgcolor="#6d839b" class="title left">Quantity</td>
-											<td width="17%" bgcolor="#6d839b" class="title left">Offered Price (RM)</td>
+											<td width="11%" bgcolor="#6d839b" class="title left">Kod Pembekal</td>
+											<td width="12%" bgcolor="#6d839b" class="title left">Status Bumiputra</td>
+											<td width="13%" bgcolor="#6d839b" class="title left">Jumlah Skor</td>
+											<td width="11%" bgcolor="#6d839b" class="title left">Kedudukan</td>
+											<td width="11%" bgcolor="#6d839b" class="title left">Unit Harga (RM)</td>
+											<td width="11%" bgcolor="#6d839b" class="title left">Kuantiti</td>
+											<td width="17%" bgcolor="#6d839b" class="title left">Harga Tawaran (RM)</td>
 										</tr>
 									</tbody>
 								</table>
@@ -131,11 +131,11 @@
 											</table>
 										#end
 										#if ($count == $item.awardSupplierList.size())
-											No awarded supplier for this item
+											Tiada pembekal dipilih untuk item ini.
 										#end										
 									</td>
 								#else
-									No awarded supplier for this item
+									Tiada pembekal dipilih untuk item ini.
 								#end
 							</tr>
 						#end
@@ -146,11 +146,11 @@
 					<table width="100%" border="0" cellpadding="0" cellspacing="0">
 						<tbody>
 							<tr>
-								<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Code</td>
-								<td width="15%" bgcolor="#6d839b" class="title border left">Bumiputra Status</td>
-								<td width="23%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
-								<td width="12%" bgcolor="#6d839b" class="title border left">Total Score</td>
-								<td width="10%" bgcolor="#6d839b" class="title border left">Ranking</td>
+								<td width="15%" bgcolor="#6d839b" class="title border left">Kod Pembekal</td>
+								<td width="15%" bgcolor="#6d839b" class="title border left">Status Bumiputra</td>
+								<td width="23%" bgcolor="#6d839b" class="title border left">Harga Tawaran (RM)</td>
+								<td width="12%" bgcolor="#6d839b" class="title border left">Jumlah Skor</td>
+								<td width="10%" bgcolor="#6d839b" class="title border left">Kedudukan</td>
 							</tr>
 							#foreach($supplierDtl in $zoneReportDTO.awardedSuppliers)
 								#set($String = "formatter")
@@ -177,9 +177,9 @@
 						<tbody>
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left">Item</td>
-								<td width="10%" bgcolor="#6d839b" class="title border left">Quantity</td>
-								<td width="15%" bgcolor="#6d839b" class="title border left">Unit Price (RM)</td>
-								<td width="15%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
+								<td width="10%" bgcolor="#6d839b" class="title border left">Kuantiti</td>
+								<td width="15%" bgcolor="#6d839b" class="title border left">Unit Harga (RM)</td>
+								<td width="15%" bgcolor="#6d839b" class="title border left">Harga Tawaran (RM)</td>
 							</tr>
 							#foreach( $loiLoaItem in $zoneReportDTO.loiLoaItems )
 								#set($String = "formatter")
@@ -212,13 +212,13 @@
 							#end
 		
 							<tr class="ui-content">
-								<th colspan="3" bgcolor="#6d839b" class="title border left alignRight">Total</th>
+								<th colspan="3" bgcolor="#6d839b" class="title border left alignRight">Jumlah</th>
 								<td bgcolor="#6d839b" class="title border left alignRight">$zoneReportDTO.afterNegoSubTotal</td>
 							</tr>
 						</tbody>
 					</table>
 				#else
-					No awarded supplier (or) all suppliers have rejected the LOI in this zone
+					Tiada pembekal dipilih (atau) kesemua pembekal telah menolak surat niat bagi zon ini.
 				#end
 			#end
 			<br/><br/><br/><br/>
@@ -234,13 +234,13 @@
 						<table width="100%" border="0" cellpadding="0" cellspacing="0">
 							<tbody>
 								<tr>
-									<td width="11%" bgcolor="#6d839b" class="title left">Supplier Code</td>
-									<td width="12%" bgcolor="#6d839b" class="title left">Bumiputra Status</td>
-									<td width="13%" bgcolor="#6d839b" class="title left">Total Score</td>
-									<td width="11%" bgcolor="#6d839b" class="title left">Ranking</td>
-									<td width="11%" bgcolor="#6d839b" class="title left">Unit Price</td>
-									<td width="11%" bgcolor="#6d839b" class="title left">Quantity</td>
-									<td width="17%" bgcolor="#6d839b" class="title left">Offered Price (RM)</td>
+									<td width="11%" bgcolor="#6d839b" class="title left">Kod Pembekal</td>
+									<td width="12%" bgcolor="#6d839b" class="title left">Status Bumiputra</td>
+									<td width="13%" bgcolor="#6d839b" class="title left">Jumlah Skor</td>
+									<td width="11%" bgcolor="#6d839b" class="title left">Kedudukan</td>
+									<td width="11%" bgcolor="#6d839b" class="title left">Unit Harga (RM)</td>
+									<td width="11%" bgcolor="#6d839b" class="title left">Kuantiti</td>
+									<td width="17%" bgcolor="#6d839b" class="title left">Harga Tawaran (RM)</td>
 								</tr>
 							</tbody>
 						</table>
@@ -278,12 +278,12 @@
 									</table>
 							    #end
 								#if ($count == $item.awardSupplierList.size())
-									No awarded supplier for this item
+									Tiada pembekal dipilih untuk item ini.
 								#end							    
 							</td>
 						#else 
 							<td class="standard border-bottom right" colspan="8">
-								No awarded supplier for this item
+								Tiada pembekal dipilih untuk item ini.
 							</td>
 						#end
 					</tr>
@@ -296,11 +296,11 @@
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 				<tbody>
 					<tr>
-						<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Code</td>
-						<td width="15%" bgcolor="#6d839b" class="title border left">Bumiputra Status</td>
-						<td width="23%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
-						<td width="12%" bgcolor="#6d839b" class="title border left">Total Score</td>
-						<td width="10%" bgcolor="#6d839b" class="title border left">Ranking</td>
+						<td width="15%" bgcolor="#6d839b" class="title border left">Kod Pembekal</td>
+						<td width="15%" bgcolor="#6d839b" class="title border left">Status Bumiputra</td>
+						<td width="23%" bgcolor="#6d839b" class="title border left">Harga Tawaran (RM)</td>
+						<td width="12%" bgcolor="#6d839b" class="title border left">Jumlah Skor</td>
+						<td width="10%" bgcolor="#6d839b" class="title border left">Kedudukan</td>
 					</tr>
 					#foreach($supplierDtl in $reportDTO.awardedSuppliers)
 						#set($String = "formatter")
@@ -327,9 +327,9 @@
 				<tbody>
 					<tr>
 						<td width="20%" bgcolor="#6d839b" class="title border left">Item</td>
-						<td width="10%" bgcolor="#6d839b" class="title border left">Quantity</td>
-						<td width="15%" bgcolor="#6d839b" class="title border left">Unit Price (RM)</td>
-						<td width="15%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
+						<td width="10%" bgcolor="#6d839b" class="title border left">Kuantiti</td>
+						<td width="15%" bgcolor="#6d839b" class="title border left">Unit Harga (RM)</td>
+						<td width="15%" bgcolor="#6d839b" class="title border left">Harga Tawaran (RM)</td>
 					</tr>
 					#foreach( $loiLoaItem in $reportDTO.loiLoaItems )
 						#set($String = "formatter")
@@ -362,13 +362,13 @@
 					#end
 
 					<tr class="ui-content">
-						<th colspan="3" bgcolor="#6d839b" class="title border left alignRight">Total</th>
+						<th colspan="3" bgcolor="#6d839b" class="title border left alignRight">Jumlah</th>
 						<td bgcolor="#6d839b" class="title border left alignRight">$reportDTO.afterNegoSubTotal</td>
 					</tr>
 				</tbody>
 			</table>
 		#else
-			No awarded supplier
+			Tiada pembekal dipilih.
 		#end		
 	#end 
 #end
