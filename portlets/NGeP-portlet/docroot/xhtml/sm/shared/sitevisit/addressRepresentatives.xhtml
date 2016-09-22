@@ -14,12 +14,18 @@
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedInterviewees}" rowKey="#{interviewee}">
 		<p:column selectionMode="multiple" style="width:2%" rendered="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}" />
 		
+		<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnIntervieweeRemove')}" />
+		<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnIntervieweeRemove')}" />
+		<p:ajax event="rowSelect" update=":#{p:component('btnIntervieweeRemove')}" />   
+        <p:ajax event="rowUnselect" update=":#{p:component('btnIntervieweeRemove')}" />  
+        <p:ajax event="toggleSelect" update=":#{p:component('btnIntervieweeRemove')}" />  
+		
 		<p:column>	
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.sm.person.composition.name']}" />
 			</f:facet>
-			<p:inputText value="#{interviewee.name}" label="#{lbl['lbl.sm.person.composition.name']}" id="intName"  maxlength="50" size="55"  required="#{empty param['disabledValidation']}" />
+			<p:inputText value="#{interviewee.name}" label="#{lbl['lbl.sm.person.composition.name']}" id="intName"  maxlength="50" size="55"  required="#{!empty param['disabledValidation']}" />
 		</p:column>
 		
 		<p:column>	
@@ -28,15 +34,17 @@
 				<h:outputText value="#{lbl['lbl.sm.userprofile.designation']}" />
 			</f:facet>
 			<p:inputText value="#{interviewee.designation}" label="#{lbl['lbl.sm.userprofile.designation']}" id="intDesignation"  
-			maxlength="50" size="55"  required="#{empty param['disabledValidation']}" />
+			maxlength="50" size="55"  required="#{!empty param['disabledValidation']}" />
 		</p:column>
 		
 		</p:dataTable>
 
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.add']}"  update="dtIntRepTbl" action="#{svoSiteVisitBackingBean.addInterviewee}" />
-			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" update="dtIntRepTbl" oncomplete="representativeDeletePopUp.show();">
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"  update="dtIntRepTbl" action="#{svoSiteVisitBackingBean.addInterviewee}">
 				<f:param name="disabledValidation" value="true" />
+			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" update="dtIntRepTbl" id="btnIntervieweeRemove"
+			oncomplete="representativeDeletePopUp.show();" disabled="#{empty svoSiteVisitBackingBean.managedBean.selectedInterviewees}">
 			</p:commandButton>
 		</div>
 	</p:panel>
@@ -47,5 +55,5 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":#{p:component('dtIntRepTbl')}"/>
+		update=":#{p:component('pnlIntRep')}"/>
 </ui:composition>
