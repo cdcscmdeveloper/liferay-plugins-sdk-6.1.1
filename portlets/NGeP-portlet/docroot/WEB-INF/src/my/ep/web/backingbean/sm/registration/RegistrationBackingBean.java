@@ -154,7 +154,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			log.info("-------RegistrationBackingBean is NUll-------------");
 			//default to malaysia
 			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-
+			PmCountry defaultPersonnelNationality = (PmCountry) defaultCountry.cloneEntity();
+			PmCountry defaultResAddCountry = (PmCountry) defaultCountry.cloneEntity();
+			PmCountry defaultPermAddCountry = (PmCountry) defaultCountry.cloneEntity();
+			
 			this.getManagedBean().setSmSupp(new SmSupplier());
 
 			SmSupplier smSupp = this.getManagedBean().getSmSupp();
@@ -174,7 +177,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smAppl.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
 			this.getManagedBean().setSmPersonnel(new SmPersonnel());
 //			this.getManagedBean().getSmPersonnel().setPmCountry(new PmCountry());
-			this.getManagedBean().getSmPersonnel().setPmCountry(defaultCountry);
+			this.getManagedBean().getSmPersonnel().setPmCountry(defaultPersonnelNationality); //personnelNationality
 			
 			this.getManagedBean().setSmBusinessAdd(new SmAddress());
 			this.getManagedBean().getSmBusinessAdd().setPmCountry(new PmCountry());
@@ -187,7 +190,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setSmResAdd(new SmAddress());
 			this.getManagedBean().getSmResAdd().setPmCountry(new PmCountry());
 //			this.getManagedBean().getSmResAdd().getPmCountry().setCountryId(1L);
-			this.getManagedBean().getSmResAdd().setPmCountry(defaultCountry);
+			this.getManagedBean().getSmResAdd().setPmCountry(defaultResAddCountry);
 			this.getManagedBean().getSmResAdd().setPmState(new PmState());
 			this.getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
 			this.getManagedBean().getSmResAdd().setPmCity(new PmCity());
@@ -195,7 +198,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setSmPermenantAdd(new SmAddress());
 			this.getManagedBean().getSmPermenantAdd().setPmCountry(new PmCountry());
 //			this.getManagedBean().getSmPermenantAdd().getPmCountry().setCountryId(1L);
-			this.getManagedBean().getSmPermenantAdd().setPmCountry(defaultCountry);
+			this.getManagedBean().getSmPermenantAdd().setPmCountry(defaultPermAddCountry);
 			this.getManagedBean().getSmPermenantAdd().setPmState(new PmState());
 			this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 			this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
@@ -239,7 +242,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String proceedToFirstUserRegistration() {
-		log.info("****proceedToFirstUserRegistration******");
+		log.info("****proceedToFirstUserRegistration******" + getManagedBean().getSmPersonnel().getPmCountry().getCountryName());
+
 		
 		//Validate GST No
 		//validateGstRegNo();
