@@ -2951,26 +2951,25 @@ public class QTDetailBackingBean extends
 									ScQtApprovalRemark.class));
 					publicationApproval.setScQtApprovalAttachments(null);
 					publicationApproval.setScQt(scQt);
-					List<ScQtApprovalRequest> approvalDtls = new ArrayList<ScQtApprovalRequest>();
-					ScQtApprovalRequest scQtApprovalDtl = new ScQtApprovalRequest();
-					ParameterReqDTO reqDTO1 = new ParameterReqDTO();
-					reqDTO1.setParameterCode(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL);
-					reqDTO1.setParameterType(ParameterTypeConst.APPROVAL_REQUEST_TYPES);
-					PmParameter parameter = getParameterSO()
-							.retrieveParameterByTypeAndCode(reqDTO1)
-							.getPmParameter();
-					scQtApprovalDtl.setApprovalType(parameter);
-					scQtApprovalDtl.setScQtApproval(publicationApproval);
-					approvalDtls.add(scQtApprovalDtl);
-					publicationApproval.setScQtApprovalDtls(approvalDtls);
-					reqDTO1.setParameterCode(ParameterConst.APPROVAL_CATEGORY_PTJ);
-					reqDTO1.setParameterType(ParameterTypeConst.APPROVAL_CATEGORY);
-					parameter = getParameterSO()
-							.retrieveParameterByTypeAndCode(reqDTO1)
-							.getPmParameter();
-					publicationApproval.setApprovalCategory(parameter);
+					publicationApproval.setApprovalCategory(getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_CATEGORY, 
+							ParameterConst.APPROVAL_CATEGORY_PTJ));
 
 				} 
+				
+				if (CollectionUtils.isEmpty(publicationApproval.getScQtApprovalDtls())) {
+					List<ScQtApprovalRequest> approvalDtls = new ArrayList<ScQtApprovalRequest>();
+					ScQtApprovalRequest scQtApprovalDtl = new ScQtApprovalRequest();
+					scQtApprovalDtl.setApprovalType(getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_REQUEST_TYPES, 
+							ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL));
+					scQtApprovalDtl.setScQtApproval(publicationApproval);
+					approvalDtls.add(scQtApprovalDtl);
+					publicationApproval.setScQtApprovalDtls(approvalDtls);	
+				}
+				publicationApproval.setDeleted(false);
+				List<ScQtApproval> toBeApprovalRemoveList = this.getManagedBean().getToBeApprovalRemoveList();
+				if (CollectionUtils.isNotEmpty(toBeApprovalRemoveList)) {
+					toBeApprovalRemoveList.remove(publicationApproval);	
+				}
 				
 				this.getManagedBean().setPublicationApproval(
 						publicationApproval);
