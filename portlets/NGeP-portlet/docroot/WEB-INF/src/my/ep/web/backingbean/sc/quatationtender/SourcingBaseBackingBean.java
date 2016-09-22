@@ -2348,7 +2348,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			scAddress.setAddress1(smAddress.getAddress1());
 			scAddress.setAddress2(smAddress.getAddress2());
 			scAddress.setAddress3(smAddress.getAddress3());
-			scAddress.setAddress4(smAddress.getAddress4());
+			//scAddress.setAddress4(smAddress.getAddress4());
 			scAddress.setPostcode(smAddress.getPostcode());
 			scAddress.setPmCountry(smAddress.getPmCountry());
 			scAddress.setPmState(smAddress.getPmState());

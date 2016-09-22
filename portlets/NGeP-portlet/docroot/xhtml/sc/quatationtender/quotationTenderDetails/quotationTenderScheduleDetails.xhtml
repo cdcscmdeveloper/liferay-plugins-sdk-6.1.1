@@ -222,10 +222,9 @@
 						value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.address']}">
-					<h:outputText value="#{samplesubmissiondtl.scAddress.address1}" />
+					<h:outputText value="#{samplesubmissiondtl.scAddress.address1}" />,
 					<h:outputText value="#{samplesubmissiondtl.scAddress.address2}" />,
-					<h:outputText value="#{samplesubmissiondtl.scAddress.address3}" />,
-					<h:outputText value="#{samplesubmissiondtl.scAddress.address4}" />
+					<h:outputText value="#{samplesubmissiondtl.scAddress.address3}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
 					<p:commandLink
@@ -380,11 +379,6 @@
 					</td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.four']}" /></td>
-					<td><p:inputText
-							disabled="#{scheduleReadonly}"
-							value="#{qTDetailBB.managedBean.scQtSampleSubmission.scAddress.address4}"
-							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
@@ -415,10 +409,6 @@
 							</c:otherwise>
 						</c:choose>
 					</td>
-				</tr>
-				<tr>
-					<td />
-					<td />
 					<td><p:outputLabel value="#{lbl['lbl.sc.post.code']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
