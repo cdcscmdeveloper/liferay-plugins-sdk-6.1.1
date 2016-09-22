@@ -115,7 +115,7 @@
 					#{lbl['lbl.sc.action']}
 				</f:facet>
 				<p:commandButton value="#{lbl['lbl.btn.assign']}" 
-					disabled="#{!(scLoiLoaItem.scRequestItem.cmItem == null)}"
+					disabled="#{!(scLoiLoaItem.scRequestItem.cmItem == null) or lOADetailBackingBean.managedBean.readOnly}"
 					action="#{codificationBackingBean.assignProductCode(scLoiLoaItem.scRequestItem)}" />
 			</p:column>
 		</p:dataTable>
