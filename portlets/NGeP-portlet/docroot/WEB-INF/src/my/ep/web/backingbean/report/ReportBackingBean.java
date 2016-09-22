@@ -14783,9 +14783,9 @@ public class ReportBackingBean extends
 				
 				if (this.getModuleValue().equalsIgnoreCase(
 						ModuleCodeConst.SUPPLIER_SELECTION)) {
-					if (!(this.reportValue
-							.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL) || this.reportValue
-							.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL))) {
+					if (this.reportValue
+							.equals(ReportConst.SC_QUOT_TENDER_OR_RPT_VAL) || this.reportValue
+							.equals(ReportConst.SC_SUMMRY_SRC_OR_RPT_VAL)) {
 
 						int count = deleteDecryptedDataAfterReportGeneration(
 								lngUserId, this.reportValue);
@@ -16284,25 +16284,47 @@ public class ReportBackingBean extends
 					}
 				}
 				
-				getEncryptedDataByQTR();
+				if (this.getManagedBean().getReportValue()
+						.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
+						|| this.getManagedBean()
+								.getReportValue()
+								.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)) {
 
-				if (StringUtils.isNotEmpty(this.getScCreatedToMonth())
-						&& StringUtils.isNotEmpty(this.getScCreatedFromMonth())) {
-					rptGenBean
-							.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ
-									+ this.getScCreatedFromMonth()
-									+ this.getScCreatedFromYear());
-					rptGenBean
-							.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ
-									+ this.getScCreatedToMonth()
-									+ this.getScCreatedToYear());
-				} else {
-					rptGenBean
-							.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ
-									+ this.getScCreatedFromYear());
-					rptGenBean
-							.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ
-									+ this.getScCreatedToYear());
+					getEstimatedAmtByQtID();
+
+				} else if (!(this.getManagedBean().getReportValue()
+						.equals(ReportConst.SC_COMMITTEE_DTLS_TD_RPT_VAL)
+						|| this.getManagedBean()
+								.getReportValue()
+								.equals(ReportConst.SC_OPENING_COMMITTEE_RPT_VAL)
+						|| this.getManagedBean()
+								.getReportValue()
+								.equals(ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL) || this
+						.getManagedBean()
+						.getReportValue()
+						.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL))) {
+					
+					getEncryptedDataByQTR();
+
+					if (StringUtils.isNotEmpty(this.getScCreatedToMonth())
+							&& StringUtils.isNotEmpty(this
+									.getScCreatedFromMonth())) {
+						rptGenBean
+								.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ
+										+ this.getScCreatedFromMonth()
+										+ this.getScCreatedFromYear());
+						rptGenBean
+								.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ
+										+ this.getScCreatedToMonth()
+										+ this.getScCreatedToYear());
+					} else {
+						rptGenBean
+								.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ
+										+ this.getScCreatedFromYear());
+						rptGenBean
+								.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ
+										+ this.getScCreatedToYear());
+					}
 				}
 			}
 			// }
@@ -16386,12 +16408,12 @@ public class ReportBackingBean extends
 						+ this.getScQuotationId());
 			}	
 			if (this.getManagedBean().getReportValue().trim()
-					.equalsIgnoreCase(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)) {
-				if (StringUtils.isNotEmpty(this.getScEstimatedAmount())) {
-					rptGenBean
-							.setEstimatedAmntTotVar(ReportConst.SC_ESTIMATED_AMNT_EQ
-									+ this.getScEstimatedAmount());
-				}
+					.equalsIgnoreCase(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
+					|| (this.getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL))) {
+				rptGenBean
+						.setEstimatedAmntTotVar(ReportConst.SC_ESTIMATED_AMNT_EQ
+								+ this.getScEstimatedAmount());
 			}
 			
 			if (StringUtils.isNotEmpty(this.getScDeskOfficer())) {
@@ -16543,6 +16565,7 @@ public class ReportBackingBean extends
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getQuotationIdTotVar()
+						+ rptGenBean.getEstimatedAmntTotVar()
 						+ rptGenBean.getScProcureMethodChkVar()
 						+ rptGenBean.getScDeskOfficerVar()
 						+ rptGenBean.getScPtjVar()
@@ -16620,8 +16643,8 @@ public class ReportBackingBean extends
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
-			
-			reqDTO.setQuotationNo(this.scQuotationNo);			
+
+			reqDTO.setQuotationNo(this.scQuotationNo);
 
 			reqDTO.setPublishDateFrom(dateFormat.format(this.scPublishFromDate)
 					.toString());
@@ -16630,16 +16653,16 @@ public class ReportBackingBean extends
 
 			getDecryptedDataByQtId(retrieveSummaryQTREncryptedDataList(reqDTO),
 					this.getManagedBean().getReportValue());
-		} else if (this.getManagedBean().getReportValue()
-				.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
-				|| this.getManagedBean().getReportValue()
-						.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)) {
-			BigDecimal quotationId = new BigDecimal(
-					this.scQuotationId != null ? this.scQuotationId.replaceAll(
-							",", "") : null);
-			decryptionByQtId(quotationId, this
-					.getManagedBean().getReportValue());
 		}
+	}
+	
+	private void getEstimatedAmtByQtID() {
+
+		BigDecimal quotationId = new BigDecimal(
+				this.scQuotationId != null ? this.scQuotationId.replaceAll(",",
+						"") : null);
+		decryptionByQtId(quotationId, this.getManagedBean().getReportValue());
+
 	}
 
 	private void getProcurementTypes(String procALL_A, String quotation_Q,
