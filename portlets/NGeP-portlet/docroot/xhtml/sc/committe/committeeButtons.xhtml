@@ -12,7 +12,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 					action="#{committeBackingBean.viewSearchBackAction}" partialSubmit="true"
 					process="@this" update="@this"
-					rendered="#{empty qTDetailBB.managedBean.taskId}" />
+					rendered="#{committeBackingBean.managedBean.taskId eq null}" />
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{committeBackingBean.updateCommitteDetails(null)}"
 					process="@all" rendered="#{isCommitteeRecordStatusActive}" 
