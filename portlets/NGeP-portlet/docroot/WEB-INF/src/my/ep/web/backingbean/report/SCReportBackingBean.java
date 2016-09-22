@@ -346,7 +346,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScPublishDateView(true);
 	            break;
 	        case ReportConst.SC_COMMITTEE_DTLS_TD_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
+	        	rptGenBean.setScCommitteQuotationNoView(true);
 	        	rptGenBean.setExtraTwoColumnView(true);
 	        	/*if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
