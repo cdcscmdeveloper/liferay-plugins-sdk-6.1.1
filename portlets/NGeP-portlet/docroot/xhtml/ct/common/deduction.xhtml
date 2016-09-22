@@ -41,21 +41,32 @@
 	           		     </f:facet>
 	           		   
 	           		     <p:selectOneMenu value="#{datas.deductionType.parameterId}" style="width:170px;float:left;text-align:left;"
-			      		     disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"  
-			      		     rendered="#{datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}">
+			      		     disabled="#{ctBackingBean.managedBean.disableAmendDetails}"  
+			      		     rendered="#{!ctBackingBean.managedBean.viewContract and 
+			      		          datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}">
 			                    <f:selectItems value="#{ctBackingBean.retrieveParameterDescListByType()}" />
 			                    <p:ajax event="change" update=":form:tableDeduction, :form:clauseDescp" process="@all"  partialSubmit="true"
 			                         listener="#{ctBackingBean.validateDeductionType(datas.deductionType.parameterId)}"></p:ajax>
 			              </p:selectOneMenu>
+			              
+			              <h:outputText  rendered="#{ctBackingBean.managedBean.viewContract and 
+			      		          datas.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}" 
+			                     value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
 			            
 			              <h:outputText rendered="#{datas.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" 
 			                 value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
-			                 <p:spacer width="5"/>
+			                 <p:spacer width="15"/>
 			                   <p:inputText  value="#{datas.deductionDesc}"  style="width:400px;float:left;" maxlength="250"
-		                           disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"
-		                           rendered="#{ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers
-		                           or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}">
+		                           disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+		                           rendered="#{!ctBackingBean.managedBean.viewContract and 
+		                              (ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers
+		                           or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed)}">
 			                 </p:inputText>  
+			                 
+			                  <h:outputText rendered="#{ctBackingBean.managedBean.viewContract and 
+		                              (ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers
+		                           or ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed)}"
+			                 value=", #{datas.deductionDesc}" style="float:left;" />
 			              </p:column> 
 		       
 		              <p:column  headerText="#{lbl['lbl.ct.amount']}" style="width:150px;text-align:right;">
@@ -64,11 +75,17 @@
 		                       <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		                  </h:outputText>
 		                  <p:inputText  value="#{datas.amount}" styleClass="ppRightBtn" style="width:100px;" 
-		                      disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"
-		                      rendered="#{ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}">
+		                      disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+		                      rendered="#{!ctBackingBean.managedBean.viewContract and 
+		                        ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}">
 			                <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			                <p:ajax process="@this"></p:ajax>
 			                </p:inputText>  
+			                
+			                <h:outputText value="#{datas.amount}"  rendered="#{ctBackingBean.managedBean.viewContract and  
+	                             ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeFixed}">
+		                       <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		                  </h:outputText>
 		              </p:column>  
 		   
 		   </p:dataTable>  
@@ -120,9 +137,12 @@
 				               	          	   <ac:iconTooltip id="index" value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
 				               	          </f:facet>
                                           <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="4" style="width:97%;" autoResize="false"
-                                               disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" styleClass="ui-inputtextarea">
+                                               rendered="#{!ctBackingBean.managedBean.viewContract}"
+                                               disabled="#{ctBackingBean.managedBean.disableAmendDetails}" styleClass="ui-inputtextarea">
         	                                  <p:ajax process="@this"/>
         	                              </p:inputTextarea>
+        	                              
+        	                              <h:outputText  rendered="#{ctBackingBean.managedBean.viewContract}"  value="#{data.clauseDescription}" style="float:left;" />
                                      </p:column>    
            
                       </p:dataTable>
