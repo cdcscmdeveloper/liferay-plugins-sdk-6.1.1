@@ -30,7 +30,7 @@ public class NtfSchedulerServlet extends HttpServlet {
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.NTF_MESSAGE_BULK_INTERNAL_JOB,
-								SchedulerConstants.NTF_MESSAGE_BULK_JOB_GROUP),
+								SchedulerConstants.NTF_JOB_GROUP),
 						NtfMessageBulkJob.class,
 						SchedulerConstants.NTF_MESSAGE_BULK_JOB_DESC,
 						SchedulerPropertiesUtils
@@ -42,7 +42,7 @@ public class NtfSchedulerServlet extends HttpServlet {
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.NTF_MESSAGE_REAL_TIME_INTERNAL_JOB,
-								SchedulerConstants.NTF_MESSAGE_REAL_TIME_JOB_GROUP),
+								SchedulerConstants.NTF_JOB_GROUP),
 						NtfMessageRealTimelJob.class,
 						SchedulerConstants.NTF_MESSAGE_REAL_TIME_JOB_DESC,
 						SchedulerPropertiesUtils
@@ -54,7 +54,7 @@ public class NtfSchedulerServlet extends HttpServlet {
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.NTF_MESSAGE_DIRECT_EMAIL_INTERNAL_JOB,
-								SchedulerConstants.NTF_MESSAGE_DIRECT_EMAIL_JOB_GROUP),
+								SchedulerConstants.NTF_JOB_GROUP),
 						NtfMessageDirectEmailJob.class,
 						SchedulerConstants.NTF_MESSAGE_DIRECT_EMAIL_JOB_DESC,
 						SchedulerPropertiesUtils
@@ -66,7 +66,7 @@ public class NtfSchedulerServlet extends HttpServlet {
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.NTF_EMAIL_BULK_INTERNAL_JOB,
-								SchedulerConstants.NTF_EMAIL_BULK_JOB_GROUP),
+								SchedulerConstants.NTF_JOB_GROUP),
 						NtfEmailBulkJob.class,
 						SchedulerConstants.NTF_EMAIL_BULK_JOB_DESC,
 						SchedulerPropertiesUtils
@@ -78,7 +78,7 @@ public class NtfSchedulerServlet extends HttpServlet {
 				.scheduleJob(
 						new JobKey(
 								SchedulerConstants.NTF_EMAIL_REAL_TIME_INTERNAL_JOB,
-								SchedulerConstants.NTF_EMAIL_REAL_TIME_JOB_GROUP),
+								SchedulerConstants.NTF_JOB_GROUP),
 						NtfEmailRealTimeJob.class,
 						SchedulerConstants.NTF_EMAIL_REAL_TIME_JOB_DESC,
 						SchedulerPropertiesUtils
