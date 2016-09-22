@@ -16288,22 +16288,22 @@ public class ReportBackingBean extends
 						.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
 						|| this.getManagedBean()
 								.getReportValue()
-								.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)) {
-
-					getEstimatedAmtByQtID();
-
-				} else if (!(this.getManagedBean().getReportValue()
-						.equals(ReportConst.SC_COMMITTEE_DTLS_TD_RPT_VAL)
+								.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)
 						|| this.getManagedBean()
 								.getReportValue()
 								.equals(ReportConst.SC_OPENING_COMMITTEE_RPT_VAL)
 						|| this.getManagedBean()
 								.getReportValue()
-								.equals(ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL) || this
-						.getManagedBean()
-						.getReportValue()
-						.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL))) {
-					
+								.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)) {
+
+					getEstimatedAmtByQtID();
+
+				} else if (!(this.getManagedBean().getReportValue()
+						.equals(ReportConst.SC_COMMITTEE_DTLS_TD_RPT_VAL)						
+						|| this.getManagedBean()
+								.getReportValue()
+						.equals(ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL))) {
+
 					getEncryptedDataByQTR();
 
 					if (StringUtils.isNotEmpty(this.getScCreatedToMonth())
@@ -16409,8 +16409,21 @@ public class ReportBackingBean extends
 			}	
 			if (this.getManagedBean().getReportValue().trim()
 					.equalsIgnoreCase(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
-					|| (this.getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL))) {
+					|| this.getManagedBean()
+							.getReportValue()
+							.trim()
+							.equalsIgnoreCase(
+									ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportValue()
+							.trim()
+							.equalsIgnoreCase(
+									ReportConst.SC_OPENING_COMMITTEE_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportValue()
+							.trim()
+							.equalsIgnoreCase(
+									ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)) {
 				rptGenBean
 						.setEstimatedAmntTotVar(ReportConst.SC_ESTIMATED_AMNT_EQ
 								+ this.getScEstimatedAmount());
@@ -16779,9 +16792,12 @@ public class ReportBackingBean extends
 			
 			if (reportCode.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
 					|| reportCode
-							.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)) {
+							.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)
+					|| reportCode.equals(ReportConst.SC_OPENING_COMMITTEE_RPT_VAL)
+					|| reportCode
+							.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)) {
 				this.setScEstimatedAmount(estimatedAmount != null ? estimatedAmount
-						.toString() : null);
+						.toString() : "");
 			} else {
 				ReportTempInfoResDTO resDTO = toSaveDecryptedAmountWithQNoAndQId(
 						qtId, estimatedAmount);
