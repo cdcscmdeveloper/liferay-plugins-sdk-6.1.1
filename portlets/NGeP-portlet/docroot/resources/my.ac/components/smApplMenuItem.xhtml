@@ -13,6 +13,7 @@
 		<cc:attribute name="section" required="true"/>
 		<cc:attribute name="tabNo" required="true"/>
 		<cc:attribute name="label" required="true"/>
+		<cc:attribute name="validate" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -28,6 +29,7 @@
 			<h:outputText value="S" rendered="#{cc.attrs.suppEdit}" title="#{lbl['tt.sm.edit.by.supp']}" style="color:red !important;"/>
 			<h:outputText value="P" rendered="#{cc.attrs.poEdit}" title="#{lbl['tt.sm.edit.by.po']}" style="color:red !important;"/>
 			<h:outputText value="A" rendered="#{cc.attrs.appEdit}" title="#{lbl['tt.sm.edit.by.app']}" style="color:red !important;"/>
+			<f:param name="validate" value="#{cc.attrs.validate}" disable="#{empty cc.attrs.validate}"/>
 		</p:commandLink>
 	</cc:implementation>
 
