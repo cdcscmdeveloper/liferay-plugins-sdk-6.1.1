@@ -29,7 +29,12 @@
 			<p:column selectionMode="multiple" style="width:2%" 
 			rendered="#{not empty supplierBusinessNatureBackingBean.managedBean.smSupplier.smSupplierBusinesses and supplierBusinessNatureBackingBean.managedBean.smSupplier.smSupplierBusinesses.size() gt 1}"
 			disabledSelection="#{supplierBusinessNatureBackingBean.managedBean.smSupplier.smSupplierBusinesses.size() le 1}" />
-			<p:ajax event="rowSelectCheckbox" />
+			
+			<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnRemove')}" />
+			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnRemove')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('btnRemove')}" />   
+            <p:ajax event="rowUnselect" update=":#{p:component('btnRemove')}" />  
+            <p:ajax event="toggleSelect" update=":#{p:component('btnRemove')}" />     
 	
 			<p:column>
 				<f:facet name="header">
@@ -78,7 +83,8 @@
 				update=":form:suppBizNatureId" />
 
 			<p:commandButton id="btnRemove" update="natureBusinessId" partialSubmit="true" process="@this,suppBizNatureId"
-				value="#{lbl['lbl.btn.delete']}" oncomplete="businessNatureDeletePopUp.show();" />
+				value="#{lbl['lbl.btn.delete']}" oncomplete="businessNatureDeletePopUp.show();" 
+				disabled="#{empty supplierBusinessNatureBackingBean.managedBean.selectedBusinessNatureLs}" />
 		</div>
 		
 		<ac:lovPopup />
