@@ -177,9 +177,7 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 		return sectionLvl1Code;
 	}
 	
-	public void removeBusinessNature() {
-		log.info("---------------removeBusinessNature count------------" + this.getManagedBean().getSelectedBusinessNatureLs().length);
-	
+	public void removeBusinessNature() {	
 		if(this.getManagedBean().getSelectedBusinessNatureLs().length ==  this.getManagedBean().getSmSupplier().getSmSupplierBusinesses().size()){
 			throw new EpException(MessageConst.ERROR_721014);
 		}
@@ -188,6 +186,8 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 			log.info("---------------removeBusinessNature.------------" + suppBusinessNature);
 			this.getManagedBean().getSmSupplier().getSmSupplierBusinesses().remove(suppBusinessNature);
 		}
+		
+		getManagedBean().setSelectedBusinessNatureLs(null);
 	}
 	
 	public String updateBusinessNature(){
