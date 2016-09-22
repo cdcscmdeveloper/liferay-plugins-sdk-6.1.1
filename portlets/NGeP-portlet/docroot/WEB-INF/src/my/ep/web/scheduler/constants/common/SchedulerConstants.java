@@ -203,33 +203,32 @@ public class SchedulerConstants {
 	public static final String EPOL_COMPANY_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
 	public static final String EPOL_CONTACT_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
 	public static final String EPOL_SUPPLIER_USER_INFO_JOB_DESCRIPTION = "Job run once daily after 1 AM";
-
-	// NOTIFICATIONS
+	//TODO need to delete obsolete constants
 	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB = "NOTIFICATION JOB GROUP";
 	public static final String NOTIFICATION_INTEGRATION_JOB_GROUP = "NOTIFICATION INTEGRATION JOB";
 	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC = "Job run 10 AM and 10 PM";
+	
+	// CM Related jobs
 	public static final String CM_EXPIRED_ITEM_TIMER_JOB = "ITEM EXPIRED JOB";
 	public static final String CM_EXPIRED_ITEM_TIMER_JOB_GROUP = "CM JOB GROUP";
 	public static final String CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC = "Job run 12 AM";
-	public static final String CM_DROP_DOC_SEQ_JOB_GROUP = "DROP DOC SEQUENCE JOB";
+	public static final String CM_DROP_DOC_SEQ_JOB_GROUP = "CM JOB GROUP";
 
+
+	// NOTIFICATIONS
+	public static final String NTF_JOB_GROUP = "NOTIFICATION JOB GROUP";
 	public static final String NTF_MESSAGE_BULK_INTERNAL_JOB = "NTF BULK MESSAGE JOB";
-	public static final String NTF_MESSAGE_BULK_JOB_GROUP = "NTF BULK MESSAGE JOB GROUP";
 	public static final String NTF_MESSAGE_BULK_JOB_DESC = "Ntf Bulk Job run every 3 minutes";
 
 	public static final String NTF_MESSAGE_REAL_TIME_INTERNAL_JOB = "NTF REAL TIME MESSAGE JOB";
-	public static final String NTF_MESSAGE_REAL_TIME_JOB_GROUP = "NTF REAL TIME MESSAGE JOB GROUP";
 	public static final String NTF_MESSAGE_REAL_TIME_JOB_DESC = "Ntf Real Time Message Job run every 2 minutes";
 
 	public static final String NTF_MESSAGE_DIRECT_EMAIL_INTERNAL_JOB = "NTF DIRECT EMAIL MESSAGE JOB";
-	public static final String NTF_MESSAGE_DIRECT_EMAIL_JOB_GROUP = "NTF DIRECT EMAIL JOB GROUP";
 	public static final String NTF_MESSAGE_DIRECT_EMAIL_JOB_DESC = "Ntf Direct Email Job run every 4 minute";
 
 	public static final String NTF_EMAIL_BULK_INTERNAL_JOB = "NTF BULK EMAIL JOB";
-	public static final String NTF_EMAIL_BULK_JOB_GROUP = "NTF BULK EMAIL JOB GROUP";
 	public static final String NTF_EMAIL_BULK_JOB_DESC = "Ntf Bulk Email Job run every 20 minutes";
 
 	public static final String NTF_EMAIL_REAL_TIME_INTERNAL_JOB = "NTF REAL TIME  EMAIL JOB";
-	public static final String NTF_EMAIL_REAL_TIME_JOB_GROUP = "NTF REAL TIME EMAIL JOB GROUP";
 	public static final String NTF_EMAIL_REAL_TIME_JOB_DESC = "Real Time Email Job run every 5 minutes";
 }
