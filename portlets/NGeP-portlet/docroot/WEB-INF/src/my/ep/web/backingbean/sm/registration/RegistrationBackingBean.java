@@ -690,8 +690,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * remove selected Supplier Bank
 	 */
 	public void removeSupplierBank() {
-		// this.getManagedBean().getSmAppl().getSmSupplierBanks().remove(this.getManagedBean().getSelectedSuppBanks());
-		log.info("---removeSupplierBank---");
 		if(this.getManagedBean().getSelectedSuppBanks() != null && this.getManagedBean().getSelectedSuppBanks().length > 0){
 			log.info("---removeSupplierBank 1---");
 			for (SmSupplierBank suppBank : this.getManagedBean().getSelectedSuppBanks()) {
@@ -700,6 +698,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				// suppBank.getPmFinancialOrg().getFinancialOrgId()
 			}
 		}
+		
+		this.getManagedBean().setSelectedSuppBanks(null);
 	}
 	
 	/**
@@ -774,7 +774,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * remove selected business nature from the SmSupplierBusinesses List
 	 */
 	public void removeBusinessNature() {
-		log.info("---------------removeBusinessNature count------------" + this.getManagedBean().getSelectedBusinessNatureLs().length);
 		if(!this.getManagedBean().getSmSupp().isBrandNew()){
 			if(this.getManagedBean().getSelectedBusinessNatureLs().length ==  this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size()){
 				throw new EpException(MessageConst.ERROR_721014);
@@ -784,6 +783,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			log.info("---------------removeBusinessNature.------------" + suppBusinessNature);
 			this.getManagedBean().getSmSupp().getSmSupplierBusinesses().remove(suppBusinessNature);
 		}
+		
+		this.getManagedBean().setSelectedBusinessNatureLs(null);
 	}
 	
 	/**
