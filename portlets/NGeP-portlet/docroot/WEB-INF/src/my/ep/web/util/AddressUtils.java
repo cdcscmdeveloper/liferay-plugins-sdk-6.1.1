@@ -145,11 +145,11 @@ public class AddressUtils {
 				address.append(scAddress.getAddress3());
 				address.append(separator);
 			}
-			if (StringUtils.isNotBlank(
+			/*if (StringUtils.isNotBlank(
 					scAddress.getAddress4())) {
 				address.append(scAddress.getAddress4());
 				address.append(separator);
-			}
+			}*/
 			
 			if (scAddress.getPmDistrict() != null && 
 					StringUtils.isNotBlank(

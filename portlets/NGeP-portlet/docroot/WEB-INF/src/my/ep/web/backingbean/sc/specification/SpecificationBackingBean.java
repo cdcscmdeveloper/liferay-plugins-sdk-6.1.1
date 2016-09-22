@@ -5989,7 +5989,7 @@ public class SpecificationBackingBean extends
 		scAddress.setAddress1(pmAddress.getAddress1());
 		scAddress.setAddress2(pmAddress.getAddress2());
 		scAddress.setAddress3(pmAddress.getAddress3());
-		scAddress.setAddress4(pmAddress.getAddress4());
+		//scAddress.setAddress4(pmAddress.getAddress4());
 		scAddress.setPostcode(pmAddress.getPostcode());
 		scAddress.setPmCountry(pmAddress.getPmCountry());
 		scAddress.setPmState(pmAddress.getPmState());
@@ -6021,10 +6021,10 @@ public class SpecificationBackingBean extends
 				scAddress.getAddress3())) {
 			address.append(COMMA).append(scAddress.getAddress3());
 		}
-		if (StringUtils.isNotBlank(
+		/*if (StringUtils.isNotBlank(
 				scAddress.getAddress4())) {
 			address.append(COMMA).append(scAddress.getAddress4());
-		}
+		}*/
 		
 		return address.toString();
 	}
