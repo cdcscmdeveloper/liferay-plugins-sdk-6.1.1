@@ -99,23 +99,29 @@
 			
 			    <p:column>
            		    <p:inputText value="#{agencyData.ceilingAmount}"  required="true"  label="#{lbl['lbl.ct.ceiling.amount']}"
-           		        disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails
+           		        disabled="#{ctBackingBean.managedBean.disableAmendDetails
            		        	or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}"
-           		        style="width:80px;" maxlength="23"  styleClass="ppRightBtn">
+           		        style="width:80px;" maxlength="23"  styleClass="ppRightBtn" rendered="#{!ctBackingBean.managedBean.viewContract}">
 			 		    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			 		    <p:ajax event="change" update=":form:tableAgencyDetails" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}"/> 
 				     </p:inputText>
+				     <h:outputText value="#{agencyData.ceilingAmount}"  style="float:right;text-align:right;" rendered="#{ctBackingBean.managedBean.viewContract}">
+				         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				      </h:outputText>
 		    	</p:column>
 		   
 		   	     <p:column>
 			      	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true" size="6"
 		               readonlyInput="true"  
 		               mindate="#{(ctBackingBean.managedBean.contractVer.ctContractValue.effDate gt DateUtils.getCurrentDateWithoutTime()) ? ctBackingBean.managedBean.contractVer.ctContractValue.effDate : DateUtils.getCurrentDateWithoutTime()}" 
-		               maxdate="#{agencyData.expDate}"			             
-		               showOn="button"  disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"
+		               maxdate="#{agencyData.expDate}"	rendered="#{!ctBackingBean.managedBean.viewContract}"		             
+		               showOn="button"  disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 		           	   <p:ajax event="dateSelect" update="agenyStatus" listener="#{ctBackingBean.checkAgencyStatus(agencyData)}"  /> 
 		           </p:calendar>
+		           
+		             <h:outputText value="#{agencyData.effDate}"  rendered="#{ctBackingBean.managedBean.viewContract}">
+				           <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		          </p:column>
 		   	
 		   	      <p:column>
@@ -145,7 +151,10 @@
 		       <p:column style="white-space:normal;">
 		           <p:inputText id="uploadRefNoDoc"  value="#{agencyData.refNo}" 
 		             style="width:80px;" disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-		              rendered="#{agencyData.ap178}"> </p:inputText>
+		              rendered="#{agencyData.ap178 and !ctBackingBean.managedBean.viewContract}"> </p:inputText>
+		              
+		           <h:outputText value="#{agencyData.refNo}" style="float:left;text-align:left;"
+		               rendered="#{agencyData.ap178 and ctBackingBean.managedBean.viewContract}"	/>
 		       </p:column>
 		        
 		        <p:column>
