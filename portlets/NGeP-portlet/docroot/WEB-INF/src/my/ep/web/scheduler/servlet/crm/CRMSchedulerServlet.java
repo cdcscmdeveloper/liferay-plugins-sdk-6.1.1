@@ -65,17 +65,17 @@ public class CRMSchedulerServlet extends HttpServlet {
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_UPDATE_SUPPLIER_USER_INFO_JOB));
 
 		// CRM update supplier info job
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(
-								SchedulerConstants.UPDATE_SUPPLIER_INFO_JOB,
-								SchedulerConstants.CRM_INTEGRATION_JOB_GROUP),
-								UpdateSupplierInfoJob.class,
-						SchedulerConstants.UPDATE_SUPPLIER_INFO_JOB_DESCRIPTION,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_UPDATE_SUPPLIER_INFO_JOB));
+//		EpSchedulerHelper
+//				.scheduleJob(
+//						new JobKey(
+//								SchedulerConstants.UPDATE_SUPPLIER_INFO_JOB,
+//								SchedulerConstants.CRM_INTEGRATION_JOB_GROUP),
+//								UpdateSupplierInfoJob.class,
+//						SchedulerConstants.UPDATE_SUPPLIER_INFO_JOB_DESCRIPTION,
+//						SchedulerPropertiesUtils
+//								.getInstance()
+//								.getProperty(
+//										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_UPDATE_SUPPLIER_INFO_JOB));
 
 	}
 
