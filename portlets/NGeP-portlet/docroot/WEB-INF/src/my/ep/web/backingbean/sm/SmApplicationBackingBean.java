@@ -1196,6 +1196,13 @@ public class SmApplicationBackingBean extends
 		// set section editor VO
 		SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), true);
 
+		// show or hide travel software panel
+		SmApplicationUtil.showOrHideTravelSoftwarePanel(getManagedBean());
+
+		// show or hide equipment panel
+		SmApplicationUtil.getInstance().removeEquipmentIfNotApplicable(
+				getManagedBean());
+
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
@@ -1486,6 +1493,13 @@ public class SmApplicationBackingBean extends
 			setSupplierChangeValues(currentPageType);
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
 					false);
+
+			// init machine details table list before entered equipment section
+			// page
+			if (outputPageType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
+				initSmMachineDetails();
+			}
 			log.info("******* Current page AFTER in managed bean ********"
 					+ getManagedBean().getCurrentPageType());
 		}
@@ -4702,25 +4716,11 @@ public class SmApplicationBackingBean extends
 						.getCategoryL3Id() == null) {
 			getManagedBean().getSelectedMachine().setCategoryCode(null);
 		}
-		if (getManagedBean().getSelectedMachine().getMachine() != null) {
-			if ((getManagedBean().getSelectedMachine().getMachine()
-					.getMachineId() == null || getManagedBean()
-					.getSelectedMachine().getMachine().getMachineId()
-					.compareTo(-1L) == 0)) {
-				getManagedBean().getSelectedMachine().setMachine(null);
-			} else {
-				getManagedBean().getSelectedMachine().setMachineType(
-						StringUtils.EMPTY);
-			}
-		}
 		if (getManagedBean().getSelectedMachine().getCategoryType() != null
 				&& getManagedBean().getSelectedMachine().getCategoryType()
 						.getParameterId() == null) {
 			getManagedBean().getSelectedMachine().setCategoryType(null);
 		}
-		EntityHelper.addOrUpdateEntityToList(getManagedBean()
-				.getSelectedMachine(), getManagedBean().getSmAppl()
-				.getSmMachineDtls());
 		if (getManagedBean().getSelectedMachine().getMachineDtlId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"smMachDtWidVar.paginator.endLink.click()");
@@ -4749,8 +4749,30 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedMachine().setValue(
 					getManagedBean().getRentPrevVal());
 		}
+
+		// roll back main list to clone object if cancel for update action
+		if (getManagedBean().getPopupAction().equals("U")) {
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+					.getSmMachineDtls())) {
+				int i = 0;
+				for (SmMachineDtl mac : getManagedBean().getSmAppl()
+						.getSmMachineDtls()) {
+					if (mac.equals(getManagedBean().getSelectedMachine())) {
+						break;
+					}
+					i++;
+				}
+				getManagedBean()
+						.getSmAppl()
+						.getSmMachineDtls()
+						.set(i,
+								(SmMachineDtl) getManagedBean()
+										.getCloneObject());
+			}
+		}
 		RequestContext.getCurrentInstance().reset(":form:tt:equipmentDialog");
 		RequestContext.getCurrentInstance().execute("equipmentDialog.hide()");
+		RequestContext.getCurrentInstance().update(":form:tt:macDt");
 	}
 
 	/**
@@ -4761,6 +4783,7 @@ public class SmApplicationBackingBean extends
 	 *            - SmMachineDtl object
 	 */
 	public void assignSelMachinery(SmMachineDtl macBean) {
+		getManagedBean().setPopupAction("U");
 		getManagedBean().setRentPrevVal(macBean.getValue());
 		if (!StringUtils.isBlank(macBean.getMachineType())) {
 			macBean.setMachine(new PmMachine());
@@ -4775,7 +4798,8 @@ public class SmApplicationBackingBean extends
 						.getSmAppl()));
 		getManagedBean().setMachineItems(
 				SmApplicationUtil.getMachineItemsByMachineDetails(macBean));
-		getManagedBean().setSelectedMachine(
+		getManagedBean().setSelectedMachine(macBean);
+		getManagedBean().setCloneObject(
 				(SmMachineDtl) SerializationUtils.clone(macBean));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("equipmentDialog.show()");
@@ -4785,6 +4809,7 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmMachineDtl object
 	 */
 	public void assignNewMachineryBean() {
+		getManagedBean().setPopupAction("N");
 		getManagedBean().setOthersMachine(false);
 		getManagedBean().setCategoryTypeItems(
 				SmApplicationUtil.getSelectedCategoryTypeItems(getManagedBean()
@@ -4810,12 +4835,21 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void deleteSelectedMachinery() {
-
+		String errMsg = StringUtils.EMPTY;
 		if (getManagedBean().getSelectedMachineList().size() > 0) {
-			EntityHelper.compareAndRemoveEntityFromList(getManagedBean()
-					.getSelectedMachineList(), getManagedBean().getSmAppl()
-					.getSmMachineDtls(), "machineDtlId");
-			getManagedBean().getSelectedMachineList().clear();
+			SmAppl cloneAppl = (SmAppl) SerializationUtils
+					.clone(getManagedBean().getSmAppl());
+			errMsg = SmApplicationUtil.getMachineDeleteErrMsgKey(
+					getManagedBean().getSmAppl(), getManagedBean()
+							.getSelectedMachineList(), getManagedBean()
+							.isShowMachineryEquipmentPanel());
+			if (!StringUtils.isBlank(errMsg)) {
+				getManagedBean().setSmAppl(cloneAppl);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								errMsg));
+			}
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { SmCommonUtil.getMessage(
@@ -4886,12 +4920,72 @@ public class SmApplicationBackingBean extends
 
 	public void onChangeMachine() {
 		if (getManagedBean().getSelectedMachine().getMachine() != null) {
-			if (getManagedBean().getSelectedMachine().getMachine()
-					.getMachineId().compareTo(Long.parseLong("-1")) != 0) {
+			if ((getManagedBean().getSelectedMachine().getMachine()
+					.getMachineId() == null)) {
+				getManagedBean().getSelectedMachine().setMachine(null);
+			} else {
+				getManagedBean().getSelectedMachine().setMachine(
+						SmCommonUtil.getInstance().getMachineById(
+								getManagedBean().getSelectedMachine()
+										.getMachine().getMachineId()));
 				getManagedBean().getSelectedMachine().setMachineType(
 						StringUtils.EMPTY);
 			}
 		}
+	}
+
+	/**
+	 * Populate category codes when on change category type selected
+	 */
+	public void onChangeCategoryType(SmMachineDtl mac) {
+		// set selected category type
+		mac.setCategoryType(SmApplicationUtil.retrievePmParameterById(mac
+				.getCategoryType().getParameterId()));
+
+		// set dropdown category codes
+		if (!StringUtils.isBlank(mac.getCategoryType().getParameterCode())
+				&& mac.getCategoryType().getParameterCode()
+						.equals(ParameterConst.CATEGORY_TYPE_PRINTING)) {
+			mac.setCategoryCode(new PmCategoryL3());
+		} else {
+			mac.setCategoryCode(null);
+		}
+
+		// set dropdown machines
+		mac.setMachine(new PmMachine());
+		mac.setMachineType(StringUtils.EMPTY);
+
+		mac.setCategoryCode(new PmCategoryL3());
+	}
+
+	/**
+	 * Process machine value when changing drop down value
+	 * 
+	 * @param SmMachineDtl
+	 *            mac
+	 */
+	public void onChangeMachine(SmMachineDtl mac) {
+		if (mac.getMachine() != null) {
+			if (mac.getMachine().getMachineId().compareTo(Long.parseLong("-1")) != 0) {
+				mac.setMachineType(StringUtils.EMPTY);
+			}
+		}
+	}
+
+	/**
+	 * Populate machine when on change category code selected
+	 */
+	public void onChangeCategoryCode(SmMachineDtl mac) {
+		// set category code
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL3Id(getManagedBean().getSelectedMachine()
+				.getCategoryCode().getCategoryL3Id());
+		mac.setCategoryCode(SmServiceLookup.getCategoryCodeSO()
+				.retrieveCategoryL3ById(reqDTO).getCategoryL3());
+
+		// set dropdown machines
+		mac.setMachine(new PmMachine());
+		mac.setMachineType(StringUtils.EMPTY);
 	}
 
 	// manufacturer end
@@ -5204,6 +5298,7 @@ public class SmApplicationBackingBean extends
 				.getSelectedBranch().getGst());
 		SmApplicationUtil.getInstance()
 				.removeNotApplicableInformationBeforeSave(getManagedBean());
+		reCheckVerifiedSection();
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
@@ -8955,6 +9050,21 @@ public class SmApplicationBackingBean extends
 	 */
 	private SmApplSectionReview assignVerificationCount(
 			SmApplSectionReview sec, Boolean isSectionVerified) {
+		int maxReviewCount = getManagedBean().getMaxReviewCount();
+
+		// check for equiment verification needed or not to exclude from max
+		// verification count
+		if (getManagedBean().getSmAppl().getApplCategoryType().equals("S")) {
+			if (!getManagedBean().isShowTravelSoftwarePanel()
+					&& !getManagedBean().isShowMachineryEquipmentPanel()) {
+				maxReviewCount = maxReviewCount - 2;
+			} else {
+				if (!getManagedBean().isShowTravelSoftwarePanel()
+						|| !getManagedBean().isShowMachineryEquipmentPanel()) {
+					maxReviewCount = maxReviewCount - 1;
+				}
+			}
+		}
 		if (isSectionVerified) {
 			sec.setCheckCount(sec.getCheckCount() + 1);
 
@@ -8962,13 +9072,43 @@ public class SmApplicationBackingBean extends
 			sec.setCheckCount(sec.getCheckCount() - 1);
 
 		}
-		if (sec.getCheckCount() >= getManagedBean().getMaxReviewCount()) {
+		if (sec.getCheckCount() >= maxReviewCount) {
 			sec.setVerifiedAll(Boolean.TRUE);
 		} else {
 			sec.setVerifiedAll(Boolean.FALSE);
 		}
 
 		return sec;
+	}
+
+	private void reCheckVerifiedSection() {
+
+		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
+			int maxReviewCount = getManagedBean().getMaxReviewCount();
+
+			// check for equiment verification needed or not to exclude from max
+			// verification count
+			if (getManagedBean().getSmAppl().getApplCategoryType().equals("S")) {
+				if (!getManagedBean().isShowTravelSoftwarePanel()
+						&& !getManagedBean().isShowMachineryEquipmentPanel()) {
+					maxReviewCount = maxReviewCount - 2;
+				} else {
+					if (!getManagedBean().isShowTravelSoftwarePanel()
+							|| !getManagedBean()
+									.isShowMachineryEquipmentPanel()) {
+						maxReviewCount = maxReviewCount - 1;
+					}
+				}
+			}
+
+			SmApplSectionReview sec = getManagedBean().isPoUser() ? getManagedBean()
+					.getPoSecReview() : getManagedBean().getApprvrSecReview();
+			if (sec.getCheckCount() >= maxReviewCount) {
+				sec.setVerifiedAll(Boolean.TRUE);
+			} else {
+				sec.setVerifiedAll(Boolean.FALSE);
+			}
+		}
 	}
 
 	/**
@@ -10997,6 +11137,14 @@ public class SmApplicationBackingBean extends
 					+ getManagedBean().getActiveCategoryList());
 		}
 
+		// show or hide travel software panel
+		SmApplicationUtil.getInstance()
+				.removeTravellingSoftwareIfNotApplicable(getManagedBean());
+
+		// show or hide equipment panel
+		SmApplicationUtil.getInstance().removeEquipmentIfNotApplicable(
+				getManagedBean());
+
 	}
 
 	public void prerenderDirectMofRegistration() {
@@ -11626,6 +11774,154 @@ public class SmApplicationBackingBean extends
 		if (retVal && personnel.isEquityOwner()) {
 			throw new EpException(MessageConst.ERROR_721052);
 		}
+	}
+
+	private void initSmMachineDetails() {
+		getManagedBean().setCategoryTypeItems(
+				SmApplicationUtil.getSelectedCategoryTypeItems(getManagedBean()
+						.getSmAppl()));
+		List<SelectItem> categoryCodeItems = null;
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getCategoryTypeItems())) {
+			PmParameter categoryType = null;
+			SmMachineDtl mac = null;
+			if (EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+					.getSmMachineDtls())) {
+				getManagedBean().getSmAppl().setSmMachineDtls(
+						new ArrayList<SmMachineDtl>());
+				for (SelectItem catItem : getManagedBean()
+						.getCategoryTypeItems()) {
+					if (catItem.getValue() != null) {
+						categoryType = SmCommonUtil.retrieveParameterById(Long
+								.parseLong(catItem.getValue().toString()));
+						categoryCodeItems = SmApplicationUtil
+								.getCategoryCodesItemsByCatTypeId(
+										categoryType.getParameterId(),
+										getManagedBean().getSmAppl());
+
+						if (categoryType.getParameterCode().equals(
+								ParameterConst.CATEGORY_TYPE_PRINTING)
+								&& !EntityHelper
+										.isCollectionEmpty(categoryCodeItems)) {
+							for (SelectItem codeItem : categoryCodeItems) {
+								mac = SmApplicationUtil
+										.getNewSmMachineDtlByCategoryTypeAndCode(
+												categoryType, codeItem,
+												getManagedBean().getSmAppl());
+								getManagedBean().getSmAppl().getSmMachineDtls()
+										.add(mac);
+							}
+						} else {
+							mac = SmApplicationUtil
+									.getNewSmMachineDtlByCategoryTypeAndCode(
+											categoryType, null,
+											getManagedBean().getSmAppl());
+							getManagedBean().getSmAppl().getSmMachineDtls()
+									.add(mac);
+						}
+					}
+				}
+			} else {
+				for (SelectItem catItem : getManagedBean()
+						.getCategoryTypeItems()) {
+					categoryType = SmCommonUtil.retrieveParameterById(Long
+							.parseLong(catItem.getValue().toString()));
+					categoryCodeItems = SmApplicationUtil
+							.getCategoryCodesItemsByCatTypeId(
+									categoryType.getParameterId(),
+									getManagedBean().getSmAppl());
+					mac = (SmMachineDtl) EntityHelper
+							.getEntityBySinglePropertyFromList(categoryType
+									.getParameterId(), getManagedBean()
+									.getSmAppl().getSmMachineDtls(),
+									"categoryType");
+					if (mac == null) {
+						if (categoryType.getParameterCode().equals(
+								ParameterConst.CATEGORY_TYPE_PRINTING)
+								&& !EntityHelper
+										.isCollectionEmpty(categoryCodeItems)) {
+							for (SelectItem codeItem : categoryCodeItems) {
+								mac = SmApplicationUtil
+										.getNewSmMachineDtlByCategoryTypeAndCode(
+												categoryType, codeItem,
+												getManagedBean().getSmAppl());
+								getManagedBean().getSmAppl().getSmMachineDtls()
+										.add(mac);
+							}
+						} else {
+							mac = SmApplicationUtil
+									.getNewSmMachineDtlByCategoryTypeAndCode(
+											categoryType, null,
+											getManagedBean().getSmAppl());
+							getManagedBean().getSmAppl().getSmMachineDtls()
+									.add(mac);
+						}
+					} else {
+						if (categoryType.getParameterCode().equals(
+								ParameterConst.CATEGORY_TYPE_PRINTING)
+								&& !EntityHelper
+										.isCollectionEmpty(categoryCodeItems)) {
+							for (SelectItem codeItem : categoryCodeItems) {
+								CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+								reqDTO.setCategoryL3Id(Long.parseLong(codeItem
+										.getValue().toString()));
+								PmCategoryL3 categoryCode = SmServiceLookup
+										.getCategoryCodeSO()
+										.retrieveCategoryL3ById(reqDTO)
+										.getCategoryL3();
+								mac = (SmMachineDtl) EntityHelper
+										.getEntityBySinglePropertyFromList(
+												categoryCode.getCategoryL3Id(),
+												getManagedBean().getSmAppl()
+														.getSmMachineDtls(),
+												"categoryCode");
+								if (mac == null) {
+									mac = SmApplicationUtil
+											.getNewSmMachineDtlByCategoryTypeAndCode(
+													categoryType, codeItem,
+													getManagedBean()
+															.getSmAppl());
+									getManagedBean().getSmAppl()
+											.getSmMachineDtls().add(mac);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * On change check box for machine list
+	 * 
+	 * @param e
+	 *            - AjaxBehaviorEvent
+	 * 
+	 */
+	public void onChangeMachineChecked(AjaxBehaviorEvent e) {
+		log.info(">>>>>>SELECTED MACHINE SIZE:"
+				+ getManagedBean().getSelectedMachineList().size() + "<<<<<<<<");
+	}
+
+	public List<SelectItem> getCategoryCodeItems(SmMachineDtl mac) {
+		List<SelectItem> retVal = new ArrayList<SelectItem>();
+		if (mac.getCategoryType() != null) {
+			retVal = SmApplicationUtil.getCategoryCodesItemsByCatTypeId(mac
+					.getCategoryType().getParameterId(), getManagedBean()
+					.getSmAppl());
+		}
+
+		return retVal;
+	}
+
+	public List<SelectItem> getMachineItems(SmMachineDtl mac) {
+		List<SelectItem> retVal = new ArrayList<SelectItem>();
+		if (mac.getCategoryType() != null) {
+			retVal = SmApplicationUtil.getMachineItemsByMachineDetails(mac);
+		}
+
+		return retVal;
 	}
 
 	public StreamedContent getFile() {

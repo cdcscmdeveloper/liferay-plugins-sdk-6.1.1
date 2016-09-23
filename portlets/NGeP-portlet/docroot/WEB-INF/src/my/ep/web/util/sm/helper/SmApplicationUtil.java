@@ -106,6 +106,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
+import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
@@ -2665,7 +2666,9 @@ public class SmApplicationUtil {
 		int i = 0;
 		StringBuilder sb = new StringBuilder();
 		for (SmApplSupportDoc doc : managedBean.getMandatoryDocs()) {
-			if (doc.getVerifiedFlg() == null) {
+			if ((managedBean.isPoUser() && doc.getVerifiedFlg() == null)
+					|| (managedBean.isApproverUser() && doc
+							.getApproverVerifiedFlg() == null)) {
 				validSave = false;
 				sb.append("<br/>").append(++i).append(".)")
 						.append(doc.getPmDocument().getDocName());
@@ -4922,15 +4925,14 @@ public class SmApplicationUtil {
 		if (validForApproval) {
 			if (!EntityHelper.isCollectionEmpty(managedBean.getMandatoryDocs())) {
 				for (SmApplSupportDoc doc : managedBean.getMandatoryDocs()) {
-					
-//					if (managedBean.isApproverUser()
-//							&& doc.getApproverVerifiedFlg() == null
-//							|| (doc.getApproverVerifiedFlg() != null && doc
-//									.getApproverVerifiedFlg().compareTo(0) == 0)) {
-//						validForApproval = false;
-//						break;
-//					}
-					if (doc.getVerifiedFlg() == null
+
+					if (managedBean.isApproverUser()
+							&& doc.getApproverVerifiedFlg() == null
+							|| (doc.getApproverVerifiedFlg() != null && doc
+									.getApproverVerifiedFlg().compareTo(0) == 0)) {
+						validForApproval = false;
+						break;
+					} else if (doc.getVerifiedFlg() == null
 							|| (doc.getVerifiedFlg() != null && doc
 									.getVerifiedFlg().compareTo(0) == 0)) {
 						validForApproval = false;
@@ -7743,7 +7745,10 @@ public class SmApplicationUtil {
 		PmParameterDesc desc = null;
 		String language = new FacesScopes().getUserLocale().getLanguage();
 		String categoryTypeDesc = StringUtils.EMPTY;
-		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+
+		if (validMachineList(valid, currentTab, bean)
+				&& !EntityHelper.isCollectionEmpty(appl
+						.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 						&& cat.getPmCategoryL3() != null
@@ -7794,7 +7799,199 @@ public class SmApplicationUtil {
 				}
 			}
 		}
+
 		return valid;
+	}
+
+	private static boolean validMachineList(boolean valid, int currentTab,
+			SmApplicationManagedBean bean) {
+		if (!EntityHelper
+				.isCollectionEmpty(bean.getSmAppl().getSmMachineDtls())) {
+			for (SmMachineDtl mac : bean.getSmAppl().getSmMachineDtls()) {
+				if (StringUtils.isBlank(mac.getBrandName())) {
+					valid = false;
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, bean);
+					}
+					throw new EpException(getMachineRequiredMsg(mac,
+							bean.getMachineItems()));
+				}
+				if (StringUtils.isBlank(mac.getMachineFunction())) {
+					valid = false;
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, bean);
+					}
+					throw new EpException(getMachineRequiredMsg(mac,
+							bean.getMachineItems()));
+				}
+				if (mac.getQty() == null
+						|| mac.getQty().compareTo(BigDecimal.ZERO) == 0) {
+					valid = false;
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, bean);
+					}
+					throw new EpException(getMachineRequiredMsg(mac,
+							bean.getMachineItems()));
+				}
+				if (mac.getValue() == null
+						|| mac.getValue().compareTo(BigDecimal.ZERO) == 0) {
+					valid = false;
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, bean);
+					}
+					throw new EpException(getMachineRequiredMsg(mac,
+							bean.getMachineItems()));
+				}
+				if (StringUtils.isBlank(mac.getPurchaseMethod())) {
+					valid = false;
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, bean);
+					}
+					throw new EpException(getMachineRequiredMsg(mac,
+							bean.getMachineItems()));
+				}
+				if (mac.getPurchaseYear() == null) {
+					valid = false;
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, bean);
+					}
+					throw new EpException(getMachineRequiredMsg(mac,
+							bean.getMachineItems()));
+				}
+				if (EntityHelper.isCollectionEmpty(SmApplicationUtil
+						.getMachineItemsByMachineDetails(mac))) {
+					if (StringUtils.isBlank(mac.getMachineType())) {
+						valid = false;
+						if (currentTab != -1) {
+							setNavigationBackToCurrentPage(currentTab, bean);
+						}
+						throw new EpException(getMachineRequiredMsg(mac,
+								bean.getMachineItems()));
+					}
+				} else {
+					if (mac.getMachine() == null
+							|| mac.getMachine().getMachineId() == null) {
+						valid = false;
+						if (currentTab != -1) {
+							setNavigationBackToCurrentPage(currentTab, bean);
+						}
+						throw new EpException(getMachineRequiredMsg(mac,
+								bean.getMachineItems()));
+					}
+				}
+			}
+		}
+		return valid;
+	}
+
+	private static String getMachineRequiredMsg(SmMachineDtl mac,
+			List<SelectItem> machineItems) {
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		String catType = StringUtils.EMPTY;
+		StringBuffer sb = new StringBuffer();
+		if (mac.getCategoryType() != null
+				&& !EntityHelper.isCollectionEmpty(mac.getCategoryType()
+						.getPmParameterDescs())) {
+			for (PmParameterDesc desc : mac.getCategoryType()
+					.getPmParameterDescs()) {
+				if (desc.getLanguageCode().equals(language)) {
+					catType = desc.getCodeName();
+				}
+			}
+			if (!StringUtils.isBlank(catType)) {
+				sb.append(catType);
+			}
+			if (mac.getCategoryCode() != null
+					&& mac.getCategoryCode().getCategoryL3Id() != null) {
+				sb.append(" - ");
+				sb.append(mac.getCategoryCode().getCategoryL3Code());
+				sb.append(" - ");
+				sb.append(mac.getCategoryCode().getCategoryName());
+			}
+			if (EntityHelper.isCollectionEmpty(machineItems)) {
+				if (!StringUtils.isBlank(mac.getMachineType())) {
+					sb.append(" - ");
+					sb.append(mac.getMachineType());
+				}
+			} else {
+				if (mac.getMachine() != null
+						&& !StringUtils.isBlank(mac.getMachine()
+								.getMachineDesc())) {
+					sb.append(" - ");
+					sb.append(mac.getMachine().getMachineDesc());
+				}
+			}
+		}
+		if (sb.length() > 0) {
+			sb.append(SmCommonUtil.getMessage("lbl.sm.machine.incomplete.msg",
+					new String[] { sb.toString() }));
+		}
+		return sb.length() > 0 ? sb.toString() : StringUtils.EMPTY;
+	}
+
+	public static String getMachineDeleteErrMsgKey(SmAppl appl,
+			List<SmMachineDtl> machToDeleteList,
+			boolean isShowMachineryEquipmentPanel) {
+		String retVal = StringUtils.EMPTY;
+		PmParameterDesc desc = null;
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		String categoryTypeDesc = StringUtils.EMPTY;
+
+		deleteSelectedMachines(machToDeleteList, appl);
+
+		for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+			if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+					&& cat.getPmCategoryL3() != null
+					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+					&& Arrays
+							.asList(my.ep.constant.sm.SupplierManagementConst.SM_CAT_TYPE_MACHINERY)
+							.contains(
+									cat.getPmCategoryL3().getCategoryTypeCode()
+											.getParameterCode())) {
+				desc = (PmParameterDesc) EntityHelper
+						.getEntityBySinglePropertyFromList(language, cat
+								.getPmCategoryL3().getCategoryTypeCode()
+								.getPmParameterDescs(), "languageCode");
+				categoryTypeDesc = desc != null ? desc.getCodeName()
+						: categoryTypeDesc;
+
+				if (EntityHelper.isCollectionEmpty(appl.getSmMachineDtls())) {
+					retVal = MessageUtils.getMessage(MessageConst.ERROR_722631,
+							new String[] { categoryTypeDesc },
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale());
+				} else {
+					SmMachineDtl mac = (SmMachineDtl) EntityHelper
+							.getEntityBySinglePropertyFromList(cat
+									.getPmCategoryL3().getCategoryTypeCode()
+									.getParameterId(), appl.getSmMachineDtls(),
+									"categoryType");
+					if (mac == null) {
+						retVal = MessageUtils.getMessage(
+								MessageConst.ERROR_722631,
+								new String[] { categoryTypeDesc },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale());
+					}
+				}
+
+			}
+		}
+		return retVal;
+	}
+
+	public static void deleteSelectedMachines(
+			List<SmMachineDtl> machToDeleteList, SmAppl appl) {
+		Iterator<SmMachineDtl> mainIter = appl.getSmMachineDtls().iterator();
+		while (mainIter.hasNext()) {
+			SmMachineDtl mainObj = mainIter.next();
+
+			for (SmMachineDtl toRemoveObj : machToDeleteList) {
+				if (mainObj.equals(toRemoveObj)) {
+					mainIter.remove();
+				}
+			}
+		}
 	}
 
 	/**
@@ -7831,9 +8028,6 @@ public class SmApplicationUtil {
 			SmMachineDtl machine) {
 		List<SelectItem> machineItems = new ArrayList<SelectItem>();
 		if (machine != null) {
-			SelectItem others = new SelectItem();
-			others.setValue(-1);
-			others.setLabel(SmCommonUtil.getMessage("lbl.sm.caps.others", null));
 			if (machine.getCategoryType() != null
 					&& machine.getCategoryType().getParameterId() != null
 					&& (machine.getCategoryCode() == null || machine
@@ -7849,7 +8043,6 @@ public class SmApplicationUtil {
 									.getCategoryCode());
 				}
 			}
-			machineItems.add(others);
 		}
 		return machineItems;
 	}
@@ -8347,6 +8540,26 @@ public class SmApplicationUtil {
 			}
 		}
 		return sb.length() > 0 ? sb.toString() : StringUtils.EMPTY;
+	}
+
+	public static SmMachineDtl getNewSmMachineDtlByCategoryTypeAndCode(
+			PmParameter categoryType, SelectItem catCodeItem, SmAppl appl) {
+		SmMachineDtl mac = new SmMachineDtl();
+		mac.setCategoryType(categoryType);
+		mac.setMachine(new PmMachine());
+		mac.setCategoryCode(new PmCategoryL3());
+		mac.setRevNo(1);
+		mac.setSmAppl(appl);
+		mac.setValue(new BigDecimal(0.00));
+		mac.setCategoryCode(new PmCategoryL3());
+		if (catCodeItem != null && catCodeItem.getValue() != null) {
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL3Id(Long.parseLong(catCodeItem.getValue()
+					.toString()));
+			mac.setCategoryCode(SmServiceLookup.getCategoryCodeSO()
+					.retrieveCategoryL3ById(reqDTO).getCategoryL3());
+		}
+		return mac;
 	}
 
 	public static SmAppl resetAndCloneResubmitApplication(SmAppl originalAppl,
