@@ -14,16 +14,16 @@
 </style>			
 	<table style="width: 100%">
 		<tr>
-			<TD style="width: 16%; vertical-align: baseline;" class="sidemenutd">
+			<TD width="16%"  class="sidemenutd"  valign="top" >
 				<p:remoteCommand id="zoneRemote" name="zoneTabChange" update="@form" partialSubmit="true" process="@form" action="#{supplierProposalDetailBackingBean.zoneTabChange}" />
 				
 				<p:tabMenu styleClass="sidemenu"
 					id="zonalMenu"
 					activeIndex="#{supplierProposalDetailBackingBean.managedBean.activeIndex}"
-					style="display : table-caption; width :  225px;"
+					style="display : table-caption;"
 					model="#{supplierProposalDetailBackingBean.managedBean.proposalZonalMenuModel}">
 				</p:tabMenu></TD>
-			<td style="width: 84%;vertical-align: top;"><p:outputPanel id="zoneSpecAnswers">
+			<td width="84%" valign="top"><p:outputPanel id="zoneSpecAnswers">
 					<ac:templateSpec processValidationId="zoneRemote"
 						templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
 						title="#{lbl['lbl.sc.spec.financial.title']}" />
