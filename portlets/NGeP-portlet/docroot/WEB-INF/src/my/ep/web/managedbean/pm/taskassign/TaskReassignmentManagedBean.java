@@ -31,7 +31,6 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private WorklistItemVO selectedDeleteTask;
 	private String searchUserName;
 	private boolean isTaskLazy;
-	private boolean isLazy;
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -191,20 +190,6 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the isLazy
-	 */
-	public boolean isLazy() {
-		return isLazy;
-	}
-
-	/**
-	 * @param isLazy the isLazy to set
-	 */
-	public void setLazy(boolean isLazy) {
-		this.isLazy = isLazy;
-	}
-
-	/**
 	 * @return the isTaskLazy
 	 */
 	public boolean isTaskLazy() {
@@ -217,6 +202,5 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setTaskLazy(boolean isTaskLazy) {
 		this.isTaskLazy = isTaskLazy;
 	}
-	
 	
 }
