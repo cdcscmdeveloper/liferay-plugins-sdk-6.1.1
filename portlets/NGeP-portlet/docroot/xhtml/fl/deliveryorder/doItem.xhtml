@@ -89,7 +89,13 @@
 					<p:graphicImage value="/css/images/design/attach.png"
 						title="Remark and Attachment" />
 				</p:commandLink>
+				
+				<p:commandLink oncomplete="submittedDoList.show();" process="@this" value="#{lbl['lbl.fl.do.view.list']}" 
+					action="#{createDOBackingBean.getSubmittedDoList(doDelAddress)}"
+					update=":form:submittedDoListDialog">
+				</p:commandLink>
 			</p:column>
+			
 			<p:rowExpansion>
 				<p:dataTable id="doItems" var="doItems"
 					value="#{doDelAddress.flFulfilmentItemAddr}" rowIndexVar="index"
@@ -443,4 +449,23 @@
 		     </p:dataTable>	
 			</p:panel>			
 		</p:dialog>
+		
+		<p:dialog id="submittedDoListDialog" header="#{lbl['lbl.fl.do.list']}"
+		widgetVar="submittedDoList" showEffect="fade" hideEffect="fade"
+		modal="true" width="600" resizable="false">
+		<p:dataTable id="submittedDoDt" var="submittedDo"
+			value="#{createDOBackingBean.managedBean.submittedDoList}"
+			rowKey="doList">
+			<ac:paginator for="submittedDoDt" />
+			<p:column headerText="#{lbl['lbl.fl.frn.do.no']}" style="text-align:center">
+				<h:outputText value="#{submittedDo.deliveryOrderNo}" style="float:right;"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.do.supp.do.no']}" style="text-align:center">
+				<h:outputText value="#{submittedDo.supplierDoRef}" style="float:right;"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.rev.hed.status']}" style="text-align:center">
+				<h:outputText value="#{createDOBackingBean.getStatusDescById(submittedDo.status.statusId)}" style="float:left;"/>
+			</p:column>
+		</p:dataTable>
+	</p:dialog>
 </ui:composition>
