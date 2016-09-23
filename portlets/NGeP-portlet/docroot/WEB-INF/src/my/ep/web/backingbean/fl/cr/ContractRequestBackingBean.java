@@ -3233,6 +3233,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().getFlRequest().setAgOffice(new PmAgOffice());
 		}
 		getManagedBean().getFlRequest().setAgOffice(resDTO.getAgOffice());
+		getManagedBean().getFlRequest().setAgOfficeName(resDTO.getAgOffice().getOfficeName());
 
 		return resDTO;
 	}
