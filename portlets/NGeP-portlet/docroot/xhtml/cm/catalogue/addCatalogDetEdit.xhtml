@@ -184,10 +184,12 @@
 
 
 							</h:panelGroup>
-						</h:panelGroup> <p:commandLink style="margin-left: 200px;padding-right: 10px;"
-							title="#{lbl['lbl.cm.upload']}"
+						</h:panelGroup> 
+							
+						<p:commandLink style="margin-left: 200px;padding-right: 10px;"  action="#{catalogueBackingBean.indForImage}"
+							title="#{lbl['lbl.cm.upload']}" 
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
-							onclick="imageDialog.show(); ">
+							oncomplete="imageDialog.show();">
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-top:10px;"></p:graphicImage>
 						</p:commandLink> <p:commandLink
