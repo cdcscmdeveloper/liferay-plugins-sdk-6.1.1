@@ -372,7 +372,7 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					action="#{backingBean.deleteSelectedPendingApprovalCategoryCodes}"
 					onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
-					update=":form:tt:catCodeInfPan,@([id$=Msg])" partialSubmit="true"
+					update="@form" partialSubmit="true"
 					process=":form:tt:catCodeInfPan">
 				</p:commandButton>
 

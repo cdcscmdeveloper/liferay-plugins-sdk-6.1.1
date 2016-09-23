@@ -449,6 +449,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String physicalConsulting;
 	private String personType;
 	private String currRegStatus;
+	private String popupAction;
 	private Long approvedStatusId;
 
 	private BigDecimal currBumiEquity;
@@ -461,6 +462,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmAppl supplierAppl;
 	private SmAppl poAppl;
+	
+	private Object cloneObject;
 
 	private SmSectionEditorVO editVO;
 	private List<PmReasonDesc> selectedPmReasonDescs;
@@ -3630,5 +3633,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisableAuthorizedRadio(boolean disableAuthorizedRadio) {
 		this.disableAuthorizedRadio = disableAuthorizedRadio;
+	}
+
+	public String getPopupAction() {
+		return popupAction;
+	}
+
+	public void setPopupAction(String popupAction) {
+		this.popupAction = popupAction;
+	}
+
+	public Object getCloneObject() {
+		return cloneObject;
+	}
+
+	public void setCloneObject(Object cloneObject) {
+		this.cloneObject = cloneObject;
 	}
 }
