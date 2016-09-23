@@ -414,13 +414,17 @@ public class EpSchedulerHelper {
 	 */
 	public static Scheduler getScheduler() {
 		if (instance == null) {
+			log.info(">>>>>EP SCHEDULER INSTANCE IS NULL<<<<<<");
 			try {
 				instance = StdSchedulerFactory.getDefaultScheduler();
 				if (!instance.isStarted()) {
+					log.info(">>>>>EP SCHEDULER INSTANCE IS NOT STARTED<<<<<<");
 					instance.start();
+					log.info(">>>>>EP SCHEDULER INSTANCE IS FINISH STARTED<<<<<<");
 				}
 			} catch (SchedulerException e) {
-				log.error(e.getMessage());
+				log.info(">>>>>FAILED TO START EP SCHEDULER DUE TO ERR MSG:"
+						+ e.getMessage() + "<<<<<<<<<");
 			}
 		}
 		return instance;
