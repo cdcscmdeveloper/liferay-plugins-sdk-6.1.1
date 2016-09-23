@@ -4925,13 +4925,13 @@ public class SmApplicationUtil {
 		if (validForApproval) {
 			if (!EntityHelper.isCollectionEmpty(managedBean.getMandatoryDocs())) {
 				for (SmApplSupportDoc doc : managedBean.getMandatoryDocs()) {
-
-					if (managedBean.isApproverUser()
-							&& doc.getApproverVerifiedFlg() == null
+					if (managedBean.isApproverUser()) {
+						if(doc.getApproverVerifiedFlg() == null
 							|| (doc.getApproverVerifiedFlg() != null && doc
-									.getApproverVerifiedFlg().compareTo(0) == 0)) {
-						validForApproval = false;
-						break;
+									.getApproverVerifiedFlg().compareTo(0) == 0)){
+							validForApproval = false;
+							break;
+						}
 					} else if (doc.getVerifiedFlg() == null
 							|| (doc.getVerifiedFlg() != null && doc
 									.getVerifiedFlg().compareTo(0) == 0)) {
