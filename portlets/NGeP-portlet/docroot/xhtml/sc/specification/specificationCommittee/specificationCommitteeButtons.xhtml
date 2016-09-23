@@ -10,7 +10,8 @@
 	<h:panelGroup>
 		<ac:gpkiPopup
 			textBeforeSign="#{specificationBackingBean.textBeforeSign}"
-			postSignAction="#{specificationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{specificationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{specificationBackingBean.enableAutoUpdate()}" />
 
 		<table width="100%">
 			<tr>
