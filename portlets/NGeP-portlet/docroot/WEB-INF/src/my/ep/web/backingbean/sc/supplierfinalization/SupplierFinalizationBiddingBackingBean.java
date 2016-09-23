@@ -1944,6 +1944,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) &&
 				isDigiSigningRequired(committeeResDTO.getRoleCode(), 
 											getManagedBean().getCommitteeEndorsementList())) {
+			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
 			if (getManagedBean().getScQtCommittee() != null &&
@@ -2378,5 +2379,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 				meetingList.add(scqtMeeting);
 			}
 
+		}
+		
+		/**
+		 * The method to used auto update of request.
+		 */
+		public void enableAutoUpdate() {
+			getManagedBean().setAutoUpdate(Boolean.TRUE);		
 		}
 }
