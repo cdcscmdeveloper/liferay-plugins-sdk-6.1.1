@@ -785,7 +785,6 @@ public class TaskReassignmentBackingBean extends
 		try {
 			this.getManagedBean().setSelectedUser(null);
 			this.getManagedBean().setSelectedTask(item);
-			this.getManagedBean().setLazy(false);
 			resetAvailableUser();
 //			this.getManagedBean().setAvailableUsers(
 //					generateAvailableUsers(item));
@@ -1368,7 +1367,7 @@ public class TaskReassignmentBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public userPagingDataModel() {
-			super("dtTaskReassign",getManagedBean().isLazy());
+			super("dtTaskReassign");
 		}
 
 		@Override
@@ -1409,7 +1408,6 @@ public class TaskReassignmentBackingBean extends
 	}
 	
 	public void searchAvailableUser(){
-		getManagedBean().setLazy(true);
 		userListDataModel.reloadData();
 	}
 	
@@ -1620,7 +1618,12 @@ public class TaskReassignmentBackingBean extends
 			}
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_SUPPLIER:
-			
+			// same org profile id
+			searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+							"pmUserOrgs.pmOrgProfile.orgProfileId",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								orgProfileId));
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_SUPPLIER_OR_PTJ:
 			//10 - Supplier(multiple roles) / PTJ(single)
