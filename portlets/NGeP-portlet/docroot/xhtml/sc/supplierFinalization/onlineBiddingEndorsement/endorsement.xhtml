@@ -10,7 +10,7 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="supplierFinalization" showDetail="true"
-			autoUpdate="true" closable="true" severity="error,info" />
+			autoUpdate="#{suppFinalBiddingBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" />
 
 		<ui:param name="isOnlineBiddingEndorseMeeting"
 			value="#{'M' eq suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" />
@@ -23,7 +23,8 @@
 				  value="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />		     				
 
 		<ac:gpkiPopup textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
-			postSignAction="#{suppFinalBiddingBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{suppFinalBiddingBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{suppFinalBiddingBackingBean.enableAutoUpdate()}" />
 
 		<div align="right" class="BtnSpacing">
 		<ui:param name="readOnlyTask" value="#{suppFinalBiddingBackingBean.managedBean.readOnly}" />
