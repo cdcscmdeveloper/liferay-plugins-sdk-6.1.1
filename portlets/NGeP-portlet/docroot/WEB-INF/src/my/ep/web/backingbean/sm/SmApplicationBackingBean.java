@@ -5706,14 +5706,12 @@ public class SmApplicationBackingBean extends
 			}
 		}
 
-		// only add CM_USER for contractor that transact with federal govt and
-		// is authorized
+		// only add CM_USER for contractor that transact with federal govt
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)
 				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
 				&& getManagedBean().getSmAppl().getSmCompanyBasic()
-						.isWithFederal()
-				&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						.isWithFederal()) {
 			addRoles(roles, RoleCode.CM_USER.value(), false);
 		}
 
