@@ -94,8 +94,8 @@ public class SupplierManagementConst {
 	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 18;
-	public static final int ADDLN_CATCODES_APPL_NORMCAT_REVIEW_MAXCOUNT = 12;
-	public static final int ADDLN_CATCODES_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
+	public static final int ADDLN_CATCODES_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
+	public static final int ADDLN_CATCODES_APPL_SPLCAT_REVIEW_MAXCOUNT = 16;
 	public static final int RECORD_DELETED = 1;
 	public static final String COUNTRY_MALAYSIA_CODE = "MY";
 	public static final String ICT_CATEGORY_L1_CODE = "21";

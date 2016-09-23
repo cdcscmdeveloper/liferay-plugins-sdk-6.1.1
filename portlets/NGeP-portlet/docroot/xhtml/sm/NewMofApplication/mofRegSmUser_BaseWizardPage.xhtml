@@ -125,28 +125,46 @@
 													update=":form"
 													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
 													styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
-											<li><h:outputText
-													value="#{lbl['lbl.sm.equipmentStepLbl']}"
-													rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
-												<p:commandLink value="#{lbl['lbl.sm.equipmentStepLbl']}"
-													onstart="blockWidget.show()"
-													oncomplete="blockWidget.hide()"
-													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
-													update=":form"
-													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
-													styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
-											<li><h:outputText
-													value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
-													rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 8}" />
-												<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
-													onstart="blockWidget.show()"
-													oncomplete="blockWidget.hide()"
-													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
-													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-													update=":form"
-													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 8}"
-													styleClass="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'currentStep' : ''}" /></li>
+											
+											<c:choose>
+												<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}">
+													<li><h:outputText
+														value="#{lbl['lbl.sm.equipmentStepLbl']}"
+														rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
+													<p:commandLink value="#{lbl['lbl.sm.equipmentStepLbl']}"
+														onstart="blockWidget.show()"
+														oncomplete="blockWidget.hide()"
+														actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+														action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+														update=":form"
+														rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
+														styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
+													<li><h:outputText
+															value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 8}" />
+														<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide()"
+															actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+															update=":form"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 8}"
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'currentStep' : ''}" /></li>
+												</c:when>
+												<c:otherwise>
+													<li><h:outputText
+															value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
+														<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide()"
+															actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+															update=":form"
+															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
+												</c:otherwise>
+											</c:choose>
 
 										</c:when>
 										<c:otherwise>

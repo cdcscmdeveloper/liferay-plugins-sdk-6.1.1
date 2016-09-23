@@ -90,70 +90,131 @@
 								tabNo="6" label="#{lbl['lbl.sm.factoryStepLbl']}" />
 						</p:menuitem>
 						
-						<p:menuitem>
-							<ac:smApplMenuItem
-								backingBean = "#{backingBean}"
-								suppEdit="#{backingBean.managedBean.editVO.suppEditEquipment}"
-								poEdit="#{backingBean.managedBean.editVO.poEditEquipment}"
-								appEdit="#{backingBean.managedBean.editVO.appEditEquipment}"
-								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP}" 
-								tabNo="7" label="#{lbl['lbl.sm.equipmentStepLbl']}" />
-						</p:menuitem>
-						
-						<p:menuitem>
-							<ac:smApplMenuItem
-								backingBean = "#{backingBean}"
-								suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
-								poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
-								appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
-								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
-								tabNo="8" label="#{lbl['lbl.sm.docsReviewLbl']}" />
-						</p:menuitem>
-							
 						<c:choose>
-							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-								<p:menuitem value="#{lbl['lbl.sm.siteReviewLbl']}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
-									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
-									update=":form" />
-
-								<c:if test="#{backingBean.managedBean.poUser}">
-									<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}"
-										style="white-space: normal;" onstart="blockWidget.show()"
-										oncomplete="blockWidget.hide()"
-										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
-										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
-										update=":form" />
-								</c:if>
+							<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}">
+								<p:menuitem>
+									<ac:smApplMenuItem
+										backingBean = "#{backingBean}"
+										suppEdit="#{backingBean.managedBean.editVO.suppEditEquipment}"
+										poEdit="#{backingBean.managedBean.editVO.poEditEquipment}"
+										appEdit="#{backingBean.managedBean.editVO.appEditEquipment}"
+										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP}" 
+										tabNo="7" label="#{lbl['lbl.sm.equipmentStepLbl']}" />
+								</p:menuitem>
 								
-								<c:if test="#{backingBean.managedBean.approverUser}">
-									<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
-										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-										update=":form" />
-								</c:if>
+								<p:menuitem>
+									<ac:smApplMenuItem
+										backingBean = "#{backingBean}"
+										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+										appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
+										tabNo="8" label="#{lbl['lbl.sm.docsReviewLbl']}" />
+								</p:menuitem>
+									
+								<c:choose>
+									<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+										<p:menuitem value="#{lbl['lbl.sm.siteReviewLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+											update=":form" />
+		
+										<c:if test="#{backingBean.managedBean.poUser}">
+											<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}"
+												style="white-space: normal;" onstart="blockWidget.show()"
+												oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+												update=":form" />
+										</c:if>
+										
+										<c:if test="#{backingBean.managedBean.approverUser}">
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+										</c:if>
+									</c:when>
+									<c:otherwise>
+										<c:if test="#{backingBean.managedBean.poUser}">
+											<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}"
+												style="white-space: normal;" onstart="blockWidget.show()"
+												oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+												update=":form" />
+										</c:if>
+										
+										<c:if test="#{backingBean.managedBean.approverUser}">
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+										</c:if>
+									</c:otherwise>
+								 </c:choose>
 							</c:when>
 							<c:otherwise>
-								<c:if test="#{backingBean.managedBean.poUser}">
-									<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}"
-										style="white-space: normal;" onstart="blockWidget.show()"
-										oncomplete="blockWidget.hide()"
-										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
-										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
-										update=":form" />
-								</c:if>
-								
-								<c:if test="#{backingBean.managedBean.approverUser}">
-									<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
-										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-										update=":form" />
-								</c:if>
+								<p:menuitem>
+									<ac:smApplMenuItem
+										backingBean = "#{backingBean}"
+										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+										appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
+										tabNo="7" label="#{lbl['lbl.sm.docsReviewLbl']}" />
+								</p:menuitem>
+									
+								<c:choose>
+									<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+										<p:menuitem value="#{lbl['lbl.sm.siteReviewLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+											update=":form" />
+		
+										<c:if test="#{backingBean.managedBean.poUser}">
+											<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}"
+												style="white-space: normal;" onstart="blockWidget.show()"
+												oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+												update=":form" />
+										</c:if>
+										
+										<c:if test="#{backingBean.managedBean.approverUser}">
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+										</c:if>
+									</c:when>
+									<c:otherwise>
+										<c:if test="#{backingBean.managedBean.poUser}">
+											<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}"
+												style="white-space: normal;" onstart="blockWidget.show()"
+												oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+												update=":form" />
+										</c:if>
+										
+										<c:if test="#{backingBean.managedBean.approverUser}">
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+										</c:if>
+									</c:otherwise>
+								 </c:choose>
 							</c:otherwise>
-						 </c:choose>
+						</c:choose>
+						
 					</c:when>
 					<c:otherwise>
 					

@@ -410,17 +410,30 @@ public class SmSideMenuIconUtil {
 				retVal = ICON_TICK;
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)
-					&& rev.isSupplierSystemVerified()
 					&& rev.isMachineryVerified()) {
-				retVal = ICON_TICK;
+				if (bean.isShowTravelSoftwarePanel()
+						&& bean.isShowMachineryEquipmentPanel()) {
+					if (rev.isMachineryVerified()
+							&& rev.isSupplierSystemVerified()) {
+						retVal = ICON_TICK;
+					}
+				} else {
+					if (bean.isShowMachineryEquipmentPanel()
+							&& rev.isMachineryVerified()) {
+						retVal = ICON_TICK;
+					} else if (bean.isShowTravelSoftwarePanel()
+							&& rev.isSupplierSystemVerified()) {
+						retVal = ICON_TICK;
+					}
+				}
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
 							.getMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode(),bean.isApproverUser())
+							.getSupportingDocMode(), bean.isApproverUser())
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
 							.getNonMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode(),bean.isApproverUser())) {
+							.getSupportingDocMode(), bean.isApproverUser())) {
 				retVal = ICON_TICK;
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)
