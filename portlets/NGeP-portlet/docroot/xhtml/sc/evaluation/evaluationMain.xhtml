@@ -13,10 +13,11 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
-		<p:messages id="evaluateMessages" showDetail="true" autoUpdate="true"
+		<p:messages id="evaluateMessages" showDetail="true" autoUpdate="#{evaluationBackingBean.managedBean.autoUpdate}"
 			showSummary="false" closable="true" severity="error, info,warn" />
 		<ac:gpkiPopup textBeforeSign="#{evaluationBackingBean.textBeforeSign}"
-			postSignAction="#{evaluationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{evaluationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{evaluationBackingBean.enableAutoUpdate()}"/>
 
 
 		<ui:fragment
