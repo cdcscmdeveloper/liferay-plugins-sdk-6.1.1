@@ -496,6 +496,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private List<TreeNode> zoneTrees;
 	
+	private boolean dupplicatedInd = false;
+	
 	
 	
 	
@@ -3884,6 +3886,20 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setSelectedItem(VCmSupplierItem selectedItem) {
 		this.selectedItem = selectedItem;
+	}
+
+	/**
+	 * @return the dupplicatedInd
+	 */
+	public boolean isDupplicatedInd() {
+		return dupplicatedInd;
+	}
+
+	/**
+	 * @param dupplicatedInd the dupplicatedInd to set
+	 */
+	public void setDupplicatedInd(boolean dupplicatedInd) {
+		this.dupplicatedInd = dupplicatedInd;
 	}
 
 	
