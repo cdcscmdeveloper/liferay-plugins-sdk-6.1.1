@@ -9785,6 +9785,7 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(
 								ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(action);
+			getManagedBean().setAutoUpdate(false);	
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
 		} else {
@@ -13244,5 +13245,11 @@ public class SpecificationBackingBean extends
 		
 		return LocalDocumenList;
 	}
-
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);		
+	}
+	
 }
