@@ -2462,6 +2462,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().getFulfilmentRequest().setAgOffice(new PmAgOffice());
 		}
 		getManagedBean().getFulfilmentRequest().setAgOffice(resDTO.getAgOffice());
+		getManagedBean().getFulfilmentRequest().setAgOfficeName(resDTO.getAgOffice().getOfficeName());
 	}
 	
 	/**
