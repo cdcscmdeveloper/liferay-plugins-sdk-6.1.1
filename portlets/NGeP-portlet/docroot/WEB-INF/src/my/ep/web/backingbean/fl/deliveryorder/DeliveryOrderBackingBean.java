@@ -1468,4 +1468,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		}
 	}
 	
+	public void getSubmittedDoList(FlDeliveryAddress flDelAddress){
+		Long addressId = flDelAddress.getDeliveryAddressId();
+		IDeliveryOrderSO delOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+		List<FlDeliveryOrder> submittedDoList=delOrderSO.retrieveSubmittedDoList(addressId);
+		getManagedBean().setSubmittedDoList(submittedDoList);
+	}
+	
 }
