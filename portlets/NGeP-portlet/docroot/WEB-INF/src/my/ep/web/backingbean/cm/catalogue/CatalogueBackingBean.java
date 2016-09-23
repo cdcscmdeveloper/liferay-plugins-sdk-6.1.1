@@ -2863,11 +2863,30 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		catImage.setTempPath(uploadDir.toString());
 		log.info("catImage.TempPath()" + catImage.getTempPath());
 
-		// render for display
-		this.getManagedBean().getSelectedMaintainItem().getCmImages().add(catImage);
+		
+		
 		// getCatalogImages().add(this.getManagedBean().getImageObj());
-		genImage(catImage);
+		log.info("this.getManagedBean().isDupplicatedInd()"+ this.getManagedBean().isDupplicatedInd());
+		log.info("b4 size:"+ this.getManagedBean().getSelectedMaintainItem().getCmImages().size());
+		if(this.getManagedBean().getSelectedMaintainItem().getCmImages()!=null 
+				&& this.getManagedBean().getSelectedMaintainItem().getCmImages().size()>=5){
+			System.out.println("More than 5");
+			if(!this.getManagedBean().isDupplicatedInd()){
+				this.getManagedBean().setDupplicatedInd(true);
+				throw new EpException(MessageConst.ERROR_715065);
+			}
+			
+		}else{
+			// render for display
+			this.getManagedBean().getSelectedMaintainItem().getCmImages().add(catImage);
+			genImage(catImage);	
+		}
+		
+		
+		
 		log.info("size:"+ this.getManagedBean().getSelectedMaintainItem().getCmImages().size());
+		
+		
 
 	}
 
@@ -9943,6 +9962,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		
 		
+	}
+	
+	public void indForImage(){
+		System.out.println("*****refreshIndForImage******");
+		this.getManagedBean().setDupplicatedInd(false);
+		System.out.println("isDupplicatedInd:"+this.getManagedBean().isDupplicatedInd());
 	}
 
 }
