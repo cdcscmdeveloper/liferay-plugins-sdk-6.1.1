@@ -9,7 +9,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<p:messages id="loiMaintMsg" showDetail="true" autoUpdate="true"
+		<p:messages id="loiMaintMsg" showDetail="true" autoUpdate="#{lOIDetailBackingBean.managedBean.autoUpdate}"
 			closable="true" showSummary="false" />
 
 		<ui:param name="isZonal"
@@ -46,7 +46,8 @@
 		<ui:include src="loiDetailsHeader.xhtml" />
 
 		<ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
-			postSignAction="#{lOIDetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{lOIDetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{lOIDetailBackingBean.enableAutoUpdate()}" />
 
 		<!--  before nego -->
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
