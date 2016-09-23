@@ -184,9 +184,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public static Logger log = EpLogger
 			.getLogger(SourcingBaseBackingBean.class);
-	
-	private int TWO_YEARS = 24; // in months
-	private int ONE_YEAR = 12; // in months
 
 	/**
 	 * To upload the attachment.
@@ -1230,7 +1227,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 *            the list of ScQtCategory instance (optional)
 	 * @return
 	 */
-	public boolean isMultiplePorposalCategory(Long qtId,
+	public boolean isMultipleProposalCategory(Long qtId,
 			List<ScQtCategory> scQtCategories) {
 		IQTDetailSO qtDetailSO = null;
 		try {
@@ -1240,7 +1237,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(qtId);
 			reqDTO.setCategoryList(scQtCategories);
-			return qtDetailSO.isMultiplePorposalCategory(reqDTO);
+			return qtDetailSO.isMultipleProposalCategory(reqDTO);
 
 		} finally {
 			qtDetailSO = null;
