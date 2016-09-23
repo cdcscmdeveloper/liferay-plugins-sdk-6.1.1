@@ -142,6 +142,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	
 	private boolean bpkUser;
 	
+	/** The auto update. */
+	private boolean autoUpdate = Boolean.TRUE;
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -1211,6 +1213,20 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setBpkUser(boolean bpkUser) {
 		this.bpkUser = bpkUser;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 	
 }
