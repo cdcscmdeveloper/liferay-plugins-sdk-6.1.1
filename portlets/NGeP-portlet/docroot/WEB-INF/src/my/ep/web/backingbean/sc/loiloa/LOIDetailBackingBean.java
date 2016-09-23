@@ -2232,6 +2232,7 @@ public class LOIDetailBackingBean extends
 			if (isDigiSigningRequired(RoleCode.RN_APPROVER.value())
 					|| isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER
 							.value())) {
+				this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
 		} else if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
@@ -2357,6 +2358,7 @@ public class LOIDetailBackingBean extends
 				ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) &&
 				isDigiSigningRequired(committeeResDTO.getRoleCode(),
 						this.getManagedBean().getFcActivityList())) {
+			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
 			signOff();
