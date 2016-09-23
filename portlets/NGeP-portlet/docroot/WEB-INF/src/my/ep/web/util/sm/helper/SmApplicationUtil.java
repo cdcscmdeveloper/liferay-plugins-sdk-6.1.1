@@ -7923,8 +7923,10 @@ public class SmApplicationUtil {
 			}
 		}
 		if (sb.length() > 0) {
+			String categoryParam = sb.toString();
+			sb = new StringBuffer();
 			sb.append(SmCommonUtil.getMessage("lbl.sm.machine.incomplete.msg",
-					new String[] { sb.toString() }));
+					new String[] { categoryParam }));
 		}
 		return sb.length() > 0 ? sb.toString() : StringUtils.EMPTY;
 	}
