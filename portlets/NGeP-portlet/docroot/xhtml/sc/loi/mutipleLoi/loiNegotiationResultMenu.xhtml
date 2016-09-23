@@ -29,11 +29,12 @@
 			value="#{lOIDetailBackingBean.checkProposalValidityDateReach(
 		     				lOIDetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
 
-		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true"
+		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="#{lOIDetailBackingBean.managedBean.autoUpdate}"
 			closable="true" showSummary="false" severity="error, info" />
 
 		<ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
-			postSignAction="#{lOIDetailBackingBean.gpkiSignMultiLoiAction(gpkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{lOIDetailBackingBean.gpkiSignMultiLoiAction(gpkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{lOIDetailBackingBean.enableAutoUpdate()}" />
 
 		<div class="ppRightBtn">
 		<ui:param name="readOnlyTask" value="#{lOIDetailBackingBean.managedBean.readOnly}" />
