@@ -7838,6 +7838,7 @@ private void retriveCommitteeRemarksList(){
 		if (roleCode
 				.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(outCome);
+			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
 		} else {
@@ -11414,5 +11415,10 @@ private void retriveCommitteeRemarksList(){
 		}
 		return outputTab;
 	}
-
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);		
+	}
 }
