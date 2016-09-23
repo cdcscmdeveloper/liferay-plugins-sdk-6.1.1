@@ -222,6 +222,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private int evaluationStageId;
 	private String evaluationHeader;
 	
+	/** The auto update. */
+	private boolean autoUpdate = Boolean.TRUE;
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -1972,6 +1975,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public static List<String> getDirectdownloaddocdefkeys() {
 		return directDownloadDocDefKeys;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 
 }
