@@ -1679,6 +1679,7 @@ public class SupplierFinalizationBackingBean extends
 					ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) && 
 					isDigiSigningRequired(committeeResDTO.getRoleCode(),
 											this.getManagedBean().getCommitteeList())) {
+				this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			} else {
 				updateBPMTask(outcome, null, reqDTO);
@@ -6502,4 +6503,10 @@ public class SupplierFinalizationBackingBean extends
 		}		
 	}
 	
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);		
+	}
 }
