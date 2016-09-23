@@ -17,7 +17,8 @@
 		value="#{lOADetailBackingBean.checkProposalValidityDateReachByQt(lOADetailBackingBean.managedBean.scQt)}" />
 
 	<ac:gpkiPopup textBeforeSign="#{lOADetailBackingBean.textBeforeSign}"
-		postSignAction="#{lOADetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+		postSignAction="#{lOADetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
+		enableAutoUpdate="#{lOADetailBackingBean.enableAutoUpdate()}" />
 
 	<table style="width: 100%">
 	<tr>

@@ -2676,11 +2676,13 @@ public class LOADetailBackingBean extends
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value()) || isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
+				this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			} 
 		} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
 			//gpki for only govt seller
 			if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
+				this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
 			}  else {
