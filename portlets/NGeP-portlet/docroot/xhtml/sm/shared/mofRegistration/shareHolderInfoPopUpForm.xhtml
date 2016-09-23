@@ -368,7 +368,8 @@
 					<p:outputPanel id="bumiRadioOutPanelId">
 						<p:selectOneRadio rendered="#{not empty backingBean.managedBean.selectedShareHolder.pmCountry 
 							and backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}" 
-							required="true" value="#{backingBean.managedBean.selectedShareHolder.bumiFlgTrans}">
+							required="true" value="#{backingBean.managedBean.selectedShareHolder.bumiFlgTrans}"
+							label="#{lbl['lbl.sm.person.bumi']}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 							<p:ajax event="change" partialSubmit="true" process="@this" />
