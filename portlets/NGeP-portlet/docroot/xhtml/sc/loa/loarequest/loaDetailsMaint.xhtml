@@ -10,7 +10,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="#{lOADetailBackingBean.managedBean.autoUpdate}" closable="true" showSummary="false" />
 		
 		<ui:param name="isTrackingDairyView" value="#{lOADetailBackingBean.managedBean.trackingDairyView}" />
 		<ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
@@ -29,7 +29,8 @@
 		<ui:include src="loaHeader.xhtml" />
 
 		<ac:gpkiPopup textBeforeSign="#{lOADetailBackingBean.textBeforeSign}"
-			postSignAction="#{lOADetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{lOADetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{lOADetailBackingBean.enableAutoUpdate()}" />
 		
 		<h:outputText styleClass="instruction" rendered="#{isPendingVerification}"
 			value="#{lbl['lbl.sc.loiloa.loa.verify.instruction']}">
