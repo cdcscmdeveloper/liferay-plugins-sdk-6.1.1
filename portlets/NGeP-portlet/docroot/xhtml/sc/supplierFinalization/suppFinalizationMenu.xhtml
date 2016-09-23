@@ -32,11 +32,12 @@
 				  value="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />		
 		     				
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
-					autoUpdate="true" closable="true" severity="error, info" />
+					autoUpdate="#{suppFinalizationBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
 
 		<ac:gpkiPopup
 			textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
-			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{suppFinalizationBackingBean.enableAutoUpdate()}" />
 
 		<div align="right" class="BtnSpacing">
 			<ui:decorate
