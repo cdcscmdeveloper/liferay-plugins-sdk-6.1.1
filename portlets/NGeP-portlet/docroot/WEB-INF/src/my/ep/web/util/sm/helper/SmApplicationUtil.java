@@ -8084,7 +8084,7 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
-	public static void generateOfflineSuppDocChecklistPdf(SmAppl smAppl) {
+	public static void generateOfflineSuppDocChecklistPdf(SmAppl smAppl,String responseType) {
 		try {
 			String tmpPath = null;
 			String tmpFolder = SmCommonUtil
@@ -8124,6 +8124,7 @@ public class SmApplicationUtil {
 			context.put("supportDocs", smAppl.getSmApplSupportDocs());
 			context.put("docDesc", SmCommonUtil.getMessage(
 					"lbl.sm.suppDoc.document.description", null));
+			context.put("responseType", responseType);
 			SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
