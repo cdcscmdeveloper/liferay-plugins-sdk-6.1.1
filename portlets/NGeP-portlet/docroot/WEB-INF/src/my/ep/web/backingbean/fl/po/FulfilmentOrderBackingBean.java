@@ -463,16 +463,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				if(hasGovernmentUserRole()){
 					//remarks
 					IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-					List<String> docTypes = new ArrayList<String>();
-					List<Long> docIds = new ArrayList<Long>();
+					Map<String, Long> docTypesMap = new HashMap<String, Long>();
+					docTypesMap.clear();
 					FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-					docTypes.add(getManagedBean().getFulfilmentOrder().getDocType());
-					docTypes.add(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getDocType());
-					docIds.add(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
-					docIds.add(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
-					
-					reqDTO.setDocIds(docIds);
-					reqDTO.setDocTypes(docTypes);
+					docTypesMap.put(getManagedBean().getFulfilmentOrder().getDocType(), getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+					docTypesMap.put(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getDocType(), getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+					reqDTO.setDocTypesMap(docTypesMap);
 					
 					FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveRemarks(reqDTO);
 					flBB.initializeRemark(getManagedBean().getFulfilmentOrder().getFlWorkflowStatus(), resDTO.getRemarkList());
