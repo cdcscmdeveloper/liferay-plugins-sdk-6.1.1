@@ -34,13 +34,14 @@
 			</p:scrollPanel>
 		</p:panel>
 		<br />
-		<p:selectBooleanCheckbox id="isTncChkBox"
+		<p:selectBooleanCheckbox id="isTncChkBox" style="float:left;"
 				value="#{accessApplBackingBean.managedBean.tncChecked}">
 				<p:ajax update="@this,btnProceed" />
 		</p:selectBooleanCheckbox>
-		<h:outputText escape="false" style="margin-left:5px;"
+		<div>
+			<h:outputText escape="false" style="margin-left:5px;"
 				value="#{lbl['lbl.pm.access.app.tnc.agree']}" />
-			
+		</div>	
 		<div align="right">
 			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"
 				onstart="tncBlockWidget.show()" oncomplete="tncBlockWidget.hide()"
