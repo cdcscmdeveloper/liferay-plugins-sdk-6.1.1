@@ -1618,6 +1618,8 @@ public class TaskReassignmentBackingBean extends
 			}
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_SUPPLIER:
+			//9 GOVT_SELLER
+			
 			// same org profile id
 			searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
