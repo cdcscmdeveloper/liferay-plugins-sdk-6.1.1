@@ -26,7 +26,8 @@
 
 		<ac:gpkiPopup
 			textBeforeSign="#{purchaseInDefaultBackingBean.textBeforeSign}"
-			postSignAction="#{purchaseInDefaultBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{purchaseInDefaultBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{purchaseInDefaultBackingBean.enableAutoUpdate()}" />
 
 		<c:if
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">

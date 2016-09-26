@@ -4922,11 +4922,13 @@ public class SimpleQuoteBackingBean extends
 		
 		//gpki for only govt seller
 		if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
+			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
 		}  else {
 			// spki
 			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 		}
 	}
