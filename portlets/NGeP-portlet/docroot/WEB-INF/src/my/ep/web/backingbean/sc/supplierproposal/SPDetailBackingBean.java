@@ -106,6 +106,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -192,7 +193,8 @@ public class SPDetailBackingBean extends
 	 * @param qtID
 	 * @param userId
 	 */
-	public void retrieveProposalChecklistDtls(Long qtID, Long userId, boolean isReadonly) {
+	public void retrieveProposalChecklistDtls(Long qtID, Long userId,
+			boolean isReadonly) {
 		debugLogger("retrieveProposalChecklistDtls");
 
 		try {
@@ -244,10 +246,16 @@ public class SPDetailBackingBean extends
 					long days = DateUtils.getDaysDifference(today,
 							getManagedBean().getQt().getClosingDate());
 					DecimalFormat dF = new DecimalFormat("#00");
-					getManagedBean().setClosingTime(
-							dF.format(days) + " " + ResourceBundleUtils.getMessage(
-									"lbl.sc.days", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()));
+					getManagedBean()
+							.setClosingTime(
+									dF.format(days)
+											+ " "
+											+ ResourceBundleUtils
+													.getMessage(
+															"lbl.sc.days",
+															ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+															new FacesScopes()
+																	.getUserLocale()));
 
 					if (days == 0) {
 						long durationInMills = DateUtils.getDateDiffInMillis(
@@ -265,11 +273,11 @@ public class SPDetailBackingBean extends
 				}
 
 			}
-			
+
 			if (!isReadonly) {
 				// checking for proposal validity
 				reqDTO.setScQt(resDTO.getScQt());
-				getProposalSO().validateSupplierProposal(reqDTO);	
+				getProposalSO().validateSupplierProposal(reqDTO);
 			}
 
 		} finally {
@@ -356,12 +364,15 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(3);
 
 		VelocityContext context = new VelocityContext();
-		Date date=retriveDatesforOrgProfile( this.getManagedBean().getQt().getPublishDate(), this.getManagedBean().getQt().getCreatedDate());
-		String ptjName=retrievePTJByOrgProfileId( this.getManagedBean().getQt().getPmOrgProfile().getOrgProfileId(),date);
-		log.info("date"+date);
-		log.info("ptjName"+ptjName);
-		//String ptjName = this.getManagedBean().getQt().getPmOrgProfile()
-				//.getOrgName();
+		Date date = retriveDatesforOrgProfile(this.getManagedBean().getQt()
+				.getPublishDate(), this.getManagedBean().getQt()
+				.getCreatedDate());
+		String ptjName = retrievePTJByOrgProfileId(this.getManagedBean()
+				.getQt().getPmOrgProfile().getOrgProfileId(), date);
+		log.info("date" + date);
+		log.info("ptjName" + ptjName);
+		// String ptjName = this.getManagedBean().getQt().getPmOrgProfile()
+		// .getOrgName();
 		context.put("ptjName", ptjName);
 		String othersTermsConditions = DocumentGenerator.getInstance()
 				.getHtmlFromVelocity(
@@ -821,6 +832,46 @@ public class SPDetailBackingBean extends
 						.getSpecAnswerList();
 			}
 
+			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
+			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
+					.getTplSpecQuestion().getClPriceTypeCode()
+					.getParameterCode());
+
+			BigDecimal compareTotalAmount = new BigDecimal(99999999999.99);
+
+			if (isPriceTypeTier) {
+				BigDecimal quantity;
+				if (answers.get(0).getTplSpecZoneQty() != null) {
+					quantity = answers.get(0).getTplSpecZoneQty().getQty();
+				} else {
+					quantity = answers.get(0).getTplSpecQuestion()
+							.getClQuantity();
+				}
+
+				for (TplSpecAnswer answer : answers) {
+					BigDecimal totalPrice = tplHelper.calculateTotalAmount(
+							answers.get(0).getTplSpecQuestion(),
+							answer.getRatePerUom(), quantity);
+					if (totalPrice.compareTo(compareTotalAmount) == 1) {
+						throw new EpException(MessageConst.ERROR_760437);
+					}
+				}
+
+			} else {
+				for (TplSpecAnswer answer : answers) {
+					if (answer.getAnswerNumeric() != null
+							&& answer.getAnswerNumeric().compareTo(compareTotalAmount) == 1) {
+						throw new EpException(MessageConst.ERROR_760437);
+					} else if (answer.getTplSpecQuestion().getTplSpecMaster()
+							.getTotalAmount() != null
+							&& answer.getTplSpecQuestion().getTplSpecMaster()
+									.getTotalAmount()
+									.compareTo(compareTotalAmount) == 1) {
+						throw new EpException(MessageConst.ERROR_760437);
+					}
+				}
+			}
+
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(getManagedBean().getQt());
@@ -1214,14 +1265,14 @@ public class SPDetailBackingBean extends
 					.getScQtPRPExperiences();
 			int index = getManagedBean().getTecCheckDetailsList().indexOf(
 					scQtProposalChecklist);
-			//MathContext mc = new MathContext(4);
+			// MathContext mc = new MathContext(4);
 			CriteriaValue totalContractsVal = new CriteriaValue(
 					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV,
 					BigDecimal.valueOf(getManagedBean().getTotalContracts()));
-			//CriteriaValue totalYearsVal = new CriteriaValue(
-					//SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV,
-					//BigDecimal.valueOf(getManagedBean().getTotalYears())
-							//.divide(BigDecimal.valueOf(12), mc));
+			// CriteriaValue totalYearsVal = new CriteriaValue(
+			// SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV,
+			// BigDecimal.valueOf(getManagedBean().getTotalYears())
+			// .divide(BigDecimal.valueOf(12), mc));
 			scQtProposalChecklist.setSubmitted(isCompleted);
 
 			for (ScQtPRPExperience prpExperience : experiences) {
@@ -1748,7 +1799,8 @@ public class SPDetailBackingBean extends
 					resDTO.getPrpExperience());
 
 			ScQtProposalScore totalContractScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV);
-			//ScQtProposalScore contractYearsScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
+			// ScQtProposalScore contractYearsScore =
+			// findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
 
 			int totalContracts = 0;
 			if (totalContractScore != null
@@ -1996,15 +2048,15 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			this.getManagedBean().setScLoaList(list);
-			/*int total = 0;
-			for (int i = 0; i < getManagedBean().getScLoaList().size(); i++) {
-				ScLoa loa = getManagedBean().getScLoaList().get(i);
-				if (loa.getContractDuration() == null) {
-					loa.setContractDuration(new BigDecimal(0));
-				}
-				total = total + loa.getContractDuration().intValue();
-			}
-			this.getManagedBean().setNoOfYears(total);*/
+			/*
+			 * int total = 0; for (int i = 0; i <
+			 * getManagedBean().getScLoaList().size(); i++) { ScLoa loa =
+			 * getManagedBean().getScLoaList().get(i); if
+			 * (loa.getContractDuration() == null) { loa.setContractDuration(new
+			 * BigDecimal(0)); } total = total +
+			 * loa.getContractDuration().intValue(); }
+			 * this.getManagedBean().setNoOfYears(total);
+			 */
 			this.getManagedBean().setContractSize(list.size());
 
 			return NAV_TO_FEDERAL_GOVT_PAGE;
@@ -2527,7 +2579,8 @@ public class SPDetailBackingBean extends
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(supplierId);
-			reqDTO.setApplId(getManagedBean().getQtProposal().getSupplierApplId());
+			reqDTO.setApplId(getManagedBean().getQtProposal()
+					.getSupplierApplId());
 			ProposalResDTO resDTO = proposalSO
 					.retrivePaidUpCapitalBySupplierById(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
@@ -2643,7 +2696,8 @@ public class SPDetailBackingBean extends
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(supplierId);
-			reqDTO.setApplId(getManagedBean().getQtProposal().getSupplierApplId());
+			reqDTO.setApplId(getManagedBean().getQtProposal()
+					.getSupplierApplId());
 			ProposalResDTO resDTO = proposalSO.retriveSupplierById(reqDTO);
 			getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
@@ -3352,7 +3406,7 @@ public class SPDetailBackingBean extends
 					.getOriginalServletRequest(servletRequest);
 			String qtId = originalServletRequest
 					.getParameter(SourcingConstants.NAV_PARAM_QUOTATION_TENDER_ID);
-			
+
 			retriveSupplierProposalDtl(Long.parseLong(qtId), null, false);
 
 		} catch (EpException e) {
@@ -3397,35 +3451,35 @@ public class SPDetailBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
 	}
-	
+
 	/**
 	 * Get supplier proposal details.
 	 * 
 	 * @param qtId
-	 * 		the quotation / tender id.
+	 *            the quotation / tender id.
 	 * @param previousPageUrl
-	 * 		the previous page url.
+	 *            the previous page url.
 	 * @param isReadonly
-	 * 		the readonly flag
+	 *            the readonly flag
 	 * @return the supplier proposal page
 	 */
-	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl, boolean isReadonly) {
+	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl,
+			boolean isReadonly) {
 		super.renewSesionObject();
 
-		retrieveProposalChecklistDtls(qtId,
-				new FacesScopes().getUserSessionBean().getUserId(),
-				isReadonly);
-		
+		retrieveProposalChecklistDtls(qtId, new FacesScopes()
+				.getUserSessionBean().getUserId(), isReadonly);
+
 		getManagedBean().setPrepareActiveIndex(0);
 		getManagedBean().setPreviousPageUrl(previousPageUrl);
-		
+
 		return NAV_TO_PROPOSAL_MAIN_PAGE;
 	}
-	
+
 	/**
 	 * Back to previous page
 	 * 
-	 * @return	the previous page
+	 * @return the previous page
 	 */
 	public String backAction() {
 		return getManagedBean().getPreviousPageUrl();
@@ -3434,8 +3488,7 @@ public class SPDetailBackingBean extends
 	private void loadDataFromCache() {
 
 		retrieveProposalChecklistDtls(this.getManagedBean().getQt().getQtId(),
-				new FacesScopes().getUserSessionBean().getUserId(),
-				false);
+				new FacesScopes().getUserSessionBean().getUserId(), false);
 	}
 
 	/**
@@ -3483,7 +3536,7 @@ public class SPDetailBackingBean extends
 	}
 
 	private String generateDeclarationFromVelocity(ScQt scQt) throws Exception {
-log.info("generateDeclarationFromVelocity");
+		log.info("generateDeclarationFromVelocity");
 		if (getManagedBean().getSmSupplier() == null
 				|| getManagedBean().getSmSupplier().getCompanyName() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
@@ -3493,10 +3546,12 @@ log.info("generateDeclarationFromVelocity");
 		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
 		SmSupplier smSupplier = getManagedBean().getSmSupplier();
 		VelocityContext context = new VelocityContext();
-		Date date=retriveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
-		log.info("date"+date);
-		String ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),date);
-		log.info("ptjName"+ptjName);
+		Date date = retriveDatesforOrgProfile(scQt.getPublishDate(),
+				scQt.getCreatedDate());
+		log.info("date" + date);
+		String ptjName = retrievePTJByOrgProfileId(
+				pmOrgProfile.getOrgProfileId(), date);
+		log.info("ptjName" + ptjName);
 		if (scQt != null) {
 			context.put("title", scQt.getQtTitle());
 		}
@@ -3986,7 +4041,7 @@ log.info("generateDeclarationFromVelocity");
 	 * @throws Exception
 	 */
 	public void printLabelAction() throws Exception {
-log.info("===printLabelAction");
+		log.info("===printLabelAction");
 		ScSlAttachment slAttachment = new ScSlAttachment();
 		slAttachment.setDocNo(getManagedBean().getQt().getQtNo());
 		generateSampleLabelsFromVelocityToPdf(slAttachment, getManagedBean()
@@ -4000,16 +4055,19 @@ log.info("===printLabelAction");
 
 	private void generateSampleLabelsFromVelocityToPdf(ScAttachment attachment,
 			ScQt scQt) throws Exception {
-		
+
 		attachment.setFileName("sample Labels.pdf");
 		populateAttachmentDetails(attachment);
 		// CommonUtils commonUtils = new CommonUtils();
 
 		VelocityContext context = new VelocityContext();
-		log.info("======currentstatusid generateSampleLabelsFromVelocityToPdf===="+this.getManagedBean().getCurrentStatusId());
-			Date date=retriveDatesforOrgProfile(scQt.getPublishDate(),scQt.getCreatedDate());
-			String ptjName=retrievePTJByOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId(),date);
-		log.info("=======ptjName====="+ptjName);
+		log.info("======currentstatusid generateSampleLabelsFromVelocityToPdf===="
+				+ this.getManagedBean().getCurrentStatusId());
+		Date date = retriveDatesforOrgProfile(scQt.getPublishDate(),
+				scQt.getCreatedDate());
+		String ptjName = retrievePTJByOrgProfileId(scQt.getPmOrgProfile()
+				.getOrgProfileId(), date);
+		log.info("=======ptjName=====" + ptjName);
 
 		context.put("sampleItems", getManagedBean().getScQtSampleLable()
 				.getSampleItems());
@@ -4127,31 +4185,29 @@ log.info("===printLabelAction");
 	 */
 	public SmMofAccount getSmMofAccountByMofNo(String mofNo) {
 		SmMofAccount mofAccount = null;
-		
+
 		if (StringUtils.isNotBlank(mofNo)) {
 			IMofAccountSO mofAccountSO;
 			try {
-				mofAccountSO = BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.SUPPLIER_MANAGEMENT,
-								IMofAccountSO.class);
+				mofAccountSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IMofAccountSO.class);
 				MofAccountReqDTO reqDTO = new MofAccountReqDTO();
 				reqDTO.setMofNo(mofNo);
-				mofAccount = mofAccountSO
-						.retriveMofAccountByMofNo(reqDTO)
+				mofAccount = mofAccountSO.retriveMofAccountByMofNo(reqDTO)
 						.getMofAccount();
 			} finally {
 				mofAccountSO = null;
-			}	
+			}
 		}
-		
+
 		if (mofAccount != null) {
 			return mofAccount;
 		} else {
 			return new SmMofAccount();
 		}
 	}
-	
+
 	/**
 	 * Check whether Date is null or not
 	 * 
@@ -4159,13 +4215,13 @@ log.info("===printLabelAction");
 	 * @param createdDate
 	 * @return Date
 	 */
-	public Date retriveDatesforOrgProfile(Date publishDate,Date createdDate){
-		if(publishDate==null){
-			log.info("===========createdDate====="+createdDate);
+	public Date retriveDatesforOrgProfile(Date publishDate, Date createdDate) {
+		if (publishDate == null) {
+			log.info("===========createdDate=====" + createdDate);
 			return createdDate;
 		}
-		log.info("===========publishDate====="+publishDate);
+		log.info("===========publishDate=====" + publishDate);
 		return publishDate;
-		
+
 	}
 }
