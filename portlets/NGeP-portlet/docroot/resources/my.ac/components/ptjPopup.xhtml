@@ -104,8 +104,10 @@
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
        		         <p:commandButton id="searcbBtnId" 
-       		         	widgetVar="ptjSearchBtnWV" value="#{lbl['lbl.btn.search']}" update=":form:#{cc.attrs.id}:dtOrgProfile"  
-       		            action="#{organisationSearchBackingBean.searchOrgProfiles(cc.attrs.orgTypeParamCode)}" process="@this" />
+       		         	widgetVar="ptjSearchBtnWV" value="#{lbl['lbl.btn.search']}" 
+       		         	update=":form:#{cc.attrs.id}:dtOrgProfile"  
+       		            action="#{organisationSearchBackingBean.searchOrgProfiles(cc.attrs.orgTypeParamCode)}" 
+       		            process="orgProfilePnlId" />
        		            
        		      <p:commandButton
 							value="#{lbl['lbl.btn.reset']}"
