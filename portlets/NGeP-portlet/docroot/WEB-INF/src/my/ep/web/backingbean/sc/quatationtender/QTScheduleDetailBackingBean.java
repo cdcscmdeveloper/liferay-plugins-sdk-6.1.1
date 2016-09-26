@@ -747,6 +747,7 @@ public class QTScheduleDetailBackingBean extends
 			return approveAdditionalAttendance(action, null);
 		} else {
 			this.getManagedBean().setAction(action);
+			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			
 			return null;
@@ -903,4 +904,12 @@ public class QTScheduleDetailBackingBean extends
 		}
 
 	}
+	
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);		
+	}
+	
 }
