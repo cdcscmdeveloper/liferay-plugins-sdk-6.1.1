@@ -7681,7 +7681,13 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean()
-				.getSmAppl());
+				.getSmAppl(),"SUP_SUBMIT");
+		RequestContext.getCurrentInstance().execute("docCheckListDlg.show()");
+	}
+	
+	public void printPoRespondInquiry(){
+		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean()
+				.getSmAppl(),"PO_INQUIRY");
 		RequestContext.getCurrentInstance().execute("docCheckListDlg.show()");
 	}
 
