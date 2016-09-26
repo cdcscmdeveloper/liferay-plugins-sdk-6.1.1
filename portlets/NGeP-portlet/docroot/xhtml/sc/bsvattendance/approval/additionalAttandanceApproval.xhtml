@@ -17,11 +17,11 @@
 		</p:blockUI>
 		
 		<ac:gpkiPopup textBeforeSign="#{qTScheduleDetailBackingBean.textBeforeSign}"
-			postSignAction="#{qTScheduleDetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{qTScheduleDetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{qTScheduleDetailBackingBean.enableAutoUpdate()}" />
 
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
+		<p:messages id="messages" showDetail="true" autoUpdate="#{qTScheduleDetailBackingBean.managedBean.autoUpdate}"
 			closable="true" severity="error, info" />
-
 		<div class="ppRightBtn">
 			<ui:repeat var="bpmAction"
 				value="#{qTScheduleDetailBackingBean.managedBean.outComes}">
