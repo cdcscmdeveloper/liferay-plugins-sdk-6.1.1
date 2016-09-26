@@ -84,7 +84,7 @@
 			</td>
 			#if ($responseType == "PO_INQUIRY")
 			<td style="font-size: 14px;white-space: normal;">
-				$poRemarks
+				$suppDoc.poRemarks
 			</td>
 			#end
 		</tr>
