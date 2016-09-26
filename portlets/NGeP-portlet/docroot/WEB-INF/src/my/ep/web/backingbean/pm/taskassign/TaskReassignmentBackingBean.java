@@ -1253,7 +1253,7 @@ public class TaskReassignmentBackingBean extends
 	/**
 	 * Reassign task to selected user
 	 */
-	public void confirmReassignTask(String action) {
+	public void confirmReassignTask() {
 		log.info("confirmReassignTask");
 
 		PmUser pmUser = this.getManagedBean().getSelectedUser();
@@ -1279,13 +1279,12 @@ public class TaskReassignmentBackingBean extends
 			}
 		}
 
-		if (ProfileManagementConst.REASSIGN_ACTION_ASSIGN.equals(action)) {
-			if (pmUser == null) {
-				throw new EpException(MessageConst.ERROR_770096);
-			}
-			// replace with the new assignee.
-			assigneeUsers.add(pmUser.getLoginId());
+		if (pmUser == null) {
+			throw new EpException(MessageConst.ERROR_770096);
 		}
+		// replace with the new assignee.
+		assigneeUsers.add(pmUser.getLoginId());
+		
 
 		try {
 			TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
@@ -1705,6 +1704,76 @@ public class TaskReassignmentBackingBean extends
 				"pmUserOrgs.pmOrgProfile.orgProfileId",
 				SearchOperator.OPERATOR_EQUALS.value(),
 				0));
+	}
+	
+	/**
+	 * Remove group task/other task from user.
+	 */
+	public void removeReassignTask() {
+		log.info("removeReassignTask");
+
+		int reassignWorkListType = getManagedBean().getTaskAssignmentSearchBean().getSelectedTaskListType();
+		String claimedBy = null;
+		PmUser pmUser = this.getManagedBean().getSelectedUser();
+		WorklistItemVO task = this.getManagedBean().getSelectedTask();
+		ITaskAssignmentSO taskAssignmentSO = null;
+
+		if (task == null) {
+			throw new EpException(MessageConst.ERROR_770097);
+		}
+		List<String> assigneeUsers = task.getAssignees();
+		if (!assigneeUsers.isEmpty()) {
+			// remove the current user.
+			if (assigneeUsers.contains(getManagedBean()
+					.getTaskAssignmentSearchBean().getUser().getLoginId())) {
+				assigneeUsers.remove(getManagedBean()
+							.getTaskAssignmentSearchBean().getUser()
+							.getLoginId());
+			
+			}
+			if(ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType){
+				claimedBy = task.getAcquiredBy();
+			}
+		}
+
+		try {
+			TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
+			reqDTO.setTaskId(task.getTaskId());
+//			reqDTO.setUser(pmUser);
+			reqDTO.setUserIdList(assigneeUsers);
+//			reqDTO.setDocNumber(task.getDocNumber());
+//			reqDTO.setDocId(task.getDocId());
+//			reqDTO.setDocType(task.getDocType());
+//			reqDTO.setDocStatus(task.getDocStatus());
+//			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
+//			reqDTO.setActionedByUser(getFacesScopes().getUserSessionBean()
+//					.getUserId());
+//			reqDTO.setFromUser(getManagedBean().getTaskAssignmentSearchBean()
+//					.getUser());
+			reqDTO.setClaimedBy(claimedBy);
+
+			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							ITaskAssignmentSO.class);
+			TaskAssignmentResDTO resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+
+			// isSuccess = reassignTask(pmUser, task);
+			if (resDTO != null && resDTO.isSuccessful()) {
+				this.taskListDataModel.reloadData();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_770104,
+										new String[] { task.getDocNumber() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+		} finally {
+			taskAssignmentSO = null;
+		}
+
 	}
 	
 	
