@@ -43,9 +43,8 @@
 					#{lbl['lbl.cm.price']}
 				</f:facet>
 				<p:inputText id="zonalPromoPriceId" value="#{zPromotion.price}" size="10" style="text-align:right" maxlength="18">
-					<p:ajax event="keyup" listener="#{catalogueBackingBean.validatePromotionPrice(rowIndex)}" update="zonalPromoErrorLink zonalPromoPriceId" />
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<p:ajax process="@this" listener="#{catalogueBackingBean.validatePromotionPrice(rowIndex)}" update="zonalPromoErrorLink zonalPromoPriceId" />
+						<f:converter converterId="bigDecimalConverter" />
 				</p:inputText>
 			</p:column>
 			<p:column>

@@ -64,7 +64,7 @@
 				</f:facet>
 				<p:inputText value="#{tier.toQty}" size="4" maxlength="6"
 					disabled="#{tier.standardDisabled}">
-					<p:ajax event="change"
+					<p:ajax process="@this"
 						listener="#{catalogueBackingBean.updateZonalTierToQty(rowIndex)}"
 						update="@(.fromQty)" />
 					<p:ajax event="keyup" update="zTErrorLink," />
@@ -80,8 +80,7 @@
 					<p:ajax event="keyup"
 						listener="#{catalogueBackingBean.validateZonalTierPrice(rowIndex)}"
 						update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink, zTierPriceId" />
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<f:converter converterId="bigDecimalConverter" />
 				</p:inputText>
 			</p:column>
 
