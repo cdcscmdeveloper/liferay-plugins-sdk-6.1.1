@@ -73,7 +73,7 @@
 			disabled="#{!editable}"
 			rendered="#{isQuestionTypeItem}" required="#{isSpecificationReq and isValidationReq}" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
-			<p:ajax event="change" partialSubmit="true" process="@this" update="@this, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
+			<p:ajax event="change" partialSubmit="true" process="@this" update="@this, ratePerUomMsg, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
 			<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			<f:validateDoubleRange minimum="0.01" maximum="99999999999.99" />
 		</p:inputText>
