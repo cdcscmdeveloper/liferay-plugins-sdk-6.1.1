@@ -3098,6 +3098,17 @@ public class SmApplicationUtil {
 		resDto = SmServiceLookup.getMofRegistrationSO()
 				.retrieveSupplierProfile(reqDto);
 		if (resDto.getSmSupplier() != null) {
+
+			// check if already had rejected application within 60 days, can't
+			// proceed. Need to used resubmit link.
+			SmAppl rejectedAppl = SmCommonUtil
+					.getLatestRejectedApplBySupplier(resDto.getSmSupplier());
+			if (rejectedAppl != null
+					&& rejectedAppl.getApplType().equals(applicationType)) {
+				result = true;
+				throw new EpException(MessageConst.ERROR_722643);
+			}
+
 			SmSupplier smSupplier = resDto.getSmSupplier();
 
 			if (smSupplier.getSmAppl() != null

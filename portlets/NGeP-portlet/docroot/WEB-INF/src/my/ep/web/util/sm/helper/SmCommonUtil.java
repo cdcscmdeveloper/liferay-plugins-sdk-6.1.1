@@ -3885,8 +3885,10 @@ public class SmCommonUtil {
 			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
 			log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity()
 					+ ">>code>>" + resDTO.getStatusCode());
-			if (!resDTO.getSeverity().equalsIgnoreCase(
-					my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
+			if (!resDTO
+					.getSeverity()
+					.equalsIgnoreCase(
+							my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
 				switch (resDTO.getStatusCode()) {
 				case "70019":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
@@ -4212,6 +4214,41 @@ public class SmCommonUtil {
 		reqDTO.getUserIds().add(userId);
 		return SmServiceLookup.getUserSO()
 				.retrieveUserRoleListByUserIds(reqDTO).getUserRoleList();
+	}
+
+	/**
+	 * Get latest rejected application by application type and supplier
+	 * 
+	 * @param SmSupplier
+	 *            supplier
+	 * @param String
+	 *            applType
+	 * @return SmAppl
+	 */
+	public static SmAppl getLatestRejectedApplBySupplier(
+			SmSupplier supplier) {
+		SmAppl retVal = null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("(")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)
+				.append(")");
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(supplier.getSupplierId());
+		reqDTO.setWorkflowStatus(sb.toString());
+		Long applId = SmServiceLookup.getMofRegistrationSO()
+				.retriveApplIdForLastRejectedApplicationByApplType(reqDTO)
+				.getApplId();
+		if (applId != null) {
+			reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setApplId(applId);
+			retVal = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+		}
+		return retVal;
 	}
 
 	private static SelectItem getLhdnSelectItem() {
