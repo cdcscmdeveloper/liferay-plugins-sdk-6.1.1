@@ -29,7 +29,8 @@
 			<tr>
 				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.ta.org.name']}" /> <p:outputLabel value="*"
-						styleClass="mandatory" /></th>
+						styleClass="mandatory" />
+						</th>
 				<td width="55%" style="white-space: nowrap;"><p:outputPanel
 						id="opPtjOrgCode"
 						rendered="#{ParameterConst.orgTypePtj eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">
@@ -164,10 +165,6 @@
 				</td>
 			</tr>
 		</table>
-		<ac:ptjPopup id="orgProfileCcId"
-			orgTypeParamCode="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}"
-			okAction="taskReassignmentBackingBean.selectPtjAction"
-			update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:somTaskListType" />
 	</p:panel>
 
 </ui:composition>
