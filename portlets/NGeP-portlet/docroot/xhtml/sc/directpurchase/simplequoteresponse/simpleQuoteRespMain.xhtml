@@ -22,7 +22,8 @@
 
 			<ac:gpkiPopup
 				textBeforeSign="#{simpleQuoteBackingBean.textBeforeSign}"
-				postSignAction="#{simpleQuoteBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+				postSignAction="#{simpleQuoteBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
+				enableAutoUpdate="#{simpleQuoteBackingBean.enableAutoUpdate()}" />
 
 		</p:outputPanel>
 		<div class="ppRightBtn">
@@ -39,8 +40,6 @@
 					update="spkiOutputPanel" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					rendered="#{simpleQuoteBackingBean.managedBean.submitButtonFlg}">
-					<f:setPropertyActionListener value="false"
-						target="#{simpleQuoteBackingBean.managedBean.autoUpdate}" />
 				</p:commandButton>
 			</p:outputPanel>
 		</div>

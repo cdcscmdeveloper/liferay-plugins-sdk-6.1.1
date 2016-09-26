@@ -1554,4 +1554,11 @@ public class PurchaseInDefaultBackingBean extends
 	private IDirectPurchaseSO getDirectPurchaseSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 	}
+	
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);		
+	}
 }

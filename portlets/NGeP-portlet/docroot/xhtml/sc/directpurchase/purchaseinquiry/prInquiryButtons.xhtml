@@ -9,7 +9,8 @@
 
 	<ac:gpkiPopup
 		textBeforeSign="#{purchaseInquiryBackingBean.textBeforeSign}"
-		postSignAction="#{purchaseInquiryBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+		postSignAction="#{purchaseInquiryBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
+		enableAutoUpdate="#{purchaseInquiryBackingBean.enableAutoUpdate()}" />
 
 	<div>
 		<!-- view back button -->
@@ -64,8 +65,6 @@
 							styleClass="ui-button" update="@([id$=spkiOutputPanel])"
 							action="#{purchaseInquiryBackingBean.supplierSubmit}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-							<f:setPropertyActionListener value="false"
-								target="#{purchaseInquiryBackingBean.managedBean.autoUpdate}" />
 							<f:setPropertyActionListener value="#{bpmAction}"
 								target="#{purchaseInquiryBackingBean.managedBean.action}" />
 						</p:commandButton>
