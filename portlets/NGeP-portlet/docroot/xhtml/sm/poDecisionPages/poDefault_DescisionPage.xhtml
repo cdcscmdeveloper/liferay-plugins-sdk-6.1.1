@@ -70,12 +70,42 @@
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 						</c:when>
 						<c:when
-							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT 
+							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+							
+							<!-- Only rendered if GLP -->
+							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								update=":form:tt:approveDialog" partialSubmit="true" process="@this" 
+								rendered="#{not empty backingBean.managedBean.smAppl.smSupplierCerts}"
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
+								action="#{backingBean.assignFinalApproveOrReject('approveDialog')}" />
+								
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:rejectDialogId" partialSubmit="true"
-								process="@this"
-								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
+								process="@this" action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
+							
+							<!-- Only rendered if GLP -->	
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton value="#{lbl['lbl.sm.button.recommend.to.approve']}"
+									rendered="#{not empty backingBean.managedBean.smAppl.smSupplierCerts}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
+									action="#{backingBean.submitPOEscalationToApprover('APPROVE')}" />
+							</c:if>
+							
+							<!-- Only rendered if GLP -->
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton value="#{lbl['lbl.sm.button.recommend.to.reject']}"
+									rendered="#{not empty backingBean.managedBean.smAppl.smSupplierCerts}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
+									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
+							</c:if>
+								
 							<p:commandButton
 								value="#{lbl['lbl.sm.button.recommend.site.visit']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
