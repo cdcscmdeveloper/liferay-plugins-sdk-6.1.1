@@ -98,9 +98,8 @@
 			</f:facet>
 			<p:inputText id="stdPrice" value="#{selectedSuppCat.cmStandardPricing.price}"
 				maxlength="18" label="#{lbl['lbl.cm.price']}" size="10"
-				style="text-align:right">
-				<f:convertNumber
-					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				style="text-align:right">	
+				<f:converter converterId="bigDecimalConverter" />
 				<p:ajax event="blur" update="stdPrice" />
 			</p:inputText>
 
