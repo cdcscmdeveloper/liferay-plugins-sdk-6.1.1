@@ -9080,8 +9080,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void reCheckVerifiedSection() {
-
 		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
+			SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 			int maxReviewCount = getManagedBean().getMaxReviewCount();
 
 			// check for equiment verification needed or not to exclude from max
@@ -9101,7 +9101,8 @@ public class SmApplicationBackingBean extends
 
 			SmApplSectionReview sec = getManagedBean().isPoUser() ? getManagedBean()
 					.getPoSecReview() : getManagedBean().getApprvrSecReview();
-			if (sec.getCheckCount() >= maxReviewCount) {
+			if (sec.getCheckCount() >= maxReviewCount
+					&& getManagedBean().isAllowedToApprove()) {
 				sec.setVerifiedAll(Boolean.TRUE);
 			} else {
 				sec.setVerifiedAll(Boolean.FALSE);
