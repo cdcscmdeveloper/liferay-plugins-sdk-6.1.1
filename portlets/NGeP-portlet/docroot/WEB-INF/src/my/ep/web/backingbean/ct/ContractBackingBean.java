@@ -170,7 +170,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
+	private static final Map<String, String> months;
+	static
+    {
+		months = new HashMap<String, String>();
+		months.put("01", "January");
+		months.put("02", "February");
+		months.put("03", "March");
+		months.put("04", "April");
+		months.put("05", "May");
+		months.put("06", "June");
+		months.put("07", "July");
+		months.put("08", "August");
+		months.put("09", "September");
+		months.put("10", "October");
+		months.put("11", "November");
+		months.put("12", "December");  
+    }
 	
+
 	public ContractBackingBean() {
 		log.debug("ContractBackingBean.constructor()");
 		if (getManagedBean().getFileDirectory() == null) {
@@ -666,22 +684,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public List<SelectItem> retrieveStartMonthList(String  tableStartYear) {
 		List<SelectItem> selectItems = null;
-	   	Map<String, String> months = null;
 	    
 	   	try {
-	   		months = new HashMap<>();
-			months.put("01", "January");
-			months.put("02", "February");
-			months.put("03", "March");
-			months.put("04", "April");
-			months.put("05", "May");
-			months.put("06", "June");
-			months.put("07", "July");
-			months.put("08", "August");
-			months.put("09", "September");
-			months.put("10", "October");
-			months.put("11", "November");
-			months.put("12", "December");  
 					
 			int schedStartYear = 0;
 			String fromdate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate());
@@ -732,22 +736,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public List<SelectItem> retrieveEndMonthList(String tableEndYear) {
 		List<SelectItem> selectItems = null;
-		Map<String, String> months = null;
 		
 		try {
-			months = new HashMap<>();
-			months.put("01", "January");
-			months.put("02", "February");
-			months.put("03", "March");
-			months.put("04", "April");
-			months.put("05", "May");
-			months.put("06", "June");
-			months.put("07", "July");
-			months.put("08", "August");
-			months.put("09", "September");
-			months.put("10", "October");
-			months.put("11", "November");
-			months.put("12", "December");  
 						
 		    int schedEndYear =0;
 			String fromdate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate());
@@ -3136,5 +3126,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				     return  true;
 			}
 			return false;
+		}
+		
+		public String getMonthYears(Date date){
+			if(date == null || date.toString() == ""){
+				return " ";
+			}
+			String dates = dateFormat.format(date);
+			String monthYear =months.get(String.valueOf(dates.substring(3, 5)))+", "
+					+String.valueOf(dates.substring(6, 10));
+			return monthYear;
 		}
 }

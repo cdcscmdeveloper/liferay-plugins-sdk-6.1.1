@@ -673,6 +673,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     	if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
     			!ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
     			if(ctBB.getManagedBean().getContractVer().getCtContractValue().getDeliveryTerm() <= 0){
+    				getManagedBean().setSelectedTabIndex(0);
     				throw new EpException(MessageConst.ERROR_100062);
     			}
     	}
@@ -768,7 +769,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							    			if (contractAmt.getCtPerformanceBonds().size() > 0 
 							    					&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() == null 
 							    					|| ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty())) {
-							    				getManagedBean().setSelectedTabIndex(0);
+							    				setTabValue("PB");
 							    				throw new EpException(MessageConst.ERROR_100022, 
 														new String[]{ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", 
 																ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -821,7 +822,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							         if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 											ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 											if (ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() == null) {
-												getManagedBean().setSelectedTabIndex(0);
+												setTabValue("PB");
 												throw new EpException(MessageConst.ERROR_750021);
 									
 											} else {						
@@ -831,11 +832,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 												
 													int retval = Double.compare(bondAmount , oriBondAmount);
 													if (retval >0) {
-														getManagedBean().setSelectedTabIndex(0);
+														setTabValue("PB");
 														throw new EpException(MessageConst.ERROR_750015);
 													}
 													if (retval < 0) {
-														getManagedBean().setSelectedTabIndex(0);
+														setTabValue("PB");
 														throw new EpException(MessageConst.ERROR_750017);  
 													}	
 										  }
@@ -876,6 +877,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								   if(deduction.getCtDeductionClauses() != null && deduction.getCtDeductionClauses().size() > 0){
 								   for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
 										  if(ctDeductionClauses.getClauseDescription().isEmpty()){
+											  setTabValue("DE");
 											  throw new EpException(MessageConst.ERROR_100022, 
 														new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.clause.desc", 
 																ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
