@@ -66,7 +66,7 @@
 		<td style="background-color:gray;color:white;font-size: 14px;font-weight: bold;">
 			$docDesc
 		</td>
-		#if ($responseType == "PO_INQUIRY")
+		#if ($responseType == "SUPPIER_RESPOND_PO")
 		<td style="background-color:gray;color:white;font-size: 14px;font-weight: bold;">
 			$poRemarks
 		</td>
@@ -82,9 +82,11 @@
 			<td style="font-size: 14px;white-space: normal;">
 				$suppDoc.pmDocument.docName
 			</td>
-			#if ($responseType == "PO_INQUIRY")
+			#if ($responseType == "SUPPIER_RESPOND_PO")
 			<td style="font-size: 14px;white-space: normal;">
-				$suppDoc.poRemarks
+				#if ($suppDoc.poRemarks)
+					$suppDoc.poRemarks
+				#end
 			</td>
 			#end
 		</tr>
