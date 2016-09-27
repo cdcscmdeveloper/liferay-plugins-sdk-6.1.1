@@ -96,10 +96,8 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="certInfPan"
 					disabled="#{empty backingBean.managedBean.smAppl.smSupplierCerts}"
-					action="#{backingBean.deleteSelectedCerts}"
 					update=":form:tt:certDt,@this" 
-					id="delCertBtnId"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					id="delCertBtnId" oncomplete="certDeletePopUp.show();" />
 
 			</div>
 			<br />
@@ -256,4 +254,13 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
+	
+	<ac:confirmationPopup id="certDeletePopUpId"
+		widget="certDeletePopUp"
+		okAction="backingBean.deleteSelectedCerts"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:certDt, @([id$=Msg]),:#{p:component('delCertBtnId')}"/>
+		
 </ui:composition>

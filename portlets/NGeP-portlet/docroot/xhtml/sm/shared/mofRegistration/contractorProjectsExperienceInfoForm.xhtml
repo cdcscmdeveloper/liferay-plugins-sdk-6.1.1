@@ -102,9 +102,8 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']} "
 					partialSubmit="true" process="contrInfPan"
 					id="delContExpBtnId" disabled="#{empty backingBean.managedBean.smAppl.smCompanyExperiences}"
-					action="#{backingBean.deleteSelectedCompanyExperiences}"
 					update=":form:tt:contDt,@this" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					oncomplete="contProjExpDeletePopUp.show()" />
 
 			</div>
 			<br />
@@ -356,4 +355,12 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
+	
+	<ac:confirmationPopup id="contProjExpDeletePopUpId"
+		widget="contProjExpDeletePopUp"
+		okAction="backingBean.deleteSelectedCompanyExperiences"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:contDt, @([id$=Msg]),:#{p:component('delContExpBtnId')}"/>
 </ui:composition>
