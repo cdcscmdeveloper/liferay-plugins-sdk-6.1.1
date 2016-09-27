@@ -218,12 +218,13 @@
 						size="35" disabled="true" />
 				</td>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.qttentype']}" />
+					<p:outputLabel value="#{lbl['lbl.sc.qttentype']}" rendered="#{isDocTypeQuotation}" />
 				</td>
 				<td>
 					<p:inputText id="qtTypeTxt"
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.qtType)}"
-						size="28" disabled="true" />					
+						size="28" disabled="true"
+						rendered="#{isDocTypeQuotation}" />					
 				</td>
 			</tr>
 
