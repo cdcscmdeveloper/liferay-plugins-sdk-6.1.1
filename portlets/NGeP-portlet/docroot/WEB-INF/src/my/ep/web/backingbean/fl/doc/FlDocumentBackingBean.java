@@ -555,11 +555,13 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			}
 			navgPage=NAV_TO_MAINTAIN_DO;
 		}else if(docType.equals(ParameterConst.DOCTYPE_INVOICE)){
+			
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			reqDTO.setInvoiceId(Long.valueOf(flDocId));
 			reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
 			FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 			InvoiceBackingBean invBB = new InvoiceBackingBean();
+			invBB.renewSesionObject();
 			invBB.getManagedBean().setSelectedTabIndex(0);
 			invBB.getManagedBean().setButtonVal(buttonVal);
 			invBB.getManagedBean().setDocProcess(docType);
