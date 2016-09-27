@@ -13,6 +13,17 @@
 			value="#{lbl['lbl.sc.spec.tech.check.list.instruction']}"
 			escape="false" />
 			
+			<ui:fragment rendered="#{!specificationBackingBean.managedBean.qt.panel}">
+			<ui:param name="checkCategoryCodemedicine" value="#{specificationBackingBean.isMultiplePorposalCategory(specificationBackingBean.managedBean.qt.qtId,null)}"></ui:param>
+			<ui:fragment rendered="#{checkCategoryCodemedicine}">
+			<br/>
+			<h:outputText styleClass="instruction" 
+			value="#{lbl['lbl.sc.spec.tech.check.list.category.code.medicine.instructions']}"
+			escape="false" />
+			<p:commandLink styleClass="instruction"  value="#{lbl['lbl.sc.spec.tech.check.list.category.code.medicine.link.instructions']}" oncomplete="medicineinstructions.show();"></p:commandLink>
+			</ui:fragment>
+			</ui:fragment>
+			
 			<h:outputText styleClass="instruction" rendered="#{specificationBackingBean.managedBean.qt.panel}"
 			value="#{lbl['lbl.sc.spec.tech.check.list.panel.instruction']}"
 			escape="false" />
@@ -360,5 +371,7 @@
 		src="/xhtml/sc/boSctemplatespec/createCommitteeTemplate.xhtml"></ui:include>
 
 	<ui:include src="addPanelItemsPopup.xhtml"></ui:include>
+	
+	<ui:include src="medicineinstructionspopup.xhtml"></ui:include>
 
 </ui:composition>
