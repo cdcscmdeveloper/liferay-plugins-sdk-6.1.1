@@ -749,7 +749,12 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmCPCompanyNameView(true);
 			rptGenBean.setSmNonMandatoryDateView(true);
 			rptGenBean.setSmFromDateView(true);
-			break;			
+			break;	
+		case ReportConst.SM_REJECTED_SOFTCERT_RPT_VAL:
+			rptGenBean.setSmCPCompanyNameView(true);			
+			rptGenBean.setSmMandatoryForDateView(true);
+			rptGenBean.setSmFromDateView(true);
+			break;	
 		default:
 			throw new EpException(
 					CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));

@@ -14365,7 +14365,7 @@ public class ReportBackingBean extends
 					throw new EpException(MessageConst.ERROR_REPORT_780037);
 				}
 			}
-
+			
 			if (StringUtils.isNotEmpty(this.getReportValue())
 					&& this.getManagedBean()
 							.getReportValue()
@@ -18677,7 +18677,8 @@ public class ReportBackingBean extends
 		gnrtdURL.append(paramConstrString);
 		
 		if (this.getManagedBean().getReportValue()
-				.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL)) {
+				.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL) || this.getManagedBean().getReportValue()
+				.equals(ReportConst.SM_REJECTED_SOFTCERT_RPT_VAL) ) {
 			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.EXC_NEXT_URL_XLS));
 		} else {
@@ -18819,7 +18820,8 @@ public class ReportBackingBean extends
 		log.info("In writeReportDataToPDFOrExcel method");
 		
 		if (this.getManagedBean().getReportValue()
-				.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL)) {
+				.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL) || this.getManagedBean().getReportValue()
+				.equals(ReportConst.SM_REJECTED_SOFTCERT_RPT_VAL) ) {
 			log.info("For Excel Data");
 			res.setHeader(ReportConst.CONTENT_DISPOSITION,
 					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportTitle
