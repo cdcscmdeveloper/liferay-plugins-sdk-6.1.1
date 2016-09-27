@@ -27,7 +27,7 @@
 							<td colspan="2" width="100%" valign="top">
 							
 								<p:dataTable
-									value="#{rptRequestBackingBean.rptRequestDataModel}" var="rptRequest"
+									value="#{rPTRequestBackingBean.rptRequestDataModel}" var="rptRequest"
 									id="rptRequestTable" rows="10" rowIndexVar="index" width="100%"
 									rowKey="#{rptRequest}" lazy="true" >
 
@@ -47,7 +47,7 @@
 									
 									<p:column>
 										<p:commandButton value="Get latest status code" process="@form"
-											action="#{rptRequestBackingBean.getLatestStatusCode(rptRequest)}" update="@form">
+											action="#{rPTRequestBackingBean.getLatestStatusCode(rptRequest)}" update="@form">
 										</p:commandButton>
 									</p:column>
 									
@@ -56,7 +56,7 @@
 											ajax="false" update="@form" onstart="statusDialog.show();"
 															id="falseGenerate" oncomplete="statusDialog.hide();">
 											<p:fileDownload
-												value="#{rptRequestBackingBean.generateReport(rptRequest)}" />
+												value="#{rPTRequestBackingBean.generateReport(rptRequest)}" />
 										</p:commandButton>
 									</p:column>
 									
@@ -81,11 +81,11 @@
 
 									</p:column>
 
-   								<p:ajax event="rowSelectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" />
-								<p:ajax event="rowUnselectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" />
-								<p:ajax event="rowUnselect" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" />
-								<p:ajax event="rowSelect" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" />
-								<p:ajax event="toggleSelect" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" />
+   								<p:ajax event="rowSelectCheckbox" listener="#{rPTRequestBackingBean.rowSelectUnselectCheckbox}" />
+								<p:ajax event="rowUnselectCheckbox" listener="#{rPTRequestBackingBean.rowSelectUnselectCheckbox}" />
+								<p:ajax event="rowUnselect" listener="#{rPTRequestBackingBean.rowSelectUnselectCheckbox}" />
+								<p:ajax event="rowSelect" listener="#{rPTRequestBackingBean.rowSelectUnselectCheckbox}" />
+								<p:ajax event="toggleSelect" listener="#{rPTRequestBackingBean.rowSelectUnselectCheckbox}" />
 									
 								</p:dataTable>
 								
@@ -110,7 +110,7 @@
 			<div align="right">
 	
 				<p:commandButton id="conf" value="yes"
-					actionListener="#{rptRequestBackingBean.removeRptRequests}" 
+					actionListener="#{rPTRequestBackingBean.removeRptRequests}" 
 					update=":form:rptRequestTable"
 					oncomplete="confirmation.hide()" />
 	

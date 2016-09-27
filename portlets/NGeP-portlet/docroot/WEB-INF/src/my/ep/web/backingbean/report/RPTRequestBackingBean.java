@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
 
-@ManagedBean(name = "rptRequestBackingBean")
+@ManagedBean(name = "rPTRequestBackingBean")
 @ViewScoped
 public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean> {
 	
