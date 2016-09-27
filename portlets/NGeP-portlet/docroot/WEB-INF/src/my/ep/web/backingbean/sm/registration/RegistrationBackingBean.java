@@ -472,6 +472,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
 			smPersonnel.setBumiFlg(0);
 			smPersonnel.setMuslimFlg(0);
+		}else{
+			//set personnel bumi flag or muslim flag 
+			smPersonnel.setBumiFlg(getManagedBean().getUserBumiFlg());
+			smPersonnel.setMuslimFlg(getManagedBean().getUserMuslimFlg());
 		}
 		
 		//check if supplier admin is supplier owner set clerical false and equityOwner true
@@ -484,10 +488,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		String trimmedName = smPersonnel.getName().trim();
 		smPersonnel.setName(trimmedName);
 		
-		//set personnel bumi flag or muslim flag 
-		smPersonnel.setBumiFlg(getManagedBean().getUserBumiFlg());
-		smPersonnel.setMuslimFlg(getManagedBean().getUserMuslimFlg());
-
+		
 		//to set the softcert Flag
 		//All supplier type will mark to "SOFT_CERT_PENDING_REQ", except supplier type is "Consultant"
 		if(!smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
@@ -2538,6 +2539,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 		if(countryId != null){
 			PmCountry country = SmCommonUtil.retrievePmCountryById(countryId);
+			owner.setNationality(country);
 			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
 				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
