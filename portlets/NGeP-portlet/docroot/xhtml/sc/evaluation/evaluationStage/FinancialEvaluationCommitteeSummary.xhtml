@@ -16,9 +16,7 @@
 			<td><h:outputLabel value="#{lbl['lbl.sc.view.by']}" /></td>
 			<td><p:selectOneMenu
 					value="#{evaluationBackingBean.managedBean.summaryViewBy}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.sc.evaluation.view.by.package.preference.margin']}" itemValue="RPM"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.sc.evaluation.view.by.item.preference.margin']}" itemValue="RI"></f:selectItem>
+					<f:selectItems value="#{evaluationBackingBean.recommendationSummaryDropDownValues()}"></f:selectItems>
 					<p:ajax event="change" process="@this" partialSubmit="true"
 						listener="#{evaluationBackingBean.recommendationsummaryChange}"
 						update="@([id$=recommendationviewSummary])"></p:ajax>
