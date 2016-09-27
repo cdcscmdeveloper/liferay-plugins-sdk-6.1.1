@@ -20,10 +20,7 @@
 			<td><h:outputLabel value="#{lbl['lbl.sc.view.by']}" /></td>
 			<td><p:selectOneMenu
 					value="#{evaluationBackingBean.managedBean.financialSummaryView}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.sc.evaluation.view.by.package.preference.margin']}" itemValue="FPM"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.sc.evaluation.view.by.item.preference.margin']}" itemValue="FI"></f:selectItem>
+					<f:selectItems value="#{evaluationBackingBean.finanialSummaryDropDownValues()}"></f:selectItems>
 					<p:ajax event="change" process="@this" partialSubmit="true"
 						listener="#{evaluationBackingBean.financialsummaryChange}"
 						update="@([id$=financialviewSummary])"></p:ajax>
