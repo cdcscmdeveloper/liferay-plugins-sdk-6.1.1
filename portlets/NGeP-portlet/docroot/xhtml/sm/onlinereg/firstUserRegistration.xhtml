@@ -122,7 +122,7 @@
 							value="#{registrationBackingBean.managedBean.sameAsOwner}">
 							<p:ajax event="change" update="@([id$=pnlUsrInfo])"
 								partialSubmit="true"
-								process="@this" />
+								process="@form" />
 						</p:selectBooleanCheckbox><h:outputText value="#{lbl['lbl.sm.userreg.admin.same.as.owner']}"></h:outputText></td>
 				</tr>
 				<tr>
