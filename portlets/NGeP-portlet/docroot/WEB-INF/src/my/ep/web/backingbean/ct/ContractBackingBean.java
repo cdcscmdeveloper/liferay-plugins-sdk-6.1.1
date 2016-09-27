@@ -188,7 +188,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		months.put("12", "December");  
     }
 	
-
+	/**
+	 * Constructor used to 
+	 * initialize file path directory
+	 */
 	public ContractBackingBean() {
 		log.debug("ContractBackingBean.constructor()");
 		if (getManagedBean().getFileDirectory() == null) {
@@ -199,9 +202,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	/**
 	 * Constructor used for specifying the directory of file storage.
-	 *
-	 * @param fileDirectory  the directory for file storage. If the fileDirectory is null, 
-	 *                       default to temporary directory
+	 * @param fileDirectory  the directory for file storage. 
+	 * If the fileDirectory is null, default to temporary directory
 	 */
 	public ContractBackingBean(String fileDirectory) {
 		log.debug("ContractBackingBean.constructor(fileDirectory)");
@@ -401,7 +403,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	/**
 	 * The method used to set the file index of attachment list.
-	 * 
 	 * @param index  file index of attachment list
 	 */
 	public void setAttachFileIndex(int index) {
@@ -410,16 +411,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	/**
 	 * The method used to delete attachment from the list.
-	 * 
 	 * @param index  file index of attachment list
 	 */
 	public void deleteAttachmentAction(int index) {
-		CtAttachment attachment = this.getManagedBean().getAttachmentList().get(index);
-		if(attachment.getAttachmentId() != null){
-			   getManagedBean().getDeleteAttachmentList().add(attachment);
-		}
-		this.getManagedBean().getAttachmentList().remove(index);
-	}
+			CtAttachment attachment = this.getManagedBean().getAttachmentList().get(index);
+			if(attachment.getAttachmentId() != null){
+				   getManagedBean().getDeleteAttachmentList().add(attachment);
+			}
+			this.getManagedBean().getAttachmentList().remove(index);
+	 }
 	
 	public void deleteAgncyAttachmentAction(int index) {
 		CtAttachment attachment = getManagedBean().getContractVer().getAgencyAttachements().get(index);
@@ -1214,54 +1214,59 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		this.selectedDeductionClauses = selectedDeductionClauses;
 	}
 	
-	 /**
-     * Method to set boolean value for checkbox 
-     * @param pass ajax event type
-     * Set boolean value for user action 
-     * */
-    public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
+	/**
+	 * Function to check/ uncheck single checkbox into data table
+	 * @param pass ajax event type
+	 * @return boolean value
+	 * */
+      public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 		
-		if((boolean) e.getComponent().getAttributes().get("value")){
-			getManagedBean().setButtonHideActive(false);
-		}else{
-			getManagedBean().setButtonHideActive(true);
-		}	
-	}
+			if((boolean) e.getComponent().getAttributes().get("value")){
+				getManagedBean().setButtonHideActive(false);
+			}else{
+				getManagedBean().setButtonHideActive(true);
+			}	
+	   }
     
-    /**
-     * Method to set boolean value for checkbox 
-     * @param pass ajax event type
-     * Set boolean value for user action 
-     * */
-    public void selectOneDeductCheckboxSelect(AjaxBehaviorEvent e){
-    	getManagedBean().setSelectAll(false);
-    	for (CtDeduction deduct : getManagedBean().getContractVer().getCtDeductions()) {
-    		if(deduct.isSelectedCheckBox()){
-    			getManagedBean().setButtonHideDedActive(false);
-    			return;
-    		}
-    	}
-		if((boolean) e.getComponent().getAttributes().get("value")){
-			getManagedBean().setButtonHideDedActive(false);
-		}else{
-			getManagedBean().setButtonHideDedActive(true);
-		}	
-	}
+     /**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+       public void selectOneDeductCheckboxSelect(AjaxBehaviorEvent e){
+	    	getManagedBean().setSelectAll(false);
+	    	for (CtDeduction deduct : getManagedBean().getContractVer().getCtDeductions()) {
+	    		if(deduct.isSelectedCheckBox()){
+	    			getManagedBean().setButtonHideDedActive(false);
+	    			return;
+	    		}
+	    	}
+			if((boolean) e.getComponent().getAttributes().get("value")){
+				getManagedBean().setButtonHideDedActive(false);
+			}else{
+				getManagedBean().setButtonHideDedActive(true);
+			}	
+	  }
     
-    public void selectOneClauseCheckboxSelect(AjaxBehaviorEvent e){
-    	getManagedBean().setSelectAll(false);
-    	for (CtDeductionClause ctDeductionClauses : getManagedBean().getSelectedDeduction().getCtDeductionClauses()) {
-    		if(ctDeductionClauses.isSelectedCheckBox()){
-    			getManagedBean().setButtonHideDedActive(false);
-    			return;
-    		}
-    	}
-		if((boolean) e.getComponent().getAttributes().get("value")){
-			getManagedBean().setButtonHideDedActive(false);
-		}else{
-			getManagedBean().setButtonHideDedActive(true);
-		}	
-    }
+	   /**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+         public void selectOneClauseCheckboxSelect(AjaxBehaviorEvent e){
+		    	getManagedBean().setSelectAll(false);
+		    	for (CtDeductionClause ctDeductionClauses : getManagedBean().getSelectedDeduction().getCtDeductionClauses()) {
+		    		if(ctDeductionClauses.isSelectedCheckBox()){
+		    			getManagedBean().setButtonHideDedActive(false);
+		    			return;
+		    		}
+		    	}
+				if((boolean) e.getComponent().getAttributes().get("value")){
+					getManagedBean().setButtonHideDedActive(false);
+				}else{
+					getManagedBean().setButtonHideDedActive(true);
+				}	
+         }
 	
     /**
 	 * @return the paidPercentage
@@ -2049,17 +2054,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			    RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();");
 			}
 			
-			/**
-			 * The method used to select all added performance bond(s).
-		     */
-			public void selectAllBond(AjaxBehaviorEvent e) { 
+		/**
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+		public void selectAllBond(AjaxBehaviorEvent e) { 
 				
-					for (CtPerformanceBond bonds : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
-						if (getManagedBean().isSelectAll()) {
-						      bonds.setSelectedCheckBox(true);
-						      if(getManagedBean().isButtonHideActive()){
-						            getManagedBean().setButtonHideActive(false);
-						      }
+			  for (CtPerformanceBond bonds : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
+					if (getManagedBean().isSelectAll()) {
+						  bonds.setSelectedCheckBox(true);
+						  if(getManagedBean().isButtonHideActive()){
+						       getManagedBean().setButtonHideActive(false);
+						  }
 					} else{
 						bonds.setSelectedCheckBox(false);
 						if(!getManagedBean().isButtonHideActive()){
@@ -2067,10 +2074,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						}
 					}
 			  }
-		}
-			
-	  public void selectOnePerformanceCheckboxSelect(AjaxBehaviorEvent e){
-		    	getManagedBean().setSelectAll(false);
+		 }
+		
+		/**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+		public void selectOnePerformanceCheckboxSelect(AjaxBehaviorEvent e){
+		    getManagedBean().setSelectAll(false);
 			for (CtPerformanceBond bonds : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
 		    		if(bonds.isSelectedCheckBox()){
 		    			getManagedBean().setButtonHideActive(false);
@@ -2081,24 +2093,34 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().setButtonHideActive(false);
 				}else{
 					getManagedBean().setButtonHideActive(true);
-				}	
+			 }	
 		}
 			
-			public void selectAllDeduction(AjaxBehaviorEvent e) {
-				  getManagedBean().setButtonHideDedActive(true);
-					for (CtDeduction deduct : getManagedBean().getContractVer().getCtDeductions()) {
-						if (getManagedBean().isSelectAll() && !deduct.isFromDpQt()) {
-							    if(getManagedBean().isButtonHideDedActive()){
-							    	 getManagedBean().setButtonHideDedActive(false);
-							    }
-						        deduct.setSelectedCheckBox(true);
-					       }else {
-					    	   deduct.setSelectedCheckBox(false);
-					       }
-				     }
-			}
+	   /**
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+	    public void selectAllDeduction(AjaxBehaviorEvent e) {
+			  getManagedBean().setButtonHideDedActive(true);
+				for (CtDeduction deduct : getManagedBean().getContractVer().getCtDeductions()) {
+					if (getManagedBean().isSelectAll() && !deduct.isFromDpQt()) {
+						    if(getManagedBean().isButtonHideDedActive()){
+						    	 getManagedBean().setButtonHideDedActive(false);
+						    }
+					        deduct.setSelectedCheckBox(true);
+				       }else {
+				    	   deduct.setSelectedCheckBox(false);
+				       }
+			     }
+		 }
 			
-			public void selectAllDeductionClause(AjaxBehaviorEvent e) {
+	    /**
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+	     public void selectAllDeductionClause(AjaxBehaviorEvent e) {
 				
 				for (CtDeductionClause ctDeductionClauses : getManagedBean().getSelectedDeduction().getCtDeductionClauses()) {
 					if (getManagedBean().isSelectAll()) {
@@ -2106,47 +2128,62 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				       }else {
 				    	   ctDeductionClauses.setSelectedCheckBox(false);
 				       }
-			}
+			     }
 			
-			if((boolean) e.getComponent().getAttributes().get("value")){
-				getManagedBean().setButtonHideDedActive(false);
-			}else{
-				getManagedBean().setButtonHideDedActive(true);
-			}	
+				if((boolean) e.getComponent().getAttributes().get("value")){
+					getManagedBean().setButtonHideDedActive(false);
+				}else{
+					getManagedBean().setButtonHideDedActive(true);
+				}	
 		}
 			
-			public void selectAllScheduleDtl(AjaxBehaviorEvent e) {
+     /**
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+	     public void selectAllScheduleDtl(AjaxBehaviorEvent e) {
 				
-				for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
-					if (getManagedBean().isSelectAll()) {
-						ctSchedules.setSelectedCheckBox(true);
-						if(getManagedBean().isButtonHideSchActive()){
-					    	 getManagedBean().setButtonHideSchActive(false);
+			for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
+				if (getManagedBean().isSelectAll()) {
+					ctSchedules.setSelectedCheckBox(true);
+					if(getManagedBean().isButtonHideSchActive()){
+				    	 getManagedBean().setButtonHideSchActive(false);
+				    }
+			       }else {
+			    	   ctSchedules.setSelectedCheckBox(false);
+			    	   if(!getManagedBean().isButtonHideSchActive()){
+					    	 getManagedBean().setButtonHideSchActive(true);
 					    }
-				       }else {
-				    	   ctSchedules.setSelectedCheckBox(false);
-				    	   if(!getManagedBean().isButtonHideSchActive()){
-						    	 getManagedBean().setButtonHideSchActive(true);
-						    }
-				       }
-			    }
+			       }
+		    }
 		}
-			
-		public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e){
-			    	getManagedBean().setSelectAll(false);
-			    	for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
-			    		if(ctSchedules.isSelectedCheckBox()){
-			    			getManagedBean().setButtonHideSchActive(false);
-			    			return;
-			    		}
-			    	}
-					if((boolean) e.getComponent().getAttributes().get("value")){
-						getManagedBean().setButtonHideSchActive(false);
-					}else{
-						getManagedBean().setButtonHideSchActive(true);
-					}	
-			    }
 		
+       /**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+		public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e){
+		    	getManagedBean().setSelectAll(false);
+		    	for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
+		    		if(ctSchedules.isSelectedCheckBox()){
+		    			getManagedBean().setButtonHideSchActive(false);
+		    			return;
+		    		}
+		    	}
+				if((boolean) e.getComponent().getAttributes().get("value")){
+					getManagedBean().setButtonHideSchActive(false);
+				}else{
+					getManagedBean().setButtonHideSchActive(true);
+				}	
+	     }
+		
+		 /**
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
 		public void selectAllPidDtl(AjaxBehaviorEvent e) {
 			
 			for (CtPidReason ctPidReasons : getManagedBean().getContractVer().getCtPidReasons()) {
@@ -2162,9 +2199,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						}
 			       }
 		    }
-	}
+	   }
 		
-	public void selectOnePidCheckboxSelect(AjaxBehaviorEvent e){
+		 /**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+	     public void selectOnePidCheckboxSelect(AjaxBehaviorEvent e){
 		    	getManagedBean().setSelectAll(false);
 		    	for (CtPidReason ctPidReasons : getManagedBean().getContractVer().getCtPidReasons()) {
 		    		if(ctPidReasons.isSelectedCheckBox()){
@@ -2177,8 +2219,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}else{
 					getManagedBean().setButtonHideActive(true);
 				}	
-		    }
+	     }
 		
+		 /**
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
 		public void selectAllProPaymentDtl(AjaxBehaviorEvent e) {
 			
 			for (CtProgressivePayment ctProgressivePayments : getManagedBean().getContractVer().getCtProgressivePayments()) {
@@ -2193,10 +2240,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							 getManagedBean().setButtonHideSchActive(true);
 						}
 			       }
-	    	}
-	 }
+	    	 }
+	    }
 		
-	public void selectOneProPaymentCheckboxSelect(AjaxBehaviorEvent e){
+		 /**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+	     public void selectOneProPaymentCheckboxSelect(AjaxBehaviorEvent e){
 		    	getManagedBean().setSelectAll(false);
 		    	for (CtProgressivePayment ctProgressivePayments : getManagedBean().getContractVer().getCtProgressivePayments()) {
 		    		if(ctProgressivePayments.isSelectedCheckBox()){
@@ -2210,47 +2262,57 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().setButtonHideSchActive(true);
 				}	
 		    }
+	   
+		 /**
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+	    public void selectAllAgencyCheckbox(){
 	
-	public void selectAllAgencyCheckbox(){
-	
-		  FacesContext context = FacesContext.getCurrentInstance();
-          Map<String, String> map = context.getExternalContext().getRequestParameterMap();
-          String onSaleAllStr = (String) map.get("onCheckAllRow");
-          boolean   onAgencyAllRow = Boolean.valueOf(onSaleAllStr.toLowerCase());
-          getManagedBean().setSelectAll(onAgencyAllRow);
+			  FacesContext context = FacesContext.getCurrentInstance();
+	          Map<String, String> map = context.getExternalContext().getRequestParameterMap();
+	          String onSaleAllStr = (String) map.get("onCheckAllRow");
+	          boolean   onAgencyAllRow = Boolean.valueOf(onSaleAllStr.toLowerCase());
+	          getManagedBean().setSelectAll(onAgencyAllRow);
        
-	 	for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
-	 		if (getManagedBean().isSelectAll()) {
-	 			ctAgencies.setSelectedCheckBox(true);
-	 			getManagedBean().setButtonHideActive(false);
-	 		}else{
-	 			ctAgencies.setSelectedCheckBox(false);
-	 			getManagedBean().setButtonHideActive(true);
-	 		}
-	 	}	
-	}
+			 	for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
+			 		if (getManagedBean().isSelectAll()) {
+			 			ctAgencies.setSelectedCheckBox(true);
+			 			getManagedBean().setButtonHideActive(false);
+			 		}else{
+			 			ctAgencies.setSelectedCheckBox(false);
+			 			getManagedBean().setButtonHideActive(true);
+			 		}
+			 	}	
+	    }
 	
-	public void selectOneAgencyCheckboxSelect(AjaxBehaviorEvent e){
-		getManagedBean().setSelectAll(false);
-    	for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
-    		if(ctAgencies.isSelectedCheckBox()){
-    			getManagedBean().setButtonHideActive(false);
-    			return;
-    		}
-    	}
-		if((boolean) e.getComponent().getAttributes().get("value")){
-			getManagedBean().setButtonHideActive(false);
-		}else{
-			getManagedBean().setButtonHideActive(true);
-		}	
-	}
-			/**
-			 * The method used for generating a list of available financial institution
-			 * for performance bond as selection.
-			 * 
-			 * @return the selection list of financial institution
-			 */
-			public SelectItem[] retrieveFinancialOrgList() {
+	    /**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+	     public void selectOneAgencyCheckboxSelect(AjaxBehaviorEvent e){
+				getManagedBean().setSelectAll(false);
+		    	for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
+		    		if(ctAgencies.isSelectedCheckBox()){
+		    			getManagedBean().setButtonHideActive(false);
+		    			return;
+		    		}
+		    	}
+				if((boolean) e.getComponent().getAttributes().get("value")){
+					getManagedBean().setButtonHideActive(false);
+				}else{
+					getManagedBean().setButtonHideActive(true);
+				}	
+	     }
+		/**
+		 * The method used for generating a list of available financial institution
+		 * for performance bond as selection.
+		 * 
+		 * @return the selection list of financial institution
+		 */
+		public SelectItem[] retrieveFinancialOrgList() {
 				SelectItem[] items = null; 
 				IFinancialOrgSO financialOrgSO;
 				
@@ -2277,14 +2339,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					financialOrgSO = null;
 				}
 				return items;
-			}
+		}
 		    
-		    /**
-			 * The method used to add a new performance bond record.
-			 * This method will generate a new record in performance bond
-			 * list, user allow to enter the bond details and attachment. 
-			 */
-		    public void addBondDetails() {
+	    /**
+		 * The method used to add a new performance bond record.
+		 * This method will generate a new record in performance bond
+		 * list, user allow to enter the bond details and attachment. 
+		 */
+	    public void addBondDetails() {
 				CtPerformanceBond newBond = new CtPerformanceBond();
 				newBond.setFinancialOrg(new PmFinancialOrg());
 				newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
@@ -2296,14 +2358,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		     	getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 			}		    
 		    	    
-		    /**
-			 * The method used to upload performance bond file.
-			 * 
-			 * @param  event      the upload event for file upload from screen
-			 * @throws Exception  if an exception occurred
-			 * @see    Exception
-			 */
-		    public void fileUploadPerformance(FileUploadEvent event) throws Exception {
+	    /**
+		 * The method used to upload performance bond file.
+		 * 
+		 * @param  event      the upload event for file upload from screen
+		 * @throws Exception  if an exception occurred
+		 * @see    Exception
+		 */
+	    public void fileUploadPerformance(FileUploadEvent event) throws Exception {
 		    	UploadedFile item = event.getFile();
 				AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 				
@@ -2322,13 +2384,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			    	 }
 			     }
 			    RequestContext.getCurrentInstance().execute("uploadBondDlg.hide()");
-			}
+		}
 		    
-			/**
-			 * The method used to remove the selected performance bond(s).
-		     */
-			public void removePerformanceBond() {
-				try {
+		/**
+		 * The method used to remove the selected performance bond(s).
+	     */
+		public void removePerformanceBond() {
+			try {
 					if (getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null) {
 						Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBonds().iterator();
 						while (performanceBond.hasNext()) {
@@ -2346,13 +2408,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				} finally {
 					
 				}
-			}
+		}
 			
-			/**
-			 * The method used to render the ceiling quantity information
-			 * of the selected product item.
-			 */
-		    public void onSelectProductItem() {
+		/**
+		 * The method used to render the ceiling quantity information
+		 * of the selected product item.
+		 */
+	    public void onSelectProductItem() {
 		    	if (getManagedBean().getSelectedItem() != null) {
 		    		if (getManagedBean().getShowItem() != null
 		    				&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
@@ -2537,7 +2599,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	   }
 	  
 	  /**
-	   * The method used to validate the entered minimun order quantity.
+	   * The method used to validate the entered minimum order quantity.
 	   */
 	  public void onChangeMinimumQty(CtContractItem ctContractItem) {
 		  if (ctContractItem.getMinimumOrderQty() <= 0) {
@@ -2916,11 +2978,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	  
 	  /**
 	   * The method used to verify contract is with GST.
-	   * 
 	   * @param gstEffDate  the gst effective date
-	   * 
-	   * @return true, if contract is with GST
-	   *         false, if contract is without GST
+	   * @return true, if contract is with GST false, if contract is without GST
 	   */
 	  public boolean isContractWithGst(Date gstEffDate) {
 		  if (gstEffDate != null && gstEffDate.getTime() <= DateUtils.getCurrentDateWithoutTime().getTime())
@@ -2931,7 +2990,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	  
 	  /**
 	   * The method used to retrieve GST Launch Date.
-	   * 
 	   * @return gst launch date
 	   */
 	  public Date getGstLaunchDate() {
@@ -2946,7 +3004,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 	  /**
 	   * The method used to retrieve GST Relief Due Date.
-	   * 
 	   * @return gst relief due date
 	   */
 	  public Date getGstReliefDueDate() {
@@ -2986,15 +3043,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	     * @param pass ajax event type
 	     * Set boolean value for user action 
 	     * */
-		
 		public void onToggleSelect(ToggleSelectEvent event) {
 			getManagedBean().setButtonHideActive(false);
 		}
 		
+		 /**
+	     * Method to set boolean value for checkbox 
+	     * @param pass ajax event type
+	     * Set boolean value for user action 
+	     * */
 		public void onRowSelect(SelectEvent event) {
 			getManagedBean().setButtonHideActive(false);
 		}
 	 
+		 /**
+	     * Method to uncheck boolean value for checkbox 
+	     * @param pass ajax event type
+	     * Set boolean value false for user action 
+	     * */
 	    public void onRowUnselect(UnselectEvent event) {
 	    	getManagedBean().setButtonHideActive(true);
 	    }
@@ -3003,7 +3069,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    /**
 		 * The method used for generating a list of available display type
 		 * of product or service item as selection.
-		 * 
 		 * @return the selection list of display type
 		 */
 		public SelectItem[] getItemDisplayTypeDropdownList(String itemType) {
@@ -3013,14 +3078,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);			
 			
 			if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
-				if (this.getManagedBean().getContractVer().getCtAgencies() != null
-						&& this.getManagedBean().getContractVer().getCtAgencies().size() > 1) {
-					itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
-				}
-				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
-			} else if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);				
-			}			
+					if (this.getManagedBean().getContractVer().getCtAgencies() != null
+							&& this.getManagedBean().getContractVer().getCtAgencies().size() > 1) {
+						itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+					}
+					itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
+			 } else if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+					itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);				
+			 }			
 				
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmParameter.parameterCode",
@@ -3031,36 +3096,37 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		
 		/**
-		 * The method used to invoke and initiate the item specification dialog.
+		 * The method used to invoke 
+		 * and initiate the item specification dialog.
 		 */
 		public void viewItemSpecDlg(CtContractItem ctContractItem) {
 			getManagedBean().setSelectedItemForSpec(ctContractItem);
 			RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 		}
 		
+		/**
+		 * The method used to set
+		 * ap201 file path and file name value is null.
+		 */
 		public void del201AttachDoc(){
 			getManagedBean().getContractVer().getCtContractValue().setAp201FilePath(null);
 			getManagedBean().getContractVer().getCtContractValue().setAp201FileName(null);
 		}
 		
+		/**
+		 * The method used to set  bond 
+		 * exempted file path and file name value is null.
+		 */
 		public void delBondExemptedDoc(){
 			 getManagedBean().getContractVer().getCtContractAmount().setBondExemptedFilePath(null);
 			 getManagedBean().getContractVer().getCtContractAmount().setBondExemptedFileName(null);
 		}
 		
 		/**
-		 * The method used for searching the agency.
-		 *//*
-		public void searchCtitemDetails() {
-			try {
-				ctItemDataModel.reloadData();
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
-			}
-		}*/
-		
-		
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
 		public void selectAllMinstryAgency(AjaxBehaviorEvent e) {
 			if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null) {
 				for (PmOrgProfile pmOrgProfiles : getAgencyDataModel().getList()) {
@@ -3079,6 +3145,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 
+		/**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
 		public void selectOneAgyCheckboxSelect(AjaxBehaviorEvent e) {
 			if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null) {
 				getManagedBean().setSelectAll(false);
@@ -3096,7 +3167,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}	
 			}
 		}
-		
 		
 		/**
 		 * Get Full Delivery Address based on CtAddress
@@ -3117,6 +3187,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return address.toString();
 		}
 		
+		/**
+		 * Function to check if bond required for contract
+		 * @param ctContractVer
+		 * @return boolean value
+		 * */
 		public boolean isPerformanceBond(){
 			if(getManagedBean().getCtContractAmount().isBondReq() && !getManagedBean().isDirectPurchase()
 					&& !getManagedBean().getCtContractAmount().isBondExempted()
@@ -3128,6 +3203,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return false;
 		}
 		
+		/**
+		 * Function to convert date into string for view only
+		 * @param Date date
+		 * @return String date
+		 * */
 		public String getMonthYears(Date date){
 			if(date == null || date.toString() == ""){
 				return " ";
