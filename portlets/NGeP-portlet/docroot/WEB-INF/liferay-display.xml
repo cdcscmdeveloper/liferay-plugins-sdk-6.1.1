@@ -309,6 +309,7 @@
 		<portlet id="blacklistDirectorOwner"></portlet>
 		<portlet id="svcTaskSummary"></portlet>
 		<portlet id="paymentReceipt"></portlet>
+		<portlet id="smComplaintSummary"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
