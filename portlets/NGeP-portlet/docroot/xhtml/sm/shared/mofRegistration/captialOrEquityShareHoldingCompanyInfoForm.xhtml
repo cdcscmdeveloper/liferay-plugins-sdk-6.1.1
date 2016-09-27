@@ -81,9 +81,9 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewEquiCompBean}" partialSubmit="true"
 					process="@this" update=":form:tt:eqiCompDialog" />
-				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					action="#{backingBean.deleteSelectedEquiCompanies}"
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="equiCompDelBtnId"
+					disabled="#{empty backingBean.managedBean.smAppl.smEquityCompanies}"
+					oncomplete="equiCompDeletePopUp.show()"
 					process="equiInfPan" partialSubmit="true"
 					update=":form:tt:eqiComDt" />
 
@@ -468,4 +468,12 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
+	
+	<ac:confirmationPopup id="equiCompDeletePopUpId"
+		widget="equiCompDeletePopUp"
+		okAction="backingBean.deleteSelectedEquiCompanies"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:eqiComDt, @([id$=Msg]),:#{p:component('equiCompDelBtnId')}"/>
 </ui:composition>

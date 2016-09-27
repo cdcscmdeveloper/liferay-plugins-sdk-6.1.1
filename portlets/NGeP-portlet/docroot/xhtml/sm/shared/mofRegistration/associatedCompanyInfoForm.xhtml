@@ -94,9 +94,8 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					id="delAssocBtnId" disabled="#{empty backingBean.managedBean.smAppl.smAssociateCompanies}"
-					action="#{backingBean.deleteSelectedAssocCompanies}"
 					partialSubmit="true" process="assocInfPan" update=":form:tt:asoc,@this" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					oncomplete="assocDeletePopUp.show();" />
 
 			</div>
 			<br />
@@ -463,4 +462,12 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
+	
+	<ac:confirmationPopup id="assocDeletePopUpId"
+		widget="assocDeletePopUp"
+		okAction="backingBean.deleteSelectedAssocCompanies"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:asoc, @([id$=Msg]),:#{p:component('delAssocBtnId')}"/>
 </ui:composition>
