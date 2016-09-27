@@ -59,6 +59,11 @@
 				<td><p:inputText disabled="true" size="51" value="#{paymentMatchBackingBean.getParameterDesc(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.fulfillmentType)}" 
 				rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}"/></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
+				<td><p:inputText size="66" disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.getParameterDesc(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.procurementTypeCategory)}" /></td>		
+			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.support.info.doc']}" toggleable="true">
