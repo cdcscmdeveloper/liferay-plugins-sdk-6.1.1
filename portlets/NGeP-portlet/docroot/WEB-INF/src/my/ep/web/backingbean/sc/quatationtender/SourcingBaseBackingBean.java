@@ -2538,5 +2538,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean isPerformanceBondRequired(BigDecimal loaAmount, List<ScQtCategory> qtCategories) {
 		return PerformanceBondUtil.isPerformanceBondRequired(loaAmount, qtCategories);
 	}
+	
+	/**
+	 * Get member role based parameter type 'FCR' and code
+	 * 
+	 * @param pmParameter
+	 * @return memberRole
+	 */
+	public String getFCMemberRole(PmParameter pmParameter) {
+
+		String memberRole = null;
+		if (pmParameter != null) {
+				memberRole = getParameterDesc(
+						ParameterTypeConst.FINALIZATION_COMMITTEE_ROLE,
+						pmParameter.getParameterCode());
+			
+		}
+		return memberRole;
+	}
 
 }
