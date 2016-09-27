@@ -72,7 +72,7 @@
 					action="#{requestNoteBackingBean.saveAction('')}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					update="@([id$=requestNoteId])" onstart="blockWidget.show();"
+					update="@([id$=requestNoteId])" onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					action="#{requestNoteBackingBean.submitAction('')}" process="@all">
 					<f:setPropertyActionListener
@@ -109,7 +109,7 @@
 						<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
 
 						<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 							process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 							update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 							actionListener="#{requestNoteBackingBean.submitAction(bpmAction)}" />
