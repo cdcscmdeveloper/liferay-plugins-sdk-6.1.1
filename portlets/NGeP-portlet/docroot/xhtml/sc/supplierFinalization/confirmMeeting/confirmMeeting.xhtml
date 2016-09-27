@@ -214,16 +214,7 @@
 
 								<p:column headerText="#{lbl['lbl.sc.role']}">
 									<h:outputText
-										value="#{suppFinalMeetingBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, ParameterConst.committeeRoleChairperson)}"
-										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleChairperson}" />
-
-									<h:outputText
-										value="#{suppFinalMeetingBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, ParameterConst.committeeRoleSecretary)}"
-										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}" />
-
-									<h:outputText
-										value="#{suppFinalMeetingBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, ParameterConst.committeeRoleMember)}"
-										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}" />
+										value="#{suppFinalMeetingBackingBean.getFCMemberRole(committeeMember.memberRole)}" />
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
