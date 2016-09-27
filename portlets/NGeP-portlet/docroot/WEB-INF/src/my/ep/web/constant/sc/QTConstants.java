@@ -204,5 +204,9 @@ public interface QTConstants {
 	public static final String HTML_NEW_LINE_CHARACTER = "<br />";
 	
 	public static final String PORTLET_NAME_QT_MAINTENANCE = "scQuotationTender_WAR_NGePportlet";
+	public static final String FINANCIAL_SUMMARY_PACKAGE_MARGIN="FPM";
+	public static final String FINANCIAL_SUMMARY_ITEM="FI";
+	public static final String RECOMMENDATION_SUMMARY_PACKAGE_MARGIN="RPM";
+	public static final String RECOMMENDATION_SUMMARY_ITEM="RI";
 	
 }
