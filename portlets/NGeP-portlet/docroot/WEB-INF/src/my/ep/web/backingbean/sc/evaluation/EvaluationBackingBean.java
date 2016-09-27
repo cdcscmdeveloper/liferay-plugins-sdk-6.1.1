@@ -40,6 +40,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11420,5 +11421,57 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public void enableAutoUpdate() {
 		getManagedBean().setAutoUpdate(Boolean.TRUE);		
+	}
+	
+	/**
+	 * this method is used to get the financial summary dropdown values.
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> finanialSummaryDropDownValues(){
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		selectItems.add(new SelectItem(null, ResourceBundleUtils
+				.getMessage("lbl.txt.select",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+	boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt().getQtId(), null);
+	//medicineCategoryCode=false;
+	log.info("finanialSummaryDropDownValues medicineCategoryCode"+medicineCategoryCode);
+	if(!medicineCategoryCode){
+		selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
+				.getMessage("lbl.sc.evaluation.view.by.package.preference.margin",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+	}
+		selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_ITEM, ResourceBundleUtils
+				.getMessage("lbl.sc.evaluation.view.by.item.preference.margin",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+		return selectItems;
+	}
+	
+	/**
+	 * this method is used to get the recommendation summary dropdown values.
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> recommendationSummaryDropDownValues(){
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		selectItems.add(new SelectItem(null, ResourceBundleUtils
+				.getMessage("lbl.txt.select",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+		boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt().getQtId(), null);
+		log.info("recommendationSummaryDropDownValues medicineCategoryCode"+medicineCategoryCode);
+		//medicineCategoryCode=false;
+		if(!medicineCategoryCode){
+		selectItems.add(new SelectItem(QTConstants.RECOMMENDATION_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
+				.getMessage("lbl.sc.evaluation.view.by.package.preference.margin",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+		}
+		selectItems.add(new SelectItem(QTConstants.RECOMMENDATION_SUMMARY_ITEM, ResourceBundleUtils
+				.getMessage("lbl.sc.evaluation.view.by.item.preference.margin",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+		return selectItems;
 	}
 }
