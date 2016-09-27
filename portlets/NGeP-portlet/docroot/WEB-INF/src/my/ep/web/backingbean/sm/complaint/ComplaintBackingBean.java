@@ -13,12 +13,18 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.event.FileUploadEvent;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.constant.MessageConst;
@@ -66,6 +72,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmComplaintSummaryVO;
 
 @ManagedBean(name = "complaintBackingBean")
 @RequestScoped
@@ -75,6 +82,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	
 	private final String COMPLAINT_VIEW = "/xhtml/sm/disciplinaryAction/complaintView.xhtml";
 	private final String LODGE_COMPLAINT = "/xhtml/sm/complaint/lodgeComplaint.xhtml";
+	private final String COMPLAINT_MANAGEMENT = "complaint-management";
 	
 	public ComplaintBackingBean() {
 		
@@ -809,6 +817,55 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	
 	public String returnToMenu(){
 		return "complaintMain";
+	}
+	
+	/**
+	 * Retrieve Complaint Summary
+	 * @return List<SmComplaintSummaryVO>
+	 */
+	public List<SmComplaintSummaryVO> retriveComplaintSummary(){
+		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		
+		ComplaintResDTO resDTO = SmServiceLookup.getComplaintSO().retrieveComplaintCountAndDesc(reqDTO);
+		List<SmComplaintSummaryVO> complaintSummaryLs = new ArrayList<SmComplaintSummaryVO>();
+		
+		if(resDTO.getResultStrList().size() > 0){
+			for(Object[] resultArr : resDTO.getResultStrList()){
+				Long statusId = Long.valueOf(resultArr[0].toString());
+				String statusName = resultArr[1].toString();
+				int total = Integer.valueOf(resultArr[2].toString());
+				
+				SmComplaintSummaryVO complaintSummaryVO = new SmComplaintSummaryVO();
+				complaintSummaryVO.setStatusId(statusId);
+				complaintSummaryVO.setStatusName(statusName);
+				complaintSummaryVO.setTotalRecord(total);
+				
+				if(statusId.longValue() != DisciplinaryActionConst.NEW_COMPLAINT_REJECT && statusId.longValue() != DisciplinaryActionConst.REVIEW_BY_PTPK_REJECT && 
+					statusId.longValue() != DisciplinaryActionConst.REVIEW_SUPP_RESP_REJECT && statusId.longValue() != DisciplinaryActionConst.COMPLAINT_COMPLETED){
+					complaintSummaryLs.add(complaintSummaryVO);
+				}
+			}
+		}
+		
+		return complaintSummaryLs;
+	}
+	
+	/**
+	 * Navigate to Complaint Search Page
+	 * @throws SystemException 
+	 * @throws PortalException 
+	 * @throws IOException 
+	 */
+	public void navigateToComplaintSearch() throws IOException, PortalException, SystemException{
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		String commonUrl = themeDisplay.getURLCurrent().substring(0,themeDisplay.getURLCurrent().indexOf(
+				themeDisplay.getLayout().getGroup().getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+
+		externalContext.redirect(commonUrl + "/" + COMPLAINT_MANAGEMENT);
+
 	}
 	
 	private List<SmAttachment> getSmAttachmentsByDocTypeAndId(String docType, Long docId){
