@@ -62,6 +62,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.biz.service.rpt.IReportTempInfoSO;
 import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
@@ -18717,8 +18718,26 @@ public class ReportBackingBean extends
 						commonUrl + "/" + "report-popup";
 				
 				if(testing){
-					RequestContext.getCurrentInstance()
-				    .execute("document.getElementById('reportUrl').value = '"+reportStr+"'; window.open('"+reportPopup+"', 'Resource', 'toolbar=no ,location=0, status=no,titlebar=no,menubar=no,width='+  screen.width +',height=' +  screen.height);e.preventDefault(); window.focus();");			//.execute("ex.show();");
+				
+					
+					//Jimmy add (temporarily workaround for report).
+					String contentStr = paramConstrString.toString();
+					
+					contentStr = contentStr.replace("&", " ");
+					
+					String headerStr = " server=RptSvr_NGEPDevRPS01_asinst_FT userid=ngep_devft/ng3pd3vft@devapp ";
+					String footerStr = " destype=cache desformat=pdf ";
+					
+					reportStr =  headerStr + contentStr + footerStr;
+
+					IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IRPTRequestSO.class);
+					
+					rptRequestSO.generateReport(reportStr, this.getReportValue());
+					
+					RequestContext.getCurrentInstance().execute("ex.show();");
+					
 				} else {
 		
 		HttpURLConnection urlConnection = null;
