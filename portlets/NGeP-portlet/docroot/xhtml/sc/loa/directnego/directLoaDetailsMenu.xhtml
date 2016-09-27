@@ -16,7 +16,7 @@
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
-			    <td width="21%"><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
+			    <td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
 				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER" label="#{lbl['lbl.sc.supplier.name']}" 
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
@@ -28,7 +28,7 @@
 			</tr>
 			
 			<tr>
-				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 				</td>
 				<td colspan="3"><p:inputText size="35"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
@@ -105,7 +105,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td rowspan="3" valign="top" width="18%"><p:outputLabel
+				<td rowspan="3" valign="top" width="21%"><p:outputLabel
 						value="#{lbl['lbl.sc.address']}" /></td>
 				<td rowspan="3">
 					<p:inputTextarea id="suppAddr" label="#{lbl['lbl.sc.address']}" 
@@ -114,7 +114,7 @@
 						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.scSupplierAddress)}"
 						required="true" /></td>
 
-				<td width="140px"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
+				<td width="160px"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 				</td>
 				<td><p:inputText id="suppPhoneNo" size="28" disabled="true" 
 								 value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.phoneFull}" />
@@ -152,7 +152,7 @@
 		toggleable="true">
 		<table width="100%">
 			<tr>
-				<td width="21%"><h:outputLabel
+				<td><h:outputLabel
 						value="#{lbl['lbl.sc.ministry']}" /></td>
 				<td colspan="3"><p:inputText disabled="#{!isEditableStatus}"
 						readonly="true"
@@ -186,7 +186,7 @@
 			</tr>
 			
 			<tr>
-				<td width="18%" valign="top"><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.title']}" />
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputTextarea
 						id="title" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"
@@ -196,6 +196,60 @@
 						cols="110" rows="3" style="margin-bottom:5px;width: 670px;" maxlength="500">
 						<p:ajax event="blur" process="title" update="title" />
 					</p:inputTextarea><p:message id="titleMsg" for="title" display="icon" /></td>
+			</tr>
+			<tr>
+				<td width="21%"><p:outputLabel
+						value="#{lbl['lbl.sc.procurement.mode']}" /> 
+					<p:outputLabel
+						value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<c:choose>
+						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="procMode" required="true"
+								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
+								style="margin-bottom:5px;width:246px;"
+								label="#{lbl['lbl.sc.procurement.mode']}">
+								<f:selectItems value="#{directLOABackingBean.getProcurementModeDropdownValues()}" />
+								<p:ajax event="change" 
+									process="@this" partialSubmit="true" update="qtType"
+									listener="#{directLOABackingBean.procurementModeChanged}" />
+							</p:selectOneMenu>
+							<p:message id="procModeMsg" for="procMode" display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="procModeTxt"
+								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.procurementMode)}"
+								size="35" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+				</td>
+				<td width="160px">
+					<p:outputLabel value="#{lbl['lbl.sc.qttentype']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<c:choose>
+						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="qtType" required="true"
+								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
+								style="margin-bottom:5px;width:206px;"
+								label="#{lbl['lbl.sc.qttentype']}">
+								<f:selectItems value="#{directLOABackingBean.getQTTypesDropdownValues()}" />
+								<p:ajax event="change" 
+									process="@this" partialSubmit="true" 
+									listener="#{directLOABackingBean.qtTypeChanged}" />
+							</p:selectOneMenu>
+							<p:message id="qtTypeMsg" for="qtType" display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText id="qtTypeTxt"
+								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.qtType)}"
+								size="28" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+					
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -250,7 +304,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.res.due.date']}" /></td>
-				<td><p:inputText
+				<td colspan="3"><p:inputText
 						value="#{directLOABackingBean.managedBean.scLoa.ackDueDate}"
 						size="15" disabled="true">
 						<f:convertDateTime
@@ -263,7 +317,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
 				</td>
-				<td><p:inputText style="text-align: right;"
+				<td colspan="3"><p:inputText style="text-align: right;"
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.estimatedAmount}"
 						size="35">
@@ -278,7 +332,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.off.price']}">
 					</p:outputLabel> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText style="text-align: right;" required="true" id="loaAmtId"
+				<td colspan="3"><p:inputText style="text-align: right;" required="true" id="loaAmtId"
 						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="35"
 						label="#{lbl['lbl.sc.loiloa.loa.off.price']}"
 						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}">
@@ -316,12 +370,10 @@
 						</c:otherwise>
 					</c:choose>
 				</td>
-				<!-- <td style="margin-top: -3px"><ac:iconTooltip
-						value="#{lbl['lbl.sc.fullfillent.type.tooltip']}" /></td> -->
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" /></td>
-				<td><p:inputText style="text-align: right;"
+				<td colspan="3"><p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.scLoa.gstAmt}"
 						disabled="#{directLOABackingBean.isGSTRegActive() or isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}"
 						size="35">
@@ -349,7 +401,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.overall.contract.amount']}" /></td>
-				<td><p:inputText style="text-align: right;"
+				<td colspan="3"><p:inputText style="text-align: right;"
 						value="#{directLOABackingBean.managedBean.overallContractAmt}"
 						size="35" id="ContractAmtId" disabled="true">
 						<f:convertNumber
@@ -419,7 +471,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.appr.req']}" />
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{isEditableStatus}" /></td>
-				<td>
+				<td colspan="3">
 					<c:choose>
 						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 							<p:selectOneRadio id="approvalReq" styleClass="commonLabel"
@@ -445,7 +497,7 @@
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="21%"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.cont.type']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
@@ -485,10 +537,10 @@
 			</tr>
 
 			<tr>
-				<td style="width: 10%;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td>
+				<td colspan="3">
 					<c:choose>
 						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 							<p:selectOneMenu id="contractAdmin"
@@ -526,7 +578,7 @@
 						value="#{lbl[lblContractDuration]}" />
 				 <p:outputLabel value="*" styleClass="mandatory"/>
 				</td>
-				<td><p:inputText style="text-align: right;" required="true" label="#{lbl[lblContractDuration]}"
+				<td colspan="3"><p:inputText style="text-align: right;" required="true" label="#{lbl[lblContractDuration]}"
 						id="contractDuration" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractDuration}"
 						size="35">
@@ -539,7 +591,7 @@
 			<ui:param name="lblexpDate"
 				value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.exp.date' : 'lbl.sc.loiloa.loa.cont.exp.date'}" />
 			<tr>
-				<td><p:outputLabel value="#{lbl[lbleffDate]}" /> <p:outputLabel
+				<td width="21%"><p:outputLabel value="#{lbl[lbleffDate]}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:calendar id="effdate" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -553,7 +605,7 @@
 							listener="#{directLOABackingBean.contractEffDateChanged()}"
 							update="expdate" />
 					</p:calendar> <p:message id="effdateMsg" for="effdate" display="icon" /></td>
-				<td><p:outputLabel value="#{lbl[lblexpDate]}" /></td>
+				<td width="160px"><p:outputLabel value="#{lbl[lblexpDate]}" /></td>
 				<td><p:calendar id="expdate" disabled="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						showOn="button" required="true"
@@ -565,7 +617,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.req.agree']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td>
+				<td colspan="3">
 					<table>
 						<tr>
 							<td>

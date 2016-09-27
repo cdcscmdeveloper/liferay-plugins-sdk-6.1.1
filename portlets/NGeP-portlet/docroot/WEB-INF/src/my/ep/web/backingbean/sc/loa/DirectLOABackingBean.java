@@ -2124,6 +2124,20 @@ public class DirectLOABackingBean extends
 			}
 		}
 		loa.setScQt(scQt);
+		
+		if (loa.getProcurementMode() == null) {
+			loa.setProcurementMode(new PmParameter());
+		}
+		
+		PmParameter qtTypeCode = null;
+		if (StringUtils.isNotBlank(scQt.getQtType())) {
+			qtTypeCode = getParameterByTypeAndCode(
+					ParameterTypeConst.QUOTATION_TENDER_TYPE, scQt.getQtType());	
+		}
+		if (qtTypeCode == null) {
+			qtTypeCode = new PmParameter();
+		}
+		loa.setQtType(qtTypeCode);
 	}
 
 	/**
@@ -4433,19 +4447,11 @@ public class DirectLOABackingBean extends
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
 		VelocityContext context = new VelocityContext();
 		String procurementMode = null;
-		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
-				.getDocType())) {
-			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
-		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
-				.getDocType())) {
-			if (scQt != null) {
-				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
-						.getProcurementMode().getParameterCode())) {
-					procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
-				} else {
-					procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
-				}
-			}
+		if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
+				.getProcurementMode().getParameterCode())) {
+			procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
+		} else {
+			procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
 		}
 		String title = procurementMode != null ? procurementMode + " "
 				+ scLoiLoa.getTitle() : scLoiLoa.getTitle();
@@ -4703,7 +4709,7 @@ public class DirectLOABackingBean extends
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
 		reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
-		reqDTO.setParameterCode(scQt.getProcurementMode().getParameterCode());
+		reqDTO.setParameterCode(scLoa.getProcurementMode().getParameterCode());
 		IParameterSO parameterSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IParameterSO.class);
@@ -6484,5 +6490,87 @@ public class DirectLOABackingBean extends
 	 */
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(true);
+	}
+	
+	/**
+	 * Gets the procurement mode dropdown values.
+	 * 
+	 * @return the procurement mode dropdown values
+	 */
+	public SelectItem[] getProcurementModeDropdownValues() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
+		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		SelectItem[] items = getDropdownValuesBySearchBean(
+				ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
+		return items;
+	}
+	
+	/**
+	 * Gets the quotation/tender type dropdown values.
+	 * 
+	 * @return the quotation/tender type dropdown values
+	 */
+	public SelectItem[] getQTTypesDropdownValues() {
+		ScLoa scLoa = getManagedBean().getScLoa();
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> qtTypes = new ArrayList<String>();
+		
+		if (null != scLoa &&null != scLoa.getProcurementMode()
+				&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
+						.getProcurementMode().getParameterCode())) {
+			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_NOT_IN.value(), qtTypes));
+		}
+
+		return super.getDropdownValuesBySearchBean(ParameterTypeConst.QUOTATION_TENDER_TYPE,
+				searchBean);
+	}
+	
+	/**
+	 * Procurement Mode dropdown change action
+	 */
+	public void procurementModeChanged() {
+		IParameterSO parameterSO = null;
+		try {
+			ScLoa scLoa = getManagedBean().getScLoa();
+			Long parameterId = scLoa.getProcurementMode().getParameterId();
+
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			scLoa.setProcurementMode(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+	}
+	
+	/**
+	 * QT Type dropdown change action
+	 */
+	public void qtTypeChanged() {
+		IParameterSO parameterSO = null;
+		try {
+			ScLoa scLoa = getManagedBean().getScLoa();
+			Long parameterId = scLoa.getQtType().getParameterId();
+
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			scLoa.setQtType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
 	}
 }
