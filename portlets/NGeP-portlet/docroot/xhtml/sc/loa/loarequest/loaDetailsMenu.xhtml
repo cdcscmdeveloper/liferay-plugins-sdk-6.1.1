@@ -207,6 +207,25 @@
 					<p:message id="sqTitleMsg" for="sqTitle" display="icon" />
 					</td>
 			</tr>
+			
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /> 
+				</td>
+				<td>
+					<p:inputText id="procModeTxt"
+						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.procurementMode)}"
+						size="35" disabled="true" />
+				</td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.qttentype']}" />
+				</td>
+				<td>
+					<p:inputText id="qtTypeTxt"
+						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.qtType)}"
+						size="28" disabled="true" />					
+				</td>
+			</tr>
 
 			<tr>
 				<td width="21%"><p:outputLabel
