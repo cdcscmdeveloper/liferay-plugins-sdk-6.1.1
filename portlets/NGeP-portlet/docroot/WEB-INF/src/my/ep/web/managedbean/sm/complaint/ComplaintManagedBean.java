@@ -25,6 +25,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sm.ComplaintSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmComplaintSummaryVO;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -80,6 +81,8 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private DiMyidentity diMyidentity;
 	private String myIdentityStatusDesc;
 	private String myIdentityResidentialStatus;
+	
+	private List<SmComplaintSummaryVO> complaintSummaryLs;
 
 	public SmComplaint getSmComplaint() {
 		return smComplaint;
@@ -426,5 +429,13 @@ public class ComplaintManagedBean extends BaseManagedBean {
 
 	public void setMyIdentityResidentialStatus(String myIdentityResidentialStatus) {
 		this.myIdentityResidentialStatus = myIdentityResidentialStatus;
+	}
+
+	public List<SmComplaintSummaryVO> getComplaintSummaryLs() {
+		return complaintSummaryLs;
+	}
+
+	public void setComplaintSummaryLs(List<SmComplaintSummaryVO> complaintSummaryLs) {
+		this.complaintSummaryLs = complaintSummaryLs;
 	}
 }
