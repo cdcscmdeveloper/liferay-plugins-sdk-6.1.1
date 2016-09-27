@@ -8084,8 +8084,21 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
-	public static void generateOfflineSuppDocChecklistPdf(SmAppl smAppl,String responseType) {
+	/**
+	 * Generate suppoting document check list to PDF
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 * @param String
+	 *            responseType
+	 */
+	public static void generateOfflineSuppDocChecklistPdf(
+			SmApplicationManagedBean bean, String responseType) {
 		try {
+			SmAppl smAppl = bean.getSmAppl();
+			List<SmApplSupportDoc> docList = responseType
+					.equals("SUPPIER_RESPOND_PO") ? bean.getMissinDocs()
+					: smAppl.getSmApplSupportDocs();
 			String tmpPath = null;
 			String tmpFolder = SmCommonUtil
 					.getUploadFilePath(SupplierManagementConst.OFFLINE_DOC_CHECKLIST_PATH);
@@ -8121,9 +8134,11 @@ public class SmApplicationUtil {
 					"lbl.sm.suppDoc.offline.sarawakAddr1", null));
 			context.put("sarawakAddr2", SmCommonUtil.getMessage(
 					"lbl.sm.suppDoc.offline.sarawakAddr2", null));
-			context.put("supportDocs", smAppl.getSmApplSupportDocs());
+			context.put("supportDocs", docList);
 			context.put("docDesc", SmCommonUtil.getMessage(
 					"lbl.sm.suppDoc.document.description", null));
+			context.put("poRemarks",
+					SmCommonUtil.getMessage("lbl.sm.sectionPoRmrk", null));
 			context.put("responseType", responseType);
 			SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
 		} catch (Exception e) {

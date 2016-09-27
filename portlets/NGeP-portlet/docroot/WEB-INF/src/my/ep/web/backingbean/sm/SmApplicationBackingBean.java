@@ -7680,14 +7680,18 @@ public class SmApplicationBackingBean extends
 																.getUserLocale())));
 			}
 		}
-		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean()
-				.getSmAppl(),"SUP_SUBMIT");
+		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean(),
+				"SUPPLIER_DECLARE");
 		RequestContext.getCurrentInstance().execute("docCheckListDlg.show()");
 	}
-	
-	public void printPoRespondInquiry(){
-		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean()
-				.getSmAppl(),"PO_INQUIRY");
+
+	/**
+	 * On click print icon for respond to PO inquiry supporting document check
+	 * list
+	 */
+	public void printSupplierRespondPoInquiry() {
+		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean(),
+				"SUPPIER_RESPOND_PO");
 		RequestContext.getCurrentInstance().execute("docCheckListDlg.show()");
 	}
 
