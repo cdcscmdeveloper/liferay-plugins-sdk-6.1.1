@@ -94,8 +94,8 @@
 					action="#{backingBean.assignNewAssocBody}" partialSubmit="true"
 					process="@this" update=":form:tt:profPop" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-					action="#{backingBean.deleteSelectedAssocBodies}"
-					partialSubmit="true" process="profInfPan" update=":form:tt:profDt" />
+					disabled="#{empty backingBean.managedBean.nonPersonnelProfBodyList}"
+					id="profBodyDelBtnId" oncomplete="profBodyDeletePopUp.show()" />
 
 			</div>
 			<br />
@@ -218,4 +218,12 @@
 		</div>
 
 	</p:dialog>
+	
+	<ac:confirmationPopup id="profBodyDeletePopUpId"
+		widget="profBodyDeletePopUp"
+		okAction="backingBean.deleteSelectedAssocBodies"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:profDt, @([id$=Msg]),:#{p:component('profBodyDelBtnId')}"/>
 </ui:composition>
