@@ -1,87 +1,88 @@
 package my.ep.web.backingbean.report;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.BufferedInputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
+import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
-import my.ep.biz.service.pm.common.notify.INotifySO;
-import my.ep.biz.service.pm.common.report.IRPTRequest;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.pm.common.notify.NotifyReqDTO;
+import my.ep.biz.dto.rpt.PMReportReqDTO;
+import my.ep.biz.dto.rpt.PMReportResDTO;
+import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmNotifyUser;
 import my.ep.persistence.entity.rpt.RPTRequest;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.RPTRequestManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
+import com.liferay.portal.util.PortalUtil;
+
 @ManagedBean(name = "rptRequestBackingBean")
 @ViewScoped
-public class RptRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean> {
+public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean> {
 	
 	private static final Logger logger = EpLogger
-			.getLogger(RptRequestBackingBean.class);
+			.getLogger(RPTRequestBackingBean.class);
 
-	private IPagingDataModel<RPTRequest> rptRequestDataModel = new ReportDataModel();
+	private IPagingDataModel<RPTRequest> rptRequestDataModel = new RPTRequestDataModel();
 
-	public RptRequestBackingBean() {
+	public RPTRequestBackingBean() {
 		this.getManagedBean().setDeleteButtonHide(true);
-		this.getManagedBean().setSearchItem("1");
-		this.getManagedBean().setSearchValue("");
 	}
 
 	public void retrieveRptRequestList() {
 		
 		debugLogger("retrieveRptRequestList");
-
-		this.getManagedBean().setUnRead(false);
-		this.getManagedBean().setSearchItem("1");
-		this.getManagedBean().setSearchValue("");
 		
 		rptRequestDataModel.resetData();
 		rptRequestDataModel.reloadData();
 		
-		resetSelectedNotify();
+		resetSelectedRPTRequest();
 	}
 
-	public void removeRptRequests() {
+	public void removeRPTRequest() {
 		
-		debugLogger("removeReports");
+		debugLogger("removeRPTRequest");
 		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
 		
 		if (this.getManagedBean().getSelectedRPTRequests() != null) {
 			
-			debugLogger("getSelectedNotifys length["
+			debugLogger("getSelectedRPTRequests length["
 					+ this.getManagedBean().getSelectedRPTRequests().length + "]");
 			
-			IRPTRequest reqSO = (IRPTRequest) BusinessDelegate.getInstance()
-					.getServiceObject("rpt", IRPTRequest.class);
+			IRPTRequestSO reqSO = (IRPTRequestSO) BusinessDelegate.getInstance()
+					.getServiceObject("rpt", IRPTRequestSO.class);
 			
 			RPTRequest[] rptRequestArr = this.getManagedBean().getSelectedRPTRequests();
 			
 			//reload the same object from db
 			
-			long[] pmNotifyUserIds = new long[rptRequestArr.length];
+			long[] rptRequetsIds = new long[rptRequestArr.length];
 			
 			for(int i = 0; i<rptRequestArr.length; i++){
 				//pmNotifyUserIds[i] = rptRequestArr[i].getNotifyUserId();
@@ -100,13 +101,13 @@ public class RptRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 					reqDTO.getRPTRequestList().add(rptRequest);
 				}
 				
-				RPTRequestResDTO resDTO = reqSO.removeReportList(reqDTO);
+				RPTRequestResDTO resDTO = reqSO.removeRPTRequestList(reqDTO);
 				
-				debugLogger("NotifyResDTO isSuccessful[" + resDTO.isSuccessful()
+				debugLogger("RPTRequestResDTO isSuccessful[" + resDTO.isSuccessful()
 						+ "]");
 				
 				if (resDTO.isSuccessful()) {
-					resetSelectedNotify();
+					resetSelectedRPTRequest();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -124,10 +125,10 @@ public class RptRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 			}
 		}
 		
-		resetSelectedNotify();
+		resetSelectedRPTRequest();
 	}
 
-	public void selectedNotify() {
+	public void selectedRPTRequest() {
 		
 		debugLogger("=== selectedNotify ===");
 		
@@ -157,9 +158,9 @@ public class RptRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 	 * @author Jimmy
 	 */
 
-	private class ReportDataModel extends PagingDataModel<RPTRequest> {
-
-		public ReportDataModel() {
+	private class RPTRequestDataModel extends PagingDataModel<RPTRequest> {
+		
+		public RPTRequestDataModel() {
 			super("reportTable");
 		}
 
@@ -171,7 +172,7 @@ public class RptRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 				logger.debug("reportTable's pageChangeListener");
 			}
 
-			IRPTRequest reportSO;
+			IRPTRequestSO reportSO;
 			
 			try {
 			
@@ -181,13 +182,13 @@ public class RptRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 				if (user == null) {
 					logger.error("User is empty.");
 				} else {
-					reportSO = (IRPTRequest) BusinessDelegate.getInstance()
+					reportSO = (IRPTRequestSO) BusinessDelegate.getInstance()
 							.getServiceObject("rpt",
-									IRPTRequest.class);
+									IRPTRequestSO.class);
 
 					// Filter By - recipient Id
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("userId",
+							new SearchFilterBean("createdBy",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									user.getUserId()));
 
@@ -198,7 +199,7 @@ public class RptRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 						
 					RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
 					reqDTO.setSearchBean(searchBean);
-					RPTRequestResDTO resDTO = reportSO.searchReportList(reqDTO);
+					RPTRequestResDTO resDTO = reportSO.searchRPTRequestList(reqDTO);
 					
 					if (resDTO.isSuccessful()) {
 						return resDTO.getSearchResultBean();
@@ -215,16 +216,18 @@ public class RptRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 	}
 
 	/**
-	 * @return the specMasterDataModel
+	 * @return the rptRequestDataModel
 	 */
-	public IPagingDataModel<RPTRequest> getrptRequestDataModel() {
+	
+	public IPagingDataModel<RPTRequest> getRptRequestDataModel() {
 		return rptRequestDataModel;
 	}
 
 	/**
-	 * @param specMasterDataModel
+	 * @param setrptRequestDataModel
 	 *            the specMasterDataModel to set
 	 */
+	
 	public void setrptRequestDataModel(
 			IPagingDataModel<RPTRequest> specMasterDataModel) {
 		this.rptRequestDataModel = specMasterDataModel;
@@ -236,39 +239,97 @@ public class RptRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 		rptRequestDataModel.resetData();
 		rptRequestDataModel.reloadData();
-		resetSelectedNotify();
+		
+		resetSelectedRPTRequest();
 	}
 	
-	public void searchItem(AjaxBehaviorEvent event) {
-		
-		String itemId = (String) event.getComponent().getAttributes().get("value");
-		
-		if(itemId == null){
-			return;
-		}
-		
-		if(itemId.equals("1")){
-			this.getManagedBean().setSearchValue("");
-		}
-	}
-	
-	public void searchValue(AjaxBehaviorEvent event) {
-		
-		String itemId = (String) event.getComponent().getAttributes().get("value");
-		
-		if(itemId == null){
-			return;
-		}
-	}
-	
-	private void resetSelectedNotify() {
+	private void resetSelectedRPTRequest() {
 		getManagedBean().setSelectedRPTRequests(null);
 	}
 
 	private void debugLogger(Object message) {
+		
 		if (logger.isDebugEnabled()) {
 			logger.debug(message);
 		}
+		
 		logger.info(message);
+	}
+	
+	public void getLatestStatusCode(RPTRequest rptRequest){
+		
+		IRPTRequestSO reqSO = (IRPTRequestSO) BusinessDelegate.getInstance()
+				.getServiceObject("rpt", IRPTRequestSO.class);
+		
+		reqSO.updateStatusCode(rptRequest);
+		
+		rptRequestDataModel.reloadData();
+	}
+	
+	public void generateReport(RPTRequest rptRequest){
+		
+		String reportCode = rptRequest.getReportCode();
+		
+		IPMReportSO reqSO = (IPMReportSO) BusinessDelegate.getInstance()
+				.getServiceObject("rpt", IPMReportSO.class);
+		
+		PMReportReqDTO reqDTO = new PMReportReqDTO();
+		reqDTO.setReportCode(reportCode);
+		PMReportResDTO resDTO = reqSO.retriveReportByrptId(reqDTO);
+		
+		
+		HttpURLConnection urlConnection = null;
+		URL obj;
+		BufferedInputStream buf;
+		
+		String gnrtdURL = "http://ngepdevrps01.ngep.com:5901/reports/rwservlet/getjobid" + rptRequest.getJobId() + "?server=RptSvr_NGEPDevRPS01_asinst_FT";
+		
+		try {
+			
+			obj = new URL(gnrtdURL);
+			urlConnection = (HttpURLConnection) obj.openConnection();
+			buf = new BufferedInputStream(urlConnection.getInputStream());
+			
+			PortletResponse portletResponse = (PortletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			HttpServletResponse res = PortalUtil
+					.getHttpServletResponse(portletResponse);
+			writeReportDataToPDFOrExcel(resDTO.getPmReportDtls().getReportTitle(), DateUtils.getCurrentDate(), buf, res);
+		     
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			urlConnection.disconnect();
+		}
+	}
+
+	private void writeReportDataToPDFOrExcel(String reportTitle,
+			Timestamp time, BufferedInputStream buf, HttpServletResponse res)
+			throws Exception{
+		
+		res.setHeader(ReportConst.CONTENT_DISPOSITION,
+				ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportTitle
+						+ ReportConst.UNDERSCORE
+						+ ReportConst.REPORT_DATE_TIME.format(new Date())
+						+ ReportConst.DOTPDFEIFON);//
+		
+		res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING,
+				ReportConst.BINARY);
+		
+		res.setContentType(ReportConst.APPLICATIONEIFONPDF);
+		res.flushBuffer();
+		
+		OutputStream out = res.getOutputStream();
+
+		byte[] b = new byte[4096];
+		
+		int size;
+		
+		while ((size = buf.read(b, 0, b.length)) != -1) {
+			out.write(b, 0, size);
+		}
+		
+		buf.close();
+		out.close();
 	}
 }
