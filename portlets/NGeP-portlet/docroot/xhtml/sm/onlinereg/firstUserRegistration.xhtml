@@ -196,7 +196,8 @@
 				</tr>
 				
 				<p:outputPanel id="pnlBumiIslam"
-					rendered="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryCode == SupplierManagementConst.COUNTRY_MALAYSIA_CODE}">
+					rendered="#{(!registrationBackingBean.managedBean.sameAsOwner and registrationBackingBean.managedBean.smPersonnel.pmCountry.countryCode == SupplierManagementConst.COUNTRY_MALAYSIA_CODE) or 
+					(registrationBackingBean.managedBean.sameAsOwner and registrationBackingBean.managedBean.smSuppOwner.nationality.countryCode == SupplierManagementConst.COUNTRY_MALAYSIA_CODE)}">
 				<tr>
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.person.bumi']}" />
@@ -251,7 +252,10 @@
 					<td class="tdTitle">
 						<p:outputPanel id="pnlFirstUserIdenType">
 						<c:choose>
-							<c:when test="#{registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+							<c:when test="#{(!registrationBackingBean.managedBean.sameAsOwner and 
+							registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC) or  
+							(registrationBackingBean.managedBean.sameAsOwner and 
+							registrationBackingBean.managedBean.smSuppOwner.identificationType.parameterCode == SupplierManagementConst.NEW_IC)}">
 								<p:outputLabel value="#{lbl['lbl.sm.individual.newicno']}" />
 							</c:when>
 							<c:otherwise>
