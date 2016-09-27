@@ -18,7 +18,7 @@ public class TaxInvoiceVO  {
 	
 	private String gstFlag;
 	private String gstRate;
-	private BigDecimal amountWithoutGst;
+	private String amountWithoutGst;
 	private String gstAmount;
 	private String gstFlagCode; 
 	
@@ -26,20 +26,6 @@ public class TaxInvoiceVO  {
 		
 	}
 
-
-	/**
-	 * @return the amountWithoutGst
-	 */
-	public BigDecimal getAmountWithoutGst() {
-		return amountWithoutGst;
-	}
-
-	/**
-	 * @param amountWithoutGst the amountWithoutGst to set
-	 */
-	public void setAmountWithoutGst(BigDecimal amountWithoutGst) {
-		this.amountWithoutGst = amountWithoutGst;
-	}
 
 	/**
 	 * @return the gstAmount
@@ -100,6 +86,18 @@ public class TaxInvoiceVO  {
 	public void setGstFlagCode(String gstFlagCode) {
 		this.gstFlagCode = gstFlagCode;
 	}
+
+
+	public String getAmountWithoutGst() {
+		return amountWithoutGst;
+	}
+
+
+	public void setAmountWithoutGst(String amountWithoutGst) {
+		this.amountWithoutGst = amountWithoutGst;
+	}
+
+
 
 
 }
