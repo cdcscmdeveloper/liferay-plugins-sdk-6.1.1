@@ -370,8 +370,7 @@
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-					action="#{backingBean.deleteSelectedPendingApprovalCategoryCodes}"
-					onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+					oncomplete="addtnlCatCodeDeletePopUp.show()"
 					update="@form" partialSubmit="true"
 					process=":form:tt:catCodeInfPan">
 				</p:commandButton>
@@ -381,4 +380,12 @@
 	</p:outputPanel>
 
 	<p:spacer height="2px;" />
+	
+	<ac:confirmationPopup id="addtnlCatCodeDeletePopUpId"
+		widget="addtnlCatCodeDeletePopUp"
+		okAction="backingBean.deleteSelectedPendingApprovalCategoryCodes"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update="@form"/>
 </ui:composition>
