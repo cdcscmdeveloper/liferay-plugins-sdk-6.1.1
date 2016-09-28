@@ -1120,6 +1120,9 @@ public class CommitteBackingBean extends
 			
 			CommitteResDTO resDTO = committeSO.retrieveCommitteDetailsByCommitteeId(reqDTO);
 			if (resDTO.isSuccessful()) {
+				// Sort the committee members
+				Collections.sort(resDTO.getCommittee().getScCommitteeMembers(),
+						new MemberRoleComparator());
 				this.getManagedBean().setSelectedHistoryCommittee(resDTO.getCommittee());
 			}			
 
