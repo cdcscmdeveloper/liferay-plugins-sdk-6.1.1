@@ -6,33 +6,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="pTaskAssignResult" header="#{lbl['lbl.pm.ta.result']}"
+	<p:panel id="pUserTaskAssignResult" header="#{lbl['lbl.pm.ta.user.task']}"
 		toggleable="true">
 		<div class="clear"></div>
-		<h:panelGroup id="taskListID">
-			<table class="ppTwoTable">
-				<tr>
-					<th width="10%"><p:outputLabel
-							value="#{lbl['lbl.pm.ta.show']}" /></th>
-					<td width="55%" style="white-space: nowrap;"><p:selectOneMenu
-							value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.selectedTaskListType}"
-							styleClass="ppDropDownWidthM" id="somTaskListType"
-								disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.searched)}" 
-							label="#{lbl['lbl.pm.ta.show']}">
-							<f:selectItem itemLabel="#{lbl['lbl.pm.ta.user.task']}"
-							itemValue="#{ProfileManagementConst.reassignWorklistTypeUser}" />
-							<f:selectItem itemLabel="#{lbl['lbl.pm.ta.group.task']}"
-							itemValue="#{ProfileManagementConst.reassignWorklistTypeGroup}" />
-							<f:selectItem itemLabel="#{lbl['lbl.pm.ta.others.task']}"
-							itemValue="#{ProfileManagementConst.reassignWorklistTypeOthers}" />
-							<p:ajax event="change"
-								listener="#{taskReassignmentBackingBean.searchTaskAssign()}"
-								update=":form:dtTaskAssignResult" />
-						</p:selectOneMenu></td>
-					<td width="30%"></td>
-				</tr>
-			</table>
-			<p:dataTable value="#{taskReassignmentBackingBean.taskListDataModel}"
+		<h:panelGroup id="userTaskListID">
+			<p:dataTable value="#{taskReassignmentBackingBean.userTaskListDataModel}"
 				lazy="true" rowIndexVar="rowIndex" rows="10" id="dtTaskAssignResult"
 				style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
 				<ac:paginator for="dtTaskAssignResult"></ac:paginator>
@@ -47,27 +25,55 @@
 					width="13%;">  
 	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, tasks.docType)}
 	        </p:column>
-				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="34%;">  
+				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="30%;">  
 	            #{tasks.docNumber}
 	        </p:column>
-				<p:column headerText="#{lbl['lbl.pm.ta.document.amt']}" width="34%;"
-					rendered="false">
-				</p:column>
-				<p:column headerText="#{lbl['lbl.pm.ta.status']}" width="5%;">  
+				<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
 				  #{taskReassignmentBackingBean.applicationStatus(tasks.docStatus)}	
 				             
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.action']}"
 					style="width:10%;text-align:center;">
 					<p:commandLink id="cLEditTask"
-						rendered="#{ProfileManagementConst.reassignWorklistTypeUser eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.selectedTaskListType}"
 						action="#{taskReassignmentBackingBean.redirectToTaskReassign(tasks)}"
 						update=":form:dlTaskReassignment">
 						<p:graphicImage value="/css/images/design/edit.png" />
 					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:panelGroup>
+		
+	</p:panel>
+	<p:panel id="pGroupTaskAssignResult" header="#{lbl['lbl.pm.ta.group.task']}"
+		toggleable="true">
+		<div class="clear"></div>
+		<h:panelGroup id="groupTaskListID">
+			<p:dataTable value="#{taskReassignmentBackingBean.groupTaskListDataModel}"
+				lazy="true" rowIndexVar="rowIndex" rows="10" id="dtGroupTaskAssignResult"
+				style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
+				<ac:paginator for="dtGroupTaskAssignResult"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
+					<h:outputText value="#{tasks.createDate.time}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"
+					width="13%;">  
+	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, tasks.docType)}
+	        </p:column>
+				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="30%;">  
+	            #{tasks.docNumber}
+	        </p:column>
+				<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
+				  #{taskReassignmentBackingBean.applicationStatus(tasks.docStatus)}	
+				             
+	        </p:column>
+				<p:column headerText="#{lbl['lbl.pm.action']}"
+					style="width:10%;text-align:center;">
 					 <p:commandLink
-					 	id="cLDeleteTask"
-					 	rendered="#{ProfileManagementConst.reassignWorklistTypeUser ne taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.selectedTaskListType}"
+					 	id="cLDeleteGroupTask"
 					 	partialSubmit="true"
 						process="@this"
 						oncomplete="taskDeletePopUp.show();"
@@ -75,19 +81,64 @@
 						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.selectedTask}" 
 							value="#{tasks}" />
+						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.taskType}" 
+							value="#{ProfileManagementConst.reassignWorklistTypeGroup}" />
 				</p:commandLink>
 				</p:column>
 			</p:dataTable>
 		</h:panelGroup>
-		
-		<ac:confirmationPopup id="taskDeleteId"
+	</p:panel>
+	<p:panel id="pOthersTaskAssignResult" header="#{lbl['lbl.pm.ta.others.task']}"
+		toggleable="true">
+		<div class="clear"></div>
+		<h:panelGroup id="othersTaskListID">
+			<p:dataTable value="#{taskReassignmentBackingBean.othersTaskListDataModel}"
+				lazy="true" rowIndexVar="rowIndex" rows="10" id="dtOthersTaskAssignResult"
+				style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
+				<ac:paginator for="dtOthersTaskAssignResult"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
+					<h:outputText value="#{tasks.createDate.time}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"
+					width="13%;">  
+	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, tasks.docType)}
+	        </p:column>
+				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="30%;">  
+	            #{tasks.docNumber}
+	        </p:column>
+			<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
+				  #{taskReassignmentBackingBean.applicationStatus(tasks.docStatus)}	
+	        </p:column>
+				<p:column headerText="#{lbl['lbl.pm.action']}"
+					style="width:10%;text-align:center;">
+					 <p:commandLink
+					 	id="cLDeleteOtherTask"
+					 	partialSubmit="true"
+						process="@this"
+						oncomplete="taskDeletePopUp.show();"
+						update="@([id$=#{taskDeleteId}])" >
+						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.selectedTask}" 
+							value="#{tasks}" />
+						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.taskType}" 
+							value="#{ProfileManagementConst.reassignWorklistTypeOthers}" />
+				</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:panelGroup>
+	</p:panel>
+	
+	<ac:confirmationPopup id="taskDeleteId"
 			widget="taskDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignTask()"
 			width="400" height="100"
 			title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}" 
-			update=":form:dtTaskAssignResult" />
-	</p:panel>
+			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" />
 	<!-- Task Selection Popup -->
 	<ui:include src="/xhtml/pm/taskReassignment/taskReassignPopup.xhtml" />
 </ui:composition>

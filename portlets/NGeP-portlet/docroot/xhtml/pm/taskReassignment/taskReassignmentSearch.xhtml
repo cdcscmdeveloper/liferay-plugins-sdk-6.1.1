@@ -22,7 +22,7 @@
 							value="#{taskReassignmentBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.organisationTypes, taskReassignmentBackingBean.orgTypeSearchBean)}" />
 						<p:ajax event="change"
 							listener="#{taskReassignmentBackingBean.changeOrgType()}"
-							update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:somTaskListType" />
+							update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" />
 					</p:selectOneMenu></td>
 				<td width="30%"></td>
 			</tr>
@@ -54,7 +54,7 @@
 						<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="60"
 							disabled="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
 							or !taskReassignmentBackingBean.managedBean.orgProfileRequired}"
-							update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:somTaskListType" readonly="true"
+							update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" readonly="true"
 							headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 							value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.pmOrgValidity.orgName}"
 							saveObject="taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile"
@@ -72,7 +72,7 @@
 						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgName !='')}"
-						update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:somTaskListType" readonly="true"
+						update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" readonly="true"
 						headerText="#{lbl['lbl.pm.ta.user.lov']}"
 						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.loginId} &#160; #{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userName}"
 						saveObject="taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user"
@@ -113,7 +113,7 @@
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userName !='')
 						or (taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo !=''
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo != null)}" 
-		            	update="@this,:form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:somTaskListType" readonly="true" 
+		            	update="@this,:form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" readonly="true" 
 						headerText="#{lbl['lbl.pm.ta.document.type']}"
 						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType.codeDesc}"
 						saveObject="taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType"
@@ -135,7 +135,7 @@
 							value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo}"
 							size="30" >
 						<p:ajax event="blur" listener="#{taskReassignmentBackingBean.onChangeUser(null)}" 
-				     		update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:somTaskListType"/> 
+				     		update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult"/> 
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.pm.ta.docno.tooltips']}" />
 				</td>
@@ -150,7 +150,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.search']}" 
 							id="cbSearchTask" widgetVar="cbSearchTask"
 							process="pTaskAssignSearch" action="#{taskReassignmentBackingBean.searchTaskAssign}"
-							update="dtTaskAssignResult,:form:somTaskListType" 
+							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" 
 							onclick="cbSearchTask.disable();cbResetTask.disable()"  
 			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
 							/>
@@ -159,7 +159,7 @@
 			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
 							value="#{lbl['lbl.btn.reset']}" 
 							action="#{taskReassignmentBackingBean.resetTaskAssignSearchBean}"
-							update="pTaskAssignSearch,:form:taskListID" 
+							update="pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID," 
 							/> 
 					</div>
 				</td>
