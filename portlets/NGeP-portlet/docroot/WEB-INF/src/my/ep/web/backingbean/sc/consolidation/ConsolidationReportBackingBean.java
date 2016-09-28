@@ -682,6 +682,10 @@ public class ConsolidationReportBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
+			
+			boolean isMedicalProcCategory = isMultipleProposalCategory(
+					scQt, null);
+			getManagedBean().setProcCategoryMedicine(isMedicalProcCategory);
 
 			List<TplSpecZoneDtl> zoneDetails = resDTO.getZoneDetails();
 			getManagedBean().setZoneDetails(zoneDetails);
@@ -998,6 +1002,7 @@ public class ConsolidationReportBackingBean extends
 	
 	private void validateDORanking(TplSpecZoneDtl specZoneDtl, List<ScQtRecommend> items) {
 		List<ScQtEvaluationResultDtl> qualifiedSuppliers = null;
+		List<QtEvaluationResultDtlBean> qualifiedSupplierBeans = null;
 		SuppFinalizationResDTO resDTO = getQualifiedSuppliersWithDORank(specZoneDtl, null);	
 		
 		int totalQualifiedSuppliers = 0;
@@ -1007,11 +1012,12 @@ public class ConsolidationReportBackingBean extends
 		}
 		
 		// Package wise validation
-		List<QtEvaluationResultDtlBean> qualifiedSupplierBeans = 
-				getQtEvaluationResultDtlBeansWithRank(specZoneDtl, null, qualifiedSuppliers);
-		validateRanking(qualifiedSupplierBeans, false, null, 
-						specZoneDtl, totalQualifiedSuppliers);
-		
+		if (!getManagedBean().isProcCategoryMedicine()) {
+			qualifiedSupplierBeans = 
+					getQtEvaluationResultDtlBeansWithRank(specZoneDtl, null, qualifiedSuppliers);
+			validateRanking(qualifiedSupplierBeans, false, null, 
+							specZoneDtl, totalQualifiedSuppliers);	
+		}		
 		// End of // Package wise validation
 		
 		
