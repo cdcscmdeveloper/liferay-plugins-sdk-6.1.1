@@ -112,11 +112,10 @@
 						update=":form:tt:equipmentDialog" process="@this"
 						partialSubmit="true" action="#{backingBean.assignNewMachineryBean}" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-						action="#{backingBean.deleteSelectedMachinery}" id="delMachBtnId"
+					<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="delMachBtnId"
 						disabled="#{empty backingBean.managedBean.smAppl.smMachineDtls}"
 						partialSubmit="true" process=":form:tt:machInfPan" update="machineMainPanelId" 
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+						oncomplete="machDeletePopUp.show()" />
 				</div>
 			</p:outputPanel>
 			
@@ -391,4 +390,11 @@
 		</p:blockUI>
 	</p:dialog>
 	
+	<ac:confirmationPopup id="machDeletePopUpId"
+		widget="machDeletePopUp"
+		okAction="backingBean.deleteSelectedMachinery"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:machInfPan, @([id$=Msg]),:#{p:component('delMachBtnId')}"/>
 </ui:composition>

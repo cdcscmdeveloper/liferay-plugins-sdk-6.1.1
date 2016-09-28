@@ -75,10 +75,8 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="smWorkShopDtPanel"
-					action="#{backingBean.deleteSelectedWorkShops}"
 					id="delWorkshopBtnId" disabled="#{empty backingBean.managedBean.applWorkShopFacilities}"
-					update=":form:tt:workDt,@this" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					update=":form:tt:workDt,@this" oncomplete="workshopDeletePopUp.show()" />
 			</div>
 			<br />
 		</p:outputPanel>
@@ -271,4 +269,12 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
+	
+	<ac:confirmationPopup id="workshopDeletePopUpId"
+		widget="workshopDeletePopUp"
+		okAction="backingBean.deleteSelectedWorkShops"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:workDt, @([id$=Msg]),:#{p:component('delWorkshopBtnId')}"/>
 </ui:composition>

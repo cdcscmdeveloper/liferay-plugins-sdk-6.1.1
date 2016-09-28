@@ -75,10 +75,9 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="smFacilityFactoryDtPanel"
-					action="#{backingBean.deleteSelectedFactories}"
 					id="delFactoryBtnId" disabled="#{empty backingBean.managedBean.applFactoryFacilities}"
 					update=":form:tt:facDt,@this" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					oncomplete="factoryDeletePopUp.show()" />
 			</div>
 			<br />
 		</p:outputPanel>
@@ -273,4 +272,12 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
+	
+	<ac:confirmationPopup id="factoryDeletePopUpId"
+		widget="factoryDeletePopUp"
+		okAction="backingBean.deleteSelectedFactories"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:facDt, @([id$=Msg]),:#{p:component('delFactoryBtnId')}"/>
 </ui:composition>

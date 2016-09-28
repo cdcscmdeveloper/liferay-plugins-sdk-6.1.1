@@ -72,10 +72,8 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="smStrDtPanel" partialSubmit="true"
-					action="#{backingBean.deleteSelectedStores}"
 					id="delStoreBtnId" disabled="#{empty backingBean.managedBean.applStoreFacilities}"
-					update=":form:tt:storeDt,@this" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					update=":form:tt:storeDt,@this" oncomplete="storeDeletePopUp.show()" />
 			</div>
 			<br />
 		</p:outputPanel>
@@ -267,4 +265,12 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
+	
+	<ac:confirmationPopup id="storeDeletePopUpId"
+		widget="storeDeletePopUp"
+		okAction="backingBean.deleteSelectedStores"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:storeDt, @([id$=Msg]),:#{p:component('delStoreBtnId')}"/>
 </ui:composition>
