@@ -1894,14 +1894,12 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * save LOI list details. save - save data into database.
-	 * 
 	 * @param outcome
 	 *            the outcome
 	 * @return the string
 	 */
 	public String savetLoiListAction() {
 		debugLogger("savetLoiListAction");
-		boolean isLoiLoasUpdate = Boolean.FALSE;
 		AwardSupplierResDTO resDTO = new AwardSupplierResDTO();
 		try {
 			ScQtFinalization scQtFinalization = getManagedBean()
@@ -1914,29 +1912,21 @@ public class LOIDetailBackingBean extends
 			boolean isLoiRequired  = getManagedBean().isLoiRequired();
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
-			List<ScLoiLoa> recSupplierList =getManagedBean().getRecSupplierList();
-			isLoiLoasUpdate = updatePendingLoiLoas(recSupplierList, docType);
-			if(isLoiLoasUpdate){
-				reqDTO.setLoiLoaList(getManagedBean().getRecSupplierList());
-				resDTO = getQtAwardSO().saveLoiLoaList(reqDTO);
-			} else{
-				resDTO.setSuccessful(Boolean.TRUE);
-			}
+			reqDTO.setLoiLoaList(getManagedBean().getRecSupplierList());
+			resDTO = getQtAwardSO().saveLoiLoaList(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				if(isLoiLoasUpdate){
-					renewSesionObject();
-					getManagedBean().setScQtFinalization(scQtFinalization);
-					getManagedBean().setDocType(docType);
-					getManagedBean().setRecSupplierList(resDTO.getLoiLoas());
-					getManagedBean().setSourceId(sourceId);
-					getManagedBean().setRecommendDtlIds(recommendDtlIds);
-					getManagedBean().setPayLoad(payLoadData);
-					getManagedBean().setLoiRequired(isLoiRequired);
-					reloadLOIList(sourceId);
-				}
-				if(null!=scQtFinalization){
-				this.getManagedBean().setScQt(scQtFinalization.getScQt());
+				renewSesionObject();
+				getManagedBean().setScQtFinalization(scQtFinalization);
+				getManagedBean().setDocType(docType);
+				getManagedBean().setRecSupplierList(resDTO.getLoiLoas());
+				getManagedBean().setSourceId(sourceId);
+				getManagedBean().setRecommendDtlIds(recommendDtlIds);
+				getManagedBean().setPayLoad(payLoadData);
+				getManagedBean().setLoiRequired(isLoiRequired);
+				reloadLOIList(sourceId);
+				if(null!= scQtFinalization){
+					getManagedBean().setScQt(scQtFinalization.getScQt());
 				}
 				successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQtFinalization.getScQt().getQtNo(), Boolean.FALSE);
 				FacesContext fc = FacesContext.getCurrentInstance();
@@ -1946,10 +1936,8 @@ public class LOIDetailBackingBean extends
 
 		} finally {
 		}
-
 		return null;
 	}
-	
 	
 	/**
 	 * Reload loi list.
