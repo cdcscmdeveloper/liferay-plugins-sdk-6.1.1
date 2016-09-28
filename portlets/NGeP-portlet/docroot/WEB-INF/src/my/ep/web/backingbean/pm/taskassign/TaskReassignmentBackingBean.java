@@ -107,7 +107,9 @@ public class TaskReassignmentBackingBean extends
 	private ISearchBean<PmParameterDesc> orgTypeSearchBean;
 
 	// List for Paging
-	private PagingDataModel<WorklistItemVO> taskListDataModel = new taskPagingDataModel();
+	private PagingDataModel<WorklistItemVO> userTaskListDataModel = new userTaskListDataModel();	
+	private PagingDataModel<WorklistItemVO> groupTaskListDataModel = new groupTaskListDataModel();
+	private PagingDataModel<WorklistItemVO> othersTaskListDataModel = new othersTaskListDataModel();
 	private PagingDataModel<PmUser> userListDataModel = new userPagingDataModel();
 
 	public void preLoading() throws EpException {
@@ -145,7 +147,19 @@ public class TaskReassignmentBackingBean extends
 				.setExcludeUser(getFacesScopes().getUserSessionBean());
 		this.setCurrentActiveOrg();
 		this.getManagedBean().setTaskLazy(false);
-		this.taskListDataModel.resetData();
+		resetAllTaskList();
+	}
+	
+	private void resetAllTaskList(){
+		this.userTaskListDataModel.resetData();
+		this.groupTaskListDataModel.resetData();
+		this.othersTaskListDataModel.resetData();
+	}
+	
+	private void reloadAllTaskList(){
+		this.userTaskListDataModel.reloadData();
+		this.groupTaskListDataModel.reloadData();
+		this.othersTaskListDataModel.reloadData();
 	}
 
 	/**
@@ -230,7 +244,7 @@ public class TaskReassignmentBackingBean extends
 
 			}
 			this.getManagedBean().setTaskLazy(false);
-			this.taskListDataModel.resetData();
+			resetAllTaskList();
 		}
 	}
 
@@ -309,7 +323,7 @@ public class TaskReassignmentBackingBean extends
 			.setSearched(false);
 		this.getManagedBean().getTaskAssignmentSearchBean().setDocType(null);
 		this.getManagedBean().setTaskLazy(false);
-		this.taskListDataModel.resetData();
+		resetAllTaskList();
 	}
 
 	/**
@@ -345,7 +359,7 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().getTaskAssignmentSearchBean()
 			.setSearched(false);
 		this.getManagedBean().setTaskLazy(false);
-		this.taskListDataModel.resetData();
+		resetAllTaskList();
 	}
 
 	public SelectItem[] getRoleList() {
@@ -523,16 +537,16 @@ public class TaskReassignmentBackingBean extends
 						.getOrgProfile());
 		this.getManagedBean().getTaskAssignmentSearchBean().setSearched(true);
 		this.getManagedBean().setTaskLazy(true);
-		this.taskListDataModel.reloadData();
+		reloadAllTaskList();
 		log.info("searchDocument - End");
 
 	}
 
-	private class taskPagingDataModel extends PagingDataModel<WorklistItemVO> {
+	private class userTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
 
-		public taskPagingDataModel() {
+		public userTaskListDataModel() {
 			super("dtTaskAssignResult",getManagedBean().isTaskLazy());
 		}
 
@@ -545,13 +559,11 @@ public class TaskReassignmentBackingBean extends
 			List<Integer> statusIds = null;
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
-			int taskListType = 0;
 
 			try {
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 				loginId = taskSearchBean.getUser() != null ? taskSearchBean
 						.getUser().getLoginId() : null;
-				taskListType = taskSearchBean.getSelectedTaskListType();
 				if (loginId != null && loginId.length() > 0) {
 					statusIds = retrieveAvailableStatusId();
 					if (statusIds != null && !statusIds.isEmpty()) {
@@ -587,33 +599,350 @@ public class TaskReassignmentBackingBean extends
 									.getTaskAssignmentSearchBean().getDocType()
 									.getPmParameter().getParameterCode());
 						}
+						
+						reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+						reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
+						responseDTO = bpmSO.getReassignedItems(reqDTO);
 
-						// User/Group/Others Task
-						switch (taskListType) {
-						case 0:
-							reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-							reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
-							responseDTO = bpmSO.getReassignedItems(reqDTO);
-							break;
-						case 1:
-							reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-							reqDTO.setAssignment(BpmConstants.ASSIGNMENT_GROUP);
-							reqDTO.setIsClaimed(false);
-							responseDTO = bpmSO.getReassignedItems(reqDTO);
-							break;
-						case 2:
-							reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-							reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
-							responseDTO = bpmSO.getGroupByOthersItems(reqDTO);
-							break;
-
-						default:
-							break;
-						}
+//						// User/Group/Others Task
+//						switch (taskListType) {
+//						case 0:
+//							reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+//							reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
+//							responseDTO = bpmSO.getReassignedItems(reqDTO);
+//							break;
+//						case 1:
+//							reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+//							reqDTO.setAssignment(BpmConstants.ASSIGNMENT_GROUP);
+//							reqDTO.setIsClaimed(false);
+//							responseDTO = bpmSO.getReassignedItems(reqDTO);
+//							break;
+//						case 2:
+//							reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+//							reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
+//							responseDTO = bpmSO.getGroupByOthersItems(reqDTO);
+//							break;
+//
+//						default:
+//							break;
+//						}
 
 						// Invoke BPM
 						// responseDTO = bpmSO.getReassignedItems(reqDTO);
 
+						// Set resultBean for UI
+						resultBean = new SearchResultBean<WorklistItemVO>();
+						resultBean.setTotalRecord(0);
+						resultBean.setResultList(null);
+
+						if (responseDTO.getWorklistVO() != null) {
+							log.info("BPM size******"
+									+ responseDTO.getWorklistVO()
+											.getWorklistItem().size());
+							log.info("BPM total******"
+									+ responseDTO.getWorklistVO().getTotal());
+							/*
+							 * if(responseDTO.getWorklistVO().getWorklistItem()!=
+							 * null) { // markup data
+							 * markupWorklistItem(responseDTO
+							 * .getWorklistVO().getWorklistItem()); }
+							 */
+							resultBean.setTotalRecord(responseDTO
+									.getWorklistVO().getTotal());
+							resultBean.setResultList(responseDTO
+									.getWorklistVO().getWorklistItem());
+						}
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				bpmSO = null;
+			}
+			return resultBean;
+		}
+
+		/**
+		 * Generate meaningful title
+		 * 
+		 * @param worklistItem
+		 */
+		private void markupWorklistItem(List<WorklistItemVO> worklistItem) {
+			log.info("markupWorklistItem");
+			for (WorklistItemVO worklistItemVO : worklistItem) {
+				// fl module Purchase Request Initiation Submit PR
+				if (worklistItemVO
+						.getProcess()
+						.equalsIgnoreCase(
+								FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME)
+						&& worklistItemVO.getTaskName().equalsIgnoreCase(
+								FLProcessNameConst.SUBMIT_PR_HT)) {
+					if (!worklistItemVO.getTitle().equalsIgnoreCase(
+							SourcingConstants.RN_TITLE)) {
+						worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
+								"lbl.sc.request.note",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								getFacesScopes().getUserLocale())
+								+ " - " + worklistItemVO.getTitle());
+					}
+				}
+				// s1 module
+				if (worklistItemVO.getTitle().equalsIgnoreCase(
+						SourcingConstants.RN_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
+							"lbl.sc.request.note",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							getFacesScopes().getUserLocale()));
+				}
+				if (worklistItemVO.getTitle().equalsIgnoreCase(
+						SourcingConstants.PI_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
+							"lbl.sc.pr.inquiry",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							getFacesScopes().getUserLocale()));
+				}
+				if (worklistItemVO.getTitle().equalsIgnoreCase(
+						SourcingConstants.PD_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
+							"lbl.sc.purchase.in.default",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							getFacesScopes().getUserLocale()));
+				}
+			}
+		}
+
+		@Override
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
+				ISearchBean<WorklistItemVO> searchBean) {
+			log.info("pageChangeListener");
+			return getWorklistItems();
+		}
+
+		private int calculateFinalOffSet(int currentPage) {
+			int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
+			return offSet;
+		}
+	}
+	
+	private class groupTaskListDataModel extends PagingDataModel<WorklistItemVO> {
+
+		private static final long serialVersionUID = 1L;
+
+		public groupTaskListDataModel() {
+			super("dtGroupTaskAssignResult",getManagedBean().isTaskLazy());
+		}
+
+		private ISearchResultBean<WorklistItemVO> getWorklistItems() {
+			log.info("getWorklistItems");
+			IBpmSO bpmSO = null;
+			BpmRequestDTO reqDTO = null;
+			BpmResponseDTO responseDTO = null;
+			String loginId = null;
+			List<Integer> statusIds = null;
+			TaskAssignmentSearchBean taskSearchBean = null;
+			SearchResultBean<WorklistItemVO> resultBean = null;
+
+			try {
+				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
+				loginId = taskSearchBean.getUser() != null ? taskSearchBean
+						.getUser().getLoginId() : null;
+				if (loginId != null && loginId.length() > 0) {
+					statusIds = retrieveAvailableStatusId();
+					if (statusIds != null && !statusIds.isEmpty()) {
+						bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+								.getServiceObject(IBpmSO.class);
+						reqDTO = new BpmRequestDTO();
+						Object ctxToken = bpmSO.authenticate(loginId);
+
+						log.info("BPM pageNo******" + getPageNo());
+						log.info("BPM pageSize*****" + getPageSize());
+						log.info("BPM loginId******" + loginId);
+						log.info("BPM statusIds******" + statusIds.size());
+
+						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
+						reqDTO.setStatusList(statusIds);
+						reqDTO.setUserId(loginId);
+						reqDTO.setCtxToken(ctxToken);
+						List<String> docNumberList = new ArrayList<String>();
+						if (StringUtils.isNotBlank(getManagedBean()
+								.getTaskAssignmentSearchBean().getDocNo())) {
+							docNumberList.add(getManagedBean()
+									.getTaskAssignmentSearchBean().getDocNo());
+							reqDTO.setDocNumberList(docNumberList);
+						}
+
+						if (getManagedBean().getTaskAssignmentSearchBean()
+								.getDocType() != null
+								&& getManagedBean()
+										.getTaskAssignmentSearchBean()
+										.getDocType().getPmParameter() != null) {
+							reqDTO.setDocType(getManagedBean()
+									.getTaskAssignmentSearchBean().getDocType()
+									.getPmParameter().getParameterCode());
+						}
+						
+						reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+						reqDTO.setAssignment(BpmConstants.ASSIGNMENT_GROUP);
+						reqDTO.setIsClaimed(false);
+						responseDTO = bpmSO.getReassignedItems(reqDTO);
+
+						// Set resultBean for UI
+						resultBean = new SearchResultBean<WorklistItemVO>();
+						resultBean.setTotalRecord(0);
+						resultBean.setResultList(null);
+
+						if (responseDTO.getWorklistVO() != null) {
+							log.info("BPM size******"
+									+ responseDTO.getWorklistVO()
+											.getWorklistItem().size());
+							log.info("BPM total******"
+									+ responseDTO.getWorklistVO().getTotal());
+							/*
+							 * if(responseDTO.getWorklistVO().getWorklistItem()!=
+							 * null) { // markup data
+							 * markupWorklistItem(responseDTO
+							 * .getWorklistVO().getWorklistItem()); }
+							 */
+							resultBean.setTotalRecord(responseDTO
+									.getWorklistVO().getTotal());
+							resultBean.setResultList(responseDTO
+									.getWorklistVO().getWorklistItem());
+						}
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				bpmSO = null;
+			}
+			return resultBean;
+		}
+
+		/**
+		 * Generate meaningful title
+		 * 
+		 * @param worklistItem
+		 */
+		private void markupWorklistItem(List<WorklistItemVO> worklistItem) {
+			log.info("markupWorklistItem");
+			for (WorklistItemVO worklistItemVO : worklistItem) {
+				// fl module Purchase Request Initiation Submit PR
+				if (worklistItemVO
+						.getProcess()
+						.equalsIgnoreCase(
+								FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME)
+						&& worklistItemVO.getTaskName().equalsIgnoreCase(
+								FLProcessNameConst.SUBMIT_PR_HT)) {
+					if (!worklistItemVO.getTitle().equalsIgnoreCase(
+							SourcingConstants.RN_TITLE)) {
+						worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
+								"lbl.sc.request.note",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								getFacesScopes().getUserLocale())
+								+ " - " + worklistItemVO.getTitle());
+					}
+				}
+				// s1 module
+				if (worklistItemVO.getTitle().equalsIgnoreCase(
+						SourcingConstants.RN_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
+							"lbl.sc.request.note",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							getFacesScopes().getUserLocale()));
+				}
+				if (worklistItemVO.getTitle().equalsIgnoreCase(
+						SourcingConstants.PI_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
+							"lbl.sc.pr.inquiry",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							getFacesScopes().getUserLocale()));
+				}
+				if (worklistItemVO.getTitle().equalsIgnoreCase(
+						SourcingConstants.PD_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
+							"lbl.sc.purchase.in.default",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							getFacesScopes().getUserLocale()));
+				}
+			}
+		}
+
+		@Override
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
+				ISearchBean<WorklistItemVO> searchBean) {
+			log.info("pageChangeListener");
+			return getWorklistItems();
+		}
+
+		private int calculateFinalOffSet(int currentPage) {
+			int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
+			return offSet;
+		}
+	}
+	
+	private class othersTaskListDataModel extends PagingDataModel<WorklistItemVO> {
+
+		private static final long serialVersionUID = 1L;
+
+		public othersTaskListDataModel() {
+			super("dtOthersTaskAssignResult",getManagedBean().isTaskLazy());
+		}
+
+		private ISearchResultBean<WorklistItemVO> getWorklistItems() {
+			log.info("getWorklistItems");
+			IBpmSO bpmSO = null;
+			BpmRequestDTO reqDTO = null;
+			BpmResponseDTO responseDTO = null;
+			String loginId = null;
+			List<Integer> statusIds = null;
+			TaskAssignmentSearchBean taskSearchBean = null;
+			SearchResultBean<WorklistItemVO> resultBean = null;
+
+			try {
+				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
+				loginId = taskSearchBean.getUser() != null ? taskSearchBean
+						.getUser().getLoginId() : null;
+				if (loginId != null && loginId.length() > 0) {
+					statusIds = retrieveAvailableStatusId();
+					if (statusIds != null && !statusIds.isEmpty()) {
+						bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+								.getServiceObject(IBpmSO.class);
+						reqDTO = new BpmRequestDTO();
+						Object ctxToken = bpmSO.authenticate(loginId);
+
+						log.info("BPM pageNo******" + getPageNo());
+						log.info("BPM pageSize*****" + getPageSize());
+						log.info("BPM loginId******" + loginId);
+						log.info("BPM statusIds******" + statusIds.size());
+
+						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
+						reqDTO.setStatusList(statusIds);
+						reqDTO.setUserId(loginId);
+						reqDTO.setCtxToken(ctxToken);
+						List<String> docNumberList = new ArrayList<String>();
+						if (StringUtils.isNotBlank(getManagedBean()
+								.getTaskAssignmentSearchBean().getDocNo())) {
+							docNumberList.add(getManagedBean()
+									.getTaskAssignmentSearchBean().getDocNo());
+							reqDTO.setDocNumberList(docNumberList);
+						}
+
+						if (getManagedBean().getTaskAssignmentSearchBean()
+								.getDocType() != null
+								&& getManagedBean()
+										.getTaskAssignmentSearchBean()
+										.getDocType().getPmParameter() != null) {
+							reqDTO.setDocType(getManagedBean()
+									.getTaskAssignmentSearchBean().getDocType()
+									.getPmParameter().getParameterCode());
+						}
+						
+						reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+						reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
+						responseDTO = bpmSO.getGroupByOthersItems(reqDTO);
+						
 						// Set resultBean for UI
 						resultBean = new SearchResultBean<WorklistItemVO>();
 						resultBean.setTotalRecord(0);
@@ -809,22 +1138,6 @@ public class TaskReassignmentBackingBean extends
 	 */
 	public static void setOrgTypeMapper(Map<Long, PmParameter> orgTypeMapper) {
 		TaskReassignmentBackingBean.orgTypeMapper = orgTypeMapper;
-	}
-
-	/**
-	 * @return the taskListDataModel
-	 */
-	public PagingDataModel<WorklistItemVO> getTaskListDataModel() {
-		return taskListDataModel;
-	}
-
-	/**
-	 * @param taskListDataModel
-	 *            the taskListDataModel to set
-	 */
-	public void setTaskListDataModel(
-			PagingDataModel<WorklistItemVO> taskListDataModel) {
-		this.taskListDataModel = taskListDataModel;
 	}
 
 	/**
@@ -1209,6 +1522,13 @@ public class TaskReassignmentBackingBean extends
 			reqDTO.setFlDocNo(task.getDocNumber());
 			reqDTO.setStatusId(task.getDocStatus().longValue());
 			reqDTO.setTaskName(task.getTaskName());
+			reqDTO.setTaskId(task.getTaskId());
+			if(getManagedBean().getTaskAssignmentSearchBean() != null &&
+					getManagedBean().getTaskAssignmentSearchBean().getUser() != null &&
+					getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId() != null){
+				reqDTO.setUserLoginId(getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId());
+			}
+			
 			resDTO = fulfilmentSO.retrieveTaskReassignmentDetail(reqDTO);
 
 		} finally {
@@ -1309,7 +1629,7 @@ public class TaskReassignmentBackingBean extends
 
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
-				this.taskListDataModel.reloadData();
+				reloadAllTaskList();
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -1419,7 +1739,7 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().getTaskAssignmentSearchBean()
 			.setSearched(false);
 		this.getManagedBean().setTaskLazy(false);
-		taskListDataModel.resetData();
+		resetAllTaskList();
 	}
 	
 	private ISearchResultBean<PmUser> generateUserResultBean(
@@ -1712,12 +2032,11 @@ public class TaskReassignmentBackingBean extends
 	public void removeReassignTask() {
 		log.info("removeReassignTask");
 
-		int reassignWorkListType = getManagedBean().getTaskAssignmentSearchBean().getSelectedTaskListType();
 		String claimedBy = null;
-		PmUser pmUser = this.getManagedBean().getSelectedUser();
 		WorklistItemVO task = this.getManagedBean().getSelectedTask();
 		ITaskAssignmentSO taskAssignmentSO = null;
-
+		int reassignWorkListType = getManagedBean().getTaskType();
+		
 		if (task == null) {
 			throw new EpException(MessageConst.ERROR_770097);
 		}
@@ -1739,17 +2058,7 @@ public class TaskReassignmentBackingBean extends
 		try {
 			TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
 			reqDTO.setTaskId(task.getTaskId());
-//			reqDTO.setUser(pmUser);
 			reqDTO.setUserIdList(assigneeUsers);
-//			reqDTO.setDocNumber(task.getDocNumber());
-//			reqDTO.setDocId(task.getDocId());
-//			reqDTO.setDocType(task.getDocType());
-//			reqDTO.setDocStatus(task.getDocStatus());
-//			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
-//			reqDTO.setActionedByUser(getFacesScopes().getUserSessionBean()
-//					.getUserId());
-//			reqDTO.setFromUser(getManagedBean().getTaskAssignmentSearchBean()
-//					.getUser());
 			reqDTO.setClaimedBy(claimedBy);
 
 			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
@@ -1760,7 +2069,7 @@ public class TaskReassignmentBackingBean extends
 
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
-				this.taskListDataModel.reloadData();
+				reloadAllTaskList();
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -1774,6 +2083,51 @@ public class TaskReassignmentBackingBean extends
 			taskAssignmentSO = null;
 		}
 
+	}
+
+	/**
+	 * @return the userTaskListDataModel
+	 */
+	public PagingDataModel<WorklistItemVO> getUserTaskListDataModel() {
+		return userTaskListDataModel;
+	}
+
+	/**
+	 * @param userTaskListDataModel the userTaskListDataModel to set
+	 */
+	public void setUserTaskListDataModel(
+			PagingDataModel<WorklistItemVO> userTaskListDataModel) {
+		this.userTaskListDataModel = userTaskListDataModel;
+	}
+
+	/**
+	 * @return the groupTaskListDataModel
+	 */
+	public PagingDataModel<WorklistItemVO> getGroupTaskListDataModel() {
+		return groupTaskListDataModel;
+	}
+
+	/**
+	 * @param groupTaskListDataModel the groupTaskListDataModel to set
+	 */
+	public void setGroupTaskListDataModel(
+			PagingDataModel<WorklistItemVO> groupTaskListDataModel) {
+		this.groupTaskListDataModel = groupTaskListDataModel;
+	}
+
+	/**
+	 * @return the othersTaskListDataModel
+	 */
+	public PagingDataModel<WorklistItemVO> getOthersTaskListDataModel() {
+		return othersTaskListDataModel;
+	}
+
+	/**
+	 * @param othersTaskListDataModel the othersTaskListDataModel to set
+	 */
+	public void setOthersTaskListDataModel(
+			PagingDataModel<WorklistItemVO> othersTaskListDataModel) {
+		this.othersTaskListDataModel = othersTaskListDataModel;
 	}
 	
 	
