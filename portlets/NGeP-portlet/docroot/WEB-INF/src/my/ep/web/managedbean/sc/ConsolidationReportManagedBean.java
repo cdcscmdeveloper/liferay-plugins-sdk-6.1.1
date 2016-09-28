@@ -86,6 +86,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> boardofDirectors;
 
 	private List<ScQtFinalizationRemarks> finalizationRemars;
+	private boolean isProcCategoryMedicine;
 	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
@@ -547,6 +548,20 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	 */
 	public static List<String> getDirectdownloaddocdefkeys() {
 		return directDownloadDocDefKeys;
+	}
+
+	/**
+	 * @return the isProcCategoryMedicine
+	 */
+	public boolean isProcCategoryMedicine() {
+		return isProcCategoryMedicine;
+	}
+
+	/**
+	 * @param isProcCategoryMedicine the isProcCategoryMedicine to set
+	 */
+	public void setProcCategoryMedicine(boolean isProcCategoryMedicine) {
+		this.isProcCategoryMedicine = isProcCategoryMedicine;
 	}
 
 }
