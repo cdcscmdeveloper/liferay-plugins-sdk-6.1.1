@@ -14,7 +14,7 @@
 			escape="false" />
 			
 			<ui:fragment rendered="#{!specificationBackingBean.managedBean.qt.panel}">
-			<ui:param name="checkCategoryCodemedicine" value="#{specificationBackingBean.isMultiplePorposalCategory(specificationBackingBean.managedBean.qt.qtId,null)}"></ui:param>
+			<ui:param name="checkCategoryCodemedicine" value="#{specificationBackingBean.isMultipleProposalCategory(specificationBackingBean.managedBean.qt, null)}"></ui:param>
 			<ui:fragment rendered="#{checkCategoryCodemedicine}">
 			<br/>
 			<h:outputText styleClass="instruction" 
