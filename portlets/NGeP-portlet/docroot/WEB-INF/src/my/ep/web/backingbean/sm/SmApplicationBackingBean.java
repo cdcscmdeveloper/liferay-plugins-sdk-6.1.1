@@ -4725,6 +4725,34 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"smMachDtWidVar.paginator.endLink.click()");
 		}
+
+		// remove from main list for non selected machine that is still not yet
+		// save to avoid error
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmMachineDtls())) {
+			List<SmMachineDtl> needToDeleteList = new ArrayList<SmMachineDtl>();
+			for (SmMachineDtl mac : getManagedBean().getSmAppl()
+					.getSmMachineDtls()) {
+				if (mac.getMachineDtlId() == null
+						&& !mac.equals(getManagedBean().getSelectedMachine())) {
+					needToDeleteList.add(mac);
+				}
+			}
+			if (!EntityHelper.isCollectionEmpty(needToDeleteList)) {
+				getManagedBean().getSmAppl().getSmMachineDtls()
+						.removeAll(needToDeleteList);
+			}
+		}
+
+		// add for new machine
+		if (getManagedBean().getSelectedMachine().isBrandNew()) {
+			if (getManagedBean().getSmAppl().getSmMachineDtls() == null) {
+				getManagedBean().getSmAppl().setSmMachineDtls(
+						new ArrayList<SmMachineDtl>());
+			}
+			getManagedBean().getSmAppl().getSmMachineDtls()
+					.add(getManagedBean().getSelectedMachine());
+		}
 		saveOrUpdateAppl();
 		assignValReqdToFalse();
 
@@ -4732,6 +4760,9 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedMachine().getMachine() == null) {
 			getManagedBean().getSelectedMachine().setMachine(new PmMachine());
 		}
+		
+		//init back smMachine list
+		initSmMachineDetails();
 
 		RequestContext.getCurrentInstance().execute("equipmentDialog.hide()");
 	}
@@ -4799,6 +4830,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setMachineItems(
 				SmApplicationUtil.getMachineItemsByMachineDetails(macBean));
 		getManagedBean().setSelectedMachine(macBean);
+		getManagedBean().getSelectedMachine().setBrandNew(false);
 		getManagedBean().setCloneObject(
 				(SmMachineDtl) SerializationUtils.clone(macBean));
 		assignValReqdToTrue();
@@ -4826,6 +4858,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedMachine().setSmAppl(
 				getManagedBean().getSmAppl());
 		getManagedBean().getSelectedMachine().setValue(new BigDecimal(0.00));
+		getManagedBean().getSelectedMachine().setBrandNew(true);
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("equipmentDialog.show()");
 	}
