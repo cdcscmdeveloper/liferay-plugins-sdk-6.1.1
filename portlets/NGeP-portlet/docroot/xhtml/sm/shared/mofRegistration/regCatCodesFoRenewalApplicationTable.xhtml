@@ -341,10 +341,18 @@
 					special="#{backingBean.managedBean.smAppl.supplierType}" />
 			
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-				action="#{backingBean.deleteSelectedCategoryCodes}"
+				oncomplete="addtnlCatCodeRenewDeletePopUp.show()"
 				update=":form:tt:catCodeInfPan" partialSubmit="true"
 				process=":form:tt:catCodeInfPan">
 			</p:commandButton>
 		</div>
 	</c:if>
+	
+	<ac:confirmationPopup id="addtnlCatCodeRenewDeletePopUpId"
+		widget="addtnlCatCodeRenewDeletePopUp"
+		okAction="backingBean.deleteSelectedCategoryCodes"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:catCodeInfPan"/>
 </ui:composition>
