@@ -207,6 +207,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private String encryptionKey;
 	
 	private String previousPageUrl;	
+	private boolean isProcCategoryMedicine;
 
 	/**
 	 * Gets the spki backing bean.
@@ -1748,6 +1749,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setPreviousPageUrl(String previousPageUrl) {
 		this.previousPageUrl = previousPageUrl;
+	}
+
+	/**
+	 * @return the isProcCategoryMedicine
+	 */
+	public boolean isProcCategoryMedicine() {
+		return isProcCategoryMedicine;
+	}
+
+	/**
+	 * @param isProcCategoryMedicine the isProcCategoryMedicine to set
+	 */
+	public void setProcCategoryMedicine(boolean isProcCategoryMedicine) {
+		this.isProcCategoryMedicine = isProcCategoryMedicine;
 	}
 	
 	
