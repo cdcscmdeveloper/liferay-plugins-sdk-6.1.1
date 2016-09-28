@@ -281,8 +281,8 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setOriginalFinalizationSecretaryUserId(
 						scQt.getFinalizationSecratery().getUserId());
 
-			boolean isMedicalProcCategory = isMedicalProcurementCategory(
-												scQt.getPmProcurementCategory());
+			boolean isMedicalProcCategory = isMultipleProposalCategory(
+					scQt, null);
 			getManagedBean().setProcCategoryMedicine(isMedicalProcCategory);
 
 			List<TplSpecZoneDtl> zoneDetails = resDTO.getZoneDetails();
