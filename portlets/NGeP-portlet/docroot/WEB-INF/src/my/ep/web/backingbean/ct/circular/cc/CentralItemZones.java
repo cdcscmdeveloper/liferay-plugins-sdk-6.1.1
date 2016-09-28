@@ -25,11 +25,11 @@ public class CentralItemZones implements Serializable{
 	public CentralItemZones() {
 		super();
 	}
+	
 	public CentralItemZones(String zone) {
 		super();
 		this.zone = zone;
 	}
-
 
 	public CentralItemZones(PmState state) {
 		super();
@@ -40,35 +40,64 @@ public class CentralItemZones implements Serializable{
 		super();
 		this.district = district;
 	}
+	
 	public CentralItemZones(PmCity city) {
 		super();
 		this.city = city;
 	}
 	
+	/**
+	 * @return the state
+	 */
 	public PmState getState() {
 		return state;
 	}
+	
+	/**
+	 * @param state the state to set
+	 */
 	public void setState(PmState state) {
 		this.state = state;
 	}
+	
+	/**
+	 * @return the district
+	 */
 	public PmDistrict getDistrict() {
 		return district;
 	}
+	
+	/**
+	 * @param district the district to set
+	 */
 	public void setDistrict(PmDistrict district) {
 		this.district = district;
 	}
 
+	/**
+	 * @return the city
+	 */
 	public PmCity getCity() {
 		return city;
 	}
 
+	/**
+	 * @param city the city to set
+	 */
 	public void setCity(PmCity city) {
 		this.city = city;
 	}
 	
+	/**
+	 * @return the zone
+	 */
 	public String getZone() {
 		return zone;
 	}
+	
+	/**
+	 * @param zone the zone to set
+	 */
 	public void setZone(String zone) {
 		this.zone = zone;
 	}
