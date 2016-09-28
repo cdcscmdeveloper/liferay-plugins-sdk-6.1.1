@@ -1227,7 +1227,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 *            the list of ScQtCategory instance (optional)
 	 * @return
 	 */
-	public boolean isMultipleProposalCategory(Long qtId,
+	public boolean isMultipleProposalCategory(ScQt scQt,
 			List<ScQtCategory> scQtCategories) {
 		IQTDetailSO qtDetailSO = null;
 		try {
@@ -1235,7 +1235,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(qtId);
+			reqDTO.setQtdetail(scQt);
 			reqDTO.setCategoryList(scQtCategories);
 			return qtDetailSO.isMultipleProposalCategory(reqDTO);
 
