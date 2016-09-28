@@ -848,6 +848,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	
+	/**
+	 * The method used to set selected tabindex for tab menu
+	 */
 	public void amendTabChangeAction(Integer selectedTabIndex) {
 		getManagedBean().setSelectedTabIndex(selectedTabIndex);
 	}
@@ -1105,7 +1108,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 			}
 	 			
 	 			// Validation for PID Reason
-	     		if(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() != null && ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
+	     		if(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() != null 
+	     				&& ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
 	     			for(CtPidReason reason : ctBackingBean.getManagedBean().getContractVer().getCtPidReasons()){
 	     			   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
 	     				   throw new EpException(MessageConst.ERROR_100022, 
@@ -1137,7 +1141,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     		}
 	        	 
 	     		// Validation for Deduction
-	     		if(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
+	     		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
+	     				ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null 
 	     				&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
 	     			  for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
 	     				   if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
@@ -1363,7 +1368,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		       }
 	
 		// Validation for amendment type
-		if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)  &&
+				!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange() 
@@ -1375,24 +1381,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
 		// Validation for reference no
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == null 
-				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == "") {
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)&&
+				(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == null 
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == "")) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_100061, 
 					new String[]{ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
 		// Validation for amendment title
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle() == null
-				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle() == "") {
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)&&
+				(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle() == "")) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_100022, 
 					new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.title", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
 		// Validation for amendment description
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getDescription() == null
-				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getDescription() == "") {
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)&&
+				(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getDescription() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getDescription() == "")) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_100022, 
 					new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.desc", 
@@ -1783,7 +1792,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to construct the tab menu for contract amendment.
+	 * The method used to construct 
+	 * the tab menu for contract amendment.
 	 */
 	public void ConstructTabSideMenu() {
 		AmendTabSideMenus sideMenu = new AmendTabSideMenus();
@@ -2095,7 +2105,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to set the secretary for different committee type.
+	 * The method used to set the
+	 *  secretary for different committee type.
      */
 	private void setSecretary() {
 		//if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
@@ -2116,7 +2127,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to retrieve the bpk approver list by the role code.
+	 * The method used to retrieve the
+	 *  bpk approver list by the role code.
      */
 	private void getBpkApproverList() {
 		IUserSO userSO = null;
@@ -2134,7 +2146,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to retrieve the supplier list for LOA acknowledgment.
+	 * The method used to retrieve the 
+	 * supplier list for LOA acknowledgment.
      */
 	private void getSupplierListForLoaAck() {		
 		IContractAmendmentSO amendSO = null;
@@ -2395,7 +2408,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to indicate the label flag for new price of product or service item.
+	 * The method used to indicate the label 
+	 * flag for new price of product or service item.
 	 */
 	private void newItemPrice(CtContractItem ctContractItem) {
 		if (ctContractItem != null && !ctContractItem.getCtItemPrices().isEmpty()
@@ -2549,7 +2563,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to delete the newly added product item price.
+	 * The method used to delete the 
+	 * newly added product item price.
 	 */
 	public void deleteItemPriceOnIndexs() {
 		CtItemPrice ctItemPrice = getManagedBean().getCtItemPrices().getAssociateCtItemPrice();
@@ -2560,7 +2575,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to delete the newly added service item price.
+	 * The method used to delete 
+	 * the newly added service item price.
 	 */
 	public void deleteServiceItemPriceOnIndexs() {
 		CtItemPrice ctItemPrice = getManagedBean().getCtServiceItemPrices().getAssociateCtItemPrice();
@@ -2616,7 +2632,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to delete the newly added ceiling quantity.
+	 * The method used to delete
+	 *  the newly added ceiling quantity.
 	 */
 	public void deleteCeilingQuantityOnIndexs() {
 		CtItemCeilingQty ctItemCeilingQty = getManagedBean().getCtItemCeilingQtys().getAssociateCtItemCeilingQty();
@@ -2672,7 +2689,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to delete the newly added maximum quantity.
+	 * The method used to delete 
+	 * the newly added maximum quantity.
 	 */
 	public void deleteItemMaxQtyOnIndexs() {
 		CtItemMaxQty ctItemMaxQty = getManagedBean().getCtItemMaxQty().getAssociateCtItemMaxQty();
@@ -2683,7 +2701,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 		
 	/**
-	 * The method used to indicate the label flag for new max order quantity of product item.
+	 * The method used to indicate the label 
+	 * flag for new max order quantity of product item.
 	 */
 	private void newItemMaxQty(CtContractItem ctContractItem) {
 		if (ctContractItem != null && !ctContractItem.getCtItemMaxQties().isEmpty()

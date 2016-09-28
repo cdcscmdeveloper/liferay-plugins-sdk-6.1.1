@@ -392,7 +392,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 	
 	/**
-	 * The method used for to retrieve  associate circular with current circular for cancel
+	 * The method used for to retrieve  
+	 * associate circular with current circular for cancel
 	 */
 	public void addCancelCircularListener() {
 		   ICircularSO circularSO = null;
@@ -425,7 +426,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	   }
 	
 		/**
-		 * The method used  to add  associate circular with current circular for cancel
+		 * The method used  to add  associate 
+		 * circular with current circular for cancel
 		 */
 		 public void addCancelledCircular() {
 			  try {	
@@ -451,7 +453,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	
 	/**
-	 * The method used to delete  associate circular with current circular 
+	 * The method used to delete 
+	 * associate circular with current circular 
 	 */
 	public void addSelectedContract() {
 		
@@ -1401,6 +1404,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		exemptedOrgDataModel.resetData();
 	}
 	
+	/**
+	 * The method used to 
+	 * reset exempted ministry for search.
+	 */
 	public void flushExempMisntry(){
 		getManagedBean().setAutoUpdate(false);
 		getManagedBean().setMinistryProfileId(null);
@@ -1439,6 +1446,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		RequestContext.getCurrentInstance().update("@form");
 	}
 	
+	/**
+	 * The method used to go back previous page
+	 * */
 	public String gotoBackPage() {
 		return getManagedBean().getGotoPreviewPage();
 	}
@@ -1807,6 +1817,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     		}
         }
     	
+    	/**
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
     	public void selectAllPerson(AjaxBehaviorEvent e) {
     		
     		for (CtContactPerson ctContactPersons : getManagedBean().getCircularVer().getCtContactPersons()) {
@@ -1822,8 +1837,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
        				    }
     		       }
     	      }
-        }
+         }
       
+    	/**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
         public void selectOnePersonCheckboxSelect(AjaxBehaviorEvent e){
     		
         	getManagedBean().setSelectAll(false);
@@ -1840,6 +1860,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     		}	
     	}
 		
+        /**
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
         public void selectAllCancelCircular(AjaxBehaviorEvent e) {
     		
     		for (CtCancelCircular ctCancelCirculars : getManagedBean().getCircularVer().getCtCancelCircularList()) {
@@ -1857,6 +1882,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     	    }
         }
 
+        /**
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
         public void selectCancelCheckboxSelect(AjaxBehaviorEvent e){
         	getManagedBean().setSelectAll(false);
         	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCircularVer().getCtCancelCircularList()){
@@ -1872,102 +1902,137 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     		}	
         }
         
- public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
+        /**
+		 * Function to check / uncheck all checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+    	 public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
+	    		
+	    		for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelledCircularList()) {
+	    			if (getManagedBean().isSelectAll()) {
+	    				ctCancelCirculars.setSelectedCheckBox(true);
+		    				if(getManagedBean().isButtonHideActiveDel()){
+		    					getManagedBean().setButtonHideActiveDel(false);
+		    				}
+	    		       }else {
+	    		    	   ctCancelCirculars.setSelectedCheckBox(false);
+	    		    	   if(!getManagedBean().isButtonHideActiveDel()){
+	       					getManagedBean().setButtonHideActiveDel(true);
+	       				}
+	    		     }
+	         	}
+	      }
+
+    	 /**
+ 		 * Function to check/ uncheck single checkbox into data table
+ 		 * @param pass ajax event type
+ 		 * @return boolean value
+ 		 * */
+         public void selectCancelCheckboxSelectList(AjaxBehaviorEvent e){
+	        	getManagedBean().setSelectAll(false);
+	        	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelledCircularList()){
+	        		if(ctCancelCirculars.isSelectedCheckBox()){
+	        			getManagedBean().setButtonHideActiveDel(false);
+	        			return;
+	        		}
+	        	}
+	    		if((boolean) e.getComponent().getAttributes().get("value")){
+	    			getManagedBean().setButtonHideActiveDel(false);
+	    		}else{
+	    			getManagedBean().setButtonHideActiveDel(true);
+	    		}	
+          }
+     
+         /**
+ 		 * Function to check / uncheck all checkbox into data table
+ 		 * @param pass ajax event type
+ 		 * @return boolean value
+ 		 * */
+           public void selectAllContractList(AjaxBehaviorEvent e) {
     		
-    		for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelledCircularList()) {
-    			if (getManagedBean().isSelectAll()) {
-    				ctCancelCirculars.setSelectedCheckBox(true);
-	    				if(getManagedBean().isButtonHideActiveDel()){
-	    					getManagedBean().setButtonHideActiveDel(false);
+	    		for (CtContract ctContracts : getManagedBean().getContractList()) {
+	    			if (getManagedBean().isSelectAll()) {
+	    				ctContracts.setSelectedCheckBox(true);
+	    				if( getManagedBean().isButtonHideActiveDel()){
+	    					 getManagedBean().setButtonHideActiveDel(false);
 	    				}
-    		       }else {
-    		    	   ctCancelCirculars.setSelectedCheckBox(false);
-    		    	   if(!getManagedBean().isButtonHideActiveDel()){
-       					getManagedBean().setButtonHideActiveDel(true);
-       				}
-    		     }
-         	}
-        }
+	    		       }else {
+		    		    	    ctContracts.setSelectedCheckBox(false);
+		    		    	     if(!getManagedBean().isButtonHideActiveDel()){
+		      					  getManagedBean().setButtonHideActiveDel(true);
+	      				     }
+    		          }
+    	         }
+          }
 
-        public void selectCancelCheckboxSelectList(AjaxBehaviorEvent e){
-        	getManagedBean().setSelectAll(false);
-        	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelledCircularList()){
-        		if(ctCancelCirculars.isSelectedCheckBox()){
-        			getManagedBean().setButtonHideActiveDel(false);
-        			return;
-        		}
-        	}
-    		if((boolean) e.getComponent().getAttributes().get("value")){
-    			getManagedBean().setButtonHideActiveDel(false);
-    		}else{
-    			getManagedBean().setButtonHideActiveDel(true);
-    		}	
-        }
+       /**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+         public void selectContractCheckboxSelectList(AjaxBehaviorEvent e){
+	        	getManagedBean().setSelectAll(false);
+	        	for (CtContract ctContracts : getManagedBean().getContractList()){
+	        		if(ctContracts.isSelectedCheckBox()){
+	        			getManagedBean().setButtonHideActiveDel(false);
+	        			return;
+	        		}
+	        	}
+	    		if((boolean) e.getComponent().getAttributes().get("value")){
+	    			getManagedBean().setButtonHideActiveDel(false);
+	    		}else{
+	    			getManagedBean().setButtonHideActiveDel(true);
+	    		}	
+          }
         
- public void selectAllContractList(AjaxBehaviorEvent e) {
-    		
-    		for (CtContract ctContracts : getManagedBean().getContractList()) {
-    			if (getManagedBean().isSelectAll()) {
-    				ctContracts.setSelectedCheckBox(true);
-    				if( getManagedBean().isButtonHideActiveDel()){
-    					 getManagedBean().setButtonHideActiveDel(false);
-    				}
-    		       }else {
-    		    	   ctContracts.setSelectedCheckBox(false);
-    		    	   if(!getManagedBean().isButtonHideActiveDel()){
-      					 getManagedBean().setButtonHideActiveDel(true);
-      				}
-    		     }
-    	    }
-        }
-
-        public void selectContractCheckboxSelectList(AjaxBehaviorEvent e){
-        	getManagedBean().setSelectAll(false);
-        	for (CtContract ctContracts : getManagedBean().getContractList()){
-        		if(ctContracts.isSelectedCheckBox()){
-        			getManagedBean().setButtonHideActiveDel(false);
-        			return;
-        		}
-        	}
-    		if((boolean) e.getComponent().getAttributes().get("value")){
-    			getManagedBean().setButtonHideActiveDel(false);
-    		}else{
-    			getManagedBean().setButtonHideActiveDel(true);
-    		}	
-        }
-        
-        public void selectAllexemptedOrg(AjaxBehaviorEvent e){
-        
-        	for (CtExemptedOrg ctExemptedOrgs : getManagedBean().getCircularVer().getCtExemptedOrgs()){
-        		if (getManagedBean().isSelectAll()) {
-        			ctExemptedOrgs.setSelectedCheckBox(true);
-        			if(getManagedBean().isButtonHideActiveDel()){
-        				getManagedBean().setButtonHideActiveDel(false);
-        			}
-    		       }else {
-    		    	   ctExemptedOrgs.setSelectedCheckBox(false);
-    		    	   if(!getManagedBean().isButtonHideActiveDel()){
-           				getManagedBean().setButtonHideActiveDel(true);
-           			}
-    		       }
-    	      }
+         /**
+  		 * Function to check / uncheck all checkbox into data table
+  		 * @param pass ajax event type
+  		 * @return boolean value
+  		 * */
+	        public void selectAllexemptedOrg(AjaxBehaviorEvent e){
+	        
+	        	for (CtExemptedOrg ctExemptedOrgs : getManagedBean().getCircularVer().getCtExemptedOrgs()){
+	        		if (getManagedBean().isSelectAll()) {
+	        			ctExemptedOrgs.setSelectedCheckBox(true);
+	        			if(getManagedBean().isButtonHideActiveDel()){
+	        				getManagedBean().setButtonHideActiveDel(false);
+	        			}
+	    		       }else {
+	    		    	   ctExemptedOrgs.setSelectedCheckBox(false);
+	    		    	   if(!getManagedBean().isButtonHideActiveDel()){
+	           				getManagedBean().setButtonHideActiveDel(true);
+	           			}
+	    		      }
+	    	      }
             }
         
-        public void selectExemptedOrgCheckboxSelect(AjaxBehaviorEvent e){
-        	getManagedBean().setSelectAll(false);
-        	for (CtExemptedOrg ctExemptedOrgs : getManagedBean().getCircularVer().getCtExemptedOrgs()){
-        		if(ctExemptedOrgs.isSelectedCheckBox()){
-        			getManagedBean().setButtonHideActiveDel(false);
-        			return;
-        		}
-        	}
-    		if((boolean) e.getComponent().getAttributes().get("value")){
-    			getManagedBean().setButtonHideActiveDel(false);
-    		}else{
-    			getManagedBean().setButtonHideActiveDel(true);
-    		}	
-        }
+        /**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+         public void selectExemptedOrgCheckboxSelect(AjaxBehaviorEvent e){
+	        	getManagedBean().setSelectAll(false);
+	        	for (CtExemptedOrg ctExemptedOrgs : getManagedBean().getCircularVer().getCtExemptedOrgs()){
+	        		if(ctExemptedOrgs.isSelectedCheckBox()){
+	        			getManagedBean().setButtonHideActiveDel(false);
+	        			return;
+	        		}
+	        	}
+	    		if((boolean) e.getComponent().getAttributes().get("value")){
+	    			getManagedBean().setButtonHideActiveDel(false);
+	    		}else{
+	    			getManagedBean().setButtonHideActiveDel(true);
+	    		}	
+         }
         
+         /**
+   		 * Function to check / uncheck all checkbox into data table
+   		 * @param pass ajax event type
+   		 * @return boolean value
+   		 * */
         public void selectExmptedSearchOrg(AjaxBehaviorEvent e){
             
         	for (PmOrgProfile pmOrgProfiles : getExemptedOrgDataModel().getList()){
@@ -1985,6 +2050,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     	      }
           }
         
+        /**
+     		 * Function to check/ uncheck single checkbox into data table
+     		 * @param pass ajax event type
+     		 * @return boolean value
+     		 * */
         public void selectSearchOrgCheckboxSelect(AjaxBehaviorEvent e){
         	getManagedBean().setSelectAll(false);
         	for (PmOrgProfile pmOrgProfiles : getExemptedOrgDataModel().getList()){
@@ -2045,48 +2115,46 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     		}
     	}
         
+		
+      /**
+		 * The method used for generating a list of available ministry
+		 * for searching agency as selection.
+		 * 
+		 * @return the selection list of ministry
+		 */
+		public SelectItem[] getCtSearchTypeList() {		
+			SelectItem[] ctSearchType = null;
+			
+			try {
+			    int i = 1;
+			    
+			    List<String> ctSearchList = new ArrayList<String> ();
+			    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.contract.no", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.contract.title", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.physical.no", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.supplier.name", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			    ctSearchType = new SelectItem[ctSearchList.size() + 1];
+			    ctSearchType[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				for (String str : ctSearchList) {
+					ctSearchType[i] = new SelectItem(i, str);
+					i++;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+		    return ctSearchType;
+		}
+    	
 		/**
-	     * Method to set boolean value for checkbox 
-	     * @param pass ajax event type
-	     * Set boolean value for user action 
-	     * 
-	     * */
-    	
-    	  /**
-    			 * The method used for generating a list of available ministry
-    			 * for searching agency as selection.
-    			 * 
-    			 * @return the selection list of ministry
-    			 */
-    			public SelectItem[] getCtSearchTypeList() {		
-    				SelectItem[] ctSearchType = null;
-    				
-    				try {
-    				    int i = 1;
-    				    
-    				    List<String> ctSearchList = new ArrayList<String> ();
-    				    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.contract.no", 
-    				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-    				    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.contract.title", 
-    				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-    				    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.physical.no", 
-    				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-    				    ctSearchList.add(ResourceBundleUtils.getMessage("lbl.ct.supplier.name", 
-    				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-    				    ctSearchType = new SelectItem[ctSearchList.size() + 1];
-    				    ctSearchType[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-    				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-    					for (String str : ctSearchList) {
-    						ctSearchType[i] = new SelectItem(i, str);
-    						i++;
-    					}
-    				} catch (Exception e) {
-    					e.printStackTrace();
-    					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-    				}
-    			    return ctSearchType;
-    			}
-    	
+		 * The method used to delete the central 
+		 * contract attachment file from attachment list.
+		 */    
     	public void deleteContractAttachmentAction(int index){
     		 CtAttachment attachements =  getManagedBean().getCircularVer().getContractAttachments().get(index);
     		 if(attachements.getAttachmentId() != null){
@@ -2094,24 +2162,48 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     		 }
     		 getManagedBean().getCircularVer().getContractAttachments().remove(index);
     	 }
-    		
+    	
+    	/**
+		 * The method used to set file 
+		 * path null for central circular attachments
+		 */    
         public void delCircularVerFile(){
         	getManagedBean().getCircularVer().setCircularFilePath(null);
         	getManagedBean().getCircularVer().setCircularFileName(null);
         }
         
+        /**
+	     * Method to set boolean value for checkbox 
+	     * @param pass ajax event type
+	     * Set boolean value for user action 
+	     * */
 		public void onToggleSelect(ToggleSelectEvent event) {
 			getManagedBean().setButtonHideActive(false);
 		}
 		
+		 /**
+	     * Method to set boolean value for checkbox 
+	     * @param pass ajax event type
+	     * Set boolean value for user action 
+	     * */
 		public void onRowSelect(SelectEvent event) {
 			getManagedBean().setButtonHideActive(false);
 		}
 	 
+		 /**
+	     * Method to uncheck boolean value for checkbox 
+	     * @param pass ajax event type
+	     * Set boolean value false for user action 
+	     * */
 	    public void onRowUnselect(UnselectEvent event) {
 	    	getManagedBean().setButtonHideActive(true);
 	    }
 	    
+	    /**
+	     * Method to to validate correct format email address
+	     * @param string email
+	     * Set boolean value true/ false for user action 
+	     * */
 	    public boolean isNotValidEmailAddress(String email) {
 			Pattern mask = null;
 			String pattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -2123,6 +2215,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			return false;
 	    }
 	    
+	    /**
+	     * Method to to validate correct format mobile no
+	     * @param string phoneNo
+	     * Set boolean value true/ false for user action 
+	     * */
 	    public boolean isNotValidMobileNo(String phoneNo) {
 	    	String pattern = "\\d+";
 			if (!phoneNo.matches(pattern)) {

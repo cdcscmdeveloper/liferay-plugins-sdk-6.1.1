@@ -421,6 +421,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			this.getManagedBean().getAttachmentList().remove(index);
 	 }
 	
+	/**
+	 * The method used to delete agency from the datatable list.
+	 * @param index  file index of attachment list
+	 */
 	public void deleteAgncyAttachmentAction(int index) {
 		CtAttachment attachment = getManagedBean().getContractVer().getAgencyAttachements().get(index);
 		if(attachment.getAttachmentId() != null){
@@ -429,6 +433,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().getContractVer().getAgencyAttachements().remove(index);
 	}
 	
+	/**
+	 * The method used to delete attachment for item from the list.
+	 * @param index  file index of attachment list
+	 */
 	public void deleteItemAttachmentAction(int index) {
 		CtAttachment attachment = getManagedBean().getContractVer().getItemAmendAttachments().get(index);
 		if(attachment.getAttachmentId() != null){
@@ -437,6 +445,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().getContractVer().getItemAmendAttachments().remove(index);
 	}
 	
+	/**
+	 * The method used to delete deduct attachment from the list.
+	 * @param index  file index of attachment list
+	 */
 	public void deleteDeductAttachmentAction(int index) {
 		CtAttachment attachment = getManagedBean().getContractVer().getDeductionAttachments().get(index);
 		if(attachment.getAttachmentId() != null){
@@ -445,6 +457,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().getContractVer().getDeductionAttachments().remove(index);
 	}
 	
+	/**
+	 * The method used to delete schedule attachment from the list.
+	 * @param index  file index of attachment list
+	 */
 	public void deleteScheduleAttachmentAction(int index){
 		CtAttachment attachment = getManagedBean().getContractVer().getScheduleAttachments().get(index);
 		if(attachment.getAttachmentId() != null){
@@ -455,6 +471,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	/**
 	 * The method used to retrieve the address of supplier.
+	 * @param ajax event
      */
 	public void retrieveSupplierAddress(AjaxBehaviorEvent event) {
 		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
@@ -474,6 +491,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	/**
 	 * The method used to retrieve the company name of supplier.
+	 * @param ajax event
      */
 	public void retrieveCompanyName(AjaxBehaviorEvent event) {
 		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
@@ -534,7 +552,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	/**
 	 * The method used to check whether current date is before the GST relief due date (31/03/2017).
-	 * 
 	 * @return true, if current date is before or equal 31/03/2017
 	 *         false, if current date is after 31/03/2017
 	 */
@@ -551,7 +568,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	
 	/**
-	 * The method used to set the alert flag when the original contract imposed service tax.
+	 * The method used to set the alert flag 
+	 * when the original contract imposed service tax.
      */
 	public void chkServiceTaxAlert() {
 		try {
@@ -571,7 +589,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
      * The method used to verify the login user is BPK CC approver 
      * or contract approver.
-	 * 
 	 * @return true, if login user is BPK CC approver or contract approver
 	 *         false, if login user is not BPK CC approver or contract approver
      */
@@ -852,7 +869,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
    	   }
        
        /**
-   	 * The method used to delete the selected frequency schedule.
+   	 * The method used to delete the 
+   	 * selected frequency schedule from schedule datatable.
    	 */
    	public void deleteScheduleDetails() {
    		try {
@@ -871,6 +889,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
    	}
    	
+   	/**
+   	 * The method used to delete the 
+   	 * progressive payment  from  datatable.
+   	 */
    	public void deleteProgressiveDetails(){
    		try {
 			Iterator<CtProgressivePayment> ctProIterator = getManagedBean().getContractVer().getCtProgressivePayments().iterator();
@@ -1155,8 +1177,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to delete the selected deduction clause.
-	 */
+   	 * The method used to delete the 
+   	 * deduction list from datatable list.
+   	 */
 	public void deleteDeductionDetails() {
 		try {
 				Iterator<CtDeduction> deductionIterator = getManagedBean().getContractVer().getCtDeductions().iterator();
@@ -1205,10 +1228,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	}
 
+	/**
+	 * The method used for getter
+	 *  and setter for deduction clause
+	 */
 	public CtDeductionClause[] getSelectedDeductionClauses() {
 		return selectedDeductionClauses;
 	}
 
+	/**
+	 * The method used for getter
+	 *  and setter for deduction clause
+	 */
 	public void setSelectedDeductionClauses(
 			CtDeductionClause[] selectedDeductionClauses) {
 		this.selectedDeductionClauses = selectedDeductionClauses;
@@ -1324,7 +1355,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		this.balanceToPaid = balanceToPaid;
 	}    
     
-    /*Zone start* /
+    /*Zone start*/
      /**
 	 * The method used for creating the zone tree node.
      */
@@ -2437,81 +2468,81 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    			itemMaxQtyZoneLabelList(getManagedBean().getSelectedItem());
 		    		}
 			  	}
-			}
+		}
 		    
-		    /**
-			 * The method used to refresh the ceiling quantity information.
-			 */
-		    private void refreshAgencyCeilingQuantityList() {
-		    	Map<Long, CtItemCeilingQty> itemCeilingQtyMap = new HashMap<Long, CtItemCeilingQty>();
-		    	for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
-		    		itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
-		    	}
-		    	getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
-		    	for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
-		    		if (!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
-		    			CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
-		    			ctItemCeilingQty.setCtAgency(ctAgency);
-		    			ctItemCeilingQty.setCtContractItem(getManagedBean().getSelectedItem());
-		    			ctItemCeilingQty.setCeilingQuantity(new BigDecimal(0));
-		    			ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		    			ctItemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-		    			getManagedBean().getSelectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
-		    		} else {
-		    			getManagedBean().getSelectedItem().getCtItemCeilingQties().add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
-		    		}
-		    	}
-			}
-		    
-		    /**
-			 * The method used to indicate the label flag for new price of contract item.
-			 */
-		    private void itemPriceZoneLabelList(CtContractItem ctContractItem) {
-		    	if (!ctContractItem.getCtItemPrices().isEmpty()) {
-					for (int temp = 0;temp<ctContractItem.getCtItemPrices().size(); temp++) {
-						Date date = ctContractItem.getCtItemPrices().get(temp).getEffDate();
-						int counter =0;
-						int index=0;
-						int countRow =0;
-						for (CtItemPrice itemPrice1 : ctContractItem.getCtItemPrices()) {
-							if(itemPrice1.getCtContractZone() != null){
-							countRow++;
-							if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
-									|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-									|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
-									|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-								if (ctContractItem.getCtItemPrices().get(temp).getFromQty().equals(itemPrice1.getFromQty()) 
-										&& ctContractItem.getCtItemPrices().get(temp).getToQty().equals( itemPrice1.getToQty()) 
-										&& ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName() != null
-										&& ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
-									counter++;
-									if (counter >= 2) {
-										if (date.before(itemPrice1.getEffDate())) {
-											index = countRow;
-											date = itemPrice1.getEffDate();
-										}	
-									}
-								}
-							} else if (ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
+	    /**
+		 * The method used to refresh the ceiling quantity information.
+		 */
+	    private void refreshAgencyCeilingQuantityList() {
+	    	Map<Long, CtItemCeilingQty> itemCeilingQtyMap = new HashMap<Long, CtItemCeilingQty>();
+	    	for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+	    		itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
+	    	}
+	    	getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
+	    	for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
+	    		if (!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
+	    			CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
+	    			ctItemCeilingQty.setCtAgency(ctAgency);
+	    			ctItemCeilingQty.setCtContractItem(getManagedBean().getSelectedItem());
+	    			ctItemCeilingQty.setCeilingQuantity(new BigDecimal(0));
+	    			ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+	    			ctItemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+	    			getManagedBean().getSelectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
+	    		} else {
+	    			getManagedBean().getSelectedItem().getCtItemCeilingQties().add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
+	    		}
+	    	}
+		}
+	    
+	    /**
+		 * The method used to indicate the label flag for new price of contract item.
+		 */
+	    private void itemPriceZoneLabelList(CtContractItem ctContractItem) {
+	    	if (!ctContractItem.getCtItemPrices().isEmpty()) {
+				for (int temp = 0;temp<ctContractItem.getCtItemPrices().size(); temp++) {
+					Date date = ctContractItem.getCtItemPrices().get(temp).getEffDate();
+					int counter =0;
+					int index=0;
+					int countRow =0;
+					for (CtItemPrice itemPrice1 : ctContractItem.getCtItemPrices()) {
+						if(itemPrice1.getCtContractZone() != null){
+						countRow++;
+						if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+							if (ctContractItem.getCtItemPrices().get(temp).getFromQty().equals(itemPrice1.getFromQty()) 
+									&& ctContractItem.getCtItemPrices().get(temp).getToQty().equals( itemPrice1.getToQty()) 
+									&& ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName() != null
+									&& ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
 								counter++;
 								if (counter >= 2) {
 									if (date.before(itemPrice1.getEffDate())) {
 										index = countRow;
 										date = itemPrice1.getEffDate();
-									}
+									}	
 								}
 							}
-						 }
-					 }
-						if (index > 0) {
-							CtItemPrice priceOfItem = ctContractItem.getCtItemPrices().get(index-1);
-							priceOfItem.setChangeZoneLabel(true);
-		    	          	ctContractItem.getCtItemPrices().remove(index-1);
-		    	          	ctContractItem.getCtItemPrices().add(index-1, priceOfItem);
+						} else if (ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
+							counter++;
+							if (counter >= 2) {
+								if (date.before(itemPrice1.getEffDate())) {
+									index = countRow;
+									date = itemPrice1.getEffDate();
+								}
+							}
 						}
+					 }
+				 }
+					if (index > 0) {
+						CtItemPrice priceOfItem = ctContractItem.getCtItemPrices().get(index-1);
+						priceOfItem.setChangeZoneLabel(true);
+	    	          	ctContractItem.getCtItemPrices().remove(index-1);
+	    	          	ctContractItem.getCtItemPrices().add(index-1, priceOfItem);
 					}
 				}
-		    }
+			}
+	    }
 		    
 	  /**
 	    * The method used to indicate the label flag for new max qty of contract item.
