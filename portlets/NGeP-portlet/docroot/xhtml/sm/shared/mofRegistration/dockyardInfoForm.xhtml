@@ -75,9 +75,9 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="smDocDtPanel" partialSubmit="true"
-					action="#{backingBean.deleteSelectedDocks}" update=":form:tt:docDt,@this" 
+					update=":form:tt:docDt,@this" 
 					id="delDockyardBtnId" disabled="#{empty backingBean.managedBean.applDockyardFacilities}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					oncomplete="dockyardDeletePopUp.show()" />
 			</div>
 			<br />
 		</p:outputPanel>
@@ -270,4 +270,12 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
+	
+	<ac:confirmationPopup id="dockyardDeletePopUpId"
+		widget="dockyardDeletePopUp"
+		okAction="backingBean.deleteSelectedDocks"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:docDt, @([id$=Msg]),:#{p:component('delDockyardBtnId')}"/>
 </ui:composition>
