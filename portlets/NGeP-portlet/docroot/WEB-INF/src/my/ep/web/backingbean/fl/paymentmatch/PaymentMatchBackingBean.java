@@ -785,17 +785,17 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				if(taxAmountMap != null){
 					if(taxAmountMap.containsKey(invItem.getGstFlag().getParameterCode())){
 						TaxInvoiceVO taxInvVO = taxAmountMap.get(invItem.getGstFlag().getParameterCode());
-						taxInvVO.setAmountWithoutGst(taxInvVO.getAmountWithoutGst().add(invItem.getInvAmt()));
+						taxInvVO.setAmountWithoutGst(new BigDecimal(taxInvVO.getAmountWithoutGst()).add(invItem.getInvAmt()).toString());
 						taxAmountMap.put(invItem.getGstFlag().getParameterCode(), taxInvVO);
 					}else{
 						TaxInvoiceVO taxInvVO = new TaxInvoiceVO();
-						taxInvVO.setAmountWithoutGst(invItem.getInvAmt());
+						taxInvVO.setAmountWithoutGst(invItem.getInvAmt().toString());
 						if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
 							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().setScale(2,RoundingMode.HALF_UP)+"%");
 							taxInvVO.setGstAmount(getManagedBean().getGstAmount().toString());	
 						}else if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.ZERO_RATED.value())){
 							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = 0%");
-							taxInvVO.setGstAmount(BigDecimal.ZERO.toString());	
+							taxInvVO.setGstAmount("0.00");	
 						}else {
 							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = Nil");
 							taxInvVO.setGstAmount("Nil");	
@@ -806,14 +806,14 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				}else{
 					taxAmountMap = new HashMap<String, TaxInvoiceVO>();
 					TaxInvoiceVO taxInvVO = new TaxInvoiceVO();
-					taxInvVO.setAmountWithoutGst(invItem.getInvAmt());
+					taxInvVO.setAmountWithoutGst(invItem.getInvAmt().toString());
 					if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
 						taxInvVO.setGstAmount(getManagedBean().getGstAmount().toString());	
 						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().setScale(2,RoundingMode.HALF_UP)+"%");
 					}else if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.ZERO_RATED.value())){
-						taxInvVO.setGstAmount(BigDecimal.ZERO.toString());	
+						taxInvVO.setGstAmount("0.00");	
 						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = 0%");
-					}else {
+					}else {//RS n OS
 						taxInvVO.setGstAmount("Nil");	
 						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = Nil");
 					}
@@ -821,17 +821,49 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					
 					taxAmountMap.put(invItem.getGstFlag().getParameterCode(), taxInvVO);
 				}
-				
-				
 			}
 		}
 		getManagedBean().setTaxInvoiceList(new ArrayList<TaxInvoiceVO>());
-		for(Entry<String, TaxInvoiceVO> itemEntry : taxAmountMap.entrySet()){
-			TaxInvoiceVO taxInvoice = itemEntry.getValue();
-			if(taxInvoice.getGstFlagCode().equalsIgnoreCase(GSFType.STANDARD.value())){
-				BigDecimal amtWithoutGst = taxInvoice.getAmountWithoutGst().subtract(getManagedBean().getGstAmount()) ;
-				taxInvoice.setAmountWithoutGst(amtWithoutGst);
-			}
+		if(taxAmountMap.containsKey(GSFType.STANDARD.value())){
+			TaxInvoiceVO taxInvoice = taxAmountMap.get(GSFType.STANDARD.value());
+			BigDecimal amtWithoutGst = (new BigDecimal(taxInvoice.getAmountWithoutGst())).subtract(getManagedBean().getGstAmount()) ;
+			taxInvoice.setAmountWithoutGst(amtWithoutGst.toString());
+			getManagedBean().getTaxInvoiceList().add(taxInvoice);
+		}else{
+			TaxInvoiceVO taxInvoice = new TaxInvoiceVO();
+			taxInvoice.setAmountWithoutGst("0.00");
+			taxInvoice.setGstAmount("0.00");
+			taxInvoice.setGstFlag(GSFType.STANDARD.value()+" = " +getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().setScale(2,RoundingMode.HALF_UP)+"%");
+			getManagedBean().getTaxInvoiceList().add(taxInvoice);
+		}
+		if(taxAmountMap.containsKey(GSFType.ZERO_RATED.value())){
+			TaxInvoiceVO taxInvoice = taxAmountMap.get(GSFType.ZERO_RATED.value());
+			getManagedBean().getTaxInvoiceList().add(taxInvoice);
+		}else{
+			TaxInvoiceVO taxInvoice = new TaxInvoiceVO();
+			taxInvoice.setAmountWithoutGst("0.00");
+			taxInvoice.setGstAmount("0.00");
+			taxInvoice.setGstFlag(GSFType.ZERO_RATED.value()+" = 0%");
+			getManagedBean().getTaxInvoiceList().add(taxInvoice);
+		}
+		if(taxAmountMap.containsKey(GSFType.RELIEF.value())){
+			TaxInvoiceVO taxInvoice = taxAmountMap.get(GSFType.RELIEF.value());
+			getManagedBean().getTaxInvoiceList().add(taxInvoice);
+		}else{
+			TaxInvoiceVO taxInvoice = new TaxInvoiceVO();
+			taxInvoice.setAmountWithoutGst("Nil");
+			taxInvoice.setGstAmount("Nil");
+			taxInvoice.setGstFlag(GSFType.RELIEF.value()+" = Nil");
+			getManagedBean().getTaxInvoiceList().add(taxInvoice);
+		}
+		if(taxAmountMap.containsKey(GSFType.OUT_OF_SCOPE.value())){
+			TaxInvoiceVO taxInvoice = taxAmountMap.get(GSFType.OUT_OF_SCOPE.value());
+			getManagedBean().getTaxInvoiceList().add(taxInvoice);
+		}else{
+			TaxInvoiceVO taxInvoice = new TaxInvoiceVO();
+			taxInvoice.setAmountWithoutGst("Nil");
+			taxInvoice.setGstAmount("Nil");
+			taxInvoice.setGstFlag(GSFType.OUT_OF_SCOPE.value()+" = Nil");
 			getManagedBean().getTaxInvoiceList().add(taxInvoice);
 		}
 	}
