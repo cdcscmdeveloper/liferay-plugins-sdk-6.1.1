@@ -28,7 +28,6 @@ public class TaskAssignmentSearchBean implements Serializable {
 	private String docNo;
 	private List<String> selectedRoles;
 	private PmUser excludeUser;
-	private int selectedTaskListType = 0;
 	private boolean isSearched;
 	
 //	private PmOrgProfile ptj;
@@ -123,20 +122,6 @@ public class TaskAssignmentSearchBean implements Serializable {
 	 */
 	public void setExcludeUser(PmUser excludeUser) {
 		this.excludeUser = excludeUser;
-	}
-
-	/**
-	 * @return the selectedTaskListType
-	 */
-	public int getSelectedTaskListType() {
-		return selectedTaskListType;
-	}
-
-	/**
-	 * @param selectedTaskListType the selectedTaskListType to set
-	 */
-	public void setSelectedTaskListType(int selectedTaskListType) {
-		this.selectedTaskListType = selectedTaskListType;
 	}
 
 	/**
