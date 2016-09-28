@@ -7,6 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.financial.proposal']}" toggleable="true">
+		<ac:instructionText value="#{lbl['lbl.sc.sp.ubat.instruction']}" 
+			rendered="#{supplierProposalDetailBackingBean.isMultipleProposalCategory(supplierProposalDetailBackingBean.managedBean.qt, null)}" />
+		
 		<p:dataTable id="financeDeailsId" var="financeList"
 			value="#{supplierProposalDetailBackingBean.managedBean.financeCheckDetailsList}"
 			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
@@ -16,14 +19,7 @@
 
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column style="width:2%">
-						<f:facet name="header">
-							<h:panelGrid
-								rendered="#{supplierProposalDetailBackingBean.isMedicalProcurementCategory(supplierProposalDetailBackingBean.managedBean.qt.pmProcurementCategory)}">
-								<ac:iconTooltip value="#{lbl['lbl.sc.sp.ubat.instruction']}" />
-							</h:panelGrid>
-						</f:facet>
-					</p:column>
+					<p:column style="width:2%" />
 
 					<p:column style="width:60%"
 						headerText="#{lbl['lbl.sc.descriptions']}" />
