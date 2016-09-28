@@ -2074,8 +2074,8 @@ public class TaskReassignmentBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
-										MessageConst.INFO_770104,
-										new String[] { task.getDocNumber() },
+										MessageConst.INFO_770105,
+										null,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
