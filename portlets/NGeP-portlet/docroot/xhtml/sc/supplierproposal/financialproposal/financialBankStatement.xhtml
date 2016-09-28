@@ -57,9 +57,9 @@
 				<tr>
 					<td style="width: 225px"><p:outputLabel style="float:left;"
 							value="#{lbl['lbl.sc.total.amount']}" /></td>
-					<td colspan="3"><p:inputText style="text-align:right"
+					<td colspan="3"><p:inputText style="text-align:right;width:205px;"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalAmount}"
-							readonly="true" disabled="true" size="30">
+							readonly="true" disabled="true">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
@@ -67,9 +67,9 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.avgogbankst']}"
 							style="float:left;" /></td>
-					<td colspan="3"><p:inputText style="text-align:right"
+					<td colspan="3"><p:inputText style="text-align:right;width:205px;"
 							value="#{supplierProposalDetailBackingBean.managedBean.avgAmount}"
-							readonly="true" disabled="true" size="30">
+							readonly="true" disabled="true">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.sp.avgogbankst.tooltip']}" />
