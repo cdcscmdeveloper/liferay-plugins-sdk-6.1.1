@@ -588,17 +588,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * remove financialDoc from the List
 	 */
 	public void removeFinancialDoc(){
-		//l && 
-		log.info("**********removeFinancialDoc*****");
 		if(this.getManagedBean().getSelectedAddFinancialDoc() != null && this.getManagedBean().getSelectedAddFinancialDoc().length > 0){
 			for (SmSvManufacturingDoc addFinDoc : this.getManagedBean().getSelectedAddFinancialDoc()) {
 				log.info("---remove FinancialDoc---" + addFinDoc);
 				this.getManagedBean().getSelectedSvTemplate().getAdditionalDocLs().remove(addFinDoc);
 				this.getManagedBean().getSelectedSvTemplate().getSmSvManufacturingDocs().remove(addFinDoc);
 			}
-			
-			log.info("*********FinancialDoc Size********" + this.getManagedBean().getSelectedSvTemplate().getSmSvManufacturingDocs().size());
 		}
+		
+		getManagedBean().setSelectedAddFinancialDoc(null);
 	}
 	
 	/**
