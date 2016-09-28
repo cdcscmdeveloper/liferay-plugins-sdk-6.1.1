@@ -3469,7 +3469,9 @@ public class SPDetailBackingBean extends
 
 		retrieveProposalChecklistDtls(qtId, new FacesScopes()
 				.getUserSessionBean().getUserId(), isReadonly);
-
+		
+		getManagedBean().setProcCategoryMedicine(super
+				.isMultipleProposalCategory(getManagedBean().getQt(), null));
 		getManagedBean().setPrepareActiveIndex(0);
 		getManagedBean().setPreviousPageUrl(previousPageUrl);
 
