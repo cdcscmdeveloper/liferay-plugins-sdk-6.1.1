@@ -55,7 +55,6 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
@@ -743,22 +742,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
 				.getParameterDescListBySearchBean(parameterType, searchBean);
 		return parameterDescs;
-	}
-
-	/**
-	 * Check if the given procurement category is medical or not
-	 * 
-	 * @param pmProcCategory
-	 *            the pmProcCategory type
-	 * @return procurement category is medical or not
-	 */
-	public boolean isMedicalProcurementCategory(PmParameter pmProcCategory) {
-		if ((pmProcCategory != null)
-				&& (ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA
-						.equals(pmProcCategory.getParameterCode()))) {
-			return true;
-		}
-		return false;
 	}
 
 	/**
