@@ -1125,8 +1125,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							throw new EpException(MessageConst.ERROR_100022, 
 				   					new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.exempted.letter", 
 				   							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-						}
-	       }
+			}
+	  }
     
     /**
 	 * The method used to authenticate user during submit the contract.
@@ -1331,7 +1331,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
 				  }
 		    }
-		} 
+	} 
 	
     /**
 	 * The method used for controlling the tab menu
@@ -2159,7 +2159,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	
 	/**
-   	 * The method used to retrieve the fulfilement details base on contract expire date or current date
+   	 * The method used to retrieve the fulfilement
+   	 *  details base on contract expire date or current date
    	 */
 	private void retrieveFulfilmentDetails() {
 		// Retrieve fulfilement details base on contract exp date
