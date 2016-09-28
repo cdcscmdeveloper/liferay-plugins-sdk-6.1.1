@@ -2545,10 +2545,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			if(accumulatedQty.doubleValue()==0) {
-				if(ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode())){
-					getManagedBean().setSelectedTabIndex(1);
-					throw new EpException(MessageConst.ERROR_740037, new String[]{uiItemAddr.getScRequestItem().getItemName(),"0"});
-				}else{
+				if(!ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode())){
 					getManagedBean().setSelectedTabIndex(1);
 					throw new EpException(MessageConst.ERROR_740027, new String[]{uiItemAddr.getScRequestItem().getItemName(),"0"});
 				}
