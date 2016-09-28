@@ -57,7 +57,8 @@
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.packagewise']}" 
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(1)}"
-				process="@form" update="@form" partialSubmit="true" style="width:150px;">
+				process="@form" update="@form" partialSubmit="true" style="width:150px;"
+				disabled="#{consolidationReportBackingBean.managedBean.procCategoryMedicine}">
 			</p:menuitem>			
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.itemized']}" 
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(2)}"
