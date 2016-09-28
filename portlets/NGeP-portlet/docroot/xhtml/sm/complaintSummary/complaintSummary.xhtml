@@ -34,7 +34,7 @@
 			<ui:repeat var="complaint" value="#{complaintBackingBean.retriveComplaintSummary()}">
 				<tr>
 					<td class="tableWidth80 dashboarTable">
-						#{complaint.statusName}
+						<p:outputLabel value="#{complaint.statusName}" style="float:left;text-align:left;" />
 					</td>
 					<td  class="tableWidth20 dashboarTable">
 						#{complaint.totalRecord}
