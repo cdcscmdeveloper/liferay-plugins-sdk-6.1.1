@@ -1106,9 +1106,6 @@ public class NoticeBoardBackingBean extends
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
 					statusIds.add(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
 					setDisplayImage(isUser());
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("IS_CHANGED",
-									SearchOperator.OPERATOR_EQUALS.value(), 0));
 
 				}
 				
