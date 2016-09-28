@@ -31,6 +31,7 @@ import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
+import my.ep.comparator.sc.MemberRoleComparator;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -1017,12 +1018,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
 		List<ScQtCommitteeActivity> committeeActivities = scQtCommittee
 				.getCommitteeActivities();
+		List<ScCommitteeMember> scCommitteeMembers = scQtCommittee.getScCommittee().getScCommitteeMembers();
 		if (CollectionUtils.isEmpty(committeeActivities)
-				&& CollectionUtils.isNotEmpty(
-						scQtCommittee.getScCommittee().getScCommitteeMembers())) {
+				&& CollectionUtils.isNotEmpty(scCommitteeMembers)) {
+			// Sort the members
+			Collections.sort(scCommitteeMembers, new MemberRoleComparator());
 			committeeActivities = new ArrayList<ScQtCommitteeActivity>();
-			for (ScCommitteeMember scCommitteeMember : scQtCommittee
-					.getScCommittee().getScCommitteeMembers()) {
+			for (ScCommitteeMember scCommitteeMember : scCommitteeMembers) {
 				ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
 				activity.setScQtCommittee(this.getManagedBean()
 						.getScQtCommittee());
