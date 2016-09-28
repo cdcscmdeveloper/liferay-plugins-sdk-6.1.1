@@ -11433,7 +11433,7 @@ private void retriveCommitteeRemarksList(){
 				.getMessage("lbl.txt.select",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())));
-	boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt().getQtId(), null);
+	boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt(), null);
 	//medicineCategoryCode=false;
 	log.info("finanialSummaryDropDownValues medicineCategoryCode"+medicineCategoryCode);
 	if(!medicineCategoryCode){
@@ -11459,7 +11459,7 @@ private void retriveCommitteeRemarksList(){
 				.getMessage("lbl.txt.select",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())));
-		boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt().getQtId(), null);
+		boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt(), null);
 		log.info("recommendationSummaryDropDownValues medicineCategoryCode"+medicineCategoryCode);
 		//medicineCategoryCode=false;
 		if(!medicineCategoryCode){
