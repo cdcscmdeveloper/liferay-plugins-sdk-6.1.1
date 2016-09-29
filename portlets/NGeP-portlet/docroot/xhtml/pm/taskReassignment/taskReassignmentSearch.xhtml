@@ -51,7 +51,7 @@
 					</p:outputPanel> <p:outputPanel id="opSysOrgCode"
 						rendered="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null or 
 					ParameterConst.orgTypeSys eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">
-						<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="60"
+						<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="73"
 							disabled="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
 							or !taskReassignmentBackingBean.managedBean.orgProfileRequired}"
 							update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" readonly="true"
@@ -68,7 +68,7 @@
 						value="#{lbl['lbl.pm.ta.username']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></th>
 				<td width="55%"><ac:lov id="lovUser" lovId="PM_USER_ID"
-						size="60"
+						size="73"
 						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgName !='')}"
@@ -107,7 +107,7 @@
 					<p:outputLabel value="#{lbl['lbl.pm.ta.process.doctype']}"/>
 				</th>
 				<td width="55%">
-					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="60" 
+					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="73"
 						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userId!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userName !='')
@@ -133,7 +133,7 @@
 					<p:inputText id="docNo"  styleClass="ppDisplayTextL"
 							label="#{lbl['lbl.pm.ta.doc.no']}" maxlength="20"
 							value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo}"
-							size="30" >
+							size="37" >
 						<p:ajax event="blur" listener="#{taskReassignmentBackingBean.onChangeUser(null)}" 
 				     		update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult"/> 
 					</p:inputText>
