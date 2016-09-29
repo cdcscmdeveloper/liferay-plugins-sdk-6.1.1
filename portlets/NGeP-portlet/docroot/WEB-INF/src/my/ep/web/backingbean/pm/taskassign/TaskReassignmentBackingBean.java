@@ -1950,7 +1950,14 @@ public class TaskReassignmentBackingBean extends
 				   String roleCode =resDTO.getRoleCode();				   
 				   if(!isSupplier && StringUtils.isNotBlank(roleCode)){
 					   roleList.add(roleCode);
-				   }				
+				   }	
+				   
+				// same org profile id
+				searchBean.getDataFilterBeans().add(
+							new SearchFilterBean(
+							"pmUserOrgs.pmOrgProfile.orgProfileId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							orgProfileId));
 				}
 			}
 			break;
