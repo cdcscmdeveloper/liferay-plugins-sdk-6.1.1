@@ -18677,14 +18677,21 @@ public class ReportBackingBean extends
 		
 		gnrtdURL.append(paramConstrString);
 		
+		String footerStr = "";
+		
 		if (this.getManagedBean().getReportValue()
 				.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL) || this.getManagedBean().getReportValue()
 				.equals(ReportConst.SM_REJECTED_SOFTCERT_RPT_VAL) ) {
 			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.EXC_NEXT_URL_XLS));
+			
+			footerStr = " &destype=cache desformat=enhancedspreadsheet ";
+			
 		} else {
 			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.EXC_NEXT_URL));
+			
+			footerStr = " destype=cache desformat=pdf ";
 		}
 
 		// Jimmy add (temporarily workaround for report).
@@ -18726,7 +18733,6 @@ public class ReportBackingBean extends
 					contentStr = contentStr.replace("&", " ");
 					
 					String headerStr = " server=RptSvr_NGEPDevRPS01_asinst_FT userid=ngep_devft/ng3pd3vft@devapp ";
-					String footerStr = " destype=cache desformat=pdf ";
 					
 					reportStr =  headerStr + contentStr + footerStr;
 
