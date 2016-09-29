@@ -64,12 +64,12 @@
 				</p:dataTable>
 				<table style="width: 100%;">
 					<tr>
-						<td style="text-align: right;"><ui:remove>
+						<td style="text-align: right;">
 								<p:commandButton value="#{lbl['lbl.pm.ta.btn.assign']}"
 									oncomplete="dlTaskReassignment.hide()"
 									action="#{taskReassignmentBackingBean.confirmReassignTask()}"
-									update=":form:dtTaskAssignResult" immediate="true" />
-							</ui:remove> <p:commandButton id="cbCancel" value="#{lbl['lbl.btn.cancel']}"
+									update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" immediate="true" />
+							<p:commandButton id="cbCancel" value="#{lbl['lbl.btn.cancel']}"
 								oncomplete="dlTaskReassignment.hide()" immediate="true" /></td>
 					</tr>
 					</table>
