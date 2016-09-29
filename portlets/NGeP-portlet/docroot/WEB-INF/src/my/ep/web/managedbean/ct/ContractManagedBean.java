@@ -994,12 +994,18 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
 	
+	/**
+	 * @return the deleteAttachmentList
+	 */
 	public List<CtAttachment> getDeleteAttachmentList() {
 		if(deleteAttachmentList == null)
 			   deleteAttachmentList = new ArrayList<CtAttachment>();
 		return deleteAttachmentList;
 	}
 
+	/**
+	 * @param deleteAttachmentList the deleteAttachmentList to set
+	 */
 	public void setDeleteAttachmentList(List<CtAttachment> deleteAttachmentList) {
 		this.deleteAttachmentList = deleteAttachmentList;
 	}
@@ -1018,10 +1024,16 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.selectedItemForSpec = selectedItemForSpec;
 	}
 
+	/**
+	 * @return the commonView
+	 */
 	public boolean isCommonView() {
 		return commonView;
 	}
 
+	/**
+	 * @param commonView the commonView to set
+	 */
 	public void setCommonView(boolean commonView) {
 		this.commonView = commonView;
 	}
