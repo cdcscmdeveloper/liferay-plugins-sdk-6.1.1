@@ -9109,6 +9109,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
+		getManagedBean().setMaxReviewCount(maxReviewCount);
 		if (isSectionVerified) {
 			sec.setCheckCount(sec.getCheckCount() + 1);
 
@@ -9144,7 +9145,7 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
-
+			getManagedBean().setMaxReviewCount(maxReviewCount);
 			SmApplSectionReview sec = getManagedBean().isPoUser() ? getManagedBean()
 					.getPoSecReview() : getManagedBean().getApprvrSecReview();
 			if (sec.getCheckCount() >= maxReviewCount
