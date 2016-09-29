@@ -25,16 +25,11 @@
 				  });
 				  $("input[id$=txtPermAdd3]").keydown(function(e){
 					 if(e.which==9 || e.keycode==9){
-						$("input[id$=txtPermAdd4]").focus();
-						e.preventDefault();
-					} 
-				  });
-				  $("input[id$=txtPermAdd4]").keydown(function(e){
-					 if(e.which==9 || e.keycode==9){
 						$("input[id$=cmbPermCounrty_focus]").focus();
 						e.preventDefault();
 					} 
 				  });
+				 
 				  $("input[id$=cmbPermCounrty_focus]").keydown(function(e){
 					 if(e.which==9 || e.keycode==9){
 						$("input[id$=cmbPermState_focus]").focus();
@@ -389,8 +384,7 @@
 
 				<tr>
 					<td class="tdTitle"></td>
-					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address4}"
-							id="txtPermAdd4" maxlength="35" /></td>
+					<td class="tdContent"></td>
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />

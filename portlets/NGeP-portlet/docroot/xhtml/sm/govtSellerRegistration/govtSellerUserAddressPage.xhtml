@@ -22,16 +22,11 @@
 				  });
 				  $("input[id$=txtPermAdd3]").keydown(function(e){
 					 if(e.which==9 || e.keycode==9){
-						$("input[id$=txtPermAdd4]").focus();
+						 $("input[id$=cmbPermCounrty_focus]").focus();
 						e.preventDefault();
 					} 
 				  });
-				  $("input[id$=txtPermAdd4]").keydown(function(e){
-					 if(e.which==9 || e.keycode==9){
-						$("input[id$=cmbPermCounrty_focus]").focus();
-						e.preventDefault();
-					} 
-				  });
+				 
 				  $("input[id$=cmbPermCounrty_focus]").keydown(function(e){
 					 if(e.which==9 || e.keycode==9){
 						$("input[id$=cmbPermState_focus]").focus();
@@ -79,13 +74,7 @@
 				  });
 				  $("input[id$=conAddress3]").keydown(function(e){
 					 if(e.which==9 || e.keycode==9){
-						$("input[id$=conAddress4]").focus();
-						e.preventDefault();
-					} 
-				  });
-				  $("input[id$=conAddress4]").keydown(function(e){
-					 if(e.which==9 || e.keycode==9){
-						$("input[id$=cmbResState_focus]").focus();
+						 $("input[id$=cmbResState_focus]").focus();
 						e.preventDefault();
 					} 
 				  });

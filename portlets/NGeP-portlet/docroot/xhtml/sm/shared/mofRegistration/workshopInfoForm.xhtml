@@ -38,9 +38,9 @@
 					<br />
 					<script>
 					
-				      function getWorkAddress2(addr1, addr2, addr3, addr4, cityName, districtName, stateName, countryName) {
+				      function getWorkAddress2(addr1, addr2, addr3, cityName, districtName, stateName, countryName) {
 
-				    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+				    	  var address = addr1 + addr2 + addr3 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
 
 				      	return address;
 				      }
@@ -50,7 +50,7 @@
 					<ac:gmapInput id="gmapInput" 
 						latitude="#{work.smAddress.mapLatitude}" 
 						longitude="#{work.smAddress.mapLongitude}" 
-						address="getWorkAddress2('#{work.smAddress.address1}', '#{work.smAddress.address2}', '#{work.smAddress.address3}', '#{work.smAddress.address4}', '#{work.smAddress.pmCity.cityName}', '#{work.smAddress.pmDistrict.districtName}', '#{work.smAddress.pmState.stateName}', '#{work.smAddress.pmCountry.countryName}')"
+						address="getWorkAddress2('#{work.smAddress.address1}', '#{work.smAddress.address2}', '#{work.smAddress.address3}', '#{work.smAddress.pmCity.cityName}', '#{work.smAddress.pmDistrict.districtName}', '#{work.smAddress.pmState.stateName}', '#{work.smAddress.pmCountry.countryName}')"
 						showButton="true"
 						disabled="false" />
 						
