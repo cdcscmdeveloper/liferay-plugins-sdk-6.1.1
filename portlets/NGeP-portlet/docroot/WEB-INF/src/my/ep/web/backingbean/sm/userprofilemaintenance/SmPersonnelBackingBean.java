@@ -865,7 +865,6 @@ public class SmPersonnelBackingBean extends
 						address.setAddress1(smPA.getSmAddress().getAddress1());
 						address.setAddress2(smPA.getSmAddress().getAddress2());
 						address.setAddress3(smPA.getSmAddress().getAddress3());
-						address.setAddress4(smPA.getSmAddress().getAddress4());
 						address.getPmCountry().setCountryId(
 								smPA.getSmAddress().getPmCountry()
 										.getCountryId());
@@ -885,7 +884,6 @@ public class SmPersonnelBackingBean extends
 						address.setAddress1(smPA.getSmAddress().getAddress1());
 						address.setAddress2(smPA.getSmAddress().getAddress2());
 						address.setAddress3(smPA.getSmAddress().getAddress3());
-						address.setAddress4(smPA.getSmAddress().getAddress4());
 						address.getPmCountry().setCountryId(
 								smPA.getSmAddress().getPmCountry()
 										.getCountryId());
@@ -1004,7 +1002,6 @@ public class SmPersonnelBackingBean extends
 					address.setAddress1(smPA.getSmAddress().getAddress1());
 					address.setAddress2(smPA.getSmAddress().getAddress2());
 					address.setAddress3(smPA.getSmAddress().getAddress3());
-					address.setAddress4(smPA.getSmAddress().getAddress4());
 					address.getPmCountry().setCountryId(
 							smPA.getSmAddress().getPmCountry().getCountryId());
 					address.getPmState().setStateId(
@@ -1024,7 +1021,6 @@ public class SmPersonnelBackingBean extends
 					address.setAddress1(smPA.getSmAddress().getAddress1());
 					address.setAddress2(smPA.getSmAddress().getAddress2());
 					address.setAddress3(smPA.getSmAddress().getAddress3());
-					address.setAddress4(smPA.getSmAddress().getAddress4());
 					address.getPmCountry().setCountryId(
 							smPA.getSmAddress().getPmCountry().getCountryId());
 					address.getPmState().setStateId(

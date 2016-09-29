@@ -2340,7 +2340,6 @@ public class SmApplicationUtil {
 		addr.setAddress1("");
 		addr.setAddress2("");
 		addr.setAddress3("");
-		addr.setAddress4("");
 		addr.setPostcode("");
 		return addr;
 	}
@@ -2383,7 +2382,6 @@ public class SmApplicationUtil {
 		facAddr.setAddress1(baseOffAddr.getAddress1());
 		facAddr.setAddress2(baseOffAddr.getAddress2());
 		facAddr.setAddress3(baseOffAddr.getAddress3());
-		facAddr.setAddress4(baseOffAddr.getAddress4());
 		facAddr.setPostcode(baseOffAddr.getPostcode());
 
 		return facAddr;
@@ -4299,7 +4297,6 @@ public class SmApplicationUtil {
 		desAddr.setAddress1(srcAddr.getAddress1());
 		desAddr.setAddress2(srcAddr.getAddress2());
 		desAddr.setAddress3(srcAddr.getAddress3());
-		desAddr.setAddress4(srcAddr.getAddress4());
 		desAddr.setPostcode(srcAddr.getPostcode());
 		if (srcAddr.getPmCountry() != null
 				&& srcAddr.getPmCountry().getCountryId() != null) {
@@ -4331,7 +4328,6 @@ public class SmApplicationUtil {
 		desAddr.setAddress1(srcAddr.getAddress1());
 		desAddr.setAddress2(srcAddr.getAddress2());
 		desAddr.setAddress3(srcAddr.getAddress3());
-		desAddr.setAddress4(srcAddr.getAddress4());
 		desAddr.setPostcode(srcAddr.getPostcode());
 		if (srcAddr.getPmCountry() != null
 				&& srcAddr.getPmCountry().getCountryId() != null) {
@@ -4723,13 +4719,7 @@ public class SmApplicationUtil {
 							.append(smSupplierBasicInfoVO.getAddress()
 									.getSmAddress().getAddress3());
 				}
-				if (StringUtils.isNotBlank(smSupplierBasicInfoVO.getAddress()
-						.getSmAddress().getAddress4())) {
-					sb.append(",")
-							.append("<br/>")
-							.append(smSupplierBasicInfoVO.getAddress()
-									.getSmAddress().getAddress4());
-				}
+
 				if (smSupplierBasicInfoVO.getAddress().getSmAddress()
 						.getPmDistrict() != null) {
 					sb.append(",")
@@ -8377,8 +8367,7 @@ public class SmApplicationUtil {
 		String streetAddress = address.getAddress1();
 		streetAddress = checkAddressSuffix(address.getAddress1())
 				+ checkAddressSuffix(address.getAddress2())
-				+ checkAddressSuffix(address.getAddress3())
-				+ checkAddressSuffix(address.getAddress4());
+				+ checkAddressSuffix(address.getAddress3());
 
 		return streetAddress;
 	}

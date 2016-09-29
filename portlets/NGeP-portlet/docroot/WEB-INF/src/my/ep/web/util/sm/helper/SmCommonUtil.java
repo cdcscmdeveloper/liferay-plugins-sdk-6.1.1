@@ -2185,8 +2185,6 @@ public class SmCommonUtil {
 			address.setAddress2(new String(refAddress.getAddress2().toString()));
 		if (refAddress.getAddress3() != null)
 			address.setAddress3(new String(refAddress.getAddress3().toString()));
-		if (refAddress.getAddress4() != null)
-			address.setAddress4(new String(refAddress.getAddress4().toString()));
 		if (refAddress.getPostcode() != null)
 			address.setPostcode(new String(refAddress.getPostcode().toString()));
 
