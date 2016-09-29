@@ -227,16 +227,18 @@
 	
 	<p:dialog id="gstBrUploadDialog" widgetVar="gstBrUploadDialog" modal="true"
 		dynamic="true" resizable="false" width="700px" height="200"
-		position="top" style="z-index:-1;" header="#{lbl['lbl.bpm.choose.file']}">
+		position="top" style="z-index:-1;" header="#{lbl['lbl.bpm.choose.file']}" 
+		onShow="singleUploadListener(uploadWB);">
 		<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
-			sizeLimit="1000000" process="@this"
+			sizeLimit="1000000" process="@this" widgetVar="uploadWB"
 			invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
 			invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
 			fileUploadListener="#{backingBean.handleGstSupDocFileAttachment}"
 			update="banchDialog" oncomplete="hideUploadDialog();" 
 			uploadLabel="#{lbl['lbl.btn.upload']}"  
 			label="#{lbl['lbl.btn.choose']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}" />
+			cancelLabel="#{lbl['lbl.btn.cancel']}" 
+			multiple="false" showButtons="false"/>
 	</p:dialog>
 	
 	<ac:confirmationPopup id="branchDeletePopUpId"
