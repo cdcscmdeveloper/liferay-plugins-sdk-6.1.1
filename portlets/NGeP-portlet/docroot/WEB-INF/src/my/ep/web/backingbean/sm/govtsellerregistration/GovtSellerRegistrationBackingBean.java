@@ -1031,7 +1031,6 @@ public class GovtSellerRegistrationBackingBean extends
 				addr.setAddress1(addrType.getPmAddress().getAddress1());
 				addr.setAddress2(addrType.getPmAddress().getAddress2());
 				addr.setAddress3(addrType.getPmAddress().getAddress3());
-				addr.setAddress4(addrType.getPmAddress().getAddress4());
 				addr.setPmCountry(addrType.getPmAddress().getPmCountry());
 				addr.setPmState(addrType.getPmAddress().getPmState());
 				addr.setPmDistrict(addrType.getPmAddress().getPmDistrict());

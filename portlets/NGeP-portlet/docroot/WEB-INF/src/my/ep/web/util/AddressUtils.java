@@ -41,10 +41,6 @@ public class AddressUtils {
 				address.append(smAddress.getAddress3());
 				address.append(separator).append(htmlLineSeparator);
 			}
-			if (smAddress.getAddress4() != null && smAddress.getAddress4().length() > 0) {
-				address.append(smAddress.getAddress4());
-				address.append(separator).append(htmlLineSeparator);
-			}
 			if (smAddress.getPmDistrict() != null && smAddress.getPmDistrict().getDistrictName() !=null && smAddress.getPmDistrict().getDistrictName().length() > 0) {
 				address.append(smAddress.getPmDistrict().getDistrictName());
 				address.append(separator).append(htmlLineSeparator);
@@ -91,10 +87,6 @@ public class AddressUtils {
 			if (smAddress.getAddress3() != null && smAddress.getAddress3().length() > 0) {
 				address.append(System.getProperty("line.separator"));
 				address.append(smAddress.getAddress3());
-				address.append(separator);
-			}
-			if (smAddress.getAddress4() != null && smAddress.getAddress4().length() > 0) {
-				address.append(smAddress.getAddress4());
 				address.append(separator);
 			}
 			
@@ -248,9 +240,6 @@ public class AddressUtils {
 				address.append(System.getProperty("line.separator"));
 				address.append(smAddress.getAddress3());
 				address.append(separator).append(htmlLineSeparator);;
-			}
-			if (smAddress.getAddress4() != null && smAddress.getAddress4().length() > 0) {
-				address.append(smAddress.getAddress4());
 			}
 		}
 		return address.toString();
