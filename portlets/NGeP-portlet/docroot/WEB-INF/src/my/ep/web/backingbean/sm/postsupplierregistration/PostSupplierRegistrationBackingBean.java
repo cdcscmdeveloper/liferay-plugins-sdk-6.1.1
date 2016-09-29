@@ -89,6 +89,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private static final String VIEW_VIRTUAL_CERT = "view-virtual-certification";
 	//private static final String VIEW_VIRTUAL_CERT = "virtual-cert";
 	private static final String RESUBMIT_APPLICATION = "resubmit-application?apId=";
+	private static final String CATALOGUE_MAINTENANCE_PAGE = "catalogue-maintenance-file";
+	
 	
 	private int softCertStatus;
 	private boolean changeRoleSection;
@@ -541,10 +543,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			String catalogue = checkCatalogueUpload(supplier.getSupplierId()); 
 			if(catalogue == null){
 				//mofActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
-				mofActionMap.put("CU", CATALOGUE_MAINT);
+				mofActionMap.put("CU", CATALOGUE_MAINTENANCE_PAGE);
 			}else{
 				if(!catalogue.equalsIgnoreCase(CATALOGUE_PUBLISHED)){
-					mofActionMap.put("CU",CATALOGUE_MAINT);
+					mofActionMap.put("CU",CATALOGUE_MAINTENANCE_PAGE);
 				}
 			}
 		}
@@ -628,10 +630,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		String catalogue = checkCatalogueUpload(supplierId); 
 		
 		if(catalogue == null){
-			basicActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
+			basicActionMap.put("CU", CATALOGUE_MAINTENANCE_PAGE);
 		}else{
 			if(!catalogue.equalsIgnoreCase(CATALOGUE_PUBLISHED)){
-				basicActionMap.put("CU",CATALOGUE_MAINT);
+				basicActionMap.put("CU",CATALOGUE_MAINTENANCE_PAGE);
 			}
 		}
 		
