@@ -1,5 +1,6 @@
 /* 
  ***************************************************   
+
  * Product nextgen
  *                ePerolehan 
  * Release 1.00    
@@ -18685,7 +18686,7 @@ public class ReportBackingBean extends
 			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.EXC_NEXT_URL_XLS));
 			
-			footerStr = " &destype=cache desformat=enhancedspreadsheet ";
+			footerStr = " destype=cache desformat=enhancedspreadsheet ";
 			
 		} else {
 			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
