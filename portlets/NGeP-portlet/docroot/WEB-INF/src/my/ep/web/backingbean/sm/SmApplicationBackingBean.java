@@ -4725,6 +4725,11 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"smMachDtWidVar.paginator.endLink.click()");
 		}
+		if (getManagedBean().getSelectedMachine().getMachine() != null
+				&& getManagedBean().getSelectedMachine().getMachine()
+						.getMachineId() == null) {
+			getManagedBean().getSelectedMachine().setMachine(null);
+		}
 
 		// remove from main list for non selected machine that is still not yet
 		// save to avoid error
@@ -4760,8 +4765,8 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedMachine().getMachine() == null) {
 			getManagedBean().getSelectedMachine().setMachine(new PmMachine());
 		}
-		
-		//init back smMachine list
+
+		// init back smMachine list
 		initSmMachineDetails();
 
 		RequestContext.getCurrentInstance().execute("equipmentDialog.hide()");
