@@ -39,9 +39,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.ToggleSelectEvent;
-import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -1358,6 +1355,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		  }
 	}	
 	
+	/**
+	 * This method used to populate list of bank form table
+	 * @param object smSupplier, int index
+	 * @return List of bank
+	 * */
 	public List<SelectItem> populateBankAccountList(SmSupplier smSupplier, int index) {		
 		 List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
 		 List<SelectItem> addAccountList = new ArrayList<SelectItem>();
@@ -2462,6 +2464,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
 	}
 	
+	/**
+	 * This method used to set
+	 *  file value null for circular details
+	 * */
 	public void deleteAttachFile(){
 		getManagedBean().getCircularVer().setCircularFileName(null);
 		getManagedBean().getCircularVer().setCircularFilePath(null);
@@ -2571,6 +2577,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return false;
 	}
 	
+	/**
+	 * This method used to validate
+	 *  pid reason during selection of other by user
+	 *  @param Long reasonId
+	 *  @return boolean value
+	 * */
 	public void validatePidReason(Long resonId){
 	
 		if(resonId == null || resonId.intValue() == 0){
@@ -2595,8 +2607,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
      * @param pass ajax event type
      * Set boolean value for user action 
      * */
-	
-public void selectAllPidReason(AjaxBehaviorEvent e) {
+	  public void selectAllPidReason(AjaxBehaviorEvent e) {
 		
 		for (CtCircularPidReason ctCircularPidReasons : getManagedBean().getCircularVer().getCtCircularPidReason()) {
 			if (getManagedBean().isSelectAll() ) {	   
@@ -2613,7 +2624,11 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 		}
    }
 	
-
+    /**
+	 * Function to check / uncheck all checkbox into data table
+	 * @param pass ajax event type
+	 * @return boolean value
+	 * */
     public void selectAllDeleteCircular(AjaxBehaviorEvent e) {
 	
 	      for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelCircularReq().getCtCancelCircularList()) {
@@ -2652,6 +2667,11 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 		}	
 	}
     
+    /**
+  	 * Function to check / uncheck all checkbox into data table
+  	 * @param pass ajax event type
+  	 * @return boolean value
+  	 * */
     public void selectAllPerson(AjaxBehaviorEvent e) {
 		
 		for (CtContactPerson ctContactPersons : getManagedBean().getCircularVer().getCtContactPersons()) {
@@ -2669,6 +2689,11 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 	     }
     }
   
+    /**
+	 * Function to check/ uncheck single checkbox into data table
+	 * @param pass ajax event type
+	 * @return boolean value
+	 * */
     public void selectOnePersonCheckboxSelect(AjaxBehaviorEvent e){
 		
     	getManagedBean().setSelectAll(false);
@@ -2685,7 +2710,12 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 		}	
 	}
     
-public void selectAllCancelCircular(AjaxBehaviorEvent e) {
+    /**
+  	 * Function to check / uncheck all checkbox into data table
+  	 * @param pass ajax event type
+  	 * @return boolean value
+  	 * */
+    public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 		
 		for (CtCancelCircular ctCancelCirculars : getManagedBean().getCircularVer().getCtCancelCircularList()) {
 			if (getManagedBean().isSelectAll()) {
@@ -2702,6 +2732,11 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 	      }
     }
 
+	/**
+	 * Function to check/ uncheck single checkbox into data table
+	 * @param pass ajax event type
+	 * @return boolean value
+	 * */
     public void selectCancelCheckboxSelect(AjaxBehaviorEvent e){
     	getManagedBean().setSelectAll(false);
     	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCircularVer().getCtCancelCircularList()){
@@ -2750,6 +2785,11 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 		}	
     }*/
     
+    /**
+	 * Function to check / uncheck all checkbox into data table
+	 * @param pass ajax event type
+	 * @return boolean value
+	 * */
     public void selectAllDeleteDlgCircular(AjaxBehaviorEvent e) {
     	
 	      for (CtCircularVer ctCircularVers : getManagedBean().getCircularVerList()) {
@@ -2852,40 +2892,50 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
     		}
         }
     	
+    	/**
+    	 * Function to check / uncheck all checkbox into data table
+    	 * @param pass ajax event type
+    	 * @return boolean value
+    	 * */
     	public void selectAllPanelItem(AjaxBehaviorEvent e) {
-    		
-	    		if(getManagedBean().isSelectionOfZone()) {
-	    		        for (CtPanelSupplier ctPanelSuppliers : getManagedBean().getSelectedPanelZone().getCtPanelSuppliers()) {
-	    			          if (getManagedBean().isSelectAll()) {
-	    				         ctPanelSuppliers.setSelectedCheckBox(true);
-	    				         if(getManagedBean().isButtonHidePanelItemDel()){
-	    				        	 getManagedBean().setButtonHidePanelItemDel(false);
-	    				         }
-	    		               }else {
-	    		    	           ctPanelSuppliers.setSelectedCheckBox(false);
-	    		    	           if(!getManagedBean().isButtonHidePanelItemDel()){
-		    				        	 getManagedBean().setButtonHidePanelItemDel(true);
-		    				         }
-	    		              }
-	    	           }
-	    		}else {
-	    			for (CtPanelSupplier ctPanelSuppliers : getManagedBean().getSelectedPanelItems().getCtPanelSuppliers()) {
-				          if (getManagedBean().isSelectAll()) {
-					         ctPanelSuppliers.setSelectedCheckBox(true);
-					         if(getManagedBean().isButtonHidePanelItemDel()){
+		
+    		if(getManagedBean().isSelectionOfZone()) {
+    		        for (CtPanelSupplier ctPanelSuppliers : getManagedBean().getSelectedPanelZone().getCtPanelSuppliers()) {
+    			          if (getManagedBean().isSelectAll()) {
+    				         ctPanelSuppliers.setSelectedCheckBox(true);
+    				         if(getManagedBean().isButtonHidePanelItemDel()){
     				        	 getManagedBean().setButtonHidePanelItemDel(false);
     				         }
-			               }else {
-			    	           ctPanelSuppliers.setSelectedCheckBox(false);
-			    	           if(!getManagedBean().isButtonHidePanelItemDel()){
+    		               }else {
+    		    	           ctPanelSuppliers.setSelectedCheckBox(false);
+    		    	           if(!getManagedBean().isButtonHidePanelItemDel()){
 	    				        	 getManagedBean().setButtonHidePanelItemDel(true);
 	    				         }
-			              }
-	    		    }
-	    		}
+    		              }
+    	           }
+    		}else {
+    			for (CtPanelSupplier ctPanelSuppliers : getManagedBean().getSelectedPanelItems().getCtPanelSuppliers()) {
+			          if (getManagedBean().isSelectAll()) {
+				         ctPanelSuppliers.setSelectedCheckBox(true);
+				         if(getManagedBean().isButtonHidePanelItemDel()){
+				        	 getManagedBean().setButtonHidePanelItemDel(false);
+				         }
+		               }else {
+		    	           ctPanelSuppliers.setSelectedCheckBox(false);
+		    	           if(!getManagedBean().isButtonHidePanelItemDel()){
+    				        	 getManagedBean().setButtonHidePanelItemDel(true);
+    				         }
+		              }
+    		    }
+    		}
         }
     	
-    	public void selectSupplierCheckboxSelect(AjaxBehaviorEvent e){
+    	/**
+    	 * Function to check/ uncheck single checkbox into data table
+    	 * @param pass ajax event type
+    	 * @return boolean value
+    	 * */
+      public void selectSupplierCheckboxSelect(AjaxBehaviorEvent e){
         	getManagedBean().setSelectAll(false);
         	if(getManagedBean().isSelectionOfZone()) {
         	    for (CtPanelSupplier ctPanelSuppliers : getManagedBean().getSelectedPanelZone().getCtPanelSuppliers()) {
@@ -2909,23 +2959,33 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
         		}	
          }
     	
+    	/**
+    	 * Function to check / uncheck all checkbox into data table
+    	 * @param pass ajax event type
+    	 * @return boolean value
+    	 * */
     	public void selectAllPanelZone(AjaxBehaviorEvent e) {
     		
-    			        for (CtPanelZone ctPanelZones : getManagedBean().getSelectedPanelItems().getCtPanelZones()) {
-    			          if (getManagedBean().isSelectAll()) {
-    			        	  ctPanelZones.setSelectedCheckBox(true);
-    			        	  if(getManagedBean().isButtonHideActiveDel()){
-    			        		  getManagedBean().setButtonHideActiveDel(false);
-    			        	  }
-    		               }else {
-    		            	   ctPanelZones.setSelectedCheckBox(false);
-    		            	   if(!getManagedBean().isButtonHideActiveDel()){
-     			        		  getManagedBean().setButtonHideActiveDel(true);
-     			        	  }
-    		              }
-    	           }
+		     for (CtPanelZone ctPanelZones : getManagedBean().getSelectedPanelItems().getCtPanelZones()) {
+		          if (getManagedBean().isSelectAll()) {
+		        	  ctPanelZones.setSelectedCheckBox(true);
+		        	  if(getManagedBean().isButtonHideActiveDel()){
+		        		  getManagedBean().setButtonHideActiveDel(false);
+		        	  }
+	               }else {
+	            	   ctPanelZones.setSelectedCheckBox(false);
+	            	   if(!getManagedBean().isButtonHideActiveDel()){
+		        		  getManagedBean().setButtonHideActiveDel(true);
+		        	  }
+	              }
+              }
         }
 	
+	/**
+	 * Function to check/ uncheck single checkbox into data table
+	 * @param pass ajax event type
+	 * @return boolean value
+	 * */
 	public void selectPanelZoneCheckboxSelect(AjaxBehaviorEvent e){
     	getManagedBean().setSelectAll(false);
       	    for (CtPanelZone ctPanelZones : getManagedBean().getSelectedPanelItems().getCtPanelZones()) {
@@ -2941,77 +3001,74 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
     			getManagedBean().setButtonHideActiveDel(true);
     		}	
      }
-    	
-    	public void selectAllDeleteCheckboxSelect(AjaxBehaviorEvent e){
-    		getManagedBean().setSelectAll(false);
-        	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelCircularReq().getCtCancelCircularList()){
-        		if(ctCancelCirculars.isSelectedCheckBox()){
-        			getManagedBean().setButtonHideActiveDel(false);
-        			return;
-        		}
-        	}
-    		if((boolean) e.getComponent().getAttributes().get("value")){
+    
+	/**
+	 * Function to check/ uncheck single checkbox into data table
+	 * @param pass ajax event type
+	 * @return boolean value
+	 * */
+	public void selectAllDeleteCheckboxSelect(AjaxBehaviorEvent e){
+		getManagedBean().setSelectAll(false);
+    	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelCircularReq().getCtCancelCircularList()){
+    		if(ctCancelCirculars.isSelectedCheckBox()){
     			getManagedBean().setButtonHideActiveDel(false);
-    		}else{
-    			getManagedBean().setButtonHideActiveDel(true);
-    		}	
+    			return;
+    		}
     	}
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			getManagedBean().setButtonHideActiveDel(false);
+		}else{
+			getManagedBean().setButtonHideActiveDel(true);
+		}	
+	}
     	
-	   public void selectAllSpecificItem(AjaxBehaviorEvent e) {
-    		
-    		        for (CtPanelItemSpec ctPanelItemSpecs : getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs()) {
-    			          if (getManagedBean().isSelectAll()) {
-    			        	  ctPanelItemSpecs.setSelectedCheckBox(true);
-    			        	  if(getManagedBean().isButtonHideActiveDel()){
-    			        		  getManagedBean().setButtonHideActiveDel(false);
-    			        	  }
-    		               }else {
-    		            	   ctPanelItemSpecs.setSelectedCheckBox(false);
-    		            	   if(!getManagedBean().isButtonHideActiveDel()){
-     			        		  getManagedBean().setButtonHideActiveDel(true);
-     			        	  }
-    		              }
-    	           }
-        }
-    	
-    	public void selectSpecificCheckBoxSelect(AjaxBehaviorEvent e){
-        	getManagedBean().setSelectAll(false);
-       	    for (CtPanelItemSpec ctPanelItemSpecs : getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs()) {
-            		if(ctPanelItemSpecs.isSelectedCheckBox()){
-            			 getManagedBean().setButtonHideActiveDel(false);
-            			return;
-            		}
-            	}
-        	
-    		  if((boolean) e.getComponent().getAttributes().get("value")){
-    			  getManagedBean().setButtonHideActiveDel(false);
-        		}else{
-        			 getManagedBean().setButtonHideActiveDel(true);
-        		}	
+	/**
+	 * Function to check / uncheck all checkbox into data table
+	 * @param pass ajax event type
+	 * @return boolean value
+	 * */
+   public void selectAllSpecificItem(AjaxBehaviorEvent e) {
+        for (CtPanelItemSpec ctPanelItemSpecs : getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs()) {
+	          if (getManagedBean().isSelectAll()) {
+	        	  ctPanelItemSpecs.setSelectedCheckBox(true);
+	        	  if(getManagedBean().isButtonHideActiveDel()){
+	        		  getManagedBean().setButtonHideActiveDel(false);
+	        	  }
+               }else {
+            	   ctPanelItemSpecs.setSelectedCheckBox(false);
+            	   if(!getManagedBean().isButtonHideActiveDel()){
+	        		  getManagedBean().setButtonHideActiveDel(true);
+	        	  }
+              }
          }
-    	
-	public void onToggleSelect(ToggleSelectEvent event) {
-		if(getManagedBean().getSelectedCancelledCircularList() != null
-				 || getManagedBean().getSelectedCancelledCircularList().size() > 0)
-		 getManagedBean().setButtonHideActiveDel(false);
-	}
-	
-	public void onToggleUnSelect() {
-		 getManagedBean().setButtonHideActiveDel(true);
-	}
- 
-    public void onRowUnselect(UnselectEvent event) {
-    	if(getManagedBean().getSelectedCancelledCircularList() == null
-				 || getManagedBean().getSelectedCancelledCircularList().size() == 0)
-    	getManagedBean().setButtonHideActiveDel(true);
     }
+	
+		/**
+		 * Function to check/ uncheck single checkbox into data table
+		 * @param pass ajax event type
+		 * @return boolean value
+		 * */
+      public void selectSpecificCheckBoxSelect(AjaxBehaviorEvent e){
+	    	getManagedBean().setSelectAll(false);
+	   	    for (CtPanelItemSpec ctPanelItemSpecs : getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs()) {
+	        		if(ctPanelItemSpecs.isSelectedCheckBox()){
+	        			 getManagedBean().setButtonHideActiveDel(false);
+	        			return;
+	        		}
+	        	}
+    	
+			  if((boolean) e.getComponent().getAttributes().get("value")){
+				  getManagedBean().setButtonHideActiveDel(false);
+	    		}else{
+	    			 getManagedBean().setButtonHideActiveDel(true);
+	    		}	
+       }
     
-    public void onRowSelect(SelectEvent event) {
-    	if(getManagedBean().getSelectedCancelledCircularList() != null
-				 || getManagedBean().getSelectedCancelledCircularList().size() > 0)
-		getManagedBean().setButtonHideActiveDel(false);
-	}
-    
+    /**
+	 * Function to check/ uncheck single checkbox into data table
+	 * @param pass ajax event type
+	 * @return boolean value
+	 * */
     public void selectAllDltDlgChkBoxSelect(AjaxBehaviorEvent e){
 		getManagedBean().setSelectAll(false);
     	for (CtCircularVer ctCircularVers : getManagedBean().getCircularVerList()){
@@ -3027,16 +3084,30 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 		}	
 	}
     
+    /**
+     * This method used to hide and display purchase in default table
+     * @return set boolean value false 
+     * */
     public void setPidValue(){
 		if(!getManagedBean().getCircularVer().isDirectPurchase()){
 			getManagedBean().getCircularVer().setPid(false);
 		}
     }
     
+    /**
+     * This method is used to hide delete button for zone tree table 
+     * @param pass ajax event
+     * @return set value false
+     * */
     public void onNodeSelect(NodeSelectEvent event) {
         getManagedBean().setButtonHideActiveDel(false);
     }  
     
+    /**
+     * This method is used to hide delete button for zone tree table 
+     * @param pass ajax event
+     * @return set value true and false
+     * */
     public void onNodeSelect1(NodeUnselectEvent event) {
     	getManagedBean().setButtonHideActiveDel(true);
         if (getManagedBean().getSelectedGeneralTreeNodes().length > 0) {
@@ -3048,6 +3119,10 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
         parentTreeNode.setSelected(false);
     }  
     
+    /**
+     * This method used to check condition to disable field
+     * @return boolean true / false
+     * */
     public boolean isDisabled(){
     	if(getManagedBean().getSelectedCancelledCircularList() == null
     			|| getManagedBean().getSelectedCancelledCircularList().size() == 0)
@@ -3119,30 +3194,44 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
 		 }
 	 }
 	 
-	 public void deleteCircularAttachmentAction(int index){
-		 CtAttachment attachements =  getManagedBean().getCircularVer().getItemAttachments().get(index);
-		 if(attachements.getAttachmentId() != null){
-			 ctBB.getManagedBean().getDeleteAttachmentList().add(attachements);
-		 }
-		 getManagedBean().getCircularVer().getItemAttachments().remove(index);
-	 }
+	/**
+	 * The method used to delete the panel 
+	 * circular attachment file from attachment list.
+	 */    
+	  public void deleteCircularAttachmentAction(int index){
+			 CtAttachment attachements =  getManagedBean().getCircularVer().getItemAttachments().get(index);
+			 if(attachements.getAttachmentId() != null){
+				 ctBB.getManagedBean().getDeleteAttachmentList().add(attachements);
+			 }
+			 getManagedBean().getCircularVer().getItemAttachments().remove(index);
+	  }
 	 
-	   public boolean isNotValidEmailAddress(String email) {
-				Pattern mask = null;
-				String pattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-				mask = Pattern.compile(pattern);
-				Matcher matcher = mask.matcher(email);
-				if (!matcher.matches()) {
-					return true;
-				}
-				return false;
-		    }
+   /**
+     * Method to to validate correct format email address
+     * @param string email
+     * Set boolean value true/ false for user action 
+     * */
+    public boolean isNotValidEmailAddress(String email) {
+		Pattern mask = null;
+		String pattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		mask = Pattern.compile(pattern);
+		Matcher matcher = mask.matcher(email);
+		if (!matcher.matches()) {
+			return true;
+		}
+		return false;
+	}
 		    
-		    public boolean isNotValidMobileNo(String phoneNo) {
-		    	String pattern = "\\d+";
-				if (!phoneNo.matches(pattern)) {
-					return true;
-				}
-				return false;
+   /**
+     * Method to to validate correct format mobile no
+     * @param string phoneNo
+     * Set boolean value true/ false for user action 
+     * */
+   public boolean isNotValidMobileNo(String phoneNo) {
+	    	String pattern = "\\d+";
+			if (!phoneNo.matches(pattern)) {
+				return true;
 			}
+			return false;
+	}
 }

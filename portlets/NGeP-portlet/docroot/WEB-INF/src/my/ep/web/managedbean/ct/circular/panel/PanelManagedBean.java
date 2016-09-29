@@ -924,10 +924,16 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.ctPanelItemGroup = ctPanelItemGroup;
 	}
 
+	/**
+	 * @return the filterCircularVerList
+	 */
 	public List<CtCircularVer> getFilterCircularVerList() {
 		return filterCircularVerList;
 	}
 
+	/**
+	 * @param filterCircularVerList the filterCircularVerList to set
+	 */
 	public void setFilterCircularVerList(List<CtCircularVer> filterCircularVerList) {
 		this.filterCircularVerList = filterCircularVerList;
 	}

@@ -27,7 +27,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,11 +53,9 @@ import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
-import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -83,10 +80,8 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
@@ -675,7 +670,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	/**
 		 * This method is used to generate notice letter
 		 * Templates using to generate letter
-	    */
+	    *//*
 	public void previewNoticeAction() throws Exception {
 		VelocityContext context = null;
 		String vmFile = null;
@@ -837,7 +832,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			context = null;
 		}
 	}
-	
+	*/
 	private void validateViewNotice() {
 		setViewNoticeFlag(true);
 		if (getManagedBean().getContractVer().getCtTermination().getDecisionDate() == null
@@ -1119,12 +1114,12 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 * Method used to call during generation of letter
 	 * This method used to retrieve portal information 
 	 */
-    private String getServerUrl() {
+ /*   private String getServerUrl() {
 		 PortletRequest portletRequest = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		return requestURL.substring(0, requestURL.length()	- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-	}
+	}*/
     
     /**
 	 * Method used to download file from database
