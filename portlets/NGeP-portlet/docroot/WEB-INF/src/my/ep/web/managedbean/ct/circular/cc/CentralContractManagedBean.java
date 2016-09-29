@@ -144,19 +144,30 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.approverModel = approverModel;
 	}
 	
-
+	/**
+	 * @return the searchContractType
+	 */
 	public String getSearchContractType() {
 		return searchContractType;
 	}
 
+	/**
+	 * @param searchContractType the searchContractType to set
+	 */
 	public void setSearchContractType(String searchContractType) {
 		this.searchContractType = searchContractType;
 	}
 	
+	/**
+	 * @return the circular
+	 */
 	public String getSearchContractValue() {
 		return searchContractValue;
 	}
 
+	/**
+	 * @param circular the circular to set
+	 */
 	public void setSearchContractValue(String searchContractValue) {
 		this.searchContractValue = searchContractValue;
 	}
@@ -750,34 +761,58 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.ctCircularPidReasons = ctCircularPidReasons;
 	}
 
+	/**
+	 * @return the buttonHideActive
+	 */
 	public boolean isButtonHideActive() {
 		return ButtonHideActive;
 	}
 
+	/**
+	 * @param buttonHideActive the buttonHideActive to set
+	 */
 	public void setButtonHideActive(boolean buttonHideActive) {
 		ButtonHideActive = buttonHideActive;
 	}
 
+	/**
+	 * @return the buttonHideActiveDel
+	 */
 	public boolean isButtonHideActiveDel() {
 		return buttonHideActiveDel;
 	}
 
+	/**
+	 * @param buttonHideActiveDel the buttonHideActiveDel to set
+	 */
 	public void setButtonHideActiveDel(boolean buttonHideActiveDel) {
 		this.buttonHideActiveDel = buttonHideActiveDel;
 	}
 
+	/**
+	 * @return the selectAll
+	 */
 	public boolean isSelectAll() {
 		return selectAll;
 	}
 
+	/**
+	 * @param selectAll the selectAll to set
+	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
 	}
 
+	/**
+	 * @return the selectedOrgsProfile
+	 */
 	public List<PmOrgProfile> getSelectedOrgsProfile() {
 		return selectedOrgsProfile;
 	}
 
+	/**
+	 * @param selectedOrgsProfile the selectedOrgsProfile to set
+	 */
 	public void setSelectedOrgsProfile(List<PmOrgProfile> selectedOrgsProfile) {
 		this.selectedOrgsProfile = selectedOrgsProfile;
 	}

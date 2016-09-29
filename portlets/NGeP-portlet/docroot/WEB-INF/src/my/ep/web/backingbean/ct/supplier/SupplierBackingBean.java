@@ -274,6 +274,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		    }
 	}
 	
+	/**
+	 * This method used to set bank info slected by selectmenu
+	 * @param object reqDTO
+	 * @return void
+	 * */
 	public void setChangeBankDetails(ContractReqDTO reqDTO) {
 		
 		   IChangeBankAccSO changeBankAccSO = null;
