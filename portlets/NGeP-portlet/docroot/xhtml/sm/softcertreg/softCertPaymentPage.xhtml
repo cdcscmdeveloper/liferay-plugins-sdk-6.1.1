@@ -53,25 +53,25 @@
 	        <h:outputText value="#{lbl['lbl.sm.soft.cert.payment.for']} #{personnel.name}"/>  
 	       </p:column>
 	       
-	       <p:column>
-	        <h:outputText value="#{softCertBackingBean.getPersonnelSoftCertPrice(personnel)}" />  
+	       <p:column style="text-align:right;">
+	        <h:outputText value="#{softCertBackingBean.getPersonnelSoftCertPrice(personnel)}"  style="padding: 4px 10px;"/>  
 	       </p:column>
 	       
 	       <p:columnGroup type="footer">
 	       		<p:row>
 	       			<p:column footerText=""></p:column>
 	                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.gst.total.exclude.gst']} :" />
-	                <p:column footerText="#{softCertBackingBean.managedBean.totalAmountBeforeGst}" style="text-align:left"/>
+	                <p:column footerText="#{softCertBackingBean.managedBean.totalAmountBeforeGst}" style="text-align:right"/>
 	            </p:row>
 	            <p:row>
 	            	<p:column footerText=""></p:column>
 	                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.add.gst']} :" />
-	                <p:column footerText="#{softCertBackingBean.managedBean.totalGstAmount}" style="text-align:left"/>
+	                <p:column footerText="#{softCertBackingBean.managedBean.totalGstAmount}" style="text-align:right"/>
 	            </p:row>
 	            <p:row>
 	            	<p:column footerText=""></p:column>
 	                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.payment.total.payable']} :" />
-	                <p:column footerText="#{softCertBackingBean.managedBean.totalPaymentAmount}" style="text-align:left"/>
+	                <p:column footerText="#{softCertBackingBean.managedBean.totalPaymentAmount}" style="text-align:right"/>
 	            </p:row>
 			</p:columnGroup>
 			
