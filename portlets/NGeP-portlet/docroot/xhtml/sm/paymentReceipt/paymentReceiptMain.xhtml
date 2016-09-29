@@ -13,37 +13,37 @@
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>		
 		<p:panel id="searchContent">
-			<table class="customTbl">
+			<table style="margin-left: 15%;">
 				<tr>
-					<td class="tdTitle">
+					<td>
 						<p:outputLabel value="#{lbl['lbl.sm.payment.receipt.date.from']}" />	
 					</td>
 					
-					<td class="tdContent">
+					<td>
 						<p:calendar id="dateFromCalId" navigator="true" value="#{paymentReceiptBB.managedBean.dateFrom}"
 							label="#{lbl['lbl.sm.payment.receipt.date.from']}" 
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 							maxdate="#{CommonConstants.CURRENT_DATE}" display="inline"
-							size="30" showOn="button" />
+							size="15" showOn="button" />
 					</td>
 					
-					<td class="tdTitle">
+					<td>
 						<p:outputLabel value="#{lbl['lbl.sm.payment.receipt.date.to']}" />	
 					</td>
 					
-					<td class="tdContent">
+					<td>
 						<p:calendar id="dateToCalId" navigator="true" value="#{paymentReceiptBB.managedBean.dateTo}"
 							label="#{lbl['lbl.sm.payment.receipt.date.to']}" 
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 							maxdate="#{CommonConstants.CURRENT_DATE}" display="inline"
-							size="30" showOn="button" />
+							size="15" showOn="button" />
 					</td>
 				</tr>
 				<tr>
-					<td class="tdTitle">
+					<td>
 						<p:outputLabel value="#{lbl['lbl.sm.payment.receipt.payment.type']}" />	
 					</td>
-					<td class="tdContent">
+					<td colspan="3">
 						<p:selectManyCheckbox id="pymtSelectionTypes" value="#{paymentReceiptBB.managedBean.selectedTypes}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.payment.receipt.payment.type.all']}" itemValue=""  />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.payment.receipt.payment.type.reg']}" itemValue="#{SupplierMgmtConst.billTypeRegFee}" 
@@ -81,7 +81,7 @@
 					<ac:labelDateTime value="#{payment.createdDate}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.payment.receipt.payment.desc']}">
+				<p:column headerText="#{lbl['lbl.sm.payment.receipt.payment.type']}">
 					<h:outputText value="#{lbl['lbl.sm.payment.receipt.payment.type.reg']}" 
 					rendered="#{payment.pyBill.billType eq SupplierMgmtConst.billTypeRegFee}" />
 					<h:outputText value="#{lbl['lbl.sm.payment.receipt.payment.type.proc']}" 
@@ -102,7 +102,10 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.payment.receipt.amount']}">
-					#{payment.paymentAmt}			
+					<h:outputText value="#{payment.paymentAmt}" style="float:right">
+						<f:convertNumber 
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.payment.receipt.ref.no']}">
