@@ -1818,7 +1818,7 @@ public class TaskReassignmentBackingBean extends
 				}
 			} else {
 				// not allow to search
-				disableSearchForSearchBean(searchBean);
+				isSearched = true;
 			}
 
 			break;
@@ -1839,11 +1839,9 @@ public class TaskReassignmentBackingBean extends
 						new ArrayList<Long>(Arrays.asList(userId,
 								getFacesScopes().getUserSessionBean()
 										.getUserId())),searchBean);
-				isSearched = true;
-			}else{
-				// not allow to search
-				disableSearchForSearchBean(searchBean);
+				
 			}
+			isSearched = true;
 			
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_NAIK_TARAF_PTJ:
@@ -1885,11 +1883,8 @@ public class TaskReassignmentBackingBean extends
 						new ArrayList<Long>(Arrays.asList(userId,
 						getFacesScopes().getUserSessionBean()
 						.getUserId())));
-				isSearched = true;
-			}else{
-				// not allow to search
-				disableSearchForSearchBean(searchBean);
 			}
+			isSearched = true;
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_DEL_ADDRESS:
 			//7 - Delivery Address
@@ -1912,7 +1907,7 @@ public class TaskReassignmentBackingBean extends
 				
 			}else{
 				// not allow to search
-				disableSearchForSearchBean(searchBean);
+				isSearched = true;
 			}
 			
 			break;
@@ -1930,15 +1925,13 @@ public class TaskReassignmentBackingBean extends
 						new ArrayList<Long>(Arrays.asList(userId,
 								getFacesScopes().getUserSessionBean()
 										.getUserId())),searchBean);
-				isSearched = true;
-			}else{
-				// not allow to search
-				disableSearchForSearchBean(searchBean);
+				
 			}
+			
+			isSearched = true;
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_SUPPLIER:
 			//9 GOVT_SELLER
-			
 			// same org profile id
 			searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
@@ -1963,7 +1956,7 @@ public class TaskReassignmentBackingBean extends
 			break;
 		default:
 			// not allow to search
-			disableSearchForSearchBean(searchBean);
+			isSearched = true;
 		}
 		
 		if(!isSearched){
@@ -2009,21 +2002,12 @@ public class TaskReassignmentBackingBean extends
 			
 			// Order by user name
 			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
-
+			
 			resultBean = PmCommonUtil.searchUsersResultBeanBySearchBean(searchBean);
 		}
 		
 		return resultBean;
 		
-	}
-	
-	private void disableSearchForSearchBean(ISearchBean<PmUser> searchBean){
-		// not allow to search
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean(
-				"pmUserOrgs.pmOrgProfile.orgProfileId",
-				SearchOperator.OPERATOR_EQUALS.value(),
-				0));
 	}
 	
 	/**
