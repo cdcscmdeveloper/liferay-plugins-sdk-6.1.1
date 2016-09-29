@@ -6707,7 +6707,6 @@ public class SmApplicationBackingBean extends
 					smAddress.setAddress1(addr.getSmAddress().getAddress1());
 					smAddress.setAddress2(addr.getSmAddress().getAddress2());
 					smAddress.setAddress3(addr.getSmAddress().getAddress3());
-					smAddress.setAddress4(addr.getSmAddress().getAddress4());
 					PmCountry country = new PmCountry();
 					country.setCountryId(addr.getSmAddress().getPmCountry()
 							.getCountryId());
@@ -8957,7 +8956,6 @@ public class SmApplicationBackingBean extends
 							assocAddr.setAddress1(accAddr.getAddress1());
 							assocAddr.setAddress2(accAddr.getAddress2());
 							assocAddr.setAddress3(accAddr.getAddress3());
-							assocAddr.setAddress4(accAddr.getAddress4());
 							assocAddr.setPostcode(accAddr.getPostcode());
 							if (accAddr.getPmCountry() != null) {
 								assocAddr.setCountryId(accAddr.getPmCountry()

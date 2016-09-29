@@ -284,7 +284,6 @@ public class MofRegistrationBackingBean extends
 		branchList.add(new CompanyBranchesBean(1, "Branch1", "Addr1"));
 		branchList.add(new CompanyBranchesBean(2, "Branch2", "Addr2"));
 		branchList.add(new CompanyBranchesBean(3, "Branch3", "Addr3"));
-		branchList.add(new CompanyBranchesBean(4, "Branch4", "Addr4"));
 
 		return branchList;
 	}

@@ -1782,11 +1782,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if (smAddress.getAddress3() != null && smAddress.getAddress3().length() > 0) {
 				address.append(smAddress.getAddress3());
 				address.append("<br />");
-			}
-			if (smAddress.getAddress4() != null && smAddress.getAddress4().length() > 0) {
-				address.append(smAddress.getAddress4());
-			}
-					
+			}					
 		}else{
 			address.append("");
 		}
