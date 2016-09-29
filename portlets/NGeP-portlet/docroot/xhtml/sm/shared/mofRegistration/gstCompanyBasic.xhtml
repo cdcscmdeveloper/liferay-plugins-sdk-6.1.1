@@ -186,8 +186,9 @@
 		
 		<p:dialog id="gstUploadDialog" widgetVar="gstUploadDialog" modal="true"
 			dynamic="true" resizable="false" width="700px" height="200"
-			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-			<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}" 
+			onShow="singleUploadListener(uploadWV);">
+			<p:fileUpload widgetVar="uploadWV" allowTypes="/(\.|\/)(pdf|doc|docx)$/"
 				sizeLimit="1000000"
 				invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
@@ -195,7 +196,8 @@
 				update="gstHqPanelId" oncomplete="gstUploadDialog.hide();" 
 				uploadLabel="#{lbl['lbl.btn.upload']}"  
 				label="#{lbl['lbl.btn.choose']}" 
-				cancelLabel="#{lbl['lbl.btn.cancel']}" />
+				cancelLabel="#{lbl['lbl.btn.cancel']}" 
+				multiple="false" showButtons="false"/>
 		</p:dialog>
 		
 		<p:confirmDialog id="confirmDeleteHqDialog" closable="true"
