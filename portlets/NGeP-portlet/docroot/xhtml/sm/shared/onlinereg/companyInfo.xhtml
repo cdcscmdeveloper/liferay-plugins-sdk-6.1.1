@@ -24,16 +24,11 @@
 			  });
 			  $("input[id$=compAdd3]").keydown(function(e){
 				 if(e.which==9 || e.keycode==9){
-					$("input[id$=compAdd4]").focus();
+					 $("input[id$=compPostCodeMy]").focus();
 					e.preventDefault();
 				} 
 			  });
-			  $("input[id$=compAdd4]").keydown(function(e){
-				 if(e.which==9 || e.keycode==9){
-					$("input[id$=compPostCodeMy]").focus();
-					e.preventDefault();
-				} 
-			  });
+
 			  $("input[id$=compPostCode]").keydown(function(e){
 				 if(e.which==9 || e.keycode==9){
 					$("input[id$=compCountryId_focus]").focus();
@@ -308,9 +303,7 @@
 
 			<tr>
 				<td></td>
-				<td class="tdContent" ><p:inputText size="40"
-						id="compAdd4" maxlength="35" disabled="#{registrationBackingBean.managedBean.viewMode}"
-						value="#{registrationBackingBean.managedBean.smBusinessAdd.address4}" /></td>
+				<td class="tdContent" ></td>
 
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
@@ -388,7 +381,6 @@
 				    	  var addr1 = document.getElementById('#{p:component(&quot;compAdd1&quot;)}').value + ',';
 				    	  var addr2 = document.getElementById('#{p:component(&quot;compAdd2&quot;)}').value + ',';
 				    	  var addr3 = document.getElementById('#{p:component(&quot;compAdd3&quot;)}').value + ',';
-				    	  var addr4 = document.getElementById('#{p:component(&quot;compAdd4&quot;)}').value + ',';
 				    	  var postcode = document.getElementById('#{p:component(&quot;compPostCodeMy&quot;)}').value + ' ';
 
 				    	  var cityName = document.getElementById('#{p:component(&quot;busCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;busCity&quot;)}_input').selectedIndex].text;
@@ -407,7 +399,7 @@
 				    	  
 				    	  //var address = addr1 + addr2 + addr3 + addr4 + postcode + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
 				    	  //var address = stateName + ',' + districtName + ',' + postcode + ' ' + cityName + addr4 + addr3 + addr2 + addr1;
-				    	  var address = countryName + ',' + stateName + ',' + districtName + ',' + cityName + addr4 + addr3 + addr2 + addr1;
+				    	  var address = countryName + ',' + stateName + ',' + districtName + ',' + cityName + addr3 + addr2 + addr1;
 				      	return address;
 				      }
 				      </SCRIPT>

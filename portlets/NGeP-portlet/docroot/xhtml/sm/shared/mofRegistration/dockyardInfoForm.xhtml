@@ -39,9 +39,9 @@
 					<br />
 					<script>
 					
-				      function getDocAddress2(addr1, addr2, addr3, addr4, cityName, districtName, stateName, countryName) {
+				      function getDocAddress2(addr1, addr2, addr3, cityName, districtName, stateName, countryName) {
 
-				    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+				    	  var address = addr1 + addr2 + addr3 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
 
 				      	return address;
 				      }
@@ -51,7 +51,7 @@
 					<ac:gmapInput id="gmapInput" 
 						latitude="#{doc.smAddress.mapLatitude}" 
 						longitude="#{doc.smAddress.mapLongitude}" 
-						address="getDocAddress2('#{doc.smAddress.address1}', '#{doc.smAddress.address2}', '#{doc.smAddress.address3}', '#{doc.smAddress.address4}', '#{doc.smAddress.pmCity.cityName}', '#{doc.smAddress.pmDistrict.districtName}', '#{doc.smAddress.pmState.stateName}', '#{doc.smAddress.pmCountry.countryName}')"
+						address="getDocAddress2('#{doc.smAddress.address1}', '#{doc.smAddress.address2}', '#{doc.smAddress.address3}','#{doc.smAddress.pmCity.cityName}', '#{doc.smAddress.pmDistrict.districtName}', '#{doc.smAddress.pmState.stateName}', '#{doc.smAddress.pmCountry.countryName}')"
 						showButton="true"
 						disabled="false" />
 						
