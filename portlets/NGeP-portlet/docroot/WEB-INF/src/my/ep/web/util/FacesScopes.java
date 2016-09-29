@@ -196,8 +196,11 @@ public class FacesScopes implements Serializable {
 						reqDTO.setLoginId(loginId);
 
 						UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
-
 						user = resDTO.getPmUser();
+						
+						// update user last login
+						reqDTO.setPmUser(resDTO.getPmUser());
+						userSO.updateUserLastLogin(reqDTO);
 					
 					} catch (Exception e) {
 						e.printStackTrace();
