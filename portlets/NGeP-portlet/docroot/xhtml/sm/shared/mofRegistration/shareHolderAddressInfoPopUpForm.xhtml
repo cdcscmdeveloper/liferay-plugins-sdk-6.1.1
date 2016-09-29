@@ -83,14 +83,7 @@
 									alertValue="#{backingBean.managedBean.latestPermAddr.smAddress.address3}"/>
 							</td>
 						</tr>
-						<tr>
-							<td></td>
-							<td><p:inputText maxlength="35"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address4}"
-									size="35">
-									<p:ajax process="@this" partialSubmit="true" update="@this" />
-								</p:inputText></td>
-						</tr>
+
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
@@ -592,23 +585,7 @@
 										alertValue="#{backingBean.managedBean.latestResdAddr.smAddress.address3}"/>
 								</td>
 							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputText maxlength="35"
-										readonly="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
-										disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
-										value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address4}"
-										size="35">
-										<p:ajax process="@this" partialSubmit="true" update="@this" />
-									</p:inputText>
-									<ac:smFieldChangeAlert 
-										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.latestPersonnel}"
-										oriValue="#{backingBean.managedBean.latestResdAddr.smAddress.address4}" 
-										currValue="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address4}" 
-										alertValue="#{backingBean.managedBean.latestResdAddr.smAddress.address4}"/>
-								</td>
-							</tr>
+
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
@@ -854,23 +831,7 @@
 										alertValue="#{backingBean.managedBean.latestOffAddr.smAddress.address3}"/>
 								</td>
 							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputText maxlength="35"
-										disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
-										readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
-										value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address4}"
-										size="35">
-										<p:ajax process="@this" partialSubmit="true" update="@this" />
-									</p:inputText>
-									<ac:smFieldChangeAlert 
-										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.latestPersonnel}"
-										oriValue="#{backingBean.managedBean.latestOffAddr.smAddress.address4}" 
-										currValue="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address4}" 
-										alertValue="#{backingBean.managedBean.latestOffAddr.smAddress.address4}"/>
-								</td>
-							</tr>
+
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>

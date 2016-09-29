@@ -242,19 +242,7 @@
 								alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address3}"/>
 					</td>
 				</tr>
-				<tr>
-					<td></td>
-					<td><p:inputText maxlength="35"
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address4}"
-							size="35" />
-						<ac:smFieldChangeAlert 
-								isShow="#{backingBean.managedBean.showFieldChanges 
-									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
-								oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address4}" 
-								currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.address4}" 
-								alertValue="#{backingBean.managedBean.latestAssocCompany.smAddress.address4}"/>
-					</td>
-				</tr>
+
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>

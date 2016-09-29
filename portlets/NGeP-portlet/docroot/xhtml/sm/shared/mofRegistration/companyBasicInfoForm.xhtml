@@ -148,16 +148,6 @@
 										alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}"/>
 								</td>
 							</tr>
-							<tr>
-								<td><p:inputText size="35" maxlength="35" id="smSupAddr4"
-										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" />
-									<ac:smFieldChangeAlert 
-										isShow="#{backingBean.managedBean.showFieldChanges}"
-										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" 
-										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" 
-										alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}"/>
-								</td>
-							</tr>
 						</table>
 					</td>
 					<td>
@@ -413,7 +403,6 @@
 					    	  var addr1 = document.getElementById('#{p:component(&quot;smSupAddr1&quot;)}').value + ',';
 					    	  var addr2 = document.getElementById('#{p:component(&quot;smSupAddr2&quot;)}').value + ',';
 					    	  var addr3 = document.getElementById('#{p:component(&quot;smSupAddr3&quot;)}').value + ',';
-					    	  var addr4 = document.getElementById('#{p:component(&quot;smSupAddr4&quot;)}').value + ',';
 					    	  var postcode = document.getElementById('#{p:component(&quot;smSupPostCodeMy&quot;)}').value + ' ';
 					    	  
 					    	  var cityName = document.getElementById('#{p:component(&quot;basicCompCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicCompCity&quot;)}_input').selectedIndex].text;
@@ -421,7 +410,7 @@
 					    	  var stateName = document.getElementById('#{p:component(&quot;basicComState&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicComState&quot;)}_input').selectedIndex].text;
 					    	  var countryName = document.getElementById('#{p:component(&quot;smSupCont&quot;)}_input').options[document.getElementById('#{p:component(&quot;smSupCont&quot;)}_input').selectedIndex].text;
 					    	  
-					    	  var address = addr1 + addr2 + addr3 + addr4 + postcode + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+					    	  var address = addr1 + addr2 + addr3 + postcode + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
 
 					      	return address;
 					      }

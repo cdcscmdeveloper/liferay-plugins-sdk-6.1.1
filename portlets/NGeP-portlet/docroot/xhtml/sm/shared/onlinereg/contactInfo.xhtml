@@ -21,16 +21,11 @@
 			  });
 			  $("input[id$=conAddress3]").keydown(function(e){
 				 if(e.which==9 || e.keycode==9){
-					$("input[id$=conAddress4]").focus();
+					 $("input[id$=cmbResState_focus]").focus();
 					e.preventDefault();
 				} 
 			  });
-			  $("input[id$=conAddress4]").keydown(function(e){
-				 if(e.which==9 || e.keycode==9){
-					$("input[id$=cmbResState_focus]").focus();
-					e.preventDefault();
-				} 
-			  });
+			  
 			  $("input[id$=cmbResState_focus]").keydown(function(e){
 				 if(e.which==9 || e.keycode==9){
 					$("input[id$=cmbResDistrict_focus]").focus();
@@ -159,10 +154,7 @@
 
 			<tr>
 				<td class="tdTitle"></td>
-				<td class="tdContent"><p:inputText size="40"
-						id="conAddress4" maxlength="35"
-						value="#{registrationBackingBean.managedBean.smResAdd.address4}"
-						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
+				<td class="tdContent"></td>
 
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
