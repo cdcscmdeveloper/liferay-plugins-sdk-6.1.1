@@ -1829,11 +1829,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				}
 				
-				getManagedBean().setBusinessCityLs(null);
-				getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
-				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
-				getManagedBean().getSmSupp().setLocalAuthorityId(null);
-				
+				if(getManagedBean().getSmBusinessAdd().isBrandNew()){
+					getManagedBean().setBusinessCityLs(null);
+					getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
+					getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+					getManagedBean().getSmSupp().setLocalAuthorityId(null);
+				}
 			}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG) ||
 					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)){
 				for(PmState state : stateLs){
@@ -1841,12 +1842,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						stateSelectLs.add(convertToStateSelectItem(state));
 					}
 				}
-				this.getManagedBean().setSabahSarawakType(false);
-				getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
-				getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
-				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
-				getManagedBean().setBusinessDistrictLs(null);
-				getManagedBean().setBusinessCityLs(null);
+				if(getManagedBean().getSmBusinessAdd().isBrandNew()){
+					getManagedBean().setSabahSarawakType(false);
+					getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
+					getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
+					getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+					getManagedBean().setBusinessDistrictLs(null);
+					getManagedBean().setBusinessCityLs(null);
+				}
 			}else{
 				this.getManagedBean().setSabahSarawakType(false);
 				//this.getManagedBean().setBusinessStateLs(stateLs);
