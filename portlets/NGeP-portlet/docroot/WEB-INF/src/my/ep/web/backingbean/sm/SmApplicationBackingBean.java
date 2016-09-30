@@ -9094,22 +9094,7 @@ public class SmApplicationBackingBean extends
 	 */
 	private SmApplSectionReview assignVerificationCount(
 			SmApplSectionReview sec, Boolean isSectionVerified) {
-		int maxReviewCount = getManagedBean().getMaxReviewCount();
-
-		// check for equiment verification needed or not to exclude from max
-		// verification count
-		if (getManagedBean().getSmAppl().getApplCategoryType().equals("S")) {
-			if (!getManagedBean().isShowTravelSoftwarePanel()
-					&& !getManagedBean().isShowMachineryEquipmentPanel()) {
-				maxReviewCount = maxReviewCount - 2;
-			} else {
-				if (!getManagedBean().isShowTravelSoftwarePanel()
-						|| !getManagedBean().isShowMachineryEquipmentPanel()) {
-					maxReviewCount = maxReviewCount - 1;
-				}
-			}
-		}
-		
+		int maxReviewCount = getMaxSecCountByShowPanel();
 		if (isSectionVerified) {
 			sec.setCheckCount(sec.getCheckCount() + 1);
 
@@ -9129,25 +9114,22 @@ public class SmApplicationBackingBean extends
 	private void reCheckVerifiedSection() {
 		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
 			SmApplicationUtil.checkAllowedToApprove(getManagedBean());
-			int maxReviewCount = getManagedBean().getMaxReviewCount();
+			int maxReviewCount = getMaxSecCountByShowPanel();
 
-			// check for equiment verification needed or not to exclude from max
-			// verification count
-			if (getManagedBean().getSmAppl().getApplCategoryType().equals("S")) {
-				if (!getManagedBean().isShowTravelSoftwarePanel()
-						&& !getManagedBean().isShowMachineryEquipmentPanel()) {
-					maxReviewCount = maxReviewCount - 2;
-				} else {
-					if (!getManagedBean().isShowTravelSoftwarePanel()
-							|| !getManagedBean()
-									.isShowMachineryEquipmentPanel()) {
-						maxReviewCount = maxReviewCount - 1;
-					}
-				}
-			}
-			
 			SmApplSectionReview sec = getManagedBean().isPoUser() ? getManagedBean()
 					.getPoSecReview() : getManagedBean().getApprvrSecReview();
+
+			// recount check count based on display section
+			if (!getManagedBean().isShowTravelSoftwarePanel()
+					&& sec.isSupplierSystemVerified()) {
+				sec.setSupplierSystemVerified(false);
+				sec.setCheckCount(sec.getCheckCount() - 1);
+			}
+			if (!getManagedBean().isShowMachineryEquipmentPanel()
+					&& sec.isMachineryVerified()) {
+				sec.setMachineryVerified(false);
+				sec.setCheckCount(sec.getCheckCount() - 1);
+			}
 			if (sec.getCheckCount() >= maxReviewCount
 					&& getManagedBean().isAllowedToApprove()) {
 				sec.setVerifiedAll(Boolean.TRUE);
@@ -9155,6 +9137,22 @@ public class SmApplicationBackingBean extends
 				sec.setVerifiedAll(Boolean.FALSE);
 			}
 		}
+	}
+
+	private int getMaxSecCountByShowPanel() {
+		int retVal = getManagedBean().getMaxReviewCount();
+		if (getManagedBean().getSmAppl().getApplCategoryType().equals("S")) {
+			if (!getManagedBean().isShowTravelSoftwarePanel()
+					&& !getManagedBean().isShowMachineryEquipmentPanel()) {
+				retVal = retVal - 2;
+			} else {
+				if (!getManagedBean().isShowTravelSoftwarePanel()
+						|| !getManagedBean().isShowMachineryEquipmentPanel()) {
+					retVal = retVal - 1;
+				}
+			}
+		}
+		return retVal;
 	}
 
 	/**
