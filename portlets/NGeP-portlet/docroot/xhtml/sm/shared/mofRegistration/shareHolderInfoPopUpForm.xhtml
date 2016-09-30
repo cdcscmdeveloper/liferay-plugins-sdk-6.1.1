@@ -700,11 +700,20 @@
 				update=":form:tt:equiJobFunctionInfo" partialSubmit="true"
 				process="@this" />
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-				action="#{backingBean.deleteSelectedShrHldrJobFunction()}"
-				update=":form:tt:shrJfdt" partialSubmit="true"
+				oncomplete="equiJobFunctionDeletePopUp.show()"
+				update=":form:tt:shrJfdt" partialSubmit="true" id="delJobFuncBtnId"
 				process="equiShrHldrJbFnc" />
 		</div>
 	</p:panel>
+	
+	<ac:confirmationPopup id="equiJobFunctionDeletePopUpId"
+		widget="equiJobFunctionDeletePopUp"
+		okAction="backingBean.deleteSelectedShrHldrJobFunction"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:shrJfdt, @([id$=Msg]),:#{p:component('delJobFuncBtnId')}"/>
+		
 	<p:dialog width="500px" height="200px"
 		header="#{lbl['lbl.sm.job.function.details']}"
 		id="equiJobFunctionInfo" widgetVar="equiJobFunctionInfo"
@@ -848,10 +857,19 @@
 					update="equiRelCompInfo" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="equiShrHldrRelComp"
-					action="#{backingBean.deleteSelectedShrHldrRelatedCompanies()}"
-					update="shrRelCom" />
+					oncomplete="relCompDeletePopUp.show()"
+					update="shrRelCom" id="delRelCompBtnId"/>
 			</div>
 		</p:panel>
+		
+		<ac:confirmationPopup id="relCompDeletePopUpId"
+		widget="relCompDeletePopUp"
+		okAction="backingBean.deleteSelectedShrHldrRelatedCompanies"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:shrRelCom, @([id$=Msg]),:#{p:component('delRelCompBtnId')}"/>
+		
 		<p:dialog width="500px" height="300px" closable="false"
 			header="#{lbl['lbl.sm.related.company.details']}"
 			id="equiRelCompInfo" widgetVar="equiRelCompInfo" resizable="false"
@@ -1033,10 +1051,19 @@
 					update="equiShrProfBeanInfo" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="equiShrPfBdyPan"
-					action="#{backingBean.deleteSelectedShrHldrProfBodies()}"
-					update="shrProfDt" />
+					oncomplete="shrProfBodyDeletePopUp.show()"
+					update="shrProfDt" id="delShrProfBodyBtnId"/>
 			</div>
 		</p:panel>
+		
+		<ac:confirmationPopup id="shrProfBodyPopUpId"
+		widget="shrProfBodyDeletePopUp"
+		okAction="backingBean.deleteSelectedShrHldrProfBodies"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:shrProfDt, @([id$=Msg]),:#{p:component('delShrProfBodyBtnId')}"/>
+		
 		<p:dialog width="500px" height="300px" closable="false"
 			header="#{lbl['lbl.sm.profBody.panHdr']}" id="equiShrProfBeanInfo"
 			widgetVar="equiShrProfBeanInfo" resizable="false" showEffect="fade"
@@ -1202,11 +1229,20 @@
 				update="equiAcadInfo" />
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 				partialSubmit="true" process="equiShrHldrAcadPan"
-				action="#{backingBean.deleteSelectedShrHldrAcademics()}"
-				update="shrAqdt" />
+				oncomplete="shrAcadDeletePopUp.show()"
+				update="shrAqdt" id="delShrShrAcadBtnId"/>
 		</div>
 
 	</p:panel>
+	
+	<ac:confirmationPopup id="shrAcadDeletePopUpId"
+		widget="shrAcadDeletePopUp"
+		okAction="backingBean.deleteSelectedShrHldrAcademics"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":form:tt:shrAqdt, @([id$=Msg]),:#{p:component('delShrShrAcadBtnId')}"/>
+		
 	<p:dialog width="450px" height="230px" closable="false"
 		header="#{lbl['lbl.sm.staff.academic.details']}" id="equiAcadInfo"
 		widgetVar="equiAcadInfo" resizable="false" showEffect="fade"
