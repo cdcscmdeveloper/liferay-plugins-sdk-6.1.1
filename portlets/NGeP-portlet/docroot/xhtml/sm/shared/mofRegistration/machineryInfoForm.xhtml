@@ -372,22 +372,21 @@
 				</tr>
 	
 			</table>
-			
+			<br />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					action="#{backingBean.addOrUpdateMachineToSmAppl}"
+					partialSubmit="true" process="equipmentDialog"
+					onclick="machineOutWidget.show();" oncomplete="machineOutWidget.hide();"
+					update=":form:tt:macDt, @([Id$=Msg]),:#{p:component('delMachBtnId')}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					partialSubmit="true" process="@this" 
+					action="#{backingBean.cancelMachineSaveorUpdate}" />
+			</div>
+			<p:blockUI block="machineOutPanelId" widgetVar="machineOutWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
 		</p:outputPanel>
-		<br />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				action="#{backingBean.addOrUpdateMachineToSmAppl}"
-				partialSubmit="true" process="equipmentDialog"
-				onclick="machineOutWidget.show();" oncomplete="machineOutWidget.hide();"
-				update=":form:tt:macDt, @([Id$=Msg]),:#{p:component('delMachBtnId')}" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				partialSubmit="true" process="@this" update="machineOutPanelId"
-				action="#{backingBean.cancelMachineSaveorUpdate}" />
-		</div>
-		<p:blockUI block="machineOutPanelId" widgetVar="machineOutWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-		</p:blockUI>
 	</p:dialog>
 	
 	<ac:confirmationPopup id="machDeletePopUpId"
