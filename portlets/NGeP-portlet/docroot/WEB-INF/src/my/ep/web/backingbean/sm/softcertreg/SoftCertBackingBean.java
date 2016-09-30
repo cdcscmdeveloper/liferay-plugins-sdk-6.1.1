@@ -914,6 +914,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					softcertUploadSuppDocVO
 							.setSuppDocList(new ArrayList<SmSoftcertDoc>());
 					reqDTO = new DocumentReqDTO();
+					reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 					reqDTO.setBasicAccount(basic);
 					reqDTO.setCompanyTypeCode(businessType);
 					reqDTO.setOwner(softcertUploadSuppDocVO.getPersonnel()
