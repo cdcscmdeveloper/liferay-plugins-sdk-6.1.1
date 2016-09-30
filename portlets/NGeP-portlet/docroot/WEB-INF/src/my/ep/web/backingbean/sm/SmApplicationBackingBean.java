@@ -4821,10 +4821,6 @@ public class SmApplicationBackingBean extends
 	public void assignSelMachinery(SmMachineDtl macBean) {
 		getManagedBean().setPopupAction("U");
 		getManagedBean().setRentPrevVal(macBean.getValue());
-		if (!StringUtils.isBlank(macBean.getMachineType())) {
-			macBean.setMachine(new PmMachine());
-			macBean.getMachine().setMachineId(-1L);
-		}
 		getManagedBean().setCategoryTypeItems(
 				SmApplicationUtil.getSelectedCategoryTypeItems(getManagedBean()
 						.getSmAppl()));
