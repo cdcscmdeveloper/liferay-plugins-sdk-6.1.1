@@ -294,7 +294,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 					.getCurrentInstance().getExternalContext().getResponse();
 			HttpServletResponse res = PortalUtil
 					.getHttpServletResponse(portletResponse);
-			writeReportDataToPDFOrExcel(resDTO.getPmReportDtls().getReportTitle(), DateUtils.getCurrentDate(), buf, res);
+			writeReportDataToPDFOrExcel(reportCode, resDTO.getPmReportDtls().getReportTitle(), DateUtils.getCurrentDate(), buf, res);
 		     
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -303,20 +303,32 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		}
 	}
 
-	private void writeReportDataToPDFOrExcel(String reportTitle,
+	private void writeReportDataToPDFOrExcel(String reportCode, String reportTitle,
 			Timestamp time, BufferedInputStream buf, HttpServletResponse res)
 			throws Exception{
 		
-		res.setHeader(ReportConst.CONTENT_DISPOSITION,
-				ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportTitle
-						+ ReportConst.UNDERSCORE
-						+ ReportConst.REPORT_DATE_TIME.format(new Date())
-						+ ReportConst.DOTPDFEIFON);//
+		if (reportCode.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL) || 
+			reportCode.equals(ReportConst.SM_REJECTED_SOFTCERT_RPT_VAL) ) {
+			
+			res.setHeader(ReportConst.CONTENT_DISPOSITION,
+					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportTitle
+							+ ReportConst.UNDERSCORE
+							+ ReportConst.REPORT_DATE_TIME.format(new Date())
+							+ ReportConst.DOTXLSEIFON);//
+			res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING,
+					ReportConst.BINARY);
+			res.setContentType(ReportConst.APPLICATIONEIFONXLS);
+		} else {
+			res.setHeader(ReportConst.CONTENT_DISPOSITION,
+					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportTitle
+							+ ReportConst.UNDERSCORE
+							+ ReportConst.REPORT_DATE_TIME.format(new Date())
+							+ ReportConst.DOTPDFEIFON);//
+			res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING,
+					ReportConst.BINARY);
+			res.setContentType(ReportConst.APPLICATIONEIFONPDF);
+		}
 		
-		res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING,
-				ReportConst.BINARY);
-		
-		res.setContentType(ReportConst.APPLICATIONEIFONPDF);
 		res.flushBuffer();
 		
 		OutputStream out = res.getOutputStream();
