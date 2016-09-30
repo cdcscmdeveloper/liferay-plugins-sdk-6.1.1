@@ -2016,16 +2016,21 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				.getSmApplRejectReasons()) {
 			if (rej.getPmReason() != null
 					&& rej.getPmReason().getPmReasonDescs() != null) {
-				for (PmReasonDesc desc : rej.getPmReason().getPmReasonDescs()) {
-					if (desc.getPmLanguage() != null
-							&& desc.getPmLanguage().getLanguageCode()
-									.equalsIgnoreCase(langCode)) {
-						sb.append(i + ") " + desc.getReasonDesc()).append(
-								"<br />");
-						i++;
+				try {
+					for (PmReasonDesc desc : rej.getPmReason()
+							.getPmReasonDescs()) {
+						if (desc.getPmLanguage() != null
+								&& desc.getPmLanguage().getLanguageCode()
+										.equalsIgnoreCase(langCode)) {
+							sb.append(i + ") " + desc.getReasonDesc()).append(
+									"<br />");
+							i++;
+						}
 					}
+				} catch (ValidationException ex) {
+					log.debug(">>>>ERROR INITIALIZE REJECT REASON:"
+							+ ex.getMessage() + "<<<<<<<");
 				}
-
 			}
 		}
 		return sb.toString();
