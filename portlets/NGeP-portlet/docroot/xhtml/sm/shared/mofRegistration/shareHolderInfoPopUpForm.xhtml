@@ -170,7 +170,8 @@
 							value="/css/images/design/tooltips.png" />
 						<p:tooltip id="toolinfo1" for="tooltip1">
 							<p:outputLabel escape="false"
-								value="#{lbl['tt.sm.registration.identification.no']}" />
+								value="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I' ? 
+								lbl['tt.sm.registration.identification.no'] : lbl['tt.sm.registration.identification.no']}}" />
 						</p:tooltip>&#160;
 						<p:message id="equiPerIcNumMsg" for="equiPerIcNum"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}"
