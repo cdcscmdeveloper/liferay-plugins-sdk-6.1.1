@@ -661,13 +661,14 @@ public class PurchaseInDefaultBackingBean extends
 		this.getManagedBean().setAction(outcome);
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			if (isDigiSigningRequired(RoleCode.BPK_PCA.value())) {
+			//BPK_PCA
+			if (isDigiSigningRequired(RoleCode.BPK_PQ_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-
-			} else if (isDigiSigningRequired(RoleCode.BPK_CCA.value())) {
+			//BPK_CCA
+			} else if (isDigiSigningRequired(RoleCode.BPK_CQ_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-
-			} else if (isDigiSigningRequired(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+			//MIN_CONTRACT_ADMIN
+			} else if (isDigiSigningRequired(RoleCode.CT_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
 		} else {
