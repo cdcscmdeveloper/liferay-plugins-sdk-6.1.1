@@ -42,17 +42,14 @@ public class SchedulerManagerBackingBean extends
 			.getLogger(SchedulerManagerBackingBean.class);
 
 	public void preRenderSchedulerManager() {
-		log.info(">>>>>>>>>>>>INSIDE PRERENDER SCHEDULER MANAGER<<<<<<<<<<<<<<<<<<");
 		renewSesionObject();
 		SmCommonUtil.setMDCUserId();
 		initAllJobs();
 		initAllJobClasses();
 		SmCommonUtil.redirectToPage("ePSchedulerManager.xhtml", "", null);
-		log.info(">>>>>>>>>>>>LEAVING PRERENDER SCHEDULER MANAGER<<<<<<<<<<<<<<<<<<");
 	}
 
 	public void initAllJobs() {
-		log.info(">>>>>>>>>>>>START INIT ALL JOBS<<<<<<<<<<<<<<<<<<");
 		JobKey tmpJobKey = null;
 		// loop jobs by group
 		try {
@@ -61,6 +58,8 @@ public class SchedulerManagerBackingBean extends
 			Trigger trigger = null;
 			EpJobVO jobVO = null;
 			getManagedBean().setEpSchedulerJobList(new ArrayList<EpJobVO>());
+			getManagedBean().setEpSchedulerProblemJobList(
+					new ArrayList<EpJobVO>());
 			getManagedBean().setJobGroups(
 					EpSchedulerHelper.getScheduler().getJobGroupNames());
 
@@ -108,6 +107,9 @@ public class SchedulerManagerBackingBean extends
 						constructCronExpression(jobVO);
 						getManagedBean().getEpSchedulerJobList().add(jobVO);
 
+						// construct problem jobs
+						addProblemJobs(jobVO);
+
 					}
 
 				}
@@ -132,7 +134,6 @@ public class SchedulerManagerBackingBean extends
 						+ "<<<<<<<<<");
 			}
 		}
-		log.info(">>>>>>>>>>>>END INIT ALL JOBS<<<<<<<<<<<<<<<<<<");
 	}
 
 	public JobKey getJobKey(String jobName, String searchGroupName) {
@@ -387,7 +388,6 @@ public class SchedulerManagerBackingBean extends
 			jobClass = (Class<? extends Job>) Class.forName(getManagedBean()
 					.getSelectedJobVO().getJobClassName());
 		} catch (ClassNotFoundException e) {
-			log.error(">>>>>>>>>>>ERROR CONVERT JOB CLASS:" + e);
 			throw new EpException(MessageConst.ERRQRTZ_00005);
 		}
 		return jobClass;
@@ -460,6 +460,22 @@ public class SchedulerManagerBackingBean extends
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
+			}
+		}
+	}
+
+	private void addProblemJobs(EpJobVO job) {
+		if (getManagedBean().getEpSchedulerProblemJobList() != null) {
+			if (job.getState() != null
+					&& (job.getState().equals("BLOCKED") || job.getState()
+							.equals("ERROR"))) {
+				getManagedBean().getEpSchedulerProblemJobList().add(job);
+			} else if (job.getTrigger() != null
+					&& job.getTrigger().getPreviousFireTime() != null
+					&& job.getTrigger().getNextFireTime() != null
+					&& job.getTrigger().getNextFireTime()
+							.before(job.getTrigger().getPreviousFireTime())) {
+				getManagedBean().getEpSchedulerProblemJobList().add(job);
 			}
 		}
 	}

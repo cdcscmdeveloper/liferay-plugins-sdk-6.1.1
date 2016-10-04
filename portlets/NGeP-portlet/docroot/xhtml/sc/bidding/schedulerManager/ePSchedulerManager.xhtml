@@ -181,6 +181,72 @@
 			</div>
 			<br />
 		</ui:remove>
+		
+		<p:outputPanel rendered="#{not empty schedulerManagerBB.managedBean.epSchedulerProblemJobList}">
+			<p:panel header="#{lbl['lbl.quartz.alert.jobs']}" toggleable="true" id="jobAlertListPanelId">
+				
+				<p:dataTable var="probJob" id="probJob" widgetVar="jobBeanWidVar"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{schedulerManagerBB.managedBean.epSchedulerProblemJobList}"
+					rows="10" rowKey="#{probJob}" rowIndexVar="index">
+	
+					<ac:paginator for="probJobDt" />
+					
+					<p:column headerText="#{lbl['lbl.quartz.job.group']}">
+						<h:outputText value="#{probJob.jobKey.group}" style="white-space: normal;"/>
+					</p:column>
+	
+					<p:column headerText="#{lbl['lbl.quartz.job.name']}">
+						<h:outputText value="#{probJob.jobKey.name}" style="white-space: normal;"/>
+					</p:column>
+	
+					<p:column headerText="#{lbl['lbl.quartz.job.description']}">
+						<h:outputText value="#{probJob.description}" style="white-space: normal;"/>
+					</p:column>
+	
+					<p:column headerText="#{lbl['lbl.quartz.status']}">
+						<h:outputText value="#{probJob.status}" />
+					</p:column>
+	
+					<p:column headerText="#{lbl['lbl.quartz.health.state']}">
+						<h:outputText value="#{lbl['lbl.quartz.health.state.none']}" rendered="#{empty probJob.state}"/>
+						<p:graphicImage value="/css/images/design/ico-submit.png" rendered="#{probJob.state ne 'ERROR' and probJob.state ne 'BLOCKED'}"
+							title="#{lbl['lbl.quartz.state.normal.tooltips']}" />
+						<p:graphicImage value="/css/images/design/icon_alert.png" rendered="#{probJob.state eq 'BLOCKED'}"
+							title="#{lbl['lbl.quartz.state.blocked.tooltips']}" />
+						<p:graphicImage value="/css/images/design/icon_error.png" rendered="#{probJob.state eq 'ERROR'}"
+							title="#{lbl['lbl.quartz.state.error.tooltips']}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.quartz.jobclass']}" style="width : 10% !important;">
+						<h:outputText value="#{probJob.jobClassSimpleName}" 
+							style="white-space: normal;"/>
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.quartz.last.fired.time']}" style="width : 10% !important;">
+						<h:outputText value="#{probJob.trigger.previousFireTime}" rendered="#{not empty probJob.trigger}"
+							style="white-space: normal;">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+						</h:outputText>
+						<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty probJob.trigger}" />
+					</p:column>
+	
+					<p:column headerText="#{lbl['lbl.quartz.next.fired.time']}" style="width : 10% !important;">
+						<h:outputText value="#{probJob.trigger.nextFireTime}" style="white-space: normal;"
+							rendered="#{not empty probJob.trigger and not empty probJob.trigger.nextFireTime}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+						</h:outputText>
+						<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty probJob.trigger}" />
+					</p:column>
+	
+				</p:dataTable>
+				
+			</p:panel>
+			
+			<br/>
+		</p:outputPanel>
 					
 		<p:panel id="biddingListPanel" header="#{lbl['lbl.sc.bidding.list']}"
 			toggleable="true">
