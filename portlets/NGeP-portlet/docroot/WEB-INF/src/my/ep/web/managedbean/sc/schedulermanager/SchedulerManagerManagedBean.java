@@ -26,6 +26,7 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	private EpJobVO selectedJobVO;
 	private List<String> jobClassList;
 	private List<ScBidSchedule> currentDayBids;
+	private List<EpJobVO> epSchedulerProblemJobList;
 	private boolean othersJobGroup;
 
 	/**
@@ -109,6 +110,14 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 
 	public void setJobClassList(List<String> jobClassList) {
 		this.jobClassList = jobClassList;
+	}
+
+	public List<EpJobVO> getEpSchedulerProblemJobList() {
+		return epSchedulerProblemJobList;
+	}
+
+	public void setEpSchedulerProblemJobList(List<EpJobVO> epSchedulerProblemJobList) {
+		this.epSchedulerProblemJobList = epSchedulerProblemJobList;
 	}
 
 }
