@@ -24,6 +24,11 @@
 		<ui:param name="confirmationheader" value="#{cc.attrs.title}" />
 		<ui:param name="confirmationContent" value="#{cc.attrs.content}" />
 		<!-- <ui:param name="confirmationMethod" value="#{cc.attrs.postSignAction}" /> -->
+		
+		<p:blockUI block=":form" widgetVar="confirmPopupBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+				
 		<p:dialog id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widget}"
 			header="#{confirmationheader}" resizable="false"
 			width="#{cc.attrs.width}" height="#{cc.attrs.height}"
@@ -40,17 +45,19 @@
 				<c:choose>
 				    <c:when test="#{empty cc.attrs.resetInput}">
 				       <p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
-							partialSubmit="true"
+							partialSubmit="true" onclick="#{cc.attrs.widget}.hide();"
+							onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-							oncomplete="#{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
+							oncomplete="confirmPopupBlockWidget.hide();" update="#{cc.attrs.update}" />
 				    </c:when>
 				    <c:otherwise>
 				        <p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
-							partialSubmit="true"
+							partialSubmit="true" onclick="#{cc.attrs.widget}.hide();"
+							onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-							oncomplete="#{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" >
-								<p:resetInput target="#{cc.attrs.resetInput}" />
-							</p:commandButton>
+							oncomplete="confirmPopupBlockWidget.hide();" update="#{cc.attrs.update}" >
+							<p:resetInput target="#{cc.attrs.resetInput}" />
+						</p:commandButton>
 				    </c:otherwise>
 				</c:choose>
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
