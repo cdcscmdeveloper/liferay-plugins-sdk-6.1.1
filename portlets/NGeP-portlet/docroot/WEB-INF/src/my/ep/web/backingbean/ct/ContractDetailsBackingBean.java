@@ -418,7 +418,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					if (ctBB.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 				    		ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 						 ctBB.getManagedBean().setDirectPurchase(true);
-						 ctBB.getManagedBean().setFlgPaymentTracking(false);
+						 //ctBB.getManagedBean().setFlgPaymentTracking(false);
 					} else {
 							ctBB.getManagedBean().setDirectPurchase(false);
 					}
