@@ -42,37 +42,31 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ViewScoped
 public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashboardManagedBean>{
 
-	  /**
-	     * The function constructor used for initializing the variable.
+	/**
+	  * The function constructor used for initializing the variable.
 	 */
-	  public ContractDashboardBackingBean(){
-		}
-		
-	  @PostConstruct
-	  public void init(){
+	public ContractDashboardBackingBean(){
+	}
+	
+	@PostConstruct
+	public void init(){
 		defaultMinistryPtjSearchValue();
 		getManagedBean().setLessThan30Days(calculateTotalRecord(1));
 		getManagedBean().setLessThan120Days(calculateTotalRecord(2));
- 	}
-	
-	  /**
-	   * This method is used to forward 
-	   * page on contract maintenance after user click
-	   * */
+	}
+
+	 /**
+	 * This method is used to forward 
+	 * page on contract maintenance after user click
+	* */
 	public void goToMaintenancePage() throws IOException {
 		FacesScopes facesScope = new FacesScopes();
-		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
-				.getRequestScope(WebKeys.THEME_DISPLAY);
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 		String commonUrl;
 		try {
-			commonUrl = themeDisplay.getURLCurrent().substring(
-					0,
-					themeDisplay.getURLCurrent().indexOf(
-							themeDisplay.getLayout().getGroup()
-							.getFriendlyURL())
-							+ themeDisplay.getLayout().getGroup()
-							.getFriendlyURL().length());
-			System.out.println("commonUrl" + commonUrl);
+			commonUrl = themeDisplay.getURLCurrent().substring(0,
+				themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup()
+						.getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 			externalContext.redirect(commonUrl + "/" +ContractConst.NAV_TO_CONTRACT_MAINT);
@@ -82,37 +76,36 @@ public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashbo
 		} catch (SystemException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}	
 	}
-	
+
 	/**
 	 * This method used to add date in current date
 	 * @param Date date, int days
 	 * @return Date date
 	 * */
-	public static Date addDays(Date date, int days)
-		{
-		    Calendar cal = Calendar.getInstance();
-		    cal.setTime(date);
-		    cal.add(Calendar.DATE, days); 
-		    return cal.getTime();
+	public static Date addDays(Date date, int days){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, days); 
+		return cal.getTime();
 	}
-		
+	
 	 /**
-   	 * The method used to set the ministry 
-   	 * profile id and PTJ profile id
-   	 */
-    private void defaultMinistryPtjSearchValue() {
-    	FacesScopes facesScopes = new FacesScopes();
-    	if (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-    			|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
-    		this.getManagedBean().setSearchMinistryProfile(null);
-    		this.getManagedBean().setSearchPtjGroupProfile(null);
-    		this.getManagedBean().setSearchPtjProfile(null);
-			
+	 * The method used to set the ministry 
+	 * profile id and PTJ profile id
+	 */
+	private void defaultMinistryPtjSearchValue() {
+		FacesScopes facesScopes = new FacesScopes();
+		if (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+			|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+			|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+			|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+			|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			this.getManagedBean().setSearchMinistryProfile(null);
+			this.getManagedBean().setSearchPtjGroupProfile(null);
+			this.getManagedBean().setSearchPtjProfile(null);
+		
 		} else {
 			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -128,7 +121,7 @@ public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashbo
 				this.getManagedBean().setSearchPtjGroupProfile(null);
 				this.getManagedBean().setSearchPtjProfile(null);
 			} else if (facesScopes.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-					|| facesScopes.hasRoleUser(RoleCode.BPK_CCA.value())) {
+				|| facesScopes.hasRoleUser(RoleCode.BPK_CCA.value())) {
 				this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 				this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
 				if (this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == -1) {
@@ -137,37 +130,36 @@ public class ContractDashboardBackingBean extends BaseBackingBean<ContractDashbo
 				this.getManagedBean().setSearchPtjProfile(orgProfile);
 			}
 		}
-    }
-	
-    /**
-     * This method used to calculate total 
-     * record into database table between defined date
-     * @param int index
-     * @return int record list
-     * */
+	}
+
+	/**
+	 * This method used to calculate total 
+	 * record into database table between defined date
+	 * @param int index
+	 * @return int record list
+	 * */
 	public int calculateTotalRecord(int index){
 
 		IContractSO contractSO = null;
 		try {
-					
-					contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-					ContractReqDTO reqDTO = new ContractReqDTO();
-					reqDTO.setSearchCriteria(index);
-					if (getManagedBean().getSearchPtjProfile() != null) {
-						reqDTO.setUserOrgProfileID(getManagedBean().getSearchPtjProfile().getOrgProfileId());
-					} else if (getManagedBean().getSearchPtjGroupProfile() != null) {
-						reqDTO.setUserOrgProfileID(getManagedBean().getSearchPtjGroupProfile().getOrgProfileId());
-					} else if (getManagedBean().getSearchMinistryProfile() != null) {
-						reqDTO.setUserOrgProfileID(getManagedBean().getSearchMinistryProfile().getOrgProfileId());
-					}
-					
-					ContractResDTO resDTO = contractSO.searchDashBoardContract(reqDTO);	
-					if (resDTO.isSuccessful()) {
-							return resDTO.getRecordCount();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setSearchCriteria(index);
+			if (getManagedBean().getSearchPtjProfile() != null) {
+				reqDTO.setUserOrgProfileID(getManagedBean().getSearchPtjProfile().getOrgProfileId());
+			} else if (getManagedBean().getSearchPtjGroupProfile() != null) {
+				reqDTO.setUserOrgProfileID(getManagedBean().getSearchPtjGroupProfile().getOrgProfileId());
+			} else if (getManagedBean().getSearchMinistryProfile() != null) {
+				reqDTO.setUserOrgProfileID(getManagedBean().getSearchMinistryProfile().getOrgProfileId());
+			}
+				
+			ContractResDTO resDTO = contractSO.searchDashBoardContract(reqDTO);	
+			if (resDTO.isSuccessful()) {
+				return resDTO.getRecordCount();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return 0;
 	}
 }

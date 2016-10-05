@@ -55,15 +55,15 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 	 * Logger instance.
 	 */
 	public static Logger log = EpLogger.getLogger(ContractBaseBackingBean.class);
-	
+
 	/**
-     * This method used to retrieve login user information.
+	 * This method used to retrieve login user information.
 	 */
 	public FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-	
+
 	/**
 	 * The method used to retrieve available approver(s).
 	 *
@@ -142,7 +142,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 		};
 		Collections.sort(ctAgencyList, comparator);
 	}
-	
+
 	/**
 	 * Sort item ceiling quantity list.
 	 *
@@ -176,13 +176,13 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 		};
 		Collections.sort(ctItemCeilingQty, comparator);
 	}	
-	
+
 	/**
 	 * The method used to verify the login user is supplier.
 	 * 
 	 * @return true, if login user is supplier
 	 *         false, if login user is not supplier
-     */
+	 */
 	public boolean isSupplierRole() {
 		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
@@ -192,7 +192,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 				||getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
 				||getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()));
 	}
-	
+
 	/**
 	 * Check is it login user is Government Seller
 	 * 
@@ -201,7 +201,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 	public boolean hasGovtSellerRole() {
 		return getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value());
 	}
-	
+
 	/**
 	 * The method used for generating a list of fulfillment type
 	 * for schedule as selection.
@@ -229,17 +229,17 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 		}
 	    return items;
 	}
-	
-    /**
-     * Retrieve cancel confirmation message by passing in document type
-     * 
-     * @return Cancel Confirmation message
-     */
-    public String getCancelConfirmationContent(String docType) {
-   	 	return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-    }
-    
-    /**
+
+	/**
+	 * Retrieve cancel confirmation message by passing in document type
+	 * 
+	 * @return Cancel Confirmation message
+	 */
+	public String getCancelConfirmationContent(String docType) {
+	 	return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	}
+
+	/**
 	 * Method used to retrieve actor by document Id, document type and role code.
 	 * @Param docId, docType, roleCode
 	 * @return CtActor
@@ -263,19 +263,19 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 		}
 		return ctActorResDTO.getCtActor();
 	}
-	
+
 	/**
 	 * The method used to navigate to contract details screen
 	 * for view purpose.
 	 * 
 	 * @return the navigate URL 
 	 */
-	public void goToLoaView(Long loaId) {
-		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-		loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
-		loaDetailBackingBean.viewLOA(loaId);
-	}
+		public void goToLoaView(Long loaId) {
+			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+			loaDetailBackingBean.viewLOA(loaId);
+		}
 }
 
