@@ -7446,7 +7446,7 @@ public class SmApplicationBackingBean extends
 												new FacesScopes()
 														.getUserLocale())));
 		renewSesionObject();
-		return CommonUIConst.ACKNOWLEDGE_PAGE;
+		return SmApplicationUtil.getApplicationErrorPage();
 	}
 
 	public String submitSmApplToBpm(PmDigiSign pmDigiSign, String applType) {
@@ -8678,7 +8678,7 @@ public class SmApplicationBackingBean extends
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									successMsg));
 					renewSesionObject();
-					retMsg = CommonUIConst.ACKNOWLEDGE_PAGE;
+					retMsg = SmApplicationUtil.getApplicationErrorPage();
 
 				} else {
 					FacesContext
