@@ -16,7 +16,9 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" escape="false" />  
+		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}">
+			<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" escape="false" /> 
+		</p:panel> 
 	</ui:define>
 	
 </ui:composition>
