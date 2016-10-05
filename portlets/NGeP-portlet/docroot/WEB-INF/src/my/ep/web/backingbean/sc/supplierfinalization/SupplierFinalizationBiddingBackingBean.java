@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -31,6 +33,7 @@ import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.comparator.sc.MemberRoleComparator;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -39,6 +42,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.BidStatusConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -53,6 +58,7 @@ import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingReqDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
@@ -61,6 +67,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -71,6 +78,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
@@ -83,6 +92,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -118,18 +128,20 @@ public class SupplierFinalizationBiddingBackingBean extends
 	private int currentTab;
 	private String textBeforeSign;
 
-	public static final int ONLINE_BIDDING_FINALIZATION_MEETING_ACTIVE_INDEX = 0;
-	public static final int ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY = 1;
-	public static final int ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT = 2;
+	private static final int ONLINE_BIDDING_FINALIZATION_MEETING_ACTIVE_INDEX = 0;
+	private static final int ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING = 1;
+	private static final int ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY = 2;
+	private static final int ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT = 3;
 	
-	public static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY = 0;
-	public static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT = 1;
+	private static final int ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING = 0;
+	private static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY = 1;
+	private static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT = 2;
 	
 	// Bidding finalization meeting tab constants
-	public static final int BIDDING_ACTIVE_INDEX_MEETING = 0;
-	public static final int BIDDING_ACTIVE_INDEX_COMMITTEE = 1;
-	public static final int BIDDING_ACTIVE_INDEX_JOIN_IN = 2;
-
+	private static final int BIDDING_ACTIVE_INDEX_MEETING = 0;
+	private static final int BIDDING_ACTIVE_INDEX_COMMITTEE = 1;
+	private static final int BIDDING_ACTIVE_INDEX_JOIN_IN = 2;
+	private static final String SPACE = " ";
 	/**
 	 * Default constructor
 	 */
@@ -168,7 +180,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 							QTConstants.FC_ONLINE_BIDDING_ENDORSEMENT_PAGE);
 			
 			if (getManagedBean().isOnlineBiddingEscalation()) {		
-				navigateToBiddingSummaryTab();
+				navigateToBriefingPaperTab();
 			} else {
 				navigateToBiddingFinalizationMeetingTab();
 			}				
@@ -186,6 +198,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				getManagedBean().getCommitteeType())) {
 			retrieveCommitteeAndMeetingDetails(qtId);
 		}
+		
 		retrieveSupplierFinalization(qtId);	
 		if (ParameterConst.ONLINE_BIDDING_ESCALATION.equals(
 				getManagedBean().getScQtFinalization().getOnlineBiddingEndorse())) {
@@ -2389,4 +2402,258 @@ public class SupplierFinalizationBiddingBackingBean extends
 		public void enableAutoUpdate() {
 			getManagedBean().setAutoUpdate(Boolean.TRUE);		
 		}
+		
+	public void navigateToBriefingPaperTab() {
+
+		this.getManagedBean()
+				.setOnlineBiddingActiveIndex(
+						this.getManagedBean().isOnlineBiddingEscalation() ? ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING
+								: ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING);
+		retrieveBriefingPaper();
+	}
+	
+	/**
+	 * @return the onlineBiddingFinalizationMeetingActiveIndex
+	 */
+	public int getOnlineBiddinBriefingPaperActiveIndex() {
+		
+		if (getManagedBean().isOnlineBiddingEscalation()) {
+			return ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING;
+		} else {
+			return ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING;
+		}
+	}
+	
+	private void retrieveBriefingPaper() {
+		
+		IQTSuppFinalizationSO qtSuppFinalizationSO;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+
+			Long qtId = getManagedBean().getScQt().getQtId();
+
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			ScQtFinalization scQtFinalization = this.getManagedBean()
+					.getScQtFinalization();
+			if (scQtFinalization == null) {
+				scQtFinalization = new ScQtFinalization();
+			}
+			reqDTO.setQtId(qtId);
+			reqDTO.setScQtFinalization(scQtFinalization);
+
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
+					.retrieveFinalizationReports(reqDTO);
+			ScQtFinalization _scQtFinalization = resDTO.getScQtFinalization();
+			
+			List<ScQtFinalizationReport> finalizationReports 
+								= _scQtFinalization.getScQtFinalizationReports();
+			
+			int endorsementReportCount = 0;
+			ScQtFinalizationReport coverReport = null;
+			List<ScQtFinalizationReport> endorsementReports = 
+								new ArrayList<ScQtFinalizationReport>();
+			for (ScQtFinalizationReport report : finalizationReports) {
+				String docCategory = report.getDocCategory();
+				String docDefinitionKey = null;
+				if (report.getPmDocument() != null) {
+					docDefinitionKey = report.getPmDocument()
+											 .getDocDefinitionKey();
+				}
+				if (SourcingConstants.DOC_DEF_KEY_COVER
+						.equals(docDefinitionKey)) {
+					coverReport = report;
+				} else if (ParameterConst.DOCUMENT_CATEGORY_ENDORSEMENT_REPORT
+								.equals(docCategory)) {
+					endorsementReports.add(report);
+					++endorsementReportCount;
+				}
+			}
+			if (coverReport != null && 
+					getManagedBean().isBpkUser()) {
+				finalizationReports.remove(coverReport);
+			}
+			scQtFinalization.setScQtFinalizationReports(
+									finalizationReports);
+			
+			if (!getManagedBean().isBpkUser()) {
+				int totalFinalizationRounds = findFinalizationCount();
+				if (endorsementReportCount < totalFinalizationRounds) {
+					String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
+				 			+ SPACE + "(" + totalFinalizationRounds + ")";
+					addFinalizationReport(reportTitle);
+					// Sort the reports as per the last updated date (in ascending order)
+					Collections.sort(finalizationReports, 
+										new Comparator<ScQtFinalizationReport>() {
+											public int compare(ScQtFinalizationReport report1, 
+													ScQtFinalizationReport report2) {
+												if (report1.getChangedDate() != null && 
+														report2.getChangedDate() != null) {
+													
+													// Ascending order
+													if (report1.getChangedDate().getTime() == 
+															report2.getChangedDate().getTime()) {
+														return 0;
+													} else if (report1.getChangedDate().getTime() >
+															report2.getChangedDate().getTime()) {
+														return 1;
+													} else {
+														return -1;
+													}
+												}
+												return -1;
+											}
+										});
+				} else {
+					finalizationReports.removeAll(endorsementReports);
+					
+					// Sort the reports as per the last updated date (in ascending order)
+					Collections.sort(endorsementReports, 
+										new Comparator<ScQtFinalizationReport>() {
+											public int compare(ScQtFinalizationReport report1, 
+													ScQtFinalizationReport report2) {
+												if (report1.getChangedDate() != null && 
+														report2.getChangedDate() != null) {
+													
+													// Ascending order
+													if (report1.getChangedDate().getTime() == 
+															report2.getChangedDate().getTime()) {
+														return 0;
+													} else if (report1.getChangedDate().getTime() > 
+															report2.getChangedDate().getTime()) {
+														return 1;
+													} else {
+														return -1;
+													}
+												}
+												return -1;
+											}
+										});
+					
+					if (endorsementReports.size() > 0) {
+						endorsementReports.get(endorsementReports.size() - 1)
+										  .setSelected(true);
+					}
+					
+					finalizationReports.addAll(endorsementReports);
+				}
+			}
+			
+			if (finalizationReports != null) {
+				getManagedBean().setDocumentList(finalizationReports);
+			}
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+	}
+	
+	private int findFinalizationCount() {
+		IScWorkFlowStatusSO scWorkFlowStatusSO = null;
+		
+		try {
+			scWorkFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO tenderReqDTO = new ScWorkFlowStatusReqDTO();
+			tenderReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());	
+			List<Long> statusIds = new ArrayList<Long>();
+			statusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+//			statusIds.add(QTStatusConst.QT_RE_FINALIZATION);
+//			statusIds.add(QTStatusConst.QT_RE_EVALUATION);
+			tenderReqDTO.setStatusIds(statusIds);
+			
+			List<ScWorkFlowStatus> statusList = scWorkFlowStatusSO
+							.retrieveWorkFlowStatus(tenderReqDTO)
+							.getWorkFlowStatusList();
+			if (statusList != null) {
+				return statusList.size();
+			} 
+		} finally {
+			scWorkFlowStatusSO = null;
+		}	
+		
+		return 0;
+	}
+	
+	/**
+	 * Add ScQtFinalizationReport
+	 */
+	private void addFinalizationReport(String reportTitle) {
+		debugLogger("addScQtFinalizationReport");
+
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		
+		List<ScQtFinalizationReport> scQtFinalizationReports 
+						= scQtFinalization.getScQtFinalizationReports();	
+		
+		ScQtFinalizationReport report = new ScQtFinalizationReport();
+		report.setTitle(reportTitle);
+		report.setScQtFinalization(scQtFinalization);
+//		report.setScQtFinalizationReportAttachment(
+//					new ScQtFinalizationReportAttachment());
+		report.setSelected(true);
+		
+		IParameterSO parameterSO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterByTypeAndCode(reqDTO);
+			report.setDefinationType(resDTO.getPmParameter());
+			report.setDocCategory(
+					ParameterConst.DOCUMENT_CATEGORY_ENDORSEMENT_REPORT); // DR
+		} finally {
+			parameterSO = null;
+		}
+
+		scQtFinalizationReports.add(report);
+	}
+	
+	/**
+	 * To download a report under Briefing Paper/Kertas Taklimat tab
+	 * 
+	 * @param scQtFinalizationReport
+	 *            selected report which would be downloaded
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report
+	 */
+	public void downloadReport(ScQtFinalizationReport scQtFinalizationReport)
+			throws Exception {
+		debugLogger("downloadReport");
+
+		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
+				.getScQtFinalizationReportAttachment();
+		downloadFile(reportAttachment);
+	}
+	
+	/**
+	 * To download all reports under Briefing Paper/Kertas Taklimat tab
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	public void downloadAllReports() throws Exception {
+		debugLogger("downloadAllReports");
+
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
+				.getScQtFinalization().getScQtFinalizationReports();
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
+
+		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
+			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
+					.get(i).getScQtFinalizationReportAttachment();
+			scAttachments.add(attachment);
+		}
+		downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+
+	}
+	
 }
+

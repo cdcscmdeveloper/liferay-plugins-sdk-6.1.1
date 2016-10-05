@@ -68,6 +68,9 @@
 			<p:menuitem value="#{lbl['lbl.sc.preparation']}"
 				action="#{suppFinalBiddingBackingBean.navigateToBiddingFinalizationMeetingTab}"
 				update="@form" rendered="#{isOnlineBiddingEndorseMeeting}" />
+			<p:menuitem value="#{lbl['lbl.sc.briefing.paper']}"
+				action="#{suppFinalBiddingBackingBean.navigateToBriefingPaperTab}"
+				update="@form"/>
 			<p:menuitem value="#{lbl['lbl.sc.bidding.summary']}"
 				action="#{suppFinalBiddingBackingBean.navigateToBiddingSummaryTab}"
 				update="@form" />
@@ -88,6 +91,13 @@
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/biddingFinalizationMeeting.xhtml" />
 			</c:if>
+			<c:if
+				test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
+							suppFinalBiddingBackingBean.getOnlineBiddinBriefingPaperActiveIndex()}">
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/briefingPaperReport.xhtml" />
+			</c:if>
+			
 			<c:if
 				test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
 							suppFinalBiddingBackingBean.getOnlineBiddingActiveIndexSummary()}">
