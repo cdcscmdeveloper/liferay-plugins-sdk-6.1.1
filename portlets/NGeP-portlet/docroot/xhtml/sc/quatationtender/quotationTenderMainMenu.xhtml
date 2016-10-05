@@ -13,10 +13,9 @@
 	<c:otherwise>
 	<ui:param name="statusId" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId}" />
 	<ui:param name="isQTStatusScheduleDocAndAfter" value="#{qTDetailBB.isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
-	<ui:param name="isQTStatusPendingQtSubmission" value="#{statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isQTStatusBtwScheduleDocAndPendingPublication" value="#{qTDetailBB.isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)}" />
 	<ui:param name="isMaintancePendingChklistStatus" value="#{qTDetailBB.isMaintancePendingChklistStatus()}" />
-	<ui:param name="isQTStatusSCcommitteeApproval" value="#{statusId eq QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL}" />
+	<ui:param name="isQTStatusSCApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)}" />
 	
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -38,7 +37,7 @@
 					<p:menuitem value="#{lbl['lbl.sc.activities']}"
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
-						rendered="#{isQTStatusPendingQtSubmission or isQTStatusSCcommitteeApproval}" />
+						rendered="#{isQTStatusSCApprovalAndBefore}" />
 						
 					<p:menuitem value="#{lbl['lbl.sc.qt.briefing.sv']}"
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
@@ -118,7 +117,7 @@
 							</c:if>
 						</c:if>
 					</c:if>
-					<c:if test="#{isQTStatusPendingQtSubmission or isQTStatusSCcommitteeApproval}">
+					<c:if test="#{isQTStatusSCApprovalAndBefore}">
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 					</c:if>
