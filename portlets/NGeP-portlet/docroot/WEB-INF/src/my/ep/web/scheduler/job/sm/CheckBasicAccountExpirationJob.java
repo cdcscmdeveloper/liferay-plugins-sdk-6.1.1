@@ -8,8 +8,11 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -32,11 +35,21 @@ public class CheckBasicAccountExpirationJob implements Job {
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		
-		updateLiferayCommentsForAllSupplierUsers();
+		/*updateLiferayCommentsForAllSupplierUsers();
 		
 		sendExpirationReminder();
 		
-		terminateExpiredBasicSupplier();
+		terminateExpiredBasicSupplier();*/
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveExpiredBasicAccounts(reqDTO);
+		List<SmSupplier> supplierList = resDTO.getSmSuppliers();
+		
+		PersonnelAuthorizationReqDTO authReqDTO = new PersonnelAuthorizationReqDTO();
+		for(SmSupplier supplier : supplierList) {
+			authReqDTO = new PersonnelAuthorizationReqDTO();
+			authReqDTO.setSmSupplier(supplier);
+			SmServiceLookup.getPersonnelAuthorizationSO().terminateBasicAccount(authReqDTO);
+		}
 	}
 	
 	/**
