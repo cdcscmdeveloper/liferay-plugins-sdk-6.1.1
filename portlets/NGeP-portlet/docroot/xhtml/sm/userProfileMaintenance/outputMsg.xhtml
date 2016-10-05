@@ -7,8 +7,16 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_MOFApplication_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					"#{lbl['lbl.sm.review.application']}");
+		</script>
+	</ui:define>
+	
 	<ui:define name="contentSection">
-	<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" escape="false" />  
+		<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" escape="false" />  
 	</ui:define>
 	
 </ui:composition>
