@@ -24,6 +24,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
@@ -144,6 +145,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	
 	/** The auto update. */
 	private boolean autoUpdate = Boolean.TRUE;
+	private List<ScQtFinalizationReport> documentList;
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -1228,5 +1230,19 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
-	
+
+	/**
+	 * @return the documentList
+	 */
+	public List<ScQtFinalizationReport> getDocumentList() {
+		return documentList;
+	}
+
+	/**
+	 * @param documentList the documentList to set
+	 */
+	public void setDocumentList(List<ScQtFinalizationReport> documentList) {
+		this.documentList = documentList;
+	}
+
 }
