@@ -3797,7 +3797,7 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveBriefingSitevisitTabDtl();
-			} else if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(currentStatus)){
+			} else if(super.isQTStatusLessThanOrEquals(currentStatus, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)){
 				// save scQt info onclick of Activites tab
 				detailSO.validateateQTDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
@@ -4000,8 +4000,7 @@ public class QTDetailBackingBean extends
 
 			case 4:
 				Long statusId = getManagedBean().getQt().getQtStatus().getStatusId();
-				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId) ||
-						QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(statusId)) {
+				if (super.isQTStatusLessThanOrEquals(statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)) {
 					retrieveActivitiesTabDtl();
 				} else if(isMaintancePendingChklistStatus){
 					retrieveDeductionPaymentTabDtl();
