@@ -13,7 +13,7 @@
 				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.ta.org.type']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></th>
-				<td width="55%" style="white-space: nowrap;"><p:selectOneMenu
+				<td width="60%" style="white-space: nowrap;"><p:selectOneMenu
 						disabled="#{not isSysOrgType}"
 						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId}"
 						styleClass="ppDropDownWidthM" id="somOrgType"
@@ -24,17 +24,17 @@
 							listener="#{taskReassignmentBackingBean.changeOrgType()}"
 							update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" />
 					</p:selectOneMenu></td>
-				<td width="30%"></td>
+				<td width="25%"></td>
 			</tr>
 			<tr>
 				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.ta.org.name']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" />
 						</th>
-				<td width="55%" style="white-space: nowrap;"><p:outputPanel
+				<td width="60%" style="white-space: nowrap;"><p:outputPanel
 						id="opPtjOrgCode"
 						rendered="#{ParameterConst.orgTypePtj eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">
-						<p:inputText size="60" id="itSelectedPtj"
+						<p:inputText size="80" id="itSelectedPtj"
 							value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.pmOrgValidity.orgName}"
 							readonly="true"
 							disabled="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
@@ -51,7 +51,7 @@
 					</p:outputPanel> <p:outputPanel id="opSysOrgCode"
 						rendered="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null or 
 					ParameterConst.orgTypeSys eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">
-						<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="73"
+						<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="80"
 							disabled="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
 							or !taskReassignmentBackingBean.managedBean.orgProfileRequired}"
 							update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" readonly="true"
@@ -61,14 +61,16 @@
 							conditionField="#{taskReassignmentBackingBean.constructConditionFields()}"
 							postUpdateListener="taskReassignmentBackingBean.onChangeOrg" />
 					</p:outputPanel></td>
-				<td width="30%"></td>
+				<td width="25%"></td>
 			</tr>
 			<tr>
-				<th width="10%"><p:outputLabel
+				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.ta.username']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></th>
-				<td width="55%"><ac:lov id="lovUser" lovId="PM_USER_ID"
-						size="73"
+				<td width="60%">
+						<p:outputPanel id="opUserLov">
+						<ac:lov id="lovUser" lovId="PM_USER_ID"
+						size="80"
 						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgName !='')}"
@@ -77,16 +79,17 @@
 						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.loginId} &#160; #{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userName}"
 						saveObject="taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user"
 						conditionField="#{taskReassignmentBackingBean.constructUserConditionFields()}"
-						postUpdateListener="taskReassignmentBackingBean.onChangeUser" /></td>
+						postUpdateListener="taskReassignmentBackingBean.onChangeUser" />
+						</p:outputPanel></td>
 
-				<td width="30%"></td>
+				<td width="25%"></td>
 			</tr>
 			<tr>
-				<th width="10%">
+				<th style ="width:15%;vertical-align:top;">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.role']}"/>
 				</th>
-				<td width="55%">
-					<div style="overflow-y: scroll; height:100px; width:400px;border: 1px solid #DDD;margin-bottom: 5px; ">
+				<td width="60%">
+					<div style="overflow-y: scroll; height:100px; width:470px;border: 1px solid #DDD;margin-bottom: 5px; ">
 						<p:selectManyCheckbox id="rolecheckboxes" 
 						    value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.selectedRoles}" 
 						    layout="pageDirection" 
@@ -98,16 +101,17 @@
        				</div>
 				</td>
 				
-				<td width="30%">
+				<td width="25%">
 					
 				</td>
 			</tr>
 			<tr>
-				<th width="10%">
+				<th width="15%">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.process.doctype']}"/>
 				</th>
-				<td width="55%">
-					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="73"
+				<td width="60%">
+					<p:outputPanel id="opDocTypeLov">
+					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="80"
 						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userId!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userName !='')
@@ -119,17 +123,18 @@
 						saveObject="taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType"
 						conditionField="#{taskReassignmentBackingBean.constuctConditionFields()}"
 						postUpdateListener="taskReassignmentBackingBean.onChangeDocType"/>
+						</p:outputPanel>
 				</td>
 				
-				<td width="30%">
+				<td width="25%">
 					
 				</td>
 			</tr>
 				<tr>
-				<th width="10%">
+				<th width="15%">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}"/>
 				</th>
-				<td width="55%">
+				<td width="60%">
 					<p:inputText id="docNo"  styleClass="ppDisplayTextL"
 							label="#{lbl['lbl.pm.ta.doc.no']}" maxlength="20"
 							value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo}"
@@ -140,7 +145,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.pm.ta.docno.tooltips']}" />
 				</td>
 				
-				<td width="30%">
+				<td width="25%">
 					
 				</td>
 			</tr>
