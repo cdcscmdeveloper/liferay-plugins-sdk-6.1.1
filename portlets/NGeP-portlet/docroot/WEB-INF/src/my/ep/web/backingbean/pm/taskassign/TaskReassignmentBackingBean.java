@@ -86,6 +86,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.StatusHelper;
 
+import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -1716,6 +1717,14 @@ public class TaskReassignmentBackingBean extends
 						}
 					}else{
 						resultBean = generateUserResultBean(status, searchBean, task,reassignType);
+					}
+					
+					if(resultBean != null && resultBean.getResultList() != null){
+						String capitalizeUserName;
+						for(PmUser user : resultBean.getResultList()){
+							capitalizeUserName = WordUtils.capitalizeFully(user.getUserName());
+							user.setUserName(capitalizeUserName);
+						}
 					}
 					return resultBean;
 				}
