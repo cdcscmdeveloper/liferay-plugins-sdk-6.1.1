@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.sc.report.section']}" toggleable="true">
+		
+		<p:dataTable id="reportTbl" 
+			widgetVar="reportWidget" var="report"
+			value="#{suppFinalBiddingBackingBean.managedBean.documentList}" 
+			rows="10" styleClass="documentslist"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			rowKey="#{report}" rowIndexVar="rowIndex">
+			
+			<ac:paginator for="reportTbl" />
+
+			<p:column headerText="#{lbl['lbl.sc.content']}" style="width:70%;">
+				<h:outputText value="#{report.title}" />
+			</p:column>			
+			
+			<p:column headerText="#{lbl['lbl.sc.type']}" style="width:15%; white-space:normal;">
+				<h:outputText value="#{suppFinalBiddingBackingBean.getParameterDesc(report.definationType)}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.action']}"
+					  style="width:15%; white-space:normal; text-align: center;">
+				<p:commandButton id="download" icon="ui-icon-download" 
+						style="background-color:transparent !important; border:0px none;"
+						ajax="false" immediate="true" action="#{suppFinalBiddingBackingBean.downloadReport(report)}" />
+				
+			</p:column>
+		</p:dataTable>
+		
+		<div class="ppRightBtn BtnSpacing">
+			<p:commandButton value="#{lbl['lbl.btn.download.all']}"
+				action="#{suppFinalBiddingBackingBean.downloadAllReports}" 
+				ajax="false" immediate="true" rendered="#{!readOnlyTask}" />
+		</div>
+	</p:panel>
+	
+</ui:composition>
