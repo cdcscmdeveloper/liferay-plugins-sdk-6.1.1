@@ -2424,7 +2424,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 	
-	private void retrieveBriefingPaper() {
+	public void retrieveBriefingPaper() {
 		
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
 		try {
