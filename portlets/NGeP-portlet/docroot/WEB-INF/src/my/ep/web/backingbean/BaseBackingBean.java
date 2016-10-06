@@ -1684,8 +1684,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		reqDTO.setCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
 		
 		PmCountry country = countrySO.retrieveCountryByCode(reqDTO).getPmCountry();
-		
-		log.info("country id>>>>>" + country.getCountryId());
 
 		return country;
 	}
