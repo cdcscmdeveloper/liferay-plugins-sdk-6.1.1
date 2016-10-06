@@ -2049,7 +2049,7 @@ public class TaskReassignmentBackingBean extends
 							.getLoginId());
 			
 			}
-			if(ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType){
+			if(assigneeUsers != null && assigneeUsers.size() > 1 && ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType){
 				claimedBy = task.getAcquiredBy();
 			}
 		}
