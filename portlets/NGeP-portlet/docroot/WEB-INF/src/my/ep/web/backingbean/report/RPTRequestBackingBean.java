@@ -6,7 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -26,9 +28,11 @@ import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.rpt.RPTRequest;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -53,6 +57,12 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 
 	public RPTRequestBackingBean() {
 		this.getManagedBean().setDeleteButtonHide(true);
+		this.getLatestStatusCodeForRequests();
+	}
+	
+	@PostConstruct
+	public void init(){
+		this.getLatestStatusCodeForRequests();
 	}
 
 	public void retrieveRptRequestList() {
@@ -201,6 +211,17 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 					reqDTO.setSearchBean(searchBean);
 					RPTRequestResDTO resDTO = reportSO.searchRPTRequestList(reqDTO);
 					
+					ISearchResultBean<RPTRequest> searchResultBean= resDTO.getSearchResultBean();
+					List<RPTRequest> rptRequestList = searchResultBean.getResultList();
+					
+					for(int i = 0; i<rptRequestList.size(); i++){
+						
+						RPTRequest rptRequest = rptRequestList.get(i);
+						
+						RPTRequestBackingBean rptRequestBackingBean = new RPTRequestBackingBean();
+						rptRequestBackingBean.getLatestStatusCode(rptRequest);
+					}
+					
 					if (resDTO.isSuccessful()) {
 						return resDTO.getSearchResultBean();
 					}
@@ -262,6 +283,11 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 				.getServiceObject("rpt", IRPTRequestSO.class);
 		
 		reqSO.updateStatusCode(rptRequest);
+		
+		rptRequestDataModel.reloadData();
+	}
+	
+	public void getLatestStatusCodeForRequests(){
 		
 		rptRequestDataModel.reloadData();
 	}
@@ -343,5 +369,60 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 		buf.close();
 		out.close();
+	}
+		
+	public String getTrimmedStatusCode(String reportStatusStr){
+		
+		int reportStatus = Integer.parseInt(reportStatusStr);
+		
+		if(reportStatus == 1 || reportStatus == 2 || reportStatus == 3
+		   || reportStatus == 9 || reportStatus == 10){
+			return "Prepare";
+		} else if (reportStatus == 4){
+			return "Success";
+		} else {
+			return "Fail";
+		}
+	}
+	
+	public String getReportTitle(String reportCode){
+		
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IPMReportSO.class);
+		
+		PMReportReqDTO reqDTO = new PMReportReqDTO();
+		reqDTO.setReportCode(reportCode);
+		
+		PMReportResDTO resDTO = reportSO.retriveReportByrptId(reqDTO);
+		
+		PMReport pmReport = resDTO.getPmReportDtls();
+		return pmReport.getReportTitle();
+		
+	}
+	
+	public boolean isSuccess(String reportStatus){
+		
+		if(reportStatus != null && reportStatus.equals("4")){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isInProgress(String reportStatus){
+		
+		
+		if(reportStatus != null){
+			if(reportStatus.equals("1") ||
+			   reportStatus.equals("2") ||
+			   reportStatus.equals("3") ||
+			   reportStatus.equals("9") ||
+			   reportStatus.equals("10")){
+					return true;
+			}
+		}
+		
+		return false;
 	}
 }

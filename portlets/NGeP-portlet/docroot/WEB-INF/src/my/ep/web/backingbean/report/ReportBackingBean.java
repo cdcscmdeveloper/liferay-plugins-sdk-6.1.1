@@ -18695,8 +18695,6 @@ public class ReportBackingBean extends
 			footerStr = " destype=cache desformat=pdf ";
 		}
 
-		// Jimmy add (temporarily workaround for report).
-		// Jimmy add (temporarily workaround for report).
 				String reportStr = gnrtdURL.toString();
 
 				FacesScopes facesScope = new FacesScopes();
@@ -18721,21 +18719,31 @@ public class ReportBackingBean extends
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
-				String reportPopup = //this.getServerUrl() + "docroot/xhtml/reports/reportpopup.xhtml";
-						commonUrl + "/" + "report-popup";
 				
 				if(testing){
-				
 					
 					//Jimmy add (temporarily workaround for report).
 					String contentStr = paramConstrString.toString();
 					
 					contentStr = contentStr.replace("&", " ");
 					
-					String headerStr = " server=RptSvr_NGEPDevRPS01_asinst_FT userid=ngep_devft/ng3pd3vft@devapp ";
+					String serverName = EpPropertiesUtils.getInstance().getProperty("rpt.SERVER_NAME");
+					String userName = EpPropertiesUtils.getInstance().getProperty("rpt.USER_NAME");
+					String password = EpPropertiesUtils.getInstance().getProperty("rpt.PASSWORD");
+					String uid = EpPropertiesUtils.getInstance().getProperty("rpt.UID");
 					
-					reportStr =  headerStr + contentStr + footerStr;
+					StringBuffer headerStr = new StringBuffer();
+					
+					headerStr.append("server=");
+					headerStr.append(serverName);
+					headerStr.append(" userid=");
+					headerStr.append(userName);
+					headerStr.append("/");
+					headerStr.append(password);
+					headerStr.append("@");
+					headerStr.append(uid);
+					
+					reportStr =  headerStr.append(contentStr).append(footerStr).toString();
 
 					IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -20250,9 +20258,9 @@ public class ReportBackingBean extends
 	if(this.getManagedBean().getSelectedOrgProfile()!=null){
 		this.setPmOrgName(this.getManagedBean().getSelectedOrgProfile().getPmOrgValidity().getOrgName());
 	}
-	/*this.getManagedBean().getUserProfileSearchBean()
-		.setSelectedOrgProfileId(orgProfile.getOrgProfileId());*/
-}
+		/*this.getManagedBean().getUserProfileSearchBean()
+			.setSelectedOrgProfileId(orgProfile.getOrgProfileId());*/
+	}
    
    private String getRoleCodes(){
 		String roleCode = null;
@@ -20315,20 +20323,5 @@ public class ReportBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "reportcontenttestingmain");
-	}
-	
-	/**
-	 * The method used to retrieve the base URL.
-	 * 
-	 * @return url  the base URL
-	 */
-	private String getServerUrl() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/";
-
-		return url;
 	}
 }
