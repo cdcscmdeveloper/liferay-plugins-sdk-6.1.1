@@ -950,6 +950,10 @@ public class ReportConst {
 	public static final String PARAM_UOM_ID = "PUOMID";
 	public static final String PARAM_EP_NO = "PEPNO";
 	public static final String PARAM_SUPP_ITEM_ID = "PSUPPITEMID";
+	public static final String PARAM_PANEL_CONTRACT_ITEM_ID = "PCONPANEL";
+	public static final String PARAM_PANEL_OR_CONTRACT = "PTYPE";
+	public static final String PARAM_PANEL_TYPE = "P";
+	public static final String PARAM_CONTRACT_TYPE = "C";
 	public static final String NO_REPORT_ID = "This Report, is not available...";
 	public static final String SLASH_REPRT_VIEW_SERVLET = "/ReportViewServlet";
 	public static final String GENERATED_URL = "generatedUrl";
