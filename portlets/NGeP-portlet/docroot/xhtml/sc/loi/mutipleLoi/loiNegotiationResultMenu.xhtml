@@ -82,19 +82,24 @@
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					value="1" />
 			</p:menuitem>
-
-			<p:menuitem value="#{lbl['lbl.sc.recommendation']}" process="@form"
+			<p:menuitem value="#{lbl['lbl.sc.briefing.paper']}" process="@form"
 				update="@form">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					value="2" />
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.sc.recommendation']}" process="@form"
+				update="@form">
+				<f:setPropertyActionListener
+					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+					value="3" />
 			</p:menuitem>
 
 			<p:menuitem value="#{lbl['lbl.sc.report']}" process="@form"
 				update="@form">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-					value="3" />
+					value="4" />
 			</p:menuitem>
 
 		</p:tabMenu>
@@ -113,10 +118,15 @@
 			<c:if
 				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}">
 				<ui:include
-					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationRecomendation.xhtml" />
+					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/briefingPaperReport.xhtml" />
 			</c:if>
 			<c:if
 				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}">
+				<ui:include
+					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationRecomendation.xhtml" />
+			</c:if>
+			<c:if
+				test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '4'}">
 				<ui:include
 					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationReport.xhtml" />
 			</c:if>

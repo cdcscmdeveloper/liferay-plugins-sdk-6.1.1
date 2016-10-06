@@ -118,6 +118,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBiddingBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
@@ -616,6 +617,9 @@ public class LOIDetailBackingBean extends
 
 				// status
 				getCurrentStatus(getManagedBean().getCurrentStatusId());
+				
+				// Breifing paper
+				retrieveBriefingPaper();
 			}
 
 		} finally {
@@ -5319,5 +5323,20 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		return Boolean.FALSE;
+	}
+	
+	private void retrieveBriefingPaper() {
+		
+		SupplierFinalizationBiddingBackingBean biddingBackingBean = new SupplierFinalizationBiddingBackingBean();
+		biddingBackingBean.getManagedBean().setScQtFinalization(
+				this.getManagedBean().getScQtFinalization());
+		biddingBackingBean.getManagedBean().setScQt(
+				this.getManagedBean().getScQt());
+		biddingBackingBean.getManagedBean()
+				.setBpkUser(
+						StringUtils.isNotBlank(this.getManagedBean()
+								.getCommitteeType()) ? true : false);
+		
+		biddingBackingBean.retrieveBriefingPaper();
 	}
 }
