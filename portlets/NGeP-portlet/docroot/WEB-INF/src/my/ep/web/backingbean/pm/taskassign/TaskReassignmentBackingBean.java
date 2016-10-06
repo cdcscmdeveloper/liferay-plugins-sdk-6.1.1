@@ -195,14 +195,28 @@ public class TaskReassignmentBackingBean extends
 				this.getManagedBean().getTaskAssignmentSearchBean()
 						.setOrgProfile(pmOrgProfile);
 				this.getManagedBean().setOrgProfileRequired(false);
+			}else{
+				this.getManagedBean().setOrgProfileRequired(true);
 			}
+			
 			PmParameter ptjParam = getParameterByTypeAndCode(
 					ParameterTypeConst.ORGANISATION_TYPES,
 					ParameterConst.ORG_TYPE_PTJ);
 			this.getManagedBean().getTaskAssignmentSearchBean()
 					.setOrgType(ptjParam);
 
-		} else {
+		} else if(ParameterConst.ORG_TYPE_SUPPORT.equals(pmOrgProfile.getOrgTypeCode()
+				.getParameterCode())){
+			this.getManagedBean().getTaskAssignmentSearchBean()
+			.setOrgProfile(pmOrgProfile);
+			this.getManagedBean().setOrgProfileRequired(false);
+			PmParameter supportParam = getParameterByTypeAndCode(
+					ParameterTypeConst.ORGANISATION_TYPES,
+					ParameterConst.ORG_TYPE_SUPPORT);
+			this.getManagedBean().getTaskAssignmentSearchBean()
+					.setOrgType(supportParam);
+			
+		}else {
 			this.getManagedBean().setOrgProfileRequired(true);
 		}
 	}
