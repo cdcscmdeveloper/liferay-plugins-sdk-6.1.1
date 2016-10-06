@@ -1104,8 +1104,8 @@ public class PurchaseInDefaultBackingBean extends
 				purchaseInDefault.getRemarks(), ScPIDRemark.class));
 
 		initializeApproverGroup();
-		populatePidReason(purchaseInDefaultResDTO.getCtPidReasonList(), 
-				purchaseInDefaultResDTO.getCircularPidReasonList());
+		/*populatePidReason(purchaseInDefaultResDTO.getCtPidReasonList(), 
+				purchaseInDefaultResDTO.getCircularPidReasonList());*/
 		justificationTypeEvent(purchaseInDefault.getReasonType(), purchaseInDefault.getReasonDesc());
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
@@ -1166,8 +1166,8 @@ public class PurchaseInDefaultBackingBean extends
 
 				getManagedBean().setPurchaseInDefault(purchaseInDefault);
 				initializeApproverGroup();
-				populatePidReason(purchaseInDefaultResDTO.getCtPidReasonList(), 
-						purchaseInDefaultResDTO.getCircularPidReasonList());
+				/*populatePidReason(purchaseInDefaultResDTO.getCtPidReasonList(), 
+						purchaseInDefaultResDTO.getCircularPidReasonList());*/
 				justificationTypeEvent(purchaseInDefault.getReasonType(), purchaseInDefault.getReasonDesc());
 
 				getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
