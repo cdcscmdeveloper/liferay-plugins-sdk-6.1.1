@@ -1376,6 +1376,38 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean) {
 
+		SmPersonnelAddress perm = new SmPersonnelAddress();
+		perm.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM);
+		perm.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		perm.getSmAddress().setPmCountry(new PmCountry());
+		perm.setSmPersonnel(shareHolderBean);
+		perm.setSameAsPerm(false);
+		getManagedBean().setShareHolderPermAddr(perm);
+
+		SmPersonnelAddress mail = new SmPersonnelAddress();
+		mail.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL);
+		mail.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		mail.getSmAddress().setPmCountry(new PmCountry());
+		mail.setSmPersonnel(shareHolderBean);
+		mail.setSameAsPerm(false);
+		getManagedBean().setShareHolderMailAddr(mail);
+
+		SmPersonnelAddress off = new SmPersonnelAddress();
+		off.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE);
+		off.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		off.getSmAddress().setPmCountry(new PmCountry());
+		off.setSmPersonnel(shareHolderBean);
+		off.setSameAsPerm(false);
+		getManagedBean().setShareHolderResdAddr(off);
+
+		SmPersonnelAddress res = new SmPersonnelAddress();
+		res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
+		res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		res.getSmAddress().setPmCountry(new PmCountry());
+		res.setSmPersonnel(shareHolderBean);
+		res.setSameAsPerm(false);
+		getManagedBean().setShareHolderOffAddr(res);
+
 		if (shareHolderBean.getSmPersonnelAddresses() != null
 				&& shareHolderBean.getSmPersonnelAddresses().size() > 0) {
 			for (SmPersonnelAddress personnelAddress : shareHolderBean
