@@ -1300,7 +1300,22 @@ public class PurchaseInDefaultBackingBean extends
 			}
 			debugLogger("viewMarketResearch - item code" + itemCode);
 			paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);
-
+			
+			if(scPurchaseInDefault.getReasonType() != null && 
+					scPurchaseInDefault.getReasonType().getReasonCode().equals(ParameterConst.PID_UN)) {
+				if(scPurchaseInDefault.getPanelItem() != null) {
+					paramMap.put(ReportConst.PARAM_PANEL_CONTRACT_ITEM_ID, 
+							scPurchaseInDefault.getPanelItem().getPanelItemId() + "");
+					paramMap.put(ReportConst.PARAM_PANEL_OR_CONTRACT, 
+							ReportConst.PARAM_PANEL_TYPE);
+				} else if(scPurchaseInDefault.getContractedItem() != null) {
+					paramMap.put(ReportConst.PARAM_PANEL_CONTRACT_ITEM_ID, 
+							scPurchaseInDefault.getContractedItem().getContractItemId() + "");
+					paramMap.put(ReportConst.PARAM_PANEL_OR_CONTRACT, 
+							ReportConst.PARAM_CONTRACT_TYPE);
+				}
+			}
+			
 			// if(scPurchaseInDefault.isBrandNew()) {
 			/*
 			 * VCmSupplierItem vCmSupplierItem =
