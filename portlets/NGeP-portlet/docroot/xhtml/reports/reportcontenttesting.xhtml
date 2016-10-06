@@ -668,8 +668,18 @@ width:32.5%;
 						<p:graphicImage value="/css/images/ajax-loader.gif" />						
 					</p:dialog>
 					
-					<p:dialog id="dialog1"  widgetVar="ex" header="#{lbl['lbl.rpt.reportstatus']}" onHide="jQuery('#someId').hide();" onShow="jQuery('#someId').show();" draggable="false" closable="true" resizable="false">
-						<h:outputText value="Report is generated. Kindly see the result in report list page." />					
+					<p:dialog id="dialog1"  widgetVar="ex" header="Generate Report Status" onHide="jQuery('#someId').hide();" onShow="jQuery('#someId').show();" draggable="false" closable="true" resizable="false">
+						<table>
+							<tr>
+								<td rowspan="2" style="padding-left: 5px;">
+									<p:graphicImage value="/css/images/design/tooltips.png" />
+								</td>
+								<td style="padding-left: 5px;"><h:outputText value="Report is generated."/></td>
+							</tr>
+							<tr>
+								<td style="padding-left: 5px;"><h:outputText value="Kindly see the result in report list page."/></td>
+							</tr>
+						</table>
 					</p:dialog>
 					
 					<input type="hidden" id="reportUrl" value="" />
