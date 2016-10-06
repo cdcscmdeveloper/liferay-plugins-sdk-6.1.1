@@ -2543,6 +2543,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public void ownerNationalityOnChange(){
+		getUnknownCountry();
 		SmSupplierOwner owner = getManagedBean().getSmSuppOwner();
 		Long countryId = owner.getNationality().getCountryId();
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
@@ -2550,13 +2551,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(countryId != null){
 			PmCountry country = SmCommonUtil.retrievePmCountryById(countryId);
 			owner.setNationality(country);
-			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
-				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) || 
+					country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
 				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
 			}else{
-				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
 			}
+			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 		}else{
 			PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 			owner.setNationality(defaultNationality);
@@ -2578,12 +2579,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(countryId != null){
 			PmCountry country = SmCommonUtil.retrievePmCountryById(countryId);
 			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
-				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
 			}else{
-				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
-				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+				if(country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
+					reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+				}else{
+					reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+				}
 			}
+			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 			personnel.setPmCountry(country);
 		}else{
 			PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -2671,11 +2675,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//Validate IC Length
 		PmParameter personnelIDType = ParameterHelper.getInstance().getPmParameterById(smPersonnel.getIdentificationTypeId());
 		if(personnelIDType.getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
+			String postcode = null;
 			this.validateIDFormat(smPersonnel.getIdentificationNo(), personnelIDType.getParameterCode());
 		
+			if(!smPersonnel.getPmCountry().getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
+				postcode = getManagedBean().getSmPermenantAdd().getPostcode();
+			}
+			
 			//validate IC with MyIdentity
 			SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
-					this.getManagedBean().getSmPermenantAdd().getPostcode(), null);
+					postcode, null);
 		}
 		
 	}

@@ -108,6 +108,7 @@
 						value="#{lbl['lbl.sm.nationality']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td class="tdContent">
+					
 					<p:selectOneMenu id="nationalityId"
 						required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.nationality']}"
@@ -118,11 +119,15 @@
 						<f:selectItems var="counLs"
 							value="#{registrationBackingBean.managedBean.countryLs}"
 							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
-						<p:ajax event="change" listener="#{registrationBackingBean.ownerNationalityOnChange}" update="cmbUsrIdenType,txtIdNumber,pnlIdentLabel" />
+						<c:if test="#{registrationBackingBean.managedBean.applType eq SupplierManagementConst.ACC_MOF}">
+							<ui:param name="unknownCountry" value="#{registrationBackingBean.getUnknownCountry()}" />
+							<f:selectItem itemValue="#{unknownCountry.countryId}" itemLabel="#{unknownCountry.countryName}" />
+						</c:if>
+						<p:ajax event="change" listener="#{registrationBackingBean.ownerNationalityOnChange}" update="cmbUsrIdenType,pnlIdentType,pnlIdentLabel" />
 					</p:selectOneMenu>
 					<p:message id="nationalityIdMsg" for="nationalityId" display="icon" /></td>
 			</tr>
-
+			
 			<tr>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />	
@@ -133,7 +138,7 @@
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationTypeId}"
 						style="width:200px" disabled="true">
 						<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
-						<p:ajax event="change" update="txtIdNumber,pnlIdentLabel"
+						<p:ajax event="change" update="pnlIdentType,pnlIdentLabel"
 							listener="#{registrationBackingBean.suppOwnerIdTypeChange}" />
 					</p:selectOneMenu>
 					
@@ -153,6 +158,7 @@
 					</p:outputPanel>
 				</td>
 				<td class="tdContent">
+					<p:outputPanel id="pnlIdentType">
 					<c:choose>
 						<c:when test="#{registrationBackingBean.managedBean.smSuppOwner.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
 							<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
@@ -173,14 +179,25 @@
 								<p:ajax process="@this" partialSubmit="true" update="@this" listener="#{registrationBackingBean.trimOwnerPassportValue}"/>
 							</p:inputText>
 						</c:otherwise>
-					</c:choose>
-					
-					&#160;
-					<p:graphicImage id="icti" value="/css/images/design/tooltips.png" />
-					<p:tooltip id="ictt" for="icti">
-						<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.ic']}"  />
-					</p:tooltip>
+					</c:choose> &#160; 
+					<c:choose>
+						<c:when
+							test="#{registrationBackingBean.managedBean.smSuppOwner.nationality.countryCode eq ParameterConst.countryUnknownCode}">
+							<p:graphicImage id="icti" value="/css/images/design/tooltips.png" />
+							<p:tooltip id="ictt" for="icti">
+								<p:outputLabel escape="false" value="#{lbl['tt.sm.mykas']}" />
+							</p:tooltip>
+						</c:when>
+
+						<c:otherwise>
+							<p:graphicImage id="icti" value="/css/images/design/tooltips.png" />
+							<p:tooltip id="ictt" for="icti">
+								<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.ic']}" />
+							</p:tooltip>
+						</c:otherwise>
+					</c:choose> 
 					<p:message id="txtIdNumberMsg" for="txtIdNumber" display="icon" />
+					</p:outputPanel>
 				</td>
 			</tr>
 
