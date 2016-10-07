@@ -18730,7 +18730,7 @@ public class ReportBackingBean extends
 					String serverName = EpPropertiesUtils.getInstance().getProperty("rpt.SERVER_NAME");
 					String userName = EpPropertiesUtils.getInstance().getProperty("rpt.USER_NAME");
 					String password = EpPropertiesUtils.getInstance().getProperty("rpt.PASSWORD");
-					String uid = EpPropertiesUtils.getInstance().getProperty("rpt.UID");
+					String sid = EpPropertiesUtils.getInstance().getProperty("rpt.SID");
 					
 					StringBuffer headerStr = new StringBuffer();
 					
@@ -18741,7 +18741,7 @@ public class ReportBackingBean extends
 					headerStr.append("/");
 					headerStr.append(password);
 					headerStr.append("@");
-					headerStr.append(uid);
+					headerStr.append(sid);
 					
 					reportStr =  headerStr.append(contentStr).append(footerStr).toString();
 
