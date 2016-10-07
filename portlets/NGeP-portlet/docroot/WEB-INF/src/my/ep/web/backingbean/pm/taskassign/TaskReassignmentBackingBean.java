@@ -1600,21 +1600,21 @@ public class TaskReassignmentBackingBean extends
 		if (task == null) {
 			throw new EpException(MessageConst.ERROR_770097);
 		}
-		List<String> assigneeUsers = task.getAssignees();
-		if (!assigneeUsers.isEmpty()) {
-			if (pmUser != null && assigneeUsers.contains(pmUser.getLoginId())) {
-				throw new EpException("the task already exist under the user:"
-						+ pmUser.getUserName());
-			} else {
-				// remove the current user.
-				if (assigneeUsers.contains(getManagedBean()
-						.getTaskAssignmentSearchBean().getUser().getLoginId())) {
-					assigneeUsers.remove(getManagedBean()
-							.getTaskAssignmentSearchBean().getUser()
-							.getLoginId());
-				}
-			}
-		}
+		List<String> assigneeUsers = new ArrayList<String>();
+//		if (!assigneeUsers.isEmpty()) {
+////			if (pmUser != null && assigneeUsers.contains(pmUser.getLoginId())) {
+////				throw new EpException("the task already exist under the user:"
+////						+ pmUser.getUserName());
+////			} else {
+//				// remove the current user.
+//				if (assigneeUsers.contains(getManagedBean()
+//						.getTaskAssignmentSearchBean().getUser().getLoginId())) {
+//					assigneeUsers.remove(getManagedBean()
+//							.getTaskAssignmentSearchBean().getUser()
+//							.getLoginId());
+////				}
+//			}
+//		}
 
 		if (pmUser == null) {
 			throw new EpException(MessageConst.ERROR_770096);
