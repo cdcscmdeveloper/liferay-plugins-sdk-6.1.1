@@ -222,7 +222,4 @@ public class JadualHargaBean implements Serializable{
 	public void setTier(String tier) {
 		this.tier = tier;
 	}
-
-
-	
 }
