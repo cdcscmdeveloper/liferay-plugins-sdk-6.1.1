@@ -11,7 +11,7 @@
 		<div class="clear"></div>
 		<h:panelGroup id="userTaskListID">
 			<p:dataTable value="#{taskReassignmentBackingBean.userTaskListDataModel}"
-				lazy="true" rowIndexVar="rowIndex" rows="10" id="dtTaskAssignResult"
+				lazy="true" rowIndexVar="userRowIndex" rowKey="#{userTasks.taskId}" rows="10" id="dtTaskAssignResult"
 				style="width:100%;" var="userTasks" widgetVar="taskListTableWidget">
 				<ac:paginator for="dtTaskAssignResult"></ac:paginator>
 
@@ -49,7 +49,7 @@
 		<div class="clear"></div>
 		<h:panelGroup id="groupTaskListID">
 			<p:dataTable value="#{taskReassignmentBackingBean.groupTaskListDataModel}"
-				lazy="true" rowIndexVar="rowIndex" rows="10" id="dtGroupTaskAssignResult"
+				lazy="true" rowIndexVar="groupRowIndex" rowKey="#{groupTasks.taskId}" rows="10" id="dtGroupTaskAssignResult"
 				style="width:100%;" var="groupTasks" widgetVar="dtGroupTaskTableWidget">
 				<ac:paginator for="dtGroupTaskAssignResult"></ac:paginator>
 
@@ -93,7 +93,7 @@
 		<div class="clear"></div>
 		<h:panelGroup id="othersTaskListID">
 			<p:dataTable value="#{taskReassignmentBackingBean.othersTaskListDataModel}"
-				lazy="true" rowIndexVar="rowIndex" rows="10" id="dtOthersTaskAssignResult"
+				lazy="true" rowIndexVar="otherRowIndex" rowKey="#{otherTasks.taskId}" rows="10" id="dtOthersTaskAssignResult"
 				style="width:100%;" var="otherTasks" widgetVar="dtOthersTaskListTableWidget">
 				<ac:paginator for="dtOthersTaskAssignResult"></ac:paginator>
 
