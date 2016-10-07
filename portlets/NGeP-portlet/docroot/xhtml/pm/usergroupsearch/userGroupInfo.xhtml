@@ -21,9 +21,10 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupname']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText style="width:220px"
+				<td><p:inputTextarea style="width:220px"
+						rows="3" cols="36"
 						value="#{usergroupBackingBean.managedBean.userGroup.groupName}"
-						size="30" maxlength="50" 
+						size="30" maxlength="100" 
 						disabled="#{not usergroupBackingBean.managedBean.userGroup.brandNew}"/>
 						<ac:iconTooltip id="uggroupnamett" value="#{lbl['lbl.pm.ug.groupname.tooltips']}" /></td>
 			</tr>
@@ -49,9 +50,9 @@
 							value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgCode}"
 							id="orgCodeUpdate"
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
-							size="10" readonly="true" />&#160;&#160;
+							size="10" readonly="true" />&#160;
 							<p:inputText 
-						size="60"
+						size="80"
 						id="itSelectedPtj" 
 						value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgName}" 
 						readonly="true"/>
@@ -173,7 +174,7 @@
 			width="400" height="100"
 			title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}" 
-			update=":form:groupUser" />	
+			update=":form:groupUser,:form:usergrouping:usergrouping" />	
 	</p:panel>
 
 </ui:composition>
