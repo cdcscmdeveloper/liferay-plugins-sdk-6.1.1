@@ -3097,12 +3097,15 @@ public class SmApplicationUtil {
 				.retrieveSupplierProfile(reqDto);
 		if (resDto.getSmSupplier() != null) {
 
-			// check if already had rejected application within 60 days, can't
+			// check if already had rejected application within 60 days (and
+			// created date after latest application created date), can't
 			// proceed. Need to used resubmit link.
-			SmAppl rejectedAppl = SmCommonUtil
-					.getLatestRejectedApplBySupplier(resDto.getSmSupplier());
+			SmAppl rejectedAppl = getLatesRejectedApplicationBySuppIdAndAppType(
+					supplierId, applicationType);
 			if (rejectedAppl != null
-					&& rejectedAppl.getApplType().equals(applicationType)) {
+					&& rejectedAppl.getCreatedDate()
+							.after(resDto.getSmSupplier().getSmAppl()
+									.getCreatedDate())) {
 				result = true;
 				throw new EpException(MessageConst.ERROR_722643);
 			}
@@ -6737,6 +6740,40 @@ public class SmApplicationUtil {
 		return SmServiceLookup.getMofRegistrationSO()
 				.retrieveLatestResubmitApplicationByRejectedAppl(reqDTO)
 				.getSmAppl();
+	}
+
+	/**
+	 * Get latest rejected application by supplier ID and application type
+	 * 
+	 * @param SmAppl
+	 *            rejectedAppl
+	 * @return SmAppl
+	 */
+	public static SmAppl getLatesRejectedApplicationBySuppIdAndAppType(
+			Long supplierId, String applType) {
+		SmAppl smAppl = null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("(")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)
+				.append(")");
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(supplierId);
+		reqDTO.setWorkflowStatus(sb.toString());
+		reqDTO.setAppType(applType);
+		Long applId = SmServiceLookup.getMofRegistrationSO()
+				.retriveApplIdForLastRejectedApplicationByApplType(reqDTO)
+				.getApplId();
+		if (applId != null) {
+			reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setApplId(applId);
+			smAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+		}
+		return smAppl;
 	}
 
 	/**
