@@ -101,7 +101,6 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 	    FlAttachment attachment = new FlAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		
 		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		attachment.setCreatedUsername(facesScopes.getUserSessionBean().getUserName());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -178,7 +177,6 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 			}
 			input.close();
 		} else {
-			// out.write(attachment.getFileByte());
 		}
 		out.flush();
 		out.close();

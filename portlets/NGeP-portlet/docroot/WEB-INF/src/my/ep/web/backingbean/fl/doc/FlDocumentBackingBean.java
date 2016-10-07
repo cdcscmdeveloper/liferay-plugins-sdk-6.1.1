@@ -396,7 +396,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			FlStopInstr flStopInstr = new FlStopInstr();
 			StopInstrBackingBean stopInstrBB = new StopInstrBackingBean();
 			statusReqDTO = new StatusReqDTO();
-			
 			statusReqDTO.setStatusId(FulfilmentStatusConst.SD_PENDING_SUBMISSION);
 			SupplierGstResDTO suppGstResDTO =getSupplierGst(resDTO.getFlOrder().getFlFulfilmentRequest());
 			if(suppGstResDTO.getSmGstSupplier() != null){
@@ -408,8 +407,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			flStopInstr.setPmReason(new PmReason());
 			flStopInstr.setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 			flStopInstr.setFlFulfilmentOrder(resDTO.getFlOrder());
-			
-			
 			stopInstrBB.renewSesionObject();
 			stopInstrBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_STOP_FULFILMENT);
 			stopInstrBB.getManagedBean().setStopInstr(flStopInstr);
@@ -447,9 +444,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			if(resDTO.getFlOrder().isFactored()){
 				flOrderBB.getManagedBean().setRemoveFactoring(true);
 			}
-//			if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){//TODO remove if no error
-//				flOrderBB.getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
-//			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}
@@ -620,7 +614,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			if(Long.parseLong(statusDesc)==FulfilmentStatusConst.FN_ACKNOWLEDGED || Long.parseLong(statusDesc)==FulfilmentStatusConst.FN_REJECTED || Long.parseLong(statusDesc)==FulfilmentStatusConst.FN_CANCELLED){
 				recNoteBB.getManagedBean().setAcknowledged(true);
 			}
-			//recNoteBB.getStatusDescById(statusDesc)
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}
@@ -740,7 +733,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			reqDTO.setFlOrderId(Long.valueOf(rsResDto.getReliefOrder().getFlFulfilmentOrder().getFulfilmentOrderId()));
 			FulfilmentResDTO resDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
 			ReliefOrderBackingBean reliefOrderBB=new ReliefOrderBackingBean();
-			
 			reliefOrderBB.getManagedBean().setButtonVal(buttonVal);
 			reliefOrderBB.getManagedBean().setSelectedTabIndex(0);
 			reliefOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
@@ -1078,7 +1070,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		orgProfileReqDTO.setOrgType(ParameterConst.ORG_TYPE_MINISTRY);
 		resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
 		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
-			
 			List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
 			for(PmOrgProfile obj : listDB){
 				retrievePTJList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
@@ -1099,9 +1090,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		reqDTO.setBranchCode(flRequest.getFlSupplierDtl().getBranchCode());
 		reqDTO.setSupplierId(flRequest.getSmSupplier().getSupplierId());
 		SupplierGstResDTO resDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(reqDTO);
-		
 		return resDTO;
-		
 	}
 	
 	/**
@@ -1111,9 +1100,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	private void defaultPtjAndMinistryValues() {
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
 			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())) {
-			//this.getManagedBean().setMinistry(null);
-			//this.getManagedBean().setPtj(null);
-			//this.getManagedBean().setPtjGroup(null);
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -1260,7 +1246,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 * Get PTJ group condition for construct the LOV listing
 	 * @return String
 	 */
-	//TODO need to test for this method.
 	public String constuctConditionFieldsForPTJGroup() {	
 		String condition = OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(), OrganizationType.MINISTRY.value())+"^"+
 				this.getManagedBean().getMinistry().getOrgProfileId();
@@ -1291,7 +1276,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		}
 		return condition;
 	}
-
 	
 	/**
 	 * Get the function type. PTJ or Supplier
@@ -1329,5 +1313,4 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			return false;
 		}
 	}
-	
 }

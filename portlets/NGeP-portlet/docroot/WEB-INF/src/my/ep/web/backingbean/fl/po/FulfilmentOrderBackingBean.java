@@ -131,7 +131,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * 	<p>save - save data into database.
 	 *  navigate to acknowledge page.
 	 */
-	public String fulfillmentOrderAction(String action) {
+   	public String fulfillmentOrderAction(String action) {
 		log.debug("FulfilmentOrderBackingBean.fulfillmentOrderAction()");
 		IFulfilmentOrderSO fulfilmentOrderSO = null;		
 		try {
@@ -205,17 +205,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 			
 			if(resDTO.isSuccessful()) {
-				String languageCode = getFacesScopes().getUserLocale().getLanguage();
 				String messageId = MessageConst.INFO_700005;
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 					messageId = MessageConst.INFO_700011;
-					if(!hasFactoringUserRole() && CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode)){
-//						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.government",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
-					}else if(CommonConstants.LANGUAGE_CODE_MALAY.equals(languageCode)){
-//						messagePrefix=" "+ResourceBundleUtils.getMessage("lbl.fl.government",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
-					}
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -302,11 +296,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.factoringUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		}
-		if(getManagedBean().isContractRequest() == Boolean.TRUE){
-			//Remove the checking if contract terminated/expired during supplier acknowledge, 
-			//unitEP(22/1/2015) said should allow to proceed if the order generated.
-			//checkValidity(getManagedBean().getFlRequest());
-		}
 	}
 
 	/**
@@ -367,7 +356,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}else{
 				doMB.getManagedBean().setReasonDesc(reasonDesc.getReasonDesc());
 			}
-			
 			doMB.getManagedBean().getFlStopInstr().setChangedDate(resDTO.getFlStopInstr().getChangedDate());
 			doMB.getManagedBean().getFlStopInstr().setStopInstrNo(resDTO.getFlStopInstr().getStopInstrNo());
 			doMB.getManagedBean().setRejectedRemark(resDTO.getStopInstrRejectedRemarkList());
@@ -518,9 +506,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				flReqDTO.setFlOrderId(removeReqType.getOrderId());
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
-//				if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){//TODO will no longer need this. direct get from florder.factoringaddres
-//					getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
-//				}				
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				getManagedBean().setDocType(resDTO.getFlOrder().getFlFulfilmentRequest().getDocType());
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
@@ -686,83 +671,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					getManagedBean().setContactEmail(pmContact.getEmail());
 					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
 				}
-				//TODO NEW
 				getManagedBean().getFulfilmentOrder().setFactoringOrgName(resDTO.getAddressTypeList().get(0).getPmFinancialOrg().getFinOrgName());
 				getManagedBean().getFulfilmentOrder().setFactoringAddress(convertFinAccAddressToFlAddress(resDTO.getAddressTypeList().get(0)));
 			}
 		}
 	}
 		
-	 /**
- 	 * Gets the remove factoring company address based on financial OrgId and address type.
- 	 *
- 	 * @param financialOrgId the financial org id
- 	 * @return the rfc address
- 	 */
-// 	public void getRfcAddress(Long financialOrgId){
-//		 IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-//		 getManagedBean().setRfcAddress(null);
-//		 getManagedBean().setRfcPhoneNo(null);
-//		 getManagedBean().setRfcFaxNo(null);
-//		 getManagedBean().setRfcContactPerson(null);
-//		 getManagedBean().setRfcContactEmail(null);
-//		 getManagedBean().setRfcContactPhoneNo(null);
-//		 if(financialOrgId!=null) {
-//				AddressReqDTO reqDTO = new AddressReqDTO();
-//				reqDTO.setFinancialOrgId(financialOrgId);
-//				reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-//				
-//				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-//				if(!resDTO.getAddressTypeList().isEmpty()){
-//					getManagedBean().setRfcAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-//					getManagedBean().setRfcPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-//					getManagedBean().setRfcFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-//					if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
-//						PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-//						getManagedBean().setRfcContactPerson(pmContact.getContactName());
-//						getManagedBean().setRfcContactEmail(pmContact.getEmail());
-//						getManagedBean().setRfcContactPhoneNo(pmContact.getPhoneNo());
-//					}
-//				}
-//			}
-//	}	
-	 
- 	//TODO remove it if tested factoring no error.
-	/**
-	 * Gets the factoring address based on financial org id  and address type.
-	 *
-	 * @param financialOrgId the financial org id
-	 * @return the factoring address
-	 */
-//	public void getFactoringAddress(Long financialOrgId) {
-//		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-//
-//		getManagedBean().setSupplierAddress(null);
-//		getManagedBean().setPhoneNo(null);
-//		getManagedBean().setFaxNo(null);
-//		getManagedBean().setContactPerson(null);
-//		getManagedBean().setContactEmail(null);
-//		getManagedBean().setContactPhoneNo(null);
-//
-//		if (financialOrgId != null) {
-//			AddressReqDTO reqDTO = new AddressReqDTO();
-//			reqDTO.setFinancialOrgId(financialOrgId);
-//			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-//
-//			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-//			if (!resDTO.getAddressTypeList().isEmpty()) {
-//				getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-//				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-//				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-//				if (!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty()) {
-//					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-//					getManagedBean().setContactPerson(pmContact.getContactName());
-//					getManagedBean().setContactEmail(pmContact.getEmail());
-//					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-//				}
-//			}
-//		}
-//	}
 		
 	/**
 	 * Gets the portlet title.
@@ -1091,22 +1005,18 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				reqDTO.setFlRequestId(getManagedBean().getFlRequest().getFulfilmentReqId());
 				reqDTO.setFlRequestLink(true);
 				FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
-				
+				FacesContext fc = FacesContext.getCurrentInstance();
 				ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 				crBB.renewSesionObject();
 				crBB = new ContractRequestBackingBean();
 				crBB.getManagedBean().setSelectedTabIndex(0);
 				crBB.getManagedBean().setDocProcess(docType);
-				
-				FacesContext fc = FacesContext.getCurrentInstance();
 				crBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 				crBB.getManagedBean().setHyperLinkPage(true);
 				crBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 				crBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
-				
 				crBB.setFulfilmentRequestField(resDTO);
 				crBB.initializeApproverGroup();
-				
 				crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 				crBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
@@ -1149,17 +1059,14 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				reqDTO.setFlRequestId(getManagedBean().getFlRequest().getFulfilmentReqId());
 				reqDTO.setFlRequestLink(true);
 				FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
-				
+				FacesContext fc = FacesContext.getCurrentInstance();
 				PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
 				prBB.getManagedBean().setSubmitButtonStatus(false);
 				prBB.getManagedBean().setDocProcess(docType);
-				
-				FacesContext fc = FacesContext.getCurrentInstance();
 				prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 				prBB.getManagedBean().setHyperLinkPage(true);
 				prBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 				prBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
-				
 				prBB.setFulfilmentRequestField(resDTO);
 				prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 				prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
@@ -1201,7 +1108,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				getManagedBean().setHyperLinkPage(true);
 				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
-				
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setSelectedTabIndex(0);
 				getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -1209,13 +1115,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setRemoveFactoring(false);
 				getManagedBean().setDocMaintainRemarks(true);
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-				
-				//reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 				getManagedBean().setDocMaintainRemarks(true);
-				
 				flBB.getManagedBean().setHideRemarks(true);
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
-				
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "poBasePage?faces-redirect=true");
@@ -1258,83 +1160,95 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setDocMaintainRemarks(true);
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 				getManagedBean().setDocMaintainRemarks(true);
-				
 				flBB.getManagedBean().setHideRemarks(true);
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
-				
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "coBasePage?faces-redirect=true");
 			}
 		}
 		
-	private void setTextBeforeSign(String outcome) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(getManagedBean().getFulfilmentOrder().getDocNo()+"|");
-		if(hasFactoringUserRole()) {
-			sb.append(ParameterConst.DOCTYPE_FACTORING_COMPANY+"|");
-		} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-			sb.append(getOrderAmt()+"|");
+		/**
+		 * Sets the text before sign.
+		 *
+		 * @param outcome the new text before sign
+		 */
+		private void setTextBeforeSign(String outcome) {
+			StringBuffer sb = new StringBuffer();
+			sb.append(getManagedBean().getFulfilmentOrder().getDocNo()+"|");
+			if(hasFactoringUserRole()) {
+				sb.append(ParameterConst.DOCTYPE_FACTORING_COMPANY+"|");
+			} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+				sb.append(getOrderAmt()+"|");
+			}
+			sb.append(outcome+"|");
+			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
+			getManagedBean().setTextBeforeSign(sb.toString());		
 		}
-		sb.append(outcome+"|");
-		sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
-		getManagedBean().setTextBeforeSign(sb.toString());		
-	}
 	
 	/**
 	 * Show 1GFMAS error
 	 *
 	 */
-	public void show1GFMASError(){
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
-		RequestContext.getCurrentInstance().update("@form");
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
-	}
-	
-	public void preRenderViewDOTable(){
-		getManagedBean().getPendingDoDataModel().reloadData();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doPendingTable.xhtml");
-	}
-	
-	public void preRenderViewDODashBoardTable(){
-		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		if(!getManagedBean().getStatusIds().isEmpty()){
-			reqDTO.setStatusIds(getManagedBean().getStatusIds());
+		public void show1GFMASError(){
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().update("@form");
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 		}
+	
+		/**
+		 * Pre render view do table.
+		 */
+		public void preRenderViewDOTable(){
+			getManagedBean().getPendingDoDataModel().reloadData();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doPendingTable.xhtml");
+		}
+	
+		/**
+		 * Pre render view do dash board table.
+		 */
+		public void preRenderViewDODashBoardTable(){
+			IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			if(!getManagedBean().getStatusIds().isEmpty()){
+				reqDTO.setStatusIds(getManagedBean().getStatusIds());
+			}
 		
-		FulfilmentResDTO resDTO = orderSO.countPendingDo(reqDTO);
-		getManagedBean().setTotalPendingFl(resDTO.getTotalPendingFl());
-		getManagedBean().setTotalPendingPartialFl(resDTO.getTotalPendingPartialFl());
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doPendingTableDashBoard.xhtml");
-	}
+			FulfilmentResDTO resDTO = orderSO.countPendingDo(reqDTO);
+			getManagedBean().setTotalPendingFl(resDTO.getTotalPendingFl());
+			getManagedBean().setTotalPendingPartialFl(resDTO.getTotalPendingPartialFl());
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doPendingTableDashBoard.xhtml");
+		}
 	
-	public void preRenderViewFlDashBoardTable(){
-		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
-		if(pmUserOrgs.get(0) == null){
-			log.info("User does not have any active orgs.");
-		}
-		if(pmUserOrgs.get(0) != null || pmUserOrgs.get(0).getPmOrgProfile() != null){
-			reqDTO.setOrgProfileId(pmUserOrgs.get(0).getPmOrgProfile().getOrgProfileId());
-		}
-		if(!getManagedBean().getStatusIds().isEmpty()){
-			reqDTO.setStatusIds(getManagedBean().getStatusIds());
-		}
+		/**
+		 * Pre render view fl dash board table.
+		 */
+		public void preRenderViewFlDashBoardTable(){
+			IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
+			if(pmUserOrgs.get(0) == null){
+				log.info("User does not have any active orgs.");
+			}
+			if(pmUserOrgs.get(0) != null || pmUserOrgs.get(0).getPmOrgProfile() != null){
+				reqDTO.setOrgProfileId(pmUserOrgs.get(0).getPmOrgProfile().getOrgProfileId());
+			}
+			if(!getManagedBean().getStatusIds().isEmpty()){
+				reqDTO.setStatusIds(getManagedBean().getStatusIds());
+			}
 		
-		FulfilmentResDTO resDTO = orderSO.countPendingFl(reqDTO);
-		getManagedBean().setTotalPendingFl(resDTO.getTotalPendingFl());
-		getManagedBean().setTotalPendingPartialFl(resDTO.getTotalPendingPartialFl());
-		getManagedBean().setTotalPendingSupplierAck(resDTO.getTotalPendingSupplierAck());
-		getManagedBean().setTotalPendingInvoice(resDTO.getTotalPendingInvoice());
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "pendingFulfilment.xhtml");
-	}
+			FulfilmentResDTO resDTO = orderSO.countPendingFl(reqDTO);
+			getManagedBean().setTotalPendingFl(resDTO.getTotalPendingFl());
+			getManagedBean().setTotalPendingPartialFl(resDTO.getTotalPendingPartialFl());
+			getManagedBean().setTotalPendingSupplierAck(resDTO.getTotalPendingSupplierAck());
+			getManagedBean().setTotalPendingInvoice(resDTO.getTotalPendingInvoice());
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "pendingFulfilment.xhtml");
+		}
 	
 	/**
 	 * Selected order type.
@@ -1495,12 +1409,17 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			flBB.getManagedBean().setHideRemarks(true);
 		}
 		
-//		if(!isGovtSeller()){
-//			flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
-//		}
 		return constructOrderUrl(getManagedBean().getSelectedFlOrder().getFulfilmentOrderId(), getManagedBean().getSelectedFlOrder().getDocNo(), getManagedBean().getSelectedFlOrder().getDocType());
 	}
 	
+	/**
+	 * Construct order url.
+	 *
+	 * @param orderId the order id
+	 * @param docNo the doc no
+	 * @param docType the doc type
+	 * @return the string
+	 */
 	private String constructOrderUrl(Long orderId,String docNo,String docType) {
 		  StringBuilder orderUILink = new StringBuilder();
 		  
@@ -1535,6 +1454,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		return constructDOUrl();
 	}
 	
+	/**
+	 * Construct do url.
+	 *
+	 * @return the string
+	 */
 	private String constructDOUrl() {
 		StringBuilder doUrlLink = new StringBuilder();
 
@@ -1552,10 +1476,14 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 
 	}
 	
+	/**
+	 * Gets the order summary grand total.
+	 *
+	 * @return the order summary grand total
+	 */
 	private void getOrderSummaryGrandTotal() {
 		BigDecimal orderSummaryTotalOrderAmt = null;
 		BigDecimal grandOrderSummaryTotalOrderAmt=new BigDecimal(0);
-		//getManagedBean().setOrderedAmtGrandTotal(grandOrderSummaryTotalOrderAmt);
 		for(FlDeliveryAddress  deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 			orderSummaryTotalOrderAmt = new BigDecimal(0);
 			for(FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()){
@@ -1576,6 +1504,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		return constructFlAuditUrl();
 	}
 	
+	/**
+	 * Construct fl audit url.
+	 *
+	 * @return the string
+	 */
 	private String constructFlAuditUrl() {
 		StringBuilder urlLink = new StringBuilder();
 
