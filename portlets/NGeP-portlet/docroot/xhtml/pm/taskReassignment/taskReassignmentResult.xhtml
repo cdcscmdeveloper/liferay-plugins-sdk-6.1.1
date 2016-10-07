@@ -12,30 +12,30 @@
 		<h:panelGroup id="userTaskListID">
 			<p:dataTable value="#{taskReassignmentBackingBean.userTaskListDataModel}"
 				lazy="true" rowIndexVar="rowIndex" rows="10" id="dtTaskAssignResult"
-				style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
+				style="width:100%;" var="userTasks" widgetVar="taskListTableWidget">
 				<ac:paginator for="dtTaskAssignResult"></ac:paginator>
 
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
-					<h:outputText value="#{tasks.createDate.time}">
+					<h:outputText value="#{userTasks.createDate.time}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"
 					width="13%;">  
-	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, tasks.docType)}
+	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, userTasks.docType)}
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="30%;">  
-	            #{tasks.docNumber}
+	            #{userTasks.docNumber}
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
-				  #{taskReassignmentBackingBean.applicationStatus(tasks.docStatus)}	
+				  #{taskReassignmentBackingBean.applicationStatus(userTasks.docStatus)}	
 				             
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.action']}"
 					style="width:10%;text-align:center;">
 					<p:commandLink id="cLEditTask"
-						action="#{taskReassignmentBackingBean.redirectToTaskReassign(tasks)}"
+						action="#{taskReassignmentBackingBean.redirectToTaskReassign(userTasks)}"
 						update=":form:dlTaskReassignment">
 						<p:graphicImage value="/css/images/design/edit.png" />
 					</p:commandLink>
@@ -50,24 +50,24 @@
 		<h:panelGroup id="groupTaskListID">
 			<p:dataTable value="#{taskReassignmentBackingBean.groupTaskListDataModel}"
 				lazy="true" rowIndexVar="rowIndex" rows="10" id="dtGroupTaskAssignResult"
-				style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
+				style="width:100%;" var="groupTasks" widgetVar="dtGroupTaskTableWidget">
 				<ac:paginator for="dtGroupTaskAssignResult"></ac:paginator>
 
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
-					<h:outputText value="#{tasks.createDate.time}">
+					<h:outputText value="#{groupTasks.createDate.time}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"
 					width="13%;">  
-	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, tasks.docType)}
+	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, groupTasks.docType)}
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="30%;">  
-	            #{tasks.docNumber}
+	            #{groupTasks.docNumber}
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
-				  #{taskReassignmentBackingBean.applicationStatus(tasks.docStatus)}	
+				  #{taskReassignmentBackingBean.applicationStatus(groupTasks.docStatus)}	
 				             
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.action']}"
@@ -80,7 +80,7 @@
 						update="@([id$=#{taskDeleteId}])" >
 						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.selectedTask}" 
-							value="#{tasks}" />
+							value="#{groupTasks}" />
 						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.taskType}" 
 							value="#{ProfileManagementConst.reassignWorklistTypeGroup}" />
 				</p:commandLink>
@@ -94,24 +94,24 @@
 		<h:panelGroup id="othersTaskListID">
 			<p:dataTable value="#{taskReassignmentBackingBean.othersTaskListDataModel}"
 				lazy="true" rowIndexVar="rowIndex" rows="10" id="dtOthersTaskAssignResult"
-				style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
+				style="width:100%;" var="otherTasks" widgetVar="dtOthersTaskListTableWidget">
 				<ac:paginator for="dtOthersTaskAssignResult"></ac:paginator>
 
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
-					<h:outputText value="#{tasks.createDate.time}">
+					<h:outputText value="#{otherTasks.createDate.time}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"
 					width="13%;">  
-	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, tasks.docType)}
+	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, otherTasks.docType)}
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="30%;">  
-	            #{tasks.docNumber}
+	            #{otherTasks.docNumber}
 	        </p:column>
 			<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
-				  #{taskReassignmentBackingBean.applicationStatus(tasks.docStatus)}	
+				  #{taskReassignmentBackingBean.applicationStatus(otherTasks.docStatus)}	
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.action']}"
 					style="width:10%;text-align:center;">
@@ -123,7 +123,7 @@
 						update="@([id$=#{taskDeleteId}])" >
 						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.selectedTask}" 
-							value="#{tasks}" />
+							value="#{otherTasks}" />
 						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.taskType}" 
 							value="#{ProfileManagementConst.reassignWorklistTypeOthers}" />
 				</p:commandLink>

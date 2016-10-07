@@ -748,7 +748,7 @@ public class TaskReassignmentBackingBean extends
 		}
 
 		private ISearchResultBean<WorklistItemVO> getWorklistItems() {
-			log.info("getWorklistItems");
+			log.info("groupTaskListDataModel - getWorklistItems");
 			IBpmSO bpmSO = null;
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
@@ -905,7 +905,7 @@ public class TaskReassignmentBackingBean extends
 		}
 
 		private ISearchResultBean<WorklistItemVO> getWorklistItems() {
-			log.info("getWorklistItems");
+			log.info("othersTaskListDataModel - getWorklistItems");
 			IBpmSO bpmSO = null;
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
