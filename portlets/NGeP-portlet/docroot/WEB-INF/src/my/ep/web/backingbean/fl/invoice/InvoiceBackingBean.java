@@ -283,8 +283,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						}
 					}
 				}
-				
-				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 			}else{
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
@@ -315,7 +313,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					messageId = MessageConst.INFO_700043;
 					messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.update.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					//messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 					messageId = MessageConst.INFO_745017;
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
@@ -382,9 +379,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					getManagedBean().setSelectedTabIndex(0);
 					getManagedBean().setInvoice(resDTO.getInvoice());
 					flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
-//					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//TODO remove if fladdress is ready n working
-//						getFactoringDtl(); 
-//					}
 				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
@@ -431,15 +425,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			FinancialOrgResDTO finOrgResDTO = null;
 			IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
 			
-			
 			if(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT.equals(this.getManagedBean().getTaskName())){
 				FLInvoiceModificationReqType invModObj = (FLInvoiceModificationReqType) obj;
 				reqDTO.setInvoiceId(Long.valueOf(invModObj.getInvoiceId()));
-				
 				resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
-//				getManagedBean().setDocProcess(res.getDocType());
 				getManagedBean().setInvoice(resDTO.getInvoice());
-				//invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 				getManagedBean().getInvoice().setFlRequest(resDTO.getInvoice().getFlRequest());
 				getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 				getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -451,11 +441,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			else if(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT.equals(this.getManagedBean().getTaskName())){
 				FLInvoiceCancelReqType invCanObj = (FLInvoiceCancelReqType) obj;
 				reqDTO.setInvoiceId(Long.valueOf(invCanObj.getInvoiceId()));
-				
 				resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
-//				getManagedBean().setDocProcess(res.getDocType());
 				getManagedBean().setInvoice(resDTO.getInvoice());
-				//invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 				getManagedBean().getInvoice().setFlRequest(resDTO.getInvoice().getFlRequest());
 				if(getManagedBean().getInvoice().getStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL)){
 					getManagedBean().setReliefDeclarationCheck(true);
@@ -585,10 +572,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				
 				getManagedBean().setChargeLineItemRoot(null);
 				getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
-//				if(getManagedBean().getInvoice().getAp59Status()!=null && getManagedBean().getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION.longValue()) { 
-//					getManagedBean().setOutComes(new String[0]);
-//				}
-				
 				if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
 					getFactoringDtl(); 
 				}
@@ -737,7 +720,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					break;
 				}
 			}
-
 
 			if(haveAdvancedPmyt){
 				ContractReqDTO ctReqDTO = new ContractReqDTO();
@@ -892,7 +874,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			getManagedBean().setGstAmount(BigDecimal.ZERO);
 		}
 		getManagedBean().setInvoiceAmountWithoutGST(invoiceTotalAmount.subtract(getManagedBean().getGstAmount()));
-		
 		getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
 		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
 		
@@ -962,7 +943,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		BigDecimal percentage = new BigDecimal(100);
 		BigDecimal invMulty = new BigDecimal(0.0);
 		BigDecimal feeAmount = new BigDecimal(0.0);
-//		nonExemptedItem = nonExemptedItem.subtract(gstTotalAmount);
 		invMulty = nonExemptedItem.multiply(serviceFee);
 		feeAmount = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
 		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
@@ -990,11 +970,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 			}
 		}
-		
 		getManagedBean().getInvoice().setFeeAmt(feeAmount);
 		getManagedBean().getInvoice().setServiceFee(serviceFee);
 		getTaxinvoice();
-	
 	}
 	
 	private void getTaxinvoice(){
@@ -1103,9 +1081,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(null==getManagedBean().getTaxSectionItemRoot() || null==getManagedBean().getOutOfScopeSectionItemRoot()){
 					populateTaxAbleChargeLineData();
 				}
-				
 			}
-			
 			setClassName("@(.invItemPnlClass)");
 		}
 		if(selectedTabIndex==2){
@@ -1135,12 +1111,10 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						String account = obj.getAccountNo();
 						if (obj.getPmFinancialOrg() != null)
 							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
-						//populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
 						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
 						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
 							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
 						}
-						
 					}
 				}
 			}
@@ -1177,7 +1151,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				FlAddress flAddress = new FlAddress();
 				getManagedBean().getInvoice().setPaymentBankAddress(convertSmAddressToFlAddress(supplierBank.getSmAddress(),flAddress));
 			}
-			
 			getManagedBean().getInvoice().setPaymentBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
 		}
 	}
@@ -1201,7 +1174,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				//TODO NEW
 				getManagedBean().getInvoice().setPaymentBankAddress(convertFinAccAddressToFlAddress(finOrgResDTO.getPmAddressType()));
 			}
-			
 			if(finOrgResDTO.getPmFinancialAcc()!=null) {
 				getManagedBean().getInvoice().setAccountNo(finOrgResDTO.getPmFinancialAcc().getAccountNo());
 				getManagedBean().getInvoice().setPaymentBank(finOrgResDTO.getPmFinancialAcc().getPmPaymentBankOrg());
@@ -1396,14 +1368,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				invBB.getManagedBean().getDecisionList().add(statusDesc);
 			}
 		}
-		 SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
-		 String expDate=null;
-		 String effDate=null;
-		 expDate = DATE_FORMAT.format(invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate());
-		 effDate = DATE_FORMAT.format(invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getEffDate());
-		 invBB.getManagedBean().setExpDate(expDate);
-		 invBB.getManagedBean().setEffDate(effDate);
-		 FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+		String expDate=null;
+		String effDate=null;
+		expDate = DATE_FORMAT.format(invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate());
+		effDate = DATE_FORMAT.format(invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getEffDate());
+		invBB.getManagedBean().setExpDate(expDate);
+		invBB.getManagedBean().setEffDate(effDate);
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 		return navgPage;
 	}
@@ -1491,60 +1463,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		return null;
 	}
 	
-	/**
-	 * call this method  as user click on items menu
-	 * <p>Populate charge line data.
-	 */
-//	private void populateChargeLineData1(){
-//		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
-//		
-//		Map<String, List<FlInvoiceItem>> invoiceItemsMap = new TreeMap<String, List<FlInvoiceItem>>();
-//		List<FlInvoiceItem> flInvoiceItemList = null;
-//		for (FlInvoiceItem flInvoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()) {
-//			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getItemCode())) {
-//				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getItemCode());
-//			} else {
-//				flInvoiceItemList = new ArrayList<FlInvoiceItem>();
-//			}
-//			flInvoiceItemList.add(flInvoiceItem);
-//			invoiceItemsMap.put(flInvoiceItem.getFlFulfilmentItem().getItemCode(), flInvoiceItemList);
-//		}
-//		
-//		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
-//		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
-//		BigDecimal grandTotalInvAmt = new BigDecimal(0);
-//		//for(Entry<Long, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){
-//		for(Entry<String, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){	
-//			List<FlInvoiceItem> invoiceItems = itemEntry.getValue();
-//			FlInvoiceItem flInvoiceItem = (FlInvoiceItem) invoiceItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
-//			flInvoiceItem.setParent(true);
-//			TreeNode childItemNode = new DefaultTreeNode(flInvoiceItem.getFlFulfilmentItem().getItemCode(), flInvoiceItem, getManagedBean().getChargeLineItemRoot());
-//			
-//			BigDecimal totalOrderAmt = new BigDecimal(0);
-//			BigDecimal totalReceiveAmt = new BigDecimal(0);
-//			BigDecimal totalRecallAmt = new BigDecimal(0);
-//			BigDecimal totalInvAmt = new BigDecimal(0);
-//			for(FlInvoiceItem chargeLineItem : invoiceItems) {
-//				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
-//				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getOrderedAmt());
-//				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getReceivedAmt());
-//				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getRecalledAmt());
-//				totalInvAmt=totalInvAmt.add(chargeLineItem.getInvAmt());
-//			}			
-//
-//			flInvoiceItem.setOrderedAmt(totalOrderAmt);
-//			flInvoiceItem.setReceivedAmt(totalReceiveAmt);
-//			flInvoiceItem.setRecalledAmt(totalRecallAmt);
-//			flInvoiceItem.setInvAmt(totalInvAmt);
-//			
-//			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
-//			grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
-//			grandTotalInvAmt = grandTotalInvAmt.add(totalInvAmt);
-//		}
-//		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
-//		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
-//		getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
-//	}
 	
 	/**
 	 * Page navigation to FLDoc search page in INV.
@@ -1739,9 +1657,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			if(!resDTO.getAddressTypeList().isEmpty()){
 				getManagedBean().getInvoice().getFlFulfilmentOrder().setFactoringAddress(convertPmAddressToFlAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
 				getManagedBean().getInvoice().getFlFulfilmentOrder().setFactoringOrgName(resDTO.getAddressTypeList().get(0).getPmFinancialOrg().getFinOrgName());
-
 			}
-
 		}
 	}
 	
@@ -1792,7 +1708,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				reqDTO.setFlOrderId(getManagedBean().getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId());
 				reqDTO.setDocType(docType);
 				FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
-				
 				FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
 				orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
@@ -1800,7 +1715,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 				orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 				orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
-				
 				orderBackingBean.getManagedBean().setHyperLinkPage(true);
 				orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				boolean isFactoredSelected=getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored();
@@ -1839,7 +1753,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				invBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 				invBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 				invBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
-				//invBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 				flBB.getManagedBean().setHideRemarks(true);
 				invBB.getManagedBean().setReliefDeclarationCheck(true);
 				invBB.getManagedBean().setDocMaintain(false);
@@ -1849,9 +1762,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						invBB.getManagedBean().getDelOrderList().add(flDeliveryOrder);
 					}
 				}		
-				
 				return NAV_INVOICE;
-			
 			}else if(docType.equalsIgnoreCase(FulfilmentConst.CONTRACT)){
 				ContractDetailsBackingBean ctDetBB = new ContractDetailsBackingBean();
 				FacesContext fc = FacesContext.getCurrentInstance();
@@ -1861,9 +1772,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			return null;
 		}
 		
+		/**
+		 * Gets the supplier gst.
+		 *
+		 * @param invoice the invoice
+		 * @return the supplier gst
+		 */
 		private void getSupplierGst(FlInvoice invoice) {
 			ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
-
 			SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
 			reqDTO.setBranchCode(invoice.getFlRequest().getFlSupplierDtl().getBranchCode());
 			reqDTO.setSupplierId(invoice.getFlRequest().getSmSupplier().getSupplierId());
@@ -1901,10 +1817,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					lv1TreeNode = new DefaultTreeNode(chargeLineLv1, getManagedBean().getChargeLineItemRoot());
 					lvl1Map.put(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId(), lv1TreeNode);
 				}
-				
 				grandTotalOrderAmt = grandTotalOrderAmt.add(invItemSummLv2.getOrderedAmt());
 				grandTotalInvAmt = grandTotalInvAmt.add(invItemSummLv2.getInvAmt());
-				
 				InvoiceChargeLineVO chargeLineLv2 = new InvoiceChargeLineVO();
 				chargeLineLv2.setLevel(2);
 				chargeLineLv2.setFlInvoiceSummary(invItemSummLv2);
@@ -1921,7 +1835,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
 			getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
 			getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
-			
 		}
 		
 		/**
@@ -1964,17 +1877,10 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			TreeNode lv2TaxTreeNode = null;
 				for(FlInvoiceItemSummary invItemSummLv2 : taxList){
 					if(lvl1TaxMapTree.containsKey(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId())) {
-//						chargeLineLv1 = new InvoiceChargeLineVO();
-//						chargeLineLv1.setLevel(1);
-//						chargeLineLv1.setFlInvoiceSummary(invItemSummLv2);
 						InvoiceChargeLineVO chargeLineLv3 = null;
 						for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
 							if(!invItemLv3.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
 								if(lvl3TaxMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode())) {
-//									InvoiceChargeLineVO retrieveLv3 = lvl3TaxMap.get(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode());
-//									
-//									BigDecimal totalReceivedQty = retrieveLv3.getFlInvoiceItem().getReceivedQty().add(invItemLv3.getReceivedQty());
-//									retrieveLv3.getFlInvoiceItem().setReceivedQty(totalReceivedQty);
 								}else{
 									chargeLineLv3 = new InvoiceChargeLineVO();
 									chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
@@ -1993,9 +1899,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						
 						lv1TreeNode = new DefaultTreeNode(chargeLineLv1, getManagedBean().getTaxSectionItemRoot());
 						lvl1TaxMapTree.put(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId(), lv1TreeNode);
-						
-						
-						
 						InvoiceChargeLineVO chargeLineLv2 = new InvoiceChargeLineVO();
 						chargeLineLv2.setLevel(2);
 						chargeLineLv2.setFlInvoiceSummary(invItemSummLv2);
@@ -2008,9 +1911,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
 							if(!invItemLv3.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
 								if(lvl3TaxMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode())) {
-//									InvoiceChargeLineVO retrieveLv3 = lvl3TaxMap.get(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode());
-//									BigDecimal totalReceivedQty = retrieveLv3.getFlInvoiceItem().getReceivedQty().add(invItemLv3.getReceivedQty());
-//									retrieveLv3.getFlInvoiceItem().setReceivedQty(totalReceivedQty);
 								}else{
 									chargeLineLv3 = new InvoiceChargeLineVO();
 									chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
@@ -2030,18 +1930,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			BigDecimal grandTotalOosAmt = new BigDecimal(0);
 				for(FlInvoiceItemSummary invItemSummLv2 : outOfScopeList){
 					if(lvl1OOSMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId())) {
-//						chargeLineLv1 = new InvoiceChargeLineVO();
-//						chargeLineLv1.setLevel(1);
-//						chargeLineLv1.setFlInvoiceSummary(invItemSummLv2);
 						InvoiceChargeLineVO chargeLineLv3 = null;
 						for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
 							if(invItemLv3.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
 								
 								if(lvl3OosMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode())) {
-//									InvoiceChargeLineVO retrieveLv3 = lvl3OosMap.get(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode());
-//									
-//									BigDecimal totalReceivedQty = retrieveLv3.getFlInvoiceItem().getReceivedQty().add(invItemLv3.getReceivedQty());
-//									retrieveLv3.getFlInvoiceItem().setReceivedQty(totalReceivedQty);
 								}else{
 									chargeLineLv3 = new InvoiceChargeLineVO();
 									chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
@@ -2072,18 +1965,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						InvoiceChargeLineVO chargeLineLv3 = null;
 						for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
 							if(invItemLv3.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
-//								if(lvl3TaxMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemLv3.getGstFlag().getParameterCode())) {
-//									InvoiceChargeLineVO retrieveLv3 = lvl3TaxMap.get(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemLv3.getGstFlag().getParameterCode());
-//									BigDecimal totalReceivedQty = retrieveLv3.getFlInvoiceItem().getReceivedQty().add(invItemLv3.getReceivedQty());
-//									retrieveLv3.getFlInvoiceItem().setReceivedQty(totalReceivedQty);
-//								}else{
 									chargeLineLv3 = new InvoiceChargeLineVO();
 									chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
 									chargeLineLv3.setLevel(3);
 									chargeLineLv3.setFlInvoiceItem(invItemLv3);
 									new DefaultTreeNode(chargeLineLv3, lv2TaxTreeNode);
 									lvl3OosMap.put(invItemSummLv2.getFlFulfilmentItem().getFulfilmentItemId().toString()+invItemSummLv2.getFlFulfilmentItem().getPmUomId()+invItemLv3.getGstFlag().getParameterCode(),chargeLineLv3);
-//								}
 									grandTotalOosAmt = grandTotalOosAmt.add(invItemLv3.getInvAmt());
 							}
 						}
@@ -2105,7 +1992,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						getManagedBean().setTaxItemTableClause(true);
 						break;
 					}
-					
 				}
 			}
 			for(FlInvoiceItemSummary invItemsSummary:getManagedBean().getInvoice().getFlInvoiceItemSummary()){
@@ -2142,11 +2028,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 				doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 				doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
-				//doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
 				doBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 				doBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 				doBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
-				
 				doBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				doBB.getManagedBean().setHyperLinkPage(true);
 				flBB.getManagedBean().setHideRemarks(true);
@@ -2194,7 +2078,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		recNoteBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 		recNoteBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 		recNoteBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());	
-
 		recNoteBB.getManagedBean().setAcknowledged(true);
 		recNoteBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 		recNoteBB.getManagedBean().setHyperLinkPage(true);
@@ -2216,6 +2099,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		return NAV_FULFILMENTNOTE_PAGE;
 	}
 		
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param outcome the new text before sign
+	 */
 	private void setTextBeforeSign(String outcome) {
 		StringBuffer sb = new StringBuffer();
 		if(getManagedBean().getInvoice().isBrandNew()) {

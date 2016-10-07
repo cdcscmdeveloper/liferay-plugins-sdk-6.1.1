@@ -143,16 +143,6 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				renewSesionObject();
-				/*if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					Map<String, String> paramMap = new HashMap<String, String>();
-					paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getAdjustment().getDocNo());
-					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-					CommonBackingBean commonBackingBean = new CommonBackingBean();
-					commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_DEBIT_NOTE);
-					commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.dan",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
-					commonBackingBean.getManagedBean().setParamMap(paramMap);
-					return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
-				}		*/
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
@@ -220,11 +210,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			statusReqDTO.setStatusId(FulfilmentStatusConst.DN_PENDING_APPROVAL);
 			getManagedBean().getAdjustment().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
 		}
-//		if(getManagedBean().getAdjustment().getFlOrder().isFactored()){
-//			getFactoringBranchDtl();
-//		}else{
 			getManagedBean().setAccountNoName(getManagedBean().getAdjustment().getFlInvoice().getAccountNo()+"  "+getManagedBean().getAdjustment().getFlInvoice().getPaymentBank().getFinOrgName());
-//		}
 		
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		if(adjustment.getFlOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
@@ -257,41 +243,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		}
 	}
 	
-	/**
-	 * Gets the factoring branch details based on financial org id and address type.
-	 *
-	 * @return the factoring branch dtl
-	 */
-//	public void getFactoringBranchDtl(){
-//		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-//		getManagedBean().setBranchName(null);
-//		getManagedBean().setSupplierAddress(null);
-//		getManagedBean().setPhoneNo(null);
-//		getManagedBean().setFaxNo(null);
-//		getManagedBean().setContactPerson(null);
-//		getManagedBean().setContactEmail(null);
-//		getManagedBean().setContactPhoneNo(null);
-//		
-//		//reset back to HQ info
-//		AddressReqDTO reqDTO = new AddressReqDTO();
-//		reqDTO.setFinancialOrgId(getManagedBean().getAdjustment().getFlOrder().getPmFinancialOrg().getFinancialOrgId());
-//		reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-//		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-//		if(!resDTO.getAddressTypeList().isEmpty()){
-//			getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-//			getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-//			getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-//			if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
-//				PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-//				getManagedBean().setContactPerson(pmContact.getContactName());
-//				getManagedBean().setContactEmail(pmContact.getEmail());
-//				getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-//			}
-//		}
-//		getManagedBean().setAccountNoName(getManagedBean().getAdjustment().getFlInvoice().getAccountNo()+"  "+getManagedBean().getAdjustment().getFlInvoice().getPaymentBank().getFinOrgName());
-//
-//	}
-	
+		
 	/**
 	 * call this method as user select charge line row
 	 * 
@@ -365,7 +317,6 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 */
 	public String backToDocument(){
 		return getManagedBean().getBackToDocument();
-		
 	}
 	
 	/**
@@ -398,7 +349,6 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
-			orderBackingBean.getManagedBean().getFlRequest().getAgOffice().setOfficeName(retrieveAgOfficeNameByOrgProfileId(orderBackingBean.getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId(),orderBackingBean.getManagedBean().getFlRequest().getAgApprovedDate()));
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -536,6 +486,11 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		}
 	}
 	
+	/**
+	 * Populate charge line data.
+	 *
+	 * @param retainPreviousSelection the retain previous selection
+	 */
 	private void populateChargeLineData(boolean retainPreviousSelection) {
 		getManagedBean().setDanChargeLineTree(new DefaultTreeNode("root", null));
 		int i=0;
@@ -614,7 +569,6 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			sb.append(outcome+"|");
 			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
 			getManagedBean().setTextBeforeSign(sb.toString());			
-			//validateFulfilmentNote(outcome);
 			// set action
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			getManagedBean().setButtonAction(outcome);
