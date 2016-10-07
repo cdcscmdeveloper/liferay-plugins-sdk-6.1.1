@@ -1756,7 +1756,9 @@ public class SupplierFinalizationBackingBean extends
 		
 		// Save Preparation and Supplier finalization tab(s) data 
 		// before throwing exception
+		validateReEvaluation();
 		reqDTO = validateInfo(2);
+		
 		reqDTO.setDeletedMeetingsList(
 				this.getManagedBean().getDeletedMeetingList());
 		if (scQtCommittee != null) {
@@ -6508,5 +6510,23 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void enableAutoUpdate() {
 		getManagedBean().setAutoUpdate(Boolean.TRUE);		
+	}
+	
+	private void validateReEvaluation(){
+		
+		if (this.getManagedBean().isReEvaluate()) {
+			ScQtFinalization finalization = this.getManagedBean().getScQtFinalization();
+			if (!(finalization.isReEvaluateCompReq()
+					||finalization.isReEvaluateFinReq() || finalization
+						.isReEvaluateTechReq())) {
+				this.getManagedBean().setActiveIndex(
+						this.getManagedBean().getFinalizationTabIndex());
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] { ResourceBundleUtils.getMessage(
+								"lbl.sc.reevaluation.required.for",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()) });
+			}
+		}
 	}
 }
