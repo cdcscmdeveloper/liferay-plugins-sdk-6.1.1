@@ -1110,7 +1110,8 @@ public class TaskReassignmentBackingBean extends
 		log.info("docInt:" + docInt);
 		if (docInt != null) {
 			PmStatusDesc desc = StatusHelper.getInstance().getStatusDescById(docInt.longValue());
-			return desc.getStatusName() +" & ReassignType : " + desc.getPmStatus().getReasssignType();
+			return desc.getStatusName();
+//			return desc.getStatusName() +" & ReassignType : " + desc.getPmStatus().getReasssignType();
 			//return getStatusDescById(docInt.longValue());
 		} else {
 			return "";
