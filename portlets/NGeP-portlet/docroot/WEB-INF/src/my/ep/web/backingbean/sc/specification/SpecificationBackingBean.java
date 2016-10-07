@@ -12354,6 +12354,7 @@ public class SpecificationBackingBean extends
 		return pmdocument;
 	}
 
+	//this method is used to check in the current checklist have mandatory or optional pmdocuments.
 	public void checkListYesConfirmation(String stage) {
 		this.getManagedBean().setStandardTemplate(
 				ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
@@ -12364,7 +12365,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getCheckListYesIndex());
 	}
-
+	//this method is used to check in the current checklist have mandatory or optional pmdocuments.
 	public void checkListNoConfirmation(String stage) {
 		this.getManagedBean().setStandardTemplate(
 				ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
@@ -12417,7 +12418,7 @@ public class SpecificationBackingBean extends
 		}
 		return pmdocument;
 	}
-
+	//this method is used to check in the current checklist have mandatory or optional pmdocuments.
 	public void checkListNoConfirmationSubmit(String stage) {
 
 		if (ParameterConst.SPECIFICATION_TYPE_TECHNICAL.equalsIgnoreCase(stage)) {
@@ -12430,7 +12431,7 @@ public class SpecificationBackingBean extends
 
 		}
 	}
-
+//this method is used to check in the current checklist have mandatory or optional pmdocuments.
 	public String checkListYesConfirmationSubmit(String stage) {
 		String checklistSubmit = CommonUIConst.ACKNOWLEDGE_PAGE;
 		if (ParameterConst.SPECIFICATION_TYPE_TECHNICAL.equalsIgnoreCase(stage)) {
@@ -12458,7 +12459,7 @@ public class SpecificationBackingBean extends
 		return checklistSubmit;
 
 	}
-
+/*this method is used to remove fulfilment details objects*/
 	private void removefullfillmentDetails(String scheduleType) {
 
 		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE
@@ -12502,6 +12503,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/*this method is used to cancel the popup window */
 	public void cancelPopup() {
 		this.getManagedBean().setAutoUpdate(true);
 		this.getManagedBean().setSelectCtPanelItem(null);
@@ -12878,7 +12880,7 @@ public class SpecificationBackingBean extends
 		}
 
 	}
-
+/*this method is used to check the technical user scoring schema attachment is mandatory or not*/
 	private void validateTechnicalUserScoringAttachment(
 			boolean isTechnicalUserScoringSchema) {
 
@@ -12891,7 +12893,7 @@ public class SpecificationBackingBean extends
 
 		}
 	}
-
+/*this method is used to check the financial user scoring schema attachment  is mandatory or not*/
 	private void validateFinancialUserScoringAttachment(
 			boolean isFinancialUserScoringSchema) {
 		if (isFinancialUserScoringSchema) {
