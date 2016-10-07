@@ -860,7 +860,8 @@ public class SPDetailBackingBean extends
 			} else {
 				for (TplSpecAnswer answer : answers) {
 					if (answer.getAnswerNumeric() != null
-							&& answer.getAnswerNumeric().compareTo(compareTotalAmount) == 1) {
+							&& answer.getAnswerNumeric().compareTo(
+									compareTotalAmount) == 1) {
 						throw new EpException(MessageConst.ERROR_760437);
 					} else if (answer.getTplSpecQuestion().getTplSpecMaster()
 							.getTotalAmount() != null
@@ -969,6 +970,41 @@ public class SPDetailBackingBean extends
 			}
 			// TODO added list of Encrypt Data Bean List
 			reqDTO.setMultiEncryptBeanList(encryptCrditFacilitesList);
+			
+			ScQtProposalChecklist finProposalChecklist = null;
+			int index = 0;
+			if(isCompleted){
+				finProposalChecklist = findProposalChecklistByDocDefKey(
+						getManagedBean().getFinanceCheckDetailsList(),
+						ParameterConst.DOCUMENT_DEFINITION_KEY_FOR_CREDIT_FACILITY_UPLOAD);
+				index = getManagedBean().getFinanceCheckDetailsList().indexOf(
+						finProposalChecklist);
+				
+				if (creditFacilitiesList == null || creditFacilitiesList.isEmpty()) {
+
+					if (!finProposalChecklist.isSubmitted()
+							|| (finProposalChecklist.getCompliance() != null &&finProposalChecklist.getCompliance().equals(
+									Boolean.FALSE))) {
+						finProposalChecklist.setScQtProposalChecklistAttachment(null);
+						finProposalChecklist.setSubmitted(true);
+						finProposalChecklist.setCompliance(true);
+					} else {
+						finProposalChecklist.setScQtProposalChecklistAttachment(null);
+					}
+
+				} else if (finProposalChecklist.isSubmitted()
+						|| finProposalChecklist.getCompliance()
+								.equals(Boolean.TRUE)) {
+					if (finProposalChecklist.getScQtProposalChecklistAttachment() != null) {
+						finProposalChecklist.setCompliance(Boolean.FALSE);
+					} else {
+						finProposalChecklist.setSubmitted(false);
+						finProposalChecklist.setCompliance(Boolean.FALSE);
+					}
+				}
+			}
+
+			
 			scQtProposalChecklist
 					.setScQtPRPCreditFacilities(creditFacilitiesList);
 			scQtProposalChecklist.setProposalScore(proposalScores);
@@ -981,6 +1017,14 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				if(isCompleted){
+					reqDTO.setMultiEncryptBeanList(null);
+					reqDTO.setScQtProposalChecklist(finProposalChecklist);
+					reqDTO.setTobeRemovedCreditFacilities(null);
+					ProposalResDTO resDto = proposalSO.saveProposalDetails(reqDTO);
+					getManagedBean().getFinanceCheckDetailsList().set(index,
+							resDto.getProposalChecklist());
+				}
 				getManagedBean().setToBeDeletedCreditFacilities(null);
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
@@ -2381,6 +2425,8 @@ public class SPDetailBackingBean extends
 		return proposalCheckList;
 	}
 
+	
+
 	/**
 	 * method to retrieve financial credit facilities details
 	 * 
@@ -3469,9 +3515,11 @@ public class SPDetailBackingBean extends
 
 		retrieveProposalChecklistDtls(qtId, new FacesScopes()
 				.getUserSessionBean().getUserId(), isReadonly);
-		
-		getManagedBean().setProcCategoryMedicine(super
-				.isMultipleProposalCategory(getManagedBean().getQt(), null));
+
+		getManagedBean()
+				.setProcCategoryMedicine(
+						super.isMultipleProposalCategory(getManagedBean()
+								.getQt(), null));
 		getManagedBean().setPrepareActiveIndex(0);
 		getManagedBean().setPreviousPageUrl(previousPageUrl);
 
