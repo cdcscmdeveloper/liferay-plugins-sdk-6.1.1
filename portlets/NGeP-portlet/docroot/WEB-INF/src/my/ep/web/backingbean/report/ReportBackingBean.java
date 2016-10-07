@@ -10161,51 +10161,122 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveReportListByAuthorization() {
 		log.info("ReportBackingBean-retrieveReportListByAuthorization");
 		reportList = new ArrayList<SelectItem>();
+		
+		log.info("1");
 		//rptGenBean = new ReportsGenerateBean();
 		this.setReportValue(null);
+		
+		log.info("2");
 		this.setReportName(null);
+		
+		log.info("3");
 		setRoleCode(null);
+		
+		log.info("4");
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
+		
+		log.info("5");
 		rptGenBean = new ReportsGenerateBean();
+		
+		log.info("6");
 		getManagedBean().setRptGenBean(rptGenBean);
+		
+		log.info("7");
 		resetReportForm();
+		
+		log.info("8");
 		rptGenBean.setReportCategoryView(false);
+		
+		log.info("9");
 		this.setReportCategory(null);
+		
+		log.info("10");
 		this.setReportValue(null);
+		
+		log.info("11");
 		reportList = new ArrayList<SelectItem>();
+		
+		log.info("12");
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			
+			log.info("13");
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
+			
+			log.info("14");
+			
 			if (StringUtils.isNotEmpty(this.getModuleValue())
 					&& ((this.getModuleValue()
 							.equalsIgnoreCase(ReportConst.FL_MOD_VAL)  || this.getModuleValue()
 							.equalsIgnoreCase(ReportConst.CT_MOD_VAL)))) {
+				
+				log.info("15");
 				rptGenBean.setReportCategoryView(true);
+				
+				log.info("16");
 				retrieveSubModuleReportCategoryList(strLanguage);
+				
+				log.info("17");
 			} else {
+				
+				log.info("18");
 				if (StringUtils.isNotEmpty(strLanguage)
 						&& (strLanguage.equalsIgnoreCase(ReportConst.ENG_LANG))) {
+					
+					log.info("19");
+					
 					reportModList = reportSO
 							.retrieveReportListByModuleNUserAuthorization(
 									lngUserId, this.getModuleValue());
+					
+					log.info("20");
 				} else if (StringUtils.isNotEmpty(strLanguage)
 						&& (strLanguage
 								.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
+					
+					log.info("21");
+					
 					reportModList = reportSO
 							.retrieveMalayReportListByModuleNUserAuthorization(
 									lngUserId, this.getModuleValue());
+					log.info("22");
 				}
+				
+				log.info("23");
+				
 				if (CollectionUtils.isNotEmpty(reportModList)) {
+					
+					log.info("24");
+					
 					for (Object[] object : reportModList) {
+						
+						log.info("25");
 						SelectItem selectItem = new SelectItem();
+						
+						log.info("26");
 						selectItem.setLabel(object[0].toString());
+						
+						log.info("27");
 						selectItem.setValue(object[1].toString());
+						
+						log.info("28");
 						reportList.add(selectItem);
+						
+						log.info("29");
 					}
 				}
+				
+				log.info("30");
 			}
 		}
+		
+		log.info("important data");
+		log.info(reportList.size());
+		log.info(getAllModuleList().size());
+		log.info(getModuleValue());
+		log.info("end important data");
+		
 		return reportList;
 	}
 
