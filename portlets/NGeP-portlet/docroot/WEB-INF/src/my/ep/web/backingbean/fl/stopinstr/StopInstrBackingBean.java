@@ -110,11 +110,14 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	}
 	
 	/**
-	 * Save stop instruction.
+	 * save,submit Stop Instruction.
 	 *
-	 * @param action the action
-	 * navigate to acknowledge page.
+	 * * @param String action 
+	 *  <p>submit - save data into database and BPM process will route to the next respective user.
+	 * 	<p>save - save data into database.
+	 *  navigate to acknowledge page.
 	 */
+	
 	public String saveStopInstruction(String action) {
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		
@@ -129,7 +132,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		reqDTO.setUserRole(getUserRole());
 		reqDTO.setApproverUserList(getManagedBean().getApproverList());
-		
 		reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 		reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 	
@@ -176,16 +178,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		}
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || getManagedBean().getTaskId() == null) { 
 			renewSesionObject();
-			/*if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
-				Map<String, String> paramMap = new HashMap<String, String>();
-				paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFlStopInstr().getStopInstrNo());
-				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-				CommonBackingBean commonBackingBean = new CommonBackingBean();
-				commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_STOP_DELIVERY);
-				commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.rpt.StopInstructionNo",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
-				commonBackingBean.getManagedBean().setParamMap(paramMap);
-				return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
-			}*/
 			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}else{
 			reqDTO.setFlOrderId(resDTO.getFlStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
@@ -198,8 +190,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		}
 	}
 
+	/**
+	 * Sets the stop instruction fields.
+	 *
+	 * @param resDTO the new stop instr fields
+	 */
 	public void setStopInstrFields(FulfilmentResDTO resDTO) {
-		// TODO Auto-generated method stub
 		getManagedBean().setSelectedTabIndex(0);
 		getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 		getManagedBean().setButtonVal(BpmOutcomeConst.BPM_STOP_FULFILMENT);
@@ -247,7 +243,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 			populateChargeLineData();
-			System.out.println("getTaskName: "+this.getManagedBean().getTaskName());
 			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
 				checkCogstr();
 			}
@@ -410,7 +405,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==2){
 			if(null==getManagedBean().getChargeLineItemRoot()){
-//				 populateChargeLineData();
 			}
 		}
 	}
@@ -627,6 +621,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
 	
+	/**
+	 * Check cogstr.
+	 */
 	public void checkCogstr(){
 		IDesignatedAreaSO designatedAreaSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDesignatedAreaSO.class);
 		IGstItemSO gstItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IGstItemSO.class);
@@ -681,6 +678,11 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		}
 	}
 	
+	/**
+	 * Navigate to view page based on dco type
+	 *
+	 * @return the string
+	 */
 	public String navigateToFlRequest(){
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		if(getManagedBean().getStopInstr().getFlRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_REQUEST)){
@@ -689,23 +691,19 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setFlRequestId(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId());
 			reqDTO.setFlRequestLink(true);
 			FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
-			
+			FacesContext fc = FacesContext.getCurrentInstance();
 			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 			crBB.renewSesionObject();
 			crBB = new ContractRequestBackingBean();
 			crBB.getManagedBean().setSelectedTabIndex(0);
 			crBB.getManagedBean().setDocProcess(getManagedBean().getStopInstr().getFlRequest().getDocType());
-			
-			FacesContext fc = FacesContext.getCurrentInstance();
 			crBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 			crBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			crBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());	
 			crBB.getManagedBean().setHyperLinkPage(true);
 			flBB.getManagedBean().setHideRemarks(true);
-			
 			crBB.setFulfilmentRequestField(resDTO);
 			crBB.initializeApproverGroup();
-			
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			crBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
@@ -745,19 +743,17 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setFlRequestId(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId());
 			reqDTO.setFlRequestLink(true);
 			FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
+			FacesContext fc = FacesContext.getCurrentInstance();
 			
 			PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
 			prBB.getManagedBean().setSubmitButtonStatus(false);
 			prBB.getManagedBean().setDocProcess(getManagedBean().getStopInstr().getFlRequest().getDocType());
-			
-			FacesContext fc = FacesContext.getCurrentInstance();
 			prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 			prBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			prBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());					
 			prBB.getManagedBean().setHyperLinkPage(true);
 			flBB.getManagedBean().setHideRemarks(true);
-			
 			prBB.setFulfilmentRequestField(resDTO);
 			prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
@@ -767,6 +763,11 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		return null;
 	}
 	
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param outcome the new text before sign
+	 */
 	private void setTextBeforeSign(String outcome) {
 		StringBuffer sb = new StringBuffer();
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) {
@@ -818,6 +819,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		}
 	}
 	
+	/**
+	 * Check tax invoice.
+	 *
+	 * @param reqId the req id
+	 * @return true, if successful
+	 */
 	private boolean checkTaxInvoice(Long reqId){
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		return fulfilmentSO.checkTaxInvoice(reqId);

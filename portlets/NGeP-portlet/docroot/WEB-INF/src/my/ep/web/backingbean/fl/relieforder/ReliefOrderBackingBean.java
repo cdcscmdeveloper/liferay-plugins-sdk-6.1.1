@@ -150,11 +150,8 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 					}
 				}
 			}
-			
-			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(null, rsResDto.getRemarkList(), rsResDto.getAttachmentList());
-			
 		}
 	}
 	
@@ -171,7 +168,6 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 		IReliefOrderSO reliwfOrderSo = null;
 		//saveReliefOrder
 		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
-		//FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reliefOrderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reliefOrderReqDTO.setOutcome(action);
 		reliefOrderReqDTO.setToken(token);
@@ -329,6 +325,13 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 		return submitAction(outcome);
 	}
 	
+	/**
+	 * Pre submit fulfillment request.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String preSubmitFulfillmentRequest(
 			PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {

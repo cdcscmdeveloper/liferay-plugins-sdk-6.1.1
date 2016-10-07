@@ -156,14 +156,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) 
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
-				// UnitEP request can reject service
-//				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-//					for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
-//						if(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-//							throw new EpException(MessageConst.ERROR_745069);
-//						}
-//					}
-//				}				
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
@@ -292,16 +284,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					renewSesionObject();
-					/*if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE))) {
-						Map<String, String> paramMap = new HashMap<String, String>();
-						paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFulfilmentNoteNo());
-						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-						CommonBackingBean commonBackingBean = new CommonBackingBean();
-						commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_FRN);
-						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.frn",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
-						commonBackingBean.getManagedBean().setParamMap(paramMap);
-						return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
-					}*/
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					reqDTO.setFulfilmentNoteId(resDTO.getFulfilmentNoteId());
@@ -339,7 +321,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			if(this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)){
 				FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
 				reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
-
 				resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
 				
 				getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
@@ -556,9 +537,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				item.setReceivedQty(formattedReceivedQty);
 			}
 			BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getGstUnitPrice());
-	//		if(item.getReceivedQty().doubleValue() == item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
-	//			receivedAmt = item.getFlDelOrderItem().getDeliveredAmt();
-	//		}
 			item.setReceivedAmt(receivedAmt.setScale(2, RoundingMode.HALF_UP));
 			if(getManagedBean().isAcknowledged()){
 				getManagedBean().setRemainingQty(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty().subtract(item.getReceivedQty()));
@@ -713,13 +691,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		
 		
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
-//			IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
-//			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-//			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
-//			PmStatus status = orderSO.retrieveDelOrderStatus(reqDTO).getPmStatus();
-//			if(status==null || status.getStatusId().longValue()!=FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT) {
-//				throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
-//			}
 			checkLastTaxFRN();
 			IPersonnelSO personnelSO = (IPersonnelSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
@@ -762,22 +733,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	
-	/**
-	 * Received amount validation. Remove this checking as GST implemented.
-	 * <p>Received Amount must be less than or equal to Delivery Amount.
-	 * @param item the item
-	 */
-	public void receivedAmtValidation(FlFulfilmentNoteItem item) {
-//		if(item.getReceivedAmt().doubleValue() > item.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
-//			item.setReceivedAmt(new BigDecimal(0));
-//			throw new EpException(MessageConst.ERROR_100032, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.received.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-//		}
-//		if(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
-//			if(item.getReceivedAmt().doubleValue() <= 0){
-//				throw new EpException(MessageConst.ERROR_100033, new String[]{"Received Amount","Delivery Amount"});
-//			}
-//		}
-	}
 	
 	/**
 	 * Page navigation to FLDoc search page in FRN.
@@ -909,7 +864,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			FacesContext fc = FacesContext.getCurrentInstance();
 			doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-			//doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
 			doBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			doBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			doBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
@@ -1052,7 +1006,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
-//			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_DO);
 			getManagedBean().setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 			getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
@@ -1218,6 +1171,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	    return items;
 	}
 	
+	/**
+	 * Sets the selected ack officer.
+	 */
 	public void setSelectedAckOfficer(){
 		for(PmUser user : getManagedBean().getPmUserList()){
 			if(user.getUserId().equals(getManagedBean().getUserLoginId())){
@@ -1233,6 +1189,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	
 
 	
+	/**
+	 * Check user authority.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean checkUserAuthority(){
 		boolean userAuthority = true;
 		
@@ -1255,6 +1216,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		return userAuthority;
 	}
 	
+	/**
+	 * Sets the fulfilment note field.
+	 *
+	 * @param resDTO the new fulfilment note field
+	 */
 	private void setFulfilmentNoteField(FulfilmentResDTO resDTO){
 		if(resDTO.getFulfilmentNote() != null){
 			getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
@@ -1314,6 +1280,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	
+	/**
+	 * Check last tax frn.
+	 */
 	public void checkLastTaxFRN(){
 		IFulfilmentSO iFulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		getManagedBean().setLastFRNTaxInv(false);
@@ -1403,6 +1372,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	
+	/**
+	 * Navigate Navigate to other page based on document type.
+	 *
+	 * @return the string
+	 */
 	public String navigateToFlRequest(){
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		if(getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_REQUEST)){
@@ -1424,10 +1398,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			crBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
 			crBB.getManagedBean().setHyperLinkPage(true);
 			flBB.getManagedBean().setHideRemarks(true);
-			
 			crBB.setFulfilmentRequestField(resDTO);
 			crBB.initializeApproverGroup();
-			
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			crBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
@@ -1477,7 +1449,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			prBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			prBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
 			flBB.getManagedBean().setHideRemarks(true);
-			
 			prBB.setFulfilmentRequestField(resDTO);
 			prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
@@ -1489,6 +1460,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		
 	}
 	
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param outcome the new text before sign
+	 */
 	private void setTextBeforeSign(String outcome) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(getManagedBean().getFulfilmentRequest().getFlFulfilmentOrder().getDocNo()+"|");
@@ -1498,11 +1474,22 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		getManagedBean().setTextBeforeSign(sb.toString());
 	}
 	
+	/**
+	 * Check tax invoice.
+	 *
+	 * @param reqId 
+	 * @return true, if successful
+	 */
 	private boolean checkTaxInvoice(Long reqId){
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		return fulfilmentSO.checkTaxInvoice(reqId);
 	}
 	
+	/**
+	 * Gets the acknowledge officer.
+	 *
+	 * @return the acknowledge officer
+	 */
 	private void getAcknowledgeOfficer(){
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
@@ -1526,6 +1513,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		getManagedBean().getApproverList().addAll(orderApproverList);
 	}
 	
+	/**
+	 * Retrieve remark rejection history.
+	 */
 	public void retrieveRemarkRejectionHistory(){
 		
 		if(getManagedBean().getSelectedItem().getFulfilmentNoteItemId() != null && !getManagedBean().getSelectedItem().getRejectionRemarks().isEmpty()){

@@ -9,7 +9,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.fl.request.IShippingInstructionSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -57,6 +56,14 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 	public ShippingInstrBackingBean(){
 
 	}
+	
+	/**
+	 * save,submit shipping instruction.
+	 * <p>submit - save data into database and BPM process will route to the next respective user.
+	 * <p>save - save data into database.
+	 * @param action the action
+	 * navigate to acknowledge page.
+	 */
 
 	public String submitShippingAction(String action){
 		System.out.println("-- shipping Instr --");
@@ -67,7 +74,6 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlShippingInstr shippingInstr = getManagedBean().getShippingInstr();
 			shippingInstrSO = (IShippingInstructionSO) BusinessDelegate.getInstance().getServiceObject("fl",IShippingInstructionSO.class);
-			//			reqDTO.setFlFulfilmentRequest(getManagedBean().getFlRequest());
 			reqDTO.setShippingInstr(shippingInstr);
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				action = "";
@@ -101,6 +107,9 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 		return null;
 	}
 
+	/**
+	 * Pre render view.
+	 */
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -117,21 +126,11 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 		reqDTO.setCtxToken(ctx);
 		reqDTO.setTaskId(taskId);
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
 
 		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 		IShippingInstructionSO shippingSO = (IShippingInstructionSO) BusinessDelegate.getInstance().getServiceObject("fl", IShippingInstructionSO.class);
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-
-//		FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
-//		if(coObj.getContractRequestId().intValue() == 0){
-//			flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
-//		}else{
-//			flReqDTO.setFlRequestId(coObj.getContractRequestId());
-//		}
-//
-//		flReqDTO.setSelectedApprovers(coObj.getApproverList());
 
 		if(res.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_SI_HT) || res.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_SI_HT)){
 			resDTO = shippingSO.retrieveShippingInstruction(flReqDTO);
@@ -146,11 +145,9 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 		}else if (res.getTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_SI_HT)){
 			FlShippingInstr flSi = new FlShippingInstr();
 			flSi.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-			IContractSO contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 			ContractReqDTO contractReqDTO = new ContractReqDTO();
 			contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
 
-//			getManagedBean().setImportedGoodContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
 			getManagedBean().setShippingInstr(flSi);
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
