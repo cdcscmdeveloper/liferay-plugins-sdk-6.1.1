@@ -36,7 +36,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 				<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
-					<h:commandLink immediate="true"
+					<h:commandLink immediate="true" rendered="#{evaFinSupplier.scQtProposalChecklistAttachment ne null}"
 						action="#{evaluationBackingBean.downloadEncryptedFile(evaFinSupplier.scQtProposalChecklistAttachment)}">
 						<h:graphicImage value="/css/images/design/icon_txt.png" />
 					</h:commandLink>
