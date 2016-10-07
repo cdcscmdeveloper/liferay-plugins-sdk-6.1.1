@@ -54,7 +54,7 @@
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveFinancialCreditFacilityAction(true)}"
-					process="@all" partialSubmit="true" update="@all" />
+					process="@all" partialSubmit="true" update="@form" />
 			</c:if>
 			<c:if test="#{'CH' eq chkDefinationKey}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"

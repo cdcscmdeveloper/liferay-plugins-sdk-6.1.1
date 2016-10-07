@@ -33,7 +33,7 @@
 			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
-					<h:commandLink immediate="true"
+					<h:commandLink immediate="true" rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null}"
 						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
 						action="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}" >
 						<h:graphicImage value="/css/images/design/icon_txt.png" />

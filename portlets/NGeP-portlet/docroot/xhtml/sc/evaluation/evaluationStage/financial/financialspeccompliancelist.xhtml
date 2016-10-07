@@ -29,7 +29,7 @@
 					<h:outputText value="#{techComplianceList.scQtCheckList.title}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
-					<h:commandLink immediate="true"
+					<h:commandLink immediate="true" rendered="#{techComplianceList.scQtProposalChecklistAttachment ne null}"
 						action="#{evaluationBackingBean.downloadEncryptedFile(techComplianceList.scQtProposalChecklistAttachment)}">
 						<h:graphicImage value="/css/images/design/icon_txt.png" />
 					</h:commandLink>
