@@ -11,7 +11,12 @@ xmlns:p="http://primefaces.org/ui"
 <h:body>
 
 <h:form id="form">
-	
+	<p:messages id="taskSearchMsg" showDetail="true" autoUpdate="true"
+		closable="true" showSummary="false" severity="error, info" />
+			
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
+	</p:blockUI>
 	<table>
 		<tr>
 			<td>Document Number</td>
@@ -20,7 +25,9 @@ xmlns:p="http://primefaces.org/ui"
 				<p:commandButton 
 					value="Search"
 					action="#{bpmTaskSearchBackingBean.searchAction}"
-					update="resultPanel" />
+					update="resultPanel"
+					onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
 			</td>
 		</tr>		
 	</table>
