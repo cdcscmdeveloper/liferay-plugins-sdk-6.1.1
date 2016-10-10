@@ -158,13 +158,16 @@
 						<h:outputText value="#{lbl['lbl.quartz.action.not.available']}" />
 					</p:outputPanel>
 					&#160;
-					<p:commandLink id="deleteActionId"
-						partialSubmit="true"
-						process="@this" action="#{schedulerManagerBB.onDeleteJob(jobBean)}"
-						update="jobBeanDt,@([id$=Msg])" onstart="blockWidget.show()"
-						oncomplete="blockWidget.hide()">
-						<p:graphicImage value="/css/images/design/ico-termination.png" title="#{lbl['lbl.quartz.delete.job']}" />
-					</p:commandLink>
+					
+					<ui:remove>
+						<p:commandLink id="deleteActionId"
+							partialSubmit="true"
+							process="@this" action="#{schedulerManagerBB.onDeleteJob(jobBean)}"
+							update="jobBeanDt,@([id$=Msg])" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()">
+							<p:graphicImage value="/css/images/design/ico-termination.png" title="#{lbl['lbl.quartz.delete.job']}" />
+						</p:commandLink>
+					</ui:remove>
 				</p:column>
 
 			</p:dataTable>
