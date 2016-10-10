@@ -113,6 +113,7 @@ public class SchedulerConstants {
 	public static final String PHIS_INTEGRATION_JOB_GROUP = "PHIS INTEGRATION JOB GROUP";
 	public static final String EPERUNDING_INTEGRATION_JOB_GROUP = "EPERUNDING INTEGRATION JOB GROUP";
 	public static final String GFMAS_INTEGRATION_JOB_GROUP = "1GFMAS INTEGRATION JOB GROUP";
+	public static final String SPA_INTEGRATION_JOB_GROUP = "SPA INTEGRATION JOB GROUP";
 
 	// EPERUNDING OUT BOUND
 	public static final String EPERUNDING_CONSULTANT_PROFILE_JOB = "CONSULTANT PROFILE JOB";
@@ -137,6 +138,11 @@ public class SchedulerConstants {
 	public static final String PHIS_PAY_EFF_NOTIFY_JOB = "PAYMENT EFFECT NOTIFICATION JOB";
 	public static final String PHIS_MASTER_DATA_MATERIAL = "MATERIAL MASTER DATA JOB";
 	public static final String PHIS_MASTER_DATA = "MATERIAL MASTER DATA JOB";
+	
+	//SPA OUT BOUND
+	
+	public static final String SPA_MASTER_DATA_MATERIAL_JOB = "MATERIAL MASTER DATA JOB";
+	
 
 	// 1GFMAS OUT BOUND
 
@@ -171,6 +177,7 @@ public class SchedulerConstants {
 	public static final String GFMAS_SM_RECEIPT_OUT_JOB_DESC = "Job run once daily 6 AM";
 	public static final String GFMAS_SM_RECEIPT_IN_JOB_DESC = "Job run once daily 7 AM";
 	public static final String GFMAS_MASTERDATA_MATERIAL_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
+	public static final String SPA_JOB_DESC = "Job run every 5 minutes";
 
 	// CRM Job Group ID
 	public static final String CRM_INTEGRATION_JOB_GROUP = "CRM INTEGRATION JOB GROUP";
