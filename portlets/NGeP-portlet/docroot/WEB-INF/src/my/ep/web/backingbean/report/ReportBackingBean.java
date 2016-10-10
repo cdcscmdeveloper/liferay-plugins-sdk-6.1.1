@@ -15383,7 +15383,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getCtGroupThreeVar()
 						+ rptGenBean.getCtProductServiceVar()
 						+ rptGenBean.getCtMinistryVar()
-						+ rptGenBean.getPegwaiPengawaiTotVar()
+						+ rptGenBean.getCtPegaiPengawaiVar()
 						+ rptGenBean.getCtKumpulanVar()
 						+ rptGenBean.getCtPtjVar()
 						+ rptGenBean.getCtLoanNoVar()
