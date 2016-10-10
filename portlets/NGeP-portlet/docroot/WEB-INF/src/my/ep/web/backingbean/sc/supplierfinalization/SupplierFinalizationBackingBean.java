@@ -4980,6 +4980,8 @@ public class SupplierFinalizationBackingBean extends
 					new ArrayList<ScQtRecommend>());
 		}
 		if (scQtRecommend.isSelected()) {
+			getManagedBean().setSelectedItem(scQtRecommend);
+			getManagedBean().getSelectedItemList().add(scQtRecommend);
 			createShortlistedSuppliersDataModel();
 		} else {
 			getManagedBean().getSelectedItemList().remove(scQtRecommend);
