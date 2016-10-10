@@ -1278,7 +1278,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	  			    }else {
 	  			    	 getManagedBean().setSelectedTabIndex(3);
 	  			    }
-	  			 getManagedBean().setPaymentTracking(getManagedBean().getSelectedTabIndex());
+	  			 getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
 			  }	  
 	 
 	   /*Set tab value if contract is not zonal*/	 
@@ -2457,16 +2457,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		                            reqDTO = new ContractReqDTO();
 		                            resDTO = new ContractResDTO();
 		            
-		            reqDTO.setContractId(ctBB.getManagedBean().getContractVer().getCtContract().getContractId());
-		           	resDTO = contractSO.retrieveLoaContractVerByContractId(reqDTO);
+		                            reqDTO.setContractId(ctBB.getManagedBean().getContractVer().getCtContract().getContractId());
+		                            resDTO = contractSO.retrieveLoaContractVerByContractId(reqDTO);
 		           	
-		           	if (resDTO.getList() != null && resDTO.getList().size() > 0) {
-		           		items = new SelectItem[resDTO.getList().size()];
-		           		for (Object[] object : resDTO.getList()) {
-		           			items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
-		           		}
-		           	}
-	        	}  else {
+		                            if (resDTO.getList() != null && resDTO.getList().size() > 0) {
+		                            	items = new SelectItem[resDTO.getList().size()];
+		                            	for (Object[] object : resDTO.getList()) {
+		                            		items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+		                            	}
+		                            }
+        	                 }  else {
 	           		items = new SelectItem[1];
 	           		items[i++] = new SelectItem(ctBB.getManagedBean().getContractVer().getContractVerId(), ctBB.getManagedBean().getContractVer().getCtContractValue().getLoaPhysicalNo());
 	           	}
