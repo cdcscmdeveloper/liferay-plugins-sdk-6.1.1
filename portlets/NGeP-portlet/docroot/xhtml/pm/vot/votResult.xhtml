@@ -15,29 +15,29 @@
 			<ac:paginator for="vot" />
 
 			<p:column headerText="#{lbl['lbl.pm.vot.code']}" style="width:10%;white-space: normal;word-wrap: break-word;">
-				<h:outputText value="#{votList.votFundCode}" />
+				<h:outputText value="#{votList[0]}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.vot.desc']}" style="width:30%;white-space: normal;word-wrap: break-word;">
-				<h:outputText value="#{votList.description}" />
+				<h:outputText value="#{votList[1]}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.pm.kumpulan.ptj']}" style="width:30%;white-space: normal;word-wrap: break-word;">
-				<h:outputText value="#{votList.pmOrgProfile.pmOrgValidity.orgCode}" />
+				<h:outputText value="#{votList[2]}" />
 				<p:spacer width="3%"></p:spacer>
-				<h:outputText value="#{votList.pmOrgProfile.pmOrgValidity.orgName}" />
+				<h:outputText value="#{votList[3]}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.vot.valid.from']}"
 				style="width:10%;white-space: normal;">
-				<h:outputText value="#{votList.effDate}">
+				<h:outputText value="#{votList[4]}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.vot.valid.to']}" style="width:10%;white-space: normal;">
-				<h:outputText value="#{votList.expDate}" >
+				<h:outputText value="#{votList[5]}" >
 				<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
@@ -45,7 +45,7 @@
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}"
 				style="width:10%;white-space: normal;"> 
-   	    #{(votList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
+   	    #{(votList[6]==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
        </p:column>
 		</p:dataTable>
 	</p:panel>

@@ -15,23 +15,23 @@
 			<ac:paginator for="fund" />
 
 			<p:column headerText="#{lbl['lbl.pm.fund.code']}" style="width:10%;white-space: normal;word-wrap: break-word;">
-				<h:outputText value="#{fundList.votFundCode}" />
+				<h:outputText value="#{fundList[0]}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.fund.desc']}" style="width:60%;white-space: normal;word-wrap: break-word;">
-				<h:outputText value="#{fundList.description}" />
+				<h:outputText value="#{fundList[1]}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.fund.valid.from']}"
 				style="width:10%;white-space: normal;">
-				<h:outputText value="#{fundList.effDate}">
+				<h:outputText value="#{fundList[2]}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.fund.valid.to']}" style="width:10%;white-space: normal;">
-				<h:outputText value="#{fundList.expDate}" >
+				<h:outputText value="#{fundList[3]}" >
 				<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
@@ -39,7 +39,7 @@
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}"
 				style="width:10%;white-space: normal;"> 
-   	    #{(fundList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
+   	    #{(fundList[4]==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
        </p:column>
 		</p:dataTable>
 	</p:panel>
