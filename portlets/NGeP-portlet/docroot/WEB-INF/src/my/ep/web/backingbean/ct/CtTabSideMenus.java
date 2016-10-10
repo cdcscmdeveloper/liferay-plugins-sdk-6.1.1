@@ -29,56 +29,56 @@ public  class CtTabSideMenus {
 	List<String> menuFactoring  = null;
 	List<String> menuPaymentTracking = null;
 	List<String> menuSetting = null;
-	
+
 	/**
 	 * The constructor used for initializing the string list
 	 */
 	public CtTabSideMenus() {
 		face = new FacesScopes();
-		   
+	   
 		if (menuFulfilement == null) {
 			menuFulfilement =  new ArrayList<String>(Arrays.asList(
-					ResourceBundleUtils.getMessage("lbl.ct.menu.fd", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+				ResourceBundleUtils.getMessage("lbl.ct.menu.fd", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		   
+   
 		if (menuAgency == null) {
 			menuAgency =  new ArrayList<String>(Arrays.asList(
-					ResourceBundleUtils.getMessage("lbl.ct.menu.agency", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			ResourceBundleUtils.getMessage("lbl.ct.menu.agency", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		   
+   
 		if (menuZone == null) {
 			menuZone =  new ArrayList<String>(Arrays.asList(
-					ResourceBundleUtils.getMessage("lbl.ct.menu.zone", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			ResourceBundleUtils.getMessage("lbl.ct.menu.zone", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		   
+   
 		if (menuItem == null) {
 			menuItem =  new ArrayList<String>(Arrays.asList(
-					ResourceBundleUtils.getMessage("lbl.ct.menu.item", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			ResourceBundleUtils.getMessage("lbl.ct.menu.item", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		   
+   
 		if (menuDeduction == null) {
 			menuDeduction =  new ArrayList<String>(Arrays.asList(
-					ResourceBundleUtils.getMessage("lbl.ct.menu.deduction", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			ResourceBundleUtils.getMessage("lbl.ct.menu.deduction", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		   
+   
 		if (menuSchedule == null) {
 			menuSchedule =  new ArrayList<String>(Arrays.asList(
-					ResourceBundleUtils.getMessage("lbl.ct.menu.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			ResourceBundleUtils.getMessage("lbl.ct.menu.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		   
+   
 		if (menuFactoring == null) {
 			menuFactoring =  new ArrayList<String>(Arrays.asList(
-					ResourceBundleUtils.getMessage("lbl.ct.menu.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			ResourceBundleUtils.getMessage("lbl.ct.menu.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		   
+   
 		if (menuPaymentTracking == null) {
 			menuPaymentTracking =  new ArrayList<String>(Arrays.asList(
-					ResourceBundleUtils.getMessage("lbl.ct.menu.adv.payment.tracking", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			ResourceBundleUtils.getMessage("lbl.ct.menu.adv.payment.tracking", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-		   
+   
 		if (menuSetting == null) {
 			menuSetting =  new ArrayList<String>(Arrays.asList(
-					ResourceBundleUtils.getMessage("lbl.ct.menu.setting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			ResourceBundleUtils.getMessage("lbl.ct.menu.setting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 	}
 }
