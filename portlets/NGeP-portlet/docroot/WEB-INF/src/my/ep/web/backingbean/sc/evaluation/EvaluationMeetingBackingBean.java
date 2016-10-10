@@ -217,7 +217,7 @@ public class EvaluationMeetingBackingBean extends
 
 	/**
 	 * Retrieve meeting details.Event handle to display all the meeting and
-	 * committee members details.
+	 * committee members and remarks details.
 	 * 
 	 * @param qtId
 	 *            (Mandatory)
@@ -677,7 +677,7 @@ public class EvaluationMeetingBackingBean extends
 
 	/**
 	 * Check committee formation.Event handle to check committee members(1
-	 * Chairperosn,1 Secretary,at least 1 member) exist or not in the list
+	 * Chairperosn,1 Secretary,at least 2 member) exist or not in the list
 	 * 
 	 * @param metReqDtO
 	 *            the met req dt o
@@ -1659,7 +1659,9 @@ public class EvaluationMeetingBackingBean extends
 		this.searchExistingUser = searchExistingUser;
 	}
 
-	// this method checking two meeting dates or equal or not.
+	/*
+	 * this method is used to check two meeting dates or equals or not.
+	 */
 	private void compareMeetingDates(ScQtMeeting scqtMeeting,
 			List<ScQtMeeting> meetingList) {
 		if (null != meetingList && meetingList.size() >= 1) {
@@ -1690,14 +1692,18 @@ public class EvaluationMeetingBackingBean extends
 
 	}
 
-	// delete existing meeting details records from database.
+	/*
+	 * delete meeting details from existing  meeting list.
+	 */
 	public void deleteMeetingDtls() {
 		markDeleteSelectedRowsAction(this.getManagedBean().getScQtMeetings(),
 				this.getManagedBean().getMeetingRemoveList());
 
 	}
 
-	// delete existing meeting details records from database.
+	/*
+	 * delete committee members from existing committee members list.
+	 */
 	public void deleteCommitteemembersDtls() {
 		markDeleteSelectedRowsAction(this.getManagedBean()
 				.getCommitteeMemberActivity(), this.getManagedBean()
@@ -1705,7 +1711,10 @@ public class EvaluationMeetingBackingBean extends
 
 	}
 
-	// retrive otherCommittee information from db.
+	
+	/*
+	 * retrive existing or otherCommittee information from db.
+	 */
 	private void retriveExistOtherCommittee() {
 		ICommitteSO committeSO = null;
 		CommitteResDTO resDTO = null;
@@ -1817,7 +1826,7 @@ public class EvaluationMeetingBackingBean extends
 //	}
 
 	/**
-	 * Close listener.close popup
+	 * user click on cancel button in popup window.
 	 */
 	public void closeListener() {
 		
