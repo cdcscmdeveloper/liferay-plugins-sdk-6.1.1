@@ -181,7 +181,7 @@ public class LocationSingleton {
 	 * @param listCities
 	 * @param locationLevelCode
 	 * @param locClass
-	 * @return
+	 * @return TreeNode
 	 */
 	public <LOCATION_CLASS extends TplSpecLoc> TreeNode buildLocationPopupTree(
 			Long countryId, List<PmState> listStates,
@@ -877,7 +877,7 @@ public class LocationSingleton {
 	 * @param listDivisions
 	 * @param listCities
 	 * @param locClass
-	 * @return
+	 * @return TreeNode
 	 */
 	public <LOCATION_CLASS extends TplSpecLoc> TreeNode buildLocationTree(
 			TplSpecZoneDtl zone, List<PmState> listStates,
@@ -1132,7 +1132,7 @@ public class LocationSingleton {
 	 * @param listDistricts
 	 * @param listDivisions
 	 * @param listCities
-	 * @return
+	 * @return TreeNode
 	 */
 	@Deprecated
 	public TreeNode buildZoneTree(TplSpecZoneDtl zone,
@@ -1332,7 +1332,7 @@ public class LocationSingleton {
 	 * @param listDistricts
 	 * @param listDivisions
 	 * @param listCities
-	 * @return
+	 * @return TreeNode
 	 */
 	@Deprecated
 	public TreeNode buildGeneralZoneTree(TplSpecZoneDtl zone,
@@ -1531,7 +1531,7 @@ public class LocationSingleton {
 	 * @param listDistricts
 	 * @param listDivisions
 	 * @param listCities
-	 * @return
+	 * @return TreeNode
 	 */
 	public TreeNode buildCircularZoneTree(CtPanelZone zone,
 			List<PmState> listStates, List<PmDistrict> listDistricts,
