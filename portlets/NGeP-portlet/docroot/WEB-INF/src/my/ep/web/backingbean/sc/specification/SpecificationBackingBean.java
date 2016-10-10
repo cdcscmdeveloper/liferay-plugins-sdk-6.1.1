@@ -2442,8 +2442,9 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
+	 * this method is used to get the pmParameter object based on parameterId.
 	 * @param parameterId
-	 * @return
+	 * @return PmParameter
 	 */
 	private PmParameter getPmParameter(Long parameterId) {
 		IParameterSO parameterSO = BusinessDelegate.getInstance()
@@ -2735,7 +2736,7 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Close listener.close popup
+	 * Close listener.close popup window.
 	 */
 	public void closeListener() {
 		getManagedBean().setRequired(Boolean.FALSE);
@@ -8342,9 +8343,9 @@ public class SpecificationBackingBean extends
 		this.searchCircular = searchCircular;
 	}
 
-	// Search circular Details Method.
+	
 	/**
-	 * Search circular list.
+	 * Search circular list.user clicks on search button in circular item search.
 	 */
 	public void searchCircularList() {
 		searchCircular.reloadData();
@@ -8920,7 +8921,7 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Metho will be called click on task list task preRenderView(). Renders the
+	 * user click on task  in task list menu.it will call preRenderView() method and Renders the
 	 * specification committe screens or pages..
 	 */
 	public void preRenderView() {
@@ -9437,7 +9438,7 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Validate prepare qt checklist.validate specification committee menus
+	 * Validate prepare qt checklist.user clicks side menus in specification committee it will validate the side menus
 	 * data.
 	 */
 	private void validatePrepareQtChecklist() {
@@ -10358,7 +10359,7 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Gpki sign action.submit in specification committee chairperson.
+	 * Gpki sign action.user clicks on submit button  in specification committee.
 	 * 
 	 * @param digiSign
 	 *            (PmDigiSign digiSign)
@@ -10484,7 +10485,7 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Cancel spec action.delete existing specs from database.
+	 * Cancel spec action.user click on cancel button in template spec screes it will remove the existing specs from database.
 	 * 
 	 * @param flowType
 	 *            (String flowType).
@@ -10582,7 +10583,7 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Save template spec details.
+	 * Save template spec details.user clicks on save button in template spec screens.
 	 * 
 	 * @param flowType
 	 *            (String flowType)
@@ -11027,7 +11028,7 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Complete template spec details.
+	 * Complete template spec details.user clicks on complete button in template spec screens.
 	 * 
 	 * @param flowType
 	 *            ((String flowType)
@@ -11378,7 +11379,7 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Creates the template spec.
+	 * Creates the template spec.user clicks on create or clone buttons in template spec popup screen.
 	 * 
 	 * @param tplSpecMaster
 	 *            (TplSpecMaster tplSpecMaster)
@@ -11639,7 +11640,7 @@ public class SpecificationBackingBean extends
 	 *            the sc qt supplier
 	 * @param smSupplier
 	 *            the sm supplier
-	 * @return the sm mof account
+	 * @return SmMofAccount.
 	 */
 	public SmMofAccount retrieveSmMofAccount(ScQtSupplier scQtSupplier,
 			SmSupplier smSupplier) {
@@ -11776,11 +11777,13 @@ public class SpecificationBackingBean extends
 
 	/**
 	 * technical checklist score change.Event handle check/Uncheck score
-	 * checkbox in technical checklist based on score you will display
+	 * checkbox in technical checklist based on score it will display
 	 * specification status.
 	 * 
 	 * @param index
 	 *            (int index)
+	 *  @param checklist
+	 *                (List<ScQtCheckList> checklist)         
 	 * @param checklist
 	 *            (List<ScQtCheckList> checklist).
 	 */
@@ -11813,11 +11816,13 @@ public class SpecificationBackingBean extends
 
 	/**
 	 * financial checklist score change.Event handle check/Uncheck score
-	 * checkbox in financial checklist based on score you will display
+	 * checkbox in financial checklist based on score it will display
 	 * specification status.
 	 * 
 	 * @param index
 	 *            (int index)
+	 * @param checklist
+	 *                (List<ScQtCheckList> checklist)            
 	 * @param checklist
 	 *            (List<ScQtCheckList> checklist).
 	 */
@@ -11868,7 +11873,7 @@ public class SpecificationBackingBean extends
 	 * Method to check all the state/districts in data table.
 	 * 
 	 * @param event
-	 *            the event
+	 *            (boolean true/false)
 	 */
 	public void checkAllConditions(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
@@ -11894,6 +11899,7 @@ public class SpecificationBackingBean extends
 	 * Method to check all the state/districts in data table in dialog.
 	 * 
 	 * @param isCheck
+	 *              (boolean true/false).
 	 */
 	public void checkAllPopUpConditions(boolean ischeck) {
 		// boolean flag = ((SelectBooleanCheckbox)
@@ -11918,6 +11924,7 @@ public class SpecificationBackingBean extends
 	 * Method to check all the state/districts in data table in dialog.
 	 * 
 	 * @param isCheck
+	 *              (boolean true/false).
 	 */
 	public void checkAllZoneGeneralPopUp(boolean ischeck) {
 		// boolean flag = ((SelectBooleanCheckbox)
@@ -12048,7 +12055,9 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// validate Technical Scoring passing score
+	/*
+	 * this method is used to check the technical passing score is less than zero or greater than 100.
+	 */
 	private void validateTechnicalPassingScoring(
 			ScQtScoreSetting technicalScoreSetting) {
 		try {
@@ -12087,7 +12096,9 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// validate Presenttataion Demo Passing scores.
+	/*
+	 * this method is used to check the demo passing score is less than zero or greater than 100.
+	 */
 	private void validateTechnicalDemoPassingScoring(
 			ScQtScoreSetting demoScoreSetting) {
 		try {
@@ -12123,7 +12134,9 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// validate Financial Package and Item Passing scores.
+	/*
+	 * this method is used to check the financial package and item  passing score is less than zero or greater than 100.
+	 */
 	private void validateFinancialPackageItemPassingScoring(
 			ScQtScoreSetting financialPackageScore,
 			ScQtScoreSetting financialItemScore) {
@@ -12169,7 +12182,9 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// delete checklist scores
+	/*
+	 * this method is used to delete the checklist scores in pmdocuments checklists.
+	 */
 	public void deleteCheckListScoreContrats() {
 
 		markDeleteSelectedRowsAction(this.getManagedBean().getCheckListScore(),
@@ -12177,14 +12192,18 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// delete checklist scores
+	/*
+	 * this method is used to delete the checklist scores in assets liability checklist.
+	 */
 	public void deleteCheckListScoreYears() {
 		markDeleteSelectedRowsAction(
 				this.getManagedBean().getScoringForYears(), this
 						.getManagedBean().getToBeRemoveList());
 	}
 
-	// delete technical Checklist List
+	/*
+	 * this method is used to delete the checklist in technical checklist side menu.
+	 */
 	public void deleteTechnicalCheckList() {
 		IParameterSO parameterSo = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -12241,7 +12260,9 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// delete Financial Checklist List
+	/*
+	 * this method is used to delete the checklist in financial checklist side menu.
+	 */
 	public void deleteFinancialCheckList() {
 		IParameterSO parameterSo = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -12300,14 +12321,22 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// changed delivery details tabs
+	/*
+	 * this method is used to change the tabs(zones) in delivery address side menu.
+	 * @param event
+	 *            (BriefingZoneBean zonebean).
+	 */
 	public void deliveryDetailsZonesTabChange(TabChangeEvent event) {
 		BriefingZoneBean specZoneDtl = (BriefingZoneBean) event.getData();
 		this.getManagedBean()
 				.setTplSpecZoneDtl(specZoneDtl.getTplSpecZoneDtl());
 	}
-
-	// this method is check for Technical Standard Checklist Exist or not
+	
+	/*
+	 *  this method is used to  check the Technical Standard Checklist Exist or not in specification side menu.
+	 *  
+	 *  return true/false.
+	 */
 	private boolean validateTechnicalStandardCheckList() {
 		boolean pmdocument = false;
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
@@ -12331,7 +12360,11 @@ public class SpecificationBackingBean extends
 		return pmdocument;
 	}
 
-	// this method is check for Financial Standard Checklist Exist or not
+	/*
+	 *  this method is used to  check the  Financial Standard Checklist Exist or not in specification side menu.
+	 *  
+	 *  return true/false.
+	 */
 	private boolean validateFinancialStandardCheckList() {
 		boolean pmdocument = false;
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
@@ -12354,7 +12387,12 @@ public class SpecificationBackingBean extends
 		return pmdocument;
 	}
 
-	//this method is used to check in the current checklist have mandatory or optional pmdocuments.
+	/*
+	 *  this method is used to check in the current technical or financial checklist have  mandatory or optional pmdocuments in specification side menu.
+	 *  @param stage
+	 *           (String stage)
+	 */
+	
 	public void checkListYesConfirmation(String stage) {
 		this.getManagedBean().setStandardTemplate(
 				ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
@@ -12365,7 +12403,11 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getCheckListYesIndex());
 	}
-	//this method is used to check in the current checklist have mandatory or optional pmdocuments.
+	/*
+	 *  this method is used to check in the current technical or financial checklist don't have  mandatory or optional pmdocuments in specification side menu.
+	 *  @param stage
+	 *           (String stage)
+	 */
 	public void checkListNoConfirmation(String stage) {
 		this.getManagedBean().setStandardTemplate(
 				ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
@@ -12379,7 +12421,11 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// this method is check for Technical Standard Checklist Exist or not
+	/*
+	 *  this method is used when user clicks on submit button in specification committee to  check the Technical Standard Checklist Exist or not.
+	 *  
+	 *  return true/false.
+	 */
 	private boolean validateTechnicalStandardCheckListSubmit() {
 		boolean pmdocument = false;
 		retriveTechnicalCheckList();
@@ -12399,7 +12445,11 @@ public class SpecificationBackingBean extends
 		return pmdocument;
 	}
 
-	// this method is check for Financial Standard Checklist Exist or not
+	/*
+	 *  this method is used when user clicks on submit button in specification committee to  check the Financial Standard Checklist Exist or not.
+	 *  
+	 *  return true/false.
+	 */
 	private boolean validateFinancialStandardCheckListSubmit() {
 		boolean pmdocument = false;
 		retriveFinancialCheckList();
@@ -12418,7 +12468,11 @@ public class SpecificationBackingBean extends
 		}
 		return pmdocument;
 	}
-	//this method is used to check in the current checklist have mandatory or optional pmdocuments.
+	/*
+	 *  this method is used when user clicks on submit button in specification committee to check in the techncial or financial checklist don't have mandatory or optional pmdocuments.
+	 *  @param stage
+	 *             (String stage). 
+	 */
 	public void checkListNoConfirmationSubmit(String stage) {
 
 		if (ParameterConst.SPECIFICATION_TYPE_TECHNICAL.equalsIgnoreCase(stage)) {
@@ -12431,7 +12485,12 @@ public class SpecificationBackingBean extends
 
 		}
 	}
-//this method is used to check in the current checklist have mandatory or optional pmdocuments.
+	/*
+	 *  this method is used when user clicks on submit button in specification committee to check in the techncial or financial checklist have mandatory or optional pmdocuments.
+	 *  @param stage
+	 *             (String stage). 
+	 *    return   navigate to acknowledgement page.       
+	 */
 	public String checkListYesConfirmationSubmit(String stage) {
 		String checklistSubmit = CommonUIConst.ACKNOWLEDGE_PAGE;
 		if (ParameterConst.SPECIFICATION_TYPE_TECHNICAL.equalsIgnoreCase(stage)) {
@@ -12459,7 +12518,11 @@ public class SpecificationBackingBean extends
 		return checklistSubmit;
 
 	}
-/*this method is used to remove fulfilment details objects*/
+	
+	/*
+	 * this method is used to remove fulfilment details objects in fulfiment details side menu.
+	 * 
+	 */
 	private void removefullfillmentDetails(String scheduleType) {
 
 		if (ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE
@@ -12503,7 +12566,9 @@ public class SpecificationBackingBean extends
 
 	}
 
-	/*this method is used to cancel the popup window */
+	/*
+	 * this method is used when user click on cancel button in popup window.
+	 */
 	public void cancelPopup() {
 		this.getManagedBean().setAutoUpdate(true);
 		this.getManagedBean().setSelectCtPanelItem(null);
@@ -12522,6 +12587,11 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/*
+	 * check in the current checklist have template spec exist or not.
+	 * 
+	 * return (true/false).
+	 */
 	private boolean retriveExistingTemplatespec(List<ScQtCheckList> checkList) {
 		if (null != checkList && !checkList.isEmpty()) {
 			for (ScQtCheckList specChecklist : checkList) {
@@ -12778,7 +12848,7 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Upload Tehnical or Financial Upload UserScoring Schema Files.
+	 * Upload Tehnical UserScoring Schema Files.
 	 * 
 	 */
 	public void technicalUserScoringSchemaFileUpload(FileUploadEvent event)
@@ -12802,7 +12872,7 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Upload Tehnical or Financial Upload UserScoring Schema Files.
+	 * Upload  Financial UserScoring Schema Files.
 	 * 
 	 */
 	public void financialUserScoringSchemaFileUpload(FileUploadEvent event)
@@ -12880,7 +12950,10 @@ public class SpecificationBackingBean extends
 		}
 
 	}
-/*this method is used to check the technical user scoring schema attachment is mandatory or not*/
+	
+	/*
+	 * this method is used to check the technical user scoring schema attachment is mandatory or not
+	 */
 	private void validateTechnicalUserScoringAttachment(
 			boolean isTechnicalUserScoringSchema) {
 
@@ -12893,7 +12966,9 @@ public class SpecificationBackingBean extends
 
 		}
 	}
-/*this method is used to check the financial user scoring schema attachment  is mandatory or not*/
+	/*
+	 * this method is used to check the financial user scoring schema attachment  is mandatory or not
+	 */
 	private void validateFinancialUserScoringAttachment(
 			boolean isFinancialUserScoringSchema) {
 		if (isFinancialUserScoringSchema) {
@@ -13061,8 +13136,10 @@ public class SpecificationBackingBean extends
 		return scQt;
 	}
 	
-	
-	/*add panelItems asa TemplateSpecItems for Panel*/
+	/*
+	 * add panelItems as a TemplateSpec Items or specifications.
+	 * return navigate to template spec screen.
+	 */
 	public String addPanelItemsToTemplateSpec(){
 		this.getManagedBean().setSpecNewable(true);
 		this.getManagedBean().setPanelSpecExistedOrNot(false);
