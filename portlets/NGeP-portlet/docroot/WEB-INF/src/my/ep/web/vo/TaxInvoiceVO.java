@@ -3,10 +3,6 @@
  */
 package my.ep.web.vo;
 
-import java.math.BigDecimal;
-
-
-
 /**
  * ChargeLineVO
  * 
@@ -23,9 +19,7 @@ public class TaxInvoiceVO  {
 	private String gstFlagCode; 
 	
 	public TaxInvoiceVO(){
-		
 	}
-
 
 	/**
 	 * @return the gstAmount
@@ -96,8 +90,5 @@ public class TaxInvoiceVO  {
 	public void setAmountWithoutGst(String amountWithoutGst) {
 		this.amountWithoutGst = amountWithoutGst;
 	}
-
-
-
 
 }

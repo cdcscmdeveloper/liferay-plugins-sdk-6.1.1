@@ -6,7 +6,6 @@ package my.ep.web.vo;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 
-
 /**
  * ChargeLineVO
  * 
@@ -17,12 +16,10 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 public class InvoiceChargeLineVO  {
 	
 	private int level;
-	
 	private FlInvoiceItem flInvoiceItem;
 	private FlInvoiceItemSummary flInvoiceSummary;
 	
 	public InvoiceChargeLineVO(){
-		
 	}
 	/**
 	 * @return the level
@@ -60,6 +57,5 @@ public class InvoiceChargeLineVO  {
 	public void setFlInvoiceSummary(FlInvoiceItemSummary flInvoiceSummary) {
 		this.flInvoiceSummary = flInvoiceSummary;
 	}
-
 
 }
