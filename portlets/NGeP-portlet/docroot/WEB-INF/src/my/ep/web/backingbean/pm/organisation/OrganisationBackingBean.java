@@ -1719,6 +1719,7 @@ public class OrganisationBackingBean extends
 			SmSupplierBank newSupplierBank = new SmSupplierBank();
 			newSupplierBank.setPmFinancialOrg(new PmFinancialOrg());
 			newSupplierBank.setAccountPurpose("P");
+			newSupplierBank.setForHqFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 			
 			if(getManagedBean().getOrgProfile().getSmSupplier() !=null
 					&& getManagedBean().getOrgProfile().getSmSupplier().getSmAppl() !=null){
