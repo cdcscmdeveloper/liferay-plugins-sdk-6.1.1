@@ -328,6 +328,15 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Summary change. when you change summary in evaluation stage it will
+	 * display all the qualified and disqualified suppliers for package and
+	 * preference margin
+	 * 
+	 * @param event
+	 *            (is Mandatory)
+	 * 
+	 */
 	public void financialsummaryChange(AjaxBehaviorEvent event) {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO evalResDTO = null;
@@ -492,6 +501,13 @@ public class EvaluationBackingBean extends
 		return summaryReqDTO;
 	}
 
+	/*
+	 * user get setting type as technical,financial,package,item
+	 * @param recommendBy
+	 *                (String recommendBy)
+	 *  
+	 *  return int.              
+	 */
 	private int getSettingType(String recommendBy) {
 		// ScQt scQt = this.getManagedBean().getScQt();
 
@@ -648,6 +664,9 @@ public class EvaluationBackingBean extends
 		this.getManagedBean().getDisqualifiedSuppliersDM().reloadData();
 	}
 
+	/*
+	 * to retrive all the general information menu details.
+	 */
 	public void retrieveGeneralInfo() {
 		this.getManagedBean().setPrepareActiveIndex(0);
 	}
@@ -1183,7 +1202,7 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
-	 * Save presentation demo dtls.when you click save in presentation demo tab.
+	 * Save presentation demo dtls.user click on save button in presentation demo tab.
 	 */
 	public void savePresentationDemoDtls() {
 		IQTEvaluationSO evaluationSo = null;
@@ -1235,7 +1254,7 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
-	 * Evaluation backaction.when you click back button in compliance stage and
+	 * Evaluation backaction.user clicks back button in compliance stage and
 	 * evaluation stage.
 	 * 
 	 * @return navigate to evaluation main page.
@@ -1709,6 +1728,15 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/*
+	 * check the status for ptj upload and supplier upload checklists.
+	 * @param checkList
+	 *               (Mandatory)
+	 *  @param evalStage
+	 *              (Mandatory)  
+	 *    
+	 *  return   ScQtCheckList.                      
+	 */
 	private ScQtCheckList checkStausForUploadNoActionCheckLists(
 			ScQtCheckList checkList, String evalStage) {
 		IQTEvaluationSO evaluationSO = null;
@@ -2271,7 +2299,9 @@ public class EvaluationBackingBean extends
 
 	}
 
-	// check one Tier technical Financial checklist status is completed or not.
+	/*
+	 * check weather the checklist status is pending or completed.
+	 */
 	private void financialCheckListStatusCheck() {
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
@@ -2952,6 +2982,9 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/*
+	 * create menu model for financial spec zones .
+	 */
 	private void populateFinancialSpecDetailsByZone() {
 
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSpecZoneDtls())) {
@@ -2990,6 +3023,8 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 * @param packageOfferPrice
 	 *            (Mandatory)
+	 *  @param TplSpecZoneDtl
+	 *                     (optional)          
 	 */
 	private void calculateFinSpecPackageVarieance(ScQt scQt,
 			ScQtScoreOfferPrice packageOfferPrice, TplSpecZoneDtl specZoneDtl) {
@@ -3286,8 +3321,8 @@ public class EvaluationBackingBean extends
 	 * all the compliance or technical or presentation demo qualified suppliers
 	 * based on zonal.
 	 * 
-	 * @param event
-	 *            (Mandatory)
+	 * 
+	 *            
 	 */
 	public void specTabChange() {
 		try {
@@ -3380,7 +3415,7 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
-	 * Others technical evaluate.Event handle to display the supplier
+	 * technical supplier evaluate.Event handle to display the supplier
 	 * information based on the compliance qualified supplier in evaluation
 	 * stage technical Tab.
 	 * 
@@ -4041,7 +4076,7 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
-	 * Others financial evaluate..Event handle to display the supplier
+	 *  financial supplier evaluate.Event handle to display the supplier
 	 * information based on the compliance or technical or presentation demo
 	 * qualified supplier in evaluation stage financial Tab.
 	 * 
@@ -5650,7 +5685,9 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	// retrieve upload qualified suppliers based on compliance stage.
+	/*
+	 * check the technical upload checklist scores in comleted or not.
+	 */
 	private void retriveUploadCheckListTechnicalSuppliers(
 			ScQtCheckList checklist) {
 		IQTEvaluationSO evaluationSo = null;
@@ -5706,8 +5743,11 @@ public class EvaluationBackingBean extends
 
 	}
 
-	// retrieve upload qualified suppliers based on compliance stage or
-	// technical stage or presentationdemo stage.
+	/*
+    * retrieve upload qualified suppliers based on compliance stage or
+	 technical stage or presentationdemo stage.
+     */
+	
 	private void retriveUploadCheckListFinancialSuppliers(
 			ScQtCheckList checklist) {
 		IQTEvaluationSO evaluationSo = null;
@@ -5833,7 +5873,7 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
-	 * Sets the tab value.check current tab and next tab for chain.
+	 * evaluation maintain previous nextTabIndex.check current tab and next tab for chain.
 	 * 
 	 * @param currentTab
 	 *            (Mandatory)
@@ -6356,7 +6396,9 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	// check sample compliance completed or not
+	/*
+	 * check the sample compliance submission is completed or not.
+	 */
 	private void checkSampleComplianceCompleted() {
 		IQTEvaluationSO evaluationSO = null;
 		try {
@@ -6378,8 +6420,10 @@ public class EvaluationBackingBean extends
 
 	}
 
-	// check meeting details status Done or not.
-
+	
+     /*
+      * check the meating details status is pending or done.
+      */
 	private void checkMeetingDetailsAndStatus(
 			List<ScQtMeeting> meetingDetailsList) {
 		if (null == meetingDetailsList || meetingDetailsList.isEmpty()) {
@@ -6402,7 +6446,9 @@ public class EvaluationBackingBean extends
 
 	}
 
-	// check attendance for opening committee.
+	/*
+	 * this method is used to check the committee members attendance is completed or pending.
+	 */
 	private void checkCommitteeMembersAttendance(
 			List<ScQtCommitteeActivity> committeeActivityList) {
 		if (null != committeeActivityList && !committeeActivityList.isEmpty()) {
@@ -7371,8 +7417,11 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	// this method to set downaloadall reports file name and save file name in
-	// db;
+	/*
+	 * this method to set downaloadall reports file name and save file name in
+	// db.
+	 */
+	
 	private void setReportAttachment() throws Exception {
 		IQTEvaluationSO evaluationSO = null;
 		try {
@@ -7779,7 +7828,7 @@ private void retriveCommitteeRemarksList(){
 	/**
 	 * Revise proposal evaluation.Event handle when member revise in evaluation.
 	 * 
-	 * @return the string
+	 * @return navigate to acknowledge page.
 	 */
 	public String reviseProposalEvaluation() {
 		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(this
@@ -8132,8 +8181,7 @@ private void retriveCommitteeRemarksList(){
 	/**
 	 * Download report.
 	 * 
-	 * @param scQtEvaluationReport
-	 *            (Mandatory)
+	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -9482,6 +9530,8 @@ private void retriveCommitteeRemarksList(){
 	/**
 	 * Delete demo upload file.Event handle to delete upload file in
 	 * presentation demo tab.
+	 * @param delEntity
+	 *               (BaseEntity delEntity).
 	 */
 	public void deleteDemoUploadFile(BaseEntity delEntity) {
 		debugLogger("deleteUploadFile");
@@ -9852,10 +9902,10 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 
-	// retrieve the scQtEvaluationReport for Maklumat Tender/Sebut Harga/
-	// Asas-Asas Penilaian / Perakuan
+	
 	/**
-	 * Retrive rules and regulation report.
+	 * Retrive rules and regulation report.retrieve the scQtEvaluationReport for Maklumat Tender/Sebut Harga/
+	Asas-Asas Penilaian / Perakuan
 	 * 
 	 * @param scQtEvaluationReport
 	 *            the sc qt evaluation report
@@ -10334,7 +10384,13 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 
-	// this method checking two meeting dates or equal or not.
+	/*
+	 * check two meeting dates equal or not.
+	 * @param scqtMeeting
+	 *                (ScQtMeeting scqtMeeting)
+	 *  @param meetingList
+	 *                 (List<ScQtMeeting> meetingList).              
+	 */
 	private void compareMeetingDates(ScQtMeeting scqtMeeting,
 			List<ScQtMeeting> meetingList) {
 		if (null != meetingList && meetingList.size() >= 1) {
@@ -10365,7 +10421,9 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	// delete existing meeting details records from database.
+	/*
+	 * delete existing meeting details records from database.
+	 */
 	public void deleteMeetingDtls() {
 		markDeleteSelectedEvaluationRowsAction(this.getManagedBean()
 				.getScQtMeetings(), this.getManagedBean()
@@ -10373,7 +10431,9 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	// delete existing meeting attendance details records from database.
+	/*
+	 * delete existing meeting attendance details records from database.
+	 */
 	public void deleteMeetingAttendanceDtls() {
 		markDeleteSelectedRowsAction(getManagedBean()
 				.getMeetingAttendanceList(), getManagedBean()
@@ -10381,7 +10441,11 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	// retrieve specification based on sample item.
+	/*
+	 * retrieve specification based on sample item.
+	 * @param event
+	 *           (ScQtSampleItem event).
+	 */
 	public void retriveSpecificationsByItem(SelectEvent event) {
 		this.getManagedBean().setSampleItemSpecifications(
 				new ArrayList<TplSpecQuestion>());
@@ -10409,7 +10473,9 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	// change sample submission status in sample tab.
+	/*
+	 * change sample submission status in sample tab.
+	 */
 	public void changeSampleStatus(ScQtSampleItem sampleItem,
 			IPagingDataModel<ScQtSampleItem> sampleItemList) {
 		List<ScQtSampleItem> dataModelItemList = sampleItemList.getList();
@@ -10926,8 +10992,8 @@ private void retriveCommitteeRemarksList(){
 	}
 
 	/*
-	 * this method to save compliance Proposal suppliers to navigate to
-	 * anotherpage using paging
+	 * this method is used to save compliance Proposal suppliers when user navigate to
+	 * anotherpage using paging data model.
 	 */
 	public void complianceProposalSubmitSuppliers() {
 		IQTEvaluationSO evaluationSo = null;
@@ -10966,7 +11032,7 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	/* this method to save Upload checklist suppliers using paging data model. */
+	/* this method is used to save the Upload checklist suppliers when user navigate to another page using paging data model. */
 	public void SaveUploadCheckListSuppliersDM() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
@@ -10994,7 +11060,10 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	/* save Compliance Paging data model */
+	/* save Compliance Sample Paging data model. 
+	 * 
+	 * 
+	 */ 
 	public void saveComplianceSampleItemsDM() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
@@ -11028,7 +11097,9 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 
-	// retrieve presentationdemo qualified suppliers based on technical stage.
+	/*
+	 * retrieve presentationdemo qualified suppliers based on technical stage.
+	 */
 	private void retrivePresentationDemoChecklistSuppliersStatus(
 			ScQtCheckList checklist) {
 		IQTEvaluationSO evaluationSo = null;
@@ -11333,7 +11404,12 @@ private void retriveCommitteeRemarksList(){
      this.getManagedBean().setToBeRemovedProposalAttachmentsChecklists(proposalChecklist);
 	}
 	
-	/*save templatedoc EditContentSession */
+	/*
+	 * this method is used to save the userInput type popup window content in reports tab.
+	 * @param evaluationReport
+	 *                 (ScQtEvaluationReport evaluationReport).
+	 * 
+	 */
 	public void saveEditTemplateDocContent(ScQtEvaluationReport evaluationReport){
 		IQTEvaluationSO evaluationSO = null;
 		try{
