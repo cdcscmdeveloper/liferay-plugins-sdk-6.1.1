@@ -1,8 +1,5 @@
 package my.ep.web.backingbean.pm.glaccount;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -10,19 +7,14 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.logging.LogKey;
-import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -45,7 +37,7 @@ public class GlAccountBackingBean extends
 	
 	public static final String NAV_TO_MAIN = "/xhtml/pm/glaccount/glAccountSearchMain";
 
-	private IPagingDataModel<PmGlAccount> searchGlAccount = new SearchGlAccountPagingDataModel();
+	private IPagingDataModel<Object[]> searchGlAccount = new SearchGlAccountPagingDataModel();
 
 	boolean result = false;
 	// Default value
@@ -101,66 +93,78 @@ public class GlAccountBackingBean extends
 		return NAV_TO_MAIN;
 	}
 
-	private ISearchBean<PmGlAccount> getSearchBeanData(
-			ISearchBean<PmGlAccount> searchBean) {
-
-		GlAccountSearchBean glAccountSearchBean = this.getManagedBean().getGlAccountSearchBean();
-		boolean	isEmpty = true;
-		if (StringUtils.isNotBlank(glAccountSearchBean.getAccountCode())) {
-
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("glAccCode",
-							SearchOperator.OPERATOR_EQUALS.value(), glAccountSearchBean
-									.getAccountCode().toUpperCase() , true));
-			isEmpty = false;
-			
-		}
-		if (StringUtils.isNotBlank(glAccountSearchBean.getAccountName())) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("description",
-							SearchOperator.OPERATOR_LIKE.value(), glAccountSearchBean
-									.getAccountName().toUpperCase(), true));
-			isEmpty = false;
-		}
-		if (StringUtils.isNotBlank(glAccountSearchBean.getStatus())) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							glAccountSearchBean.getStatus()));
-		} else {
-			List<String> activeAndInActiveStatus = new ArrayList<String>();
-			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
-			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg",
-							SearchOperator.OPERATOR_IN.value(), 
-							activeAndInActiveStatus
-			));
-		}
-		return searchBean;
-	}
+//	private ISearchBean<PmGlAccount> getSearchBeanData(
+//			ISearchBean<PmGlAccount> searchBean) {
+//
+//		GlAccountSearchBean glAccountSearchBean = this.getManagedBean().getGlAccountSearchBean();
+//		boolean	isEmpty = true;
+//		if (StringUtils.isNotBlank(glAccountSearchBean.getAccountCode())) {
+//
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("glAccCode",
+//							SearchOperator.OPERATOR_EQUALS.value(), glAccountSearchBean
+//									.getAccountCode().toUpperCase() , true));
+//			isEmpty = false;
+//			
+//		}
+//		if (StringUtils.isNotBlank(glAccountSearchBean.getAccountName())) {
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("description",
+//							SearchOperator.OPERATOR_LIKE.value(), glAccountSearchBean
+//									.getAccountName().toUpperCase(), true));
+//			isEmpty = false;
+//		}
+//		if (StringUtils.isNotBlank(glAccountSearchBean.getStatus())) {
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("recordStatusFlg",
+//							SearchOperator.OPERATOR_EQUALS.value(),
+//							glAccountSearchBean.getStatus()));
+//		} else {
+//			List<String> activeAndInActiveStatus = new ArrayList<String>();
+//			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
+//			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("recordStatusFlg",
+//							SearchOperator.OPERATOR_IN.value(), 
+//							activeAndInActiveStatus
+//			));
+//		}
+//		return searchBean;
+//	}
 
 	private class SearchGlAccountPagingDataModel extends
-			PagingDataModel<PmGlAccount> {
+			PagingDataModel<Object[]> {
 		private static final long serialVersionUID = 1L;
 
 		public SearchGlAccountPagingDataModel() {
 			super("glAccountSR",getManagedBean().isLazy());
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
-		public ISearchResultBean<PmGlAccount> pageChangeListener(
-				ISearchBean<PmGlAccount> searchBean) {
+		public ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 			IGlAccountSO glAccountSO;
 
 			try {
-				ISearchBean<PmGlAccount> searchBeanData = getSearchBeanData(searchBean);
+				//ISearchBean<PmGlAccount> searchBeanData = getSearchBeanData(searchBean);
 				GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
-				glAccountReqDTO.setGlAccountSearchBean(searchBeanData);
+				GlAccountSearchBean glAccountSearchBean = getManagedBean().getGlAccountSearchBean();				
+				if (StringUtils.isNotBlank(glAccountSearchBean.getAccountCode())) {
+					glAccountReqDTO.setGlAccountCode(glAccountSearchBean.getAccountCode());					
+				}
+				
+				if (StringUtils.isNotBlank(glAccountSearchBean.getAccountName())) {
+					glAccountReqDTO.setGlAccountDesc(glAccountSearchBean.getAccountName());
+				}
+				
+				if (StringUtils.isNotBlank(glAccountSearchBean.getStatus())) {
+					glAccountReqDTO.setGlAccountRecordStatus(Integer.parseInt(glAccountSearchBean.getStatus()));
+				}
+				
+				glAccountReqDTO.setGlAccountObjSearchBean(searchBean);
 				glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IGlAccountSO.class);
@@ -168,7 +172,7 @@ public class GlAccountBackingBean extends
 				getManagedBean().setLazy(true);		
 				if (resDTO.isSuccessful()) {
 
-					return resDTO.getGlAccountResultBean();
+					return resDTO.getGlAccountObjResultBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -186,18 +190,15 @@ public class GlAccountBackingBean extends
 	/**
 	 * @return the searchGlAccount
 	 */
-	public IPagingDataModel<PmGlAccount> getSearchGlAccount() {
+	public IPagingDataModel<Object[]> getSearchGlAccount() {
 		return searchGlAccount;
 	}
 
 	/**
 	 * @param searchGlAccount the searchGlAccount to set
 	 */
-	public void setSearchGlAccount(IPagingDataModel<PmGlAccount> searchGlAccount) {
+	public void setSearchGlAccount(IPagingDataModel<Object[]> searchGlAccount) {
 		this.searchGlAccount = searchGlAccount;
 	}
-
-	
-	
 
 }

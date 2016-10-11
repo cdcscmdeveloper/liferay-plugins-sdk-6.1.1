@@ -18,35 +18,29 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.pm.vot.program.code']}" />
 				</f:facet>
-				<ui:repeat var="pmVotFunds" value="#{programActivityList.pmVotFund}">
-					<h:outputText value="#{(pmVotFunds.votFundCode)}" />
-					<br />
-				</ui:repeat>
+				#{programActivityList[0]}
 			</p:column>
 
 			<p:column style="width:40%;white-space: normal;word-wrap: break-word;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.pm.vot.program.desc']}" />
 				</f:facet>
-				<ui:repeat var="pmVotFunds" value="#{programActivityList.pmVotFund}">
-					<h:outputText value="#{(pmVotFunds.description)}" />
-					<br />
-				</ui:repeat>
+				#{programActivityList[1]}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.program.activity.code']}"
 				style="width:15%;white-space: normal;">
-				<h:outputText value="#{programActivityList.prgActivityCode}" />
+				#{programActivityList[2]}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.program.activity.desc']}"
 				style="width:40%;white-space: normal;word-wrap: break-word;">
-				<h:outputText value="#{programActivityList.description}" />
+				#{programActivityList[3]}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.vot.program.valid.from']}"
 				style="width:15%;">
-				<h:outputText value="#{programActivityList.effDate}">
+				<h:outputText value="#{programActivityList[4]}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
@@ -54,7 +48,7 @@
 
 			<p:column headerText="#{lbl['lbl.pm.vot.program.valid.to']}"
 				style="width:15%;">
-				<h:outputText value="#{programActivityList.expDate}">
+				<h:outputText value="#{programActivityList[5]}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
@@ -62,7 +56,7 @@
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}"
 				style="width:10%;white-space: normal;word-wrap: break-word;"> 
-   	    #{(programActivityList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
+   	    #{(programActivityList[6]==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
        </p:column>
 		</p:dataTable>
 	</p:panel>
