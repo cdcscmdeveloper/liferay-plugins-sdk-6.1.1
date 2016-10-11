@@ -1,7 +1,7 @@
 /**
- * 
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
-package my.ep.web.backingbean.fl.pr;
+package my.ep.web.vo;
 
 import java.io.Serializable;
 
@@ -10,14 +10,13 @@ import org.primefaces.model.TreeNode;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 
 /**
- * @author Ramana
- *
+ * The Class FLSupplierItemVO.
+ * 
+ * @author Giribabu
+ * @since 22/9/2014
  */
 public class FLSupplierItemVO implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ScSupplierItemPrice  supplierItemPrice;
 	private TreeNode itemZoneTree;

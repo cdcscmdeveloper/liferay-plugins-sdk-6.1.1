@@ -161,6 +161,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.FLSupplierItemVO;
 
 /**
  * Backing Bean for Create Purchase Order.
