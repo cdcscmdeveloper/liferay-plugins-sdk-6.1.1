@@ -11,13 +11,11 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationReqDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -25,6 +23,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmBulkApplicationVO;
+import my.ep.web.vo.SmOverlapCategoryVO;
 
 @ManagedBean(name = "bulkApplicationMB")
 @SessionScoped
@@ -38,79 +37,43 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 	private String viewBy = "ALL";
 	private String assignment = "ALL";
 	private String docType = "";
-	private PagingDataModel<SmBulkApplicationVO> taskListDataModel = new taskPagingDataModel();
+	private PagingDataModel<SmBulkApplicationVO> claimTaskListDataModel = new ClaimTaskPagingDataModel();
+	private PagingDataModel<SmBulkApplicationVO> unClaimTaskListDataModel = new UnClaimTaskPagingDataModel();
 	private List<SmBulkApplicationVO> selectedTasks;
 	private List<PmStatusDesc> regStatusDescList;
 
-	private class taskPagingDataModel extends
+	private class ClaimTaskPagingDataModel extends
 			PagingDataModel<SmBulkApplicationVO> {
 
 		private static final long serialVersionUID = 1L;
 
-		public taskPagingDataModel() {
-			super("taskListId");
+		public ClaimTaskPagingDataModel() {
+			super("claimTaskListId");
 		}
 
 		@Override
 		protected ISearchResultBean<SmBulkApplicationVO> pageChangeListener(
 				ISearchBean<SmBulkApplicationVO> searchBean) {
-			IBpmSO bpmSO = null;
 			List<SmBulkApplicationVO> smApplicationTaskList = new ArrayList<SmBulkApplicationVO>();
-			SmBulkApplicationVO bulkApplicationVO = null;
 			try {
-				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-						.getServiceObject(IBpmSO.class);
 
-				FacesScopes face = new FacesScopes();
-				Object token = face.getBPMAuthenticationCtxToken();
-
-				BpmRequestDTO reqDTO = new BpmRequestDTO();
-				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+				BpmRequestDTO reqDTO = getBpmReqDTO();
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
-				reqDTO.setState("ASSIGNED");
-				reqDTO.setDocType(getDocType());
-				reqDTO.setViewBy(getViewBy());
-				reqDTO.setAssignment(getAssignment());
-				reqDTO.setCtxToken(token);
-				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
+				BpmResponseDTO responseDTO = SmServiceLookup.getBpmSO()
+						.getWorklistItems(reqDTO);
 				SearchResultBean<SmBulkApplicationVO> resultBean = new SearchResultBean<SmBulkApplicationVO>();
 
 				if (responseDTO.getWorklistVO() != null) {
 					if (responseDTO.getWorklistVO().getWorklistItem() != null) {
+						SmBulkApplicationVO bulkAppl = null;
 						for (WorklistItemVO worklistItemVO : responseDTO
 								.getWorklistVO().getWorklistItem()) {
-							// sm module
-							if (worklistItemVO.getTitle().startsWith("lbl.sm")) {
-								SmBulkApplicationReqDTO bulkApplReqDTO = new SmBulkApplicationReqDTO();
-								bulkApplReqDTO.setApplId(worklistItemVO
-										.getDocId().longValue());
-								SmAppl appl = SmServiceLookup
-										.getSmBulkApplicationSO()
-										.getApplicationByApplId(bulkApplReqDTO)
-										.getAppl();
-								String companyName = appl.getSmSupplier()
-										.getCompanyName();
-								StringBuilder sb = new StringBuilder();
-								sb.append(ResourceBundleUtils.getMessage(
-										worklistItemVO.getTitle(),
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										face.getUserLocale()));
-								if (companyName != null) {
-									sb.append(" ( ");
-									sb.append(companyName);
-									sb.append(" ) ");
+							if (worklistItemVO.isClaimed()) {
+								bulkAppl = getBulkApplicationVO(worklistItemVO);
+								if (bulkAppl != null) {
+									smApplicationTaskList
+											.add(getBulkApplicationVO(worklistItemVO));
 								}
-								worklistItemVO.setTitle(sb.toString());
-								bulkApplicationVO = new SmBulkApplicationVO();
-								bulkApplicationVO.setItem(worklistItemVO);
-								bulkApplicationVO.setAppl(appl);
-								bulkApplicationVO
-										.setRegStatusDescList(SmApplicationUtil
-												.getInstance()
-												.retrieveRegistrationStatusList(
-														appl.getSupplierType(),
-														appl.getApplType()));
-								smApplicationTaskList.add(bulkApplicationVO);
 							}
 						}
 					}
@@ -123,10 +86,125 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 				}
 				return resultBean;
 			} finally {
-				bpmSO = null;
+
 			}
 		}
 
+	}
+
+	private class UnClaimTaskPagingDataModel extends
+			PagingDataModel<SmBulkApplicationVO> {
+
+		private static final long serialVersionUID = 1L;
+
+		public UnClaimTaskPagingDataModel() {
+			super("unClaimTaskListId");
+		}
+
+		@Override
+		protected ISearchResultBean<SmBulkApplicationVO> pageChangeListener(
+				ISearchBean<SmBulkApplicationVO> searchBean) {
+			List<SmBulkApplicationVO> smApplicationTaskList = new ArrayList<SmBulkApplicationVO>();
+			try {
+
+				BpmRequestDTO reqDTO = getBpmReqDTO();
+				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
+				BpmResponseDTO responseDTO = SmServiceLookup.getBpmSO()
+						.getWorklistItems(reqDTO);
+				SearchResultBean<SmBulkApplicationVO> resultBean = new SearchResultBean<SmBulkApplicationVO>();
+
+				if (responseDTO.getWorklistVO() != null) {
+					if (responseDTO.getWorklistVO().getWorklistItem() != null) {
+						SmBulkApplicationVO bulkAppl = null;
+						for (WorklistItemVO worklistItemVO : responseDTO
+								.getWorklistVO().getWorklistItem()) {
+							if (!worklistItemVO.isClaimed()) {
+								bulkAppl = getBulkApplicationVO(worklistItemVO);
+								if (bulkAppl != null) {
+									smApplicationTaskList
+											.add(getBulkApplicationVO(worklistItemVO));
+								}
+							}
+						}
+					}
+
+					resultBean.setTotalRecord(smApplicationTaskList.size());
+					resultBean.setResultList(smApplicationTaskList);
+				} else {
+					resultBean.setTotalRecord(0);
+					resultBean.setResultList(null);
+				}
+				return resultBean;
+			} finally {
+
+			}
+		}
+
+	}
+
+	private BpmRequestDTO getBpmReqDTO() {
+		FacesScopes face = new FacesScopes();
+		Object token = face.getBPMAuthenticationCtxToken();
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+		reqDTO.setState("ASSIGNED");
+		reqDTO.setDocType(getDocType());
+		reqDTO.setViewBy(getViewBy());
+		reqDTO.setAssignment(getAssignment());
+		reqDTO.setCtxToken(token);
+		return reqDTO;
+	}
+
+	private SmBulkApplicationVO getBulkApplicationVO(
+			WorklistItemVO worklistItemVO) {
+		SmBulkApplicationVO bulkApplicationVO = null;
+		if (worklistItemVO.getDocType() != null
+				&& worklistItemVO.getDocType().equalsIgnoreCase("SR")) {
+			FacesScopes face = new FacesScopes();
+			SmBulkApplicationReqDTO bulkApplReqDTO = new SmBulkApplicationReqDTO();
+			bulkApplReqDTO.setApplId(worklistItemVO.getDocId().longValue());
+			SmAppl appl = SmServiceLookup.getSmBulkApplicationSO()
+					.getApplicationByApplId(bulkApplReqDTO).getAppl();
+			if (appl != null) {
+				String companyName = appl.getSmSupplier().getCompanyName();
+				StringBuilder sb = new StringBuilder();
+				sb.append(ResourceBundleUtils.getMessage(
+						worklistItemVO.getTitle(),
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale()));
+				if (companyName != null) {
+					sb.append(" ( ");
+					sb.append(companyName);
+					sb.append(" ) ");
+				}
+				worklistItemVO.setTitle(sb.toString());
+				bulkApplicationVO = new SmBulkApplicationVO();
+				bulkApplicationVO.setItem(worklistItemVO);
+				bulkApplicationVO.setAppl(appl);
+				bulkApplicationVO.setRegStatusDescList(SmApplicationUtil
+						.getInstance().retrieveRegistrationStatusList(
+								appl.getSupplierType(), appl.getApplType()));
+				bulkApplicationVO.setHqFacility(SmApplicationUtil
+						.getHqFacilityByAppl(appl));
+				PmStatusDesc currentStatusDesc = SmApplicationUtil
+						.getCurrRegStatusDesc(appl);
+				if (currentStatusDesc != null) {
+					bulkApplicationVO.setApprovedStatusId(currentStatusDesc
+							.getPmStatus().getStatusId());
+					bulkApplicationVO.setCurrRegStatus(currentStatusDesc
+							.getStatusName());
+				}
+				SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
+						.getOverlapCategoryVO(appl);
+				if (overlapCategoryVO != null) {
+					bulkApplicationVO.setOverlappedCategory(overlapCategoryVO
+							.isOverLappedCategoryExist());
+					bulkApplicationVO.setOverlapRemarks(overlapCategoryVO
+							.getOverLappedCategoryRemarks());
+				}
+			}
+		}
+		return bulkApplicationVO;
 	}
 
 	private int calculateFinalOffSet(int currentPage) {
@@ -166,15 +244,6 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 		this.docType = docType;
 	}
 
-	public PagingDataModel<SmBulkApplicationVO> getTaskListDataModel() {
-		return taskListDataModel;
-	}
-
-	public void setTaskListDataModel(
-			PagingDataModel<SmBulkApplicationVO> taskListDataModel) {
-		this.taskListDataModel = taskListDataModel;
-	}
-
 	public List<SmBulkApplicationVO> getSelectedTasks() {
 		return selectedTasks;
 	}
@@ -189,5 +258,23 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 
 	public void setRegStatusDescList(List<PmStatusDesc> regStatusDescList) {
 		this.regStatusDescList = regStatusDescList;
+	}
+
+	public PagingDataModel<SmBulkApplicationVO> getClaimTaskListDataModel() {
+		return claimTaskListDataModel;
+	}
+
+	public void setClaimTaskListDataModel(
+			PagingDataModel<SmBulkApplicationVO> claimTaskListDataModel) {
+		this.claimTaskListDataModel = claimTaskListDataModel;
+	}
+
+	public PagingDataModel<SmBulkApplicationVO> getUnClaimTaskListDataModel() {
+		return unClaimTaskListDataModel;
+	}
+
+	public void setUnClaimTaskListDataModel(
+			PagingDataModel<SmBulkApplicationVO> unClaimTaskListDataModel) {
+		this.unClaimTaskListDataModel = unClaimTaskListDataModel;
 	}
 }

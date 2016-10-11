@@ -27,7 +27,8 @@ public class SmBulkApplicationBackingBean extends
 		getManagedBean().setSelectedTasks(new ArrayList<SmBulkApplicationVO>());
 		SmCommonUtil.setMDCUserId();
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/bulkApplication/bulkApplicationTaskList.xhtml", "",null);
+				"/xhtml/sm/bulkApplication/bulkApplicationTaskList.xhtml", "",
+				null);
 	}
 
 	public void approveBulkApplication() {
@@ -43,8 +44,19 @@ public class SmBulkApplicationBackingBean extends
 		}
 	}
 
+	public void onClaimBpmTask() {
+		claimBpmTask();
+		refreshTaskList();
+	}
+
+	public void onReleaseBpmTask() {
+		releaseBpmTask();
+		refreshTaskList();
+	}
+
 	public void refreshTaskList() {
-		this.getManagedBean().getTaskListDataModel().reloadData();
+		this.getManagedBean().getClaimTaskListDataModel().reloadData();
+		this.getManagedBean().getUnClaimTaskListDataModel().reloadData();
 	}
 
 	public String applicationStatus(Integer docInt) {

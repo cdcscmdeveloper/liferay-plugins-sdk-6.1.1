@@ -167,6 +167,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
@@ -2468,39 +2469,61 @@ public class SmApplicationUtil {
 	 */
 	public static void checkOverLappingCategories(
 			SmApplicationManagedBean managedBean) {
+		SmOverlapCategoryVO overlapCategoryVO = getOverlapCategoryVO(managedBean
+				.getSmAppl());
 		managedBean.setOverLappedCategoryExists(false);
-		managedBean.setOverLappedCategoryMsg("");
-		for (SmSupplierCategory cat : managedBean.getSmAppl()
-				.getSmSupplierCategories()) {
-			if (cat.isOverLapCategory()
-					&& (cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
-							.getRecordStatusFlg().compareTo(
-									SupplierManagementConst.PENDING_ACT_STATUS) == 0)) {
-				managedBean.setOverLappedCategoryExists(true);
+		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
+		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
+
+		if (overlapCategoryVO != null) {
+			managedBean.setOverLappedCategoryExists(overlapCategoryVO
+					.isOverLappedCategoryExist());
+			managedBean.setOverLappedCategoryMsg(overlapCategoryVO
+					.getOverLappedCategoryMsg());
+			managedBean.setOverLappedCategoryRemarks(overlapCategoryVO
+					.getOverLappedCategoryRemarks());
+		}
+	}
+
+	public static SmOverlapCategoryVO getOverlapCategoryVO(SmAppl smAppl) {
+		SmOverlapCategoryVO retVal = null;
+		if (smAppl != null
+				&& !EntityHelper.isCollectionEmpty(smAppl
+						.getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
+				if (cat.isOverLapCategory()
+						&& (cat.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
+								.getRecordStatusFlg()
+								.compareTo(
+										SupplierManagementConst.PENDING_ACT_STATUS) == 0)) {
+					retVal = new SmOverlapCategoryVO();
+					retVal.setOverLappedCategoryExist(true);
+					break;
+				}
 			}
 		}
-		if (managedBean.isOverLappedCategoryExists()) {
+		if (retVal != null && retVal.isOverLappedCategoryExist()) {
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setSupplierId(managedBean.getSmAppl().getSmSupplier()
-					.getSupplierId());
-			reqDTO.setApplId(managedBean.getSmAppl().getApplId());
+			reqDTO.setSupplierId(smAppl.getSmSupplier().getSupplierId());
+			reqDTO.setApplId(smAppl.getApplId());
 			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
-			managedBean.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
+			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
 					"lbl.sm.category.overlappingMsg", null)
 					+ "<br />"
 					+ getOverlappedCategoryMsg(resultList));
 			Locale loc = new Locale("ms", "MY");
 			ResourceBundleUtils.getMessage("lbl.sm.category.overlappingMsg",
 					null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-			managedBean.setOverLappedCategoryRemarks(ResourceBundleUtils
-					.getMessage("lbl.sm.category.overlappingMsg", null,
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
+			retVal.setOverLappedCategoryRemarks(ResourceBundleUtils.getMessage(
+					"lbl.sm.category.overlappingMsg", null,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
 					+ System.lineSeparator()
 					+ System.lineSeparator()
 					+ getOverlappedCategoryRemarks(resultList));
 		}
+		return retVal;
 	}
 
 	/**
@@ -8468,7 +8491,9 @@ public class SmApplicationUtil {
 	public static PmStatusDesc getCurrRegStatusDesc(SmAppl appl) {
 		PmStatusDesc retVal = null;
 		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (appl.getSmSupplier().getSmAppl().getPmRegStatus() != null
+		if (appl != null
+				&& appl.getSmSupplier() != null
+				&& appl.getSmSupplier().getSmAppl().getPmRegStatus() != null
 				&& appl.getSmSupplier().getSmAppl().getPmRegStatus()
 						.getPmStatus() != null
 				&& !EntityHelper.isCollectionEmpty(appl.getSmSupplier()
