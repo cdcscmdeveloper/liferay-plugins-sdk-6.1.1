@@ -64,7 +64,7 @@ BaseBackingBean<ProgramActivityManagedBean> {
 	public static final String NAV_TO_MAIN = "/xhtml/pm/programActivity/programActivitySearchMain";
 
 	/** The search vot program activity. */
-	private IPagingDataModel<PmPrgActivity> searchVotProgramActivity = new SearchVotPagingDataModel();
+	private IPagingDataModel<Object[]> searchVotProgramActivity = new SearchVotPagingDataModel();
 
 	/** The result. */
 	boolean result = false;
@@ -255,7 +255,7 @@ BaseBackingBean<ProgramActivityManagedBean> {
 	 * The Class SearchVotPagingDataModel.
 	 */
 	private class SearchVotPagingDataModel extends
-	PagingDataModel<PmPrgActivity> {
+	PagingDataModel<Object[]> {
 		
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
@@ -271,24 +271,44 @@ BaseBackingBean<ProgramActivityManagedBean> {
 		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
 		 */
 		@Override
-		public ISearchResultBean<PmPrgActivity> pageChangeListener(
-				ISearchBean<PmPrgActivity> searchBean) {
+		public ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 			IProgramActivitySO programActivitySO;
 
 			try {
-				ISearchBean<PmPrgActivity> searchBeanData = getSearchBeanData(searchBean);
-				ProgramActivityReqDTO programActivityReqDTO = new ProgramActivityReqDTO();
-				programActivityReqDTO.setPmPrgActivitySearchBean(searchBeanData);
+			//	ISearchBean<PmPrgActivity> searchBeanData = getSearchBeanData(searchBean);
+				ProgramActivityReqDTO programActivityReqDTO = new ProgramActivityReqDTO();				
+				ProgramSearchBean votProgramSearchBean = getManagedBean().getProgramSearchBean();
+				if (StringUtils.isNotBlank(votProgramSearchBean.getVotCode())) {
+					programActivityReqDTO.setVotCode(votProgramSearchBean.getVotCode())	;
+				}
+				if (StringUtils.isNotBlank(votProgramSearchBean.getVotName())){
+					programActivityReqDTO.setVotDesc(votProgramSearchBean.getVotName());
+				}
+
+				if (StringUtils.isNotBlank(votProgramSearchBean.getProgramActivityCode())){
+					programActivityReqDTO.setPrgActCode(votProgramSearchBean.getProgramActivityCode());
+				}
+
+				if (StringUtils.isNotBlank(votProgramSearchBean.getProgramActivityDesc())) {
+					programActivityReqDTO.setPrgActDesc(votProgramSearchBean.getProgramActivityDesc());
+				}
+
+				if(StringUtils.isNotBlank(votProgramSearchBean.getStatus())){
+					programActivityReqDTO.setPrgActRecordStatus(Integer.parseInt(votProgramSearchBean.getStatus()));
+				}
+				
+				programActivityReqDTO.setPmPrgActivityObjSearchBean(searchBean);
 				programActivitySO = (IProgramActivitySO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IProgramActivitySO.class);
 				ProgramActivityResDTO resDTO = programActivitySO.searchVotProgramActivityData(programActivityReqDTO);
 				getManagedBean().setLazy(true);
 				if (resDTO.isSuccessful()) {					
-					return resDTO.getProgramActivityBean();
+					return resDTO.getProgramActivityObjBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -309,25 +329,18 @@ BaseBackingBean<ProgramActivityManagedBean> {
 	}
 
 	/**
-	 * Gets the search vot program activity.
-	 * 
 	 * @return the searchVotProgramActivity
 	 */
-	public IPagingDataModel<PmPrgActivity> getSearchVotProgramActivity() {
+	public IPagingDataModel<Object[]> getSearchVotProgramActivity() {
 		return searchVotProgramActivity;
 	}
 
 	/**
-	 * Sets the search vot program activity.
-	 * 
-	 * @param searchVotProgramActivity
-	 *            the searchVotProgramActivity to set
+	 * @param searchVotProgramActivity the searchVotProgramActivity to set
 	 */
 	public void setSearchVotProgramActivity(
-			IPagingDataModel<PmPrgActivity> searchVotProgramActivity) {
+			IPagingDataModel<Object[]> searchVotProgramActivity) {
 		this.searchVotProgramActivity = searchVotProgramActivity;
 	}
-
-
 
 }
