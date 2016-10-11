@@ -142,15 +142,16 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(supplier.getSmAppl());
 					if(workFlowStatus != null && 
-						(workFlowStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED || 
-						workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL)){
+						(workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTERED || 
+						workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL || 
+						workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT)){
 						path = mofSupplierFlowAfterApproval(supplier,isRejectedApplExist);
 					}else{
 						SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 						if(wfStatus != null){
 							if(wfStatus.getPmStatus() != null && 
 								(wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
-								wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION)){
+								wfStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION)){
 								getManagedBean().setFlowStatus(3);
 								
 								path = RESUBMIT_APPLICATION + wfStatus.getDocId();
