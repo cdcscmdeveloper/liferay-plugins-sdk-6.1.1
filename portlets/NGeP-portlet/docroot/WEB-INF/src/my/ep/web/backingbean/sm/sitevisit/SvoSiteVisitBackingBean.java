@@ -384,7 +384,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * remove selected Interviewee
 	 */
 	public void removeInterviewee(){
-		log.info("*******removeInterviewee**********");
 		if(this.getManagedBean().getSelectedInterviewees() != null && this.getManagedBean().getSelectedInterviewees().length > 0){
 			for (SmSvInterviewee interviewee : this.getManagedBean().getSelectedInterviewees()) {
 				log.info("---removeSupplierBank---" + interviewee);
@@ -561,7 +560,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void removeWorkshopWorker(){
 		//this.getManagedBean().getSelectedInterviewees() != null && 
-		if(this.getManagedBean().getSelectedWorkers().length > 0){
+		if(getManagedBean().getSelectedWorkers() != null && this.getManagedBean().getSelectedWorkers().length > 0){
 			for (SmSvWorker svWorker : this.getManagedBean().getSelectedWorkers()) {
 				log.info("---removeSvWorker---" + svWorker);
 				this.getManagedBean().getSelectedSvTemplate().getSmSvWorkers().remove(svWorker);
@@ -895,8 +894,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * add selected printing type/ work done from  the List
 	 */
 	public void removePrintWork(){
-		log.info("---removePrintWork---");
-		if(this.getManagedBean().getSelectedPrintWorks().length > 0){
+		if(getManagedBean().getSelectedPrintWorks() != null && this.getManagedBean().getSelectedPrintWorks().length > 0){
 			for (SmSvPrintwork printWork : this.getManagedBean().getSelectedPrintWorks()) {
 				this.getManagedBean().getSelectedSvTemplate().getSmSvPrintworks().remove(printWork);
 			}
@@ -1820,9 +1818,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * remove selected additional machine from the list
 	 */
 	public void removeAdditionalMachine(){
-		log.info("---removePrintWork---");
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
-		if(svTemplate.getSelectedAdtMachines().length > 0){
+		if(svTemplate.getSelectedAdtMachines() != null && svTemplate.getSelectedAdtMachines().length > 0){
 			for (SmSvAdtMachine adtMachine : svTemplate.getSelectedAdtMachines()) {
 				svTemplate.getSmSvAdtMachines().remove(adtMachine);
 			}
