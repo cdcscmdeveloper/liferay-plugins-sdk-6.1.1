@@ -50,7 +50,8 @@
 						</p:commandLink>
 					</p:outputPanel> <p:outputPanel id="opSysOrgCode"
 						rendered="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null or 
-					ParameterConst.orgTypeSys eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">
+					ParameterConst.orgTypeSys eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode or
+					ParameterConst.orgTypeSupport eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">
 						<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="80"
 							disabled="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
 							or !taskReassignmentBackingBean.managedBean.orgProfileRequired}"
