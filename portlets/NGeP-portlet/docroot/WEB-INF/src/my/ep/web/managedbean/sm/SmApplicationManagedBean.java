@@ -314,7 +314,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> bankStates;
 	private List<SelectItem> bankDistricts;
 	private List<SelectItem> bankCities;
-	
+
 	private List<Long> svTaskIdsNeedToDelete;
 
 	private List<PmCertBody> certBodyLs;
@@ -410,8 +410,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmParameter certificate;
 	private PmParameter diploma;
 	private PmParameter glpCert;
-//	private PmEduLevel certEduLevel;
-//	private PmEduLevel diplomaEduLevel;
+	// private PmEduLevel certEduLevel;
+	// private PmEduLevel diplomaEduLevel;
 	private PmParameterDesc glp;
 	private List<SelectItem> acadQualifications;
 	private List<SelectItem> travellingSoftwareItems;
@@ -462,7 +462,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmAppl supplierAppl;
 	private SmAppl poAppl;
-	
+
 	private Object cloneObject;
 
 	private SmSectionEditorVO editVO;
@@ -2930,21 +2930,17 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.rejectionOtherReasonId = rejectionOtherReasonId;
 	}
 
-	/*public PmEduLevel getCertEduLevel() {
-		return certEduLevel;
-	}
-
-	public void setCertEduLevel(PmEduLevel certEduLevel) {
-		this.certEduLevel = certEduLevel;
-	}
-
-	public PmEduLevel getDiplomaEduLevel() {
-		return diplomaEduLevel;
-	}
-
-	public void setDiplomaEduLevel(PmEduLevel diplomaEduLevel) {
-		this.diplomaEduLevel = diplomaEduLevel;
-	}*/
+	/*
+	 * public PmEduLevel getCertEduLevel() { return certEduLevel; }
+	 * 
+	 * public void setCertEduLevel(PmEduLevel certEduLevel) { this.certEduLevel
+	 * = certEduLevel; }
+	 * 
+	 * public PmEduLevel getDiplomaEduLevel() { return diplomaEduLevel; }
+	 * 
+	 * public void setDiplomaEduLevel(PmEduLevel diplomaEduLevel) {
+	 * this.diplomaEduLevel = diplomaEduLevel; }
+	 */
 
 	public List<PmParameterDesc> getEduLevelList() {
 		return eduLevelList;

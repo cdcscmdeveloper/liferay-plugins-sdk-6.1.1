@@ -23,99 +23,105 @@
 			<tr>
 				<td>
 					<p:commandButton action="#{bulkApplicationBackingBean.refreshTaskList}"
-					value="#{lbl['lbl.bpm.refresh']}" update="taskListId" />
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						value="#{lbl['lbl.bpm.refresh']}" update="claimTaskListId" />
 				</td>
 				<td style="white-space: nowrap; float: right;">
-				    <p:commandButton value="#{lbl['lbl.sm.button.approve']}" style="float:right;" id="approveBtnId" update="@form"
-				    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{bulkApplicationBackingBean.approveBulkApplication}"/>
+				    <p:commandButton value="#{lbl['lbl.sm.button.approve']}" style="float:right;" 
+				    	id="approveBtnId" update="@form"
+				    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+				    	action="#{bulkApplicationBackingBean.approveBulkApplication}"/>
 				</td>
 			</tr>
 			<tr height="10"><td height="10"></td></tr>
 		</table>
 		
-		<p:panel header="#{lbl['lbl.sm.bulk.application.list']}" toggleable="true" id="resultPanelId">
+		<p:panel header="#{lbl['lbl.sm.bulk.application.list.group']}" toggleable="true" id="unClaimPanelId">
+			<p:dataTable id="unClaimTaskListId" rowKey="#{unclaim}" lazy="true" rows="10" 
+				emptyMessage="#{lbl['lbl.pp.no.record.found']}" var="unclaim" 
+				rowIndexVar="index" value="#{bulkApplicationBackingBean.managedBean.unClaimTaskListDataModel}">
+				<ac:paginator for="unClaimTaskListId"></ac:paginator>
 		
-			<p:dataTable id="taskListId" rowKey="#{tasks}" lazy="true" rows="10" 
-				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-				rowIndexVar="index" value="#{bulkApplicationBackingBean.managedBean.taskListDataModel}"
-				var="tasks" selection="#{bulkApplicationBackingBean.managedBean.selectedTasks}">
-				<ac:paginator for="taskListId" />
-					
-				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column style="white-space:normal !important;" headerText="#{lbl['lbl.bpm.doc.no']}">
+					<h:outputText value="#{unclaim.item.docNumber}" />
+				</p:column>
 	
-				<p:column width="5%;" style="white-space:normal;" headerText="#{lbl['lbl.bpm.doc.no']}">
-					<h:outputText value="#{tasks.item.docNumber}" />
+				<p:column style="width : 25%;white-space:normal;" headerText="#{lbl['lbl.bpm.description']}">
+					<h:outputText value="#{unclaim.item.title}" />
 				</p:column>
 				
-				<p:column width="5%;" style="white-space:normal;" headerText="#{lbl['lbl.bpm.doc.type']}">
-					<h:outputText value="#{bulkApplicationBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,'SR')}" />
+				<p:column style="white-space:normal;" headerText="#{lbl['lbl.bpm.created.date']}">
+					<h:outputText value="#{unclaim.item.createDate.time}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
+				</p:column>
+				
+				<p:column style="white-space:normal;" headerText="#{lbl['lbl.bpm.due.date']}">
+					<h:outputText value="#{unclaim.item.expirationDate.time}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.cm.action']}">
+					<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						action="#{bulkApplicationBackingBean.onClaimBpmTask}" update="@form">
+						<f:param name="taskId" value="#{unclaim.item.taskId}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		
+		<p:panel header="#{lbl['lbl.sm.bulk.application.list']}" toggleable="true" id="resultPanelId">
+		
+			<p:dataTable id="claimTaskListId" rowKey="#{tasks}" lazy="true" rows="10" 
+				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				rowIndexVar="index" value="#{bulkApplicationBackingBean.managedBean.claimTaskListDataModel}"
+				var="tasks" selection="#{bulkApplicationBackingBean.managedBean.selectedTasks}">
+				<ac:paginator for="claimTaskListId" />
+					
+				<p:column selectionMode="multiple" style="width:2% !important;" />
+	
+				<p:column style="width : 10% !important;white-space:normal !important;" headerText="#{lbl['lbl.bpm.doc.no']}">
+					<h:outputText value="#{tasks.item.docNumber}" />
 				</p:column>
 	
-				<p:column width="30%" style="white-space:normal;" headerText="#{lbl['lbl.bpm.description']}">
+				<p:column style="width : 30% !important;white-space:normal !important;" headerText="#{lbl['lbl.bpm.description']}">
 					<h:outputText value="#{tasks.item.title}" />
 				</p:column>
 				
-				<p:column width="8%;" style="white-space:normal;" headerText="#{lbl['lbl.bpm.created.date']}">
+				<p:column style="white-space:normal;" headerText="#{lbl['lbl.bpm.created.date']}">
 					<h:outputText value="#{tasks.item.createDate.time}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				
-				<p:column width="8%;" style="white-space:normal;" headerText="#{lbl['lbl.bpm.due.date']}">
+				<p:column style="white-space:normal;" headerText="#{lbl['lbl.bpm.due.date']}">
 					<h:outputText value="#{tasks.item.expirationDate.time}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				
-				<p:column width="14%;" style="white-space:normal;" headerText="#{lbl['lbl.bpm.status']}">
-					<h:outputText value="#{bulkApplicationBackingBean.applicationStatus(tasks.item.docStatus)}" />
+				<p:column style="width : 30% !important;white-space:normal !important;" headerText="#{lbl['lbl.sm.decision']}">
+					
+					<ac:smApplApproveDecisionForm smAppl="#{tasks.appl}" currRegStatus="#{tasks.currRegStatus}" 
+						facilityType="#{tasks.hqFacility.facilityType}" changeCurrRegStatus="#{tasks.changeCurrRegStatus}" 
+						approvedStatusId="#{tasks.approvedStatusId}" regStatusDescList="#{tasks.regStatusDescList}"
+						approvalRemarks="#{tasks.approvalRemarks}" overLapRemarks="#{tasks.overlapRemarks}" valueReqd="true" 
+						overLappedCategoryExists="#{tasks.overlappedCategory}" changeRegStatusUpdateId="claimTaskListId" border="false"/>
+					
 				</p:column>
-				
-				<p:column width="30%;" style="white-space:normal;" headerText="#{lbl['lbl.sm.decision']}">
-					<table style="width: 100%">
-						<tr>
-							<c:if test="#{tasks.appl.applType ne 'C'}">
-								<td style="border-style: none !important;">
-									<p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> 
-									<p:outputLabel value="*" styleClass="mandatory" />
-								</td>
-								<td style="border-style: none !important;">
-									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-										id="approveSelBox" required="true"
-										value="#{tasks.appl.pmStatus.statusId}"
-										style="width: 207px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-										<f:selectItems
-											value="#{tasks.regStatusDescList}" var="reg"
-											itemLabel="#{reg.statusName}"
-											itemValue="#{reg.pmStatus.statusId}" />
-				
-									</p:selectOneMenu> <p:message id="approveSelBoxMsg" for="approveSelBox"
-										showSummary="true" showDetail="false" display="icon" /></td>
-							</c:if>
-						</tr>
-						<tr>
-							<td style="border-style: none !important;vertical-align: top">
-								<p:outputLabel value="#{lbl['lbl.sm.remarks.approval']}" />
-							</td>
-							<td style="padding-top: 5px;border-style: none !important;">
-								<p:inputTextarea cols="50"
-									style="width : auto;" rows="10"
-									value="#{tasks.remarks}"
-									id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
-									validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
-									maxlength="2500">
-									<f:validateLength maximum="2500" />
-								</p:inputTextarea> 
-								<p:message id="rmrksForApprTxtAreaMsg" for="rmrksForApprTxtArea"
-									showSummary="true" showDetail="false" display="icon" />
-							</td>
-						</tr>
-					</table>
+				<p:column style="width : 5% !important;" headerText="#{lbl['lbl.cm.action']}">
+					<p:commandButton value="#{lbl['lbl.bpm.btn.release']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						action="#{bulkApplicationBackingBean.onReleaseBpmTask}" update="@form">
+						<f:param name="taskId" value="#{tasks.item.taskId}" />
+					</p:commandButton>
 				</p:column>
-
 			</p:dataTable>
 			
 		</p:panel>
