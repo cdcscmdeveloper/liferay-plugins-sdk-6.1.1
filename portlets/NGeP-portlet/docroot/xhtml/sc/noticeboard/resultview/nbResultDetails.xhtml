@@ -17,7 +17,7 @@
 
 			<ac:paginator for="nbsearchresults" />
 
-			<p:column headerText="#{lbl['lbl.sc.title']}" style="width:27%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.sc.title']}" style="width:27%;word-wrap:break-word;white-space: normal;">
 				<p:commandLink style="margin-right:20px;"
 					action="#{noticeBoardBackingBean.retrieveQTDetails(scqt[0])}">
 					<h:outputText value="#{scqt[1]}" />
@@ -28,18 +28,21 @@
 				<ui:param name="date" value="#{noticeBoardBackingBean.retriveDatesforOrgProfile(scqt[3],scqt[6])}"></ui:param>
 				<h:outputText value="#{noticeBoardBackingBean.retrievePTJByOrgProfileId(scqt[2], date)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.publish.date']}"
-				style="width:11%;white-space: normal;">
-				<h:outputText value="#{scqt[3]}">
+			<p:column style="width:11%;white-space: normal;">
+				
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sc.publish.date']}" />
+				<h:outputText value=" / #{lbl['lbl.sc.closing.date']}" />
+				<h:outputText value=" / #{lbl['lbl.sc.notice.board.countdowndays']}"
+					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}" />
+			</f:facet>
+			<h:outputText value="#{scqt[3]}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
-				</h:outputText>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.closing.date']}"
-				style="width:11%;white-space: normal;">
+				</h:outputText> <br/>
+				
 				<h:outputText value="#{scqt[4]}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
-				</h:outputText>
+				</h:outputText> <br/>
 
 				<ui:param name="closingChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentClosingDateMap[scqt[0]]}" />
 				<h:outputText
@@ -49,13 +52,10 @@
 				<h:outputText value="#{closingChangeDate}" styleClass="lastUpdated" rendered="#{isChangesTab and !empty closingChangeDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 				</h:outputText>
+				<h:outputText value="#{noticeBoardBackingBean.getClosingDays(scqt[4])}" 
+				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.notice.board.countdowndays']}"
-				style="width:8%; white-space:normal; text-align:right;"
-				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}">
-				<h:outputText value="#{noticeBoardBackingBean.getClosingDays(scqt[4])}" />
-			</p:column>
-
+			
 			<p:column headerText="#{lbl['lbl.sc.notice.board.view.bsv']}"
 				style="width:10%; white-space:normal; text-align:right;"
 				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
