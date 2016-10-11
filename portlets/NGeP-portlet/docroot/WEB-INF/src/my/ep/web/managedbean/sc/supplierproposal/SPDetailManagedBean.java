@@ -252,6 +252,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sm basic company.
+	 *
 	 * @return the smCompanyBasic
 	 */
 	public SmFacility getSmCompanyBasic() {
@@ -1618,6 +1620,12 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.businessType = businessType;
 	}
 
+	/**
+	 * Gets the minimum effective date.
+	 *
+	 * @param effectiveDates the effective dates
+	 * @return the minimum effective date
+	 */
 	private Date getMinEffectiveDate(List<Date> effectiveDates) {
 		Date minEffectiveDate = null;
 		if (effectiveDates != null && !effectiveDates.isEmpty()) {
@@ -1633,6 +1641,12 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return minEffectiveDate;
 	}
 
+	/**
+	 * Gets the max expire date.
+	 *
+	 * @param expiryDates the expire dates
+	 * @return the max expire date
+	 */
 	private Date getMaxExpiryDate(List<Date> expiryDates) {
 		Date maxExpiryDate = null;
 		if (expiryDates != null && !expiryDates.isEmpty()) {
@@ -1648,6 +1662,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return maxExpiryDate;
 	}
 
+	/**
+	 * Number of months between two dates.
+	 *
+	 * @param effectiveDate the effective date
+	 * @param expiryDate the expire date
+	 * @return the number of months
+	 */
 	private int numberOfMonthsBetweenTwoDates(Date effectiveDate,
 			Date expiryDate) {
 		Calendar startCalendar = new GregorianCalendar();
