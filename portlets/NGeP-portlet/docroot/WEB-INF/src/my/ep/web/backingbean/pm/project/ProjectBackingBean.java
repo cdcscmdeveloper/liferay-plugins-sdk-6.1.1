@@ -46,7 +46,7 @@ BaseBackingBean<ProjectManagedBean> {
 
 	public static final String NAV_TO_MAIN = "/xhtml/pm/project/projectSearchMain";
 
-	private IPagingDataModel<PmSubSetia> searchProject = new SearchProjectPagingDataModel();
+	private IPagingDataModel<Object[]> searchProject = new SearchProjectPagingDataModel();
 
 
 
@@ -55,12 +55,9 @@ BaseBackingBean<ProjectManagedBean> {
 	public static final boolean SEARCH_DEFAULT = false;
 
 	public ProjectBackingBean() {
-
 		log.info("inside ProjectBackingBean constructor");
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
-			System.out.println("***userId: " + pmUser.getUserId());
-
 			new LogKey(pmUser.getUserId()); 
 		}else{
 			new LogKey(1L); 
@@ -86,7 +83,6 @@ BaseBackingBean<ProjectManagedBean> {
 	 * reset search bean fields
 	 */
 	public void resetProjectSearchBean() {
-
 		debugLogger("resetProjectSearchBean");		
 		this.getManagedBean().setLazy(false);
 	/*	this.getManagedBean().setVotCode(new String());
@@ -208,7 +204,7 @@ BaseBackingBean<ProjectManagedBean> {
 	}
 
 	private class SearchProjectPagingDataModel extends
-	PagingDataModel<PmSubSetia> {
+	PagingDataModel<Object[]> {
 		private static final long serialVersionUID = 1L;
 
 		public SearchProjectPagingDataModel() {
@@ -216,17 +212,38 @@ BaseBackingBean<ProjectManagedBean> {
 		}
 
 		@Override
-		public ISearchResultBean<PmSubSetia> pageChangeListener(
-				ISearchBean<PmSubSetia> searchBean) {
+		public ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 			IProjectSetiaSO projectSO;
 
 			try {
-				ISearchBean<PmSubSetia> searchBeanData = getSearchBeanData(searchBean);
+				//ISearchBean<PmSubSetia> searchBeanData = getSearchBeanData(searchBean);
 				ProjectSetiaReqDTO projectSetiaReqDTO = new ProjectSetiaReqDTO();
-				projectSetiaReqDTO.setPmSubSetiaSearchBean(searchBeanData);
+				ProjectSearchBean projectSearchBean = getManagedBean().getProjectSearchBean();
+			
+				if (StringUtils.isNotBlank(projectSearchBean.getVotCode())) {
+					projectSetiaReqDTO.setVotFundCode(projectSearchBean.getVotCode());
+				}
+				if (StringUtils.isNotBlank(projectSearchBean.getVotName())){
+					projectSetiaReqDTO.setVotFundDesc(projectSearchBean.getVotName());
+				}
+
+				if (StringUtils.isNotBlank(projectSearchBean.getProjectCode())){
+					projectSetiaReqDTO.setProjectCode(projectSearchBean.getProjectCode());
+				}
+
+				if (StringUtils.isNotBlank(projectSearchBean.getProjectDesc())) {
+					projectSetiaReqDTO.setProjectDesc(projectSearchBean.getProjectDesc());
+				}
+
+				if(StringUtils.isNotBlank(projectSearchBean.getStatus())){
+					projectSetiaReqDTO.setSubSetiaRecordStatus(Integer.parseInt(projectSearchBean.getStatus()));
+				} 
+				
+				projectSetiaReqDTO.setPmSubSetiaObjSearchBean(searchBean);
 				projectSO = (IProjectSetiaSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IProjectSetiaSO.class);
@@ -234,7 +251,7 @@ BaseBackingBean<ProjectManagedBean> {
 				getManagedBean().setLazy(true);
 				if (projectSetiResDTO.isSuccessful()) {
 
-					return projectSetiResDTO.getPmSubSetiaResultBean();
+					return projectSetiResDTO.getPmSubSetiaObjResultBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -252,15 +269,16 @@ BaseBackingBean<ProjectManagedBean> {
 	/**
 	 * @return the searchProject
 	 */
-	public IPagingDataModel<PmSubSetia> getSearchProject() {
+	public IPagingDataModel<Object[]> getSearchProject() {
 		return searchProject;
 	}
 
 	/**
 	 * @param searchProject the searchProject to set
 	 */
-	public void setSearchProject(IPagingDataModel<PmSubSetia> searchProject) {
+	public void setSearchProject(IPagingDataModel<Object[]> searchProject) {
 		this.searchProject = searchProject;
 	}
+
 
 }
