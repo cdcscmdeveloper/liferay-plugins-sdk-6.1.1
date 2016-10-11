@@ -14,8 +14,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.primefaces.model.TreeNode;
-
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -46,8 +44,10 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
-import my.ep.web.backingbean.fl.pr.FLSupplierItemVO;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.FLSupplierItemVO;
+
+import org.primefaces.model.TreeNode;
 
 /**
  * Managed Bean for Create Purchase Order.
