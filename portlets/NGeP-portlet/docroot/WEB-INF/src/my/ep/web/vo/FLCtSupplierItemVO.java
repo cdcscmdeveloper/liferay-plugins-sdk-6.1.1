@@ -1,24 +1,22 @@
 /**
- * 
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
-package my.ep.web.backingbean.fl.pr;
+package my.ep.web.vo;
 
 import java.io.Serializable;
-import java.util.List;
 
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 
 import org.primefaces.model.TreeNode;
 
 /**
- * @author Ramana
- *
+ * The Class FLCtSupplierItemVO.
+ * 
+ * @author Giribabu
+ * @since 22/9/2014
  */
 public class FLCtSupplierItemVO implements Serializable{
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private CtItemPrice  supplierItemPrice;
 	private TreeNode itemZoneTree;
