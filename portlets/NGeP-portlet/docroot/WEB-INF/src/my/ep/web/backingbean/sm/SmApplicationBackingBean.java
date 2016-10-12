@@ -1418,7 +1418,8 @@ public class SmApplicationBackingBean extends
 		// proceed to next section
 		if (!StringUtils.isBlank(applType)
 				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				&& !getManagedBean().getSmAppl().isActiveAppl()) {
+				&& !getManagedBean().getSmAppl().isActiveAppl()
+				&& getManagedBean().isSupplierUser()) {
 			RequestContext.getCurrentInstance().execute(
 					"saveDraftConfirmDialog.show();");
 		} else {
