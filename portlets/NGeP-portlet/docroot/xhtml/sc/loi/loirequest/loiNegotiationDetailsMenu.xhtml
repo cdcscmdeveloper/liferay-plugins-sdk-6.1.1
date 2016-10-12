@@ -161,11 +161,12 @@
 				</c:if>
 
 				<c:if test="#{isEditableStatus and !afterNegotiation}">
-					<p:inputTextarea style="width:325px" rows="2" maxlength="255" value="#{negoTerm.negoResult}" 
-					onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
+					<p:inputTextarea id="negoRemarkId" style="width:325px" rows="2" maxlength="255" value="#{negoTerm.negoResult}" 
+					onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);" required="#{isPendingNegotiation}"
 						autoResize="false" readonly="#{lOIDetailBackingBean.managedBean.readOnly}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 					</p:inputTextarea>
+					<p:message id="negoRemarkIdMsg" for="negoRemarkId" display="icon" />
 				</c:if>
 			</p:column>
 			
