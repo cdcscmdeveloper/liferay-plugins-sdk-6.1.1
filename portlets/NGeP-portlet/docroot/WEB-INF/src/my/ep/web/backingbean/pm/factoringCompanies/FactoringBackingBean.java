@@ -9,6 +9,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.factoring.IFactoringCompaniesSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.factoringCompanie.FactoringManageBean;
@@ -21,8 +22,12 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-
-
+/**
+ * The backing bean for list of factoring companies
+ * 
+ * @author Ken
+ * @since 2.09.2015
+ */
 @ManagedBean(name = "factoringBackingBean")
 @ViewScoped
 public class FactoringBackingBean extends
@@ -34,24 +39,21 @@ public class FactoringBackingBean extends
 		super();
 	}
 
+	/**
+	 * Pre render Factoring Companies page
+	 * 
+	 * @return
+	 */
 	public String preRenderView() {
-		log.info("...........preRenderView............");
-		
+		log.info("........... factoringCompanies preRenderView............");		
 		IFactoringCompaniesSO factoringCompaniesSO = null;
 		try {
 			factoringCompaniesSO = (IFactoringCompaniesSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IFactoringCompaniesSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFactoringCompaniesSO.class);
 			
 			List<PmFinancialOrg> result = factoringCompaniesSO.getFactoringCompanies();
 			this.getManagedBean().setFactoringCompanies(result);
 	
-
-			System.out
-					.println("...................result.size()="
-							+ result.size());
-
-			// ///////////////////////////////
-			// ///////////////////////////////
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "factoringCompanies");
