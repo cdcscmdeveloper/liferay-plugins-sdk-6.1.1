@@ -781,8 +781,8 @@ public class ReportConst {
 	public static final String FL_AMP_CONTRACT_NAME_EQ = "&PCRNO=";	
 	public static final String FL_AMP_SUPPL_NAME_EQ = "&PSUPP=";
 	public static final String FL_AMP_MINISTRY_EQ = "&PMINIS=";
-	public static final String FL_AMP_PEGAWAI_PENGAWAI_EQ = "&PFPP";
-	public static final String FL_AMP_KUMPULAN_EQ = "&PFJA";
+	public static final String FL_AMP_PEGAWAI_PENGAWAI_EQ = "&PFPP=";
+	public static final String FL_AMP_KUMPULAN_EQ = "&PFJA=";
 	public static final String FL_AMP_PTJ_NAME_EQ = "&PPTJ=";
 	public static final String FL_AMP_SST_NO_EQ = "&PLOA=";
 	public static final String FL_AMP_CONTRACT_NO_EQ = "&PCONTRACTNO=";
