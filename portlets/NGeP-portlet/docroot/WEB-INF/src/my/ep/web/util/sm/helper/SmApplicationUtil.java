@@ -2687,9 +2687,7 @@ public class SmApplicationUtil {
 		int i = 0;
 		StringBuilder sb = new StringBuilder();
 		for (SmApplSupportDoc doc : managedBean.getMandatoryDocs()) {
-			if ((managedBean.isPoUser() && doc.getVerifiedFlg() == null)
-					|| (managedBean.isApproverUser() && doc
-							.getApproverVerifiedFlg() == null)) {
+			if ((managedBean.isPoUser() && doc.getVerifiedFlg() == null)) {
 				validSave = false;
 				sb.append("<br/>").append(++i).append(".)")
 						.append(doc.getPmDocument().getDocName());
