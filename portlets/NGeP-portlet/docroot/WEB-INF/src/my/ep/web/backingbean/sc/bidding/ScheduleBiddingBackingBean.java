@@ -72,6 +72,9 @@ public class ScheduleBiddingBackingBean extends
 
 	}
 
+	/**
+	 * Populate duration drop down values.
+	 */
 	public void populateDurationDropDownValues() {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
@@ -206,6 +209,9 @@ public class ScheduleBiddingBackingBean extends
 
 	}
 
+	/**
+	 * Validate contact personnel.
+	 */
 	private void validateContactPersonnel() {
 
 		List<String> contactPersonnelNames = new ArrayList<String>();
@@ -251,6 +257,9 @@ public class ScheduleBiddingBackingBean extends
 		}
 	}
 
+	/**
+	 * Listener method for zonal bid row select event.
+	 */
 	public void zonalRowBidSelectListener() {
 		ScBidSchedule selectedZonalBid = this.getManagedBean()
 				.getRowSelectedBid();
@@ -263,6 +272,11 @@ public class ScheduleBiddingBackingBean extends
 
 	}
 
+	/**
+	 * Listener method for Bid item selection event.
+	 *
+	 * @param event the event
+	 */
 	public void bidItemSelectionListner(SelectEvent event) {
 		ScBidItem bidItem = (ScBidItem) event.getObject();
 		this.getManagedBean().setSelectedBidItem(bidItem);
@@ -557,7 +571,7 @@ public class ScheduleBiddingBackingBean extends
 
 				String variable1 = getMessageCommon("lbl.rpt.qtNo");
 				String variable2 = resDTO.getScBid().getDocNo();
-				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
+				commonMessageAcknowledgmentPage(MessageConst.INFO_700026,
 						variable1, variable2);
 			}
 
@@ -566,7 +580,14 @@ public class ScheduleBiddingBackingBean extends
 		}
 	}
 
-	private void commonMessageAcknowledmentPage(String messageId,
+	/**
+	 * Common message acknowledgment page.
+	 *
+	 * @param messageId the message id
+	 * @param variable1 the variable 1
+	 * @param variable2 the variable 2
+	 */
+	private void commonMessageAcknowledgmentPage(String messageId,
 			String variable1, String variable2) {
 		FacesContext.getCurrentInstance().addMessage(
 				null,
@@ -583,7 +604,7 @@ public class ScheduleBiddingBackingBean extends
 	}
 
 	/**
-	 * Listener for selection multi boolean checkbox events
+	 * Listener for selection of multi boolean check box events
 	 */
 	public void selectAll() {
 
@@ -601,7 +622,7 @@ public class ScheduleBiddingBackingBean extends
 	}
 
 	/**
-	 * Listener for selection boolean checkbox events
+	 * Listener for selection boolean check box events
 	 */
 	public void selected(int index) {
 		if (getManagedBean().isSelected()
@@ -628,6 +649,12 @@ public class ScheduleBiddingBackingBean extends
 
 	}
 
+	/**
+	 * Method to calculate Item unit price sub total.
+	 *
+	 * @param recommendDtl the ScQtRecommendDtl
+	 * @return the big decimal
+	 */
 	public BigDecimal itemUnitPriceSubTotal(ScQtRecommendDtl recommendDtl) {
 
 		BigDecimal itemSubTotal = this
