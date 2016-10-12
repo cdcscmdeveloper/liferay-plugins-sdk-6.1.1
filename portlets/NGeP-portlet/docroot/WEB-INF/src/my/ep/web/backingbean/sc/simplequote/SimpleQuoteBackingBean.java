@@ -2294,17 +2294,16 @@ public class SimpleQuoteBackingBean extends
 			templateSpecBackingBean = new TemplateSpecBackingBean();
 		}
 		templateSpecBackingBean.getManagedBean().setG2G(false);
-		if (getManagedBean().getScQuote().getProcurementType()
-				.getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
+		
+		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
+		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL) 
+				|| procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) ) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 
-		} else if (getManagedBean().getScQuote().getProcurementType()
-				.getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
 			getManagedBean().setG2GFlag(Boolean.TRUE);
@@ -2312,9 +2311,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setByBusinessNature(Boolean.FALSE);
 			getManagedBean().setByLocality(Boolean.FALSE);
 			templateSpecBackingBean.getManagedBean().setG2G(true);
-		} else if (getManagedBean().getScQuote().getProcurementType()
-				.getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
