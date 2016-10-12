@@ -48,8 +48,6 @@ public class GlAccountBackingBean extends
 		log.info("inside GlAccountBackingBean constructor");
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
-			System.out.println("***userId: " + pmUser.getUserId());
-
 			new LogKey(pmUser.getUserId()); 
 		}else{
 			new LogKey(1L); 
