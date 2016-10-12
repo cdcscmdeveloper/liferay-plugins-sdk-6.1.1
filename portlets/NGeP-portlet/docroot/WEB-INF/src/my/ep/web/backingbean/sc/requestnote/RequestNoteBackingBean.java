@@ -1814,14 +1814,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void procurementTypeEvent() {
 		debugLogger("procurementTypeEvent"); 
-		if (getManagedBean().getProcurementType()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL) || getManagedBean().getProcurementType().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+		String procType = getManagedBean().getProcurementType();
+		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL) 
+				|| procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+				|| procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
-			   getManagedBean().setJustRequired(Boolean.FALSE);
+			getManagedBean().setJustRequired(Boolean.FALSE);
 			
-		} else if (getManagedBean().getProcurementType()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+		} else if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
 		    getManagedBean().setJustRequired(Boolean.TRUE);

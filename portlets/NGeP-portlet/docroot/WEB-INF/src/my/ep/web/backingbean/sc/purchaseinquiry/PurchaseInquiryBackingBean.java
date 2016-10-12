@@ -925,23 +925,18 @@ public class PurchaseInquiryBackingBean extends
 	 */
 	public void procurementTypeEvent() {
 		log.info("procurementTypeEvent");
-		if (getManagedBean().getRequestNoteDtl().getProcurementType()
-				.getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)
-				|| getManagedBean().getRequestNoteDtl().getProcurementType()
-						.getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+		String procurementType = getManagedBean().getRequestNoteDtl().getProcurementType().getParameterCode();
+		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)
+				|| procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+				|| procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
 
-		} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
-				.getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean()
 					.setJustDropdown(
 							getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
-
 		} 
 		getManagedBean().getRequestNoteDtl().setJustificationType(
 				new PmReason());

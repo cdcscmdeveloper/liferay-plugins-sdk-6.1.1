@@ -85,7 +85,7 @@
 					</ui:fragment>
 
 					<ui:fragment
-						rendered="#{requestNoteDtl.procurementType.parameterCode eq 'G'}">
+						rendered="#{requestNoteDtl.procurementType.parameterCode eq 'G' or requestNoteDtl.procurementType.parameterCode eq 'P'}">
 						<h:outputText
 							value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,requestNoteDtl.procurementType.parameterCode)}" />
 					</ui:fragment>
