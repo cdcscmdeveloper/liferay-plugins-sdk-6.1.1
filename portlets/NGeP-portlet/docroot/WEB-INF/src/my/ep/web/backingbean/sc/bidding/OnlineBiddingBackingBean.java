@@ -122,6 +122,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	}
 
+	/**
+	 * Fetch tolerance price.
+	 */
 	private void fetchTolerancePrice() {
 		IRuleSO ruleSO = null;
 
@@ -282,6 +285,14 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		navigateUsingExternalContext(selectedBidScheduleId);
 	}
 
+	/**
+	 * Navigate using external context.
+	 *
+	 * @param bidScheduleId the bid schedule id
+	 * @throws PortalException the portal exception
+	 * @throws SystemException the system exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void navigateUsingExternalContext(Long bidScheduleId)
 			throws PortalException, SystemException, IOException {
 
@@ -341,6 +352,16 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	}
 
+	/**
+	 * Gets the online bid schedule details.
+	 *
+	 * @param bidScheduleID the bid schedule ID
+	 * @param supplierID the supplier ID
+	 * @return the online bid schedule details
+	 * @throws PortalException the portal exception
+	 * @throws SystemException the system exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void getOnlineBidScheduleDetails(Long bidScheduleID, Long supplierID)
 			throws PortalException, SystemException, IOException {
 		IBiddingSO biddingSO = null;
@@ -385,7 +406,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * action method to populate item details
+	 * Action method to populate item details
 	 * 
 	 * @param scBidPrice
 	 */
@@ -499,6 +520,13 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 	}
 
+	/**
+	 * Gets the bid price totals.
+	 *
+	 * @param scBidPrice the sc bid price
+	 * @param itemPrice the item price
+	 * @return the bid price totals
+	 */
 	private Double getBidPriceTotals(ScBidPrice scBidPrice, BigDecimal itemPrice) {
 
 		return this.tplSpecHelper.calcTotalAmount(
@@ -509,7 +537,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * action method to confirm and submit bid price
+	 * Action method to confirm and submit bid price
 	 * 
 	 * @param scBidPrice
 	 */
@@ -590,6 +618,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	}
 
+	/**
+	 * Action method to update bid price and calculate rank.
+	 */
 	public void updateBidPriceAndCalculateRank() {
 		log.info("updateBidPriceNDcalculateRank");
 		ScBidPrice priceItemToPersist = null;
@@ -646,6 +677,13 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	}
 
+	/**
+	 * Duration calculator.
+	 *
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @return the long
+	 */
 	private Long durationCalculator(Date startDate, Date endDate) {
 
 		long durationInMills = endDate.getTime() - startDate.getTime();
@@ -656,6 +694,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		return time;
 	}
 
+	/**
+	 * Method to calculate Item start price total.
+	 */
 	private void itemStartPriceTotal() {
 
 		BigDecimal startPriceTotal = new BigDecimal(0.0d);
@@ -962,6 +1003,11 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		return tplSpecHelper;
 	}
 
+	/**
+	 * Retrive qt details.
+	 *
+	 * @param bid the bid
+	 */
 	private void retriveQtDetails(ScBidSchedule bid) {
 		IQTDetailSO qTDetailSO = null;
 		try {
