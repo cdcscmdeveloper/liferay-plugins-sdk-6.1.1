@@ -71,7 +71,7 @@
 				okAction="qTSupplierQulCriteriaBackingBean.deleteCategoryCodes"
 				width="33%" height="100" title="#{lbl['lbl.sc.category.code']}"
 				content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
-				update="@([id$=openCategoryCodesPanel])" />
+				update="@form" />
 			<ac:categoryCodePopup
 				okAction="qTSupplierQulCriteriaBackingBean.addNewCategoryAction"
 				update="@([id$=openPnlId])" />
@@ -317,7 +317,7 @@
 							width="400" height="100"
 							title="#{lbl['lbl.sc.location.list.paidup.capital']}"
 							content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
-							update="@([id$=supplierQualificationCriterialocationPaidUpcapitalPanel])" />
+							update="@form" />
 		
 						<p:dialog header="#{lbl['lbl.sc.add.location']}"
 							widgetVar="ZoneLocation" modal="true" position="top" height="65%">
