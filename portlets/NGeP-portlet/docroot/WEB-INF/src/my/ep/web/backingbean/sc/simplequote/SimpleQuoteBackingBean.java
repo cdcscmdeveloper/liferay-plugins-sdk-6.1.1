@@ -2329,6 +2329,19 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().getScQuote().setJustificationType(
 					new PmReason());
 		}
+		
+		// when procurement type as pk7 selected 
+		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+			Locale locale = new FacesScopes().getUserLocale();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(
+									ResourceBundleUtils.getMessage("lbl.sc.procurement.type.pk7.msg",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+		}
 
 	}
 
