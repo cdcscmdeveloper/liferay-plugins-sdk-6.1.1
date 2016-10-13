@@ -80,7 +80,7 @@
 								<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
 									label="#{lbl['lbl.sm.identificationno']}" readonly="#{complainantDtlViewFLag}"
 									value="#{complaintBackingBean.managedBean.smComplainant.identificationNo}"
-									size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.individual.newicno']} - #{lbl['lbl.sm.invalidIcNo']}">
+									size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}">
 									<f:validateRegex pattern="[0-9]+" />
 									<f:validateLength minimum="12"></f:validateLength>
 								</p:inputText>
