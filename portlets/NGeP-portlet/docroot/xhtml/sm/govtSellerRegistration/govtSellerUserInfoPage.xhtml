@@ -229,7 +229,7 @@
 						<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.identificationno']}" 
 							value="#{bb.managedBean.smPersonnel.identificationNo}"
-							size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.individual.newicno']} - #{lbl['lbl.sm.invalidIcNo']}">
+							size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}">
 							<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}"/>
 						</p:inputText>
 					
