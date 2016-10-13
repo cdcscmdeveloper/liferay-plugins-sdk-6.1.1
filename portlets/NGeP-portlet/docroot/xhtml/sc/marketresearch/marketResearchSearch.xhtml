@@ -30,21 +30,6 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
-				<td><p:selectOneMenu style="width:226px;"
-						requiredMessage="#{lbl['lbl.sc.mr.val.proc.type.msg']}"
-						value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.selectedProcurementMethod}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />
-						<f:selectItems
-							value="#{marketResearchBackingBean.getProcModeCategories()}"
-							var="procMode" itemLabel="#{procMode.codeName}"
-							itemValue="#{procMode.pmParameter.parameterCode}" />
-					</p:selectOneMenu></td>
-					<td colspan="2"></td>
-
-			</tr>
-			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.no']}" /></td>
 				<td><p:inputText id="loaNoId" maxlength="255" size="38"
 					value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.loaNo}"/>
@@ -82,10 +67,10 @@
 		</table>
 		<h:panelGroup>
 			<div class="ppRightBtn" style="width: 100%">
-				<p:commandButton value="#{lbl['lbl.btn.search']}" 
+				<p:commandButton value="#{lbl['lbl.btn.search']}" process="@this, marketResearchPanel" partialSubmit="true"
 					action="#{marketResearchBackingBean.searchMarketResearch}"
 					update="marketResearchPanel,marketResearchResult"	/>
-				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this"
 					action="#{marketResearchBackingBean.resetMarketResearch}"
 					update="marketResearchPanel,marketResearchResult"	/>	
 			</div>
