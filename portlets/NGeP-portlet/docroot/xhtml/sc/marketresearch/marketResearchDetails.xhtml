@@ -66,11 +66,7 @@
 				<td></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
-				<td>
-					<p:inputText value="#{marketResearchBackingBean.getParameterDesc(vo.procurementMode)}"
-								disabled="true" style="width:195px;" readonly="true" />
-				</td>
+				
 				<td><p:outputLabel value="#{lbl['lbl.sc.open.for']}" /></td>
 				<td><p:inputText id="openForTxt"
 						value="#{not empty vo.openFor ? marketResearchBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, vo.openFor) : lbl['lbl.txt.na']}"

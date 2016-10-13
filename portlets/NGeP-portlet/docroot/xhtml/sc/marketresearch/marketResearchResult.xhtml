@@ -23,9 +23,7 @@
 				<p:column headerText="#{lbl['lbl.sc.mr.procurement.title']}">
 					<h:outputText value="#{scMarketData[2]}"/>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
-					<h:outputText value="#{marketResearchBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode,scMarketData[3])}"/>
-				</p:column>
+				
 				<p:column  headerText="#{lbl['lbl.sc.mr.loa.ack.date']}">
 					<h:outputText  value="#{scMarketData[4]}">
 						<f:convertDateTime
