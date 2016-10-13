@@ -6,22 +6,19 @@ package my.ep.web.backingbean.sc.marketresearch;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.document.QTDocumentReqDTO;
 import my.ep.dto.sc.document.QTDocumentResDTO;
@@ -31,7 +28,6 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
@@ -44,9 +40,11 @@ import my.ep.web.bean.sc.quatationtender.MarketResearchSearchBean;
 import my.ep.web.managedbean.sc.marketresearch.MarketResearchManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 import my.ep.web.vo.MarketResearchVO;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 
 
@@ -84,11 +82,6 @@ public class MarketResearchBackingBean extends
 				.handleNavigation(fc, null, NAV_TO_SEARCH_MAIN);
 	}
 	
-	public List<PmParameterDesc> getProcModeCategories(){
-		return ParameterHelper
-				.getInstance()
-				.getParameterDescList(ParameterTypeConst.SC_PROCUREMENT_MODE);
-	}
 	
 	// pagination for market research result list
 	private class MarketResearchPagingDataModel extends PagingDataModel<ScLoa> {
@@ -123,10 +116,6 @@ public class MarketResearchBackingBean extends
 						reqDTO.setLoaNo(mrSearchBean.getLoaNo());
 					}
 					
-					if(StringUtils.isNotBlank(mrSearchBean.getSelectedProcurementMethod())){
-						reqDTO.setProcurementMethod(mrSearchBean.getSelectedProcurementMethod());
-					}
-				
 					if(mrSearchBean.getLoaAckDateFrom() != null){
 						reqDTO.setLoaAckDateFrom(mrSearchBean.getLoaAckDateFrom());
 					}
@@ -172,11 +161,15 @@ public class MarketResearchBackingBean extends
 	public void searchMarketResearch(){
 		log.info("searchMarketResearch");
 		getManagedBean().setSearch(true);
-		MarketResearchSearchBean mrSearchBean = getManagedBean().getMarketResearchSearchBean();		
+		MarketResearchSearchBean mrSearchBean = getManagedBean().getMarketResearchSearchBean();	
+		boolean searchValue=checkSearchValues(mrSearchBean);
+		if(!searchValue){
+			throw new EpException(MessageConst.ERROR_760438);
+			}
 		if(mrSearchBean.getLoaAckDateFrom() != null && mrSearchBean.getLoaAckDateTo() != null){
 			if (DateUtils.isDateGreater(mrSearchBean.getLoaAckDateFrom() ,
 					mrSearchBean.getLoaAckDateTo())) {
-				throw new EpException("Loa From Date is greater than Loa To Date");
+				throw new EpException(MessageConst.ERROR_760439);
 			}
 		}
 		getMarketResearchDataModel().reloadData();
@@ -405,5 +398,42 @@ public class MarketResearchBackingBean extends
 			qtSuppFinalizationSO = null;
 		}
 		return scQtFinalization;
+	}
+	
+	private boolean checkSearchValues(MarketResearchSearchBean mrSearchBean){
+		
+		if(StringUtils.isNotBlank(mrSearchBean.getProcurementTitle())){
+			return Boolean.TRUE;
+			
+		}
+		
+		if(StringUtils.isNotBlank(mrSearchBean.getItemName())){
+			return Boolean.TRUE;
+			
+		}
+		
+		if(StringUtils.isNotBlank(mrSearchBean.getSpec())){
+			return Boolean.TRUE;
+			
+		}
+		
+		if(StringUtils.isNotBlank(mrSearchBean.getLoaNo())){
+			return Boolean.TRUE;
+			
+		}
+		
+		
+	
+		if(mrSearchBean.getLoaAckDateFrom() != null){
+			return Boolean.TRUE;
+			
+		}
+		
+		if(mrSearchBean.getLoaAckDateTo() != null){
+			return Boolean.TRUE;
+			
+		}
+		
+		return Boolean.FALSE;
 	}
 }
