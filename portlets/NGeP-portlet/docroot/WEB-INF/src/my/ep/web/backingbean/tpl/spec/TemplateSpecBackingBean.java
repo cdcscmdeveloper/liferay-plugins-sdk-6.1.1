@@ -276,6 +276,7 @@ public class TemplateSpecBackingBean extends
 
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setAnswerList(answerList);
+			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.saveTemplateSpecAnswer(reqDTO);
