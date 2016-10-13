@@ -17,7 +17,7 @@ import org.quartz.JobExecutionException;
 @DisallowConcurrentExecution
 public class ContactInfoJob implements Job {
 
-	public static Logger log = EpLogger.getLogger(GovernmentEntityInfoJob.class);
+	public static Logger log = EpLogger.getLogger(ContactInfoJob.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
