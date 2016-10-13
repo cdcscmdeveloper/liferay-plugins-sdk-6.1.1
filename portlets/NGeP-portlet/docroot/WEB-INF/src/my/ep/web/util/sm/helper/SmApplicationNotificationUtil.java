@@ -2,11 +2,14 @@ package my.ep.web.util.sm.helper;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
+import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.DateUtils;
+import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -25,23 +28,26 @@ public class SmApplicationNotificationUtil {
 	 * @param reqDTO
 	 *            - ReviewApplicationReqDTO
 	 */
-	public static void setApprovalNotificationParameters(
-			SmApplicationManagedBean managedBean, ReviewApplicationReqDTO reqDTO) {
-		reqDTO.setBusinessRegNo(managedBean.getSmSupplier().getRegNo());
-		reqDTO.setCompanyName(managedBean.getSmSupplier().getCompanyName());
-		if (managedBean.getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				|| managedBean
-						.getSmAppl()
-						.getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-				|| managedBean.getSmAppl().getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+	public static void setApprovalNotificationParameters(SmAppl smAppl,
+			SmSupplierBasicInfoVO basicInfo, boolean isPoUser,
+			SmSupplier supplier, String supplierRemarks,
+			String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
+		reqDTO.setBusinessRegNo(supplier.getRegNo());
+		reqDTO.setCompanyName(supplier.getCompanyName());
+		if (smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				|| smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
 			reqDTO.setPaymentMethods(" --- TO BE CONFIRMED ON THE PAYMENT LIST DETAILS ---");
-			reqDTO.setCategoryDescription(retriveCategoryMessageForNotification(managedBean));
-		} else if (managedBean.getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-			reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(managedBean));
+			reqDTO.setCategoryDescription(retriveCategoryMessageForNotification(
+					smAppl, isPoUser));
+		} else if (smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(
+					smAppl, supplier, basicInfo, approvalRemarks,
+					supplierRemarks));
 			// reqDTO.setMofNum(managedBean.getBasicInfo().getMofNo());
 		}
 		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
@@ -108,7 +114,9 @@ public class SmApplicationNotificationUtil {
 	 * @return String - notification message or table content
 	 */
 	public static String retriveCancelRegistrationMessageForNotification(
-			SmApplicationManagedBean managedBean) {
+			SmAppl smAppl, SmSupplier supplier,
+			SmSupplierBasicInfoVO basicInfo, String approvalRemarks,
+			String supplierRemarks) {
 		StringBuilder sb = new StringBuilder();
 		log.info("*********** retriveCancelRegistrationMessageForNotification *********");
 		sb.append("<table style=\"width:100%; border: 1px solid black;border-collapse: collapse;\">");
@@ -118,8 +126,8 @@ public class SmApplicationNotificationUtil {
 						null)).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(DateUtils.dateToString("dd-MMM-yyyy", managedBean
-						.getSmAppl().getApplSubmitDate())).append("</td>");
+				.append(DateUtils.dateToString("dd-MMM-yyyy",
+						smAppl.getApplSubmitDate())).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
@@ -127,7 +135,7 @@ public class SmApplicationNotificationUtil {
 						null)).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(managedBean.getSmAppl().getApplNo()).append("</td>");
+				.append(smAppl.getApplNo()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
@@ -135,7 +143,7 @@ public class SmApplicationNotificationUtil {
 						null)).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(managedBean.getBasicInfo().getMofNo()).append("</td>");
+				.append(basicInfo.getMofNo()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
@@ -143,8 +151,7 @@ public class SmApplicationNotificationUtil {
 						null)).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(managedBean.getSmSupplier().getCompanyName())
-				.append("</td>");
+				.append(supplier.getCompanyName()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
@@ -152,8 +159,8 @@ public class SmApplicationNotificationUtil {
 						null)).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(AddressUtils.getFullAddress(managedBean.getBasicInfo()
-						.getAddress().getSmAddress())).append("</td>");
+				.append(AddressUtils.getFullAddress(basicInfo.getAddress()
+						.getSmAddress())).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
@@ -161,7 +168,7 @@ public class SmApplicationNotificationUtil {
 						null)).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(managedBean.getSupplierRemarks()).append("</td>");
+				.append(supplierRemarks).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
@@ -169,7 +176,7 @@ public class SmApplicationNotificationUtil {
 						null)).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(managedBean.getApplnApprovalRemarks()).append("</td>");
+				.append(approvalRemarks).append("</td>");
 		sb.append("</tr>");
 		sb.append("</table>");
 		return sb.toString();
@@ -185,8 +192,8 @@ public class SmApplicationNotificationUtil {
 	 *            - SmApplicationManagedBean
 	 * @return String - notification message or table content
 	 */
-	public static String retriveCategoryMessageForNotification(
-			SmApplicationManagedBean managedBean) {
+	public static String retriveCategoryMessageForNotification(SmAppl smAppl,
+			boolean isPoUser) {
 		StringBuilder approvedCatCodes = new StringBuilder();
 		StringBuilder rejectedCatCodes = new StringBuilder();
 		StringBuilder finalMsg = new StringBuilder();
@@ -209,8 +216,7 @@ public class SmApplicationNotificationUtil {
 		rejectedCatCodes.append("</tr>");
 		int i = 0;
 		int j = 0;
-		for (SmSupplierCategory cat : managedBean.getSmAppl()
-				.getSmSupplierCategories()) {
+		for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 				approvedCatCodes.append("<br/>");
@@ -235,7 +241,7 @@ public class SmApplicationNotificationUtil {
 						.append("</td>");
 				rejectedCatCodes
 						.append("<td style='border: 1px solid black;'>");
-				if (managedBean.isPoUser()) {
+				if (isPoUser) {
 					rejectedCatCodes.append(cat.getPoRemarks()).append("</td>");
 				} else {
 					rejectedCatCodes.append(cat.getApproverRemarks()).append(
