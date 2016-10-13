@@ -13,13 +13,12 @@
 		<cc:attribute name="currRegStatus" />
 		<cc:attribute name="facilityType" />
 		<cc:attribute name="changeCurrRegStatus" default="false" />
-		<cc:attribute name="approvedStatusId" />
-		<cc:attribute name="regStatusDescList" />
 		<cc:attribute name="approvalRemarks" />
 		<cc:attribute name="overLapRemarks" />
 		<cc:attribute name="valueReqd" default="false" />
 		<cc:attribute name="border" default="true" />
 		<cc:attribute name="overLappedCategoryExists" default="false" />
+		<cc:attribute name="bean" required="true" />
 	</cc:interface>
 	
 	<cc:implementation>
@@ -64,10 +63,10 @@
 			
 							<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
 									id="approveSelBox" required="#{cc.attrs.valueReqd}"
-									value="#{cc.attrs.approvedStatusId}"
+									value="#{cc.attrs.bean.approvedStatusId}"
 									style="width: 240px;margin-bottom: 5px;">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-									<f:selectItems value="#{cc.attrs.regStatusDescList}" var="reg"
+									<f:selectItems value="#{cc.attrs.bean.regStatusDescList}" var="reg"
 										itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.statusId}" />
 			
 								</p:selectOneMenu> <p:message id="approveSelBoxMsg" for="approveSelBox"

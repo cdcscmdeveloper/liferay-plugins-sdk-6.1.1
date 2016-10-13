@@ -9,11 +9,16 @@
 	<br />
 	<p:messages id="applicationApprovedRemarksMsg" showSummary="false"
 		showDetail="true" autoUpdate="true" closable="true" />
-	
-	<ac:smApplApproveDecisionForm smAppl="#{backingBean.managedBean.smAppl}" currRegStatus="#{backingBean.managedBean.currRegStatus}" 
-		facilityType="#{backingBean.managedBean.basicCompanyFacility.facilityType}" changeCurrRegStatus="#{backingBean.managedBean.changeCurrRegStatus}" 
-		approvedStatusId="#{backingBean.managedBean.approvedStatusId}" regStatusDescList="#{backingBean.managedBean.regStatusDescList}"
-		approvalRemarks="#{backingBean.managedBean.applnApprovalRemarks}" overLapRemarks="#{backingBean.managedBean.applnOverLapRemarks}" 
-		valueReqd="#{backingBean.managedBean.valueReqd}" overLappedCategoryExists="#{backingBean.managedBean.overLappedCategoryExists}"/>
-		
+
+	<ac:smApplApproveDecisionForm
+		smAppl="#{backingBean.managedBean.smAppl}"
+		currRegStatus="#{backingBean.managedBean.currRegStatus}"
+		bean="#{backingBean.managedBean}"
+		facilityType="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
+		changeCurrRegStatus="#{backingBean.managedBean.changeCurrRegStatus}"
+		approvalRemarks="#{backingBean.managedBean.applnApprovalRemarks}"
+		overLapRemarks="#{backingBean.managedBean.applnOverLapRemarks}"
+		valueReqd="#{backingBean.managedBean.valueReqd}"
+		overLappedCategoryExists="#{backingBean.managedBean.overLappedCategoryExists}" />
+
 </ui:composition>
