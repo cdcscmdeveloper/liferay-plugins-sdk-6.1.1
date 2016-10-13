@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -8726,6 +8727,90 @@ public class SmApplicationUtil {
 		}
 
 		return urlParam;
+	}
+
+	public static void approveApplCategories(boolean isApprover, boolean isPo,
+			SmAppl smAppl) {
+		for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
+			if (cat.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.PENDING_ACT_STATUS) == 0
+					|| cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+				if ((isPo && cat.getPoDecFlg() != null && cat.getPoDecFlg()
+						.compareTo(new Integer(1)) == 0)
+						|| (isApprover && cat.getApprvrDecFlg() != null && cat
+								.getApprvrDecFlg().compareTo(new Integer(1)) == 0)) {
+					if (cat.getApprovedDate() == null) {
+						cat.setApprovedDate(new Date());
+					}
+					cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
+					setCategoryNameForApprovedCategory(cat);
+					setSupplierCategoryEffectiveDate(cat, smAppl.getApplType());
+				} else {
+					cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+				}
+
+				// if PO direct approved, delete Approver Flag
+				if (isPo) {
+					cat.setApprvrDecFlg(null);
+					cat.setApproverRemarks(null);
+				}
+			}
+		}
+	}
+
+	private static void setSupplierCategoryEffectiveDate(
+			SmSupplierCategory cat, String applType) {
+		Calendar c = Calendar.getInstance();
+		if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+				&& cat.getCategoryEffDate() == null) {
+			if (StringUtils.isNotBlank(applType)
+					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+					&& !applType
+							.equals(ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL)) {
+				c.add(Calendar.MONTH, SmServiceLookup.getSmRuleSO()
+						.retrieveNewCatEffectiveMonthAfterAppoved()
+						.getNewCatEffectiveMonth());
+			}
+			cat.setCategoryEffDate(c.getTime());
+		}
+	}
+
+	private static void setCategoryNameForApprovedCategory(
+			SmSupplierCategory cat) {
+		CategoryCodeReqDTO reqDTO = null;
+		if (cat.getPmCategoryL1() != null
+				&& cat.getPmCategoryL1().getCategoryL1Id() != null) {
+			reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL1Id(cat.getPmCategoryL1().getCategoryL1Id());
+			PmCategoryL1 l1 = SmServiceLookup.getCategoryCodeSO()
+					.retrieveCategoryL1DtlById(reqDTO).getCategoryL1();
+			if (l1 != null) {
+				cat.setCategoryL1Name(l1.getCategoryName());
+			}
+		}
+		if (cat.getPmCategoryL2() != null
+				&& cat.getPmCategoryL2().getCategoryL2Id() != null) {
+			reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL2Id(cat.getPmCategoryL2().getCategoryL2Id());
+			PmCategoryL2 l2 = SmServiceLookup.getCategoryCodeSO()
+					.retrieveCategoryL2DtlById(reqDTO).getCategoryL2();
+			if (l2 != null) {
+				cat.setCategoryL2Name(l2.getCategoryName());
+			}
+		}
+		if (cat.getPmCategoryL3() != null
+				&& cat.getPmCategoryL3().getCategoryL3Id() != null) {
+			reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL3Id(cat.getPmCategoryL3().getCategoryL3Id());
+			PmCategoryL3 l3 = SmServiceLookup.getCategoryCodeSO()
+					.retrieveCategoryL3DtlById(reqDTO).getCategoryL3();
+			if (l3 != null) {
+				cat.setCategoryL3Name(l3.getCategoryName());
+			}
+		}
 	}
 
 	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {

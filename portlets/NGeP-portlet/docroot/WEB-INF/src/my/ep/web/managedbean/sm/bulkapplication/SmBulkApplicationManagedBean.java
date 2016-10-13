@@ -12,17 +12,20 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.dto.sm.bulkApplication.SmBulkApplicationReqDTO;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.SmBulkApplicationVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
 
 @ManagedBean(name = "bulkApplicationMB")
@@ -41,6 +44,7 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 	private PagingDataModel<SmBulkApplicationVO> unClaimTaskListDataModel = new UnClaimTaskPagingDataModel();
 	private List<SmBulkApplicationVO> selectedTasks;
 	private List<PmStatusDesc> regStatusDescList;
+	private List<SmAppl> responseSubmittedBulkAppl;
 
 	private class ClaimTaskPagingDataModel extends
 			PagingDataModel<SmBulkApplicationVO> {
@@ -161,10 +165,10 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 		if (worklistItemVO.getDocType() != null
 				&& worklistItemVO.getDocType().equalsIgnoreCase("SR")) {
 			FacesScopes face = new FacesScopes();
-			SmBulkApplicationReqDTO bulkApplReqDTO = new SmBulkApplicationReqDTO();
-			bulkApplReqDTO.setApplId(worklistItemVO.getDocId().longValue());
-			SmAppl appl = SmServiceLookup.getSmBulkApplicationSO()
-					.getApplicationByApplId(bulkApplReqDTO).getAppl();
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			mofReqDTO.setApplId(worklistItemVO.getDocId().longValue());
+			SmAppl appl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmApplicationDetailsById(mofReqDTO).getSmAppl();
 			if (appl != null) {
 				String companyName = appl.getSmSupplier().getCompanyName();
 				StringBuilder sb = new StringBuilder();
@@ -179,7 +183,11 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 				}
 				worklistItemVO.setTitle(sb.toString());
 				bulkApplicationVO = new SmBulkApplicationVO();
-				bulkApplicationVO.setItem(worklistItemVO);
+				bulkApplicationVO.setTaskId(worklistItemVO.getTaskId());
+				bulkApplicationVO.setCreateDate(worklistItemVO.getCreateDate());
+				bulkApplicationVO.setExpirationDate(worklistItemVO
+						.getExpirationDate());
+				bulkApplicationVO.setTitle(worklistItemVO.getTitle());
 				bulkApplicationVO.setAppl(appl);
 				bulkApplicationVO.setRegStatusDescList(SmApplicationUtil
 						.getInstance().retrieveRegistrationStatusList(
@@ -202,6 +210,18 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 					bulkApplicationVO.setOverlapRemarks(overlapCategoryVO
 							.getOverLappedCategoryRemarks());
 				}
+				PmState state = appl.getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress()
+						.getPmState();
+				bulkApplicationVO.setPmZone(SmApplicationUtil
+						.retrieveZoneByStateId(state.getStateId()));
+				if (appl.getSupportingDocMode().equalsIgnoreCase(
+						SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+					bulkApplicationVO.setOnlineDoc(true);
+				} else {
+					bulkApplicationVO.setOnlineDoc(false);
+				}
+				bulkApplicationVO.setPaymentReqd(getPaymentMode(appl));
 			}
 		}
 		return bulkApplicationVO;
@@ -210,6 +230,17 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 	private int calculateFinalOffSet(int currentPage) {
 		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
 		return offSet;
+	}
+
+	private boolean getPaymentMode(SmAppl smAppl) {
+		boolean payReq = false;
+		if (smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				|| smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			payReq = true;
+		}
+		return payReq;
 	}
 
 	public List<WorklistItemVO> getTaskList() {
@@ -276,5 +307,14 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 	public void setUnClaimTaskListDataModel(
 			PagingDataModel<SmBulkApplicationVO> unClaimTaskListDataModel) {
 		this.unClaimTaskListDataModel = unClaimTaskListDataModel;
+	}
+
+	public List<SmAppl> getResponseSubmittedBulkAppl() {
+		return responseSubmittedBulkAppl;
+	}
+
+	public void setResponseSubmittedBulkAppl(
+			List<SmAppl> responseSubmittedBulkAppl) {
+		this.responseSubmittedBulkAppl = responseSubmittedBulkAppl;
 	}
 }

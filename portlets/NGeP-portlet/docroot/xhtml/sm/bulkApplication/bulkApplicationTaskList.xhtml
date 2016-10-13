@@ -9,123 +9,234 @@
 
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_smBulkApplication_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.bulk.submission']}");
+			$('#portlet_smBulkApplication_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					"#{lbl['lbl.sm.bulk.submission']}");
 		</script>
 	</ui:define>
-	
+
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false"/>
+		<p:messages id="messages" showDetail="true" closable="true"
+			showSummary="false" escape="false" />
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		
+
 		<table style="width: 100%;">
 			<tr>
-				<td>
-					<p:commandButton action="#{bulkApplicationBackingBean.refreshTaskList}"
+				<td><p:commandButton
+						action="#{bulkApplicationBackingBean.refreshTaskList}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						value="#{lbl['lbl.bpm.refresh']}" update="claimTaskListId" />
-				</td>
-				<td style="white-space: nowrap; float: right;">
-				    <p:commandButton value="#{lbl['lbl.sm.button.approve']}" style="float:right;" 
-				    	id="approveBtnId" update="@form"
-				    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-				    	action="#{bulkApplicationBackingBean.approveBulkApplication}"/>
-				</td>
+						value="#{lbl['lbl.bpm.refresh']}" update="claimTaskListId" /></td>
+				<td style="white-space: nowrap; float: right;"><p:commandButton
+						value="#{lbl['lbl.sm.button.approve']}" style="float:right;"
+						id="approveBtnId" update="@form" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
+						action="#{bulkApplicationBackingBean.approveBulkApplication}" /></td>
 			</tr>
-			<tr height="10"><td height="10"></td></tr>
+			<tr height="10">
+				<td height="10"></td>
+			</tr>
 		</table>
-		
-		<p:panel header="#{lbl['lbl.sm.bulk.application.list.group']}" toggleable="true" id="unClaimPanelId">
-			<p:dataTable id="unClaimTaskListId" rowKey="#{unclaim}" lazy="true" rows="10" 
-				emptyMessage="#{lbl['lbl.pp.no.record.found']}" var="unclaim" 
-				rowIndexVar="index" value="#{bulkApplicationBackingBean.managedBean.unClaimTaskListDataModel}">
+
+		<p:panel header="#{lbl['lbl.sm.bulk.approval.header']}"
+			toggleable="true"
+			rendered="#{not empty bulkApplicationBackingBean.managedBean.responseSubmittedBulkAppl}">
+			<p:dataTable var="smAppl" id="approveApplDtId"
+				widgetVar="approveApplDtWidVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{bulkApplicationBackingBean.managedBean.responseSubmittedBulkAppl}"
+				rows="10" rowKey="#{smAppl}" rowIndexVar="index">
+
+				<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
+					<h:outputText value="#{lbl['lbl.sm.contractor']}"
+						rendered="#{smAppl.supplierType eq 'K'}" />
+					<h:outputText value="#{lbl['lbl.sm.consultant']}"
+						rendered="#{smAppl.supplierType eq 'J'}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.companyname']}">
+					<h:outputText value="#{smAppl.smSupplier.companyName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.application.no']}">
+					<h:outputText value="#{smAppl.applNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.applicationtype']}"
+					style="width :25%;white-space : normal">
+					<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}"
+						rendered="#{smAppl.applType eq 'N'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}"
+						rendered="#{smAppl.applType eq 'B'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}"
+						rendered="#{smAppl.applType eq 'A'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}"
+						rendered="#{smAppl.applType eq 'U'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}"
+						rendered="#{smAppl.applType eq 'C'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}"
+						rendered="#{smAppl.applType eq 'R'}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.bulk.submitted.status']}">
+					<h:outputText value="#{lbl['lbl.sm.bulk.approval.success']}"
+						rendered="#{smAppl.success}" />
+					<h:outputText value="#{lbl['lbl.sm.bulk.approval.fail']}"
+						rendered="#{!smAppl.success}" />
+					&#160;
+					<p:graphicImage value="/css/images/design/icon_error.png"
+						rendered="#{!smAppl.success}" />
+					<p:graphicImage value="/css/images/design/icon_success.png"
+						rendered="#{smAppl.success}" />
+				</p:column>
+
+			</p:dataTable>
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sm.bulk.application.list.group']}"
+			toggleable="true" id="unClaimPanelId">
+			<p:dataTable id="unClaimTaskListId" rowKey="#{unclaim}" lazy="true"
+				rows="10" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				var="unclaim" rowIndexVar="index"
+				value="#{bulkApplicationBackingBean.managedBean.unClaimTaskListDataModel}">
 				<ac:paginator for="unClaimTaskListId"></ac:paginator>
-		
-				<p:column style="white-space:normal !important;" headerText="#{lbl['lbl.bpm.doc.no']}">
-					<h:outputText value="#{unclaim.item.docNumber}" />
+
+				<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
+					<h:outputText value="#{lbl['lbl.sm.contractor']}"
+						rendered="#{unclaim.appl.supplierType eq 'K'}" />
+					<h:outputText value="#{lbl['lbl.sm.consultant']}"
+						rendered="#{unclaim.appl.supplierType eq 'J'}" />
 				</p:column>
-	
-				<p:column style="width : 25%;white-space:normal;" headerText="#{lbl['lbl.bpm.description']}">
-					<h:outputText value="#{unclaim.item.title}" />
+
+				<p:column headerText="#{lbl['lbl.sm.companyname']}">
+					<h:outputText value="#{unclaim.appl.smSupplier.companyName}" />
 				</p:column>
-				
-				<p:column style="white-space:normal;" headerText="#{lbl['lbl.bpm.created.date']}">
-					<h:outputText value="#{unclaim.item.createDate.time}">
+
+				<p:column headerText="#{lbl['lbl.sm.application.no']}">
+					<h:outputText value="#{unclaim.appl.applNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.applicationtype']}"
+					style="width :25%;white-space : normal">
+					<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}"
+						rendered="#{unclaim.appl.applType eq 'N'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}"
+						rendered="#{unclaim.appl.applType eq 'B'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}"
+						rendered="#{unclaim.appl.applType eq 'A'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}"
+						rendered="#{unclaim.appl.applType eq 'U'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}"
+						rendered="#{unclaim.appl.applType eq 'C'}" />
+					<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}"
+						rendered="#{unclaim.appl.applType eq 'R'}" />
+				</p:column>
+
+				<p:column style="white-space:normal;"
+					headerText="#{lbl['lbl.bpm.created.date']}">
+					<h:outputText value="#{unclaim.createDate.time}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
-				
-				<p:column style="white-space:normal;" headerText="#{lbl['lbl.bpm.due.date']}">
-					<h:outputText value="#{unclaim.item.expirationDate.time}">
+
+				<p:column style="white-space:normal;"
+					headerText="#{lbl['lbl.bpm.due.date']}">
+					<h:outputText value="#{unclaim.expirationDate.time}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
-				
+
 				<p:column headerText="#{lbl['lbl.cm.action']}">
 					<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						action="#{bulkApplicationBackingBean.onClaimBpmTask}" update="@form">
-						<f:param name="taskId" value="#{unclaim.item.taskId}" />
+						action="#{bulkApplicationBackingBean.onClaimBpmTask}"
+						update="@form">
+						<f:param name="taskId" value="#{unclaim.taskId}" />
 					</p:commandButton>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-		
-		<p:panel header="#{lbl['lbl.sm.bulk.application.list']}" toggleable="true" id="resultPanelId">
-		
-			<p:dataTable id="claimTaskListId" rowKey="#{tasks}" lazy="true" rows="10" 
-				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-				rowIndexVar="index" value="#{bulkApplicationBackingBean.managedBean.claimTaskListDataModel}"
-				var="tasks" selection="#{bulkApplicationBackingBean.managedBean.selectedTasks}">
+
+		<p:panel header="#{lbl['lbl.sm.bulk.application.list']}"
+			toggleable="true" id="resultPanelId">
+
+			<p:dataTable id="claimTaskListId" rowKey="#{tasks}" lazy="true"
+				rows="10" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				rowIndexVar="index" var="tasks"
+				value="#{bulkApplicationBackingBean.managedBean.claimTaskListDataModel}"
+				selection="#{bulkApplicationBackingBean.managedBean.selectedTasks}">
 				<ac:paginator for="claimTaskListId" />
-					
+
+				<p:ajax event="toggleSelect" update="@([id$=approveBtnId])" />
+				<p:ajax event="rowSelect" update="@([id$=approveBtnId])" />
+				<p:ajax event="rowSelectCheckbox" update="@([id$=approveBtnId])" />
+				<p:ajax event="rowUnselectCheckbox" update="@([id$=approveBtnId])" />
+				<p:ajax event="rowUnselect" update="@([id$=approveBtnId])" />
+
 				<p:column selectionMode="multiple" style="width:2% !important;" />
-	
-				<p:column style="width : 10% !important;white-space:normal !important;" headerText="#{lbl['lbl.bpm.doc.no']}">
-					<h:outputText value="#{tasks.item.docNumber}" />
+
+				<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
+					<h:outputText value="#{lbl['lbl.sm.contractor']}"
+						rendered="#{tasks.appl.supplierType eq 'K'}" />
+					<h:outputText value="#{lbl['lbl.sm.consultant']}"
+						rendered="#{tasks.appl.supplierType eq 'J'}" />
 				</p:column>
-	
-				<p:column style="width : 30% !important;white-space:normal !important;" headerText="#{lbl['lbl.bpm.description']}">
-					<h:outputText value="#{tasks.item.title}" />
+
+				<p:column headerText="#{lbl['lbl.sm.companyname']}">
+					<h:outputText value="#{tasks.appl.smSupplier.companyName}" />
 				</p:column>
-				
-				<p:column style="white-space:normal;" headerText="#{lbl['lbl.bpm.created.date']}">
-					<h:outputText value="#{tasks.item.createDate.time}">
+
+				<p:column headerText="#{lbl['lbl.sm.application.no']}">
+					<h:outputText value="#{tasks.appl.applNo}" />
+				</p:column>
+
+				<p:column style="white-space:normal;"
+					headerText="#{lbl['lbl.bpm.created.date']}">
+					<h:outputText value="#{tasks.createDate.time}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
-				
-				<p:column style="white-space:normal;" headerText="#{lbl['lbl.bpm.due.date']}">
-					<h:outputText value="#{tasks.item.expirationDate.time}">
+
+				<p:column style="white-space:normal;"
+					headerText="#{lbl['lbl.bpm.due.date']}">
+					<h:outputText value="#{tasks.expirationDate.time}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
-				
-				<p:column style="width : 30% !important;white-space:normal !important;" headerText="#{lbl['lbl.sm.decision']}">
-					
-					<ac:smApplApproveDecisionForm smAppl="#{tasks.appl}" currRegStatus="#{tasks.currRegStatus}" 
-						facilityType="#{tasks.hqFacility.facilityType}" changeCurrRegStatus="#{tasks.changeCurrRegStatus}" 
-						approvedStatusId="#{tasks.approvedStatusId}" regStatusDescList="#{tasks.regStatusDescList}"
-						approvalRemarks="#{tasks.approvalRemarks}" overLapRemarks="#{tasks.overlapRemarks}" valueReqd="true" 
-						overLappedCategoryExists="#{tasks.overlappedCategory}" changeRegStatusUpdateId="claimTaskListId" border="false"/>
-					
+
+				<p:column
+					style="width : 30% !important;white-space:normal !important;"
+					headerText="#{lbl['lbl.sm.decision']}">
+
+					<ac:smApplApproveDecisionForm smAppl="#{tasks.appl}"
+						currRegStatus="#{tasks.currRegStatus}" bean="#{tasks}"
+						facilityType="#{tasks.hqFacility.facilityType}"
+						changeCurrRegStatus="#{tasks.changeCurrRegStatus}"
+						approvalRemarks="#{tasks.approvalRemarks}"
+						overLapRemarks="#{tasks.overlapRemarks}" valueReqd="true"
+						overLappedCategoryExists="#{tasks.overlappedCategory}"
+						changeRegStatusUpdateId="claimTaskListId" border="false" />
+
 				</p:column>
-				<p:column style="width : 5% !important;" headerText="#{lbl['lbl.cm.action']}">
+				<p:column style="width : 5% !important;"
+					headerText="#{lbl['lbl.cm.action']}">
 					<p:commandButton value="#{lbl['lbl.bpm.btn.release']}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						action="#{bulkApplicationBackingBean.onReleaseBpmTask}" update="@form">
-						<f:param name="taskId" value="#{tasks.item.taskId}" />
+						action="#{bulkApplicationBackingBean.onReleaseBpmTask}"
+						update="@form">
+						<f:param name="taskId" value="#{tasks.taskId}" />
 					</p:commandButton>
 				</p:column>
 			</p:dataTable>
-			
+
 		</p:panel>
-		
+
 	</ui:define>
-		
+
 </ui:composition>

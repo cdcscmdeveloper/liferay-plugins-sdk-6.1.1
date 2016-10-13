@@ -8499,42 +8499,20 @@ public class SmApplicationBackingBean extends
 					}
 					reqDTO.setPaymentReqd(setPaymentMode());
 				}
-				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
-						.getSmSupplierCategories()) {
-					if (cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0
-							|| cat.getRecordStatusFlg()
-									.compareTo(
-											SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
-						if ((getManagedBean().isPoUser()
-								&& cat.getPoDecFlg() != null && cat
-								.getPoDecFlg().compareTo(new Integer(1)) == 0)
-								|| (getManagedBean().isApproverUser()
-										&& cat.getApprvrDecFlg() != null && cat
-										.getApprvrDecFlg().compareTo(
-												new Integer(1)) == 0)) {
-							if (cat.getApprovedDate() == null) {
-								cat.setApprovedDate(new Date());
-							}
-							cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
-							setCategoryNameForApprovedCategory(cat);
-							setSupplierCategoryEffectiveDate(cat,
-									getManagedBean().getSmAppl().getApplType());
-						} else {
-							cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-						}
 
-						// if PO direct approved, delete Approver Flag
-						if (getManagedBean().isPoUser()) {
-							cat.setApprvrDecFlg(null);
-							cat.setApproverRemarks(null);
-						}
-					}
-				}
+				// approve categories
+				SmApplicationUtil.approveApplCategories(getManagedBean()
+						.isApproverUser(), getManagedBean().isPoUser(),
+						getManagedBean().getSmAppl());
 
 				SmApplicationNotificationUtil
-						.setApprovalNotificationParameters(getManagedBean(),
-								reqDTO);
+						.setApprovalNotificationParameters(getManagedBean()
+								.getSmAppl(), getManagedBean().getBasicInfo(),
+								getManagedBean().isPoUser(), getManagedBean()
+										.getSmSupplier(), getManagedBean()
+										.getSupplierRemarks(), getManagedBean()
+										.getApplnApprovalRemarks(), reqDTO);
+				
 				if (StringUtils.isNotBlank(getManagedBean()
 						.getApplnApprovalRemarks())) {
 					SmApplicationUtil.manageAndSaveNewSmRemarks(
