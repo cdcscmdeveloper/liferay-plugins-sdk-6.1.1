@@ -20,6 +20,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
+ * Job Class to pool current day bid schedules
  * @author Venkat Chanumolu
  */
 
@@ -34,7 +35,11 @@ public class BidSchedulesPoolingJob implements Job {
 		}
 		log.info(message);
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	 */
+	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
