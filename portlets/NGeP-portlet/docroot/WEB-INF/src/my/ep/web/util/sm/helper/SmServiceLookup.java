@@ -21,7 +21,6 @@ import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.blacklistDirector.IBlacklistDirectorSO;
-import my.ep.biz.service.sm.bulkApplication.ISmBulkApplicationSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.complaint.IComplaintSO;
@@ -39,6 +38,7 @@ import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.rule.ISmRuleSO;
 import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
+import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
@@ -412,17 +412,6 @@ public class SmServiceLookup {
 	}
 
 	/**
-	 * Get ISmBulkApplicationSO
-	 * 
-	 * @return ISmBulkApplicationSO
-	 */
-	public static ISmBulkApplicationSO getSmBulkApplicationSO() {
-		return (ISmBulkApplicationSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISmBulkApplicationSO.class);
-	}
-
-	/**
 	 * Get ICategoryCodeSO
 	 * 
 	 * @return ICategoryCodeSO
@@ -529,6 +518,16 @@ public class SmServiceLookup {
 	}
 
 	/**
+	 * Get ISdoReviewSO
+	 * 
+	 * @return ISdoReviewSO
+	 */
+	public static ISdoReviewSO getSdoReviewSO() {
+		return (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISdoReviewSO.class);
+	}
+
+	/**
 	 * Get IReasonSO
 	 * 
 	 * @return IReasonSO
@@ -558,7 +557,7 @@ public class SmServiceLookup {
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 						ITrackingDiarySO.class);
 	}
-	
+
 	/**
 	 * Get IDiMyidentitySO
 	 * 
