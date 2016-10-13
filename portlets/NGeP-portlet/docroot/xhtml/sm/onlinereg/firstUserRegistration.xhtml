@@ -266,6 +266,7 @@
 						<c:choose>
 						<c:when test="#{registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
 							<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
+								requiredMessage="#{lbl['lbl.sm.icNo.required']}"
 								label="#{lbl['lbl.sm.identificationno']}" rendered="#{!registrationBackingBean.managedBean.sameAsOwner}"
 								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
 								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}">

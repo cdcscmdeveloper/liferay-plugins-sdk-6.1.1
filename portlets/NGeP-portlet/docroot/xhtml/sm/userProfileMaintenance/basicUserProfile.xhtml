@@ -140,6 +140,7 @@
 					<td><p:outputPanel id="basicBUIdTypePan">
 							<p:inputText label="#{lbl['lbl.sm.userprofile.idno']}"
 								required="true" id="basicBUIcNum"
+								requiredMessage="#{lbl['lbl.sm.icNo.required']}"
 								rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'I'}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationNo}"
 								size="35" maxlength="12"
