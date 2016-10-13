@@ -25,14 +25,17 @@
 		<ui:param name="confirmationContent" value="#{cc.attrs.content}" />
 		<!-- <ui:param name="confirmationMethod" value="#{cc.attrs.postSignAction}" /> -->
 		
-		<p:blockUI block=":form" widgetVar="confirmPopupBlockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-		</p:blockUI>
+		
 				
 		<p:dialog id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widget}"
 			header="#{confirmationheader}" resizable="false"
 			width="#{cc.attrs.width}" height="#{cc.attrs.height}"
 			closable="false" modal="true">
+			
+			<p:blockUI block="#{cc.attrs.id}Popup" widgetVar="confirmPopupBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+			<h:panelGroup id="#{cc.attrs.id}Popup">
 			<table>
 				<tr>
 					<td align="center"><h:graphicImage
@@ -45,17 +48,17 @@
 				<c:choose>
 				    <c:when test="#{empty cc.attrs.resetInput}">
 				       <p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
-							partialSubmit="true" onclick="#{cc.attrs.widget}.hide();"
+							partialSubmit="true" 
 							onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-							oncomplete="confirmPopupBlockWidget.hide();" update="#{cc.attrs.update}" />
+							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
 				    </c:when>
 				    <c:otherwise>
 				        <p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
-							partialSubmit="true" onclick="#{cc.attrs.widget}.hide();"
+							partialSubmit="true" 
 							onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-							oncomplete="confirmPopupBlockWidget.hide();" update="#{cc.attrs.update}" >
+							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" >
 							<p:resetInput target="#{cc.attrs.resetInput}" />
 						</p:commandButton>
 				    </c:otherwise>
@@ -63,6 +66,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
 					oncomplete="#{cc.attrs.widget}.hide();" />
 			</div>
+			</h:panelGroup>
 		</p:dialog>
 	</cc:implementation>
 </ui:composition>
