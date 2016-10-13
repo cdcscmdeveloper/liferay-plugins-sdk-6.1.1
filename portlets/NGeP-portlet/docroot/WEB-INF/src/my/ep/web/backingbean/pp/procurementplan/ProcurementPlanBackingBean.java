@@ -133,7 +133,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private static final int SEARCH_PTJ_CODE = 2;
 	private static final int SEARCH_PTJ_NAME = 3;
 	
-	
+	/**
+	 * 
+	 * 
+	 * @return planTypeSearchBean
+	 */
 	public ISearchBean<PmParameterDesc> getPlanTypeSearchBean() {
 		log.info("getPlanTypeSearchBean");
 		if (this.planTypeSearchBean == null) {
@@ -143,7 +147,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return this.planTypeSearchBean;
 	}
 		
-	
+	/**
+	 * Debug logger
+	 * 
+	 * @param message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.info(message);
@@ -277,7 +285,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	/**
 	 * compare username case insensitive
 	 * @param username
-	 * @return
+	 * @return boolean
 	 */
 	public boolean compareUserNameInsensitive(String username) {
 		log.info("compareUserNameInsensitive");
@@ -3439,23 +3447,30 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 	/* --------------------------------------------------------- Search & Result - END -----------------------------------------------------------------*/
 	
-	
+	/**
+	 * Get the user role value
+	 * 
+	 * @return String
+	 */
 	private static String getUserRoleValue() {		
 		FacesScopes sc = new FacesScopes();
-		if (sc.hasRoleUser(RoleCode.PLAN_APPROVER.value())) {
-			return RoleCode.PLAN_APPROVER.value();
-		} else if (sc.hasRoleUser(RoleCode.PLAN_OFFICER.value())) {
-			return RoleCode.PLAN_OFFICER.value();
-//		} else if (sc.hasRoleUser(RoleCode.PLAN_EXPEN_OFFICER.value())) {
-//			return RoleCode.PLAN_EXPEN_OFFICER.value();
-//		} else if (sc.hasRoleUser(RoleCode.PLAN_PROCU_OFFICER.value())) {
-//			return RoleCode.PLAN_PROCU_OFFICER.value();
-		} else if (sc.hasRoleUser(RoleCode.PLAN_VERF_OFFICER.value())) {
-			return RoleCode.PLAN_VERF_OFFICER.value();
-		} 
-	return null;	
+			if (sc.hasRoleUser(RoleCode.PLAN_APPROVER.value())) {
+				return RoleCode.PLAN_APPROVER.value();
+			} else if (sc.hasRoleUser(RoleCode.PLAN_OFFICER.value())) {
+				return RoleCode.PLAN_OFFICER.value();
+	//		} else if (sc.hasRoleUser(RoleCode.PLAN_EXPEN_OFFICER.value())) {
+	//			return RoleCode.PLAN_EXPEN_OFFICER.value();
+	//		} else if (sc.hasRoleUser(RoleCode.PLAN_PROCU_OFFICER.value())) {
+	//			return RoleCode.PLAN_PROCU_OFFICER.value();
+			} else if (sc.hasRoleUser(RoleCode.PLAN_VERF_OFFICER.value())) {
+				return RoleCode.PLAN_VERF_OFFICER.value();
+			} 
+		return null;	
 	}
 	
+	/**
+	 * To generate search options in ppOrgProfilePopUp.xhtml
+	 */
 	private void generateSearchOptions(){
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		SelectItem item = new SelectItem(SEARCH_MINISTRY_CODE, 
@@ -3485,7 +3500,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	
 	/**
-	 * paginate for org profile list
+	 * Pagination for org profile list
 	 * @author Ken
 	 *
 	 */
@@ -3628,12 +3643,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppOrgProfileDataModel.reloadData();
 	}
 	
+	/**
+	 * To populate save object after select PTJ in LOV
+	 */	
 	public void populateSaveObject(){
 		if(getManagedBean().getSelectedPTJ() != null){
 			getManagedBean().getPlanSearchBean().setPtj(getManagedBean().getSelectedPTJ());
 		}
 	}
 	
+	/**
+	 * To Retrieve Procurement Plan Billing Address
+	 * 
+	 * @return String
+	 */
 	public String retrievePpBillingAddr() {
 		if(getManagedBean().getSelectedPlan().getOrgProfileAddress() != null){
 			return getPpFullAddress(getManagedBean().getSelectedPlan().getOrgProfileAddress());
@@ -3651,6 +3674,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	
+	/**
+	 * To construct Ministry condition fields for LOV
+	 * 
+	 * @return String
+	 */
 	public String constructMinistryConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
@@ -3659,6 +3687,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return sb.toString();
 	}
 	
+	/**
+	 * To construct Kumpulan PTJ condition fields for LOV
+	 * 
+	 * @return String
+	 */
 	public String constructKumpulanPTJConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
@@ -3671,6 +3704,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return sb.toString();
 	}
 	
+	/**
+	 * To construct PTJ condition fields for LOV
+	 * 
+	 * @return String
+	 */
 	public String constructPTJConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
@@ -3683,6 +3721,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return sb.toString();
 	}
 	
+	/**
+	 * Post Action Listener : to set PTJ in PlanSearchBean after PTJ has been selected in LOV
+	 */	
 	public void updateSearchCriteria(BaseEntity entity) {
 		log.info("updateSearchCriteria");
 		PmOrgProfile orgProfile = (PmOrgProfile) entity;
@@ -3690,6 +3731,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				.setPtj(orgProfile);
 	}
 	
+	/**
+	 * Post Action Listener : to set Kumpulan PTJ in PlanSearchBean after Kumpulan PTJ has been selected in LOV
+	 */	
 	public void updateKPTJSearchCriteria(BaseEntity entity) {
 		log.info("updateKPTJSearchCriteria");
 		PmOrgProfile orgProfile = (PmOrgProfile) entity;
@@ -3697,6 +3741,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				.setKptj(orgProfile);
 	}
 	
+	/**
+	 * Post Action Listener : to set Ministry in PlanSearchBean after Ministry has been selected in LOV
+	 */	
 	public void updateMinistrySearchCriteria(BaseEntity entity) {
 		log.info("updateMinistrySearchCriteria");
 		PmOrgProfile orgProfile = (PmOrgProfile) entity;
@@ -3704,7 +3751,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				.setMinistry(orgProfile);
 	}
 	
-	//ministry, kumpulan ptj and ptj
+	/**
+	 * To setup org profile details (ministry, kumpulan ptj and ptj)
+	 */
 	private void setupOrgProfile(){
 		if(getManagedBean().getCurrentActiveOrg() !=null){
 			Long orgProfileId = getManagedBean().getCurrentActiveOrg().getOrgProfileId();
@@ -3769,11 +3818,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	
+	/**
+	 * To Retrieve Plan Type List
+	 * 
+	 * @return List<PmParameterDesc> 
+	 */
 	public List<PmParameterDesc> retrievePplanType(){
 		log.info("retrievePplanType");		
 		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.PLAN_TYPE, null);
 	}
 	
+	/**
+	 * reset action after change search plan type
+	 * 
+	 * @param paramCode
+	 */
 	public void changeSearchPlanType(String paramCode){
 		if(paramCode != null){
 			this.getManagedBean().getPlanSearchBean().setStatus(null);
@@ -3781,7 +3840,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 
-	
+	/**
+	 * To Retrieve Plan Status List
+	 * 
+	 * @return SelectItem[]
+	 */
 	public SelectItem[] retrievePlanStatus(){
 		log.info("retrievePlanStatus");
 		SelectItem[] items = null;
@@ -3833,12 +3896,23 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	
+	/**
+	 * To Retrieve Plan Doc Type
+	 * @param plan
+	 * @return String
+	 */
 	public String retrievePlanDocType(PpPlan plan){
 		return ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(plan.getPlanType().getParameterCode()) 
 		? ParameterConst.DOCTYPE_PLAN_PROCUREMENT
 		: ParameterConst.DOCTYPE_PLAN_EXPENDITURE;
 	}
 	
+	/**
+	 * To get Procurement Category Lables 
+	 * 
+	 * @param parameter
+	 * @return String
+	 */
 	public String getProcurementCategoryLabels(PmParameter parameter) {
 		log.info("getProcurementCategoryLabels");
 		String label = "";
@@ -3852,36 +3926,74 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return label;
 	}
 	
+	/**
+	 * Post Action Listener : To Validate Ep Item B in LOV
+	 * 
+	 * @param entity
+	 * @param index
+	 */
 	public void validateEpItemBLov(BaseEntity entity,int index){
 		PmGlAccount glAcc = (PmGlAccount) entity;
 		List<PpExpenditureItem> epItems = this.getManagedBean().getEpItemsB();
 		validateEpItems(epItems, glAcc,index,"b");
 	}
 	
+	/**
+	 * Post Action Listener : To Validate Ep Item H in LOV
+	 * 
+	 * @param entity
+	 * @param index
+	 */
 	public void validateEpItemHLov(BaseEntity entity,int index){
 		PmGlAccount glAcc = (PmGlAccount) entity;
 		List<PpExpenditureItem> epItems = this.getManagedBean().getEpItemsH();
 		validateEpItems(epItems, glAcc,index,"h");
 	}
 	
+	/**
+	 * Post Action Listener : To Validate Ep Item P in LOV
+	 * 
+	 * @param entity
+	 * @param index
+	 */
 	public void validateEpItemPLov(BaseEntity entity,int index){
 		PmGlAccount glAcc = (PmGlAccount) entity;
 		List<PpExpenditureItem> epItems = this.getManagedBean().getEpItemsP();
 		validateEpItems(epItems, glAcc,index,"p");
 	}
 	
+	/**
+	 * Post Action Listener : To Validate Ep Item S in LOV
+	 * 
+	 * @param entity
+	 * @param index
+	 */
 	public void validateEpItemSLov(BaseEntity entity,int index){
 		PmGlAccount glAcc = (PmGlAccount) entity;
 		List<PpExpenditureItem> epItems = this.getManagedBean().getEpItemsS();
 		validateEpItems(epItems, glAcc,index,"s");
 	}
 	
+	/**
+	 * Post Action Listener : To Validate Ep Item T in LOV
+	 * 
+	 * @param entity
+	 * @param index
+	 */
 	public void validateEpItemTLov(BaseEntity entity,int index){
 		PmGlAccount glAcc = (PmGlAccount) entity;
 		List<PpExpenditureItem> epItems = this.getManagedBean().getEpItemsT();
 		validateEpItems(epItems, glAcc,index,"t");
 	}
 	
+	/**
+	 * To Validate Expenditure Plan Items
+	 * 
+	 * @param epItems
+	 * @param glAccount
+	 * @param index
+	 * @param type
+	 */
 	private void validateEpItems(List<PpExpenditureItem> epItems,PmGlAccount glAccount,int index,String type){
 		if(!epItems.isEmpty()){
 			List <Long> soIds = new ArrayList<Long>();
@@ -3907,6 +4019,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	
+	/**
+	 * Action after select GL Account In LOV
+	 * 
+	 * @param glAccount
+	 * @param index
+	 * @param type
+	 */
 	public void selectGlAccountAction(PmGlAccount glAccount,Integer index,String type){
 		if(StringUtils.isNotBlank(type)){
 			List<PpExpenditureItem> epItems = null;
@@ -3938,6 +4057,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 
+	/**
+	 * To Retrieve Kumpulan PTJ Id
+	 * 
+	 * @return Long
+	 */
 	public Long retrieveKptjId(){		
 		PmOrgProfile orgProfile = retrieveJabatanOrgProfile(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
 		return orgProfile != null && orgProfile.getOrgProfileId() != null ? orgProfile.getOrgProfileId() : null;
