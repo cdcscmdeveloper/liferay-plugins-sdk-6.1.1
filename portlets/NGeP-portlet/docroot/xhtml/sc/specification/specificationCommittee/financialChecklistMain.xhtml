@@ -328,7 +328,7 @@
 			okAction="specificationBackingBean.deleteFinancialCheckList"
 			title="#{lbl['lbl.sc.spec.finance.check.list']}"
 			content="#{lbl['lbl.sc.dialog.confirm.message']}"
-			update="@form" />
+			update="@([id$=financialMainScCommitteeCheckList])" />
 		<ui:include src="financialCheckListStandardCheckList.xhtml" />
 	</p:panel>
 </ui:composition>
