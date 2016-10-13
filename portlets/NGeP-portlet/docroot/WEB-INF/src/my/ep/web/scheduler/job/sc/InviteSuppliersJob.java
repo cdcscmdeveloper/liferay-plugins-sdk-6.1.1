@@ -30,6 +30,10 @@ public class InviteSuppliersJob implements Job {
 			log.debug(message);
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	 */
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		debugLogger("Start InviteSuppliersJob ");

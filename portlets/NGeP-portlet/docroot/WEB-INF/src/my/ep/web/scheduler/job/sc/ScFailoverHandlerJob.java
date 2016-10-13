@@ -27,7 +27,11 @@ public class ScFailoverHandlerJob implements Job {
 			log.debug(message);
 		}
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	 */
+	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		IBiddingSO biddingSO = null;

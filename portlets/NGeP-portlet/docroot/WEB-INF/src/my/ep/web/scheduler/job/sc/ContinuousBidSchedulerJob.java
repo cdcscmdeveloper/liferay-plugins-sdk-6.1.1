@@ -25,6 +25,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
+ * Job Class to start and close bid sessions 
  * @author Venkat Chanumolu
  */
 
@@ -33,7 +34,11 @@ public class ContinuousBidSchedulerJob implements Job {
 
 	private static Logger log = EpLogger
 			.getLogger(ContinuousBidSchedulerJob.class);
-
+	
+	/* (non-Javadoc)
+	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	 */
+	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		log.info("%%%%% ContinuousBidSchedulerJob start...... :) :) :)");
