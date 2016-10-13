@@ -134,6 +134,7 @@
 			<portlet id="scSupplierFinalizationEndorsement"/>
             <portlet id="SpecCommitteMaintanance"></portlet>
             <portlet id="QTApproval"></portlet>
+            <portlet id="QTSupplierAcceptance" />
             <portlet id="BusinessOwner"></portlet>
             <portlet id="ReviewPurchaseInquiry"></portlet>
 		    <portlet id="ReviewPurchaseInDefault"></portlet>
