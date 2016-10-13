@@ -150,6 +150,7 @@
 				<td><p:outputPanel id="equiPerDtlIdenTypePan">
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerIcNum"
+							requiredMessage="#{lbl['lbl.sm.icNo.required']}"
 							disabled="#{backingBean.managedBean.disableIcEmail}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
