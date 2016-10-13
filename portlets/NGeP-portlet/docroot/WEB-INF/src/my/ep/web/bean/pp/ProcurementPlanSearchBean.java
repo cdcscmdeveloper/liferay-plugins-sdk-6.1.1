@@ -4,31 +4,26 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameter;
 
 /**
- * Search Bean for Procurement Plan 
+ * Search Bean for Procurement Plan
  * 
  * @author RAIN POH
  * @since 20/10/2013
- *
+ * 
  */
 public class ProcurementPlanSearchBean {
-	
+
 	private String planNumber;
-	
 	private Long status;
-	
 	private String year;
-	
 	private PmOrgProfile ptj;
-	
 	private PmOrgProfile ministry;
-	
 	private PmOrgProfile kptj;
-	
 	private PmParameter planType;
-	
 	private PmParameter votType;
-	
 	private String planTitle;
+	
+	public ProcurementPlanSearchBean() {
+	}
 
 	/**
 	 * @return the status
@@ -38,7 +33,8 @@ public class ProcurementPlanSearchBean {
 	}
 
 	/**
-	 * @param status the status to set
+	 * @param status
+	 *            the status to set
 	 */
 	public void setStatus(Long status) {
 		this.status = status;
@@ -52,25 +48,25 @@ public class ProcurementPlanSearchBean {
 	}
 
 	/**
-	 * @param year the year to set
+	 * @param year
+	 *            the year to set
 	 */
 	public void setYear(String year) {
 		this.year = year;
 	}
 
-	
-
 	/**
 	 * @return the ptj
 	 */
 	public PmOrgProfile getPtj() {
-		if(ptj==null)
+		if (ptj == null)
 			ptj = new PmOrgProfile();
 		return ptj;
 	}
 
 	/**
-	 * @param ptj the ptj to set
+	 * @param ptj
+	 *            the ptj to set
 	 */
 	public void setPtj(PmOrgProfile ptj) {
 		this.ptj = ptj;
@@ -80,13 +76,14 @@ public class ProcurementPlanSearchBean {
 	 * @return the ministry
 	 */
 	public PmOrgProfile getMinistry() {
-		if(ministry==null)
+		if (ministry == null)
 			ministry = new PmOrgProfile();
 		return ministry;
 	}
 
 	/**
-	 * @param ministry the ministry to set
+	 * @param ministry
+	 *            the ministry to set
 	 */
 	public void setMinistry(PmOrgProfile ministry) {
 		this.ministry = ministry;
@@ -96,13 +93,14 @@ public class ProcurementPlanSearchBean {
 	 * @return the planType
 	 */
 	public PmParameter getPlanType() {
-		if(planType==null)
+		if (planType == null)
 			planType = new PmParameter();
 		return planType;
 	}
 
 	/**
-	 * @param planType the planType to set
+	 * @param planType
+	 *            the planType to set
 	 */
 	public void setPlanType(PmParameter planType) {
 		this.planType = planType;
@@ -112,13 +110,14 @@ public class ProcurementPlanSearchBean {
 	 * @return the votType
 	 */
 	public PmParameter getVotType() {
-		if(votType==null)
+		if (votType == null)
 			votType = new PmParameter();
 		return votType;
 	}
 
 	/**
-	 * @param votType the votType to set
+	 * @param votType
+	 *            the votType to set
 	 */
 	public void setVotType(PmParameter votType) {
 		this.votType = votType;
@@ -132,7 +131,8 @@ public class ProcurementPlanSearchBean {
 	}
 
 	/**
-	 * @param planNumber the planNumber to set
+	 * @param planNumber
+	 *            the planNumber to set
 	 */
 	public void setPlanNumber(String planNumber) {
 		this.planNumber = planNumber;
@@ -146,7 +146,8 @@ public class ProcurementPlanSearchBean {
 	}
 
 	/**
-	 * @param planTitle the planTitle to set
+	 * @param planTitle
+	 *            the planTitle to set
 	 */
 	public void setPlanTitle(String planTitle) {
 		this.planTitle = planTitle;
@@ -160,10 +161,11 @@ public class ProcurementPlanSearchBean {
 	}
 
 	/**
-	 * @param kptj the kptj to set
+	 * @param kptj
+	 *            the kptj to set
 	 */
 	public void setKptj(PmOrgProfile kptj) {
 		this.kptj = kptj;
 	}
-	
+
 }
