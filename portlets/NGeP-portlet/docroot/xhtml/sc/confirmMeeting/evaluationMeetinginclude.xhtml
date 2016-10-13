@@ -123,7 +123,7 @@
 			okAction="evaluationMeetingBackingBean.deleteMeetingDtls"
 			title="#{lbl['lbl.sc.meeting.details']}"
 			content="#{lbl['lbl.sc.dialog.confirm.meeting.dtls']}"
-			update="@form" />
+			update="@([id$=evaluationConfirmmeetingId])" />
 
 	</p:panel>
 
@@ -262,7 +262,7 @@
 			okAction="evaluationMeetingBackingBean.deleteCommitteemembersDtls"
 			title="#{lbl['lbl.sc.committee.member.list']}"
 			content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
-			update="@form" />
+			update="@([id$=evaluationConfirmMeetingCommitteemembersListPanel])" />
 
 
 	</p:panel>
