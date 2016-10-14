@@ -1259,8 +1259,11 @@ public class TaskReassignmentBackingBean extends
 					.retrieveTaskAssignmentRole(reqDTO);
 			if (resDTO.isSuccessful() && !resDTO.getRoleCodeList().isEmpty()) {
 				vo.setRoleList(resDTO.getRoleCodeList());
-//				vo.setGroupDocId(resDTO.getGroupDocId());
-//				vo.setGroupDocType(resDTO.getGroupDocType());
+				vo.setGroupDocId(resDTO.getGroupDocId());
+				vo.setGroupDocType(resDTO.getGroupDocType());
+				vo.setDocId(resDTO.getDocId());
+				vo.setDocNo(resDTO.getDocNo());
+				vo.setDocType(resDTO.getDocType());
 			}
 		}catch(Exception e){
 			throw new EpException("unable to get task reassignment details from Contract Management Module.");
