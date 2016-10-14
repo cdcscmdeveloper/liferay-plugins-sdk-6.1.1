@@ -40,7 +40,7 @@
 					<p:messages id="messages" showDetail="true" autoUpdate="#{empty param['disableMsgAutoUpdate']}" closable="true" showSummary="false" />
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.btn.save']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReport('')}" 
-						disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}">
+						disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
 						</p:commandButton>
 
 						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" action="#{svoSiteVisitBackingBean.submitDialogShow}" 
