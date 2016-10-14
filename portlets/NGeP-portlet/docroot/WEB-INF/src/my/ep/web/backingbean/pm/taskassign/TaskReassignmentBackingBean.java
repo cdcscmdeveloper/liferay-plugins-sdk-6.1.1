@@ -23,6 +23,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -42,6 +43,8 @@ import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -85,6 +88,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.web.vo.PmTaskReassignmentVO;
 
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1181,280 +1185,13 @@ public class TaskReassignmentBackingBean extends
 		return this.orgTypeSearchBean;
 	}
 
-//	/**
-//	 * retrieve and generate available users
-//	 * 
-//	 * @return List<PmUser>
-//	 */
-//	public List<PmUser> generateAvailableUsers(WorklistItemVO task) {
-//		log.info("generateAvailableUsers");
-//		boolean isApprover = false;
-//		List<PmUser> pmUsers = new ArrayList<PmUser>();
-//		try {
-//			PmStatus status = PmCommonUtil.getPmStatusById(task.getDocStatus()
-//					.longValue());
-//			if (status != null) {
-//				List<String> roleList = new ArrayList<String>();
-//				Long userId = this.getManagedBean()
-//						.getTaskAssignmentSearchBean().getUser().getUserId();
-//				Long orgProfileId = this.getManagedBean()
-//						.getTaskAssignmentSearchBean().getOrgProfile()
-//						.getOrgProfileId();
-//				Long orgTypeId = this.getManagedBean()
-//						.getTaskAssignmentSearchBean().getOrgType()
-//						.getParameterId();
-//				ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
-//				PmOrgProfile orgProfile = null;
-//
-//				String moduleCode = status.getModuleCode();
-//				int reassignType = status.getReasssignType() != null ? status
-//						.getReasssignType() : 0;
-//				switch (reassignType) {
-//				//1 - Normal Reassignment
-//				case 1:
-//					if (ModuleCodeConst.CONTRACT_MANAGEMENT
-//							.equalsIgnoreCase(moduleCode)) {
-//						roleList = retrieveCtRoles(task);
-//					} else if (ModuleCodeConst.SUPPLIER_SELECTION
-//							.equalsIgnoreCase(moduleCode)) {
-//						roleList = retrieveSourcingRoles(task);
-//					}
-//
-//					// same org profile id
-//					searchBean.getDataFilterBeans().add(
-//							new SearchFilterBean(
-//									"pmUserOrgs.pmOrgProfile.orgProfileId",
-//									SearchOperator.OPERATOR_EQUALS.value(),
-//									orgProfileId));
-//
-//					// same org type id
-//					searchBean
-//							.getDataFilterBeans()
-//							.add(new SearchFilterBean(
-//									"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterId",
-//									SearchOperator.OPERATOR_EQUALS.value(),
-//									orgTypeId));
-//
-//					break;
-//				// case 2:
-//				//
-//				// break;
-//				case 3:
-//					//3 - Cross PTJ
-//					if (ModuleCodeConst.SUPPLIER_SELECTION
-//							.equalsIgnoreCase(moduleCode)) {
-//						orgProfile = retrieveSourcingOrgProfile(task);
-//					}
-//
-//					if (orgProfile != null) {
-//						if (OrganizationType.MINISTRY.value().equals(
-//								orgProfile.getOrgTypeCode().getParameterCode())) {
-//							// PTJ under same ministry
-//							searchBean
-//									.getDataFilterBeans()
-//									.add(new SearchFilterBean(
-//											OrgProfileUtil
-//													.getSearchBeanParentString(OrganizationType.MINISTRY
-//															.value()),
-//											SearchOperator.OPERATOR_EQUALS
-//													.value(), orgProfile
-//													.getOrgProfileId()));
-//						} else if (OrganizationType.DIVISION.value().equals(
-//								orgProfile.getOrgTypeCode().getParameterCode())) {
-//							// same org profile id
-//							searchBean
-//									.getDataFilterBeans()
-//									.add(new SearchFilterBean(
-//											"pmUserOrgs.pmOrgProfile.orgProfileId",
-//											SearchOperator.OPERATOR_EQUALS
-//													.value(), orgProfile
-//													.getOrgProfileId()));
-//						}
-//					} else {
-//						// not allow to search
-//						searchBean.getDataFilterBeans().add(
-//								new SearchFilterBean(
-//										"pmUserOrgs.pmOrgProfile.orgProfileId",
-//										SearchOperator.OPERATOR_EQUALS.value(),
-//										0));
-//					}
-//
-//					break;
-//				case 4:
-//					//4 - Include User under Ministry, Kumpulan PTJ & PTJ
-//					Long actualOrgProfileId = null;
-//					if (ModuleCodeConst.PROCUREMENT_PLAN
-//							.equalsIgnoreCase(moduleCode)) {
-//						actualOrgProfileId = retrievePpOrgProfile(task);
-//					}
-//					if(actualOrgProfileId != null){
-//						roleList = retrieveAvailableRoles(task.getDocStatus()
-//							.longValue(),reassignType);
-//						pmUsers = PmCommonUtil.retrieveUserListFromGroupOrgType(
-//								actualOrgProfileId,
-//								roleList,
-//								false,
-//								null,
-//								new ArrayList<Long>(Arrays.asList(userId,
-//										getFacesScopes().getUserSessionBean()
-//												.getUserId())),searchBean);
-//					}else{
-//						// not allow to search
-//						searchBean.getDataFilterBeans().add(
-//								new SearchFilterBean(
-//										"pmUserOrgs.pmOrgProfile.orgProfileId",
-//										SearchOperator.OPERATOR_EQUALS.value(),
-//										0));
-//					}
-//					
-//					break;
-//				case 5:
-//					//5 - Include User for Naik Taraf & PTJ
-//					roleList = retrieveAvailableRoles(task.getDocStatus()
-//							.longValue(),reassignType);
-//					pmUsers = PmCommonUtil.retrieveUserListFromGroupOrgType(
-//							orgProfileId,
-//							roleList,
-//							true,
-//							ParameterConst.ORG_AUTH_TYPE_ORG_GROUP,
-//							new ArrayList<Long>(Arrays.asList(userId,
-//									getFacesScopes().getUserSessionBean()
-//											.getUserId())),searchBean);
-//					break;
-//				case 6:
-//					//6 - User Group
-//					Long userGroupId = null;
-//					if (ModuleCodeConst.SUPPLIER_SELECTION
-//							.equalsIgnoreCase(moduleCode)) {
-//						userGroupId = retrieveSourcingUserGroupId(task);
-//					}else if (ModuleCodeConst.ORDER_FULFILLMENT
-//							.equalsIgnoreCase(moduleCode)) {
-//						
-//					}
-//					
-//					if(userGroupId != null){
-//						pmUsers = retrieveUserGroupUserListByUserGroupId(
-//								userGroupId,
-//								null,
-//								new ArrayList<Long>(Arrays.asList(userId,
-//								getFacesScopes().getUserSessionBean()
-//								.getUserId())));
-//					}else{
-//						// not allow to search
-//						searchBean.getDataFilterBeans().add(
-//								new SearchFilterBean(
-//										"pmUserOrgs.pmOrgProfile.orgProfileId",
-//										SearchOperator.OPERATOR_EQUALS.value(),
-//										0));
-//					}
-//					break;
-//				case 7:
-//					//7 - Delivery Address
-//					// not allow to search
-//					searchBean.getDataFilterBeans().add(
-//							new SearchFilterBean(
-//									"pmUserOrgs.pmOrgProfile.orgProfileId",
-//									SearchOperator.OPERATOR_EQUALS.value(),
-//									0));
-//					break;
-//
-//				default:
-//					throw new EpException(MessageConst.ERROR_770095,
-//							new String[] {"reassignType:"+ reassignType +" is not valid." });
-//				}
-//
-//				if(pmUsers.isEmpty()){
-//					
-//					// Filter By user status
-//					searchBean.getDataFilterBeans().add(
-//							new SearchFilterBean("recordStatusFlg",
-//									SearchOperator.OPERATOR_EQUALS.value(),
-//									DbValueConst.RECORD_STATUS_ACTIVE));
-//					
-//					// Filter By user org status
-//					searchBean.getDataFilterBeans().add(
-//							new SearchFilterBean("pmUserOrgs.recordStatusFlg",
-//										SearchOperator.OPERATOR_EQUALS.value(),
-//										DbValueConst.RECORD_STATUS_ACTIVE));		
-//
-//					// Filter By role status
-//					searchBean.getDataFilterBeans().add(
-//							new SearchFilterBean("pmUserOrgs.pmUserRoles.recordStatusFlg",
-//									SearchOperator.OPERATOR_EQUALS.value(),
-//									DbValueConst.RECORD_STATUS_ACTIVE));	
-//
-//					// not current selected user and not current login user
-//					searchBean.getDataFilterBeans().add(
-//							new SearchFilterBean("userId",
-//									SearchOperator.OPERATOR_NOT_IN.value(),
-//									new ArrayList<Long>(Arrays.asList(userId,
-//											getFacesScopes().getUserSessionBean()
-//													.getUserId()))));
-//
-//					if (roleList.isEmpty()) {
-//						roleList = retrieveAvailableRoles(task.getDocStatus()
-//								.longValue(),reassignType);
-//					}
-//
-//					// in applicable to roles
-//					searchBean.getDataFilterBeans().add(
-//							new SearchFilterBean(
-//									"pmUserOrgs.pmUserRoles.pmRole.roleCode",
-//									SearchOperator.OPERATOR_IN.value(), roleList));
-//
-//					pmUsers = PmCommonUtil.searchUsersBySearchBean(searchBean);
-//				}
-//				
-//
-//			}
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new EpException(MessageConst.ERROR_770095,
-//					new String[] { e.getMessage() });
-//		}
-//		return pmUsers;
-//	}
-
-	private List<String> retrieveSourcingRoles(WorklistItemVO task) {
-		log.info("retrieveSourcingRoles");
-		List<String> roleList = new ArrayList<String>();
-		SourcingIntegrationResDTO resDTO = retrieveSourcingTaskReassignmentDetail(task);
-		if (resDTO != null && StringUtils.isNotBlank(resDTO.getRoleCode())) {
-			roleList.add(resDTO.getRoleCode());
-		}
-		return roleList;
-	}
-
-	private PmOrgProfile retrieveOrgProfile(WorklistItemVO task,String moduleCode) {
-		log.info("retrieveOrgProfile");
-		PmOrgProfile orgProfile = null;
-		if (ModuleCodeConst.SUPPLIER_SELECTION
-				.equalsIgnoreCase(moduleCode)) {
-			SourcingIntegrationResDTO resDTO = retrieveSourcingTaskReassignmentDetail(task);
-			if (resDTO != null && resDTO.getOrgProfileId() != null) {
-				orgProfile = PmCommonUtil.retrievePmOrgProfileDtl(resDTO
-						.getOrgProfileId());
-			}
-		}else if (ModuleCodeConst.ORDER_FULFILLMENT
-				.equalsIgnoreCase(moduleCode)) {
-			FulfilmentResDTO resDTO = retrieveFLTaskReassignmentDetail(task);
-			if(resDTO != null && resDTO.getOrgProfileId() != null){
-				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(resDTO
-						.getOrgProfileId());
-			}
-		}
-		
-		return orgProfile;
-	}
-
-	private SourcingIntegrationResDTO retrieveSourcingTaskReassignmentDetail(
+	private PmTaskReassignmentVO retrieveSourcingTaskReassignmentDetail(
 			WorklistItemVO task) {
+		log.info("retrieveSourcingTaskReassignmentDetail");
 		ISourcingIntegrationSO scIntegrationSO = null;
-		SourcingIntegrationReqDTO reqDTO = null;
-		SourcingIntegrationResDTO resDTO = null;
+		PmTaskReassignmentVO vo = new PmTaskReassignmentVO();
 		try {
-			reqDTO = new SourcingIntegrationReqDTO();
+			SourcingIntegrationReqDTO reqDTO = new SourcingIntegrationReqDTO();
 			scIntegrationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION,
 					ISourcingIntegrationSO.class);
@@ -1462,31 +1199,31 @@ public class TaskReassignmentBackingBean extends
 			reqDTO.setDocNo(task.getDocNumber());
 			reqDTO.setStatusId(task.getDocStatus().longValue());
 			reqDTO.setTaskName(task.getTaskName());
-			resDTO = scIntegrationSO.retrieveTaskReassignmentDetail(reqDTO);
-
+			SourcingIntegrationResDTO resDTO = scIntegrationSO.retrieveTaskReassignmentDetail(reqDTO);
+			if(resDTO != null){
+//				vo.setGroupDocId(resDTO.getGroupDocId());
+//				vo.setGroupDocType(resDTO.getGroupDocType());
+				vo.setOrgProfileId(resDTO.getOrgProfileId());
+				vo.setRoleList(new ArrayList<String>(Arrays.asList(resDTO.getRoleCode())));
+				vo.setUserGroupId(resDTO.getUserGroupId());
+				
+			}
+		}catch(Exception e){
+			throw new EpException("unable to get task reassignment details from Sourcing Module.");
 		} finally {
 			scIntegrationSO = null;
 		}
-		return resDTO;
+		return vo;
 	}
+
 	
-	private Long retrievePpOrgProfile(WorklistItemVO task) {
-		log.info("retrievePpOrgProfile");
-		Long orgProfileId = null;
-		ProcurementPlanResDTO resDTO = retrievePpTaskReassignmentDetail(task);
-		if (resDTO != null && resDTO.getOrgProfileId() != null) {
-			orgProfileId = resDTO.getOrgProfileId();
-		}
-		return orgProfileId;
-	}
-	
-	private ProcurementPlanResDTO retrievePpTaskReassignmentDetail(
+	private PmTaskReassignmentVO retrievePpTaskReassignmentDetail(
 			WorklistItemVO task) {
+		log.info("retrievePpTaskReassignmentDetail");
 		IProcurementPlanSO procurementSO= null;
-		ProcurementPlanReqDTO reqDTO = null;
-		ProcurementPlanResDTO resDTO = null;
+		PmTaskReassignmentVO vo = new PmTaskReassignmentVO();
 		try {
-			reqDTO = new ProcurementPlanReqDTO();
+			ProcurementPlanReqDTO reqDTO  = new ProcurementPlanReqDTO();
 			procurementSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROCUREMENT_PLAN,
 					IProcurementPlanSO.class);
@@ -1494,18 +1231,23 @@ public class TaskReassignmentBackingBean extends
 			reqDTO.setDocType(docType);
 			reqDTO.setDocNo(task.getDocNumber());
 			reqDTO.setStatusId(task.getDocStatus().longValue());
-			resDTO = procurementSO.retrieveTaskReassignmentDetail(reqDTO);
-
+			ProcurementPlanResDTO resDTO = procurementSO.retrieveTaskReassignmentDetail(reqDTO);
+			if (resDTO != null && resDTO.getOrgProfileId() != null) {
+				vo.setOrgProfileId(resDTO.getOrgProfileId());
+				vo.setDocId(resDTO.getDocId());
+			}
+		}catch(Exception e){
+			throw new EpException("unable to get task reassignment details from Procurement Plan Module.");
 		} finally {
 			procurementSO = null;
 		}
-		return resDTO;
+		return vo;
 	}
-
-	private List<String> retrieveCtRoles(WorklistItemVO task) {
-		log.info("retrieveCtRoles");
+	
+	private PmTaskReassignmentVO retrieveCtTaskReassignmentDetails(WorklistItemVO task) {
+		log.info("retrieveCtTaskReassignmentDetails");
+		PmTaskReassignmentVO vo = new PmTaskReassignmentVO();
 		IContractIntegrationSO ctIntegrationSO = null;
-		List<String> roleList = new ArrayList<String>();
 		try {
 			ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
 			ctIntegrationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1516,21 +1258,26 @@ public class TaskReassignmentBackingBean extends
 			ContractIntegrationResDTO resDTO = ctIntegrationSO
 					.retrieveTaskAssignmentRole(reqDTO);
 			if (resDTO.isSuccessful() && !resDTO.getRoleCodeList().isEmpty()) {
-				roleList = resDTO.getRoleCodeList();
+				vo.setRoleList(resDTO.getRoleCodeList());
+//				vo.setGroupDocId(resDTO.getGroupDocId());
+//				vo.setGroupDocType(resDTO.getGroupDocType());
 			}
+		}catch(Exception e){
+			throw new EpException("unable to get task reassignment details from Contract Management Module.");
 		} finally {
 			ctIntegrationSO = null;
 		}
-		return roleList;
+		return vo;
 	}
-	
-	private FulfilmentResDTO retrieveFLTaskReassignmentDetail(
+
+		
+	private PmTaskReassignmentVO retrieveFLTaskReassignmentDetail(
 			WorklistItemVO task) {
+		log.info("retrieveFLTaskReassignmentDetail");
 		IFulfilmentSO fulfilmentSO = null;
-		FulfilmentReqDTO reqDTO = null;
-		FulfilmentResDTO resDTO = null;
+		PmTaskReassignmentVO vo = new PmTaskReassignmentVO();
 		try {
-			reqDTO = new FulfilmentReqDTO();
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.ORDER_FULFILLMENT,
 					IFulfilmentSO.class);
@@ -1545,12 +1292,50 @@ public class TaskReassignmentBackingBean extends
 				reqDTO.setUserLoginId(getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId());
 			}
 			
-			resDTO = fulfilmentSO.retrieveTaskReassignmentDetail(reqDTO);
-
+			FulfilmentResDTO resDTO = fulfilmentSO.retrieveTaskReassignmentDetail(reqDTO);
+			if(resDTO != null){
+				vo.setOrderAmount(resDTO.getOrderAmount());
+				vo.setOrgProfileId(resDTO.getOrgProfileId());
+				vo.setDocId(resDTO.getDocId());
+				//vo.setDocNo(resDTO.getDocNo());
+				vo.setDocType(resDTO.getDocType());
+				vo.setUserGroupId(resDTO.getUserGroupId());
+				vo.setAddressId(resDTO.getAddressId());
+				vo.setSupplier(resDTO.isSupplier());
+				vo.setGroupDocId(resDTO.getGroupDocId());
+				vo.setGroupDocType(resDTO.getGroupDocType());
+			}
+		}catch(Exception e){
+			throw new EpException("unable to get task reassignment details from Fulfilment Module.");
 		} finally {
 			fulfilmentSO = null;
 		}
-		return resDTO;
+		return vo;
+	}
+	
+	private PmTaskReassignmentVO retrieveCMTaskReassignmentDetail(
+			WorklistItemVO task) {
+		log.info("retrieveCMTaskReassignmentDetail");
+		ICodificationSO codificationSO = null;
+		PmTaskReassignmentVO vo = new PmTaskReassignmentVO();
+		try {
+			CodificationReqDTO reqDTO = new CodificationReqDTO();
+			codificationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CATALOGUE_MANAGEMENT,
+					ICodificationSO.class);
+			reqDTO.setDocNo(task.getDocNumber());
+			reqDTO.setDocType(task.getDocType());
+			
+			CodificationResDTO resDTO = codificationSO.findDocIdByDocNoAndDocType(reqDTO);
+			if(resDTO != null){
+				vo.setDocId(resDTO.getDocId());
+			}
+		}catch(Exception e){
+			throw new EpException("unable to get task reassignment details from Catalogue Management Module.");
+		} finally {
+			codificationSO = null;
+		}
+		return vo;
 	}
 
 	/**
@@ -1596,7 +1381,7 @@ public class TaskReassignmentBackingBean extends
 		PmUser pmUser = this.getManagedBean().getSelectedUser();
 		WorklistItemVO task = this.getManagedBean().getSelectedTask();
 		ITaskAssignmentSO taskAssignmentSO = null;
-
+		PmTaskReassignmentVO vo = getManagedBean().getTaskReassignmentVO();
 		if (task == null) {
 			throw new EpException(MessageConst.ERROR_770097);
 		}
@@ -1628,9 +1413,11 @@ public class TaskReassignmentBackingBean extends
 			reqDTO.setTaskId(task.getTaskId());
 			reqDTO.setUser(pmUser);
 			reqDTO.setUserIdList(assigneeUsers);
-			reqDTO.setDocNumber(task.getDocNumber());
-			reqDTO.setDocId(task.getDocId());
-			reqDTO.setDocType(task.getDocType());
+			reqDTO.setDocNumber(StringUtils.isNotBlank(vo.getDocNo())? vo.getDocNo() : task.getDocNumber());
+			reqDTO.setDocId(vo.getDocId() != null ? vo.getDocId().intValue() : task.getDocId());		
+			reqDTO.setDocType(vo.getDocType() != null ? vo.getDocType() : task.getDocType());
+			reqDTO.setGroupDocId(vo.getGroupDocId() != null ? vo.getGroupDocId() : null);
+			reqDTO.setGroupDocType(StringUtils.isNotBlank(vo.getGroupDocType()) ? vo.getGroupDocType() : null);
 			reqDTO.setDocStatus(task.getDocStatus());
 			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
 			reqDTO.setActionedByUser(getFacesScopes().getUserSessionBean()
@@ -1716,32 +1503,55 @@ public class TaskReassignmentBackingBean extends
 						.longValue());
 				if (status != null) {
 					ISearchResultBean<PmUser> resultBean = null;
+					PmTaskReassignmentVO vo = null;
 					List<String> roleList = new ArrayList<String>();
 					int reassignType = status.getReasssignType() != null ? status
 							.getReasssignType() : 0;
+							
+					String moduleCode = status.getModuleCode();
+					if (ModuleCodeConst.CONTRACT_MANAGEMENT
+							.equalsIgnoreCase(moduleCode)) {
+						vo = retrieveCtTaskReassignmentDetails(task);
+					} else if (ModuleCodeConst.SUPPLIER_SELECTION
+							.equalsIgnoreCase(moduleCode)) {
+						vo = retrieveSourcingTaskReassignmentDetail(task);
+					} else if (ModuleCodeConst.ORDER_FULFILLMENT
+							.equalsIgnoreCase(moduleCode)) {
+						vo = retrieveFLTaskReassignmentDetail(task);
+					}else if (ModuleCodeConst.PROCUREMENT_PLAN
+							.equalsIgnoreCase(moduleCode)) {
+						vo = retrievePpTaskReassignmentDetail(task);
+					}else if(ModuleCodeConst.CONTRACT_MANAGEMENT
+							.equalsIgnoreCase(moduleCode)) {
+						vo = retrieveCMTaskReassignmentDetail(task);
+					}
 					
-					// 99 - MIXTURE(Sub Reassign Type)
-					if(reassignType == ProfileManagementConst.REASSIGN_TYPE_MIXTURE){
-						roleList = retrieveSourcingRoles(task);
-						if(!roleList.isEmpty()){
-							PmStatusRole statusRole = PmCommonUtil.retrieveStatusRoleByStatusIdAndRoleCode(task.getDocStatus().longValue(), roleList.get(0));
-							if(statusRole != null && statusRole.getReasssignType() !=null){
-								reassignType = statusRole.getReasssignType();
-								resultBean = generateUserResultBean(status , searchBean, task,reassignType,roleList);
+					if(vo != null){
+						getManagedBean().setTaskReassignmentVO(vo);
+						// 99 - MIXTURE(Sub Reassign Type)
+						if(reassignType == ProfileManagementConst.REASSIGN_TYPE_MIXTURE){
+							roleList = vo.getRoleList();
+							if(!roleList.isEmpty()){
+								PmStatusRole statusRole = PmCommonUtil.retrieveStatusRoleByStatusIdAndRoleCode(task.getDocStatus().longValue(), roleList.get(0));
+								if(statusRole != null && statusRole.getReasssignType() !=null){
+									reassignType = statusRole.getReasssignType();
+									resultBean = generateUserResultBean(status , searchBean, task,reassignType,roleList,vo);
+								}
+							}
+						}else{
+							resultBean = generateUserResultBean(status, searchBean, task,reassignType,roleList,vo);
+						}
+						
+						if(resultBean != null && resultBean.getResultList() != null){
+							String capitalizeUserName;
+							for(PmUser user : resultBean.getResultList()){
+								capitalizeUserName = WordUtils.capitalizeFully(user.getUserName());
+								user.setUserName(capitalizeUserName);
 							}
 						}
-					}else{
-						resultBean = generateUserResultBean(status, searchBean, task,reassignType,roleList);
-					}
+						return resultBean;
+					}				
 					
-					if(resultBean != null && resultBean.getResultList() != null){
-						String capitalizeUserName;
-						for(PmUser user : resultBean.getResultList()){
-							capitalizeUserName = WordUtils.capitalizeFully(user.getUserName());
-							user.setUserName(capitalizeUserName);
-						}
-					}
-					return resultBean;
 				}
 			
 		}catch(Exception e){
@@ -1757,6 +1567,7 @@ public class TaskReassignmentBackingBean extends
 	
 	public void resetAvailableUser(){
 		getManagedBean().setSearchUserName(null);
+		getManagedBean().setTaskReassignmentVO(null);
 		userListDataModel.resetData();
 	}
 	
@@ -1768,9 +1579,8 @@ public class TaskReassignmentBackingBean extends
 	}
 	
 	private ISearchResultBean<PmUser> generateUserResultBean(
-			PmStatus status , ISearchBean<PmUser> searchBean,WorklistItemVO task ,int reassignType,List<String> roleList){
+			PmStatus status , ISearchBean<PmUser> searchBean,WorklistItemVO task ,int reassignType,List<String> roleList,PmTaskReassignmentVO vo){
 		PmOrgProfile orgProfile = null;
-		String moduleCode = status.getModuleCode();
 		ISearchResultBean<PmUser> resultBean = null;
 		boolean isSearched = false;
 		Long orgProfileId = getManagedBean()
@@ -1791,17 +1601,13 @@ public class TaskReassignmentBackingBean extends
 						SearchOperator.OPERATOR_LIKE.value(),
 						getManagedBean().getSearchUserName(),true));
 		}
+		if(roleList.isEmpty()){
+			roleList = vo.getRoleList();
+		}	
 		
 		switch (reassignType) {
 		case ProfileManagementConst.REASSIGN_TYPE_COMMON:
 			//1 - Normal Reassignment
-			if (ModuleCodeConst.CONTRACT_MANAGEMENT
-					.equalsIgnoreCase(moduleCode)) {
-				roleList = retrieveCtRoles(task);
-			} else if (ModuleCodeConst.SUPPLIER_SELECTION
-					.equalsIgnoreCase(moduleCode)) {
-				roleList = retrieveSourcingRoles(task);
-			}
 
 			// same org profile id
 			searchBean.getDataFilterBeans().add(
@@ -1815,7 +1621,9 @@ public class TaskReassignmentBackingBean extends
 		// break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
 			//3 - Cross PTJ
-			orgProfile = retrieveOrgProfile(task, moduleCode);
+			if(vo.getOrgProfileId() != null){
+				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(vo.getOrgProfileId());
+			}
 			
 			if (orgProfile != null) {
 				if (OrganizationType.MINISTRY.value().equals(
@@ -1849,13 +1657,12 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
 			//4 - Include User under Ministry, Kumpulan PTJ & PTJ
-			if (ModuleCodeConst.PROCUREMENT_PLAN
-					.equalsIgnoreCase(moduleCode)) {
-				actualOrgProfileId = retrievePpOrgProfile(task);
-			}
+			actualOrgProfileId = vo.getOrgProfileId();
 			if(actualOrgProfileId != null){
-				roleList = retrieveAvailableRoles(task.getDocStatus()
-					.longValue(),reassignType,subReassignType);
+				if(roleList == null || roleList.isEmpty()){
+					roleList = retrieveAvailableRoles(task.getDocStatus()
+						.longValue(),reassignType,subReassignType);
+				}
 				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
 						actualOrgProfileId,
 						roleList,
@@ -1871,8 +1678,11 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_NAIK_TARAF_PTJ:
 			//5 - Include User for Naik Taraf & PTJ
-			roleList = retrieveAvailableRoles(task.getDocStatus()
+			if(roleList == null || roleList.isEmpty()){
+				roleList = retrieveAvailableRoles(task.getDocStatus()
 					.longValue(),reassignType,subReassignType);
+			}
+			
 			resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
 					orgProfileId,
 					roleList,
@@ -1885,22 +1695,9 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_GROUP:
 			//6 - User Group
-			BigDecimal approvalLimit = null;
-			if (ModuleCodeConst.SUPPLIER_SELECTION
-					.equalsIgnoreCase(moduleCode)) {
-				SourcingIntegrationResDTO resDTO = retrieveSourcingTaskReassignmentDetail(task);
-				if(resDTO != null && resDTO.getUserGroupId() != null){
-					userGroupId = resDTO.getUserGroupId();
-				}
-			}else if (ModuleCodeConst.ORDER_FULFILLMENT
-					.equalsIgnoreCase(moduleCode)) {
-				FulfilmentResDTO resDTO = retrieveFLTaskReassignmentDetail(task);
-				if(resDTO != null && resDTO.getUserGroupId() != null){
-					userGroupId = resDTO.getUserGroupId();
-					approvalLimit = resDTO.getOrderAmount();
-				}
-			}
-			
+			BigDecimal approvalLimit = vo.getApprovalLimit();
+			userGroupId = vo.getUserGroupId();
+						
 			if(userGroupId != null){
 				resultBean = retrieveUserGroupUserListByUserGroupId(
 						userGroupId,
@@ -1913,13 +1710,7 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_DEL_ADDRESS:
 			//7 - Delivery Address
-			if (ModuleCodeConst.ORDER_FULFILLMENT
-					.equalsIgnoreCase(moduleCode)) {
-				FulfilmentResDTO resDTO = retrieveFLTaskReassignmentDetail(task);
-				if(resDTO != null && resDTO.getAddressId() != null){
-					addressId = resDTO.getAddressId();
-				}
-			}
+			addressId = vo.getAddressId();
 			
 			if(addressId != null){
 				// same address id
@@ -1938,10 +1729,14 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ_NAIK_TARAF:
 			//8 - Include user for Ministry, Kumpulan PTJ, PTJ & Naik Taraf
-			orgProfile = retrieveOrgProfile(task, moduleCode);		
+			if(vo.getOrgProfileId() != null){
+				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(vo.getOrgProfileId());
+			}
 			if(orgProfile != null){
-				roleList = retrieveAvailableRoles(task.getDocStatus()
-					.longValue(),reassignType,subReassignType);
+				if(roleList == null || roleList.isEmpty()){
+					roleList = retrieveAvailableRoles(task.getDocStatus()
+						.longValue(),reassignType,subReassignType);
+				}
 				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
 						orgProfile.getOrgProfileId(),
 						roleList,
@@ -1966,22 +1761,18 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_SUPPLIER_OR_PTJ:
 			//10 - Supplier(multiple roles) / PTJ(single)
-			
-			if (ModuleCodeConst.ORDER_FULFILLMENT
-					.equalsIgnoreCase(moduleCode)) {
-				FulfilmentResDTO resDTO = retrieveFLTaskReassignmentDetail(task);
-				if(resDTO != null ){
-					// if isSupplier then PmStatusRole.reassignType = 9 else PmStatusRole.reassignType = 1
-					subReassignType = resDTO.isSupplier() ? 9 : 1;
+		
+			// if isSupplier then PmStatusRole.reassignType = 9 else PmStatusRole.reassignType = 1
+				subReassignType = vo.isSupplier() ? 9 : 1;
 
-					// same org profile id
-					searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-								"pmUserOrgs.pmOrgProfile.orgProfileId",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								orgProfileId));
-				}
-			}
+			// same org profile id
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+							"pmUserOrgs.pmOrgProfile.orgProfileId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							orgProfileId));
+				
+			
 			break;
 		default:
 			// not allow to search
@@ -2015,7 +1806,7 @@ public class TaskReassignmentBackingBean extends
 									getFacesScopes().getUserSessionBean()
 											.getUserId()))));
 
-			if (roleList.isEmpty()) {
+			if (roleList == null || roleList.isEmpty()) {
 				roleList = retrieveAvailableRoles(task.getDocStatus()
 						.longValue(),reassignType,subReassignType);
 			}

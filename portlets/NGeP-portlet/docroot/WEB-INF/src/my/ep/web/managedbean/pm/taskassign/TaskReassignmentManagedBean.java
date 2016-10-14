@@ -13,6 +13,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.PmTaskReassignmentVO;
 
 @ManagedBean(name = "taskReassignmentManagedBean")
 @SessionScoped
@@ -32,6 +33,7 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private String searchUserName;
 	private boolean isTaskLazy;
 	private int taskType;
+	private PmTaskReassignmentVO taskReassignmentVO;
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -216,6 +218,20 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	 */
 	public void setTaskType(int taskType) {
 		this.taskType = taskType;
+	}
+
+	/**
+	 * @return the taskReassignmentVO
+	 */
+	public PmTaskReassignmentVO getTaskReassignmentVO() {
+		return taskReassignmentVO;
+	}
+
+	/**
+	 * @param taskReassignmentVO the taskReassignmentVO to set
+	 */
+	public void setTaskReassignmentVO(PmTaskReassignmentVO taskReassignmentVO) {
+		this.taskReassignmentVO = taskReassignmentVO;
 	}
 	
 }
