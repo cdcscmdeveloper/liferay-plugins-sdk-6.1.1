@@ -44,7 +44,7 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 	private PagingDataModel<SmBulkApplicationVO> unClaimTaskListDataModel = new UnClaimTaskPagingDataModel();
 	private List<SmBulkApplicationVO> selectedTasks;
 	private List<PmStatusDesc> regStatusDescList;
-	private List<SmAppl> responseSubmittedBulkAppl;
+	private List<SmAppl> failedSubmittedList;
 
 	private class ClaimTaskPagingDataModel extends
 			PagingDataModel<SmBulkApplicationVO> {
@@ -309,12 +309,11 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 		this.unClaimTaskListDataModel = unClaimTaskListDataModel;
 	}
 
-	public List<SmAppl> getResponseSubmittedBulkAppl() {
-		return responseSubmittedBulkAppl;
+	public List<SmAppl> getFailedSubmittedList() {
+		return failedSubmittedList;
 	}
 
-	public void setResponseSubmittedBulkAppl(
-			List<SmAppl> responseSubmittedBulkAppl) {
-		this.responseSubmittedBulkAppl = responseSubmittedBulkAppl;
+	public void setFailedSubmittedList(List<SmAppl> failedSubmittedList) {
+		this.failedSubmittedList = failedSubmittedList;
 	}
 }

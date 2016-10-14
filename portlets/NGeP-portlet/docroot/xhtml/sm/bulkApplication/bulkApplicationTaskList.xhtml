@@ -40,61 +40,6 @@
 			</tr>
 		</table>
 
-		<p:panel header="#{lbl['lbl.sm.bulk.approval.header']}"
-			toggleable="true"
-			rendered="#{not empty bulkApplicationBackingBean.managedBean.responseSubmittedBulkAppl}">
-			<p:dataTable var="smAppl" id="approveApplDtId"
-				widgetVar="approveApplDtWidVar"
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{bulkApplicationBackingBean.managedBean.responseSubmittedBulkAppl}"
-				rows="10" rowKey="#{smAppl}" rowIndexVar="index">
-
-				<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
-					<h:outputText value="#{lbl['lbl.sm.contractor']}"
-						rendered="#{smAppl.supplierType eq 'K'}" />
-					<h:outputText value="#{lbl['lbl.sm.consultant']}"
-						rendered="#{smAppl.supplierType eq 'J'}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sm.companyname']}">
-					<h:outputText value="#{smAppl.smSupplier.companyName}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sm.application.no']}">
-					<h:outputText value="#{smAppl.applNo}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sm.applicationtype']}"
-					style="width :25%;white-space : normal">
-					<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}"
-						rendered="#{smAppl.applType eq 'N'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}"
-						rendered="#{smAppl.applType eq 'B'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}"
-						rendered="#{smAppl.applType eq 'A'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}"
-						rendered="#{smAppl.applType eq 'U'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}"
-						rendered="#{smAppl.applType eq 'C'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}"
-						rendered="#{smAppl.applType eq 'R'}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sm.bulk.submitted.status']}">
-					<h:outputText value="#{lbl['lbl.sm.bulk.approval.success']}"
-						rendered="#{smAppl.success}" />
-					<h:outputText value="#{lbl['lbl.sm.bulk.approval.fail']}"
-						rendered="#{!smAppl.success}" />
-					&#160;
-					<p:graphicImage value="/css/images/design/icon_error.png"
-						rendered="#{!smAppl.success}" />
-					<p:graphicImage value="/css/images/design/icon_success.png"
-						rendered="#{smAppl.success}" />
-				</p:column>
-
-			</p:dataTable>
-		</p:panel>
-
 		<p:panel header="#{lbl['lbl.sm.bulk.application.list.group']}"
 			toggleable="true" id="unClaimPanelId">
 			<p:dataTable id="unClaimTaskListId" rowKey="#{unclaim}" lazy="true"
@@ -180,6 +125,12 @@
 				<p:column selectionMode="multiple" style="width:2% !important;" />
 
 				<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
+					<p:outputPanel
+						rendered="#{bulkApplicationBackingBean.failSubmitted(tasks.appl.applId)}">
+						&#160;
+						<p:graphicImage value="/css/images/design/icon_error.png"
+							title="#{lbl['lbl.sm.bulk.approval.fail']}" />
+					</p:outputPanel>
 					<h:outputText value="#{lbl['lbl.sm.contractor']}"
 						rendered="#{tasks.appl.supplierType eq 'K'}" />
 					<h:outputText value="#{lbl['lbl.sm.consultant']}"

@@ -1,15 +1,19 @@
 package my.ep.web.backingbean.sm.bulkapplication;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -48,8 +52,8 @@ public class SmBulkApplicationBackingBean extends
 			ReviewApplicationReqDTO reviewAppReqDTO = null;
 
 			String basePortalUrl = SmCommonUtil.getBasePortalUrl();
-			getManagedBean().setResponseSubmittedBulkAppl(
-					new ArrayList<SmAppl>());
+			List<SmAppl> successSubmittedList = new ArrayList<SmAppl>();
+			getManagedBean().setFailedSubmittedList(new ArrayList<SmAppl>());
 
 			for (SmBulkApplicationVO bulkAppl : getManagedBean()
 					.getSelectedTasks()) {
@@ -106,41 +110,70 @@ public class SmBulkApplicationBackingBean extends
 										ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
 										bulkAppl.getOverlapRemarks());
 					}
-					reviewAppReqDTO = getReviewApplicationReqDTO(
-							fs.getBPMAuthenticationCtxToken(), fs
-									.getUserLocale().getLanguage(), fs
-									.getRequest().getServerName(), fs
-									.getRequest().getServerPort(),
-							basePortalUrl, fs.getUserSessionBean(), bulkAppl);
+					reviewAppReqDTO = getReviewApplicationReqDTO(fs,
+							basePortalUrl, bulkAppl);
 
 					SmServiceLookup.getReviewApplicationSO()
 							.submitPOorApproverReviewToBPM(reviewAppReqDTO);
-					bulkAppl.getAppl().setSuccess(true);
-					getManagedBean().getResponseSubmittedBulkAppl().add(
-							bulkAppl.getAppl());
+					successSubmittedList.add(bulkAppl.getAppl());
 				} catch (Exception ex) {
-					getManagedBean().getResponseSubmittedBulkAppl().add(
+					getManagedBean().getFailedSubmittedList().add(
 							bulkAppl.getAppl());
 				}
 
 			}
+			showSuccessApplicationMsg(successSubmittedList);
 		}
 	}
 
-	private ReviewApplicationReqDTO getReviewApplicationReqDTO(Object token,
-			String language, String serverName, int serverPort,
-			String basePortalUrl, PmUser user, SmBulkApplicationVO bulkVO) {
+	public boolean failSubmitted(Long smApplId) {
+		boolean retVal = false;
+		SmAppl smAppl = (SmAppl) EntityHelper
+				.getEntityBySinglePropertyFromList(smApplId, getManagedBean()
+						.getFailedSubmittedList(), "applId");
+		if (smAppl != null) {
+			retVal = true;
+		}
+		return retVal;
+	}
+
+	private void showSuccessApplicationMsg(List<SmAppl> applList) {
+		StringBuilder sb = new StringBuilder();
+		if (!EntityHelper.isCollectionEmpty(applList)) {
+			int count = 1;
+			sb.append("<table>");
+			for (SmAppl smAppl : applList) {
+				sb.append("<tr>").append("<td>").append(count).append(") ")
+						.append("</td><td>");
+				sb.append(smAppl.getApplNo()).append(" (")
+						.append(smAppl.getSmSupplier().getCompanyName());
+				sb.append(") </td>").append("</tr>");
+			}
+			sb.append("</table>");
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							SmCommonUtil.getMessage(
+									"lbl.sm.bulk.approval.success.msg",
+									new String[] { sb.toString() })));
+		}
+	}
+
+	private ReviewApplicationReqDTO getReviewApplicationReqDTO(FacesScopes fs,
+			String basePortalUrl, SmBulkApplicationVO bulkVO) {
 		ReviewApplicationReqDTO revReqDTO = new ReviewApplicationReqDTO();
 		SdoReviewReqDTO sdoReqDTO = null;
 		sdoReqDTO = new SdoReviewReqDTO();
 		sdoReqDTO.setTaskId(bulkVO.getTaskId());
-		sdoReqDTO.setToken(token);
+		sdoReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 		BpmResponseDTO bpmResDTO = (BpmResponseDTO) SmServiceLookup
 				.getSdoReviewSO().getBPMTaskDetails(sdoReqDTO);
 		revReqDTO.setSmAppl(bulkVO.getAppl());
 		revReqDTO
 				.setPoOrApproverDecision(my.ep.constant.sm.SupplierManagementConst.APPROVE);
-		revReqDTO.setPoLoginId(user.getLoginId());
+		revReqDTO.setPoLoginId(fs.getUserSessionBean().getLoginId());
 		revReqDTO.setPoRole(false);
 		revReqDTO.setApproverRole(true);
 		revReqDTO.setApplId(bulkVO.getAppl().getApplId());
@@ -153,11 +186,11 @@ public class SmBulkApplicationBackingBean extends
 		revReqDTO.setLocation(bulkVO.getPmZone().getZoneName().toUpperCase());
 		revReqDTO.setSupplierType(bulkVO.getAppl().getSupplierType()
 				.toUpperCase());
-		revReqDTO.setToken(token);
-		revReqDTO.setLangCode(language);
+		revReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
+		revReqDTO.setLangCode(fs.getUserLocale().getLanguage());
 		revReqDTO.setUserList(new ArrayList<String>());
-		revReqDTO.setServerName(serverName);
-		revReqDTO.setServerPort(serverPort);
+		revReqDTO.setServerName(fs.getRequest().getServerName());
+		revReqDTO.setServerPort(fs.getRequest().getServerPort());
 		revReqDTO.setPortalBaseUrl(basePortalUrl);
 		revReqDTO.setOnlineDoc(bulkVO.isOnlineDoc());
 		SmApplicationNotificationUtil.setApprovalNotificationParameters(
@@ -179,6 +212,7 @@ public class SmBulkApplicationBackingBean extends
 	public void refreshTaskList() {
 		this.getManagedBean().getClaimTaskListDataModel().reloadData();
 		this.getManagedBean().getUnClaimTaskListDataModel().reloadData();
+		this.getManagedBean().setFailedSubmittedList(null);
 	}
 
 	public String applicationStatus(Integer docInt) {

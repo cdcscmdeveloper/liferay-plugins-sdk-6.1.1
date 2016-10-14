@@ -3123,11 +3123,12 @@ public class SmApplicationUtil {
 			// created date after latest application created date), can't
 			// proceed. Need to used resubmit link.
 			SmAppl rejectedAppl = getLatesRejectedApplicationBySuppIdAndAppType(
-					supplierId, applicationType);
+					supplierId, null);
 			if (rejectedAppl != null
 					&& rejectedAppl.getCreatedDate()
 							.after(resDto.getSmSupplier().getSmAppl()
-									.getCreatedDate())) {
+									.getCreatedDate())
+					&& rejectedAppl.getApplType().equals(applicationType)) {
 				result = true;
 				throw new EpException(MessageConst.ERROR_722643);
 			}
