@@ -1297,7 +1297,7 @@ public class TaskReassignmentBackingBean extends
 				vo.setOrderAmount(resDTO.getOrderAmount());
 				vo.setOrgProfileId(resDTO.getOrgProfileId());
 				vo.setDocId(resDTO.getDocId());
-				//vo.setDocNo(resDTO.getDocNo());
+				vo.setDocNo(resDTO.getDocNo());
 				vo.setDocType(resDTO.getDocType());
 				vo.setUserGroupId(resDTO.getUserGroupId());
 				vo.setAddressId(resDTO.getAddressId());
