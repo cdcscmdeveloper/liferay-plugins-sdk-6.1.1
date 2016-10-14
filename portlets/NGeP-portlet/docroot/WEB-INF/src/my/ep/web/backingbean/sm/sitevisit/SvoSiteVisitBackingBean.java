@@ -51,6 +51,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -60,6 +61,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAdtMachine;
 import my.ep.persistence.entity.sm.SmSvBankInfo;
@@ -2354,6 +2356,50 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//getManagedBean().setSelectedSvTask(svTask);
 		retrieveSiteVisitInfo("V");
 	}
+	
+	/**
+	 * get Branch or Associated Company Desc (for facility type)
+	 * @param addressId
+	 * @return String
+	 */
+	public String getBranchOrAssociateCompFaciclityDescByAddrressId(Long addressId){
+		String facilityDesc = null;
+		String facilityType = null;
+		if(addressId != null){
+			if(getManagedBean().getSmSvTask().getSmAppl().getSmSupplierBranches().size() > 0){
+				for(SmSupplierBranch supplierBranch : getManagedBean().getSmSvTask().getSmAppl().getSmSupplierBranches()){
+					if(supplierBranch.getSmAddress().getAddressId().longValue() == addressId){
+						facilityType = "B";
+						break;
+					}
+				}
+			}
+			
+			if(facilityType == null){
+				if(getManagedBean().getSmSvTask().getSmAppl().getSmAssociateCompanies().size() > 0){
+					for(SmAssociateCompany associateCompany : getManagedBean().getSmSvTask().getSmAppl().getSmAssociateCompanies()){
+						if(associateCompany.getSmAddress().getAddressId().longValue() == addressId){
+							facilityType = "A";
+							break;
+						}
+					}
+				}
+			}
+			
+			if(facilityType != null){
+				if(facilityType.equals("A")){
+					facilityDesc = "lbl.sm.siteassign.facility.associate.company";
+				}else{
+					facilityDesc = "lbl.sm.siteassign.facility.branch";
+				}
+				
+				return SmCommonUtil.getMessage(facilityDesc,null);
+			}
+		}
+		
+		return null;
+	}
+	
 	
 	private SmFacility retrieveFacilityByAddress(Long addressId){
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
