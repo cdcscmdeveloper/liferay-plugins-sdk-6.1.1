@@ -10,9 +10,6 @@
 */
 package my.ep.web.backingbean.pm.accountingoffice;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -20,18 +17,14 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.persistence.logging.LogKey;
-import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -41,12 +34,13 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AccountingOfficeBackingBean.
+ * The Backing Bean class for accounting office.
+ * 
+ * @author Ken
+ * @since  17.04.2016
  */
 @ManagedBean(name = "accountingOfficeBackingBean")
 @ViewScoped
@@ -61,7 +55,7 @@ public class AccountingOfficeBackingBean extends
 	public static final String NAV_TO_MAIN = "/xhtml/pm/accountingoffice/accountingOfficeSearchMain";
 
 	/** The search accounting office. */
-	private IPagingDataModel<PmAgOffice> searchAccountingOffice = new SearchOfficePagingDataModel();
+	private IPagingDataModel<Object[]> searchAccountingOffice = new SearchOfficePagingDataModel();
 
 	/** The result. */
 	boolean result = false;
@@ -73,12 +67,8 @@ public class AccountingOfficeBackingBean extends
 	 * Instantiates a new accounting office backing bean.
 	 */
 	public AccountingOfficeBackingBean() {
-		
-		log.info("inside AccountingOfficeBackingBean constructor");
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
-
-			System.out.println("***userId: " + pmUser.getUserId());
 			new LogKey(pmUser.getUserId()); 
 		}else{
 			new LogKey(1L); 
@@ -100,8 +90,7 @@ public class AccountingOfficeBackingBean extends
 	/**
 	 * reset search bean fields.
 	 */
-	public void resetOfficeSearchBean() {
-		
+	public void resetOfficeSearchBean() {		
 		debugLogger("resetAccountingOfficeSearch");
 		this.getManagedBean().setAccountingOfficeSearchBean(new AccountingOfficeSearchBean());
 		this.getManagedBean().setLazy(false);         
@@ -145,7 +134,7 @@ public class AccountingOfficeBackingBean extends
 	 * 
 	 * @return the searchAccountingOffice
 	 */
-	public IPagingDataModel<PmAgOffice> getSearchAccountingOffice() {
+	public IPagingDataModel<Object[]> getSearchAccountingOffice() {
 		return searchAccountingOffice;
 	}
 
@@ -156,7 +145,7 @@ public class AccountingOfficeBackingBean extends
 	 *            the searchAccountingOffice to set
 	 */
 	public void setSearchAccountingOffice(
-			IPagingDataModel<PmAgOffice> searchAccountingOffice) {
+			IPagingDataModel<Object[]> searchAccountingOffice) {
 		this.searchAccountingOffice = searchAccountingOffice;
 	}
 	
@@ -174,62 +163,62 @@ public class AccountingOfficeBackingBean extends
 		return "/xhtml/pm/salutation/salutationMaintenance.xhtml";
 	}	*/
 	
-	private ISearchBean<PmAgOffice> getSearchBeanData(
-			ISearchBean<PmAgOffice> searchBean) {
-
-		AccountingOfficeSearchBean officeSearchBean = this.getManagedBean().getAccountingOfficeSearchBean();
-		debugLogger("getSearchBeanData--Search Criteria Data");
-		if (StringUtils.isNotBlank(officeSearchBean.getOfficeCode())){
-
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("officeCode",
-							SearchOperator.OPERATOR_EQUALS.value(), officeSearchBean.getOfficeCode().toUpperCase() , true));
-			
-			
-		}
-		if (StringUtils.isNotBlank(officeSearchBean.getOfficeName())) {
-
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmAgValidityList.officeName",
-							SearchOperator.OPERATOR_LIKE.value(), officeSearchBean
-									.getOfficeName().toUpperCase(), true));
-			
-		}
-		if(StringUtils.isNotBlank(officeSearchBean.getStatus())) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							officeSearchBean.getStatus()));
-			
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmAgValidityList.recordStatusFlg",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							officeSearchBean.getStatus()));
-		}		
-		else{
-			List<String> activeAndInActiveStatus = new ArrayList<String>();
-			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
-			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg",
-							SearchOperator.OPERATOR_IN.value(), 
-							activeAndInActiveStatus
-			));
-			
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmAgValidityList.recordStatusFlg",
-							SearchOperator.OPERATOR_IN.value(), 
-							activeAndInActiveStatus
-			));
-		}
-		return searchBean;
-	}
+//	private ISearchBean<PmAgOffice> getSearchBeanData(
+//			ISearchBean<PmAgOffice> searchBean) {
+//
+//		AccountingOfficeSearchBean officeSearchBean = this.getManagedBean().getAccountingOfficeSearchBean();
+//		debugLogger("getSearchBeanData--Search Criteria Data");
+//		if (StringUtils.isNotBlank(officeSearchBean.getOfficeCode())){
+//
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("officeCode",
+//							SearchOperator.OPERATOR_EQUALS.value(), officeSearchBean.getOfficeCode().toUpperCase() , true));
+//			
+//			
+//		}
+//		if (StringUtils.isNotBlank(officeSearchBean.getOfficeName())) {
+//
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("pmAgValidityList.officeName",
+//							SearchOperator.OPERATOR_LIKE.value(), officeSearchBean
+//									.getOfficeName().toUpperCase(), true));
+//			
+//		}
+//		if(StringUtils.isNotBlank(officeSearchBean.getStatus())) {
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("recordStatusFlg",
+//							SearchOperator.OPERATOR_EQUALS.value(),
+//							officeSearchBean.getStatus()));
+//			
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("pmAgValidityList.recordStatusFlg",
+//							SearchOperator.OPERATOR_EQUALS.value(),
+//							officeSearchBean.getStatus()));
+//		}		
+//		else{
+//			List<String> activeAndInActiveStatus = new ArrayList<String>();
+//			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
+//			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("recordStatusFlg",
+//							SearchOperator.OPERATOR_IN.value(), 
+//							activeAndInActiveStatus
+//			));
+//			
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("pmAgValidityList.recordStatusFlg",
+//							SearchOperator.OPERATOR_IN.value(), 
+//							activeAndInActiveStatus
+//			));
+//		}
+//		return searchBean;
+//	}
 
 	/**
 	 * The Class SearchOfficePagingDataModel.
 	 */
 	private class SearchOfficePagingDataModel extends
-			PagingDataModel<PmAgOffice> {
+			PagingDataModel<Object[]> {
 		
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
@@ -245,25 +234,25 @@ public class AccountingOfficeBackingBean extends
 		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
 		 */
 		@Override
-		public ISearchResultBean<PmAgOffice> pageChangeListener(
-				ISearchBean<PmAgOffice> searchBean) {
+		public ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 			IAgOfficeSO agOfficeSO;
 
 			try {
-				ISearchBean<PmAgOffice> searchBeanData = getSearchBeanData(searchBean);
-				AgOfficeReqDTO ctrReqDTO = new AgOfficeReqDTO();
-				ctrReqDTO.setOfficeSearchBean(searchBeanData);
+				//ISearchBean<PmAgOffice> searchBeanData = getSearchBeanData(searchBean);
+				AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
+				reqDTO.setOfficeObjSearchBean(searchBean);
 				agOfficeSO = (IAgOfficeSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IAgOfficeSO.class);
-				AgOfficeResDTO resDTO= agOfficeSO.retrieveAgOfficeByOfficeCodeBySearch(ctrReqDTO);
+				AgOfficeResDTO resDTO= agOfficeSO.searchAgOffice(reqDTO);
 				getManagedBean().setLazy(true);
 				if (resDTO.isSuccessful()) {
 
-					return resDTO.getOfficeResultBean();
+					return resDTO.getOfficeObjResultBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
