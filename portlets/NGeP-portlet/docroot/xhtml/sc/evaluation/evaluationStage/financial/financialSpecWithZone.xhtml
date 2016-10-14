@@ -19,8 +19,8 @@
 	margin-bottom: -310px !important;
 }
 
-.menuTextZone .ui-menuitem-text {
-	padding-right:70% !important;
+.ui-menuitem-text {
+	padding-right:20% !important;
 }
 </style>
 
@@ -51,7 +51,7 @@
 							name="specTabChange" update="@form" partialSubmit="true"
 							process="@this" action="#{evaluationBackingBean.specTabChange}" />
 
-						<p:tabMenu styleClass="sidemenu menuTextZone" id="zonalMenu" 
+						<p:tabMenu styleClass="sidemenu ui-menuitem-text" id="zonalMenu" 
 							activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
 							style="display : table-caption;"
 							model="#{evaluationBackingBean.managedBean.evaluationSpecZonalMenuModel}">
