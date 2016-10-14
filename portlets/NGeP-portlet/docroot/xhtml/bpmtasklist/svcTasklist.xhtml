@@ -45,7 +45,7 @@
 			</div>
 			<div id="customSection">
 				<p:panel id="searchContent">
-					<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
+					<p:panel header="#{lbl['lbl.sm.siteassign.search']}" toggleable="true">
 					<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 					<table style="width: 100%;">
 						<tr>
@@ -99,19 +99,18 @@
 						</tr>
 					</table>
 					<div style="text-align: right;">
-		
+						<p:commandButton id="schBtn" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							action="#{svcTasklistBackingBean.searchAction}" value="#{lbl['lbl.btn.search']}"
+							update="rspl" />
+							
 						<p:commandButton id="resetBtn" 
 							action="#{svcTasklistBackingBean.resetSearchCriteria}" value="#{lbl['lbl.btn.reset']}"
 							update="searchContent" />
 		
-						<p:commandButton id="schBtn" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							action="#{svcTasklistBackingBean.searchAction}" value="#{lbl['lbl.btn.search']}"
-							update="rspl" />
-						
 					</div>
 					</p:panel>
 		
-					<p:panel id="rspl" header="#{lbl['lbl.sm.results']}" toggleable="true">
+					<p:panel id="rspl" header="#{lbl['lbl.sm.siteassign.result']}" toggleable="true">
 						<p:dataTable id="rsDt" value="#{svcTasklistBackingBean.managedBean.searchDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							lazy="true" var="appl" rows="10">
 					
