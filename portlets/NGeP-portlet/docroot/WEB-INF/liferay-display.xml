@@ -219,6 +219,7 @@
 			<portlet id="cmTrackingDiary"></portlet>
 			<portlet id="cdTrackingDiary"></portlet>
 			<portlet id="supplierDashboard"></portlet>
+			<portlet id="publicCatalogueMobile"></portlet>
 		</category>
 		
 		
