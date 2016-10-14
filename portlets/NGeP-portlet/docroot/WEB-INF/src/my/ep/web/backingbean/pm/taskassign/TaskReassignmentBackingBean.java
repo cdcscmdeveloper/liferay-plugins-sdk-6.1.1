@@ -1727,11 +1727,11 @@ public class TaskReassignmentBackingBean extends
 							PmStatusRole statusRole = PmCommonUtil.retrieveStatusRoleByStatusIdAndRoleCode(task.getDocStatus().longValue(), roleList.get(0));
 							if(statusRole != null && statusRole.getReasssignType() !=null){
 								reassignType = statusRole.getReasssignType();
-								resultBean = generateUserResultBean(status , searchBean, task,reassignType);
+								resultBean = generateUserResultBean(status , searchBean, task,reassignType,roleList);
 							}
 						}
 					}else{
-						resultBean = generateUserResultBean(status, searchBean, task,reassignType);
+						resultBean = generateUserResultBean(status, searchBean, task,reassignType,roleList);
 					}
 					
 					if(resultBean != null && resultBean.getResultList() != null){
@@ -1768,9 +1768,8 @@ public class TaskReassignmentBackingBean extends
 	}
 	
 	private ISearchResultBean<PmUser> generateUserResultBean(
-			PmStatus status , ISearchBean<PmUser> searchBean,WorklistItemVO task ,int reassignType){
+			PmStatus status , ISearchBean<PmUser> searchBean,WorklistItemVO task ,int reassignType,List<String> roleList){
 		PmOrgProfile orgProfile = null;
-		List<String> roleList = new ArrayList<>();
 		String moduleCode = status.getModuleCode();
 		ISearchResultBean<PmUser> resultBean = null;
 		boolean isSearched = false;
