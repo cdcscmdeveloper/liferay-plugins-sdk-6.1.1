@@ -645,8 +645,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(!requestNoteDtl.isDeleted()) {
 					String pType = requestNoteDtl.getProcurementType()
 							.getParameterCode();
-					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
-							.equals(ParameterConst.PROC_TYPE_EMERGENCY))) {
+					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && 
+							!pType.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && 
+							!pType.equals(ParameterConst.PROC_TYPE_PK7)) {
 						// Check total procurement amount per ptj per item per year
 						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
 						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
@@ -1827,6 +1828,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
 		    getManagedBean().setJustRequired(Boolean.TRUE);
 		} 
+
+		// when procurement type as pk7 selected 
+		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+			Locale locale = new FacesScopes().getUserLocale();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(
+									ResourceBundleUtils.getMessage("lbl.sc.procurement.type.pk7.msg",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+		}
 	}
 	
 	/**
