@@ -44,7 +44,11 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			
 			<p:column headerText="#{lbl['lbl.sm.facility.facilityType']}">
-				<h:outputText  value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svTask.smSvAddress.smAddress.smFacilities[0].facilityType)}" />
+				<h:outputText rendered="#{not empty svTask.smSvAddress.smAddress.smFacilities[0].facilityType}" 
+				value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svTask.smSvAddress.smAddress.smFacilities[0].facilityType)}" />
+				
+				<h:outputText rendered="#{empty svTask.smSvAddress.smAddress.smFacilities[0].facilityType}" 
+				value="#{svoSiteVisitBackingBean.getBranchOrAssociateCompFaciclityDescByAddrressId(svTask.smSvAddress.smAddress.addressId)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.address']}"
@@ -54,16 +58,21 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.latitude.longitude']}">
-				<p:outputLabel value="#{lbl['lbl.sm.latitude']}" style="float:left"
-						styleClass="outputLabel-view-label" />
-				<p:outputLabel styleClass="outputLabel-view"
-						value="#{svTask.smSvAddress.smAddress.mapLatitude}" />
-				<br />
-	
-				<p:outputLabel value="#{lbl['lbl.sm.longitude']}" style="float:left"
-						styleClass="outputLabel-view-label" />
-				<p:outputLabel styleClass="outputLabel-view"
-						value="#{svTask.smSvAddress.smAddress.mapLongitude}" />
+				<table>
+					<tr>
+						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.latitude']}" style="float:left"
+							styleClass="outputLabel-view-label" /></td>
+						<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" style="float:left"
+							value="#{svTask.smSvAddress.smAddress.mapLatitude}" /></td>
+					</tr>
+		
+					<tr>
+						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.longitude']}" style="float:left"
+							styleClass="outputLabel-view-label" /></td>
+						<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" style="float:left"
+							value="#{svTask.smSvAddress.smAddress.mapLongitude}" /></td>
+					</tr>
+				</table>
 			</p:column>
 
 
