@@ -13,7 +13,12 @@
 
 
 	<ui:define name="contentSection">
-
+<style type="text/css">
+.sidemenu>.ui-tabmenu-nav {
+	padding-bottom: 310px !important;
+	margin-bottom: -310px !important;
+}
+</style>
 
 		<h:panelGroup>
 			<table width="100%" class="BtnSpacing">
@@ -36,9 +41,9 @@
 
 	
 		<h:panelGroup>
-			<table style="border: 0px; width: 100%">
+			<table style="width: 100%">
 				<tr>
-					<td style="width: 16%" class="sidemenutd" valign="top"><p:remoteCommand
+					<td style="width: 16%;" class="sidemenutd" valign="top"><p:remoteCommand
 							name="specTabChange" update="@form" partialSubmit="true"
 							process="@this" action="#{evaluationBackingBean.specTabChange}" />
 
@@ -47,7 +52,7 @@
 							style="display : table-caption;"
 							model="#{evaluationBackingBean.managedBean.evaluationSpecZonalMenuModel}">
 						</p:tabMenu></td>
-					<td style="width: 84%"><h:panelGroup id="zoneSpecAnswers">
+					<td style="width: 84%" valign="top"><h:panelGroup id="zoneSpecAnswers">
 							<ui:param name="finSpecsupplierList"
 								value="#{evaluationBackingBean.managedBean.finSpecSupplierListDM}"></ui:param>
 							<ui:param name="finSpecofferPrice"
