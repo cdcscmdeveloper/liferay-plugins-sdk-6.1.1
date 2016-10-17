@@ -222,6 +222,9 @@
 			<portlet id="publicCatalogueMobile"></portlet>
 		</category>
 		
+		<category name="CatalogueMobile">
+			<portlet id="publicCatalogueMobile"></portlet>
+		</category>
 		
 		<category name="GfMas">
 			<portlet id="ptjGfmasInbound"></portlet>
