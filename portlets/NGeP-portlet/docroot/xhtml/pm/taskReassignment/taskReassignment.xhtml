@@ -16,9 +16,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<!-- Result -->
 		<ui:include src="taskReassignmentResult.xhtml"/>
 		<ac:lovPopup /> 
-		<ac:ptjPopup id="orgProfileCcId"
-			orgTypeParamCode="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}"
-			okAction="taskReassignmentBackingBean.selectPtjAction"
-			update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" />
+		
  	</ui:define>
 </ui:composition>
