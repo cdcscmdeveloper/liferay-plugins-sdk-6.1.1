@@ -13,6 +13,7 @@
 	<cc:attribute name="update" required="false" default="@this" />
 	<cc:attribute name="orgTypeParamCode" required="true" />
 	<cc:attribute name="id" required="true" />
+	<cc:attribute name="includePegawaiPengawal" required="false" default="false" />
 </cc:interface>
 
 <cc:implementation>
@@ -39,14 +40,14 @@
                  <p:inputText id="itMin"  readonly="true" style="width:170px" 
                 	 value="#{lbl['lbl.pm.org.ptj.search.ministry']}"/>
                  <p:spacer height="1"/>
-                 <p:selectOneMenu id="somMinistry" styleClass="ptjPopupSomWidth"  rendered="#{!reportBackingBean.managedBean.requiredForReport}"
+                 <p:selectOneMenu id="somMinistry" styleClass="ptjPopupSomWidth"  rendered="#{!includePegawaiPengawal}"
                  	disabled="#{organisationSearchBackingBean.managedBean.disabledMinistry}"
                       value="#{organisationSearchBackingBean.managedBean.ministryProfileId}" >
             	   <f:selectItems value="#{organisationSearchBackingBean.getMinistryDropdown()}"/>
             	   <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somJabatan,:form:#{cc.attrs.id}:searcbBtnId" />
                  </p:selectOneMenu>
                  
-                 <c:if test="#{reportBackingBean.managedBean.requiredForReport}">                
+                 <c:if test="#{includePegawaiPengawal}">                
                  <p:selectOneMenu id="somMinistryReport" styleClass="ptjPopupSomWidth"  
                  	disabled="#{organisationSearchBackingBean.managedBean.disabledMinistry}"
                       value="#{organisationSearchBackingBean.managedBean.ministryProfileId}" >
@@ -77,7 +78,7 @@
             	    <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
                  </p:selectOneMenu>
                 </c:if>
-                <c:if test="#{!reportBackingBean.managedBean.requiredForReport}">  
+                <c:if test="#{!includePegawaiPengawal}">  
                  <p:inputText id="somJab" readonly="true" style="width:170px"
                  	rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}" 
                  	value="#{lbl['lbl.pm.org.ptj.search.jabatan']}"/>
@@ -158,5 +159,6 @@
 		</h:panelGroup>
 		
 		</p:dialog>
+		<p:defaultCommand target="searcbBtnId" scope="orgProfilePnlGrp"></p:defaultCommand>
 </cc:implementation>
 </ui:composition>
