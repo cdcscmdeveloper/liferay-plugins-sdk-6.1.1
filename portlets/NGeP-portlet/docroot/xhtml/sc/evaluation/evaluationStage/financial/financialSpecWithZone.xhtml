@@ -14,14 +14,9 @@
 
 	<ui:define name="contentSection">
 <style type="text/css">
-.sidemenu>.ui-tabmenu-nav {
-	padding-bottom: 310px !important;
-	margin-bottom: -310px !important;
-}
 
-.ui-menuitem-text {
-	padding-right:27% !important;
-}
+
+
 </style>
 
 		<h:panelGroup>
@@ -51,9 +46,8 @@
 							name="specTabChange" update="@form" partialSubmit="true"
 							process="@this" action="#{evaluationBackingBean.specTabChange}" />
 
-						<p:tabMenu styleClass="sidemenu ui-menuitem-text" id="zonalMenu" 
+						<p:tabMenu styleClass="sidemenu" id="zonalMenu" 
 							activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
-							style="display : table-caption;"
 							model="#{evaluationBackingBean.managedBean.evaluationSpecZonalMenuModel}">
 						</p:tabMenu></td>
 					<td style="width: 84%" valign="top"><h:panelGroup id="zoneSpecAnswers">
