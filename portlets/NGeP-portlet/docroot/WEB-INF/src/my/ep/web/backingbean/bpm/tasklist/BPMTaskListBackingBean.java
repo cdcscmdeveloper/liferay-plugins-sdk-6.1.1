@@ -533,7 +533,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
 					+ SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE,
-					SourcingConstants.NAV_PAGE_QT_APPROVAL);
+					SourcingConstants.NAV_PAGE_QT_SUPPLIER_ACCEPTANCE);
 
 			temp.put(SCProcessNameConst.START_MANUAL_QT_CREATION
 					+ SCProcessNameConst.SUBMIT_MANUAL_QUOTATION_TENDER,
