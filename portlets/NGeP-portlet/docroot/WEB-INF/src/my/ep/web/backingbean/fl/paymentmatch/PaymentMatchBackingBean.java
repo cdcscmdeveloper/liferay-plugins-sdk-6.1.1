@@ -652,7 +652,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					}
 					reqDTO.setRequestItemId(invSummary.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
 					reqDTO.setOrgProfileId(getManagedBean().getPaymentAdvice().getFlRequest().getSmSupplier().getSupplierId());
-					if(getManagedBean().getPaymentAdvice().getFlInvoice().getFlRequest().getCtContract() != null){
+					if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
 						reqDTO.setContractId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
 					}
 					resDTO = feeExemptionSO.checkForFeeException(reqDTO);
