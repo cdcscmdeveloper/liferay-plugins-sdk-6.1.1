@@ -3408,7 +3408,7 @@ public class SpecificationBackingBean extends
 	 * @param index
 	 *            the index
 	 * @param checklist
-	 *            the checklist
+	 *            (List<ScQtCheckList> checklist)
 	 */
 	public void technicalChecklistDropDownActionChange(int index,
 			List<ScQtCheckList> checklist) {
@@ -3645,8 +3645,8 @@ public class SpecificationBackingBean extends
 	 * Schedule type change.Event handle change Schedule
 	 * type(Schedule/Progressive payment)in Specification committee.
 	 * 
-	 * @param event
-	 *            (String ScheduleType).
+	 * @param scqt
+	 *            (ScQt scqt).
 	 */
 	public void scheduleTypeChange(ScQt scqt) {
 
