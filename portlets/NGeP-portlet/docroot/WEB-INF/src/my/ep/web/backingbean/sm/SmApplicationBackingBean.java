@@ -5333,6 +5333,8 @@ public class SmApplicationBackingBean extends
 				.getSelectedBranch().getGst());
 		SmApplicationUtil.getInstance()
 				.removeNotApplicableInformationBeforeSave(getManagedBean());
+		SmApplicationUtil.updateApplBranchCodeIfEmpty(getManagedBean()
+				.getSmAppl());
 		reCheckVerifiedSection();
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
@@ -8512,7 +8514,7 @@ public class SmApplicationBackingBean extends
 										.getSmSupplier(), getManagedBean()
 										.getSupplierRemarks(), getManagedBean()
 										.getApplnApprovalRemarks(), reqDTO);
-				
+
 				if (StringUtils.isNotBlank(getManagedBean()
 						.getApplnApprovalRemarks())) {
 					SmApplicationUtil.manageAndSaveNewSmRemarks(
