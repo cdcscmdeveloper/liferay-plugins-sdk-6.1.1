@@ -119,7 +119,7 @@ import org.primefaces.model.UploadedFile;
 /**
  * Backing Bean for User Profiles (Management)
  * 
- * @author DK, RAIN POH
+ * @author DK, RAIN POH, KEN
  * @since 8/7/2013
  * 
  */
