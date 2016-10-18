@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1394,10 +1395,19 @@ public class NoticeBoardBackingBean extends
 					searchDataBean.getPassDays()));
 		} else if (searchDataBean.getFromDate() != null
 				&& searchDataBean.getToDate() != null) {
+			
+			Date searchToDate = searchDataBean.getToDate();
+			Calendar c2 = Calendar.getInstance();
+			c2.setTime(searchToDate);
+			Calendar toDate = Calendar.getInstance();
+			toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+					c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+			toDate.set(Calendar.MILLISECOND, 0);
+			searchToDate = toDate.getTime();
 			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
 					.value());
 			searchFilterBean.setSearchValue(new SearchBetweenValue<Date>(
-					searchDataBean.getFromDate(), searchDataBean.getToDate()));
+					searchDataBean.getFromDate(), searchToDate));
 		}
 
 		if (searchFilterBean.getSearchValue() == null) {
