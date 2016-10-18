@@ -155,6 +155,7 @@
 			<portlet id="scSupplierInvitation"/>
 			<portlet id="PendingResponseDpQt"/>
 			<portlet id="OnlineBiddingStatus"/>
+			<portlet id="scQTCheckSupplierQualification" />
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
