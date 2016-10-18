@@ -4240,11 +4240,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		reqDTO.setSupplierType(flRequest.getSmSupplier().getSmAppl().getSupplierType());
 		MofAccountResDTO resDTO = mofAccountSO.retriveMOFAccountBySupplierIdAndType(reqDTO);
 		
-		if(DateUtils.getCurrentDate().before(resDTO.getMofAccount().getEffDate())){
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_745012, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-		}
-		if(DateUtils.getCurrentDate().after(resDTO.getMofAccount().getExpDate())){
+		if(resDTO.getMofAccount()==null || DateUtils.getCurrentDate().before(resDTO.getMofAccount().getEffDate()) || DateUtils.getCurrentDate().after(resDTO.getMofAccount().getExpDate())){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_745012, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
