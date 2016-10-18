@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<style type="text/css">
+		.ui-datatable-data .ui-widget-content {
+			border: 0px !important;
+			border-bottom: 0px !important;
+		}
+	</style>
+	<br/>
+	<p:dialog id="commomSuppPopUpId"
+		header="#{lbl['lbl.sc.award.supplier']}" widgetVar="commomSuppPopUp"
+		width="600" position="top">
+		
+	<p:panel id="commonSupplierListPl"
+			header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+
+			<p:dataTable id="commonSupplierListTbl"
+				widgetVar="shortlistedSuppDtls" selectionMode="single"
+				value="#{suppFinalizationBackingBean.managedBean.shortlistedCommonSuppliers}"
+				var="suppInfo" lazy="true" rows="10" rowIndexVar="index"
+				rowKey="#{suppInfo[0]}"
+				style="width:100%;" selection="#{suppFinalizationBackingBean.managedBean.selectedCommonSupplier}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+
+				<p:ajax event="rowSelect" update="@([id$=okBtnId])" process="@this"
+					partialSubmit="true"  />
+
+				<ac:paginator for="commonSupplierListTbl" />
+
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+					style="white-space:nowrap; text-align:center;" width="30%">
+					<h:outputText value="#{suppInfo[1]}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+					style="white-space:nowrap; text-align:center;" width="30%">
+					<h:outputText
+						value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag,
+					fn:toUpperCase((suppInfo[2] eq 0)?'false':'true'))}" style="float:left;"/>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.mof.status']}" style="white-space:nowrap; text-align:center;">
+
+					<h:outputText value="#{lbl['lbl.pm.status.active']}"
+						rendered="#{suppInfo[3] eq true}" />
+					
+
+					<h:outputText value="#{lbl['lbl.sm.status.expired']}"
+						style="background-color:red; color:white; font-weight:bold;width:40%"
+						rendered="#{suppInfo[3] eq false}" />
+				</p:column>
+
+			</p:dataTable>
+
+			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				style="float:right;" onclick="commomSuppPopUp.hide();" />
+
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" id="okBtnId"
+				disabled="#{empty suppFinalizationBackingBean.managedBean.selectedCommonSupplier}"
+				style="float:right;" process="@this" partialSubmit="true"
+				actionListener="#{suppFinalizationBackingBean.awardSupplierEvent}"
+				onclick="commomSuppPopUp.hide();"
+				update="@([id$=itemListTbl],[id$=awardSupplier])" />
+		</div>
+	</p:panel>
+	</p:dialog>
+
+</ui:composition>
