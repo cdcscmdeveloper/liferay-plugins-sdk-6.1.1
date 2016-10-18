@@ -26,6 +26,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
+import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.taskassginment.ITaskAssignmentSO;
@@ -49,6 +50,8 @@ import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.access.application.AccessApplReqDTO;
+import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -95,6 +98,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+/**
+ * Backing Bean for Task Reasssingment (new)
+ * 
+ * @author Ken
+ * @since 07.09.2016
+ * 
+ */
 @ManagedBean(name = "taskReassignmentBackingBean")
 @ViewScoped
 public class TaskReassignmentBackingBean extends
@@ -155,12 +165,18 @@ public class TaskReassignmentBackingBean extends
 		resetAllTaskList();
 	}
 	
+	/**
+	 * To Reset All Task List (BPM)
+	 */
 	private void resetAllTaskList(){
 		this.userTaskListDataModel.resetData();
 		this.groupTaskListDataModel.resetData();
 		this.othersTaskListDataModel.resetData();
 	}
 	
+	/**
+	 * To Reload All Task List (BPM)
+	 */
 	private void reloadAllTaskList(){
 		this.userTaskListDataModel.reloadData();
 		this.groupTaskListDataModel.reloadData();
@@ -267,6 +283,11 @@ public class TaskReassignmentBackingBean extends
 		}
 	}
 
+	/**
+	 * To Construct condition fields for lovMinistry
+	 * 
+	 * @return String
+	 */
 	public String constructConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterId^");
@@ -381,6 +402,11 @@ public class TaskReassignmentBackingBean extends
 		resetAllTaskList();
 	}
 
+	/**
+	 * To get the selected user role list
+	 * 
+	 * @return SelectItem[] 
+	 */
 	public SelectItem[] getRoleList() {
 		IUserSO userSO = null;
 		SelectItem[] items = null;
@@ -507,6 +533,11 @@ public class TaskReassignmentBackingBean extends
 		return sb.toString();
 	}
 
+	/**
+	 * To construct user condisiton fields for opUserLov
+	 * 
+	 * @return String
+	 */
 	public String constructUserConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");
@@ -561,6 +592,12 @@ public class TaskReassignmentBackingBean extends
 
 	}
 
+	/**
+	 * User Task List Data Model
+	 * 
+	 * @author Ken
+	 *
+	 */
 	private class userTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
@@ -743,6 +780,12 @@ public class TaskReassignmentBackingBean extends
 		}
 	}
 	
+	/**
+	 * Group Task List Data Model (available to claim in task list screen)
+	 * 
+	 * @author Ken
+	 *
+	 */
 	private class groupTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
@@ -900,6 +943,12 @@ public class TaskReassignmentBackingBean extends
 		}
 	}
 	
+	/**
+	 * Others Task List Data Model (group task has been claimed by other user)
+	 * 
+	 * @author Ken
+	 *
+	 */
 	private class othersTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
@@ -1059,7 +1108,7 @@ public class TaskReassignmentBackingBean extends
 	/**
 	 * retrieve status id list for BPM
 	 * 
-	 * @return
+	 * @return List<Integer>
 	 */
 	private List<Integer> retrieveAvailableStatusId() {
 		log.info("retrieveAvailableStatusId");
@@ -1185,6 +1234,12 @@ public class TaskReassignmentBackingBean extends
 		return this.orgTypeSearchBean;
 	}
 
+	/**
+	 * To Retrieve Sourcing Module Task Reassignment Details
+	 * 
+	 * @param task
+	 * @return PmTaskReassignmentVO
+	 */
 	private PmTaskReassignmentVO retrieveSourcingTaskReassignmentDetail(
 			WorklistItemVO task) {
 		log.info("retrieveSourcingTaskReassignmentDetail");
@@ -1216,7 +1271,12 @@ public class TaskReassignmentBackingBean extends
 		return vo;
 	}
 
-	
+	/**
+	 * To Retrieve Procurement Plan Task Reassignment Details
+	 * 
+	 * @param task
+	 * @return PmTaskReassignmentVO
+	 */
 	private PmTaskReassignmentVO retrievePpTaskReassignmentDetail(
 			WorklistItemVO task) {
 		log.info("retrievePpTaskReassignmentDetail");
@@ -1244,6 +1304,12 @@ public class TaskReassignmentBackingBean extends
 		return vo;
 	}
 	
+	/**
+	 * To Retrieve Contract Management Task Reassignment Details
+	 * 
+	 * @param task
+	 * @return PmTaskReassignmentVO
+	 */
 	private PmTaskReassignmentVO retrieveCtTaskReassignmentDetails(WorklistItemVO task) {
 		log.info("retrieveCtTaskReassignmentDetails");
 		PmTaskReassignmentVO vo = new PmTaskReassignmentVO();
@@ -1273,7 +1339,12 @@ public class TaskReassignmentBackingBean extends
 		return vo;
 	}
 
-		
+	/**
+	 * To Retrieve Order Fulfilment Task Reassignment Details
+	 * 
+	 * @param task
+	 * @return PmTaskReassignmentVO
+	 */
 	private PmTaskReassignmentVO retrieveFLTaskReassignmentDetail(
 			WorklistItemVO task) {
 		log.info("retrieveFLTaskReassignmentDetail");
@@ -1316,6 +1387,12 @@ public class TaskReassignmentBackingBean extends
 		return vo;
 	}
 	
+	/**
+	 * To Retrieve Catalogue Management Task Reassignment Details
+	 * 
+	 * @param task
+	 * @return PmTaskReassignmentVO
+	 */
 	private PmTaskReassignmentVO retrieveCMTaskReassignmentDetail(
 			WorklistItemVO task) {
 		log.info("retrieveCMTaskReassignmentDetail");
@@ -1338,6 +1415,42 @@ public class TaskReassignmentBackingBean extends
 		} finally {
 			codificationSO = null;
 		}
+		return vo;
+	}
+	
+	/**
+	 * To Retrieve Profile Management Task Reassignment Details
+	 * 
+	 * @param task
+	 * @return PmTaskReassignmentVO
+	 */
+	private PmTaskReassignmentVO retrievePMTaskReassignmentDetail(
+			WorklistItemVO task) {
+		log.info("retrievePMTaskReassignmentDetail");
+		PmTaskReassignmentVO vo = new PmTaskReassignmentVO();
+		//it is for access application only
+		if(task.getDocType() != null && 
+				(ParameterConst.DOCTYPE_COMPANY_PROFILE.equals(task.getDocType()) || ParameterConst.DOCTYPE_MARKET_RESEARCH.equals(task.getDocType()))){
+			IAccessApplSO accessApplSO = null;
+			try{
+				accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IAccessApplSO.class);
+				
+				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+				reqDTO.setDocNo(task.getDocNumber());
+				AccessApplResDTO resDTO = accessApplSO.retrieveAccessApplByApplNo(reqDTO);
+				if(resDTO.isSuccessful() && resDTO.getAccessAppl() != null){
+					vo.setDocId(resDTO.getAccessAppl().getAccessApplId());
+					
+				}
+			}catch(Exception e){
+				throw new EpException(e.getMessage());
+			}finally{
+				accessApplSO = null;
+			}
+		}
+		
 		return vo;
 	}
 
@@ -1452,6 +1565,14 @@ public class TaskReassignmentBackingBean extends
 
 	}
 	
+	/**
+	 * To Retieve USer Group User List By User Group Id
+	 * 
+	 * @param userGroupId
+	 * @param approvalLimit
+	 * @param excludeUserIds
+	 * @return ISearchResultBean<PmUser>
+	 */
 	private ISearchResultBean<PmUser> retrieveUserGroupUserListByUserGroupId(Long userGroupId, BigDecimal approvalLimit, List<Long> excludeUserIds) {
 		log.info("retrieveUserGroupUserListByUserGroupId");
 		IUserSO userSO = null;
@@ -1488,6 +1609,12 @@ public class TaskReassignmentBackingBean extends
 		this.userListDataModel = userListDataModel;
 	}
 
+	/**
+	 * Available user data model (to confirm which user to be assignee)
+	 * 
+	 * @author Ken
+	 *
+	 */
 	private class userPagingDataModel extends PagingDataModel<PmUser> {
 
 		private static final long serialVersionUID = 1L;
@@ -1527,8 +1654,10 @@ public class TaskReassignmentBackingBean extends
 					}else if(ModuleCodeConst.CONTRACT_MANAGEMENT
 							.equalsIgnoreCase(moduleCode)) {
 						vo = retrieveCMTaskReassignmentDetail(task);
+					}else if(ModuleCodeConst.PROFILE_MANAGEMENT
+							.equalsIgnoreCase(moduleCode)) {
+						vo = retrievePMTaskReassignmentDetail(task);
 					}else if(ModuleCodeConst.SUPPLIER_MANAGEMENT
-							.equalsIgnoreCase(moduleCode) || ModuleCodeConst.PROFILE_MANAGEMENT
 							.equalsIgnoreCase(moduleCode)) {
 						vo = new PmTaskReassignmentVO();
 					}
@@ -1568,16 +1697,27 @@ public class TaskReassignmentBackingBean extends
 		}
 	}
 	
+	/**
+	 * To search available user to be assignee
+	 */
 	public void searchAvailableUser(){
 		userListDataModel.reloadData();
 	}
 	
+	/**
+	 * To reset user list data model 
+	 */
 	public void resetAvailableUser(){
 		getManagedBean().setSearchUserName(null);
 		getManagedBean().setTaskReassignmentVO(null);
 		userListDataModel.resetData();
 	}
 	
+	/**
+	 * Action after docType has been selected
+	 * 
+	 * @param entity
+	 */
 	public void onChangeDocType(BaseEntity entity){
 		this.getManagedBean().getTaskAssignmentSearchBean()
 			.setSearched(false);
@@ -1585,6 +1725,17 @@ public class TaskReassignmentBackingBean extends
 		resetAllTaskList();
 	}
 	
+	/**
+	 * To generate user result bean based on reassignType
+	 * 
+	 * @param status
+	 * @param searchBean
+	 * @param task
+	 * @param reassignType
+	 * @param roleList
+	 * @param vo
+	 * @return ISearchResultBean<PmUser>
+	 */
 	private ISearchResultBean<PmUser> generateUserResultBean(
 			PmStatus status , ISearchBean<PmUser> searchBean,WorklistItemVO task ,int reassignType,List<String> roleList,PmTaskReassignmentVO vo){
 		PmOrgProfile orgProfile = null;
