@@ -136,12 +136,12 @@
 		
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="1"
 			columnClasses="columnWidth20">
-			<h:column style="text-align:center;">
+			<h:column>
 				<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
 					process="@this" partialSubmit="true" 
 					actionListener="#{suppFinalizationBackingBean.getShortlistedCommomSupplier}"
 					oncomplete="commomSuppPopUp.show();" update="@([id$=commomSuppPopUpId])"  
-					disabled="#{!(isSecretaryUser or isBPKTaskAndClaimed)}"/>
+					disabled="#{!(isSecretaryUser or isBPKTaskAndClaimed)}" style="float:right;"/>
 			</h:column>
 
 		</h:panelGrid>
