@@ -5288,7 +5288,7 @@ public class LOIDetailBackingBean extends
 			long dayBal = DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(),
 					date);
 			String[] dayLeftParam = { dayBal + "" };
-			 message=SmCommonUtil.getMessage(
+			 message= getMessage(
 					"lbl.sc.loiloa.loi.res.due.date.tooltip", dayLeftParam);
 			
 		}
