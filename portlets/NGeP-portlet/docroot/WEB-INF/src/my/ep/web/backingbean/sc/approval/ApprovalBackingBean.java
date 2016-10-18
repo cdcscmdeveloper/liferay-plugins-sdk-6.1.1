@@ -744,10 +744,7 @@ public class ApprovalBackingBean extends
 
 			CommitteResDTO committeResDto = null;
 			// QuationTenderResDTO qtResDTO = null;
-			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
-
-					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
-							.equalsIgnoreCase(taskName)) {
+			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 
