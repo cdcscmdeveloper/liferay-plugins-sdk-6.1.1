@@ -3714,19 +3714,8 @@ public class SmApplicationUtil {
 	public static List<SelectItem> getUomSelectItems() {
 		List<SelectItem> uomSelectItems = new ArrayList<SelectItem>();
 		List<PmUom> uomList = retrieveUomList();
-
-		SelectItem si = null;
-		if (uomList != null) {
-			for (PmUom pmUom : uomList) {
-				if (pmUom.getUomId() != null && pmUom.getUomName() != null
-						&& !StringUtils.isEmpty(pmUom.getUomName())) {
-					si = new SelectItem();
-					si.setLabel(pmUom.getUomName());
-					si.setValue(pmUom.getUomId());
-					uomSelectItems.add(si);
-				}
-			}
-		}
+		uomSelectItems = EntityHelper.convertListToSelectItem(uomList,
+				"uomName", "uomId");
 
 		// sort
 		Collections.sort(uomSelectItems, new Comparator<SelectItem>() {
@@ -3747,19 +3736,8 @@ public class SmApplicationUtil {
 	public static List<SelectItem> getRaceSelectItems() {
 		List<SelectItem> raceSelectItems = new ArrayList<SelectItem>();
 		List<PmRace> racesList = retrievePmRaceList();
-
-		SelectItem si = null;
-		if (racesList != null) {
-			for (PmRace pmRace : racesList) {
-				if (pmRace.getRaceId() != null && pmRace.getRaceName() != null
-						&& !StringUtils.isEmpty(pmRace.getRaceName())) {
-					si = new SelectItem();
-					si.setLabel(pmRace.getRaceName());
-					si.setValue(pmRace.getRaceId());
-					raceSelectItems.add(si);
-				}
-			}
-		}
+		raceSelectItems = EntityHelper.convertListToSelectItem(racesList,
+				"raceName", "raceId");
 
 		// sort
 		Collections.sort(raceSelectItems, new Comparator<SelectItem>() {
@@ -5223,13 +5201,10 @@ public class SmApplicationUtil {
 		managedBean.getAddrSameAsItems().add(item);
 		if (!EntityHelper.isCollectionEmpty(managedBean.getSmAppl()
 				.getSmSupplierBranches())) {
-			for (SmSupplierBranch br : managedBean.getSmAppl()
-					.getSmSupplierBranches()) {
-				item = new SelectItem();
-				item.setValue(br.getSupplierBranchId());
-				item.setLabel(br.getBranchName());
-				managedBean.getAddrSameAsItems().add(item);
-			}
+			managedBean.getAddrSameAsItems().addAll(
+					EntityHelper.convertListToSelectItem(managedBean
+							.getSmAppl().getSmSupplierBranches(),
+							"supplierBranchId", "branchName"));
 		}
 
 		managedBean.setShowDockyardPanel(false);
