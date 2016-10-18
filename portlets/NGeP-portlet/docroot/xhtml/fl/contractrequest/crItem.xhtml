@@ -550,6 +550,24 @@
 						value="#{contractRequestBackingBean.managedBean.itemDesc == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.itemDesc}" /> 
 				</td>
 			</tr>
+			<tr>
+				<td ><p:outputLabel value="#{lbl['lbl.ct.max.order.qty']}" rendered="#{!contractRequestBackingBean.managedBean.serviceItem}"/></td>
+				<td><p:inputText disabled="true"  rendered="#{!contractRequestBackingBean.managedBean.serviceItem}"
+						value="#{contractRequestBackingBean.managedBean.maxOrderQuantity}"
+						size="35" >
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
+						</p:inputText></td>
+			</tr>
+			<tr>
+				<td ><p:outputLabel value="#{lbl['lbl.fl.qty']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
+				<td><p:inputText disabled="true"  rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
+						value="#{contractRequestBackingBean.managedBean.minOrderQuantity}"
+						size="35" >
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
+						</p:inputText></td>
+			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.price.type']}" /></td>
 				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.priceType != null}"
