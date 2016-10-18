@@ -27,7 +27,7 @@
 				<td><p:commandButton
 						action="#{bulkApplicationBackingBean.refreshTaskList}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						value="#{lbl['lbl.bpm.refresh']}" update="claimTaskListId" /></td>
+						value="#{lbl['lbl.bpm.refresh']}" update="@form" /></td>
 				<td style="white-space: nowrap; float: right;"><p:commandButton
 						value="#{lbl['lbl.sm.button.approve']}" style="float:right;"
 						id="approveBtnId" update="@form" onstart="blockWidget.show()"
