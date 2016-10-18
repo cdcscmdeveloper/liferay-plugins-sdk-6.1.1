@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<div align="left" class="header-info">
 	
@@ -28,10 +29,10 @@
 					<td><h:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
 					<td class="header-info-text">
 						<c:choose>
-							<c:when test="#{backingBean.managedBean.poSecReview.recommendation eq 'APPROVE'}">
+							<c:when test="#{fn:containsIgnoreCase(backingBean.managedBean.poSecReview.recommendation, 'APPROVE')}">
 								#{lbl['lbl.sm.decision.approve.uppercase']}
 							</c:when>
-							<c:when test="#{backingBean.managedBean.poSecReview.recommendation eq 'REJECT'}">
+							<c:when test="#{fn:containsIgnoreCase(backingBean.managedBean.poSecReview.recommendation, 'REJECT')}">
 								#{lbl['lbl.sm.decision.reject.uppercase']}
 							</c:when>
 							<c:otherwise>
