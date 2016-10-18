@@ -317,6 +317,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	private String itemDesc;
 	
+	private BigDecimal maxOrderQuantity;
+	private Double minOrderQuantity;
+	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
 	
@@ -2988,6 +2991,34 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setItemDesc(String itemDesc) {
 		this.itemDesc = itemDesc;
+	}
+
+	/**
+	 * @return the maxOrderQuantity
+	 */
+	public BigDecimal getMaxOrderQuantity() {
+		return maxOrderQuantity;
+	}
+
+	/**
+	 * @param maxOrderQuantity the maxOrderQuantity to set
+	 */
+	public void setMaxOrderQuantity(BigDecimal maxOrderQuantity) {
+		this.maxOrderQuantity = maxOrderQuantity;
+	}
+
+	/**
+	 * @return the minOrderQuantity
+	 */
+	public Double getMinOrderQuantity() {
+		return minOrderQuantity;
+	}
+
+	/**
+	 * @param minOrderQuantity the minOrderQuantity to set
+	 */
+	public void setMinOrderQuantity(Double minOrderQuantity) {
+		this.minOrderQuantity = minOrderQuantity;
 	}
 
 }

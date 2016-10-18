@@ -3544,10 +3544,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setPricePerUom(ciItemResDTO.getItemPrice());
 			}
 			getManagedBean().setUomName(flItemAddr.getScRequestItem().getUom() != null ? flItemAddr.getScRequestItem().getUom().getUomName() : "");
+			getManagedBean().setMinOrderQuantity(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getMinimumOrderQty());
 		} else {
 			// Try to get agency ceiling quantity for Item
 			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			ciItemResDTO = contractItemSO.getItemCeilingQuantity(reqDTO);
+			getManagedBean().setMaxOrderQuantity(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getTotalMaxQuantity());
 			if(ciItemResDTO.getItemCeilingQuantity()!=null && ciItemResDTO.getItemCeilingQuantity().doubleValue()>0) {
 				getManagedBean().setCeilingQuantity(ciItemResDTO.getItemCeilingQuantity());
 			} else { // have to set Item Ceiling Quantity
