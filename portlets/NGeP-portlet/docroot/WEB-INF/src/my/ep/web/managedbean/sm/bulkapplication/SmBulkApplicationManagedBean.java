@@ -184,6 +184,7 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 				worklistItemVO.setTitle(sb.toString());
 				bulkApplicationVO = new SmBulkApplicationVO();
 				bulkApplicationVO.setTaskId(worklistItemVO.getTaskId());
+				bulkApplicationVO.setTaskName(worklistItemVO.getTaskName());
 				bulkApplicationVO.setCreateDate(worklistItemVO.getCreateDate());
 				bulkApplicationVO.setExpirationDate(worklistItemVO
 						.getExpirationDate());

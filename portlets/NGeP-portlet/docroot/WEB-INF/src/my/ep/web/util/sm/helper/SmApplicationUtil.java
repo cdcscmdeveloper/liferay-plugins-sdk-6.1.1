@@ -8730,6 +8730,22 @@ public class SmApplicationUtil {
 		return urlParam;
 	}
 
+	/**
+	 * Update all application supplier branch code if empty
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 */
+	public static void updateApplBranchCodeIfEmpty(SmAppl smAppl) {
+		if (!EntityHelper.isCollectionEmpty(smAppl.getSmSupplierBranches())) {
+			for (SmSupplierBranch br : smAppl.getSmSupplierBranches()) {
+				if (br.getBranchCode() == null) {
+					br.setBranchCode(br.getSupplierBranchId());
+				}
+			}
+		}
+	}
+
 	public static void approveApplCategories(boolean isApprover, boolean isPo,
 			SmAppl smAppl) {
 		for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
