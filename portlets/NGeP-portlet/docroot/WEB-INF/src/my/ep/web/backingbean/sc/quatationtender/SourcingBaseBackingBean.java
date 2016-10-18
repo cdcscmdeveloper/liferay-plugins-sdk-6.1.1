@@ -2556,5 +2556,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return memberRole;
 	}
+	
+	/**
+	 * Gets the procurement type tool tip.
+	 *
+	 * @return the procurement type tool tip
+	 */
+	public String getProcurementTypeToolTip(){
+		// MaxProcurementAmt
+		BigDecimal maxProcurementAmt = getPRThresholdAmount();
+		DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+				.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
+		String message = ResourceBundleUtils.getMessage(
+				"lbl.sc.procurementtype.tooltip", new String[] {amountDF.format(maxProcurementAmt)}, 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+		return message;
+	}
+	
 }
