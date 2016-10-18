@@ -107,6 +107,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -165,7 +166,7 @@ public class SupplierFinalizationBackingBean extends
 	
 	private static final Long DEFAULT_ITEM = 0L;
 	private static final Long DEFAULT_ZONE = 0L;
-	
+			
 	/**
 	 * Default constructor
 	 */
@@ -5438,10 +5439,10 @@ public class SupplierFinalizationBackingBean extends
 		debugLogger("awardSupplierEvent");
 
 		boolean qtRefinalized = isQTRefinalized();
-		String awardSupplierStr = getManagedBean().getAwardSupplier();
+		Object[] supplierInfo = getManagedBean().getSelectedCommonSupplier();
 		List<ScQtRecommend> selectedItemList 
 				= this.getManagedBean().getSelectedItemList();
-		if (StringUtils.isBlank(awardSupplierStr)
+		if (selectedItemList == null
 				|| CollectionUtils.isEmpty(selectedItemList)) {
 			log.info("No supplier has been selected or no item has been selected");
 			return;
@@ -5468,7 +5469,8 @@ public class SupplierFinalizationBackingBean extends
 			} else {
 				isShortlisted = true;
 			}
-			
+			Long supplierId = ((BigDecimal)supplierInfo[0]).longValue();
+			Long qtId = getManagedBean().getScQt().getQtId();
 			// get the SmSupplier object by the dropdown selection
 			for (ScQtRecommend scQtRecommend : selectedItemSet) {
 				if (!scQtRecommend.isSelected()) {
@@ -5478,8 +5480,36 @@ public class SupplierFinalizationBackingBean extends
 				
 				this.getManagedBean().getSelectedItemList().clear();
 				this.getManagedBean().getSelectedItemList().add(scQtRecommend);
+				this.getManagedBean().setSelectedItem(scQtRecommend);
 				
-				List<ScQtEvaluationResultDtl> shortListedSupplierList 
+				IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+				try {
+					qtSuppFinalizationSO = getQTSuppFinalizationSO();
+					SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+					reqDTO.setQtId(qtId);
+					reqDTO.setRecommendType(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM);
+					reqDTO.setRequestItemId(scQtRecommend.getRequestItem()
+							.getRequestNoteItemId());
+					reqDTO.setScQtFinalization(this.getManagedBean()
+							.getScQtFinalization());
+					reqDTO.setSupplierId(supplierId);
+					SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
+							.retrieveEvaluationResultsByItem(reqDTO);
+					List<ScQtEvaluationResultDtl> selectedQualSuppliers = resDTO
+							.getQualifiedByItemSuppliers();
+					if (CollectionUtils.isNotEmpty(selectedQualSuppliers)) {
+						for (ScQtEvaluationResultDtl evalResultDtl : selectedQualSuppliers) {
+							evalResultDtl.setAwareded(isAwarded);
+							evalResultDtl.setShortListed(isShortlisted);
+							selectSupplierEvent(evalResultDtl, isAwarded);
+						}
+
+					}
+				} finally {
+					qtSuppFinalizationSO = null;
+				}
+				
+				/*List<ScQtEvaluationResultDtl> shortListedSupplierList 
 								= scQtRecommend.getShortListedSupplierList();
 				if (CollectionUtils.isNotEmpty(shortListedSupplierList)) {
 					for (ScQtEvaluationResultDtl evalResultDtl 
@@ -5487,7 +5517,8 @@ public class SupplierFinalizationBackingBean extends
 						String suppId = String.valueOf(evalResultDtl
 								.getQtEvaluationResult().getScQtProposal()
 								.getScQtSupplier().getSmSupplier().getSupplierId());
-						if (suppId.equals(awardSupplierStr)) {
+						if (suppId.equals(selectedCommSupplier.getScQtProposal()
+								.getScQtSupplier().getSmSupplier().getSupplierId())) {
 							evalResultDtl.setAwareded(isAwarded);
 							evalResultDtl.setShortListed(isShortlisted);
 							this.getManagedBean().setRecommendedSupplier(null);
@@ -5500,7 +5531,7 @@ public class SupplierFinalizationBackingBean extends
 							break;
 						}
 					}
-				}
+				}*/
 			}
 			if (removableItem != null) {
 				selectedItemSet.remove(removableItem);
@@ -5509,6 +5540,7 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setSelectedItemList(null);
 			this.getManagedBean().setAwardSupplierList(null);
 			this.getManagedBean().setAwardSupplier(null);
+			this.getManagedBean().setSelectedItem(null);
 		} else {
 			log.info("There are no selected items");
 			return;
@@ -6531,4 +6563,72 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}
 	}
+	
+	
+	private class ShortlistedCommonSuppliersPagingDataModel extends
+			PagingDataModel<Object[]> {
+
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Constructor for Summary Supplier Paging Data Model
+		 */
+		public ShortlistedCommonSuppliersPagingDataModel() {
+			super("commonSupplierListTbl");
+		}
+
+		@Override
+		public ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
+
+			SuppFinalizationResDTO resDTO = null;
+			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+			try {
+				List<ScQtRecommend> selectedItemList = getManagedBean()
+						.getSelectedItemList();
+				if (CollectionUtils.isNotEmpty(selectedItemList)) {
+					qtSuppFinalizationSO = getQTSuppFinalizationSO();
+
+					SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
+					reqDTO.setEvalResultSearchBean(searchBean);
+					List<Long> requestItemIds = new ArrayList<Long>();
+					for (ScQtRecommend selectedItem : selectedItemList) {
+						requestItemIds.add(selectedItem.getRequestItem()
+								.getRequestNoteItemId());
+					}
+					reqDTO.setRequestItemIds(requestItemIds);
+					reqDTO.setRefinalize(getManagedBean().getQtRefinalized());
+					resDTO = qtSuppFinalizationSO
+							.retrieveQualifiedCommonSuppliersByItem(reqDTO);
+				}
+			} finally {
+				qtSuppFinalizationSO = null;
+			}
+
+			return resDTO.getQualifiedCommonSuppliersByItem();
+		}
+	}
+	
+	public IPagingDataModel<Object[]> getShortlistedCommomSupplier() {
+
+		IPagingDataModel<Object[]> shortlistedCommomSupplier = getManagedBean()
+				.getShortlistedCommonSuppliers();
+		if (shortlistedCommomSupplier == null) {
+			shortlistedCommomSupplier = new ShortlistedCommonSuppliersPagingDataModel();
+			getManagedBean().setShortlistedCommonSuppliers(
+					shortlistedCommomSupplier);
+		}else {
+			shortlistedCommomSupplier.reloadData();
+		}
+		return shortlistedCommomSupplier;
+	}
+	
+	private IQTSuppFinalizationSO getQTSuppFinalizationSO() {
+		
+		return BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSuppFinalizationSO.class);
+	}
+
 }
