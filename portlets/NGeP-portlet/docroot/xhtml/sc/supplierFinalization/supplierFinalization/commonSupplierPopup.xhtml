@@ -14,7 +14,7 @@
 	</style>
 	<br/>
 	<p:dialog id="commomSuppPopUpId"
-		header="#{lbl['lbl.sc.award.supplier']}" widgetVar="commomSuppPopUp"
+		header="#{lbl['lbl.sc.select.supplier']}" widgetVar="commomSuppPopUp"
 		width="600" position="top">
 		
 	<p:panel id="commonSupplierListPl"
@@ -32,28 +32,34 @@
 					partialSubmit="true"  />
 
 				<ac:paginator for="commonSupplierListTbl" />
-
-				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-					style="white-space:nowrap; text-align:center;" width="30%">
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+							style="white-space:nowrap; text-align:center;" width="30%" />
+						<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+							style="white-space:nowrap; text-align:center;" width="30%"/>
+						<p:column headerText="#{lbl['lbl.sc.mof.status']}"
+							style="white-space:nowrap; text-align:center;" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
 					<h:outputText value="#{suppInfo[1]}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
-					style="white-space:nowrap; text-align:center;" width="30%">
+				<p:column style="text-align:center;">
 					<h:outputText
 						value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag,
-					fn:toUpperCase((suppInfo[2] eq 0)?'false':'true'))}" style="float:left;"/>
+					fn:toUpperCase((suppInfo[2] eq 0)?'false':'true'))}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.mof.status']}" style="white-space:nowrap; text-align:center;">
+				<p:column rendered="#{suppInfo[3] eq true}" style="text-align:center;">
+					<h:outputText value="#{lbl['lbl.pm.status.active']}" />
+				</p:column>
 
-					<h:outputText value="#{lbl['lbl.pm.status.active']}"
-						rendered="#{suppInfo[3] eq true}" />
-					
-
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}"
-						style="background-color:red; color:white; font-weight:bold;width:40%"
-						rendered="#{suppInfo[3] eq false}" />
+				<p:column
+					style="white-space:nowrap; text-align:center;background-color:red; color:white; font-weight:bold;"
+					rendered="#{suppInfo[3] eq false}">
+					<h:outputText value="#{lbl['lbl.sm.status.expired']}" />
 				</p:column>
 
 			</p:dataTable>
