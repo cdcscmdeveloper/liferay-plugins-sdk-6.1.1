@@ -20,7 +20,7 @@
 						label="#{lbl['lbl.sc.direct.purchase.title']}"
 						disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
-						style="margin-bottom: 5px;width: 860px;">
+						style="margin-bottom: 5px;width: 905px;">
 						 <p:ajax event="keyup" />
 						</p:inputText>
 						 <p:message
@@ -31,7 +31,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.item.name']}" /></td>
 				<td colspan="3"><p:inputText disabled="true"
-						style="width: 860px;"
+						style="width: 905px;"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.scRequestItem.itemName}"
 						size="106" /></td>
 			</tr>
@@ -40,7 +40,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.item.name']}" /></td>
 				<td colspan="3"><p:inputText disabled="true"
-						style="width: 860px;"
+						style="width: 905px;"
 						value="#{purchaseInDefaultBackingBean.getText(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.scRequestItem.cmItem.itemName)}"
 						size="106" /></td>
 			</tr>
@@ -49,7 +49,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.prod.code']}" /></td>
-				<td colspan="3"><p:inputText disabled="true" style="width: 860px;"
+				<td colspan="3"><p:inputText disabled="true" style="width: 905px;"
 						value="#{purchaseInDefaultBackingBean.getText(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.scRequestItem.cmItem.extensionCode)}"
 						size="106" /></td>
 
