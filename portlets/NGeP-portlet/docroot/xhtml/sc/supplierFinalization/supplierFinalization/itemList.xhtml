@@ -138,9 +138,10 @@
 			columnClasses="columnWidth20">
 			<h:column style="text-align:center;">
 				<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
-					process="@this" partialSubmit="true" rendered="#{isSecretaryUser}" 
+					process="@this" partialSubmit="true" 
 					actionListener="#{suppFinalizationBackingBean.getShortlistedCommomSupplier}"
-					oncomplete="commomSuppPopUp.show();" update="@([id$=commomSuppPopUpId])" />
+					oncomplete="commomSuppPopUp.show();" update="@([id$=commomSuppPopUpId])"  
+					disabled="#{!(isSecretaryUser or isBPKTaskAndClaimed)}"/>
 			</h:column>
 
 		</h:panelGrid>
