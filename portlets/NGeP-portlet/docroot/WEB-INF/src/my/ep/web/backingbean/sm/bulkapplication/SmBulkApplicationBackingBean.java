@@ -8,13 +8,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
-import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.helper.EntityHelper;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -116,6 +113,9 @@ public class SmBulkApplicationBackingBean extends
 					SmServiceLookup.getReviewApplicationSO()
 							.submitPOorApproverReviewToBPM(reviewAppReqDTO);
 					successSubmittedList.add(bulkAppl.getAppl());
+
+					refreshTaskList();
+
 				} catch (Exception ex) {
 					getManagedBean().getFailedSubmittedList().add(
 							bulkAppl.getAppl());
@@ -164,29 +164,22 @@ public class SmBulkApplicationBackingBean extends
 	private ReviewApplicationReqDTO getReviewApplicationReqDTO(FacesScopes fs,
 			String basePortalUrl, SmBulkApplicationVO bulkVO) {
 		ReviewApplicationReqDTO revReqDTO = new ReviewApplicationReqDTO();
-		SdoReviewReqDTO sdoReqDTO = null;
-		sdoReqDTO = new SdoReviewReqDTO();
-		sdoReqDTO.setTaskId(bulkVO.getTaskId());
-		sdoReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
-		BpmResponseDTO bpmResDTO = (BpmResponseDTO) SmServiceLookup
-				.getSdoReviewSO().getBPMTaskDetails(sdoReqDTO);
 		revReqDTO.setSmAppl(bulkVO.getAppl());
-		revReqDTO
-				.setPoOrApproverDecision(my.ep.constant.sm.SupplierManagementConst.APPROVE);
+		revReqDTO.setPoOrApproverDecision("APPROVE");
 		revReqDTO.setPoLoginId(fs.getUserSessionBean().getLoginId());
 		revReqDTO.setPoRole(false);
 		revReqDTO.setApproverRole(true);
 		revReqDTO.setApplId(bulkVO.getAppl().getApplId());
 		revReqDTO.setApplNo(bulkVO.getAppl().getApplNo());
-		revReqDTO.setOutcome(my.ep.constant.sm.SupplierManagementConst.APPROVE);
+		revReqDTO.setOutcome("APPROVE");
 		revReqDTO.setSuppId(bulkVO.getAppl().getSmSupplier().getSupplierId());
-		revReqDTO.setBpmTaskName(bpmResDTO.getTaskName());
+		revReqDTO.setBpmTaskName(bulkVO.getTaskName());
 		revReqDTO.setAppType(bulkVO.getAppl().getApplType());
 		revReqDTO.setTaskId(bulkVO.getTaskId());
 		revReqDTO.setLocation(bulkVO.getPmZone().getZoneName().toUpperCase());
 		revReqDTO.setSupplierType(bulkVO.getAppl().getSupplierType()
 				.toUpperCase());
-		revReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
+		revReqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		revReqDTO.setLangCode(fs.getUserLocale().getLanguage());
 		revReqDTO.setUserList(new ArrayList<String>());
 		revReqDTO.setServerName(fs.getRequest().getServerName());
