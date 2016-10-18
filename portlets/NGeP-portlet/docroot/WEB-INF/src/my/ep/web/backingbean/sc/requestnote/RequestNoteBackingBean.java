@@ -1822,24 +1822,29 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
 			getManagedBean().setJustRequired(Boolean.FALSE);
-			
+
 		} else if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
-		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
-		    getManagedBean().setJustRequired(Boolean.TRUE);
+			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
+			getManagedBean().setJustRequired(Boolean.TRUE);
 		} 
 
 		// when procurement type as pk7 selected 
 		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
-			Locale locale = new FacesScopes().getUserLocale();
+			// MaxProcurementAmt
+			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+
+			BigDecimal maxProcurementAmt = getPRThresholdAmount();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 							.getMessage(
-									ResourceBundleUtils.getMessage("lbl.sc.procurement.type.pk7.msg",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
+									MessageConst.INFO_760440,
+									new String[] {amountDF.format(maxProcurementAmt)},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+
 		}
 	}
 	
@@ -3551,8 +3556,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		getManagedBean().setApproverList(approvers);
 	}
-	
-	
+
 	/**
 	 * Gets the purchase in default expired message.
 	 *
