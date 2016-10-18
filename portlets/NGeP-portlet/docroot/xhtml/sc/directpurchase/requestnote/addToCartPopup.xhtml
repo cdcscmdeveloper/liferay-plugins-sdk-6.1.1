@@ -94,8 +94,9 @@
 					<td>
 						<table>
 							<tr>
-								<td><p:selectOneRadio styleClass="commonLabel" style="margin-bottom: 5px;"
-										id="procType" label="#{lbl['lbl.sc.procurement.type']}"
+								<td><p:selectOneRadio styleClass="commonLabel"
+										style="margin-bottom: 5px;" id="procType"
+										label="#{lbl['lbl.sc.procurement.type']}"
 										value="#{requestNoteBackingBean.managedBean.procurementType}"
 										required="#{requestNoteBackingBean.managedBean.required}">
 										<f:selectItems
@@ -106,8 +107,8 @@
 											process="@this" />
 									</p:selectOneRadio></td>
 								<td style="margin-top: -3px"><p:message id="procTypeMsg"
-										for="procType" display="icon" /> <ac:iconTooltip
-										value="#{lbl['lbl.sc.procurementtype.tooltip']}" /></td>
+										for="procType" display="icon" /> 
+									<ac:iconTooltip value="#{requestNoteBackingBean.procurementTypeToolTip}" /></td>
 							</tr>
 						</table>
 					</td>
