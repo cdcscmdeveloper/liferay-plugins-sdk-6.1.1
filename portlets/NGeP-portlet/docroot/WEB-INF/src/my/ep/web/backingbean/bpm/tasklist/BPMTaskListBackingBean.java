@@ -867,13 +867,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	public String claimTask()  {
 
 		System.out.println("**********claimTask");
-		try{
+		
 			claimBpmTask();
 			this.getManagedBean().getTaskListGroupDataModel().reloadData();
 			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
-		}catch(Exception e){
-			throw new EpException(e.getMessage());
-		}
+		
 
 		return "taskListView?faces-redirect=true";
 
