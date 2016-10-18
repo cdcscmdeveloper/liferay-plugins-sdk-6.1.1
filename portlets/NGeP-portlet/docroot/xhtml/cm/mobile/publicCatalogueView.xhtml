@@ -199,7 +199,7 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 										value="#{pCatalogueBackingBean.managedBean.searchDataModel}"
 										id="catalogueGridViewID" var="supplierItem">
 										<ac:paginator for="catalogueGridViewID"></ac:paginator>
-										<div class="tbclass">
+										<div class="tbclass" style="vertical-align: top !important;">
 											<p:commandLink
 												action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}"
 												process="@this">
