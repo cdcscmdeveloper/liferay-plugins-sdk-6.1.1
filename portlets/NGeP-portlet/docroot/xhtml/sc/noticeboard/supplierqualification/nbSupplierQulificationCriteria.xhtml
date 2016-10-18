@@ -11,7 +11,8 @@
 		 <div class="clear"></div>
 		<div align="left">
 			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				action="#{noticeBoardBackingBean.backBtn}" />
+				action="#{noticeBoardBackingBean.backBtn}"
+				rendered="#{noticeBoardBackingBean.managedBean.navigateFromNoticeBoard}" />
 		</div>
 			<ui:include src="/xhtml/sc/noticeboard/supplierqualification/nbSupplierQualification.xhtml"></ui:include>
 		

@@ -27,7 +27,8 @@
 			</tr>
 		</table>
 	</div>
-	<p:panel header="#{lbl['lbl.sc.notice.board.check.supplier.qualification']}" toggleable="true">
+	<p:panel 
+		header="#{noticeBoardBackingBean.managedBean.navigateFromNoticeBoard ? lbl['lbl.sc.notice.board.check.supplier.qualification'] : ''}">
 		<div class="clear"></div>
 		<table style="margin: 0 auto;">
 

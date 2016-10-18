@@ -698,6 +698,28 @@ public class NoticeBoardBackingBean extends
 	}
 	
 	/**
+	 * Navigate to supplier qualification criteria page when click on liferay menu
+	 */
+	public void preRenderSuppQualView() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String qtId = originalServletRequest
+				.getParameter(SourcingConstants.NAV_PARAM_QUOTATION_TENDER_ID);
+		
+		if (StringUtils.isNotBlank(qtId)) {
+			super.renewSesionObject();
+			isUser();
+			getManagedBean().setNavigateFromNoticeBoard(false);
+			String redirectUrl = gotoSupplierQualificationCriteria(Long.valueOf(qtId));
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, redirectUrl);	
+		}
+	}
+	
+	/**
 	 * Navigate to supplier registration screen on click of register icon
 	 * 
 	 * @param qtId
@@ -1947,7 +1969,6 @@ public class NoticeBoardBackingBean extends
 
 			if (null != zoneDtls) {
 				int zoneTabIndex = 0;
-				FacesContext facesContext = FacesContext.getCurrentInstance();
 
 				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 
