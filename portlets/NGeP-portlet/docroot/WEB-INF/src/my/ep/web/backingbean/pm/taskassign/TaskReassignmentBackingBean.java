@@ -1256,8 +1256,10 @@ public class TaskReassignmentBackingBean extends
 			reqDTO.setTaskName(task.getTaskName());
 			SourcingIntegrationResDTO resDTO = scIntegrationSO.retrieveTaskReassignmentDetail(reqDTO);
 			if(resDTO != null){
-//				vo.setGroupDocId(resDTO.getGroupDocId());
-//				vo.setGroupDocType(resDTO.getGroupDocType());
+				vo.setGroupDocId(resDTO.getGroupDocId());
+				vo.setGroupDocType(resDTO.getGroupDocType());
+				vo.setDocId(resDTO.getDocId());
+				vo.setDocType(resDTO.getDocType());
 				vo.setOrgProfileId(resDTO.getOrgProfileId());
 				vo.setRoleList(new ArrayList<String>(Arrays.asList(resDTO.getRoleCode())));
 				vo.setUserGroupId(resDTO.getUserGroupId());
