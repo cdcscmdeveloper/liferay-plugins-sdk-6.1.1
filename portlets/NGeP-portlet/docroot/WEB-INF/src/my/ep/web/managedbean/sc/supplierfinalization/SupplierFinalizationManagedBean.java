@@ -225,6 +225,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/** The auto update. */
 	private boolean autoUpdate = Boolean.TRUE;
 	
+	private Object[] selectedCommonSupplier;
+	private IPagingDataModel<Object[]> shortlistedCommonSuppliers;
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -1990,5 +1993,35 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
+
+	/**
+	 * @return the shortlistedCommonSuppliers
+	 */
+	public IPagingDataModel<Object[]> getShortlistedCommonSuppliers() {
+		return shortlistedCommonSuppliers;
+	}
+
+	/**
+	 * @param shortlistedCommonSuppliers the shortlistedCommonSuppliers to set
+	 */
+	public void setShortlistedCommonSuppliers(
+			IPagingDataModel<Object[]> shortlistedCommonSuppliers) {
+		this.shortlistedCommonSuppliers = shortlistedCommonSuppliers;
+	}
+
+	/**
+	 * @return the selectedCommonSupplier
+	 */
+	public Object[] getSelectedCommonSupplier() {
+		return selectedCommonSupplier;
+	}
+
+	/**
+	 * @param selectedCommonSupplier the selectedCommonSupplier to set
+	 */
+	public void setSelectedCommonSupplier(Object[] selectedCommonSupplier) {
+		this.selectedCommonSupplier = selectedCommonSupplier;
+	}
+
 
 }
