@@ -15,6 +15,12 @@ import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.PmTaskReassignmentVO;
 
+/**
+ * Managed Bean for Task Reassignment
+ * 
+ * @author Ken
+ * @since 07.09.2016
+ */
 @ManagedBean(name = "taskReassignmentManagedBean")
 @SessionScoped
 public class TaskReassignmentManagedBean extends BaseManagedBean {
