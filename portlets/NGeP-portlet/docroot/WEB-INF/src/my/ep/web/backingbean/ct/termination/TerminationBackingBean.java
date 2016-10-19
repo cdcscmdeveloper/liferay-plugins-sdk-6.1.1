@@ -27,6 +27,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,9 +54,11 @@ import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
+import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -80,8 +83,10 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
@@ -178,6 +183,9 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		reqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
 		reqDTO.setDocType(dataType.getDocType());
 		getManagedBean().setUserLoginId(dataType.getContractAdmin().getUserName());
+		if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)){
+			getManagedBean().setDisableField(true);
+		}
 		setTerminationContractVer(reqDTO);
 			
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -264,10 +272,16 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode() != null) {
 				if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
 					getManagedBean().setRemedy(true);
+					 getManagedBean().setNoticeTypelbl(ResourceBundleUtils.getMessage("lbl.ct.termination.upload.remedy", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				} else if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
 					getManagedBean().setTermination(true);
+					getManagedBean().setNoticeTypelbl(ResourceBundleUtils.getMessage("lbl.ct.termination.upload.termination", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				} else if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
 					getManagedBean().setMutualTermination(true);
+					 getManagedBean().setNoticeTypelbl(ResourceBundleUtils.getMessage("lbl.ct.termination.upload.mutual", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				}
 			}
 
@@ -485,13 +499,9 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.mutual.termination.agreement", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}		
-				// Mandatory to upload meeting minutes if the decision is Mutual Termination		
-				if(this.getManagedBean().getAttachmentList().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_750014);
-				}
 			}
 		
-			if (!getManagedBean().isMutualTermination()) {
+			if (getManagedBean().isRemedy()) {
 				if (getManagedBean().getContractVer().getCtTermination().getRemedyStartDate() == null) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remedy.start.date", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -523,6 +533,20 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			}
 		}
 		
+		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+			if(getManagedBean().getContractVer().getTerminationLetterAttachments().isEmpty()){
+		         throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.termination.upload.notice", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			    }
+		}
+		
+		if(this.getManagedBean().isMutualTermination()) {
+			// Mandatory to upload meeting minutes if the decision is Mutual Termination		
+			if(this.getManagedBean().getAttachmentList().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_750014);
+			}
+		}
+		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
 				&& getManagedBean().getApproverModel().getTarget().size()==0) {
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
@@ -540,8 +564,12 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			 String parameterCode = ParameterHelper.getInstance().getPmParameterById(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId()).getParameterCode();
 			 if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
 				 getManagedBean().setRemedy(true);
+				 getManagedBean().setNoticeTypelbl(ResourceBundleUtils.getMessage("lbl.ct.termination.upload.remedy", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			 } else if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE)) {
 				 getManagedBean().setTermination(true);
+				 getManagedBean().setNoticeTypelbl(ResourceBundleUtils.getMessage("lbl.ct.termination.upload.termination", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				 if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgency() == null 
 						 || getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length() == 0) {
 					 if (getManagedBean().getContractVer().getCtAgencies() != null 
@@ -552,6 +580,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				 }
 			 } else if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_MUTUAL_TERMINATE)) {
 				 getManagedBean().setMutualTermination(true);
+				 getManagedBean().setNoticeTypelbl(ResourceBundleUtils.getMessage("lbl.ct.termination.upload.mutual", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			 } 
 		 } catch (Exception e) {
 			 System.out.println(e);
@@ -643,7 +673,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	/**
 		 * This method is used to generate notice letter
 		 * Templates using to generate letter
-	    *//*
+	    */
 	public void previewNoticeAction() throws Exception {
 		VelocityContext context = null;
 		String vmFile = null;
@@ -672,8 +702,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					          context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
 					          String jabtanName = retrieveJabatanByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 					          if(!jabtanName.isEmpty()) {
-					                  ministryJabatan.append(jabtanName);
-					                  ministryJabatan.append(" / ");
+					        	  ministryJabatan.append(jabtanName);
+					              ministryJabatan.append(" / ");
 					          }
 				
 					          PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
@@ -796,16 +826,25 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 								context.put("recommendAgencyDate", dateformat.format(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()));
 							} else {
 								context.put("recommendAgencyDate", "");
-							}					
-						getManagedBean().setEditorValue(DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context));
-						RequestContext.getCurrentInstance().execute("noticeDlg.show()");
+							}	
+
+							String filePath = getManagedBean().getFileDirectory();
+							File file = new File(filePath);
+							file.mkdirs();
+							String fileName = getTemplateFileName();
+							AttachmentFormat attachmentFormat = null;
+							attachmentFormat = new AttachmentDateFormat();
+							filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
+					    convertHtmlToDocFile(DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context), filePath);
+					    downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+						//RequestContext.getCurrentInstance().execute("noticeDlg.show()");
 				}
 			}
 		} finally {
 			context = null;
 		}
 	}
-	*/
+	
 	private void validateViewNotice() {
 		setViewNoticeFlag(true);
 		if (getManagedBean().getContractVer().getCtTermination().getDecisionDate() == null
@@ -1087,12 +1126,12 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 * Method used to call during generation of letter
 	 * This method used to retrieve portal information 
 	 */
- /*   private String getServerUrl() {
+    private String getServerUrl() {
 		 PortletRequest portletRequest = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		return requestURL.substring(0, requestURL.length()	- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-	}*/
+	}
     
     /**
 	 * Method used to download file from database
@@ -1328,4 +1367,22 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
     public void onRowUnselect(UnselectEvent event) {
     	getManagedBean().setButtonHideActive(true);
     }
+    
+
+	/**
+	 * The method used to retrieve filename of the file to download
+	 * according to template type.
+	 * 
+	 * @return the filename
+	 */
+	private String getTemplateFileName() {
+		if (getManagedBean().isTermination()) {
+			return "termination-notice.docx";
+		} else if (getManagedBean().isMutualTermination()) {
+			return "mutual-termination-notice.docx";
+		} else if (getManagedBean().isRemedy()) {
+			return "remedy-notice.docx";
+		}
+		return null;
+	}
 }
