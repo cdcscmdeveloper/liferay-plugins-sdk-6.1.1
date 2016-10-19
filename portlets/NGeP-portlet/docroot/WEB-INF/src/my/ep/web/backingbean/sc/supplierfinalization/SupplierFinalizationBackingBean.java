@@ -6417,6 +6417,10 @@ public class SupplierFinalizationBackingBean extends
 								.getRequestNoteItemId());
 					}
 					reqDTO.setRequestItemIds(requestItemIds);
+					TplSpecZoneDtl specZone = getManagedBean().getCurrentZone();
+					if(specZone != null){
+						reqDTO.setSpecZoneId(specZone.getSpecZoneId());
+					}
 					reqDTO.setRefinalize(getManagedBean().getQtRefinalized());
 					resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedCommonSuppliersByItem(reqDTO);
