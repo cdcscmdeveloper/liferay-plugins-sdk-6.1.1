@@ -23,6 +23,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.BidStatusConst;
+import my.ep.constant.sc.BiddingConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -90,6 +91,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private Long interval;
 	private Long remainingBidTime;
 
+	private String remainingTime;
 	private String remainingHours;
 	private String remainingMinutes;
 	private String remainingSeconds;
@@ -143,7 +145,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				BigDecimal tolerancePercentage = new BigDecimal(
 						configRulevalue.getRuleValue());
 				Date ruleExpiryDate = configRulevalue.getExpDate();
-				if (!tolerancePercentage.equals(0) && (ruleExpiryDate == null || !ruleExpiryDate.before(new Date()))) {
+				if (!tolerancePercentage.equals(0)
+						&& (ruleExpiryDate == null || !ruleExpiryDate
+								.before(new Date()))) {
 					this.toleranceCheck = true;
 					BigDecimal tolerancePriceLowerBound = (new BigDecimal(100))
 							.subtract(tolerancePercentage);
@@ -255,6 +259,13 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 				if (resDTO.getScBidAction() != null) {
 					setScBidAction(resDTO.getScBidAction());
+					if (resDTO
+							.getScBidAction()
+							.getActionType()
+							.equalsIgnoreCase(
+									BiddingConst.BID_ACTION_TYPE_PAUSED)) {
+						setRemainingTime(remainingTimeAfterPauseCalculator());
+					}
 
 				}
 
@@ -287,11 +298,15 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * Navigate using external context.
-	 *
-	 * @param bidScheduleId the bid schedule id
-	 * @throws PortalException the portal exception
-	 * @throws SystemException the system exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param bidScheduleId
+	 *            the bid schedule id
+	 * @throws PortalException
+	 *             the portal exception
+	 * @throws SystemException
+	 *             the system exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void navigateUsingExternalContext(Long bidScheduleId)
 			throws PortalException, SystemException, IOException {
@@ -354,13 +369,18 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * Gets the online bid schedule details.
-	 *
-	 * @param bidScheduleID the bid schedule ID
-	 * @param supplierID the supplier ID
+	 * 
+	 * @param bidScheduleID
+	 *            the bid schedule ID
+	 * @param supplierID
+	 *            the supplier ID
 	 * @return the online bid schedule details
-	 * @throws PortalException the portal exception
-	 * @throws SystemException the system exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws PortalException
+	 *             the portal exception
+	 * @throws SystemException
+	 *             the system exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void getOnlineBidScheduleDetails(Long bidScheduleID, Long supplierID)
 			throws PortalException, SystemException, IOException {
@@ -380,6 +400,16 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 				setPackageRanking(resDTO.getPackageRanking());
 				setScBidAction(resDTO.getScBidAction());
+				//always set scBidAction object before this
+				if (resDTO.getScBidAction() != null
+						&& resDTO
+								.getScBidAction()
+								.getActionType()
+								.equalsIgnoreCase(
+										BiddingConst.BID_ACTION_TYPE_PAUSED)) {
+					setRemainingTime(remainingTimeAfterPauseCalculator());
+				}
+
 				List<ScBidPrice> fetchedBidPrices = resDTO.getBidPrices();
 				for (int i = 0; i < fetchedBidPrices.size(); i++) {
 					for (ScBidPrice bidPrice : this.getBidPrices()) {
@@ -522,9 +552,11 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * Gets the bid price totals.
-	 *
-	 * @param scBidPrice the sc bid price
-	 * @param itemPrice the item price
+	 * 
+	 * @param scBidPrice
+	 *            the sc bid price
+	 * @param itemPrice
+	 *            the item price
 	 * @return the bid price totals
 	 */
 	private Double getBidPriceTotals(ScBidPrice scBidPrice, BigDecimal itemPrice) {
@@ -679,9 +711,11 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * Duration calculator.
-	 *
-	 * @param startDate the start date
-	 * @param endDate the end date
+	 * 
+	 * @param startDate
+	 *            the start date
+	 * @param endDate
+	 *            the end date
 	 * @return the long
 	 */
 	private Long durationCalculator(Date startDate, Date endDate) {
@@ -1005,8 +1039,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * Retrive qt details.
-	 *
-	 * @param bid the bid
+	 * 
+	 * @param bid
+	 *            the bid
 	 */
 	private void retriveQtDetails(ScBidSchedule bid) {
 		IQTDetailSO qTDetailSO = null;
@@ -1461,4 +1496,40 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		this.scQt = scQt;
 	}
 
+	/**
+	 * @return the remainingTime
+	 */
+	public String getRemainingTime() {
+		return remainingTime;
+	}
+
+	/**
+	 * @param remainingTime
+	 *            the remainingTime to set
+	 */
+	public void setRemainingTime(String remainingTime) {
+		this.remainingTime = remainingTime;
+	}
+
+	private String remainingTimeAfterPauseCalculator() {
+		if (this.scBidAction != null
+				&& this.scBidAction.getActionType().equalsIgnoreCase(
+						BiddingConst.BID_ACTION_TYPE_PAUSED)) {
+			long durationInMills = this.getScBidSchedule().getEndDate()
+					.getTime()
+					- this.scBidAction.getCreatedDate().getTime();
+
+			long diffSeconds = durationInMills / 1000 % 60;
+			long diffMinutes = durationInMills / (60 * 1000) % 60;
+			long diffHours = durationInMills / (60 * 60 * 1000) % 24;
+			String duration = durationFormat.format(diffHours) + ":"
+					+ durationFormat.format(diffMinutes) + ":"
+					+ durationFormat.format(diffSeconds);
+			
+			System.out.println("Remaing bid time is : $$$$$"+duration);
+			return duration;
+		} else {
+			return "";
+		}
+	}
 }
