@@ -19,10 +19,14 @@
 		    <f:event type="preRenderView" update="@form" listener="#{rptRequestBackingBean.getLatestStatusCodeForRequests()}" />
 		</f:metadata>
 		
-		<p:commandButton icon="ui-icon-refresh" value="refresh" process="@form"
+		<p:commandLink id="refreshId" partialSubmit="true" process="@this"
 			action="#{rptRequestBackingBean.getLatestStatusCodeForRequests()}" update="@form">
-		</p:commandButton>
-			
+			<p:graphicImage value="/css/images/design/ico-refresh.png"/>
+		</p:commandLink>&#160;
+		
+		<h:outputText value="Click Refresh to get the latest status update.">
+		</h:outputText>
+		
 		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 	
 			<tr>
@@ -41,8 +45,31 @@
 
 									<ac:paginator for="rptRequestTable" />
 									
+									<p:column headerText="Job Id">
+										<h:outputText value="#{rptRequest.jobId}"/>
+									</p:column>
+									
+									<p:column headerText="Report Module">
+										<h:outputText value="#{rptRequestBackingBean.getReportModule(rptRequest.reportCode)}"/>
+									</p:column>
+									
 									<p:column headerText="Report Name">
-										<h:outputText value="#{rptRequestBackingBean.getReportTitle(rptRequest.reportCode)}"/>
+										<h:outputText value="#{rptRequestBackingBean.getReportName(rptRequest.reportCode)}"/>
+									</p:column>
+									
+	      							<p:column headerText="Date/Time"
+										style="text-align: right;width:10%; padding:5px!important; ">
+
+										<h:outputText value="#{rptRequest.createdDate}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</h:outputText>
+										
+										<br/>
+										
+										<h:outputText value="#{rptRequest.createdDate}">
+											<f:convertDateTime pattern="hh:mm:ss a" />
+										</h:outputText>
+
 									</p:column>
 									
 									<p:column headerText="Status">
@@ -50,29 +77,16 @@
 									</p:column>
 									
 									<p:column headerText="Action">
-									
-										<p:commandButton icon="ui-icon-arrowthick-1-s" value="download" rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}"
-											ajax="false" update="@form" onstart="blkReportContent.show();"
-															id="falseGenerate" oncomplete="blkReportContent.hide();">
+										
+										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}"
+											onstart="blkReportContent.show();" update="@form"
+															id="falseGenerate" ajax="false">
 											<p:fileDownload
 												value="#{rptRequestBackingBean.generateReport(rptRequest)}" />
-										</p:commandButton>
+											<p:graphicImage value="/css/images/design/download.png"
+												style="margin-right:2px;" />
+										</p:commandLink>
 									
-									</p:column>
-	      			
-	      							<p:column headerText="Date/Time"
-										style="text-align: right;width:10%; padding:5px!important; ">
-
-										<h:outputText value="#{rptRequest.createdDate}">
-											<f:convertDateTime pattern="dd-MM-yyyy" />
-										</h:outputText>
-	
-										<br />
-	
-										<h:outputText value="#{rptRequest.createdDate}">
-											<f:convertDateTime pattern="hh:mm:ss a" />
-										</h:outputText>
-
 									</p:column>
 
 	   								<p:ajax event="rowSelectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" />

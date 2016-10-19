@@ -88,6 +88,7 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
@@ -174,11 +175,11 @@ public class ReportBackingBean extends
 	/** The module value. */
 	private String moduleValue;
 
-	/** The report name. */
-	private String reportName;
-
 	/** The report value. */
 	private String reportValue;
+
+	/** The report name. */
+	private String reportName;
 
 	/** The report category. */
 	private String reportCategory;
@@ -18721,7 +18722,7 @@ public class ReportBackingBean extends
 			}
 		}
 	}
-
+	
 	/**
 	 * fileGenerateReport - Ut will generate report based on generated URL.
 	 * 
@@ -18820,7 +18821,9 @@ public class ReportBackingBean extends
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IRPTRequestSO.class);
 					
-					rptRequestSO.generateReport(reportStr, this.getReportValue());
+					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportStr, this.getReportValue());
+					
+					this.getManagedBean().setJobId(String.valueOf(resDTO.getJobId()));
 					
 					RequestContext.getCurrentInstance().execute("ex.show();");
 					
@@ -20401,4 +20404,37 @@ public class ReportBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "reportcontenttestingmain");
 	}
+	
+	public void redirect() throws IOException {
+		
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
+				.getRequestScope(WebKeys.THEME_DISPLAY);
+
+
+		String commonUrl = "";
+		
+		try {
+			commonUrl = themeDisplay.getURLCurrent().substring(
+					0,
+					themeDisplay.getURLCurrent().indexOf(
+							themeDisplay.getLayout().getGroup()
+									.getFriendlyURL())
+							+ themeDisplay.getLayout().getGroup()
+									.getFriendlyURL().length());
+		} catch (PortalException e1) {
+			e1.printStackTrace();
+		} catch (SystemException e1) {
+			e1.printStackTrace();
+		}
+
+		String reportsRequested = commonUrl + "/" + "reports-requested";
+	    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+	    externalContext.redirect(reportsRequested);
+	}
+
 }
+	    
+	    
+	  
+	 
