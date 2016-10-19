@@ -10,6 +10,7 @@
  */
 package my.ep.web.managedbean.report;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -180,6 +181,9 @@ public class ReportMangedBean extends BaseManagedBean {
 	private List<SelectItem> searchField;
 	/** The search operator. */
 	private List<SelectItem> searchOperator;
+
+	private String jobId;
+	
 
 	/**
 	 * Gets the report jsp.
@@ -1042,4 +1046,19 @@ public class ReportMangedBean extends BaseManagedBean {
 	public void setReportStr(String reportStr) {
 		this.reportStr = reportStr;
 	}
+	
+	/**
+	 * @return the jobId
+	 */
+	public String getJobId() {
+		return jobId;
+	}
+
+	/**
+	 * @param jobId the jobId to set
+	 */
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
+	}
+
 }
