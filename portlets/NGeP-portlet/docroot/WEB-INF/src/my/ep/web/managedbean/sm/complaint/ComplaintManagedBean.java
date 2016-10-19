@@ -5,6 +5,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.commons.lang3.StringUtils;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -16,6 +18,7 @@ import my.ep.persistence.entity.pm.common.DiMyidentity;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmComplainant;
+import my.ep.persistence.entity.sm.SmComplainantAddress;
 import my.ep.persistence.entity.sm.SmComplaint;
 import my.ep.persistence.entity.sm.SmComplaintReview;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -26,8 +29,6 @@ import my.ep.web.bean.sm.ComplaintSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmComplaintSummaryVO;
-
-import org.apache.commons.lang3.StringUtils;
 
 @ManagedBean(name = "complaintMB")
 @SessionScoped
@@ -83,6 +84,8 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private String myIdentityResidentialStatus;
 	
 	private List<SmComplaintSummaryVO> complaintSummaryLs;
+	private SmComplainantAddress identificationAddress;
+	private SmComplainantAddress mailingAddress;
 
 	public SmComplaint getSmComplaint() {
 		return smComplaint;
@@ -437,5 +440,21 @@ public class ComplaintManagedBean extends BaseManagedBean {
 
 	public void setComplaintSummaryLs(List<SmComplaintSummaryVO> complaintSummaryLs) {
 		this.complaintSummaryLs = complaintSummaryLs;
+	}
+
+	public SmComplainantAddress getIdentificationAddress() {
+		return identificationAddress;
+	}
+
+	public SmComplainantAddress getMailingAddress() {
+		return mailingAddress;
+	}
+
+	public void setIdentificationAddress(SmComplainantAddress identificationAddress) {
+		this.identificationAddress = identificationAddress;
+	}
+
+	public void setMailingAddress(SmComplainantAddress mailingAddress) {
+		this.mailingAddress = mailingAddress;
 	}
 }

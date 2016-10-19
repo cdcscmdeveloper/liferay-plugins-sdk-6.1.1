@@ -30,6 +30,7 @@ import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sm.DisciplinaryActionConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -55,17 +56,21 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAttachment;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmComplainant;
+import my.ep.persistence.entity.sm.SmComplainantAddress;
 import my.ep.persistence.entity.sm.SmComplaint;
 import my.ep.persistence.entity.sm.SmComplaintOffense;
 import my.ep.persistence.entity.sm.SmComplaintResponse;
 import my.ep.persistence.entity.sm.SmComplaintReview;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.sm.ComplaintSearchBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.complaint.ComplaintManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -111,9 +116,14 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 			}
 		}
 		
+		if(getManagedBean().isSameAddress()){
+			getManagedBean().getMailingAddress().setSmAddress((SmAddress)getManagedBean().getIdentificationAddress().getSmAddress().cloneEntity());
+		}
+		getManagedBean().getSmComplainant().getSmComplainantAddresses().add(getManagedBean().getMailingAddress());
+		getManagedBean().getSmComplainant().getSmComplainantAddresses().add(getManagedBean().getIdentificationAddress());
+		
 		
 		reqDTO.setAttachmentLs(getManagedBean().getComplaintDocs());
-		
 		IComplaintSO reqSO = (IComplaintSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IComplaintSO.class);
 		reqDTO.setSmComplaint(this.getManagedBean().getSmComplaint());
@@ -180,6 +190,16 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		if(!getManagedBean().getSmComplaint().getSmComplaintOffenses().isEmpty()){
 			for(SmComplaintOffense offense : getManagedBean().getSmComplaint().getSmComplaintOffenses()){
 				getManagedBean().getSelectedOffenses().add(offense.getOffense().getParameterId().toString());
+			}
+		}
+		
+		if(resDTO.getSmComplaint().getSmComplainant().getSmComplainantAddresses().size() > 0){
+			for(SmComplainantAddress complaintAddr : resDTO.getSmComplaint().getSmComplainant().getSmComplainantAddresses()){
+				if(complaintAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.PERM_ADD)){
+					getManagedBean().setIdentificationAddress(complaintAddr);
+				}else{
+					getManagedBean().setMailingAddress(complaintAddr);
+				}
 			}
 		}
 		
@@ -594,33 +614,81 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, COMPLAINT_VIEW);
 	}
 	
+	/**
+	 * Prerednder for lodge Complaint
+	 */
 	public void prerenderLodgeComplaint(){
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
 		if (this.getManagedBean().getSmComplaint() == null) {
+			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			PmParameter defaultIdentificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
+			
 			log.info("--------------BackingBean is Null--------------------");
 			getManagedBean().setSmComplaint(new SmComplaint());
 			getManagedBean().setSmComplainant(new SmComplainant());
-			getManagedBean().getSmComplainant().setSmAddress(new SmAddress());
-			getManagedBean().getSmComplainant().getSmAddress().setPmCountry(new PmCountry());
-			getManagedBean().getSmComplainant().getSmAddress().setPmState(new PmState());
-			getManagedBean().getSmComplainant().getSmAddress().setPmDistrict(new PmDistrict());
-			getManagedBean().getSmComplainant().getSmAddress().setPmCity(new PmCity());
+
 			getManagedBean().getSmComplainant().setIdentificationType(new PmParameter());
 			getManagedBean().getSmComplainant().setNationality(new PmCountry());
+			getManagedBean().setIdentificationAddress(new SmComplainantAddress());
+			getManagedBean().getIdentificationAddress().setSmAddress(new SmAddress());
+			getManagedBean().getIdentificationAddress().getSmAddress().setPmCountry(defaultCountry);
+			getManagedBean().getIdentificationAddress().getSmAddress().setPmState(new PmState());
+			getManagedBean().getIdentificationAddress().getSmAddress().setPmDistrict(new PmDistrict());
+			getManagedBean().getIdentificationAddress().getSmAddress().setPmCity(new PmCity());
+			getManagedBean().getIdentificationAddress().setAddressType(SupplierManagementConst.MAIL_ADD);
+			getManagedBean().getIdentificationAddress().setSmComplainant(getManagedBean().getSmComplainant());
+			
+			getManagedBean().setMailingAddress(new SmComplainantAddress());
+			getManagedBean().getMailingAddress().setSmAddress(new SmAddress());
+			getManagedBean().getMailingAddress().getSmAddress().setPmCountry((PmCountry)defaultCountry.cloneEntity());
+			getManagedBean().getMailingAddress().getSmAddress().setPmState(new PmState());
+			getManagedBean().getMailingAddress().getSmAddress().setPmDistrict(new PmDistrict());
+			getManagedBean().getMailingAddress().getSmAddress().setPmCity(new PmCity());
+			getManagedBean().getMailingAddress().setAddressType(SupplierManagementConst.PERM_ADD);
+			getManagedBean().getMailingAddress().setSmComplainant(getManagedBean().getSmComplainant());
 			
 			//Default country to MY
-			getManagedBean().getSmComplainant().getSmAddress().setPmCountry(SmCommonUtil.retrieveCountryByCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE));
 			getManagedBean().getSmComplainant().setNationality(SmCommonUtil.retrieveCountryByCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE));
+			getManagedBean().getSmComplainant().setIdentificationType(defaultIdentificationType);
 			
 			getManagedBean().setComplaintDocs(new ArrayList<SmAttachment>());
 			getManagedBean().getSmComplaint().setSmSupplier(new SmSupplier());
+			
+			getManagedBean().getSmComplainant().setSmComplainantAddresses(new ArrayList<SmComplainantAddress>());
+			
 		}
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, LODGE_COMPLAINT);
+	}
+	
+	public void nationalityOnChange(){
+		SmComplainant complainant = getManagedBean().getSmComplainant();
+		Long countryId = getManagedBean().getSmComplainant().getNationality().getCountryId();
+		String identicationCode = null;
+	
+		if(countryId != null){
+			PmCountry country = SmCommonUtil.retrievePmCountryById(countryId);
+			complainant.setNationality(country);
+			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) || 
+					country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
+				identicationCode = ParameterConst.IDENTIFICATION_TYPES_IC;
+			}else{
+				identicationCode = ParameterConst.IDENTIFICATION_TYPES_PASSPORT;
+			}
+		}else{
+/*			PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			complainant.setNationality(defaultNationality);*/
+			identicationCode = ParameterConst.IDENTIFICATION_TYPES_IC;
+		}
+		
+		//owner.setNationality(country);
+		PmParameter identObj = ParameterHelper.getInstance().
+				getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, identicationCode);
+		complainant.setIdentificationType(identObj);
 	}
 	
 	/**
@@ -632,8 +700,12 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		//complaintDataModel = new ComplaintPagingDataModel();
 	}
 	
+	/**
+	 * Identification Type on change
+	 */
 	public void identificationTypeOnChange(){
-		PmParameter identType = retrieveIdentificationParam();
+		PmParameter identType = ParameterHelper.getInstance().
+				getPmParameterById(getManagedBean().getSmComplainant().getIdentificationType().getParameterId());
 	
 		if(getManagedBean().getSmComplainant().getIdentificationNo() != null){
 			if(getManagedBean().getSmComplainant().getIdentificationType() != null){
@@ -648,16 +720,6 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 
 		getManagedBean().getSmComplainant().setIdentificationType(identType);
 		
-	}
-		
-	
-	public PmParameter retrieveIdentificationParam(){
-		ParameterReqDTO reqDTO = new ParameterReqDTO();
-		reqDTO.setParameterId(getManagedBean().getSmComplainant().getIdentificationType().getParameterId());
-		
-		ParameterResDTO resDTO = SmServiceLookup.getParameterSO().retrieveParameterById(reqDTO);
-		
-		return resDTO.getPmParameter();
 	}
 	
 	/**
