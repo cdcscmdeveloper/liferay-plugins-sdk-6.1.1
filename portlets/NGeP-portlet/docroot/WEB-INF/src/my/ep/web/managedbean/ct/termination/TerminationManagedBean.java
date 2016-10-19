@@ -43,6 +43,7 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private String textBeforeSign;
 	private String buttonAction;
 	private String ptjCodeName;
+	private String noticeTypelbl;
 	private String ptjCodeNameSearchValue;
 
 	private boolean termination;
@@ -52,6 +53,7 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private boolean viewContract = false;
 	private boolean  buttonHideActive = true;
 	private boolean  selectAll;
+	private boolean  disableField;
 
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -405,6 +407,20 @@ public class TerminationManagedBean extends BaseManagedBean {
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
 	}
-	
-	
+
+	public String getNoticeTypelbl() {
+		return noticeTypelbl;
+	}
+
+	public void setNoticeTypelbl(String noticeTypelbl) {
+		this.noticeTypelbl = noticeTypelbl;
+	}
+
+	public boolean isDisableField() {
+		return disableField;
+	}
+
+	public void setDisableField(boolean disableField) {
+		this.disableField = disableField;
+	}
 }
