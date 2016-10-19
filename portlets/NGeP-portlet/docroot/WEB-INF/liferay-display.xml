@@ -156,6 +156,7 @@
 			<portlet id="PendingResponseDpQt"/>
 			<portlet id="OnlineBiddingStatus"/>
 			<portlet id="scQTCheckSupplierQualification" />
+			<portlet id="scMobileNoticeBoard" />
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
@@ -252,6 +253,7 @@
 			<portlet id="SvcTasklist"></portlet>
 			<portlet id="assignedTaskSearch"></portlet>
 			<portlet id="passwordcipher"></portlet>
+			<portlet id="Mobile Notice Board"></portlet>
 		</category>
 
 		<category name="Template">
