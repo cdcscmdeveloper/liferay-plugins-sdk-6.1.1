@@ -6,12 +6,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.complainant.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.complainant.details']}" toggleable="true" id="pnlComplainant">
 		<table class="customTbl">
 			<c:if test="#{complaintBackingBean.managedBean.smComplainant.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
 				<tr>
 					<td class="tdTitle">
-						<p:outputLabel value="Status From MyIdentity" />
+						<p:outputLabel value="#{lbl['lbl.sm.complainant.myidentity.status']}" rendered="#{!complaintBackingBean.managedBean.smComplainant.brandNew}"/>
 					</td>
 					<td class="tdContent" colspan="3">
 						<h:outputText 
@@ -44,6 +44,7 @@
 				<td class="tdContent"><p:selectOneMenu required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.nationality']}" id="complntNationality"
 						value="#{complaintBackingBean.managedBean.smComplainant.nationality.countryId}" disabled="#{complainantDtlViewFLag}">
 						<f:selectItems  value="#{complaintBackingBean.getCountryDropDown()}" />
+						<p:ajax event="change" update="complntIdentType,pnlComplIdentType,pnlComplIdentNo" listener="#{complaintBackingBean.nationalityOnChange()}" />
 					</p:selectOneMenu>
 					<p:message id="complntNationalityMsg" for="complntNationality" display="icon" /></td>
 			</tr>
@@ -82,8 +83,8 @@
 									label="#{lbl['lbl.sm.identificationno']}" readonly="#{complainantDtlViewFLag}"
 									value="#{complaintBackingBean.managedBean.smComplainant.identificationNo}"
 									size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}">
-									<f:validateRegex pattern="[0-9]+" />
-									<f:validateLength minimum="12"></f:validateLength>
+									<f:validateRegex pattern="[0-9]+" disabled="#{empty param['disableValidation']}" />
+									<f:validateLength minimum="12" disabled="#{empty param['disableValidation']}" ></f:validateLength>
 								</p:inputText>
 							</c:when>
 							
@@ -99,121 +100,42 @@
 						</p:outputPanel>
 					</td>
 			</tr>
-
+			
 			<tr>
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.address']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
+				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.complainant.agency.name']}" /></td>
+				<td class="tdContent"><p:inputText id="complntAgencyName" label="#{lbl['lbl.sm.complainant.agency.name']}"
+						value="#{complaintBackingBean.managedBean.smComplainant.agencyName}" maxlength="80" readonly="#{complainantDtlViewFLag}"
+						size="40" />
+						<p:message id="complntAgencyNameMsg" for="complntAgencyName" display="icon" />
 				</td>
-				<td class="tdContent"><p:inputText size="50" colspan="3" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.address']}" id="complntAddress"
-						value="#{complaintBackingBean.managedBean.smComplainant.smAddress.address1}" maxlength="255" readonly="#{complainantDtlViewFLag}" />
-						<p:message id="complntAddressMsg" for="complntAddress" display="icon" />
-				</td>
-						
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.country']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td class="tdContent"><p:selectOneMenu id="complntCountry" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.country']}"
-						value="#{complaintBackingBean.managedBean.smComplainant.smAddress.pmCountry.countryId}" disabled="#{complainantDtlViewFLag}">
-						<f:selectItems  value="#{complaintBackingBean.getCountryDropDown()}" />
-						<p:ajax event="change" update="complntState" />
-					</p:selectOneMenu>
-					<p:message id="complntCountryMsg" for="complntCountry" display="icon" />
+									
+				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.complainant.unit.name']}" /></td>
+				<td class="tdContent"><p:inputText id="complntUnitName" label="#{lbl['lbl.sm.complainant.unit.name']}"
+						value="#{complaintBackingBean.managedBean.smComplainant.unitName}" maxlength="80" readonly="#{complainantDtlViewFLag}"
+						size="40" />
+						<p:message id="complntUnitNameMsg" for="complntUnitName" display="icon" />
 				</td>
 			</tr>
-			<tr>
-				<td class="tdTitle"></td>
-				<td class="tdContent"><p:inputText size="50" colspan="3" readonly="#{complainantDtlViewFLag}"
-						value="#{complaintBackingBean.managedBean.smComplainant.smAddress.address2}" maxlength="255" /></td>
-						
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.state']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td class="tdContent"><p:selectOneMenu id="complntState" label="#{lbl['lbl.sm.state']}" required="#{!empty param['disableValidation']}"
-						value="#{complaintBackingBean.managedBean.smComplainant.smAddress.pmState.stateId}" disabled="#{complainantDtlViewFLag}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="state"
-							value="#{complaintBackingBean.getStateDropDownByCountry(complaintBackingBean.managedBean.smComplainant.smAddress.pmCountry.countryId)}"
-							itemValue="#{state.stateId}"
-							itemLabel="#{state.stateName}">
-						</f:selectItems>
-						<p:ajax event="change" update="complntDistrict" />
-					</p:selectOneMenu>
-					<p:message id="complntStateMsg" for="complntState" display="icon" />
-				</td>
-			</tr>
-			<tr>
-				<td class="tdTitle"></td>
-				<td class="tdContent"><p:inputText size="50" colspan="3" maxlength="255" readonly="#{complainantDtlViewFLag}"
-						value="#{complaintBackingBean.managedBean.smComplainant.smAddress.address3}" /></td>
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.district']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td class="tdContent"><p:selectOneMenu id="complntDistrict" label="#{lbl['lbl.sm.district']}" disabled="#{complainantDtlViewFLag}"
-				value="#{complaintBackingBean.managedBean.smComplainant.smAddress.pmDistrict.districtId}" required="#{!empty param['disableValidation']}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="district" 
-							value="#{complaintBackingBean.getDistrictDropDownByState(complaintBackingBean.managedBean.smComplainant.smAddress.pmState.stateId)}"
-							itemValue="#{district.districtId}"
-							itemLabel="#{district.districtName}">
-						</f:selectItems>
-						<p:ajax event="change" update="complntCity" />
-					</p:selectOneMenu>
-					<p:message id="complntDistrictMsg" for="complntDistrict" display="icon" />
-				</td>
-			</tr>
-			<tr>
-				<td class="tdTitle"></td>
-				<td class="tdContent"></td>
-						
-				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.towncity']}" /></td>
-				<td class="tdContent"><p:selectOneMenu id="complntCity" label="#{lbl['lbl.sm.towncity']}" disabled="#{complainantDtlViewFLag}"
-				value="#{complaintBackingBean.managedBean.smComplainant.smAddress.pmCity.cityId}" required="#{!empty param['disableValidation']}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="city"
-							value="#{complaintBackingBean.getCityDropDownByDistrict(complaintBackingBean.managedBean.smComplainant.smAddress.pmDistrict.districtId)}"
-							itemLabel="#{city.cityName}" itemValue="#{city.cityId}" />
-					</p:selectOneMenu>
-					<p:message id="complntCityMsg" for="complntCity" display="icon" />
-				</td>
-			</tr>
-
-			<tr>
-				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td class="tdContent"><p:inputText required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.postcode']}" id="complntPostcode"
-						value="#{complaintBackingBean.managedBean.smComplainant.smAddress.postcode}" readonly="#{complainantDtlViewFLag}"
-						size="40" maxlength="10" />
-					<p:message id="complntPostcodeMsg" for="complntPostcode" display="icon" />		
-				</td>
-				
-				
-			</tr>
-
+			
 			<tr>
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.phoneno']}" /></td>
 				<td class="tdContent">
 					<ac:phone id="txtPhoneNoId" isMobile="false" label="#{lbl['lbl.sm.phoneno']}" disabled="#{complainantDtlViewFLag}"
-						countryCode="#{complaintBackingBean.managedBean.smComplainant.phoneCountry}" 
-						areaCode="#{complaintBackingBean.managedBean.smComplainant.phoneArea}" 
-						number="#{complaintBackingBean.managedBean.smComplainant.phoneNo}"  
+						countryCode="#{complaintBackingBean.managedBean.smComplainant.homePhoneCountry}" 
+						areaCode="#{complaintBackingBean.managedBean.smComplainant.homePhoneArea}" 
+						number="#{complaintBackingBean.managedBean.smComplainant.homePhoneNo}"  
 						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
 				</td>
 				
 				<td class="tdTitle"><p:outputLabel
-						value="#{lbl['lbl.sm.faxno']}" /></td>
+						value="#{lbl['lbl.sm.complainant.phone.office']}" /></td>
 				<td class="tdContent">
-					<ac:phone id="txtFaxNoId" isMobile="false" label="#{lbl['lbl.sm.faxno']}" disabled="#{complainantDtlViewFLag}"
-						countryCode="#{complaintBackingBean.managedBean.smComplainant.faxCountry}" 
-						areaCode="#{complaintBackingBean.managedBean.smComplainant.faxArea}" 
-						number="#{complaintBackingBean.managedBean.smComplainant.faxNo}"  
-						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" />
+					<ac:phone id="txtOfficeNoId" isMobile="false" label="#{lbl['lbl.sm.complainant.phone.office']}" disabled="#{complainantDtlViewFLag}"
+						countryCode="#{complaintBackingBean.managedBean.smComplainant.phoneCountry}" 
+						areaCode="#{complaintBackingBean.managedBean.smComplainant.phoneArea}" 
+						number="#{complaintBackingBean.managedBean.smComplainant.phoneNo}"  
+						validatorMessage="#{lbl['lbl.sm.complainant.phone.office']} - #{lbl['lbl.sm.invalidNo']}" />
 				</td>
 			</tr>
 			
@@ -227,9 +149,18 @@
 						countryCode="#{complaintBackingBean.managedBean.smComplainant.mobileCountry}" 
 						areaCode="#{complaintBackingBean.managedBean.smComplainant.mobileArea}" 
 						number="#{complaintBackingBean.managedBean.smComplainant.mobileNo}" 
-						isMobile="true" 
+						isMobile="true" required="#{!empty param['disableValidation']}"
 						validatorMessage="#{lbl['lbl.sm.mobilenumber']} - #{lbl['lbl.sm.invalidNo']}"
 						telcoId="#{complaintBackingBean.managedBean.smComplainant.mobileTelcoId}" /></td>
+						
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.complainant.designation']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent"><p:inputText size="40" id="complntDesignation" label="#{lbl['lbl.sm.complainant.designation']}" readonly="#{complainantDtlViewFLag}"
+					value="#{complaintBackingBean.managedBean.smComplainant.email}" required="#{!empty param['disableValidation']}" maxlength="80" />
+					<p:message id="complntDesignationMsg" for="complntDesignation" display="icon" />		
+				</td>
 			</tr>
 			<tr>
 				<td class="tdTitle">
@@ -240,6 +171,8 @@
 				value="#{complaintBackingBean.managedBean.smComplainant.email}" required="#{!empty param['disableValidation']}" maxlength="80" />
 				<p:message id="complntEmailMsg" for="complntEmail" display="icon" />		
 				</td>
+				
+				
 			</tr>
 
 			<c:if test="#{complaintBackingBean.managedBean.smComplaint.brandNew}">
@@ -255,8 +188,8 @@
 					</td>
 				</tr>
 			</c:if>
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantAddress.xhtml"></ui:include>
 		</table>
-
 	</p:panel>
 	
 	<p:dialog header="#{lbl['lbl.sm.complainant.myidentity.info']}" widgetVar="myidentityDlg" modal="true" height="250" width="500">
