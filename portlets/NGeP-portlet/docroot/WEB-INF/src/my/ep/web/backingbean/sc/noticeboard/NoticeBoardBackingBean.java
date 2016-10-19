@@ -158,7 +158,8 @@ public class NoticeBoardBackingBean extends
 	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml";
 	private static final String NB_MAIN_PAGE = "/xhtml/sc/noticeboard/resultview/nbMainPage.xhtml";
 	private static final String REGIST_MSG_KEY = "lbl.sc.notice.board.regist.msg";
-	 
+	private static final String MOBILE_NB_MAIN_PAGE = "/xhtml/sc/noticeboard/mobileview/nbMainPage.xhtml";
+	
 	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
 	private IPagingDataModel<ScQtCategory> categoryCodesDataModel = new QTCategoryCodesDataModel();
 	private boolean visible;
@@ -698,6 +699,18 @@ public class NoticeBoardBackingBean extends
 	}
 	
 	/**
+	 * Navigate to NoticeBoard view page on click of NoticeBoard tab
+	 */
+	public void preRenderMobileView() {
+		
+		super.renewSesionObject();
+		searchNoticeBoard();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, MOBILE_NB_MAIN_PAGE+"?faces-redirect=true");
+	}
+	
+	/**
 	 * Navigate to supplier qualification criteria page when click on liferay menu
 	 */
 	public void preRenderSuppQualView() {
@@ -831,12 +844,15 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setMinistryProfile(new PmOrgProfile());
 		this.getManagedBean().setPtjGroupProfile(new PmOrgProfile());
 		this.getManagedBean().setPtjProfile(new PmOrgProfile());
+		this.getManagedBean().getSiteVisitDataBean().setPassDays(0);
+		this.getManagedBean().getPublishSearchDataBean().setPassDays(0);
 		this.getManagedBean().setPublishSearchDataBean(
 				new NoticeBoardSearchDataBean());
 		this.getManagedBean().setBriefSearchDataBean(
 				new NoticeBoardSearchDataBean());
 		this.getManagedBean().setSiteVisitDataBean(
 				new NoticeBoardSearchDataBean());
+		this.getManagedBean().setClsDataBean(new NoticeBoardSearchDataBean());
 		clearTreeNode("location");
 	}
 
