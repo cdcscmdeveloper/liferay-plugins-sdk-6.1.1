@@ -2005,7 +2005,7 @@ public class TaskReassignmentBackingBean extends
 			throw new EpException(MessageConst.ERROR_770097);
 		}
 		List<String> assigneeUsers = task.getAssignees();
-		if (assigneeUsers !=null && assigneeUsers.isEmpty()) {
+		if (assigneeUsers !=null && !assigneeUsers.isEmpty()) {
 			// remove the current user.
 			if (assigneeUsers.contains(getManagedBean()
 					.getTaskAssignmentSearchBean().getUser().getLoginId())) {
