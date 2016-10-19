@@ -19530,7 +19530,13 @@ public class ReportBackingBean extends
 						"lbl.txt.select",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						getFacesScopes().getUserLocale()));
-				this.setPmOrgCategory(ReportConst.FEDERAL_GOVT);
+				if (StringUtils.isNotEmpty(this.getPmOrgCategory())
+						&& this.getPmOrgCategory().equals(
+								ReportConst.OTHERS)) {
+					this.setPmOrgCategory(ReportConst.OTHERS);
+				} else {
+					this.setPmOrgCategory(ReportConst.FEDERAL_GOVT);
+				}
 				this.setItemsList(items);
 			} else {
 				if (StringUtils.isNotEmpty(this.getPmOrgCategory())
