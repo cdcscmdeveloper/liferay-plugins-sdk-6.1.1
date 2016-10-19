@@ -2753,7 +2753,7 @@ public class ProfileManagementBackingBean extends
 		}else{
 			if(getManagedBean().getSearchOrgCategory() != null){
 				SelectItem[] items =  getOrgTypeDropdownValues();
-				List<String> orgTypeIds = new ArrayList<>();
+				List<String> orgTypeIds = new ArrayList<String>();
 				for(SelectItem item: items){
 					if(item.getValue() != null){
 						orgTypeIds.add(item.getValue().toString());
@@ -3461,8 +3461,8 @@ public class ProfileManagementBackingBean extends
 	 * @param user
 	 */
 	private void validateRoles(PmUserOrg userOrg) {
-		List<String> uniqueRoles = new ArrayList<String>(
-				Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
+		//List<String> uniqueRoles = new ArrayList<String>(
+		//		Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
 		boolean activeRole = false;
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		List<PmUserRole> userRoleList = null;

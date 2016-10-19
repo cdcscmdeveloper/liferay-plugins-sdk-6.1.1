@@ -2740,7 +2740,7 @@ public class SupportDocumentBackingBean extends
 	
 	public List<PmCertBody> retrieveGlpList(){
 		ICertBodySO bodySO = null;
-		List<PmCertBody> certBodyList = new ArrayList<>();
+		List<PmCertBody> certBodyList = new ArrayList<PmCertBody>();
 		try{
 			ISearchBean<PmCertBody> searchBean = new SearchBean<PmCertBody>();
 			
