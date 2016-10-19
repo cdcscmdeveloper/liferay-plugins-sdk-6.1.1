@@ -142,6 +142,15 @@ public class SchedulerConstants {
 	//SPA OUT BOUND
 	
 	public static final String SPA_MASTER_DATA_MATERIAL_JOB = "MATERIAL MASTER DATA JOB";
+	public static final String SPA_MASTER_DATA_SEGMENT_JOB = "MATERIAL MASTER DATA SEGMENT JOB";
+	public static final String SPA_MASTER_DATA_FAMILY_JOB = "MATERIAL MASTER DATA FAMILY JOB";
+	public static final String SPA_MASTER_DATA_CLASS_JOB = "MATERIAL MASTER DATA CLASS JOB";
+	public static final String SPA_MASTER_DATA_COMMODITY_JOB = "MATERIAL MASTER DATA COMMODITY JOB";
+	public static final String SPA_MASTER_DATA_COLOR_JOB = "MATERIAL MASTER DATA COLOR JOB";
+	public static final String SPA_MASTER_DATA_BRAND_JOB = "MATERIAL MASTER DATA BRAND JOB";
+	public static final String SPA_MASTER_DATA_MEASUREMENT_JOB = "MATERIAL MASTER DATA MEASUREMENT JOB";
+	public static final String SPA_MASTER_DATA_TYPE_JOB = "MATERIAL MASTER DATA TYPE JOB";
+	
 	
 
 	// 1GFMAS OUT BOUND
@@ -178,6 +187,7 @@ public class SchedulerConstants {
 	public static final String GFMAS_SM_RECEIPT_IN_JOB_DESC = "Job run once daily 7 AM";
 	public static final String GFMAS_MASTERDATA_MATERIAL_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
 	public static final String SPA_JOB_DESC = "Job run every 5 minutes";
+	public static final String SPA_JOB_DAILY_DESC = "Job run once daily after 12 AM";
 
 	// CRM Job Group ID
 	public static final String CRM_INTEGRATION_JOB_GROUP = "CRM INTEGRATION JOB GROUP";
