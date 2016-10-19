@@ -1828,13 +1828,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				SearchOperator.OPERATOR_EQUALS.value(), 
 				ppPlan.getPlanType().getParameterId()));
 		
-		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(planType)){
-			/* additional rules for PP if any*/
-			
-		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(planType)){
-			/* additional rules for EP if any*/
-
-		}
+//		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(planType)){
+//			/* additional rules for PP if any*/
+//			
+//		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(planType)){
+//			/* additional rules for EP if any*/
+//
+//		}
 		
 		existingPlans = PpCommonUtil.retrievePlanBySearchBean(searchBean);
 		if(existingPlans!=null && !existingPlans.isEmpty()){

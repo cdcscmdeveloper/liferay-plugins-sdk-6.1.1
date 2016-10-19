@@ -144,7 +144,7 @@ public class OrgProfileSearchBackingBean extends
 					resDTO = orgProfileSO.retrieveKPtjListByParents(reqDTO);
 				}
 				
-				if (resDTO.isSuccessful()) {
+				if (resDTO != null && resDTO.isSuccessful()) {
 					return resDTO.getOrgProfileResultBean();
 				}
 			} catch (Exception e) {
