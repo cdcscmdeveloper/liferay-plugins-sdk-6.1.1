@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+		<ui:param name="isChangesTab"
+			value="#{noticeBoardBackingBean.managedBean.selectedTab == ParameterConst.noticeBoardStatusChanges}" />
+
+		<p:dataTable id="nbsearchresults"
+			value="#{noticeBoardBackingBean.qtDataModel}" lazy="true"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			styleClass="nbsrhresultsStyleClass" style="width:100%" var="scqt"
+			rows="20">
+
+			<ac:paginator for="nbsearchresults" />
+
+			<p:column headerText="#{lbl['lbl.sc.title']}" style="width:27%;word-wrap:break-word;white-space: normal;">
+				<p:commandLink style="margin-right:20px;"
+					action="#{noticeBoardBackingBean.retrieveQTDetails(scqt[0])}">
+					<h:outputText value="#{scqt[1]}" />
+				</p:commandLink>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.ptj']}"
+				style="width:20%;white-space: normal;">
+				<ui:param name="date" value="#{noticeBoardBackingBean.retriveDatesforOrgProfile(scqt[3],scqt[6])}"></ui:param>
+				<h:outputText value="#{noticeBoardBackingBean.retrievePTJByOrgProfileId(scqt[2], date)}" />
+			</p:column>
+			<p:column style="width:11%;white-space: normal;">
+				
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sc.publish.date']}" />
+				<h:outputText value=" / #{lbl['lbl.sc.closing.date']}" />
+				<h:outputText value=" / #{lbl['lbl.sc.notice.board.countdowndays']}"
+					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}" />
+			</f:facet>
+			<h:outputText value="#{scqt[3]}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+				</h:outputText> <br/>
+				
+				<h:outputText value="#{scqt[4]}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+				</h:outputText> 
+
+				<ui:param name="closingChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentClosingDateMap[scqt[0]]}" />
+				<h:outputText
+					value="&#60;br/&#62;#{lbl['lbl.sc.updated.on']} "
+					styleClass="lastUpdated" escape="false"
+					rendered="#{isChangesTab and !empty closingChangeDate}" />
+				<h:outputText value="#{closingChangeDate}" styleClass="lastUpdated" rendered="#{isChangesTab and !empty closingChangeDate}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+				</h:outputText> <br/>
+				<h:outputText value="#{noticeBoardBackingBean.getClosingDays(scqt[4])}" 
+				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}"/>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.notice.board.view.bsv']}"
+				style="width:10%; white-space:normal; text-align:right;"
+				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
+				<h:outputText
+					value="#{(scqt[5] eq '1')?lbl['lbl.btn.yes']:lbl['lbl.btn.no']}" />
+						&#160;
+						<p:commandLink id="supRegIcon"
+					action="#{noticeBoardBackingBean.gotoSupplierRegistration(scqt[0])}"
+					rendered="#{scqt[5] eq '1'}"
+					title="#{lbl['lbl.sc.notice.board.self.registration.tooltip']}">
+					<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/register.png" />
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.action']}"
+				style="width:10%; white-space:normal; text-align:center;" rendered="#{noticeBoardBackingBean.managedBean.selectedTab ne ParameterConst.noticeBoardStatusCancelled ?'true':'false'}">
+				<ui:fragment
+					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
+					<p:commandLink id="chkQualIcon"
+						action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt[0])}"
+						title="#{lbl['lbl.sc.notice.board.check.supplier.qualification.tooltip']}">
+						<p:graphicImage 
+							value="#{CommonUIConstant.imagePathUptoDesign}/tick.png" rendered="#{noticeBoardBackingBean.displayImage}"/>
+					</p:commandLink>
+					<p:commandButton id="downloadIcon" icon="ui-icon-download"
+						style="background-color:transparent !important; border:0px none;"
+						ajax="false"
+						action="#{noticeBoardBackingBean.downloadAllQTDocuments(scqt[0])}"
+						title="#{lbl['lbl.sc.notice.board.download.quotation.tender.documents']}" />
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusClosed}">
+				<p:commandLink
+					action="#{noticeBoardBackingBean.showPriceSchedules(scqt[0])}">
+					<h:outputText value="#{lbl['lbl.sc.notice.board.price.schedule']}"
+						rendered="#{noticeBoardBackingBean.isCommitteeFormed(scqt[0])}"></h:outputText>
+				</p:commandLink>
+			</ui:fragment>
+				<ui:fragment
+					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusAwarded}">
+					<p:commandLink
+						action="#{noticeBoardBackingBean.showAwardDetails(scqt[0])}">
+						<h:outputText value="#{lbl['lbl.sc.notice.board.view.awarded.list']}"></h:outputText>
+					</p:commandLink>
+				</ui:fragment>
+			</p:column>
+
+		</p:dataTable>
+
+</ui:composition>

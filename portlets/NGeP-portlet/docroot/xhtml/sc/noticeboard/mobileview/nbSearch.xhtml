@@ -1,0 +1,414 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:panel header="#{lbl['lbl.sc.notice.board.searchCriteria']}" id="nbpanel" toggleable="true" collapsed="true">
+
+		<ac:lovPopup />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td style="white-space: normal" width="35%"><p:outputLabel
+						value="#{lbl['lbl.sc.qtn.no']}" /></td>
+				<td><p:inputText
+						value="#{noticeBoardBackingBean.managedBean.qtNo}"  /></td>
+			</tr>
+			<tr>
+				<td style="white-space: normal"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+				<td><p:inputText
+						value="#{noticeBoardBackingBean.managedBean.title}"  /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.category.code']}" /></td>
+				<td>						
+					<p:inputText id="catCodeTxt" 
+						value="#{noticeBoardBackingBean.managedBean.categoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{noticeBoardBackingBean.managedBean.categoryL3.pmCategoryL2.categoryL2Code}#{noticeBoardBackingBean.managedBean.categoryL3.categoryL3Code}"
+						
+						disabled="true" />
+					&#160;
+					<p:commandLink id="catCodeImg"
+						process="@this" partialSubmit="true" update="@([id$=catCodePopup])"
+						oncomplete="catCodePopup.show();"
+						action="#{categoryCodeSearchBackingBean.renewSesionObject}">
+						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/search.png"/>								
+					</p:commandLink>
+					
+					<ac:categoryCodePopup 
+						okAction="noticeBoardBackingBean.selectCategoryAction"
+						update="@([id$=catCodeTxt])" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.ministry']}" /></td>
+
+				<td><ac:lov id="minstryPtj" lovId="PM_ORG_PROFILE_MINSTRY"
+						headerText="#{lbl['lbl.sc.notice.board.ministry.search']}" update="@form"
+						saveObject="noticeBoardBackingBean.managedBean.ministryProfile"
+						value="#{noticeBoardBackingBean.managedBean.ministryProfile.orgName}"
+						 readonly="true" /></td>
+
+
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.ptj.group']}" /></td>
+
+				<td><ac:lov id="PtjGropup" lovId="PM_ORG_PROFILE_PTJ_GROUP"
+						headerText="#{lbl['lbl.sc.notice.board.ptj.group.search']}" update="@form"
+						saveObject="noticeBoardBackingBean.managedBean.ptjGroupProfile"
+						value="#{noticeBoardBackingBean.managedBean.ptjGroupProfile.orgName}"
+						 readonly="true" 
+						conditionField="#{noticeBoardBackingBean.constuctConditionFieldsForPTJGroup()}"/></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+				<td><ac:lov id="openPtj" lovId="PM_ORG_PROFILE_PTJ"
+						headerText="#{lbl['lbl.sc.notice.board.ptj.search']}"
+						saveObject="noticeBoardBackingBean.managedBean.ptjProfile"
+						value="#{noticeBoardBackingBean.managedBean.ptjProfile.orgName}"
+						 readonly="true"
+						conditionField="#{noticeBoardBackingBean.constuctConditionFields()}" /></td>
+
+			</tr>
+		</table>
+	</p:panel>
+		<p:panel header="#{lbl['lbl.sc.published.date']}" id="publishdtl"
+			toggleable="true" collapsed="true">
+			<h:panelGroup id="recentPubDatePG">
+				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
+					width="100%" columnClasses="nbColumnHeight"
+					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
+					<p:column
+						rendered="#{!noticeBoardBackingBean.managedBean.pubYesterday}">
+
+						<p:commandLink update="publishdtl"
+							actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','today')}"
+							process="@this" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
+								style="padding-right:15px;padding-bottom:10px; font-size:12px" />
+						</p:commandLink>
+
+						<p:commandLink update="publishdtl"
+							actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','today')}"
+							rendered="#{noticeBoardBackingBean.managedBean.pubToday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" />
+						</p:commandLink>
+
+					</p:column>
+					<p:column
+						rendered="#{!noticeBoardBackingBean.managedBean.pubToday}">
+						<p:commandLink update="publishdtl"
+							actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','null')}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
+								style="padding-right:15px;padding-bottom:10px;font-size:12px" />
+						</p:commandLink>
+
+						<p:commandLink update="publishdtl"
+							actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','null')}"
+							rendered="#{noticeBoardBackingBean.managedBean.pubYesterday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" /> 
+						</p:commandLink>
+					</p:column>
+				</h:panelGrid>
+			</h:panelGroup>
+
+			<h:panelGrid id="rangePubDatePG" columns="2" border="0"
+				cellpadding="0" cellspacing="0" width="100%"
+				columnClasses="nbColumnHeight"
+				rendered="#{!noticeBoardBackingBean.managedBean.pubShow}">
+
+				<h:outputText value="#{lbl['lbl.sc.notice.board.passed']}"
+					style="padding-right:5px;" />
+
+
+				<p:column>
+					<p:inputText size="5" styleClass="ppNumericAlign"
+						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.passDays}"
+						mask="99" style="text-align: right">
+						<p:ajax event="blur"
+							listener="#{noticeBoardBackingBean.hideAndShowDates('PbDate')}"
+							update="rangePubDatePG,recentPubDatePG" process="@this" />
+					</p:inputText>
+
+					<h:outputText value="#{lbl['lbl.sc.notice.board.days']}"
+						style="padding-left:5px;"></h:outputText>
+				</p:column>
+
+				<p:column
+					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
+					<h:outputText value="#{lbl['lbl.sc.notice.board.fromdate']}" />
+				</p:column>
+
+				<p:column
+					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
+					<p:calendar showOn="button" readonlyInput="true" id="pubFromDt"
+						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						size="10">
+						<p:ajax event="dateSelect" update="pubToDt" />
+					</p:calendar>
+				</p:column>
+				
+				<p:column
+					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
+					<h:outputText value="#{lbl['lbl.sc.notice.board.to']}" />
+				</p:column>
+				<p:column
+					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
+					<p:calendar showOn="button" readonlyInput="true" id="pubToDt"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						size="10"
+						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.toDate}"
+						mindate="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}">
+					</p:calendar>
+				</p:column>
+			</h:panelGrid>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.sc.location']}"
+			toggleable="true" collapsed="true">
+			<p:ajax event="toggle"
+				listener="#{noticeBoardBackingBean.retriveLocationByStates}"
+				update="locations"></p:ajax>
+			<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0">
+				<h:panelGroup id="resetBtn" styleClass="resetBtnCLS">
+					<p:commandLink 
+						style="float:right;"
+						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
+						update="locations,@(.resetBtnCLS)"
+						actionListener="#{noticeBoardBackingBean.clearTreeNode('location')}">
+						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" /><ac:iconTooltip value="#{lbl['lbl.btn.reset']}"/> 
+						
+					</p:commandLink>
+				</h:panelGroup>
+				<p:tree id="locations"
+					value="#{noticeBoardBackingBean.managedBean.locationRootNode}"
+					var="location" style="border:0;" selectionMode="single"
+					dynamic="true"
+					selection="#{noticeBoardBackingBean.managedBean.locationSelectedNode}">
+
+					<p:ajax event="expand" update="locations"
+						listener="#{noticeBoardBackingBean.onNodeExpand}" />
+					<p:ajax event="collapse" update="locations"
+						listener="#{noticeBoardBackingBean.onNodeCollapse}" />
+					<p:ajax event="select" update="locations,@(.resetBtnCLS)"
+						listener="#{noticeBoardBackingBean.onNodeSelect}" />
+					<p:ajax event="unselect" update="locations"
+						listener="#{noticeBoardBackingBean.onNodeUnselect}" />
+					<p:treeNode type="state">
+						<h:outputText
+							value="#{location.stateCode} - #{location.stateName}" />
+						<!--  <p:commandLink
+						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
+						style="padding-left:15px;" >
+						<f:setPropertyActionListener target="#{noticeBoardBackingBean.managedBean.resetData}" value="test" />
+						<p:graphicImage library="ep/images/design" name="reset.png"
+							value="/css/images/design/reset.png" />
+					</p:commandLink>  -->
+					</p:treeNode>
+					<p:treeNode type="district">
+						<h:outputText value="#{location.districtCode} - #{location.districtName}" />
+						<!--  <p:commandLink
+						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
+						style="padding-left:15px;">
+						<f:setPropertyActionListener target="#{noticeBoardBackingBean.managedBean.resetData}" value="#{reset}" />
+						<p:graphicImage library="ep/images/design" name="reset.png"
+							value="/css/images/design/reset.png" />
+					</p:commandLink> -->
+					</p:treeNode>
+					
+				</p:tree>
+			</h:panelGrid>
+		</p:panel>
+
+
+
+
+
+		<p:panel header="#{lbl['lbl.sc.notice.board.briefingDate']}" id="briefingdtls"
+			toggleable="true" collapsed="true">
+			<h:panelGroup id="recentBriefDatePG">
+				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
+					 width="100%" columnClasses="nbColumnHeight"
+					rendered="#{! noticeBoardBackingBean.managedBean.showBriDate}">
+					<p:column
+						rendered="#{!noticeBoardBackingBean.managedBean.breifYesterday}">
+						<p:commandLink update="briefingdtls"
+							actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','today')}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
+								style="padding-right:15px;padding-bottom:10px;font-size:12px" />
+						</p:commandLink>
+
+						<p:commandLink update="briefingdtls"
+							actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','today')}"
+							rendered="#{noticeBoardBackingBean.managedBean.breifToday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column
+						rendered="#{!noticeBoardBackingBean.managedBean.breifToday}">
+						<p:commandLink update="briefingdtls"
+							actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','null')}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
+								style="padding-right:15px;padding-bottom:10px;font-size:12px" />
+						</p:commandLink>
+
+						<p:commandLink update="briefingdtls"
+							actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','null')}"
+							rendered="#{noticeBoardBackingBean.managedBean.breifYesterday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" />
+						</p:commandLink>
+					</p:column>
+				</h:panelGrid>
+			</h:panelGroup>
+
+			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
+				 columnClasses="nbColumnHeight"
+				rendered="#{!noticeBoardBackingBean.managedBean.breifShow}">
+				<h:outputText value="#{lbl['lbl.sc.notice.board.next']}"
+					style="padding-right:20px;" />
+				<p:column>
+
+					<p:inputText styleClass="ppNumericAlign" id="bsvdate" size="5"
+						value="#{noticeBoardBackingBean.managedBean.briefSearchDataBean.passDays}"
+						style="text-align:right;">
+						<p:ajax event="blur"
+							listener="#{noticeBoardBackingBean.hideAndShowDates('Brief')}"
+							update="recentBriefDatePG" process="@this" />
+
+					</p:inputText>
+					<h:outputText value="#{lbl['lbl.sc.notice.board.days']}"
+						style="padding-left:5px;"></h:outputText>
+				</p:column>
+			</h:panelGrid>
+
+
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.notice.board.sitevisitdate']}" id="sitevisitdtls"
+			toggleable="true" collapsed="true">
+			<h:panelGroup id="recentSiteVisitDatePG">
+				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
+					width="100%" columnClasses="nbColumnHeight"
+					rendered="#{! noticeBoardBackingBean.managedBean.showSiteDate}">
+
+					<p:column
+						rendered="#{!noticeBoardBackingBean.managedBean.svYesterday}">
+						<p:commandLink update="sitevisitdtls"
+							actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','today')}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
+								style="padding-right:15px;margin-bottom:20px;font-size:12px" />
+						</p:commandLink>
+
+						<p:commandLink update="sitevisitdtls"
+							actionListener="#{noticeBoardBackingBean.showFields('SITEVISITDETAILS','today')}"
+							rendered="#{noticeBoardBackingBean.managedBean.svToday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" />
+						</p:commandLink>
+					</p:column>
+
+
+					<p:column rendered="#{!noticeBoardBackingBean.managedBean.svToday}">
+						<p:commandLink update="sitevisitdtls"
+							actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','null')}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
+								style="padding-right:15px;padding-bottom:10px;font-size:12px" />
+						</p:commandLink>
+
+						<p:commandLink update="sitevisitdtls"
+							actionListener="#{noticeBoardBackingBean.showFields('SITEVISITDETAILS','null')}"
+							rendered="#{!noticeBoardBackingBean.managedBean.svToday and noticeBoardBackingBean.managedBean.svYesterday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" />
+						</p:commandLink>
+					</p:column>
+
+				</h:panelGrid>
+			</h:panelGroup>
+
+			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
+				 columnClasses="nbColumnHeight"
+				rendered="#{!noticeBoardBackingBean.managedBean.svShow}">
+				<h:outputText value="#{lbl['lbl.sc.notice.board.next']}"
+					style="padding-right:20px;" />
+				<p:column>
+
+					<p:inputText  styleClass="ppNumericAlign" id="sitevisitdate"
+						size="5"
+						value="#{noticeBoardBackingBean.managedBean.siteVisitDataBean.passDays}" style="text-align:right;">
+						<p:ajax event="blur"
+							listener="#{noticeBoardBackingBean.hideAndShowDates('SiteVisit')}"
+							update="recentSiteVisitDatePG" process="@this" />
+
+					</p:inputText>
+					<h:outputText value="#{lbl['lbl.sc.notice.board.days']}"
+						style="padding-left:5px;"></h:outputText>
+				</p:column>
+			</h:panelGrid>
+
+
+
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.closing.date']}" toggleable="true" collapsed="true">
+
+			<h:panelGrid columns="2" width="100%" columnClasses="nbColumnHeight">
+				<h:outputText value="#{lbl['lbl.sc.notice.board.fromdate']}" />
+				<p:column>
+					<p:calendar id="clsFromDt" showOn="button"
+						value="#{noticeBoardBackingBean.managedBean.clsDataBean.fromDate}"
+						readonlyInput="true"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						size="10">
+						<p:ajax event="dateSelect" update="clsToDt" />
+					</p:calendar>
+				</p:column>
+				<h:outputText value="#{lbl['lbl.sc.notice.board.to']}" />
+				<p:column>
+				<p:calendar id="clsToDt" showOn="button"
+						value="#{noticeBoardBackingBean.managedBean.clsDataBean.toDate}"
+						readonlyInput="true"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						size="10"
+						mindate="#{noticeBoardBackingBean.managedBean.clsDataBean.fromDate}">
+
+				</p:calendar>
+			</p:column>
+			</h:panelGrid>
+
+
+		</p:panel>
+
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td colspan="2" class="ppRightBtn"><p:commandButton
+						id="nbSearchButton" value="#{lbl['lbl.btn.search']}"
+						action="#{noticeBoardBackingBean.searchNoticeBoard}"
+						update="@(.nbsrhresultsStyleClass)" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" process="" styleClass="BtnSpacing">
+					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.reset']}" update="nbpanel"
+						process="@this" action="#{noticeBoardBackingBean.reset}" styleClass="BtnSpacing">
+					</p:commandButton></td>
+			</tr>
+		</table>
+	
+
+</ui:composition>
