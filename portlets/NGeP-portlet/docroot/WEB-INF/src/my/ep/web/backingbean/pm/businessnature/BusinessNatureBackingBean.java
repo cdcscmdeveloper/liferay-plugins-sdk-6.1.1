@@ -250,9 +250,7 @@ public class BusinessNatureBackingBean extends
 
 			// section
 			if (getManagedBean().getCategoryLvl() == 10L) {
-				if (getManagedBean().getSecLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getSecLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelCode())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelCode");
@@ -262,9 +260,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getSecLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getSecLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelName");
@@ -287,9 +283,7 @@ public class BusinessNatureBackingBean extends
 
 			// division
 			if (getManagedBean().getCategoryLvl() == 20L) {
-				if (getManagedBean().getDivLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getDivLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelCode())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelCode");
@@ -299,9 +293,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getDivLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getDivLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelName())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelName");
@@ -311,9 +303,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getSecLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getSecLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -324,9 +314,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getSecLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getSecLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -349,9 +337,7 @@ public class BusinessNatureBackingBean extends
 
 			// group
 			if (getManagedBean().getCategoryLvl() == 30L) {
-				if (getManagedBean().getGroupLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getGroupLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelCode())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelCode");
@@ -361,9 +347,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getGroupLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getGroupLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelName");
@@ -373,9 +357,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getDivLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getDivLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelCode())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -386,9 +368,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getDivLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getDivLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelName())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -399,9 +379,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getSecLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getSecLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelCode())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -412,9 +390,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getSecLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getSecLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -436,9 +412,7 @@ public class BusinessNatureBackingBean extends
 
 			// class
 			if (getManagedBean().getCategoryLvl() == 40L) {
-				if (getManagedBean().getClassLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getClassLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getClassLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelCode");
@@ -448,9 +422,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getClassLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getClassLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getClassLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelName");
@@ -460,9 +432,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getGroupLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getGroupLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -473,9 +443,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getGroupLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getGroupLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelName())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -486,9 +454,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getDivLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getDivLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelCode())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -499,9 +465,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getDivLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getDivLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelName())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -512,9 +476,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getSecLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getSecLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelCode())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -525,9 +487,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getSecLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getSecLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())){
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -549,9 +509,7 @@ public class BusinessNatureBackingBean extends
 
 			// item
 			if (getManagedBean().getCategoryLvl() == 50L) {
-				if (getManagedBean().getItemLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getItemLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getItemLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelCode");
@@ -561,9 +519,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getItemLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getItemLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getItemLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelName");
@@ -573,9 +529,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getClassLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getClassLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getClassLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -586,9 +540,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getClassLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getClassLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getClassLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -599,9 +551,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getGroupLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getGroupLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -612,9 +562,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getGroupLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getGroupLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getGroupLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -625,9 +573,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getDivLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getDivLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -638,9 +584,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getDivLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getDivLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getDivLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -651,9 +595,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getSecLevelCode() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getSecLevelCode())) {
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelCode())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -664,9 +606,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getSecLevelName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getSecLevelName())) {
+				if (StringUtils.isNotBlank(getManagedBean().getSecLevelName())) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
@@ -677,8 +617,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getStatus() != null
-						&& !"".equals(getManagedBean().getStatus())) {
+				if (getManagedBean().getStatus() != null) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					codesSearchBean.setSearchField("recordStatusFlg");
