@@ -144,7 +144,9 @@
 			<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Berikut adalah terma terma yang akan di runding:-</span></p>
 				<ol type="i" style="font-size:13px;font-weight:normal;color:#333333;text-align:justify;">
 					#foreach( $scNegoTerm in $scNegoTerms )
-						<li>$scNegoTerm.termDesc</li>
+						#if ($!scNegoTerm.pmTerm)
+							<li>$scNegoTerm.termDesc</li>
+						 #end
 					#end
 				</ol>
 			<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">3. Kerajaan bercadang untuk mengadakan mesyuarat di antara wakil-wakil Kerajaan dengan pihak tuan pada tarikh dan tempat seperti berikut:</span></p>
@@ -159,7 +161,7 @@
 						<tr>
 							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.negoLocation</span></td>
 							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$dateSDF.format($scNegoLocation.negoDate)</span></td>
-							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.remark</span></td>
+							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$!scNegoLocation.remark</span></td>
 						</tr>
 					#end
 				</table>

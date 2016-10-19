@@ -99,17 +99,20 @@
 									</td>
 									<td class="standard border-bottom left">
 										#foreach( $scLoiTerm in $scLoi.scNegoTerms )
-											#if (! $scLoiTerm.termDesc)
+										  #if ($!scLoiTerm.pmTerm)
+											 #if (! $scLoiTerm.termDesc)
 												<br/>
 											#else
 											#set( $termDesc = $scLoiTerm.termDesc.replaceAll("&", "&#38;") )
 												  $termDesc 
 												 <br/>
 											#end
+										  #end
 										#end
 									</td>
 									<td class="standard border-bottom left-right">
 										#foreach( $scLoiTerm in $scLoi.scNegoTerms )
+										 #if ($!scLoiTerm.pmTerm)
 											#if (! $scLoiTerm.negoResult )
 												<br/>
 											#else
@@ -117,6 +120,7 @@
 												  $negoResult 
 												 <br/>
 											#end
+										  #end
 										#end
 									</td>
 								</tr>
