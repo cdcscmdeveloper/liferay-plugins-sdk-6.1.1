@@ -17,22 +17,34 @@
 					lOADetailBackingBean.managedBean.scLoa.loaNo}</td>
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 				</td>
-				<td class="header-info-text">
-				<c:if test="#{lOADetailBackingBean.managedBean.scLoa.brandNew}">
+				<td class="header-info-text"><c:if
+						test="#{lOADetailBackingBean.managedBean.scLoa.brandNew}">
 					#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgName}
-					</c:if>
-					<c:if test="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and isDocTypeQuotation}">
+					</c:if> <c:if
+						test="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and isDocTypeQuotation}">
 					#{lOADetailBackingBean.retrievePTJByOrgProfileId(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgProfileId, lOADetailBackingBean.isQTStatusPublished(lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId)?lOADetailBackingBean.managedBean.scQt.publishDate : lOADetailBackingBean.managedBean.scQt.createdDate)}
-					</c:if>
-					<c:if test="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !isDocTypeQuotation}">
+					</c:if> <c:if
+						test="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !isDocTypeQuotation}">
 					#{lOADetailBackingBean.retrievePTJByOrgProfileId(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgProfileId,lOADetailBackingBean.managedBean.scLoa.scQuote.createdDate)}
-					</c:if>
-				</td>
+					</c:if></td>
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" />
 				</td>
 				<td class="header-info-text">
 					#{lOADetailBackingBean.getStatusDescById(lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId)}
 				</td>
+			</tr>
+			<tr>
+				<td width="10%"><h:outputLabel
+						value="#{lbl['lbl.sc.document.no']}" /></td>
+				<td class="header-info-text"><h:outputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}"
+						rendered="#{isDocTypeQuotation}" /> <h:outputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
+						rendered="#{!isDocTypeQuotation}" /></td>
+				<td width="10%"><h:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
+				<td class="header-info-text" colspan="3">
+					#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}</td>
 			</tr>
 		</table>
 	</div>

@@ -34,6 +34,16 @@
 					directLOABackingBean.managedBean.scLoa.ackDueDate)}
 					#{lbl['lbl.sc.days']})</td>
 			</tr>
+			<tr>
+				<td width="10%"><h:outputLabel
+						value="#{lbl['lbl.sc.document.no']}" /></td>
+				<td class="header-info-text">
+					#{directLOABackingBean.managedBean.scQt.qtNo}</td>
+				<td width="10%"><h:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
+				<td class="header-info-text" colspan="5">
+					#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}</td>
+			</tr>
 
 		</table>
 	</div>
