@@ -354,7 +354,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().getContractVer().getScheduleAttachments().add(attachment);
 		}else if(event.getComponent().getId().equalsIgnoreCase("uploadItemAmendId")){
 			getManagedBean().getContractVer().getItemAmendAttachments().add(attachment);
-		}else
+		}else if(event.getComponent().getId().equalsIgnoreCase("uploadTermLetterId")){
+			getManagedBean().getContractVer().getTerminationLetterAttachments().add(attachment);
+			RequestContext.getCurrentInstance().execute("uploadTermLetterDlg.hide()");
+		}
+		else
 		   this.getManagedBean().getAttachmentList().add(attachment);
 	}
 	
@@ -431,6 +435,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			 getManagedBean().getDeleteAttachmentList().add(attachment);
 		}
 		getManagedBean().getContractVer().getAgencyAttachements().remove(index);
+	}
+	
+	/**
+	 * The method used to delete agency from the datatable list.
+	 * @param index  file index of attachment list
+	 */
+	public void deleteTerminationLetterAction(int index) {
+		CtAttachment attachment = getManagedBean().getContractVer().getTerminationLetterAttachments().get(index);
+		if(attachment.getAttachmentId() != null){
+			 getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		getManagedBean().getContractVer().getTerminationLetterAttachments().remove(index);
 	}
 	
 	/**
