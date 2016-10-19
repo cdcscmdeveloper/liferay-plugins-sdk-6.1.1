@@ -86,8 +86,8 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
@@ -107,15 +107,6 @@ import my.ep.web.util.template.MergeDocx;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.docx4j.jaxb.*;
-import org.docx4j.openpackaging.contenttype.ContentType;
-import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.exceptions.InvalidFormatException;
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.openpackaging.parts.PartName;
-import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
-import org.docx4j.relationships.Relationship;
-import org.docx4j.wml.CTAltChunk;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
@@ -136,7 +127,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "agreementBackingBean")
 @RequestScoped
-public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> {
+public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManagedBean> {
 	
 	private static Logger log = Logger.getLogger(AgreementBackingBean.class);
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
@@ -163,13 +154,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}
 	}
 
-	/**
+/*	*//**
 	 * This method used to retrieve login user information.
-	 */
+	 *//*
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
-	}
+	}*/
 
 	/**
 	 * This  method used to initialize approver list.
@@ -1645,32 +1636,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/";
-	
 		return url;
-	}
-
-	/**
-	 * The method used to convert the template into document file.
-	 */
-	private  void convertHtmlToDocFile(String content, String filePath) {
-		WordprocessingMLPackage wordMLPackage;
-		try {
-				wordMLPackage = WordprocessingMLPackage.createPackage();
-				AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
-				afiPart.setBinaryData(content.getBytes());
-				afiPart.setContentType(new ContentType("text/html"));
-				Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart);
-	
-				CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
-				ac.setId(altChunkRel.getId());
-				wordMLPackage.getMainDocumentPart().addObject(ac);
-				wordMLPackage.getContentTypeManager().addDefaultContentType("html","text/html");
-				wordMLPackage.save(new java.io.File(filePath));
-			} catch (InvalidFormatException e) {
-				e.printStackTrace();
-			} catch (Docx4JException e) {
-				e.printStackTrace();
-			}
 	}
 
 	/**
