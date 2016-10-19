@@ -60,6 +60,10 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		this.getLatestStatusCodeForRequests();
 	}
 	
+	private String strLanguage = ResourceBundleUtils.getMessage(
+			ReportConst.LABEL_LANG, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+			new FacesScopes().getUserLocale());
+	
 	@PostConstruct
 	public void init(){
 		this.getLatestStatusCodeForRequests();
@@ -377,7 +381,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 		if(reportStatus == 1 || reportStatus == 2 || reportStatus == 3
 		   || reportStatus == 9 || reportStatus == 10){
-			return "Prepare";
+			return "In Progress";
 		} else if (reportStatus == 4){
 			return "Success";
 		} else {
@@ -385,7 +389,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		}
 	}
 	
-	public String getReportTitle(String reportCode){
+	public String getReportName(String reportCode){
 		
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -395,12 +399,36 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		reqDTO.setReportCode(reportCode);
 		
 		PMReportResDTO resDTO = reportSO.retriveReportByrptId(reqDTO);
-		
 		PMReport pmReport = resDTO.getPmReportDtls();
-		return pmReport.getReportTitle();
 		
+		String submodule = reportSO.retriveSubModuleNameByReportCode(strLanguage, reportCode);
+		
+		if(submodule != null && !submodule.isEmpty()){
+		
+			System.out.println("1");
+			
+			StringBuilder str = new StringBuilder();
+			str.append(submodule);
+			str.append("/");
+			str.append(pmReport.getReportTitle());
+		
+			return str.toString();
+			
+		} else {
+			return pmReport.getReportTitle();
+		}
 	}
 	
+	public String getReportModule(String reportCode){
+		
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IPMReportSO.class);
+		
+		return reportSO.retriveModuleNameByReportCode(strLanguage, reportCode);
+		
+	}
+
 	public boolean isSuccess(String reportStatus){
 		
 		if(reportStatus != null && reportStatus.equals("4")){
