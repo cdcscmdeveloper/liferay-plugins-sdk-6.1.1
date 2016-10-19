@@ -7,27 +7,27 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.notice.board.searchCriteria']}" id="nbpanel" toggleable="true" collapsed="true">
+	<p:panel header="#{lbl['lbl.sc.notice.board.searchCriteria']}" id="nbpanel" style="margin-right:20px;">
 
 		<ac:lovPopup />
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td style="white-space: normal" width="35%"><p:outputLabel
+				<td style="white-space: nowrap"><p:outputLabel
 						value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td><p:inputText
-						value="#{noticeBoardBackingBean.managedBean.qtNo}"  /></td>
+						value="#{noticeBoardBackingBean.managedBean.qtNo}" size="30" /></td>
 			</tr>
 			<tr>
-				<td style="white-space: normal"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+				<td style="white-space: nowrap"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td><p:inputText
-						value="#{noticeBoardBackingBean.managedBean.title}"  /></td>
+						value="#{noticeBoardBackingBean.managedBean.title}" size="30" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.category.code']}" /></td>
 				<td>						
 					<p:inputText id="catCodeTxt" 
 						value="#{noticeBoardBackingBean.managedBean.categoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{noticeBoardBackingBean.managedBean.categoryL3.pmCategoryL2.categoryL2Code}#{noticeBoardBackingBean.managedBean.categoryL3.categoryL3Code}"
-						
+						size="25"
 						disabled="true" />
 					&#160;
 					<p:commandLink id="catCodeImg"
@@ -50,7 +50,7 @@
 						headerText="#{lbl['lbl.sc.notice.board.ministry.search']}" update="@form"
 						saveObject="noticeBoardBackingBean.managedBean.ministryProfile"
 						value="#{noticeBoardBackingBean.managedBean.ministryProfile.orgName}"
-						 readonly="true" /></td>
+						size="25" readonly="true" /></td>
 
 
 			</tr>
@@ -63,7 +63,7 @@
 						headerText="#{lbl['lbl.sc.notice.board.ptj.group.search']}" update="@form"
 						saveObject="noticeBoardBackingBean.managedBean.ptjGroupProfile"
 						value="#{noticeBoardBackingBean.managedBean.ptjGroupProfile.orgName}"
-						 readonly="true" 
+						size="25" readonly="true" 
 						conditionField="#{noticeBoardBackingBean.constuctConditionFieldsForPTJGroup()}"/></td>
 			</tr>
 			
@@ -73,12 +73,12 @@
 						headerText="#{lbl['lbl.sc.notice.board.ptj.search']}"
 						saveObject="noticeBoardBackingBean.managedBean.ptjProfile"
 						value="#{noticeBoardBackingBean.managedBean.ptjProfile.orgName}"
-						 readonly="true"
+						size="25" readonly="true"
 						conditionField="#{noticeBoardBackingBean.constuctConditionFields()}" /></td>
 
 			</tr>
 		</table>
-	</p:panel>
+
 		<p:panel header="#{lbl['lbl.sc.published.date']}" id="publishdtl"
 			toggleable="true" collapsed="true">
 			<h:panelGroup id="recentPubDatePG">
@@ -135,7 +135,7 @@
 				<p:column>
 					<p:inputText size="5" styleClass="ppNumericAlign"
 						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.passDays}"
-						mask="99" style="text-align: right">
+						mask="99" style="width:111px;text-align: right">
 						<p:ajax event="blur"
 							listener="#{noticeBoardBackingBean.hideAndShowDates('PbDate')}"
 							update="rangePubDatePG,recentPubDatePG" process="@this" />
@@ -183,7 +183,7 @@
 			<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0">
 				<h:panelGroup id="resetBtn" styleClass="resetBtnCLS">
 					<p:commandLink 
-						style="float:right;"
+						style="float:right;width:80px"
 						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
 						update="locations,@(.resetBtnCLS)"
 						actionListener="#{noticeBoardBackingBean.clearTreeNode('location')}">
@@ -239,7 +239,7 @@
 			toggleable="true" collapsed="true">
 			<h:panelGroup id="recentBriefDatePG">
 				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
-					 width="100%" columnClasses="nbColumnHeight"
+					width="100%" columnClasses="nbColumnHeight"
 					rendered="#{! noticeBoardBackingBean.managedBean.showBriDate}">
 					<p:column
 						rendered="#{!noticeBoardBackingBean.managedBean.breifYesterday}">
@@ -278,15 +278,15 @@
 			</h:panelGroup>
 
 			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
-				 columnClasses="nbColumnHeight"
+				width="100%" columnClasses="nbColumnHeight"
 				rendered="#{!noticeBoardBackingBean.managedBean.breifShow}">
 				<h:outputText value="#{lbl['lbl.sc.notice.board.next']}"
-					style="padding-right:20px;" />
+					style="padding-right:5px;" />
 				<p:column>
 
 					<p:inputText styleClass="ppNumericAlign" id="bsvdate" size="5"
 						value="#{noticeBoardBackingBean.managedBean.briefSearchDataBean.passDays}"
-						style="text-align:right;">
+						style="width:111px; text-align:right;">
 						<p:ajax event="blur"
 							listener="#{noticeBoardBackingBean.hideAndShowDates('Brief')}"
 							update="recentBriefDatePG" process="@this" />
@@ -345,15 +345,15 @@
 			</h:panelGroup>
 
 			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
-				 columnClasses="nbColumnHeight"
+				width="100%" columnClasses="nbColumnHeight"
 				rendered="#{!noticeBoardBackingBean.managedBean.svShow}">
 				<h:outputText value="#{lbl['lbl.sc.notice.board.next']}"
-					style="padding-right:20px;" />
+					style="padding-right:5px;" />
 				<p:column>
 
 					<p:inputText  styleClass="ppNumericAlign" id="sitevisitdate"
 						size="5"
-						value="#{noticeBoardBackingBean.managedBean.siteVisitDataBean.passDays}" style="text-align:right;">
+						value="#{noticeBoardBackingBean.managedBean.siteVisitDataBean.passDays}" style="width:111px; text-align:right;">
 						<p:ajax event="blur"
 							listener="#{noticeBoardBackingBean.hideAndShowDates('SiteVisit')}"
 							update="recentSiteVisitDatePG" process="@this" />
@@ -409,6 +409,6 @@
 					</p:commandButton></td>
 			</tr>
 		</table>
-	
+	</p:panel>
 
 </ui:composition>
