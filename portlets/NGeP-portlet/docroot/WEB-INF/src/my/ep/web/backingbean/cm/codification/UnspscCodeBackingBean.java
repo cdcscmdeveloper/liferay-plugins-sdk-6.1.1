@@ -28,6 +28,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
 import my.ep.constants.CDProcessNameConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -35,6 +36,7 @@ import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
 import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -159,7 +161,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				|| fs.hasRoleUser("G2G_ADMIN")
 				|| fs.hasRoleUser("GOVT_SELLER");
 	}
-	
+
 	public boolean isAllSupplierWithoutTemp() {
 
 		FacesScopes fs = new FacesScopes();
@@ -171,7 +173,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				|| fs.hasRoleUser("BASIC_SUPPLIER_ADMIN")
 				|| fs.hasRoleUser("GOVT_SELLER");
 	}
-	
+
 
 	public String submitForRequest(String action) throws Exception {
 
@@ -181,6 +183,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 					.getInstance()
 					.getServiceObject("cm", ICodificationSO.class);
+
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 			FacesScopes face = new FacesScopes();
 			Object token = face.getBPMAuthenticationCtxToken();
@@ -265,9 +270,42 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 
 					/////// set at SO tracking dairy ActionDesc
-					
+
 					String actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah diserah kepada Pentadbir Katalog untuk semakan";
 					reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CU_DocType));
+
+
+					if(isCatalogueAdmin()){
+						System.out.println("**isCatalogueAdmin***");
+						UserReqDTO userReqDTO = new UserReqDTO();
+						userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
+						UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+						if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+							for(PmUser user :userResDTO.getUserList()){
+								System.out.println("user.getLoginId():"+user.getLoginId());
+								reqDTO.getCdAdminList().add(user.getLoginId());
+							}
+						}
+
+
+					}else{
+						System.out.println("**supplier***");
+						UserReqDTO userReqDTO = new UserReqDTO();
+						userReqDTO.setRoleCode(RoleCode.CM_ADMIN.value());
+						UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+						if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+							for(PmUser user :userResDTO.getUserList()){
+								System.out.println("user.getLoginId():"+user.getLoginId());
+								reqDTO.getCmAdminList().add(user.getLoginId());
+							}
+						}
+					}
+
+
+
+
 					resDTO = unspscSO.addCodificationRequest(reqDTO);
 
 					if(resDTO.isSuccessful()){
@@ -331,6 +369,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate
 					.getInstance()
 					.getServiceObject("pm", IStatusSO.class);
+
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			FacesScopes face = new FacesScopes();
 			Object token = face.getBPMAuthenticationCtxToken();
 
@@ -399,7 +440,19 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 				///////actionDesc set at SO
 				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REQUEST_ADMIN, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus(),CmConst.CU_DocType));
-				
+
+
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
+				UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+					for(PmUser user :userResDTO.getUserList()){
+						System.out.println("user.getLoginId():"+user.getLoginId());
+						reqDTO.getCdAdminList().add(user.getLoginId());
+					}
+				}
+
 				resDTO = unspscSO.addCodificationRequest(reqDTO);
 
 				FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -419,8 +472,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				if(!action.equalsIgnoreCase(CmConst.ACTIONSTATUS))
 				{	log.info("tracking diary for status:bpmTesting");			
 				reqDTO.setTrackingStatus(true);
-				
-				
+
+
 				UNSPSCCodeRequestReviewByUser(reqDTO,face,action,statusSO,statusReqDTO);					
 				}/*else{
 					statusReqDTO.setStatusId(15006L);
@@ -456,6 +509,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	public void UNSPSCCodeRequestReviewByUser(CodificationReqDTO reqDTO,FacesScopes face,String action, IStatusSO statusSO, StatusReqDTO statusReqDTO ){
 
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+
 		String actionDesc = "";
 		if(action.equalsIgnoreCase("SUBMIT")){
 			if (face.hasRoleUser(CmConst.CM_ADMIN)){		
@@ -465,6 +522,18 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah diserah kepada Pentadbir Kodifikasi untuk semakan";
 				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus(),CmConst.CU_DocType));
+
+				userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
+				UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+					for(PmUser user :userResDTO.getUserList()){
+						System.out.println("user.getLoginId():"+user.getLoginId());
+						reqDTO.getCdAdminList().add(user.getLoginId());
+					}
+				}
+
+
 			}
 			else if (face.hasRoleUser(CmConst.CODIFICATION_OFFICER)) {
 				log.info("Tracking diary for UNSPSC Code Review CODIFICATION_OFFICER");
@@ -472,8 +541,18 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah diserah kepada CDC Working Committee untuk kelulusan. ";
 				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus(),CmConst.CU_DocType));
+
+				userReqDTO.setRoleCode(RoleCode.CD_COMMITTEE.value());
+				UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+					for(PmUser user :userResDTO.getUserList()){
+						System.out.println("user.getLoginId():"+user.getLoginId());
+						reqDTO.getCdcList().add(user.getLoginId());
+					}
+				}
 			}
-			
+
 		}
 		else {
 			if (face.hasRoleUser(CmConst.CM_ADMIN)){		
@@ -483,6 +562,17 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah disyorkan oleh "+reqDTO.getUserName();
 				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus(),CmConst.CU_DocType));
+
+				userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
+				UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+					for(PmUser user :userResDTO.getUserList()){
+						System.out.println("user.getLoginId():"+user.getLoginId());
+						reqDTO.getCdAdminList().add(user.getLoginId());
+					}
+				}
+
 			}			
 			else if (face.hasRoleUser(CmConst.CODIFICATION_OFFICER)) {
 				log.info("Tracking diary for UNSPSC Code Recomended To Supplier by CODIFICATION_OFFICER");
@@ -491,6 +581,16 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah disyorkan oleh "+reqDTO.getUserName();
 				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, new PmStatus(),CmConst.CU_DocType));
+
+				userReqDTO.setRoleCode(RoleCode.CD_COMMITTEE.value());
+				UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+					for(PmUser user :userResDTO.getUserList()){
+						System.out.println("user.getLoginId():"+user.getLoginId());
+						reqDTO.getCdcList().add(user.getLoginId());
+					}
+				}
 			}
 		}
 	}
@@ -937,7 +1037,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		bb.getManagedBean().setAutoCompleteUnspscCode(new CmUnspsc());
 		bb.getManagedBean().getTitleFilterBean().setSearchValue(null);
 		bb.getManagedBean().getSearchDataModel().resetData();
-		
+
 
 
 		return "verifyUnspscSearch?faces-redirect=true";
@@ -960,6 +1060,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
@@ -1411,11 +1513,22 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				}
 				log.info("tracking diary for Codification_Officer:savetempCode");
 				reqDTO.setTrackingStatus(true);
-				
+
 				statusReqDTO.setStatusId(15004L);
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				String actionDesc ="Kod Item "+this.getManagedBean().getRequestCode().getDocNo()+" telah diserah kepada CDC Working Committee untuk kelulusan. ";
 				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));	
+
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setRoleCode(RoleCode.CD_COMMITTEE.value());
+				UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+				if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+					for(PmUser user :userResDTO.getUserList()){
+						System.out.println("user.getLoginId():"+user.getLoginId());
+						reqDTO.getCdcList().add(user.getLoginId());
+					}
+				}
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -1750,6 +1863,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	}
 
 	public String submitToBPM() {
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		if (this.getManagedBean().getRequestExtCodeList() == null
 				|| this.getManagedBean().getRequestExtCodeList().isEmpty()) {
@@ -1761,18 +1879,18 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 									new FacesScopes().getUserLocale())));
 			return null;
 		}
-		
+
 		Map brandMap = new HashMap();
 		Map typeMap = new HashMap();
 		Map meaMap = new HashMap();
 		Map colorMap = new HashMap();
 		for (CmRequestCode code :this.getManagedBean().getRequestExtCodeList()) {
-			
+
 			////////////////check brand
 			if(code.isRequestBrand()){
 				if(!brandMap.containsKey(code.getBrandName())){
 					System.out.println("********1st time create new************");
-					
+
 					brandMap.put(code.getBrandName(),code.getBrandName());
 				}else{
 					facesContext.addMessage(
@@ -1782,16 +1900,16 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 					return null;
-					
+
 				}
 			}
-			
+
 			/////check type 
-			
+
 			if(code.isRequestType()){
 				if(!typeMap.containsKey(code.getTypeName())){
 					System.out.println("********1st time create new************");
-					
+
 					typeMap.put(code.getTypeName(),code.getTypeName());
 				}else{
 					facesContext.addMessage(
@@ -1801,16 +1919,16 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 					return null;
-					
+
 				}
 			}
-			
+
 			//// check measurement
-			
+
 			if(code.isRequestMeasurement()){
 				if(!meaMap.containsKey(code.getMeasurementName())){
 					System.out.println("********1st time create new************");
-					
+
 					meaMap.put(code.getMeasurementName(),code.getMeasurementName());
 				}else{
 					facesContext.addMessage(
@@ -1820,16 +1938,16 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 					return null;
-					
+
 				}
 			}
-			
+
 			/// check color
-			
+
 			if(code.isRequestColor()){
 				if(!colorMap.containsKey(code.getColorName())){
 					System.out.println("********1st time create new************");
-					
+
 					colorMap.put(code.getColorName(),code.getColorName());
 				}else{
 					facesContext.addMessage(
@@ -1839,24 +1957,24 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 					return null;
-					
+
 				}
 			}
-			
-			
+
+
 		}
-		
-		
-		
+
+
+
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
-		
-	
-		
+
+
+
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
@@ -1880,7 +1998,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
 		reqDTO.setToken(token);		
-		
+
 		log.info("Tracking diary for Extension Code---submitToBPM()");	
 
 
@@ -1905,8 +2023,35 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			reqDTO.setTrackingStatus(true);
 			actionDesc = "Kod Lanjutan "+reqDTO.getRequestCode().getDocNo()+" telah diserah kepada Pentadbir Katalog untuk semakan";
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));				
-		}		
+		}
+		
+		if(isCatalogueAdmin()){
+			System.out.println("**isCatalogueAdmin***");
+			
+			userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
+			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
+			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+				for(PmUser user :userResDTO.getUserList()){
+					System.out.println("user.getLoginId():"+user.getLoginId());
+					reqDTO.getCdAdminList().add(user.getLoginId());
+				}
+			}
+
+
+		}else{
+			System.out.println("**supplier***");
+			
+			userReqDTO.setRoleCode(RoleCode.CM_ADMIN.value());
+			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+				for(PmUser user :userResDTO.getUserList()){
+					System.out.println("user.getLoginId():"+user.getLoginId());
+					reqDTO.getCmAdminList().add(user.getLoginId());
+				}
+			}
+		}
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);		
 
 		if(resDTO.isSuccessful()){
@@ -2105,7 +2250,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			this.getManagedBean().getRequestExtCodeList().add(this.getManagedBean().getRequestExtCode());
 		}
 		clearForm();
-		
+
 		RequestContext.getCurrentInstance().execute("extensionPopUp.hide();");
 	}
 
@@ -2126,7 +2271,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		Object token = face.getBPMAuthenticationCtxToken();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
-		
+
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
@@ -2251,7 +2396,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			}
 		}
 
-		
+
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setOutCome(action);
 		reqDTO.setToken(token);
@@ -2282,13 +2427,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			log.info("Tracking diary for Extension Code Published by Code_Officer");
 			reqDTO.setTrackingStatus(true);
 
-		
+
 
 			statusReqDTO.setStatusId(15005L);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			String actionDesc ="Kod Item "+ this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diiklankan oleh "+pmUser.getUserName();
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
-			
+
 			resDTO = unspscSO.publishExtensionRequest(reqDTO);
 
 		}
@@ -2436,10 +2581,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		// }
 
 		// return "taskListView";
-		
-		
+
+
 		RequestContext.getCurrentInstance().execute("extensionConfirmation.hide()");
-		
+
 		System.out.println("***************b4 return**************");
 		return "/xhtml/common/acknowledge.xhtml";
 	}
@@ -2447,7 +2592,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	public void getExtensionCodeReviewStatus(CodificationReqDTO reqDTO,FacesScopes face, IStatusSO statusSO, StatusReqDTO statusReqDTO ){
 
-
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 		if (face.hasRoleUser(CmConst.CM_ADMIN)){		
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by Catalog_Admin");
@@ -2455,6 +2601,18 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			String actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diserah kepada Jawatankuasa Kodifikasi (CDC) untuk kelulusan.";
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
+
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setRoleCode(RoleCode.CD_COMMITTEE.value());
+			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+				for(PmUser user :userResDTO.getUserList()){
+					System.out.println("user.getLoginId():"+user.getLoginId());
+					reqDTO.getCdcList().add(user.getLoginId());
+				}
+			}
+
 		}
 		else if (face.hasRoleUser(CmConst.CD_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by CD_COMMITTE");
@@ -2462,6 +2620,18 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			String actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diserah kepada Jawatankuasa Kodifikasi (eP) untuk perakuan.";
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
+
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setRoleCode(RoleCode.EP_COMMITTEE.value());
+			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+				for(PmUser user :userResDTO.getUserList()){
+					System.out.println("user.getLoginId():"+user.getLoginId());
+					reqDTO.getEpList().add(user.getLoginId());
+				}
+			}
+
 		}
 		else if (face.hasRoleUser(CmConst.EP_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by EP_COMMITTE");
@@ -2469,6 +2639,17 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			String actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diperaku oleh " +reqDTO.getUserName();
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
+
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
+			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+				for(PmUser user :userResDTO.getUserList()){
+					System.out.println("user.getLoginId():"+user.getLoginId());
+					reqDTO.getCdAdminList().add(user.getLoginId());
+				}
+			}
 		}
 	}
 
@@ -2529,7 +2710,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		String claim = originalServletRequest.getParameter("claim");
 		System.out.println("taskId:" + taskId);
 		System.out.println("claim:" + claim);
-		
+
 		Boolean b = Boolean.valueOf(claim);
 		bb.getManagedBean().setClaim(b);
 		bb.getManagedBean().setTaskId(taskId);
@@ -2540,7 +2721,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
-		
+
 		this.getManagedBean().setTaskId(taskId);
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
@@ -2550,7 +2731,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		Object obj = res.getPojo();
 
 		CDRequestDataType unspsc = (CDRequestDataType) obj;
-		
+
 		System.out.println("********isPublished******"+unspsc.isPublished());
 
 		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
@@ -2682,25 +2863,25 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		System.out.println("********res.getTaskName()********"
 				+ res.getTaskName());
 		if (res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {
-			
+
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"reviewApproveExtensionCode.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Endorse Extension Code")) {
-		
+
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"reviewApproveExtensionCodeII.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Publish Extension Code")) {
-		
+
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"reviewApproveExtensionCodeII.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Publish Result Notification")) { 
-			
+
 
 			if (unspsc.isPublished()) {
 				fc.getApplication().getNavigationHandler()
@@ -2712,14 +2893,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 						"reviewExtensionCodeFlow2.xhtml");
 			}
 		}else if(res.getTaskName().equalsIgnoreCase("Recommend Result Notification")){
-			
+
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null,
 					"reviewExtensionCodeFlow2.xhtml");
-			
+
 		}else {
-			
+
 			fc.getApplication()
 			.getNavigationHandler()
 			.handleNavigation(fc, null, "reviewExtensionCodeFlow.xhtml");
@@ -2728,33 +2909,33 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		//
 
 	}
-	
-	
+
+
 	public void claimTask()  {
 		System.out.println("**********claimTask");
-		
+
 		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
-		
-		
+
+
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
-		
+
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setCtxToken(token);
 		bpmSO.claimTask(reqDTO);
-		
-		
+
+
 		bb.getManagedBean().getTaskListGroupDataModel().reloadData();
 		bb.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 		this.getManagedBean().setClaim(true);
-		
+
 		//return "/xhtml/bpmtasklist/taskListView.xhtml?faces-redirect=true";
-		
-		
+
+
 	}
 
 	public void preRenderView() {
@@ -2774,7 +2955,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		String claim = originalServletRequest.getParameter("claim");
 		System.out.println("taskId:" + taskId);
 		System.out.println("claim:" + claim);
-		
+
 		Boolean b = Boolean.valueOf(claim);
 		bb.getManagedBean().setClaim(b);
 		bb.getManagedBean().setTaskId(taskId);
@@ -3325,12 +3506,12 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		boolean brandRecommend = false;
 		boolean typeRecommend = false;
 		boolean meaRecommend = false;
-		
+
 		if (this.getManagedBean().getReviewExtCodeList() != null
 				&& this.getManagedBean().getReviewExtCodeList().size() > 0) {
 
 			for (CmRequestCode code : this.getManagedBean().getReviewExtCodeList()) {
-				
+
 				if (code.getColorNameDD() != null && code.isRequestColor()) { 
 
 					colorRecommend = true;
@@ -3342,40 +3523,40 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				if (code.getBrandNameDD() != null) {
 
 					brandRecommend = true;
-					
+
 
 				}else if (!code.isRequestBrand()){
 					brandRecommend = true;
-					
+
 				}
 
 				if (code.getTypeNameDD() != null ) {
 
 					typeRecommend = true;
-					
+
 				}else if (!code.isRequestType()){
-					
+
 					typeRecommend = true;
 				}
-				
+
 				if (code.getMeasurementNameDD() != null) {
 
 					meaRecommend = true;
-					
+
 				}else if (!code.isRequestMeasurement()){
-					
+
 					meaRecommend = true;
 				}
-				
+
 				if(colorRecommend && brandRecommend && typeRecommend && meaRecommend){
 					this.getManagedBean().setExtensionConfirmationMsg(ResourceBundleUtils.getMessage("lbl.cm.extension.confirmation.recommend",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-					
+
 				}else{
-					
+
 					this.getManagedBean().setExtensionConfirmationMsg(ResourceBundleUtils.getMessage("lbl.cm.extension.confirmation.proceed",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-					
+
 				}
 
 			}
@@ -3385,27 +3566,27 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 
 	}
-	
+
 
 	public String retrieveMofNo(long supplierId, String supplierType){
-		
+
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
 		String mofNo = "N/A";
 		IMofAccountSO mofSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofAccountSO.class);
 		reqDTO.setSupplierId(supplierId);
 		reqDTO.setSupplierType(supplierType);
 		MofAccountResDTO resDTO = mofSO.retriveMOFAccountBySupplierIdAndType(reqDTO);
-		
+
 		if( resDTO.getMofAccount()!=null){
 			mofNo = resDTO.getMofAccount().getMofNo();
 		}
-		
+
 		return mofNo;
 	}
-	
-	
+
+
 	public void editExtensionRequest(int index){
-		
+
 		this.getManagedBean().setEditMode(true);
 		this.getManagedBean().setEditModeIndex(index);
 		if(this.getManagedBean().getRequestExtCodeList()!=null && this.getManagedBean().getRequestExtCodeList().size()>0){
@@ -3475,7 +3656,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 				this.getManagedBean().setSelectedColor(null);
 				this.getManagedBean().setColorDisable(false);  //text box
-				
+
 
 			}else{
 				this.getManagedBean().setSelectedColor(new CmColor());
@@ -3485,8 +3666,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				this.getManagedBean().getRequestExtCode().setColorName("");
 
 			}
-			
-			
+
+
 			if(code.isRequestMeasurement()){
 
 				this.getManagedBean().setSelectedMeasurement(null);
@@ -3503,13 +3684,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		}
 	}
-	
+
 	public void deleteExtensionRequest(int index){
-		
-		
-		
+
+
+
 		this.getManagedBean().getRequestExtCodeList().remove(index);
-		
+
 	}
 
 }
