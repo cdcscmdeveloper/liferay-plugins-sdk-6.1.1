@@ -82,4 +82,20 @@
 		</div>
 
 	</h:panelGroup>
+	<h:panelGroup id="pauseBiddingTime"
+		rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_PAUSED}">
+		<div style="align: left">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 120px;"><p:outputLabel
+								value="#{lbl['lbl.sc.remaining.time']}" /></td>
+						<td><p:inputText size="20" disabled="true"
+								value="#{onlineBiddingBB.remainingTime}" /></td>
+						
+					</tr>
+
+				</table>
+
+			</div>
+		</h:panelGroup>
 </ui:composition>
