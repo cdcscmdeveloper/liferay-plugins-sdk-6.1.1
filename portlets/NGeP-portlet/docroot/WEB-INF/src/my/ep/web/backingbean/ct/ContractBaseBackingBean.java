@@ -15,6 +15,15 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
+import org.docx4j.jaxb.Context;
+import org.docx4j.openpackaging.contenttype.ContentType;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.exceptions.InvalidFormatException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.PartName;
+import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
+import org.docx4j.relationships.Relationship;
+import org.docx4j.wml.CTAltChunk;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.ct.actor.ICtActorSO;
@@ -262,6 +271,30 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		return ctActorResDTO.getCtActor();
+	}
+	
+	/**
+	 * The method used to convert the template into document file.
+	 */
+	protected  void convertHtmlToDocFile(String content, String filePath) {
+		WordprocessingMLPackage wordMLPackage;
+		try {
+				wordMLPackage = WordprocessingMLPackage.createPackage();
+				AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
+				afiPart.setBinaryData(content.getBytes());
+				afiPart.setContentType(new ContentType("text/html"));
+				Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart);
+	
+				CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
+				ac.setId(altChunkRel.getId());
+				wordMLPackage.getMainDocumentPart().addObject(ac);
+				wordMLPackage.getContentTypeManager().addDefaultContentType("html","text/html");
+				wordMLPackage.save(new java.io.File(filePath));
+			} catch (InvalidFormatException e) {
+				e.printStackTrace();
+			} catch (Docx4JException e) {
+				e.printStackTrace();
+			}
 	}
 
 	/**
