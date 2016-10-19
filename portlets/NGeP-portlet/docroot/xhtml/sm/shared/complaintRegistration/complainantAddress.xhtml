@@ -23,9 +23,11 @@
 				<p:ajax event="change" process="@form" update="pnlComplainant" />
 			</p:selectBooleanCheckbox>
 			<h:outputText value="#{lbl['lbl.sm.complainant.same.as.ic.address']}" 
-				rendered="#{complaintBackingBean.managedBean.smComplainant.identificationType.parameterCode == SupplierManagementConst.NEW_IC}" />
+				rendered="#{complaintBackingBean.managedBean.smComplainant.identificationType.parameterCode == SupplierManagementConst.NEW_IC and 
+				complaintBackingBean.managedBean.smComplainant.brandNew}" />
 			<h:outputText value="#{lbl['lbl.sm.complainant.same.as.perm.address']}" 
-				rendered="#{complaintBackingBean.managedBean.smComplainant.identificationType.parameterCode != SupplierManagementConst.NEW_IC}" />
+				rendered="#{complaintBackingBean.managedBean.smComplainant.identificationType.parameterCode != SupplierManagementConst.NEW_IC and 
+				complaintBackingBean.managedBean.smComplainant.brandNew}" />
 		</td>
 	</tr>
 	<tr>
