@@ -7,13 +7,14 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <p:panel id="terminateContract" header="#{lbl['lbl.ct.panel.termination']}" toggleable="true"  toggleSpeed="500">
+    	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.termination.details']}" escape="false"/><br/><br/>
        <h:panelGrid columns="4" style="width:1050px;" styleClass="top-aligned-columns"
           columnClasses="columnWidth200">
               <p:outputLabel value="#{lbl['lbl.ct.termination.decision']}" styleClass="required" />
           <h:panelGrid columns="4">
 	          <p:selectOneMenu id="menuSelectionId" required="true"  style="width:180px;" label="#{lbl['lbl.ct.termination.decision']}"
 	          	 disabled="#{terminationBackingBean.managedBean.contractVer.status.statusId==CtStatusConst.ftPendingLetterPrintAndUpdate
-	          	 or ctBackingBean.isApprover() or terminationBackingBean.managedBean.viewContract}"
+	          	 or ctBackingBean.isApprover() or terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
 				 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionType.parameterId}">
 				 <f:selectItems value="#{terminationBackingBean.decisionTypeList}" />
 				 <p:ajax event="change" update=":form:terminateContract" process="@this"
@@ -21,14 +22,14 @@
 			  </p:selectOneMenu>
 			  <p:message for="menuSelectionId" display="icon"/>
 			  <p:spacer width="2" />
-			  <p:commandLink value="#{lbl['lbl.ct.view.notice']}" update="editorDisplay" action="#{terminationBackingBean.previewNoticeAction}"
-			  	rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}" />
+			  <h:commandLink value="#{lbl['lbl.ct.view.notice']}"  action="#{terminationBackingBean.previewNoticeAction}" process="@this"
+			  	   rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}" />
 		  </h:panelGrid>
 		  
 		     <p:outputLabel value="#{lbl['lbl.ct.decision.date']}"  styleClass="required"/>
 		   <h:panelGrid columns="2">
              <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionDate}"
-          		disabled="#{terminationBackingBean.managedBean.viewContract}"
+          		disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
           		readonlyInput="true" navigator="true"
                 id="calItem1" size="12" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>                              
 		      <p:message for="calItem1" display="icon"/>
@@ -39,7 +40,7 @@
 		 <h:panelGrid columns="3" 
 		      rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}">
 		    <p:inputText id="fileRefNum" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileRefNo}" 
-		           disabled="#{terminationBackingBean.managedBean.viewContract}"
+		           disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
 		           style="width:170px;" maxlength="100">
 		     </p:inputText>
 		     <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}" />
@@ -51,7 +52,8 @@
 		     <h:panelGroup id="uploadTerminationPg" rendered="#{terminationBackingBean.managedBean.mutualTermination}">
 				<p:commandButton 
 					oncomplete="uploadTerminatinDlg.show();return false;"
-					 icon="ui-icon-upload" immediate="true" disabled="#{terminationBackingBean.managedBean.viewContract}"
+					 icon="ui-icon-upload" immediate="true" 
+					 disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
 					rendered="#{terminationBackingBean.managedBean.contractVer.ctTermination.filePath == null}" />
 				<h:commandLink
 					title="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileName}"
@@ -62,7 +64,9 @@
 						terminationBackingBean.managedBean.contractVer.ctTermination.fileName)}" />
 				<p:spacer width="3" />
 						 <p:commandLink onclick="dlgAttachAgrementDoc.show();" style="margin-bottom:-5px;"
-						        rendered="#{!terminationBackingBean.managedBean.viewContract and terminationBackingBean.managedBean.contractVer.ctTermination.filePath != null}">
+						         disabled="#{terminationBackingBean.managedBean.disableField}"
+						        rendered="#{(!terminationBackingBean.managedBean.viewContract or !terminationBackingBean.managedBean.disableField)
+						          and terminationBackingBean.managedBean.contractVer.ctTermination.filePath != null}">
 			   				    <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			        	     </p:commandLink>
 		</h:panelGroup>
@@ -70,7 +74,7 @@
 		   <p:outputLabel value="#{lbl['lbl.ct.remedy.start.date']}" styleClass="required" rendered="#{terminationBackingBean.managedBean.remedy}"  />
 		  <h:panelGrid columns="2"  rendered="#{terminationBackingBean.managedBean.remedy}">
                 <p:calendar id="calItem3"  readonlyInput="true" navigator="true"
-                    disabled="#{terminationBackingBean.managedBean.viewContract}"
+                    disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
                     value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" size="12"
                      showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
                     <p:ajax event="dateSelect" update=":form:calItem4" process="@this" />
@@ -86,7 +90,7 @@
 		               rendered="#{terminationBackingBean.managedBean.remedy}"/>
 		  <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.remedy}">
              <p:calendar id="calItem4"  readonlyInput="true" navigator="true"
-                 disabled="#{terminationBackingBean.managedBean.viewContract}"
+                 disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
                  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}"
           		 mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  size="12" 
                  showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -100,7 +104,7 @@
 		        styleClass="required"  rendered="#{terminationBackingBean.managedBean.termination}" />
 		   <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
               <p:calendar id="calItem6" size="12"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyDate}"
-                disabled="#{terminationBackingBean.managedBean.viewContract}"
+                disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
                 showOn="button" readonlyInput="true" navigator="true"
                  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
 		         <p:message for="calItem6" display="icon"/>
@@ -109,7 +113,7 @@
 		    <p:outputLabel value="#{lbl['lbl.ct.last.remedy.file.no']}"  styleClass="required"  rendered="#{terminationBackingBean.managedBean.termination}" />
 		  <h:panelGrid columns="3" rendered="#{terminationBackingBean.managedBean.termination}">
            <p:inputText id="lastRemedyFileNo" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyFileNo}" 
-             disabled="#{terminationBackingBean.managedBean.viewContract}"
+             disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
              style="width:170px;" maxlength="100">
               </p:inputText>
               <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remedy.file.ref.no']}" />
@@ -119,7 +123,7 @@
 		    <p:outputLabel value="#{lbl['lbl.ct.last.remedy.start.date']}" styleClass="required" rendered="#{terminationBackingBean.managedBean.termination}"  />
 		    <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
               <p:calendar  id="calItem7" readonlyInput="true" navigator="true"
-          		  disabled="#{terminationBackingBean.managedBean.viewContract}"
+          		  disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
           		  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  size="12" 
           		  showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
                   <p:ajax event="dateSelect" update=":form:calItem8" process="@this" />
@@ -130,7 +134,7 @@
 		  <p:outputLabel value="#{lbl['lbl.ct.recommended.agency.date']}"  styleClass="required" rendered="#{terminationBackingBean.managedBean.termination}" />
 		    <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
               <p:calendar id="calItem9" size="12"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgencyDate}"
-                  disabled="#{terminationBackingBean.managedBean.viewContract}"
+                  disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
                   showOn="button" readonlyInput="true" navigator="true"
                   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>		
                    <p:message for="calItem9" display="icon"/>  
@@ -139,7 +143,7 @@
 		   <p:outputLabel value="#{lbl['lbl.ct.last.remedy.end.date']}"  styleClass="required" rendered="#{terminationBackingBean.managedBean.termination}"  />
 		  <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
              <p:calendar id="calItem8" readonlyInput="true"
-                 disabled="#{terminationBackingBean.managedBean.viewContract}"
+                 disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
                  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}" navigator="true"
                  mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" size="12" 
           		showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -157,7 +161,7 @@
                  	value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgency}"/>
                  	<p:spacer width="3" />
 					<p:commandLink action="#{terminationBackingBean.resetSearchAgency()}" 
-						disabled="#{terminationBackingBean.managedBean.viewContract}"
+						disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}"
 						process="@this"	update=":form:searchAgencyPanel" oncomplete="searchAgencyDlg.show();">
 					<p:graphicImage value="/css/images/design/ico-search.png" /></p:commandLink>
                   <p:message for="recomendAgency" display="icon"/>
@@ -174,13 +178,14 @@
 			                <p:column
 			                    style="width:3%;" rendered="#{!terminationBackingBean.managedBean.viewContract}">  
 				                      <f:facet name="header">
-							                <p:selectBooleanCheckbox id="checkBoxAll" value="#{terminationBackingBean.managedBean.selectAll}">
+							                <p:selectBooleanCheckbox id="checkBoxAll" value="#{terminationBackingBean.managedBean.selectAll}"
+							                   disabled="#{terminationBackingBean.managedBean.disableField}">
 								               <p:ajax partialSubmit="true" process="@this"
 									               update=":form:terminationReason,:form:terReasonDelBtn" listener="#{terminationBackingBean.selectAllTermination}" />
 							               </p:selectBooleanCheckbox>
 						                  </f:facet>
 		           
-		                                 <p:selectBooleanCheckbox 
+		                                 <p:selectBooleanCheckbox  disabled="#{terminationBackingBean.managedBean.disableField}"
 		                                     value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
 		           		                    <p:ajax event="change" partialSubmit="true" process="@this"
 		           		                        update=":form:terminationReason,:form:terReasonDelBtn" listener="#{terminationBackingBean.selectOneTerminationCheckbox}"></p:ajax>
@@ -193,8 +198,10 @@
 					                     <h:outputText value="#{lbl['lbl.ct.clause.no']}" />
 				                  </f:facet>
 		                          <p:inputTextarea id="cluseId" value="#{data.clauseNo}"  rows="2" 
-		                                disabled="#{terminationBackingBean.managedBean.viewContract}" autoResize="false"
-		                                onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" style="width:95%;" />
+		                                disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}" autoResize="false"
+		                                onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" style="width:95%;">
+		                                <p:ajax process="@this"></p:ajax>
+		                                </p:inputTextarea>
                             </p:column>
 		     
 		                    <p:column  style="width:65%;">
@@ -203,22 +210,91 @@
 					                    <h:outputText value="#{lbl['lbl.ct.termination.desc']}"  />
 				                  </f:facet>
 		                          <p:inputTextarea id="descId" value="#{data.description}" rows="2" 
-		                               disabled="#{terminationBackingBean.managedBean.viewContract}" autoResize="false"
-		                               onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" style="width:95%;" />
+		                               disabled="#{terminationBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField}" autoResize="false"
+		                               onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" style="width:95%;">
+		                                    <p:ajax process="@this"></p:ajax>
+		                               </p:inputTextarea>
 		                      </p:column> 
 		            </p:dataTable>
 		      </h:panelGrid>
 		      <div class="ppRightBtn"> 
 		             <p:commandButton value="#{lbl['lbl.btn.add']}"  
 		      	            rendered="#{!terminationBackingBean.managedBean.viewContract}" partialSubmit="true"
+		      	            disabled="#{terminationBackingBean.managedBean.disableField}"
 		                    action="#{terminationBackingBean.addTerminateReason()}" update="terminationReason" process="@form"
 		                    oncomplete="terminationReasonWidget.paginator.endLink.click();" />
 		                    <p:spacer width="2"/>
 		              <p:commandButton id="terReasonDelBtn" value="#{lbl['lbl.ct.delete']}"  process="@this" partialSubmit="true"
-		                      disabled="#{terminationBackingBean.managedBean.buttonHideActive}"
+		                      disabled="#{terminationBackingBean.managedBean.buttonHideActive or terminationBackingBean.managedBean.disableField}"
                             onsuccess="dlgTerminationReason.show()" rendered="#{!terminationBackingBean.managedBean.viewContract}">
 			          </p:commandButton> 
 	   	     </div>
+	   	     <p:spacer height="15" />
+	   	     <h:panelGroup
+	   	        rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}">
+	   	     	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.termination.notice.upload']}" escape="false"/><br/>
+	   	
+	   	     	<table style="width: 100%" >
+			          <tr>
+				                 
+				                 <td width="50%" valign="top">
+								<table style="width: 100%">
+								<tr>
+										<td class="TableFieldLeft" width="24%">
+										   <h:outputLabel value="#{terminationBackingBean.managedBean.noticeTypelbl}"  styleClass="required"/></td>
+										<td class="TableFieldRight">
+											<p:commandButton oncomplete="uploadTermLetterDlg.show();return false;"
+												update="terminationUploadId, uploadTermLetterDlg" value="#{lbl['lbl.txt.attach.files']}"
+												disabled="#{ctBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField
+												or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
+									</td>
+							</tr>
+							<tr>
+									<td/>
+									<td>
+											<p:dataGrid id="terminationUploadId" value="#{terminationBackingBean.managedBean.contractVer.terminationLetterAttachments}"
+													var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
+													emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+													<table>
+															<tr>
+																	<td rowspan="2">
+																			<h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
+																	<td width="5"></td>
+															</tr>
+															<tr>
+																<td></td>
+																<td>
+																		<h:commandLink value="#{attachFile.fileName}" 
+																			styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+																		<p:commandLink onsuccess="deleteUploadLetterDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
+																			rendered="#{!ctBackingBean.managedBean.viewContract}"
+																			disabled="#{ctBackingBean.managedBean.viewContract or  terminationBackingBean.managedBean.disableField
+																				or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
+			   																<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	 														</p:commandLink>
+			 	 												</td>
+														</tr>
+											</table>
+									</p:dataGrid>
+								</td>
+							</tr>
+						</table>
+ 					 </td>
+ 					 <td width="50%" valign="top"></td>
+				</tr>
+			</table>
+			</h:panelGroup>
+			  <p:confirmDialog id="deleteUploadLetterId" widgetVar="deleteUploadLetterDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:terminationUploadId" 
+		                         action="#{ctBackingBean.deleteTerminationLetterAction(ctBackingBean.managedBean.attachFileIndex)}"
+		                         oncomplete="deleteUploadLetterDlg.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteUploadLetterDlg.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
+	   	     
 	   	     <p:confirmDialog id="dlgTerminationReason" widgetVar="dlgTerminationReason"  appendToBody="true" 
 	   	           message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 			       <div class="ppRightBtn">
@@ -241,9 +317,28 @@
 			       </div>
 			</p:confirmDialog>
      </p:panel>
+     
+     <p:dialog id="uploadTermLetterDlg" widgetVar="uploadTermLetterDlg" modal="true"  resizable="false"
+	     width="700px" height="auto" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;" dragDropSupport="false"
+			fileUploadListener="#{ctBackingBean.fileUpload}" showButtons="false"
+			mode="advanced" id="uploadTermLetterId" multiple="false"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
+			update="terminationUploadId" >
+		</p:fileUpload>
+		<f:facet name="footer">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadTermLetterDlg.hide();" />
+  		</div>
+   		</f:facet>
+	</p:dialog>	
 	
 	<p:dialog header="#{lbl['lbl.ct.notice']}" resizable="false" widgetVar="noticeDlg" modal="true" height="450" width="820" styleClass="pop_up_top">
-		<p:editor controls="print" id="editorDisplay" value="#{terminationBackingBean.managedBean.editorValue}" width="800" height="430" />
+		<p:editor controls="print" id="editorDisplay" value="#{terminationBackingBean.managedBean.editorValue}" width="800" height="430"  />
 	</p:dialog>
 	<p:dialog id="uploadTerminatinDlg" widgetVar="uploadTerminatinDlg"
 		modal="true" width="700px" height="350px" resizable="false"
