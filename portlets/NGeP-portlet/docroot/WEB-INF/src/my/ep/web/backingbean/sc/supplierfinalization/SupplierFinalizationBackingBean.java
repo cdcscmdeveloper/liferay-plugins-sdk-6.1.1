@@ -5322,6 +5322,10 @@ public class SupplierFinalizationBackingBean extends
 					reqDTO.setScQtFinalization(this.getManagedBean()
 							.getScQtFinalization());
 					reqDTO.setSupplierId(supplierId);
+					TplSpecZoneDtl specZoneDtl = this.getManagedBean().getCurrentZone();
+					if(specZoneDtl != null){
+						reqDTO.setQtZoneCriteriaId(specZoneDtl.getSpecZoneId());
+					}
 					SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveEvaluationResultsByItem(reqDTO);
 					List<ScQtEvaluationResultDtl> selectedQualSuppliers = resDTO
