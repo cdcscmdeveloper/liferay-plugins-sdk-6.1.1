@@ -1664,14 +1664,13 @@ public class TaskReassignmentBackingBean extends
 					}else if (ModuleCodeConst.PROCUREMENT_PLAN
 							.equalsIgnoreCase(moduleCode)) {
 						vo = retrievePpTaskReassignmentDetail(task);
-					}else if(ModuleCodeConst.CONTRACT_MANAGEMENT
+					}else if(ModuleCodeConst.CATALOGUE_MANAGEMENT
 							.equalsIgnoreCase(moduleCode)) {
 						vo = retrieveCMTaskReassignmentDetail(task);
 					}else if(ModuleCodeConst.PROFILE_MANAGEMENT
 							.equalsIgnoreCase(moduleCode)) {
 						vo = retrievePMTaskReassignmentDetail(task);
 					}else if(ModuleCodeConst.SUPPLIER_MANAGEMENT
-							.equalsIgnoreCase(moduleCode) || ModuleCodeConst.CATALOGUE_MANAGEMENT
 							.equalsIgnoreCase(moduleCode)) {
 						vo = new PmTaskReassignmentVO();
 					}
