@@ -188,7 +188,8 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * Method to retrieve Technical & Financial Proposal CheckList and to set in managed bean
+	 * Method to retrieve Technical & Financial Proposal CheckList and to set in
+	 * managed bean
 	 * 
 	 * @param qtID
 	 * @param userId
@@ -284,7 +285,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Gets the display language.
-	 *
+	 * 
 	 * @return the display language
 	 */
 	private String getDisplayLanguage() {
@@ -295,9 +296,11 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Formatted duration based on locale.
-	 *
-	 * @param durationInMills the duration in mills
-	 * @param displayLanguage the display language
+	 * 
+	 * @param durationInMills
+	 *            the duration in mills
+	 * @param displayLanguage
+	 *            the display language
 	 * @return the string
 	 */
 	private String formattedDurationBasedOnLocale(long durationInMills,
@@ -340,7 +343,8 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * Listener method for tab change to retrieve Quotation/Tender Document Details
+	 * Listener method for tab change to retrieve Quotation/Tender Document
+	 * Details
 	 */
 	public void retrieveQTDocumentDetails() {
 		debugLogger("retrieveTechnicalProposalList");
@@ -404,7 +408,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Populate proposal details to save.
-	 *
+	 * 
 	 * @return the proposal ProposalReqDTO
 	 */
 	private ProposalReqDTO populateProposalDetailsTosave() {
@@ -449,8 +453,9 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Method to submit the Supplier Proposal details.
-	 *
-	 * @param digiSign the digi sign
+	 * 
+	 * @param digiSign
+	 *            the digi sign
 	 */
 	public void submitSupplierProposal(PmDigiSign digiSign) {
 
@@ -540,10 +545,13 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Common message acknowledgment page.
-	 *
-	 * @param messageId the message id
-	 * @param variable1 the variable 1
-	 * @param variable2 the variable 2
+	 * 
+	 * @param messageId
+	 *            the message id
+	 * @param variable1
+	 *            the variable 1
+	 * @param variable2
+	 *            the variable 2
 	 */
 	private void commonMessageAcknowledgementPage(String messageId,
 			String variable1, String variable2) {
@@ -693,10 +701,13 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * Handle save reset after exception for technical non government experiences.
-	 *
-	 * @param experiences the experiences
-	 * @param encryptExpriencList the encrypt exprienc list
+	 * Handle save reset after exception for technical non government
+	 * experiences.
+	 * 
+	 * @param experiences
+	 *            the experiences
+	 * @param encryptExpriencList
+	 *            the encrypt exprienc list
 	 */
 	private void handleSaveResetAfterExceptionForTechNonGovExp(
 			List<ScQtPRPExperience> experiences,
@@ -725,10 +736,13 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * Handle save reset after exception for financial non government experiences.
-	 *
-	 * @param experiences the experiences
-	 * @param encryptExpriencList the encrypt exprienc list
+	 * Handle save reset after exception for financial non government
+	 * experiences.
+	 * 
+	 * @param experiences
+	 *            the experiences
+	 * @param encryptExpriencList
+	 *            the encrypt exprienc list
 	 */
 	private void handleSaveResetAfterExceptionForFinNonGovExp(
 			List<ScQtPRPExperience> experiences,
@@ -809,7 +823,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Save template specification details.
-	 *
+	 * 
 	 * @return the proposal res DTO
 	 */
 	private ProposalResDTO saveTemplateSpecDtls() {
@@ -921,7 +935,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Save tech template spec dtls.
-	 *
+	 * 
 	 * @return the proposal res DTO
 	 */
 	private ProposalResDTO saveTechTemplateSpecDtls() {
@@ -1007,32 +1021,36 @@ public class SPDetailBackingBean extends
 				}
 			}
 			reqDTO.setMultiEncryptBeanList(encryptCrditFacilitesList);
-			
+
 			ScQtProposalChecklist finProposalChecklist = null;
 			int index = 0;
-			if(isCompleted){
+			if (isCompleted) {
 				finProposalChecklist = findProposalChecklistByDocDefKey(
 						getManagedBean().getFinanceCheckDetailsList(),
 						ParameterConst.DOCUMENT_DEFINITION_KEY_FOR_CREDIT_FACILITY_UPLOAD);
 				index = getManagedBean().getFinanceCheckDetailsList().indexOf(
 						finProposalChecklist);
-				
-				if (creditFacilitiesList == null || creditFacilitiesList.isEmpty()) {
+
+				if (creditFacilitiesList == null
+						|| creditFacilitiesList.isEmpty()) {
 
 					if (!finProposalChecklist.isSubmitted()
-							|| (finProposalChecklist.getCompliance() != null &&finProposalChecklist.getCompliance().equals(
-									Boolean.FALSE))) {
-						finProposalChecklist.setScQtProposalChecklistAttachment(null);
+							|| (finProposalChecklist.getCompliance() != null && finProposalChecklist
+									.getCompliance().equals(Boolean.FALSE))) {
+						finProposalChecklist
+								.setScQtProposalChecklistAttachment(null);
 						finProposalChecklist.setSubmitted(true);
 						finProposalChecklist.setCompliance(true);
 					} else {
-						finProposalChecklist.setScQtProposalChecklistAttachment(null);
+						finProposalChecklist
+								.setScQtProposalChecklistAttachment(null);
 					}
 
 				} else if (finProposalChecklist.isSubmitted()
-						|| finProposalChecklist.getCompliance()
-								.equals(Boolean.TRUE)) {
-					if (finProposalChecklist.getScQtProposalChecklistAttachment() != null) {
+						|| finProposalChecklist.getCompliance().equals(
+								Boolean.TRUE)) {
+					if (finProposalChecklist
+							.getScQtProposalChecklistAttachment() != null) {
 						finProposalChecklist.setCompliance(Boolean.FALSE);
 					} else {
 						finProposalChecklist.setSubmitted(false);
@@ -1041,7 +1059,6 @@ public class SPDetailBackingBean extends
 				}
 			}
 
-			
 			scQtProposalChecklist
 					.setScQtPRPCreditFacilities(creditFacilitiesList);
 			scQtProposalChecklist.setProposalScore(proposalScores);
@@ -1054,11 +1071,12 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				if(isCompleted){
+				if (isCompleted) {
 					reqDTO.setMultiEncryptBeanList(null);
 					reqDTO.setScQtProposalChecklist(finProposalChecklist);
 					reqDTO.setTobeRemovedCreditFacilities(null);
-					ProposalResDTO resDto = proposalSO.saveProposalDetails(reqDTO);
+					ProposalResDTO resDto = proposalSO
+							.saveProposalDetails(reqDTO);
 					getManagedBean().getFinanceCheckDetailsList().set(index,
 							resDto.getProposalChecklist());
 				}
@@ -1082,9 +1100,11 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Handle save reset after exception for financial credit facilities.
-	 *
-	 * @param creditFacilitiesList the credit facilities list
-	 * @param encryptExpriencList the encrypt exprienc list
+	 * 
+	 * @param creditFacilitiesList
+	 *            the credit facilities list
+	 * @param encryptExpriencList
+	 *            the encrypt exprienc list
 	 */
 	private void handleSaveResetAfterExceptionForFinCreditFacility(
 			List<ScQtPRPCreditFacility> creditFacilitiesList,
@@ -1351,7 +1371,7 @@ public class SPDetailBackingBean extends
 			CriteriaValue totalContractsVal = new CriteriaValue(
 					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV,
 					BigDecimal.valueOf(getManagedBean().getTotalContracts()));
-			
+
 			scQtProposalChecklist.setSubmitted(isCompleted);
 
 			for (ScQtPRPExperience prpExperience : experiences) {
@@ -1453,6 +1473,7 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String saveAssetLiabilityAction(boolean isCompleted) {
+
 		debugLogger("saveAssetLiabilityAction");
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
@@ -1498,6 +1519,8 @@ public class SPDetailBackingBean extends
 				currentLiabilities.setValue(scQtPRPAssetLiability
 						.getCurrentLiabilities().toString());
 				prpAssetLiabilityList.add(currentLiabilities);
+				reqDTO.setCurrentLiability(scQtPRPAssetLiability
+						.getCurrentLiabilities().intValue());
 				scQtPRPAssetLiability.setCurrentLiabilities(null);
 			}
 			reqDTO.setEncryptDataList(prpAssetLiabilityList);
@@ -1737,7 +1760,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Gets the proposal SO.
-	 *
+	 * 
 	 * @return the proposal SO
 	 */
 	private IQTProposalSO getProposalSO() {
@@ -1766,8 +1789,7 @@ public class SPDetailBackingBean extends
 
 			pageUrl = retrieveTemplateSpecDtls(scQtProposalChecklist);
 
-		}
-		else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM
+		} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM
 				.equalsIgnoreCase(definationType)) {
 			String docDefinitionKey = scQtProposalChecklist.getScQtCheckList()
 					.getPmDocument().getDocDefinitionKey();
@@ -1775,8 +1797,7 @@ public class SPDetailBackingBean extends
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
 				pageUrl = retrieveTecNonGovCompanyExpDtls(scQtProposalChecklist);
-			}
-			else if (SourcingConstants.DOC_DEF_KEY_NO_OF_EMPLOYEES
+			} else if (SourcingConstants.DOC_DEF_KEY_NO_OF_EMPLOYEES
 					.equalsIgnoreCase(docDefinitionKey)) {
 
 				pageUrl = retrieveEmployeeDtls(scQtProposalChecklist);
@@ -1794,8 +1815,7 @@ public class SPDetailBackingBean extends
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
 				pageUrl = retrieveTecCompanyExpDtls(scQtProposalChecklist);
-			} 
-			else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_STAFF_LIST
+			} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_STAFF_LIST
 					.equalsIgnoreCase(docDefinitionKey)) {
 				pageUrl = retriveTechnicalStaffDtls(scQtProposalChecklist);
 
@@ -1807,8 +1827,9 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Retrieve template specification details.
-	 *
-	 * @param scQtProposalChecklist the sc qt proposal checklist
+	 * 
+	 * @param scQtProposalChecklist
+	 *            the sc qt proposal checklist
 	 * @return the string
 	 */
 	private String retrieveTemplateSpecDtls(
@@ -1941,8 +1962,9 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Retrieve technical sample details.
-	 *
-	 * @param scQtProposalChecklist the proposal checklist
+	 * 
+	 * @param scQtProposalChecklist
+	 *            the proposal checklist
 	 * @return the string
 	 */
 	private String retrieveSampleDetails(
@@ -2054,7 +2076,7 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			this.getManagedBean().setScLoaList(list);
-			
+
 			this.getManagedBean().setContractSize(list.size());
 
 			return NAV_TO_FEDERAL_GOVT_PAGE;
@@ -2163,8 +2185,9 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Retrieve financial specification details.
-	 *
-	 * @param scQtProposalChecklist the sc qt proposal checklist
+	 * 
+	 * @param scQtProposalChecklist
+	 *            the sc qt proposal checklist
 	 * @return the string
 	 */
 	private String retrieveFinancialSpecDtls(
@@ -2277,8 +2300,9 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Gets the financial specification url.
-	 *
-	 * @param scQt the sc qt
+	 * 
+	 * @param scQt
+	 *            the sc qt
 	 * @return the financial spec url
 	 */
 	private String getFinancialSpecUrl(ScQt scQt) {
@@ -2376,9 +2400,11 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Find proposal check list by doc definition key.
-	 *
-	 * @param proposalChecklists the list of proposal check lists
-	 * @param docDefKey the doc definition key
+	 * 
+	 * @param proposalChecklists
+	 *            the list of proposal check lists
+	 * @param docDefKey
+	 *            the doc definition key
 	 * @return the proposal check list
 	 */
 	private ScQtProposalChecklist findProposalChecklistByDocDefKey(
@@ -2400,8 +2426,6 @@ public class SPDetailBackingBean extends
 
 		return proposalCheckList;
 	}
-
-	
 
 	/**
 	 * Method to retrieve financial credit facilities details
@@ -2430,11 +2454,14 @@ public class SPDetailBackingBean extends
 
 			this.getManagedBean().setScQtPRPCreditFacilities(facilitiesList);
 			totalCreditFacilitiesSum();
-			/*ScQtProposalScore creditFacilitiesScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES);
-			if (creditFacilitiesScore != null) {
-				  this.getManagedBean().setTotalAmountCredit(
-				  creditFacilitiesScore.getCriteriaValue());
-			}*/
+			/*
+			 * ScQtProposalScore creditFacilitiesScore =
+			 * findProposalScoreByCriteriaType
+			 * (SourcingConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES); if
+			 * (creditFacilitiesScore != null) {
+			 * this.getManagedBean().setTotalAmountCredit(
+			 * creditFacilitiesScore.getCriteriaValue()); }
+			 */
 
 			return NAV_TO_CREDIT_FACILITIES_PAGE;
 
@@ -2769,9 +2796,11 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Gets the GST info.
-	 *
-	 * @param supplierId the supplier id
-	 * @param branchId the branch id
+	 * 
+	 * @param supplierId
+	 *            the supplier id
+	 * @param branchId
+	 *            the branch id
 	 * @return the GST info
 	 */
 	private SmGstSupplier getGSTInfo(Long supplierId, Long branchId) {
@@ -2864,7 +2893,8 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * Method to calculate total amount for  three months bank statement check list
+	 * Method to calculate total amount for three months bank statement check
+	 * list
 	 */
 	public void totalAmountSum() {
 		debugLogger("totalAmountSum");
@@ -2919,7 +2949,7 @@ public class SPDetailBackingBean extends
 	 * @param prpExperience
 	 */
 	public void expiryDateSelectListener(ScQtPRPExperience prpExperience) {
-		
+
 		int index = getManagedBean().getScQtPRPExperiences().indexOf(
 				prpExperience);
 		if (prpExperience.getEffectiveDate() == null) {
@@ -2991,26 +3021,32 @@ public class SPDetailBackingBean extends
 		BigDecimal totalAccountReceivable = assetLiability
 				.getTotalAccountReceivable();
 
-		if (null != totalCashInHand && null != totalAccountReceivable
-				&& null != liabilities) {
-			BigDecimal totalAmount = totalCashInHand
-					.add(totalAccountReceivable);
+		if (liabilities == null || liabilities.intValue() <= 0) {
+			assetLiability.setAcidRatio(null);
+			assetLiability.setCurrentRatio(null);
+		} else {
+			BigDecimal totalAmount;
+			if (null != totalCashInHand && null != totalAccountReceivable) {
+				totalAmount = totalCashInHand.add(totalAccountReceivable);
+			} else if (null != totalCashInHand) {
+				totalAmount = totalCashInHand;
+			} else if (null != totalAccountReceivable) {
+				totalAmount = totalAccountReceivable;
+			} else {
+				totalAmount = new BigDecimal(0);
+			}
 			MathContext mc = new MathContext(14);
 			acidRatio = totalAmount.divide(liabilities, mc);
 			assetLiability.setAcidRatio(acidRatio);
+
+			if (asset != null) {
+				currentRatio = asset.divide(liabilities, mc);
+				assetLiability.setCurrentRatio(currentRatio);
+			} else {
+				assetLiability.setCurrentRatio(new BigDecimal(0));
+			}
+
 		}
-
-		if (asset != null && liabilities != null && liabilities.intValue() > 0) {
-
-			MathContext mc = new MathContext(14);
-
-			currentRatio = asset.divide(liabilities, mc);
-			assetLiability.setCurrentRatio(currentRatio);
-		} else {
-			assetLiability.setAcidRatio(new BigDecimal(0));
-			assetLiability.setCurrentRatio(new BigDecimal(0));
-		}
-
 	}
 
 	/**
@@ -3053,7 +3089,7 @@ public class SPDetailBackingBean extends
 
 		List<ScQtPRPExperience> tobeDeletedExperiences = getManagedBean()
 				.getDeletedPRPExperiences();
-		
+
 		List<ScQtPRPExperience> deleteList = new ArrayList<ScQtPRPExperience>();
 		if (experienceList != null) {
 
@@ -3123,7 +3159,7 @@ public class SPDetailBackingBean extends
 		debugLogger("deleteCreditFacilities");
 		List<ScQtPRPCreditFacility> creditFacilitiesList = getManagedBean()
 				.getScQtPRPCreditFacilities();
-		
+
 		List<ScQtPRPCreditFacility> toDeleteCreditFacilitiesList = getManagedBean()
 				.getToBeDeletedCreditFacilities();
 
@@ -3459,10 +3495,12 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Generate declaration from velocity.
-	 *
-	 * @param scQt the sc qt
+	 * 
+	 * @param scQt
+	 *            the sc qt
 	 * @return the string
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	private String generateDeclarationFromVelocity(ScQt scQt) throws Exception {
 		log.info("generateDeclarationFromVelocity");
@@ -3518,10 +3556,13 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Update proposal scores value.
-	 *
-	 * @param proposalChecklist the proposal check list
-	 * @param proposalScores the proposal scores
-	 * @param criteriaValues the criteria values
+	 * 
+	 * @param proposalChecklist
+	 *            the proposal check list
+	 * @param proposalScores
+	 *            the proposal scores
+	 * @param criteriaValues
+	 *            the criteria values
 	 * @return the proposal score list
 	 */
 	private List<ScQtProposalScore> updateProposalScoresValue(
@@ -3586,8 +3627,9 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Find proposal score by criteria type.
-	 *
-	 * @param criteriaType the criteria type
+	 * 
+	 * @param criteriaType
+	 *            the criteria type
 	 * @return the ScQtProposalScore
 	 */
 	private ScQtProposalScore findProposalScoreByCriteriaType(int criteriaType) {
@@ -3610,10 +3652,13 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Navigate prepare technical proposal check list.
-	 *
-	 * @param currProposalChecklist the current proposal check list
-	 * @param newProposalChecklist the new proposal check list
-	 * @param isCompleted the is completed
+	 * 
+	 * @param currProposalChecklist
+	 *            the current proposal check list
+	 * @param newProposalChecklist
+	 *            the new proposal check list
+	 * @param isCompleted
+	 *            the is completed
 	 * @return the string
 	 */
 	private String navigatePrepareTecProposalCheckList(
@@ -3640,10 +3685,13 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Navigate prepare fin proposal check list.
-	 *
-	 * @param currProposalChecklist the current proposal check list
-	 * @param newProposalChecklist the new proposal check list
-	 * @param isCompleted the is completed
+	 * 
+	 * @param currProposalChecklist
+	 *            the current proposal check list
+	 * @param newProposalChecklist
+	 *            the new proposal check list
+	 * @param isCompleted
+	 *            the is completed
 	 * @return the string
 	 */
 	private String navigatePrepareFinProposalCheckList(
@@ -3672,9 +3720,11 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Update proposal check list.
-	 *
-	 * @param currProposalChecklist the current proposal check list
-	 * @param newProposalChecklist the new proposal check list
+	 * 
+	 * @param currProposalChecklist
+	 *            the current proposal check list
+	 * @param newProposalChecklist
+	 *            the new proposal check list
 	 */
 	private void updateQtProposalCheckList(
 			ScQtProposalChecklist currProposalChecklist,
@@ -3692,10 +3742,12 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * Update  technical proposal check list.
-	 *
-	 * @param currProposalChecklist the curr proposal check list
-	 * @param newProposalChecklist the new proposal check list
+	 * Update technical proposal check list.
+	 * 
+	 * @param currProposalChecklist
+	 *            the curr proposal check list
+	 * @param newProposalChecklist
+	 *            the new proposal check list
 	 */
 	private void updateQtTechProposalCheckList(
 			ScQtProposalChecklist currProposalChecklist,
@@ -3711,10 +3763,13 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Update fin and technical proposal check list.
-	 *
-	 * @param currProposalChecklist the current proposal check list
-	 * @param newProposalChecklist the new proposal check list
-	 * @param finOrTech the fin or technical
+	 * 
+	 * @param currProposalChecklist
+	 *            the current proposal check list
+	 * @param newProposalChecklist
+	 *            the new proposal check list
+	 * @param finOrTech
+	 *            the fin or technical
 	 */
 	private void updateQtFinNdTechProposalCheckList(
 			ScQtProposalChecklist currProposalChecklist,
@@ -4039,10 +4094,13 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Generate sample labels from velocity to pdf.
-	 *
-	 * @param attachment the attachment
-	 * @param scQt the sc qt
-	 * @throws Exception the exception
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param scQt
+	 *            the sc qt
+	 * @throws Exception
+	 *             the exception
 	 */
 	private void generateSampleLabelsFromVelocityToPdf(ScAttachment attachment,
 			ScQt scQt) throws Exception {
