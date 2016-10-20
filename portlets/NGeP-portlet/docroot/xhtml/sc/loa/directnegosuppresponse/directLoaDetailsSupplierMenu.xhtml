@@ -9,23 +9,8 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-			
-				<tr>
-					<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
-					</td>
-					<td width="82%"><p:inputText size="40"
-							value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.epNo}"
-							disabled="true" /></td>
-				</tr>
-			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
-				<td><p:inputText size="40"
-						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
+				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
 				<td colspan="3"><p:inputText size="106"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 						disabled="true" /> <p:spacer width="5" /> <p:commandLink
@@ -40,6 +25,19 @@
 							value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"
 							target="#{supplierDetailBackingBean.smSupplier}" />
 					</p:commandLink></td>
+			</tr>
+			<tr>
+				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.ep.no']}" /></td>
+				<td width="82%"><p:inputText size="40"
+							value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.epNo}"
+							disabled="true" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
+				<td><p:inputText size="40"
+						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
+						disabled="true" /></td>
 			</tr>
 
 			<tr>

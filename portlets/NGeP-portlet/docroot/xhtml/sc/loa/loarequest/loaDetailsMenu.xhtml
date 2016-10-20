@@ -14,6 +14,16 @@
    
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td style="width:21%;">
+				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" />
+			</td>
+			<td colspan="3">
+				<p:inputText size="106"
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
+					disabled="true" />
+			</td>
+		</tr>
 		<c:if test="#{!isDocTypeQuotation}">
 		<tr>
 			<td style="width:21%;">
@@ -33,16 +43,6 @@
 		   <td>
 				<p:inputText size="35"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
-					disabled="true" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" />
-			</td>
-			<td colspan="3">
-				<p:inputText size="106"
-					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 					disabled="true" />
 			</td>
 		</tr>
