@@ -75,6 +75,7 @@ import my.ep.web.managedbean.pm.accessappl.AccessApplManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 
 /**
@@ -625,6 +626,12 @@ public class AccessApplBackingBean extends
 	private void validateAccessAppl(String outcome){
 		log.info("validateAccessAppl");
 		PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
+		if(BpmOutcomeConst.BPM_SAVE.equals(outcome)){
+			// validate IC with MyIdentity
+			SmCommonUtil.getInstance().verifyWithMyIdentity(accessAppl.getApplicantName(),
+					accessAppl.getIdentificationNo(),
+					accessAppl.getPostcode(), null);
+		}
 		
 		if(accessAppl.getOrgProfile() == null ){
 			throw new EpException(MessageConst.ERROR_100022,
