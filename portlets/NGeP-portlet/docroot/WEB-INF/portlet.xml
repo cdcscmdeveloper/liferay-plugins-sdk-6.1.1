@@ -8990,7 +8990,7 @@
 		
 	 <portlet>
 		<portlet-name>scMobileNoticeBoard</portlet-name>
-		<display-name>Notice Board</display-name>
+		<display-name>Quotation / Tender Notice</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -9002,8 +9002,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Notice Board</title>
-			<short-title>Notice Board</short-title>
+			<title>Quotation / Tender Notice</title>
+			<short-title>Quotation / Tender Notice</short-title>
 
 			<keywords></keywords>
 		</portlet-info>
