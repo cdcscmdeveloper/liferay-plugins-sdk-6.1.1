@@ -61,13 +61,7 @@
 				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 				<h:outputText
 					value="#{(scqt[5] eq '1')?lbl['lbl.btn.yes']:lbl['lbl.btn.no']}" />
-						&#160;
-						<p:commandLink id="supRegIcon"
-					action="#{noticeBoardBackingBean.gotoSupplierRegistration(scqt[0])}"
-					rendered="#{scqt[5] eq '1'}"
-					title="#{lbl['lbl.sc.notice.board.self.registration.tooltip']}">
-					<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/register.png" />
-				</p:commandLink>
+					&#160;
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.action']}"
