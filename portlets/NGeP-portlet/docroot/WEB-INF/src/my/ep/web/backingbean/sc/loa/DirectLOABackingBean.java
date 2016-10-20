@@ -1673,22 +1673,12 @@ public class DirectLOABackingBean extends
 						.getMessage("lbl.txt.select",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								face.getUserLocale())));
-				selectItems.add(new SelectItem(1, getMonth(1)));
-				selectItems.add(new SelectItem(2, getMonth(2)));
-				selectItems.add(new SelectItem(3, getMonth(3)));
-				selectItems.add(new SelectItem(4, getMonth(4)));
-				selectItems.add(new SelectItem(5, getMonth(5)));
-				selectItems.add(new SelectItem(6, getMonth(6)));
-				selectItems.add(new SelectItem(7, getMonth(7)));
-				selectItems.add(new SelectItem(8, getMonth(8)));
-				selectItems.add(new SelectItem(9, getMonth(9)));
-				selectItems.add(new SelectItem(10, getMonth(10)));
-				selectItems.add(new SelectItem(11, getMonth(11)));
-				selectItems.add(new SelectItem(12, getMonth(12)));
-
+				
+				for (int i = 1; i <= 12; i++) {
+					selectItems.add(new SelectItem(i, getMonth(i, face.getUserLocale())));
+				}
 				this.getManagedBean().setYearList(selectItems);
 			} finally {
-
 			}
 		}
 		return getManagedBean().getYearList();
@@ -1701,11 +1691,11 @@ public class DirectLOABackingBean extends
 	 *            the month id
 	 * @return the month
 	 */
-	private String getMonth(int monthId) {
+	private String getMonth(int monthId, Locale locale) {
 		Calendar fullMonth = Calendar.getInstance();
 		fullMonth.set(00, monthId, 0000);
 
-		Format formatter = new SimpleDateFormat("MMMM");
+		Format formatter = new SimpleDateFormat("MMMM", locale);
 		String month = formatter.format(fullMonth.getTime());
 
 		return month;
