@@ -1671,6 +1671,7 @@ public class TaskReassignmentBackingBean extends
 							.equalsIgnoreCase(moduleCode)) {
 						vo = retrievePMTaskReassignmentDetail(task);
 					}else if(ModuleCodeConst.SUPPLIER_MANAGEMENT
+							.equalsIgnoreCase(moduleCode) || ModuleCodeConst.CATALOGUE_MANAGEMENT
 							.equalsIgnoreCase(moduleCode)) {
 						vo = new PmTaskReassignmentVO();
 					}
