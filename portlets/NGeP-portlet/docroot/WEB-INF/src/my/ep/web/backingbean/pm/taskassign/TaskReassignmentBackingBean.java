@@ -236,6 +236,17 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().getTaskAssignmentSearchBean()
 					.setOrgType(supportParam);
 			
+		}else if(ParameterConst.ORG_TYPE_BPK.equals(pmOrgProfile.getOrgTypeCode()
+				.getParameterCode())){
+			this.getManagedBean().getTaskAssignmentSearchBean()
+			.setOrgProfile(pmOrgProfile);
+			this.getManagedBean().setOrgProfileRequired(false);
+			PmParameter bpkParam = getParameterByTypeAndCode(
+					ParameterTypeConst.ORGANISATION_TYPES,
+					ParameterConst.ORG_TYPE_BPK);
+			this.getManagedBean().getTaskAssignmentSearchBean()
+					.setOrgType(bpkParam);
+			
 		}else {
 			this.getManagedBean().setOrgProfileRequired(true);
 		}
