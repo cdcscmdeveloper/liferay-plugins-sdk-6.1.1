@@ -7785,7 +7785,7 @@ private void retriveCommitteeRemarksList(){
 				checkDemoStatusForQtCheckList();
 				evaluationTechnicalChangeScQtStatusUpdate();
 			}
-			if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL
+			else if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL
 					.equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				List<ScQtProposalChecklist> financialSpes = this
 						.getManagedBean().getFinSpecSupplierListDM().getList();
