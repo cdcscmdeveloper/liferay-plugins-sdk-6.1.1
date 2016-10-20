@@ -15,22 +15,13 @@
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;" immediate="true"
 				process="@this" partialSubmit="true" styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
-
 			<!--  Need to add all screen button into a single page and append here.. -->
 			<ui:include src="financialchecklistbuttons.xhtml" />
-
 		</div>
-
 		<!-- Header file for all sub screens -->
-
-		<p:spacer height="4">
-		</p:spacer>
 		<ui:include src="/xhtml/sc/supplierproposal/proposalcommon/checklistHeader.xhtml" />
-		<p:spacer height="4">
-		</p:spacer>
 		<!-- inclueded page for respecitive checklist -->
 		<ui:include
 			src="#{supplierProposalDetailBackingBean.managedBean.pageUrl}" />
-
 	</ui:define>
 </ui:composition>
