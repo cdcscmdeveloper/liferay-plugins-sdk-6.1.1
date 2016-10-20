@@ -51,7 +51,8 @@
 					</p:outputPanel> <p:outputPanel id="opSysOrgCode"
 						rendered="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null or 
 					ParameterConst.orgTypeSys eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode or
-					ParameterConst.orgTypeSupport eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">
+					ParameterConst.orgTypeSupport eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode or
+					ParameterConst.orgTypeBpk eq taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}">
 						<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="80"
 							disabled="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
 							or !taskReassignmentBackingBean.managedBean.orgProfileRequired}"
@@ -61,7 +62,8 @@
 							saveObject="taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.orgProfile"
 							conditionField="#{taskReassignmentBackingBean.constructConditionFields()}"
 							postUpdateListener="taskReassignmentBackingBean.onChangeOrg" />
-					</p:outputPanel></td>
+					</p:outputPanel>
+					</td>
 				<td width="25%"></td>
 			</tr>
 			<tr>
