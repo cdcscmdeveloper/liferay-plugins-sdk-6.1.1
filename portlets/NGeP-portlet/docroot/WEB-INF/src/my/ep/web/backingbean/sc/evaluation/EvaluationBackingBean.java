@@ -7326,26 +7326,24 @@ private void retriveCommitteeRemarksList(){
 			if (null != this.getManagedBean().getNoOfContractsProposalScore()) {
 				ScQtProposalScore contract = this.getManagedBean()
 						.getNoOfContractsProposalScore();
-				if (null != contract.getUserScore()) {
-					if (null != this.getManagedBean().getUserScores()) {
+				if (null != contract.getUserScore() && null != this.getManagedBean().getUserScores()) {
 						if (contract.getUserScore().intValue() > new Integer(
 								getManagedBean().getUserScores())) {
 							throw new EpException(MessageConst.ERROR_760201);
 						}
-					}
+					
 				}
 
 			}
 			if (null != this.getManagedBean().getNoOfyearsProposalScore()) {
 				ScQtProposalScore contract = this.getManagedBean()
 						.getNoOfyearsProposalScore();
-				if (null != contract.getUserScore()) {
-					if (null != this.getManagedBean().getContractScores()) {
+				if (null != contract.getUserScore() && null != this.getManagedBean().getContractScores()) {
 						if (contract.getUserScore().intValue() > new Integer(
 								getManagedBean().getContractScores())) {
 							throw new EpException(MessageConst.ERROR_760201);
 						}
-					}
+					
 				}
 
 			}
