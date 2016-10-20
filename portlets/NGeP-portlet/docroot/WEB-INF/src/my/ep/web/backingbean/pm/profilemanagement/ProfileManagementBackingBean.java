@@ -110,6 +110,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -3964,12 +3966,12 @@ public class ProfileManagementBackingBean extends
 			if(isNewUser){
 		    	checkIdentificationNumber1();
 		    	
-//		    	//MyIdentity Checking
-//		    	if(getManagedBean().getSelectedUser()
-//						.getIdentificationCode().getParameterCode().equals(ProfileManagementConst.DEFAULT_IDENTIFY_TYPE)){
-//					SmCommonUtil.getInstance().verifyWithMyIdentity(user.getUserName(),user.getIdentificationNo(), 
-//							null, SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
-//				}
+		    	//MyIdentity Checking
+		    	if(getManagedBean().getSelectedUser()
+						.getIdentificationCode().getParameterCode().equals(ProfileManagementConst.DEFAULT_IDENTIFY_TYPE)){
+					SmCommonUtil.getInstance().verifyWithMyIdentity(user.getUserName(),user.getIdentificationNo(), 
+							null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+				}
 			}
 			validateUser(user, userOrg);
 			// addressEntered = validateUserAddress(this.getManagedBean()
