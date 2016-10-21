@@ -1203,6 +1203,16 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.getInstance().removeEquipmentIfNotApplicable(
 				getManagedBean());
 
+		// show po remarks  and rejection reason for resubmit application
+		if (getManagedBean().isSupplierUser()
+				&& getManagedBean().getSmAppl().isResubmit()) {
+			applSectionRevExist();
+			getManagedBean().setRejectReasonsMsg(
+					SmCommonUtil
+							.getHtmlApplicationRejectReasons(getManagedBean()
+									.getSmAppl()));
+		}
+
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
@@ -9720,18 +9730,7 @@ public class SmApplicationBackingBean extends
 		boolean containsAppRev = false;
 
 		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {
-			for (SmApplSectionReview rev : getManagedBean().getSmAppl()
-					.getSmApplSectionReviews()) {
-				if (rev.getRoleType().equalsIgnoreCase(
-						SupplierManagementConst.SECTION_REV_ROLE_APP)) {
-					getManagedBean().setApprvrSecReview(rev);
-					containsAppRev = true;
-				}
-				if (rev.getRoleType().equalsIgnoreCase(
-						SupplierManagementConst.SECTION_REV_ROLE_PO)) {
-					getManagedBean().setPoSecReview(rev);
-				}
-			}
+			containsAppRev = applSectionRevExist();
 			if (getManagedBean().isReviewSiteVisit()
 					&& !getManagedBean().getApprvrSecReview()
 							.isSitevisitVerified()) {
@@ -9757,14 +9756,7 @@ public class SmApplicationBackingBean extends
 		boolean containsPORev = false;
 
 		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {
-			for (SmApplSectionReview rev : getManagedBean().getSmAppl()
-					.getSmApplSectionReviews()) {
-				if (rev.getRoleType().equalsIgnoreCase(
-						SupplierManagementConst.SECTION_REV_ROLE_PO)) {
-					getManagedBean().setPoSecReview(rev);
-					containsPORev = true;
-				}
-			}
+			containsPORev = applSectionRevExist();
 			if (getManagedBean().isReviewSiteVisit()
 					&& !getManagedBean().getPoSecReview().isSitevisitVerified()) {
 				getManagedBean().getPoSecReview().setVerifiedAll(false);
@@ -9781,11 +9773,37 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	/**
-	 * Test printer.
-	 */
-	public void testPrinter() {
-		log.info("********* Test printer actions ********  ");
+	public boolean applSectionRevExist() {
+		boolean containsSecRev = false;
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmApplSectionReviews())) {
+			if (getManagedBean().isApproverUser()) {
+				for (SmApplSectionReview rev : getManagedBean().getSmAppl()
+						.getSmApplSectionReviews()) {
+					if (rev.getRoleType().equalsIgnoreCase(
+							SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+						getManagedBean().setApprvrSecReview(rev);
+						containsSecRev = true;
+					}
+					if (rev.getRoleType().equalsIgnoreCase(
+							SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+						getManagedBean().setPoSecReview(rev);
+					}
+				}
+			} else if (getManagedBean().isPoUser()
+					|| (getManagedBean().isSupplierUser() && getManagedBean()
+							.getSmAppl().isResubmit())) {
+				for (SmApplSectionReview rev : getManagedBean().getSmAppl()
+						.getSmApplSectionReviews()) {
+					if (rev.getRoleType().equalsIgnoreCase(
+							SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+						getManagedBean().setPoSecReview(rev);
+						containsSecRev = true;
+					}
+				}
+			}
+		}
+		return containsSecRev;
 	}
 
 	/**

@@ -99,12 +99,12 @@
 
 			</div>
 			<br />
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="false" cols="41"
-								maxlength="200" id="assocCmpnyPORmrks"
+								maxlength="200" id="assocCmpnyPORmrks"  readonly="#{backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}"
 								validatorMessage="#{lbl['lbl.sm.assocCmpny.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.poSecReview.associateRemark}">
 								<f:validateLength maximum="200" />

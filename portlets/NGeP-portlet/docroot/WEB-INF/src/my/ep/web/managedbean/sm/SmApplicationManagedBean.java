@@ -450,6 +450,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String personType;
 	private String currRegStatus;
 	private String popupAction;
+	private String rejectReasonsMsg;
 	private Long approvedStatusId;
 
 	private BigDecimal currBumiEquity;
@@ -3645,5 +3646,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCloneObject(Object cloneObject) {
 		this.cloneObject = cloneObject;
+	}
+
+	public String getRejectReasonsMsg() {
+		return rejectReasonsMsg;
+	}
+
+	public void setRejectReasonsMsg(String rejectReasonsMsg) {
+		this.rejectReasonsMsg = rejectReasonsMsg;
 	}
 }

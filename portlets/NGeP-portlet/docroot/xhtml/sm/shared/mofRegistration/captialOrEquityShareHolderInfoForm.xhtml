@@ -131,12 +131,12 @@
 						update=":form:tt:shrPerDt" disabled="#{backingBean.managedBean.disAllowOwnerEdit or empty backingBean.managedBean.selectedShareHolders}"/>
 				</div>
 				<br />
-				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
 					<table style="width: 50%">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="false" cols="41"
-									maxlength="200" id="capShrHoldInfoPoRmrk"
+									maxlength="200" id="capShrHoldInfoPoRmrk" readonly="#{backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}"
 									validatorMessage="#{lbl['lbl.sm.shrHldrInfo.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 									value="#{backingBean.managedBean.poSecReview.shareholderRemark}">
 									<f:validateLength maximum="200" />
