@@ -285,6 +285,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String gfmasErrorDesc;
 	
 	//getFactoring address details
+	private boolean factored;
 	private String facSupplierAddress;
 	private String phoneNo;
 	private String faxNo;
@@ -3019,6 +3020,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setMinOrderQuantity(Double minOrderQuantity) {
 		this.minOrderQuantity = minOrderQuantity;
+	}
+
+	public boolean isFactored() {
+		return factored;
+	}
+
+	public void setFactored(boolean factored) {
+		this.factored = factored;
 	}
 
 }
