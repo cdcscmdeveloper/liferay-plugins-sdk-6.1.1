@@ -104,6 +104,7 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 			docTypeList.add(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+			docTypeList.add(ParameterConst.DOCTYPE_REMOVE_FACTORING);
 			docTypeList.add(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
 			docTypeList.add(ParameterConst.DOCTYPE_AGREEMENT);
 			docTypeList.add(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);

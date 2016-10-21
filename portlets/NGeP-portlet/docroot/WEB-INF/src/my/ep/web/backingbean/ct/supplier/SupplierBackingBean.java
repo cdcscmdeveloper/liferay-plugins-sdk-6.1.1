@@ -355,7 +355,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			// Remove Factoring Request
 			if (getManagedBean().getFactoring().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				getManagedBean().setRemoveFactoring(true);
-			}
+				getManagedBean().setDocType(ParameterConst.DOCTYPE_REMOVE_FACTORING);
+			} else {
+            	getManagedBean().setRemoveFactoring(false);
+				getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+            }
                 
 			if (getManagedBean().getUserMap().size() == 0) {
 				initializeApproverList();
@@ -394,9 +398,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
 				}
 			}
-           
+			
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-    		          ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo()));
+    		          ModuleCodeConst.CONTRACT_MANAGEMENT, getManagedBean().getDocType(), getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getFactoring().getCtWorkflowStatus(), 
@@ -546,6 +550,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setRemoveFactoring(getManagedBean().isRemoveFactoring());
+			reqDTO.setDocType(getManagedBean().getDocType());
 	    
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
@@ -567,7 +572,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 	    					MessageUtils.getMessage(messageId,
-	    							new String[] {getFactoringLabel(), 
+	    							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getDocType()),
 	    							this.getManagedBean().getFactoring().getLoa().getLoaNo() },
 	    							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		    
@@ -645,7 +650,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				StringBuilder sb = new StringBuilder();
 				sb.append(getManagedBean().getContractNo());
 				sb.append(ContractConst.SEPRATE_LINE);
-				sb.append(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+				sb.append(getManagedBean().getDocType());
 				sb.append(ContractConst.SEPRATE_LINE);
 				sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
 				sb.append(ContractConst.SEPRATE_LINE);
@@ -744,16 +749,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
                 sb = new StringBuilder();
                 sb.append(getManagedBean().getContractNo());
 		        sb.append(ContractConst.SEPRATE_LINE);
-		        sb.append(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+		        sb.append(getManagedBean().getDocType());
 		        sb.append(ContractConst.SEPRATE_LINE);
-		        if(getManagedBean().isRemoveFactoring()) {
-			           sb.append("REMOVE");
-			           sb.append(ContractConst.SEPRATE_LINE);
-		        } else {
-		        	sb.append("REQUESY");
-		        	sb.append(ContractConst.SEPRATE_LINE);
-		        }
-	
 		        sb.append(outcome);		
 		        sb.append(ContractConst.SEPRATE_LINE);
 		        sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());    
@@ -814,8 +811,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		StringBuilder sb = new StringBuilder();
 		sb.append(getManagedBean().getCtContract().getContractNo());
 		sb.append(ContractConst.SEPRATE_LINE);
-		sb.append(ContractConst.DOC_TYPE_REQUEST_FACTORING);
-		sb.append(ContractConst.SEPRATE_LINE);
+		sb.append(getManagedBean().getDocType());
+	    sb.append(ContractConst.SEPRATE_LINE);
 		sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
 		sb.append(ContractConst.SEPRATE_LINE);
 		sb.append(getManagedBean().getCtContract().getSmSupplier().getRegNo());
@@ -1017,14 +1014,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-		File file = new File(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-			         ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo()));
-
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
 		file.mkdirs();
-		String filePath = DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-			ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo()) +
-			ContractConst.SPACE_SLASH + attachmentFormat.format(item.getFileName(), null);
-	
+		filePath = filePath + ContractConst.SPACE_SLASH + attachmentFormat.format(item.getFileName(), null);
+				
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();    	
