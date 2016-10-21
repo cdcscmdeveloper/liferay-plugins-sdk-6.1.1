@@ -3668,6 +3668,15 @@ table.rptTbl {
 	
 }
 
+.ui-icon-proceed-migrated {
+	background-image: url('../images/design/ico-proceed.png') !important;
+	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !important;
+	margin-right:5px;
+	
+}
+
 .ui-icon-fl-cancel {
 	background-image: url('../images/design/cancel.png') !important;
 	background-position: center;
