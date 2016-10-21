@@ -2041,31 +2041,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @return String
 	 */
 	public String getApplicationRejectionReason() {
-		String langCode = new FacesScopes().getUserLocale().getLanguage();
-		StringBuilder sb = new StringBuilder();
-		int i = 1;
-		for (SmApplRejectReason rej : getManagedBean().getSmAppl()
-				.getSmApplRejectReasons()) {
-			if (rej.getPmReason() != null
-					&& rej.getPmReason().getPmReasonDescs() != null) {
-				try {
-					for (PmReasonDesc desc : rej.getPmReason()
-							.getPmReasonDescs()) {
-						if (desc.getPmLanguage() != null
-								&& desc.getPmLanguage().getLanguageCode()
-										.equalsIgnoreCase(langCode)) {
-							sb.append(i + ") " + desc.getReasonDesc()).append(
-									"<br />");
-							i++;
-						}
-					}
-				} catch (ValidationException ex) {
-					log.debug(">>>>ERROR INITIALIZE REJECT REASON:"
-							+ ex.getMessage() + "<<<<<<<");
-				}
-			}
-		}
-		return sb.toString();
+		return SmCommonUtil.getHtmlApplicationRejectReasons(getManagedBean()
+				.getSmAppl());
 	}
 
 	/**

@@ -410,11 +410,11 @@
 					</tr>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td colspan="3"><p:inputTextarea autoResize="false" cols="41"
-								maxlength="200" id="offFacSectPoRmrk"
+								maxlength="200" id="offFacSectPoRmrk" readonly="#{backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}"
 								validatorMessage="#{lbl['lbl.sm.panHdr.offFacility']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}">
 								<f:validateLength maximum="200" />
