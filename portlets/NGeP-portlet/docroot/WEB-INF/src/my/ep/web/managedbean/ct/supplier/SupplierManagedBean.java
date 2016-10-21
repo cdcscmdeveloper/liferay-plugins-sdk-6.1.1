@@ -47,6 +47,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String buttonAction;
 	private String fileDirectory;
 	private String accountNoAndName;
+	private String docType;
 	private Date effDate;
 	private Date expDate;
 	private Date loaDate;
@@ -550,4 +551,18 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
 		this.spkiBackingBean = spkiBackingBean;
 	}
+
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}	
 }

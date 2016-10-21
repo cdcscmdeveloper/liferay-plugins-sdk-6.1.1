@@ -1557,7 +1557,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public boolean checkFactoringExpiryDate() {
     	if (ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring() != null 
     			&& ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus() != null
-    			&& ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()) {
+    			&& (ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
+    				|| ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.XF_PENDING_ACKNOWLEDGEMENT.longValue()
+    				|| ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.XF_PENDING_ENDORSEMENT.longValue())) {
     		return true;
     	}
     	return false;
@@ -1825,21 +1827,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			    	 supplierBB.getManagedBean().setContractVer(resDTO.getContract().getLatestContractVer());
 			     } else {
 			    	 supplierBB.getManagedBean().setContractVer(resDTO.getContract().getCurrentContractVer());
-			     }		     
-				
-				supplierBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-		        		ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_REQUEST_FACTORING, supplierBB.getManagedBean().getCtContract().getContractNo()));
-				supplierBB.setCtBB(new ContractBackingBean(supplierBB.getManagedBean().getFileDirectory()));		    	
+			     }	    	
           		
 				if (supplierBB.getManagedBean().getCtContract().getCtFactoring() != null &&  supplierBB.getManagedBean().getCtContract().isFactored()
-						&& (supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
-						|| supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_ACKNOWLEDGEMENT_REJECTED.longValue()
-						|| supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_REJECTED.longValue())) {
+						&& supplierBB.getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()) {
+					// Remove Factoring
 					supplierBB.getManagedBean().setFactoring(resDTO.getContract().getCtFactoring());
 					supplierBB.getManagedBean().getFactoring().setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 					supplierBB.getManagedBean().setRemoveFactoring(true);
+					supplierBB.getManagedBean().setDocType(ParameterConst.DOCTYPE_REMOVE_FACTORING);
 					PmStatus pmStatus = new PmStatus();
-					pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
+					pmStatus.setStatusId(ContractStatusConst.XF_PENDING_SUBMISSION);
 					supplierBB.getManagedBean().getFactoring().setStatus(pmStatus);
 					supplierBB.getManagedBean().setAccBankName(null);
 					supplierBB.getManagedBean().setAccBankName(
@@ -1848,9 +1846,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								+ supplierBB.getManagedBean().getFactoring().getBankName());
 					supplierBB.getCtBB().initializeRemarkAndAttachement(null, supplierBB.getManagedBean().getRemarkList(), supplierBB.getManagedBean().getAttachmentList());
 				} else {
-					supplierBB.getManagedBean().setRemoveFactoring(false);
+					// Request Factoring
 					supplierBB.initializeFactoring();
+					supplierBB.getManagedBean().setRemoveFactoring(false);
+					supplierBB.getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
 				}
+				String docType = (supplierBB.getManagedBean().isRemoveFactoring()) ? ParameterConst.DOCTYPE_REMOVE_FACTORING : ParameterConst.DOCTYPE_REQUEST_FACTORING;
+				supplierBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+		        		ModuleCodeConst.CONTRACT_MANAGEMENT, docType, supplierBB.getManagedBean().getCtContract().getContractNo()));
+				supplierBB.setCtBB(new ContractBackingBean(supplierBB.getManagedBean().getFileDirectory()));
 			}			
 		} catch(Exception ex) {
 			ex.printStackTrace();

@@ -5195,7 +5195,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public boolean checkFactoringExpiryDate() {
     	if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getCtFactoring() != null 
     			&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus() != null
-    			&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()) {
+    			&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
+    				|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.XF_PENDING_ACKNOWLEDGEMENT.longValue()
+    				|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.XF_PENDING_ENDORSEMENT.longValue())) {
     		return true;
     	}
     	return false;
