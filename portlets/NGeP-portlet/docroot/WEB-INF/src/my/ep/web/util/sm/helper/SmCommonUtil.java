@@ -61,6 +61,7 @@ import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.eclipse.persistence.exceptions.ValidationException;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -146,12 +147,14 @@ import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -4223,8 +4226,7 @@ public class SmCommonUtil {
 	 *            applType
 	 * @return SmAppl
 	 */
-	public static SmAppl getLatestRejectedApplBySupplier(
-			SmSupplier supplier) {
+	public static SmAppl getLatestRejectedApplBySupplier(SmSupplier supplier) {
 		SmAppl retVal = null;
 		StringBuilder sb = new StringBuilder();
 		sb.append("(")
@@ -4318,6 +4320,44 @@ public class SmCommonUtil {
 	public static boolean isHasDifferences(Object latest, Object current,
 			String[] excludeProps) {
 		return isSmObjectPropsDifference(latest, current, excludeProps);
+	}
+
+	/**
+	 * Get HTML reject reasons for display purpose
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @return String
+	 */
+	public static String getHtmlApplicationRejectReasons(SmAppl smAppl) {
+		String langCode = new FacesScopes().getUserLocale().getLanguage();
+		StringBuilder sb = new StringBuilder();
+		int i = 1;
+		if (smAppl != null
+				&& !EntityHelper.isCollectionEmpty(smAppl
+						.getSmApplRejectReasons())) {
+			for (SmApplRejectReason rej : smAppl.getSmApplRejectReasons()) {
+				if (rej.getPmReason() != null
+						&& rej.getPmReason().getPmReasonDescs() != null) {
+					try {
+						for (PmReasonDesc desc : rej.getPmReason()
+								.getPmReasonDescs()) {
+							if (desc.getPmLanguage() != null
+									&& desc.getPmLanguage().getLanguageCode()
+											.equalsIgnoreCase(langCode)) {
+								sb.append(i + ") " + desc.getReasonDesc())
+										.append("<br />");
+								i++;
+							}
+						}
+					} catch (ValidationException ex) {
+						log.debug(">>>>ERROR INITIALIZE REJECT REASON:"
+								+ ex.getMessage() + "<<<<<<<");
+					}
+				}
+			}
+		}
+		return sb.toString();
 	}
 
 	public String getPaymentGatewayVKeyByBillType(String billType) {

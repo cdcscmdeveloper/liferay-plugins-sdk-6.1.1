@@ -101,12 +101,12 @@
 
 			</div>
 			<br />
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="false" cols="41"
-								maxlength="200" id="certInfoPoRmrk"
+								maxlength="200" id="certInfoPoRmrk" readonly="#{backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}"
 								validatorMessage="#{lbl['lbl.sm.panHdr.certInfo']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.poSecReview.certRemark}">
 								<f:validateLength maximum="200" />

@@ -81,13 +81,14 @@
 						<ui:include
 							src="/xhtml/sm/shared/mofRegistration/noFacilityRequiredMsg.xhtml" />
 						
-						<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+						<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
 							<table style="width: 50%">
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 									<td><p:inputTextarea autoResize="false" cols="41"
 											maxlength="200" id="renewPoFactRmrk"
 											validatorMessage="#{lbl['lbl.sm.poRemarks.length.validMsg']}"
+											readonly="#{backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}"
 											value="#{backingBean.managedBean.poSecReview.factoryRemark}">
 											<f:validateLength maximum="200" />
 										</p:inputTextarea> <p:message id="renewPoFactRmrkMsg" for="renewPoFactRmrk"
