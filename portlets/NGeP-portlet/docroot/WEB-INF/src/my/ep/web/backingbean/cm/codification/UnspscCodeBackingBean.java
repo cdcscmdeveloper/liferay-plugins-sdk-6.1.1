@@ -175,9 +175,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	}
 
 
-	public String submitForRequest(String action) throws Exception {
+	public String submitForRequest(String action){
 
-		try {
+		
 			System.out.println("action:" + action);
 
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
@@ -343,22 +343,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new EpException(MessageConst.EP_MAJ_00001,
-					new String[] { ResourceBundleUtils.getMessage(null,
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
-
-			// return "unspscRequestForm";
-		}
-
-		// return "taskListView";
 		return "BPMtesting";
 
 	}
 
-	public String bpmTesting(String action) throws Exception {
+	public String bpmTesting(String action){
 
 		
 
@@ -584,7 +573,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			}
 		}
 	}
-	public String selectSubmitRecommend(String action) throws Exception {
+	public String selectSubmitRecommend(String action) {
 
 		
 			this.getManagedBean().getRequestCode().setCmRecommendCodes(null);
@@ -664,51 +653,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 									new FacesScopes().getUserLocale())));
 		
 
-		return "BPMtesting";
-
-	}
-
-	public String submitForMaintenanceRequest(String action) throws Exception {
-
-		try {
-			System.out.println("action:" + action);
-
-			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
-					.getInstance()
-					.getServiceObject("cm", ICodificationSO.class);
-
-			FacesScopes face = new FacesScopes();
-			Object token = face.getBPMAuthenticationCtxToken();
-			CodificationReqDTO reqDTO = new CodificationReqDTO();
-
-			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-			reqDTO.setToken(token);
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setOutCome(action);
-			CodificationResDTO resDTO = null;
-
-			resDTO = unspscSO.updateCodificationRequest(reqDTO);
-
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-
-			facesContext.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_710001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-		} catch (Exception ex) {
-			System.out.println("***************Exception*****************");
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext
-			.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"BPM  ERROR", ex.getMessage()));
-
-			return "reviewDeleteExtension";
-		}
-
-		// return "taskListView";
 		return "BPMtesting";
 
 	}
@@ -1056,7 +1000,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 
-		try {
+
 
 			if (outcome.equalsIgnoreCase("SUBMIT")) {
 				System.out.println("***this.getManagedBean().isNewSegment()"
@@ -1564,17 +1508,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
 			}
-		} catch (Exception ex) {
 
-			System.out.println("***************Exception*****************");
 
-			throw new EpException(MessageConst.EP_MAJ_00001);
-
-			// return "reviewBeforeCreateTempCode";
-		}
-
-		// BpmResponseDTO responseDTO =
-		// updateTask(resDTO.getRequestCode(),taskListBB.getManagedBean().getTaskId());
+	
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(
 				null,
@@ -1583,7 +1519,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
-		// return "taskListView";
 		return "BPMtesting";
 
 	}
