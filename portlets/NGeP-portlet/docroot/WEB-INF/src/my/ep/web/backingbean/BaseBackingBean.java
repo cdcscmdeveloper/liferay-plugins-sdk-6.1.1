@@ -315,7 +315,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 	public void releaseBpmTask() {
 		System.out.println("**********releaseTask");
-		try {
+		
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
 
@@ -330,9 +330,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			reqDTO.setTaskId(taskId);
 			reqDTO.setCtxToken(token);
 			bpmSO.releaseTask(reqDTO);
-		} catch (Exception e) {
-			throw new EpException(e.getMessage());
-		}
+		
 
 	}
 
