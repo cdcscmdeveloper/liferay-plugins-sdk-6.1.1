@@ -222,8 +222,10 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 						
 						RPTRequest rptRequest = rptRequestList.get(i);
 						
-						RPTRequestBackingBean rptRequestBackingBean = new RPTRequestBackingBean();
-						rptRequestBackingBean.getLatestStatusCode(rptRequest);
+						if(isInProgress(rptRequest.getStatusCode())){
+							RPTRequestBackingBean rptRequestBackingBean = new RPTRequestBackingBean();
+							rptRequestBackingBean.getLatestStatusCode(rptRequest);	
+						}
 					}
 					
 					if (resDTO.isSuccessful()) {
@@ -256,16 +258,6 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 	public void setrptRequestDataModel(
 			IPagingDataModel<RPTRequest> specMasterDataModel) {
 		this.rptRequestDataModel = specMasterDataModel;
-	}
-	
-	public void searchNotify() {
-		
-		//this.getManagedBean().setSelectedNotify(new PmNotifyUser());
-		
-		rptRequestDataModel.resetData();
-		rptRequestDataModel.reloadData();
-		
-		resetSelectedRPTRequest();
 	}
 	
 	private void resetSelectedRPTRequest() {
@@ -303,6 +295,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 	
 	public void getLatestStatusCodeForRequests(){
 		
+		rptRequestDataModel.resetData();
 		rptRequestDataModel.reloadData();
 	}
 	
@@ -449,7 +442,6 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 	}
 	
 	public boolean isInProgress(String reportStatus){
-		
 		
 		if(reportStatus != null){
 			if(reportStatus.equals("1") ||
