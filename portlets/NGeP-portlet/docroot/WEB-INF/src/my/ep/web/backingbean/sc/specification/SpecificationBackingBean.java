@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1693,7 +1694,7 @@ public class SpecificationBackingBean extends
 
 				}
 			}
-
+checklistSorting(this.getManagedBean().getTechnicalScoring());
 		} finally {
 			specSo = null;
 		}
@@ -1801,6 +1802,7 @@ public class SpecificationBackingBean extends
 					new ArrayList<ScQtCheckList>());
 			List<ScQtCheckList> checklist = this.getManagedBean()
 					.getScQtCheckSt2financeProposalList();
+			checklistSorting(checklist);
 			if (null != checklist && !checklist.isEmpty()) {
 
 				List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
@@ -1981,6 +1983,7 @@ public class SpecificationBackingBean extends
 
 				}
 			}
+			
 		} finally {
 			specSo = null;
 		}
@@ -5366,8 +5369,10 @@ public class SpecificationBackingBean extends
 			st2financeproposalList2
 					.setDocCategory(QTConstants.FINANCIAL_DOC_TYPE);
 			st2financeproposalList2.setScoringReq(false);
+			Integer checkListSequence=checkTechnicalORFinancialAddChecklistSequence(st2financeproposalList);
+			log.info("========== financial return checklist sequence===="+checkListSequence);
 			st2financeproposalList2
-					.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_UPLOAD);
+					.setChecklistSeq(checkListSequence);
 
 			st2financeproposalList2.setScQt(this.getManagedBean().getQt());
 
@@ -5392,6 +5397,7 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setScQtCheckSt2financeProposalList(
 					st2financeproposalList);
+			checklistSorting(getManagedBean().getScQtCheckSt2financeProposalList());
 			this.getManagedBean().setFinStandaraChecklist(false);
 		} finally {
 		}
@@ -5402,12 +5408,12 @@ public class SpecificationBackingBean extends
 	 * checklist in specification committee.
 	 */
 	public void addTechnicalComplianceList() {
-
+		
 		try {
 
 			List<ScQtCheckList> compilance = this.getManagedBean()
 					.getScQtCheckSt2techProposal();
-
+                
 			List<PmDocument> selectList = this.getManagedBean()
 					.getStageTwoTechComplianceSelect();
 			this.getManagedBean().setTechStandaraChecklist(false);
@@ -5420,6 +5426,7 @@ public class SpecificationBackingBean extends
 				PmDocument document = selectList.get(i);
 				boolean isRequired = false;
 				for (ScQtCheckList techStandard : compilance) {
+					
 					if (techStandard.getTitle().equals(document.getDocName())) {
 						this.getManagedBean().setTechStandaraChecklist(true);
 						isRequired = true;
@@ -5442,10 +5449,11 @@ public class SpecificationBackingBean extends
 					scqtlist.setPmDocument(document);
 					setUserDetails(scqtlist);
 					if (null == document.getDisplaySeq()) {
-						scqtlist.setChecklistSeq(new Integer(10));
+						scqtlist.setChecklistSeq(formatChecklistSequence(SourcingConstants.STANDARD_CHECKLIST_SEQUENCE,0));
 					} else {
-						scqtlist.setChecklistSeq(new Integer(document
-								.getDisplaySeq()));
+					
+						scqtlist.setChecklistSeq(formatChecklistSequence(SourcingConstants.STANDARD_CHECKLIST_SEQUENCE,new Integer(document
+								.getDisplaySeq())));
 					}
 					scqtlist.setScQt(this.getManagedBean().getQt());
 
@@ -5459,16 +5467,12 @@ public class SpecificationBackingBean extends
 						Long statusId = null;
 						if (!scqtlist.isScoringReq()) {
 							statusId = QTStatusConst.TS_COMPLETED;
-						} else if (scqtlist.isScoringReq()) {
+						} else  {
 							statusId = QTStatusConst.TS_PENDING_SUBMISSION;
 						}
 						scqtlist.setPmStatus(getPmStatusByStatusId(statusId));
 					}
-					if (null != scqtlist.getDefinationType()
-							&& ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-									.equalsIgnoreCase(scqtlist
-											.getDefinationType()
-											.getParameterCode())) {
+					else {
 						scqtlist.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					}
 					scqtlist.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
@@ -5476,11 +5480,12 @@ public class SpecificationBackingBean extends
 				}
 
 			}
-
+              
 			getManagedBean().setScQtCheckSt2techProposal(compilance);
+			checklistSorting(getManagedBean().getScQtCheckSt2techProposal());
 
 		} finally {
-
+			
 		}
 		this.getManagedBean().setAutoUpdate(true);
 		RequestContext.getCurrentInstance().execute("stageTwoTech.hide()");
@@ -5505,8 +5510,10 @@ public class SpecificationBackingBean extends
 			st2technicalproposalList1
 					.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
 			st2technicalproposalList1.setScoringReq(false);
+			Integer checkListSequence=checkTechnicalORFinancialAddChecklistSequence(st2technicalproposalList);
+			log.info("========== technical return checklist sequence===="+checkListSequence);
 			st2technicalproposalList1
-					.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_UPLOAD);
+					.setChecklistSeq(checkListSequence);
 
 			st2technicalproposalList1.setScQt(this.getManagedBean().getQt());
 			st2technicalproposalList1.setAction(new PmParameter());
@@ -5519,6 +5526,7 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setScQtCheckSt2techProposal(
 					st2technicalproposalList);
+			checklistSorting(getManagedBean().getScQtCheckSt2techProposal());
 			this.getManagedBean().setTechStandaraChecklist(false);
 		} finally {
 		}
@@ -5571,10 +5579,10 @@ public class SpecificationBackingBean extends
 					// scqtlist.setChecklistSeq(document.getDisplaySeq());
 					scqtlist.setPmDocument(document);
 					if (null == document.getDisplaySeq()) {
-						scqtlist.setChecklistSeq(new Integer(10));
+						scqtlist.setChecklistSeq(formatChecklistSequence(SourcingConstants.STANDARD_CHECKLIST_SEQUENCE,0));
 					} else {
-						scqtlist.setChecklistSeq(new Integer(document
-								.getDisplaySeq()));
+						scqtlist.setChecklistSeq(formatChecklistSequence(SourcingConstants.STANDARD_CHECKLIST_SEQUENCE,new Integer(document
+								.getDisplaySeq())));
 					}
 					scqtlist.setScQt(this.getManagedBean().getQt());
 
@@ -5589,16 +5597,12 @@ public class SpecificationBackingBean extends
 						Long statusId = null;
 						if (!scqtlist.isScoringReq()) {
 							statusId = QTStatusConst.TS_COMPLETED;
-						} else if (scqtlist.isScoringReq()) {
+						} else  {
 							statusId = QTStatusConst.TS_PENDING_SUBMISSION;
 						}
 						scqtlist.setPmStatus(getPmStatusByStatusId(statusId));
 					}
-					if (null != scqtlist.getDefinationType()
-							&& ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-									.equalsIgnoreCase(scqtlist
-											.getDefinationType()
-											.getParameterCode())) {
+					else {
 						scqtlist.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					}
 
@@ -5608,6 +5612,7 @@ public class SpecificationBackingBean extends
 			}
 
 			getManagedBean().setScQtCheckSt2financeProposalList(compilance);
+			checklistSorting(getManagedBean().getScQtCheckSt2financeProposalList());
 
 		} finally {
 		}
@@ -10790,12 +10795,14 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().getScQtCheckSt2techProposal()
 						.add(this.getManagedBean().getIndex(), localCheckList);
 			}
+			checklistSorting(this.getManagedBean().getScQtCheckSt2techProposal());
 		} else {
 			setFinSpecScoreWeightage(localCheckList);
 			this.getManagedBean().getScQtCheckSt2financeProposalList()
 					.remove(this.getManagedBean().getIndex());
 			this.getManagedBean().getScQtCheckSt2financeProposalList()
 					.add(this.getManagedBean().getIndex(), localCheckList);
+			checklistSorting(this.getManagedBean().getScQtCheckSt2financeProposalList());
 
 		}
 
@@ -10902,6 +10909,7 @@ public class SpecificationBackingBean extends
 						technicalCheckLists.remove(currIndex);
 						technicalCheckLists.add(currIndex, checkList);
 					}
+					checklistSorting(this.getManagedBean().getScQtCheckSt2techProposal());
 
 				} else {
 					setFinSpecScoreWeightage(checkList);
@@ -10953,6 +10961,7 @@ public class SpecificationBackingBean extends
 					 * ().getScQtCheckSt2financeProposalList()
 					 * .add(this.getManagedBean().getIndex(), checkList);
 					 */
+					checklistSorting(this.getManagedBean().getScQtCheckSt2financeProposalList());
 				}
 			}
 		}
@@ -12190,6 +12199,7 @@ public class SpecificationBackingBean extends
 			technical.addAll(deleteTechCheckList);
 			this.getManagedBean().setMarkDeletedTechChecklist(technical);
 		}
+		checklistSorting(getManagedBean().getScQtCheckSt2techProposal());
 	}
 
 	/*
@@ -12250,7 +12260,7 @@ public class SpecificationBackingBean extends
 			financial.addAll(deletefinCheckList);
 			this.getManagedBean().setMarkDeletedFinChecklist(financial);
 		}
-
+		checklistSorting(getManagedBean().getScQtCheckSt2financeProposalList());
 	}
 
 	/*
@@ -13263,4 +13273,40 @@ public class SpecificationBackingBean extends
 		getManagedBean().setAutoUpdate(Boolean.TRUE);		
 	}
 	
+	private Integer formatChecklistSequence(String ckecklistSequence,int runningNo){
+		StringBuilder docNo = new StringBuilder();
+		docNo.append(ckecklistSequence);
+		docNo.append(String.format("%1$0" + (6 - docNo.length()) + "d", runningNo));
+		log.info("============display doc num====="+docNo.toString());
+		return new Integer(docNo.toString());
+	}
+	
+	private Integer checkTechnicalORFinancialAddChecklistSequence(List<ScQtCheckList> checklists){
+		if(CollectionUtils.isNotEmpty(checklists)){
+			ScQtCheckList checklist=checklists.get(checklists.size()-1);
+			if(checklist.getChecklistSeq().toString().contains("400")){
+				System.out.println("======checkTechnicalORFinancialAddChecklistSequence===="+checklist.getChecklistSeq());
+			int sequence=checklist.getChecklistSeq()+1;
+			System.out.println("======sequence===="+sequence);
+				return (checklist.getChecklistSeq()+1);
+			}else{
+				return SourcingConstants.CHECKLIST_SEQ_UPLOAD;
+			}
+			
+		}else{
+			return SourcingConstants.CHECKLIST_SEQ_UPLOAD;
+		}
+		//return SourcingConstants.CHECKLIST_SEQ_UPLOAD;
+	}
+	
+	private void checklistSorting(List<ScQtCheckList> checkList){
+		Collections.sort(checkList, 
+				new Comparator<ScQtCheckList>() {
+					public int compare(ScQtCheckList checklist1, 
+							ScQtCheckList checklist2) {
+						
+						return checklist1.getChecklistSeq()-checklist2.getChecklistSeq();
+					}
+				});
+	}
 }
