@@ -82,7 +82,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
 				<td><p:selectBooleanCheckbox disabled="true" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}"
-						value="#{reliefOrderBB.managedBean.flRequest.ctContract.factored}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
+						value="#{reliefOrderBB.managedBean.factored}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
@@ -432,7 +432,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.fl.factoring.details']}" toggleable="true" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract.factored}">
+	<p:panel header="#{lbl['lbl.fl.factoring.details']}" toggleable="true" rendered="#{reliefOrderBB.managedBean.factored}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel

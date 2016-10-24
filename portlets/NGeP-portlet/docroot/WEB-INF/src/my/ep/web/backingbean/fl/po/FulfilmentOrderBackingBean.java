@@ -1031,11 +1031,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
 						if(contractSupplierResDTO.getFactoring() != null){
 							resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+							crBB.getManagedBean().setFactored(true);
 							if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
 								crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring());
 							}
 						}else{
-							resDTO.getFlFulfilmentRequest().getCtContract().setFactored(false);
+							crBB.getManagedBean().setFactored(false);
 						}
 					}
 				}

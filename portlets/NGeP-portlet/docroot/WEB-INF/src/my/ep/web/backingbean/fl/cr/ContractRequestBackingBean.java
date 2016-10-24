@@ -256,7 +256,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 		}
-		
 		if(null == getManagedBean().getFlManualAddress()){
 			getManagedBean().setFlManualAddress(new FlDeliveryAddress());
 			getManagedBean().getFlManualAddress().setDeliveryAddressId(1L);
@@ -1000,11 +999,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(contractSupplierResDTO.getFactoring() != null){
 					contractSupplierResDTO.getFactoring();
 					resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+					getManagedBean().setFactored(true);
 					if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
 						getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring());
 					}
 				}else{
-					resDTO.getFlFulfilmentRequest().getCtContract().setFactored(false);
+					getManagedBean().setFactored(false);
 				}
 			}	
 

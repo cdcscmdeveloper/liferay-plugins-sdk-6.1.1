@@ -184,7 +184,7 @@
 				<td><p:selectBooleanCheckbox disabled="true" style="vertical-align:-4px"
 						value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
 						contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factored : 
-						contractRequestBackingBean.managedBean.flRequest.ctContract.factored}" />
+						contractRequestBackingBean.managedBean.factored}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>	
 			</tr>
 			<tr>
@@ -333,7 +333,7 @@
 	<p:panel header="#{lbl['lbl.fl.factoring.details']}"  toggleable="true" 
 		rendered="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
 						contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factored : 
-						contractRequestBackingBean.managedBean.flRequest.ctContract.factored}">
+						contractRequestBackingBean.managedBean.factored}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
