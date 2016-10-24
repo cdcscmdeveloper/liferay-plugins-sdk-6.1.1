@@ -116,7 +116,22 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	private FlFulfilmentItemAddr amountSectionItemRow;
 	
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
+	private String className="@(.myDoClassName)";
 	
+	/**
+	 * @return the className
+	 */
+	public String getClassName() {
+		return className;
+	}
+
+	/**
+	 * @param className the className to set
+	 */
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
 	/**
 	 * Instantiates a new delivery order backing bean.
 	 */
@@ -219,6 +234,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 					flDeliveryAddress.getFlTempDoAddr().setFlDeliveryAddress(flDeliveryAddress);
+					flDeliveryAddress.getFlTempDoAddr().setSelected(true);
 					if(flDeliveryAddress.getFlTempDoAddr().getEstDeliveryDate() == null){
 						flDeliveryAddress.getFlTempDoAddr().setEstDeliveryDate(new Date());
 					}
@@ -405,6 +421,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		
 		// initialize FlTempDoAddr if null
 		for(FlDeliveryAddress deliveryAddress : flOrder.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
+			deliveryAddress.getFlTempDoAddr().setSelected(false);
 			if(deliveryAddress.getFlTempDoAddr()==null) {
 				deliveryAddress.setFlTempDoAddr(new FlTempDoAddr());
 			}
@@ -758,6 +775,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 */
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
+			setClassName("@(.doPnlClass)");
 			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()!=null && getManagedBean().getButtonVal()==null) {
 				sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 				sortOrderSummaryList(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());

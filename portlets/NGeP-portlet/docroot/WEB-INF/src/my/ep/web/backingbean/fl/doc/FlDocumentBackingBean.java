@@ -362,11 +362,12 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
 					if(contractSupplierResDTO.getFactoring() != null){
 						resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+						crBB.getManagedBean().setFactored(true);
 						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
 							crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring());
+						}else{
+							crBB.getManagedBean().setFactored(false);
 						}
-					}else{
-						resDTO.getFlFulfilmentRequest().getCtContract().setFactored(false);
 					}
 				}
 				
@@ -765,8 +766,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
 							reliefOrderBB.getCrSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 						}
-					}else{
-						reliefOrderBB.getManagedBean().getFlRequest().getCtContract().setFactored(false);
 					}
 				}
 			}
