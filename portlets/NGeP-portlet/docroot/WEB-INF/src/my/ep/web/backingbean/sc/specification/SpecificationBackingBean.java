@@ -13284,10 +13284,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	private Integer checkTechnicalORFinancialAddChecklistSequence(List<ScQtCheckList> checklists){
 		if(CollectionUtils.isNotEmpty(checklists)){
 			ScQtCheckList checklist=checklists.get(checklists.size()-1);
-			if(checklist.getChecklistSeq().toString().contains("400")){
-				System.out.println("======checkTechnicalORFinancialAddChecklistSequence===="+checklist.getChecklistSeq());
-			int sequence=checklist.getChecklistSeq()+1;
-			System.out.println("======sequence===="+sequence);
+			if(checklist.getChecklistSeq().toString().contains(SourcingConstants.UPLOAD_CHECKLIST_SEQUENCE)){
 				return (checklist.getChecklistSeq()+1);
 			}else{
 				return SourcingConstants.CHECKLIST_SEQ_UPLOAD;
