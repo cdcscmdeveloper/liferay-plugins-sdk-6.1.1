@@ -1007,25 +1007,10 @@ public class NoticeBoardBackingBean extends
 						.getQualificationBean()) {
 					if ((!SourcingConstants.SUPPLIER_CRITERIA_TYPE_SOFT_CERTIFICATE
 							.equalsIgnoreCase(qualificationBean
-									.getCriteria()))) {
-						boolean qualified = true;
-						if (qualificationBean.getSupplierStatuses() != null) {
-							for (String supplierStatus : qualificationBean.getSupplierStatuses()) {
-								if (StringUtils.equals(supplierStatus, "false")) {
-									qualified = false;
-									break;
-								}
-							}
-						} else {
-							if (!qualificationBean.isSupplierStatus()) {
-								qualified = false;
-							}	
-						}
-						
-						if (!qualified) {
-							this.getManagedBean().setQualified(qualified);
-							break;	
-						}
+									.getCriteria()))
+							&& !qualificationBean.isSupplierStatus()) {
+						this.getManagedBean().setQualified(false);
+						break;
 					}
 				}
 
