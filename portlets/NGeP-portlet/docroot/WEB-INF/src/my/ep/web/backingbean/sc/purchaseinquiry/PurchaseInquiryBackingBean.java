@@ -623,7 +623,15 @@ public class PurchaseInquiryBackingBean extends
 									requestNoteDtl.getJustificationType()
 											.getReasonCode()));
 				}
-				
+			} else if (requestNoteDtl.getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+				if (requestNoteDtl.getJustificationType().getReasonCode() != null) {
+					requestNoteDtl
+							.setJustificationType(getReasonByCategoryAndCode(
+									ReasonCategory.JUSTIFICATION_PK7.value(),
+									requestNoteDtl.getJustificationType()
+											.getReasonCode()));
+				}
 			} else {
 				requestNoteDtl.setJustificationType(null);
 			}
@@ -928,7 +936,6 @@ public class PurchaseInquiryBackingBean extends
 		log.info("procurementTypeEvent");
 		String procurementType = getManagedBean().getRequestNoteDtl().getProcurementType().getParameterCode();
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)
-				|| procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
 				|| procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
@@ -938,6 +945,11 @@ public class PurchaseInquiryBackingBean extends
 			getManagedBean()
 					.setJustDropdown(
 							getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
+			getManagedBean()
+					.setJustDropdown(
+							getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
 		} 
 		getManagedBean().getRequestNoteDtl().setJustificationType(
 				new PmReason());
