@@ -1333,7 +1333,15 @@ public class SimpleQuoteBackingBean extends
 							.getJustificationType().getReasonCode()));
 
 				}
-			}  else {
+			}  else if (quote.getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+				if (quote.getJustificationType().getReasonCode() != null) {
+					quote.setJustificationType(getReasonByCategoryAndCode(
+							ReasonCategory.JUSTIFICATION_PK7.value(), quote
+							.getJustificationType().getReasonCode()));
+
+				}
+			} else {
 				quote.setJustificationType(null);
 			}
 
@@ -1986,6 +1994,18 @@ public class SimpleQuoteBackingBean extends
 				quote.setJustificationType(getReasonByCategoryAndCode(
 						ReasonCategory.JUSTIFICATION_AD_HOC.value(), quote
 								.getJustificationType().getReasonCode()));
+			} else if (quote.getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+				if (quote.getJustificationType().getReasonCode() == null) {
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.reason",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
+				}
+				quote.setJustificationType(getReasonByCategoryAndCode(
+						ReasonCategory.JUSTIFICATION_PK7.value(), quote
+								.getJustificationType().getReasonCode()));
 			} else {
 				quote.setJustificationType(null);
 			}
@@ -2296,8 +2316,7 @@ public class SimpleQuoteBackingBean extends
 		templateSpecBackingBean.getManagedBean().setG2G(false);
 		
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
-		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL) 
-				|| procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) ) {
+		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
@@ -2311,11 +2330,16 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setByBusinessNature(Boolean.FALSE);
 			getManagedBean().setByLocality(Boolean.FALSE);
 			templateSpecBackingBean.getManagedBean().setG2G(true);
-		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
+		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
+			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
+		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
 		} 
 
 		if (getManagedBean().getScQuote().isPanel()) {

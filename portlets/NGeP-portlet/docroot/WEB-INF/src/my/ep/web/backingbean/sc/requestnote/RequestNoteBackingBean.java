@@ -1672,6 +1672,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			scRequestNoteDtl.setJustificationType(getReasonByCategoryAndCode(
 					ReasonCategory.JUSTIFICATION_AD_HOC.value(), getManagedBean().getJustificationType()));
+		} else if (scRequestNoteDtl.getProcurementType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+			scRequestNoteDtl.setJustificationType(getReasonByCategoryAndCode(
+					ReasonCategory.JUSTIFICATION_PK7.value(), getManagedBean().getJustificationType()));
 		} else{
 			scRequestNoteDtl.setJustificationType(null);
 		}
@@ -1817,7 +1821,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("procurementTypeEvent"); 
 		String procType = getManagedBean().getProcurementType();
 		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL) 
-				|| procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
 				|| procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
@@ -1826,6 +1829,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		} else if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_AD_HOC.value()));
+			getManagedBean().setJustRequired(Boolean.TRUE);
+		} else if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
+			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
 			getManagedBean().setJustRequired(Boolean.TRUE);
 		} 
 
