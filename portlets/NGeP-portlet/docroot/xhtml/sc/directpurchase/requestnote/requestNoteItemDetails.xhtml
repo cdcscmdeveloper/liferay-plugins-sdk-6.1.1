@@ -77,15 +77,15 @@
 							value="#{lbl['lbl.sc.request.note.proc.type.normal']}" />
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{requestNoteDtl.procurementType.parameterCode eq 'A'}">
-						<p:commandLink value="#{lbl['lbl.sc.justification.adhoc']}"
+						rendered="#{requestNoteDtl.procurementType.parameterCode eq 'A' or requestNoteDtl.procurementType.parameterCode eq 'P'}">
+						<p:commandLink value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,requestNoteDtl.procurementType.parameterCode)}"
 							partialSubmit="true" process="@this" update=":form:justPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
 					</ui:fragment>
 
 					<ui:fragment
-						rendered="#{requestNoteDtl.procurementType.parameterCode eq 'G' or requestNoteDtl.procurementType.parameterCode eq 'P'}">
+						rendered="#{requestNoteDtl.procurementType.parameterCode eq 'G'}">
 						<h:outputText
 							value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,requestNoteDtl.procurementType.parameterCode)}" />
 					</ui:fragment>
