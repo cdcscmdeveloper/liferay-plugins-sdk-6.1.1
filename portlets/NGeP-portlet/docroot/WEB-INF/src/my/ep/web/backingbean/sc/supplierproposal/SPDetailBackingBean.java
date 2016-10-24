@@ -10,6 +10,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -61,6 +63,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
@@ -219,6 +222,7 @@ public class SPDetailBackingBean extends
 			if (resDTO.getTechnicalCheckLists() != null) {
 				getManagedBean().setTecCheckDetailsList(
 						resDTO.getTechnicalCheckLists());
+				checklistSorting(getManagedBean().getTecCheckDetailsList());
 				log.info("Technical Check list: "
 						+ resDTO.getTechnicalCheckLists().size());
 			}
@@ -227,6 +231,7 @@ public class SPDetailBackingBean extends
 			if (resDTO.getFinancialCheckLists() != null) {
 				getManagedBean().setFinanceCheckDetailsList(
 						resDTO.getFinancialCheckLists());
+				checklistSorting(getManagedBean().getFinanceCheckDetailsList());
 				log.info("Financial Check list: "
 						+ resDTO.getFinancialCheckLists().size());
 			}
@@ -4275,5 +4280,16 @@ public class SPDetailBackingBean extends
 		log.info("===========publishDate=====" + publishDate);
 		return publishDate;
 
+	}
+	
+	private void checklistSorting(List<ScQtProposalChecklist> checkList){
+		Collections.sort(checkList, 
+				new Comparator<ScQtProposalChecklist>() {
+					public int compare(ScQtProposalChecklist checklist1, 
+							ScQtProposalChecklist checklist2) {
+						
+						return checklist1.getScQtCheckList().getChecklistSeq()-checklist2.getScQtCheckList().getChecklistSeq();
+					}
+				});
 	}
 }
