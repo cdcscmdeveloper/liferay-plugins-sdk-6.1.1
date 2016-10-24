@@ -360,7 +360,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	public String bpmTesting(String action) throws Exception {
 
-		try {
+		
 
 
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
@@ -491,17 +491,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							MessageUtils.getMessage(MessageConst.INFO_710001,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-		} catch (Exception ex) {
-			System.out.println("***************Exception*****************");
-			ex.printStackTrace();
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext
-			.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"BPM  ERROR", ex.getMessage()));
 
-			return "reviewUnspscCode";
-		}
 
 		return "BPMtesting";
 
@@ -596,7 +586,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	}
 	public String selectSubmitRecommend(String action) throws Exception {
 
-		try {
+		
 			this.getManagedBean().getRequestCode().setCmRecommendCodes(null);
 			if(this.getManagedBean().getSelectedRecommendCode().getUnspscTitle()!=null && this.getManagedBean().getSelectedRecommendCode().getUnspscCode()!=null){
 				this.getManagedBean().getRequestCode().getCmRecommendCodes().add(this.getManagedBean().getSelectedRecommendCode());
@@ -672,16 +662,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							MessageUtils.getMessage(MessageConst.INFO_710001,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-		} catch (Exception ex) {
-			System.out.println("***************Exception*****************");
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext
-			.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"BPM  ERROR", ex.getMessage()));
-
-			return "selectRecommendUnspscCode";
-		}
+		
 
 		return "BPMtesting";
 
@@ -2024,10 +2005,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			actionDesc = "Kod Lanjutan "+reqDTO.getRequestCode().getDocNo()+" telah diserah kepada Pentadbir Katalog untuk semakan";
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));				
 		}
-		
+
 		if(isCatalogueAdmin()){
 			System.out.println("**isCatalogueAdmin***");
-			
+
 			userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
@@ -2041,7 +2022,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		}else{
 			System.out.println("**supplier***");
-			
+
 			userReqDTO.setRoleCode(RoleCode.CM_ADMIN.value());
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
@@ -3059,56 +3040,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		}
 
-	}
-
-	public String deleteExtensionCode() {
-
-		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICodificationSO.class);
-
-		FacesScopes face = new FacesScopes();
-		Object token = face.getBPMAuthenticationCtxToken();
-		CodificationReqDTO reqDTO = new CodificationReqDTO();
-		CmRequestCode code = new CmRequestCode();
-		CodificationBackingBean cdBB = new CodificationBackingBean();
-		try {
-
-			code.setItemId(cdBB.getManagedBean().getDeleteItem().getItemId());
-			code.setTempCode(cdBB.getManagedBean().getDeleteItem()
-					.getCmUnspsc().getUnspscCode());
-			code.setTempTitle(cdBB.getManagedBean().getDeleteItem()
-					.getCmUnspsc().getUnspscTitle());
-			code.setBrandName(cdBB.getManagedBean().getDeleteItem()
-					.getCmBrand().getBrandName());
-			code.setItemName(cdBB.getManagedBean().getDeleteItem()
-					.getItemName());
-			code.setTypeName(cdBB.getManagedBean().getDeleteItem().getCmType()
-					.getTypeName());
-			code.setMeasurementName(cdBB.getManagedBean().getDeleteItem()
-					.getCmMeasurement().getMeasurementName());
-			code.setColorName(cdBB.getManagedBean().getDeleteItem()
-					.getCmColor().getColorName());
-			reqDTO.setToken(token);
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setOutCome("SUBMIT");
-			reqDTO.setRequestCode(code);
-			reqDTO.setProcessId(CDProcessNameConst.EXTENSION_CODE_MAINTENANCE_PROCESS_ID);				
-
-			CodificationResDTO resDTO = unspscSO.addCodificationRequest(reqDTO);
-
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_710001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return "extensionSearch";
 	}
 
 	public SearchFilterBean getColorFilterBean() {
