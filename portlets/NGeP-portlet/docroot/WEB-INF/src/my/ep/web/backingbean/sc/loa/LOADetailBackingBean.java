@@ -1867,8 +1867,8 @@ public class LOADetailBackingBean extends
 				}
 			}
 		}
-		String title = procurementMode !=null ? procurementMode + " " + scLoiLoa.getTitle() 
-				: scLoiLoa.getTitle();
+		String title = procurementMode != null ? procurementMode + " " + 
+		scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();
 		context.put("title", title);
 
 		String userName = "Nama Pembekal";
@@ -3225,10 +3225,12 @@ public class LOADetailBackingBean extends
 	public List<SelectItem> getYearDetails() {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		FacesScopes face = new FacesScopes();
+		Locale local = face.getUserLocale();
 		try {
-			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, local)));
 			for (int i = 1; i <= 12; i++) {
-				selectItems.add(new SelectItem(i, getMonth(i, face.getUserLocale())));
+				selectItems.add(new SelectItem(i, getMonth(i, local)));
 			}
 			this.getManagedBean().setYearList(selectItems);
 		} finally {
