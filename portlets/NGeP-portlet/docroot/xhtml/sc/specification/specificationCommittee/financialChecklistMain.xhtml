@@ -209,7 +209,7 @@
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 						disabled="true"
-						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' and   stageTwofunctional.definationType.parameterCode eq 'NA' and stageTwofunctional.action.parameterCode eq 'U') and (fn:containsIgnoreCase(stageTwofunctional.title,'Annual') or fn:containsIgnoreCase(stageTwofunctional.title,'Verification') or fn:containsIgnoreCase(stageTwofunctional.title,'Pengesahan') or fn:containsIgnoreCase(stageTwofunctional.title,'Kunci')))}">
+						rendered="#{(((stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' or stageTwofunctional.pmDocument.docDefinitionKey eq 'FA') and   stageTwofunctional.definationType.parameterCode eq 'NA' and stageTwofunctional.action.parameterCode eq 'U') and (fn:containsIgnoreCase(stageTwofunctional.title,'Annual') or fn:containsIgnoreCase(stageTwofunctional.title,'Verification') or fn:containsIgnoreCase(stageTwofunctional.title,'Pengesahan') or fn:containsIgnoreCase(stageTwofunctional.title,'Kunci')))}">
 
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
