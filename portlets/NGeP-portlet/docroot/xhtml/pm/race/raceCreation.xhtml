@@ -1,0 +1,45 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	
+   <p:panel header="#{lbl['lbl.pm.race.title']}" toggleable="true">
+	<p:spacer height="10"></p:spacer>
+			
+	<table style="width:100%;">
+	  <tr>	  	
+		<td style="width:16%;"><p:outputLabel value="#{lbl['lbl.pm.race.code']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:inputText id="itRaceCode" styleClass="ppDisplayTextM" 
+			validatorMessage="#{lbl['lbl.pm.race.code.error']}"
+			label="#{lbl['lbl.pm.race.code']}"
+			value="#{raceBackingBean.managedBean.pmRace.raceCode}" required="true"
+		    disabled="#{!raceBackingBean.managedBean.pmRace.brandNew}" size="30" maxlength="5" >
+		 	 <f:validateRegex pattern="\d*(.\d+)?"/>
+             </p:inputText>
+		</td>
+	  </tr>	
+	  <tr>
+		<td><p:outputLabel value="#{lbl['lbl.pm.race.name']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:inputText id="itRaceName" styleClass="ppDisplayTextM" required="true" 
+			 value="#{raceBackingBean.managedBean.pmRace.raceName}" 
+			 size="30" maxlength="100" label="#{lbl['lbl.pm.race.name']}" />
+	  </td>
+	  </tr>
+	   <tr> 
+		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" 
+     			value="#{raceBackingBean.managedBean.pmRace.recordStatusFlg}"
+     			disabled="#{raceBackingBean.managedBean.pmRace.brandNew}" > 
+    	    	<f:selectItems value="#{raceBackingBean.getStatusList()}"></f:selectItems>   	   
+    	    </p:selectOneMenu></td>				
+	    </tr>
+	</table>
+   </p:panel>	
+</ui:composition>
