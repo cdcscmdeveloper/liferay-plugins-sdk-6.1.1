@@ -668,11 +668,10 @@ width:32.5%;
 									<p:graphicImage value="/css/images/design/tooltips.png" />
 								</td>
 								<td>
-									<h:outputText value="System starts generating the report."/>
-									<br/>
-									<h:outputText value="The job id is "/>
+									<h:outputText value="System starts generating the report. "/>
+									<h:outputText value="( Job id = "/>
 									<h:outputText value="#{reportBackingBean.managedBean.jobId}"/>
-									<h:outputText value="."/>
+									<h:outputText value=")"/>
 									<br/>
 									<h:outputText value="Click continue button if you still want to generate another report."/>
 									<br/>
@@ -681,7 +680,7 @@ width:32.5%;
 							</tr>
 							<tr>
 								<td colspan="2">
-									<p:commandButton value="Continue" onclick="PF('ex').hide();"/>
+									<p:commandButton value="Continue" onclick="ex.hide();"/>
 									<p:commandButton value="View Report" action="#{reportBackingBean.redirect()}">
 									</p:commandButton>
 								</td>

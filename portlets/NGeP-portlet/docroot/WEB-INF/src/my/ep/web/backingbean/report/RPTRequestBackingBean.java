@@ -291,6 +291,16 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		rptRequestDataModel.reloadData();
 	}
 	
+	public void preRender(){
+		
+		this.getLatestStatusCodeForRequests();
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, "rptrequestcontent");
+	}
+	
+	
 	public void getLatestStatusCodeForRequests(){
 		
 		rptRequestDataModel.reloadData();

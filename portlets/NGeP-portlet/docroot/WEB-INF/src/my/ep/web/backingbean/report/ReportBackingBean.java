@@ -20428,7 +20428,7 @@ public class ReportBackingBean extends
 			e1.printStackTrace();
 		}
 
-		String reportsRequested = commonUrl + "/" + "reports-requested";
+		String reportsRequested = commonUrl + "/" + "report";
 	    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 	    externalContext.redirect(reportsRequested);
 	}
