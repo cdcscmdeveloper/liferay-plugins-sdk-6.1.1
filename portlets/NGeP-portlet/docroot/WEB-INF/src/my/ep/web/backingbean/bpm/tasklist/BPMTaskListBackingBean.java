@@ -882,13 +882,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 	public String releaseTask()  {
 		System.out.println("**********releaseTask");
-		try{
-			releaseBpmTask();
-			this.getManagedBean().getTaskListGroupDataModel().reloadData();
-			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
-		}catch(Exception e){
-			throw new EpException(e.getMessage());
-		}
+		
+		releaseBpmTask();
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		
 
 		return "taskListView?faces-redirect=true";
 
