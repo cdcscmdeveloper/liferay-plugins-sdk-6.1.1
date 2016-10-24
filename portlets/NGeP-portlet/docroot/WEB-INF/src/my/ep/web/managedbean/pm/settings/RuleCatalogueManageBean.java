@@ -28,6 +28,7 @@ import my.ep.persistence.entity.pm.general.settings.gst.PmDaGst;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaValidity;
 import my.ep.persistence.entity.pm.general.settings.gst.PmGstItem;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sm.SmSupplier;
 
@@ -53,8 +54,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Integer gstIndex = 0;
 	private PmConfigGeneral selectedConfigGeneral;
 	private PmConfigRuleValue selectedRuleValue;
-	private PmConfigRule selectedRuleType;
-	private List<PmConfigRule> configRuleList;
+	private PmConfigRuleDesc selectedRuleDescType;
+	private List<PmConfigRuleDesc> configRuleDescList;
 	private String selectedDocumentType;
 	private Date today = new Date();
 	private Date tomorrow = null;
@@ -891,20 +892,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the selectedRuleType
-	 */
-	public PmConfigRule getSelectedRuleType() {
-		return selectedRuleType;
-	}
-
-	/**
-	 * @param selectedRuleType the selectedRuleType to set
-	 */
-	public void setSelectedRuleType(PmConfigRule selectedRuleType) {
-		this.selectedRuleType = selectedRuleType;
-	}
-
-	/**
 	 * @return the today
 	 */
 	public Date getToday() {
@@ -972,20 +959,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 */
 	public void setSelectedRuleValue(PmConfigRuleValue selectedRuleValue) {
 		this.selectedRuleValue = selectedRuleValue;
-	}
-
-	/**
-	 * @return the configRuleList
-	 */
-	public List<PmConfigRule> getConfigRuleList() {
-		return configRuleList;
-	}
-
-	/**
-	 * @param configRuleList the configRuleList to set
-	 */
-	public void setConfigRuleList(List<PmConfigRule> configRuleList) {
-		this.configRuleList = configRuleList;
 	}
 
 	/**
@@ -1212,6 +1185,33 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setThresholdIdToBudgetSpentMap(
 			Map<String, Integer> thresholdIdToBudgetSpentMap) {
 		this.thresholdIdToBudgetSpentMap = thresholdIdToBudgetSpentMap;
+	}
+	/**
+	 * @return the configRuleDescList
+	 */
+	public List<PmConfigRuleDesc> getConfigRuleDescList() {
+		if(configRuleDescList == null){
+			configRuleDescList = new ArrayList<PmConfigRuleDesc>();
+		}
+		return configRuleDescList;
+	}
+	/**
+	 * @param configRuleDescList the configRuleDescList to set
+	 */
+	public void setConfigRuleDescList(List<PmConfigRuleDesc> configRuleDescList) {
+		this.configRuleDescList = configRuleDescList;
+	}
+	/**
+	 * @return the selectedRuleDescType
+	 */
+	public PmConfigRuleDesc getSelectedRuleDescType() {
+		return selectedRuleDescType;
+	}
+	/**
+	 * @param selectedRuleDescType the selectedRuleDescType to set
+	 */
+	public void setSelectedRuleDescType(PmConfigRuleDesc selectedRuleDescType) {
+		this.selectedRuleDescType = selectedRuleDescType;
 	}
 
 }

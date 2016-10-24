@@ -2,8 +2,6 @@ package my.ep.web.backingbean.pm.settings;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +20,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -104,7 +103,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RuleConfigHelper;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
@@ -171,8 +169,9 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	public void selectCategoryAction(PmCategoryL3 pmCategoryL3) {
 		log.info("*****addNewRuleTypeValue*$$$****");
 		this.getManagedBean().setSelectedCategoryL3(pmCategoryL3);
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
-		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
+		newRuleValue.setRuleType(configRuleType);
 		newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 
 		// if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
@@ -182,16 +181,15 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 				.getSelectedCategoryL3());
 		// }
 
-		if (this.getManagedBean().getSelectedRuleType().getRangeType() == 1) {
+		if (configRuleType.getRangeType() == 1) {
 
-			if (this.getManagedBean().getSelectedRuleType()
+			if (configRuleType
 					.getConfigRuleValues() != null
-					&& this.getManagedBean().getSelectedRuleType()
+					&& configRuleType
 							.getConfigRuleValues().size() > 0) {
-				int size = this.getManagedBean().getSelectedRuleType()
+				int size = configRuleType
 						.getConfigRuleValues().size();
-				newRuleValue.setGroupValueId(this.getManagedBean()
-						.getSelectedRuleType().getConfigRuleValues()
+				newRuleValue.setGroupValueId(configRuleType.getConfigRuleValues()
 						.get(size - 1).getGroupValueId() + 1);
 
 			} else {
@@ -200,9 +198,9 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			}
 			newRuleValue.setFromValue(new BigDecimal(1));
 		}
-		int index = this.getManagedBean().getSelectedRuleType()
+		int index =configRuleType
 				.getConfigRuleValues().size();
-		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+		configRuleType.getConfigRuleValues()
 				.add(index, newRuleValue);
 		RequestContext.getCurrentInstance().execute(
 				"ruleValueTblWidget.paginator.endLink.click()");
@@ -397,9 +395,13 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			// SerializationUtils.clone(configRule);
 			//
 			// }
-			List<PmConfigRule> list = retriveConfigRuleFromDB();
-			this.getManagedBean().setConfigRuleList(list);
-			this.getManagedBean().setSelectedRuleType(list.get(0));
+			
+			List<PmConfigRuleDesc> list = retriveConfigRuleDescFromDB();
+			getManagedBean().setConfigRuleDescList(list);
+			getManagedBean().setSelectedRuleDescType(list.get(0));
+//			List<PmConfigRule> list = retriveConfigRuleFromDB();
+//			this.getManagedBean().setConfigRuleList(list);
+//			this.getManagedBean().setSelectedRuleType(list.get(0));
 		}finally{
 			cgeneralSO = null;
 		}
@@ -552,8 +554,8 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		}
 	}
 
-	private List<PmConfigRule> retriveConfigRuleFromDB() {
-		List<PmConfigRule> configRules = new ArrayList<PmConfigRule>();
+	private List<PmConfigRuleDesc> retriveConfigRuleDescFromDB() {
+		List<PmConfigRuleDesc> configRulesDesc = new ArrayList<PmConfigRuleDesc>();
 		// get Rule config from DB
 		IRuleSO ruleSO;
 		try {
@@ -564,67 +566,50 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			String languageCode = new FacesScopes().getUserLocale()
 					.getLanguage();
 			reqRDTO.setLanguageCode(languageCode);
-			SearchBean<PmConfigRule> searchBean = new SearchBean<PmConfigRule>();
+			ISearchBean<PmConfigRuleDesc> searchBean = new SearchBean<PmConfigRuleDesc>();
+			
 			// Filter By - status
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatus",
+					new SearchFilterBean("ruleType.recordStatus",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							DbValueConst.RECORD_STATUS_ACTIVE));
-			reqRDTO.setSearchBean(searchBean);
-			RuleResDTO resRDTO = ruleSO.getRuleTypes(reqRDTO);
-			configRules = resRDTO.getRuleTypeList();
-
-			// fill up ruleType's ruleValueList
-//			for (PmConfigRule cRule : configRules) {
-//
-//				reqRDTO.setRuleType(cRule.getRuleType());
-//				resRDTO = ruleSO.getRuleValuesByRuleType(reqRDTO);
-//				List<PmConfigRuleValue> valuelist = resRDTO.getRuleValueList();
-//				cRule.setConfigRuleValues(valuelist);
-//			}
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("languageCode.languageCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							languageCode));
+			
+			searchBean.getSortColumns().add(new SearchOrderBean("ruleDesc",true));
+			
+			reqRDTO.setDescSearchBean(searchBean);
+			
+			RuleResDTO resRDTO = ruleSO.getRuleTypesDesc(reqRDTO);
+			if(resRDTO.isSuccessful() && resRDTO.getDescResultBean() != null){
+				configRulesDesc = resRDTO.getDescResultBean().getResultList();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(e.getMessage());
 		} finally {
 			ruleSO = null;
 		}
-		// fill up category display value
-		// for (PmConfigRule rule : configRules) {
-		// if (rule.getRuleDataTypeId().getParameterCode()
-		// .equalsIgnoreCase("c")) {
-		// for (PmConfigRuleValue cRule : rule.getConfigRuleValues()) {
-		// PmCategoryL3 categoryL3 = cRule.getCategoryL3Id();
-		// if (categoryL3 != null) {
-		// String categoryL3Code = categoryL3.getCategoryL3Code();
-		// String categoryL2Code = categoryL3.getPmCategoryL2()
-		// .getCategoryL2Code();
-		// String categoryL1Code = categoryL3.getPmCategoryL2()
-		// .getPmCategoryL1().getCategoryL1Code();
-		// cRule.setCategoryDisplayValue(categoryL1Code
-		// + categoryL2Code + categoryL3Code);
-		// }
-		// }
-		// }
-		// }
-		for (PmConfigRule rule : configRules) {
-			sortConfigRuleValueList(rule.getConfigRuleValues());
-		}
-		return configRules;
+		
+		return configRulesDesc;
 	}
 	
-	private void sortConfigRuleValueList(
-			List<PmConfigRuleValue> configRuleValueList) {
-		Comparator<PmConfigRuleValue> comparator = new Comparator<PmConfigRuleValue>() {
-			@Override
-			public int compare(PmConfigRuleValue o1,
-					PmConfigRuleValue o2) {
-				return new CompareToBuilder().append(o1.getEffDate(),
-						o2.getEffDate()).append(o1.getFromValue(),
-								o2.getFromValue()).toComparison();
-			}
-		};
-		Collections.sort(configRuleValueList, comparator);
-	}
+//	private void sortConfigRuleValueList(
+//			List<PmConfigRuleValue> configRuleValueList) {
+//		Comparator<PmConfigRuleValue> comparator = new Comparator<PmConfigRuleValue>() {
+//			@Override
+//			public int compare(PmConfigRuleValue o1,
+//					PmConfigRuleValue o2) {
+//				return new CompareToBuilder().append(o1.getEffDate(),
+//						o2.getEffDate()).append(o1.getFromValue(),
+//								o2.getFromValue()).toComparison();
+//			}
+//		};
+//		Collections.sort(configRuleValueList, comparator);
+//	}
 
 	// public void categoryCodesUpdate(BaseEntity entity) {
 	//
@@ -702,11 +687,11 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		log.info("................ruleValueUpdate...............");
 		if (value != null) {
 			PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
-
+			PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 			ruleValue.setRuleValue(value);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.remove(index);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.add(index, ruleValue);
 		}
 
@@ -717,11 +702,11 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		log.info("................fromValueUpdate...............");
 		if (fromValue != null) {
 			PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
-
+			PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 			ruleValue.setFromValue(fromValue);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.remove(index);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.add(index, ruleValue);
 		}
 
@@ -732,11 +717,11 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		log.info("................toValueUpdate...............");
 		if (toValue != null) {
 			PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
-
+			PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 			ruleValue.setToValue(toValue);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.remove(index);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.add(index, ruleValue);
 		}
 
@@ -747,11 +732,11 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		log.info("................effDateUpdate...............");
 		if (effDate != null) {
 			PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
-
+			PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 			ruleValue.setEffDate(effDate);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.remove(index);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.add(index, ruleValue);
 		}
 
@@ -762,11 +747,11 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		log.info("................expDateUpdate...............");
 		if (expDate != null) {
 			PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
-
+			PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 			ruleValue.setExpDate(expDate);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.remove(index);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.add(index, ruleValue);
 		}
 
@@ -1020,10 +1005,11 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 		log.info("...................newRuleValue.getRuleValue()="
 				+ newRuleValue.getRuleValue());
-		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+		newRuleValue.setRuleType(configRuleType);
 		newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 
-		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
+		if (configRuleType.getRuleDataTypeId()
 				.getParameterCode().equals("C")) {
 			newRuleValue.setCategoryL3Id(new PmCategoryL3()); // make sure to
 																// delete the
@@ -1033,9 +1019,9 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 																// selected
 		}
 
-		int index = this.getManagedBean().getSelectedRuleType()
+		int index = configRuleType
 				.getConfigRuleValues().size();
-		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+		configRuleType.getConfigRuleValues()
 				.add(index, newRuleValue);
 
 	}
@@ -1044,8 +1030,8 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		log.info(".......checkStatus........");
 		// log.info("....index="+index);
 		this.setCurrentIndexVal(index);
-		PmConfigRuleValue selectedValue = this.getManagedBean()
-				.getSelectedRuleType().getConfigRuleValues().get(index);
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues().get(index);
 		// log.info(".................selectedValue="+selectedValue);
 		// log.info(".................selectedValue.getRecordStatusFlg()="+selectedValue.getRecordStatusFlg());
 		if (selectedValue.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {// change
@@ -1058,7 +1044,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			// prepare popup msg
 			setInactivePopUpMsg(PmCommonUtil.getMessage(
 					"lbl.pm.inactive.popUp.msg", new String[] {
-							getRuleTypeDesc(getManagedBean().getSelectedRuleType(),null)}));
+							configRuleType.getRuleType()}));
 
 			RequestContext.getCurrentInstance().execute(
 					"statusConfirmDialog.show();");
@@ -1194,24 +1180,23 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		// this.getManagedBean().getConfigRuleList().remove(indexOfSelectedRuleType);
 		Integer rowIndex = getManagedBean().getDeleteRowIndex();
 		List<PmConfigRuleValue> removeList = new ArrayList<PmConfigRuleValue>();
-		PmConfigRuleValue selectedValueToDel = this.getManagedBean()
-				.getSelectedRuleType().getConfigRuleValues().get(rowIndex.intValue());
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+		PmConfigRuleValue selectedValueToDel = configRuleType.getConfigRuleValues().get(rowIndex.intValue());
 
-		if (this.getManagedBean().getSelectedRuleType().getRangeType() == 1
+		if (configRuleType.getRangeType() == 1
 				&& selectedValueToDel.isShowFlag()) {// if its range and parent
 														// record, delete all
 														// child
 			Integer groupIdOfParent = selectedValueToDel.getGroupValueId();
-			for (PmConfigRuleValue value : this.getManagedBean()
-					.getSelectedRuleType().getConfigRuleValues()) {
+			for (PmConfigRuleValue value : configRuleType.getConfigRuleValues()) {
 				if (value.getGroupValueId().equals(groupIdOfParent)) {
 					removeList.add(value);
 				}
 			}
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.removeAll(removeList);
 		} else {
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			configRuleType.getConfigRuleValues()
 					.remove(rowIndex.intValue());
 		}
 
@@ -1396,10 +1381,10 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	public void saveRuleCatalog() {
 
 		// make sure to delete the new obj before update if doesn't selected
-		for (PmConfigRule ruleType : this.getManagedBean().getConfigRuleList()) {
+		for (PmConfigRuleDesc ruleTypeDesc : this.getManagedBean().getConfigRuleDescList()) {
 
-			if (ruleType.getRuleDataTypeId().getParameterCode().equals("C")) {
-				for (PmConfigRuleValue ruleTypeValue : ruleType
+			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().equals("C")) {
+				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType()
 						.getConfigRuleValues()) {
 					if (ruleTypeValue.getCategoryL3Id() != null
 							&& ruleTypeValue.getCategoryL3Id()
@@ -1429,10 +1414,10 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 			}
 			// check validation
-			for (int i = 0; i < ruleType.getConfigRuleValues().size(); i++) {
+			for (int i = 0; i < ruleTypeDesc.getRuleType().getConfigRuleValues().size(); i++) {
 				// add new values to tracking Diary list
 
-				PmConfigRuleValue baseValueToCompare = ruleType
+				PmConfigRuleValue baseValueToCompare = ruleTypeDesc.getRuleType()
 						.getConfigRuleValues().get(i);
 
 				if (baseValueToCompare.getRecordStatusFlg() == 0) {// if is
@@ -1441,22 +1426,22 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					// next
 					// record\
 					continue;
-				} else if ((ruleType.getRangeType() == 1 || ruleType.getRangeType() == 2)
+				} else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc.getRuleType().getRangeType() == 2)
 						&& baseValueToCompare.isError()) {// to value can not be
 															// less than from
 															// value
 					throw new EpException(MessageConst.ERROR_770210,
-							new String[] {  getRuleTypeDesc(ruleType,null)});
+							new String[] {  ruleTypeDesc.getRuleDesc()});
 				}
 
-				for (int j = i + 1; j <= (ruleType.getConfigRuleValues().size() - 1); j++) {
-					PmConfigRuleValue value = ruleType.getConfigRuleValues()
+				for (int j = i + 1; j <= (ruleTypeDesc.getRuleType().getConfigRuleValues().size() - 1); j++) {
+					PmConfigRuleValue value = ruleTypeDesc.getRuleType().getConfigRuleValues()
 							.get(j);
 
 					if (value.getRecordStatusFlg() == 0) {// if is inActive one
 						// go to next record
 						continue;
-					} else if ((ruleType.getRangeType() == 1 || ruleType.getRangeType() == 2)&& value.isError()) { // to
+					} else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc.getRuleType().getRangeType() == 2)&& value.isError()) { // to
 																					// value
 																					// can
 																					// not
@@ -1466,46 +1451,46 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 																					// from
 																					// value
 						throw new EpException(MessageConst.ERROR_770210,
-								new String[] { getRuleTypeDesc(ruleType,null) });
+								new String[] { ruleTypeDesc.getRuleDesc() });
 					}
 
 					if (!ruleValueValidation(baseValueToCompare, value,
-							ruleType)) {
+							ruleTypeDesc.getRuleType())) {
 						// log.info("...............ruleType.getValidationType()="+ruleType.getValidationType());
 
 						// hit error and return
-						switch (ruleType.getValidationType()) {
+						switch (ruleTypeDesc.getRuleType().getValidationType()) {
 						case '1':
-							if (ruleType.getRangeType() == 1
+							if (ruleTypeDesc.getRuleType().getRangeType() == 1
 									&& baseValueToCompare.getGroupValueId()
 											.equals(value.getGroupValueId())) {
 
 								throw new EpException(
 										MessageConst.ERROR_770110,
-										new String[] {  getRuleTypeDesc(ruleType,null) });
+										new String[] {  ruleTypeDesc.getRuleDesc()});
 							} else {
 
 								throw new EpException(
 										MessageConst.ERROR_770109,
-										new String[] {  getRuleTypeDesc(ruleType,null) });
+										new String[] {  ruleTypeDesc.getRuleDesc()});
 							}
 						case '2':
-							if (ruleType.getRuleDataTypeId().getParameterCode()
+							if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode()
 									.equalsIgnoreCase("c")) {
 								throw new EpException(
 										MessageConst.ERROR_770199,
 										new String[] {
-												 getRuleTypeDesc(ruleType,null),
+												ruleTypeDesc.getRuleDesc(),
 												value.getCategoryDisplayValue() });
 							} else {
 								throw new EpException(
 										MessageConst.ERROR_770110,
-										new String[] {  getRuleTypeDesc(ruleType,null) });
+										new String[] { ruleTypeDesc.getRuleDesc() });
 							}
 
 						case '3':
 							throw new EpException(MessageConst.ERROR_770154,
-									new String[] {  getRuleTypeDesc(ruleType,null) });
+									new String[] {  ruleTypeDesc.getRuleDesc() });
 
 						}
 
@@ -1525,43 +1510,43 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());			
-			for (PmConfigRule ruleType : this.getManagedBean()
-					.getConfigRuleList()) {
+			for (PmConfigRuleDesc ruleTypeDesc : this.getManagedBean()
+					.getConfigRuleDescList()) {
 
-				for (PmConfigRuleValue ruleTypeValue : ruleType
+				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType()
 						.getConfigRuleValues()) {
 					String messageId = null;
 					String[] msgParam = null;
 					if (ruleTypeValue.isBrandNew()) {
 
-						messageId = MessageConst.TD_80015;
-						if (ruleType.getRuleDataTypeId().getParameterCode()
+						messageId = MessageConst.TD_80200;
+						if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode()
 								.equals("C")) {
 							msgParam = new String[] {
 									ruleTypeValue.getCategoryDisplayValue(),
-									getRuleTypeDesc(ruleType,CommonConstants.LANGUAGE_CODE_MALAY) };
+									getRuleTypeDesc(ruleTypeDesc.getRuleType().getRuleType(),CommonConstants.LANGUAGE_CODE_MALAY) };
 
 						} else {
 							msgParam = new String[] {
 									ruleTypeValue.getRuleValue(),
-									getRuleTypeDesc(ruleType,CommonConstants.LANGUAGE_CODE_MALAY) };
+									getRuleTypeDesc(ruleTypeDesc.getRuleType().getRuleType(),CommonConstants.LANGUAGE_CODE_MALAY) };
 
 						}
 					} else {
 						if (ruleTypeValue.isModified()
 								&& ruleTypeValue.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 
-							messageId = MessageConst.TD_80016;
-							if (ruleType.getRuleDataTypeId().getParameterCode()
+							messageId = MessageConst.TD_80201;
+							if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode()
 									.equals("C")) {
 								msgParam = new String[] {
 										ruleTypeValue.getCategoryDisplayValue(),
-										getRuleTypeDesc(ruleType,CommonConstants.LANGUAGE_CODE_MALAY) };
+										getRuleTypeDesc(ruleTypeDesc.getRuleType().getRuleType(),CommonConstants.LANGUAGE_CODE_MALAY) };
 
 							} else {
 								msgParam = new String[] {
 										ruleTypeValue.getRuleValue(),
-										getRuleTypeDesc(ruleType,CommonConstants.LANGUAGE_CODE_MALAY) };
+										getRuleTypeDesc(ruleTypeDesc.getRuleType().getRuleType(),CommonConstants.LANGUAGE_CODE_MALAY) };
 
 							}
 						}
@@ -1571,7 +1556,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 						reqDTO.setTrackingStatus(true);
 						reqDTO.getTrackDairyVOs()
 								.add(PmCommonUtil.assignTrackingDairyForRuleConfig(
-										ruleType,
+										ruleTypeDesc.getRuleType(),
 										getActionDesc(messageId, msgParam),
 										ruleTypeValue.getRecordStatusFlg()
 										.longValue()));
@@ -1581,7 +1566,13 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 			}
 			// /////////////////////
-			reqDTO.setRuleTypeList(this.getManagedBean().getConfigRuleList());
+			List<PmConfigRule> ruleTypeList = new ArrayList<PmConfigRule>();
+			for(PmConfigRuleDesc desc : getManagedBean().getConfigRuleDescList()){
+				if(desc.getRuleType() != null){
+					ruleTypeList.add(desc.getRuleType());
+				}
+			}
+			reqDTO.setRuleTypeList(ruleTypeList);
 			RuleResDTO resDTO = ruleSO.updateRuleValueList(reqDTO);
 			// clear the catch and retrive updated list from DB
 
@@ -1591,13 +1582,13 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			// RuleConfigHelper.getInstance().getRuleTypeList());
 			// this.getManagedBean().setSelectedRuleType(
 			// RuleConfigHelper.getInstance().getRuleTypeList().get(0));
-			List<PmConfigRule> list = retriveConfigRuleFromDB();
-			this.getManagedBean().setConfigRuleList(list);
+			List<PmConfigRuleDesc> list = retriveConfigRuleDescFromDB();
+			this.getManagedBean().setConfigRuleDescList(list);
 			
-			Long configRuleId = getManagedBean().getSelectedRuleType().getRuleTypeId();
-			for(PmConfigRule configRule: list){
-				if(configRuleId.equals(configRule.getRuleTypeId())){
-					this.getManagedBean().setSelectedRuleType(configRule);
+			Long configRuleId = getManagedBean().getSelectedRuleDescType().getRuleType().getRuleTypeId();
+			for(PmConfigRuleDesc desc: list){
+				if(configRuleId.equals(desc.getRuleType().getRuleTypeId())){
+					this.getManagedBean().setSelectedRuleDescType(desc);
 					break;
 				}
 			}
@@ -2816,41 +2807,41 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	public void cloneRuleTypeValue(int index) {
 		log.info("cloneRuleTypeValue....index=" + index);
 		PmConfigRuleValue ruleValue = new PmConfigRuleValue();
-		ruleValue.setEffDate(this.getManagedBean().getSelectedRuleType()
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+		ruleValue.setEffDate(configRuleType
 				.getConfigRuleValues().get(index).getEffDate());
-		ruleValue.setExpDate(this.getManagedBean().getSelectedRuleType()
+		ruleValue.setExpDate(configRuleType
 				.getConfigRuleValues().get(index).getExpDate());
 		ruleValue.setShowFlag(false);
 
-		ruleValue.setGroupValueId(this.getManagedBean().getSelectedRuleType()
+		ruleValue.setGroupValueId(configRuleType
 				.getConfigRuleValues().get(index).getGroupValueId());
 		log.info("groupValueId="
-				+ this.getManagedBean().getSelectedRuleType()
+				+ configRuleType
 						.getConfigRuleValues().get(index).getGroupValueId());
 
-		int markIndex = getLastIndexToClone(this.getManagedBean()
-				.getSelectedRuleType().getConfigRuleValues(), this
-				.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+		int markIndex = getLastIndexToClone(configRuleType.getConfigRuleValues(),
+				configRuleType.getConfigRuleValues()
 				.get(index).getGroupValueId());
 		log.info("markIndex=" + markIndex);
 
-		if (this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+		if (configRuleType.getConfigRuleValues()
 				.get(markIndex).getRuleValue() == null
-				|| this.getManagedBean().getSelectedRuleType()
+				|| configRuleType
 						.getConfigRuleValues().get(markIndex).getRuleValue()
 						.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770162);
 		}
-		if (this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+		if (configRuleType.getConfigRuleValues()
 				.get(markIndex).getToValue() != null
-				&& !this.getManagedBean().getSelectedRuleType()
+				&& !configRuleType
 						.getConfigRuleValues().get(markIndex).getRuleValue()
 						.isEmpty()) {
-			ruleValue.setFromValue(this.getManagedBean().getSelectedRuleType()
+			ruleValue.setFromValue(configRuleType
 					.getConfigRuleValues().get(markIndex).getToValue()
 					.add(new BigDecimal(1)));
-			ruleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			ruleValue.setRuleType(configRuleType);
+			configRuleType.getConfigRuleValues()
 					.add(markIndex + 1, ruleValue);
 		} else {
 			throw new EpException(MessageConst.ERROR_770156);
@@ -2865,10 +2856,11 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	 *            (int index(mandatory))
 	 */
 	public void updateToValue(int index) {
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 		log.info("......updateToValue........");
 		log.info("................index=" + index);
 		log.info("................this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size()="
-				+ this.getManagedBean().getSelectedRuleType()
+				+ configRuleType
 						.getConfigRuleValues().size());
 		// validation
 		// PmConfigRuleValue crulevalue =
@@ -2881,22 +2873,19 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		//
 		// }
 
-		if (this.getManagedBean().getSelectedRuleType().getRangeType() == 1 &&  index < this.getManagedBean().getSelectedRuleType()
+		if (configRuleType.getRangeType() == 1 &&  index < configRuleType
 				.getConfigRuleValues().size() - 1) {
-			PmConfigRuleValue rulevalue = this.getManagedBean()
-					.getSelectedRuleType().getConfigRuleValues().get(index + 1);
+			PmConfigRuleValue rulevalue = configRuleType.getConfigRuleValues().get(index + 1);
 			if (rulevalue
 					.getGroupValueId()
-					.equals(this.getManagedBean().getSelectedRuleType()
+					.equals(configRuleType
 							.getConfigRuleValues().get(index).getGroupValueId())) {
-				rulevalue.setFromValue(this.getManagedBean()
-						.getSelectedRuleType().getConfigRuleValues().get(index)
+				rulevalue.setFromValue(configRuleType.getConfigRuleValues().get(index)
 						.getToValue().add(new BigDecimal(1)));
 			}
 		}
 		
-		PmConfigRuleValue selectedValue = this.getManagedBean()
-				.getSelectedRuleType().getConfigRuleValues().get(index);
+		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues().get(index);
 		if (selectedValue.getFromValue() != null
 				&& selectedValue.getToValue() != null
 				&& selectedValue.getFromValue().compareTo(
@@ -2916,16 +2905,14 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	public void updateGroupChildDate(int index) {
 		log.info("....updateGroupChildDate.....");
 		log.info("................index=" + index);
-
-		PmConfigRuleValue ruleValue = this.getManagedBean()
-				.getSelectedRuleType().getConfigRuleValues().get(index);
-		if (this.getManagedBean().getSelectedRuleType().getRangeType() == 1
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+		PmConfigRuleValue ruleValue = configRuleType.getConfigRuleValues().get(index);
+		if (configRuleType.getRangeType() == 1
 				&& ruleValue.isShowFlag()) {
 			Date effDate = ruleValue.getEffDate();
 			Date expDate = ruleValue.getExpDate();
 
-			for (PmConfigRuleValue value : this.getManagedBean()
-					.getSelectedRuleType().getConfigRuleValues()) {
+			for (PmConfigRuleValue value : configRuleType.getConfigRuleValues()) {
 				if (value.getGroupValueId().equals(ruleValue.getGroupValueId())) {
 					value.setEffDate(effDate);
 					value.setExpDate(expDate);
@@ -2941,9 +2928,11 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	public void addNewRuleTypeValue() {
 		log.info("*****addNewRuleTypeValue*****");
 		log.debug("*****addNewRuleTypeValue*****");
-		if(this.getManagedBean().getSelectedRuleType() != null){
+		if(this.getManagedBean().getSelectedRuleDescType() != null &&
+				this.getManagedBean().getSelectedRuleDescType().getRuleType() != null){
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
-		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
+		newRuleValue.setRuleType(configRuleType);
 		newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 
 		// if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
@@ -2952,16 +2941,15 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		// newRuleValue.setCategoryL3Id(this.getManagedBean().getCategoryL3());
 		// }
 
-		if (this.getManagedBean().getSelectedRuleType().getRangeType() == 1) {
+		if (configRuleType.getRangeType() == 1) {
 
-			if (this.getManagedBean().getSelectedRuleType()
+			if (configRuleType
 					.getConfigRuleValues() != null
-					&& this.getManagedBean().getSelectedRuleType()
+					&& configRuleType
 							.getConfigRuleValues().size() > 0) {
-				int size = this.getManagedBean().getSelectedRuleType()
+				int size = configRuleType
 						.getConfigRuleValues().size();
-				newRuleValue.setGroupValueId(this.getManagedBean()
-						.getSelectedRuleType().getConfigRuleValues()
+				newRuleValue.setGroupValueId(configRuleType.getConfigRuleValues()
 						.get(size - 1).getGroupValueId() + 1);
 
 			} else {
@@ -2970,9 +2958,9 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			}
 			newRuleValue.setFromValue(new BigDecimal(1));
 		}
-		int index = this.getManagedBean().getSelectedRuleType()
+		int index = configRuleType
 				.getConfigRuleValues().size();
-		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+		configRuleType.getConfigRuleValues()
 				.add(index, newRuleValue);
 		RequestContext.getCurrentInstance().execute(
 				"ruleValueTblWidget.paginator.endLink.click()");
@@ -4197,8 +4185,8 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		log.info("ruleValueStatusChange");
 		// log.info("...getCurrentIndexVal="+this.getCurrentIndexVal());
 		if (this.getCurrentIndexVal() != null) {
-			PmConfigRuleValue selectedValue = this.getManagedBean()
-					.getSelectedRuleType().getConfigRuleValues()
+			PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+			PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 					.get(this.getCurrentIndexVal());
 			// log.info("....selectedValue.getRuleValue()="+selectedValue.getRuleValue());
 			// log.info(".................selectedValue.getRecordStatusFlg()="+selectedValue.getRecordStatusFlg());
@@ -4219,8 +4207,8 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		log.info(".......revertStatusChange........");
 		// log.info("...getCurrentIndexVal="+this.getCurrentIndexVal());
 		if (this.getCurrentIndexVal() != null) {
-			PmConfigRuleValue selectedValue = this.getManagedBean()
-					.getSelectedRuleType().getConfigRuleValues()
+			PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+			PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 					.get(this.getCurrentIndexVal());
 			// log.info("....selectedValue.getRuleValue()="+selectedValue.getRuleValue());
 
@@ -4417,8 +4405,8 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	 */
 	public void updateErrorDialog(int index) {
 		log.info("....updateErrorDialog....");
-		PmConfigRuleValue selectedValue = this.getManagedBean()
-				.getSelectedRuleType().getConfigRuleValues().get(index);
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues().get(index);
 		if (selectedValue.getFromValue() != null
 				&& selectedValue.getToValue() != null
 				&& selectedValue.getFromValue().compareTo(
@@ -4458,20 +4446,27 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
 	}
 	
-	public String getRuleTypeDesc(PmConfigRule configRule, String language){
-		String ruleTypeDesc = null;
-		for(PmConfigRuleDesc desc : configRule.getConfigRuleDesc()){
-			if(desc.getLanguageCode().getLanguageCode().equals(
-					StringUtils.isNotBlank(language) ? language : new FacesScopes().getUserLocale().getLanguage())){
-				ruleTypeDesc = desc.getRuleDesc();
-				break;
-			}
-		}		
-		return ruleTypeDesc;
-		
-	}
+	
 	
 	public String getMaxCalendarYearRange(){
 		return null;
+	}
+	
+	private String getRuleTypeDesc(String ruleType,String languageCode) {
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+			RuleReqDTO reqDTO = new RuleReqDTO();
+
+			reqDTO.setRuleType(ruleType);
+			reqDTO.setLanguageCode(languageCode);
+
+			return ruleSO.getRuleDescByType(reqDTO);
+
+		} finally {
+			ruleSO = null;
+		}
 	}
 }
