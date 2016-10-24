@@ -421,10 +421,10 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		
 		// initialize FlTempDoAddr if null
 		for(FlDeliveryAddress deliveryAddress : flOrder.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
-			deliveryAddress.getFlTempDoAddr().setSelected(false);
 			if(deliveryAddress.getFlTempDoAddr()==null) {
 				deliveryAddress.setFlTempDoAddr(new FlTempDoAddr());
 			}
+			deliveryAddress.getFlTempDoAddr().setSelected(false);
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
 				if(itemAddr.getFlTempDoItem()==null) {
 					itemAddr.setFlTempDoItem(new FlTempDoItem());
