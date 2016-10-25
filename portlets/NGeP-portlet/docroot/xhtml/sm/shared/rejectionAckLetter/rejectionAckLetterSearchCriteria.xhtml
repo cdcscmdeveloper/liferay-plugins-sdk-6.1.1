@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel id="pnlRejectionAckSearch" header="#{lbl['lbl.sm.rejection.ack.pnl.search']}">
+	<table style="width: 100%">
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
+			<td><p:selectOneMenu required="true" id="searchSuppTypeId"
+					label="#{lbl['lbl.rpt.supplierType']}"
+					value="#{rejectionAckLetterBB.managedBean.supplierType}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="K" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="J" />
+				</p:selectOneMenu> <p:message id="searchSuppTypeIdMsg" for="searchSuppTypeId"
+					display="icon" /></td>
+		</tr>
+
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /></td>
+			<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
+					id="regStatusId" value="#{rejectionAckLetterBB.managedBean.regStatusId}"
+					style="width: 207px;margin-bottom: 5px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems value="#{rejectionAckLetterBB.managedBean.regStatusDescList}" var="reg"
+					itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.pmRegStatus.regStatusId}" />
+				</p:selectOneMenu></td>
+		</tr>
+
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.mofno']}" /></td>
+			<td><p:inputText id="mofNoId" label="#{lbl['lbl.sm.mofno']}"
+					value="#{rejectionAckLetterBB.managedBean.mofNo}" size="35" maxlength="14" /></td>
+		</tr>
+
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.epno']}" /></td>
+			<td><p:inputText id="epNoId" label="#{lbl['lbl.sm.epno']}"
+					value="#{rejectionAckLetterBB.managedBean.epNo}"
+					size="35" maxlength="14" /></td>
+		</tr>
+
+
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
+			<td><p:inputText label="#{lbl['lbl.sm.companyname']}"
+					value="#{rejectionAckLetterBB.managedBean.companyName}"
+					size="40" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.rocNo']}" /></td>
+			<td><p:inputText label="#{lbl['lbl.sm.rocNo']}"
+					value="#{rejectionAckLetterBB.managedBean.regNo}"
+					size="35" /></td>
+		</tr>
+
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']}" /></td>
+			<td><p:selectOneMenu id="searchApplTypeId"
+					label="#{lbl['lbl.sm.applicationtype']}"
+					value="#{rejectionAckLetterBB.managedBean.applType}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.newmof']}" itemValue="N" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.bumiputera']}" itemValue="B" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.categorycode']}" itemValue="A" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.updateprofile']}" itemValue="U" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.cancelmof']}" itemValue="C" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.appltype.renewmof']}" itemValue="R" />
+				</p:selectOneMenu> <p:message id="searchApplTypeIdMsg" for="searchApplTypeId"
+					display="icon" /></td>
+		</tr>
+		
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
+			<td><p:inputText id="applNoId"
+					label="#{lbl['lbl.sm.application.no']}"
+					value="#{rejectionAckLetterBB.managedBean.applNo}"
+					size="35" maxlength="20" /> <p:message id="applNoIdMsg"
+					for="applNoId" display="icon" /></td>
+		</tr>
+
+		<tr>
+			<td colspan="2">
+				<div style="text-align: right;">
+					<p:commandButton value="#{lbl['lbl.btn.search']}" update="@form" 
+					action="#{rejectionAckLetterBB.searchAction}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+						action="#{rejectionAckLetterBB.resetSearch}"
+						update="pnlRejectionAckSearch">
+					</p:commandButton>
+				</div>
+			</td>
+		</tr>
+	</table>
+	</p:panel>
+
+	<br />
+
+</ui:composition>
