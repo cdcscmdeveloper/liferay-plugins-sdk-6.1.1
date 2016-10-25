@@ -93,6 +93,10 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		
 	}
 
+	/**
+	 * Proceed to Lodge Complaint
+	 * @return String
+	 */
 	public String lodgeComplaint() {
 		String complNo = String.valueOf((new Date()).getTime());
 		Date date = new Date();
@@ -141,6 +145,9 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 
+	/**
+	 * retrieve Complaint Info
+	 */
 	public void retrieveComplaintInfo() {
 		//renewSesionObject();
 		// this.getManagedBean().setComplaintId(31);
@@ -304,6 +311,11 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		this.getManagedBean().setSmSupplierLs(resDTO.getSmSuppLs());
 	}*/
 
+	/**
+	 * On Complaint Row Select
+	 * @param complId
+	 * @return String
+	 */
 	public String onComplaintRowSelect(Long complId) {
 		log.info("---------------onComplaintRowSelect------------------");
 		this.getManagedBean().setComplaintId(complId);
@@ -311,6 +323,10 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		return "complaintMain";
 	}
 	
+	/**
+	 * get MyIdentity Status Desc
+	 * @return String
+	 */
 	public String getMyIdentityStatusDesc(){
 		String label = null;
 		
@@ -334,6 +350,10 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		return label;
 	}
 	
+	/**
+	 * get MyIdentity Residential Status Desc
+	 * @return String
+	 */
 	public String getMyIdentityResidentialStatusDesc(){
 		String label = null;
 		
@@ -370,6 +390,9 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		}
 	}*/
 
+	/**
+	 * Retrieve All Active Complaint
+	 */
 	public void retrieveAllActiveComplaint() {
 		// SmComplaintReview bBean = this.getManagedBean().getSmComplReview();
 		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
@@ -380,6 +403,10 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		this.getManagedBean().setSmComplLs(resDTO.getSmComplLs());
 	}
 
+	/**
+	 * Uodate Complaint
+	 * @return String
+	 */
 	public String updateComplaint() {
 		log.info("--------------updateComplaint------------");
 		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
@@ -411,6 +438,9 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		//return outputMsg(true, "Complaint has been updated.");
 	}
 	
+	/**
+	 * update Complaint Offenses 
+	 */
 	public void updateComplaintOffenses(){
 		Map<Long, SmComplaintOffense> offensesMap = new HashMap<Long, SmComplaintOffense>();
 		for(SmComplaintOffense complOffense : getManagedBean().getSmComplaint().getSmComplaintOffenses()){
