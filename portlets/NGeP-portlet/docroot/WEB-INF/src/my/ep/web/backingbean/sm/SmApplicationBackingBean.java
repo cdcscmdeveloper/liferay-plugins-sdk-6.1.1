@@ -4098,7 +4098,10 @@ public class SmApplicationBackingBean extends
 				overLapCategory);
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
-			if (cat.getPmCategoryL1()
+			if(getManagedBean().getSelectedCategory()
+					.getPmCategoryL3().getCategoryL3Code().equals("99")) {
+				validCat = true;
+			} else if (cat.getPmCategoryL1()
 					.getCategoryL1Id()
 					.equals(getManagedBean().getSelectedCategory()
 							.getPmCategoryL1().getCategoryL1Id())
@@ -11993,4 +11996,27 @@ public class SmApplicationBackingBean extends
 		this.file = file;
 	}
 
+	public void validateCategoryOtherDescription() {
+		System.out.println("Selected Category size: " + this.getManagedBean().getActiveCategoryList().size());
+		for(SmSupplierCategory cat : this.getManagedBean().getActiveCategoryList()) {
+			if(cat.getPmCategoryL3().getCategoryL3Code().equals("99")) {
+				if(cat.getOtherDesc() == null || cat.getOtherDesc().trim().length() == 0) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("<br/>")
+//					.append(++i)
+//					.append(".) ")
+					.append(cat.getPmCategoryL1()
+							.getCategoryL1Code())
+					.append(cat.getPmCategoryL2()
+							.getCategoryL2Code())
+					.append(cat.getPmCategoryL3()
+							.getCategoryL3Code());
+					
+					throw new EpException(MessageConst.ERROR_722514,
+							new String[] { sb.toString() });					
+				}
+			}
+		}
+		RequestContext.getCurrentInstance().execute("catCodePopup.show()");
+	}
 }
