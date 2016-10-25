@@ -627,6 +627,9 @@ public class AccessApplBackingBean extends
 		log.info("validateAccessAppl");
 		PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
 		if(BpmOutcomeConst.BPM_SAVE.equals(outcome)){
+			log.info("myidentity validation");
+			log.info("Ic No: ->>>> :" + accessAppl.getIdentificationNo());
+			log.info("PostCode ->>>> :" + accessAppl.getPostcode());
 			// validate IC with MyIdentity
 			SmCommonUtil.getInstance().verifyWithMyIdentity(accessAppl.getApplicantName(),
 					accessAppl.getIdentificationNo(),
