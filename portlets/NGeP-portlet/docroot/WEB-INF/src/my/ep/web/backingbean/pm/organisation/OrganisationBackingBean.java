@@ -2555,9 +2555,32 @@ public class OrganisationBackingBean extends
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
+			boolean isAuthorizedProfile = false;
+			ISearchBean<PmParameterDesc> searchBean = null;		
+			//check if it's authorized org profile
+			if(getManagedBean().getOrgProfile().getAuthorizedProfileGroups() != null
+					&& !getManagedBean().getOrgProfile().getAuthorizedProfileGroups().isEmpty()){
+				for(PmProfileGroup group : getManagedBean().getOrgProfile().getAuthorizedProfileGroups()){
+					if(DbValueConst.RECORD_STATUS_ACTIVE == group.getRecordStatusFlg()){
+						isAuthorizedProfile = true;
+						break;
+					}
+				}
+			}
+			
+			if(isAuthorizedProfile){
+				// filter out the org group type in drop down
+				searchBean = new SearchBean<PmParameterDesc>();
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmParameter.parameterCode",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								ParameterConst.ORG_AUTH_TYPE_ORG_GROUP));
+				
+			}
+		
 			List<PmParameterDesc> parameterDescs = ParameterHelper
 					.getInstance().getParameterDescListBySearchBean(
-							ParameterTypeConst.ORG_AUTH_TYPE, null);
+							ParameterTypeConst.ORG_AUTH_TYPE, searchBean);
 
 			items = new SelectItem[parameterDescs.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
