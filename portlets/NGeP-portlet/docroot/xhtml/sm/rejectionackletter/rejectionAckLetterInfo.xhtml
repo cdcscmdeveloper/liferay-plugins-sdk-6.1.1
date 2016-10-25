@@ -1,0 +1,81 @@
+<ui:composition template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<ui:param value="#{rejectionAckLetterBB.managedBean.selectedAppl.smSupplier.smMofAccount}" name="mofAcc" />
+		<table>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.no']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{rejectionAckLetterBB.managedBean.selectedAppl.applNo}" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mofno']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" 
+				value="#{!empty mofAcc ? mofAcc.mofNo : lbl['lbl.sm.no.available']}" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.rpt.supplierType']}" /></td>
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.contractor']}" 
+					rendered="#{rejectionAckLetterBB.managedBean.selectedAppl.supplierType eq 'K'}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.consultant']}" 
+					rendered="#{rejectionAckLetterBB.managedBean.selectedAppl.supplierType eq 'J'}" />
+				</td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.applicationtype']}" /></td>
+				<td>
+				<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.appltype.newmof']}" 
+				rendered="#{rejectionAckLetterBB.managedBean.selectedAppl.applType eq 'N'}" />
+				<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.appltype.bumiputera']}" 
+				rendered="#{rejectionAckLetterBB.managedBean.selectedAppl.applType eq 'B'}" />
+				<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.appltype.categorycode']}" 
+				rendered="#{rejectionAckLetterBB.managedBean.selectedAppl.applType eq 'A'}" />
+				<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.appltype.updateprofile']}" 
+				rendered="#{rejectionAckLetterBB.managedBean.selectedAppl.applType eq 'U'}" />
+				<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.appltype.cancelmof']}" 
+				rendered="#{rejectionAckLetterBB.managedBean.selectedAppl.applType eq 'C'}" />
+				<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.appltype.renewmof']}" 
+				rendered="#{rejectionAckLetterBB.managedBean.selectedAppl.applType eq 'R'}" />
+				
+				</td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.reactivate.basicacc.supp.name']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{rejectionAckLetterBB.managedBean.selectedAppl.smSupplier.companyName}" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.epno']}" /></td>
+				<td>#{rejectionAckLetterBB.managedBean.selectedAppl.smSupplier.epNo}</td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.rejection.ack.mof.expiry.date']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{!empty mofAcc ? mofAcc.expDate : lbl['lbl.sm.no.available']}" /></td>
+			</tr>
+		</table>
+		<br />
+		#{lbl['lbl.sm.rejection.ack.letter.notice']}
+		
+		<p:commandButton value="#{lbl['lbl.sm.btn.rejection.ack.letter.print']}" 
+			action="#{rejectionAckLetterBB.printRejectionAcknowledgementLetter()}" ajax="false">
+			<f:param name="applId" value="#{rejectionAckLetterBB.managedBean.selectedAppl.applId}"></f:param>
+			<p:fileDownload value="#{rejectionAckLetterBB.printRejectionAcknowledgementLetter()}" />
+		</p:commandButton>
+		<p:commandButton value="#{lbl['lbl.btn.cancel']}" action="#{rejectionAckLetterBB.navigateToResult}"></p:commandButton>
+	</ui:define>
+</ui:composition>
