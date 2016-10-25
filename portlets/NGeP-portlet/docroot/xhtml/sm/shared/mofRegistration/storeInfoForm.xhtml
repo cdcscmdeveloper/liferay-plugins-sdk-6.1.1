@@ -9,61 +9,61 @@
 	<p:panel header="#{lbl['lbl.sm.store.details']}" toggleable="true"
 		id="smStrDtPanel" rendered="#{backingBean.managedBean.showStorePanel}">
 		<p:outputPanel rendered="#{backingBean.managedBean.showStorePanel}">
-			<p:dataTable var="stor" widgetVar="smFacStoreDtWidVar"
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{backingBean.managedBean.applStoreFacilities}"
-				selection="#{backingBean.managedBean.selectedStoreFacilities}"
-				rowKey="#{stor}" rowIndexVar="index" id="storeDt">
-				<ac:paginator for="storeDt" />
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.applStoreFacilities}"/>
-
-				<p:column headerText="#{lbl['lbl.sm.facility.store.name']}">
-					<h:outputText value="#{stor.facilityName}" />
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.category']}">
-					<ui:repeat var="catFac" value="#{stor.smSupplierCategoryFacilities}">
-						<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
-									#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
-									#{catFac.pmCategoryL3.categoryL3Code}
-								 	(#{catFac.pmCategoryL3.categoryName})" 
-							style="float: left;white-space: normal;" /><br />
-					</ui:repeat>
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.store.address']}"
-					style="width :60%;white-space : normal">
-					<h:outputText value="#{backingBean.getFullAddress(stor.smAddress)}"
-						style="float : left" />
-					<br />
-					<script>
+				<p:dataTable var="stor" widgetVar="smFacStoreDtWidVar"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{storeCatVar.facilityList}"
+					selection="#{backingBean.managedBean.selectedStoreFacilities}"
+					rowKey="#{stor}" rowIndexVar="index" id="storeDt">
+					<ac:paginator for="storeDt" />
+					<p:column selectionMode="multiple" width="1%" rendered="#{not empty storeCatVar.facilityList}"/>
+	
+					<p:column headerText="#{lbl['lbl.sm.facility.store.name']}">
+						<h:outputText value="#{stor.facilityName}" />
+					</p:column>
 					
-				      function getStoreAddress2(addr1, addr2, addr3, cityName, districtName, stateName, countryName) {
-
-				    	  var address = addr1 + addr2 + addr3 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
-
-				      	return address;
-				      }
+					<p:column headerText="#{lbl['lbl.sm.category']}">
+						<ui:repeat var="catFac" value="#{stor.smSupplierCategoryFacilities}">
+							<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
+										#{catFac.pmCategoryL3.categoryL3Code}
+									 	(#{catFac.pmCategoryL3.categoryName})" 
+								style="float: left;white-space: normal;" /><br />
+						</ui:repeat>
+					</p:column>
 					
-					</script>
-
-					<ac:gmapInput id="gmapInput" 
-						latitude="#{stor.smAddress.mapLatitude}" 
-						longitude="#{stor.smAddress.mapLongitude}" 
-						address="getStoreAddress2('#{stor.smAddress.address1}', '#{stor.smAddress.address2}', '#{stor.smAddress.address3}', '#{stor.smAddress.pmCity.cityName}', '#{stor.smAddress.pmDistrict.districtName}', '#{stor.smAddress.pmState.stateName}', '#{stor.smAddress.pmCountry.countryName}')"
-						showButton="true"
-						disabled="false" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
-					<p:commandLink process="@this" partialSubmit="true"
-						action="#{backingBean.assignSelStore(stor)}"
-						update=":form:tt:storeDialog" style="padding-right:5px"
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
-					</p:commandLink>
-				</p:column>
-
-			</p:dataTable>
+					<p:column headerText="#{lbl['lbl.sm.store.address']}"
+						style="width :60%;white-space : normal">
+						<h:outputText value="#{backingBean.getFullAddress(stor.smAddress)}"
+							style="float : left" />
+						<br />
+						<script>
+						
+					      function getStoreAddress2(addr1, addr2, addr3, cityName, districtName, stateName, countryName) {
+	
+					    	  var address = addr1 + addr2 + addr3 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+	
+					      	return address;
+					      }
+						
+						</script>
+	
+						<ac:gmapInput id="gmapInput" 
+							latitude="#{stor.smAddress.mapLatitude}" 
+							longitude="#{stor.smAddress.mapLongitude}" 
+							address="getStoreAddress2('#{stor.smAddress.address1}', '#{stor.smAddress.address2}', '#{stor.smAddress.address3}', '#{stor.smAddress.pmCity.cityName}', '#{stor.smAddress.pmDistrict.districtName}', '#{stor.smAddress.pmState.stateName}', '#{stor.smAddress.pmCountry.countryName}')"
+							showButton="true"
+							disabled="false" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
+						<p:commandLink process="@this" partialSubmit="true"
+							action="#{backingBean.assignSelStore(stor)}"
+							update=":form:tt:storeDialog" style="padding-right:5px"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
+							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
@@ -73,7 +73,7 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="smStrDtPanel" partialSubmit="true"
 					id="delStoreBtnId" disabled="#{empty backingBean.managedBean.applStoreFacilities}"
-					update=":form:tt:storeDt,@this" oncomplete="storeDeletePopUp.show()" />
+					update=":#{p:component('storeDt')},@this" oncomplete="storeDeletePopUp.show()" />
 			</div>
 			<br />
 		</p:outputPanel>
@@ -128,7 +128,7 @@
 					</td>
 				</tr>
 				
-				<ac:smFacilityAddress backingBean="#{backingBean}" smAddress="#{backingBean.managedBean.selectedStoreFacility.smAddress}"
+				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedStoreFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.storeFacilityStates}"
 					districtItems="#{backingBean.managedBean.storeFacilityDistricts}" cityItems="#{backingBean.managedBean.storeFacilityCities}" 
 					facilityPanel="#{SupplierManagementConst.SM_STORE_FACILITY_PANEL}" panelId="storeAddrId"/>
@@ -254,7 +254,7 @@
 					action="#{backingBean.addOrUpdateStoreToSmAppl}"
 					partialSubmit="true" process="storeDialog"
 					onclick="storeBlockWidget.show();" oncomplete="storeBlockWidget.hide();"
-					update=":form:tt:storeDt, @([id$=Msg]),:#{p:component('delStoreBtnId')}" />
+					update=":#{p:component('smStrDtPanel')}, @([id$=Msg])" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					process="@this" partialSubmit="true"
 					action="#{backingBean.cancelStoreSaveorUpdate}"
@@ -272,5 +272,5 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":form:tt:storeDt, @([id$=Msg]),:#{p:component('delStoreBtnId')}"/>
+		update=":#{p:component('smStrDtPanel')}, @([id$=Msg]),:#{p:component('delStoreBtnId')}"/>
 </ui:composition>
