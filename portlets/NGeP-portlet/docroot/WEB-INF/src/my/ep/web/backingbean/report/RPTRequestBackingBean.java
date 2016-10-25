@@ -79,7 +79,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		resetSelectedRPTRequest();
 	}
 
-	public void removeRPTRequest() {
+	public void removeRPTRequests() {
 		
 		debugLogger("removeRPTRequest");
 		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
@@ -200,6 +200,11 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 							.getServiceObject("rpt",
 									IRPTRequestSO.class);
 
+					// Filter By - status
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("recordStatus",
+									SearchOperator.OPERATOR_EQUALS.value(), 1));
+					
 					// Filter By - recipient Id
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("createdBy",
