@@ -412,7 +412,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 			
 			StringBuilder str = new StringBuilder();
 			str.append(submodule);
-			str.append("/");
+			str.append(" / ");
 			str.append(pmReport.getReportTitle());
 		
 			return str.toString();

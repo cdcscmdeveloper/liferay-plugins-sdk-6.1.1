@@ -9,31 +9,52 @@
 
 	<ui:define name="resourceSection">
 	
+		<style type="text/css">
+			
+			.ui-scrollpanel-native{
+				background-color : #FFFFFF !important;
+			}
+			
+			.ui-menubutton .ui-state-default .ui-icon {
+			    background-image: url("/css/images/design/icon_trash.png") !important; 
+			}
+			
+		</style>
+	
 	</ui:define>
 	
 	<ui:define name="contentSection">
 	
+	  	<p:remoteCommand name="onload" action="#{rptRequestBackingBean.getLatestStatusCodeForRequests()}" partialSubmit="true" process="@this" update="@form"/>
+	  
 		<p:messages id="messages" autoUpdate="true" closable="true" />
-
- 	    <p:remoteCommand name="onload" action="#{rptRequestBackingBean.getLatestStatusCodeForRequests()}" partialSubmit="true" process="@this" update="@form"/>
- 
-		<p:commandLink id="refreshId" partialSubmit="true" process="@this"
-			action="#{rptRequestBackingBean.getLatestStatusCodeForRequests()}" update="@form">
-			<p:graphicImage value="/css/images/design/ico-refresh.png"/>
-		</p:commandLink>&#160;
-		
-		<h:outputText value="Click Refresh to get the latest status update.">
-		</h:outputText>
 		
 		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 	
 			<tr>
 	
-				<td valign="top">
+				<td width="42%" valign="top">
 					
 					<table width="100%">
 					
+						<tr style="background-color:#f4f4f4;">
+						
+							<td style="text-align: right;">
+							
+								<p:commandButton value="#{lbl['lbl.portal.notify.btn.refresh']}"
+								   action="#{rptRequestBackingBean.getLatestStatusCodeForRequests()}"
+								   update="@form"/> 
+									
+								<p:commandButton id="deleteBtn"
+									
+									value="#{lbl['lbl.portal.notify.btn.delete']}"
+									oncomplete="confirmation.show();"/>
+							</td>
+							
+						</tr>
+
 						<tr>
+						
 							<td colspan="2" width="100%" valign="top">
 							
 								<p:dataTable
@@ -42,21 +63,21 @@
 									rowKey="#{rptRequest}" lazy="true" >
 
 									<ac:paginator for="rptRequestTable" />
-									
-									<p:column headerText="Job Id">
-										<h:outputText value="#{rptRequest.jobId}" style="text-align:center"/>
+	
+									<p:column headerText="Job Id" style="text-align:center;">
+										<h:outputText value="#{rptRequest.jobId}" style="text-align:center;"/>
 									</p:column>
 									
-									<p:column headerText="Report Module">
+									<p:column headerText="Report Module" style="text-align:center;">
 										<h:outputText value="#{rptRequestBackingBean.getReportModule(rptRequest.reportCode)}"/>
 									</p:column>
 									
-									<p:column headerText="Report Name">
+									<p:column headerText="Report Name" style="padding-left:8px!important;">
 										<h:outputText value="#{rptRequestBackingBean.getReportName(rptRequest.reportCode)}"/>
 									</p:column>
 									
 	      							<p:column headerText="Date/Time"
-										style="text-align: right;width:10%; padding:5px!important; ">
+										style="text-align: center;width:10%; padding:5px!important; ">
 
 										<h:outputText value="#{rptRequest.createdDate}">
 											<f:convertDateTime pattern="dd-MM-yyyy" />
@@ -70,15 +91,15 @@
 
 									</p:column>
 									
-									<p:column headerText="Status">
-										<h:outputText value="#{rptRequestBackingBean.getTrimmedStatusCode(rptRequest.statusCode)}" style="text-align:center"/>
+									<p:column headerText="Status" style="text-align:center;">
+										<h:outputText value="#{rptRequestBackingBean.getTrimmedStatusCode(rptRequest.statusCode)}" style="text-align:center;"/>
 									</p:column>
 									
-									<p:column headerText="Action">
+									<p:column headerText="Action" style="text-align:center;">
 										
 										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}"
 											onstart="blkReportContent.show();" update="@form"
-															ajax="false" style="text-align:center">
+															ajax="false" style="text-align:center;">
 											<p:fileDownload
 												value="#{rptRequestBackingBean.generateReport(rptRequest)}" />
 											<p:graphicImage value="/css/images/design/download.png" id="downloadImage"
@@ -86,29 +107,40 @@
 											<p:tooltip id="tooltip" for="downloadImage">
 												<p:outputLabel escape="false" value="Download"  />
 											</p:tooltip>	
+											
 										</p:commandLink>
 									
 									</p:column>
 									
-									<p:ajax event="rowSelectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" />
-									<p:ajax event="rowUnselectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" />
-									<p:ajax event="rowUnselect" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" />
-									<p:ajax event="rowSelect" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" />
-									<p:ajax event="toggleSelect" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" />
-										
 								</p:dataTable>
 								
 							</td>
+						
 						</tr>
+					
 					</table>
+				
 				</td>
+			
 			</tr>
-	
+			
 		</table>
-							
-  		<p:dialog widgetVar="blkReportContent" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
-	    	<p:graphicImage name="../css/images/ajax-loader.gif" />
-		</p:dialog>
+		
+		<p:confirmDialog message="#{lbl['lbl.btn.dialog.cofirm.delete.msg']}" header="#{lbl['lbl.btn.dialog.cofirm.header']}" widgetVar="confirmation">
+	
+			<div align="right">
+	
+				<p:commandButton id="conf" value="#{lbl['lbl.btn.dialog.cofirm.yes']}"
+					oncomplete="confirmation.hide()" />
+	
+				<p:commandButton id="decline" value="#{lbl['lbl.btn.dialog.cofirm.no']}"
+					onclick="confirmation.hide()" />
+	
+					<h:inputHidden id="rowIndex"></h:inputHidden>
+			</div>
+	
+		</p:confirmDialog>
+	
 	</ui:define>
 	
 </ui:composition>
