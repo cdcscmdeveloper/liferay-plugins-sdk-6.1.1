@@ -2727,4 +2727,66 @@ public class NoticeBoardBackingBean extends
 		
 	}
 	
+	public List<PmOrgProfile> autoCompleteOrgMinistry(String query) {
+
+		IOrgProfileSO parameterSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setAutoCompeleteString(query);
+		reqDTO.setOrgType(ParameterConst.ORG_TYPE_MINISTRY);
+		OrgProfileResDTO resDTO = parameterSO
+				.retrieveOrgProfilesBasedOnOrgType(reqDTO);
+		return resDTO.getOrgProfileList();
+	}
+	
+	public List<PmOrgProfile> autoCompleteOrgPTJGroup(String query) {
+
+		IOrgProfileSO parameterSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setAutoCompeleteString(query);
+		reqDTO.setOrgType(ParameterConst.ORG_TYPE_PTJ_GROUP);
+		OrgProfileResDTO resDTO = parameterSO
+				.retrieveOrgProfilesBasedOnOrgType(reqDTO);
+		return resDTO.getOrgProfileList();
+	}
+	
+	public List<PmOrgProfile> autoCompleteOrgPTJ(String query) {
+
+		IOrgProfileSO parameterSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setAutoCompeleteString(query);
+		reqDTO.setOrgType(ParameterConst.ORG_TYPE_PTJ);
+		OrgProfileResDTO resDTO = parameterSO
+				.retrieveOrgProfilesBasedOnOrgType(reqDTO);
+		return resDTO.getOrgProfileList();
+	}
+	public String itemLabel(PmOrgProfile orgProfile) {
+
+		if (orgProfile != null && orgProfile.getOrgCode() != null
+				&& orgProfile.getOrgName() != null) {
+			return orgProfile.getOrgCode() + "-" + orgProfile.getOrgName();
+		}
+		return " ";
+	}
+	
+	/**
+	 * Method will cut the string based on cutOffIndex value.
+	 * 
+	 * @param str
+	 * @param cutOffIndex
+	 * @return formatted string
+	 */
+	public String chopString(String str, int cutOffIndex) {
+
+		if (str.length() > cutOffIndex) {
+			str = StringUtils.substring(str, 0, cutOffIndex) + " ...";
+		}
+		return str;
+	}
+
 }
