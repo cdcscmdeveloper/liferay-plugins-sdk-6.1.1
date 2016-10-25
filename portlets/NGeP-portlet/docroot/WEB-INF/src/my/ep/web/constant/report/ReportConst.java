@@ -498,6 +498,9 @@ public class ReportConst {
 	// SM - Supplier Profile
 	public static final String SM_SUPPLIER_PROFILE_REPORT = "SM_APPLICATION_DETAILS.jsp";
 	public static final String SM_SUPPLIER_UNREGIS_REPORT = "SM_APPL_DETAILS_UNREGIS.jsp";
+	
+	//SM - Rejection Acknlowledgement Letter
+	public static final String SM_REJECTION_ACK_LETTER = "SM_ACK_REJECT.jsp";
 
 	// CT Module reports start
 	public static final String CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL = "CT_001";
@@ -1010,6 +1013,8 @@ public class ReportConst {
 	public static final String EXT_MEASUREMENT = "Measurement";
 	public static final String SM_PAYMENT_GOV = "Government";
 	public static final String SM_PAYMENT_CDC = "CDC";
+	public static final String SM_APPL_ID = "PAPPLID";
+	public static final String PM_USER_ID = "PUSERID";
 
 	/** The Constant EXT_COLOUR. */
 	public static final String EXT_COLOUR = "Colour";
