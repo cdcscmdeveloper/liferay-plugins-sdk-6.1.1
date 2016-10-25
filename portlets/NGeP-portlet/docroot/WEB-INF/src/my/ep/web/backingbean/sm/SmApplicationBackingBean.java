@@ -1203,7 +1203,7 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.getInstance().removeEquipmentIfNotApplicable(
 				getManagedBean());
 
-		// show po remarks  and rejection reason for resubmit application
+		// show po remarks and rejection reason for resubmit application
 		if (getManagedBean().isSupplierUser()
 				&& getManagedBean().getSmAppl().isResubmit()) {
 			applSectionRevExist();
@@ -4183,6 +4183,10 @@ public class SmApplicationBackingBean extends
 		}
 		assignValReqdToFalse();
 		saveOrUpdateAppl();
+		getManagedBean().setFactoryFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
 		RequestContext.getCurrentInstance().execute("factoryDialog.hide()");
 
 	}
@@ -4298,6 +4302,10 @@ public class SmApplicationBackingBean extends
 		}
 		assignValReqdToFalse();
 		saveOrUpdateAppl();
+		getManagedBean().setDockYardFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD));
 		RequestContext.getCurrentInstance().execute("dockYardDialog.hide()");
 
 	}
@@ -4415,6 +4423,10 @@ public class SmApplicationBackingBean extends
 		}
 		assignValReqdToFalse();
 		saveOrUpdateAppl();
+		getManagedBean().setWorkshopFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
 		RequestContext.getCurrentInstance().execute("workShopDialog.hide()");
 	}
 
@@ -4529,6 +4541,10 @@ public class SmApplicationBackingBean extends
 		}
 		assignValReqdToFalse();
 		saveOrUpdateAppl();
+		getManagedBean().setStoreFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
 		RequestContext.getCurrentInstance().execute("storeDialog.hide()");
 	}
 
@@ -11341,13 +11357,19 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public void onChangeFacAddrSameAs(SmAddress address, String panelName) {
+	public void onChangeFacAddrSameAs(SmFacility facility, String panelName) {
 		if (StringUtils.isNotBlank(getManagedBean().getFacAddresSameAs())) {
 			if (getManagedBean().getFacAddresSameAs().equals("HQ")) {
-				SmApplicationUtil.getInstance().cloneAddress(
-						address,
-						getManagedBean().getSmAppl().getSmCompanyBasic()
-								.getSmCompanyAddresses().get(0).getSmAddress());
+				SmFacility hq = SmApplicationUtil
+						.getHqFacilityByAppl(getManagedBean().getSmAppl());
+				if (hq != null) {
+					facility.setOwnerName(hq.getOwnerName());
+					facility.setPurchasePrice(hq.getPurchasePrice());
+					facility.setRentalRate(hq.getRentalRate());
+					facility.setOwnershipType(hq.getOwnershipType());
+					SmApplicationUtil.getInstance().cloneAddress(
+							facility.getSmAddress(), hq.getSmAddress());
+				}
 			} else {
 				Long branchId = Long.parseLong(getManagedBean()
 						.getFacAddresSameAs());
@@ -11356,11 +11378,11 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getSmAppl()
 										.getSmSupplierBranches(),
 								"supplierBranchId");
-				SmApplicationUtil.getInstance().cloneAddress(address,
-						branch.getSmAddress());
+				SmApplicationUtil.getInstance().cloneAddress(
+						facility.getSmAddress(), branch.getSmAddress());
 			}
 			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
-					getManagedBean(), address, panelName);
+					getManagedBean(), facility.getSmAddress(), panelName);
 		}
 	}
 

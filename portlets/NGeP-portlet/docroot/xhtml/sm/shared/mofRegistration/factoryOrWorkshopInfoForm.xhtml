@@ -15,62 +15,63 @@
 	<p:panel header="#{lbl['lbl.sm.factory.details']}" toggleable="true"
 		id="smFacilityFactoryDtPanel" rendered="#{backingBean.managedBean.showFactoryPanel}">
 		<p:outputPanel rendered="#{backingBean.managedBean.showFactoryPanel}">
-			<p:dataTable var="fac" widgetVar="smFacilityFactorDtWidVar"
-				value="#{backingBean.managedBean.applFactoryFacilities}"
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				selection="#{backingBean.managedBean.selectedFactoryFacilities}"
-				rowKey="#{fac}" rowIndexVar="index" id="facDt">
-				<ac:paginator for="facDt" />
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.applFactoryFacilities}"/>
-
-				<p:column headerText="#{lbl['lbl.sm.facility.factory.name']}">
-					<h:outputText value="#{fac.facilityName}" />
-				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.category']}">
-					<ui:repeat var="catFac" value="#{fac.smSupplierCategoryFacilities}">
-						<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
-									#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
-									#{catFac.pmCategoryL3.categoryL3Code}
-								 	(#{catFac.pmCategoryL3.categoryName})" 
-							style="float: left;white-space: normal;" /><br />
-					</ui:repeat>
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.factory.address']}"
-					style="width :60%;white-space : normal">
-					<h:outputText value="#{backingBean.getFullAddress(fac.smAddress)}"
-						style="float : left" />
-						<br />
-						<script>
-						
-					      function getAddress2(addr1, addr2, addr3, cityName, districtName, stateName, countryName) {
-
-					    	  var address = addr1 + addr2 + addr3 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
-
-					      	return address;
-					      }
-						
-						</script>
-
-
-						<ac:gmapInput id="gmapInput" 
-							latitude="#{fac.smAddress.mapLatitude}" 
-							longitude="#{fac.smAddress.mapLongitude}" 
-							address="getAddress2('#{fac.smAddress.address1}', '#{fac.smAddress.address2}', '#{fac.smAddress.address3}', '#{fac.smAddress.pmCity.cityName}', '#{fac.smAddress.pmDistrict.districtName}', '#{fac.smAddress.pmState.stateName}', '#{fac.smAddress.pmCountry.countryName}')"
-							showButton="true"
-							disabled="false" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
-					<p:commandLink action="#{backingBean.assignSelFactory(fac)}"
-						partialSubmit="true" process="@this"
-						update=":form:tt:factoryDialog" style="padding-right:5px" 
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
-					</p:commandLink>
-				</p:column>
-
-			</p:dataTable>
+				<p:dataTable var="fac" widgetVar="smFacilityFactorDtWidVar"
+					value="#{factoryCatVar.facilityList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					selection="#{backingBean.managedBean.selectedFactoryFacilities}"
+					rowKey="#{fac}" rowIndexVar="index" id="facDt">
+					<ac:paginator for="facDt" />
+					<p:column selectionMode="multiple" width="1%" rendered="#{not empty factoryCatVar.facilityList}"/>
+	
+					<p:column headerText="#{lbl['lbl.sm.facility.factory.name']}">
+						<h:outputText value="#{fac.facilityName}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.category']}">
+						<ui:repeat var="catFac" value="#{fac.smSupplierCategoryFacilities}">
+							<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
+										#{catFac.pmCategoryL3.categoryL3Code}
+									 	(#{catFac.pmCategoryL3.categoryName})" 
+								style="float: left;white-space: normal;" /><br />
+						</ui:repeat>
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.factory.address']}"
+						style="width :60%;white-space : normal">
+						<h:outputText value="#{backingBean.getFullAddress(fac.smAddress)}"
+							style="float : left" />
+							<br />
+							<script>
+							
+						      function getAddress2(addr1, addr2, addr3, cityName, districtName, stateName, countryName) {
+	
+						    	  var address = addr1 + addr2 + addr3 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+	
+						      	return address;
+						      }
+							
+							</script>
+	
+	
+							<ac:gmapInput id="gmapInput" 
+								latitude="#{fac.smAddress.mapLatitude}" 
+								longitude="#{fac.smAddress.mapLongitude}" 
+								address="getAddress2('#{fac.smAddress.address1}', '#{fac.smAddress.address2}', '#{fac.smAddress.address3}', '#{fac.smAddress.pmCity.cityName}', '#{fac.smAddress.pmDistrict.districtName}', '#{fac.smAddress.pmState.stateName}', '#{fac.smAddress.pmCountry.countryName}')"
+								showButton="true"
+								disabled="false" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
+						<p:commandLink action="#{backingBean.assignSelFactory(fac)}"
+							partialSubmit="true" process="@this"
+							update=":form:tt:factoryDialog" style="padding-right:5px" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
+							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+						</p:commandLink>
+					</p:column>
+	
+				</p:dataTable>
 			
 			<p:spacer height="2px;" />
 			<div align="right">
@@ -82,7 +83,7 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="smFacilityFactoryDtPanel"
 					id="delFactoryBtnId" disabled="#{empty backingBean.managedBean.applFactoryFacilities}"
-					update=":form:tt:facDt,@this" 
+					update=":#{p:component('facDt')},@this" 
 					oncomplete="factoryDeletePopUp.show()" />
 			</div>
 			<br />
@@ -138,7 +139,7 @@
 					</td>
 				</tr>
 				
-				<ac:smFacilityAddress backingBean="#{backingBean}" smAddress="#{backingBean.managedBean.selectedFactoryFacility.smAddress}"
+				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedFactoryFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.factoryFacilityStates}"
 					districtItems="#{backingBean.managedBean.factoryFacilityDistricts}" cityItems="#{backingBean.managedBean.factoryFacilityCities}" 
 					facilityPanel="#{SupplierManagementConst.SM_FACTORY_FACILITY_PANEL}" panelId="factoryAddrId"/>
@@ -267,7 +268,7 @@
 					action="#{backingBean.addOrUpdateFactoryToSmAppl}"
 					partialSubmit="true" process="factoryDialog"
 					onclick="factoryBlockWidget.show();" oncomplete="factoryBlockWidget.hide();"
-					update=":form:tt:facDt, @([id$=Msg]),:#{p:component('delFactoryBtnId')}" />
+					update=":#{p:component('smFacilityFactoryDtPanel')}, @([id$=Msg])" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.cancelFactorySaveorUpdate}"
@@ -285,5 +286,5 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":form:tt:facDt, @([id$=Msg]),:#{p:component('delFactoryBtnId')}"/>
+		update=":#{p:component('smFacilityFactoryDtPanel')}, @([id$=Msg]),:#{p:component('delFactoryBtnId')}"/>
 </ui:composition>

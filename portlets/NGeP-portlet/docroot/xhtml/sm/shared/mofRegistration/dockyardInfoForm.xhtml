@@ -9,63 +9,63 @@
 	<p:panel header="#{lbl['lbl.sm.dockyard.details']}" toggleable="true"
 		id="smDocDtPanel" rendered="#{backingBean.managedBean.showDockyardPanel}">
 		<p:outputPanel rendered="#{backingBean.managedBean.showDockyardPanel}">
-			<p:dataTable var="doc" widgetVar="smFacilityDockDtWidVar"
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{backingBean.managedBean.applDockyardFacilities}"
-				selection="#{backingBean.managedBean.selectedDockyardFacilities}"
-				rowKey="#{doc}" rowIndexVar="index" id="docDt">
-				<ac:paginator for="docDt" />
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.applDockyardFacilities}"/>
-
-				<p:column headerText="#{lbl['lbl.sm.facility.dockyard.name']}">
-					<h:outputText value="#{doc.facilityName}" />
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.category']}">
-					<ui:repeat var="catFac" value="#{doc.smSupplierCategoryFacilities}">
-						<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
-									#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
-									#{catFac.pmCategoryL3.categoryL3Code}
-								 	(#{catFac.pmCategoryL3.categoryName})" 
-							style="float: left;white-space: normal;" /><br />
-					</ui:repeat>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sm.dockyard.address']}"
-					style="width :60%;white-space : normal">
-					<h:outputText value="#{backingBean.getFullAddress(doc.smAddress)}"
-						style="float : left" />
-						
-					<br />
-					<script>
+				<p:dataTable var="doc" widgetVar="smFacilityDockDtWidVar"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{dockyardCatVar.facilityList}"
+					selection="#{backingBean.managedBean.selectedDockyardFacilities}"
+					rowKey="#{doc}" rowIndexVar="index" id="docDt">
+					<ac:paginator for="docDt" />
+					<p:column selectionMode="multiple" width="1%" rendered="#{not empty dockyardCatVar.facilityList}"/>
+	
+					<p:column headerText="#{lbl['lbl.sm.facility.dockyard.name']}">
+						<h:outputText value="#{doc.facilityName}" />
+					</p:column>
 					
-				      function getDocAddress2(addr1, addr2, addr3, cityName, districtName, stateName, countryName) {
-
-				    	  var address = addr1 + addr2 + addr3 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
-
-				      	return address;
-				      }
-					
-					</script>
-
-					<ac:gmapInput id="gmapInput" 
-						latitude="#{doc.smAddress.mapLatitude}" 
-						longitude="#{doc.smAddress.mapLongitude}" 
-						address="getDocAddress2('#{doc.smAddress.address1}', '#{doc.smAddress.address2}', '#{doc.smAddress.address3}','#{doc.smAddress.pmCity.cityName}', '#{doc.smAddress.pmDistrict.districtName}', '#{doc.smAddress.pmState.stateName}', '#{doc.smAddress.pmCountry.countryName}')"
-						showButton="true"
-						disabled="false" />
+					<p:column headerText="#{lbl['lbl.sm.category']}">
+						<ui:repeat var="catFac" value="#{doc.smSupplierCategoryFacilities}">
+							<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
+										#{catFac.pmCategoryL3.categoryL3Code}
+									 	(#{catFac.pmCategoryL3.categoryName})" 
+								style="float: left;white-space: normal;" /><br />
+						</ui:repeat>
+					</p:column>
+	
+					<p:column headerText="#{lbl['lbl.sm.dockyard.address']}"
+						style="width :60%;white-space : normal">
+						<h:outputText value="#{backingBean.getFullAddress(doc.smAddress)}"
+							style="float : left" />
+							
+						<br />
+						<script>
 						
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
-					<p:commandLink action="#{backingBean.assignSelDockyard(doc)}"
-						process="@this" partialSubmit="true"
-						update=":form:tt:dockYardDialog" style="padding-right:5px"
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
-					</p:commandLink>
-				</p:column>
-
-			</p:dataTable>
+					      function getDocAddress2(addr1, addr2, addr3, cityName, districtName, stateName, countryName) {
+	
+					    	  var address = addr1 + addr2 + addr3 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+	
+					      	return address;
+					      }
+						
+						</script>
+	
+						<ac:gmapInput id="gmapInput" 
+							latitude="#{doc.smAddress.mapLatitude}" 
+							longitude="#{doc.smAddress.mapLongitude}" 
+							address="getDocAddress2('#{doc.smAddress.address1}', '#{doc.smAddress.address2}', '#{doc.smAddress.address3}','#{doc.smAddress.pmCity.cityName}', '#{doc.smAddress.pmDistrict.districtName}', '#{doc.smAddress.pmState.stateName}', '#{doc.smAddress.pmCountry.countryName}')"
+							showButton="true"
+							disabled="false" />
+							
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
+						<p:commandLink action="#{backingBean.assignSelDockyard(doc)}"
+							process="@this" partialSubmit="true"
+							update=":form:tt:dockYardDialog" style="padding-right:5px"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+						</p:commandLink>
+					</p:column>
+	
+				</p:dataTable>
 			
 			<p:spacer height="2px;" />
 			<div align="right">
@@ -75,7 +75,7 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="smDocDtPanel" partialSubmit="true"
-					update=":form:tt:docDt,@this" 
+					update=":#{p:component('docDt')},@this" 
 					id="delDockyardBtnId" disabled="#{empty backingBean.managedBean.applDockyardFacilities}"
 					oncomplete="dockyardDeletePopUp.show()" />
 			</div>
@@ -135,7 +135,7 @@
 					</td>
 				</tr>
 				
-				<ac:smFacilityAddress backingBean="#{backingBean}" smAddress="#{backingBean.managedBean.selectedDockyardFacility.smAddress}"
+				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedDockyardFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.dockFacilityStates}"
 					districtItems="#{backingBean.managedBean.dockFacilityDistricts}" cityItems="#{backingBean.managedBean.dockFacilityCities}" 
 					facilityPanel="#{SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL}" panelId="dockyardAddrId"/>
@@ -259,7 +259,7 @@
 					action="#{backingBean.addOrUpdateDockYardToSmAppl}"
 					partialSubmit="true" process="dockYardDialog"
 					onclick="dockyardBlockWidget.show();" oncomplete="dockyardBlockWidget.hide();"
-					update=":form:tt:docDt, @([id$=Msg]),:#{p:component('delDockyardBtnId')}" />
+					update=":#{p:component('smDocDtPanel')}, @([id$=Msg])" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					process="@this" partialSubmit="true"
 					action="#{backingBean.cancelDockyardSaveorUpdate}"
@@ -277,5 +277,5 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":form:tt:docDt, @([id$=Msg]),:#{p:component('delDockyardBtnId')}"/>
+		update=":#{p:component('smDocDtPanel')}, @([id$=Msg]),:#{p:component('delDockyardBtnId')}"/>
 </ui:composition>
