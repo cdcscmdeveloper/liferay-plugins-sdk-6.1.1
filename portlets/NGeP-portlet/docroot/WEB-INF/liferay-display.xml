@@ -320,6 +320,7 @@
 		<portlet id="svcTaskSummary"></portlet>
 		<portlet id="paymentReceipt"></portlet>
 		<portlet id="smComplaintSummary"></portlet>
+		<portlet id="rejectionAcknowledgementLetter"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
