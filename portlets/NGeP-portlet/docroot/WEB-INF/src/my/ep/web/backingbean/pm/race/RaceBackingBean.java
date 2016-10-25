@@ -6,6 +6,7 @@ package my.ep.web.backingbean.pm.race;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -31,6 +32,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -42,6 +44,8 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
 
 /**
  * Backing Bean Class for Race.
@@ -225,7 +229,15 @@ public class RaceBackingBean extends
 	 */
 	private void validationMessage(PmRace race){
 		debugLogger("validationMessage");
+		
 		if(DbValueConst.RECORD_STATUS_ACTIVE == race.getRecordStatusFlg()){
+			if(!StringUtils.isNumeric(race.getRaceCode())){
+				String numericErrors = ResourceBundleUtils.getMessage(
+						"lbl.pm.race.code.error", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+				throw new EpException(numericErrors);
+			}
+			
 			String raceNameErrors = isExistRaceCode(race);
 			if (StringUtils.isNotBlank(raceNameErrors)) {
 				if(race.isBrandNew()){
