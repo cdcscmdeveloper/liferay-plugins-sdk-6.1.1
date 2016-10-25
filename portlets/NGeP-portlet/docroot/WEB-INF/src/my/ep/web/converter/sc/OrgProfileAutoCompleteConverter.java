@@ -15,6 +15,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
+import org.apache.commons.lang.StringUtils;
+
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -33,14 +35,14 @@ public class OrgProfileAutoCompleteConverter implements Converter {
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String value) {
 		
-		if (value != null && value.trim().length() > 0) {
+		if (value != null && value.trim().length() > 0 && StringUtils.isNumeric(value)) {
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgProfileId(Long.valueOf(value));
 			IOrgProfileSO parameterSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = parameterSO
-					.retrieveOrgProfileByProfileId(reqDTO);
+					.retrieveOrgProfileDtlByProfileId(reqDTO);
 			return resDTO.getPmOrgProfile();
 		} else {
 			return null;
