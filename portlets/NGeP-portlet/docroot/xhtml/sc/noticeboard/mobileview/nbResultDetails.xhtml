@@ -12,15 +12,15 @@
 		<p:dataTable id="nbsearchresults"
 			value="#{noticeBoardBackingBean.qtDataModel}" lazy="true"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			styleClass="nbsrhresultsStyleClass" style="width:100%" var="scqt"
-			rows="20">
+			styleClass="nbsrhresultsStyleClass" style="width:100%" var="scqt" paginatorPosition="bottom" paginator="true"
+			rows="20" paginatorTemplate="{PreviousPageLink} {FirstPageLink} {NextPageLink}">
 
 			<ac:paginator for="nbsearchresults" />
 
 			<p:column headerText="#{lbl['lbl.sc.title']}" style="width:27%;word-wrap:break-word;white-space: normal;">
 				<p:commandLink style="margin-right:20px;"
 					action="#{noticeBoardBackingBean.retrieveQTDetails(scqt[0])}">
-					<h:outputText value="#{scqt[1]}" />
+					<h:outputText value="#{noticeBoardBackingBean.chopString(scqt[1],22)}" />
 				</p:commandLink>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.ptj']}"
@@ -33,8 +33,6 @@
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.publish.date']}" />
 				<h:outputText value=" / #{lbl['lbl.sc.closing.date']}" />
-				<h:outputText value=" / #{lbl['lbl.sc.notice.board.countdowndays']}"
-					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}" />
 			</f:facet>
 			<h:outputText value="#{scqt[3]}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
@@ -52,8 +50,6 @@
 				<h:outputText value="#{closingChangeDate}" styleClass="lastUpdated" rendered="#{isChangesTab and !empty closingChangeDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 				</h:outputText> <br/>
-				<h:outputText value="#{noticeBoardBackingBean.getClosingDays(scqt[4])}" 
-				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.notice.board.view.bsv']}"
