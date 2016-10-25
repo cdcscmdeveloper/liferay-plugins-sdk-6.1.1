@@ -11,7 +11,7 @@
 		<p:outputPanel rendered="#{backingBean.managedBean.showStorePanel}">
 				<p:dataTable var="stor" widgetVar="smFacStoreDtWidVar"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{storeCatVar.facilityList}"
+					value="#{backingBean.managedBean.applStoreFacilities}"
 					selection="#{backingBean.managedBean.selectedStoreFacilities}"
 					rowKey="#{stor}" rowIndexVar="index" id="storeDt">
 					<ac:paginator for="storeDt" />

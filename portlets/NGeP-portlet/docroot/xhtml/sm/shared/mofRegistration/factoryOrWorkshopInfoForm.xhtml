@@ -17,7 +17,7 @@
 		<p:outputPanel rendered="#{backingBean.managedBean.showFactoryPanel}">
 				
 				<p:dataTable var="fac" widgetVar="smFacilityFactorDtWidVar"
-					value="#{factoryCatVar.facilityList}"
+					value="#{backingBean.managedBean.applFactoryFacilities}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					selection="#{backingBean.managedBean.selectedFactoryFacilities}"
 					rowKey="#{fac}" rowIndexVar="index" id="facDt">

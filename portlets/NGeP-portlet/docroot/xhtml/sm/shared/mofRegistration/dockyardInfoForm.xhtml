@@ -11,7 +11,7 @@
 		<p:outputPanel rendered="#{backingBean.managedBean.showDockyardPanel}">
 				<p:dataTable var="doc" widgetVar="smFacilityDockDtWidVar"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{dockyardCatVar.facilityList}"
+					value="#{backingBean.managedBean.applDockyardFacilities}"
 					selection="#{backingBean.managedBean.selectedDockyardFacilities}"
 					rowKey="#{doc}" rowIndexVar="index" id="docDt">
 					<ac:paginator for="docDt" />

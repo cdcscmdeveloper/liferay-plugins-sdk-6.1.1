@@ -11,7 +11,7 @@
 		<p:outputPanel rendered="#{backingBean.managedBean.showWorkShopPanel}">
 				
 				<p:dataTable var="work" widgetVar="smWorkShopDtWidVar"
-					value="#{workshopCatVar.facilityList}"
+					value="#{backingBean.managedBean.applWorkShopFacilities}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					selection="#{backingBean.managedBean.selectedWorkShopFacilities}"
 					rowKey="#{work}" rowIndexVar="index" id="workDt">
