@@ -1382,6 +1382,7 @@ public class TaskReassignmentBackingBean extends
 			FulfilmentResDTO resDTO = fulfilmentSO.retrieveTaskReassignmentDetail(reqDTO);
 			if(resDTO != null){
 				vo.setOrderAmount(resDTO.getOrderAmount());
+				vo.setApprovalLimit(resDTO.getOrderAmount());
 				vo.setOrgProfileId(resDTO.getOrgProfileId());
 				vo.setDocId(resDTO.getDocId());
 				vo.setDocNo(resDTO.getDocNo());
@@ -2103,6 +2104,35 @@ public class TaskReassignmentBackingBean extends
 	public void setOthersTaskListDataModel(
 			PagingDataModel<WorklistItemVO> othersTaskListDataModel) {
 		this.othersTaskListDataModel = othersTaskListDataModel;
+	}
+	
+	public void redirectToTaskReassignment(PmOrgProfile orgProfile, PmUser user) {		
+		log.info("redirectToTaskReassignment");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackURL(fc.getViewRoot().getViewId());		
+		resetTaskAssignSearchBean();
+		retrieveOrgTypeMap();
+		
+		this.getManagedBean().getTaskAssignmentSearchBean()
+			.setOrgProfile(orgProfile);
+		this.getManagedBean().getTaskAssignmentSearchBean()
+			.setOrgType(orgProfile.getOrgTypeCode());
+		this.getManagedBean().getTaskAssignmentSearchBean()
+			.setUser(user);
+		this.getManagedBean().setOrgProfileRequired(false);
+		this.getManagedBean().setDisableForTaskAssignment(true);
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "/xhtml/pm/taskReassignment/taskReassignment.xhtml");
+
+		
+	}
+	
+	public void redirectToPmUserPage(){
+		log.info("this.getManagedBean().getBackURL()"+this.getManagedBean().getBackURL());
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, this.getManagedBean().getBackURL()); 
+
 	}
 	
 	
