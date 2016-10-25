@@ -52,8 +52,9 @@
 						completeMethod="#{noticeBoardBackingBean.autoCompleteOrgMinistry}"
 						var="orgProfile" itemValue="#{orgProfile}"
 						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
-						maxResults="5" dropdown="false" forceSelection="true"
+						maxResults="3" dropdown="false" forceSelection="true"
 						converter="orgProfileAutoCompleteConverter">
+						<p:ajax event="itemSelect" update="autoOrgMinistryId"></p:ajax>
 					</p:autoComplete></td>
 
 
@@ -63,26 +64,27 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.ptj.group']}" /></td>
 
-				<td><p:autoComplete id="PtjGropup"
+				<td><p:autoComplete id="autoPtjGropupId"
 						title="#{lbl['lbl.sc.ptj.group']}"
 						value="#{noticeBoardBackingBean.managedBean.ptjGroupProfile}"
 						completeMethod="#{noticeBoardBackingBean.autoCompleteOrgPTJGroup}"
 						var="orgProfile" itemValue="#{orgProfile}"
 						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
-						maxResults="5" dropdown="false" forceSelection="true"
+						maxResults="3" dropdown="false" forceSelection="true"
 						converter="orgProfileAutoCompleteConverter">
+						<p:ajax event="itemSelect" update="autoPtjGropupId"></p:ajax>
 					</p:autoComplete></td>
 			</tr>
 			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td><p:autoComplete id="openPtj"
+				<td><p:autoComplete id="autoPtjId"
 						title="#{lbl['lbl.sc.ptj']}"
 						value="#{noticeBoardBackingBean.managedBean.ptjProfile}"
 						completeMethod="#{noticeBoardBackingBean.autoCompleteOrgPTJ}"
 						var="orgProfile" itemValue="#{orgProfile}"
 						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
-						maxResults="5" dropdown="false" forceSelection="true"
+						maxResults="3" dropdown="false" forceSelection="true"
 						converter="orgProfileAutoCompleteConverter">
 					</p:autoComplete></td>
 
