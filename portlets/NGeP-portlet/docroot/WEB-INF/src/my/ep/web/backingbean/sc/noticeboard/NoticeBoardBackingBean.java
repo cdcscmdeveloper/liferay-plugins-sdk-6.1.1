@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -120,6 +121,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.autocomplete.AutoComplete;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.event.NodeCollapseEvent;
@@ -2728,40 +2730,36 @@ public class NoticeBoardBackingBean extends
 	}
 	
 	public List<PmOrgProfile> autoCompleteOrgMinistry(String query) {
-
-		IOrgProfileSO parameterSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
+		
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setAutoCompeleteString(query);
+		reqDTO.setMaxResults(getMaxResultsCount("autoOrgMinistryId"));
 		reqDTO.setOrgType(ParameterConst.ORG_TYPE_MINISTRY);
-		OrgProfileResDTO resDTO = parameterSO
+		OrgProfileResDTO resDTO = getOrgProfileSo()
 				.retrieveOrgProfilesBasedOnOrgType(reqDTO);
 		return resDTO.getOrgProfileList();
 	}
 	
 	public List<PmOrgProfile> autoCompleteOrgPTJGroup(String query) {
-
-		IOrgProfileSO parameterSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
+		
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setAutoCompeleteString(query);
+		reqDTO.setMaxResults(getMaxResultsCount("autoPtjGropupId"));
 		reqDTO.setOrgType(ParameterConst.ORG_TYPE_PTJ_GROUP);
-		OrgProfileResDTO resDTO = parameterSO
+		reqDTO.setOrgProfileConditionField(constuctConditionFieldsForPTJGroup());
+		OrgProfileResDTO resDTO = getOrgProfileSo()
 				.retrieveOrgProfilesBasedOnOrgType(reqDTO);
 		return resDTO.getOrgProfileList();
 	}
 	
 	public List<PmOrgProfile> autoCompleteOrgPTJ(String query) {
-
-		IOrgProfileSO parameterSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
+		
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setMaxResults(getMaxResultsCount("autoPtjId"));
 		reqDTO.setAutoCompeleteString(query);
 		reqDTO.setOrgType(ParameterConst.ORG_TYPE_PTJ);
-		OrgProfileResDTO resDTO = parameterSO
+		reqDTO.setOrgProfileConditionField(constuctConditionFields());
+		OrgProfileResDTO resDTO = getOrgProfileSo()
 				.retrieveOrgProfilesBasedOnOrgType(reqDTO);
 		return resDTO.getOrgProfileList();
 	}
@@ -2787,6 +2785,25 @@ public class NoticeBoardBackingBean extends
 			str = StringUtils.substring(str, 0, cutOffIndex) + " ...";
 		}
 		return str;
+	}
+	
+	private int getMaxResultsCount(String componentId) {
+
+		int maxResults = 5;
+		UIComponent component = new FacesScopes().findComponentById(
+				FacesContext.getCurrentInstance().getViewRoot(), componentId);
+		if (component instanceof AutoComplete) {
+			AutoComplete autoComplete = (AutoComplete) component;
+			maxResults = autoComplete.getMaxResults();
+		}
+
+		return maxResults;
+	}
+	
+	private IOrgProfileSO getOrgProfileSo() {
+
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 	}
 
 }
