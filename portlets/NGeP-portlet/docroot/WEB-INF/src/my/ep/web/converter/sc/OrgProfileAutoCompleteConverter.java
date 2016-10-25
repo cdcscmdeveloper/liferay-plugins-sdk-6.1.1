@@ -52,7 +52,9 @@ public class OrgProfileAutoCompleteConverter implements Converter {
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
 
 		if (arg2 != null && arg2 instanceof PmOrgProfile) {
-			return String.valueOf(((PmOrgProfile) arg2).getOrgProfileId());
+			PmOrgProfile orgProfile = (PmOrgProfile) arg2;
+			Long orgProfileId = orgProfile.getOrgProfileId();
+			return orgProfileId != null?String.valueOf(orgProfileId):"";
 		}
 		return "";
 	}
