@@ -46,11 +46,15 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.ministry']}" /></td>
 
-				<td><ac:lov id="minstryPtj" lovId="PM_ORG_PROFILE_MINSTRY"
-						headerText="#{lbl['lbl.sc.notice.board.ministry.search']}" update="@form"
-						saveObject="noticeBoardBackingBean.managedBean.ministryProfile"
-						value="#{noticeBoardBackingBean.managedBean.ministryProfile.orgName}"
-						 readonly="true" /></td>
+				<td><p:autoComplete id="autoOrgMinistryId"
+						title="#{lbl['lbl.sc.ministry']}"
+						value="#{noticeBoardBackingBean.managedBean.ministryProfile}"
+						completeMethod="#{noticeBoardBackingBean.autoCompleteOrgMinistry}"
+						var="orgProfile" itemValue="#{orgProfile}"
+						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
+						maxResults="5" dropdown="false" forceSelection="true"
+						converter="orgProfileAutoCompleteConverter">
+					</p:autoComplete></td>
 
 
 			</tr>
@@ -59,22 +63,28 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.ptj.group']}" /></td>
 
-				<td><ac:lov id="PtjGropup" lovId="PM_ORG_PROFILE_PTJ_GROUP"
-						headerText="#{lbl['lbl.sc.notice.board.ptj.group.search']}" update="@form"
-						saveObject="noticeBoardBackingBean.managedBean.ptjGroupProfile"
-						value="#{noticeBoardBackingBean.managedBean.ptjGroupProfile.orgName}"
-						 readonly="true" 
-						conditionField="#{noticeBoardBackingBean.constuctConditionFieldsForPTJGroup()}"/></td>
+				<td><p:autoComplete id="PtjGropup"
+						title="#{lbl['lbl.sc.ptj.group']}"
+						value="#{noticeBoardBackingBean.managedBean.ptjGroupProfile}"
+						completeMethod="#{noticeBoardBackingBean.autoCompleteOrgPTJGroup}"
+						var="orgProfile" itemValue="#{orgProfile}"
+						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
+						maxResults="5" dropdown="false" forceSelection="true"
+						converter="orgProfileAutoCompleteConverter">
+					</p:autoComplete></td>
 			</tr>
 			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td><ac:lov id="openPtj" lovId="PM_ORG_PROFILE_PTJ"
-						headerText="#{lbl['lbl.sc.notice.board.ptj.search']}"
-						saveObject="noticeBoardBackingBean.managedBean.ptjProfile"
-						value="#{noticeBoardBackingBean.managedBean.ptjProfile.orgName}"
-						 readonly="true"
-						conditionField="#{noticeBoardBackingBean.constuctConditionFields()}" /></td>
+				<td><p:autoComplete id="openPtj"
+						title="#{lbl['lbl.sc.ptj']}"
+						value="#{noticeBoardBackingBean.managedBean.ptjProfile}"
+						completeMethod="#{noticeBoardBackingBean.autoCompleteOrgPTJ}"
+						var="orgProfile" itemValue="#{orgProfile}"
+						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
+						maxResults="5" dropdown="false" forceSelection="true"
+						converter="orgProfileAutoCompleteConverter">
+					</p:autoComplete></td>
 
 			</tr>
 		</table>
