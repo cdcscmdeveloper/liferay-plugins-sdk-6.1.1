@@ -28,7 +28,6 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
-//import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -88,6 +87,7 @@ import my.ep.web.vo.SmSupplierBasicInfoVO;
 import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.model.Role;
+//import my.ep.persistence.entity.pm.common.PmEduLevel;
 
 @ManagedBean(name = "smApplMB")
 @SessionScoped
@@ -433,6 +433,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmGstSupplier selectedGst;
 	private SmGstSupplierDoc selectedGstSuppDoc;
 	private List<SmSiteVisitFacilityVO> siteVisitFacVOList;
+	private List<PmCategoryL3> dockYardFacilitiesVOList;
+	private List<PmCategoryL3> storeFacilitiesVOList;
+	private List<PmCategoryL3> workshopFacilitiesVOList;
+	private List<PmCategoryL3> factoryFacilitiesVOList;
 	private boolean branchSameAsHq;
 	private String facAddresSameAs;
 	private List<SelectItem> addrSameAsItems;
@@ -3654,5 +3658,41 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRejectReasonsMsg(String rejectReasonsMsg) {
 		this.rejectReasonsMsg = rejectReasonsMsg;
+	}
+
+	public List<PmCategoryL3> getDockYardFacilitiesVOList() {
+		return dockYardFacilitiesVOList;
+	}
+
+	public void setDockYardFacilitiesVOList(
+			List<PmCategoryL3> dockYardFacilitiesVOList) {
+		this.dockYardFacilitiesVOList = dockYardFacilitiesVOList;
+	}
+
+	public List<PmCategoryL3> getStoreFacilitiesVOList() {
+		return storeFacilitiesVOList;
+	}
+
+	public void setStoreFacilitiesVOList(
+			List<PmCategoryL3> storeFacilitiesVOList) {
+		this.storeFacilitiesVOList = storeFacilitiesVOList;
+	}
+
+	public List<PmCategoryL3> getWorkshopFacilitiesVOList() {
+		return workshopFacilitiesVOList;
+	}
+
+	public void setWorkshopFacilitiesVOList(
+			List<PmCategoryL3> workshopFacilitiesVOList) {
+		this.workshopFacilitiesVOList = workshopFacilitiesVOList;
+	}
+
+	public List<PmCategoryL3> getFactoryFacilitiesVOList() {
+		return factoryFacilitiesVOList;
+	}
+
+	public void setFactoryFacilitiesVOList(
+			List<PmCategoryL3> factoryFacilitiesVOList) {
+		this.factoryFacilitiesVOList = factoryFacilitiesVOList;
 	}
 }

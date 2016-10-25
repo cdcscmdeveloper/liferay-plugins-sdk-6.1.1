@@ -5203,8 +5203,8 @@ public class SmApplicationUtil {
 				.getSmSupplierBranches())) {
 			managedBean.getAddrSameAsItems().addAll(
 					EntityHelper.convertListToSelectItem(managedBean
-							.getSmAppl().getSmSupplierBranches(),
-							"supplierBranchId", "branchName"));
+							.getSmAppl().getSmSupplierBranches(), "branchName",
+							"supplierBranchId"));
 		}
 
 		managedBean.setShowDockyardPanel(false);
@@ -5267,6 +5267,19 @@ public class SmApplicationUtil {
 				}
 			}
 		}
+
+		managedBean.setDockYardFacilitiesVOList(SmApplicationUtil
+				.getCategoryFacilityVO(managedBean.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD));
+		managedBean.setWorkshopFacilitiesVOList(SmApplicationUtil
+				.getCategoryFacilityVO(managedBean.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
+		managedBean.setStoreFacilitiesVOList(SmApplicationUtil
+				.getCategoryFacilityVO(managedBean.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
+		managedBean.setFactoryFacilitiesVOList(SmApplicationUtil
+				.getCategoryFacilityVO(managedBean.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
 	}
 
 	/**
@@ -8601,6 +8614,67 @@ public class SmApplicationUtil {
 			}
 		}
 		return sb.length() > 0 ? sb.toString() : StringUtils.EMPTY;
+	}
+
+	/**
+	 * Construct and get category and facility list to display in facility
+	 * section
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @return List<SmCategoryFacilityVO>
+	 */
+	public static List<PmCategoryL3> getCategoryFacilityVO(SmAppl smAppl,
+			String facType) {
+		List<PmCategoryL3> categoryFacilityVOList = new ArrayList<PmCategoryL3>();
+		if (smAppl != null
+				&& !EntityHelper.isCollectionEmpty(smAppl
+						.getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
+				if ((cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
+						.getRecordStatusFlg()
+						.compareTo(
+								SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+						&& (cat.getPmCategoryL3() != null
+								&& !StringUtils.isBlank(cat.getPmCategoryL3()
+										.getFacilityType()) && cat
+								.getPmCategoryL3().getFacilityType()
+								.equalsIgnoreCase(facType))) {
+
+					cat.getPmCategoryL3().setFacilityList(
+							new ArrayList<SmFacility>());
+
+					for (SmFacility fac : smAppl.getSmFacilities()) {
+						if (!EntityHelper.isCollectionEmpty(fac
+								.getSmSupplierCategoryFacilities())) {
+							SmSupplierCategoryFacility catTmp = (SmSupplierCategoryFacility) EntityHelper
+									.getEntityBySinglePropertyFromList(cat
+											.getPmCategoryL3()
+											.getCategoryL3Id(), fac
+											.getSmSupplierCategoryFacilities(),
+											"pmCategoryL3");
+
+							if (catTmp != null) {
+								SmFacility facTmp = (SmFacility) EntityHelper
+										.getEntityBySinglePropertyFromList(fac
+												.getFacilityId(), cat
+												.getPmCategoryL3()
+												.getFacilityList(),
+												"facilityId");
+								if (facTmp == null) {
+									cat.getPmCategoryL3().getFacilityList()
+											.add(fac);
+								}
+							}
+						}
+					}
+
+					categoryFacilityVOList.add(cat.getPmCategoryL3());
+				}
+			}
+		}
+		return categoryFacilityVOList;
 	}
 
 	public static SmMachineDtl getNewSmMachineDtlByCategoryTypeAndCode(
