@@ -40,6 +40,8 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean isTaskLazy;
 	private int taskType;
 	private PmTaskReassignmentVO taskReassignmentVO;
+	private String backURL;
+	private boolean disableForTaskAssignment;
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -239,5 +241,35 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setTaskReassignmentVO(PmTaskReassignmentVO taskReassignmentVO) {
 		this.taskReassignmentVO = taskReassignmentVO;
 	}
+
+	/**
+	 * @return the backURL
+	 */
+	public String getBackURL() {
+		return backURL;
+	}
+
+	/**
+	 * @param backURL the backURL to set
+	 */
+	public void setBackURL(String backURL) {
+		this.backURL = backURL;
+	}
+
+	/**
+	 * @return the disableForTaskAssignment
+	 */
+	public boolean isDisableForTaskAssignment() {
+		return disableForTaskAssignment;
+	}
+
+	/**
+	 * @param disableForTaskAssignment the disableForTaskAssignment to set
+	 */
+	public void setDisableForTaskAssignment(boolean disableForTaskAssignment) {
+		this.disableForTaskAssignment = disableForTaskAssignment;
+	}
+
+	
 	
 }

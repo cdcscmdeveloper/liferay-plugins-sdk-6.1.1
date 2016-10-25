@@ -40,6 +40,16 @@
 						<f:setPropertyActionListener target="#{profileManagementBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profileManagementBackingBean.tabChangePassword}" />
 					</p:menuitem>
+					<p:menuitem 
+						rendered="#{not profileManagementBackingBean.managedBean.selectedUserOrg.brandNew and (
+						ParameterConst.orgTypeSys eq profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode or
+						ParameterConst.orgTypeSupport eq profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode or
+						ParameterConst.orgTypeBpk eq profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode or 
+						ParameterConst.orgTypePtj eq profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode )}" 
+						value="#{lbl['lbl.pm.ta.task.reassigment']}" update="@form" process="@this"
+						action="#{taskReassignmentBackingBean.redirectToTaskReassignment(profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile,profileManagementBackingBean.managedBean.selectedUser)}"
+						immediate="true">
+					</p:menuitem>					
 				</p:tabMenu>
 			</td>
 			<td style="width:80%;vertical-align:top;">
