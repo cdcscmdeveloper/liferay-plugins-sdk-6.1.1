@@ -41,11 +41,11 @@
 						
 							<td style="text-align: right;">
 							
-								<p:commandButton value="#{lbl['lbl.portal.notify.btn.refresh']}"
+								<p:commandButton value="#{lbl['lbl.btn.refresh']}"
 								   action="#{rptRequestBackingBean.getLatestStatusCodeForRequests()}"
 								   update=":form:rptRequestTable, :form:deleteBtn"/> 
 									
-								<p:commandButton id="deleteBtn" value="#{lbl['lbl.portal.notify.btn.delete']}"
+								<p:commandButton id="deleteBtn" value="#{lbl['lbl.btn.delete']}"
 									disabled="#{rptRequestBackingBean.managedBean.deleteButtonHide}"
 									oncomplete="confirmation.show();" update=":form:rptRequestTable, :form:deleteBtn"/>
 							</td>
@@ -66,19 +66,19 @@
 	
 									<p:column  selectionMode="multiple" style="width:7%;text-align:center"/>
 	
-									<p:column headerText="Job Id" style="text-align:center;">
+									<p:column headerText="#{lbl['lbl.rpt.jobId']}" style="text-align:center;">
 										<h:outputText value="#{rptRequest.jobId}" style="text-align:center;"/>
 									</p:column>
 									
-									<p:column headerText="Report Module" style="text-align:center;">
+									<p:column headerText="#{lbl['lbl.rpt.reportModule']}" style="text-align:center;">
 										<h:outputText value="#{rptRequestBackingBean.getReportModule(rptRequest.reportCode)}"/>
 									</p:column>
 									
-									<p:column headerText="Report Name" style="padding-left:8px!important;">
+									<p:column headerText="#{lbl['lbl.rpt.reportName']}" style="padding-left:8px!important;">
 										<h:outputText value="#{rptRequestBackingBean.getReportName(rptRequest.reportCode)}"/>
 									</p:column>
 									
-	      							<p:column headerText="Date/Time"
+	      							<p:column headerText="#{lbl['lbl.txt.dateTime']}"
 										style="text-align: center;width:10%; padding:5px!important; ">
 
 										<h:outputText value="#{rptRequest.createdDate}">
@@ -93,11 +93,11 @@
 
 									</p:column>
 									
-									<p:column headerText="Status" style="text-align:center;">
+									<p:column headerText="#{lbl['lbl.txt.docStatus']}" style="text-align:center;">
 										<h:outputText value="#{rptRequestBackingBean.getTrimmedStatusCode(rptRequest.statusCode)}" style="text-align:center;"/>
 									</p:column>
 									
-									<p:column headerText="Action" style="text-align:center;">
+									<p:column headerText="#{lbl['lbl.txt.action']}" style="text-align:center;">
 										
 										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}"
 											onstart="blkReportContent.show();" update="@form"
