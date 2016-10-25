@@ -365,8 +365,9 @@
 					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}"></p:commandLink>
 				#{lbl['lbl.sm.download.categorycode']}
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					action="#{backingBean.validateCategoryOtherDescription}"
 					partialSubmit="true" process="@this"
-					oncomplete="catCodePopup.show();">
+					>
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
