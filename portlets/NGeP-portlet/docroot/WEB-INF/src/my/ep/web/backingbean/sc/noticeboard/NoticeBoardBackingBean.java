@@ -99,6 +99,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.pm.cc.CategoryCodeSearchBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -2804,6 +2805,13 @@ public class NoticeBoardBackingBean extends
 
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+	}
+	
+	public void selectedCategory(AjaxBehaviorEvent event){
+		
+		CategoryCodeSearchBackingBean bean = new CategoryCodeSearchBackingBean();
+		//bean.getManagedBean().setSearchBy(ParameterConst.CATEGORY_CODE_SEARCH_BY_CODE);
+		bean.okAction("noticeBoardBackingBean.selectCategoryAction");
 	}
 
 }
