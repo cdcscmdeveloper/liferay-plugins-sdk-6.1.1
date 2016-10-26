@@ -6,14 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<style type="text/css">
-	.ui-selectonemenu-panel .ui-selectonemenu-list-item {
-		white-space: normal !important;
-		width: 250px !important;
-		line-height: 2em !important;
-		}
-	</style>
-
 	<p:panel header="#{lbl['lbl.sc.notice.board.searchCriteria']}" id="nbpanel" toggleable="true" collapsed="true">
 
 		<ac:lovPopup />
@@ -22,12 +14,12 @@
 				<td style="white-space: normal" width="35%"><p:outputLabel
 						value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td width="65%"><p:inputText
-						value="#{noticeBoardBackingBean.managedBean.qtNo}"  style="width:80%;"/></td>
+						value="#{noticeBoardBackingBean.managedBean.qtNo}"  style="width:81%;"/></td>
 			</tr>
 			<tr>
 				<td style="white-space: normal" width="35%"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td width="65%"><p:inputText
-						value="#{noticeBoardBackingBean.managedBean.title}"  style="width:80%;"/></td>
+						value="#{noticeBoardBackingBean.managedBean.title}"  style="width:81%;"/></td>
 			</tr>
 			
 			<tr>
@@ -83,37 +75,37 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="35%"><p:outputLabel value="#{lbl['lbl.sc.main.category']}" /></td>
-				<td width="65%"><p:selectOneMenu id="catCodeLvl1"
+				<td width="65%"><h:selectOneMenu id="catCodeLvl1"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl1}"
 						style="margin-bottom: 5px; width:80%;">
 						<f:selectItems
 							value="#{categoryCodeSearchBackingBean.level1CategoryCodes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							update="catCodeLvl2,catCodeLvl3" />
-					</p:selectOneMenu></td>
+					</h:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td width="35%"><p:outputLabel value="#{lbl['lbl.sc.sub.category']}" /></td>
-				<td width="65%"><p:selectOneMenu id="catCodeLvl2"
+				<td width="65%"><h:selectOneMenu id="catCodeLvl2"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2}"
 						style="margin-bottom: 5px; width:80%;">
 						<f:selectItems
 							value="#{categoryCodeSearchBackingBean.level2CategoryCodes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							update="catCodeLvl3" />
-					</p:selectOneMenu></td>
+					</h:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td width="35%"><p:outputLabel
 						value="#{lbl['lbl.sc.sub.category.division']}" /></td>
-				<td width="65%"><p:selectOneMenu id="catCodeLvl3"
+				<td width="65%"><h:selectOneMenu id="catCodeLvl3"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl3}"
 						style="margin-bottom: 5px; width:80%;">
 						<f:selectItems
 							value="#{categoryCodeSearchBackingBean.level3CategoryCodes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{noticeBoardBackingBean.selectedCategory}" />
-					</p:selectOneMenu></td>
+					</h:selectOneMenu></td>
 			</tr>
 		</table>
 	</p:panel>
