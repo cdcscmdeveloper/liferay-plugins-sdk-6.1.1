@@ -982,7 +982,7 @@ public class NoticeBoardBackingBean extends
 	/**
 	 * Verify whether Mofno is valid or not.
 	 */
-	public void checkSupplierQulificationStatus() {
+	public void checkSupplierQualificationStatus() {
 		
 		this.getManagedBean().setQualificationBean(null);
 		this.getManagedBean().setProposalURL(null);
