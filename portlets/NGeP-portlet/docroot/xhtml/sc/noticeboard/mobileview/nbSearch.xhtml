@@ -22,25 +22,37 @@
 				<td><p:inputText
 						value="#{noticeBoardBackingBean.managedBean.title}"  /></td>
 			</tr>
+			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.category.code']}" /></td>
-				<td>						
-					<p:inputText id="catCodeTxt" 
-						value="#{noticeBoardBackingBean.managedBean.categoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{noticeBoardBackingBean.managedBean.categoryL3.pmCategoryL2.categoryL2Code}#{noticeBoardBackingBean.managedBean.categoryL3.categoryL3Code}"
-						
-						disabled="true" />
-					&#160;
-					<p:commandLink id="catCodeImg"
-						process="@this" partialSubmit="true" update="@([id$=catCodePopup])"
-						oncomplete="catCodePopup.show();"
-						action="#{categoryCodeSearchBackingBean.renewSesionObject}">
-						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/search.png"/>								
-					</p:commandLink>
-					
-					<ac:categoryCodePopup 
-						okAction="noticeBoardBackingBean.selectCategoryAction"
-						update="@([id$=catCodeTxt])" />
-				</td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.main.category']}" /></td>
+				<td><p:selectOneMenu id="catCodeLvl1"
+						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl1}" style="width:50%">
+						<f:selectItems
+							value="#{categoryCodeSearchBackingBean.level1CategoryCodes}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							update="catCodeLvl2,catCodeLvl3" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sub.category']}" /></td>
+				<td><p:selectOneMenu id="catCodeLvl2"
+						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2}" style="width:50%">
+						<f:selectItems
+							value="#{categoryCodeSearchBackingBean.level2CategoryCodes}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							update="catCodeLvl3" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.sub.category.division']}" /></td>
+				<td><p:selectOneMenu id="catCodeLvl3"
+						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl3}" style="width:50%">
+						<f:selectItems
+							value="#{categoryCodeSearchBackingBean.level3CategoryCodes}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{noticeBoardBackingBean.selectedCategory}" />
+					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -53,11 +65,9 @@
 						var="orgProfile" itemValue="#{orgProfile}"
 						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
 						maxResults="3" dropdown="false" forceSelection="true"
-						converter="orgProfileAutoCompleteConverter">
+						converter="orgProfileAutoCompleteConverter" style="width:50%">
 						<p:ajax event="itemSelect" update="autoOrgMinistryId"></p:ajax>
 					</p:autoComplete></td>
-
-
 			</tr>
 			
 			<tr>
@@ -71,7 +81,7 @@
 						var="orgProfile" itemValue="#{orgProfile}"
 						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
 						maxResults="3" dropdown="false" forceSelection="true"
-						converter="orgProfileAutoCompleteConverter">
+						converter="orgProfileAutoCompleteConverter" style="width:50%">
 						<p:ajax event="itemSelect" update="autoPtjGropupId"></p:ajax>
 					</p:autoComplete></td>
 			</tr>
@@ -85,7 +95,7 @@
 						var="orgProfile" itemValue="#{orgProfile}"
 						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
 						maxResults="3" dropdown="false" forceSelection="true"
-						converter="orgProfileAutoCompleteConverter">
+						converter="orgProfileAutoCompleteConverter" style="width:50%">
 					</p:autoComplete></td>
 
 			</tr>
