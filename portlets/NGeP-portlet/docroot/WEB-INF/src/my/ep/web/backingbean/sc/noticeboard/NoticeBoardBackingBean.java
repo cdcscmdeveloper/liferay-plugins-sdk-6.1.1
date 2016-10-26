@@ -102,6 +102,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.pm.cc.CategoryCodeSearchBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -141,7 +142,7 @@ import org.primefaces.model.TreeNode;
 import com.liferay.portal.util.PortalUtil;
 
 /**
- * Notice Board Backing Bean class will display the status of 
+ * Notice Board Backing Bean class displays the status of 
  * 'Publish,Changes,Closed,Awarded' Quotation/Tender's in Notice Board screen.
  *  
  * @author sri 
@@ -709,6 +710,7 @@ public class NoticeBoardBackingBean extends
 	public void preRenderMobileView() {
 		
 		super.renewSesionObject();
+		new CategoryCodeSearchBackingBean().renewSesionObject();
 		searchNoticeBoard();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
