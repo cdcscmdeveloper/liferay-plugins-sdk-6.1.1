@@ -43,7 +43,9 @@
 						        <h:outputText value="#{lbl['lbl.ct.ref.no']}"  styleClass="required"/>
 						</f:facet>
 						<p:inputText id="bondRefNoId" value="#{varBond.refNo}" maxlength="50" style="width:95%;" 
-						     rendered="#{!ctBackingBean.managedBean.viewContract}"/>
+						     rendered="#{!ctBackingBean.managedBean.viewContract}">
+						     <p:ajax  process="@this"></p:ajax>
+						</p:inputText>
 					
 						<h:outputText value="#{varBond.refNo}" 
 						      style="float:left;text-align:left;"  rendered="#{ctBackingBean.managedBean.viewContract}"/>
