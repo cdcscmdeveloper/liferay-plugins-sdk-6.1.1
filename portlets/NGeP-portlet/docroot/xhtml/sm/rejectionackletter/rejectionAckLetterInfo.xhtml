@@ -65,7 +65,11 @@
 			
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.rejection.ack.mof.expiry.date']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{!empty mofAcc ? mofAcc.expDate : lbl['lbl.sm.no.available']}" /></td>
+				<td><h:outputText styleClass="outputLabel-view" value="#{mofAcc.expDate}" rendered="#{!empty mofAcc}">
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" rendered="#{empty mofAcc}"/>
+				</td>
 			</tr>
 		</table>
 		<br />
