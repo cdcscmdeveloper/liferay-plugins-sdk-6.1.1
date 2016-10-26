@@ -1539,6 +1539,7 @@ public class PurchaseInquiryBackingBean extends
 		getManagedBean().setViewOnly(Boolean.TRUE);
 		getManagedBean().setShowButton(Boolean.FALSE);
 		getManagedBean().setShowBackButton(Boolean.TRUE);
+		getManagedBean().setDisabledRemark(Boolean.TRUE);
 		
 		// current page url for page navigation from pid to request note
 		FacesContext fc = FacesContext.getCurrentInstance();

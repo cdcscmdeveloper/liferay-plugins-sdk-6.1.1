@@ -15,35 +15,40 @@
 		toggleable="true" id="addToCartId">
 		<table>
 			<tr>
-				<td style="width: 19%;"><p:outputLabel
+				<td style="width:220px;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="46" id="title"
+				<td colspan="3">
+				    <p:inputText id="title"
+						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.title}"
 						required="true" maxlength="100"
 						label="#{lbl['lbl.sc.direct.purchase.title']}"
 						disabled="#{isViewOnly}"
-						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.title}"
-						style="margin-bottom: 5px;" /> <p:message id="titleMsg"
+						size="106">
+						<f:ajax></f:ajax>
+					</p:inputText> <p:message id="titleMsg"
 						for="title" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.supp.name']}" /></td>
-				<td><p:inputText disabled="true"
+				<td colspan="3"><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.supplierName}"
-						size="46" /></td>
+						size="106" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
+				<td colspan="3"><p:inputText disabled="true"
+						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.itemName}"
+						size="106" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.product.code']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.extensionCode}"
-						size="46" /></td>
-
-				<td style="width: 225px;"><p:outputLabel
-						value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.itemName}"
 						size="50" /></td>
 			</tr>
 			<tr>
@@ -51,7 +56,7 @@
 						value="#{lbl['lbl.sc.price.inquiry.desc']}" /></td>
 				<td><p:inputTextarea disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.itemDesc}"
-						rows="2" cols="122" style="margin-bottom: 5px; width: 325px;" /></td>
+						rows="3" style="margin-bottom: 5px; width: 325px;" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.price.inquiry.uom']}" /></td>
@@ -131,7 +136,7 @@
 									style="font-weight:bold" /> <p:spacer width="6px" /> <p:inputText disabled="true"
 						id="dayToRespId"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.dateToResponse}"
-						size="18">
+						size="12">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 					</p:inputText></td>
@@ -186,7 +191,7 @@
 
 						<table style="width: 100%">
 							<tr>
-								<td style="width: 19%"><p:outputLabel
+								<td style="width: 220px"><p:outputLabel
 										value="#{lbl['lbl.sc.procurement.type']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td>
@@ -213,7 +218,7 @@
 							<tr>
 								<ui:fragment
 									rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
-									<td style="width: 19%"><p:outputLabel
+									<td style="width: 220px"><p:outputLabel
 											value="#{lbl['lbl.sc.reason']}" /> <p:outputLabel value="*"
 											styleClass="mandatory" /></td>
 									<td><p:selectOneMenu
@@ -255,7 +260,7 @@
 		toggleable="true">
 		<table>
 			<tr>
-				<td style="width: 212px;"><p:outputLabel
+				<td style="width: 220px;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" /> <p:outputLabel
 						value="*" styleClass="mandatory"
 						rendered="#{isPendingSupplierRespStatus}" /></td>
@@ -330,6 +335,6 @@
 
 	<ac:scRemarkAndAttachment
 		remarkList="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.remarks}"
-		readonly="#{isViewOnly or readOnlyTask}" showAttachment="false" />
+		readonly="#{purchaseInquiryBackingBean.managedBean.disabledRemark or readOnlyTask}" showAttachment="false" />
 
 </ui:composition>

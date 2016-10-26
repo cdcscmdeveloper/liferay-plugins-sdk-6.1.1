@@ -141,6 +141,9 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
      
      /** The auto update. */
  	private boolean autoUpdate = Boolean.TRUE;
+ 	
+ 	/** The disabled remark. */
+	 private boolean disabledRemark;
     
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -740,4 +743,19 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
+
+	/**
+	 * @return the disabledRemark
+	 */
+	public boolean isDisabledRemark() {
+		return disabledRemark;
+	}
+
+	/**
+	 * @param disabledRemark the disabledRemark to set
+	 */
+	public void setDisabledRemark(boolean disabledRemark) {
+		this.disabledRemark = disabledRemark;
+	}
+	
 }
