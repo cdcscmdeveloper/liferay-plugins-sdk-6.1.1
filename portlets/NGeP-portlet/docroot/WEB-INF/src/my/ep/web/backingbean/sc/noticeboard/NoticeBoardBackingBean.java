@@ -30,6 +30,7 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
@@ -48,6 +49,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -99,7 +102,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.pm.cc.CategoryCodeSearchBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -2809,9 +2811,23 @@ public class NoticeBoardBackingBean extends
 	
 	public void selectedCategory(AjaxBehaviorEvent event){
 		
-		CategoryCodeSearchBackingBean bean = new CategoryCodeSearchBackingBean();
-		//bean.getManagedBean().setSearchBy(ParameterConst.CATEGORY_CODE_SEARCH_BY_CODE);
-		bean.okAction("noticeBoardBackingBean.selectCategoryAction");
+		Long selectedCategoryL3 = (Long) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().setCategoryL3(null);
+		if(selectedCategoryL3 != null){
+			ICategoryCodeSO categoryCodeSO = null;
+			try {
+				categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				reqDTO.setCategoryL3Id(selectedCategoryL3);
+				CategoryCodeResDTO resDTO = categoryCodeSO
+						.retrieveCategoryL3DtlById(reqDTO);
+				this.getManagedBean().setCategoryL3(resDTO.getCategoryL3());
+			} finally {
+				categoryCodeSO = null;
+			}
+		}
 	}
 
 }
