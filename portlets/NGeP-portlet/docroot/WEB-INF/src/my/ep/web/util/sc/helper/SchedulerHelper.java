@@ -3,6 +3,7 @@
  */
 package my.ep.web.util.sc.helper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,13 @@ import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
  * 
  */
 
-public class SchedulerHelper {
+public class SchedulerHelper implements Serializable{
 	
+	/**
+	 * Generated serial Version Id
+	 */
+	private static final long serialVersionUID = 4383547471804557032L;
+
 	private static SchedulerHelper instance;
 	
 	private static List<ScBidSchedule> jobBidScheduleList = new ArrayList<ScBidSchedule>();
