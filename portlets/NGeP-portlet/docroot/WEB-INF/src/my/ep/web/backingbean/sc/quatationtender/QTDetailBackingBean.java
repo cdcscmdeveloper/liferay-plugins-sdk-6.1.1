@@ -3741,7 +3741,7 @@ public class QTDetailBackingBean extends
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
-			detailSO.validateateQTDetails(reqDTO);
+			detailSO.validateQTDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewQTSesionObject();
 			this.getManagedBean().setTaskName(taskName);
@@ -3799,7 +3799,7 @@ public class QTDetailBackingBean extends
 				retrieveBriefingSitevisitTabDtl();
 			} else if(super.isQTStatusLessThanOrEquals(currentStatus, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)){
 				// save scQt info onclick of Activites tab
-				detailSO.validateateQTDetails(reqDTO);
+				detailSO.validateQTDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setTaskName(taskName);
@@ -3917,7 +3917,7 @@ public class QTDetailBackingBean extends
 			if (!isReadOnly) {
 				switch (priviousIndex) {
 				case 0:
-					detailSO.validateateQTDetails(reqDTO);
+					detailSO.validateQTDetails(reqDTO);
 					// retrieveQuationTenderDetails(this.getManagedBean().getQt().getQtId());
 					break;
 				case 1:

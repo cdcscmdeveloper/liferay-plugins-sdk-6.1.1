@@ -39,7 +39,7 @@
 							readonly="#{noticeBoardBackingBean.managedBean.supplierMofNo ne null?'true':'false'}"></p:inputText></td>
 				<td><p:commandButton value="#{lbl['lbl.btn.check']}"
 						id="nbCheckSupplierQualification"
-						action="#{noticeBoardBackingBean.checkSupplierQulificationStatus}"
+						action="#{noticeBoardBackingBean.checkSupplierQualificationStatus}"
 						update="@form,table-wrapper" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();">
 					</p:commandButton></td>
