@@ -2793,15 +2793,14 @@
 	<portlet>
 		<portlet-name>rejectionAcknowledgementLetter</portlet-name>
 		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<render-weight>0</render-weight>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
-		<css-class-wrapper>rejectionAcknowledgementLetter-portlet</css-class-wrapper>
-	 </portlet>
-	 
+		<css-class-wrapper>
+			rejectionacknowledgementletter-portlet
+		</css-class-wrapper>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
