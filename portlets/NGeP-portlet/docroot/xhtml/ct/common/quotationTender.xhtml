@@ -10,139 +10,137 @@
 			vertical-align:top;
 		}
 	</style>
-   <p:panel id="qtnTenderPnl" toggleable="true"  toggleSpeed="500">
-	       <f:facet name="header">
-			    <h:outputText value="#{lbl['lbl.ct.panel.procurement']}"/>
-			   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.procurement.dtls']}"/>
-	   	   </f:facet>
-	   
-	        <h:panelGrid style="width:100%;" styleClass="top-aligned-columns">
-		          <h:panelGroup style="width:100%;" >
-		            <table style="width: 100%">
-				             <tr>
-		                              <td class="columnWidth150">
-			                               <p:outputLabel value="#{lbl['lbl.ct.proc.type.category']}" />
-			                          </td>
-			                          <td>
-			                                <p:inputText style="width:170px;" disabled="true"  
-			                                   value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContractValue.procurementTypeCategory)}" />		
-			                          </td>
-			                          <td>
-		                                    <p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
-		                              </td>
-		                              <td>
-			                                 <h:panelGrid columns="3">
-				                                   <p:inputText style="width:170px;" disabled="true" maxlength="30" 
-				                                        value="#{ctBackingBean.managedBean.contractVer.ctContractValue.loaNo}" />
-				                                   <p:spacer width="1"/>
-			                                       <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
-			                                 </h:panelGrid>
-			                          </td>
-				               </tr>
-				
-				               <tr>
-				               	<h:panelGroup rendered="#{!ctBackingBean.managedBean.commonView or 
-				                	ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral}">
-					                   <td>
-			                                  <p:outputLabel value="#{lbl['lbl.ct.proc.mode']}" />
-			                           </td>
-			                           <td>
-		                                     <p:inputTextarea  style="width:170px;" disabled="true" maxlength="50" rows="2" autoResize="false" 
-		                                          value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.procurementMode)}" />
-		                               </td>
-		                             </h:panelGroup>
-		                               <td>
-		                                      <p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
-			                           </td>
-			                           <td> 
-			                                 <h:panelGrid columns="3">				
-				                                <p:inputTextarea id="ctLoaNo" rows="2"  style="width:170px;margin-bottom: 5px;" disabled="true" 
-				                                     maxlength="30" autoResize="false"  value="#{ctBackingBean.managedBean.contractVer.ctContractValue.loaPhysicalNo}" />
-				                                <p:spacer width="1"/>
-			                                    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
-			                                </h:panelGrid>	
-			                           </td>
-			                   </tr>
-			                   <tr>
-			                          <td>
-			                                 <p:outputLabel value="#{lbl['lbl.ct.fulfilment.type']}" />
-			                          </td>
-			                          <td>
-			                               <p:inputText style="width:170px;" disabled="true"  
-			                                   value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType)}" />		
-			                         </td>
-			                         <td>
-		    	                           <p:outputLabel value="#{lbl['lbl.ct.loa.ack.date']}" />
-		    	                     </td>
-		    	                     <td>
-			                                 <p:inputText style="width:80px;" disabled="true"
-			                                     value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ackDate}">
-			                                  <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-			                                 </p:inputText>
-		                             </td>
-			                  </tr>
-			     
-			     <tr>
-			     
-			     <td>
-			                 <p:outputLabel value="#{lbl['lbl.ct.contract.Type']}" />
-			            </td>
-			            <td>
-		                       <p:inputText  style="width:170px;" disabled="true" maxlength="50"
-		                            value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.contractType)}" />
-		               </td>
-		               <td>
-		                         <p:outputLabel value="#{lbl['lbl.ct.service.fee']}" />
-		                   </td>
-		                   <td>
-			                     <h:panelGrid columns="4">
-			                         <p:inputText styleClass="ppRightBtn" style="width:80px;" disabled="true" 
-			                             maxlength="5"  value="#{ctBackingBean.managedBean.contractVer.ctContractValue.serviceFee}">
-			                             <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-			                         </p:inputText>	
-				                     <p:outputLabel value="%" />
-				                     <p:spacer width="1" />
-				                   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.fee']}" />
-		                          </h:panelGrid>
-		                    </td>
-		            </tr>
-		            
-		            <tr>
-		              
-		              <td>
-		                         <p:outputLabel value="#{lbl['lbl.ct.pub.date']}" 
-		                             rendered="#{!ctBackingBean.managedBean.directPurchase}"/>
-			                 </td>
-			                 <td>
-			                      <p:inputText  rendered="#{!ctBackingBean.managedBean.directPurchase}"
-				                       style="width:80px;" disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContract.publishDate}">
-				                    <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-		                         </p:inputText>	
-		                    </td>
-		                    <td>
-		                      <p:outputLabel value="#{lbl['lbl.ct.gst.service']}" styleClass="required"
-		                      		rendered="#{ctBackingBean.isBeforeGstReliefDueDate() and ctBackingBean.imposedServiceTaxCondition()}"/>
-			                  </td>
-			                  <td>
-		                        <h:panelGrid  style="margin-bottom:10px" cellpadding="5" 
-		                            rendered="#{ctBackingBean.isBeforeGstReliefDueDate() and ctBackingBean.imposedServiceTaxCondition()}">
-                                          <p:selectOneRadio id="serviceTaxFlg" disabled="#{ctBackingBean.managedBean.viewContract 
+   	<p:panel id="qtnTenderPnl" toggleable="true"  toggleSpeed="500">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.procurement']}" />
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.procurement.dtls']}" />
+		</f:facet>
+		<h:panelGrid style="width:100%;" styleClass="top-aligned-columns">
+			<h:panelGroup style="width:100%;">
+				<table style="width: 100%">
+					<tr>
+						<td class="columnWidth150"><p:outputLabel
+								value="#{lbl['lbl.ct.proc.type.category']}" /></td>
+						<td><p:inputText style="width:170px;" disabled="true"
+								value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContractValue.procurementTypeCategory)}" />
+						</td>
+						<td><p:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
+						<td><h:panelGrid columns="3">
+								<p:inputText style="width:170px;" disabled="true" maxlength="30"
+									value="#{ctBackingBean.managedBean.contractVer.ctContractValue.loaNo}" />
+								<p:spacer width="1" />
+								<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
+							</h:panelGrid></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.ct.fulfilment.type']}" />
+						</td>
+						<td><p:inputTextarea style="width:170px;" disabled="true"
+								maxlength="50" rows="2" autoResize="false"
+								value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType)}" />
+						</td>
+						<td><p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
+						</td>
+						<td><h:panelGrid columns="3">
+								<p:inputTextarea id="ctLoaNo" rows="2"
+									style="width:170px;margin-bottom: 5px;" disabled="true"
+									maxlength="30" autoResize="false"
+									value="#{ctBackingBean.managedBean.contractVer.ctContractValue.loaPhysicalNo}" />
+								<p:spacer width="1" />
+								<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
+							</h:panelGrid></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.ct.contract.Type']}" />
+						</td>
+						<td><p:inputText style="width:170px;" disabled="true"
+								maxlength="50"
+								value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.contractType)}" />
+						</td>
+						<td><p:outputLabel value="#{lbl['lbl.ct.loa.ack.date']}" />
+						</td>
+						<td><p:inputText style="width:80px;" disabled="true"
+								value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ackDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText></td>
+					</tr>
+					<tr>
+						<h:panelGroup rendered="#{!ctBackingBean.managedBean.commonView or 
+				              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral}">
+							<td><p:outputLabel value="#{lbl['lbl.ct.proc.method']}" /></td>
+							<td><p:inputText style="width:170px;" disabled="true"
+									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode)}" />
+							</td>
+						</h:panelGroup>
+						<td><p:outputLabel value="#{lbl['lbl.ct.service.fee']}" /></td>
+						<td><h:panelGrid columns="4">
+								<p:inputText styleClass="ppRightBtn" style="width:80px;"
+									disabled="true" maxlength="5"
+									value="#{ctBackingBean.managedBean.contractVer.ctContractValue.serviceFee}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+								</p:inputText>
+								<p:outputLabel value="%" />
+								<p:spacer width="1" />
+								<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.fee']}" />
+							</h:panelGrid>
+						</td>							
+					</tr>
+					<tr>
+						<h:panelGroup
+							rendered="#{!ctBackingBean.managedBean.directPurchase and (!ctBackingBean.managedBean.commonView or 
+						              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)}">
+							<td><p:outputLabel value="#{lbl['lbl.ct.qt.tender.type']}" />
+							</td>
+							<td><p:inputText style="width:170px;" disabled="true"
+									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.qtType)}" />
+							</td>
+						</h:panelGroup>					
+						<td><p:outputLabel value="#{lbl['lbl.ct.pub.date']}"
+								rendered="#{!ctBackingBean.managedBean.directPurchase}" /></td>
+						<td><p:inputText
+								rendered="#{!ctBackingBean.managedBean.directPurchase}"
+								style="width:80px;" disabled="true"
+								value="#{ctBackingBean.managedBean.contractVer.ctContract.publishDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText></td>	
+					</tr>
+					<tr>
+						<h:panelGroup rendered="#{(!ctBackingBean.managedBean.commonView or 
+				              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral) and 
+				              ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode==ParameterConst.procurementModeDirectNego}">
+							<td><p:outputLabel value="#{lbl['lbl.ct.proc.mode']}" /></td>
+							<td><p:inputText style="width:170px;" disabled="true"
+									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.procurementMode)}" />
+							</td>
+						</h:panelGroup>
+						<td><p:outputLabel value="#{lbl['lbl.ct.gst.service']}"
+								styleClass="required"
+								rendered="#{ctBackingBean.isBeforeGstReliefDueDate() and ctBackingBean.imposedServiceTaxCondition()}" />
+						</td>
+						<td><h:panelGrid style="margin-bottom:10px" cellpadding="5"
+								rendered="#{ctBackingBean.isBeforeGstReliefDueDate() and ctBackingBean.imposedServiceTaxCondition()}">
+								<p:selectOneRadio id="serviceTaxFlg"
+									disabled="#{ctBackingBean.managedBean.viewContract 
                                           		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
                                           		or ctBackingBean.getValueFromAmendment() 
                                           		or ctBackingBean.managedBean.disableAmendDetails}"
-                                       		value="#{ctBackingBean.managedBean.contractVer.ctContractValue.serviceTax}"
-                                       		required="true">
-                                     	    <f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
-											<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
-											<p:ajax  event="change" update="@all" process="@this"  listener="#{ctBackingBean.onChangeServiceTax()}"></p:ajax>
-                                          </p:selectOneRadio>
-                                          <p:message for="serviceTaxFlg" display="icon"/>	
-                                 </h:panelGrid>
-			                 </td>
-		               
-		               </tr>
-		               </table>	
-		               </h:panelGroup>	
-		           </h:panelGrid>
+									value="#{ctBackingBean.managedBean.contractVer.ctContractValue.serviceTax}"
+									required="true">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}"
+										itemValue="true" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.no']}"
+										itemValue="false" />
+									<p:ajax event="change" update="@all" process="@this"
+										listener="#{ctBackingBean.onChangeServiceTax()}"></p:ajax>
+								</p:selectOneRadio>
+								<p:message for="serviceTaxFlg" display="icon" />
+							</h:panelGrid></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+		</h:panelGrid>
         </p:panel>
 </ui:composition>
