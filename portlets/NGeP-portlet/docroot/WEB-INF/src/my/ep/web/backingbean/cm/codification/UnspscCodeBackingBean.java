@@ -1032,6 +1032,37 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					return "reviewBeforeCreateTempCode";
 
 				}
+				
+				
+				
+				
+				
+				boolean isDigitSegment = this.getManagedBean().getSelectedLovUnspscSegment().getUnspscCode().matches("\\d{8}"); 
+				boolean isDigitFamily = this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode().matches("\\d{8}"); 
+				boolean isDigitClass = this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode().matches("\\d{8}"); 
+				boolean isDigitCommodity = this.getManagedBean().getSelectedLovUnspsc().getUnspscCode().matches("\\d{8}"); 
+				
+				if(!(isDigitSegment && isDigitFamily && isDigitClass && isDigitCommodity)){
+					
+					FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									null,
+									MessageUtils
+									.getMessage(
+											MessageConst.ERROR_715066,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes()
+											.getUserLocale())));
+					
+					return "reviewBeforeCreateTempCode";
+					
+				}
+				
+				
 
 				if (this.getManagedBean().getSelectedLovUnspscSegment()
 						.isBrandNew()) {
