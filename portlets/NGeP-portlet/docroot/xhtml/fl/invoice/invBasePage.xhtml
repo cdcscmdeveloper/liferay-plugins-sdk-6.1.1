@@ -22,12 +22,18 @@
 					'#{invoiceBackingBean.getPortletTitle()}');
 		</script>
 		<f:event listener="#{invoiceBackingBean.preRenderView}"	type="preRenderView" />
-		<c:if test="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+		<h:panelGroup rendered="#{(invoiceBackingBean.managedBean.taxInvoice=='false' and (invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
 					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate or
 					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel or
-					  invoiceBackingBean.managedBean.isHyperLinkPage()}">
-			<ac:title value="#{invoiceBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeInvoice)}" />
-		</c:if>				
+					  invoiceBackingBean.managedBean.isHyperLinkPage()))}">
+		<ac:title value="#{invoiceBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeInvoice)}" />
+		</h:panelGroup>
+		<h:panelGroup rendered="#{(invoiceBackingBean.managedBean.taxInvoice=='true' and (invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate or
+					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel ))}">
+		<ac:title value="#{lbl['lbl.fl.tax.invoice']}" />
+		</h:panelGroup>
+		
 		<p:messages id="messages" showDetail="true" autoUpdate="#{invoiceBackingBean.managedBean.autoUpdate}"
 			showSummary="false" closable="true" severity="error, info, warn" />
 		<p:panel style="background:#f2dede !important; border:0px;" styleClass="gfmasPanelCss" rendered="#{invoiceBackingBean.managedBean.gfmasError}" >		
