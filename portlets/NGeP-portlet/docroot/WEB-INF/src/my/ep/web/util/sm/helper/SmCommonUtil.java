@@ -3897,6 +3897,65 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
 				case "70031":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+/*				case "70032":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);*/
+				case "70004":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70005":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				}
+			}
+		} catch (Exception ex) {
+			String message = MessageUtils.getMessage(ex.getMessage(),
+					MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+			if (message != null) {
+				throw new EpException(message + "(ERR-729999)");
+			} else {
+				throw new EpException(ex.getMessage() + "(ERR-729999)");
+			}
+		}
+	}
+	
+	/**
+	 * verify verify Owner With My Identity
+	 * @param name
+	 * @param identificationNo
+	 * @param postCode
+	 * @param type
+	 */
+	public void verifyOwnerWithMyIdentity(String name, String identificationNo,
+			String postCode, String type){
+		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
+		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				"sm", IMyIdentitySO.class);
+
+		if (type != null
+				&& type.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN)) {
+			reqDTO.setType(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+		} else {
+			reqDTO.setType(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+		}
+
+		reqDTO.setNewIcNo(identificationNo);
+		reqDTO.setPostCode(postCode);
+		reqDTO.setName(name);
+
+		try {
+			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
+			log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity()
+					+ ">>code>>" + resDTO.getStatusCode());
+			if (!resDTO
+					.getSeverity()
+					.equalsIgnoreCase(
+							my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
+				switch (resDTO.getStatusCode()) {
+				case "70019":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
+				case "70020":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
+				case "70031":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
 				case "70032":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
 				case "70004":
