@@ -20,7 +20,7 @@
 			<p:column headerText="#{lbl['lbl.sc.title']}" style="width:27%;word-wrap:break-word;white-space: normal;">
 				<p:commandLink style="margin-right:20px;"
 					action="#{noticeBoardBackingBean.retrieveQTDetails(scqt[0])}">
-					<h:outputText value="#{noticeBoardBackingBean.chopString(scqt[1],22)}" />
+					<h:outputText value="#{scqt[1]}" />
 				</p:commandLink>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.ptj']}"
