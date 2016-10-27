@@ -284,8 +284,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
 		if(suppOwner.getIdentificationType().getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
-			SmCommonUtil.getInstance().verifyWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
-					null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+			if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+				SmCommonUtil.getInstance().verifyWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
+						null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+			}else{
+				SmCommonUtil.getInstance().verifyOwnerWithMyIdentity(suppOwner.getOwnerName(), suppOwner.getIdentificationNo(), 
+						null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+			}
 		}
 		
 		personnelNationalityOnChange();
@@ -2682,6 +2687,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				postcode = getManagedBean().getSmPermenantAdd().getPostcode();
 			}
 			
+			if(smPersonnel.getIdentificationType().getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
+				if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+					SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), 
+							null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+				}else{
+					SmCommonUtil.getInstance().verifyOwnerWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), 
+							null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+				}
+			}
 			//validate IC with MyIdentity
 			SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(),
 					postcode, null);
