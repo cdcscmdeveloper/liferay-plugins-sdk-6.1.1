@@ -414,6 +414,9 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setCompanyName(null);
 		String pageUrl = "/xhtml/sc/noticeboard/resultview/"
 				+ this.getManagedBean().getPreviousPage();
+		if(this.getManagedBean().isNavigateFromMobileView()){
+			pageUrl=MOBILE_NB_MAIN_PAGE;
+		}
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getApplication().getNavigationHandler()
 				.handleNavigation(context, null, pageUrl+"?faces-redirect=true");
@@ -712,6 +715,7 @@ public class NoticeBoardBackingBean extends
 		super.renewSesionObject();
 		new CategoryCodeSearchBackingBean().renewSesionObject();
 		searchNoticeBoard();
+		this.getManagedBean().setNavigateFromMobileView(true);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, MOBILE_NB_MAIN_PAGE+"?faces-redirect=true");
@@ -1843,10 +1847,15 @@ public class NoticeBoardBackingBean extends
 	public String constuctConditionFields() {
 
 		String parentOrgProfile = null;
-		Long MinistryOrgProfileId = this.getManagedBean().getMinistryProfile()
-				.getOrgProfileId();
-		Long PTJGroupOrgProfileId = this.getManagedBean().getPtjGroupProfile()
-				.getOrgProfileId();
+		
+		PmOrgProfile ministryOrgProfile = this.getManagedBean()
+				.getMinistryProfile();
+		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile
+				.getOrgProfileId() : null;
+		PmOrgProfile groupOrgProfile = this.getManagedBean()
+				.getPtjGroupProfile();
+		Long PTJGroupOrgProfileId = groupOrgProfile != null ? groupOrgProfile
+				.getOrgProfileId() : null;
 		if (null != PTJGroupOrgProfileId) {
 			parentOrgProfile = OrgProfileUtil
 					.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
@@ -1865,8 +1874,9 @@ public class NoticeBoardBackingBean extends
 	public String constuctConditionFieldsForPTJGroup() {
 
 		StringBuffer parentOrgProfile = new StringBuffer();
-		Long MinistryOrgProfileId = this.getManagedBean().getMinistryProfile()
-				.getOrgProfileId();
+		PmOrgProfile ministryOrgProfile = this.getManagedBean().getMinistryProfile();
+		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile
+				.getOrgProfileId() : null;
 		if (null != MinistryOrgProfileId) {
 			String minLevel = EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.LVL_ORG_PROFILE_MINISTRY);
