@@ -3054,7 +3054,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void setPbQcDecisionValue() {
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbQcApproved(false);
-		if (getManagedBean().getPbQcApproved().equalsIgnoreCase("A")) {
+		if (getManagedBean().getPbQcApproved()!=null && getManagedBean().getPbQcApproved().equalsIgnoreCase("A")) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbQcApproved(true);
 		}
 	}
