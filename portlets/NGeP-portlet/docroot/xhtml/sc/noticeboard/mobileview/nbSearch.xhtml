@@ -6,6 +6,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<style type="text/css">
+	.ui-autocomplete-input.ui-inputfield.ui-widget.ui-state-default.ui-corner-all
+	{
+		width: 95% !important;
+	}
+	</style>
+
 	<p:panel header="#{lbl['lbl.sc.notice.board.searchCriteria']}" id="nbpanel" toggleable="true" collapsed="true">
 
 		<ac:lovPopup />
@@ -14,12 +21,12 @@
 				<td style="white-space: normal" width="35%"><p:outputLabel
 						value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td width="65%"><p:inputText
-						value="#{noticeBoardBackingBean.managedBean.qtNo}"  style="width:81%;"/></td>
+						value="#{noticeBoardBackingBean.managedBean.qtNo}"  style="width:95%;"/></td>
 			</tr>
 			<tr>
 				<td style="white-space: normal" width="35%"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td width="65%"><p:inputText
-						value="#{noticeBoardBackingBean.managedBean.title}"  style="width:81%;"/></td>
+						value="#{noticeBoardBackingBean.managedBean.title}"  style="width:95%;"/></td>
 			</tr>
 			
 			<tr>
@@ -33,7 +40,7 @@
 						var="orgProfile" itemValue="#{orgProfile}"
 						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
 						maxResults="3" dropdown="false" forceSelection="true"
-						converter="orgProfileAutoCompleteConverter" size="24">
+						converter="orgProfileAutoCompleteConverter">
 						<p:ajax event="itemSelect" update="autoOrgMinistryId"></p:ajax>
 					</p:autoComplete></td>
 			</tr>
@@ -49,7 +56,7 @@
 						var="orgProfile" itemValue="#{orgProfile}"
 						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
 						maxResults="3" dropdown="false" forceSelection="true"
-						converter="orgProfileAutoCompleteConverter" size="24">
+						converter="orgProfileAutoCompleteConverter">
 						<p:ajax event="itemSelect" update="autoPtjGropupId"></p:ajax>
 					</p:autoComplete></td>
 			</tr>
@@ -63,7 +70,7 @@
 						var="orgProfile" itemValue="#{orgProfile}"
 						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
 						maxResults="3" dropdown="false" forceSelection="true"
-						converter="orgProfileAutoCompleteConverter" size="24">
+						converter="orgProfileAutoCompleteConverter">
 					</p:autoComplete></td>
 
 			</tr>
@@ -77,7 +84,7 @@
 				<td width="35%"><p:outputLabel value="#{lbl['lbl.sc.main.category']}" /></td>
 				<td width="65%"><h:selectOneMenu id="catCodeLvl1"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl1}"
-						style="margin-bottom: 5px; width:80%;">
+						style="margin-bottom: 5px; width:95%;">
 						<f:selectItems
 							value="#{categoryCodeSearchBackingBean.level1CategoryCodes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
@@ -88,7 +95,7 @@
 				<td width="35%"><p:outputLabel value="#{lbl['lbl.sc.sub.category']}" /></td>
 				<td width="65%"><h:selectOneMenu id="catCodeLvl2"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2}"
-						style="margin-bottom: 5px; width:80%;">
+						style="margin-bottom: 5px; width:95%;">
 						<f:selectItems
 							value="#{categoryCodeSearchBackingBean.level2CategoryCodes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
@@ -100,7 +107,7 @@
 						value="#{lbl['lbl.sc.sub.category.division']}" /></td>
 				<td width="65%"><h:selectOneMenu id="catCodeLvl3"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl3}"
-						style="margin-bottom: 5px; width:80%;">
+						style="margin-bottom: 5px; width:95%;">
 						<f:selectItems
 							value="#{categoryCodeSearchBackingBean.level3CategoryCodes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
