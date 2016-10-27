@@ -31,7 +31,7 @@ public class UpdateGovernmentUserInfoJob implements Job {
 			crmServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							ICRMServiceSO.class);
-			crmServiceSO.UpdateGovernmentUserInfoService();
+			crmServiceSO.updateGovernmentUserInfoService();
 			// please add resDTO to log better
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());
