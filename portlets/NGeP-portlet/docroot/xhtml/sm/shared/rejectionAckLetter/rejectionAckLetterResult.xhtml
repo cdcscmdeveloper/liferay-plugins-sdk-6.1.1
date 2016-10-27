@@ -38,9 +38,16 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.regStatus']}">
-				<h:outputText value="" />
-				<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+				<h:outputText value="#{smAppl.pmRegStatus.pmStatus.pmStatusDescs[0].statusName}" rendered="#{!empty smAppl.pmRegStatus}" />
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl.pmRegStatus}"/>
 			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.siteassign.processing.officer']}">
+				<h:outputText value="#{smAppl.reviewer.userName}"  rendered="#{!empty smAppl.reviewer}" />
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl.reviewer}"/>
+			</p:column>
+			
+			
 
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 				<p:commandLink id="editLinkId" value="#{lbl['lbl.sm.view']}" action="#{rejectionAckLetterBB.navigateToApplInfo(smAppl)}"
