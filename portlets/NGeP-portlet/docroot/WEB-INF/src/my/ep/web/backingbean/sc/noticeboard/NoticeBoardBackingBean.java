@@ -18,6 +18,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
@@ -853,8 +854,7 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setSvShow(false);
 		this.getManagedBean().setCategoryL3(new PmCategoryL3());
 		this.getManagedBean().setMinistryProfile(new PmOrgProfile());
-		this.getManagedBean().setPtjGroupProfile(new PmOrgProfile());
-		this.getManagedBean().setPtjProfile(new PmOrgProfile());
+		resetPtjGroupOrgProfile();
 		this.getManagedBean().getSiteVisitDataBean().setPassDays(0);
 		this.getManagedBean().getPublishSearchDataBean().setPassDays(0);
 		this.getManagedBean().setPublishSearchDataBean(
@@ -865,6 +865,21 @@ public class NoticeBoardBackingBean extends
 				new NoticeBoardSearchDataBean());
 		this.getManagedBean().setClsDataBean(new NoticeBoardSearchDataBean());
 		clearTreeNode("location");
+	}
+	
+	/**
+	 * Reset Ptj Group Org Profile
+	 */
+	public void resetPtjGroupOrgProfile() {
+		this.getManagedBean().setPtjGroupProfile(new PmOrgProfile());
+		resetPtjOrgProfile();
+	}
+	
+	/**
+	 * Reset Ptj Org Profile
+	 */
+	public void resetPtjOrgProfile() {
+		this.getManagedBean().setPtjProfile(new PmOrgProfile());
 	}
 
 	/**
@@ -2842,4 +2857,139 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 
+	/**
+	 * The method used for generating a list of available ministry.
+	 * 
+	 * @return the selection list of ministry
+	 */
+	public SelectItem[] getMinistryDropdown() {		
+		SelectItem[] items = null;
+
+		try {
+			int i = 1;
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgType(OrganizationType.MINISTRY.value());
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
+
+			items = new SelectItem[resDTO.getOrgProfileList().size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+
+			for (PmOrgProfile orgProfile : resDTO.getOrgProfileList()) {
+				items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
+						orgProfile.getOrgName());
+			}
+			return items;
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return null;
+	}
+
+	/**
+	 * The method used for generating a list of available jabatan
+	 * 
+	 * @return the selection list of jabatan
+	 */
+	public SelectItem[] getJabatanDropdown() {		
+		SelectItem[] items = null;
+
+		try {
+			int i = 1;
+			if (getManagedBean().getMinistryProfile() != null
+					&& getManagedBean().getMinistryProfile().getOrgProfileId() != null) {
+				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(getManagedBean()
+						.getMinistryProfile().getOrgProfileId());
+				reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveChildDDListByParentOrgProfileId(reqDTO);
+
+				items = new SelectItem[(resDTO.getOrgProfileDDList() != null ? resDTO
+						.getOrgProfileDDList().size() : 0) + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+
+				if (CollectionUtils.isNotEmpty(resDTO.getOrgProfileDDList())) {
+					for (Object[] objects : resDTO.getOrgProfileDDList()) {
+						items[i++] = new SelectItem(Long.parseLong(objects[0]
+								.toString()), objects[1].toString());
+					}
+				}
+				return items;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return null;
+	}
+	
+	/**
+	 * The method used for generating a list of available PTJ
+	 * 
+	 * @return the selection list of ptj
+	 */
+	public SelectItem[] getPTJDropdown() {		
+		SelectItem[] items = null;
+
+		try {
+			int i = 1;
+			if (getManagedBean().getPtjGroupProfile() != null
+					&& getManagedBean().getPtjGroupProfile().getOrgProfileId() != null) {
+				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(getManagedBean()
+						.getPtjGroupProfile().getOrgProfileId());
+				reqDTO.setOrgCode(OrganizationType.DIVISION.value());
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveChildDDListByParentOrgProfileId(reqDTO);
+
+				items = new SelectItem[(resDTO.getOrgProfileDDList() != null ? resDTO
+						.getOrgProfileDDList().size() : 0) + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+
+				if (CollectionUtils.isNotEmpty(resDTO.getOrgProfileDDList())) {
+					for (Object[] objects : resDTO.getOrgProfileDDList()) {
+						items[i++] = new SelectItem(Long.parseLong(objects[0]
+								.toString()), objects[1].toString());
+					}
+				}
+				return items;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return null;
+	}
 }
