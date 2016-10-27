@@ -50,7 +50,9 @@
 						headerText="#{lbl['lbl.sc.notice.board.ministry.search']}" update="@form"
 						saveObject="noticeBoardBackingBean.managedBean.ministryProfile"
 						value="#{noticeBoardBackingBean.managedBean.ministryProfile.orgName}"
-						size="25" readonly="true" /></td>
+						size="25" readonly="true"
+						postUpdateListener="noticeBoardBackingBean.resetPtjGroupOrgProfile()" />
+				</td>
 
 
 			</tr>
@@ -64,7 +66,9 @@
 						saveObject="noticeBoardBackingBean.managedBean.ptjGroupProfile"
 						value="#{noticeBoardBackingBean.managedBean.ptjGroupProfile.orgName}"
 						size="25" readonly="true" 
-						conditionField="#{noticeBoardBackingBean.constuctConditionFieldsForPTJGroup()}"/></td>
+						conditionField="#{noticeBoardBackingBean.constuctConditionFieldsForPTJGroup()}"
+						postUpdateListener="noticeBoardBackingBean.resetPtjOrgProfile()"/>
+				</td>
 			</tr>
 			
 			<tr>
