@@ -171,6 +171,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private boolean isNavigateFromNoticeBoard = true;
 	private List<TreeNode> zoneTree;
 	private Map<Long,Boolean> committeeFormed;
+	private boolean navigateFromMobileView;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1246,6 +1247,14 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteeFormed(Map<Long, Boolean> committeeFormed) {
 		this.committeeFormed = committeeFormed;
+	}
+
+	public boolean isNavigateFromMobileView() {
+		return navigateFromMobileView;
+	}
+
+	public void setNavigateFromMobileView(boolean navigateFromMobileView) {
+		this.navigateFromMobileView = navigateFromMobileView;
 	}
 
 
