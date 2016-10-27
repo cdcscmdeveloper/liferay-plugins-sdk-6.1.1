@@ -34,45 +34,47 @@
 				<td width="35%"><p:outputLabel
 						value="#{lbl['lbl.sc.ministry']}" /></td>
 
-				<td style="padding-bottom: 5px;" width="65%"><p:autoComplete id="autoOrgMinistryId"
-						title="#{lbl['lbl.sc.ministry']}"
-						value="#{noticeBoardBackingBean.managedBean.ministryProfile}"
-						completeMethod="#{noticeBoardBackingBean.autoCompleteOrgMinistry}"
-						var="orgProfile" itemValue="#{orgProfile}"
-						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
-						maxResults="3" dropdown="false" forceSelection="true"
-						converter="orgProfileAutoCompleteConverter">
-						<p:ajax event="itemSelect" update="autoOrgMinistryId"></p:ajax>
-					</p:autoComplete></td>
+				<td style="padding-bottom: 5px;" width="65%">
+					<h:selectOneMenu id="autoOrgMinistryId"
+						value="#{noticeBoardBackingBean.managedBean.ministryProfile.orgProfileId}"
+						style="margin-bottom: 5px; width:95%;">
+						<f:selectItems
+							value="#{noticeBoardBackingBean.ministryDropdown}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							update="autoPtjGropupId,autoPtjId"
+							listener="#{noticeBoardBackingBean.resetPtjGroupOrgProfile}" />
+					</h:selectOneMenu>
+				</td>
 			</tr>
 			
 			<tr>
 				<td width="35%"><p:outputLabel
 						value="#{lbl['lbl.sc.ptj.group']}" /></td>
 
-				<td style="padding-bottom: 5px;" width="65%"><p:autoComplete id="autoPtjGropupId"
-						title="#{lbl['lbl.sc.ptj.group']}"
-						value="#{noticeBoardBackingBean.managedBean.ptjGroupProfile}"
-						completeMethod="#{noticeBoardBackingBean.autoCompleteOrgPTJGroup}"
-						var="orgProfile" itemValue="#{orgProfile}"
-						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
-						maxResults="3" dropdown="false" forceSelection="true"
-						converter="orgProfileAutoCompleteConverter">
-						<p:ajax event="itemSelect" update="autoPtjGropupId"></p:ajax>
-					</p:autoComplete></td>
+				<td style="padding-bottom: 5px;" width="65%">
+					<h:selectOneMenu id="autoPtjGropupId"
+						value="#{noticeBoardBackingBean.managedBean.ptjGroupProfile.orgProfileId}"
+						style="margin-bottom: 5px; width:95%;">
+						<f:selectItems
+							value="#{noticeBoardBackingBean.jabatanDropdown}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							update="autoPtjId"
+							listener="#{noticeBoardBackingBean.resetPtjOrgProfile}" />
+					</h:selectOneMenu>
+				</td>
 			</tr>
 			
 			<tr>
 				<td width="35%"><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td style="padding-bottom: 5px;" width="65%"><p:autoComplete id="autoPtjId"
-						title="#{lbl['lbl.sc.ptj']}"
-						value="#{noticeBoardBackingBean.managedBean.ptjProfile}"
-						completeMethod="#{noticeBoardBackingBean.autoCompleteOrgPTJ}"
-						var="orgProfile" itemValue="#{orgProfile}"
-						itemLabel="#{noticeBoardBackingBean.itemLabel(orgProfile)}"
-						maxResults="3" dropdown="false" forceSelection="true"
-						converter="orgProfileAutoCompleteConverter">
-					</p:autoComplete></td>
+				<td style="padding-bottom: 5px;" width="65%">
+					<h:selectOneMenu id="autoPtjId"
+						value="#{noticeBoardBackingBean.managedBean.ptjProfile.orgProfileId}"
+						style="margin-bottom: 5px; width:95%;">
+						<f:selectItems
+							value="#{noticeBoardBackingBean.PTJDropdown}" />
+						<p:ajax event="change" partialSubmit="true" process="@this" />
+					</h:selectOneMenu>
+				</td>
 
 			</tr>
 		</table>
