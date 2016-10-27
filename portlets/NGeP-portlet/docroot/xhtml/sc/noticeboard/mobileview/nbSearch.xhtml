@@ -12,19 +12,20 @@
 		width: 95% !important;
 	}
 	</style>
-
-	<p:panel header="#{lbl['lbl.sc.notice.board.searchCriteria']}" id="nbpanel" toggleable="true" collapsed="true">
+	
+<p:panel id="nbpanel">
+	<p:panel header="#{lbl['lbl.sc.notice.board.searchCriteria']}"  toggleable="true" collapsed="true">
 
 		<ac:lovPopup />
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td style="white-space: normal" width="35%"><p:outputLabel
-						value="#{lbl['lbl.sc.qtn.no']}" /></td>
+				<td width="35%"><p:outputLabel
+						value="#{lbl['lbl.sc.qtn.no']}" style="white-space: nowrap"/></td>
 				<td width="65%"><p:inputText
 						value="#{noticeBoardBackingBean.managedBean.qtNo}"  style="width:95%;"/></td>
 			</tr>
 			<tr>
-				<td style="white-space: normal" width="35%"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+				<td  width="35%"><p:outputLabel value="#{lbl['lbl.sc.title']}" style="white-space: nowrap"/></td>
 				<td width="65%"><p:inputText
 						value="#{noticeBoardBackingBean.managedBean.title}"  style="width:95%;"/></td>
 			</tr>
@@ -430,10 +431,8 @@
 				</p:calendar>
 			</p:column>
 			</h:panelGrid>
-
-
 		</p:panel>
-
+</p:panel>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td colspan="2" class="ppRightBtn"><p:commandButton
