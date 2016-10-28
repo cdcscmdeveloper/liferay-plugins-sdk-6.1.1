@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
@@ -93,6 +94,7 @@ import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -1540,6 +1542,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean changesOnQTMaintenance;
 	private boolean nameRequired;
 	private boolean isPanelSpecExistedOrNot=Boolean.FALSE;
+	
+	  /** The spki backing bean. */
+    @ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
 	
 	/**
 	 * Sets the panel suppliers.
@@ -8647,6 +8653,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setPanelSpecExistedOrNot(boolean isPanelSpecExistedOrNot) {
 		this.isPanelSpecExistedOrNot = isPanelSpecExistedOrNot;
+	}
+
+	/**
+	 * @return the spkiBackingBean
+	 */
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	/**
+	 * @param spkiBackingBean the spkiBackingBean to set
+	 */
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
 	}
 
 }
