@@ -179,23 +179,28 @@
 					   	   
                                  <p:menuitem id="menuItemId1" value="#{lbl['lbl.ct.suspend.contract']}"   icon="ui-icon-suspension"
                                       rendered="#{contractDetailsBackingBean.isContractAdmin()
-					 		          and data.ctStatus == 1 and data.ctContract.recordStatusFlg==1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch}"  
+					 		          	and data.ctStatus == 1 and data.ctContract.recordStatusFlg==1
+					 		          	and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					 		          	and !data.allowAgreementCreation}"  
 					 		          process="@this" partialSubmit="true"
 					 		          action="#{contractDetailsBackingBean.gotoSuspendPage(data.ctContract.contractId)}" 
                                       onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()"></p:menuitem>
 					 		          
 					 		   <p:menuitem id="menuItemId2" value="#{lbl['lbl.ct.termination']}"  icon="ui-icon-termination"
 					 		         rendered="#{contractDetailsBackingBean.isContractAdmin() 
-					 		         and data.ctStatus == 1 and data.ctContract.recordStatusFlg==1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch}"  
+					 		         	and data.ctStatus == 1 and data.ctContract.recordStatusFlg==1
+					 		         	and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					 		         	and !data.allowAgreementCreation}"  
                              	    action="#{contractDetailsBackingBean.gotoTerminatePage(data.ctContract.contractId)}"
                              	    process="@this" partialSubmit="true"
 								     onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 							   </p:menuitem>
 								        
 							  <p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.amendment.with.supplement']}" icon="ui-icon-amendment" 
-							        rendered="#{contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1 and data.ctContract.recordStatusFlg ==1 and
-					 		             data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase 
-                             	        and data.agStatus == 1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch}" 
+							        rendered="#{contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1 and data.ctContract.recordStatusFlg ==1
+							        	and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase 
+                             	        and data.agStatus == 1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+                             	        and !data.allowAgreementCreation}" 
                              	        process="@this" partialSubmit="true"
 								    action="#{contractDetailsBackingBean.gotoAmendPage(data.ctContract.contractId)}"
 								    onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
@@ -204,16 +209,27 @@
 					 		<p:menuitem id="menuItemId4" value="#{(data.agStatus == 1) ? lbl['lbl.ct.amendment.without.supplement'] : lbl['lbl.ct.fulfilment.details.update']}"  icon="ui-icon-update" 
 					 		      rendered="#{contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1
 					 		      			  and data.ctContract.recordStatusFlg==1 and !data.pendingFinalistAgreement
-					 		      			  and !contractDetailsBackingBean.managedBean.trackingDiarySearch }"  process="@this" partialSubmit="true"
+					 		      			  and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					 		      			  and !data.allowAgreementCreation }"  process="@this" partialSubmit="true"
                              	  action="#{contractDetailsBackingBean.gotoUpdatePage(data.ctContract.contractId, data.agStatus)}"
 								  onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					        </p:menuitem>
 				
 					   	 <p:menuitem id="menuItemId5" value="#{lbl['lbl.ct.view.termination.history']}"  
 					   	     icon="ui-icon-termination-history" 
-                             rendered="#{data.terminate or data.mutualTerminate or data.remedy}" process="@this" partialSubmit="true"
+                             rendered="#{(data.terminate or data.mutualTerminate or data.remedy)
+                             	and !data.allowAgreementCreation}" process="@this" partialSubmit="true"
                              action="#{contractDetailsBackingBean.gotoTerminateHistoryPage(data.ctContract.contractId)}"
 							 onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     </p:menuitem>
+					     
+					     <p:menuitem id="menuItemId6" value="#{lbl['lbl.ct.proceed.migrated']}"  
+					   	     icon="ui-icon-proceed-migrated" 
+                             rendered="#{contractDetailsBackingBean.isContractAdmin()
+					 		          and data.ctContract.recordStatusFlg==1
+					 		          and data.allowAgreementCreation}"
+					 		 action="#{contractDetailsBackingBean.setContractId(data.ctContract.contractId)}"
+							   	process="@this" partialSubmit="true"  oncomplete="proceedMigratedDlg.show()">
 					     </p:menuitem>
 					   		          
                        </p:menuButton>
@@ -231,8 +247,9 @@
 					     	<p:menuitem id="menuItemId12" value="#{lbl['lbl.ct.request.change.bank.acc']}"
 					     		icon="ui-icon-change-bank" 
                             	rendered="#{data.ctStatus == 1 and data.ctContract.recordStatusFlg==1 
-                            	 	and !data.pendingFinalistAgreement
-                            		and !contractDetailsBackingBean.managedBean.trackingDiarySearch}"
+                            	 		and !data.pendingFinalistAgreement
+                            			and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+                            			and !data.allowAgreementCreation}"
                             		process="@this" partialSubmit="true"
 					   	     	action="#{contractDetailsBackingBean.gotoChangeBankPage(data.ctContract.contractId)}"
 					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
@@ -240,15 +257,37 @@
 					     	<p:menuitem id="menuItemId13" value="#{(data.ctContract.factored) ? lbl['lbl.ct.remove.factoring'] : lbl['lbl.ct.request.factoring']}"
 					   	     	icon="ui-icon-factoring" 
 					   	     	process="@this" partialSubmit="true"
-					   	     	rendered="#{data.isAllowFactoring() and data.ctContract.recordStatusFlg==1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch}"
+					   	     	rendered="#{data.isAllowFactoring() and data.ctContract.recordStatusFlg==1
+					   	     		and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					   	     		and !data.allowAgreementCreation}"
                             	action="#{contractDetailsBackingBean.gotoFactoringPage(data.ctContract.contractId)}"
 					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					     	</p:menuitem>
 						</p:menuButton>
 					</p:column>
-				</p:dataTable>			
-				 	
-			</div>
+				</p:dataTable>
+			</div>			
+			<p:confirmDialog id="proceedMigratedDlg" widgetVar="proceedMigratedDlg" message="#{lbl['lbl.ct.proceed.migrated.message']}" 	
+       			severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.ct.proceed.migrated.confirmation']}">
+           		<div class="ppRightBtn">
+		     		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		         		update="contractTbl, proceedMigratedConfirmDlg" 
+		          		action="#{contractDetailsBackingBean.proceedForFulfilment(true)}"
+		          		onstart="proceedMigratedDlg.hide(); blkContractSearchTable.show();"
+		            	oncomplete="blkContractSearchTable.hide(); proceedMigratedConfirmDlg.show();"/>
+			 		<p:commandButton value="#{lbl['lbl.btn.no']}"  process="@this"  partialSubmit="true"
+		         		update="contractTbl, proceedMigratedConfirmDlg" 
+		          		action="#{contractDetailsBackingBean.proceedForFulfilment(false)}"
+		          		onstart="proceedMigratedDlg.hide(); blkContractSearchTable.show();"
+		            	oncomplete="blkContractSearchTable.hide(); proceedMigratedConfirmDlg.show();"/>
+		      	</div>
+   			</p:confirmDialog>
+   			<p:confirmDialog id="proceedMigratedConfirmDlg" widgetVar="proceedMigratedConfirmDlg" message="#{contractDetailsBackingBean.proceedForFulfilmentMsg}" 	
+       			severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.ct.proceed.migrated.confirmation']}">
+           		<div class="ppRightBtn">
+			 		<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="proceedMigratedConfirmDlg.hide();" />
+		      	</div>
+   			</p:confirmDialog>
 		</p:panel>
 	</ui:define>
 </ui:composition>
