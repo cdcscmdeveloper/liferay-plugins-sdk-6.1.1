@@ -6,13 +6,14 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="contentSection">
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
-		<p:messages id="supplieacceptance" showDetail="true" autoUpdate="true"
+		<p:messages id="supplieacceptance" showDetail="true" autoUpdate="#{approvalBackingBean.managedBean.autoUpdate}"
 			closable="true" showSummary="false" severity="error, info" />
 
 		<table style="width: 100%">
@@ -27,9 +28,14 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
 								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" />
 						</ui:repeat>
+						<ac:spkiPopup id="spkiPopup"
+												password="#{approvalBackingBean.managedBean.spkiBackingBean.password}"
+												challengeAns1="#{approvalBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+												challengeQues1="#{approvalBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+												postSignAction="#{approvalBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" 
+												enableAutoUpdate="#{approvalBackingBean.enableAutoUpdate()}" />
 					</ui:define>
 				</ui:decorate>
 			</td>
