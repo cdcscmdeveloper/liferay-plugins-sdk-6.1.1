@@ -1701,7 +1701,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public String convertString(String label, int length){
 		
 		String formattedString = "";
-		if(label.trim().length()>=20){
+		if(label.trim().length()>=length){
 			if(label!=null && label.trim().length()>0){
 				formattedString = label.substring(0, length);
 				
