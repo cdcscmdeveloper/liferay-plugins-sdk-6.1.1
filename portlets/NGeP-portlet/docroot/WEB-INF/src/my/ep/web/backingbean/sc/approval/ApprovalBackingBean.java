@@ -44,6 +44,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
+import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -65,7 +66,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
@@ -1404,8 +1408,63 @@ public class ApprovalBackingBean extends
 	 * 
 	 * @param outCome
 	 */
-	public String supplierAcceptance(String outCome) {
+	public void  supplierAcceptance(String outCome) {
+		this.getManagedBean().setAction(outCome);
+		if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outCome)){
+		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
+		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+		RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+		}else{
+			updateBpmSupplierAcceptanceTaskAction(outCome, null);
+		}
 
+
+	}
+
+	public boolean isReviceOrReject() {
+		String[] outComes = this.getManagedBean().getOutComes();
+		if (null != outComes && outComes.length > 0) {
+			for (String outCome : outComes) {
+				if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
+					return true;
+				} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outCome)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);		
+	}
+	
+	
+	/**
+	 * Spki sign action.
+	 * 
+	 * @param digiSign
+	 *            the digi sign
+	 */
+	public void spkiSignAction(PmDigiSign digiSign) {
+		updateBpmSupplierAcceptanceTaskAction(this.getManagedBean().getAction(), digiSign);
+	}
+	
+	/**
+	 * Update bpm task. update bpm - save data into database and BPM process
+	 * will route to the next respective user.
+	 * 
+	 * @param outcome
+	 *            the outcome
+	 * @param digiSign
+	 *            the digi sign
+	 * 
+	 */
+	private void updateBpmSupplierAcceptanceTaskAction(String outcome,PmDigiSign digiSign) {
 		FacesScopes facesScopes = new FacesScopes();
 
 		try {
@@ -1439,12 +1498,30 @@ public class ApprovalBackingBean extends
 			dataType.getSupplierList();
 			int totalSuppliers = dataType.getSupplierList().size();
 			// Generate document if last supplier accept.
-			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outCome)){
+			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
 				// P1 - update proposal validity period if all suppliers approved.
 				// P2 - update proposal validity period if one of suppliers approved.
+				
 				isAllAccepted = totalSuppliers > 0 && totalSuppliers == totalAccepted+1;
 				if (isAllAccepted) {
 					approveApprovalRequests(qt, approvalRequests, true);
+				}
+				if (null != digiSign) {
+					ProposalReqDTO proposalReqDto=new ProposalReqDTO();
+					proposalReqDto.setQtId(qt.getQtId());
+					proposalReqDto.setUserId(new FacesScopes()
+					.getUserSessionBean().getUserId());
+					proposalReqDto.setProposalValidityExtension(Boolean.TRUE);
+					ProposalResDTO resDTO=proposalSO.retriveProposalBySupplierUserId(proposalReqDto);
+					if(null!=resDTO.getSmSupplier()){
+					String originalText = prepareOriginalText(resDTO.getSmSupplier());
+					byte[] signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
+					updateSpkiDigiSignData(digiSign,
+							ParameterConst.DOCTYPE_QUOTATION, qt.getQtId(),
+							qt.getQtNo(),originalText);
+					digiSign.setSpkiSignedData(signedData);
+				}
+					
 				}
 				
 			}
@@ -1456,14 +1533,16 @@ public class ApprovalBackingBean extends
 			qt.setScQtApprovals(qtApproval);
 
 			qt.setScQtCommittees(null);
-
+			
+			
+			qtReqDTO.setDigiSignData(digiSign);
 			qtReqDTO.setPayLoad(dataType);
 			FacesScopes facesScope = new FacesScopes();
 			qtReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
 			qtReqDTO.setQtdetail(qt);
 			qtReqDTO.setPmUser(facesScope.getUserSessionBean());
 			qtReqDTO.setRoleCode(getUserRoleCode());
-			qtReqDTO.setOutcome(outCome);
+			qtReqDTO.setOutcome(outcome);
 
 			QuationTenderResDTO tenderResDTO = (QuationTenderResDTO) detailSO
 					.updateSupplierAction(qtReqDTO);
@@ -1485,7 +1564,7 @@ public class ApprovalBackingBean extends
 										null,
 										MessageUtils
 												.getMessage(
-														getMessgeConstant(outCome),
+														getMessgeConstant(outcome),
 														new String[] {
 																getParameterDesc(
 																		ParameterTypeConst.DOCUMENT_TYPES,
@@ -1494,33 +1573,53 @@ public class ApprovalBackingBean extends
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				// clear data
+				super.renewSesionObject();
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler()
+						.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+				
 			}
 
 		} finally {
 		}
-		return null;
+		
 	}
+	
+	
+/**
+ * Prepare original text.
+ * 
+ * @param smSupplier
+ *            the sm supplier
+ * @return the string
+ */
+private String prepareOriginalText(SmSupplier smSupplier) {
+	FacesScopes facesScopes = new FacesScopes();
+	StringBuilder sb = new StringBuilder();
+	String countryCode = "";
+	String orginalText = "";
 
-	public boolean isReviceOrReject() {
-		String[] outComes = this.getManagedBean().getOutComes();
-		if (null != outComes && outComes.length > 0) {
-			for (String outCome : outComes) {
-				if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
-					return true;
-				} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outCome)) {
-					return true;
-				}
+	if (smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
+			&& smSupplier.getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses().size() > 0) {
+		List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl()
+				.getSmCompanyBasic().getSmCompanyAddresses();
+
+		for (SmCompanyAddress compaAddress : companyAddress) {
+			if (compaAddress.getAddressType().equalsIgnoreCase(
+					AddressType.CONTACT_ADDRESS.value())) {
+				countryCode = compaAddress.getSmAddress().getPmCountry()
+						.getCountryCode();
+				break;
 			}
 		}
-		return false;
 	}
-	
-	/**
-	 * The method to used auto update of request.
-	 */
-	public void enableAutoUpdate() {
-		getManagedBean().setAutoUpdate(Boolean.TRUE);		
-	}
-	
+	sb.append(getManagedBean().getQt().getQtNo()).append("|")
+			.append(facesScopes.getUserSessionBean().getIdentificationNo())
+			.append("|").append(smSupplier.getRegNo()).append("|")
+			.append(countryCode);
+	orginalText = sb.toString();
+	return orginalText;
+}
 }
