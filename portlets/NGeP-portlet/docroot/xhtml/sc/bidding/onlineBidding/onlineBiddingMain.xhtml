@@ -175,7 +175,7 @@
 					<h:panelGroup id="submitButton" style="width : 35%">
 						<p:commandLink id="submitBidOB"
 							disabled="#{(bidPriceItem.newPrice == null) or (bidPriceItem.newPrice lt bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt)}"
-							action="#{onlineBiddingBB.confirmAndSubmitBIdPrice(bidPriceItem)}"
+							action="#{onlineBiddingBB.confirmAndSubmitBidPrice(bidPriceItem)}"
 							process="@this"
 							update="@this,spinnerPG,lastBidPrice,lastBidPriceSubTotal,newPrice,newPriceSubTotal,newRanking,:form:packageRankingPanelOB,:form:obMessage">
 							<p:graphicImage
