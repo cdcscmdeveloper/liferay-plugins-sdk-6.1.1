@@ -184,7 +184,7 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 							</td>
 							<h:panelGroup id="searchResultId">
 								<td width="70%"><p:outputLabel
-										rendered="#{pCatalogueBackingBean.managedBean.keyWord}"
+										rendered="#{pCatalogueBackingBean.managedBean.keyWord and pCatalogueBackingBean.managedBean.itemName != null}"
 										style="font-weight:bold;float:left;font-size:18px;"
 										value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.itemName}"></p:outputLabel>
 
