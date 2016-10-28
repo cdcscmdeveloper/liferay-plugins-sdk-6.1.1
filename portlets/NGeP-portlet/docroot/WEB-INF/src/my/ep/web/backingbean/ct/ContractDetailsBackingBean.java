@@ -119,6 +119,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private static final String REQUEST_FACTORING_PAGE = "/xhtml/ct/supplier/factoring/requestOfFactoring.xhtml?faces-redirect=true";
 	
 	private String editorValue;
+	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
 	
 	/**
@@ -162,7 +163,21 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public void setEditorValue(String editorValue) {
 		this.editorValue = editorValue;
 	}
-	
+		
+	/**
+	 * @return the proceedForFulfilmentMsg
+	 */
+	public String getProceedForFulfilmentMsg() {
+		return proceedForFulfilmentMsg;
+	}
+
+	/**
+	 * @param proceedForFulfilmentMsg the proceedForFulfilmentMsg to set
+	 */
+	public void setProceedForFulfilmentMsg(String proceedForFulfilmentMsg) {
+		this.proceedForFulfilmentMsg = proceedForFulfilmentMsg;
+	}
+
 	/**
 	 * The method used for searching the contract.
 	 * A warning message will display on screen when searching
@@ -2499,5 +2514,40 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     		 setValidateContractField(reqDTO);
     	 }
      }
-
+     
+     /**
+ 	 * The method used to set the contract id to
+ 	 * proceed for fulfilment
+ 	 * 
+ 	 * @param contractId contract id
+ 	 */
+ 	public void setContractId(Long contractId){
+ 		  getManagedBean().setContractId(contractId);
+ 	}
+     
+     /**
+ 	 * The method used to proceed for fulfilment with / without agreement
+ 	 * of migrated contract.
+ 	 * 
+ 	 * @param resDTO  the response data transfer object for contract
+ 	 */
+ 	public void proceedForFulfilment(boolean withAgreement) {
+ 		if (withAgreement) {
+ 			proceedForFulfilmentMsg = ResourceBundleUtils.getMessage("lbl.ct.proceed.with.agreement",
+ 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()); 			
+ 		} else {
+ 			proceedForFulfilmentMsg = ResourceBundleUtils.getMessage("lbl.ct.proceed.without.agreement",
+ 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+ 		}
+ 		
+ 		IContractSO	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		ContractReqDTO reqDTO  = new ContractReqDTO();
+		reqDTO.setContractId(getManagedBean().getContractId());
+		Long  contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
+		reqDTO.setContractVerId(contractVerId);
+		reqDTO.setAgreement(withAgreement);
+		contractSO.proceedForFulfilment(reqDTO);
+ 		getManagedBean().getContractDataModel().reloadData();
+ 		
+ 	}
 }

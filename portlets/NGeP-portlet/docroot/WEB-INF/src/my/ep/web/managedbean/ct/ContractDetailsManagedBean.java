@@ -96,9 +96,10 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private Map<Long, PmUserGroup> userGroupMap;
 	private Map<Long, PmUser> userMap;
 	private HashMap<String, PmUserGroupUser> approverMap;
-		private PmDigiSign pmDigiSign;	
+	private PmDigiSign pmDigiSign;	
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	public boolean backPageAmendment;
+	private Long contractId;
 	
 	public int deductionIndex =99;
 	public int scheduleIndex =99;
@@ -760,6 +761,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 
 	public void setBackPageAmendment(boolean backPageAmendment) {
 		this.backPageAmendment = backPageAmendment;
+	}
+
+	/**
+	 * @return the contractId
+	 */
+	public Long getContractId() {
+		return contractId;
+	}
+
+	/**
+	 * @param contractId the contractId to set
+	 */
+	public void setContractId(Long contractId) {
+		this.contractId = contractId;
 	}
 
 	/**
