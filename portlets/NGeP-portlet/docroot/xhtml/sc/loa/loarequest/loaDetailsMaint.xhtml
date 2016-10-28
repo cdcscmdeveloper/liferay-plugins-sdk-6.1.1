@@ -45,25 +45,24 @@
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form" disabled="#{isPendingVerification and !isTrackingDairyView}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form" disabled="#{isPendingVerification and !isTrackingDairyView}">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form" disabled="#{isPendingVerification and !isTrackingDairyView}">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form" disabled="#{isPendingVerification and !isTrackingDairyView}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form"   disabled="#{!isPendingVerification}">	
+					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form" disabled="#{isPendingVerification and !isTrackingDairyView}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
+					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form"   disabled="#{!isPendingVerification}">	
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" 
 					  disabled="#{(!isFulfilmentTypeScheduled or isPendingVerification) and !isTrackingDairyView}">	
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
-					</p:menuitem>
-					
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}" disabled="#{!lOADetailBackingBean.managedBean.scLoa.bondReq or isPendingVerification}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 6 : 5}" />
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}" disabled="#{!lOADetailBackingBean.managedBean.scLoa.bondReq or isPendingVerification}">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="6" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.approval.details']}" update="@form" disabled="#{isPendingVerification and !isTrackingDairyView}" >
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 7 : 6}" />
@@ -75,29 +74,29 @@
 					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 0}">
 						<ui:include src="loaDetailsMenu.xhtml" />
 					</c:if>
-		
+					
 					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="loaLetterOfAcceptance.xhtml" />
+					</c:if>
+		
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 2}">
 						<ui:include src="loaAwardDetailsMenu.xhtml" />
 					</c:if>
 					
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 2}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 3}">
 						<ui:include src="loaDeductionPaymentMenu.xhtml" />
 					</c:if>
 					
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 3}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 4}">
 						<ui:include src="loaPaymentDetailsMenu.xhtml" />	
 					</c:if>
 				
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 4}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 5}">
 						<ui:include src="loaFulfilmentSchedule.xhtml" />
 					</c:if>
 					
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 5 and isDocTypeQuotation}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 6 and isDocTypeQuotation}">
 						<ui:include src="loaPerformanceBondMenu.xhtml" />
-					</c:if>
-					
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == (isDocTypeQuotation ? 6 : 5)}">
-						<ui:include src="loaLetterOfAcceptance.xhtml" />
 					</c:if>
 					
 					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == (isDocTypeQuotation ? 7 : 6)}">
