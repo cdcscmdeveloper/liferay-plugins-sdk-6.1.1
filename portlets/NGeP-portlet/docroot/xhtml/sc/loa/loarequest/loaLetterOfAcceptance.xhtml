@@ -6,6 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+			escape="false" value="#{lbl['lbl.sc.loiloa.loa.attachment.instruction']}" />
+			
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}"
 		id="loaletterOfAcceptancePanelIds" toggleable="true">
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget"
