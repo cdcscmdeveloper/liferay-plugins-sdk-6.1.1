@@ -160,6 +160,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	 */
 	public void clearSerach() {
 		this.getManagedBean().setItemName(null);
+		this.getManagedBean().setFrontPage(true);
 		this.getManagedBean().reset();
 	}
 
