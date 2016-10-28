@@ -573,7 +573,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 * 
 	 * @param scBidPrice
 	 */
-	public void confirmAndSubmitBIdPrice(ScBidPrice scBidPrice) {
+	public void confirmAndSubmitBidPrice(ScBidPrice scBidPrice) {
 
 		System.out.println("########inside confirmAndSubmitBIdPrice######"
 				+ scBidPrice);
