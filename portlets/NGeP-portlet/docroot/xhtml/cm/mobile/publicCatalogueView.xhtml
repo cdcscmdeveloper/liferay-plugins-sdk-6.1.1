@@ -214,7 +214,7 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 									<br />
 									<hr class="horizontal_dotted_line" /> 
 									<br /> 
-									<p:dataGrid
+									<p:dataGrid paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}  {NextPageLink} {LastPageLink} "
 										style="width:100%;" lazy="true" columns="2" rows="6"
 										emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 										value="#{pCatalogueBackingBean.managedBean.searchDataModel}"
