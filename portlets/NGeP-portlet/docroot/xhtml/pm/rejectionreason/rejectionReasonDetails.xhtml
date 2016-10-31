@@ -112,15 +112,15 @@
 
 						<table class="ppOneTable" style="width: 100%">
 							<tr>
-								<th><p:outputLabel
+								<th width="15%"><p:outputLabel
 										value="#{lbl['lbl.pm.reason.purchase.form']}" /></th>
-								<td><p:selectBooleanCheckbox id="chkPrchaseContract"
+								<td width="5%"><p:selectBooleanCheckbox id="chkPrchaseContract"
 										value="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}">
 										<p:ajax event="change" process="@this"
 											update="circularCategory, sourcingMethod,circularCriteriaLabel"
 											listener="#{rejectionReasonBackingBean.purchaseFromContractChange()}" />
 									</p:selectBooleanCheckbox></td>
-								<th><p:outputLabel
+								<th width="20%"><p:outputLabel
 										value="#{lbl['lbl.pm.reason.circular.criteria']}" /> 
 										<p:outputPanel id="circularCriteriaLabel">
 											<p:outputLabel
@@ -128,7 +128,7 @@
 											rendered="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}" />
 										</p:outputPanel>
 								</th>
-								<td><p:selectOneMenu id="circularCategory" 
+								<td width="15%"><p:selectOneMenu id="circularCategory" 
 										required="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase and 
 											rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode == ParameterConst.purchaseInDefault}"
 										label="#{lbl['lbl.pm.reason.circular.criteria']}"
@@ -143,9 +143,9 @@
 									</p:selectOneMenu> <p:message id="circularCategoryMsg" for="circularCategory"
 										display="icon" /></td>
 
-								<th><p:outputLabel
+								<th width="15%"><p:outputLabel
 										value="#{lbl['lbl.pm.reason.sourcing.method']}" /></th>
-								<td><p:selectOneMenu id="sourcingMethod"
+								<td width="20%"><p:selectOneMenu id="sourcingMethod"
 										disabled="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}"
 										label="#{lbl['lbl.pm.reason.sourcing.method']}"
 										style="width:210px;"
