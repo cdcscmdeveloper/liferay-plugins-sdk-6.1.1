@@ -117,13 +117,20 @@
 								<td><p:selectBooleanCheckbox id="chkPrchaseContract"
 										value="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}">
 										<p:ajax event="change" process="@this"
-											update="circularCategory, sourcingMethod"
+											update="circularCategory, sourcingMethod,circularCriteriaLabel"
 											listener="#{rejectionReasonBackingBean.purchaseFromContractChange()}" />
 									</p:selectBooleanCheckbox></td>
 								<th><p:outputLabel
-										value="#{lbl['lbl.pm.reason.circular.criteria']}" /> <p:outputLabel
-										value="* " styleClass="mandatory" /></th>
-								<td><p:selectOneMenu id="circularCategory" required="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode == ParameterConst.purchaseInDefault}"
+										value="#{lbl['lbl.pm.reason.circular.criteria']}" /> 
+										<p:outputPanel id="circularCriteriaLabel">
+											<p:outputLabel
+											value="* " styleClass="mandatory" 
+											rendered="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}" />
+										</p:outputPanel>
+								</th>
+								<td><p:selectOneMenu id="circularCategory" 
+										required="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase and 
+											rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode == ParameterConst.purchaseInDefault}"
 										label="#{lbl['lbl.pm.reason.circular.criteria']}"
 										style="width:210px;"
 										value="#{rejectionReasonBackingBean.managedBean.selectedReason.conditionField.parameterId}">
