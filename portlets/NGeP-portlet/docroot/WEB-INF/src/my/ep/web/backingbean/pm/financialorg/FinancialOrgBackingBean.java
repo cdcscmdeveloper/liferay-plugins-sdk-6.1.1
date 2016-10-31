@@ -647,6 +647,11 @@ public class FinancialOrgBackingBean extends
 							
 							if(StringUtils.isBlank(pmAddress.getPostcode())){
 								throw new EpException(MessageConst.ERROR_770041);
+							}else {
+								String postCodeRegex = "\\d{5}";
+								if(!pmAddress.getPostcode().matches(postCodeRegex)){ 
+									throw new EpException(MessageConst.ERROR_775211);
+								}
 							}
 							
 							if(pmAddress.getPmState().getStateId()==null){
@@ -674,6 +679,11 @@ public class FinancialOrgBackingBean extends
 								}
 								if(StringUtils.isBlank(this.getManagedBean().getContactPerson().getEmail())){
 									throw new EpException(MessageConst.ERROR_775207);
+								}else{
+									String emailRegex ="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+									if(!this.getManagedBean().getContactPerson().getEmail().matches(emailRegex)){
+										throw new EpException(MessageConst.ERROR_775212);
+									}
 								}
 //							}
 						}
@@ -771,12 +781,14 @@ public class FinancialOrgBackingBean extends
 			}
 		}else{
 			log.info("updateMainAddress - add");			
-			if(getManagedBean().isAddressAndContactPersonMandatory()){
+			if(getManagedBean().isAddressAndContactPersonMandatory() || isAddressOrContactInfoFillIn(this.getManagedBean().getPmAddress(), this.getManagedBean().getContactPerson())){
 				List<PmContact> contactLst = new ArrayList<PmContact>();
 //				PmAddressType addressType = new PmAddressType();
 //				addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
 //				addressType.setPmAddress(this.getManagedBean().getPmAddress());
 //				addressType.setPmFinancialOrg(this.getManagedBean().getFinancialOrg());
+				
+				pmAddressType.setPmAddress(this.getManagedBean().getPmAddress());
 
 				// bind contact & address type
 				if(this.getManagedBean().getContactPerson().isBrandNew()){
