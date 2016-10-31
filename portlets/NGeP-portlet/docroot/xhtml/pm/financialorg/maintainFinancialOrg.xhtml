@@ -11,6 +11,9 @@
 	</ui:define>
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<!-- <p:messages id="messages" showDetail="true"  showSummary="false" autoUpdate="#{financialOrgBackingBean.managedBean.showParentMsg}"
 			closable="true" severity="error,info"></p:messages> -->
 		<table style="width: 100%;">
@@ -18,14 +21,20 @@
 				<td>
 					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						 update=":form" process="@this"
+						 onstart="blockWidget.show()" 
+						oncomplete="blockWidget.hide()" 
 						action="#{financialOrgBackingBean.backToMain}" style="float:left;" /></td>
 				<td><p:commandButton value="#{lbl['lbl.btn.save']}"
+						onstart="blockWidget.show()" 
+						oncomplete="blockWidget.hide()" 
 						action="#{financialOrgBackingBean.saveFinancialOrg('SAVE')}"
 						update="@([id$=Msg])" style="float:right;" 
 						rendered="#{financialOrgBackingBean.managedBean.financialOrg.brandNew}">
 						<f:param name="disableValidation" value="true" />   
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.update']}"
+						onstart="blockWidget.show()" 
+						oncomplete="blockWidget.hide()" 
 						action="#{financialOrgBackingBean.saveFinancialOrg('UPDATE')}"
 						update="@form, @([id$=Msg])" style="float:right;" 
 						rendered="#{!financialOrgBackingBean.managedBean.financialOrg.brandNew}">

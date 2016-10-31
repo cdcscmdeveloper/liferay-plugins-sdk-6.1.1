@@ -12,7 +12,7 @@
 				<td style="width:15%;">
 					<p:outputLabel
 						value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
-						value="*" styleClass="mandatory" />
+						value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/>
 				</td>
 				<td style="width:35%;">
 					<p:selectOneMenu id="facCountry" tabindex="0"
@@ -30,11 +30,11 @@
 				<td style="width:15%;">
 					<p:outputLabel
 						value="#{lbl['lbl.pm.address.state']}" /> 
-					<p:outputLabel
+					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"
 						value="*" styleClass="mandatory" />
 				</td>
 				<td style="width:35%;">
-					<p:selectOneMenu id="facState" required="true" tabindex="1"
+					<p:selectOneMenu id="facState" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" tabindex="1"
 						label="#{lbl['lbl.pm.address.state']}" style="width:297px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateId}"
 						>
@@ -53,11 +53,11 @@
 				<td >
 					<p:outputLabel
 						value="#{lbl['lbl.pm.address.address']}" /> 
-					<p:outputLabel
+					<p:outputLabel rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"
 						value="*" styleClass="mandatory" /></td>
 				<td ><p:inputText id="address1" tabindex="2"
 						label="#{lbl['lbl.pm.address.address']}" maxlength="100"
-						required="true" styleClass="ppDisplayTextL"
+						required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" styleClass="ppDisplayTextL"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address1}"
 						size="52" />
 						<p:message for="address1" id="address1Msg" display="icon" /></td>
@@ -66,14 +66,14 @@
 					<p:outputPanel id="olDivisionMandatory">
 						<p:outputLabel
 						value="*" styleClass="mandatory" 
-						rendered="#{financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}"/>
+						rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory and financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}"/>
 					</p:outputPanel>
 					
 				</td>
 				<td >
 					<p:selectOneMenu id="facDivision" tabindex="8" style="width:297px;"
 						disabled="#{not financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}"
-						required="#{financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}"
+						required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory and financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}"
 						label="#{lbl['lbl.pm.address.division']}"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDivision.divisionId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -92,9 +92,9 @@
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address2}"
 						size="52" maxlength="100" /></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td >
-					<p:selectOneMenu id="facDistrict" required="true" tabindex="9"
+					<p:selectOneMenu id="facDistrict" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" tabindex="9"
 						label="#{lbl['lbl.pm.address.district']}" style="width:297px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDistrict.districtId}"
 						>
@@ -116,8 +116,8 @@
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address3}"
 						size="52" /></td>				
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td class="tdContent"><p:selectOneMenu id="facCity" required="true"  tabindex="10"
+						value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
+				<td class="tdContent"><p:selectOneMenu id="facCity" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"  tabindex="10"
 						label="#{lbl['lbl.pm.address.city']}" style="width:297px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmCity.cityId}"
 						>
@@ -136,8 +136,8 @@
 				<td></td>
 				<td class="tdContent"></td>
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td ><p:inputText id="postCode" required="true"
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
+				<td ><p:inputText id="postCode" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"
 						label="#{lbl['lbl.pm.address.postcode']}" maxlength="5"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.postcode}" styleClass="ppDisplayTextL"
 						validatorMessage="#{lbl['lbl.pm.address.postcode']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
@@ -146,13 +146,13 @@
 			</tr>
 			<tr>
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+						value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td ><ac:phone id="telNo" isMobile="false" label="#{lbl['lbl.pm.address.tel']}"
 						countryCode="#{financialOrgBackingBean.managedBean.pmAddress.phoneCountry}" 
 						areaCode="#{financialOrgBackingBean.managedBean.pmAddress.phoneArea}" 
 						number="#{financialOrgBackingBean.managedBean.pmAddress.phoneNo}"  
 						validatorMessage="#{lbl['lbl.pm.address.tel']} - #{lbl['lbl.pm.profiles.invalidNo']}" 
-						required="true"/>
+						required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/>
 						</td>
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
 				<td ><ac:phone id="faxNo" isMobile="false" label="#{lbl['lbl.pm.address.fax']}"
@@ -165,7 +165,7 @@
 			</tr>
 			<tr>
 				<td ><p:outputLabel value="#{lbl['lbl.pm.header.general.org.contactPerson']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 				<td ><p:commandLink
 						action="#{financialOrgBackingBean.addContacePerson}"  tabindex="7"
 						update="addManualDelAddrPnl" process="addManualDelAddrPnl"
@@ -187,9 +187,9 @@
 			<table>
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.pm.contact.name']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+							value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 					<td class="tdContent"><p:inputText id="contactName"  styleClass="ppDisplayTextL"
-							label="#{lbl['lbl.pm.contact.name']}" required="true" maxlength="85"
+							label="#{lbl['lbl.pm.contact.name']}" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" maxlength="85"
 							value="#{financialOrgBackingBean.managedBean.contactPerson.contactName}"
 							size="50" /></td>
 					<td><p:message id="contactNameMsg" for="contactName"
@@ -197,13 +197,13 @@
 				</tr>
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.pm.contact.email']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<p:outputLabel value="*" styleClass="mandatory" rendered="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"/></td>
 					<td class="tdContent">
 						<p:inputText id="contactEmail" styleClass="ppDisplayTextL"
-							label="#{lbl['lbl.pm.contact.email']}" required="true" maxlength="80" size="50"
+							label="#{lbl['lbl.pm.contact.email']}" required="#{financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}" maxlength="80" size="50"
 							value="#{financialOrgBackingBean.managedBean.contactPerson.email}"
 							validatorMessage="#{lbl['lbl.pm.contact.email']} - #{lbl['lbl.pm.profiles.invalidEmail']}" >
-							<f:validateRegex 
+							<f:validateRegex disabled="#{not financialOrgBackingBean.managedBean.addressAndContactPersonMandatory}"
 								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 						</p:inputText>&#160; <p:graphicImage id="giEmail"
 								value="/css/images/design/tooltips.png" /> <p:tooltip

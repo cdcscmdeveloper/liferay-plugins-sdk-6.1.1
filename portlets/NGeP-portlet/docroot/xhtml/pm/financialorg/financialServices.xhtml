@@ -49,6 +49,8 @@
 						value="#{financialOrgBackingBean.getServiceTypeList()}" />
 					<p:ajax event="change" process="@this" 
 				 		update="@form" 
+				 		onstart="blockWidget.show()" 
+						oncomplete="blockWidget.hide()" 
 						listener="#{financialOrgBackingBean.updateService}"  />
 				</p:selectOneMenu>
 				<p:message for="svcType" id="svcTypeMsg" display="icon" /> 
@@ -68,6 +70,11 @@
 					value="#{financialsrv.recordStatusFlg}" required="true"	>
 					<f:selectItems
 						value="#{financialOrgBackingBean.getStatusOptions()}" />
+					<p:ajax event="change" process="@this" 
+				 		update="@form" 
+				 		onstart="blockWidget.show()" 
+						oncomplete="blockWidget.hide()" 
+						listener="#{financialOrgBackingBean.updateServicesRecordStatus()}"  />
 				</p:selectOneMenu>
 
 			</p:column>

@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.pm.glaccount;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -7,14 +9,25 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
+import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
+import my.ep.dto.pm.common.object.ObjectReqDTO;
+import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchOperator;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -22,6 +35,7 @@ import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.pm.glaccount.GlAccountManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -149,7 +163,20 @@ public class GlAccountBackingBean extends
 			try {
 				//ISearchBean<PmGlAccount> searchBeanData = getSearchBeanData(searchBean);
 				GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
-				GlAccountSearchBean glAccountSearchBean = getManagedBean().getGlAccountSearchBean();				
+				GlAccountSearchBean glAccountSearchBean = getManagedBean().getGlAccountSearchBean();	
+				
+				if (StringUtils.isNotBlank(glAccountSearchBean.getSelectedAccType())) {
+					glAccountReqDTO.setAccType(glAccountSearchBean.getSelectedAccType());					
+				}
+				
+				if (StringUtils.isNotBlank(glAccountSearchBean.getSelectedAccClass())) {
+					glAccountReqDTO.setAccClass(glAccountSearchBean.getSelectedAccClass());					
+				}
+				
+				if (StringUtils.isNotBlank(glAccountSearchBean.getSelectedGenObjCode())) {
+					glAccountReqDTO.setGoCode(glAccountSearchBean.getSelectedGenObjCode());					
+				}
+				
 				if (StringUtils.isNotBlank(glAccountSearchBean.getAccountCode())) {
 					glAccountReqDTO.setGlAccountCode(glAccountSearchBean.getAccountCode());					
 				}
@@ -197,6 +224,114 @@ public class GlAccountBackingBean extends
 	 */
 	public void setSearchGlAccount(IPagingDataModel<Object[]> searchGlAccount) {
 		this.searchGlAccount = searchGlAccount;
+	}
+	
+	public List<PmParameterDesc> retrieveAccountType() {
+		log.info("retrieveAccountType");
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+				ParameterTypeConst.TYPE_OF_ACCOUNT_TYPE, null);
+	}
+
+	public SelectItem[] retrieveAccountClass() {
+		log.info("retrieveAccountClass");
+		SelectItem[] items = null;
+		if (StringUtils.isNotBlank(getManagedBean().getGlAccountSearchBean().getSelectedAccType())) {
+			IObjectSO objectSO = null;
+			try {
+				int i = 1;
+				ObjectReqDTO reqDTO = new ObjectReqDTO();
+				SearchBean<String> accGoSearchBean = new SearchBean<String>();
+				accGoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("accType",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getGlAccountSearchBean().getSelectedAccType()));
+				accGoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatus",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				accGoSearchBean.getSortColumns().add(new SearchOrderBean("accClass"));
+
+				reqDTO.setAccGoSearchBean(accGoSearchBean);
+				objectSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
+				ObjectResDTO resDTO = objectSO
+						.retrieveAccClassListBySearchBean(reqDTO);
+				List<String> list = resDTO.getAccGoResultBean().getResultList();
+				items = new SelectItem[list.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+				for (String object : list) {
+					items[i++] = new SelectItem(object,
+							object);
+				}
+			} catch (Exception e) {
+				throw new EpException(e.getMessage());
+			} finally {
+			  objectSO = null;
+			}
+		}else{
+			items = new SelectItem[1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}
+		return items;
+	}
+	
+	public SelectItem[] retrieveGoCodeList() {
+		log.info("retrieveGoCodeList");
+		SelectItem[] items = null;
+		if (StringUtils.isNotBlank(getManagedBean().getGlAccountSearchBean().getSelectedAccType())) {
+			IObjectSO objectSO = null;
+			try {
+				int i = 1;
+				ObjectReqDTO reqDTO = new ObjectReqDTO();
+				SearchBean<String> accGoSearchBean = new SearchBean<String>();
+				accGoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("accType",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getGlAccountSearchBean().getSelectedAccType()));
+				
+				accGoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("accClass",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getGlAccountSearchBean().getSelectedAccClass()));
+				
+				accGoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatus",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				accGoSearchBean.getSortColumns().add(new SearchOrderBean("goCode"));
+
+				reqDTO.setAccGoSearchBean(accGoSearchBean);
+				objectSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
+				ObjectResDTO resDTO = objectSO
+						.retrieveGoCodeListBySearchBean(reqDTO);
+				List<String> list = resDTO.getAccGoResultBean().getResultList();
+				items = new SelectItem[list.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+				for (String object : list) {
+					items[i++] = new SelectItem(object,
+							object);
+				}
+			} catch (Exception e) {
+				throw new EpException(e.getMessage());
+			} finally {
+			  objectSO = null;
+			}
+		}else{
+			items = new SelectItem[1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}
+		return items;
 	}
 
 }

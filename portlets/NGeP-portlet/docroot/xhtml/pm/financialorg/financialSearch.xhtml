@@ -58,11 +58,14 @@
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							update="searchFinancialOrg" process="finSearchPanel"
-						
+							onstart="blockWidget.show()" 
+							oncomplete="blockWidget.hide()" 
 							action="#{financialOrgBackingBean.searchFinancialOrg}" />
 						
 						<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this"
 							update=":form:finSearchPanel,:form:searchFinancialOrg" 
+							onstart="blockWidget.show()" 
+							oncomplete="blockWidget.hide()" 
 							action="#{financialOrgBackingBean.resetFinancialOrgSearchBean}" />
 					</div>
 				</td>

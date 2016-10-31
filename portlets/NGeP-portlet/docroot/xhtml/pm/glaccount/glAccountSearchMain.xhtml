@@ -13,7 +13,9 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 	
 		<p:messages id="accountingOffice" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
-			
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>	
 		<ui:include src="/xhtml/pm/glaccount/glAccountSearch.xhtml" />
 				
 		<ui:include src="/xhtml/pm/glaccount/glAccountResult.xhtml" />
