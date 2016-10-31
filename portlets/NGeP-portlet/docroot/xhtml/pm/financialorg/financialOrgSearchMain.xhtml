@@ -10,6 +10,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	<ui:define name="contentSection">
 		<!-- Validation Message -->
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<!-- Search -->
 		<ui:include src="financialSearch.xhtml"/>
 		<!-- Result -->

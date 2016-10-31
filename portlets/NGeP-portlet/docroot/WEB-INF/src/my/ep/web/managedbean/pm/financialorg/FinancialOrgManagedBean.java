@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
@@ -38,6 +39,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	// Financial Org address
 	private PmAddress pmAddress;
 	private PmContact contactPerson;
+	private PmAddressType addressType;
 	
 	// General
 	private boolean showParentMsg;
@@ -266,6 +268,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	public void setAddressAndContactPersonMandatory(
 			boolean addressAndContactPersonMandatory) {
 		this.addressAndContactPersonMandatory = addressAndContactPersonMandatory;
+	}
+
+	/**
+	 * @return the addressType
+	 */
+	public PmAddressType getAddressType() {
+		return addressType;
+	}
+
+	/**
+	 * @param addressType the addressType to set
+	 */
+	public void setAddressType(PmAddressType addressType) {
+		this.addressType = addressType;
 	}
 
 

@@ -229,6 +229,7 @@ public class FinancialOrgBackingBean extends
 //		getManagedBean().setBranchAddress(PmCommonUtil.getNewPmAddress());
 //		getManagedBean().setBranchContactPerson(new PmContact());
 
+		updateAddressAndContactPersonMandatory();
 
 	}
 
@@ -264,7 +265,7 @@ public class FinancialOrgBackingBean extends
 		
 		this.getManagedBean().setFinancialOrg(retrievePmFinancialOrg(id));
 		getManagedBean().setServiceTypes(new ArrayList<String>());
-
+		updateAddressAndContactPersonMandatory();
 		for (PmFinancialSvc financialSvc : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()) {
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
 			if(this.getManagedBean().getServiceTypes()== null){
@@ -317,7 +318,8 @@ public class FinancialOrgBackingBean extends
 
 		boolean addrExist = false;
 		boolean contactExist = false;
-	
+		PmAddressType selectedPmAddressType = null;
+		
 		if (finAddressTypes != null && !finAddressTypes.isEmpty()) {
 			for (PmAddressType pmAddressType : finAddressTypes) {
 				// financial address
@@ -338,6 +340,8 @@ public class FinancialOrgBackingBean extends
 						contactLst.add(contact);
 						pmAddressType.setPmContacts(contactLst);
 					}
+					selectedPmAddressType = pmAddressType;
+					break;
 				}
 				
 				
@@ -361,10 +365,13 @@ public class FinancialOrgBackingBean extends
 			addressType.setPmContacts(contactLst);
 			
 			// by address type & financial org
-			finAddressTypes.add(addressType);
-			this.getManagedBean().getFinancialOrg().setPmAddressTypes(finAddressTypes);
+			//finAddressTypes.add(addressType);
+			selectedPmAddressType = addressType;
+			//this.getManagedBean().getFinancialOrg().setPmAddressTypes(finAddressTypes);
 	
 		}
+		
+		getManagedBean().setAddressType(selectedPmAddressType);
 
 	}
 
@@ -623,50 +630,54 @@ public class FinancialOrgBackingBean extends
 		}
 		
 		 if(this.getManagedBean().getPmAddress()!=null){
-//			 for(PmAddressType pmAddressType:this.getManagedBean().getFinancialOrg().getPmAddressTypes()){
-//					if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
-//							&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
-						PmAddress pmAddress = this.getManagedBean().getPmAddress();
-						if(pmAddress.getPmCountry().getCountryId()==null){
-							throw new EpException(MessageConst.ERROR_770039);
-						}
-				
-						if(StringUtils.isBlank(pmAddress.getAddress1())){
-							throw new EpException(MessageConst.ERROR_770040);
-						}
-						
-						if(StringUtils.isBlank(pmAddress.getPostcode())){
-							throw new EpException(MessageConst.ERROR_770041);
-						}
-						
-						if(pmAddress.getPmState().getStateId()==null){
-							throw new EpException(MessageConst.ERROR_770042);
-						}
-				
-						if(pmAddress.getPmDistrict().getDistrictId()==null){
-							throw new EpException(MessageConst.ERROR_770043);
-						}
-						
-//						PmState pmState = PmCommonUtil.retrievePmStateByStateId(pmAddress.getPmState().getStateId());
-						if(pmAddress.getPmState().getAdoptDivision()){
-							if(pmAddress.getPmDivision().getDivisionId()==null){
-								throw new EpException(MessageConst.ERROR_770044);
+			PmAddress address = this.getManagedBean().getPmAddress();
+			PmContact contact = this.getManagedBean().getContactPerson();
+			if(getManagedBean().isAddressAndContactPersonMandatory() || isAddressOrContactInfoFillIn(address,contact)){
+//				 for(PmAddressType pmAddressType:this.getManagedBean().getFinancialOrg().getPmAddressTypes()){
+//						if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
+//								&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
+							PmAddress pmAddress = this.getManagedBean().getPmAddress();
+							if(pmAddress.getPmCountry().getCountryId()==null){
+								throw new EpException(MessageConst.ERROR_770039);
 							}
-						}else{
-							//set set division null
-							pmAddress.setPmDivision(null);
+					
+							if(StringUtils.isBlank(pmAddress.getAddress1())){
+								throw new EpException(MessageConst.ERROR_770040);
+							}
+							
+							if(StringUtils.isBlank(pmAddress.getPostcode())){
+								throw new EpException(MessageConst.ERROR_770041);
+							}
+							
+							if(pmAddress.getPmState().getStateId()==null){
+								throw new EpException(MessageConst.ERROR_770042);
+							}
+					
+							if(pmAddress.getPmDistrict().getDistrictId()==null){
+								throw new EpException(MessageConst.ERROR_770043);
+							}
+							
+//							PmState pmState = PmCommonUtil.retrievePmStateByStateId(pmAddress.getPmState().getStateId());
+							if(pmAddress.getPmState().getAdoptDivision()){
+								if(pmAddress.getPmDivision().getDivisionId()==null){
+									throw new EpException(MessageConst.ERROR_770044);
+								}
+							}else{
+								//set set division null
+								pmAddress.setPmDivision(null);
+							}
+							
+					
+//							for(PmContact pmContact:pmAddressType.getPmContacts()){
+								if(StringUtils.isBlank(this.getManagedBean().getContactPerson().getContactName())){
+									throw new EpException(MessageConst.ERROR_775206);
+								}
+								if(StringUtils.isBlank(this.getManagedBean().getContactPerson().getEmail())){
+									throw new EpException(MessageConst.ERROR_775207);
+								}
+//							}
 						}
-						
-				
-//						for(PmContact pmContact:pmAddressType.getPmContacts()){
-							if(StringUtils.isBlank(this.getManagedBean().getContactPerson().getContactName())){
-								throw new EpException(MessageConst.ERROR_775206);
-							}
-							if(StringUtils.isBlank(this.getManagedBean().getContactPerson().getEmail())){
-								throw new EpException(MessageConst.ERROR_775207);
-							}
-//						}
-					}
+			}
 		 
 		 if(DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean().getFinancialOrg().getRecordStatusFlg()){
 			 if(StringUtils.isNotBlank(getManagedBean().getFinancialOrg().getFinOrgName())){
@@ -728,51 +739,62 @@ public class FinancialOrgBackingBean extends
 	 */
 	private void updateMainAddress(){
 		log.info("updateMainAddress");
-		boolean hasAddressType = false;
+	
 		if(this.getManagedBean().getFinancialOrg().getPmAddressTypes()==null){
 			this.getManagedBean().getFinancialOrg().setPmAddressTypes(new ArrayList<PmAddressType>());
 		}
 		
-		for(PmAddressType pmAddressType:this.getManagedBean().getFinancialOrg().getPmAddressTypes()){
-			if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
-					&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
-				log.info("updateMainAddress - update");
-				hasAddressType = true;
-				pmAddressType.setPmAddress(this.getManagedBean().getPmAddress());
-				
-				if(pmAddressType.getPmContacts()==null){
-					pmAddressType.setPmContacts(new ArrayList<PmContact>());
+		PmAddressType pmAddressType = getManagedBean().getAddressType();
+//		for(PmAddressType pmAddressType:this.getManagedBean().getFinancialOrg().getPmAddressTypes()){
+//			if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
+//					&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
+		if(!pmAddressType.isBrandNew() && pmAddressType.getAddressTypeId() != null){
+			log.info("updateMainAddress - update");			
+			pmAddressType.setPmAddress(this.getManagedBean().getPmAddress());
+			
+			if(pmAddressType.getPmContacts()==null){
+				pmAddressType.setPmContacts(new ArrayList<PmContact>());
+			}
+			if(this.getManagedBean().getContactPerson().isBrandNew()){
+				this.getManagedBean().getContactPerson().setPmAddressType(pmAddressType);
+				pmAddressType.getPmContacts().add(this.getManagedBean().getContactPerson());
+			}else{
+				pmAddressType.getPmContacts().clear();
+				pmAddressType.getPmContacts().add(this.getManagedBean().getContactPerson());
+			}
+			
+			for(PmAddressType addressType :this.getManagedBean().getFinancialOrg().getPmAddressTypes()){
+				if(addressType.getAddressTypeId() == pmAddressType.getAddressTypeId()){
+					addressType = pmAddressType;
+					break;
 				}
+			}
+		}else{
+			log.info("updateMainAddress - add");			
+			if(getManagedBean().isAddressAndContactPersonMandatory()){
+				List<PmContact> contactLst = new ArrayList<PmContact>();
+//				PmAddressType addressType = new PmAddressType();
+//				addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
+//				addressType.setPmAddress(this.getManagedBean().getPmAddress());
+//				addressType.setPmFinancialOrg(this.getManagedBean().getFinancialOrg());
+
+				// bind contact & address type
 				if(this.getManagedBean().getContactPerson().isBrandNew()){
 					this.getManagedBean().getContactPerson().setPmAddressType(pmAddressType);
-					pmAddressType.getPmContacts().add(this.getManagedBean().getContactPerson());
-				}else{
-					pmAddressType.getPmContacts().clear();
-					pmAddressType.getPmContacts().add(this.getManagedBean().getContactPerson());
 				}
+				contactLst.add(this.getManagedBean().getContactPerson());
+				pmAddressType.setPmContacts(contactLst);
+				
+				// by address type & financial org
+				this.getManagedBean().getFinancialOrg().getPmAddressTypes().add(pmAddressType);
 			}
 		}
+				
+//			}
+////		}
 		
-		if(!hasAddressType){
-			log.info("updateMainAddress - add");
 			
-			
-			List<PmContact> contactLst = new ArrayList<PmContact>();
-			PmAddressType addressType = new PmAddressType();
-			addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
-			addressType.setPmAddress(this.getManagedBean().getPmAddress());
-			addressType.setPmFinancialOrg(this.getManagedBean().getFinancialOrg());
-
-			// bind contact & address type
-			if(this.getManagedBean().getContactPerson().isBrandNew()){
-				this.getManagedBean().getContactPerson().setPmAddressType(addressType);
-			}
-			contactLst.add(this.getManagedBean().getContactPerson());
-			addressType.setPmContacts(contactLst);
-			
-			// by address type & financial org
-			this.getManagedBean().getFinancialOrg().getPmAddressTypes().add(addressType);
-		}
+		
 	
 	}
 	
@@ -1090,7 +1112,8 @@ public class FinancialOrgBackingBean extends
 				pmParameter = (PmParameter) serviceTypeMapper.get(finSev.getServiceTypeCode().getParameterId());
 				serviceTypeSet.add(pmParameter.getParameterCode());
 			}			
-			getManagedBean().getServiceTypes().addAll(serviceTypeSet);			
+			getManagedBean().getServiceTypes().addAll(serviceTypeSet);		
+			updateAddressAndContactPersonMandatory();
 		}catch(Exception ex){
 			throw ex;
 		}finally{
@@ -1404,4 +1427,58 @@ public class FinancialOrgBackingBean extends
 		}
 		return isMandatory;
 	}
+	
+	public void updateAddressAndContactPersonMandatory(){
+		boolean isMandatory = false;
+		if(getManagedBean().getFinancialOrg().getPmFinancialSvcs()!= null) {
+			for(PmFinancialSvc svc : getManagedBean().getFinancialOrg().getPmFinancialSvcs()){
+				if(DbValueConst.RECORD_STATUS_ACTIVE == svc.getRecordStatusFlg() 
+						&& svc.getServiceTypeCode() != null 
+						&& svc.getServiceTypeCode().getParameterCode() !=null){
+					if(svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_FACTORING_COMPANY)||
+							svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND)||
+							svc.getServiceTypeCode().getParameterCode().equals(ParameterConst.BANK_SERVICES_REGISTRATION)){
+						isMandatory = true;
+						break;
+					}
+				}
+				
+			}
+		}
+		getManagedBean().setAddressAndContactPersonMandatory(isMandatory);
+	}
+	
+	private boolean isAddressOrContactInfoFillIn(PmAddress address,PmContact contact){
+		boolean isFillIn = false;
+		if(StringUtils.isNotEmpty(address.getAddress1()) ||
+				StringUtils.isNotEmpty(address.getAddress2())||
+				StringUtils.isNotEmpty(address.getAddress3())||
+				(address.getPmState() != null && address.getPmState().getStateId() != null) ||
+				(address.getPmDivision() != null && address.getPmDivision().getDivisionId() != null) ||
+				(address.getPmDistrict() != null && address.getPmDistrict().getDistrictId()!= null) ||
+				(address.getPmCity() != null && address.getPmCity().getCityId() != null) ||
+				StringUtils.isNotEmpty(address.getPostcode()) ||
+				StringUtils.isNotEmpty(address.getPhoneArea()) ||
+				StringUtils.isNotEmpty(address.getPhoneNo()) ||
+				StringUtils.isNotEmpty(address.getFaxArea()) ||
+				StringUtils.isNotEmpty(address.getFaxNo()) ||
+				StringUtils.isNotEmpty(contact.getPhoneArea()) ||
+				StringUtils.isNotEmpty(contact.getPhoneNo()) ||
+				StringUtils.isNotEmpty(contact.getFaxArea()) ||
+				StringUtils.isNotEmpty(contact.getFaxNo()) ||
+				StringUtils.isNotEmpty(contact.getMobileArea()) ||
+				StringUtils.isNotEmpty(contact.getMobileNo()) ||
+				StringUtils.isNotEmpty(contact.getContactName()) ||
+				StringUtils.isNotEmpty(contact.getEmail())){
+			isFillIn = true;
+			
+		}
+		return isFillIn;
+	}
+	
+	public void updateServicesRecordStatus(){
+		updateAddressAndContactPersonMandatory();
+		getManagedBean().setTabActiveIndex(1);
+	}
+	
 }

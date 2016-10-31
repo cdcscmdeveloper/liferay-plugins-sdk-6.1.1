@@ -19,6 +19,9 @@ public class GlAccountSearchBean implements Serializable  {
 	private String ptjCode;
 	private String ptjDescription;
 	private String status;
+	private String selectedAccType;
+	private String selectedAccClass;
+	private String selectedGenObjCode;
 	
 	public GlAccountSearchBean(){}
 	
@@ -81,6 +84,48 @@ public class GlAccountSearchBean implements Serializable  {
 	 */
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the selectedAccType
+	 */
+	public String getSelectedAccType() {
+		return selectedAccType;
+	}
+
+	/**
+	 * @param selectedAccType the selectedAccType to set
+	 */
+	public void setSelectedAccType(String selectedAccType) {
+		this.selectedAccType = selectedAccType;
+	}
+
+	/**
+	 * @return the selectedAccClass
+	 */
+	public String getSelectedAccClass() {
+		return selectedAccClass;
+	}
+
+	/**
+	 * @param selectedAccClass the selectedAccClass to set
+	 */
+	public void setSelectedAccClass(String selectedAccClass) {
+		this.selectedAccClass = selectedAccClass;
+	}
+
+	/**
+	 * @return the selectedGenObjCode
+	 */
+	public String getSelectedGenObjCode() {
+		return selectedGenObjCode;
+	}
+
+	/**
+	 * @param selectedGenObjCode the selectedGenObjCode to set
+	 */
+	public void setSelectedGenObjCode(String selectedGenObjCode) {
+		this.selectedGenObjCode = selectedGenObjCode;
 	}
 	
 }
