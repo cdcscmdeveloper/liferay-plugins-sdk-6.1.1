@@ -1,4 +1,4 @@
-package my.ep.web.managedbean.sc;
+package my.ep.web.managedbean.sc.consolidation;
 
 import java.util.ArrayList;
 import java.util.List;
