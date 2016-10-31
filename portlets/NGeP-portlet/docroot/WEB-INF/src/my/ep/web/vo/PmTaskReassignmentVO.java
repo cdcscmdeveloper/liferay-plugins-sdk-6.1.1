@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
+
 
 
 /**
@@ -32,6 +34,7 @@ public class PmTaskReassignmentVO implements Serializable {
 	private BigDecimal approvalLimit;
 	private BigDecimal orderAmount;
 	private boolean supplier;
+	private List<TrackingDiaryReqDTO> trackingDiaryList;
 	
 	
 	public PmTaskReassignmentVO(){
@@ -244,6 +247,22 @@ public class PmTaskReassignmentVO implements Serializable {
 	 */
 	public void setOrderAmount(BigDecimal orderAmount) {
 		this.orderAmount = orderAmount;
+	}
+
+
+	/**
+	 * @return the trackingDiaryList
+	 */
+	public List<TrackingDiaryReqDTO> getTrackingDiaryList() {
+		return trackingDiaryList;
+	}
+
+
+	/**
+	 * @param trackingDiaryList the trackingDiaryList to set
+	 */
+	public void setTrackingDiaryList(List<TrackingDiaryReqDTO> trackingDiaryList) {
+		this.trackingDiaryList = trackingDiaryList;
 	}
 	
 

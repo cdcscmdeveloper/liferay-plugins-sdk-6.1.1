@@ -1343,6 +1343,10 @@ public class TaskReassignmentBackingBean extends
 				vo.setDocId(resDTO.getDocId());
 				vo.setDocNo(resDTO.getDocNo());
 				vo.setDocType(resDTO.getDocType());
+				//For Tracking Diary 
+				if(resDTO.getCircularList() != null && !resDTO.getCircularList().isEmpty()){
+					vo.setTrackingDiaryList(resDTO.getCircularList());
+				}
 			}
 		}catch(Exception e){
 			throw new EpException("unable to get task reassignment details from Contract Management Module.");
@@ -1554,6 +1558,10 @@ public class TaskReassignmentBackingBean extends
 					.getUserId());
 			reqDTO.setFromUser(getManagedBean().getTaskAssignmentSearchBean()
 					.getUser());
+			//For Tracking Diary List (CT)
+			if(vo.getTrackingDiaryList() != null && !vo.getTrackingDiaryList().isEmpty()){
+				reqDTO.setTrackingDiaryList(vo.getTrackingDiaryList());
+			}
 
 			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
 					.getInstance().getServiceObject(
