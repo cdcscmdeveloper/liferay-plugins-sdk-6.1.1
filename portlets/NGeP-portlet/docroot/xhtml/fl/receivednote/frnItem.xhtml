@@ -34,8 +34,12 @@
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:center;"/>
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:center;"/>
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.frn.accum.total.received.qty']}" style="white-space:normal;text-align:center;"/>
-				<p:column rowspan="3" headerText="#{lbl['lbl.fl.frn.accum.total.received.amt']}" style="white-space:normal;text-align:center;"/>
-				
+				<p:column rowspan="3" style="width:15%;">
+				<f:facet name="header" style="white-space:normal;">
+					<h:outputText value="#{lbl['lbl.fl.frn.accum.total.received.amt']}" style="white-space:normal;text-align:center;"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.accumulated.total.received.amt']}"/>
+				</f:facet>
+			</p:column>
             </p:row>
           </p:columnGroup>    
              <p:column>
@@ -82,6 +86,7 @@
 					<td style="width:130px;"><p:outputLabel value="#{lbl['lbl.fl.qty']}" /></td>
 					<td style="width:50px;"></td>
 					<td style="width:138px;"><p:outputLabel value="#{lbl['lbl.fl.amount.rm']}" /></td>
+					<td style="width:50px;"></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.ordered']}" /></td>
@@ -90,7 +95,8 @@
 							value="#{receivedNoteBackingBean.managedBean.orderedQty}"
 							size="15" disabled="true" ><f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern"
-								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" /></p:inputText> </td><td><ac:iconTooltip
+								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" /></p:inputText> </td>
+					<td><ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.do.order.qty']}" /></td>
 					<td><p:inputText style="text-align:right;"
 							styleClass="colFloatRight"
@@ -99,7 +105,8 @@
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
-					<td></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.fl.tooltip.frn.order.amt']}" /></td>
 					
 				</tr>
 				<tr>
@@ -109,7 +116,8 @@
 							value="#{receivedNoteBackingBean.managedBean.deliveredQty}"
 							size="15" disabled="true" ><f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern"
-								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" /></p:inputText></td><td> <ac:iconTooltip
+								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" /></p:inputText></td>
+					<td> <ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.do.del.qty']}" /></td>
 					<td><p:inputText styleClass="colFloatRight"
 							style="text-align:right;"
@@ -118,7 +126,8 @@
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
-					<td></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.fl.tooltip.frn.del.amt']}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.remaining']}" /></td>
@@ -128,6 +137,7 @@
 							<f:attribute name="pattern"
 								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" /></p:inputText></td><td> <ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.do.remain.qty']}" /></td>
+					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
@@ -145,7 +155,8 @@
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern"
 								value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
-						</p:inputText></td><td> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}" /></td>
+						</p:inputText></td>
+					<td> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}" /></td>
 					<td><p:inputText size="15" style="text-align:right;"
 							styleClass="colFloatRight" id="receivedAmtVal"
 							label="#{lbl['lbl.fl.received.amount']}"
@@ -164,15 +175,17 @@
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
-					<td></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.fl.tooltip.frn.received.amt']}" /></td>
 				</tr>
 				<tr>
 					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 					<td colspan="3">
-						<p:inputTextarea cols="42" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemarks.get(0).remark}" autoResize="false" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}">
+						<p:inputTextarea cols="47" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemarks.get(0).remark}" autoResize="false" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}">
 							<p:ajax process="@this" />
-						</p:inputTextarea><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.item.remarks']}"/>
+						</p:inputTextarea>
 					</td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.item.remarks']}"/></td>
 				</tr>
 				<tr>
 					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.fl.remark.history']}" /></td>
