@@ -21,7 +21,6 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.quationtender.ScEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
@@ -81,9 +80,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** The committee activitymulti select. */
 	private List<ScQtCommitteeActivity> committeeActivitymultiSelect;
-
-	/** The evaluation result. */
-	private ScEvaluationResult evaluationResult;
 
 	/** The qualified list. */
 	private List<ScQtEvaluationResult> qualifiedList;
@@ -902,25 +898,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setCommitteeActivitymultiSelect(
 			List<ScQtCommitteeActivity> committeeActivitymultiSelect) {
 		this.committeeActivitymultiSelect = committeeActivitymultiSelect;
-	}
-
-	/**
-	 * Gets the evaluation result.
-	 * 
-	 * @return the evaluation result
-	 */
-	public ScEvaluationResult getEvaluationResult() {
-		return evaluationResult;
-	}
-
-	/**
-	 * Sets the evaluation result.
-	 * 
-	 * @param evaluationResult
-	 *            the new evaluation result
-	 */
-	public void setEvaluationResult(ScEvaluationResult evaluationResult) {
-		this.evaluationResult = evaluationResult;
 	}
 
 	/**
