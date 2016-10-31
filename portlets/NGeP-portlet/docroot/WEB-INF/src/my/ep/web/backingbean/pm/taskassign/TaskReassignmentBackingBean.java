@@ -1336,7 +1336,7 @@ public class TaskReassignmentBackingBean extends
 			reqDTO.setDocType(task.getDocType());
 			ContractIntegrationResDTO resDTO = ctIntegrationSO
 					.retrieveTaskAssignmentRole(reqDTO);
-			if (resDTO.isSuccessful() && !resDTO.getRoleCodeList().isEmpty()) {
+			if (resDTO.isSuccessful()) {
 				vo.setRoleList(resDTO.getRoleCodeList());
 				vo.setGroupDocId(resDTO.getGroupDocId());
 				vo.setGroupDocType(resDTO.getGroupDocType());
