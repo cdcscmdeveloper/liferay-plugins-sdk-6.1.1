@@ -2175,23 +2175,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
 		}
 		
-		List<SmPersonnel> personnelLs = getManagedBean().getSmAppl().getSmPersonnels();
-		if(personnelLs.size() > 0){
-			for(SmPersonnel personnel : personnelLs){
-				if(personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING){
-					getManagedBean().setDisabledCompanyNameInMaintenance(true);
-				}
-			}
-		}
-
-		
-		/*if (SmApplicationUtil
+		if (SmApplicationUtil
 				.isApplHasSoftcertProcessingNotComplete(getManagedBean()
 						.getSmSupp().getSmAppl())) {
 			getManagedBean().setDisabledCompanyNameInMaintenance(true);
 			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
-		}*/
-
+		}
 	}
 	
 	/**
