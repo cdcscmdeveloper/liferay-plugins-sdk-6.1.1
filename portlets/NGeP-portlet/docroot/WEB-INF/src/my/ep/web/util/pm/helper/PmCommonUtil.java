@@ -2073,9 +2073,16 @@ public class PmCommonUtil {
 	 * @return String
 	 */
 	public static String getMsgFromMsgUtils(String msgId, String[] params) {
-		return MessageUtils.getMessage(msgId, params,
+		if(params != null){
+			return MessageUtils.getMessage(msgId, params,
 				MessageUtils.BUNDLE_COMMON_MESSAGES,
 				new FacesScopes().getUserLocale());
+		}else{
+			return MessageUtils.getMessage(msgId,
+					MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+		}
+		
 	}
 
 	/**
