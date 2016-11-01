@@ -315,5 +315,14 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 	public void setPmGoDataModel(IPagingDataModel<VPmGo> pmGoDataModel) {
 		this.pmGoDataModel = pmGoDataModel;
 	}
+	
+	public void onChangeAccType(){
+		getManagedBean().setSelectedAccClass(null);
+		getManagedBean().setSelectedGenObjCode(null);
+	}
+	
+	public void onChangeAccClass(){
+		getManagedBean().setSelectedGenObjCode(null);
+	}
 
 }
