@@ -1572,14 +1572,9 @@ public class TaskReassignmentBackingBean extends
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
 				reloadAllTaskList();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_770104,
-										new String[] { task.getDocNumber() },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+						FacesMessage.SEVERITY_INFO, MessageConst.INFO_770104, 
+						new String[] { task.getDocNumber() });				
 			}
 		} finally {
 			taskAssignmentSO = null;
@@ -2054,14 +2049,8 @@ public class TaskReassignmentBackingBean extends
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
 				reloadAllTaskList();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_770105,
-										null,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+						FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 			}
 		} finally {
 			taskAssignmentSO = null;
