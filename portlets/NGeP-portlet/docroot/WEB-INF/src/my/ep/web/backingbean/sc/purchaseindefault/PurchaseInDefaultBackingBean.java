@@ -27,8 +27,8 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -1017,7 +1017,7 @@ public class PurchaseInDefaultBackingBean extends
 			if(purchaseInDefault != null && purchaseInDefault.getPmOrgProfile() != null){
 				Long orgProfileId = purchaseInDefault.getPmOrgProfile().getOrgProfileId();
 				reqDTO.setOrgProfileId(orgProfileId);
-				resDTO = getDirectPurchaseSO().retrieveGroupListByOrgId(reqDTO);
+				resDTO = getRequestNoteSO().retrieveGroupListByOrgId(reqDTO);
 				if(resDTO.getUserGroupList().size()>0) {
 					getManagedBean().setUserGroupList(resDTO.getUserGroupList());
 				} else {
@@ -1491,7 +1491,7 @@ public class PurchaseInDefaultBackingBean extends
 			RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
 			reqDTO.setGroupId(purchaseInDefault.getPmUserGroup().getUserGroupId());
 			reqDTO.setOrgProfileId(purchaseInDefault.getPmOrgProfile().getOrgProfileId());
-			resDTO = getDirectPurchaseSO().retrieveApproverListByGroupId(reqDTO);
+			resDTO = getRequestNoteSO().retrieveApproverListByGroupId(reqDTO);
 			List<PmUserGroupUser> groupUsers = resDTO.getApproverGroupUserList();
 
 			if(!CollectionUtils.isEmpty(groupUsers)) {
@@ -1563,12 +1563,12 @@ public class PurchaseInDefaultBackingBean extends
 	}
 	
 	/**
-	 * Gets the direct purchase so.
+	 * Gets the request note so.
 	 *
-	 * @return the direct purchase so	
+	 * @return the request note so	
 	 */
-	private IDirectPurchaseSO getDirectPurchaseSO() {
-		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+	private IRequestNoteSO getRequestNoteSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
 	}
 	
 	/**

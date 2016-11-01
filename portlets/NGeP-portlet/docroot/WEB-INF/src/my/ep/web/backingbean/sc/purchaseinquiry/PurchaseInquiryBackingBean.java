@@ -29,8 +29,8 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -598,7 +598,7 @@ public class PurchaseInquiryBackingBean extends
 					.getRequestNoteDtl();
 			ScRequestNote requestNote = new ScRequestNote();
 			requestNote.setTitle(prInquiry.getTitle());
-			requestNote.setRequestNoteNo(getDirectPurchaseSO()
+			requestNote.setRequestNoteNo(getRequestNoteSO()
 					.generateRequestNoteNo());
 			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 			setUserDetails(requestNote);
@@ -1000,7 +1000,7 @@ public class PurchaseInquiryBackingBean extends
 			RequestNoteReqDTO requestDTO = new RequestNoteReqDTO();
 			requestDTO.setRequestNoteId(getManagedBean().getRequestNote()
 					.getRequestNoteId());
-			RequestNoteResDTO resDTO = getDirectPurchaseSO().getRequestNote(
+			RequestNoteResDTO resDTO = getRequestNoteSO().getRequestNote(
 					requestDTO);
 			ScRequestNote requestNote = resDTO.getRequestNoteDetail();
 			reqNoteBackingBean.getManagedBean().setRequestNote(requestNote);
@@ -1551,13 +1551,13 @@ public class PurchaseInquiryBackingBean extends
 
 	
 	/**
-	 * Gets the direct purchase so.
+	 * Gets the request note so.
 	 * 
-	 * @return the direct purchase so
+	 * @return the request note so
 	 */
-	private IDirectPurchaseSO getDirectPurchaseSO() {
+	private IRequestNoteSO getRequestNoteSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+				ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
 	}
 
 	/**
