@@ -32,6 +32,7 @@ public class gpkiBackingBean implements Serializable {
 	private static Logger log = Logger.getLogger(gpkiBackingBean.class);
 	private String signedText;
 	private PmDigiSign pmDigiSign = new PmDigiSign();
+	private Exception nonSigningException;
 
 	public gpkiBackingBean() {
 
@@ -67,7 +68,8 @@ public class gpkiBackingBean implements Serializable {
 		this.pmDigiSign = pmDigiSign;
 	}
 
-	public String gpkiSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr, ContextualCompositeMethodExpression enableAutoUpdateMtdExpr) {
+	public String gpkiSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr, ContextualCompositeMethodExpression enableAutoUpdateMtdExpr, 
+									ContextualCompositeMethodExpression postSignActionErrorHandlerMtdExpr) {
 		System.out.println("ContextualCompositeMethodExpression");
 		
 		String textBeforeSign = FacesContext.getCurrentInstance()
@@ -163,7 +165,15 @@ public class gpkiBackingBean implements Serializable {
 			}
 		} catch (Exception e) {
 			RequestContext.getCurrentInstance().execute("setRunGPKIEnableAutoUpdate(true);");	
-			throw e;
+			if (postSignActionErrorHandlerMtdExpr != null) {
+				nonSigningException = e;
+				postSignActionErrorHandlerMtdExpr.invoke(
+						FacesContext.getCurrentInstance().getELContext(),
+						new Object[] {nonSigningException});
+				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
+			} else {
+				throw e;
+			}
 		}
 		
 		RequestContext.getCurrentInstance().execute("gpkiBlockWidget.hide()");
@@ -198,6 +208,14 @@ public class gpkiBackingBean implements Serializable {
 		
 		FacesContext.getCurrentInstance().addMessage("gpki",
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errorMsg));
+	}
+
+	public Exception getNonSigningException() {
+		return nonSigningException;
+	}
+
+	public void setNonSigningException(Exception nonSigningException) {
+		this.nonSigningException = nonSigningException;
 	}
 
 }
