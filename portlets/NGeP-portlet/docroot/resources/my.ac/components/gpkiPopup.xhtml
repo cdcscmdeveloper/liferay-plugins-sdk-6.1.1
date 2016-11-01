@@ -14,13 +14,15 @@
 			method-signature="void action(my.ep.persistence.entity.pm.common.PmDigiSign)" />
 		<cc:attribute name="enableAutoUpdate" required="false"
 			method-signature="void action()" />
+		<cc:attribute name="postSignActionErrorHandler" required="false"
+			method-signature="void action(java.lang.Exception)" />			
 	</cc:interface>
 
 
 	<cc:implementation>
 		<p:remoteCommand name="postSignAction"
 			onstart="setRunGPKIEnableAutoUpdate(false);"
-			action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" />
+			action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate, cc.attrs.postSignActionErrorHandler)}" />
 		<p:remoteCommand name="errorAction"
 			action="#{gpkiBackingBean.showError}" />
 		<h:inputHidden id="inputTextBeforeSign" binding="#{textBeforeSign}"
