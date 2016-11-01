@@ -234,30 +234,30 @@ public class GlAccountBackingBean extends
 
 	public SelectItem[] retrieveAccountClass() {
 		log.info("retrieveAccountClass");
-		SelectItem[] items = null;
+		SelectItem[] items = null;	
 		if (StringUtils.isNotBlank(getManagedBean().getGlAccountSearchBean().getSelectedAccType())) {
 			IObjectSO objectSO = null;
 			try {
 				int i = 1;
 				ObjectReqDTO reqDTO = new ObjectReqDTO();
-				SearchBean<String> accGoSearchBean = new SearchBean<String>();
-				accGoSearchBean.getDataFilterBeans().add(
+				SearchBean<String> accDoSearchBean = new SearchBean<String>();
+				accDoSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("accType",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								getManagedBean().getGlAccountSearchBean().getSelectedAccType()));
-				accGoSearchBean.getDataFilterBeans().add(
+				accDoSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatus",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								DbValueConst.RECORD_STATUS_ACTIVE));
 				
-				accGoSearchBean.getSortColumns().add(new SearchOrderBean("accClass"));
+				accDoSearchBean.getSortColumns().add(new SearchOrderBean("accClass"));
 
-				reqDTO.setAccGoSearchBean(accGoSearchBean);
+				reqDTO.setAccDoSearchBean(accDoSearchBean);
 				objectSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
 				ObjectResDTO resDTO = objectSO
-						.retrieveAccClassListBySearchBean(reqDTO);
-				List<String> list = resDTO.getAccGoResultBean().getResultList();
+						.retrieveVPmDoAccClassListBySearchBean(reqDTO);
+				List<String> list = resDTO.getAccDoResultBean().getResultList();
 				items = new SelectItem[list.size() + 1];
 				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -282,36 +282,36 @@ public class GlAccountBackingBean extends
 	
 	public SelectItem[] retrieveGoCodeList() {
 		log.info("retrieveGoCodeList");
-		SelectItem[] items = null;
-		if (StringUtils.isNotBlank(getManagedBean().getGlAccountSearchBean().getSelectedAccType())) {
+		SelectItem[] items = null;		
+		if (StringUtils.isNotBlank(getManagedBean().getGlAccountSearchBean().getSelectedAccClass())) {
 			IObjectSO objectSO = null;
 			try {
 				int i = 1;
 				ObjectReqDTO reqDTO = new ObjectReqDTO();
-				SearchBean<String> accGoSearchBean = new SearchBean<String>();
-				accGoSearchBean.getDataFilterBeans().add(
+				SearchBean<String> accDoSearchBean = new SearchBean<String>();
+				accDoSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("accType",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								getManagedBean().getGlAccountSearchBean().getSelectedAccType()));
 				
-				accGoSearchBean.getDataFilterBeans().add(
+				accDoSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("accClass",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								getManagedBean().getGlAccountSearchBean().getSelectedAccClass()));
 				
-				accGoSearchBean.getDataFilterBeans().add(
+				accDoSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatus",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								DbValueConst.RECORD_STATUS_ACTIVE));
 				
-				accGoSearchBean.getSortColumns().add(new SearchOrderBean("goCode"));
+				accDoSearchBean.getSortColumns().add(new SearchOrderBean("goCode"));
 
-				reqDTO.setAccGoSearchBean(accGoSearchBean);
+				reqDTO.setAccDoSearchBean(accDoSearchBean);
 				objectSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
 				ObjectResDTO resDTO = objectSO
-						.retrieveGoCodeListBySearchBean(reqDTO);
-				List<String> list = resDTO.getAccGoResultBean().getResultList();
+						.retrieveVPmDoGoCodeListBySearchBean(reqDTO);
+				List<String> list = resDTO.getAccDoResultBean().getResultList();
 				items = new SelectItem[list.size() + 1];
 				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -330,8 +330,19 @@ public class GlAccountBackingBean extends
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
+			
 		}
 		return items;
 	}
+	
+	public void onChangeAccType(){
+		getManagedBean().getGlAccountSearchBean().setSelectedAccClass(null);
+		getManagedBean().getGlAccountSearchBean().setSelectedGenObjCode(null);
+	}
+	
+	public void onChangeAccClass(){
+		getManagedBean().getGlAccountSearchBean().setSelectedGenObjCode(null);
+	}
+
 
 }
