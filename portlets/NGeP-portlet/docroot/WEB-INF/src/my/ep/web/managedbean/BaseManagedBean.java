@@ -31,6 +31,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SelectItem> localAuthorityItems;
 	private String captchaText;
 	private String captchaAnswer;
+	private Exception nonSigningException;
 
 	// For sub title displayed in screen.
 	private String title;
@@ -229,6 +230,14 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setCaptchaAnswer(String captchaAnswer) {
 		this.captchaAnswer = captchaAnswer;
+	}
+
+	public Exception getNonSigningException() {
+		return nonSigningException;
+	}
+
+	public void setNonSigningException(Exception nonSigningException) {
+		this.nonSigningException = nonSigningException;
 	}
 
 }
