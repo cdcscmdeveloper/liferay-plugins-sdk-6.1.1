@@ -6526,21 +6526,11 @@ public class SmApplicationUtil {
 			SmAppl smAppl) {
 		boolean retVal = false;
 
-		if (!smAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+		if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
+				.contains(smSupplier.getBusinessType())) {
 			retVal = true;
-		} else {
-			if (smAppl.getApplType()
-					.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-					&& smAppl.isActiveAppl()) {
-				if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
-						.contains(smSupplier.getBusinessType())) {
-					retVal = true;
-				} else if (isApplHasSoftcertProcessingNotComplete(smAppl)) {
-					retVal = true;
-				}
-			} else {
-				retVal = true;
-			}
+		} else if (isApplHasSoftcertProcessingNotComplete(smAppl)) {
+			retVal = true;
 		}
 		return retVal;
 	}
