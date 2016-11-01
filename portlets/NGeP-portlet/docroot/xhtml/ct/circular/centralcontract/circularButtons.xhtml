@@ -24,7 +24,7 @@
 						oncomplete="blockWidget.hide();" onkeypress="if (event.keyCode == 13) { return false; }"
 						action="#{centralContractBackingBean.gpkiSignAction(action)}" />
 				</ui:repeat></td>
-			<c:if test='#{centralContractBackingBean.managedBean.action eq "view"}'>
+			<c:if test="#{centralContractBackingBean.managedBean.action eq 'view'}">
 				<td style="text-align: right">
 					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
 						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(centralContractBackingBean.managedBean.circularVer.docType, centralContractBackingBean.managedBean.circular.circularId)}"  />
