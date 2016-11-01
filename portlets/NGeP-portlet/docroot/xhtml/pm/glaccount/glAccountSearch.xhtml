@@ -21,6 +21,7 @@
 								var="parameter" itemLabel="#{parameter.codeName}"
 								itemValue="#{parameter.pmParameter.parameterCode}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{glAccountBackingBean.onChangeAccType()}"
 								onstart="blockWidget.show()" 
 								oncomplete="blockWidget.hide()" 
 								update="somAccClass,somGoCode" />
@@ -38,6 +39,7 @@
 							<f:selectItems
 								value="#{glAccountBackingBean.retrieveAccountClass()}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{glAccountBackingBean.onChangeAccClass()}"
 								update="@this,somGoCode" 
 								onstart="blockWidget.show()" 
 								oncomplete="blockWidget.hide()" />
