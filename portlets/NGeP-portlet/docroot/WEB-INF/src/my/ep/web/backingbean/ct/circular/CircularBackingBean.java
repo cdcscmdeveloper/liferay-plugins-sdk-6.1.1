@@ -326,7 +326,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				panelBackingBean.getManagedBean().setSelectedPanelZone(null);
 				panelBackingBean.getManagedBean().setSelectedTabIndex(0);
 				panelBackingBean.getManagedBean().setAction(action);
-				panelBackingBean.getManagedBean().setGotoPreviewPage("/xhtml/ct/circular/maintenance/search.xhtml");
+				panelBackingBean.getManagedBean().setGotoPreviewPage("/xhtml/ct/circular/maintenance/search.xhtml?faces-redirect=true");
 				
 				if(action.equalsIgnoreCase("view")) {
 					panelBackingBean.getManagedBean().setUpdateAction(false);
@@ -340,7 +340,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 					panelBackingBean.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 				}
 				panelBackingBean.setPanelCircularVar(reqDTO);
-				return "/xhtml/ct/circular/panel/circularBase.xhtml";
+				return "/xhtml/ct/circular/panel/circularBase.xhtml?faces-redirect=true";
 			} else {
 				CentralContractBackingBean centralContractBackingBean = new CentralContractBackingBean();
 				centralContractBackingBean.getManagedBean().setSelectedCircularContract(null);
@@ -348,7 +348,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				centralContractBackingBean.getManagedBean().setSelectedZoneItems(null);
 				centralContractBackingBean.getManagedBean().setSelectedTabIndex(0);
 				centralContractBackingBean.getManagedBean().setAction(action);
-				centralContractBackingBean.getManagedBean().setGotoPreviewPage("/xhtml/ct/circular/maintenance/search.xhtml");
+				centralContractBackingBean.getManagedBean().setGotoPreviewPage("/xhtml/ct/circular/maintenance/search.xhtml?faces-redirect=true");
 				
 				if(action.equalsIgnoreCase("view")) {
 					centralContractBackingBean.getManagedBean().setViewContract(true);
@@ -361,7 +361,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 					centralContractBackingBean.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 				}
 				centralContractBackingBean.setContractCircularVar(reqDTO);
-				return "/xhtml/ct/circular/centralcontract/circularBase.xhtml";
+				return "/xhtml/ct/circular/centralcontract/circularBase.xhtml?faces-redirect=true";
 			}
 	}
 	
