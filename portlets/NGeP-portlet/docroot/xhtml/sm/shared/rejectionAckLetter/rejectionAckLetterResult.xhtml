@@ -51,7 +51,7 @@
 
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 				<p:commandLink id="editLinkId" value="#{lbl['lbl.sm.view']}" action="#{rejectionAckLetterBB.navigateToApplInfo(smAppl)}"
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this" partialSubmit="true" update="@form">
 				<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 				</p:commandLink>
 			</p:column>
