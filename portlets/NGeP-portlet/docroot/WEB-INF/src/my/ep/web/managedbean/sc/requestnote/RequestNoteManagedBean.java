@@ -17,7 +17,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
@@ -1025,10 +1025,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		 */
 		@Override
 		public ISearchResultBean<ScRequestNote> pageChangeListener(ISearchBean<ScRequestNote> searchBean) {
-			IDirectPurchaseSO directPurchaseSO;
+			IRequestNoteSO requestNoteSO;
 			try {
-				directPurchaseSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+				requestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
 				
 				if(StringUtils.isNotBlank(getSearchReqNoteNo())) {
 					searchBean.getDataFilterBeans().add(
@@ -1068,13 +1068,13 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 				RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
 				reqDTO.setRequestNoteSearchBean(searchBean);
 				
-				RequestNoteResDTO resDTO = directPurchaseSO.searchRequestNoteList(reqDTO);
+				RequestNoteResDTO resDTO = requestNoteSO.searchRequestNoteList(reqDTO);
 				
 				if(resDTO.isSuccessful()) {
 					return resDTO.getRequestNoteResultBean();
 				}
 			} finally {
-				directPurchaseSO = null;
+				requestNoteSO = null;
 			}
 			
 			return null;

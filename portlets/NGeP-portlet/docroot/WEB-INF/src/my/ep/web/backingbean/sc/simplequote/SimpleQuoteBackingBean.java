@@ -37,8 +37,8 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -1258,10 +1258,10 @@ public class SimpleQuoteBackingBean extends
 		boolean autoUpdate = getManagedBean().isAutoUpdate();
 		Date pidExpDate = getManagedBean().getPidExpiryDate();
 		try {
-			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate
+			IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION,
-							IDirectPurchaseSO.class);
+							IRequestNoteSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
 
@@ -1292,7 +1292,7 @@ public class SimpleQuoteBackingBean extends
 				setUserDetails(requestNote);
 				
 				if(StringUtils.isBlank(requestNote.getRequestNoteNo())){
-					requestNote.setRequestNoteNo(directPurchaseSO
+					requestNote.setRequestNoteNo(requestNoteSO
 							.generateRequestNoteNo());
 				}
 				requestNote.setTitle(quote.getTitle());
@@ -1909,10 +1909,10 @@ public class SimpleQuoteBackingBean extends
 		debugLogger("submitSimpleQuote");
 		try {
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
-			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate
+			IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION,
-							IDirectPurchaseSO.class);
+							IRequestNoteSO.class);
 			ScQuote quote = getManagedBean().getScQuote();
 
 			if (quote.getRequestItems() == null) {
@@ -1929,7 +1929,7 @@ public class SimpleQuoteBackingBean extends
 				ScRequestNote requestNote = getManagedBean().getRequestNote();
 				requestNote.setTitle(quote.getTitle());
 				setUserDetails(requestNote);
-				requestNote.setRequestNoteNo(directPurchaseSO
+				requestNote.setRequestNoteNo(requestNoteSO
 						.generateRequestNoteNo());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 				requestNote.setWorkFlowStatuses(null);
