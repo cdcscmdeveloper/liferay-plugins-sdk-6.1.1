@@ -20,15 +20,15 @@
 					value="#{panelBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel"
 						value="lbl.btn.#{fn:toLowerCase(action)}" />
-					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					<p:commandButton id="subBtnId" value="#{lbl[buttonLabel]}" styleClass="ui-button"
 						update="@form" onkeypress="if (event.keyCode == 13) { return false; }"
 						process="@form"
 						onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{panelBackingBean.gpkiSignAction(action)}"/>
 				</ui:repeat></td>
-			<c:if test='#{panelBackingBean.managedBean.action eq "view"}'>
-				<td style="text-align: right">
+			<c:if test="#{panelBackingBean.managedBean.action eq 'view' }">
+				<td style="text-align: right;">
 					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
 						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(panelBackingBean.managedBean.circularVer.docType,
 						panelBackingBean.managedBean.circular.circularId)}"  />
