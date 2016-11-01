@@ -3941,6 +3941,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			getManagedBean().setNonSigningException(null);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		}else{
@@ -3988,10 +3989,25 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	/**
 	 * Enable auto update.
+	 * @throws Exception 
 	 */
-	public void enableAutoUpdate(){
+	public void enableAutoUpdate() throws Exception{
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
+		if(getManagedBean().getNonSigningException()!=null) {
+			throw getManagedBean().getNonSigningException();
+		} 
+	}
+	
+	/**
+	 * Set exception thrown by GPKI caller
+	 * @param e
+	 */
+	public void postSignActionErrorHandler(Exception e) {
+		if(e!=null) {
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			getManagedBean().setNonSigningException(e);
+		}
 	}
 	
 	/**
