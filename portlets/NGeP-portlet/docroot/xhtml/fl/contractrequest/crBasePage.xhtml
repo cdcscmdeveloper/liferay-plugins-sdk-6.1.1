@@ -24,6 +24,7 @@
 		<ac:gpkiPopup 
 			textBeforeSign="#{contractRequestBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{contractRequestBackingBean.preSubmitFulfillmentRequest(gpkiBackingBean.pmDigiSign)}"
+			postSignActionErrorHandler="#{contractRequestBackingBean.postSignActionErrorHandler(gpkiBackingBean.nonSigningException)}"
 			enableAutoUpdate="#{contractRequestBackingBean.enableAutoUpdate()}" />		
 		<f:event listener="#{contractRequestBackingBean.preRenderView}"	type="preRenderView" />		
 		<c:if test="#{contractRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or contractRequestBackingBean.managedBean.isHyperLinkPage()}">
