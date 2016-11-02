@@ -4447,4 +4447,19 @@ public class SmCommonUtil {
 
 		return vCode;
 	}
+
+	public String retrieveLoginIdsByZoneAndRole(String zoneZode,
+			String roleCode, String supplierType, String applType,
+			String applCatTyep) {
+		
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setZoneCode(zoneZode);
+		userReqDTO.setRoleCode(roleCode);
+		userReqDTO.setSupplierType(supplierType);
+		userReqDTO.setApplicationType(applType);
+		userReqDTO.setCategoryType(applCatTyep);
+
+		UserResDTO userResDTO = SmServiceLookup.getUserSO().retrieveUserIdsByRoleAndZone(userReqDTO);
+		return userResDTO.getUserIdList();
+	}
 }
