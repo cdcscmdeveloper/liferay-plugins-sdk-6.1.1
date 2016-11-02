@@ -1659,8 +1659,10 @@ public class EvaluationMeetingBackingBean extends
 		this.searchExistingUser = searchExistingUser;
 	}
 
-	/*
+	
+	/**
 	 * this method is used to check two meeting dates or equals or not.
+	 * 
 	 */
 	private void compareMeetingDates(ScQtMeeting scqtMeeting,
 			List<ScQtMeeting> meetingList) {
