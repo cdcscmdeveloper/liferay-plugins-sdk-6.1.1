@@ -31,8 +31,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<td>
 							<!-- for phase 1 -->
 							<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}"
-								disabled="#{!pPlanBackingBean.managedBean.modeEditable}">
-								<p:ajax event="blur" process="@this" update="@this" partialSubmit="true"/>
+								disabled="#{!pPlanBackingBean.managedBean.modeEditable}">								
 							</p:inputTextarea>  
 								
 							<!-- enable this for phase 2 and disable phase 1 section to test	
@@ -51,8 +50,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<br/>
 			<br/>  
 	 		<div class="ppRightBtn">
-			  <p:commandButton id="cmdItemRemarkOk" value="#{lbl['lbl.btn.ok']}" immediate="true"  action="#{pPlanBackingBean.confirmRemarkCloseDialog}"  />
-			  <p:commandButton id="cmdItemRemarkCancel" value="#{lbl['lbl.btn.cancel']}" immediate="true"  oncomplete="dlItemRemarkWv.hide();" />		
+			  <p:commandButton id="cmdItemRemarkOk" value="#{lbl['lbl.btn.ok']}" process=":form:opItemRemark" action="#{pPlanBackingBean.confirmRemarkCloseDialog}"  update="@form"/>
+			  <p:commandButton id="cmdItemRemarkCancel" value="#{lbl['lbl.btn.cancel']}" immediate="true"  oncomplete="dlItemRemarkWv.hide();" update="@form"/>		
 			</div>      
 		</p:outputPanel>
 	</p:dialog>
