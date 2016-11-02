@@ -9,27 +9,33 @@
 	<p:panel header="#{lbl['lbl.sm.store.details']}" toggleable="true"
 		id="smStrDtPanel" rendered="#{backingBean.managedBean.showStorePanel}">
 		<p:outputPanel rendered="#{backingBean.managedBean.showStorePanel}">
+			<br />
+			<ui:repeat var="storeCatVar" value="#{backingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
+				<div align="left">
+					<p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} (#{storeCatVar.categoryName})" />
+				</div>
+				
 				<p:dataTable var="stor" widgetVar="smFacStoreDtWidVar"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{backingBean.managedBean.applStoreFacilities}"
+					value="#{storeCatVar.facilityList}"
 					selection="#{backingBean.managedBean.selectedStoreFacilities}"
 					rowKey="#{stor}" rowIndexVar="index" id="storeDt">
 					<ac:paginator for="storeDt" />
-					<p:column selectionMode="multiple" width="1%" rendered="#{not empty storeCatVar.facilityList}"/>
+					<p:column selectionMode="multiple" width="1%" rendered="#{not empty storeCatVar.facilityList}" />
 	
 					<p:column headerText="#{lbl['lbl.sm.facility.store.name']}">
+						<p:outputPanel rendered="#{not empty stor.smSupplierCategoryFacilities and stor.smSupplierCategoryFacilities.size() gt 1}">
+							<p:graphicImage value="/css/images/design/ico-same-with.png" 
+								title="#{lbl['lbl.sm.facility.address.attach.more.than.one.category']}" />&#160;
+						</p:outputPanel>
 						<h:outputText value="#{stor.facilityName}" />
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.sm.category']}">
-						<ui:repeat var="catFac" value="#{stor.smSupplierCategoryFacilities}">
-							<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
-										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
-										#{catFac.pmCategoryL3.categoryL3Code}
-									 	(#{catFac.pmCategoryL3.categoryName})" 
-								style="float: left;white-space: normal;" /><br />
-						</ui:repeat>
-					</p:column>
+					<ui:remove>
+						<p:column headerText="#{lbl['lbl.sm.category']}">
+							<h:outputText value="#{storeCatVar.fullCatcode} (#{storeCatVar.categoryName})" />
+						</p:column>
+					</ui:remove>
 					
 					<p:column headerText="#{lbl['lbl.sm.store.address']}"
 						style="width :60%;white-space : normal">
@@ -62,7 +68,8 @@
 							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
 						</p:commandLink>
 					</p:column>
-				</p:dataTable>
+				</p:dataTable><br />
+			</ui:repeat>
 			
 			<p:spacer height="2px;" />
 			<div align="right">
@@ -131,7 +138,7 @@
 				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedStoreFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.storeFacilityStates}"
 					districtItems="#{backingBean.managedBean.storeFacilityDistricts}" cityItems="#{backingBean.managedBean.storeFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_STORE_FACILITY_PANEL}" panelId="storeAddrId"/>
+					facilityPanel="#{SupplierManagementConst.SM_STORE_FACILITY_PANEL}" panelId="storeOwnerPanelId"/>
 					
 				
 				<tr>
@@ -165,87 +172,90 @@
 						</p:inputText> <p:message id="smFacStoreAreaMsg" for="smFacStoreArea"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneRadio id="smStoreOwnerType"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.ownerType']}"
-							value="#{backingBean.managedBean.selectedStoreFacility.ownershipType}">
-							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}"
-								itemValue="R" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
-								itemValue="O" />
-							<p:ajax event="change" listener="#{backingBean.storeOwnerTypeSel}"
-								update="storPan,storPanLbl" />
-						</p:selectOneRadio> <p:message id="smStoreOwnerTypeMsg" for="smStoreOwnerType"
-							showSummary="true" showDetail="false" display="icon" /></td>
-				</tr>
-				<tr>
-					<td><p:outputPanel id="storPanLbl">
-							<p:outputLabel value="#{lbl['lbl.cm.price']}"
-								rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}" />
-							<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
-								rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}" />
-							<p:outputLabel value="*" styleClass="mandatory"
-								rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O' or 
-								backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}" />
-						</p:outputPanel></td>
-					<td><p:outputPanel id="storPan">
-							<ui:fragment
-								rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}">
-								<p:inputText id="smFacStorePrice"
-									disabled="#{!backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.cm.price']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
-									value="#{backingBean.managedBean.selectedStoreFacility.purchasePrice}"
-									size="20"
-									required="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}">
-									<f:validateDoubleRange
-										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-									<p:ajax process="@this" partialSubmit="true"
-										update="@this,smFacStorePriceMsg" />
-								</p:inputText>
-								<p:message id="smFacStorePriceMsg" for="smFacStorePrice"
-									showSummary="true" showDetail="false" display="icon" />
-							</ui:fragment>
-							<ui:fragment
-								rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}">
-								<p:inputText id="smFacStoreRent"
-									disabled="#{!backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
-									value="#{backingBean.managedBean.selectedStoreFacility.rentalRate}"
-									size="20"
-									required="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}">
-									<f:validateDoubleRange
-										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-									<p:ajax process="@this" partialSubmit="true"
-										update="@this,smFacStoreRentMsg" />
-								</p:inputText>
-								<p:message id="smFacStoreRentMsg" for="smFacStoreRent"
-									showSummary="true" showDetail="false" display="icon" />
-							</ui:fragment>
-						</p:outputPanel></td>
-				</tr>
-	
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="50" id="smFacStoreOwnName"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.ownername']}"
-							value="#{backingBean.managedBean.selectedStoreFacility.ownerName}"
-							size="35" /> <p:message id="smFacStoreOwnNameMsg"
-							for="smFacStoreOwnName" showSummary="true" showDetail="false"
-							display="icon" /></td>
-				</tr>
+				
+				<p:outputPanel id="storeOwnerPanelId">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneRadio id="smStoreOwnerType"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.facility.ownerType']}"
+								value="#{backingBean.managedBean.selectedStoreFacility.ownershipType}">
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}"
+									itemValue="R" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
+									itemValue="O" />
+								<p:ajax event="change" listener="#{backingBean.storeOwnerTypeSel}"
+									update="storPan,storPanLbl" />
+							</p:selectOneRadio> <p:message id="smStoreOwnerTypeMsg" for="smStoreOwnerType"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputPanel id="storPanLbl">
+								<p:outputLabel value="#{lbl['lbl.cm.price']}"
+									rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}" />
+								<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
+									rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}" />
+								<p:outputLabel value="*" styleClass="mandatory"
+									rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O' or 
+									backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}" />
+							</p:outputPanel></td>
+						<td><p:outputPanel id="storPan">
+								<ui:fragment
+									rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}">
+									<p:inputText id="smFacStorePrice"
+										disabled="#{!backingBean.managedBean.valueReqd}"
+										label="#{lbl['lbl.cm.price']}" maxlength="17"
+										validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
+										value="#{backingBean.managedBean.selectedStoreFacility.purchasePrice}"
+										size="20"
+										required="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}">
+										<f:validateDoubleRange
+											minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+											maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+										<p:ajax process="@this" partialSubmit="true"
+											update="@this,smFacStorePriceMsg" />
+									</p:inputText>
+									<p:message id="smFacStorePriceMsg" for="smFacStorePrice"
+										showSummary="true" showDetail="false" display="icon" />
+								</ui:fragment>
+								<ui:fragment
+									rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}">
+									<p:inputText id="smFacStoreRent"
+										disabled="#{!backingBean.managedBean.valueReqd}"
+										label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
+										validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
+										value="#{backingBean.managedBean.selectedStoreFacility.rentalRate}"
+										size="20"
+										required="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}">
+										<f:validateDoubleRange
+											minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+											maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+										<p:ajax process="@this" partialSubmit="true"
+											update="@this,smFacStoreRentMsg" />
+									</p:inputText>
+									<p:message id="smFacStoreRentMsg" for="smFacStoreRent"
+										showSummary="true" showDetail="false" display="icon" />
+								</ui:fragment>
+							</p:outputPanel></td>
+					</tr>
+		
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText maxlength="50" id="smFacStoreOwnName"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.ownername']}"
+								value="#{backingBean.managedBean.selectedStoreFacility.ownerName}"
+								size="35" /> <p:message id="smFacStoreOwnNameMsg"
+								for="smFacStoreOwnName" showSummary="true" showDetail="false"
+								display="icon" /></td>
+					</tr>
+				</p:outputPanel>
 	
 			</table>
 			<br />
@@ -272,5 +282,5 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":#{p:component('smStrDtPanel')}, @([id$=Msg]),:#{p:component('delStoreBtnId')}"/>
+		update=":#{p:component('storeDt')}, @([id$=Msg]),:#{p:component('delStoreBtnId')}"/>
 </ui:composition>

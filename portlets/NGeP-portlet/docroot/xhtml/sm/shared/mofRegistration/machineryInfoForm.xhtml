@@ -44,79 +44,92 @@
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.machineryVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.machineryVerified : false)}" />
 			
 			<p:outputPanel rendered="#{backingBean.managedBean.showMachineryEquipmentPanel}">
-				<p:dataTable var="macBean" widgetVar="smMachDtWidVar"
-					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{backingBean.managedBean.smAppl.smMachineDtls}"
-					selection="#{backingBean.managedBean.selectedMachineList}"
-					rowKey="#{macBean}" rowIndexVar="index" id="macDt">
-					<ac:paginator for="macDt" />
+				<br />
+				<ui:repeat var="machCatVar" value="#{backingBean.managedBean.machineCategoryVOList}" varStatus="machCatVarStatus">
+					<table style="width: 100%;">
+						<tr>
+							<td style="white-space: nowrap; float: left;">
+							    <p:outputLabel value="#{lbl['lbl.sm.category']}: #{backingBean.getParameterDesc(machCatVar.categoryTypeCode)}" />
+							</td>
+						</tr>
+					</table>
+					<br />
 					
-					<p:ajax event="rowSelect" listener="#{backingBean.onChangeMachineChecked}"
-						update=":form:tt:machInfPan"></p:ajax>
-					<p:ajax event="rowUnselect"
-						listener="#{backingBean.onChangeMachineChecked}"
-						update=":form:tt:machInfPan"></p:ajax>
-					<p:ajax event="rowSelectCheckbox"
-						listener="#{backingBean.onChangeMachineChecked}"
-						update=":form:tt:machInfPan"></p:ajax>
-					<p:ajax event="rowUnselectCheckbox"
-						listener="#{backingBean.onChangeMachineChecked}"
-						update=":form:tt:machInfPan"></p:ajax>
-					<p:ajax event="rowDblselect"
-						listener="#{backingBean.onChangeMachineChecked}"
-						update=":form:tt:machInfPan"></p:ajax>
-					
-					<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smMachineDtls}"/>
-					
-					<p:column headerText="#{lbl['lbl.sm.machine.category']}">
-						<h:outputText value="#{backingBean.getMachineCategoryType(macBean)}" />
-					</p:column>
-					
-					<p:column headerText="#{lbl['lbl.sm.machine.categorycode']}" style="width : 25%;white-space: normal;">
-						<h:outputText value="#{macBean.categoryCode.categoryL3Code} - #{macBean.categoryCode.categoryName}" 
-							rendered="#{not empty macBean.categoryCode}" />
-					</p:column>
-					
-					<p:column headerText="#{lbl['lbl.sm.machine.equiType']}" style="width : 25%;white-space: normal;">
-						<h:outputText value="#{macBean.machineType}" rendered="#{not empty macBean.machineType}"/>
-						<h:outputText value="#{macBean.machine.machineDesc}" rendered="#{empty macBean.machineType}"/>
-					</p:column>
-	
-					<p:column headerText="#{lbl['lbl.sm.machine.brand']}">
-						<h:outputText value="#{macBean.brandName}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.machine.function']}">
-						<h:outputText value="#{macBean.machineFunction}" />
-					</p:column>
-	
-					<p:column headerText="#{lbl['lbl.sm.machine.quantity']}">
-						<h:outputText value="#{macBean.qty}" />
-					</p:column>
-	
-					<p:column headerText="#{lbl['lbl.sm.machine.value']}">
-						<ac:labelAmount value="#{macBean.value}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
-						<p:commandLink partialSubmit="true" process="@this"
-							action="#{backingBean.assignSelMachinery(macBean)}"
-							update=":form:tt:equipmentDialog" style="padding-right:5px" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
-							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
-						</p:commandLink>
-					</p:column>
-	
-				</p:dataTable>
-				<p:spacer height="2px;" />
-				<div align="right">
-					<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-						update=":form:tt:equipmentDialog" process="@this"
-						partialSubmit="true" action="#{backingBean.assignNewMachineryBean}" 
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-					<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="delMachBtnId"
-						disabled="#{empty backingBean.managedBean.smAppl.smMachineDtls}"
-						partialSubmit="true" process=":form:tt:machInfPan" update="machineMainPanelId" 
-						oncomplete="machDeletePopUp.show()" />
-				</div>
+					<p:dataTable var="macBean" widgetVar="smMachDtWidVar"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						value="#{machCatVar.smMachineDtls}"
+						selection="#{backingBean.managedBean.selectedMachineList}"
+						rowKey="#{macBean}" rowIndexVar="index" id="macDt">
+						<ac:paginator for="macDt" />
+						
+						<p:ajax event="rowSelect" listener="#{backingBean.onChangeMachineChecked}"
+							update=":form:tt:machInfPan"></p:ajax>
+						<p:ajax event="rowUnselect"
+							listener="#{backingBean.onChangeMachineChecked}"
+							update=":form:tt:machInfPan"></p:ajax>
+						<p:ajax event="rowSelectCheckbox"
+							listener="#{backingBean.onChangeMachineChecked}"
+							update=":form:tt:machInfPan"></p:ajax>
+						<p:ajax event="rowUnselectCheckbox"
+							listener="#{backingBean.onChangeMachineChecked}"
+							update=":form:tt:machInfPan"></p:ajax>
+						<p:ajax event="rowDblselect"
+							listener="#{backingBean.onChangeMachineChecked}"
+							update=":form:tt:machInfPan"></p:ajax>
+						
+						<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smMachineDtls}"/>
+						
+						<p:column headerText="#{lbl['lbl.sm.machine.equiType']}" style="width : 25%;white-space: normal;">
+							<h:outputText value="#{macBean.machineType}" rendered="#{not empty macBean.machineType}"/>
+							<h:outputText value="#{macBean.machine.machineDesc}" rendered="#{empty macBean.machineType}"/>
+						</p:column>
+						
+						<p:column headerText="#{lbl['lbl.sm.category']}">
+							<ui:repeat var="catFac" value="#{macBean.smMachineCategories}">
+								<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+											#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
+											#{catFac.pmCategoryL3.categoryL3Code}
+										 	(#{catFac.pmCategoryL3.categoryName})" 
+									style="float: left;white-space: normal;" /><br />
+							</ui:repeat>
+						</p:column>
+		
+						<p:column headerText="#{lbl['lbl.sm.machine.brand']}">
+							<h:outputText value="#{macBean.brandName}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.machine.function']}">
+							<h:outputText value="#{macBean.machineFunction}" />
+						</p:column>
+		
+						<p:column headerText="#{lbl['lbl.sm.machine.quantity']}">
+							<h:outputText value="#{macBean.qty}" />
+						</p:column>
+		
+						<p:column headerText="#{lbl['lbl.sm.machine.value']}">
+							<ac:labelAmount value="#{macBean.value}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+							<p:commandLink partialSubmit="true" process="@this"
+								action="#{backingBean.assignSelMachinery(macBean)}"
+								update=":form:tt:equipmentDialog" style="padding-right:5px" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
+								<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+							</p:commandLink>
+						</p:column>
+		
+					</p:dataTable>
+					<p:spacer height="2px;" />
+					<div align="right">
+						<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+							update=":form:tt:equipmentDialog" process="@this"
+							partialSubmit="true" action="#{backingBean.assignNewMachineryBean(machCatVar.categoryTypeCode.parameterId)}" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+						<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="delMachBtnId"
+							disabled="#{empty backingBean.managedBean.smAppl.smMachineDtls}"
+							partialSubmit="true" process=":form:tt:machInfPan" update=":#{p:component('machineMainPanelId')}" 
+							oncomplete="machDeletePopUp.show()" />
+					</div>
+				</ui:repeat>
 			</p:outputPanel>
 			
 			<ui:remove>
@@ -190,7 +203,7 @@
 						<p:outputLabel value="*" styleClass="mandatory"/>
 					</td>
 					<td>
-						<p:selectOneMenu disabled="#{backingBean.managedBean.popupAction eq 'U'}"
+						<p:selectOneMenu disabled="true"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.category']}" id="smMachineCatTypeId"
 							value="#{backingBean.managedBean.selectedMachine.categoryType.parameterId}"
@@ -229,7 +242,6 @@
 					</tr>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{not empty backingBean.managedBean.machineItems}">
 					<tr>
 						<td>
 							<p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" /> 
@@ -242,6 +254,7 @@
 								style="width: 207px;margin-bottom: 5px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems value="#{backingBean.managedBean.machineItems}" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.others']}" itemValue="-1" />
 								<p:ajax event="change" process="@this" update="machineOutPanelId" 
 										onstart="machineOutWidget.show()" oncomplete="machineOutWidget.hide()"
 										listener="#{backingBean.onChangeMachine()}"/>
@@ -250,11 +263,10 @@
 								showSummary="true" showDetail="false" display="icon" />
 						</td>
 					</tr>
-				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{empty backingBean.managedBean.machineItems}">
+				<p:outputPanel rendered="#{backingBean.managedBean.selectedMachine.machine.machineId eq -1}">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" />
+						<td><p:outputLabel value="#{lbl['lbl.sm.profBody.others']}" />
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:inputText maxlength="50"
 								required="#{backingBean.managedBean.valueReqd}"
@@ -269,6 +281,25 @@
 						</td>
 					</tr>
 				</p:outputPanel>
+				
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.category']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:selectManyMenu showCheckbox="true"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.category']}" id="smMachCategoryId"
+							value="#{backingBean.managedBean.selectedMachineCategoryIds}"
+							style="height:100px;width: 200px;">
+							<f:selectItems
+								value="#{backingBean.getSelectedCategoryItemsByCategoryType(backingBean.managedBean.selectedMachine.categoryType.parameterId)}" />
+						</p:selectManyMenu>
+						<p:message id="smMachCategoryIdMsg" for="smMachCategoryId"
+							showSummary="true" showDetail="false" display="icon" />
+					</td>
+				</tr>
 	
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /> <p:outputLabel
@@ -379,7 +410,7 @@
 					action="#{backingBean.addOrUpdateMachineToSmAppl}"
 					partialSubmit="true" process="equipmentDialog"
 					onclick="machineOutWidget.show();" oncomplete="machineOutWidget.hide();"
-					update=":form:tt:macDt, @([Id$=Msg]),:#{p:component('delMachBtnId')}" />
+					update=":#{p:component('machInfPan')}, @([Id$=Msg]),:#{p:component('delMachBtnId')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					partialSubmit="true" process="@this" 
 					action="#{backingBean.cancelMachineSaveorUpdate}" />

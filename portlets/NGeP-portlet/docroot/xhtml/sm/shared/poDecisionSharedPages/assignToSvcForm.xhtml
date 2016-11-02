@@ -33,9 +33,27 @@
 
 	<br />
 	
-	<ui:include src="/xhtml/sm/shared/mofRegistration/siteVisitFacilityInfo.xhtml" />
-
-	<br />
+	<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applType eq 'B'}">
+		<ui:include src="/xhtml/sm/shared/mofRegistration/siteVisitFacilityInfo.xhtml" />
+	</p:outputPanel>
+	
+	<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applType ne 'B'}">
+		<ac:smAssignSiteVisitAddress panelId="dockyardSiteVisitId" voList="#{backingBean.managedBean.dockYardSiteVisitVOList}"
+			facilityPanelLabel="#{lbl['lbl.sm.dockyard.details']}" facilityNameLabel="#{lbl['lbl.sm.facility.dockyard.name']}"
+			facilityAddressLabel="#{lbl['lbl.sm.dockyard.address']}" backingBean="#{backingBean}" /><br />
+		
+		<ac:smAssignSiteVisitAddress panelId="factorySiteVisitId" voList="#{backingBean.managedBean.factorySiteVisitVOList}"
+			facilityPanelLabel="#{lbl['lbl.sm.factory.details']}" facilityNameLabel="#{lbl['lbl.sm.facility.factory.name']}"
+			facilityAddressLabel="#{lbl['lbl.sm.factory.address']}" backingBean="#{backingBean}" /><br />
+		
+		<ac:smAssignSiteVisitAddress panelId="workshopSiteVisitId" voList="#{backingBean.managedBean.workshopSiteVisitVOList}"
+			facilityPanelLabel="#{lbl['lbl.sm.workshop.details']}" facilityNameLabel="#{lbl['lbl.sm.facility.workshop.name']}"
+			facilityAddressLabel="#{lbl['lbl.sm.workshop.address']}" backingBean="#{backingBean}" /><br />
+		
+		<ac:smAssignSiteVisitAddress panelId="storeSiteVisitId" voList="#{backingBean.managedBean.storeSiteVisitVOList}"
+			facilityPanelLabel="#{lbl['lbl.sm.store.details']}" facilityNameLabel="#{lbl['lbl.sm.facility.store.name']}"
+			facilityAddressLabel="#{lbl['lbl.sm.store.address']}" backingBean="#{backingBean}" /><br />
+	</p:outputPanel>
 	
 	<table style="width: 100%">
 

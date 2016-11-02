@@ -33,7 +33,7 @@
 					listener="#{cc.attrs.backingBean.onChangeFacAddrSameAs(cc.attrs.facility,cc.attrs.facilityPanel)}"
 					update="addr1LabelId,addr1InputId,addr2InputId,addr3InputId,
 					countryLabelId,countryInputId,stateLabelId,stateInputId,districtLabelId,districtInputId,
-					cityLabelId,cityInputId,postCodeLabelId,postCodeInputId" />
+					cityLabelId,cityInputId,postCodeLabelId,postCodeInputId,:#{p:component(cc.attrs.panelId)}" />
 			</p:selectOneMenu>
 			&#160; 
 			<p:graphicImage id="sameAsAddrGraphicId"

@@ -134,6 +134,7 @@ import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
+import my.ep.persistence.entity.sm.SmMachineCategory;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -168,6 +169,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+import my.ep.web.vo.SmMachineCategoryVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
@@ -1768,25 +1770,29 @@ public class SmApplicationUtil {
 	public static boolean validateFacilityPanel(SmApplicationManagedBean bean,
 			int currentTab, boolean validSave) {
 		if (bean.isShowFactoryPanel()) {
-			validSave = validFacility(validSave, currentTab, bean,
+			validSave = validateFacility(validSave, currentTab, bean,
 					SupplierManagementConst.SM_FACILITY_TYPE_FACTORY,
-					"lbl.sm.facility.type.factory");
+					"lbl.sm.facility.type.factory",
+					bean.getFactoryFacilitiesVOList());
 
 		}
 		if (bean.isShowDockyardPanel()) {
-			validSave = validFacility(validSave, currentTab, bean,
+			validSave = validateFacility(validSave, currentTab, bean,
 					SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD,
-					"lbl.sm.facility.type.dockyard");
+					"lbl.sm.facility.type.dockyard",
+					bean.getDockYardFacilitiesVOList());
 		}
 		if (bean.isShowWorkShopPanel()) {
-			validSave = validFacility(validSave, currentTab, bean,
+			validSave = validateFacility(validSave, currentTab, bean,
 					SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP,
-					"lbl.sm.facility.type.workshop");
+					"lbl.sm.facility.type.workshop",
+					bean.getWorkshopFacilitiesVOList());
 		}
 		if (bean.isShowStorePanel()) {
-			validSave = validFacility(validSave, currentTab, bean,
+			validSave = validateFacility(validSave, currentTab, bean,
 					SupplierManagementConst.SM_FACILITY_TYPE_STORE,
-					"lbl.sm.facility.type.store");
+					"lbl.sm.facility.type.store",
+					bean.getStoreFacilitiesVOList());
 		}
 		return validSave;
 	}
@@ -1811,6 +1817,28 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722621,
 						new String[] { SmCommonUtil.getMessage(facTypeLabel,
 								null) });
+			}
+		}
+		return valid;
+	}
+
+	private static boolean validateFacility(boolean valid, int currentTab,
+			SmApplicationManagedBean bean, String facType, String facTypeLabel,
+			List<PmCategoryL3> categoryList) {
+		if (!EntityHelper.isCollectionEmpty(categoryList)) {
+			for (PmCategoryL3 l3 : categoryList) {
+				if (EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
+					valid = false;
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, bean);
+					}
+					throw new EpException(
+							MessageConst.ERROR_722621,
+							new String[] {
+									SmCommonUtil.getMessage(facTypeLabel, null),
+									l3.getFullCatcode() + " ("
+											+ l3.getCategoryName() + ")" });
+				}
 			}
 		}
 		return valid;
@@ -4963,20 +4991,63 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean) {
 		boolean valid = true;
 
-		for (SmSiteVisitFacilityVO facVO : managedBean.getSiteVisitFacVOList()) {
-			if (!EntityHelper.isListGotSelectedValue(facVO.getAssocCompanies())
-					&& !EntityHelper.isListGotSelectedValue(facVO
-							.getSuppBranches())
-					&& !EntityHelper.isListGotSelectedValue(facVO
-							.getFacilities())) {
-				valid = false;
-				throw new EpException(MessageConst.ERROR_722627,
-						new String[] { facVO.getCatTypeLabel() });
-			}
-		}
+		valid = isValidSiteVisitSelection(valid,
+				managedBean.getBumiSiteVisitVOList(), managedBean.getSmAppl()
+						.getApplType());
+
+		valid = isValidSiteVisitSelection(valid,
+				managedBean.getDockYardSiteVisitVOList(), managedBean
+						.getSmAppl().getApplType());
+		valid = isValidSiteVisitSelection(valid,
+				managedBean.getWorkshopSiteVisitVOList(), managedBean
+						.getSmAppl().getApplType());
+		valid = isValidSiteVisitSelection(valid,
+				managedBean.getFactorySiteVisitVOList(), managedBean
+						.getSmAppl().getApplType());
+		valid = isValidSiteVisitSelection(valid,
+				managedBean.getStoreSiteVisitVOList(), managedBean.getSmAppl()
+						.getApplType());
 
 		return valid;
 
+	}
+
+	private static boolean isValidSiteVisitSelection(boolean valid,
+			List<SmSiteVisitFacilityVO> siteVisitVOList, String applType) {
+		if (!EntityHelper.isCollectionEmpty(siteVisitVOList) && valid) {
+			for (SmSiteVisitFacilityVO facVO : siteVisitVOList) {
+				if (!EntityHelper.isListGotSelectedValue(facVO
+						.getAssocCompanies())
+						&& !EntityHelper.isListGotSelectedValue(facVO
+								.getSuppBranches())
+						&& !EntityHelper.isListGotSelectedValue(facVO
+								.getHeadQuarters())) {
+					if (applType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+						valid = false;
+						throw new EpException(MessageConst.ERROR_722627,
+								new String[] { StringUtils
+										.lowerCase(SmCommonUtil.getMessage(
+												"lbl.sm.site.visit", null)) });
+					} else {
+						if (!EntityHelper.isCollectionEmpty(facVO
+								.getFacilities())
+								&& !EntityHelper.isListGotSelectedValue(facVO
+										.getFacilities())) {
+							valid = false;
+							throw new EpException(MessageConst.ERROR_722627,
+									new String[] { SmCommonUtil.getMessage(
+											"lbl.sm.catCodes.catcode", null)
+											+ " "
+											+ facVO.getL3().getFullCatcode()
+											+ " ("
+											+ facVO.getL3().getCategoryName()
+											+ ")" });
+						}
+					}
+				}
+			}
+		}
+		return valid;
 	}
 
 	/**
@@ -4986,8 +5057,9 @@ public class SmApplicationUtil {
 	 * @param SmApplicationManagedBean
 	 *            bean
 	 */
-	public static void setSiteVisitData(SmApplicationManagedBean bean) {
-		if (!SmCommonUtil.isCollectionEmpty(bean.getSiteVisitFacVOList())) {
+	public static void setSiteVisitData(SmApplicationManagedBean bean,
+			List<SmSiteVisitFacilityVO> voList) {
+		if (!SmCommonUtil.isCollectionEmpty(voList)) {
 			bean.setSvTaskList(new ArrayList<SmSvTask>());
 
 			// only set new list if svTask is empty
@@ -5005,7 +5077,7 @@ public class SmApplicationUtil {
 					ParameterTypeConst.CATEGORY_TYPE,
 					SupplierManagementConst.CAT_TYPE_BUMIPUTERA,
 					new FacesScopes().getUserLocale().getLanguage());
-			for (SmSiteVisitFacilityVO facVO : bean.getSiteVisitFacVOList()) {
+			for (SmSiteVisitFacilityVO facVO : voList) {
 
 				// add assocCompany address to site visit
 				if (!SmCommonUtil.isCollectionEmpty(facVO.getAssocCompanies())) {
@@ -5013,8 +5085,14 @@ public class SmApplicationUtil {
 						if (assoc.isSelected()) {
 
 							// set smSvTask related table
-							setSmSvTask(bean, bumiType, facVO, svTask,
-									assoc.getSmAddress());
+							setSmSvTask(
+									bean,
+									bumiType,
+									facVO,
+									svTask,
+									assoc.getSmAddress(),
+									assoc.getAssociateCompanyId(),
+									my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_ASSOCIATE_COMPANY);
 						}
 					}
 				}
@@ -5025,8 +5103,14 @@ public class SmApplicationUtil {
 						if (br.isSelected()) {
 
 							// set smSvTask related table
-							setSmSvTask(bean, bumiType, facVO, svTask,
-									br.getSmAddress());
+							setSmSvTask(
+									bean,
+									bumiType,
+									facVO,
+									svTask,
+									br.getSmAddress(),
+									br.getSupplierBranchId(),
+									my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_BRANCH);
 						}
 					}
 				}
@@ -5037,8 +5121,18 @@ public class SmApplicationUtil {
 						if (fac.isSelected()) {
 
 							// set smSvTask related table
-							setSmSvTask(bean, bumiType, facVO, svTask,
-									fac.getSmAddress());
+							setSmSvTask(
+									bean,
+									bumiType,
+									facVO,
+									svTask,
+									fac.getSmAddress(),
+									fac.getFacilityId(),
+									(fac.getFacilityType()
+											.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || fac
+											.getFacilityType()
+											.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) ? my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ
+											: my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_FACILITY);
 						}
 					}
 				}
@@ -5048,10 +5142,14 @@ public class SmApplicationUtil {
 
 	private static void setSmSvTask(SmApplicationManagedBean bean,
 			PmParameter bumiType, SmSiteVisitFacilityVO facVO, SmSvTask svTask,
-			SmAddress addr) {
+			SmAddress addr, Long siteRefId, String siteType) {
 		// SmSvTask
 		svTask = new SmSvTask();
 		svTask.setSmAppl(bean.getSmAppl());
+		if (!bean.getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+			svTask.setPmCategoryL3(facVO.getL3());
+		}
 
 		// SmSvOffice
 		setSmSvOffice(bean, svTask);
@@ -5060,7 +5158,7 @@ public class SmApplicationUtil {
 		setSmSvTemplate(bumiType, facVO.getL3(), svTask);
 
 		// SmSvAddress
-		setSmSvAddress(addr, svTask);
+		setSmSvAddress(addr, svTask, siteRefId, siteType);
 
 		// SmSvCategories
 		setSmSvCategories(svTask, facVO.getSuppCategories());
@@ -5081,10 +5179,13 @@ public class SmApplicationUtil {
 		svTask.setSmSvTemplate(template);
 	}
 
-	private static void setSmSvAddress(SmAddress addr, SmSvTask svTask) {
+	private static void setSmSvAddress(SmAddress addr, SmSvTask svTask,
+			Long siteRefId, String siteType) {
 		SmSvAddress smSvAddress = new SmSvAddress();
 		smSvAddress.setSmSvTask(svTask);
 		smSvAddress.setSmAddress(addr);
+		smSvAddress.setSiteType(siteType);
+		smSvAddress.setSiteRefId(siteRefId);
 		svTask.setSmSvAddress(smSvAddress);
 	}
 
@@ -5280,6 +5381,41 @@ public class SmApplicationUtil {
 		managedBean.setFactoryFacilitiesVOList(SmApplicationUtil
 				.getCategoryFacilityVO(managedBean.getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
+
+		// set PO assign site visit popup VO value
+		if (managedBean.isPoUser()
+				&& managedBean.getCurrentPageType().equals(
+						SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)) {
+			if (managedBean.getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+				SmFacility hq = getHqFacilityByAppl(managedBean.getSmAppl());
+				SmSiteVisitFacilityVO facVO = new SmSiteVisitFacilityVO();
+				facVO.setCatTypeLabel(SupplierManagementConst.FACILITY_TYPE_MAP
+						.get(hq.getFacilityType()));
+				facVO.setHeadQuarters(new ArrayList<SmFacility>());
+				facVO.getHeadQuarters().add(hq);
+				facVO.setAssocCompanies(managedBean.getSmAppl()
+						.getSmAssociateCompanies());
+				facVO.setSuppBranches(managedBean.getSmAppl()
+						.getSmSupplierBranches());
+				managedBean
+						.setBumiSiteVisitVOList(new ArrayList<SmSiteVisitFacilityVO>());
+				managedBean.getBumiSiteVisitVOList().add(facVO);
+			} else {
+				managedBean.setDockYardSiteVisitVOList(getSiteVisitFacilityVO(
+						managedBean.getSmAppl(),
+						managedBean.getDockYardFacilitiesVOList()));
+				managedBean.setWorkshopSiteVisitVOList(getSiteVisitFacilityVO(
+						managedBean.getSmAppl(),
+						managedBean.getWorkshopFacilitiesVOList()));
+				managedBean.setStoreSiteVisitVOList(getSiteVisitFacilityVO(
+						managedBean.getSmAppl(),
+						managedBean.getStoreFacilitiesVOList()));
+				managedBean.setFactorySiteVisitVOList(getSiteVisitFacilityVO(
+						managedBean.getSmAppl(),
+						managedBean.getFactoryFacilitiesVOList()));
+			}
+		}
 	}
 
 	/**
@@ -7813,15 +7949,16 @@ public class SmApplicationUtil {
 								setNavigationBackToCurrentPage(currentTab, bean);
 							}
 							throw new EpException(MessageConst.ERROR_722631,
-									new String[] { categoryTypeDesc });
+									new String[] {
+											cat.getPmCategoryL3()
+													.getFullCatcode(),
+											categoryTypeDesc });
 						} else {
 							SmMachineDtl mac = (SmMachineDtl) EntityHelper
 									.getEntityBySinglePropertyFromList(cat
 											.getPmCategoryL3()
-											.getCategoryTypeCode()
-											.getParameterId(),
-											appl.getSmMachineDtls(),
-											"categoryType");
+											.getCategoryL3Id(), appl
+											.getSmMachineDtls(), "categoryCode");
 							if (mac == null) {
 								valid = false;
 								if (currentTab != -1) {
@@ -7998,19 +8135,21 @@ public class SmApplicationUtil {
 
 				if (EntityHelper.isCollectionEmpty(appl.getSmMachineDtls())) {
 					retVal = MessageUtils.getMessage(MessageConst.ERROR_722631,
-							new String[] { categoryTypeDesc },
+							new String[] {
+									cat.getPmCategoryL3().getFullCatcode(),
+									categoryTypeDesc },
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale());
 				} else {
 					SmMachineDtl mac = (SmMachineDtl) EntityHelper
 							.getEntityBySinglePropertyFromList(cat
-									.getPmCategoryL3().getCategoryTypeCode()
-									.getParameterId(), appl.getSmMachineDtls(),
-									"categoryType");
+									.getPmCategoryL3().getCategoryL3Id(), appl
+									.getSmMachineDtls(), "categoryCode");
 					if (mac == null) {
 						retVal = MessageUtils.getMessage(
-								MessageConst.ERROR_722631,
-								new String[] { categoryTypeDesc },
+								MessageConst.ERROR_722631, new String[] {
+										cat.getPmCategoryL3().getFullCatcode(),
+										categoryTypeDesc },
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale());
 					}
@@ -8308,6 +8447,32 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Assign machine category default value during edit Equipment
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 * @param SmMachineDtl
+	 *            mach
+	 */
+	public static void assignMachineCategoryIds(SmApplicationManagedBean bean,
+			SmMachineDtl mach) {
+		bean.setSelectedMachineCategoryIds(null);
+		// assign category to facility
+		Long[] machCatIds = null;
+		if (EntityHelper.isCollectionEmpty(mach.getSmMachineCategories())) {
+			machCatIds = new Long[0];
+		} else {
+			machCatIds = new Long[mach.getSmMachineCategories().size()];
+			for (int i = 0; i < machCatIds.length; i++) {
+				machCatIds[i] = mach.getSmMachineCategories().get(i)
+						.getPmCategoryL3().getCategoryL3Id();
+
+			}
+		}
+		bean.setSelectedMachineCategoryIds(machCatIds);
+	}
+
+	/**
 	 * Add or update facility category during add new facility or update
 	 * existing facility
 	 * 
@@ -8362,6 +8527,64 @@ public class SmApplicationUtil {
 		} else {
 			// none selected so remove all
 			smFac.setSmSupplierCategoryFacilities(null);
+		}
+	}
+
+	/**
+	 * Add or update machine category during add new equipment or update
+	 * existing equipment
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 * @param SmA
+	 *            smFac
+	 */
+	public static void addOrUpdateMachineDtlCategory(
+			SmApplicationManagedBean bean, SmMachineDtl smMach) {
+		if (bean.getSelectedMachineCategoryIds() != null) {
+			SmMachineCategory machCat = null;
+			if (EntityHelper.isCollectionEmpty(smMach.getSmMachineCategories())) {
+				smMach.setSmMachineCategories(new ArrayList<SmMachineCategory>());
+			}
+			for (Long catId : bean.getSelectedMachineCategoryIds()) {
+				for (SmSupplierCategory cat : bean.getSmAppl()
+						.getSmSupplierCategories()) {
+
+					// insert new selected category
+					if (cat.getPmCategoryL3().getCategoryL3Id().equals(catId)) {
+						machCat = (SmMachineCategory) EntityHelper
+								.getEntityBySinglePropertyFromList(catId,
+										smMach.getSmMachineCategories(),
+										"pmCategoryL3");
+						if (machCat == null) {
+							machCat = new SmMachineCategory();
+							machCat.setSmMachineDtl(smMach);
+							machCat.setPmCategoryL3(cat.getPmCategoryL3());
+							smMach.getSmMachineCategories().add(machCat);
+						}
+					}
+				}
+			}
+
+			// remove not selected category
+			if (!EntityHelper
+					.isCollectionEmpty(smMach.getSmMachineCategories())) {
+				Iterator<SmMachineCategory> removeCatFacIt = smMach
+						.getSmMachineCategories().iterator();
+				while (removeCatFacIt.hasNext()) {
+					SmMachineCategory removeCatFac = removeCatFacIt.next();
+
+					if (!EntityHelper.isIdExistInIds(removeCatFac
+							.getPmCategoryL3().getCategoryL3Id(), bean
+							.getSelectedMachineCategoryIds())) {
+						removeCatFacIt.remove();
+					}
+				}
+			}
+
+		} else {
+			// none selected so remove all
+			smMach.setSmMachineCategories(null);
 		}
 	}
 
@@ -8665,6 +8888,143 @@ public class SmApplicationUtil {
 			}
 		}
 		return categoryFacilityVOList;
+	}
+
+	public static List<SmMachineCategoryVO> getMachineCategoryVO(SmAppl smAppl) {
+		List<SmMachineCategoryVO> machineCategoryVOList = new ArrayList<SmMachineCategoryVO>();
+		if (smAppl != null
+				&& !EntityHelper.isCollectionEmpty(smAppl
+						.getSmSupplierCategories())) {
+			SmMachineCategoryVO machineCategoryVO = null;
+			SmMachineDtl machDtl = null;
+			boolean isNew = false;
+			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
+				if ((cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
+						.getRecordStatusFlg()
+						.compareTo(
+								SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+						&& !EntityHelper.isCollectionEmpty(smAppl
+								.getSmMachineDtls())
+						&& cat.getPmCategoryL3() != null
+						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+						&& Arrays
+								.asList(my.ep.constant.sm.SupplierManagementConst.SM_CAT_TYPE_MACHINERY)
+								.contains(
+										cat.getPmCategoryL3()
+												.getCategoryTypeCode()
+												.getParameterCode())) {
+					machineCategoryVO = (SmMachineCategoryVO) EntityHelper
+							.getEntityBySinglePropertyFromList(cat
+									.getPmCategoryL3().getCategoryTypeCode()
+									.getParameterId(), machineCategoryVOList,
+									"categoryTypeCode");
+					if (machineCategoryVO == null) {
+						isNew = true;
+						machineCategoryVO = new SmMachineCategoryVO();
+						machineCategoryVO
+								.setSmMachineDtls(new ArrayList<SmMachineDtl>());
+						machineCategoryVO.setCategoryTypeCode(cat
+								.getPmCategoryL3().getCategoryTypeCode());
+					}
+					for (SmMachineDtl mach : smAppl.getSmMachineDtls()) {
+						if (mach.getCategoryType() != null
+								&& mach.getCategoryType()
+										.getParameterId()
+										.compareTo(
+												cat.getPmCategoryL3()
+														.getCategoryTypeCode()
+														.getParameterId()) == 0) {
+							machDtl = (SmMachineDtl) EntityHelper
+									.getEntityBySinglePropertyFromList(mach
+											.getMachineDtlId(),
+											machineCategoryVO
+													.getSmMachineDtls(),
+											"machineDtlId");
+							if (machDtl == null) {
+								machineCategoryVO.getSmMachineDtls().add(mach);
+							}
+						}
+					}
+					if (isNew) {
+						machineCategoryVOList.add(machineCategoryVO);
+						isNew = false;
+					}
+				}
+			}
+		}
+		return machineCategoryVOList;
+	}
+
+	/**
+	 * Construct assign site visit VO to display in Site Visit Assignment Popup
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @param List
+	 *            <PmCategoryL3> l3List
+	 * @return List<SmSiteVisitFacilityVO>
+	 */
+	public static List<SmSiteVisitFacilityVO> getSiteVisitFacilityVO(
+			SmAppl smAppl, List<PmCategoryL3> l3List) {
+		List<SmSiteVisitFacilityVO> retVal = new ArrayList<SmSiteVisitFacilityVO>();
+		if (!EntityHelper.isCollectionEmpty(l3List)) {
+			SmSiteVisitFacilityVO vo = null;
+			for (PmCategoryL3 l3 : l3List) {
+				if (!EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
+					vo = new SmSiteVisitFacilityVO();
+					vo.setL3(l3);
+
+					// add Faciliies
+					vo.setFacilities(new ArrayList<SmFacility>());
+					for (SmFacility fac : l3.getFacilityList()) {
+
+						// check whether category share address with other
+						// categories
+						if (!EntityHelper.isCollectionEmpty(fac
+								.getSmSupplierCategoryFacilities())
+								&& fac.getSmSupplierCategoryFacilities().size() > 1) {
+							vo.setShareAddress(true);
+						}
+
+						vo.getFacilities().add(
+								(SmFacility) SerializationUtils.clone(fac));
+					}
+
+					// add HQ
+					vo.setHeadQuarters(new ArrayList<SmFacility>());
+					vo.getHeadQuarters().add(
+							(SmFacility) SerializationUtils
+									.clone(getHqFacilityByAppl(smAppl)));
+
+					// add associate company
+					vo.setAssocCompanies(new ArrayList<SmAssociateCompany>());
+					if (!EntityHelper.isCollectionEmpty(smAppl
+							.getSmAssociateCompanies())) {
+						for (SmAssociateCompany assoc : smAppl
+								.getSmAssociateCompanies()) {
+							vo.getAssocCompanies().add(
+									(SmAssociateCompany) SerializationUtils
+											.clone(assoc));
+						}
+					}
+
+					// add branch
+					vo.setSuppBranches(new ArrayList<SmSupplierBranch>());
+					if (!EntityHelper.isCollectionEmpty(smAppl
+							.getSmSupplierBranches())) {
+						for (SmSupplierBranch br : smAppl
+								.getSmSupplierBranches()) {
+							vo.getSuppBranches().add(
+									(SmSupplierBranch) SerializationUtils
+											.clone(br));
+						}
+					}
+					retVal.add(vo);
+				}
+			}
+		}
+		return retVal;
 	}
 
 	public static SmMachineDtl getNewSmMachineDtlByCategoryTypeAndCode(
