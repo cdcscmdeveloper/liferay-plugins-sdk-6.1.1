@@ -33,8 +33,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<td>
 						<!-- for phase 1 -->
 						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}"
-							disabled="#{!pPlanBackingBean.managedBean.modeEditable}">
-							<p:ajax event="blur" process="@this" update="@this" partialSubmit="true"/>
+							disabled="#{!pPlanBackingBean.managedBean.modeEditable}">							
 							</p:inputTextarea> 
 							
 						<!-- enable this for phase 2 and disable phase 1 section to test	 
@@ -53,8 +52,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<br/>
 			<br/>  
 	 		<div class="ppRightBtn">
-			  <p:commandButton id="cmdJustificationOk" value="#{lbl['lbl.btn.ok']}" immediate="true"  action="#{pPlanBackingBean.confirmJustificationCloseDialog}"  update="@form"/>
-			  <p:commandButton id="cmdJustificationCancel" value="#{lbl['lbl.btn.cancel']}" process="@this" immediate="true"  oncomplete="dlItemJustificationWv.hide();" />		
+			  <p:commandButton id="cmdJustificationOk" value="#{lbl['lbl.btn.ok']}" process=":form:opItemJustification"  action="#{pPlanBackingBean.confirmJustificationCloseDialog}"  update="@form"/>
+			  <p:commandButton id="cmdJustificationCancel" value="#{lbl['lbl.btn.cancel']}" process="@this" immediate="true"  oncomplete="dlItemJustificationWv.hide();" update="@form" />		
 			</div>      
 		</p:outputPanel>
 	</p:dialog>
