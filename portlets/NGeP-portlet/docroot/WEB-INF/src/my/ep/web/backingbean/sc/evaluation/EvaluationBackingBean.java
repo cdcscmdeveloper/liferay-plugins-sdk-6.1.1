@@ -664,8 +664,11 @@ public class EvaluationBackingBean extends
 		this.getManagedBean().getDisqualifiedSuppliersDM().reloadData();
 	}
 
-	/*
-	 * to retrive all the general information menu details.
+	
+	/**
+	 *to retrive all the general information menu details.
+	 * 
+	 *
 	 */
 	public void retrieveGeneralInfo() {
 		this.getManagedBean().setPrepareActiveIndex(0);
@@ -8039,10 +8042,13 @@ private void retriveCommitteeRemarksList(){
 		return null;
 	}
 
-	/*
-	 * 
+	
+	/**
 	 * preRenderView(). user click on task list navigate to evaluation screens
 	 * for(EC/OC/TEC/FEC).
+	 * 
+	 * 
+	 * 
 	 */
 	public void preRenderView() {
 
@@ -10234,45 +10240,52 @@ private void retriveCommitteeRemarksList(){
 	}
 
 	/**
-	 * @return the skip
+	 * return skip value
+	 * @return boolean
 	 */
 	public boolean isSkip() {
 		return skip;
 	}
 
 	/**
+	 * set spki value
 	 * @param skip
-	 *            the skip to set
+	 *            (boolean skip).
+	 *            
 	 */
 	public void setSkip(boolean skip) {
 		this.skip = skip;
 	}
 
 	/**
-	 * @return the currentTab
+	 * return current tab value.
+	 * @return int
 	 */
 	public int getCurrentTab() {
 		return currentTab;
 	}
 
 	/**
+	 * set  current tab Value.
 	 * @param currentTab
-	 *            the currentTab to set
+	 *            (int currentTab)
 	 */
 	public void setCurrentTab(int currentTab) {
 		this.currentTab = currentTab;
 	}
 
 	/**
-	 * @return the outputTab
+	 * return output tab Value.
+	 * @return int
 	 */
 	public int getOutputTab() {
 		return outputTab;
 	}
 
 	/**
+	 * set current output tab value.
 	 * @param outputTab
-	 *            the outputTab to set
+	 *           (int outputTab)
 	 */
 	public void setOutputTab(int outputTab) {
 		this.outputTab = outputTab;
@@ -10419,8 +10432,10 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	/*
-	 * delete existing meeting details records from database.
+	
+	/**
+	 * delete existing meeting details records from database. 
+	 * 
 	 */
 	public void deleteMeetingDtls() {
 		markDeleteSelectedEvaluationRowsAction(this.getManagedBean()
@@ -10429,8 +10444,10 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	/*
+	
+	/**
 	 * delete existing meeting attendance details records from database.
+	 *  
 	 */
 	public void deleteMeetingAttendanceDtls() {
 		markDeleteSelectedRowsAction(getManagedBean()
@@ -10439,10 +10456,12 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	/*
+	
+	/**
 	 * retrieve specification based on sample item.
 	 * @param event
 	 *           (ScQtSampleItem event).
+	 *  
 	 */
 	public void retriveSpecificationsByItem(SelectEvent event) {
 		this.getManagedBean().setSampleItemSpecifications(
@@ -10989,9 +11008,11 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 
-	/*
+	
+	/**
 	 * this method is used to save compliance Proposal suppliers when user navigate to
 	 * anotherpage using paging data model.
+	 * 
 	 */
 	public void complianceProposalSubmitSuppliers() {
 		IQTEvaluationSO evaluationSo = null;
@@ -11030,7 +11051,11 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	/* this method is used to save the Upload checklist suppliers when user navigate to another page using paging data model. */
+	
+	/**
+	 * this method is used to save the Upload checklist suppliers when user navigate to another page using paging data model.
+	 * 
+	 */
 	public void SaveUploadCheckListSuppliersDM() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
@@ -11058,10 +11083,11 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	/* save Compliance Sample Paging data model. 
+	
+	/**
+	 *save Compliance Sample Paging data model.
 	 * 
-	 * 
-	 */ 
+	 */
 	public void saveComplianceSampleItemsDM() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
@@ -11095,8 +11121,10 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 
-	/*
-	 * retrieve presentationdemo qualified suppliers based on technical stage.
+	
+	/**
+	 * retrieve presentationdemo qualified suppliers based on technical stage. 
+	 * 
 	 */
 	private void retrivePresentationDemoChecklistSuppliersStatus(
 			ScQtCheckList checklist) {
@@ -11402,11 +11430,12 @@ private void retriveCommitteeRemarksList(){
      this.getManagedBean().setToBeRemovedProposalAttachmentsChecklists(proposalChecklist);
 	}
 	
-	/*
+	
+	/**
 	 * this method is used to save the userInput type popup window content in reports tab.
 	 * @param evaluationReport
 	 *                 (ScQtEvaluationReport evaluationReport).
-	 * 
+	 *                 
 	 */
 	public void saveEditTemplateDocContent(ScQtEvaluationReport evaluationReport){
 		IQTEvaluationSO evaluationSO = null;
