@@ -203,6 +203,11 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		}
 	}
 	
+	/**
+	 * On row rec supplier action.
+	 *
+	 * @param event the event
+	 */
 	public void onRowRecSupplierAction(SelectEvent event) {
 		IQTAwardSO qtAwardSO = null;
 		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();

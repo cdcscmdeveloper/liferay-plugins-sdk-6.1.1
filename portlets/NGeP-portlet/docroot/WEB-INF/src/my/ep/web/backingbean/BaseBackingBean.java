@@ -258,7 +258,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * return concatId; }
 	 */
 
-	/* Utility method */
+	/**
+	 * User image path.
+	 *
+	 * @param userId the user id
+	 * @return the string
+	 */
 	public String userImagePath(String userId) {
 		FacesScopes facesScopes = new FacesScopes();
 		String imagePath = "";
@@ -284,6 +289,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 	}
 
+	/**
+	 * Compare user name.
+	 *
+	 * @param username the username
+	 * @return true, if successful
+	 */
 	public boolean compareUserName(String username) {
 		FacesScopes facesScopes = new FacesScopes();
 		if (username != null
@@ -294,6 +305,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * Claim bpm task.
+	 */
 	public void claimBpmTask() {
 		
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
@@ -313,6 +327,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		
 	}
 
+	/**
+	 * Release bpm task.
+	 */
 	public void releaseBpmTask() {
 		System.out.println("**********releaseTask");
 		
@@ -371,6 +388,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * { valueBean.setSelected(selectAll); } }
 	 */
 
+	/**
+	 * Select all.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param selected the selected
+	 * @param list the list
+	 */
 	public <ENTITY_CLASS extends BaseEntity> void selectAll(boolean selected,
 			List<ENTITY_CLASS> list) {
 		if (list != null) {
@@ -380,6 +404,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * Delete selected rows action.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param list the list
+	 */
 	public <ENTITY_CLASS extends BaseEntity> void deleteSelectedRowsAction(
 			List<ENTITY_CLASS> list) {
 		if (log.isDebugEnabled()) {
@@ -407,6 +437,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * Delete row action.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param list the list
+	 * @param toBeRemoved the to be removed
+	 */
 	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list,
 			ENTITY_CLASS toBeRemoved) {
 		if (log.isDebugEnabled()) {
@@ -418,6 +455,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * Delete rows action.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param list the list
+	 * @param toBeRemovedList the to be removed list
+	 */
 	public <ENTITY_CLASS> void deleteRowsAction(List<ENTITY_CLASS> list,
 			List<ENTITY_CLASS> toBeRemovedList) {
 		if (log.isDebugEnabled()) {
@@ -429,6 +473,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * Mark delete selected rows action.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param list the list
+	 * @param markDeletedList the mark deleted list
+	 */
 	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsAction(
 			List<ENTITY_CLASS> list, List<ENTITY_CLASS> markDeletedList) {
 		if (log.isDebugEnabled()) {
@@ -814,6 +865,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return getRadioButtonCodeValuesBySearchBean(parameterType, null);
 	}
 
+	/**
+	 * Gets the radio button code values by search bean.
+	 *
+	 * @param parameterType the parameter type
+	 * @param searchBean the search bean
+	 * @return the radio button code values by search bean
+	 */
 	public SelectItem[] getRadioButtonCodeValuesBySearchBean(
 			String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
@@ -839,6 +897,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return items;
 	}
 
+	/**
+	 * Gets the radio button values.
+	 *
+	 * @param parameterType the parameter type
+	 * @return the radio button values
+	 */
 	public SelectItem[] getRadioButtonValues(String parameterType) {
 		SelectItem[] items = null;
 		try {
@@ -862,6 +926,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return items;
 	}
 
+	/**
+	 * Common upload file.
+	 *
+	 * @param event the event
+	 * @param path the path
+	 */
 	public void commonUploadFile(FileUploadEvent event, String path) {
 
 		// String tempDir = "C://Ngep//doc//"+moduleName+"//";
@@ -881,6 +951,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 	}
 
+	/**
+	 * Common download.
+	 *
+	 * @param path the path
+	 * @param displayFileName the display file name
+	 * @return the streamed content
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public StreamedContent commonDownload(String path, String displayFileName)
 			throws IOException {
 		String filePath = EpPropertiesUtils.getInstance().getProperty(
@@ -956,6 +1034,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * Gen file.
+	 *
+	 * @param uploadDir the upload dir
+	 * @param file the file
+	 */
 	public void genFile(String uploadDir, UploadedFile file) {
 
 		File dir = new File(uploadDir);
@@ -987,6 +1071,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 	}
 
+	/**
+	 * Generate report.
+	 *
+	 * @param reportFile the report file
+	 * @param paramMap the param map
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void generateReport(String reportFile,
 			Map<String, String> paramMap) throws IOException {
 		String reportUrl = generateReportURL(reportFile, paramMap);
@@ -1026,6 +1117,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		out.close();
 	}
 
+	/**
+	 * Generate report url.
+	 *
+	 * @param reportFile the report file
+	 * @param paramMap the param map
+	 * @return the string
+	 */
 	protected String generateReportURL(String reportFile,
 			Map<String, String> paramMap) {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
@@ -1054,30 +1152,71 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return reportUrl.toString();
 	}
 
+	/**
+	 * Gets the full address.
+	 *
+	 * @param smAddress the sm address
+	 * @return the full address
+	 */
 	public String getFullAddress(SmAddress smAddress) {
 		return AddressUtils.getFullAddress(smAddress);
 	}
 
+	/**
+	 * Gets the SM full address.
+	 *
+	 * @param smAddress the sm address
+	 * @return the SM full address
+	 */
 	public String getSMFullAddress(SmAddress smAddress) {
 		return AddressUtils.getSmFullFormattedAddress(smAddress);
 	}
 
+	/**
+	 * Gets the full address.
+	 *
+	 * @param pmAddress the pm address
+	 * @return the full address
+	 */
 	public String getFullAddress(PmAddress pmAddress) {
 		return AddressUtils.getFullAddress(pmAddress);
 	}
 
+	/**
+	 * Gets the pp full address.
+	 *
+	 * @param ppAddress the pp address
+	 * @return the pp full address
+	 */
 	public String getPpFullAddress(PpAddress ppAddress) {
 		return AddressUtils.getFullAddress(ppAddress);
 	}
 
+	/**
+	 * Gets the full address.
+	 *
+	 * @param ctAddress the ct address
+	 * @return the full address
+	 */
 	public String getFullAddress(CtAddress ctAddress) {
 		return AddressUtils.getFullAddress(ctAddress);
 	}
 
+	/**
+	 * Gets the full address.
+	 *
+	 * @param scAddress the sc address
+	 * @return the full address
+	 */
 	public String getFullAddress(ScAddress scAddress) {
 		return AddressUtils.getFullAddress(scAddress);
 	}
 
+	/**
+	 * Handle exception.
+	 *
+	 * @param exception the exception
+	 */
 	public void handleException(Exception exception) {
 		ExceptionHandler expHandler = FacesContext.getCurrentInstance()
 				.getExceptionHandler();
@@ -1086,6 +1225,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * Escape xhtml.
+	 *
+	 * @param input the input
+	 * @return the string
+	 */
 	public String escapeXhtml(String input) {
 		String output = "";
 		if (input != null) {
@@ -1094,6 +1239,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return output;
 	}
 
+	/**
+	 * Gets the short file name.
+	 *
+	 * @param filename the filename
+	 * @return the short file name
+	 */
 	public String getShortFileName(String filename) {
 		if (filename != null && filename.length() > 15) {
 			filename = filename.substring(0, 15);
@@ -1102,6 +1253,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return filename;
 	}
 
+	/**
+	 * Retrieve jabatan by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the string
+	 */
 	public String retrieveJabatanByOrgProfileId(Long orgProfileId) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
@@ -1118,6 +1275,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return jabatan;
 	}
 
+	/**
+	 * Retrieve jabatan by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @param tranDate the tran date
+	 * @return the string
+	 */
 	public String retrieveJabatanByOrgProfileId(Long orgProfileId, Date tranDate) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
@@ -1135,6 +1299,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return jabatan;
 	}
 
+	/**
+	 * Retrieve pegawai pengawal by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the string
+	 */
 	public String retrievePegawaiPengawalByOrgProfileId(Long orgProfileId) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
@@ -1151,6 +1321,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return pagawaiPengawal;
 	}
 
+	/**
+	 * Retrieve pegawai pengawal by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @param tranDate the tran date
+	 * @return the string
+	 */
 	public String retrievePegawaiPengawalByOrgProfileId(Long orgProfileId,
 			Date tranDate) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
@@ -1169,6 +1346,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return pagawaiPengawal;
 	}
 
+	/**
+	 * Retrieve ministry code by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the string
+	 */
 	public String retrieveMinistryCodeByOrgProfileId(Long orgProfileId) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
@@ -1180,6 +1363,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				.getPmOrgProfile().getOrgCode();
 	}
 
+	/**
+	 * Retrieve ministry by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the string
+	 */
 	public String retrieveMinistryByOrgProfileId(Long orgProfileId) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
@@ -1197,6 +1386,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * Retrieve ministry by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @param tranDate the tran date
+	 * @return the string
+	 */
 	public String retrieveMinistryByOrgProfileId(Long orgProfileId,
 			Date tranDate) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
@@ -1216,6 +1412,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * Retrieve ministry org profile.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the pm org profile
+	 */
 	public PmOrgProfile retrieveMinistryOrgProfile(Long orgProfileId) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
@@ -1227,6 +1429,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				.getPmOrgProfile();
 	}
 
+	/**
+	 * Retrieve jabatan org profile.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the pm org profile
+	 */
 	public PmOrgProfile retrieveJabatanOrgProfile(Long orgProfileId) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
@@ -1243,6 +1451,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return pmOrgProfile;
 	}
 
+	/**
+	 * Retrieve pegawai pegawal org profile.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the pm org profile
+	 */
 	public PmOrgProfile retrievePegawaiPegawalOrgProfile(Long orgProfileId) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
@@ -1254,6 +1468,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				.getPmOrgProfile();
 	}
 
+	/**
+	 * Retrieve ptj by org profile id.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @param tranDate the tran date
+	 * @return the string
+	 */
 	public String retrievePTJByOrgProfileId(Long orgProfileId, Date tranDate) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
@@ -1346,8 +1567,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return value.size();
 	}
 
+	
 	/**
 	 * Download file.
+	 *
+	 * @param filePath the file path
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void downloadFile(String filePath) throws IOException {
 		File file = new File(filePath);
@@ -1395,6 +1620,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * Gets the captcha text image.
+	 *
+	 * @return the captcha text image
+	 */
 	public StreamedContent getCaptchaTextImage() {
 		StreamedContent graphicText = null;
 		try {
@@ -1425,6 +1655,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return graphicText;
 	}
 
+	/**
+	 * Validate captcha.
+	 *
+	 * @param context the context
+	 * @param component the component
+	 * @param value the value
+	 */
 	public void validateCaptcha(FacesContext context, UIComponent component,
 			Object value) {
 		String skipValidator = FacesContext.getCurrentInstance()
@@ -1543,6 +1780,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * Sort outcomes.
+	 *
+	 * @param outComes the out comes
+	 * @return the string[]
+	 */
 	private String[] sortOutcomes(String[] outComes) {
 		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
 
@@ -1657,6 +1900,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return commonDownload(finalFilePath, displayFileName);
 	}
 
+	/**
+	 * Deleteselected list.
+	 *
+	 * @param <ENTITY_CLASS> the generic type
+	 * @param list the list
+	 * @return true, if successful
+	 */
 	public <ENTITY_CLASS extends BaseEntity> boolean deleteselectedList(
 			List<ENTITY_CLASS> list) {
 		if (list != null) {
@@ -1698,6 +1948,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	}
 	
 	
+	/**
+	 * Convert string.
+	 *
+	 * @param label the label
+	 * @param length the length
+	 * @return the string
+	 */
 	public String convertString(String label, int length){
 		
 		String formattedString = "";
