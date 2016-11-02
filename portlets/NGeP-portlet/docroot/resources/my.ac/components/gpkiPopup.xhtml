@@ -14,15 +14,13 @@
 			method-signature="void action(my.ep.persistence.entity.pm.common.PmDigiSign)" />
 		<cc:attribute name="enableAutoUpdate" required="false"
 			method-signature="void action()" />
-		<cc:attribute name="postSignActionErrorHandler" required="false"
-			method-signature="void action(java.lang.Exception)" />			
 	</cc:interface>
 
 
 	<cc:implementation>
 		<p:remoteCommand name="postSignAction"
 			onstart="setRunGPKIEnableAutoUpdate(false);"
-			action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate, cc.attrs.postSignActionErrorHandler)}" />
+			action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" />
 		<p:remoteCommand name="errorAction"
 			action="#{gpkiBackingBean.showError}" />
 		<h:inputHidden id="inputTextBeforeSign" binding="#{textBeforeSign}"
@@ -183,9 +181,9 @@
 	<p:dialog header="#{lbl['lbl.cc.gpki.title']}" widgetVar="gpki_dlg"
 		resizable="false" modal="true">
 		
-		<p:ajax event="close" listener="#{cc.attrs.enableAutoUpdate}" 
-			onstart="return isRunGPKIEnableAutoUpdate()" 
-			oncomplete="setRunGPKIEnableAutoUpdate(true);"
+		<p:ajax event="close" listener="#{gpkiBackingBean.onDialogCloseAction()}" 
+			onstart="blockWidget.show();return isRunGPKIEnableAutoUpdate()" 
+			oncomplete="setRunGPKIEnableAutoUpdate(true);blockWidget.hide();" 
 			disabled="#{empty cc.getValueExpression('enableAutoUpdate')}" />
 				
 		<p:blockUI block="gpkiPopup" widgetVar="gpkiBlockWidget">
