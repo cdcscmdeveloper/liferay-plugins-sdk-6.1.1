@@ -14,6 +14,10 @@ import my.ep.web.util.DateUtils;
 
 @FacesValidator("dateRangeValidator")
 public class DateRangeValidator implements Validator {
+	
+	/* (non-Javadoc)
+	 * @see javax.faces.validator.Validator#validate(javax.faces.context.FacesContext, javax.faces.component.UIComponent, java.lang.Object)
+	 */
 	@Override
 	public void validate(FacesContext context, UIComponent component,
 			Object value) throws ValidatorException {
