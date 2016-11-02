@@ -24,6 +24,7 @@ import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmApplInquiry;
@@ -210,7 +211,14 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			/*				SmRemark smRmk = this.getManagedBean().getSmRemark();
 				smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVO);
 				smRmk.setDocId(this.getManagedBean().getSmAppl().getApplId());*/
-
+			if(!getManagedBean().getSmAppl().isResubmit()) {
+				String poLoginIds = SmCommonUtil.retrieveLoginIdsByZoneAndRole(
+						getManagedBean().getZoneCode(), "UPS_PO", getManagedBean()
+								.getSmAppl().getSupplierType(), getManagedBean()
+								.getSmAppl().getApplType(), getManagedBean()
+								.getSmAppl().getApplCategoryType());
+				((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).setPoUsers(poLoginIds);				
+			}
 			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 			updateMandatoryAndNonMandatorySuppDocToApplDoc();
 			reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
