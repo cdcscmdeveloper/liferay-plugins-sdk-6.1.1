@@ -1179,6 +1179,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * Gets the request types.
+	 *
+	 * @param paramaterTypes the paramater types
+	 * @return the request types
+	 */
 	public List<String> getRequestTypes(String paramaterTypes) {
 		if (StringUtils.isNotEmpty(paramaterTypes)) {
 			String[] paramTypes = paramaterTypes.split(",");
@@ -1445,6 +1451,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 
+	/**
+	 * Retrive mof account by supplier.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the sm mof account
+	 */
 	public SmMofAccount retriveMofAccountBySupplier(SmSupplier smSupplier) {
 		SmMofAccount mofAccount = null;
 
@@ -1977,6 +1989,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return newAddress;
 	}
 	
+	/**
+	 * Gets the panel group items by circuler ver.
+	 *
+	 * @param circular the circular
+	 * @return the panel group items by circuler ver
+	 */
 	public List<CtPanelItemGroup> getPanelGroupItemsByCirculerVer(CtCircularVer circular) {
 		IPanelGroupItemSO ipanelGroupItemSO;
 		try {
