@@ -11996,8 +11996,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 
-	/*
+	
+	/**
 	 * this method is used to check the technical passing score is less than zero or greater than 100.
+	 * 
+	 *
+	 * 
 	 */
 	private void validateTechnicalPassingScoring(
 			ScQtScoreSetting technicalScoreSetting) {
@@ -12037,8 +12041,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 
-	/*
+	
+	/**
 	 * this method is used to check the demo passing score is less than zero or greater than 100.
+	 * 
+	 *
+	 * 
 	 */
 	private void validateTechnicalDemoPassingScoring(
 			ScQtScoreSetting demoScoreSetting) {
@@ -12075,8 +12083,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	}
 
-	/*
-	 * this method is used to check the financial package and item  passing score is less than zero or greater than 100.
+	
+	/**
+	 *this method is used to check the financial package and item  passing score is less than zero or greater than 100.
+	 * 
+	 *
+	 * 
 	 */
 	private void validateFinancialPackageItemPassingScoring(
 			ScQtScoreSetting financialPackageScore,
@@ -12123,8 +12135,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	}
 
-	/*
-	 * this method is used to delete the checklist scores in pmdocuments checklists.
+	
+	
+	/**
+	 *this method is used to delete the checklist scores in pmdocuments checklists.
+	 * 
+	 *
+	 * 
 	 */
 	public void deleteCheckListScoreContrats() {
 
@@ -12133,8 +12150,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	}
 
-	/*
-	 * this method is used to delete the checklist scores in assets liability checklist.
+	
+	/**
+	 *this method is used to delete the checklist scores in assets liability checklist.
+	 * 
+	 *
+	 * 
 	 */
 	public void deleteCheckListScoreYears() {
 		markDeleteSelectedRowsAction(
@@ -12142,8 +12163,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						.getManagedBean().getToBeRemoveList());
 	}
 
-	/*
-	 * this method is used to delete the checklist in technical checklist side menu.
+	
+	/**
+	 *this method is used to delete the checklist in technical checklist side menu.
+	 * 
+	 *
+	 * 
 	 */
 	public void deleteTechnicalCheckList() {
 		IParameterSO parameterSo = BusinessDelegate.getInstance()
@@ -12202,8 +12227,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		checklistSorting(getManagedBean().getScQtCheckSt2techProposal());
 	}
 
-	/*
+	
+	/**
 	 * this method is used to delete the checklist in financial checklist side menu.
+	 * 
+	 *
+	 * 
 	 */
 	public void deleteFinancialCheckList() {
 		IParameterSO parameterSo = BusinessDelegate.getInstance()
@@ -12263,10 +12292,15 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		checklistSorting(getManagedBean().getScQtCheckSt2financeProposalList());
 	}
 
-	/*
+	
+	
+	/**
 	 * this method is used to change the tabs(zones) in delivery address side menu.
 	 * @param event
 	 *            (BriefingZoneBean zonebean).
+	 * 
+	 *
+	 * 
 	 */
 	public void deliveryDetailsZonesTabChange(TabChangeEvent event) {
 		BriefingZoneBean specZoneDtl = (BriefingZoneBean) event.getData();
@@ -12274,10 +12308,15 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				.setTplSpecZoneDtl(specZoneDtl.getTplSpecZoneDtl());
 	}
 	
-	/*
-	 *  this method is used to  check the Technical Standard Checklist Exist or not in specification side menu.
+	
+	
+	/**
+	 * this method is used to  check the Technical Standard Checklist Exist or not in specification side menu.
 	 *  
 	 *  return true/false.
+	 * 
+	 *
+	 * 
 	 */
 	private boolean validateTechnicalStandardCheckList() {
 		boolean pmdocument = false;
@@ -12302,10 +12341,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return pmdocument;
 	}
 
-	/*
+	
+	/**
 	 *  this method is used to  check the  Financial Standard Checklist Exist or not in specification side menu.
 	 *  
 	 *  return true/false.
+	 * 
+	 *
+	 * 
 	 */
 	private boolean validateFinancialStandardCheckList() {
 		boolean pmdocument = false;
@@ -12329,12 +12372,15 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return pmdocument;
 	}
 
-	/*
+	
+	/**
 	 *  this method is used to check in the current technical or financial checklist have  mandatory or optional pmdocuments in specification side menu.
 	 *  @param stage
 	 *           (String stage)
+	 * 
+	 *
+	 * 
 	 */
-	
 	public void checkListYesConfirmation(String stage) {
 		this.getManagedBean().setStandardTemplate(
 				ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
@@ -12345,10 +12391,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getCheckListYesIndex());
 	}
-	/*
-	 *  this method is used to check in the current technical or financial checklist don't have  mandatory or optional pmdocuments in specification side menu.
+	
+	/**
+	 *   this method is used to check in the current technical or financial checklist don't have  mandatory or optional pmdocuments in specification side menu.
 	 *  @param stage
 	 *           (String stage)
+	 * 
+	 *
+	 * 
 	 */
 	public void checkListNoConfirmation(String stage) {
 		this.getManagedBean().setStandardTemplate(
@@ -12363,10 +12413,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	}
 
-	/*
+	
+	/**
 	 *  this method is used when user clicks on submit button in specification committee to  check the Technical Standard Checklist Exist or not.
 	 *  
 	 *  return true/false.
+	 * 
+	 *
+	 * 
 	 */
 	private boolean validateTechnicalStandardCheckListSubmit() {
 		boolean pmdocument = false;
@@ -12387,10 +12441,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return pmdocument;
 	}
 
-	/*
-	 *  this method is used when user clicks on submit button in specification committee to  check the Financial Standard Checklist Exist or not.
+	
+	/**
+	 *this method is used when user clicks on submit button in specification committee to  check the Financial Standard Checklist Exist or not.
 	 *  
-	 *  return true/false.
+	 * return true/false.
 	 */
 	private boolean validateFinancialStandardCheckListSubmit() {
 		boolean pmdocument = false;
@@ -12410,10 +12465,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		return pmdocument;
 	}
-	/*
-	 *  this method is used when user clicks on submit button in specification committee to check in the techncial or financial checklist don't have mandatory or optional pmdocuments.
+	
+	/**
+	 * this method is used when user clicks on submit button in specification committee to check in the techncial or financial checklist don't have mandatory or optional pmdocuments.
 	 *  @param stage
 	 *             (String stage). 
+	 *             
 	 */
 	public void checkListNoConfirmationSubmit(String stage) {
 
@@ -12427,11 +12484,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		}
 	}
-	/*
-	 *  this method is used when user clicks on submit button in specification committee to check in the techncial or financial checklist have mandatory or optional pmdocuments.
+	
+	/**
+	 *this method is used when user clicks on submit button in specification committee to check in the techncial or financial checklist have mandatory or optional pmdocuments.
 	 *  @param stage
 	 *             (String stage). 
-	 *    return   navigate to acknowledgement page.       
+	 *    return   navigate to acknowledgement page.  
+	 *             
 	 */
 	public String checkListYesConfirmationSubmit(String stage) {
 		String checklistSubmit = CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -12461,9 +12520,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	}
 	
-	/*
-	 * this method is used to remove fulfilment details objects in fulfiment details side menu.
-	 * 
+	
+	/**
+	 *this method is used to remove fulfilment details objects in fulfiment details side menu.
+	 *@Param String(String scheduleType). 
+	 *             
 	 */
 	private void removefullfillmentDetails(String scheduleType) {
 
@@ -12508,8 +12569,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	}
 
-	/*
+	
+	/**
 	 * this method is used when user click on cancel button in popup window.
+	 * 
+	 *
+	 * 
 	 */
 	public void cancelPopup() {
 		this.getManagedBean().setAutoUpdate(true);
@@ -12529,10 +12594,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	}
 
-	/*
-	 * check in the current checklist have template spec exist or not.
+	
+	/**
+	 *check in the current checklist have template spec exist or not.
 	 * 
 	 * return (true/false).
+	 *             
 	 */
 	private boolean retriveExistingTemplatespec(List<ScQtCheckList> checkList) {
 		if (null != checkList && !checkList.isEmpty()) {
@@ -13078,9 +13145,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return scQt;
 	}
 	
-	/*
+	
+	/**
 	 * add panelItems as a TemplateSpec Items or specifications.
-	 * return navigate to template spec screen.
+	 * @return navigate to template spec screen.
+	 * 
+	 * 
 	 */
 	public String addPanelItemsToTemplateSpec(){
 		this.getManagedBean().setSpecNewable(true);
