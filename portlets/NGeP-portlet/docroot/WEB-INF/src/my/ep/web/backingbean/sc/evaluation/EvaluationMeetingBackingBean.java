@@ -1718,8 +1718,11 @@ public class EvaluationMeetingBackingBean extends
 	}
 
 	
-	/*
+	
+	/**
 	 * retrive existing or otherCommittee information from db.
+	 * 
+	 * 
 	 */
 	private void retriveExistOtherCommittee() {
 		ICommitteSO committeSO = null;
