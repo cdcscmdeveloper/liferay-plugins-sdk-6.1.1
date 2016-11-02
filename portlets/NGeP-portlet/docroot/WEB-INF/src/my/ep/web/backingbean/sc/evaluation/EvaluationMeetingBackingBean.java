@@ -1692,8 +1692,11 @@ public class EvaluationMeetingBackingBean extends
 
 	}
 
-	/*
+	
+	/**
 	 * delete meeting details from existing  meeting list.
+	 * 
+	 * 
 	 */
 	public void deleteMeetingDtls() {
 		markDeleteSelectedRowsAction(this.getManagedBean().getScQtMeetings(),
@@ -1701,8 +1704,11 @@ public class EvaluationMeetingBackingBean extends
 
 	}
 
-	/*
+	
+	/**
 	 * delete committee members from existing committee members list.
+	 * 
+	 * 
 	 */
 	public void deleteCommitteemembersDtls() {
 		markDeleteSelectedRowsAction(this.getManagedBean()
