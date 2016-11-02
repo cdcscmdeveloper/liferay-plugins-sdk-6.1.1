@@ -2302,8 +2302,10 @@ public class EvaluationBackingBean extends
 
 	}
 
-	/*
+	
+	/**
 	 * check weather the checklist status is pending or completed.
+	 * 
 	 */
 	private void financialCheckListStatusCheck() {
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -2985,8 +2987,10 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	/*
+	
+	/**
 	 * create menu model for financial spec zones .
+	 * 
 	 */
 	private void populateFinancialSpecDetailsByZone() {
 
@@ -5688,8 +5692,10 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	/*
+	
+	/**
 	 * check the technical upload checklist scores in comleted or not.
+	 * 
 	 */
 	private void retriveUploadCheckListTechnicalSuppliers(
 			ScQtCheckList checklist) {
@@ -5746,11 +5752,13 @@ public class EvaluationBackingBean extends
 
 	}
 
-	/*
-    * retrieve upload qualified suppliers based on compliance stage or
-	 technical stage or presentationdemo stage.
-     */
 	
+	/**
+	 * retrieve upload qualified suppliers based on compliance stage or
+	  *  technical stage or presentationdemo stage.
+	  *      
+	 * 
+	 */
 	private void retriveUploadCheckListFinancialSuppliers(
 			ScQtCheckList checklist) {
 		IQTEvaluationSO evaluationSo = null;
@@ -6399,8 +6407,10 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	/*
+	
+	/**
 	 * check the sample compliance submission is completed or not.
+	 * 
 	 */
 	private void checkSampleComplianceCompleted() {
 		IQTEvaluationSO evaluationSO = null;
@@ -6424,9 +6434,10 @@ public class EvaluationBackingBean extends
 	}
 
 	
-     /*
-      * check the meating details status is pending or done.
-      */
+	/**
+	 * check the meating details status is pending or done.
+	 * 
+	 */
 	private void checkMeetingDetailsAndStatus(
 			List<ScQtMeeting> meetingDetailsList) {
 		if (null == meetingDetailsList || meetingDetailsList.isEmpty()) {
@@ -6449,8 +6460,10 @@ public class EvaluationBackingBean extends
 
 	}
 
-	/*
+	
+	/**
 	 * this method is used to check the committee members attendance is completed or pending.
+	 * 
 	 */
 	private void checkCommitteeMembersAttendance(
 			List<ScQtCommitteeActivity> committeeActivityList) {
@@ -7418,11 +7431,12 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	/*
-	 * this method to set downaloadall reports file name and save file name in
-	// db.
-	 */
 	
+	/**
+	 * this method to set downaloadall reports file name and save file name in
+	 *  db.
+	 * 
+	 */
 	private void setReportAttachment() throws Exception {
 		IQTEvaluationSO evaluationSO = null;
 		try {
@@ -10395,12 +10409,15 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 
-	/*
+	
+
+	/**
 	 * check two meeting dates equal or not.
 	 * @param scqtMeeting
 	 *                (ScQtMeeting scqtMeeting)
 	 *  @param meetingList
-	 *                 (List<ScQtMeeting> meetingList).              
+	 *                 (List<ScQtMeeting> meetingList).
+	 * 
 	 */
 	private void compareMeetingDates(ScQtMeeting scqtMeeting,
 			List<ScQtMeeting> meetingList) {
@@ -10490,8 +10507,13 @@ private void retriveCommitteeRemarksList(){
 
 	}
 
-	/*
+	
+	/**
 	 * change sample submission status in sample tab.
+	 * @param ScQtSampleItem
+	 *                (ScQtSampleItem sampleItem,IPagingDataModel<ScQtSampleItem> sampleItemList)
+	 *  
+	 * 
 	 */
 	public void changeSampleStatus(ScQtSampleItem sampleItem,
 			IPagingDataModel<ScQtSampleItem> sampleItemList) {
