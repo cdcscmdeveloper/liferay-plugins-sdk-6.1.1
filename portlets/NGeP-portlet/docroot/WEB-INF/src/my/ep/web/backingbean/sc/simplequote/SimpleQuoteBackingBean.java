@@ -2299,6 +2299,35 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setTabActiveIndex(0);
 		}
 	}
+	
+	/**
+	 * Proc type radio button event.
+	 */
+	public void procTypeRadioButtonEvent() {
+		debugLogger("procTypeRadioButtonEvent");
+
+		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
+		
+		procurementTypeEvent();
+		
+		// when procurement type as pk7 selected 
+		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+			// MaxProcurementAmt
+			BigDecimal maxProcurementAmt = getPRThresholdAmount();
+			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(
+									MessageConst.INFO_760440,
+									new String[] {amountDF.format(maxProcurementAmt)},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+
+		}
+	}
 
 	/**
 	 * Event for procurement type drop down in SQ. to show justification drop
@@ -2352,24 +2381,6 @@ public class SimpleQuoteBackingBean extends
 		if (getManagedBean().getScQuote().getJustificationType() == null) {
 			getManagedBean().getScQuote().setJustificationType(
 					new PmReason());
-		}
-		
-		// when procurement type as pk7 selected 
-		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
-			// MaxProcurementAmt
-			BigDecimal maxProcurementAmt = getPRThresholdAmount();
-			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-							.getMessage(
-									MessageConst.INFO_760440,
-									new String[] {amountDF.format(maxProcurementAmt)},
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-
 		}
 	}
 

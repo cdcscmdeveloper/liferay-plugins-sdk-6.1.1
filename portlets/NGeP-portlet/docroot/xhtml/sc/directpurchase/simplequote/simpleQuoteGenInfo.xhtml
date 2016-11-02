@@ -103,7 +103,7 @@
 									<f:selectItems
 										value="#{simpleQuoteBackingBean.managedBean.procurementTypes}" />
 									<p:ajax event="change" update="@([id$=justId])"
-										listener="#{simpleQuoteBackingBean.procurementTypeEvent}"
+										listener="#{simpleQuoteBackingBean.procTypeRadioButtonEvent}"
 										process="@this" />
 								</p:selectOneRadio></td>
 
