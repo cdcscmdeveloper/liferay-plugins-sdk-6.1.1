@@ -216,18 +216,38 @@ public abstract class BaseManagedBean implements Serializable {
 		this.localAuthorityItems = localAuthorityItems;
 	}
 
+	/**
+	 * Gets the captcha text.
+	 *
+	 * @return the captcha text
+	 */
 	public String getCaptchaText() {
 		return captchaText;
 	}
 
+	/**
+	 * Sets the captcha text.
+	 *
+	 * @param captchaText the new captcha text
+	 */
 	public void setCaptchaText(String captchaText) {
 		this.captchaText = captchaText;
 	}
 
+	/**
+	 * Gets the captcha answer.
+	 *
+	 * @return the captcha answer
+	 */
 	public String getCaptchaAnswer() {
 		return captchaAnswer;
 	}
 
+	/**
+	 * Sets the captcha answer.
+	 *
+	 * @param captchaAnswer the new captcha answer
+	 */
 	public void setCaptchaAnswer(String captchaAnswer) {
 		this.captchaAnswer = captchaAnswer;
 	}

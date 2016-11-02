@@ -4481,6 +4481,11 @@ public class LOADetailBackingBean extends
 		return specResDTO;
 	}
 	
+	/**
+	 * Save template spec.
+	 *
+	 * @param templateSpecBean the template spec bean
+	 */
 	public void saveTemplateSpec(TemplateSpecBean templateSpecBean){
 		
 		ITemplateSpecSO templateSpecSO = null;
@@ -4522,6 +4527,11 @@ public class LOADetailBackingBean extends
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 	}
 	
+	/**
+	 * Back to previous.
+	 *
+	 * @param tabIndex the tab index
+	 */
 	public void backToPrevious(int tabIndex) {
 		log.info("backToPrevious");
 		getManagedBean().setSelectedTabIndex(tabIndex);
@@ -4706,6 +4716,11 @@ public class LOADetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Checks if is GST reg active.
+	 *
+	 * @return true, if is GST reg active
+	 */
 	public boolean isGSTRegActive() {
 		boolean isActive = Boolean.FALSE;
 		ScLoa scLoa = getManagedBean().getScLoa();
@@ -4784,9 +4799,10 @@ public class LOADetailBackingBean extends
 		return isProposalValidDateReach;
 	}
 	
-	
 	/**
-	 * @param event
+	 * Upload branch info.
+	 *
+	 * @param event the event
 	 */
 	public void uploadBranchInfo(FileUploadEvent event) {
 		
@@ -4946,6 +4962,11 @@ public class LOADetailBackingBean extends
 		scLoa.setGstAmt(null);
 	}
 	
+	/**
+	 * Tab change action.
+	 *
+	 * @param selectedTabIndex the selected tab index
+	 */
 	public void tabChangeAction(int selectedTabIndex){
 		
 		if(selectedTabIndex != 0 && this.getManagedBean().isDisplayAlert()){
@@ -5168,10 +5189,20 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Checks if is flag.
+	 *
+	 * @return true, if is flag
+	 */
 	public boolean isFlag() {
 		return flag;
 	}
 
+	/**
+	 * Sets the flag.
+	 *
+	 * @param flag the new flag
+	 */
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
