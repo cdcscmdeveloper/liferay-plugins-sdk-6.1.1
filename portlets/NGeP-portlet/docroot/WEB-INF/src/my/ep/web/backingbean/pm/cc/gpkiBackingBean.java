@@ -68,8 +68,7 @@ public class gpkiBackingBean implements Serializable {
 		this.pmDigiSign = pmDigiSign;
 	}
 
-	public String gpkiSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr, ContextualCompositeMethodExpression enableAutoUpdateMtdExpr, 
-									ContextualCompositeMethodExpression postSignActionErrorHandlerMtdExpr) {
+	public String gpkiSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr, ContextualCompositeMethodExpression enableAutoUpdateMtdExpr) {
 		System.out.println("ContextualCompositeMethodExpression");
 		
 		String textBeforeSign = FacesContext.getCurrentInstance()
@@ -113,6 +112,7 @@ public class gpkiBackingBean implements Serializable {
 		System.out.println("signedText:"+signedText);
 		
 		try {
+			this.setNonSigningException(null);
 			if (getGpkiEnabledProperty().equalsIgnoreCase("true")) {
 				if (subjectDN.substring(subjectDN.indexOf("=") + 1,
 						subjectDN.indexOf(",")).equals(
@@ -165,15 +165,13 @@ public class gpkiBackingBean implements Serializable {
 			}
 		} catch (Exception e) {
 			RequestContext.getCurrentInstance().execute("setRunGPKIEnableAutoUpdate(true);");	
-			if (postSignActionErrorHandlerMtdExpr != null) {
-				nonSigningException = e;
-				postSignActionErrorHandlerMtdExpr.invoke(
+			if (enableAutoUpdateMtdExpr != null) {
+				enableAutoUpdateMtdExpr.invoke(
 						FacesContext.getCurrentInstance().getELContext(),
-						new Object[] {nonSigningException});
-				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
-			} else {
-				throw e;
+						new Object[] {});
 			}
+			nonSigningException = e;
+			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 		}
 		
 		RequestContext.getCurrentInstance().execute("gpkiBlockWidget.hide()");
@@ -210,6 +208,12 @@ public class gpkiBackingBean implements Serializable {
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errorMsg));
 	}
 
+	public void onDialogCloseAction() throws Exception {
+		if(this.getNonSigningException()!=null) {
+			throw this.getNonSigningException();
+		}
+	}
+	
 	public Exception getNonSigningException() {
 		return nonSigningException;
 	}
