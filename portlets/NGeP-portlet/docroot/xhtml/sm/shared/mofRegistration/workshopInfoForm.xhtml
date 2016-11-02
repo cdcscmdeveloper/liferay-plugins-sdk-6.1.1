@@ -9,28 +9,38 @@
 	<p:panel header="#{lbl['lbl.sm.workshop.details']}" toggleable="true"
 		id="smWorkShopDtPanel" rendered="#{backingBean.managedBean.showWorkShopPanel}">
 		<p:outputPanel rendered="#{backingBean.managedBean.showWorkShopPanel}">
+			<br />
+			<ui:repeat var="workshopCatVar" value="#{backingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
+				<table style="width: 100%;">
+					<tr>
+						<td style="white-space: nowrap; float: left;">
+						    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} (#{workshopCatVar.categoryName})" />
+						</td>
+					</tr>
+				</table>
+				<br />
 				
 				<p:dataTable var="work" widgetVar="smWorkShopDtWidVar"
-					value="#{backingBean.managedBean.applWorkShopFacilities}"
+					value="#{workshopCatVar.facilityList}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					selection="#{backingBean.managedBean.selectedWorkShopFacilities}"
 					rowKey="#{work}" rowIndexVar="index" id="workDt">
 					<ac:paginator for="workDt" />
-					<p:column selectionMode="multiple" width="1%" rendered="#{not empty workshopCatVar.facilityList}"/>
+					<p:column selectionMode="multiple" width="1%" rendered="#{not empty workshopCatVar.facilityList}" />
 	
 					<p:column headerText="#{lbl['lbl.sm.facility.workshop.name']}">
+						<p:outputPanel rendered="#{not empty work.smSupplierCategoryFacilities and work.smSupplierCategoryFacilities.size() gt 1}">
+							<p:graphicImage value="/css/images/design/ico-same-with.png" 
+								title="#{lbl['lbl.sm.facility.address.attach.more.than.one.category']}" />&#160;
+						</p:outputPanel>
 						<h:outputText value="#{work.facilityName}" />
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.sm.category']}">
-						<ui:repeat var="catFac" value="#{work.smSupplierCategoryFacilities}">
-							<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
-										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
-										#{catFac.pmCategoryL3.categoryL3Code}
-									 	(#{catFac.pmCategoryL3.categoryName})" 
-								style="float: left;white-space: normal;" /><br />
-						</ui:repeat>
-					</p:column>
+					<ui:remove>
+						<p:column headerText="#{lbl['lbl.sm.category']}">
+							<h:outputText value="#{workshopCatVar.fullCatcode} (#{workshopCatVar.categoryName})" />
+						</p:column>
+					</ui:remove>
 					
 					<p:column headerText="#{lbl['lbl.sm.workshop.address']}"
 						style="width :60%;white-space : normal">
@@ -66,7 +76,8 @@
 						</p:commandLink>
 					</p:column>
 	
-				</p:dataTable>
+				</p:dataTable><br />
+			</ui:repeat>
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
@@ -136,7 +147,7 @@
 				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedWorkShopFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.workShopFacilityStates}"
 					districtItems="#{backingBean.managedBean.workShopFacilityDistricts}" cityItems="#{backingBean.managedBean.workShopFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL}" panelId="workShopAddrId"/>
+					facilityPanel="#{SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL}" panelId="workshopOwnerPanelId"/>
 					
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
@@ -169,88 +180,91 @@
 						</p:inputText> <p:message id="smWrkShpAreaMsg" for="smWrkShpArea"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneRadio
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.ownerType']}" id="smWrkShpOwnType"
-							value="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType}">
-							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']} "
-								itemValue="R" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
-								itemValue="O" />
-							<p:ajax event="change"
-								listener="#{backingBean.workShopOwnerTypeSel}"
-								update="workPan,workPanLbl" />
-						</p:selectOneRadio> <p:message id="smWrkShpOwnTypeMsg" for="smWrkShpOwnType"
-							showSummary="true" showDetail="false" display="icon" /></td>
-				</tr>
-				<tr>
-					<td><p:outputPanel id="workPanLbl">
-							<p:outputLabel value="#{lbl['lbl.cm.price']}"
-								rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}" />
-							<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
-								rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}" />
-							<p:outputLabel value="*" styleClass="mandatory"
-								rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O' or 
-								backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}" />
-						</p:outputPanel></td>
-					<td><p:outputPanel id="workPan">
-							<ui:fragment
-								rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
-								<p:inputText id="smWrkShpPrice"
-									disabled="#{!backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.cm.price']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
-									value="#{backingBean.managedBean.selectedWorkShopFacility.purchasePrice}"
-									size="20"
-									required="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
-									<f:validateDoubleRange
-										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-									<p:ajax process="@this" partialSubmit="true"
-										update="@this,smWrkShpPriceMsg" />
-								</p:inputText>
-								<p:message id="smWrkShpPriceMsg" for="smWrkShpPrice"
-									showSummary="true" showDetail="false" display="icon" />
-							</ui:fragment>
-							<ui:fragment
-								rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
-								<p:inputText id="smWrkShpRent"
-									disabled="#{!backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
-									value="#{backingBean.managedBean.selectedWorkShopFacility.rentalRate}"
-									size="20"
-									required="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
-									<f:validateDoubleRange
-										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-									<p:ajax process="@this" partialSubmit="true"
-										update="@this,smWrkShpRentMsg" />
-								</p:inputText>
-								<p:message id="smWrkShpRentMsg" for="smWrkShpRent"
-									showSummary="true" showDetail="false" display="icon" />
-							</ui:fragment>
-						</p:outputPanel></td>
-				</tr>
-	
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerName']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="50" id="smWrkShpOwnName"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.ownerName']}"
-							value="#{backingBean.managedBean.selectedWorkShopFacility.ownerName}"
-							size="35" /> <p:message id="smWrkShpOwnNameMsg"
-							for="smWrkShpOwnName" showSummary="true" showDetail="false"
-							display="icon" /></td>
-				</tr>
+				
+				<p:outputPanel id="workshopOwnerPanelId">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneRadio
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.facility.ownerType']}" id="smWrkShpOwnType"
+								value="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType}">
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']} "
+									itemValue="R" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
+									itemValue="O" />
+								<p:ajax event="change"
+									listener="#{backingBean.workShopOwnerTypeSel}"
+									update="workPan,workPanLbl" />
+							</p:selectOneRadio> <p:message id="smWrkShpOwnTypeMsg" for="smWrkShpOwnType"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputPanel id="workPanLbl">
+								<p:outputLabel value="#{lbl['lbl.cm.price']}"
+									rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}" />
+								<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
+									rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}" />
+								<p:outputLabel value="*" styleClass="mandatory"
+									rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O' or 
+									backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}" />
+							</p:outputPanel></td>
+						<td><p:outputPanel id="workPan">
+								<ui:fragment
+									rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
+									<p:inputText id="smWrkShpPrice"
+										disabled="#{!backingBean.managedBean.valueReqd}"
+										label="#{lbl['lbl.cm.price']}" maxlength="17"
+										validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
+										value="#{backingBean.managedBean.selectedWorkShopFacility.purchasePrice}"
+										size="20"
+										required="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
+										<f:validateDoubleRange
+											minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+											maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+										<p:ajax process="@this" partialSubmit="true"
+											update="@this,smWrkShpPriceMsg" />
+									</p:inputText>
+									<p:message id="smWrkShpPriceMsg" for="smWrkShpPrice"
+										showSummary="true" showDetail="false" display="icon" />
+								</ui:fragment>
+								<ui:fragment
+									rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
+									<p:inputText id="smWrkShpRent"
+										disabled="#{!backingBean.managedBean.valueReqd}"
+										label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
+										validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
+										value="#{backingBean.managedBean.selectedWorkShopFacility.rentalRate}"
+										size="20"
+										required="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
+										<f:validateDoubleRange
+											minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+											maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+										<p:ajax process="@this" partialSubmit="true"
+											update="@this,smWrkShpRentMsg" />
+									</p:inputText>
+									<p:message id="smWrkShpRentMsg" for="smWrkShpRent"
+										showSummary="true" showDetail="false" display="icon" />
+								</ui:fragment>
+							</p:outputPanel></td>
+					</tr>
+		
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerName']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:inputText maxlength="50" id="smWrkShpOwnName"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.facility.ownerName']}"
+								value="#{backingBean.managedBean.selectedWorkShopFacility.ownerName}"
+								size="35" /> <p:message id="smWrkShpOwnNameMsg"
+								for="smWrkShpOwnName" showSummary="true" showDetail="false"
+								display="icon" /></td>
+					</tr>
+				</p:outputPanel>
 	
 			</table>
 			<br />
@@ -277,5 +291,5 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg]),:#{p:component('delWorkshopBtnId')}"/>
+		update=":#{p:component('workDt')}, @([id$=Msg]),:#{p:component('delWorkshopBtnId')}"/>
 </ui:composition>

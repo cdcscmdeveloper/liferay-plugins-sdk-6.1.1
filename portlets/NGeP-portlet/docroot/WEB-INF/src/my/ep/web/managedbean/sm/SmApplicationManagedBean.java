@@ -79,6 +79,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmApplStatusInfoVO;
+import my.ep.web.vo.SmMachineCategoryVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSectionEditorVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -87,6 +88,7 @@ import my.ep.web.vo.SmSupplierBasicInfoVO;
 import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.model.Role;
+
 //import my.ep.persistence.entity.pm.common.PmEduLevel;
 
 @ManagedBean(name = "smApplMB")
@@ -204,6 +206,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private Long[] chequeSingPerId;
 	private Long[] selectedBankBranchIds;
 	private Long[] selectedSuppCategoryFacilityIds;
+	private Long[] selectedMachineCategoryIds;
 	private Long selBankBranchId;
 	private Long selSuppCategoryFacilityId;
 	private SmSupplierBank selectedBank;
@@ -437,6 +440,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmCategoryL3> storeFacilitiesVOList;
 	private List<PmCategoryL3> workshopFacilitiesVOList;
 	private List<PmCategoryL3> factoryFacilitiesVOList;
+	private List<SmSiteVisitFacilityVO> dockYardSiteVisitVOList;
+	private List<SmSiteVisitFacilityVO> storeSiteVisitVOList;
+	private List<SmSiteVisitFacilityVO> workshopSiteVisitVOList;
+	private List<SmSiteVisitFacilityVO> factorySiteVisitVOList;
+	private List<SmSiteVisitFacilityVO> bumiSiteVisitVOList;
+	private List<SmMachineCategoryVO> machineCategoryVOList;
 	private boolean branchSameAsHq;
 	private String facAddresSameAs;
 	private List<SelectItem> addrSameAsItems;
@@ -3694,5 +3703,67 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setFactoryFacilitiesVOList(
 			List<PmCategoryL3> factoryFacilitiesVOList) {
 		this.factoryFacilitiesVOList = factoryFacilitiesVOList;
+	}
+
+	public List<SmSiteVisitFacilityVO> getDockYardSiteVisitVOList() {
+		return dockYardSiteVisitVOList;
+	}
+
+	public void setDockYardSiteVisitVOList(
+			List<SmSiteVisitFacilityVO> dockYardSiteVisitVOList) {
+		this.dockYardSiteVisitVOList = dockYardSiteVisitVOList;
+	}
+
+	public List<SmSiteVisitFacilityVO> getStoreSiteVisitVOList() {
+		return storeSiteVisitVOList;
+	}
+
+	public void setStoreSiteVisitVOList(
+			List<SmSiteVisitFacilityVO> storeSiteVisitVOList) {
+		this.storeSiteVisitVOList = storeSiteVisitVOList;
+	}
+
+	public List<SmSiteVisitFacilityVO> getWorkshopSiteVisitVOList() {
+		return workshopSiteVisitVOList;
+	}
+
+	public void setWorkshopSiteVisitVOList(
+			List<SmSiteVisitFacilityVO> workshopSiteVisitVOList) {
+		this.workshopSiteVisitVOList = workshopSiteVisitVOList;
+	}
+
+	public List<SmSiteVisitFacilityVO> getFactorySiteVisitVOList() {
+		return factorySiteVisitVOList;
+	}
+
+	public void setFactorySiteVisitVOList(
+			List<SmSiteVisitFacilityVO> factorySiteVisitVOList) {
+		this.factorySiteVisitVOList = factorySiteVisitVOList;
+	}
+
+	public Long[] getSelectedMachineCategoryIds() {
+		return selectedMachineCategoryIds;
+	}
+
+	public void setSelectedMachineCategoryIds(Long[] selectedMachineCategoryIds) {
+		this.selectedMachineCategoryIds = selectedMachineCategoryIds;
+	}
+
+	public List<SmMachineCategoryVO> getMachineCategoryVOList() {
+		return machineCategoryVOList;
+	}
+
+	public void setMachineCategoryVOList(
+			List<SmMachineCategoryVO> machineCategoryVOList) {
+		this.machineCategoryVOList = machineCategoryVOList;
+	}
+
+	public List<SmSiteVisitFacilityVO> getBumiSiteVisitVOList() {
+		return bumiSiteVisitVOList;
+	}
+
+	public void setBumiSiteVisitVOList(
+			List<SmSiteVisitFacilityVO> bumiSiteVisitVOList) {
+		this.bumiSiteVisitVOList = bumiSiteVisitVOList;
 	}
 }

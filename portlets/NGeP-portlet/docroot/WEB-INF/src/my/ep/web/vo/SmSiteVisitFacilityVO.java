@@ -18,8 +18,10 @@ public class SmSiteVisitFacilityVO implements Serializable {
 	private String catTypeLabel;
 	private List<SmSupplierCategory> suppCategories;
 	private List<SmFacility> facilities;
+	private List<SmFacility> headQuarters;
 	private List<SmAssociateCompany> assocCompanies;
 	private List<SmSupplierBranch> suppBranches;
+	private boolean shareAddress;
 
 	public List<SmSupplierCategory> getSuppCategories() {
 		return suppCategories;
@@ -67,5 +69,21 @@ public class SmSiteVisitFacilityVO implements Serializable {
 
 	public void setL3(PmCategoryL3 l3) {
 		this.l3 = l3;
+	}
+
+	public List<SmFacility> getHeadQuarters() {
+		return headQuarters;
+	}
+
+	public void setHeadQuarters(List<SmFacility> headQuarters) {
+		this.headQuarters = headQuarters;
+	}
+
+	public boolean isShareAddress() {
+		return shareAddress;
+	}
+
+	public void setShareAddress(boolean shareAddress) {
+		this.shareAddress = shareAddress;
 	}
 }

@@ -9,27 +9,39 @@
 	<p:panel header="#{lbl['lbl.sm.dockyard.details']}" toggleable="true"
 		id="smDocDtPanel" rendered="#{backingBean.managedBean.showDockyardPanel}">
 		<p:outputPanel rendered="#{backingBean.managedBean.showDockyardPanel}">
+			<br />
+			<ui:repeat var="dockyardCatVar" value="#{backingBean.managedBean.dockYardFacilitiesVOList}" varStatus="dockyardCatVarStatus">
+				<table style="width: 100%;">
+					<tr>
+						<td style="white-space: nowrap; float: left;">
+						    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} (#{dockyardCatVar.categoryName})" />
+						</td>
+					</tr>
+				</table>
+				<br />
+				
+				
 				<p:dataTable var="doc" widgetVar="smFacilityDockDtWidVar"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{backingBean.managedBean.applDockyardFacilities}"
+					value="#{dockyardCatVar.facilityList}"
 					selection="#{backingBean.managedBean.selectedDockyardFacilities}"
 					rowKey="#{doc}" rowIndexVar="index" id="docDt">
 					<ac:paginator for="docDt" />
-					<p:column selectionMode="multiple" width="1%" rendered="#{not empty dockyardCatVar.facilityList}"/>
+					<p:column selectionMode="multiple" width="1%" rendered="#{not empty dockyardCatVar.facilityList}" />
 	
 					<p:column headerText="#{lbl['lbl.sm.facility.dockyard.name']}">
+						<p:outputPanel rendered="#{not empty doc.smSupplierCategoryFacilities and doc.smSupplierCategoryFacilities.size() gt 1}">
+							<p:graphicImage value="/css/images/design/ico-same-with.png" 
+								title="#{lbl['lbl.sm.facility.address.attach.more.than.one.category']}" />&#160;
+						</p:outputPanel>
 						<h:outputText value="#{doc.facilityName}" />
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.sm.category']}">
-						<ui:repeat var="catFac" value="#{doc.smSupplierCategoryFacilities}">
-							<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
-										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
-										#{catFac.pmCategoryL3.categoryL3Code}
-									 	(#{catFac.pmCategoryL3.categoryName})" 
-								style="float: left;white-space: normal;" /><br />
-						</ui:repeat>
-					</p:column>
+					<ui:remove>
+						<p:column headerText="#{lbl['lbl.sm.category']}">
+							<h:outputText value="#{dockyardCatVar.fullCatcode} (#{dockyardCatVar.categoryName})" />
+						</p:column>
+					</ui:remove>
 	
 					<p:column headerText="#{lbl['lbl.sm.dockyard.address']}"
 						style="width :60%;white-space : normal">
@@ -65,7 +77,8 @@
 						</p:commandLink>
 					</p:column>
 	
-				</p:dataTable>
+				</p:dataTable><br />
+			</ui:repeat>
 			
 			<p:spacer height="2px;" />
 			<div align="right">
@@ -138,7 +151,7 @@
 				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedDockyardFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.dockFacilityStates}"
 					districtItems="#{backingBean.managedBean.dockFacilityDistricts}" cityItems="#{backingBean.managedBean.dockFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL}" panelId="dockyardAddrId"/>
+					facilityPanel="#{SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL}" panelId="dockYardBlockPanelId"/>
 					
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
@@ -170,87 +183,90 @@
 						</p:inputText> <p:message id="smDockAreaSqMsg" for="smDockAreaSq"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneRadio
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.ownerType']}" id="smDockOwnerType"
-							value="#{backingBean.managedBean.selectedDockyardFacility.ownershipType}">
-							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}"
-								itemValue="R" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
-								itemValue="O" />
-							<p:ajax event="change" listener="#{backingBean.dockOwnerTypeSel}"
-								update="docPan,docPanLbl" />
-						</p:selectOneRadio> <p:message id="smDockOwnerTypeMsg" for="smDockOwnerType"
-							showSummary="true" showDetail="false" display="icon" /></td>
-				</tr>
-				<tr>
-					<td><p:outputPanel id="docPanLbl">
-							<p:outputLabel value="#{lbl['lbl.cm.price']}"
-								rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}" />
-							<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
-								rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
-							<p:outputLabel value="*" styleClass="mandatory"
-								rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O' or 
-								backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
-						</p:outputPanel></td>
-					<td><p:outputPanel id="docPan">
-							<ui:fragment
-								rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
-								<p:inputText id="smDocPrice"
-									disabled="#{!backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.cm.price']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
-									value="#{backingBean.managedBean.selectedDockyardFacility.purchasePrice}"
-									size="20"
-									required="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
-									<f:validateDoubleRange
-										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-									<p:ajax process="@this" partialSubmit="true"
-										update="@this,smDocPriceMsg" />
-								</p:inputText>
-								<p:message id="smDocPriceMsg" for="smDocPrice" showSummary="true"
-									showDetail="false" display="icon" />
-							</ui:fragment>
-							<ui:fragment
-								rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
-								<p:inputText id="smDocRent"
-									disabled="#{!backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
-									value="#{backingBean.managedBean.selectedDockyardFacility.rentalRate}"
-									size="20"
-									required="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
-									<f:validateDoubleRange
-										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-									<p:ajax process="@this" partialSubmit="true"
-										update="@this,smDocRentMsg" />
-								</p:inputText>
-								<p:message id="smDocRentMsg" for="smDocRent" showSummary="true"
-									showDetail="false" display="icon" />
-							</ui:fragment>
-						</p:outputPanel></td>
-				</tr>
-	
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="smDockOwnerName"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.ownername']}"
-							value="#{backingBean.managedBean.selectedDockyardFacility.ownerName}"
-							size="35" /> <p:message id="smDockOwnerNameMsg"
-							for="smDockOwnerName" showSummary="true" showDetail="false"
-							display="icon" /></td>
-				</tr>
+				
+				<p:outputPanel id="dockyardOwnerPanelId">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneRadio
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.facility.ownerType']}" id="smDockOwnerType"
+								value="#{backingBean.managedBean.selectedDockyardFacility.ownershipType}">
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}"
+									itemValue="R" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
+									itemValue="O" />
+								<p:ajax event="change" listener="#{backingBean.dockOwnerTypeSel}"
+									update="docPan,docPanLbl" />
+							</p:selectOneRadio> <p:message id="smDockOwnerTypeMsg" for="smDockOwnerType"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputPanel id="docPanLbl">
+								<p:outputLabel value="#{lbl['lbl.cm.price']}"
+									rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}" />
+								<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
+									rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
+								<p:outputLabel value="*" styleClass="mandatory"
+									rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O' or 
+									backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
+							</p:outputPanel></td>
+						<td><p:outputPanel id="docPan">
+								<ui:fragment
+									rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
+									<p:inputText id="smDocPrice"
+										disabled="#{!backingBean.managedBean.valueReqd}"
+										label="#{lbl['lbl.cm.price']}" maxlength="17"
+										validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
+										value="#{backingBean.managedBean.selectedDockyardFacility.purchasePrice}"
+										size="20"
+										required="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
+										<f:validateDoubleRange
+											minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+											maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+										<p:ajax process="@this" partialSubmit="true"
+											update="@this,smDocPriceMsg" />
+									</p:inputText>
+									<p:message id="smDocPriceMsg" for="smDocPrice" showSummary="true"
+										showDetail="false" display="icon" />
+								</ui:fragment>
+								<ui:fragment
+									rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
+									<p:inputText id="smDocRent"
+										disabled="#{!backingBean.managedBean.valueReqd}"
+										label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
+										validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
+										value="#{backingBean.managedBean.selectedDockyardFacility.rentalRate}"
+										size="20"
+										required="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
+										<f:validateDoubleRange
+											minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+											maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+										<p:ajax process="@this" partialSubmit="true"
+											update="@this,smDocRentMsg" />
+									</p:inputText>
+									<p:message id="smDocRentMsg" for="smDocRent" showSummary="true"
+										showDetail="false" display="icon" />
+								</ui:fragment>
+							</p:outputPanel></td>
+					</tr>
+		
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="smDockOwnerName"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.ownername']}"
+								value="#{backingBean.managedBean.selectedDockyardFacility.ownerName}"
+								size="35" /> <p:message id="smDockOwnerNameMsg"
+								for="smDockOwnerName" showSummary="true" showDetail="false"
+								display="icon" /></td>
+					</tr>
+				</p:outputPanel>
 	
 			</table>
 			<br />
@@ -277,5 +293,5 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":#{p:component('smDocDtPanel')}, @([id$=Msg]),:#{p:component('delDockyardBtnId')}"/>
+		update=":#{p:component('docDt')}, @([id$=Msg]),:#{p:component('delDockyardBtnId')}"/>
 </ui:composition>

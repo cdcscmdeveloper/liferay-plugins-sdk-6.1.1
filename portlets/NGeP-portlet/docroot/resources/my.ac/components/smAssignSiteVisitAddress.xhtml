@@ -1,0 +1,172 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<cc:interface>
+		<cc:attribute name="panelId" default="#{cc.id}" />
+		<cc:attribute name="voList" required="true" />
+		<cc:attribute name="facilityPanelLabel" required="true" />
+		<cc:attribute name="facilityNameLabel" required="true" />
+		<cc:attribute name="facilityAddressLabel" required="true" />
+		<cc:attribute name="backingBean" required="true" />
+	</cc:interface>
+
+	<cc:implementation>
+		<p:panel header="#{cc.attrs.facilityPanelLabel}" toggleable="true" id="#{cc.attrs.panelId}" rendered="#{not empty cc.attrs.voList}">
+			
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.site.visit.select.address.instruction']}"/>
+
+			<p:dataTable var="tableVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{cc.attrs.voList}" rowKey="#{tableVar}"
+				rowIndexVar="tableIndex" id="#{cc.attrs.panelId}Dt">
+				<ac:paginator for="#{cc.attrs.panelId}Dt" />
+
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+					style="width : 2% !important;text-align: center !important;">
+					<h:outputText value="#{tableIndex + 1}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
+					style="width: 25% !important;white-space: normal;">
+					<p:outputPanel rendered="#{tableVar.shareAddress}">
+						<p:graphicImage value="/css/images/design/ico-same-with.png"
+							title="#{lbl['lbl.sm.facility.address.attach.more.than.one.category']}" />&#160;
+					</p:outputPanel>
+					<h:outputText
+						value="#{tableVar.l3.fullCatcode} (#{tableVar.l3.categoryName})" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.site.visit.address']}">
+
+					<p:panel header="#{lbl['lbl.sm.facility.type._H']}"
+						toggleable="true">
+
+						<p:dataTable var="hqVar"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							value="#{tableVar.headQuarters}" rowKey="#{hqVar}"
+							rowIndexVar="hqIndex" id="#{cc.attrs.panelId}hqDt">
+
+							<p:column headerText="" style="width: 5% !important;;">
+								<p:selectBooleanCheckbox value="#{hqVar.selected}">
+									<p:ajax event="change" update="@this" process="@this"
+										partialSubmit="true" />
+								</p:selectBooleanCheckbox>
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sm.facility.hq.name']}">
+								<h:outputText value="#{hqVar.facilityName}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sm.companyaddress']}"
+								style="width: 70% !important;white-space: normal !important;">
+								<h:outputText
+									value="#{cc.attrs.backingBean.getFullAddress(hqVar.smAddress)}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:panel><br />
+
+					<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}"
+						toggleable="true">
+
+						<p:dataTable var="assocVar"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							value="#{tableVar.assocCompanies}" rowKey="#{assocVar}"
+							rowIndexVar="assocIndex" id="#{cc.attrs.panelId}assocDt">
+
+							<p:column headerText="" style="width: 5% !important;">
+								<p:selectBooleanCheckbox value="#{assocVar.selected}">
+									<p:ajax event="change" update="@this" process="@this"
+										partialSubmit="true" />
+								</p:selectBooleanCheckbox>
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sm.assocCmpny.company.name']}">
+								<h:outputText value="#{assocVar.companyName}" />
+							</p:column>
+
+							<p:column
+								style="width: 70% !important;white-space: normal !important;"
+								headerText="#{lbl['lbl.sm.assocCmpny.company.address']}">
+								<h:outputText
+									value="#{cc.attrs.backingBean.getFullAddress(assocVar.smAddress)}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:panel><br />
+
+					<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true">
+
+						<p:dataTable var="brVar"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							value="#{tableVar.suppBranches}" rowKey="#{brVar}"
+							rowIndexVar="brIndex" id="#{cc.attrs.panelId}brDt">
+
+							<p:column headerText="" style="width: 5% !important;">
+								<p:selectBooleanCheckbox value="#{brVar.selected}">
+									<p:ajax event="change" update="@this" process="@this"
+										partialSubmit="true" />
+								</p:selectBooleanCheckbox>
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
+								<h:outputText value="#{brVar.branchName}" />
+							</p:column>
+
+							<p:column
+								style="width: 70% !important;white-space: normal !important;"
+								headerText="#{lbl['lbl.sm.address']}">
+								<h:outputText
+									value="#{cc.attrs.backingBean.getFullAddress(brVar.smAddress)}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:panel><br />
+
+					<p:panel header="#{lbl['lbl.sm.facility.information']}"
+						toggleable="true">
+
+						<p:dataTable var="facVar"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							value="#{tableVar.facilities}" rowKey="#{facVar}"
+							rowIndexVar="facIndex" id="#{cc.attrs.panelId}facDt">
+
+							<p:column headerText="" style="width: 5% !important;">
+								<p:selectBooleanCheckbox value="#{facVar.selected}">
+									<p:ajax event="change" update="@this" process="@this"
+										partialSubmit="true" />
+								</p:selectBooleanCheckbox>
+							</p:column>
+
+							<p:column headerText="#{cc.attrs.facilityNameLabel}">
+								<h:outputText value="#{facVar.facilityName}" />
+							</p:column>
+
+							<p:column
+								style="width: 70% !important;white-space: normal !important;"
+								headerText="#{cc.attrs.facilityAddressLabel}">
+								<h:outputText
+									value="#{cc.attrs.backingBean.getFullAddress(facVar.smAddress)}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:panel>
+
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>
+	</cc:implementation>
+
+</ui:composition>
