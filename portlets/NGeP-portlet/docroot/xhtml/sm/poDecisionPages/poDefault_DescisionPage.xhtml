@@ -295,18 +295,20 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
-	<p:dialog width="1000px" height="450px" closable="false"
+	<p:dialog width="70%" height="70%" closable="false"
 		header="#{lbl['lbl.sm.assign.site.visit']}" widgetVar="svcDialog"
 		id="svcDialog" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
 		
-		<p:outputPanel layout="block" id="assignSvcBlockPanel">
-			<ui:include src="/xhtml/sm/shared/poDecisionSharedPages/assignToSvcForm.xhtml" />
-			<p:blockUI block="assignSvcBlockPanel" widgetVar="assignSvcBlockWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
-		</p:outputPanel>
-
+		<p:scrollPanel style="height:700px;border:0;" mode="native">
+			<p:outputPanel layout="block" id="assignSvcBlockPanel">
+					<ui:include src="/xhtml/sm/shared/poDecisionSharedPages/assignToSvcForm.xhtml" />
+				<p:blockUI block="assignSvcBlockPanel" widgetVar="assignSvcBlockWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+				</p:blockUI>
+			</p:outputPanel>
+		</p:scrollPanel>
+		
 	</p:dialog>
 	<p:dialog width="650px" header="#{backingBean.managedBean.poSecReview.recommendation eq 'REJECT' ? lbl['lbl.sm.button.recommend.to.reject'] : lbl['lbl.sm.button.recommend.to.approve']}"
 		closable="false" id="submitApprvrDialog" height="350px"

@@ -15,28 +15,33 @@
 	<p:panel header="#{lbl['lbl.sm.factory.details']}" toggleable="true"
 		id="smFacilityFactoryDtPanel" rendered="#{backingBean.managedBean.showFactoryPanel}">
 		<p:outputPanel rendered="#{backingBean.managedBean.showFactoryPanel}">
+			<br />
+			<ui:repeat var="factoryCatVar" value="#{backingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
+				<div align="left">
+					<p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} (#{factoryCatVar.categoryName})" />
+				</div>
 				
 				<p:dataTable var="fac" widgetVar="smFacilityFactorDtWidVar"
-					value="#{backingBean.managedBean.applFactoryFacilities}"
+					value="#{factoryCatVar.facilityList}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					selection="#{backingBean.managedBean.selectedFactoryFacilities}"
 					rowKey="#{fac}" rowIndexVar="index" id="facDt">
 					<ac:paginator for="facDt" />
-					<p:column selectionMode="multiple" width="1%" rendered="#{not empty factoryCatVar.facilityList}"/>
+					<p:column selectionMode="multiple" width="1%" rendered="#{not empty factoryCatVar.facilityList}" />
 	
 					<p:column headerText="#{lbl['lbl.sm.facility.factory.name']}">
+						<p:outputPanel rendered="#{not empty fac.smSupplierCategoryFacilities and fac.smSupplierCategoryFacilities.size() gt 1}">
+							<p:graphicImage value="/css/images/design/ico-same-with.png" 
+								title="#{lbl['lbl.sm.facility.address.attach.more.than.one.category']}" />&#160;
+						</p:outputPanel>
 						<h:outputText value="#{fac.facilityName}" />
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.sm.category']}">
-						<ui:repeat var="catFac" value="#{fac.smSupplierCategoryFacilities}">
-							<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
-										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
-										#{catFac.pmCategoryL3.categoryL3Code}
-									 	(#{catFac.pmCategoryL3.categoryName})" 
-								style="float: left;white-space: normal;" /><br />
-						</ui:repeat>
-					</p:column>
+					<ui:remove>
+						<p:column headerText="#{lbl['lbl.sm.category']}">
+							<h:outputText value="#{factoryCatVar.fullCatcode} (#{factoryCatVar.categoryName})" />
+						</p:column>
+					</ui:remove>
 					
 					<p:column headerText="#{lbl['lbl.sm.factory.address']}"
 						style="width :60%;white-space : normal">
@@ -71,7 +76,9 @@
 						</p:commandLink>
 					</p:column>
 	
-				</p:dataTable>
+				</p:dataTable><br />
+				
+			</ui:repeat>
 			
 			<p:spacer height="2px;" />
 			<div align="right">
@@ -142,7 +149,7 @@
 				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedFactoryFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.factoryFacilityStates}"
 					districtItems="#{backingBean.managedBean.factoryFacilityDistricts}" cityItems="#{backingBean.managedBean.factoryFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_FACTORY_FACILITY_PANEL}" panelId="factoryAddrId"/>
+					facilityPanel="#{SupplierManagementConst.SM_FACTORY_FACILITY_PANEL}" panelId="factoryOwnerPanelId"/>
 				
 				
 				<tr>
@@ -176,90 +183,93 @@
 						</p:inputText> <p:message id="smFacFactoryAreaMsg" for="smFacFactoryArea"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneRadio id="smOwnerType"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.ownerType']}"
-							value="#{backingBean.managedBean.selectedFactoryFacility.ownershipType}">
-							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}"
-								itemValue="R" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
-								itemValue="O" />
-							<p:ajax event="change"
-								listener="#{backingBean.factoryOwnerTypeSel}"
-								update="facPan,facPanLbl" />
-						</p:selectOneRadio> <p:message id="smOwnerTypeMsg" for="smOwnerType"
-							showSummary="true" showDetail="false" display="icon" /></td>
-				</tr>
-				<tr>
-					<td><p:outputPanel id="facPanLbl">
-							<p:outputLabel value="#{lbl['lbl.sm.buy.price']}"
-								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}"
-								id="oid" />
-							<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
-								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}"
-								id="rid" />
-							<p:outputLabel value="*" styleClass="mandatory"
-								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O' or 
-								backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}" />
-						</p:outputPanel></td>
-					<td><p:outputPanel id="facPan">
-							<ui:fragment
-								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
-								<p:inputText id="smFacFactoryPrice"
-									disabled="#{!backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.cm.price']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
-									value="#{backingBean.managedBean.selectedFactoryFacility.purchasePrice}"
-									size="20"
-									required="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
-									<f:validateDoubleRange
-										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-									<p:ajax process="@this" partialSubmit="true"
-										update="@this,smFacFactoryPriceMsg" />
-								</p:inputText>
-								<p:message id="smFacFactoryPriceMsg" for="smFacFactoryPrice"
-									showSummary="true" showDetail="false" display="icon" />
-							</ui:fragment>
-							<ui:fragment
-								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
-								<p:inputText id="smFacFactoryRent"
-									disabled="#{!backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
-									value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"
-									size="20"
-									required="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
-									<f:validateDoubleRange
-										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-									<p:ajax process="@this" partialSubmit="true"
-										update="@this,smFacFactoryRentMsg" />
-								</p:inputText>
-								<p:message id="smFacFactoryRentMsg" for="smFacFactoryRent"
-									showSummary="true" showDetail="false" display="icon" />
-							</ui:fragment>
-						</p:outputPanel></td>
-				</tr>
-	
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="50" id="smFacFactoryOwnName"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.ownername']}"
-							value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}"
-							size="35" /> <p:message id="smFacFactoryOwnNameMsg"
-							for="smFacFactoryOwnName" showSummary="true" showDetail="false"
-							display="icon" /></td>
-				</tr>
+				
+				<p:outputPanel id="factoryOwnerPanelId">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneRadio id="smOwnerType"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.facility.ownerType']}"
+								value="#{backingBean.managedBean.selectedFactoryFacility.ownershipType}">
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}"
+									itemValue="R" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
+									itemValue="O" />
+								<p:ajax event="change"
+									listener="#{backingBean.factoryOwnerTypeSel}"
+									update="facPan,facPanLbl" />
+							</p:selectOneRadio> <p:message id="smOwnerTypeMsg" for="smOwnerType"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputPanel id="facPanLbl">
+								<p:outputLabel value="#{lbl['lbl.sm.buy.price']}"
+									rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}"
+									id="oid" />
+								<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
+									rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}"
+									id="rid" />
+								<p:outputLabel value="*" styleClass="mandatory"
+									rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O' or 
+									backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}" />
+							</p:outputPanel></td>
+						<td><p:outputPanel id="facPan">
+								<ui:fragment
+									rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
+									<p:inputText id="smFacFactoryPrice"
+										disabled="#{!backingBean.managedBean.valueReqd}"
+										label="#{lbl['lbl.cm.price']}" maxlength="17"
+										validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
+										value="#{backingBean.managedBean.selectedFactoryFacility.purchasePrice}"
+										size="20"
+										required="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
+										<f:validateDoubleRange
+											minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+											maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+										<p:ajax process="@this" partialSubmit="true"
+											update="@this,smFacFactoryPriceMsg" />
+									</p:inputText>
+									<p:message id="smFacFactoryPriceMsg" for="smFacFactoryPrice"
+										showSummary="true" showDetail="false" display="icon" />
+								</ui:fragment>
+								<ui:fragment
+									rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
+									<p:inputText id="smFacFactoryRent"
+										disabled="#{!backingBean.managedBean.valueReqd}"
+										label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
+										validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
+										value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"
+										size="20"
+										required="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
+										<f:validateDoubleRange
+											minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+											maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+										<p:ajax process="@this" partialSubmit="true"
+											update="@this,smFacFactoryRentMsg" />
+									</p:inputText>
+									<p:message id="smFacFactoryRentMsg" for="smFacFactoryRent"
+										showSummary="true" showDetail="false" display="icon" />
+								</ui:fragment>
+							</p:outputPanel></td>
+					</tr>
+		
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText maxlength="50" id="smFacFactoryOwnName"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.ownername']}"
+								value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}"
+								size="35" /> <p:message id="smFacFactoryOwnNameMsg"
+								for="smFacFactoryOwnName" showSummary="true" showDetail="false"
+								display="icon" /></td>
+					</tr>
+				</p:outputPanel>
 	
 			</table>
 			<br />
@@ -286,5 +296,5 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":#{p:component('smFacilityFactoryDtPanel')}, @([id$=Msg]),:#{p:component('delFactoryBtnId')}"/>
+		update=":#{p:component('facDt')}, @([id$=Msg]),:#{p:component('delFactoryBtnId')}"/>
 </ui:composition>
