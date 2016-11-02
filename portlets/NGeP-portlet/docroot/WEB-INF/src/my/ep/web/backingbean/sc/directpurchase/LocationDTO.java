@@ -9,6 +9,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 
+// TODO: Auto-generated Javadoc
 public class LocationDTO implements Serializable{
 
 	/**
@@ -57,6 +58,11 @@ public class LocationDTO implements Serializable{
 		this.address = address;
 	}
 
+	/**
+	 * Gets the location name.
+	 *
+	 * @return the location name
+	 */
 	public String getLocationName() {
 		if(locationName == null || "".equalsIgnoreCase(locationName)){
 			if(zone != null){
@@ -77,34 +83,84 @@ public class LocationDTO implements Serializable{
 		}
 		return locationName;
 	}
+	
+	/**
+	 * Sets the location name.
+	 *
+	 * @param locationName the new location name
+	 */
 	public void setLocationName(String locationName) {
 		this.locationName = locationName;
 	}
+	
+	/**
+	 * Gets the state.
+	 *
+	 * @return the state
+	 */
 	public PmState getState() {
 		return state;
 	}
+	
+	/**
+	 * Sets the state.
+	 *
+	 * @param state the new state
+	 */
 	public void setState(PmState state) {
 		this.state = state;
 	}
+	
+	/**
+	 * Gets the district.
+	 *
+	 * @return the district
+	 */
 	public PmDistrict getDistrict() {
 		return district;
 	}
+	
+	/**
+	 * Sets the district.
+	 *
+	 * @param district the new district
+	 */
 	public void setDistrict(PmDistrict district) {
 		this.district = district;
 	}
 
+	/**
+	 * Gets the city.
+	 *
+	 * @return the city
+	 */
 	public PmCity getCity() {
 		return city;
 	}
 
+	/**
+	 * Sets the city.
+	 *
+	 * @param city the new city
+	 */
 	public void setCity(PmCity city) {
 		this.city = city;
 	}
 
+	/**
+	 * Gets the division.
+	 *
+	 * @return the division
+	 */
 	public PmDivision getDivision() {
 		return division;
 	}
 
+	/**
+	 * Sets the division.
+	 *
+	 * @param division the new division
+	 */
 	public void setDivision(PmDivision division) {
 		this.division = division;
 	}
@@ -133,6 +189,12 @@ public class LocationDTO implements Serializable{
 	public void setAddress(PmAddress address) {
 		this.address = address;
 	}
+	
+	/**
+	 * Gets the row key.
+	 *
+	 * @return the row key
+	 */
 	public int getRowKey() {
 		final int prime = 31;
 		int result = 1;
@@ -145,6 +207,12 @@ public class LocationDTO implements Serializable{
 		result = prime * result + ((city == null) ? 0 : city.hashCode());
 		return result;
 	}
+	
+	/**
+	 * Sets the row key.
+	 *
+	 * @param rowKey the new row key
+	 */
 	public void setRowKey(int rowKey) {
 		this.rowKey = rowKey;
 	}

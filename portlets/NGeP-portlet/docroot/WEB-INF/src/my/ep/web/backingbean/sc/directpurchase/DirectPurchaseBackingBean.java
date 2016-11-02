@@ -85,6 +85,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	/** The direct purchase search page nav. */
 	private String DIRECT_PURCHASE_SEARCH_PAGE_NAV = "directPurchaseSearch";
 
+	/**
+	 * Pre render direct purchase search.
+	 */
 	public void preRenderDirectPurchaseSearch() {
 		debugLogger("preRenderDirectPurchaseSearch");
 		FacesContext fc = FacesContext.getCurrentInstance();
