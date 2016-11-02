@@ -6242,8 +6242,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return isDate;
 	}
 
-	/*
-	 * supplierStatusDateComparision.panel suppliers Date comparision.
+	
+	/**
+	 *supplierStatusDateComparision.panel suppliers Date comparision.
 	 * 
 	 * @param enddate (Date suppliersExpiaryDate)
 	 * 
@@ -12960,8 +12961,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	}
 	
-	/*
+	
+	/**
 	 * this method is used to check the technical user scoring schema attachment is mandatory or not
+	 * 
 	 */
 	private void validateTechnicalUserScoringAttachment(
 			boolean isTechnicalUserScoringSchema) {
@@ -12975,8 +12978,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		}
 	}
-	/*
+	
+	/**
 	 * this method is used to check the financial user scoring schema attachment  is mandatory or not
+	 * 
 	 */
 	private void validateFinancialUserScoringAttachment(
 			boolean isFinancialUserScoringSchema) {
