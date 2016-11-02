@@ -197,24 +197,18 @@ public class SPDetailBackingBean extends
 	 * @param qtID
 	 * @param userId
 	 */
-	public void retrieveProposalChecklistDtls(Long qtID, Long userId,
+	private void retrieveProposalChecklistDtls(Long qtID, Long userId,
 			boolean isReadonly) {
 		debugLogger("retrieveProposalChecklistDtls");
-
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(qtID);
 			reqDTO.setUserId(userId);
-
 			ProposalResDTO resDTO = getProposalSO()
 					.retrieveProposalDtlBySupplierId(reqDTO);
-
 			ScQt scQt = resDTO.getScQt();
-
 			getManagedBean().setQt(resDTO.getScQt());
-
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
-
 			getManagedBean().setQtProposal(resDTO.getScQtProposal());
 			getManagedBean().setSupplierId(resDTO.getSupplierId());
 
@@ -3365,8 +3359,14 @@ public class SPDetailBackingBean extends
 					.getOriginalServletRequest(servletRequest);
 			String qtId = originalServletRequest
 					.getParameter(SourcingConstants.NAV_PARAM_QUOTATION_TENDER_ID);
-
-			retriveSupplierProposalDtl(Long.parseLong(qtId), null, false);
+			super.renewSesionObject();
+			retrieveProposalChecklistDtls(Long.parseLong(qtId),
+					new FacesScopes().getUserSessionBean().getUserId(), false);
+			getManagedBean().setProcCategoryMedicine(
+					super.isMultipleProposalCategory(getManagedBean().getQt(),
+							null));
+			getManagedBean().setPrepareActiveIndex(0);
+			getManagedBean().setPreviousPageUrl(null);
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -3393,50 +3393,20 @@ public class SPDetailBackingBean extends
 			} else {
 				handleException(e);
 			}
-
-		} catch (Exception e) {
+		} 
+		catch(Exception e){
 			handleException(e);
-
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
-		} finally {
+		}finally {
 
 		}
-
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
-	}
-
-	/**
-	 * Get supplier proposal details.
-	 * 
-	 * @param qtId
-	 *            the quotation / tender id.
-	 * @param previousPageUrl
-	 *            the previous page url.
-	 * @param isReadonly
-	 *            the read only flag
-	 * @return the supplier proposal page
-	 */
-	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl,
-			boolean isReadonly) {
-		super.renewSesionObject();
-
-		retrieveProposalChecklistDtls(qtId, new FacesScopes()
-				.getUserSessionBean().getUserId(), isReadonly);
-
-		getManagedBean()
-				.setProcCategoryMedicine(
-						super.isMultipleProposalCategory(getManagedBean()
-								.getQt(), null));
-		getManagedBean().setPrepareActiveIndex(0);
-		getManagedBean().setPreviousPageUrl(previousPageUrl);
-
-		return NAV_TO_PROPOSAL_MAIN_PAGE;
 	}
 
 	/**
@@ -4281,15 +4251,15 @@ public class SPDetailBackingBean extends
 		return publishDate;
 
 	}
-	
-	private void checklistSorting(List<ScQtProposalChecklist> checkList){
-		Collections.sort(checkList, 
-				new Comparator<ScQtProposalChecklist>() {
-					public int compare(ScQtProposalChecklist checklist1, 
-							ScQtProposalChecklist checklist2) {
-						
-						return checklist1.getScQtCheckList().getChecklistSeq()-checklist2.getScQtCheckList().getChecklistSeq();
-					}
-				});
+
+	private void checklistSorting(List<ScQtProposalChecklist> checkList) {
+		Collections.sort(checkList, new Comparator<ScQtProposalChecklist>() {
+			public int compare(ScQtProposalChecklist checklist1,
+					ScQtProposalChecklist checklist2) {
+
+				return checklist1.getScQtCheckList().getChecklistSeq()
+						- checklist2.getScQtCheckList().getChecklistSeq();
+			}
+		});
 	}
 }
