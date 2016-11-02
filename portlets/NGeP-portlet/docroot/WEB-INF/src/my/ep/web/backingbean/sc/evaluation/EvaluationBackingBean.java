@@ -10297,7 +10297,7 @@ private void retriveCommitteeRemarksList(){
 	}
 
 	/**
-	 * set current output tab value.
+	 * set  output tab value.
 	 * @param outputTab
 	 *           (int outputTab)
 	 */
