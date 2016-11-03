@@ -48,6 +48,7 @@
 								var="parameter" itemLabel="#{parameter.codeName}"
 								itemValue="#{parameter.pmParameter.parameterCode}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{pmGoSearchBackingBean.onChangeAccType()}"
 								update="somAccClass,somGoCode" />
 						</p:selectOneMenu>
 
@@ -59,6 +60,7 @@
 							<f:selectItems
 								value="#{pmGoSearchBackingBean.retrieveAccountClass()}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
+							listener="#{pmGoSearchBackingBean.onChangeAccClass()}"
 								update="@this,somGoCode" />
 						</p:selectOneMenu>
 
