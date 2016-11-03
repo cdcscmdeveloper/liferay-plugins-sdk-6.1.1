@@ -1,11 +1,16 @@
 package my.ep.web.vo;
 
+import java.io.Serializable;
 import java.util.List;
 
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 
-public class SmMachineCategoryVO {
+public class SmMachineCategoryVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9150227604058321990L;
 	private PmParameter categoryTypeCode;
 	private List<SmMachineDtl> smMachineDtls;
 
