@@ -696,7 +696,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 						getManagedBean().setEditorValue("");
 						if(vmFile !=null) {							 				
 					          if(getServerUrl() != null){
-					               context.put("imgUrl",getServerUrl()+ "css/images/gov.png" );
+					               context.put("imgUrl",getServerUrl()+  "NGeP-portlet/css/images/gov.png" );
 					          }
 					
 					          context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
