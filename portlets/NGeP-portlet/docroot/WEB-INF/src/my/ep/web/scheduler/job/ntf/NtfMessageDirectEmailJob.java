@@ -1,6 +1,5 @@
 package my.ep.web.scheduler.job.ntf;
 
-import my.ep.biz.service.integration.ntf.IJbossNtfSO;
 import my.ep.biz.service.ntf.scheduler.INtfMessageBulkSchedulerSO;
 import my.ep.biz.service.ntf.scheduler.INtfMessageDirectEmailSchedulerSO;
 import my.ep.constant.ModuleCodeConst;
