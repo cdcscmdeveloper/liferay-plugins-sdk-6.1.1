@@ -2281,10 +2281,7 @@ public class PmCommonUtil {
 		try {
 			UserReqDTO reqDTO = new UserReqDTO();
 			UserResDTO resDTO = new UserResDTO();
-			
-			// Order by user name
-			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
-			
+						
 			reqDTO.setOrgProfileId(ptjOrgProfileId);
 			reqDTO.setRoleCodes(roleCodeList);
 			reqDTO.setWithProfileGroup(isNaikTaraf);
@@ -2293,6 +2290,40 @@ public class PmCommonUtil {
 			userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			resDTO = userSO.retrieveUserListFromGroupOrgType(reqDTO);
+
+			if (resDTO.isSuccessful() && resDTO.getUserResultBean() != null) {
+				return resDTO.getUserResultBean();
+			}
+
+		} finally {
+			userSO = null;
+		}		
+		return null;
+	}
+	
+	/**
+	 * retrieve user list (by applying group org type) for sourcing
+	 * 
+	 * @param ptjOrgProfileId
+	 * @param roleCodeList
+	 * @param excludedUserIds
+	 * @return List<PmUser>
+	 */
+	public static ISearchResultBean<PmUser> retrieveUserListFromGroupOrgTypeForSourcing(Long ptjOrgProfileId,
+			List<String> roleCodeList,List<Long> excludedUserIds,ISearchBean<PmUser> searchBean) {
+		log.info("retrieveUserListFromGroupOrgType - Start");
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = new UserResDTO();
+						
+			reqDTO.setOrgProfileId(ptjOrgProfileId);
+			reqDTO.setRoleCodes(roleCodeList);
+			reqDTO.setUserIds(excludedUserIds);
+			reqDTO.setUserSearchBean(searchBean);
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.retrieveUserListFromGroupOrgTypeForSourcing(reqDTO);
 
 			if (resDTO.isSuccessful() && resDTO.getUserResultBean() != null) {
 				return resDTO.getUserResultBean();
