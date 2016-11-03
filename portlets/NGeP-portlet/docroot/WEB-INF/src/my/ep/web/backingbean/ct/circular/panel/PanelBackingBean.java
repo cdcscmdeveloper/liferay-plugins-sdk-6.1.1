@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -150,12 +150,13 @@ import my.ep.web.util.pm.helper.ParameterHelper;
  * @since 9/10/2013
  */
 @ManagedBean (name = "panelBackingBean") 
-@RequestScoped
+@ViewScoped
 public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-	ContractBackingBean ctBB = null;
+	private ContractBackingBean ctBB = null;
+	
 	/**
 	 * The function constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -175,7 +176,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().getCancelCircularReq().setStatus(status);
 			initializeRemarks();
 			if(ctBB == null){
-		    	ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+		    	ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			    ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			}
     	}  
@@ -382,11 +383,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 	         getManagedBean().setRemarkList(resDTO.getRemarkList());
 	         getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-	         ctBB.getManagedBean().setDeleteAttachmentList(null);
 	         getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
-	         ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+	         ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 	         ctBB.initializeRemarkAndAttachement(resDTO.getCancelCircularReq().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-		
+	         ctBB.getManagedBean().setDeleteAttachmentList(null);
 		} catch (Exception e) {
 		     e.printStackTrace();
 		     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -524,9 +524,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					getManagedBean().setSelectedPanelZone(null);
 					getManagedBean().setUpdateAction(false);
 					getManagedBean().setViewContract(false);
-					initializeRemarks();
-					ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-					ctBB.initializeRemarkAndAttachement(getManagedBean().getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
