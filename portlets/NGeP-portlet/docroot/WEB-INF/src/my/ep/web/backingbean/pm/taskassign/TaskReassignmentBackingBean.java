@@ -1904,19 +1904,14 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ_NAIK_TARAF:
 			//8 - Include user for Ministry, Kumpulan PTJ, PTJ & Naik Taraf
-			if(vo.getOrgProfileId() != null){
-				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(vo.getOrgProfileId());
-			}
-			if(orgProfile != null){
-				if(roleList == null || roleList.isEmpty()){
+		if(vo.getOrgProfileId() != null){
+			if(roleList == null || roleList.isEmpty()){
 					roleList = retrieveAvailableRoles(task.getDocStatus()
 						.longValue(),reassignType,subReassignType);
 				}
-				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
-						orgProfile.getOrgProfileId(),
-						roleList,
-						true,
-						null,
+				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgTypeForSourcing(
+						vo.getOrgProfileId(),
+						roleList,						
 						new ArrayList<Long>(Arrays.asList(userId,
 								getFacesScopes().getUserSessionBean()
 										.getUserId())),searchBean);
