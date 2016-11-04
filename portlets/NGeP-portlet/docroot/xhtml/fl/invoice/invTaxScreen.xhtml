@@ -60,7 +60,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:center">
 			<f:facet name="footer">
-				<h:outputText value=""></h:outputText>			
+				<h:outputText value="#{lbl['lbl.fl.item.total']}"></h:outputText>			
 			</f:facet>
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.gstUnitPrice}" rendered="#{chargeLineNode.level == 3 and chargeLineNode.flInvoiceItem.gstFlag.parameterCode!=ParameterConst.zeroRated and chargeLineNode.flInvoiceItem.gstFlag.parameterCode!=ParameterConst.taxRelief}" style="float:right;">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
