@@ -331,7 +331,7 @@ public class QTDetailBackingBean extends
 	
 	private PmOrgProfile getOrgProfileByLoginUser() {
 		PmOrgProfile pmOrgProfile = null;
-		Long userId = facesScope.getUserSessionBean().getUserId();
+		Long userId = new FacesScopes().getUserSessionBean().getUserId();
 		
 		if (userId != null) {
 			IUserSO userSO = null;
@@ -1411,7 +1411,7 @@ public class QTDetailBackingBean extends
 							ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 
 					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-					supplierSearchReqDTO.setUserId(userId);
+					supplierSearchReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 					List<SmSupplier> smSuppliers = supplierSearchSO
 							.retriveSupplierProfiles(supplierSearchReqDTO)
 							.getResultBean().getResultList();

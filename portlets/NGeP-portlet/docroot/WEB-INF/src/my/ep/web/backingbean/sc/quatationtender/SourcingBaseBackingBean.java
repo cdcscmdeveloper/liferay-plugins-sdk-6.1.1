@@ -894,11 +894,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		pmDigiSign.setOriginalData(textBeforeSign);
 	}
 
-	FacesScopes facesScope = new FacesScopes();
-	Long userId = facesScope.getUserSessionBean().getUserId();
-	// Long userId = (Long) MDC.get(LogKey.USER_ID);
-	Timestamp date = new Timestamp(System.currentTimeMillis());
-
 	/**
 	 * To check Digisining Required
 	 * 
