@@ -4080,6 +4080,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						throw new EpException(MessageConst.ERROR_740041);
 					}
 				}
+				
+				validateChargelineLimit(action);
 			}
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
@@ -5181,6 +5183,26 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	public void searchContract(){
 		getManagedBean().getActiveContractDataModel().reloadData();
+	}
+	
+	private void validateChargelineLimit(String action){
+		Map<String, Integer> fulfilmentItemMap = new HashMap<String, Integer>();
+		int countChargelineLimit = 0;
+		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
+				if(fulfilmentItemMap.get(itemAddr.getScRequestItem().getRequestNoteItemId()+ " "+itemAddr.getGstUnitPrice())==null) {
+					countChargelineLimit = countChargelineLimit + 1;
+					fulfilmentItemMap.put(itemAddr.getScRequestItem().getRequestNoteItemId()+ " "+itemAddr.getGstUnitPrice(), countChargelineLimit);
+				} 
+			}
+		}
+		if(countChargelineLimit > FulfilmentConst.CHARGELINE_LIMIT){
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+				throw new EpException(MessageConst.ERROR_740049, new String[]{getManagedBean().getFlRequest().getDocNo(),FulfilmentConst.CHARGELINE_LIMIT.toString()});
+			}else {
+				throw new EpException(MessageConst.ERROR_740050, new String[]{getManagedBean().getFlRequest().getDocNo(),FulfilmentConst.CHARGELINE_LIMIT.toString()});
+			}
+		}
 	}
 	
 }
