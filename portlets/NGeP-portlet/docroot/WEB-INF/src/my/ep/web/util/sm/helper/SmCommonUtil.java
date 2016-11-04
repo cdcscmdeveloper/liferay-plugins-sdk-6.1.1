@@ -4448,7 +4448,7 @@ public class SmCommonUtil {
 		return vCode;
 	}
 
-	public String retrieveLoginIdsByZoneAndRole(String zoneZode,
+	public static String retrieveLoginIdsByZoneAndRole(String zoneZode,
 			String roleCode, String supplierType, String applType,
 			String applCatTyep) {
 		
