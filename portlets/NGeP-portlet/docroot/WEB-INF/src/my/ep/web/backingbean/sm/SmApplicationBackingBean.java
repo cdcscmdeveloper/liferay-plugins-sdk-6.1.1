@@ -7305,6 +7305,18 @@ public class SmApplicationBackingBean extends
 				reqDTO.setPoLoginId(SmApplicationUtil.getPOLoginId(
 						getManagedBean().getSmSupplier(), getManagedBean()
 								.getSmAppl()));
+			} else {
+				PmState state = getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
+				if (state != null && state.getStateId() != null) {
+					PmZone zone = SmApplicationUtil.retrieveZoneByStateId(state
+							.getStateId());
+					reqDTO.setSdoLoginIds(SmCommonUtil
+							.retrieveLoginIdsByZoneAndRole(zone.getZoneCode(),
+									"UPS_SDO", bpmAppl.getSupplierType(),
+									bpmAppl.getApplType(),
+									bpmAppl.getApplCategoryType()));
+				}
 			}
 
 			// Set list of users to send to BPM
@@ -8696,6 +8708,16 @@ public class SmApplicationBackingBean extends
 					reqDTO.setSvTaskIdsNeedToBeRemoved(getManagedBean()
 							.getSvTaskIdsNeedToDelete());
 
+					SmAddress hqAddr = getHqAddress();
+					if (hqAddr != null) {
+						ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+						zoneReqDTO.setStateId(hqAddr.getPmState().getStateId());
+						PmZone zone = SmServiceLookup.getZoneSO()
+								.retrieveZoneByStateId(zoneReqDTO).getPmZone();
+						String approverLoginIds = SmCommonUtil.retrieveLoginIdsByZoneAndRole(zone.getZoneCode(), "UPS_APPROVER", getManagedBean().getSmAppl().getSupplierType(), getManagedBean().getSmAppl().getApplType(), getManagedBean().getSmAppl().getApplCategoryType());
+						reqDTO.setApproverLoginIds(approverLoginIds);
+					}
+					
 					ReviewApplicationResDTO revApplicationResDTO = reqSO
 							.submitPOorApproverReviewToBPM(reqDTO);
 
