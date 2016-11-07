@@ -2920,7 +2920,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					committeeMember.setCtAmendment(this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment());
 					committeeMember.setPmUser(users);
 					committeeMember.setMemberRole(new PmParameter());
-					committeeMember.setExternalUser(false);
 					committeeMember.setMemberName(users.getUserName());
 					committeeMember.setIcPassport(users.getIdentificationNo());
 					committeeMember.setGrade(users.getGrade());
