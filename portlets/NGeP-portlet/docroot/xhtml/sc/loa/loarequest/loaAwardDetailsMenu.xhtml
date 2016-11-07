@@ -9,11 +9,6 @@
 	<ui:param name="isZonal" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.zonal}" />
 	<ui:param name="loa" value="#{lOADetailBackingBean.managedBean.scLoa}" />
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" toggleable="true">
-		<div width="17%" style="white-space: nowrap;" align="right" class="BtnSpacing">
-			<p:commandButton value="#{lbl['lbl.sc.loiloa.update.specification']}"
-				action="#{lOADetailBackingBean.setTemplateSpec(loa)}"
-				rendered="#{isPendingSubmissionStatus and isDocTypeQuotation}"></p:commandButton>
-		</div>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="17%">
