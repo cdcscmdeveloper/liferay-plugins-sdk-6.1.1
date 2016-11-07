@@ -45,6 +45,12 @@ public class SupplierDetailBackingBean extends
 	public SupplierDetailBackingBean() {
 	}
 
+	/**
+	 * Get  Supplier GstDetails   based on Supplier.
+	 * 
+	 * @param smSupplier
+	 * 
+	 */
 	public void setSmSupplier(SmSupplier smSupplier) {
 		debugLogger("setSmSupplier");
 		ISupplierGstSO supplierGstSo = null;
@@ -114,6 +120,12 @@ public class SupplierDetailBackingBean extends
 		this.getManagedBean().setHasQtProposal(false);
 	}
 	
+	/**
+	 * Get  SmSupplier data based on proposal.
+	 * 
+	 * @param scQtProposal
+	 * 
+	 */
 	public void setScQtProposal(ScQtProposal scQtProposal) {
 		debugLogger("setScQtProposal");
 
@@ -137,6 +149,11 @@ public class SupplierDetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * method to handle reset data.
+	 * 
+	 * 
+	 */
 	public void reset() {
 		this.getManagedBean().setMofNo(null);
 		this.getManagedBean().setSmApplId(null);
