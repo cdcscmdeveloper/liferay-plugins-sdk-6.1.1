@@ -1853,19 +1853,23 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_NAIK_TARAF_PTJ:
 			//5 - Include User for Naik Taraf & PTJ
-			if(roleList == null || roleList.isEmpty()){
-				roleList = retrieveAvailableRoles(task.getDocStatus()
-					.longValue(),reassignType,subReassignType);
-			}
 			
-			resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
-					orgProfileId,
-					roleList,
-					true,
-					ParameterConst.ORG_AUTH_TYPE_ORG_GROUP,
-					new ArrayList<Long>(Arrays.asList(userId,
-							getFacesScopes().getUserSessionBean()
-									.getUserId())),searchBean);
+			actualOrgProfileId = vo.getOrgProfileId();
+			if(actualOrgProfileId != null){
+				if(roleList == null || roleList.isEmpty()){
+					roleList = retrieveAvailableRoles(task.getDocStatus()
+						.longValue(),reassignType,subReassignType);
+				}
+				
+				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
+						actualOrgProfileId,
+						roleList,
+						true,
+						ParameterConst.ORG_AUTH_TYPE_ORG_GROUP,
+						new ArrayList<Long>(Arrays.asList(userId,
+								getFacesScopes().getUserSessionBean()
+										.getUserId())),searchBean);
+			}
 			isSearched = true;
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_GROUP:
