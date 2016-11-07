@@ -5268,6 +5268,12 @@ public class LOIDetailBackingBean extends
 	}
 	
 	
+	/**
+	 * Deletebutton negotation result disable.
+	 *
+	 * @param list the list
+	 * @return true, if successful
+	 */
 	public  boolean deletebuttonNegotationResultDisable(
 			List<ScLoiTerm> list) {
 		if (list != null) {
@@ -5281,6 +5287,12 @@ public class LOIDetailBackingBean extends
 		return true;
 	}
 
+	/**
+	 * Retrivemessage.
+	 *
+	 * @param date the date
+	 * @return the string
+	 */
 	public String retrivemessage(Date date){
 		String message="";
 		if(null!=date){
