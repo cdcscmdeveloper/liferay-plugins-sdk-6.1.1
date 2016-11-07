@@ -266,6 +266,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 * Get SelectedComponentId.
 	 * @return the selectedComponentId
 	 */
 	public String getSelectedComponentId() {
@@ -273,6 +274,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 * Set SelectedComponentId.
 	 * @param selectedComponentId the selectedComponentId to set
 	 */
 	public void setSelectedComponentId(String selectedComponentId) {
@@ -280,6 +282,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 * Get SelectedAttachment Object.
 	 * @return the selectedAttachment
 	 */
 	public BaseEntity getSelectedAttachment() {
@@ -287,6 +290,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 * set SelectedAttachment Object.
 	 * @param selectedAttachment the selectedAttachment to set
 	 */
 	public void setSelectedAttachment(BaseEntity selectedAttachment) {
@@ -294,6 +298,8 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 * Get attachment list.
+	 * 
 	 * @return the attachmentList
 	 */
 	public List<? extends BaseEntity> getAttachmentList() {
@@ -301,6 +307,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 * set attachment list.
 	 * @param attachmentList the attachmentList to set
 	 */
 	public void setAttachmentList(List<? extends BaseEntity> attachmentList) {

@@ -1415,6 +1415,10 @@ public class CommitteBackingBean extends
 		}
 	}
 	
+	/**
+	 * Event to handle selection of committee members.
+	 * @param committeeMember
+	 */
 	public void selectMemberEvent(ScCommitteeMember committeeMember) {
 		this.getManagedBean().setSelectAllMembers(false);
 		List<ScCommitteeMember> selectedCommitteeMembers 
@@ -2311,6 +2315,10 @@ public class CommitteBackingBean extends
 	/* (non-Javadoc)
 	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
 	 */
+	
+	/**
+	 * Override from SourcingBaseBackingBean#preRenderView() and retrive committee details.
+	 */
 	public void preRenderView() {
 		Object payLoad = getBpmTaskDetails(Object.class, null);
 		ICommitteSO committeSO = BusinessDelegate.getInstance()
@@ -2430,6 +2438,11 @@ public class CommitteBackingBean extends
 		return NAV_TO_SEARCH_PAGE + "?faces-redirect=true";
 	}
 	
+	/**
+	 * Gets the Status DropDown Values.
+	 *
+	 * @return SelectItem[]
+	 */
 	public SelectItem[] getRecordStatusDropdownValues() {
 		/*
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
