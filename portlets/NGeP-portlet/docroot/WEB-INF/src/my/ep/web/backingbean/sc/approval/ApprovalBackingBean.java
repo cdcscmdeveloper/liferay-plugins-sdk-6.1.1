@@ -322,8 +322,8 @@ public class ApprovalBackingBean extends
 		return imageFileName;
 	}
 
-	/*
-	 * 
+	
+	/**
 	 * preRenderView(). user click on task list it will Render Approvals screens
 	 * for(Committee/BPK/Finalization/Publication).
 	 */
@@ -1422,6 +1422,11 @@ public class ApprovalBackingBean extends
 
 	}
 
+	/**
+	 * Method to Revise or Reject..
+	 * 
+	 * @return boolean
+	 */
 	public boolean isReviceOrReject() {
 		String[] outComes = this.getManagedBean().getOutComes();
 		if (null != outComes && outComes.length > 0) {
