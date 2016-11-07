@@ -2285,6 +2285,7 @@ public class PmCommonUtil {
 			reqDTO.setOrgProfileId(ptjOrgProfileId);
 			reqDTO.setRoleCodes(roleCodeList);
 			reqDTO.setWithProfileGroup(isNaikTaraf);
+			reqDTO.setGroupOrgType(groupOrgType);
 			reqDTO.setUserIds(excludedUserIds);
 			reqDTO.setUserSearchBean(searchBean);
 			userSO = BusinessDelegate.getInstance().getServiceObject(
