@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.sc.consolidation;
 
 import java.io.FileNotFoundException;
@@ -79,10 +82,12 @@ import org.primefaces.model.MenuModel;
 
 
 /**
+ * ConsolidationReport  Detail Backing Bean.
+ * 
  * @author Praneeth
  * 
  * @version 1.1
- * @since 14/01/2016
+ * @since 14.01.2016
  */
 @ManagedBean(name="consolidationReportBackingBean")
 @RequestScoped
@@ -513,6 +518,11 @@ public class ConsolidationReportBackingBean extends
 		}
 	}	
 
+	/**
+	 *save consolidationReport Details.
+	 * 
+	 *
+	 */
 	public void saveAction() {
 		SuppFinalizationReqDTO reqDTO = prepareDataToSave();
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -544,6 +554,11 @@ public class ConsolidationReportBackingBean extends
 		}
 	}
 	
+	/**
+	 *submit Action Details.
+	 * 
+	 *
+	 */
 	public void submitAction() {
 		// Validate Desk officer ranking
 		validateConsolidationReport();
@@ -551,6 +566,11 @@ public class ConsolidationReportBackingBean extends
 			
 	}
 	
+	/**
+	 *submit consolidationReport Details.
+	 * 
+	 *
+	 */
 	public void submitConsolidationReport(){
 		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -1361,6 +1381,7 @@ public class ConsolidationReportBackingBean extends
 	}
 
 	/**
+	 * Get briefingPaerTabIndex.
 	 * @return the BRIEFING_PAPER_TAB_INDEX
 	 */
 	public static int getBRIEFING_PAPER_TAB_INDEX() {
@@ -1368,6 +1389,7 @@ public class ConsolidationReportBackingBean extends
 	}
 
 	/**
+	 * Get ItemizedTypeTabIndex.
 	 * @return the ITEMIZED_TYPE_TAB_INDEX
 	 */
 	public static int getITEMIZED_TYPE_TAB_INDEX() {
@@ -1375,6 +1397,7 @@ public class ConsolidationReportBackingBean extends
 	}
 
 	/**
+	 * Get PackageTypeTabIndex.
 	 * @return the PACKAGE_TYPE_TAB_INDEX
 	 */
 	public static int getPACKAGE_TYPE_TAB_INDEX() {
