@@ -228,37 +228,30 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			this.getManagedBean().getSmApplInquiry().setSmAppl(this.getManagedBean().getSmAppl());
 			reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 
-			try{
-				SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
 
-				if (resDTO.isSuccessful()) {
-					RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
-					//RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
-					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-					if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
-						FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721105,
-								new String[] {getManagedBean().getSmAppl().getApplNo(),getManagedBean().getSmAppl().getSmSupplier().getCompanyName()},MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-					}else{
-//						String assignedPOName = getAssignedPOName(getManagedBean().getSmAppl().getApplNo());
-						String assignedPOName = "";
-						FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721104,
-								new String[] {getManagedBean().getSmAppl().getApplNo(), assignedPOName},MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-					}
-					renewSesionObject();
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				} else {
-					RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
-					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-				}
-			}catch(Exception ex){
-				//RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
+			SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
+				//RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-				throw new EpException(ex.getMessage());
+				if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721105,
+							new String[] {getManagedBean().getSmAppl().getApplNo(),getManagedBean().getSmAppl().getSmSupplier().getCompanyName()},MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+				}else{
+					//						String assignedPOName = getAssignedPOName(getManagedBean().getSmAppl().getApplNo());
+					String assignedPOName = "";
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721104,
+							new String[] {getManagedBean().getSmAppl().getApplNo(), assignedPOName},MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+				}
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			} else {
+				RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 			}
-
-
 		}
 		return null;
 	}
