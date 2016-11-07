@@ -581,11 +581,14 @@ public class BSVAttendanceBackingBean extends
 
 	}
 
+	
+
 	/**
 	 * Method will execute on row select in data table.
 	 * 
-	 * @param event
+	 *@param event
 	 *            the instance of SelectEvent
+	 *            
 	 */
 	public void onRowSelect(SelectEvent event) {
 
@@ -1084,6 +1087,7 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 	}
 
 	/**
+	 * return SlectedHeadername.
 	 * @return the slectedHeaderName
 	 */
 	public String getSlectedHeaderName() {
@@ -1091,6 +1095,7 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 	}
 
 	/**
+	 * set slectedHeaderName.
 	 * @param slectedHeaderName
 	 *            the slectedHeaderName to set
 	 */
@@ -1135,6 +1140,14 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 			briefingRegistration.setBsvAttendance(attanedList);
 		}
 	
+	/**
+	 * update briefing attendance details info.
+	 * 
+	 * @param bsvAttendance
+	 * @param listAttendance
+	 * @param attendance
+	 *
+	 */
 	public void updateBriefingAttendance(ScQtBsvAttendance bsvAttendance,List<ScQtBsvAttendance> listAttendance,boolean attendance){
 		int i=listAttendance.indexOf(bsvAttendance);
 		bsvAttendance.setAttended(attendance);
@@ -1263,6 +1276,13 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 		}
 
 	}
+	
+	/**
+	 *To Get MofAccountNum by supplier.
+	 *@param supplier 
+	 * 
+	 * @return supplier mofAccountNum.
+	 */
 	public String mofAccountNumber(SmSupplier supplier){
 		return retriveMofAccountBySupplier(supplier).getMofNo();
 	}
