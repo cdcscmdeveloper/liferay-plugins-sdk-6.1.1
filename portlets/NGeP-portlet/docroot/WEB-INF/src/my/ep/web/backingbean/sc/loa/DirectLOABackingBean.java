@@ -2373,6 +2373,9 @@ public class DirectLOABackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDirectAwardSO.class);
 	}
 
+	/**
+	 * Close listener.
+	 */
 	public void closeListener() {
 		getManagedBean().setRequired(Boolean.FALSE);
 		this.getManagedBean().setZoneLocation(Boolean.FALSE);
@@ -3417,6 +3420,11 @@ public class DirectLOABackingBean extends
 		updateTplSpecMasterNDetails(isZonal);
 	}
 
+	/**
+	 * Gets the approval users.
+	 *
+	 * @return the approval users
+	 */
 	public void getApprovalUsers() {
 		if (CollectionUtils.isEmpty(this.getManagedBean().getApproverList())) {
 			IUserSO userSo = BusinessDelegate.getInstance().getServiceObject(
@@ -3636,9 +3644,10 @@ public class DirectLOABackingBean extends
 		}
 	}
 
-	/*
-	 * * Download all reports as pdf or xlsx files in Letter of Acceptance.
-	 * 
+
+	/**
+	 * Download all reports.
+	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void downloadAllReports() throws IOException {
@@ -3865,6 +3874,9 @@ public class DirectLOABackingBean extends
 
 	}
 
+	/**
+	 * Pre render direct loa.
+	 */
 	public void preRenderDirectLoa() {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		
@@ -5677,6 +5689,11 @@ public class DirectLOABackingBean extends
 		}
 	}
 
+	/**
+	 * Checks if is GST reg active.
+	 *
+	 * @return true, if is GST reg active
+	 */
 	public boolean isGSTRegActive() {
 
 		boolean isActive = true;
@@ -5788,6 +5805,9 @@ public class DirectLOABackingBean extends
 		}
 	}
 
+	/**
+	 * Reset contract dates.
+	 */
 	public void resetContractDates() {
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		scLoa.setContractEffDate(null);
@@ -5922,6 +5942,11 @@ public class DirectLOABackingBean extends
 				isZonal, this.getManagedBean().getSpecTemplateSpecBean());	
 	}
 
+	/**
+	 * Upload branch info.
+	 *
+	 * @param event the event
+	 */
 	public void uploadBranchInfo(FileUploadEvent event) {
 
 		ScLoa scLoa = this.getManagedBean().getScLoa();
@@ -6072,6 +6097,9 @@ public class DirectLOABackingBean extends
 		awardReqDTO.setTobeDeletedList(specAnswers);
 	}
 
+	/**
+	 * Populate ministry based on login user.
+	 */
 	public void populateMinistryBasedOnLoginUser() {
 		PmOrgProfile orgProfile = this.getManagedBean().getScQt()
 				.getPmOrgProfile();
@@ -6108,6 +6136,11 @@ public class DirectLOABackingBean extends
 		}
 	}
 
+	/**
+	 * Select all supp documents.
+	 *
+	 * @param event the event
+	 */
 	public void selectAllSuppDocuments(AjaxBehaviorEvent event) {
 		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource())
 				.isSelected();
@@ -6563,5 +6596,29 @@ public class DirectLOABackingBean extends
 		} finally {
 			parameterSO = null;
 		}
+	}
+	
+	
+	/**
+	 * Show prepared by.
+	 *
+	 * @param createdBy the created by
+	 * @return the string
+	 */
+	public String showPreparedBy(Long createdBy) {
+		String userName = "";
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		if (createdBy != null) {
+			reqDTO.setUserId(createdBy);
+			UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+
+			if (resDTO.getPmUser() != null) {
+				userName = resDTO.getPmUser().getUserName();
+			}
+		}
+		return userName;
 	}
 }
