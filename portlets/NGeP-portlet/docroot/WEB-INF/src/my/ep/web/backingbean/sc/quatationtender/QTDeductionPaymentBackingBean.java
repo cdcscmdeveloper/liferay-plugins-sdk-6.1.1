@@ -295,6 +295,11 @@ public class QTDeductionPaymentBackingBean extends
 		return getDropdownValuesBySearchBean(ParameterTypeConst.DEDUCTION_TYPE,searchBean);
 	}
 	
+	/**
+	 *User Selects DeductionClause.
+	 *
+	 *
+	 */
 	public void selectAllDeductionClause(AjaxBehaviorEvent event) {
 		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		this.getManagedBean().getSelectedScQtDeduction().getScQtDeductionClauses();
@@ -312,6 +317,7 @@ public class QTDeductionPaymentBackingBean extends
 	}
 
 	/**
+	 * Get the flag.
 	 * @return the flag
 	 */
 	public boolean isFlag() {
@@ -319,6 +325,7 @@ public class QTDeductionPaymentBackingBean extends
 	}
 
 	/**
+	 * Set the flag.
 	 * @param flag the flag to set
 	 */
 	public void setFlag(boolean flag) {
