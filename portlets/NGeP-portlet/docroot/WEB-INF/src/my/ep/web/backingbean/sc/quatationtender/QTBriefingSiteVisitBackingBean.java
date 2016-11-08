@@ -1063,6 +1063,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	}
 	
 	/**
+	 * Get the BsvMinDate.
 	 * @return minDate
 	 */
 	public Date handleBSVMinDate() {

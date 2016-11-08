@@ -1,5 +1,12 @@
-/**
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
  * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
  */
 package my.ep.web.backingbean.sc.quatationtender;
 
@@ -122,6 +129,7 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.TreeNode;
 
 /**
+ *  Create Quotation / Tender  Backing Bean.
  * @author User
  *
  */
@@ -156,7 +164,11 @@ public class CreateQtBackingBean extends
 		log.info(message);
 	}
 
-	
+	/**
+	 *create LOV ConstructionFields For Panel.
+	 * 
+	 *@return the panelCondtion.
+	 */
 	public String constrcutFieldsForPanel() {
 
 		StringBuffer conditionString = new StringBuffer();
@@ -262,6 +274,9 @@ public class CreateQtBackingBean extends
 
 	}
 	
+	/**
+	 * Navigate to quotationTender creation page.
+	 */
 	public void preCreateQuotationTenderRenderView() {
 		
 		super.renewSesionObject();
@@ -2222,7 +2237,13 @@ public class CreateQtBackingBean extends
 			specSo = null;
 		}
 	}
-		
+	
+	/**
+	 * Set the FileNo.
+	 * 
+	 * @param ScQt
+	 * 		the scQt
+	 */
 	public void setFileNo(ScQt scQt) {
 		scQt.getFileNo();
 		
@@ -2431,6 +2452,9 @@ public class CreateQtBackingBean extends
 		}
 
 	}
+	/**
+	 * method to search PanelItem PagingDataModel.
+	 */
 	public void searchAllPanelItems(){
 
 		IPagingDataModel<CtPanelItem> panelItemDataModel = getManagedBean()
@@ -2543,6 +2567,12 @@ public class CreateQtBackingBean extends
 			
 		}
 	
+	/**
+	 * User change the procurement category DropDown  based on  get the Procurement category object and set.
+	 * 
+	 * @param event
+	 *
+	 */
 	public void setProcurmentCategory(AjaxBehaviorEvent event){
 		
 		Long id = (Long) event.getComponent().getAttributes().get("value");
@@ -2566,6 +2596,11 @@ public class CreateQtBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 	
+	/**
+	 * Gets the PublishingPeriod tooltip.
+	 * 
+	 * @return the PublishingPeriod tooltip.
+	 */
 	public String getPublishingPeriodDaysToolTip() {
 		StringBuilder tooltip = new StringBuilder();
 		ScQt scQt = getManagedBean().getQt();
