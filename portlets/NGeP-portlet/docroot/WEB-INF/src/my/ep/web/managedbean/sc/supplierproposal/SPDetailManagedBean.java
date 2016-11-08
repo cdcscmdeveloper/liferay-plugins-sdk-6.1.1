@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.managedbean.sc.supplierproposal;
 
 import java.math.BigDecimal;
