@@ -5,6 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+			escape="false" value="#{lbl['lbl.sc.loiloa.loa.attachment.instruction']}" />
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}"
 		id="directLoaLetterOfAcceptancePanel" toggleable="true">
@@ -51,7 +54,8 @@
 				headerText="#{lbl['lbl.sc.upload']}" rendered="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 			   <h:panelGroup id="docUploadId">
 				<ui:fragment
-					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
+					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or 
+						scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload}">
 					<ac:scSingleFileUploadButton id="scDocUploadBtn"
 						popupWidgetVar="scDocUploadDlg"
 						attachment="#{scLoaReport.scLoaReportAttachment}"
@@ -75,7 +79,8 @@
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{directLOABackingBean.downloadReport(scLoaReport)}"
-					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true}" />
+					rendered="#{(scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true)
+					or scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload}" />
 			</p:column>
 		</p:dataTable>
 

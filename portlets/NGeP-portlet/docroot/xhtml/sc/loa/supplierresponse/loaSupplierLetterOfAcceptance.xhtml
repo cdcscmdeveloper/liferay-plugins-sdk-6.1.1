@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}"
+		id="loaletterOfAcceptancePanelIds" toggleable="true">
+		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget"
+			var="scLoaReport"
+			rowIndexVar="rowIndex"
+			value="#{lOADetailBackingBean.managedBean.scLoa.scLoaReports}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rows="10"
+			rowKey="#{scLoaReport}">
+			<ac:paginator for="contentsTbl" />
+
+			<p:column style="width:2%">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selectAllNegoLoc" disabled="true"
+						value="#{lOIDetailBackingBean.flag}"
+						rendered="#{isEditableStatus}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=loaletterOfAcceptancePanelIds])"
+							listener="#{lOADetailBackingBean.selectAllDocuments}"></p:ajax>
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{scLoaReport.selected}"
+					disabled="#{!empty scLoaReport.pmDocument or lOADetailBackingBean.managedBean.readOnly}">
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=loaletterOfAcceptancePanelIds])" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+
+
+			<p:column headerText="#{lbl['lbl.sc.content']}">
+				<h:inputText style="width:96%" value="#{scLoaReport.title}"
+				    label="#{lbl['lbl.sc.content']}"
+				    id="contendId"
+				    required="true" 
+					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+					rendered="#{empty scLoaReport.pmDocument}">
+					<p:ajax event="keyup" />
+				</h:inputText>
+				<h:outputText value="#{scLoaReport.title}"
+					rendered="#{!empty scLoaReport.pmDocument}" />
+				<p:message id="contendIdMsg" for="contendId" display="icon" />
+			</p:column>
+
+			<p:column style="width:10%;text-align: center;"
+				headerText="#{lbl['lbl.sc.action']}">
+				<ac:scSingleFileUploadButton id="scDocUploadBtn"
+					popupWidgetVar="scDocUploadDlg"
+					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or
+					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload}"
+					attachment="#{scLoaReport.scLoaReportAttachment}"
+					readonly="#{lOADetailBackingBean.managedBean.readOnly}"
+					rowIndex="#{rowIndex}">
+					<f:setPropertyActionListener for="actionEvent"
+						target="#{lOADetailBackingBean.managedBean.selectedScLoaReport}"
+						value="#{scLoaReport}" />
+					<f:setPropertyActionListener for="actionEvent"
+						target="#{lOADetailBackingBean.managedBean.attachmentDocType}"
+						value="LAR" />
+				</ac:scSingleFileUploadButton>
+				<p:commandButton id="download" icon="ui-icon-download"
+					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+					style="background-color:transparent !important; border:0px none;"
+					ajax="false"
+					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
+					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true or
+					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload}" />
+			</p:column>
+		</p:dataTable>
+
+		<div class="ppRightBtn BtnSpacing">
+			<p:commandButton rendered="#{!isPendingVerification}"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+				value="#{lbl['lbl.btn.download.all']}" ajax="false"
+				styleClass="ui-button"
+				action="#{lOADetailBackingBean.downloadAllReports}" />
+
+			<p:commandButton
+				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+				styleClass="ui-button" update="@form" onclick="printBtn.jq.click();"
+				actionListener="#{lOADetailBackingBean.showVerifyButton()}"
+				rendered="#{isPendingVerification}" />
+
+			<p:commandButton
+				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}" ajax="false"
+				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+				partialSubmit="true" process="@form" styleClass="ui-button"
+				widgetVar="printBtn" style="display:none;"
+				actionListener="#{lOADetailBackingBean.downloadAllReports}" />
+
+			<c:if test="#{isEditableStatus}">
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+					process="@this, contentsTbl" partialSubmit="true"
+					action="#{lOADetailBackingBean.addLoaContentAction}"
+					oncomplete="contentsTblWidget.paginator.endLink.click();"
+					update="contentsTbl" />
+
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					disabled="#{lOADetailBackingBean.managedBean.readOnly or lOADetailBackingBean.deleteselectedList(lOADetailBackingBean.managedBean.scLoa.scLoaReports)}"
+					process="@this, contentsTbl" partialSubmit="true"
+					oncomplete="loaReportDeletePopUp.show();"
+					update="@([id$=#{loaReportDeleteId}])" />
+			</c:if>
+
+		</div>
+		<ac:confirmationPopup id="loaReportDeleteId"
+			widget="loaReportDeletePopUp"
+			okAction="lOADetailBackingBean.deleteLoaDocument" width="400"
+			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+
+	</p:panel>
+</ui:composition>

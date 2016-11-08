@@ -45,8 +45,7 @@
 								value="0" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
-
-						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}"
 							update="@form"
 							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
@@ -54,8 +53,7 @@
 								value="1" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
-
-						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}"
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
 							update="@form"
 							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
@@ -63,7 +61,6 @@
 								value="2" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
-
 						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
 							update="@form"
 							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
@@ -91,20 +88,11 @@
 								value="5" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
-
-						<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}"
-							update="@form"
-							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
-							<f:setPropertyActionListener
-								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-								value="6" />
-							<f:param name="disableValidation" value="true" />
-						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.declaration']}" update="@form"
 							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-								value="7" />
+								value="6" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 
@@ -117,12 +105,12 @@
 						<c:if
 							test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">
 							<ui:include
-								src="/xhtml/sc/loa/directnego/directLoaAwardDetailsMenu.xhtml" />
+								src="directawardloaSupplierLetterOfAcceptance.xhtml" />
 						</c:if>
 						<c:if
 							test="#{directLOABackingBean.managedBean.selectedTabIndex == 2}">
 							<ui:include
-								src="/xhtml/sc/loa/directnego/directawardloaLetterOfAcceptance.xhtml" />
+								src="/xhtml/sc/loa/directnego/directLoaAwardDetailsMenu.xhtml" />
 						</c:if>
 						<c:if
 							test="#{directLOABackingBean.managedBean.selectedTabIndex == 3}">
@@ -139,17 +127,19 @@
 							<ui:include
 								src="/xhtml/sc/loa/directnego/directawardloaPerformanceBondMenu.xhtml" />
 						</c:if>
-						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 6}">
-							<ui:include src="directLoaLetterOfAcceptance.xhtml" />
-						</c:if>
 						<h:panelGroup
-							rendered="#{directLOABackingBean.managedBean.selectedTabIndex == 7}">
+							rendered="#{directLOABackingBean.managedBean.selectedTabIndex == 6}">
 							<ui:include src="directLoaIntegrityPactMenu.xhtml" />
 						</h:panelGroup>
 					</h:panelGroup></td>
 			</tr>
 		</table>
+		
+		<ac:scSingleFileUploadPopup widgetVar="scDocUploadDlg"
+			fileUploadListener="directLOABackingBean.handleFileUpload"
+			readonly="#{directLOABackingBean.managedBean.readOnly}"
+			update="@([id$=scDocUploadBtn])" 
+			autoUpdateValue="#{directLOABackingBean.managedBean.autoUpdate}"/>
 
 		<p:confirmDialog widgetVar="gstConfirmPopupWid" id="gstConfirmPopup"
 			width="500px"
