@@ -2279,6 +2279,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 
 	/**
+	 * Get the Gpki Sign Data.
 	 * @return  the textBeforeSign
 	 */
 	public String getTextBeforeSign() {
@@ -2292,6 +2293,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 
 	/**
+	 * Set the Gpki Sign Data.
 	 * @param textBeforeSign
 	 * 				the textBeforeSign to set
 	 */
@@ -2312,6 +2314,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 
 	/**
+	 * Get the CurrentTab.
 	 * @return the currentTab
 	 */
 	public int getCurrentTab() {
@@ -2319,6 +2322,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 
 	/**
+	 *  Set the CurrentTab.
 	 * @param currentTab
 	 *            the currentTab to set
 	 */
@@ -2327,6 +2331,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 
 	/**
+	 *  Get the OnlineBiddingMeeting ActiveIndex.
 	 * @return the onlineBiddingFinalizationMeetingActiveIndex
 	 */
 	public int getOnlineBiddingFinalizationMeetingActiveIndex() {
@@ -2338,6 +2343,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 
 	/**
+	 * Get the OnlineBiddingSummary ActiveIndex.
 	 * @return the onlineBiddingActiveIndexSummary
 	 */
 	public int getOnlineBiddingActiveIndexSummary() {
@@ -2352,6 +2358,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 
 	/**
+	 * Get the OnlineBiddingOnlineEndorsment ActiveIndex.
 	 * @return the onlineBiddingActiveIndexOnlineEndorsement
 	 */
 	public static int getOnlineBiddingActiveIndexOnlineEndorsement() {
@@ -2359,13 +2366,17 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 
 	/**
+	 * Get the OnlineBiddingOfflineEndorsment ActiveIndex.
 	 * @return the onlineBiddingActiveIndexOfflineEndorsement
 	 */
 	public static int getOnlineBiddingActiveIndexOfflineEndorsement() {
 		return ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT;
 	}
 	
-	// this method checking two meeting dates or equal or not.
+	
+	/**
+	 * this method checking two meeting dates or equal or not.
+	 */
 		private void compareMeetingDates(ScQtMeeting scqtMeeting,
 				List<ScQtMeeting> meetingList) {
 			if (null != meetingList && meetingList.size() >= 1) {
@@ -2402,7 +2413,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 		public void enableAutoUpdate() {
 			getManagedBean().setAutoUpdate(Boolean.TRUE);		
 		}
-		
+	
+		/**
+		 * Get the BriefingPaper Tab Details.and navigate to briefing paper tab.
+		 */
 	public void navigateToBriefingPaperTab() {
 
 		this.getManagedBean()
@@ -2413,6 +2427,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 	
 	/**
+	 * Get the OnlineBidding BriefingPaper ActiveIndex.
 	 * @return the onlineBiddingFinalizationMeetingActiveIndex
 	 */
 	public int getOnlineBiddinBriefingPaperActiveIndex() {
@@ -2424,6 +2439,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 	
+	/**
+	 * Get the  BriefingPaper tab details.
+	 * 
+	 */
 	public void retrieveBriefingPaper() {
 		
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
