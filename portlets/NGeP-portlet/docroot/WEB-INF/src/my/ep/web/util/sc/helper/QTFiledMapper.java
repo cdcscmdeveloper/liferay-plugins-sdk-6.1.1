@@ -200,12 +200,21 @@ public class QTFiledMapper {
 
 		}
 
+		/**
+		 * Get Field Values
+		 * 
+		 * @return the array of values.
+		 */
 		@Override
 		public String[] value() {
 
 			return toBeEnableFields;
 		}
-
+		/**
+		 * Get Field Values by statusId.
+		 * @param statusId
+		 * @return the array of values.
+		 */
 		public static String[] getValuesByStatusId(Long statusId) {
 			for (QTMaintanaceEnableFields filedMapper : QTMaintanaceEnableFields
 					.values()) {
@@ -357,12 +366,22 @@ public class QTFiledMapper {
 
 		}
 
+		/**
+		 * Get Field Values 
+		 * 
+		 * @return the array of values.
+		 */
 		@Override
 		public String[] value() {
 
 			return toBeEnableFields;
 		}
-
+         
+		/**
+		 * Get Field Values by statusId.
+		 * @param statusId
+		 * @return the array of values.
+		 */
 		public static String[] getValuesByStatusId(Long statusId) {
 			for (QTTaskListEnableFields filedMapper : QTTaskListEnableFields
 					.values()) {
