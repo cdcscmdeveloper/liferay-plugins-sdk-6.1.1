@@ -33,9 +33,13 @@
 					#{directLOABackingBean.managedBean.scQt.qtNo}</td>
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
-				<td class="header-info-text" colspan="3">
+				<td class="header-info-text">
 					#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}</td>
-				
+
+				<td width="10%"><h:outputLabel
+						value="#{lbl['lbl.sc.prepared.by']}" /></td>
+				<td class="header-info-text">
+					#{directLOABackingBean.showPreparedBy(directLOABackingBean.managedBean.scLoa.createdBy)}</td>
 			</tr>
 		</table>
 	</div>
