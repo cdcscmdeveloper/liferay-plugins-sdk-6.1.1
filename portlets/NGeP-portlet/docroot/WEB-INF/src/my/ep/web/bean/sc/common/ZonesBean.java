@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2016 Archisoft. All rights reserved.
+ */
 package my.ep.web.bean.sc.common;
 
 import java.util.List;
