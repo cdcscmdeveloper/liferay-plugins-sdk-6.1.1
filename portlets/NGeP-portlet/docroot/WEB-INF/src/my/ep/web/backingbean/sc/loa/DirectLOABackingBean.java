@@ -297,6 +297,11 @@ public class DirectLOABackingBean extends
 	 */
 	public void downloadReport(ScLoaReport scLoaReport) throws IOException {
 		debugLogger("downloadReport");
+		if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT) &&
+				getManagedBean().getScLoa().getPmStatus().getStatusId().
+				equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
+			validateLoaWitness();
+		}
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 				.getScLoaReportAttachment();
 		scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
@@ -1040,6 +1045,9 @@ public class DirectLOABackingBean extends
 			if (!getManagedBean().isAgreeWithTermsConditions()) {
 				throw new EpException(MessageConst.ERROR_750002);
 			}
+			
+			// validate repo attachements
+			validateRepoAttachment(scLoa);
 		}
 
 		// validation for fulfillment schedule and progressivepayment
@@ -3658,6 +3666,9 @@ public class DirectLOABackingBean extends
 		List<ScLoaReportAttachment> scAttachments = new ArrayList<ScLoaReportAttachment>();
 
 		for (ScLoaReport scLoaReport : scLoaReports) {
+			if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT)) {
+				validateLoaWitness();
+			}
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
 			scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
@@ -3681,8 +3692,9 @@ public class DirectLOABackingBean extends
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 				.getScLoaReportAttachment();
 
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-				.equals(definitionType)) {
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType) || 
+				ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD.equals(definitionType) ||
+				ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD.equals(definitionType)) {
 			try {
 				String docDefinitionKey = scLoaReport.getPmDocument()
 						.getDocDefinitionKey();
@@ -3750,13 +3762,19 @@ public class DirectLOABackingBean extends
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
+					} else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
+							.equals(docDefinitionKey)) {
+						// download from system
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						//TODO generate acknowledgement LOA receipt
+						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
 					}
-
 				} else if (scLoaReportAttachment != null
 						&& QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-								.equals(statusId)
+						.equals(statusId)
 						|| QTStatusConst.LOA_PENDING_VERIFICATION
-								.equals(statusId)) { // if
+						.equals(statusId)) { // if
 					// pending supplier acknowledgement , always regenerate
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
@@ -3767,14 +3785,7 @@ public class DirectLOABackingBean extends
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateContractSummaryPdfFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa);
-					} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-							.equals(docDefinitionKey)) {
-						filename.append(".pdf");
-						scLoaReportAttachment.setFileName(filename.toString());
-						generateAgreementLetterPdfFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa,
-								getManagedBean().getScQt());
-					} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
+ 					} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
@@ -3793,13 +3804,13 @@ public class DirectLOABackingBean extends
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
-					}
+					} 
 				} else if (scLoaReportAttachment != null
 						&& QTStatusConst.LOA_PENDING_SUBMISSION
-								.equals(statusId)) {
+						.equals(statusId)) {
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
-					
+
 					// if pending submission , always regenerate
 					if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
 							.equals(docDefinitionKey)) {
@@ -5655,6 +5666,24 @@ public class DirectLOABackingBean extends
 				SourcingConstants.LOI_NEGOTIONATION_RESULT, context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
+	
+	/**
+	 * Generate negotiation result pdf.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param scLoa
+	 *            the sc loa
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void generateAcknowledgmentLOAReceiptPdf(ScAttachment attachment)
+			throws Exception {
+		attachment.setFileName("Acknowledgement_LOA_receipt.pdf");
+		File file = new File("C:\\Users\\USER\\Desktop\\S1 Appendix Review and comment by Unit eP.docx");
+
+		DocumentGenerator.getInstance().generatePdfFromFile(new FileOutputStream(getActualFilePath(attachment)), file);
+	}
 
 	/**
 	 * Sum of gstAmount & loa offer price
@@ -6506,6 +6535,22 @@ public class DirectLOABackingBean extends
 							new String[] {scLoaReport.getTitle()});
 				}
 			}
+			if(scLoaReport.getDefinationType() != null && 
+					scLoaReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD)){
+				if(null == scLoaReport.getScLoaReportAttachment()){
+					throw new EpException(MessageConst.ERROR_760441,
+							new String[] {scLoaReport.getTitle()});
+				}
+			}
+			if(this.getManagedBean().getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
+				if(scLoaReport.getDefinationType() != null && 
+						(scLoaReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD))){
+					if(null == scLoaReport.getScLoaReportAttachment()){
+						throw new EpException(MessageConst.ERROR_760441,
+								new String[] {scLoaReport.getTitle()});
+					}
+				}
+			}
 		}
 	}
 	
@@ -6620,5 +6665,17 @@ public class DirectLOABackingBean extends
 			}
 		}
 		return userName;
+	}
+	
+	/**
+	 * Validate ScLoaWitness before download attachment of Acknowledge LOA Receipt
+	 */
+	private void validateLoaWitness() {
+		ScLoaWitness witness = this.getManagedBean().getLoaSupplierWitness();
+		if(witness == null || witness.getWitnessName().isEmpty() || witness.getIdentificationNo().isEmpty() ||
+				witness.getDesignation().isEmpty() || witness.getAddress().isEmpty() || 
+				witness.getPhoneNo().isEmpty() || witness.getFaxNo().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760442);
+		}
 	}
 }

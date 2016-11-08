@@ -51,33 +51,29 @@
 				<p:message id="contendIdMsg" for="contendId" display="icon" />
 			</p:column>
 
-			<p:column style="width:15%;text-align: center;"
-				headerText="#{lbl['lbl.sc.upload']}" rendered="#{isEditableStatus}">
-				<ui:fragment
-					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
-					<ac:scSingleFileUploadButton id="scDocUploadBtn"
-						popupWidgetVar="scDocUploadDlg"
-						attachment="#{scLoaReport.scLoaReportAttachment}"
-						readonly="#{lOADetailBackingBean.managedBean.readOnly}"
-						rowIndex="#{rowIndex}">
-						<f:setPropertyActionListener for="actionEvent"
-							target="#{lOADetailBackingBean.managedBean.selectedScLoaReport}"
-							value="#{scLoaReport}" />
-						<f:setPropertyActionListener for="actionEvent"
-							target="#{lOADetailBackingBean.managedBean.attachmentDocType}"
-							value="LAR" />
-					</ac:scSingleFileUploadButton>
-				</ui:fragment>
-			</p:column>
-
 			<p:column style="width:10%;text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
+				<ac:scSingleFileUploadButton id="scDocUploadBtn"
+					popupWidgetVar="scDocUploadDlg"
+					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or
+					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload}"
+					attachment="#{scLoaReport.scLoaReportAttachment}"
+					readonly="#{lOADetailBackingBean.managedBean.readOnly}"
+					rowIndex="#{rowIndex}">
+					<f:setPropertyActionListener for="actionEvent"
+						target="#{lOADetailBackingBean.managedBean.selectedScLoaReport}"
+						value="#{scLoaReport}" />
+					<f:setPropertyActionListener for="actionEvent"
+						target="#{lOADetailBackingBean.managedBean.attachmentDocType}"
+						value="LAR" />
+				</ac:scSingleFileUploadButton>
 				<p:commandButton id="download" icon="ui-icon-download"
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
-					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true}" />
+					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true or
+					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload}" />
 			</p:column>
 		</p:dataTable>
 

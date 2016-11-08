@@ -324,6 +324,26 @@
 						size="8" /> #{lbl['lbl.sc.days']}</td>
 			</tr>
 			<tr>
+				<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.gov.sign.date']}" />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				</td>
+				<td>
+					<p:calendar id="govSignDate"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+						showOn="button"
+						value="#{directLOABackingBean.managedBean.scLoa.govtSignDate}"
+						mindate="#{DateUtils.getCurrentDateWithoutTime()}"
+						required="true"
+						readonlyInput="true"
+						label="#{lbl['lbl.sc.loiloa.loa.gov.sign.date']}"
+						size="31"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
+					</p:calendar>
+					<p:message id="govSignDateMsg" for="govSignDate" display="icon" />
+				</td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
 				</td>
 				<td colspan="3"><p:inputText style="text-align: right;"
