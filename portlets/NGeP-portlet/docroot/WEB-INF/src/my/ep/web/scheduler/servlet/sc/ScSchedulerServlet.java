@@ -1,5 +1,8 @@
 package my.ep.web.scheduler.servlet.sc;
 
+import java.util.HashMap;
+import java.util.List;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +22,7 @@ import my.ep.web.scheduler.job.sc.QTPublishSchedulingJob;
 import my.ep.web.scheduler.job.sc.ScFailoverHandlerJob;
 
 import org.apache.log4j.Logger;
+import org.quartz.JobDataMap;
 import org.quartz.JobKey;
 
 public class ScSchedulerServlet extends HttpServlet {
@@ -40,24 +44,25 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_DAILY_JOB));
+		
+		// Sc Continous job
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(SchedulerConstants.SC_CONTINOUS_JOB,
+						SchedulerConstants.SC_JOB_GROUP),
+				ContinuousBidSchedulerJob.class,
+				SchedulerConstants.SC_CONTINUOUS_JOB_DESCRIPTION,
+				SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_CONTINUOUS_JOB),
+								new JobDataMap(new HashMap<String, List<Long>>()));
 
 		// daily Job to be run at server startup
 
 		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_DAILY_JOB,
 				SchedulerConstants.SC_JOB_GROUP), BidSchedulesPoolingJob.class);
-
-		// Sc Continous job
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.SC_CONTINOUS_JOB,
-								SchedulerConstants.SC_JOB_GROUP),
-						ContinuousBidSchedulerJob.class,
-						SchedulerConstants.SC_CONTINUOUS_JOB_DESCRIPTION,
-						SchedulerPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_CONTINUOUS_JOB));
 
 		// Sc Daily job for published Quatation Tenders.
 		EpSchedulerHelper
