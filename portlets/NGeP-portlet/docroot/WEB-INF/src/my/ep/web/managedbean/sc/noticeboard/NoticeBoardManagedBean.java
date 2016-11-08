@@ -1,4 +1,13 @@
-/* Copyright © 2014 Archisoft. All rights reserved. */
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+ */
 package my.ep.web.managedbean.sc.noticeboard;
 
 
