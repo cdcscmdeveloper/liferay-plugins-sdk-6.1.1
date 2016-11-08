@@ -5199,6 +5199,30 @@ public class LOADetailBackingBean extends
 			}
 		}
 	}
+	
+	
+	/**
+	 * Show prepared by.
+	 *
+	 * @param createdBy the created by
+	 * @return the string
+	 */
+	public String showPreparedBy(Long createdBy) {
+		String userName = "";
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		if (createdBy != null) {
+			reqDTO.setUserId(createdBy);
+			UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+
+			if (resDTO.getPmUser() != null) {
+				userName = resDTO.getPmUser().getUserName();
+			}
+		}
+		return userName;
+	}
 
 	/**
 	 * Checks if is flag.

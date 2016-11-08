@@ -43,8 +43,12 @@
 						rendered="#{!isDocTypeQuotation}" /></td>
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
-				<td class="header-info-text" colspan="3">
+				<td class="header-info-text">
 					#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}</td>
+					<td width="10%"><h:outputLabel
+						value="#{lbl['lbl.sc.prepared.by']}" /></td>
+				<td class="header-info-text">
+					#{lOADetailBackingBean.showPreparedBy(lOADetailBackingBean.managedBean.scLoa.createdBy)}</td>
 			</tr>
 		</table>
 	</div>
