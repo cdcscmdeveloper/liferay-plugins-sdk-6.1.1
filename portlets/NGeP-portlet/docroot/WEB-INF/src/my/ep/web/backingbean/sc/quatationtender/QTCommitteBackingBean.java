@@ -575,6 +575,9 @@ public class QTCommitteBackingBean extends
 				.remove(this.getManagedBean().getCommitteMember());
 	}
 
+	/**
+	 * user selects  row in  ClonePopup based on that get the committeeMembers list.
+	 */
 	public void onRowCloneCommitteeApprovalsAction(SelectEvent event) {
 		debugLogger("onRowCloneCommitteeApprovalsAction");
 		ScQt scQt = (ScQt) event.getObject();
@@ -603,6 +606,9 @@ public class QTCommitteBackingBean extends
 		}
 	}
 
+	/**
+	 * user clicks on clone button add committee members to committeeApproval tab.
+	 */
 	public void addCloneCommitteeMembersApprovalsAction() {
 		debugLogger("addCloneCommitteeMembersApprovalsAction");
 
@@ -1558,6 +1564,11 @@ public class QTCommitteBackingBean extends
 	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#
 	 * preRenderView()
 	 */
+	/**
+	 * navigate to CommitteeDetails page.
+	 * 
+	 * 
+	 */
 	public void preRenderView() {
 		/*
 		 * renewSesionObject(); HttpServletRequest servletRequest = PortalUtil
@@ -2073,6 +2084,11 @@ public class QTCommitteBackingBean extends
 		return str;
 	}
 
+	/**
+	 * Method will split specialCharacter in the String.
+	 *
+	 * @return the formated string.
+	 */ 
 	public String splitEmail(String email) {
 
 		if (email != null && email.length() > 19) {
@@ -2083,6 +2099,12 @@ public class QTCommitteBackingBean extends
 		}
 		return email;
 	}
+	
+	/**
+	 * Method to render the EC Or TEC Button Based on Status and CommitteeType.
+	 *
+	 * @return the button show or hide status.
+	 */ 
 	
 	public boolean renderECOrTECButton(Long qtStatus, String commType) {
 
@@ -2119,6 +2141,13 @@ public class QTCommitteBackingBean extends
 
 	}
 	
+	/**
+	 * Method to check the CheckList Status is Present or not.
+	 *
+	 * @return the CheckList Status is Present or not.
+	 */ 
+	
+	 
 	public boolean isMaintancePendingChklistStatus() {
 
 		boolean isPresent = false;
@@ -2143,6 +2172,13 @@ public class QTCommitteBackingBean extends
 
 	}
 	
+	/**
+	 * Method to check the CheckBox is enable or disable based on committeeStatus and CommitteeType.
+	 * 
+	 * @param committeStatus
+	 * @param commType
+	 * @return the CheckBox is Enable or Disable.
+	 */
 	public boolean isEnableCheckboxes(Long committeStatus, String commType) {
 
 		boolean isEnableCheckboxes = !isCommitteInfoEditable(committeStatus,commType);
@@ -2212,6 +2248,11 @@ public class QTCommitteBackingBean extends
 		}
 	}
 	
+	/**
+	 * Set the NameRequired
+	 * 
+	 * 
+	 */
 	public void nameRequired(){
 		this.getManagedBean().setNameRequired(false);
 	}
