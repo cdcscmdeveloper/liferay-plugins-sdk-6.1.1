@@ -29,6 +29,13 @@ public class LongConverter implements Converter {
 	/* (non-Javadoc)
 	 * @see javax.faces.convert.Converter#getAsObject(javax.faces.context.FacesContext, javax.faces.component.UIComponent, java.lang.String)
 	 */
+	/**
+	 *Convert from String to object.
+	 *@param arg0
+	 *@param arg1
+	 *@param arg2
+	 *@return the object instance.
+	 */
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String arg2) {
 		Object ret = null;
@@ -40,6 +47,13 @@ public class LongConverter implements Converter {
 
 	/* (non-Javadoc)
 	 * @see javax.faces.convert.Converter#getAsString(javax.faces.context.FacesContext, javax.faces.component.UIComponent, java.lang.Object)
+	 */
+	/**
+	 *Convert from Object to String.
+	 *@param arg0
+	 *@param arg1
+	 *@param arg2
+	 *@return the formated data.
 	 */
 	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
