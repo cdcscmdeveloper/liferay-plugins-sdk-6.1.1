@@ -20,7 +20,7 @@ public class TechnicalStaffBean {
 		
 	}
 
-	/**
+	/**create constructor for class.
 	 * @param smPersonnel
 	 */
 	public TechnicalStaffBean(SmPersonnel smPersonnel) {
@@ -28,6 +28,7 @@ public class TechnicalStaffBean {
 	}
 
 	/**
+	 * Get the smPersonnel
 	 * @return the smPersonnel
 	 */
 	public SmPersonnel getSmPersonnel() {
@@ -35,6 +36,7 @@ public class TechnicalStaffBean {
 	}
 
 	/**
+	 * Set the smPersonnel
 	 * @param smPersonnel the smPersonnel to set
 	 */
 	public void setSmPersonnel(SmPersonnel smPersonnel) {
@@ -42,6 +44,7 @@ public class TechnicalStaffBean {
 	}
 
 	/**
+	 * Get the smStaffAcademics
 	 * @return the smStaffAcademics
 	 */
 	public List<PmParameterDesc> getSmStaffAcademics() {
@@ -49,6 +52,7 @@ public class TechnicalStaffBean {
 	}
 
 	/**
+	 * Set the smStaffAcademics
 	 * @param smStaffAcademics the smStaffAcademics to set
 	 */
 	public void setSmStaffAcademics(List<PmParameterDesc> smStaffAcademics) {
