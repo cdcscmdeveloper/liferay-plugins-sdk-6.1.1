@@ -11,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
+ * Class to handle user session data corresponding to SupplierInvitationBackingBean
  * @author Hemanth Katta
  *
  */

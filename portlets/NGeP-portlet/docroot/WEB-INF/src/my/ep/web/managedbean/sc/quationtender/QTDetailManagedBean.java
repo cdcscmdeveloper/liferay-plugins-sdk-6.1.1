@@ -7065,1411 +7065,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedFlag = selectedFlag;
 	}
 
-	public ScQtRemark getScQtRemarks() {
-		return scQtRemarks;
-	}
-
-	public void setScQtRemarks(ScQtRemark scQtRemarks) {
-		this.scQtRemarks = scQtRemarks;
-	}
-
-	public List<ScQtCheckList> getScQtCheckSt2techProposal() {
-		return scQtCheckSt2techProposal;
-	}
-
-	public void setScQtCheckSt2techProposal(
-			List<ScQtCheckList> scQtCheckSt2techProposal) {
-		this.scQtCheckSt2techProposal = scQtCheckSt2techProposal;
-	}
-
-	public List<ScQtCheckList> getMarkDeletedTechChecklist() {
-		return markDeletedTechChecklist;
-	}
-
-	public void setMarkDeletedTechChecklist(
-			List<ScQtCheckList> markDeletedTechChecklist) {
-		this.markDeletedTechChecklist = markDeletedTechChecklist;
-	}
-
-	public List<ScQtCheckList> getScQtCheckSt2financeProposalList() {
-		return scQtCheckSt2financeProposalList;
-	}
-
-	public void setScQtCheckSt2financeProposalList(
-			List<ScQtCheckList> scQtCheckSt2financeProposalList) {
-		this.scQtCheckSt2financeProposalList = scQtCheckSt2financeProposalList;
-	}
-
-	public List<ScQtCheckList> getMarkDeletedFinChecklist() {
-		return markDeletedFinChecklist;
-	}
-
-	public void setMarkDeletedFinChecklist(
-			List<ScQtCheckList> markDeletedFinChecklist) {
-		this.markDeletedFinChecklist = markDeletedFinChecklist;
-	}
-
-	public List<ScQtCommitteeActivity> getCommitteeActivities() {
-		return committeeActivities;
-	}
-
-	public void setCommitteeActivities(
-			List<ScQtCommitteeActivity> committeeActivities) {
-		this.committeeActivities = committeeActivities;
-	}
-
-	public boolean isSampleReq() {
-		return isSampleReq;
-	}
-
-	public void setSampleReq(boolean isSampleReq) {
-		this.isSampleReq = isSampleReq;
-	}
-
-	public boolean isSpecStatus() {
-		return isSpecStatus;
-	}
-
-	public void setSpecStatus(boolean isSpecStatus) {
-		this.isSpecStatus = isSpecStatus;
-	}
-
-	public Long getProcurementId() {
-		return procurementId;
-	}
-
-	public void setProcurementId(Long procurementId) {
-		this.procurementId = procurementId;
-	}
-
-	public String getEvaluationType() {
-		return evaluationType;
-	}
-
-	public void setEvaluationType(String evaluationType) {
-		this.evaluationType = evaluationType;
-	}
-
-	public List<PmDocument> getStageTwoTechComplianceList() {
-		return stageTwoTechComplianceList;
-	}
-
-	public void setStageTwoTechComplianceList(
-			List<PmDocument> stageTwoTechComplianceList) {
-		this.stageTwoTechComplianceList = stageTwoTechComplianceList;
-	}
-
-	public List<PmDocument> getStageTwoTechComplianceSelect() {
-		return stageTwoTechComplianceSelect;
-	}
-
-	public void setStageTwoTechComplianceSelect(
-			List<PmDocument> stageTwoTechComplianceSelect) {
-		this.stageTwoTechComplianceSelect = stageTwoTechComplianceSelect;
-	}
-
-	public List<PmDocument> getStageTwoFinComplianceList() {
-		return stageTwoFinComplianceList;
-	}
-
-	public void setStageTwoFinComplianceList(
-			List<PmDocument> stageTwoFinComplianceList) {
-		this.stageTwoFinComplianceList = stageTwoFinComplianceList;
-	}
-
-	public List<PmDocument> getStageTwoFinComplianceSelect() {
-		return stageTwoFinComplianceSelect;
-	}
-
-	public void setStageTwoFinComplianceSelect(
-			List<PmDocument> stageTwoFinComplianceSelect) {
-		this.stageTwoFinComplianceSelect = stageTwoFinComplianceSelect;
-	}
-
-	public List<ScQtCheckList> getS2TechSelect() {
-		return s2TechSelect;
-	}
-
-	public void setS2TechSelect(List<ScQtCheckList> s2TechSelect) {
-		this.s2TechSelect = s2TechSelect;
-	}
-
-	public List<ScQtCheckList> getS2FinSelect() {
-		return s2FinSelect;
-	}
-
-	public void setS2FinSelect(List<ScQtCheckList> s2FinSelect) {
-		this.s2FinSelect = s2FinSelect;
-	}
-
-	public String getScheduleType() {
-		return scheduleType;
-	}
-
-	public void setScheduleType(String scheduleType) {
-		this.scheduleType = scheduleType;
-	}
-
-	public String getFromMonth() {
-		return fromMonth;
-	}
-
-	public void setFromMonth(String fromMonth) {
-		this.fromMonth = fromMonth;
-	}
-
-	public String getToMonth() {
-		return toMonth;
-	}
-
-	public void setToMonth(String toMonth) {
-		this.toMonth = toMonth;
-	}
-
-	public String getStartYear() {
-		return startYear;
-	}
-
-	public void setStartYear(String startYear) {
-		this.startYear = startYear;
-	}
-
-	public String getEndYear() {
-		return endYear;
-	}
-
-	public void setEndYear(String endYear) {
-		this.endYear = endYear;
-	}
-
-	public String getBusinessOwner() {
-		return businessOwner;
-	}
-
-	public void setBusinessOwner(String businessOwner) {
-		this.businessOwner = businessOwner;
-	}
-
-	public List<ScQtCheckListScore> getCheckListScore() {
-		return checkListScore;
-	}
-
-	public void setCheckListScore(List<ScQtCheckListScore> checkListScore) {
-		this.checkListScore = checkListScore;
-	}
-
-	public List<ScQtCheckListScore> getScoringForYears() {
-		return scoringForYears;
-	}
-
-	public void setScoringForYears(List<ScQtCheckListScore> scoringForYears) {
-		this.scoringForYears = scoringForYears;
-	}
-
-	public List<ScQtCheckListScore> getCheckListSelectScore() {
-		return checkListSelectScore;
-	}
-
-	public void setCheckListSelectScore(
-			List<ScQtCheckListScore> checkListSelectScore) {
-		this.checkListSelectScore = checkListSelectScore;
-	}
-
-	public BigDecimal getTechnicalWeightageScore() {
-		return technicalWeightageScore;
-	}
-
-	public void setTechnicalWeightageScore(BigDecimal technicalWeightageScore) {
-		this.technicalWeightageScore = technicalWeightageScore;
-	}
-
-	public BigDecimal getFinancialWeightageScore() {
-		return financialWeightageScore;
-	}
-
-	public void setFinancialWeightageScore(BigDecimal financialWeightageScore) {
-		this.financialWeightageScore = financialWeightageScore;
-	}
-
-	public int getTotalAmount() {
-		return totalAmount;
-	}
-
-	public void setTotalAmount(int totalAmount) {
-		this.totalAmount = totalAmount;
-	}
-
-	public BigDecimal getTotalAmountAvg() {
-		return totalAmountAvg;
-	}
-
-	public void setTotalAmountAvg(BigDecimal totalAmountAvg) {
-		this.totalAmountAvg = totalAmountAvg;
-	}
-
-	public List<CtPanelItem> getPanelItemList() {
-		return panelItemList;
-	}
-
-	public void setPanelItemList(List<CtPanelItem> panelItemList) {
-		this.panelItemList = panelItemList;
-	}
-
-	public boolean isPanel() {
-		return isPanel;
-	}
-
-	public void setPanel(boolean isPanel) {
-		this.isPanel = isPanel;
-	}
-
-	public TreeNode getCtZoneTrees() {
-		return ctZoneTrees;
-	}
-
-	public void setCtZoneTrees(TreeNode ctZoneTrees) {
-		this.ctZoneTrees = ctZoneTrees;
-	}
-
-	public TreeNode[] getCtZoneTreeSelectedNodes() {
-		return ctZoneTreeSelectedNodes;
-	}
-
-	public void setCtZoneTreeSelectedNodes(TreeNode[] ctZoneTreeSelectedNodes) {
-		this.ctZoneTreeSelectedNodes = ctZoneTreeSelectedNodes;
-	}
-
-	public List<ScQtCategory> getSuppCriteriaopenSelectList() {
-		return suppCriteriaopenSelectList;
-	}
-
-	public void setSuppCriteriaopenSelectList(
-			List<ScQtCategory> suppCriteriaopenSelectList) {
-		this.suppCriteriaopenSelectList = suppCriteriaopenSelectList;
-	}
-
-	public TreeNode getPanelZoneSelect() {
-		return panelZoneSelect;
-	}
-
-	public void setPanelZoneSelect(TreeNode panelZoneSelect) {
-		this.panelZoneSelect = panelZoneSelect;
-	}
-
-	public Date getCircularExpDate() {
-		return circularExpDate;
-	}
-
-	public void setCircularExpDate(Date circularExpDate) {
-		this.circularExpDate = circularExpDate;
-	}
-
-	public String getCircularType() {
-		return circularType;
-	}
-
-	public void setCircularType(String circularType) {
-		this.circularType = circularType;
-	}
-
-	public String getStandardTemplate() {
-		return standardTemplate;
-	}
-
-	public void setStandardTemplate(String standardTemplate) {
-		this.standardTemplate = standardTemplate;
-	}
-
-	public String getSupportingDoc() {
-		return supportingDoc;
-	}
-
-	public void setSupportingDoc(String supportingDoc) {
-		this.supportingDoc = supportingDoc;
-	}
-
-	public String getTemplateType() {
-		return templateType;
-	}
-
-	public void setTemplateType(String templateType) {
-		this.templateType = templateType;
-	}
-
-	public String getSpecificationType() {
-		return specificationType;
-	}
-
-	public void setSpecificationType(String specificationType) {
-		this.specificationType = specificationType;
-	}
-
-	public ScQtDoc getScqtDoc() {
-		return scqtDoc;
-	}
-
-	public void setScqtDoc(ScQtDoc scqtDoc) {
-		this.scqtDoc = scqtDoc;
-	}
-
-	public String getMinistryName() {
-		return ministryName;
-	}
-
-	public void setMinistryName(String ministryName) {
-		this.ministryName = ministryName;
-	}
-
-	public Long getSearchItemTypeId() {
-		return searchItemTypeId;
-	}
-
-	public void setSearchItemTypeId(Long searchItemTypeId) {
-		this.searchItemTypeId = searchItemTypeId;
-	}
-
-	public Long getSearchSpecTypeId() {
-		return searchSpecTypeId;
-	}
-
-	public void setSearchSpecTypeId(Long searchSpecTypeId) {
-		this.searchSpecTypeId = searchSpecTypeId;
-	}
-
-	public Long getSearchProcurementId() {
-		return searchProcurementId;
-	}
-
-	public void setSearchProcurementId(Long searchProcurementId) {
-		this.searchProcurementId = searchProcurementId;
-	}
-
-	public Long getSearchCreatedBy() {
-		return searchCreatedBy;
-	}
-
-	public void setSearchCreatedBy(Long searchCreatedBy) {
-		this.searchCreatedBy = searchCreatedBy;
-	}
-
-	public List<ScQtDoc> getDocSearchlist() {
-		return docSearchlist;
-	}
-
-	public void setDocSearchlist(List<ScQtDoc> docSearchlist) {
-		this.docSearchlist = docSearchlist;
-	}
-
-	public List<ScQtCheckList> getCheckListItem() {
-		return checkListItem;
-	}
-
-	public void setCheckListItem(List<ScQtCheckList> checkListItem) {
-		this.checkListItem = checkListItem;
-	}
-
-	public List<SelectItem> getZoneList() {
-		return zoneList;
-	}
-
-	public void setZoneList(List<SelectItem> zoneList) {
-		this.zoneList = zoneList;
-	}
-
-	public String getSpecName() {
-		return specName;
-	}
-
-	public void setSpecName(String specName) {
-		this.specName = specName;
-	}
-
-	public Long getStatusId() {
-		return statusId;
-	}
-
-	public void setStatusId(Long statusId) {
-		this.statusId = statusId;
-	}
-
-	public boolean isRecordStatus() {
-		return isRecordStatus;
-	}
-
-	public void setRecordStatus(boolean isRecordStatus) {
-		this.isRecordStatus = isRecordStatus;
-	}
-
-	public List<ScQtCheckList> getTechnicalScoring() {
-		return technicalScoring;
-	}
-
-	public void setTechnicalScoring(List<ScQtCheckList> technicalScoring) {
-		this.technicalScoring = technicalScoring;
-	}
-
-	public List<ScQtCheckList> getFinancialScoring() {
-		return financialScoring;
-	}
-
-	public void setFinancialScoring(List<ScQtCheckList> financialScoring) {
-		this.financialScoring = financialScoring;
-	}
-
-	public int getTechPoints() {
-		return techPoints;
-	}
-
-	public void setTechPoints(int techPoints) {
-		this.techPoints = techPoints;
-	}
-
-	public int getFinPoints() {
-		return finPoints;
-	}
-
-	public void setFinPoints(int finPoints) {
-		this.finPoints = finPoints;
-	}
-
-	public List<SelectItem> getYearList() {
-		return yearList;
-	}
-
-	public void setYearList(List<SelectItem> yearList) {
-		this.yearList = yearList;
-	}
-
-	public List<SelectItem> getYearsDisplayList() {
-		return yearsDisplayList;
-	}
-
-	public void setYearsDisplayList(List<SelectItem> yearsDisplayList) {
-		this.yearsDisplayList = yearsDisplayList;
-	}
-
-	public List<BriefingZoneBean> getDeliveryLocBean() {
-		return deliveryLocBean;
-	}
-
-	public void setDeliveryLocBean(List<BriefingZoneBean> deliveryLocBean) {
-		this.deliveryLocBean = deliveryLocBean;
-	}
-
-	public List<ScQtDeliveryLoc> getDeliveryLoc() {
-		return deliveryLoc;
-	}
-
-	public void setDeliveryLoc(List<ScQtDeliveryLoc> deliveryLoc) {
-		this.deliveryLoc = deliveryLoc;
-	}
-
-	public List<ScQtDeliveryLoc> getDeliveryNonZoneList() {
-		return deliveryNonZoneList;
-	}
-
-	public void setDeliveryNonZoneList(List<ScQtDeliveryLoc> deliveryNonZoneList) {
-		this.deliveryNonZoneList = deliveryNonZoneList;
-	}
-
-	public List<ScQtDeliveryLoc> getDeleteDeliveryList() {
-		return deleteDeliveryList;
-	}
-
-	public void setDeleteDeliveryList(List<ScQtDeliveryLoc> deleteDeliveryList) {
-		this.deleteDeliveryList = deleteDeliveryList;
-	}
-
-	public List<ScQtDeliveryLoc> getSelectDeliveryList() {
-		return selectDeliveryList;
-	}
-
-	public void setSelectDeliveryList(List<ScQtDeliveryLoc> selectDeliveryList) {
-		this.selectDeliveryList = selectDeliveryList;
-	}
-
-	public String getDeliveyzoneName() {
-		return deliveyzoneName;
-	}
-
-	public void setDeliveyzoneName(String deliveyzoneName) {
-		this.deliveyzoneName = deliveyzoneName;
-	}
-
-	public int getTechnicalChecklistScoring() {
-		return technicalChecklistScoring;
-	}
-
-	public void setTechnicalChecklistScoring(int technicalChecklistScoring) {
-		this.technicalChecklistScoring = technicalChecklistScoring;
-	}
-
-	public String getChecklistScoreType() {
-		return checklistScoreType;
-	}
-
-	public void setChecklistScoreType(String checklistScoreType) {
-		this.checklistScoreType = checklistScoreType;
-	}
-
-	public String getCompanyScoreType() {
-		return companyScoreType;
-	}
-
-	public void setCompanyScoreType(String companyScoreType) {
-		this.companyScoreType = companyScoreType;
-	}
-
-	public ScQtCheckListScore getScQtCheckListScore() {
-		return scQtCheckListScore;
-	}
-
-	public void setScQtCheckListScore(ScQtCheckListScore scQtCheckListScore) {
-		this.scQtCheckListScore = scQtCheckListScore;
-	}
-
-	public ScQtCheckListScore getScQtContractScore() {
-		return scQtContractScore;
-	}
-
-	public void setScQtContractScore(ScQtCheckListScore scQtContractScore) {
-		this.scQtContractScore = scQtContractScore;
-	}
-
-	public List<SelectItem> getTechnicalChecklistAction() {
-		return technicalChecklistAction;
-	}
-
-	public void setTechnicalChecklistAction(
-			List<SelectItem> technicalChecklistAction) {
-		this.technicalChecklistAction = technicalChecklistAction;
-	}
-
-	public BigDecimal getScoreVarience() {
-		return scoreVarience;
-	}
-
-	public void setScoreVarience(BigDecimal scoreVarience) {
-		this.scoreVarience = scoreVarience;
-	}
-
-	public ScQtScoreOfferPrice getOfferPricePackage() {
-		return offerPricePackage;
-	}
-
-	public void setOfferPricePackage(ScQtScoreOfferPrice offerPricePackage) {
-		this.offerPricePackage = offerPricePackage;
-	}
-
-	public ScQtScoreOfferPrice getOfferPriceItem() {
-		return OfferPriceItem;
-	}
-
-	public void setOfferPriceItem(ScQtScoreOfferPrice offerPriceItem) {
-		OfferPriceItem = offerPriceItem;
-	}
-
-	public ScQtScoreWeightage getScQtScoreWeightage() {
-		return scQtScoreWeightage;
-	}
-
-	public void setScQtScoreWeightage(ScQtScoreWeightage scQtScoreWeightage) {
-		this.scQtScoreWeightage = scQtScoreWeightage;
-	}
-
-	public ScQtScoreSetting getTechnicalScoreSetting() {
-		return technicalScoreSetting;
-	}
-
-	public void setTechnicalScoreSetting(ScQtScoreSetting technicalScoreSetting) {
-		this.technicalScoreSetting = technicalScoreSetting;
-	}
-
-	public ScQtScoreSetting getFinancialScoreSetting() {
-		return financialScoreSetting;
-	}
-
-	public void setFinancialScoreSetting(ScQtScoreSetting financialScoreSetting) {
-		this.financialScoreSetting = financialScoreSetting;
-	}
-
-	public ScQtScoreSetting getDemoScoreSetting() {
-		return demoScoreSetting;
-	}
-
-	public void setDemoScoreSetting(ScQtScoreSetting demoScoreSetting) {
-		this.demoScoreSetting = demoScoreSetting;
-	}
-
-	public ScQtScoreSetting getRecommendationPackageScore() {
-		return recommendationPackageScore;
-	}
-
-	public void setRecommendationPackageScore(
-			ScQtScoreSetting recommendationPackageScore) {
-		this.recommendationPackageScore = recommendationPackageScore;
-	}
-
-	public ScQtScoreSetting getRecommendationScore() {
-		return recommendationScore;
-	}
-
-	public void setRecommendationScore(ScQtScoreSetting recommendationScore) {
-		this.recommendationScore = recommendationScore;
-	}
-
-	public BigDecimal getTechnicalpackage() {
-		return technicalpackage;
-	}
-
-	public void setTechnicalpackage(BigDecimal technicalpackage) {
-		this.technicalpackage = technicalpackage;
-	}
-
-	public BigDecimal getFinancialpackage() {
-		return financialpackage;
-	}
-
-	public void setFinancialpackage(BigDecimal financialpackage) {
-		this.financialpackage = financialpackage;
-	}
-
-	public BigDecimal getRecommendationPackageTotal() {
-		return recommendationPackageTotal;
-	}
-
-	public void setRecommendationPackageTotal(BigDecimal recommendationPackageTotal) {
-		this.recommendationPackageTotal = recommendationPackageTotal;
-	}
-
-	public BigDecimal getRecommendTechnicalScore() {
-		return recommendTechnicalScore;
-	}
-
-	public void setRecommendTechnicalScore(BigDecimal recommendTechnicalScore) {
-		this.recommendTechnicalScore = recommendTechnicalScore;
-	}
-
-	public BigDecimal getRecommendfinancialScore() {
-		return recommendfinancialScore;
-	}
-
-	public void setRecommendfinancialScore(BigDecimal recommendfinancialScore) {
-		this.recommendfinancialScore = recommendfinancialScore;
-	}
-
-	public int getTabActiveIndex() {
-		return tabActiveIndex;
-	}
-
-	public void setTabActiveIndex(int tabActiveIndex) {
-		this.tabActiveIndex = tabActiveIndex;
-	}
-
-	public Long getStateId() {
-		return stateId;
-	}
-
-	public void setStateId(Long stateId) {
-		this.stateId = stateId;
-	}
-
-	public Long getDistrictId() {
-		return districtId;
-	}
-
-	public void setDistrictId(Long districtId) {
-		this.districtId = districtId;
-	}
-
-	public Long getMinistryId() {
-		return ministryId;
-	}
-
-	public void setMinistryId(Long ministryId) {
-		this.ministryId = ministryId;
-	}
-
-	public Long getDepartmentId() {
-		return departmentId;
-	}
-
-	public void setDepartmentId(Long departmentId) {
-		this.departmentId = departmentId;
-	}
-
-	public Long getPtjId() {
-		return ptjId;
-	}
-
-	public void setPtjId(Long ptjId) {
-		this.ptjId = ptjId;
-	}
-
-	public String getStateCode() {
-		return stateCode;
-	}
-
-	public void setStateCode(String stateCode) {
-		this.stateCode = stateCode;
-	}
-
-	public String getDistrictCode() {
-		return districtCode;
-	}
-
-	public void setDistrictCode(String districtCode) {
-		this.districtCode = districtCode;
-	}
-
-	public List<PmOrgProfile> getMinistryList() {
-		return ministryList;
-	}
-
-	public void setMinistryList(List<PmOrgProfile> ministryList) {
-		this.ministryList = ministryList;
-	}
-
-	public List<PmOrgProfile> getDepartmentList() {
-		return departmentList;
-	}
-
-	public void setDepartmentList(List<PmOrgProfile> departmentList) {
-		this.departmentList = departmentList;
-	}
-
-	public List<Object[]> getPtjtList() {
-		return ptjtList;
-	}
-
-	public void setPtjtList(List<Object[]> ptjtList) {
-		this.ptjtList = ptjtList;
-	}
-
-	public List<Object[]> getPtjProfileDDList() {
-		return ptjProfileDDList;
-	}
-
-	public void setPtjProfileDDList(List<Object[]> ptjProfileDDList) {
-		this.ptjProfileDDList = ptjProfileDDList;
-	}
-
-	public List<PmAddressType> getDeliveryAddressSelect() {
-		return deliveryAddressSelect;
-	}
-
-	public void setDeliveryAddressSelect(List<PmAddressType> deliveryAddressSelect) {
-		this.deliveryAddressSelect = deliveryAddressSelect;
-	}
-
-	public List<TplSpecZoneDtl> getDeliveryZones() {
-		return deliveryZones;
-	}
-
-	public void setDeliveryZones(List<TplSpecZoneDtl> deliveryZones) {
-		this.deliveryZones = deliveryZones;
-	}
-
-	public List<BriefingZoneBean> getAddressZoneBean() {
-		return addressZoneBean;
-	}
-
-	public void setAddressZoneBean(List<BriefingZoneBean> addressZoneBean) {
-		this.addressZoneBean = addressZoneBean;
-	}
-
-	public List<ScQtCheckList> getFinSpecList() {
-		return finSpecList;
-	}
-
-	public void setFinSpecList(List<ScQtCheckList> finSpecList) {
-		this.finSpecList = finSpecList;
-	}
-
-	public Long getPanelItemId() {
-		return panelItemId;
-	}
-
-	public void setPanelItemId(Long panelItemId) {
-		this.panelItemId = panelItemId;
-	}
-
-	public CtCircularVer getCircularVer() {
-		return circularVer;
-	}
-
-	public void setCircularVer(CtCircularVer circularVer) {
-		this.circularVer = circularVer;
-	}
-
-	public String getSubject() {
-		return subject;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public String getChairPersonPinNum() {
-		return chairPersonPinNum;
-	}
-
-	public void setChairPersonPinNum(String chairPersonPinNum) {
-		this.chairPersonPinNum = chairPersonPinNum;
-	}
-
-	public TreeNode getSelectedTreeNode() {
-		return selectedTreeNode;
-	}
-
-	public void setSelectedTreeNode(TreeNode selectedTreeNode) {
-		this.selectedTreeNode = selectedTreeNode;
-	}
-
-	public CtCircularSearchBean getCtSearchBean() {
-		return ctSearchBean;
-	}
-
-	public void setCtSearchBean(CtCircularSearchBean ctSearchBean) {
-		this.ctSearchBean = ctSearchBean;
-	}
-
-	public CtCircularVer getCtCircularVer() {
-		return ctCircularVer;
-	}
-
-	public void setCtCircularVer(CtCircularVer ctCircularVer) {
-		this.ctCircularVer = ctCircularVer;
-	}
-
-	public List<ScQtCheckList> getFinspecChecklist() {
-		return finspecChecklist;
-	}
-
-	public void setFinspecChecklist(List<ScQtCheckList> finspecChecklist) {
-		this.finspecChecklist = finspecChecklist;
-	}
-
-	public String getButtonOutCome() {
-		return buttonOutCome;
-	}
-
-	public void setButtonOutCome(String buttonOutCome) {
-		this.buttonOutCome = buttonOutCome;
-	}
-
-	public String getNewItemCategory() {
-		return newItemCategory;
-	}
-
-	public void setNewItemCategory(String newItemCategory) {
-		this.newItemCategory = newItemCategory;
-	}
-
-	public String getBankstmntTomonth() {
-		return bankstmntTomonth;
-	}
-
-	public void setBankstmntTomonth(String bankstmntTomonth) {
-		this.bankstmntTomonth = bankstmntTomonth;
-	}
-
-	public int getTempIndex() {
-		return tempIndex;
-	}
-
-	public void setTempIndex(int tempIndex) {
-		this.tempIndex = tempIndex;
-	}
-
-	public boolean isSelectPanelItem() {
-		return selectPanelItem;
-	}
-
-	public void setSelectPanelItem(boolean selectPanelItem) {
-		this.selectPanelItem = selectPanelItem;
-	}
-
-	public Long getSpecStatusId() {
-		return specStatusId;
-	}
-
-	public void setSpecStatusId(Long specStatusId) {
-		this.specStatusId = specStatusId;
-	}
-
-	public boolean isSpecSelectStats() {
-		return specSelectStats;
-	}
-
-	public void setSpecSelectStats(boolean specSelectStats) {
-		this.specSelectStats = specSelectStats;
-	}
-
-	public int getSelectedCheckList() {
-		return selectedCheckList;
-	}
-
-	public void setSelectedCheckList(int selectedCheckList) {
-		this.selectedCheckList = selectedCheckList;
-	}
-
-	public String getSpecType() {
-		return specType;
-	}
-
-	public void setSpecType(String specType) {
-		this.specType = specType;
-	}
-
-	public List<ScQtCheckListScore> getToBeRemoveList() {
-		return toBeRemoveList;
-	}
-
-	public void setToBeRemoveList(List<ScQtCheckListScore> toBeRemoveList) {
-		this.toBeRemoveList = toBeRemoveList;
-	}
-
-	public List<ScQtCheckListScore> getOtherScoreSelected() {
-		return otherScoreSelected;
-	}
-
-	public void setOtherScoreSelected(List<ScQtCheckListScore> otherScoreSelected) {
-		this.otherScoreSelected = otherScoreSelected;
-	}
-
-	
-
-	public String getCheckListTitle() {
-		return checkListTitle;
-	}
-
-	public void setCheckListTitle(String checkListTitle) {
-		this.checkListTitle = checkListTitle;
-	}
-
-	public List<ScQtDeliveryLoc> getDeliveryLocRemoveList() {
-		return deliveryLocRemoveList;
-	}
-
-	public void setDeliveryLocRemoveList(List<ScQtDeliveryLoc> deliveryLocRemoveList) {
-		this.deliveryLocRemoveList = deliveryLocRemoveList;
-	}
-
-	public List<ScQtCheckList> getChecklistRemoveList() {
-		return checklistRemoveList;
-	}
-
-	public void setChecklistRemoveList(List<ScQtCheckList> checklistRemoveList) {
-		this.checklistRemoveList = checklistRemoveList;
-	}
-
-	public int getTechnicalTableRow() {
-		return technicalTableRow;
-	}
-
-	public void setTechnicalTableRow(int technicalTableRow) {
-		this.technicalTableRow = technicalTableRow;
-	}
-
-	public int getFinancialTableRow() {
-		return financialTableRow;
-	}
-
-	public void setFinancialTableRow(int financialTableRow) {
-		this.financialTableRow = financialTableRow;
-	}
-
-	public List<SelectItem> getScoreTypeList() {
-		return ScoreTypeList;
-	}
-
-	public void setScoreTypeList(List<SelectItem> scoreTypeList) {
-		ScoreTypeList = scoreTypeList;
-	}
-
-	public boolean isTechStandaraChecklist() {
-		return isTechStandaraChecklist;
-	}
-
-	public void setTechStandaraChecklist(boolean isTechStandaraChecklist) {
-		this.isTechStandaraChecklist = isTechStandaraChecklist;
-	}
-
-	public boolean isFinStandaraChecklist() {
-		return isFinStandaraChecklist;
-	}
-
-	public void setFinStandaraChecklist(boolean isFinStandaraChecklist) {
-		this.isFinStandaraChecklist = isFinStandaraChecklist;
-	}
-
-	public String getLocalOutCome() {
-		return localOutCome;
-	}
-
-	public void setLocalOutCome(String localOutCome) {
-		this.localOutCome = localOutCome;
-	}
-
-	public List<ScQtSpecificationRemark> getSpecificationRemarks() {
-		return specificationRemarks;
-	}
-
-	public void setSpecificationRemarks(
-			List<ScQtSpecificationRemark> specificationRemarks) {
-		this.specificationRemarks = specificationRemarks;
-	}
-
-	public Long getDivisionId() {
-		return divisionId;
-	}
-
-	public void setDivisionId(Long divisionId) {
-		this.divisionId = divisionId;
-	}
-
-	
-
-	public boolean isSpecComplete() {
-		return specComplete;
-	}
-
-	public void setSpecComplete(boolean specComplete) {
-		this.specComplete = specComplete;
-	}
-
-	public int getTechnicalSpecCount() {
-		return technicalSpecCount;
-	}
-
-	public void setTechnicalSpecCount(int technicalSpecCount) {
-		this.technicalSpecCount = technicalSpecCount;
-	}
-
-	public int getFinancialSpecCount() {
-		return financialSpecCount;
-	}
-
-	public void setFinancialSpecCount(int financialSpecCount) {
-		this.financialSpecCount = financialSpecCount;
-	}
-
-	public List<SelectItem> getBankyearsList() {
-		return bankyearsList;
-	}
-
-	public void setBankyearsList(List<SelectItem> bankyearsList) {
-		this.bankyearsList = bankyearsList;
-	}
-
-	public List<ScQtSupplier> getRestrictedSupplierList() {
-		return restrictedSupplierList;
-	}
-
-	public void setRestrictedSupplierList(List<ScQtSupplier> restrictedSupplierList) {
-		this.restrictedSupplierList = restrictedSupplierList;
-	}
-
-	public boolean isNewTemplateSpec() {
-		return newTemplateSpec;
-	}
-
-	public void setNewTemplateSpec(boolean newTemplateSpec) {
-		this.newTemplateSpec = newTemplateSpec;
-	}
-
-	public TreeNode getDeletePanelTreenode() {
-		return deletePanelTreenode;
-	}
-
-	public void setDeletePanelTreenode(TreeNode deletePanelTreenode) {
-		this.deletePanelTreenode = deletePanelTreenode;
-	}
-
-	public List<SelectItem> getFinancialChecklistAction() {
-		return financialChecklistAction;
-	}
-
-	public void setFinancialChecklistAction(
-			List<SelectItem> financialChecklistAction) {
-		this.financialChecklistAction = financialChecklistAction;
-	}
-
-	public boolean isSpecNewable() {
-		return specNewable;
-	}
-
-	public void setSpecNewable(boolean specNewable) {
-		this.specNewable = specNewable;
-	}
-
-	public QtnTenderSearchBean getQtnTendertemplateSearchBean() {
-		return qtnTendertemplateSearchBean;
-	}
-
-	public void setQtnTendertemplateSearchBean(
-			QtnTenderSearchBean qtnTendertemplateSearchBean) {
-		this.qtnTendertemplateSearchBean = qtnTendertemplateSearchBean;
-	}
-
-	public ScQtScoreSetting getFinacialItemScoreSetting() {
-		return finacialItemScoreSetting;
-	}
-
-	public void setFinacialItemScoreSetting(
-			ScQtScoreSetting finacialItemScoreSetting) {
-		this.finacialItemScoreSetting = finacialItemScoreSetting;
-	}
-
-	public BigDecimal getFinancialItemScore() {
-		return financialItemScore;
-	}
-
-	public void setFinancialItemScore(BigDecimal financialItemScore) {
-		this.financialItemScore = financialItemScore;
-	}
-
-	public BigDecimal getTotalScore() {
-		return totalScore;
-	}
-
-	public void setTotalScore(BigDecimal totalScore) {
-		this.totalScore = totalScore;
-	}
-
-	public String getLocationLevel() {
-		return locationLevel;
-	}
-
-	public void setLocationLevel(String locationLevel) {
-		this.locationLevel = locationLevel;
-	}
-
-	public IPagingDataModel<PmAddressType> getSearchDeliveryAddressDataModel() {
-		return searchDeliveryAddressDataModel;
-	}
-
-	public void setSearchDeliveryAddressDataModel(
-			IPagingDataModel<PmAddressType> searchDeliveryAddressDataModel) {
-		this.searchDeliveryAddressDataModel = searchDeliveryAddressDataModel;
-	}
-
-	public Long getPtjGroupId() {
-		return ptjGroupId;
-	}
-
-	public void setPtjGroupId(Long ptjGroupId) {
-		this.ptjGroupId = ptjGroupId;
-	}
-
-	public int getCheckListYesIndex() {
-		return checkListYesIndex;
-	}
-
-	public void setCheckListYesIndex(int checkListYesIndex) {
-		this.checkListYesIndex = checkListYesIndex;
-	}
-
-	public boolean isTechnicalOtherChecklistSubmit() {
-		return technicalOtherChecklistSubmit;
-	}
-
-	public void setTechnicalOtherChecklistSubmit(
-			boolean technicalOtherChecklistSubmit) {
-		this.technicalOtherChecklistSubmit = technicalOtherChecklistSubmit;
-	}
-
-	public boolean isFinancialOtherChecklistSubmit() {
-		return financialOtherChecklistSubmit;
-	}
-
-	public void setFinancialOtherChecklistSubmit(
-			boolean financialOtherChecklistSubmit) {
-		this.financialOtherChecklistSubmit = financialOtherChecklistSubmit;
-	}
-
-	public boolean isZoneSpecUpdate() {
-		return zoneSpecUpdate;
-	}
-
-	public void setZoneSpecUpdate(boolean zoneSpecUpdate) {
-		this.zoneSpecUpdate = zoneSpecUpdate;
-	}
-
-	public boolean isZonesWarnMessageUpdate() {
-		return zonesWarnMessageUpdate;
-	}
-
-	public void setZonesWarnMessageUpdate(boolean zonesWarnMessageUpdate) {
-		this.zonesWarnMessageUpdate = zonesWarnMessageUpdate;
-	}
-
-	public boolean isSpecItemWeightageRequired() {
-		return isSpecItemWeightageRequired;
-	}
-
-	public void setSpecItemWeightageRequired(boolean isSpecItemWeightageRequired) {
-		this.isSpecItemWeightageRequired = isSpecItemWeightageRequired;
-	}
-
-	public int getMinistryRemarksSize() {
-		return ministryRemarksSize;
-	}
-
-	public void setMinistryRemarksSize(int ministryRemarksSize) {
-		this.ministryRemarksSize = ministryRemarksSize;
-	}
-
-	public boolean isTechnicalUserScoringSchema() {
-		return isTechnicalUserScoringSchema;
-	}
-
-	public void setTechnicalUserScoringSchema(boolean isTechnicalUserScoringSchema) {
-		this.isTechnicalUserScoringSchema = isTechnicalUserScoringSchema;
-	}
-
-	public boolean isFinancialUserScoringSchema() {
-		return isFinancialUserScoringSchema;
-	}
-
-	public void setFinancialUserScoringSchema(boolean isFinancialUserScoringSchema) {
-		this.isFinancialUserScoringSchema = isFinancialUserScoringSchema;
-	}
-
-	public List<ScQtLocCriteria> getSupplierLocationList() {
-		return supplierLocationList;
-	}
-
-	public void setSupplierLocationList(List<ScQtLocCriteria> supplierLocationList) {
-		this.supplierLocationList = supplierLocationList;
-	}
-
-	public ScQtSupplierCriteria getSupplierCriteria() {
-		return supplierCriteria;
-	}
-
-	public void setSupplierCriteria(ScQtSupplierCriteria supplierCriteria) {
-		this.supplierCriteria = supplierCriteria;
-	}
-
-	public List<ScQtApproval> getToBeApprovalRemoveList() {
-		return toBeApprovalRemoveList;
-	}
-
-	public void setToBeApprovalRemoveList(List<ScQtApproval> toBeApprovalRemoveList) {
-		this.toBeApprovalRemoveList = toBeApprovalRemoveList;
-	}
-
-	public TreeNode[] getSelectedGeneralTreeNodes() {
-		return selectedGeneralTreeNodes;
-	}
-
-	public void setSelectedGeneralTreeNodes(TreeNode[] selectedGeneralTreeNodes) {
-		this.selectedGeneralTreeNodes = selectedGeneralTreeNodes;
-	}
-
-	public List<ZonesBean> getBeans() {
-		return beans;
-	}
-
-	public void setBeans(List<ZonesBean> beans) {
-		this.beans = beans;
-	}
-
-	public String getFulfilmentType() {
-		return fulfilmentType;
-	}
-
-	public void setFulfilmentType(String fulfilmentType) {
-		this.fulfilmentType = fulfilmentType;
-	}
-	
-	public List<ScQtSchedule> getScheduleList() {
-		return scheduleList;
-	}
-
-	public void setScheduleList(List<ScQtSchedule> scheduleList) {
-		this.scheduleList = scheduleList;
-	}
-
-	public List<ScQtProgressivePayment> getProgressivePaymentList() {
-		return progressivePaymentList;
-	}
-
-	public void setProgressivePaymentList(
-			List<ScQtProgressivePayment> progressivePaymentList) {
-		this.progressivePaymentList = progressivePaymentList;
-	}
-
-	
-
-
-
-	public String getProcuremntCategory() {
-		return procuremntCategory;
-	}
-
-	public void setProcuremntCategory(String procuremntCategory) {
-		this.procuremntCategory = procuremntCategory;
-	}
-
-	public List<ScQtRemark> getScQtRemarksList() {
-		return scQtRemarksList;
-	}
-
-	public void setScQtRemarksList(List<ScQtRemark> scQtRemarksList) {
-		this.scQtRemarksList = scQtRemarksList;
-	}
-
-	public ScQtRemark getContractremark() {
-		return contractremark;
-	}
-
-	public void setContractremark(ScQtRemark contractremark) {
-		this.contractremark = contractremark;
-	}
-
-	public List<SelectItem> getEvaluationTypeItem() {
-		return evaluationTypeItem;
-	}
-
-	public void setEvaluationTypeItem(List<SelectItem> evaluationTypeItem) {
-		this.evaluationTypeItem = evaluationTypeItem;
-	}
-
-	public boolean isPanelChange() {
-		return isPanelChange;
-	}
-
-	public void setPanelChange(boolean isPanelChange) {
-		this.isPanelChange = isPanelChange;
-	}
-	
-	public String getTempZoneName() {
-		return tempZoneName;
-	}
-
-	public void setTempZoneName(String tempZoneName) {
-		this.tempZoneName = tempZoneName;
-	}
-
-	public boolean isState() {
-		return isState;
-	}
-
-	public void setState(boolean isState) {
-		this.isState = isState;
-	}
-
 	/**
 	 * @return the selectCtPanelItem
 	 */
@@ -8668,5 +7263,2436 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
 		this.spkiBackingBean = spkiBackingBean;
 	}
+
+	/**
+	 * @return the circularType
+	 */
+	public String getCircularType() {
+		return circularType;
+	}
+
+	/**
+	 * @param circularType the circularType to set
+	 */
+	public void setCircularType(String circularType) {
+		this.circularType = circularType;
+	}
+
+	/**
+	 * @return the circularExpDate
+	 */
+	public Date getCircularExpDate() {
+		return circularExpDate;
+	}
+
+	/**
+	 * @param circularExpDate the circularExpDate to set
+	 */
+	public void setCircularExpDate(Date circularExpDate) {
+		this.circularExpDate = circularExpDate;
+	}
+
+	/**
+	 * @return the toBeApprovalRemoveList
+	 */
+	public List<ScQtApproval> getToBeApprovalRemoveList() {
+		return toBeApprovalRemoveList;
+	}
+
+	/**
+	 * @param toBeApprovalRemoveList the toBeApprovalRemoveList to set
+	 */
+	public void setToBeApprovalRemoveList(List<ScQtApproval> toBeApprovalRemoveList) {
+		this.toBeApprovalRemoveList = toBeApprovalRemoveList;
+	}
+
+	/**
+	 * @return the scQtRemarks
+	 */
+	public ScQtRemark getScQtRemarks() {
+		return scQtRemarks;
+	}
+
+	/**
+	 * @param scQtRemarks the scQtRemarks to set
+	 */
+	public void setScQtRemarks(ScQtRemark scQtRemarks) {
+		this.scQtRemarks = scQtRemarks;
+	}
+
+	/**
+	 * @return the scQtCheckSt2techProposal
+	 */
+	public List<ScQtCheckList> getScQtCheckSt2techProposal() {
+		return scQtCheckSt2techProposal;
+	}
+
+	/**
+	 * @param scQtCheckSt2techProposal the scQtCheckSt2techProposal to set
+	 */
+	public void setScQtCheckSt2techProposal(
+			List<ScQtCheckList> scQtCheckSt2techProposal) {
+		this.scQtCheckSt2techProposal = scQtCheckSt2techProposal;
+	}
+
+	/**
+	 * @return the markDeletedTechChecklist
+	 */
+	public List<ScQtCheckList> getMarkDeletedTechChecklist() {
+		return markDeletedTechChecklist;
+	}
+
+	/**
+	 * @param markDeletedTechChecklist the markDeletedTechChecklist to set
+	 */
+	public void setMarkDeletedTechChecklist(
+			List<ScQtCheckList> markDeletedTechChecklist) {
+		this.markDeletedTechChecklist = markDeletedTechChecklist;
+	}
+
+	/**
+	 * @return the scQtCheckSt2financeProposalList
+	 */
+	public List<ScQtCheckList> getScQtCheckSt2financeProposalList() {
+		return scQtCheckSt2financeProposalList;
+	}
+
+	/**
+	 * @param scQtCheckSt2financeProposalList the scQtCheckSt2financeProposalList to set
+	 */
+	public void setScQtCheckSt2financeProposalList(
+			List<ScQtCheckList> scQtCheckSt2financeProposalList) {
+		this.scQtCheckSt2financeProposalList = scQtCheckSt2financeProposalList;
+	}
+
+	/**
+	 * @return the markDeletedFinChecklist
+	 */
+	public List<ScQtCheckList> getMarkDeletedFinChecklist() {
+		return markDeletedFinChecklist;
+	}
+
+	/**
+	 * @param markDeletedFinChecklist the markDeletedFinChecklist to set
+	 */
+	public void setMarkDeletedFinChecklist(
+			List<ScQtCheckList> markDeletedFinChecklist) {
+		this.markDeletedFinChecklist = markDeletedFinChecklist;
+	}
+
+	/**
+	 * @return the committeeActivities
+	 */
+	public List<ScQtCommitteeActivity> getCommitteeActivities() {
+		return committeeActivities;
+	}
+
+	/**
+	 * @param committeeActivities the committeeActivities to set
+	 */
+	public void setCommitteeActivities(
+			List<ScQtCommitteeActivity> committeeActivities) {
+		this.committeeActivities = committeeActivities;
+	}
+
+	/**
+	 * @return the isSampleReq
+	 */
+	public boolean isSampleReq() {
+		return isSampleReq;
+	}
+
+	/**
+	 * @param isSampleReq the isSampleReq to set
+	 */
+	public void setSampleReq(boolean isSampleReq) {
+		this.isSampleReq = isSampleReq;
+	}
+
+	/**
+	 * @return the isSpecStatus
+	 */
+	public boolean isSpecStatus() {
+		return isSpecStatus;
+	}
+
+	/**
+	 * @param isSpecStatus the isSpecStatus to set
+	 */
+	public void setSpecStatus(boolean isSpecStatus) {
+		this.isSpecStatus = isSpecStatus;
+	}
+
+	/**
+	 * @return the procurementId
+	 */
+	public Long getProcurementId() {
+		return procurementId;
+	}
+
+	/**
+	 * @param procurementId the procurementId to set
+	 */
+	public void setProcurementId(Long procurementId) {
+		this.procurementId = procurementId;
+	}
+
+	/**
+	 * @return the evaluationType
+	 */
+	public String getEvaluationType() {
+		return evaluationType;
+	}
+
+	/**
+	 * @param evaluationType the evaluationType to set
+	 */
+	public void setEvaluationType(String evaluationType) {
+		this.evaluationType = evaluationType;
+	}
+
+	/**
+	 * @return the stageTwoTechComplianceList
+	 */
+	public List<PmDocument> getStageTwoTechComplianceList() {
+		return stageTwoTechComplianceList;
+	}
+
+	/**
+	 * @param stageTwoTechComplianceList the stageTwoTechComplianceList to set
+	 */
+	public void setStageTwoTechComplianceList(
+			List<PmDocument> stageTwoTechComplianceList) {
+		this.stageTwoTechComplianceList = stageTwoTechComplianceList;
+	}
+
+	/**
+	 * @return the stageTwoTechComplianceSelect
+	 */
+	public List<PmDocument> getStageTwoTechComplianceSelect() {
+		return stageTwoTechComplianceSelect;
+	}
+
+	/**
+	 * @param stageTwoTechComplianceSelect the stageTwoTechComplianceSelect to set
+	 */
+	public void setStageTwoTechComplianceSelect(
+			List<PmDocument> stageTwoTechComplianceSelect) {
+		this.stageTwoTechComplianceSelect = stageTwoTechComplianceSelect;
+	}
+
+	/**
+	 * @return the stageTwoFinComplianceList
+	 */
+	public List<PmDocument> getStageTwoFinComplianceList() {
+		return stageTwoFinComplianceList;
+	}
+
+	/**
+	 * @param stageTwoFinComplianceList the stageTwoFinComplianceList to set
+	 */
+	public void setStageTwoFinComplianceList(
+			List<PmDocument> stageTwoFinComplianceList) {
+		this.stageTwoFinComplianceList = stageTwoFinComplianceList;
+	}
+
+	/**
+	 * @return the stageTwoFinComplianceSelect
+	 */
+	public List<PmDocument> getStageTwoFinComplianceSelect() {
+		return stageTwoFinComplianceSelect;
+	}
+
+	/**
+	 * @param stageTwoFinComplianceSelect the stageTwoFinComplianceSelect to set
+	 */
+	public void setStageTwoFinComplianceSelect(
+			List<PmDocument> stageTwoFinComplianceSelect) {
+		this.stageTwoFinComplianceSelect = stageTwoFinComplianceSelect;
+	}
+
+	/**
+	 * @return the s2TechSelect
+	 */
+	public List<ScQtCheckList> getS2TechSelect() {
+		return s2TechSelect;
+	}
+
+	/**
+	 * @param s2TechSelect the s2TechSelect to set
+	 */
+	public void setS2TechSelect(List<ScQtCheckList> s2TechSelect) {
+		this.s2TechSelect = s2TechSelect;
+	}
+
+	/**
+	 * @return the s2FinSelect
+	 */
+	public List<ScQtCheckList> getS2FinSelect() {
+		return s2FinSelect;
+	}
+
+	/**
+	 * @param s2FinSelect the s2FinSelect to set
+	 */
+	public void setS2FinSelect(List<ScQtCheckList> s2FinSelect) {
+		this.s2FinSelect = s2FinSelect;
+	}
+
+	/**
+	 * @return the scheduleType
+	 */
+	public String getScheduleType() {
+		return scheduleType;
+	}
+
+	/**
+	 * @param scheduleType the scheduleType to set
+	 */
+	public void setScheduleType(String scheduleType) {
+		this.scheduleType = scheduleType;
+	}
+
+	/**
+	 * @return the fromMonth
+	 */
+	public String getFromMonth() {
+		return fromMonth;
+	}
+
+	/**
+	 * @param fromMonth the fromMonth to set
+	 */
+	public void setFromMonth(String fromMonth) {
+		this.fromMonth = fromMonth;
+	}
+
+	/**
+	 * @return the toMonth
+	 */
+	public String getToMonth() {
+		return toMonth;
+	}
+
+	/**
+	 * @param toMonth the toMonth to set
+	 */
+	public void setToMonth(String toMonth) {
+		this.toMonth = toMonth;
+	}
+
+	/**
+	 * @return the startYear
+	 */
+	public String getStartYear() {
+		return startYear;
+	}
+
+	/**
+	 * @param startYear the startYear to set
+	 */
+	public void setStartYear(String startYear) {
+		this.startYear = startYear;
+	}
+
+	/**
+	 * @return the endYear
+	 */
+	public String getEndYear() {
+		return endYear;
+	}
+
+	/**
+	 * @param endYear the endYear to set
+	 */
+	public void setEndYear(String endYear) {
+		this.endYear = endYear;
+	}
+
+	/**
+	 * @return the businessOwner
+	 */
+	public String getBusinessOwner() {
+		return businessOwner;
+	}
+
+	/**
+	 * @param businessOwner the businessOwner to set
+	 */
+	public void setBusinessOwner(String businessOwner) {
+		this.businessOwner = businessOwner;
+	}
+
+	/**
+	 * @return the checkListScore
+	 */
+	public List<ScQtCheckListScore> getCheckListScore() {
+		return checkListScore;
+	}
+
+	/**
+	 * @param checkListScore the checkListScore to set
+	 */
+	public void setCheckListScore(List<ScQtCheckListScore> checkListScore) {
+		this.checkListScore = checkListScore;
+	}
+
+	/**
+	 * @return the scoringForYears
+	 */
+	public List<ScQtCheckListScore> getScoringForYears() {
+		return scoringForYears;
+	}
+
+	/**
+	 * @param scoringForYears the scoringForYears to set
+	 */
+	public void setScoringForYears(List<ScQtCheckListScore> scoringForYears) {
+		this.scoringForYears = scoringForYears;
+	}
+
+	/**
+	 * @return the checkListSelectScore
+	 */
+	public List<ScQtCheckListScore> getCheckListSelectScore() {
+		return checkListSelectScore;
+	}
+
+	/**
+	 * @param checkListSelectScore the checkListSelectScore to set
+	 */
+	public void setCheckListSelectScore(
+			List<ScQtCheckListScore> checkListSelectScore) {
+		this.checkListSelectScore = checkListSelectScore;
+	}
+
+	/**
+	 * @return the scheduleList
+	 */
+	public List<ScQtSchedule> getScheduleList() {
+		return scheduleList;
+	}
+
+	/**
+	 * @param scheduleList the scheduleList to set
+	 */
+	public void setScheduleList(List<ScQtSchedule> scheduleList) {
+		this.scheduleList = scheduleList;
+	}
+
+	/**
+	 * @return the progressivePaymentList
+	 */
+	public List<ScQtProgressivePayment> getProgressivePaymentList() {
+		return progressivePaymentList;
+	}
+
+	/**
+	 * @param progressivePaymentList the progressivePaymentList to set
+	 */
+	public void setProgressivePaymentList(
+			List<ScQtProgressivePayment> progressivePaymentList) {
+		this.progressivePaymentList = progressivePaymentList;
+	}
+
+	/**
+	 * @return the technicalWeightageScore
+	 */
+	public BigDecimal getTechnicalWeightageScore() {
+		return technicalWeightageScore;
+	}
+
+	/**
+	 * @param technicalWeightageScore the technicalWeightageScore to set
+	 */
+	public void setTechnicalWeightageScore(BigDecimal technicalWeightageScore) {
+		this.technicalWeightageScore = technicalWeightageScore;
+	}
+
+	/**
+	 * @return the financialWeightageScore
+	 */
+	public BigDecimal getFinancialWeightageScore() {
+		return financialWeightageScore;
+	}
+
+	/**
+	 * @param financialWeightageScore the financialWeightageScore to set
+	 */
+	public void setFinancialWeightageScore(BigDecimal financialWeightageScore) {
+		this.financialWeightageScore = financialWeightageScore;
+	}
+
+	/**
+	 * @return the totalAmount
+	 */
+	public int getTotalAmount() {
+		return totalAmount;
+	}
+
+	/**
+	 * @param totalAmount the totalAmount to set
+	 */
+	public void setTotalAmount(int totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	/**
+	 * @return the totalAmountAvg
+	 */
+	public BigDecimal getTotalAmountAvg() {
+		return totalAmountAvg;
+	}
+
+	/**
+	 * @param totalAmountAvg the totalAmountAvg to set
+	 */
+	public void setTotalAmountAvg(BigDecimal totalAmountAvg) {
+		this.totalAmountAvg = totalAmountAvg;
+	}
+
+	/**
+	 * @return the panelItemList
+	 */
+	public List<CtPanelItem> getPanelItemList() {
+		return panelItemList;
+	}
+
+	/**
+	 * @param panelItemList the panelItemList to set
+	 */
+	public void setPanelItemList(List<CtPanelItem> panelItemList) {
+		this.panelItemList = panelItemList;
+	}
+
+	/**
+	 * @return the isPanel
+	 */
+	public boolean isPanel() {
+		return isPanel;
+	}
+
+	/**
+	 * @param isPanel the isPanel to set
+	 */
+	public void setPanel(boolean isPanel) {
+		this.isPanel = isPanel;
+	}
+
+	/**
+	 * @return the ctZoneTrees
+	 */
+	public TreeNode getCtZoneTrees() {
+		return ctZoneTrees;
+	}
+
+	/**
+	 * @param ctZoneTrees the ctZoneTrees to set
+	 */
+	public void setCtZoneTrees(TreeNode ctZoneTrees) {
+		this.ctZoneTrees = ctZoneTrees;
+	}
+
+	/**
+	 * @return the ctZoneTreeSelectedNodes
+	 */
+	public TreeNode[] getCtZoneTreeSelectedNodes() {
+		return ctZoneTreeSelectedNodes;
+	}
+
+	/**
+	 * @param ctZoneTreeSelectedNodes the ctZoneTreeSelectedNodes to set
+	 */
+	public void setCtZoneTreeSelectedNodes(TreeNode[] ctZoneTreeSelectedNodes) {
+		this.ctZoneTreeSelectedNodes = ctZoneTreeSelectedNodes;
+	}
+
+	/**
+	 * @return the suppCriteriaopenSelectList
+	 */
+	public List<ScQtCategory> getSuppCriteriaopenSelectList() {
+		return suppCriteriaopenSelectList;
+	}
+
+	/**
+	 * @param suppCriteriaopenSelectList the suppCriteriaopenSelectList to set
+	 */
+	public void setSuppCriteriaopenSelectList(
+			List<ScQtCategory> suppCriteriaopenSelectList) {
+		this.suppCriteriaopenSelectList = suppCriteriaopenSelectList;
+	}
+
+	/**
+	 * @return the panelZoneSelect
+	 */
+	public TreeNode getPanelZoneSelect() {
+		return panelZoneSelect;
+	}
+
+	/**
+	 * @param panelZoneSelect the panelZoneSelect to set
+	 */
+	public void setPanelZoneSelect(TreeNode panelZoneSelect) {
+		this.panelZoneSelect = panelZoneSelect;
+	}
+
+	/**
+	 * @return the selectedGeneralTreeNodes
+	 */
+	public TreeNode[] getSelectedGeneralTreeNodes() {
+		return selectedGeneralTreeNodes;
+	}
+
+	/**
+	 * @param selectedGeneralTreeNodes the selectedGeneralTreeNodes to set
+	 */
+	public void setSelectedGeneralTreeNodes(TreeNode[] selectedGeneralTreeNodes) {
+		this.selectedGeneralTreeNodes = selectedGeneralTreeNodes;
+	}
+
+	/**
+	 * @return the standardTemplate
+	 */
+	public String getStandardTemplate() {
+		return standardTemplate;
+	}
+
+	/**
+	 * @param standardTemplate the standardTemplate to set
+	 */
+	public void setStandardTemplate(String standardTemplate) {
+		this.standardTemplate = standardTemplate;
+	}
+
+	/**
+	 * @return the supportingDoc
+	 */
+	public String getSupportingDoc() {
+		return supportingDoc;
+	}
+
+	/**
+	 * @param supportingDoc the supportingDoc to set
+	 */
+	public void setSupportingDoc(String supportingDoc) {
+		this.supportingDoc = supportingDoc;
+	}
+
+	/**
+	 * @return the templateType
+	 */
+	public String getTemplateType() {
+		return templateType;
+	}
+
+	/**
+	 * @param templateType the templateType to set
+	 */
+	public void setTemplateType(String templateType) {
+		this.templateType = templateType;
+	}
+
+	/**
+	 * @return the specificationType
+	 */
+	public String getSpecificationType() {
+		return specificationType;
+	}
+
+	/**
+	 * @param specificationType the specificationType to set
+	 */
+	public void setSpecificationType(String specificationType) {
+		this.specificationType = specificationType;
+	}
+
+	/**
+	 * @return the scqtDoc
+	 */
+	public ScQtDoc getScqtDoc() {
+		return scqtDoc;
+	}
+
+	/**
+	 * @param scqtDoc the scqtDoc to set
+	 */
+	public void setScqtDoc(ScQtDoc scqtDoc) {
+		this.scqtDoc = scqtDoc;
+	}
+
+	/**
+	 * @return the ministryName
+	 */
+	public String getMinistryName() {
+		return ministryName;
+	}
+
+	/**
+	 * @param ministryName the ministryName to set
+	 */
+	public void setMinistryName(String ministryName) {
+		this.ministryName = ministryName;
+	}
+
+	/**
+	 * @return the searchItemTypeId
+	 */
+	public Long getSearchItemTypeId() {
+		return searchItemTypeId;
+	}
+
+	/**
+	 * @param searchItemTypeId the searchItemTypeId to set
+	 */
+	public void setSearchItemTypeId(Long searchItemTypeId) {
+		this.searchItemTypeId = searchItemTypeId;
+	}
+
+	/**
+	 * @return the searchSpecTypeId
+	 */
+	public Long getSearchSpecTypeId() {
+		return searchSpecTypeId;
+	}
+
+	/**
+	 * @param searchSpecTypeId the searchSpecTypeId to set
+	 */
+	public void setSearchSpecTypeId(Long searchSpecTypeId) {
+		this.searchSpecTypeId = searchSpecTypeId;
+	}
+
+	/**
+	 * @return the searchProcurementId
+	 */
+	public Long getSearchProcurementId() {
+		return searchProcurementId;
+	}
+
+	/**
+	 * @param searchProcurementId the searchProcurementId to set
+	 */
+	public void setSearchProcurementId(Long searchProcurementId) {
+		this.searchProcurementId = searchProcurementId;
+	}
+
+	/**
+	 * @return the searchCreatedBy
+	 */
+	public Long getSearchCreatedBy() {
+		return searchCreatedBy;
+	}
+
+	/**
+	 * @param searchCreatedBy the searchCreatedBy to set
+	 */
+	public void setSearchCreatedBy(Long searchCreatedBy) {
+		this.searchCreatedBy = searchCreatedBy;
+	}
+
+	/**
+	 * @return the docSearchlist
+	 */
+	public List<ScQtDoc> getDocSearchlist() {
+		return docSearchlist;
+	}
+
+	/**
+	 * @param docSearchlist the docSearchlist to set
+	 */
+	public void setDocSearchlist(List<ScQtDoc> docSearchlist) {
+		this.docSearchlist = docSearchlist;
+	}
+
+	/**
+	 * @return the checkListItem
+	 */
+	public List<ScQtCheckList> getCheckListItem() {
+		return checkListItem;
+	}
+
+	/**
+	 * @param checkListItem the checkListItem to set
+	 */
+	public void setCheckListItem(List<ScQtCheckList> checkListItem) {
+		this.checkListItem = checkListItem;
+	}
+
+	/**
+	 * @return the zoneList
+	 */
+	public List<SelectItem> getZoneList() {
+		return zoneList;
+	}
+
+	/**
+	 * @param zoneList the zoneList to set
+	 */
+	public void setZoneList(List<SelectItem> zoneList) {
+		this.zoneList = zoneList;
+	}
+
+	/**
+	 * @return the specName
+	 */
+	public String getSpecName() {
+		return specName;
+	}
+
+	/**
+	 * @param specName the specName to set
+	 */
+	public void setSpecName(String specName) {
+		this.specName = specName;
+	}
+
+	/**
+	 * @return the statusId
+	 */
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	/**
+	 * @param statusId the statusId to set
+	 */
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	/**
+	 * @return the isRecordStatus
+	 */
+	public boolean isRecordStatus() {
+		return isRecordStatus;
+	}
+
+	/**
+	 * @param isRecordStatus the isRecordStatus to set
+	 */
+	public void setRecordStatus(boolean isRecordStatus) {
+		this.isRecordStatus = isRecordStatus;
+	}
+
+	/**
+	 * @return the technicalScoring
+	 */
+	public List<ScQtCheckList> getTechnicalScoring() {
+		return technicalScoring;
+	}
+
+	/**
+	 * @param technicalScoring the technicalScoring to set
+	 */
+	public void setTechnicalScoring(List<ScQtCheckList> technicalScoring) {
+		this.technicalScoring = technicalScoring;
+	}
+
+	/**
+	 * @return the financialScoring
+	 */
+	public List<ScQtCheckList> getFinancialScoring() {
+		return financialScoring;
+	}
+
+	/**
+	 * @param financialScoring the financialScoring to set
+	 */
+	public void setFinancialScoring(List<ScQtCheckList> financialScoring) {
+		this.financialScoring = financialScoring;
+	}
+
+	/**
+	 * @return the techPoints
+	 */
+	public int getTechPoints() {
+		return techPoints;
+	}
+
+	/**
+	 * @param techPoints the techPoints to set
+	 */
+	public void setTechPoints(int techPoints) {
+		this.techPoints = techPoints;
+	}
+
+	/**
+	 * @return the finPoints
+	 */
+	public int getFinPoints() {
+		return finPoints;
+	}
+
+	/**
+	 * @param finPoints the finPoints to set
+	 */
+	public void setFinPoints(int finPoints) {
+		this.finPoints = finPoints;
+	}
+
+	/**
+	 * @return the yearList
+	 */
+	public List<SelectItem> getYearList() {
+		return yearList;
+	}
+
+	/**
+	 * @param yearList the yearList to set
+	 */
+	public void setYearList(List<SelectItem> yearList) {
+		this.yearList = yearList;
+	}
+
+	/**
+	 * @return the yearsDisplayList
+	 */
+	public List<SelectItem> getYearsDisplayList() {
+		return yearsDisplayList;
+	}
+
+	/**
+	 * @param yearsDisplayList the yearsDisplayList to set
+	 */
+	public void setYearsDisplayList(List<SelectItem> yearsDisplayList) {
+		this.yearsDisplayList = yearsDisplayList;
+	}
+
+	/**
+	 * @return the deliveryLocBean
+	 */
+	public List<BriefingZoneBean> getDeliveryLocBean() {
+		return deliveryLocBean;
+	}
+
+	/**
+	 * @param deliveryLocBean the deliveryLocBean to set
+	 */
+	public void setDeliveryLocBean(List<BriefingZoneBean> deliveryLocBean) {
+		this.deliveryLocBean = deliveryLocBean;
+	}
+
+	/**
+	 * @return the deliveryLoc
+	 */
+	public List<ScQtDeliveryLoc> getDeliveryLoc() {
+		return deliveryLoc;
+	}
+
+	/**
+	 * @param deliveryLoc the deliveryLoc to set
+	 */
+	public void setDeliveryLoc(List<ScQtDeliveryLoc> deliveryLoc) {
+		this.deliveryLoc = deliveryLoc;
+	}
+
+	/**
+	 * @return the deliveryNonZoneList
+	 */
+	public List<ScQtDeliveryLoc> getDeliveryNonZoneList() {
+		return deliveryNonZoneList;
+	}
+
+	/**
+	 * @param deliveryNonZoneList the deliveryNonZoneList to set
+	 */
+	public void setDeliveryNonZoneList(List<ScQtDeliveryLoc> deliveryNonZoneList) {
+		this.deliveryNonZoneList = deliveryNonZoneList;
+	}
+
+	/**
+	 * @return the deleteDeliveryList
+	 */
+	public List<ScQtDeliveryLoc> getDeleteDeliveryList() {
+		return deleteDeliveryList;
+	}
+
+	/**
+	 * @param deleteDeliveryList the deleteDeliveryList to set
+	 */
+	public void setDeleteDeliveryList(List<ScQtDeliveryLoc> deleteDeliveryList) {
+		this.deleteDeliveryList = deleteDeliveryList;
+	}
+
+	/**
+	 * @return the selectDeliveryList
+	 */
+	public List<ScQtDeliveryLoc> getSelectDeliveryList() {
+		return selectDeliveryList;
+	}
+
+	/**
+	 * @param selectDeliveryList the selectDeliveryList to set
+	 */
+	public void setSelectDeliveryList(List<ScQtDeliveryLoc> selectDeliveryList) {
+		this.selectDeliveryList = selectDeliveryList;
+	}
+
+	/**
+	 * @return the supplierCriteria
+	 */
+	public ScQtSupplierCriteria getSupplierCriteria() {
+		return supplierCriteria;
+	}
+
+	/**
+	 * @param supplierCriteria the supplierCriteria to set
+	 */
+	public void setSupplierCriteria(ScQtSupplierCriteria supplierCriteria) {
+		this.supplierCriteria = supplierCriteria;
+	}
+
+	/**
+	 * @return the deliveyzoneName
+	 */
+	public String getDeliveyzoneName() {
+		return deliveyzoneName;
+	}
+
+	/**
+	 * @param deliveyzoneName the deliveyzoneName to set
+	 */
+	public void setDeliveyzoneName(String deliveyzoneName) {
+		this.deliveyzoneName = deliveyzoneName;
+	}
+
+	/**
+	 * @return the technicalChecklistScoring
+	 */
+	public int getTechnicalChecklistScoring() {
+		return technicalChecklistScoring;
+	}
+
+	/**
+	 * @param technicalChecklistScoring the technicalChecklistScoring to set
+	 */
+	public void setTechnicalChecklistScoring(int technicalChecklistScoring) {
+		this.technicalChecklistScoring = technicalChecklistScoring;
+	}
+
+	/**
+	 * @return the checklistScoreType
+	 */
+	public String getChecklistScoreType() {
+		return checklistScoreType;
+	}
+
+	/**
+	 * @param checklistScoreType the checklistScoreType to set
+	 */
+	public void setChecklistScoreType(String checklistScoreType) {
+		this.checklistScoreType = checklistScoreType;
+	}
+
+	/**
+	 * @return the companyScoreType
+	 */
+	public String getCompanyScoreType() {
+		return companyScoreType;
+	}
+
+	/**
+	 * @param companyScoreType the companyScoreType to set
+	 */
+	public void setCompanyScoreType(String companyScoreType) {
+		this.companyScoreType = companyScoreType;
+	}
+
+	/**
+	 * @return the scQtCheckListScore
+	 */
+	public ScQtCheckListScore getScQtCheckListScore() {
+		return scQtCheckListScore;
+	}
+
+	/**
+	 * @param scQtCheckListScore the scQtCheckListScore to set
+	 */
+	public void setScQtCheckListScore(ScQtCheckListScore scQtCheckListScore) {
+		this.scQtCheckListScore = scQtCheckListScore;
+	}
+
+	/**
+	 * @return the scQtContractScore
+	 */
+	public ScQtCheckListScore getScQtContractScore() {
+		return scQtContractScore;
+	}
+
+	/**
+	 * @param scQtContractScore the scQtContractScore to set
+	 */
+	public void setScQtContractScore(ScQtCheckListScore scQtContractScore) {
+		this.scQtContractScore = scQtContractScore;
+	}
+
+	/**
+	 * @return the technicalChecklistAction
+	 */
+	public List<SelectItem> getTechnicalChecklistAction() {
+		return technicalChecklistAction;
+	}
+
+	/**
+	 * @param technicalChecklistAction the technicalChecklistAction to set
+	 */
+	public void setTechnicalChecklistAction(
+			List<SelectItem> technicalChecklistAction) {
+		this.technicalChecklistAction = technicalChecklistAction;
+	}
+
+	/**
+	 * @return the scoreVarience
+	 */
+	public BigDecimal getScoreVarience() {
+		return scoreVarience;
+	}
+
+	/**
+	 * @param scoreVarience the scoreVarience to set
+	 */
+	public void setScoreVarience(BigDecimal scoreVarience) {
+		this.scoreVarience = scoreVarience;
+	}
+
+	/**
+	 * @return the offerPricePackage
+	 */
+	public ScQtScoreOfferPrice getOfferPricePackage() {
+		return offerPricePackage;
+	}
+
+	/**
+	 * @param offerPricePackage the offerPricePackage to set
+	 */
+	public void setOfferPricePackage(ScQtScoreOfferPrice offerPricePackage) {
+		this.offerPricePackage = offerPricePackage;
+	}
+
+	/**
+	 * @return the offerPriceItem
+	 */
+	public ScQtScoreOfferPrice getOfferPriceItem() {
+		return OfferPriceItem;
+	}
+
+	/**
+	 * @param offerPriceItem the offerPriceItem to set
+	 */
+	public void setOfferPriceItem(ScQtScoreOfferPrice offerPriceItem) {
+		OfferPriceItem = offerPriceItem;
+	}
+
+	/**
+	 * @return the scQtScoreWeightage
+	 */
+	public ScQtScoreWeightage getScQtScoreWeightage() {
+		return scQtScoreWeightage;
+	}
+
+	/**
+	 * @param scQtScoreWeightage the scQtScoreWeightage to set
+	 */
+	public void setScQtScoreWeightage(ScQtScoreWeightage scQtScoreWeightage) {
+		this.scQtScoreWeightage = scQtScoreWeightage;
+	}
+
+	/**
+	 * @return the technicalScoreSetting
+	 */
+	public ScQtScoreSetting getTechnicalScoreSetting() {
+		return technicalScoreSetting;
+	}
+
+	/**
+	 * @param technicalScoreSetting the technicalScoreSetting to set
+	 */
+	public void setTechnicalScoreSetting(ScQtScoreSetting technicalScoreSetting) {
+		this.technicalScoreSetting = technicalScoreSetting;
+	}
+
+	/**
+	 * @return the financialScoreSetting
+	 */
+	public ScQtScoreSetting getFinancialScoreSetting() {
+		return financialScoreSetting;
+	}
+
+	/**
+	 * @param financialScoreSetting the financialScoreSetting to set
+	 */
+	public void setFinancialScoreSetting(ScQtScoreSetting financialScoreSetting) {
+		this.financialScoreSetting = financialScoreSetting;
+	}
+
+	/**
+	 * @return the demoScoreSetting
+	 */
+	public ScQtScoreSetting getDemoScoreSetting() {
+		return demoScoreSetting;
+	}
+
+	/**
+	 * @param demoScoreSetting the demoScoreSetting to set
+	 */
+	public void setDemoScoreSetting(ScQtScoreSetting demoScoreSetting) {
+		this.demoScoreSetting = demoScoreSetting;
+	}
+
+	/**
+	 * @return the recommendationPackageScore
+	 */
+	public ScQtScoreSetting getRecommendationPackageScore() {
+		return recommendationPackageScore;
+	}
+
+	/**
+	 * @param recommendationPackageScore the recommendationPackageScore to set
+	 */
+	public void setRecommendationPackageScore(
+			ScQtScoreSetting recommendationPackageScore) {
+		this.recommendationPackageScore = recommendationPackageScore;
+	}
+
+	/**
+	 * @return the recommendationScore
+	 */
+	public ScQtScoreSetting getRecommendationScore() {
+		return recommendationScore;
+	}
+
+	/**
+	 * @param recommendationScore the recommendationScore to set
+	 */
+	public void setRecommendationScore(ScQtScoreSetting recommendationScore) {
+		this.recommendationScore = recommendationScore;
+	}
+
+	/**
+	 * @return the procuremntCategory
+	 */
+	public String getProcuremntCategory() {
+		return procuremntCategory;
+	}
+
+	/**
+	 * @param procuremntCategory the procuremntCategory to set
+	 */
+	public void setProcuremntCategory(String procuremntCategory) {
+		this.procuremntCategory = procuremntCategory;
+	}
+
+	/**
+	 * @return the fulfilmentType
+	 */
+	public String getFulfilmentType() {
+		return fulfilmentType;
+	}
+
+	/**
+	 * @param fulfilmentType the fulfilmentType to set
+	 */
+	public void setFulfilmentType(String fulfilmentType) {
+		this.fulfilmentType = fulfilmentType;
+	}
+
+	/**
+	 * @return the technicalpackage
+	 */
+	public BigDecimal getTechnicalpackage() {
+		return technicalpackage;
+	}
+
+	/**
+	 * @param technicalpackage the technicalpackage to set
+	 */
+	public void setTechnicalpackage(BigDecimal technicalpackage) {
+		this.technicalpackage = technicalpackage;
+	}
+
+	/**
+	 * @return the financialpackage
+	 */
+	public BigDecimal getFinancialpackage() {
+		return financialpackage;
+	}
+
+	/**
+	 * @param financialpackage the financialpackage to set
+	 */
+	public void setFinancialpackage(BigDecimal financialpackage) {
+		this.financialpackage = financialpackage;
+	}
+
+	/**
+	 * @return the recommendationPackageTotal
+	 */
+	public BigDecimal getRecommendationPackageTotal() {
+		return recommendationPackageTotal;
+	}
+
+	/**
+	 * @param recommendationPackageTotal the recommendationPackageTotal to set
+	 */
+	public void setRecommendationPackageTotal(BigDecimal recommendationPackageTotal) {
+		this.recommendationPackageTotal = recommendationPackageTotal;
+	}
+
+	/**
+	 * @return the recommendTechnicalScore
+	 */
+	public BigDecimal getRecommendTechnicalScore() {
+		return recommendTechnicalScore;
+	}
+
+	/**
+	 * @param recommendTechnicalScore the recommendTechnicalScore to set
+	 */
+	public void setRecommendTechnicalScore(BigDecimal recommendTechnicalScore) {
+		this.recommendTechnicalScore = recommendTechnicalScore;
+	}
+
+	/**
+	 * @return the recommendfinancialScore
+	 */
+	public BigDecimal getRecommendfinancialScore() {
+		return recommendfinancialScore;
+	}
+
+	/**
+	 * @param recommendfinancialScore the recommendfinancialScore to set
+	 */
+	public void setRecommendfinancialScore(BigDecimal recommendfinancialScore) {
+		this.recommendfinancialScore = recommendfinancialScore;
+	}
+
+	/**
+	 * @return the tabActiveIndex
+	 */
+	public int getTabActiveIndex() {
+		return tabActiveIndex;
+	}
+
+	/**
+	 * @param tabActiveIndex the tabActiveIndex to set
+	 */
+	public void setTabActiveIndex(int tabActiveIndex) {
+		this.tabActiveIndex = tabActiveIndex;
+	}
+
+	/**
+	 * @return the scQtRemarksList
+	 */
+	public List<ScQtRemark> getScQtRemarksList() {
+		return scQtRemarksList;
+	}
+
+	/**
+	 * @param scQtRemarksList the scQtRemarksList to set
+	 */
+	public void setScQtRemarksList(List<ScQtRemark> scQtRemarksList) {
+		this.scQtRemarksList = scQtRemarksList;
+	}
+
+	/**
+	 * @return the stateId
+	 */
+	public Long getStateId() {
+		return stateId;
+	}
+
+	/**
+	 * @param stateId the stateId to set
+	 */
+	public void setStateId(Long stateId) {
+		this.stateId = stateId;
+	}
+
+	/**
+	 * @return the districtId
+	 */
+	public Long getDistrictId() {
+		return districtId;
+	}
+
+	/**
+	 * @param districtId the districtId to set
+	 */
+	public void setDistrictId(Long districtId) {
+		this.districtId = districtId;
+	}
+
+	/**
+	 * @return the ministryId
+	 */
+	public Long getMinistryId() {
+		return ministryId;
+	}
+
+	/**
+	 * @param ministryId the ministryId to set
+	 */
+	public void setMinistryId(Long ministryId) {
+		this.ministryId = ministryId;
+	}
+
+	/**
+	 * @return the departmentId
+	 */
+	public Long getDepartmentId() {
+		return departmentId;
+	}
+
+	/**
+	 * @param departmentId the departmentId to set
+	 */
+	public void setDepartmentId(Long departmentId) {
+		this.departmentId = departmentId;
+	}
+
+	/**
+	 * @return the ptjId
+	 */
+	public Long getPtjId() {
+		return ptjId;
+	}
+
+	/**
+	 * @param ptjId the ptjId to set
+	 */
+	public void setPtjId(Long ptjId) {
+		this.ptjId = ptjId;
+	}
+
+	/**
+	 * @return the stateCode
+	 */
+	public String getStateCode() {
+		return stateCode;
+	}
+
+	/**
+	 * @param stateCode the stateCode to set
+	 */
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
+	}
+
+	/**
+	 * @return the isState
+	 */
+	public boolean isState() {
+		return isState;
+	}
+
+	/**
+	 * @param isState the isState to set
+	 */
+	public void setState(boolean isState) {
+		this.isState = isState;
+	}
+
+	/**
+	 * @return the districtCode
+	 */
+	public String getDistrictCode() {
+		return districtCode;
+	}
+
+	/**
+	 * @param districtCode the districtCode to set
+	 */
+	public void setDistrictCode(String districtCode) {
+		this.districtCode = districtCode;
+	}
+
+	/**
+	 * @return the ministryList
+	 */
+	public List<PmOrgProfile> getMinistryList() {
+		return ministryList;
+	}
+
+	/**
+	 * @param ministryList the ministryList to set
+	 */
+	public void setMinistryList(List<PmOrgProfile> ministryList) {
+		this.ministryList = ministryList;
+	}
+
+	/**
+	 * @return the departmentList
+	 */
+	public List<PmOrgProfile> getDepartmentList() {
+		return departmentList;
+	}
+
+	/**
+	 * @param departmentList the departmentList to set
+	 */
+	public void setDepartmentList(List<PmOrgProfile> departmentList) {
+		this.departmentList = departmentList;
+	}
+
+	/**
+	 * @return the ptjtList
+	 */
+	public List<Object[]> getPtjtList() {
+		return ptjtList;
+	}
+
+	/**
+	 * @param ptjtList the ptjtList to set
+	 */
+	public void setPtjtList(List<Object[]> ptjtList) {
+		this.ptjtList = ptjtList;
+	}
+
+	/**
+	 * @return the ptjProfileDDList
+	 */
+	public List<Object[]> getPtjProfileDDList() {
+		return ptjProfileDDList;
+	}
+
+	/**
+	 * @param ptjProfileDDList the ptjProfileDDList to set
+	 */
+	public void setPtjProfileDDList(List<Object[]> ptjProfileDDList) {
+		this.ptjProfileDDList = ptjProfileDDList;
+	}
+
+	/**
+	 * @return the deliveryAddressSelect
+	 */
+	public List<PmAddressType> getDeliveryAddressSelect() {
+		return deliveryAddressSelect;
+	}
+
+	/**
+	 * @param deliveryAddressSelect the deliveryAddressSelect to set
+	 */
+	public void setDeliveryAddressSelect(List<PmAddressType> deliveryAddressSelect) {
+		this.deliveryAddressSelect = deliveryAddressSelect;
+	}
+
+	/**
+	 * @return the deliveryZones
+	 */
+	public List<TplSpecZoneDtl> getDeliveryZones() {
+		return deliveryZones;
+	}
+
+	/**
+	 * @param deliveryZones the deliveryZones to set
+	 */
+	public void setDeliveryZones(List<TplSpecZoneDtl> deliveryZones) {
+		this.deliveryZones = deliveryZones;
+	}
+
+	/**
+	 * @return the addressZoneBean
+	 */
+	public List<BriefingZoneBean> getAddressZoneBean() {
+		return addressZoneBean;
+	}
+
+	/**
+	 * @param addressZoneBean the addressZoneBean to set
+	 */
+	public void setAddressZoneBean(List<BriefingZoneBean> addressZoneBean) {
+		this.addressZoneBean = addressZoneBean;
+	}
+
+	/**
+	 * @return the finSpecList
+	 */
+	public List<ScQtCheckList> getFinSpecList() {
+		return finSpecList;
+	}
+
+	/**
+	 * @param finSpecList the finSpecList to set
+	 */
+	public void setFinSpecList(List<ScQtCheckList> finSpecList) {
+		this.finSpecList = finSpecList;
+	}
+
+	/**
+	 * @return the panelItemId
+	 */
+	public Long getPanelItemId() {
+		return panelItemId;
+	}
+
+	/**
+	 * @param panelItemId the panelItemId to set
+	 */
+	public void setPanelItemId(Long panelItemId) {
+		this.panelItemId = panelItemId;
+	}
+
+	/**
+	 * @return the contractremark
+	 */
+	public ScQtRemark getContractremark() {
+		return contractremark;
+	}
+
+	/**
+	 * @param contractremark the contractremark to set
+	 */
+	public void setContractremark(ScQtRemark contractremark) {
+		this.contractremark = contractremark;
+	}
+
+	/**
+	 * @return the circularVer
+	 */
+	public CtCircularVer getCircularVer() {
+		return circularVer;
+	}
+
+	/**
+	 * @param circularVer the circularVer to set
+	 */
+	public void setCircularVer(CtCircularVer circularVer) {
+		this.circularVer = circularVer;
+	}
+
+	/**
+	 * @return the subject
+	 */
+	public String getSubject() {
+		return subject;
+	}
+
+	/**
+	 * @param subject the subject to set
+	 */
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	/**
+	 * @return the chairPersonPinNum
+	 */
+	public String getChairPersonPinNum() {
+		return chairPersonPinNum;
+	}
+
+	/**
+	 * @param chairPersonPinNum the chairPersonPinNum to set
+	 */
+	public void setChairPersonPinNum(String chairPersonPinNum) {
+		this.chairPersonPinNum = chairPersonPinNum;
+	}
+
+	/**
+	 * @return the selectedTreeNode
+	 */
+	public TreeNode getSelectedTreeNode() {
+		return selectedTreeNode;
+	}
+
+	/**
+	 * @param selectedTreeNode the selectedTreeNode to set
+	 */
+	public void setSelectedTreeNode(TreeNode selectedTreeNode) {
+		this.selectedTreeNode = selectedTreeNode;
+	}
+
+	/**
+	 * @return the ctSearchBean
+	 */
+	public CtCircularSearchBean getCtSearchBean() {
+		return ctSearchBean;
+	}
+
+	/**
+	 * @param ctSearchBean the ctSearchBean to set
+	 */
+	public void setCtSearchBean(CtCircularSearchBean ctSearchBean) {
+		this.ctSearchBean = ctSearchBean;
+	}
+
+	/**
+	 * @return the evaluationTypeItem
+	 */
+	public List<SelectItem> getEvaluationTypeItem() {
+		return evaluationTypeItem;
+	}
+
+	/**
+	 * @param evaluationTypeItem the evaluationTypeItem to set
+	 */
+	public void setEvaluationTypeItem(List<SelectItem> evaluationTypeItem) {
+		this.evaluationTypeItem = evaluationTypeItem;
+	}
+
+	/**
+	 * @return the ctCircularVer
+	 */
+	public CtCircularVer getCtCircularVer() {
+		return ctCircularVer;
+	}
+
+	/**
+	 * @param ctCircularVer the ctCircularVer to set
+	 */
+	public void setCtCircularVer(CtCircularVer ctCircularVer) {
+		this.ctCircularVer = ctCircularVer;
+	}
+
+	/**
+	 * @return the finspecChecklist
+	 */
+	public List<ScQtCheckList> getFinspecChecklist() {
+		return finspecChecklist;
+	}
+
+	/**
+	 * @param finspecChecklist the finspecChecklist to set
+	 */
+	public void setFinspecChecklist(List<ScQtCheckList> finspecChecklist) {
+		this.finspecChecklist = finspecChecklist;
+	}
+
+	/**
+	 * @return the buttonOutCome
+	 */
+	public String getButtonOutCome() {
+		return buttonOutCome;
+	}
+
+	/**
+	 * @param buttonOutCome the buttonOutCome to set
+	 */
+	public void setButtonOutCome(String buttonOutCome) {
+		this.buttonOutCome = buttonOutCome;
+	}
+
+	/**
+	 * @return the isPanelChange
+	 */
+	public boolean isPanelChange() {
+		return isPanelChange;
+	}
+
+	/**
+	 * @param isPanelChange the isPanelChange to set
+	 */
+	public void setPanelChange(boolean isPanelChange) {
+		this.isPanelChange = isPanelChange;
+	}
+
+	/**
+	 * @return the newItemCategory
+	 */
+	public String getNewItemCategory() {
+		return newItemCategory;
+	}
+
+	/**
+	 * @param newItemCategory the newItemCategory to set
+	 */
+	public void setNewItemCategory(String newItemCategory) {
+		this.newItemCategory = newItemCategory;
+	}
+
+	/**
+	 * @return the bankstmntTomonth
+	 */
+	public String getBankstmntTomonth() {
+		return bankstmntTomonth;
+	}
+
+	/**
+	 * @param bankstmntTomonth the bankstmntTomonth to set
+	 */
+	public void setBankstmntTomonth(String bankstmntTomonth) {
+		this.bankstmntTomonth = bankstmntTomonth;
+	}
+
+	/**
+	 * @return the tempIndex
+	 */
+	public int getTempIndex() {
+		return tempIndex;
+	}
+
+	/**
+	 * @param tempIndex the tempIndex to set
+	 */
+	public void setTempIndex(int tempIndex) {
+		this.tempIndex = tempIndex;
+	}
+
+	/**
+	 * @return the selectPanelItem
+	 */
+	public boolean isSelectPanelItem() {
+		return selectPanelItem;
+	}
+
+	/**
+	 * @param selectPanelItem the selectPanelItem to set
+	 */
+	public void setSelectPanelItem(boolean selectPanelItem) {
+		this.selectPanelItem = selectPanelItem;
+	}
+
+	/**
+	 * @return the specStatusId
+	 */
+	public Long getSpecStatusId() {
+		return specStatusId;
+	}
+
+	/**
+	 * @param specStatusId the specStatusId to set
+	 */
+	public void setSpecStatusId(Long specStatusId) {
+		this.specStatusId = specStatusId;
+	}
+
+	/**
+	 * @return the specSelectStats
+	 */
+	public boolean isSpecSelectStats() {
+		return specSelectStats;
+	}
+
+	/**
+	 * @param specSelectStats the specSelectStats to set
+	 */
+	public void setSpecSelectStats(boolean specSelectStats) {
+		this.specSelectStats = specSelectStats;
+	}
+
+	/**
+	 * @return the selectedCheckList
+	 */
+	public int getSelectedCheckList() {
+		return selectedCheckList;
+	}
+
+	/**
+	 * @param selectedCheckList the selectedCheckList to set
+	 */
+	public void setSelectedCheckList(int selectedCheckList) {
+		this.selectedCheckList = selectedCheckList;
+	}
+
+	/**
+	 * @return the specType
+	 */
+	public String getSpecType() {
+		return specType;
+	}
+
+	/**
+	 * @param specType the specType to set
+	 */
+	public void setSpecType(String specType) {
+		this.specType = specType;
+	}
+
+	/**
+	 * @return the toBeRemoveList
+	 */
+	public List<ScQtCheckListScore> getToBeRemoveList() {
+		return toBeRemoveList;
+	}
+
+	/**
+	 * @param toBeRemoveList the toBeRemoveList to set
+	 */
+	public void setToBeRemoveList(List<ScQtCheckListScore> toBeRemoveList) {
+		this.toBeRemoveList = toBeRemoveList;
+	}
+
+	/**
+	 * @return the otherScoreSelected
+	 */
+	public List<ScQtCheckListScore> getOtherScoreSelected() {
+		return otherScoreSelected;
+	}
+
+	/**
+	 * @param otherScoreSelected the otherScoreSelected to set
+	 */
+	public void setOtherScoreSelected(List<ScQtCheckListScore> otherScoreSelected) {
+		this.otherScoreSelected = otherScoreSelected;
+	}
+
+	/**
+	 * @return the checkListTitle
+	 */
+	public String getCheckListTitle() {
+		return checkListTitle;
+	}
+
+	/**
+	 * @param checkListTitle the checkListTitle to set
+	 */
+	public void setCheckListTitle(String checkListTitle) {
+		this.checkListTitle = checkListTitle;
+	}
+
+	/**
+	 * @return the deliveryLocRemoveList
+	 */
+	public List<ScQtDeliveryLoc> getDeliveryLocRemoveList() {
+		return deliveryLocRemoveList;
+	}
+
+	/**
+	 * @param deliveryLocRemoveList the deliveryLocRemoveList to set
+	 */
+	public void setDeliveryLocRemoveList(List<ScQtDeliveryLoc> deliveryLocRemoveList) {
+		this.deliveryLocRemoveList = deliveryLocRemoveList;
+	}
+
+	/**
+	 * @return the checklistRemoveList
+	 */
+	public List<ScQtCheckList> getChecklistRemoveList() {
+		return checklistRemoveList;
+	}
+
+	/**
+	 * @param checklistRemoveList the checklistRemoveList to set
+	 */
+	public void setChecklistRemoveList(List<ScQtCheckList> checklistRemoveList) {
+		this.checklistRemoveList = checklistRemoveList;
+	}
+
+	/**
+	 * @return the technicalTableRow
+	 */
+	public int getTechnicalTableRow() {
+		return technicalTableRow;
+	}
+
+	/**
+	 * @param technicalTableRow the technicalTableRow to set
+	 */
+	public void setTechnicalTableRow(int technicalTableRow) {
+		this.technicalTableRow = technicalTableRow;
+	}
+
+	/**
+	 * @return the financialTableRow
+	 */
+	public int getFinancialTableRow() {
+		return financialTableRow;
+	}
+
+	/**
+	 * @param financialTableRow the financialTableRow to set
+	 */
+	public void setFinancialTableRow(int financialTableRow) {
+		this.financialTableRow = financialTableRow;
+	}
+
+	/**
+	 * @return the scoreTypeList
+	 */
+	public List<SelectItem> getScoreTypeList() {
+		return ScoreTypeList;
+	}
+
+	/**
+	 * @param scoreTypeList the scoreTypeList to set
+	 */
+	public void setScoreTypeList(List<SelectItem> scoreTypeList) {
+		ScoreTypeList = scoreTypeList;
+	}
+
+	/**
+	 * @return the isTechStandaraChecklist
+	 */
+	public boolean isTechStandaraChecklist() {
+		return isTechStandaraChecklist;
+	}
+
+	/**
+	 * @param isTechStandaraChecklist the isTechStandaraChecklist to set
+	 */
+	public void setTechStandaraChecklist(boolean isTechStandaraChecklist) {
+		this.isTechStandaraChecklist = isTechStandaraChecklist;
+	}
+
+	/**
+	 * @return the isFinStandaraChecklist
+	 */
+	public boolean isFinStandaraChecklist() {
+		return isFinStandaraChecklist;
+	}
+
+	/**
+	 * @param isFinStandaraChecklist the isFinStandaraChecklist to set
+	 */
+	public void setFinStandaraChecklist(boolean isFinStandaraChecklist) {
+		this.isFinStandaraChecklist = isFinStandaraChecklist;
+	}
+
+	/**
+	 * @return the localOutCome
+	 */
+	public String getLocalOutCome() {
+		return localOutCome;
+	}
+
+	/**
+	 * @param localOutCome the localOutCome to set
+	 */
+	public void setLocalOutCome(String localOutCome) {
+		this.localOutCome = localOutCome;
+	}
+
+	/**
+	 * @return the specificationRemarks
+	 */
+	public List<ScQtSpecificationRemark> getSpecificationRemarks() {
+		return specificationRemarks;
+	}
+
+	/**
+	 * @param specificationRemarks the specificationRemarks to set
+	 */
+	public void setSpecificationRemarks(
+			List<ScQtSpecificationRemark> specificationRemarks) {
+		this.specificationRemarks = specificationRemarks;
+	}
+
+	/**
+	 * @return the divisionId
+	 */
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	/**
+	 * @param divisionId the divisionId to set
+	 */
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	/**
+	 * @return the specComplete
+	 */
+	public boolean isSpecComplete() {
+		return specComplete;
+	}
+
+	/**
+	 * @param specComplete the specComplete to set
+	 */
+	public void setSpecComplete(boolean specComplete) {
+		this.specComplete = specComplete;
+	}
+
+	/**
+	 * @return the beans
+	 */
+	public List<ZonesBean> getBeans() {
+		return beans;
+	}
+
+	/**
+	 * @param beans the beans to set
+	 */
+	public void setBeans(List<ZonesBean> beans) {
+		this.beans = beans;
+	}
+
+	/**
+	 * @return the technicalSpecCount
+	 */
+	public int getTechnicalSpecCount() {
+		return technicalSpecCount;
+	}
+
+	/**
+	 * @param technicalSpecCount the technicalSpecCount to set
+	 */
+	public void setTechnicalSpecCount(int technicalSpecCount) {
+		this.technicalSpecCount = technicalSpecCount;
+	}
+
+	/**
+	 * @return the financialSpecCount
+	 */
+	public int getFinancialSpecCount() {
+		return financialSpecCount;
+	}
+
+	/**
+	 * @param financialSpecCount the financialSpecCount to set
+	 */
+	public void setFinancialSpecCount(int financialSpecCount) {
+		this.financialSpecCount = financialSpecCount;
+	}
+
+	/**
+	 * @return the bankyearsList
+	 */
+	public List<SelectItem> getBankyearsList() {
+		return bankyearsList;
+	}
+
+	/**
+	 * @param bankyearsList the bankyearsList to set
+	 */
+	public void setBankyearsList(List<SelectItem> bankyearsList) {
+		this.bankyearsList = bankyearsList;
+	}
+
+	/**
+	 * @return the restrictedSupplierList
+	 */
+	public List<ScQtSupplier> getRestrictedSupplierList() {
+		return restrictedSupplierList;
+	}
+
+	/**
+	 * @param restrictedSupplierList the restrictedSupplierList to set
+	 */
+	public void setRestrictedSupplierList(List<ScQtSupplier> restrictedSupplierList) {
+		this.restrictedSupplierList = restrictedSupplierList;
+	}
+
+	/**
+	 * @return the newTemplateSpec
+	 */
+	public boolean isNewTemplateSpec() {
+		return newTemplateSpec;
+	}
+
+	/**
+	 * @param newTemplateSpec the newTemplateSpec to set
+	 */
+	public void setNewTemplateSpec(boolean newTemplateSpec) {
+		this.newTemplateSpec = newTemplateSpec;
+	}
+
+	/**
+	 * @return the deletePanelTreenode
+	 */
+	public TreeNode getDeletePanelTreenode() {
+		return deletePanelTreenode;
+	}
+
+	/**
+	 * @param deletePanelTreenode the deletePanelTreenode to set
+	 */
+	public void setDeletePanelTreenode(TreeNode deletePanelTreenode) {
+		this.deletePanelTreenode = deletePanelTreenode;
+	}
+
+	/**
+	 * @return the supplierLocationList
+	 */
+	public List<ScQtLocCriteria> getSupplierLocationList() {
+		return supplierLocationList;
+	}
+
+	/**
+	 * @param supplierLocationList the supplierLocationList to set
+	 */
+	public void setSupplierLocationList(List<ScQtLocCriteria> supplierLocationList) {
+		this.supplierLocationList = supplierLocationList;
+	}
+
+	/**
+	 * @return the financialChecklistAction
+	 */
+	public List<SelectItem> getFinancialChecklistAction() {
+		return financialChecklistAction;
+	}
+
+	/**
+	 * @param financialChecklistAction the financialChecklistAction to set
+	 */
+	public void setFinancialChecklistAction(
+			List<SelectItem> financialChecklistAction) {
+		this.financialChecklistAction = financialChecklistAction;
+	}
+
+	/**
+	 * @return the specNewable
+	 */
+	public boolean isSpecNewable() {
+		return specNewable;
+	}
+
+	/**
+	 * @param specNewable the specNewable to set
+	 */
+	public void setSpecNewable(boolean specNewable) {
+		this.specNewable = specNewable;
+	}
+
+	/**
+	 * @return the qtnTendertemplateSearchBean
+	 */
+	public QtnTenderSearchBean getQtnTendertemplateSearchBean() {
+		return qtnTendertemplateSearchBean;
+	}
+
+	/**
+	 * @param qtnTendertemplateSearchBean the qtnTendertemplateSearchBean to set
+	 */
+	public void setQtnTendertemplateSearchBean(
+			QtnTenderSearchBean qtnTendertemplateSearchBean) {
+		this.qtnTendertemplateSearchBean = qtnTendertemplateSearchBean;
+	}
+
+	/**
+	 * @return the tempZoneName
+	 */
+	public String getTempZoneName() {
+		return tempZoneName;
+	}
+
+	/**
+	 * @param tempZoneName the tempZoneName to set
+	 */
+	public void setTempZoneName(String tempZoneName) {
+		this.tempZoneName = tempZoneName;
+	}
+
+	/**
+	 * @return the finacialItemScoreSetting
+	 */
+	public ScQtScoreSetting getFinacialItemScoreSetting() {
+		return finacialItemScoreSetting;
+	}
+
+	/**
+	 * @param finacialItemScoreSetting the finacialItemScoreSetting to set
+	 */
+	public void setFinacialItemScoreSetting(
+			ScQtScoreSetting finacialItemScoreSetting) {
+		this.finacialItemScoreSetting = finacialItemScoreSetting;
+	}
+
+	/**
+	 * @return the financialItemScore
+	 */
+	public BigDecimal getFinancialItemScore() {
+		return financialItemScore;
+	}
+
+	/**
+	 * @param financialItemScore the financialItemScore to set
+	 */
+	public void setFinancialItemScore(BigDecimal financialItemScore) {
+		this.financialItemScore = financialItemScore;
+	}
+
+	/**
+	 * @return the totalScore
+	 */
+	public BigDecimal getTotalScore() {
+		return totalScore;
+	}
+
+	/**
+	 * @param totalScore the totalScore to set
+	 */
+	public void setTotalScore(BigDecimal totalScore) {
+		this.totalScore = totalScore;
+	}
+
+	/**
+	 * @return the locationLevel
+	 */
+	public String getLocationLevel() {
+		return locationLevel;
+	}
+
+	/**
+	 * @param locationLevel the locationLevel to set
+	 */
+	public void setLocationLevel(String locationLevel) {
+		this.locationLevel = locationLevel;
+	}
+
+	/**
+	 * @return the searchDeliveryAddressDataModel
+	 */
+	public IPagingDataModel<PmAddressType> getSearchDeliveryAddressDataModel() {
+		return searchDeliveryAddressDataModel;
+	}
+
+	/**
+	 * @param searchDeliveryAddressDataModel the searchDeliveryAddressDataModel to set
+	 */
+	public void setSearchDeliveryAddressDataModel(
+			IPagingDataModel<PmAddressType> searchDeliveryAddressDataModel) {
+		this.searchDeliveryAddressDataModel = searchDeliveryAddressDataModel;
+	}
+
+	/**
+	 * @return the ptjGroupId
+	 */
+	public Long getPtjGroupId() {
+		return ptjGroupId;
+	}
+
+	/**
+	 * @param ptjGroupId the ptjGroupId to set
+	 */
+	public void setPtjGroupId(Long ptjGroupId) {
+		this.ptjGroupId = ptjGroupId;
+	}
+
+	/**
+	 * @return the checkListYesIndex
+	 */
+	public int getCheckListYesIndex() {
+		return checkListYesIndex;
+	}
+
+	/**
+	 * @param checkListYesIndex the checkListYesIndex to set
+	 */
+	public void setCheckListYesIndex(int checkListYesIndex) {
+		this.checkListYesIndex = checkListYesIndex;
+	}
+
+	/**
+	 * @return the technicalOtherChecklistSubmit
+	 */
+	public boolean isTechnicalOtherChecklistSubmit() {
+		return technicalOtherChecklistSubmit;
+	}
+
+	/**
+	 * @param technicalOtherChecklistSubmit the technicalOtherChecklistSubmit to set
+	 */
+	public void setTechnicalOtherChecklistSubmit(
+			boolean technicalOtherChecklistSubmit) {
+		this.technicalOtherChecklistSubmit = technicalOtherChecklistSubmit;
+	}
+
+	/**
+	 * @return the financialOtherChecklistSubmit
+	 */
+	public boolean isFinancialOtherChecklistSubmit() {
+		return financialOtherChecklistSubmit;
+	}
+
+	/**
+	 * @param financialOtherChecklistSubmit the financialOtherChecklistSubmit to set
+	 */
+	public void setFinancialOtherChecklistSubmit(
+			boolean financialOtherChecklistSubmit) {
+		this.financialOtherChecklistSubmit = financialOtherChecklistSubmit;
+	}
+
+	/**
+	 * @return the zoneSpecUpdate
+	 */
+	public boolean isZoneSpecUpdate() {
+		return zoneSpecUpdate;
+	}
+
+	/**
+	 * @param zoneSpecUpdate the zoneSpecUpdate to set
+	 */
+	public void setZoneSpecUpdate(boolean zoneSpecUpdate) {
+		this.zoneSpecUpdate = zoneSpecUpdate;
+	}
+
+	/**
+	 * @return the zonesWarnMessageUpdate
+	 */
+	public boolean isZonesWarnMessageUpdate() {
+		return zonesWarnMessageUpdate;
+	}
+
+	/**
+	 * @param zonesWarnMessageUpdate the zonesWarnMessageUpdate to set
+	 */
+	public void setZonesWarnMessageUpdate(boolean zonesWarnMessageUpdate) {
+		this.zonesWarnMessageUpdate = zonesWarnMessageUpdate;
+	}
+
+	/**
+	 * @return the isSpecItemWeightageRequired
+	 */
+	public boolean isSpecItemWeightageRequired() {
+		return isSpecItemWeightageRequired;
+	}
+
+	/**
+	 * @param isSpecItemWeightageRequired the isSpecItemWeightageRequired to set
+	 */
+	public void setSpecItemWeightageRequired(boolean isSpecItemWeightageRequired) {
+		this.isSpecItemWeightageRequired = isSpecItemWeightageRequired;
+	}
+
+	/**
+	 * @return the ministryRemarksSize
+	 */
+	public int getMinistryRemarksSize() {
+		return ministryRemarksSize;
+	}
+
+	/**
+	 * @param ministryRemarksSize the ministryRemarksSize to set
+	 */
+	public void setMinistryRemarksSize(int ministryRemarksSize) {
+		this.ministryRemarksSize = ministryRemarksSize;
+	}
+
+	/**
+	 * @return the isTechnicalUserScoringSchema
+	 */
+	public boolean isTechnicalUserScoringSchema() {
+		return isTechnicalUserScoringSchema;
+	}
+
+	/**
+	 * @param isTechnicalUserScoringSchema the isTechnicalUserScoringSchema to set
+	 */
+	public void setTechnicalUserScoringSchema(boolean isTechnicalUserScoringSchema) {
+		this.isTechnicalUserScoringSchema = isTechnicalUserScoringSchema;
+	}
+
+	/**
+	 * @return the isFinancialUserScoringSchema
+	 */
+	public boolean isFinancialUserScoringSchema() {
+		return isFinancialUserScoringSchema;
+	}
+
+	/**
+	 * @param isFinancialUserScoringSchema the isFinancialUserScoringSchema to set
+	 */
+	public void setFinancialUserScoringSchema(boolean isFinancialUserScoringSchema) {
+		this.isFinancialUserScoringSchema = isFinancialUserScoringSchema;
+	}
+
+	
 
 }
