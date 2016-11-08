@@ -1243,234 +1243,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.clausesTitle = clausesTitle;
 	}
 
-	public List<TreeNode> getLocationTreeNodes() {
-		return locationTreeNodes;
-	}
-
-	public void setLocationTreeNodes(List<TreeNode> locationTreeNodes) {
-		this.locationTreeNodes = locationTreeNodes;
-	}
-
-	public TreeNode getRootLocationTree() {
-		return rootLocationTree;
-	}
-
-	public void setRootLocationTree(TreeNode rootLocationTree) {
-		this.rootLocationTree = rootLocationTree;
-	}
-
-	public String getLocalLevelCode() {
-		return LocalLevelCode;
-	}
-
-	public void setLocalLevelCode(String localLevelCode) {
-		LocalLevelCode = localLevelCode;
-	}
-
-	public boolean isRequired() {
-		return required;
-	}
-
-	public void setRequired(boolean required) {
-		this.required = required;
-	}
-
-	public boolean isZoneLocation() {
-		return zoneLocation;
-	}
-
-	public void setZoneLocation(boolean zoneLocation) {
-		this.zoneLocation = zoneLocation;
-	}
-
-	public boolean isAutoUpdate() {
-		return autoUpdate;
-	}
-
-	public void setAutoUpdate(boolean autoUpdate) {
-		this.autoUpdate = autoUpdate;
-	}
-
-	public TreeNode getRootZoanlTree() {
-		return rootZoanlTree;
-	}
-
-	public void setRootZoanlTree(TreeNode rootZoanlTree) {
-		this.rootZoanlTree = rootZoanlTree;
-	}
-
-	public String getZoneName() {
-		return zoneName;
-	}
-
-	public void setZoneName(String zoneName) {
-		this.zoneName = zoneName;
-	}
-
-	public String getTempZoneName() {
-		return tempZoneName;
-	}
-
-	public void setTempZoneName(String tempZoneName) {
-		this.tempZoneName = tempZoneName;
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
-	}
-
-	public List<TplSpecLoc> getTotalSuppliersSpecLoc() {
-		return totalSuppliersSpecLoc;
-	}
-
-	public void setTotalSuppliersSpecLoc(List<TplSpecLoc> totalSuppliersSpecLoc) {
-		this.totalSuppliersSpecLoc = totalSuppliersSpecLoc;
-	}
-
-	public List<ScQtLocCriteria> getExistingLocationList() {
-		return existingLocationList;
-	}
-
-	public void setExistingLocationList(
-			List<ScQtLocCriteria> existingLocationList) {
-		this.existingLocationList = existingLocationList;
-	}
-
-	public TreeNode[] getSelectedNodes() {
-		return selectedNodes;
-	}
-
-	public void setSelectedNodes(TreeNode[] selectedNodes) {
-		this.selectedNodes = selectedNodes;
-	}
-
-	public List<TreeNode> getZoneTrees() {
-		return zoneTrees;
-	}
-
-	public void setZoneTrees(List<TreeNode> zoneTrees) {
-		this.zoneTrees = zoneTrees;
-	}
-
-	public List<ZonesBean> getZoneBeans() {
-		return zoneBeans;
-	}
-
-	public void setZoneBeans(List<ZonesBean> zoneBeans) {
-		this.zoneBeans = zoneBeans;
-	}
-
-	public TreeNode[] getSelectedGeneralTreeNodes() {
-		return selectedGeneralTreeNodes;
-	}
-
-	public void setSelectedGeneralTreeNodes(TreeNode[] selectedGeneralTreeNodes) {
-		this.selectedGeneralTreeNodes = selectedGeneralTreeNodes;
-	}
-
-	public PTJLocalityCode getAllStateCode() {
-		return allStateCode;
-	}
-
-	public void setAllStateCode(PTJLocalityCode allStateCode) {
-		this.allStateCode = allStateCode;
-	}
-
-	public List<ScQtSchedule> getToBeRemoveSchedules() {
-		return toBeRemoveSchedules;
-	}
-
-	public void setToBeRemoveSchedules(List<ScQtSchedule> toBeRemoveSchedules) {
-		this.toBeRemoveSchedules = toBeRemoveSchedules;
-	}
-
-	public List<ScQtProgressivePayment> getToBeRemoveProgPayments() {
-		return toBeRemoveProgPayments;
-	}
-
-	public void setToBeRemoveProgPayments(
-			List<ScQtProgressivePayment> toBeRemoveProgPayments) {
-		this.toBeRemoveProgPayments = toBeRemoveProgPayments;
-	}
-
-	public BigDecimal getOverallContractAmt() {
-		return overallContractAmt;
-	}
-
-	public void setOverallContractAmt(BigDecimal overallContractAmt) {
-		this.overallContractAmt = overallContractAmt;
-	}
-
-	public boolean isRenderRemainder() {
-		return renderRemainder;
-	}
-
-	public void setRenderRemainder(boolean renderRemainder) {
-		this.renderRemainder = renderRemainder;
-	}
-
-	public List<ScLoaSupportingDoc> getSelectedScLoaSuppDocs() {
-		return selectedScLoaSuppDocs;
-	}
-
-	public void setSelectedScLoaSuppDocs(
-			List<ScLoaSupportingDoc> selectedScLoaSuppDocs) {
-		this.selectedScLoaSuppDocs = selectedScLoaSuppDocs;
-	}
-
-	public ScLoaSupportingDoc getSelectedScLoaSuppDoc() {
-		return selectedScLoaSuppDoc;
-	}
-
-	public void setSelectedScLoaSuppDoc(ScLoaSupportingDoc selectedScLoaSuppDoc) {
-		this.selectedScLoaSuppDoc = selectedScLoaSuppDoc;
-	}
-
-	public TemplateSpecBean getProdTemplateSpecBean() {
-		return prodTemplateSpecBean;
-	}
-
-	public void setProdTemplateSpecBean(TemplateSpecBean prodTemplateSpecBean) {
-		this.prodTemplateSpecBean = prodTemplateSpecBean;
-	}
-
-	public TemplateSpecBean getSpecTemplateSpecBean() {
-		return specTemplateSpecBean;
-	}
-
-	public void setSpecTemplateSpecBean(TemplateSpecBean specTemplateSpecBean) {
-		this.specTemplateSpecBean = specTemplateSpecBean;
-	}
-
-	public ScQtDoc getProdscQtDoc() {
-		return prodscQtDoc;
-	}
-
-	public void setProdscQtDoc(ScQtDoc prodscQtDoc) {
-		this.prodscQtDoc = prodscQtDoc;
-	}
-
-	public ScQtDoc getServicescQtDoc() {
-		return servicescQtDoc;
-	}
-
-	public void setServicescQtDoc(ScQtDoc servicescQtDoc) {
-		this.servicescQtDoc = servicescQtDoc;
-	}
-
-	public ScQtZoneCriteria getToBedeletedSupplierZone() {
-		return toBedeletedSupplierZone;
-	}
-
-	public void setToBedeletedSupplierZone(
-			ScQtZoneCriteria toBedeletedSupplierZone) {
-		this.toBedeletedSupplierZone = toBedeletedSupplierZone;
-	}
-
 	/**
 	 * @return the branchInfoReport
 	 */
@@ -1541,4 +1313,399 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	public void setMinistryConditionField(String ministryConditionField) {
 		this.ministryConditionField = ministryConditionField;
 	}
+
+	/**
+	 * @return the prodscQtDoc
+	 */
+	public ScQtDoc getProdscQtDoc() {
+		return prodscQtDoc;
+	}
+
+	/**
+	 * @param prodscQtDoc the prodscQtDoc to set
+	 */
+	public void setProdscQtDoc(ScQtDoc prodscQtDoc) {
+		this.prodscQtDoc = prodscQtDoc;
+	}
+
+	/**
+	 * @return the servicescQtDoc
+	 */
+	public ScQtDoc getServicescQtDoc() {
+		return servicescQtDoc;
+	}
+
+	/**
+	 * @param servicescQtDoc the servicescQtDoc to set
+	 */
+	public void setServicescQtDoc(ScQtDoc servicescQtDoc) {
+		this.servicescQtDoc = servicescQtDoc;
+	}
+
+	/**
+	 * @return the prodTemplateSpecBean
+	 */
+	public TemplateSpecBean getProdTemplateSpecBean() {
+		return prodTemplateSpecBean;
+	}
+
+	/**
+	 * @param prodTemplateSpecBean the prodTemplateSpecBean to set
+	 */
+	public void setProdTemplateSpecBean(TemplateSpecBean prodTemplateSpecBean) {
+		this.prodTemplateSpecBean = prodTemplateSpecBean;
+	}
+
+	/**
+	 * @return the specTemplateSpecBean
+	 */
+	public TemplateSpecBean getSpecTemplateSpecBean() {
+		return specTemplateSpecBean;
+	}
+
+	/**
+	 * @param specTemplateSpecBean the specTemplateSpecBean to set
+	 */
+	public void setSpecTemplateSpecBean(TemplateSpecBean specTemplateSpecBean) {
+		this.specTemplateSpecBean = specTemplateSpecBean;
+	}
+
+	/**
+	 * @return the locationTreeNodes
+	 */
+	public List<TreeNode> getLocationTreeNodes() {
+		return locationTreeNodes;
+	}
+
+	/**
+	 * @param locationTreeNodes the locationTreeNodes to set
+	 */
+	public void setLocationTreeNodes(List<TreeNode> locationTreeNodes) {
+		this.locationTreeNodes = locationTreeNodes;
+	}
+
+	/**
+	 * @return the rootLocationTree
+	 */
+	public TreeNode getRootLocationTree() {
+		return rootLocationTree;
+	}
+
+	/**
+	 * @param rootLocationTree the rootLocationTree to set
+	 */
+	public void setRootLocationTree(TreeNode rootLocationTree) {
+		this.rootLocationTree = rootLocationTree;
+	}
+
+	/**
+	 * @return the localLevelCode
+	 */
+	public String getLocalLevelCode() {
+		return LocalLevelCode;
+	}
+
+	/**
+	 * @param localLevelCode the localLevelCode to set
+	 */
+	public void setLocalLevelCode(String localLevelCode) {
+		LocalLevelCode = localLevelCode;
+	}
+
+	/**
+	 * @return the allStateCode
+	 */
+	public PTJLocalityCode getAllStateCode() {
+		return allStateCode;
+	}
+
+	/**
+	 * @param allStateCode the allStateCode to set
+	 */
+	public void setAllStateCode(PTJLocalityCode allStateCode) {
+		this.allStateCode = allStateCode;
+	}
+
+	/**
+	 * @return the required
+	 */
+	public boolean isRequired() {
+		return required;
+	}
+
+	/**
+	 * @param required the required to set
+	 */
+	public void setRequired(boolean required) {
+		this.required = required;
+	}
+
+	/**
+	 * @return the zoneLocation
+	 */
+	public boolean isZoneLocation() {
+		return zoneLocation;
+	}
+
+	/**
+	 * @param zoneLocation the zoneLocation to set
+	 */
+	public void setZoneLocation(boolean zoneLocation) {
+		this.zoneLocation = zoneLocation;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the zoneName
+	 */
+	public String getZoneName() {
+		return zoneName;
+	}
+
+	/**
+	 * @param zoneName the zoneName to set
+	 */
+	public void setZoneName(String zoneName) {
+		this.zoneName = zoneName;
+	}
+
+	/**
+	 * @return the tempZoneName
+	 */
+	public String getTempZoneName() {
+		return tempZoneName;
+	}
+
+	/**
+	 * @param tempZoneName the tempZoneName to set
+	 */
+	public void setTempZoneName(String tempZoneName) {
+		this.tempZoneName = tempZoneName;
+	}
+
+	/**
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
+	}
+
+	/**
+	 * @param index the index to set
+	 */
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	/**
+	 * @return the totalSuppliersSpecLoc
+	 */
+	public List<TplSpecLoc> getTotalSuppliersSpecLoc() {
+		return totalSuppliersSpecLoc;
+	}
+
+	/**
+	 * @param totalSuppliersSpecLoc the totalSuppliersSpecLoc to set
+	 */
+	public void setTotalSuppliersSpecLoc(List<TplSpecLoc> totalSuppliersSpecLoc) {
+		this.totalSuppliersSpecLoc = totalSuppliersSpecLoc;
+	}
+
+	/**
+	 * @return the rootZoanlTree
+	 */
+	public TreeNode getRootZoanlTree() {
+		return rootZoanlTree;
+	}
+
+	/**
+	 * @param rootZoanlTree the rootZoanlTree to set
+	 */
+	public void setRootZoanlTree(TreeNode rootZoanlTree) {
+		this.rootZoanlTree = rootZoanlTree;
+	}
+
+	/**
+	 * @return the existingLocationList
+	 */
+	public List<ScQtLocCriteria> getExistingLocationList() {
+		return existingLocationList;
+	}
+
+	/**
+	 * @param existingLocationList the existingLocationList to set
+	 */
+	public void setExistingLocationList(List<ScQtLocCriteria> existingLocationList) {
+		this.existingLocationList = existingLocationList;
+	}
+
+	/**
+	 * @return the selectedNodes
+	 */
+	public TreeNode[] getSelectedNodes() {
+		return selectedNodes;
+	}
+
+	/**
+	 * @param selectedNodes the selectedNodes to set
+	 */
+	public void setSelectedNodes(TreeNode[] selectedNodes) {
+		this.selectedNodes = selectedNodes;
+	}
+
+	/**
+	 * @return the zoneTrees
+	 */
+	public List<TreeNode> getZoneTrees() {
+		return zoneTrees;
+	}
+
+	/**
+	 * @param zoneTrees the zoneTrees to set
+	 */
+	public void setZoneTrees(List<TreeNode> zoneTrees) {
+		this.zoneTrees = zoneTrees;
+	}
+
+	/**
+	 * @return the zoneBeans
+	 */
+	public List<ZonesBean> getZoneBeans() {
+		return zoneBeans;
+	}
+
+	/**
+	 * @param zoneBeans the zoneBeans to set
+	 */
+	public void setZoneBeans(List<ZonesBean> zoneBeans) {
+		this.zoneBeans = zoneBeans;
+	}
+
+	/**
+	 * @return the selectedGeneralTreeNodes
+	 */
+	public TreeNode[] getSelectedGeneralTreeNodes() {
+		return selectedGeneralTreeNodes;
+	}
+
+	/**
+	 * @param selectedGeneralTreeNodes the selectedGeneralTreeNodes to set
+	 */
+	public void setSelectedGeneralTreeNodes(TreeNode[] selectedGeneralTreeNodes) {
+		this.selectedGeneralTreeNodes = selectedGeneralTreeNodes;
+	}
+
+	/**
+	 * @return the toBeRemoveSchedules
+	 */
+	public List<ScQtSchedule> getToBeRemoveSchedules() {
+		return toBeRemoveSchedules;
+	}
+
+	/**
+	 * @param toBeRemoveSchedules the toBeRemoveSchedules to set
+	 */
+	public void setToBeRemoveSchedules(List<ScQtSchedule> toBeRemoveSchedules) {
+		this.toBeRemoveSchedules = toBeRemoveSchedules;
+	}
+
+	/**
+	 * @return the toBeRemoveProgPayments
+	 */
+	public List<ScQtProgressivePayment> getToBeRemoveProgPayments() {
+		return toBeRemoveProgPayments;
+	}
+
+	/**
+	 * @param toBeRemoveProgPayments the toBeRemoveProgPayments to set
+	 */
+	public void setToBeRemoveProgPayments(
+			List<ScQtProgressivePayment> toBeRemoveProgPayments) {
+		this.toBeRemoveProgPayments = toBeRemoveProgPayments;
+	}
+
+	/**
+	 * @return the overallContractAmt
+	 */
+	public BigDecimal getOverallContractAmt() {
+		return overallContractAmt;
+	}
+
+	/**
+	 * @param overallContractAmt the overallContractAmt to set
+	 */
+	public void setOverallContractAmt(BigDecimal overallContractAmt) {
+		this.overallContractAmt = overallContractAmt;
+	}
+
+	/**
+	 * @return the renderRemainder
+	 */
+	public boolean isRenderRemainder() {
+		return renderRemainder;
+	}
+
+	/**
+	 * @param renderRemainder the renderRemainder to set
+	 */
+	public void setRenderRemainder(boolean renderRemainder) {
+		this.renderRemainder = renderRemainder;
+	}
+
+	/**
+	 * @return the selectedScLoaSuppDocs
+	 */
+	public List<ScLoaSupportingDoc> getSelectedScLoaSuppDocs() {
+		return selectedScLoaSuppDocs;
+	}
+
+	/**
+	 * @param selectedScLoaSuppDocs the selectedScLoaSuppDocs to set
+	 */
+	public void setSelectedScLoaSuppDocs(
+			List<ScLoaSupportingDoc> selectedScLoaSuppDocs) {
+		this.selectedScLoaSuppDocs = selectedScLoaSuppDocs;
+	}
+
+	/**
+	 * @return the selectedScLoaSuppDoc
+	 */
+	public ScLoaSupportingDoc getSelectedScLoaSuppDoc() {
+		return selectedScLoaSuppDoc;
+	}
+
+	/**
+	 * @param selectedScLoaSuppDoc the selectedScLoaSuppDoc to set
+	 */
+	public void setSelectedScLoaSuppDoc(ScLoaSupportingDoc selectedScLoaSuppDoc) {
+		this.selectedScLoaSuppDoc = selectedScLoaSuppDoc;
+	}
+
+	/**
+	 * @return the toBedeletedSupplierZone
+	 */
+	public ScQtZoneCriteria getToBedeletedSupplierZone() {
+		return toBedeletedSupplierZone;
+	}
+
+	/**
+	 * @param toBedeletedSupplierZone the toBedeletedSupplierZone to set
+	 */
+	public void setToBedeletedSupplierZone(ScQtZoneCriteria toBedeletedSupplierZone) {
+		this.toBedeletedSupplierZone = toBedeletedSupplierZone;
+	}
+	
 }
