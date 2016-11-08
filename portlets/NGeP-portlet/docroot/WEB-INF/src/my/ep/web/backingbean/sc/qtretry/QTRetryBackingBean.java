@@ -269,6 +269,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 * Get the RetryQTDataModel.
 	 * @return the retryQTDataModel
 	 */
 	public IPagingDataModel<ScQtDisruptionLog> getRetryQTDataModel() {
@@ -276,6 +277,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 * Set the RetryQTDataModel.
 	 * @param retryQTDataModel the retryQTDataModel to set
 	 */
 	public void setRetryQTDataModel(IPagingDataModel<ScQtDisruptionLog> retryQTDataModel) {
@@ -283,6 +285,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 * Get the SelectedRetryQT.
 	 * @return the selectedRetryQT
 	 */
 	public ScQtDisruptionLog getSelectedRetryQT() {
@@ -290,6 +293,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 *  Set the SelectedRetryQT.
 	 * @param selectedRetryQT the selectedRetryQT to set
 	 */
 	public void setSelectedRetryQT(ScQtDisruptionLog selectedRetryQT) {
@@ -297,6 +301,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 *  Get the SelectedRetryQT.
 	 * @return the selectedRetryQTs
 	 */
 	public List<ScQtDisruptionLog> getSelectedRetryQTs() {
@@ -304,6 +309,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 	}
 
 	/**
+	 *  Set the SelectedRetryQT.
 	 * @param selectedRetryQTs the selectedRetryQTs to set
 	 */
 	public void setSelectedRetryQTs(List<ScQtDisruptionLog> selectedRetryQTs) {

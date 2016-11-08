@@ -426,6 +426,7 @@ public class NoticeBoardBackingBean extends
 
 	/**
 	 * qtnTenderDocs
+	 * return the quotation tender details page.
 	 */
 	public String qtnTenderDocs() {
 		log.info("** qtnTenderDocs **");
@@ -433,6 +434,12 @@ public class NoticeBoardBackingBean extends
 		return NAV_TO_QTN_TENDER_DETAILS_PAGE;
 	}
 
+	/**
+	 * hide fields based on sectionName and day.
+	 * @param sectionName
+	 * @param day
+	 * 
+	 */
 	public void hideFields(String sectionName, String day) {
 		log.info("inside update date field");
 		if (NoticeBoardSection.PUBLISHDETAILS.name().equalsIgnoreCase(
@@ -472,6 +479,12 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 
+	/**
+	 * show fields based on sectionName and day.
+	 * @param sectionName
+	 * @param day
+	 * 
+	 */
 	public void showFields(String sectionName, String day) {
 		log.info("inside show date field");
 		if (NoticeBoardSection.PUBLISHDETAILS.name().equalsIgnoreCase(
@@ -507,6 +520,12 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 
+	/**
+	 * treenode select checkbox event.
+	 * @param event
+	 * 
+	 * 
+	 */
 	public void onNodeSelect(NodeSelectEvent event) {
 
 		TreeNode root = new EpDefaultTreeNode("Root", null);
@@ -528,14 +547,32 @@ public class NoticeBoardBackingBean extends
 
 	}
 
+	/**
+	 * treenode collapse event.
+	 * @param event
+	 * 
+	 * 
+	 */
 	public void onNodeCollapse(NodeCollapseEvent event) {
 		System.out.println("collapse @@@@@@@@@@@@@ " + event.getTreeNode());
 	}
 
+	/**
+	 * treenode Unselect checkbox event.
+	 * @param event
+	 * 
+	 * 
+	 */
 	public void onNodeUnselect(NodeUnselectEvent event) {
 		System.out.println("unselect @@@@@@@@@@@@@ " + event.getTreeNode());
 	}
 
+	/**
+	 * treenode expand event.
+	 * @param event
+	 * 
+	 * 
+	 */
 	public void onNodeExpand(NodeExpandEvent event) {
 
 		Object obj = event.getTreeNode().getData();
@@ -562,6 +599,12 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 
+	/**
+	 * method to get parameter Description by parametertype.
+	 * @param type
+	 * 
+	 * @return the list of parameter descriptions.
+	 */
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
 		return ParameterHelper.getInstance().getParameterDescList(type);
 
@@ -785,6 +828,12 @@ public class NoticeBoardBackingBean extends
 		return BSV_SUPP_REGISTRATION_PAGE;
 	}
 
+	
+	/**
+	 * User click on zones in bsvZones tab.
+	 * 
+	 *
+	 */ 
 	public void bsvZoneTabChangeAction() {
 		if (log.isDebugEnabled()) {
 			log.debug("bsvZoneTabChangeAction");
@@ -1885,7 +1934,11 @@ public class NoticeBoardBackingBean extends
 		return parentOrgProfile;
 	}
 	
-
+	/**
+	 * construct the ConditionFields based on PTJGroup.
+	 * 
+	 * @return orgProfileId
+	 */
 	public String constuctConditionFieldsForPTJGroup() {
 
 		StringBuffer parentOrgProfile = new StringBuffer();
@@ -2385,6 +2438,7 @@ public class NoticeBoardBackingBean extends
 	}
 	
 	/**
+	 * Get QT PagingDataModel.
 	 * @return the qtDataModel
 	 */
 	public IPagingDataModel<Object[]> getQtDataModel() {
@@ -2392,6 +2446,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
+	 * Set QT PagingDataModel.
 	 * @param qtDataModel
 	 *            the qtDataModel to set
 	 */
@@ -2400,6 +2455,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
+	 * Set the Visible.
 	 * @return the visible
 	 */
 	public boolean isVisible() {
@@ -2407,6 +2463,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
+	 * Get the Visible.
 	 * @param visible the visible to set
 	 */
 	public void setVisible(boolean visible) {
@@ -2414,6 +2471,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
+	 * Set the dispalyImage.
 	 * @return the displayImage
 	 */
 	public boolean isDisplayImage() {
@@ -2421,12 +2479,18 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
+	 * Get the dispalyImage.
 	 * @param displayImage the displayImage to set
 	 */
 	public void setDisplayImage(boolean displayImage) {
 		this.displayImage = displayImage;
 	}
 	
+	/**
+	 * check BsvDate is greater than currentdate.
+	 * @param bsvDtl
+	 * @return the attendance is editable or not.
+	 */
 	public boolean isAttandanceEditable(ScQtBsvDtl bsvDtl){
 		if(bsvDtl.getBsvDate().compareTo(new Date()) > 0 ){
 			return false;
@@ -2488,6 +2552,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
+	 * Get the SlectedHeaderName.
 	 * @return the slectedHeaderName
 	 */
 	public String getSlectedHeaderName() {
@@ -2495,6 +2560,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
+	 * Set the SlectedHeaderName.
 	 * @param slectedHeaderName the slectedHeaderName to set
 	 */
 	public void setSlectedHeaderName(String slectedHeaderName) {
@@ -2547,6 +2613,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
+	 * Get CategoryCodes PagingDataModel.
 	 * @return the categoryCodesDataModel
 	 */
 	public IPagingDataModel<ScQtCategory> getCategoryCodesDataModel() {
@@ -2554,6 +2621,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
+	 * Set CategoryCodes PagingDataModel.
 	 * @param categoryCodesDataModel the categoryCodesDataModel to set
 	 */
 	public void setCategoryCodesDataModel(
@@ -2759,6 +2827,13 @@ public class NoticeBoardBackingBean extends
 		
 	}
 	
+	/**
+	 * Get list Of Ministry.
+	 * 
+	 * @param query
+	 * 
+	 * @return  List<PmOrgProfile>
+	 */
 	public List<PmOrgProfile> autoCompleteOrgMinistry(String query) {
 		
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -2770,6 +2845,13 @@ public class NoticeBoardBackingBean extends
 		return resDTO.getOrgProfileList();
 	}
 	
+	/**
+	 * Get list Of PTJGroups.
+	 * 
+	 * @param query
+	 * 
+	 * @return  List<PmOrgProfile>
+	 */
 	public List<PmOrgProfile> autoCompleteOrgPTJGroup(String query) {
 		
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -2782,6 +2864,13 @@ public class NoticeBoardBackingBean extends
 		return resDTO.getOrgProfileList();
 	}
 	
+	/**
+	 * Get list Of PTJ.
+	 * 
+	 * @param query
+	 * 
+	 * @return  List<PmOrgProfile>
+	 */
 	public List<PmOrgProfile> autoCompleteOrgPTJ(String query) {
 		
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -2793,6 +2882,14 @@ public class NoticeBoardBackingBean extends
 				.retrieveOrgProfilesBasedOnOrgType(reqDTO);
 		return resDTO.getOrgProfileList();
 	}
+	
+	/**
+	 * method to get itemLabels based on PmOrgProfile.
+	 * 
+	 * @param orgProfile
+	 * 
+	 * @return  the item label data.
+	 */
 	public String itemLabel(PmOrgProfile orgProfile) {
 
 		if (orgProfile != null && orgProfile.getOrgCode() != null
@@ -2836,6 +2933,13 @@ public class NoticeBoardBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 	}
 	
+	/**
+	 * method to get list of categoryCodes based on CategoryId.
+	 * 
+	 * @param event
+	 * 
+	 *  
+	 */
 	public void selectedCategory(AjaxBehaviorEvent event){
 		
 		Long selectedCategoryL3 = (Long) event.getComponent().getAttributes()
