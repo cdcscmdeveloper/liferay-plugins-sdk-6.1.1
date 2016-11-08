@@ -386,6 +386,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 		getManagedBean().setSearchPanelSuppliersNode(null);
 	}
 
+	/**
+	 * user change tab in supplierQualificationCriteria menu based on tab get the data.
+	 */
 	public void onTabChangeAction(TabChangeEvent event) {
 		debugLogger("onTabChangeAction");
 		String tabTitle = event.getTab().getTitle();
@@ -458,6 +461,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	
+	/**
+	 * Method to get mofAccount Details based on supplier.
+	 * @param smSupplier
+	 * @return the supplier mofAccount Details instance.
+	 */
 	public SmMofAccount retrieveSmMofAccountFromSmSupplier(SmSupplier smSupplier) {
 		debugLogger("retrieveSmMofAccountFromSmSupplier");
 		SmMofAccount smMofAccount = null;
@@ -536,6 +544,12 @@ public class QTSupplierQulCriteriaBackingBean extends
 		return smMofAccount;
 	}
 	
+	/**
+	 * Check smMofAccount expiry date is greater than current date.
+	 *
+	 * @param mofAccount
+	 * @return the boolean.
+	 */
 	public boolean supplierStatusDateComparision(SmMofAccount mofAccount) {
 		debugLogger("supplierStatusDateComparision");
 		Date enddate = mofAccount.getExpDate();
@@ -1904,6 +1918,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		return scQtSupplier;
 	}		
 
+	/**
+	 * 
+	 * Validate PaidUpCapital.
+	 * 
+	 */
 	public void validatePaidupcapital() {
 		debugLogger("validatePaidupcapital");
 		this.getManagedBean().setPaidupcapital(true);
