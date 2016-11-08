@@ -51,6 +51,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
 /**
+ * Implementation for Supplier Invitation Backing Bean.
  * @author Hemanth Katta
  *
  */
@@ -68,6 +69,9 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 	private static final String ALL_LABEL_KEY = "lbl.txt.all";
 	private static final String BSV_LABEL_KEY = "lbl.sc.qt.briefing.sv";
 	
+	/**
+	 * inIt method create objects.
+	 */
 	@PostConstruct
 	private void init() {
 		
@@ -88,6 +92,9 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 		}
 	}
 	
+	/**
+	 * Navigate to Supplier Invitation listing page.
+	 */
 	public void preRenderView() {
 		
 		log.info("preRenderView");
@@ -275,11 +282,15 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 			return invitationTypes;
 	}
 	
+	/**
+	 * search supplier invitation pagingDataModel.
+	 */
 	public void onSearchSelectedInvitationType(String type) {
 		supplierInvitationModel.reloadData();
 	}
 	
 	/**
+	 * Get the SupplierInvitationModel.
 	 * @return the supplierInvitationModel
 	 */
 	public IPagingDataModel<Object[]> getSupplierInvitationModel() {
@@ -287,6 +298,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 	}
 
 	/**
+	 * Set the SupplierInvitationModel.
 	 * @param supplierInvitationModel the supplierInvitationModel to set
 	 */
 	public void setSupplierInvitationModel(
@@ -311,7 +323,11 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 		return resDTO != null ? resDTO.getPmParameter() : null;
 	}
 	
-	/*retrive pmParameter id based on type*/
+	
+	/**
+	 * Get the parameter Id based on supplierInvitationType.
+	 * @param type
+	 */
 	public Long retriveParameterId(String type){
 		IParameterSO parameterSo=null;
 		Long returnId=0L;
