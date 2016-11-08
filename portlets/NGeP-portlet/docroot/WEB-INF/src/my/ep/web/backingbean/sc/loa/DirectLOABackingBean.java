@@ -6233,22 +6233,47 @@ public class DirectLOABackingBean extends
 		scLoa.setScLoaReports(result);
 	}
 
+	/**
+	 * Checks if is flag.
+	 *
+	 * @return true, if is flag
+	 */
 	public boolean isFlag() {
 		return flag;
 	}
 
+	/**
+	 * Sets the flag.
+	 *
+	 * @param flag the new flag
+	 */
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
 
+	/**
+	 * Checks if is supp doc flag.
+	 *
+	 * @return true, if is supp doc flag
+	 */
 	public boolean isSuppDocFlag() {
 		return suppDocFlag;
 	}
 
+	/**
+	 * Sets the supp doc flag.
+	 *
+	 * @param suppDocFlag the new supp doc flag
+	 */
 	public void setSuppDocFlag(boolean suppDocFlag) {
 		this.suppDocFlag = suppDocFlag;
 	}
 
+	/**
+	 * Tab change action.
+	 *
+	 * @param selectedTabIndex the selected tab index
+	 */
 	public void tabChangeAction(int selectedTabIndex) {
 
 		if (selectedTabIndex != 0 && this.getManagedBean().isDisplayAlert()) {
