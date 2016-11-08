@@ -288,13 +288,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 		this.toBeDeletedRegistartions = toBeDeletedRegistartions;
 	}
 
-	public boolean isMaintanceFlow() {
-		return maintanceFlow;
-	}
-
-	public void setMaintanceFlow(boolean maintanceFlow) {
-		this.maintanceFlow = maintanceFlow;
-	}
+	
 
 	/**
 	 * @return the ctZoneSupplierList
@@ -351,6 +345,20 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	public void setSelectedbriefRegistrationEnableDisable(
 			ScQtBsvRegistration selectedbriefRegistrationEnableDisable) {
 		this.selectedbriefRegistrationEnableDisable = selectedbriefRegistrationEnableDisable;
+	}
+
+	/**
+	 * @return the maintanceFlow
+	 */
+	public boolean isMaintanceFlow() {
+		return maintanceFlow;
+	}
+
+	/**
+	 * @param maintanceFlow the maintanceFlow to set
+	 */
+	public void setMaintanceFlow(boolean maintanceFlow) {
+		this.maintanceFlow = maintanceFlow;
 	}
 	
 }
