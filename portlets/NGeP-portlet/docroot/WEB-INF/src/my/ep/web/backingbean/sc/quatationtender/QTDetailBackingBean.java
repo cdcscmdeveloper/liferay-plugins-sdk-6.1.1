@@ -1938,6 +1938,10 @@ public class QTDetailBackingBean extends
 	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#
 	 * preRenderView()
 	 */
+
+	/**
+	 * Navigate to quotation tender maintenance page.
+	 */
 	public void preRenderView() {
 		try {
 			renewSesionObject();
@@ -4665,6 +4669,11 @@ public class QTDetailBackingBean extends
 
 	}
 
+	/**
+	 * Get the ApprovalDetails Enable or Disable based on Approval and status.
+	 * 
+	 * @return the enable or disable approvals.
+	 */
 	public boolean approvalDtlsEditable(ScQtApproval approval) {
 		
 		Long statusId = this
@@ -4899,6 +4908,11 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setScTdObj(scTdObj);
 	}
 	
+	/**
+	 * Check in the MaintenanceFlow ChecklistStatus. 
+	 * 
+	 * @return the true or false.
+	 */
 	public boolean isMaintancePendingChklistStatus(){
 		
 		boolean isPresent = false;
@@ -4915,6 +4929,11 @@ public class QTDetailBackingBean extends
 	return isPresent;	
 	}
 	
+	/**
+	 *manipulate the activeIndex num.
+	 * @param activeIndex
+	 * @return the current activeIndex.
+	 */
 	public int manipulateIndexNumber(int activeIndex){
 		
 		int changedIndex = activeIndex;
