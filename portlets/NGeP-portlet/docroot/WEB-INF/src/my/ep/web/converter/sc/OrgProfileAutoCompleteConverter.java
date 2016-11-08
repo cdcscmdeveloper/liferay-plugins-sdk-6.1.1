@@ -32,6 +32,13 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @FacesConverter(value = "orgProfileAutoCompleteConverter")
 public class OrgProfileAutoCompleteConverter implements Converter {
 
+	/**
+	 *Convert from Long to object.
+	 *@param arg0
+	 *@param arg1
+	 *@param value
+	 *@return the object instance.
+	 */
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String value) {
 		
@@ -49,7 +56,13 @@ public class OrgProfileAutoCompleteConverter implements Converter {
 		}
 	}
 
-
+	/**
+	 *Convert from Object to String.
+	 *@param arg0
+	 *@param arg1
+	 *@param arg2
+	 *@return the formated data.
+	 */
 	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
 

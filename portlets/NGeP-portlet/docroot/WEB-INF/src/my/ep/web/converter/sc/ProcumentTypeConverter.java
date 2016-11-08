@@ -27,6 +27,13 @@ public class ProcumentTypeConverter implements Converter {
 	/* (non-Javadoc)
 	 * @see javax.faces.convert.Converter#getAsObject(javax.faces.context.FacesContext, javax.faces.component.UIComponent, java.lang.String)
 	 */
+	/**
+	 *Convert from String to object.
+	 *@param facesContext
+	 *@param uiComponent
+	 *@param s
+	 *@return the object instance.
+	 */
 	public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {
 		String result = s;
 		if (result != null) {
@@ -37,6 +44,13 @@ public class ProcumentTypeConverter implements Converter {
 
 	/* (non-Javadoc)
 	 * @see javax.faces.convert.Converter#getAsString(javax.faces.context.FacesContext, javax.faces.component.UIComponent, java.lang.Object)
+	 */
+	/**
+	 *Convert from Object to String.
+	 *@param facesContext
+	 *@param uiComponent
+	 *@param o
+	 *@return the formated data.
 	 */
 	public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object o) {
 		StringBuilder sb = new StringBuilder();
