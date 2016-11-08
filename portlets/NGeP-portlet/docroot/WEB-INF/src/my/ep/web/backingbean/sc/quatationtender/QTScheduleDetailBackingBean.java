@@ -678,6 +678,11 @@ public class QTScheduleDetailBackingBean extends
 	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#
 	 * preRenderView()
 	 */
+	/**
+	 *Navigate to additional Attendance Approval Details Page.
+	 * 
+	 *
+	 */
 	public void preRenderView() {
 
 		SCSiteVisitProposalDataType payLoad = getBpmTaskDetails(SCSiteVisitProposalDataType.class, null);

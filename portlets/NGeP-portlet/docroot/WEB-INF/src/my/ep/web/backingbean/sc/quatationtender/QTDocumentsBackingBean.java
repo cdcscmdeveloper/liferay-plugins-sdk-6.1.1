@@ -2569,6 +2569,7 @@ public class QTDocumentsBackingBean extends
 	}
 
 	/**
+	 * Get the readOnly.
 	 * @return the readOnly
 	 */
 	public boolean isReadOnly() {
@@ -2576,6 +2577,7 @@ public class QTDocumentsBackingBean extends
 	}
 
 	/**
+	 * Set the readOnly.
 	 * @param readOnly the readOnly to set
 	 */
 	public void setReadOnly(boolean readOnly) {
