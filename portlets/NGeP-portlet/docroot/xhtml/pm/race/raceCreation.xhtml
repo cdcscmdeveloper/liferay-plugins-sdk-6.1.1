@@ -19,7 +19,7 @@
 			validatorMessage="#{lbl['lbl.pm.race.code.error']}"
 			label="#{lbl['lbl.pm.race.code']}"
 			value="#{raceBackingBean.managedBean.pmRace.raceCode}" required="true"
-		    disabled="#{!raceBackingBean.managedBean.pmRace.brandNew}" size="30" maxlength="5" >
+		    disabled="#{!raceBackingBean.managedBean.pmRace.brandNew}" size="30" maxlength="4" >
 		 	 <f:validateRegex pattern="\d*(.\d+)?"/>
              </p:inputText>
 		</td>
@@ -29,7 +29,7 @@
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputText id="itRaceName" styleClass="ppDisplayTextM" style="text-transform:uppercase" required="true" 
 			 value="#{raceBackingBean.managedBean.pmRace.raceName}" 
-			 size="30" maxlength="100" label="#{lbl['lbl.pm.race.name']}" />
+			 size="135" maxlength="100" label="#{lbl['lbl.pm.race.name']}" />
 	  </td>
 	  </tr>
 	   <tr> 
