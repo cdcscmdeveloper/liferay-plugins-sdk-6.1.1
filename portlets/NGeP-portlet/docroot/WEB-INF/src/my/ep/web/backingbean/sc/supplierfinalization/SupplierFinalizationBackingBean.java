@@ -443,6 +443,9 @@ public class SupplierFinalizationBackingBean extends
 		retrieveEndorsementCommitteeDetails();
 	}
 	
+   /**
+    * Get the Endorsment tab data.
+    */
 	public void navigateToEndorsementReportTab() {
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getEndorsementReportActiveIndex());
@@ -2271,7 +2274,13 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
-	 
+	/**
+	 *Get the Endorsment Report Content.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
     public void getSuppFinalizationEndorsementReportStreamContent() throws Exception {
 		debugLogger("getSuppFinalizationEndorsementReportStreamContent");
 		ScQtFinalizationReportAttachment reportAttachment = new ScQtFinalizationReportAttachment();
@@ -2284,7 +2293,13 @@ public class SupplierFinalizationBackingBean extends
 
 		getManagedBean().setEndorsementReportStream(streamContent);
     }	
-
+     
+    /**
+	 *Get the Documents Report Information.
+	 * 
+	 *@return the ScQtFinalizationReportAttachment instance.
+	 *             
+	 */
 	public ScQtFinalizationReportAttachment generateDocumentAttachment(
 			ScQtFinalizationReport scQtFinalizationReport, boolean isDirectDownload) throws Exception {
 		String definitionType = scQtFinalizationReport.getDefinationType()
@@ -3358,7 +3373,8 @@ public class SupplierFinalizationBackingBean extends
 
 	/**
 	 * To send a notification by email to the committee members corresponding to
-	 * the selected quotation/tender
+	 * the selected quotation/tender.
+	 * 
 	 */
 	public void sendReminder() {
 		String errorFieldLabel = null;
@@ -5503,7 +5519,10 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 
-	
+	/**
+	 * Get the list of supplier codes.
+	 * @return the list of codes.
+	 */
 	public List<Integer> getSupplierCodes(ScQtRecommend item) {
 		return new ArrayList<Integer>(
 					item.getSelectedSuppliers().keySet());
@@ -5567,6 +5586,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	/**
+	 * Get the currentTab
 	 * @return the currentTab
 	 */
 	public int getCurrentTab() {
@@ -5574,6 +5594,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	/**
+	 * Set the currentTab
 	 * @param currentTab
 	 *            the currentTab to set
 	 */
@@ -5593,6 +5614,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	/**
+	 * Get the Gpki Singin Data.
 	 * @return the textBeforeSign
 	 */
 	public String getTextBeforeSign() {
@@ -5606,6 +5628,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	/**
+	 * Set the Gpki Singin Data.
 	 * @param textBeforeSign
 	 *            the textBeforeSign to set
 	 */
@@ -5639,6 +5662,13 @@ public class SupplierFinalizationBackingBean extends
 		return committeSO.retrieveCommitteMemberByUserId(
 				committeReqDTO);
 	}
+
+	
+	/**
+	 * Inner class SampleLabelDTO for Finalization Endorsement Report.
+	 *
+	 * 
+	 */
 	
 	public class SampleLabelDTO {
 		private int totalCompliant;
@@ -6437,6 +6467,10 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
+			/**
+			 * The method  used to get the shortListed suppliers list.
+			 * @return the list of PagingDataModel objects.
+			 */		
 	public IPagingDataModel<Object[]> getShortlistedCommomSupplier() {
 
 		IPagingDataModel<Object[]> shortlistedCommomSupplier = getManagedBean()
