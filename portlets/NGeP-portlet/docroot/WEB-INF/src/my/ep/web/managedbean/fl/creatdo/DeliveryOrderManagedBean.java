@@ -217,6 +217,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private boolean delAddressSelected = false;
 	
 	private List<FlDeliveryOrder> submittedDoList;
+	
+	private String supplierUserName;
     
 	/**
 	 * Gets the item selected for cal.
@@ -1326,6 +1328,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSubmittedDoList(List<FlDeliveryOrder> submittedDoList) {
 		this.submittedDoList = submittedDoList;
+	}
+
+	/**
+	 * @return the supplierUserName
+	 */
+	public String getSupplierUserName() {
+		return supplierUserName;
+	}
+
+	/**
+	 * @param supplierUserName the supplierUserName to set
+	 */
+	public void setSupplierUserName(String supplierUserName) {
+		this.supplierUserName = supplierUserName;
 	}
 	
 }

@@ -125,20 +125,31 @@
 				<td><p:inputText disabled="true" size="51"
 						value="#{createDOBackingBean.getText(createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.branchName)}" /></td>
 				<td style="width: 140px;"><p:outputLabel
-						value="#{lbl['lbl.fl.prepared.date']}" /></td>
-				<td><p:inputText size="15" disabled="true"  value="#{createDOBackingBean.managedBean.fulfilmentRequest.createdDate}"><f:convertDateTime
+						value="#{lbl['lbl.fl.do.submitted.date']}" /></td>
+				<td ><p:inputText size="15" disabled="true" value="#{createDOBackingBean.managedBean.flDeliveryOrder.createdDate}"><f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" /></p:inputText></td>	
+				
+			</tr>
+			<tr>
+				<td valign="top" rowspan="3"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.address']}" /></td>
+				<td rowspan="3"><p:inputTextarea cols="53" rows="6" disabled="true"
+						style=" margin-bottom:5px;" autoResize="false"
+						value="#{flOrderBB.getFullAddress(createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress)}" /></td>
+				<td style="width: 140px;"><p:outputLabel
+						value="#{lbl['lbl.fl.exp.del.date']}" /></td>
+				<td ><p:inputText size="15" disabled="true"  value="#{createDOBackingBean.managedBean.flDeliveryOrder.estDeliveryDate}"><f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" /></p:inputText></td>
 			</tr>
 			<tr>
-				<td valign="top" rowspan="1"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td rowspan="1"><p:inputTextarea cols="53" rows="8" disabled="true"
-						style=" margin-bottom:5px;" autoResize="false"
-						value="#{flOrderBB.getFullAddress(createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress)}" /></td>
-				<td style="width: 140px;vertical-align: top;"><p:outputLabel
-						value="#{lbl['lbl.fl.submission.date']}" /></td>
-				<td style="vertical-align: top;"><p:inputText size="15" disabled="true" value="#{createDOBackingBean.managedBean.flDeliveryOrder.createdDate}"><f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" /></p:inputText></td>	
+				<td style="width: 140px;"><p:outputLabel
+						value="#{lbl['lbl.fl.do.submitted.by']}" /></td>
+				<td><p:inputText disabled="true" size="51"
+						value="#{createDOBackingBean.managedBean.supplierUserName}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<td style="width: 117px;"><p:outputLabel

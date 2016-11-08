@@ -97,6 +97,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 // TODO: Auto-generated Javadoc
@@ -538,6 +539,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			doBB.getManagedBean().setFromPageUrl(navgPage);
 			doBB.getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
 			doBB.getManagedBean().setBackToPrevious(null);
+			doBB.getManagedBean().setSupplierUserName(getUsername(resDTO.getFlDeliveryOrder().getCreatedBy()));
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}
@@ -1311,5 +1313,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			}
 			return false;
 		}
+	}
+	
+	public String getUsername(Long userId) {
+		return PmCommonUtil.retriveUserName(userId);
 	}
 }
