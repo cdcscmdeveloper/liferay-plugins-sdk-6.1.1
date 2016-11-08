@@ -1249,13 +1249,21 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.committeeFormed = committeeFormed;
 	}
 
+	/**
+	 * @return the navigateFromMobileView
+	 */
 	public boolean isNavigateFromMobileView() {
 		return navigateFromMobileView;
 	}
 
+	/**
+	 * @param navigateFromMobileView the navigateFromMobileView to set
+	 */
 	public void setNavigateFromMobileView(boolean navigateFromMobileView) {
 		this.navigateFromMobileView = navigateFromMobileView;
 	}
+
+	
 
 
 }
