@@ -3,6 +3,7 @@ package my.ep.web.scheduler.helper;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import my.ep.factory.EpLogger;
@@ -52,7 +53,25 @@ public class EpSchedulerHelper {
 	public static void scheduleJob(JobKey jobKey,
 			Class<? extends Job> jobClass, String jobDetailDesc,
 			String cronExpression) {
-		addAndScheduleNewJob(jobKey, jobClass, jobDetailDesc, cronExpression);
+		scheduleJob(jobKey, jobClass, jobDetailDesc, cronExpression, null);
+	}
+	
+	/**
+	 * Schedule new job or update existing scheduled job
+	 * 
+	 * @param JobKey
+	 *            jobKey (mandatory)
+	 * @param Class
+	 *            <? extends Job> jobClass (mandatory)
+	 * @param String
+	 *            jobDetailDesc (mandatory)
+	 * @param String
+	 *            cronExpression (mandatory)
+	 */
+	public static void scheduleJob(JobKey jobKey,
+			Class<? extends Job> jobClass, String jobDetailDesc,
+			String cronExpression, JobDataMap jobDataMap) {
+		addAndScheduleNewJob(jobKey, jobClass, jobDetailDesc, cronExpression, jobDataMap);
 		updateScheduledJob(jobKey, jobDetailDesc, cronExpression, jobClass);
 	}
 
@@ -181,7 +200,7 @@ public class EpSchedulerHelper {
 	 */
 	public static void addAndScheduleNewJob(JobKey jobKey,
 			Class<? extends Job> jobClass, String jobDetailDesc,
-			String cronExpression) {
+			String cronExpression, JobDataMap jobDataMap) {
 		if (jobKey != null && jobClass != null
 				&& !StringUtils.isBlank(jobDetailDesc)
 				&& !StringUtils.isBlank(cronExpression)) {
@@ -193,13 +212,16 @@ public class EpSchedulerHelper {
 							.withDescription(jobDetailDesc).build();
 
 					// specify trigger
-					final CronTrigger cronTrigger = TriggerBuilder
+					TriggerBuilder<CronTrigger> triggerBuilder = TriggerBuilder
 							.newTrigger()
-							.withSchedule(
-									CronScheduleBuilder
-											.cronSchedule(cronExpression)
-											.withMisfireHandlingInstructionFireAndProceed())
-							.build();
+							.withSchedule(CronScheduleBuilder
+									.cronSchedule(cronExpression)
+									.withMisfireHandlingInstructionFireAndProceed());				
+					if (jobDataMap != null) {
+						triggerBuilder = triggerBuilder.usingJobData(jobDataMap);
+					} 
+					final CronTrigger cronTrigger = triggerBuilder.build();
+					
 					log.info(">>>>>>>>>>>ADD JOB:" + jobKey.getName()
 							+ "   MISFIRE POLICY:"
 							+ cronTrigger.getMisfireInstruction()
@@ -458,4 +480,28 @@ public class EpSchedulerHelper {
 		getScheduler().scheduleJob(job, trigger);
 	}
 
+	/**
+	 * To update job data in the trigger
+	 * 
+	 * @param jobName
+	 * 		the job name
+	 * @param jobGroup
+	 * 		the job group
+	 * @param jobDataKey
+	 * 		the job data key
+	 * @param jobDataValue
+	 * 		the job data value
+	 */
+	public static void updateTriggerJobData(String jobName, String jobGroup, String jobDataKey, Object jobDataValue) {
+		try {
+			Trigger trigger = EpSchedulerHelper.getTriggerByJobKey(
+					getJobKey(jobName, jobGroup));
+			Map<String, Object> jobDataMap = trigger.getJobDataMap().getWrappedMap();
+			jobDataMap.put(jobDataKey, jobDataValue);
+			
+			EpSchedulerHelper.getScheduler().rescheduleJob(trigger.getKey(), trigger);
+		} catch (SchedulerException e) {
+			log.error(e.getMessage());
+		}
+	}
 }
