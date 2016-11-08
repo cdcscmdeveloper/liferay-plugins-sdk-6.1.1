@@ -5677,13 +5677,13 @@ public class DirectLOABackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void generateAcknowledgmentLOAReceiptPdf(ScAttachment attachment)
+	/*private void generateAcknowledgmentLOAReceiptPdf(ScAttachment attachment)
 			throws Exception {
 		attachment.setFileName("Acknowledgement_LOA_receipt.pdf");
 		File file = new File("C:\\Users\\USER\\Desktop\\S1 Appendix Review and comment by Unit eP.docx");
 
 		DocumentGenerator.getInstance().generatePdfFromFile(new FileOutputStream(getActualFilePath(attachment)), file);
-	}
+	}*/
 
 	/**
 	 * Sum of gstAmount & loa offer price
