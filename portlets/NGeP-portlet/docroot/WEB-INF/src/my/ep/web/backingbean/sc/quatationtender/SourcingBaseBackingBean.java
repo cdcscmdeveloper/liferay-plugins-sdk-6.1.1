@@ -1798,9 +1798,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	/**
+	 * Get the OverallContractAmount.
 	 * @param offerPrice
 	 * @param gstAmount
-	 * @return
+	 * @return the contractAmount.
 	 */
 	public BigDecimal overallCtAmount(BigDecimal offerPrice,
 			BigDecimal gstAmount) {
@@ -1816,8 +1817,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	/**
+	 * Check ProposalValidity Days Reached or not.
 	 * @param scQt
-	 * @return
+	 * @return boolean
 	 */
 	public boolean handleProposalValidityDays(ScQt scQt) {
 		Date validityDate = null;
