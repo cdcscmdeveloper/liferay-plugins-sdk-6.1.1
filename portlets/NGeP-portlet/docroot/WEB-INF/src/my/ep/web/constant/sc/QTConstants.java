@@ -209,4 +209,6 @@ public interface QTConstants {
 	public static final String RECOMMENDATION_SUMMARY_PACKAGE_MARGIN="RPM";
 	public static final String RECOMMENDATION_SUMMARY_ITEM="RI";
 	
+	public static final String REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT = "Perakuan Penerimaan Surat Setuju Terima";
+	
 }

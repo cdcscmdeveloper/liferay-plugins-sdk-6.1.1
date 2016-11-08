@@ -2804,6 +2804,17 @@ public class LOADetailBackingBean extends
 		}
        // validation for fulfillment schedule and progressivepayment
 		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_SAVE.equals(outcome)) {
+			
+			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
+				for(ScLoaReport loaReport : scLoa.getScLoaReports()) {
+					if(loaReport.getDefinationType().getParameterCode().equals(
+							ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) &&
+							loaReport.getScLoaReportAttachment() == null) {
+						throw new EpException(
+								MessageConst.ERROR_760441, new String[] {loaReport.getTitle()});
+					}
+				}
+			}
 			// check whether loa from s1 or s2.
 			if(scLoa.getScLoiLoa() != null){
 				if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){

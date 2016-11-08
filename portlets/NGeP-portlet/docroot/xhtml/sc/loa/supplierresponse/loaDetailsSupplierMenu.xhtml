@@ -104,6 +104,26 @@
 						value="#{lbl['lbl.sc.gst.branch.attachment.tooltip']}" />
 				</td>
 			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.supplier.sign.date']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:calendar id="supplierSignDate"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+						showOn="button"
+						value="#{lOADetailBackingBean.managedBean.scLoa.supplierSignDate}"
+						mindate="#{DateUtils.getCurrentDateWithoutTime()}"
+						required="true"
+						readonlyInput="true"
+						label="#{lbl['lbl.sc.loiloa.loa.supplier.sign.date']}"
+						size="40"
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}">
+					</p:calendar>
+					<p:message id="supplierSignDateMsg" for="supplierSignDate" display="icon" />
+				</td>
+			</tr>
 		</table>
 	</p:panel>
 
