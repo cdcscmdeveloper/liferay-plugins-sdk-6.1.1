@@ -383,6 +383,9 @@ public class SupplierFinalizationMeetingBackingBean extends
 		}
 	}
 	
+	/**
+	 * check the selected member exist in the current list.if member doesn't exist add and exist remove the member from current list.
+	 */
 	public void selectMemberEvent(ScCommitteeMember committeeMember) {
 		this.getManagedBean().setSelectAllMembers(false);
 		List<ScCommitteeMember> selectedCommitteeMembers 
@@ -469,7 +472,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 		return items;
 	}
 	
-	// TODO :: Not in use
+	/**
+	 * user change committeeType from existing to new method will render.
+	 * 
+	 */
 	public void userSelectionAction(AjaxBehaviorEvent event) {
 		String userSelection = (String) event.getComponent().getAttributes().get("value");
 		userSelection = this.getManagedBean().getCommitteMember().getUserSelection();
