@@ -22,6 +22,7 @@
 
 					<div align="right" class="BtnSpacing">
 						<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							partialSubmit="true"
 							action="#{suppFinalMeetingBackingBean.saveAction}" update="@form" />
 
