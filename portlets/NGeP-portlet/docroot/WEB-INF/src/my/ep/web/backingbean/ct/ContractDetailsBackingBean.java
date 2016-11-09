@@ -867,7 +867,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							}else if(!ctBB.getManagedBean().getCtContractAmount().isBondWaived()  
 									    && ctBB.getManagedBean().isBondWaiver()
 										&& ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() !=  null){
-							    	  throw new EpException(MessageConst.ERROR_750004, new String[]{});
+							    	  throw new EpException(MessageConst.ERROR_750004);
 				            }
 			     	}
 						// Validation for zone
