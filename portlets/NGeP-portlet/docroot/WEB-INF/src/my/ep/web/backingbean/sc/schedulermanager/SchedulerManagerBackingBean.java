@@ -296,7 +296,8 @@ public class SchedulerManagerBackingBean extends
 					.getSelectedJobVO().getJobName(), getManagedBean()
 					.getSelectedJobVO().getJobGroup()), jobClass,
 					getManagedBean().getSelectedJobVO().getDescription(),
-					cronExpSb.toString());
+					cronExpSb.toString(),
+					null);
 		} catch (Exception ex) {
 			throw new EpException(MessageConst.ERRQRTZ_00004);
 		}
