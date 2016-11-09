@@ -31,6 +31,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -75,15 +76,17 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean decisionPbQcLOA;
 	private boolean confirmMeeting;
 	private boolean selectAll;
-	private boolean showPrintButton;
-	private boolean bpmActionFlag = true;
+//	private boolean showPrintButton;
+	//private boolean bpmActionFlag = true;
 	private boolean autoUpdate = true;	
 	private boolean disableEndorseAmendDetails;
 	private boolean disableFinalAmendDetails;
 	private boolean disableMeetingDetails;
+	private boolean disableLoaLetter;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtContractVer> amendHistoryList;
+	private List<CtLetterOfAcceptance> ctLetterOfAcceptance;
 	private List<String> finalListOfSideMenu;
 	private List<SmPersonnel> supplierList;
 	private List<PmUser> bpkApproverList;
@@ -515,31 +518,31 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	/**
 	 * @return the showPrintButton
-	 */
+	 *//*
 	public boolean isShowPrintButton() {
 		return showPrintButton;
 	}
 	
-	/**
+	*//**
 	 * @param showPrintButton the showPrintButton to set
-	 */
+	 *//*
 	public void setShowPrintButton(boolean showPrintButton) {
 		this.showPrintButton = showPrintButton;
 	}
-	
-	/**
+	*/
+/*	*//**
 	 * @return the bpmActionFlag
-	 */
+	 *//*
 	public boolean isBpmActionFlag() {
 		return bpmActionFlag;
 	}
 	
-	/**
+	*//**
 	 * @param bpmActionFlag the bpmActionFlag to set
-	 */
+	 *//*
 	public void setBpmActionFlag(boolean bpmActionFlag) {
 		this.bpmActionFlag = bpmActionFlag;
-	}
+	}*/
 	
 	/**
 	 * @return the autoUpdate
@@ -908,5 +911,27 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverName(String approverName) {
 		this.approverName = approverName;
-	}	
+	}
+
+	public List<CtLetterOfAcceptance> getCtLetterOfAcceptance() {
+		if(ctLetterOfAcceptance == null){
+			ctLetterOfAcceptance = new ArrayList<CtLetterOfAcceptance>();
+		}
+		return ctLetterOfAcceptance;
+	}
+
+	public void setCtLetterOfAcceptance(
+			List<CtLetterOfAcceptance> ctLetterOfAcceptance) {
+		this.ctLetterOfAcceptance = ctLetterOfAcceptance;
+	}
+
+	public boolean isDisableLoaLetter() {
+		return disableLoaLetter;
+	}
+
+	public void setDisableLoaLetter(boolean disableLoaLetter) {
+		this.disableLoaLetter = disableLoaLetter;
+	}
+	
+	
 }
