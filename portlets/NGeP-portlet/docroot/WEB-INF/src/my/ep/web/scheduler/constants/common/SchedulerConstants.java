@@ -15,7 +15,9 @@ public class SchedulerConstants {
 	// Sourcing Module Constants
 	// Sourcing Job Group ID
 	public static final String SC_JOB_GROUP = "SOURCING JOB GROUP";
-
+	
+	//Bidding jobDataMap Constant
+	public static final String JOB_BID_ID_LIST = "jobBidIdList";
 	// Sourcing Job Key Id
 	public static final String SC_CONTINOUS_JOB = "CONTINUOUS BID SCHEDULE STATUS CHECK";
 	public static final String SC_DAILY_JOB = "BIDS FETCH DAILY JOB";
