@@ -858,8 +858,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							     }
 						    }
 					    }	
-				    }
-	
+							
+							if((!ctBB.getManagedBean().getCtContractAmount().isBondWaived() ||
+									(ctBB.getManagedBean().getCtContractAmount().isBondWaived()  
+										&& ctBB.getManagedBean().getContractVer().getBondWaiverAttachments().size() ==  0))&& 
+									 ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() ==  null){
+								       throw new EpException(MessageConst.ERROR_750044);
+							}else if(!ctBB.getManagedBean().getCtContractAmount().isBondWaived()  
+									    && ctBB.getManagedBean().isBondWaiver()
+										&& ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() !=  null){
+							    	  throw new EpException(MessageConst.ERROR_750004, new String[]{});
+				            }
+			     	}
 						// Validation for zone
 						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 							ctBB.getZoneObjDetails();
