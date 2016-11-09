@@ -37,6 +37,7 @@ import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
@@ -4468,5 +4469,46 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		} finally {
 			ruleSO = null;
 		}
+	}
+	
+	public void testRulesMap(){
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType("TST05");
+		RuleResDTO roleResDTO = ruleSO
+				.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
+
+		if (roleResDTO.isSuccessful()
+				&& roleResDTO.getRuleValueStrList() != null
+				&& roleResDTO.getRuleValueStrList().size() > 0) {
+			String percentage = roleResDTO.getRuleValueStrList().get(0);
+			System.out.println(percentage);
+		}
+	}
+	
+	public void resetRulesMap(){
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		 ruleSO
+				.resetRulesMap();
+
+	}
+	
+	public void addRulesMap(){
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		 ruleSO
+				.addTestMap();
+
+	}
+	
+	
+	public void readRulesMap(){
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		 ruleSO
+				.readTestMap();
+
 	}
 }
