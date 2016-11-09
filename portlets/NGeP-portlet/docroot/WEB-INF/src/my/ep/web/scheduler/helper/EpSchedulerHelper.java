@@ -67,6 +67,8 @@ public class EpSchedulerHelper {
 	 *            jobDetailDesc (mandatory)
 	 * @param String
 	 *            cronExpression (mandatory)
+	 * @param JobDataMap
+	 *            job data map (mandatory)
 	 */
 	public static void scheduleJob(JobKey jobKey,
 			Class<? extends Job> jobClass, String jobDetailDesc,
@@ -207,21 +209,22 @@ public class EpSchedulerHelper {
 			try {
 				if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
 					// specify the job' s details..
-					final JobDetail job = JobBuilder.newJob(jobClass)
+					JobBuilder jobBuilder = JobBuilder.newJob(jobClass)
 							.withIdentity(jobKey)
-							.withDescription(jobDetailDesc).build();
+							.withDescription(jobDetailDesc);
+					if (jobDataMap != null) {
+						jobBuilder = jobBuilder.storeDurably().usingJobData(jobDataMap);
+					}
+					final JobDetail job = jobBuilder.build();
 
 					// specify trigger
-					TriggerBuilder<CronTrigger> triggerBuilder = TriggerBuilder
+					final CronTrigger cronTrigger = TriggerBuilder
 							.newTrigger()
-							.withSchedule(CronScheduleBuilder
-									.cronSchedule(cronExpression)
-									.withMisfireHandlingInstructionFireAndProceed());				
-					if (jobDataMap != null) {
-						triggerBuilder = triggerBuilder.usingJobData(jobDataMap);
-					} 
-					final CronTrigger cronTrigger = triggerBuilder.build();
-					
+							.withSchedule(
+									CronScheduleBuilder
+											.cronSchedule(cronExpression)
+											.withMisfireHandlingInstructionFireAndProceed())
+							.build();
 					log.info(">>>>>>>>>>>ADD JOB:" + jobKey.getName()
 							+ "   MISFIRE POLICY:"
 							+ cronTrigger.getMisfireInstruction()
@@ -481,7 +484,7 @@ public class EpSchedulerHelper {
 	}
 
 	/**
-	 * To update job data in the trigger
+	 * To update job data in the JobDetail
 	 * 
 	 * @param jobName
 	 * 		the job name
@@ -492,14 +495,14 @@ public class EpSchedulerHelper {
 	 * @param jobDataValue
 	 * 		the job data value
 	 */
-	public static void updateTriggerJobData(String jobName, String jobGroup, String jobDataKey, Object jobDataValue) {
+	public static void updateJobDetailData(String jobName, String jobGroup, String jobDataKey, Object jobDataValue) {
 		try {
-			Trigger trigger = EpSchedulerHelper.getTriggerByJobKey(
-					getJobKey(jobName, jobGroup));
-			Map<String, Object> jobDataMap = trigger.getJobDataMap().getWrappedMap();
+			JobDetail jobDetail = EpSchedulerHelper.getScheduler()
+					.getJobDetail(getJobKey(jobName, jobGroup));
+			Map<String, Object> jobDataMap = jobDetail.getJobDataMap().getWrappedMap();
 			jobDataMap.put(jobDataKey, jobDataValue);
 			
-			EpSchedulerHelper.getScheduler().rescheduleJob(trigger.getKey(), trigger);
+			EpSchedulerHelper.getScheduler().addJob(jobDetail, true);
 		} catch (SchedulerException e) {
 			log.error(e.getMessage());
 		}
