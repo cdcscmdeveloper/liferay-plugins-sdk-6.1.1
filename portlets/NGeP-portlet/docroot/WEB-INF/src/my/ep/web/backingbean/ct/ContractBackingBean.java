@@ -441,6 +441,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to delete agency from the datatable list.
 	 * @param index  file index of attachment list
 	 */
+	public void deleteBondWaiverAttach() {
+		CtAttachment attachment = getManagedBean().getContractVer().getBondWaiverAttachments().get(getManagedBean().getAttachFileIndex());
+		if(attachment.getAttachmentId() != null){
+			 getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		getManagedBean().getContractVer().getBondWaiverAttachments().remove(getManagedBean().getAttachFileIndex());
+	    if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
+		       getManagedBean().setBondWaiver(false);
+	    }
+	}
+	
+	/**
+	 * The method used to delete agency from the datatable list.
+	 * @param index  file index of attachment list
+	 */
 	public void deleteTerminationLetterAction(int index) {
 		CtAttachment attachment = getManagedBean().getContractVer().getTerminationLetterAttachments().get(index);
 		if(attachment.getAttachmentId() != null){
@@ -1854,9 +1869,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
 	 */
-	public void agencyFileUpload(FileUploadEvent event) throws Exception {
+	public void ComonFileUpload(FileUploadEvent event) throws Exception {
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-		
+		  FacesScopes facesScopes = new FacesScopes();
 		UploadedFile item = event.getFile();		
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
@@ -1867,13 +1882,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
 	    
+	    if(event.getComponent().getId().equalsIgnoreCase("agencyUploadId")){
 	    CtAgency agency =  getManagedBean().getContractVer().getCtAgencies().get(getManagedBean().getIndex());
 	    getManagedBean().getContractVer().getCtAgencies().remove(getManagedBean().getIndex());
 	    agency.setFileName(item.getFileName());
 	    agency.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	    getManagedBean().getContractVer().getCtAgencies().add(getManagedBean().getIndex(), agency);
-	    
 	    RequestContext.getCurrentInstance().execute("uploadDlg1.hide()");		 
+	    }
+	    else if(event.getComponent().getId().equalsIgnoreCase("uploadWaiver")){
+	    	CtAttachment attachment = new CtAttachment();
+	    	attachment.setFileName(item.getFileName());
+	    	attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+	    	attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+	    	attachment.setCreatedUser(facesScopes.getUserSessionBean());
+	    	attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+	    	getManagedBean().getContractVer().getBondWaiverAttachments().add(attachment);
+	    	RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
+	    }
+	  
 	}
 		
 	/**
@@ -2050,7 +2077,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			e.printStackTrace();
 		}
 	}
-		    
+	
+	public void chkBondWaiverAction(){
+		  if(!getManagedBean().getCtContractAmount().isBondWaived()){
+	            getManagedBean().getCtContractAmount().setBondWaived(false);
+		        if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null){
+		             getManagedBean().getContractVer().setBondWaiverAttachments(null);
+		        }if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
+		        	 getManagedBean().setBondWaiver(true);
+		        }
+	      }	  if(getManagedBean().getCtContractAmount().isBondWaived() &&
+	    		  getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
+	    	  getManagedBean().setBondWaiver(false);
+	      }
+	}  
 	/**
 	 * The method used to upload AP201 file.
 	 * 
