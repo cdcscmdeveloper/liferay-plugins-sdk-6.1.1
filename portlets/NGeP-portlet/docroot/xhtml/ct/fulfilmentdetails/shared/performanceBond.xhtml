@@ -18,7 +18,7 @@
 	   	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.performance.bond']}" escape="false"/><br/>
 	   	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.bond.waiver']}" escape="false"/><br/><br/>
 	     <h:panelGrid columns="2" >
-	   		  <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondWaiver}">
+	   		  <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondWaived}">
 	   		         <p:ajax event="change" update=":form:fileBondWaiver" listener="#{ctBackingBean.chkBondWaiverAction}" process="@this"/> 
 	   		  </p:selectBooleanCheckbox>
 	   		  <h:outputFormat id="waiverId" value="#{lbl['lbl.ct.bond.waiver.chkbox']}" styleClass="instruction">
@@ -28,11 +28,11 @@
 	  <h:panelGroup id="fileBondWaiver">
 	 		  <table style="width: 100%">
 					<tr>
-							<td class="TableFieldLeft" width="10%"><h:outputLabel value="#{lbl['lbl.ct.bond.waiver.letter']}" /></td>
+							<td class="TableFieldLeft" width="10%"><h:outputLabel value="#{lbl['lbl.ct.bond.waiver.letter']}"  styleClass="required" /></td>
 							<td class="TableFieldRight">
 									<p:commandButton oncomplete="uploadWaiverDlg.show();return false;"
 											update="dataGridId, uploadWaiverDlg" icon="ui-icon-upload-arrow"
-											disabled="#{ctBackingBean.managedBean.viewContract or (!ctBackingBean.managedBean.ctContractAmount.bondWaiver
+											disabled="#{ctBackingBean.managedBean.viewContract or (!ctBackingBean.managedBean.ctContractAmount.bondWaived
 											and ctBackingBean.managedBean.contractVer.ctContract.latestContractVer == null)
 											or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 							</td>
