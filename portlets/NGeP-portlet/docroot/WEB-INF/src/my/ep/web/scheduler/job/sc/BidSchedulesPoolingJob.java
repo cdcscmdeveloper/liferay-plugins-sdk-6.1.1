@@ -90,6 +90,12 @@ public class BidSchedulesPoolingJob implements Job {
 							SchedulerConstants.JOB_BID_ID_LIST,
 							jobBidScheduleIdList);
 					System.out.println("JobDataMap is set with the active bid Id list in Job1");
+				}else{
+					EpSchedulerHelper.updateJobDetailData(
+							SchedulerConstants.SC_CONTINOUS_JOB,
+							SchedulerConstants.SC_JOB_GROUP,
+							SchedulerConstants.JOB_BID_ID_LIST,
+							new ArrayList<Long>());
 				}
 
 				log.info("%$%$%$ BidSchedulesPoolingJob job executed successfully @"
