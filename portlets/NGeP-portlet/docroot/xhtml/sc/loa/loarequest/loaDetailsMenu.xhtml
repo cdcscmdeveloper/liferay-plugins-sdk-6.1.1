@@ -288,6 +288,7 @@
 					label="#{lbl['lbl.sc.loiloa.loa.gov.sign.date']}"
 					size="31"
 					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">
+					<p:ajax event="dateSelect" />
 				</p:calendar>
 				<p:message id="govSignDateMsg" for="govSignDate" display="icon" />
 			</td>

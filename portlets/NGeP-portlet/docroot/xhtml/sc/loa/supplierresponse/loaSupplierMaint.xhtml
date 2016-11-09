@@ -104,6 +104,12 @@
 			</tr>
 		</table>
 		
+		<ac:scSingleFileUploadPopup widgetVar="scDocUploadDlg"
+			fileUploadListener="lOADetailBackingBean.handleFileUpload"
+			readonly="#{lOADetailBackingBean.managedBean.readOnly}"
+			update="@([id$=scDocUploadBtn])" 
+			autoUpdateValue="#{lOADetailBackingBean.managedBean.autoUpdate}"/>
+		
 		<p:confirmDialog widgetVar="gstConfirmPopupWid" id="gstConfirmPopup"
 			width="500px" message="#{lbl['lbl.sc.gst.nonreg.supplier.alert.msg']}" >
 			<div align="center">
