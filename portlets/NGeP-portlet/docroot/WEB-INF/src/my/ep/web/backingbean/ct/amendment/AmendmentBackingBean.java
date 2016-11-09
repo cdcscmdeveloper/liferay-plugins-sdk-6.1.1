@@ -26,9 +26,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.Deflater;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -133,6 +130,7 @@ import my.ep.util.ct.CtAddressUtil;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
+import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -153,6 +151,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
+import org.docx4j.convert.out.pdf.PdfConversion;
+import org.docx4j.convert.out.pdf.viaXSLFO.PdfSettings;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
@@ -272,21 +273,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		public CommittePagingDataModel() {
 			super("newCommitteTable");
-		}
+	}
 		
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
-		 * .biz.bean.search.ISearchBean)
-		 */
-		@Override
-		public ISearchResultBean<PmUser> pageChangeListener(ISearchBean<PmUser> searchBean) {
-			UserReqDTO userReqDTO = null;
-			UserResDTO resDto = null;
-			IUserSO userSO  = null;
-			try {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+	 * .biz.bean.search.ISearchBean)
+	 */
+	@Override
+	public ISearchResultBean<PmUser> pageChangeListener(ISearchBean<PmUser> searchBean) {
+		UserReqDTO userReqDTO = null;
+		UserResDTO resDto = null;
+		IUserSO userSO  = null;
+		try {
 				userReqDTO = new UserReqDTO();
 				if (getManagedBean().getCommitteeName() != null && !"".equalsIgnoreCase(getManagedBean().getCommitteeName())) {
 					SearchFilterBean filterBean = new SearchFilterBean("userName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getCommitteeName());
@@ -311,8 +312,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-			    userReqDTO = null;
-			    resDto = null;
+				userReqDTO = null;
+				resDto = null;
 				userSO = null;
 			}
 			return null;
@@ -346,188 +347,188 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void preRenderView() throws UnsupportedEncodingException {
 		
-		    IContractAmendmentSO contractAmendmentSO = null;
-		    ContractReqDTO ctReqDTO = null;
-		    ContractResDTO resDTO = null;
-		    try{
-					HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-					HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-					String taskId = originalServletRequest.getParameter("taskId");
+	    IContractAmendmentSO contractAmendmentSO = null;
+	    ContractReqDTO ctReqDTO = null;
+	    ContractResDTO resDTO = null;
+	    try{
+				HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+				HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+				String taskId = originalServletRequest.getParameter("taskId");
+				
+				if (taskId == null) {
+					ConstructTabSideMenu();
 					
-					if (taskId == null) {
-						ConstructTabSideMenu();
-						
-						if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
-								&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
-							FacesContext.getCurrentInstance().addMessage(null,
-									new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
-											MessageUtils.getMessage(MessageConst.INFO_758004,
-													MessageUtils.BUNDLE_COMMON_MESSAGES, 
-													new FacesScopes().getUserLocale())));
-							ctBackingBean.getManagedBean().setServiceTaxAlertFlg(false);				
-						}
-						
-						return;
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+							&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
+						FacesContext.getCurrentInstance().addMessage(null,
+								new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
+										MessageUtils.getMessage(MessageConst.INFO_758004,
+												MessageUtils.BUNDLE_COMMON_MESSAGES, 
+												new FacesScopes().getUserLocale())));
+						ctBackingBean.getManagedBean().setServiceTaxAlertFlg(false);				
 					}
+					
+					return;
+				}
 		
-					/*Retrieve bpm details*/
-					getManagedBean().setSelectedTabIndex(0);
-				 	CTContractAmendmentDataType dataType =  super.getBpmTaskDetails(CTContractAmendmentDataType.class, null);		
-	     	
-			     	/* Setting save button as per requirement*/
-			     	String[] outcome = new String[getManagedBean().getOutComes().length];
-			     	int i = 0; 
-					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME) 
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME) 
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) 
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) 
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
-						    outcome = new String[getManagedBean().getOutComes().length+1];
-						    outcome[i++] = BpmOutcomeConst.BPM_SAVE;
-					}
-					for (String action : getManagedBean().getOutComes()) {
-						outcome[i++] = action;
-					}
-			        getManagedBean().setOutComes(outcome);
-	       
-			        /*Retrieve contract amendment details*/
-			        ctReqDTO = new ContractReqDTO();
-			     	ctReqDTO.setUpdateAction(false);
-			        ctReqDTO.setContractId(new Long(dataType.getContractId()));
-					ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
-					ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-					ctReqDTO.setTaskName(getManagedBean().getTaskName());
-					setAmendmentContractVer(ctReqDTO);
+				/*Retrieve bpm details*/
+				getManagedBean().setSelectedTabIndex(0);
+			 	CTContractAmendmentDataType dataType =  super.getBpmTaskDetails(CTContractAmendmentDataType.class, null);		
+     	
+		     	/* Setting save button as per requirement*/
+		     	String[] outcome = new String[getManagedBean().getOutComes().length];
+		     	int i = 0; 
+				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME) 
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME) 
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) 
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) 
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
+					    outcome = new String[getManagedBean().getOutComes().length+1];
+					    outcome[i++] = BpmOutcomeConst.BPM_SAVE;
+				}
+				for (String action : getManagedBean().getOutComes()) {
+					outcome[i++] = action;
+				}
+		        getManagedBean().setOutComes(outcome);
+       
+		        /*Retrieve contract amendment details*/
+		        ctReqDTO = new ContractReqDTO();
+		     	ctReqDTO.setUpdateAction(false);
+		        ctReqDTO.setContractId(new Long(dataType.getContractId()));
+				ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+				ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+				ctReqDTO.setTaskName(getManagedBean().getTaskName());
+				setAmendmentContractVer(ctReqDTO);
 					
-					/*Define boolean value to control gui details*/
-					getManagedBean().setSelectedItem(null);
-					getManagedBean().setSelectedServiceItem(null);			     
-					getManagedBean().setBpkSaSkApprover(false);
-				   	getManagedBean().setMemberSignOff(false);  
-					getManagedBean().setPbConfirmMeeting(false);
-				 	getManagedBean().setSignUpdateDecision(false);
-				    getManagedBean().setLetterOfAcceptance(false);
-					getManagedBean().setPrepareLOA(false);
-					getManagedBean().setDecisionPbQcLOA(false);
-					getManagedBean().setSignOffDecision(false);
+				/*Define boolean value to control gui details*/
+				getManagedBean().setSelectedItem(null);
+				getManagedBean().setSelectedServiceItem(null);			     
+				getManagedBean().setBpkSaSkApprover(false);
+			   	getManagedBean().setMemberSignOff(false);  
+				getManagedBean().setPbConfirmMeeting(false);
+			 	getManagedBean().setSignUpdateDecision(false);
+			    getManagedBean().setLetterOfAcceptance(false);
+				getManagedBean().setPrepareLOA(false);
+				getManagedBean().setDecisionPbQcLOA(false);
+				getManagedBean().setSignOffDecision(false);
 			
-					contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
-					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
-						       getManagedBean().setPbConfirmMeeting(true);
-						      if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null
-								    && !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().isEmpty()) {
-							          Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
-						      
-						      } if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
-							         getManagedBean().setSignUpdateDecision(true);
-						     }
-					 } 
-					else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
-							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
-						          getManagedBean().setLetterOfAcceptance(true);
-						          getManagedBean().setPrepareLOA(true);
-			         	          getManagedBean().setPbQcApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
-			         	          
-			          	           //retrieve approver from CtActor
-			          	           String roleCode = null;
-								   if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-										   ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-									   roleCode = RoleCode.CT_APPROVER.value();
-								   } else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-										   ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-									   roleCode = RoleCode.BPK_CC_APPROVER.value();
-								   }
-								   CtActor approverActor = retrieveContractActor(
-										   ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
-										   ctBackingBean.getManagedBean().getContractVer().getDocType(),
-										   roleCode);
-							       if (approverActor != null) {	  
-							    	   getManagedBean().setApproverName(approverActor.getUserName());
-							       }
-			          	          if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 
-			        			        && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null) {
-			        		            getManagedBean().setDecisionPbQcLOA(true);
-			        	       
-			        	          } if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null) {
-			        	        	      ctReqDTO = new ContractReqDTO();
-			        	        	     ctReqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
-			        		              resDTO = contractAmendmentSO.setScLoa(ctReqDTO);
-			        		            ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(resDTO.getAmendmentScLoa());
-			        		            if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin() == null) {
-			        			            ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(getFacesScopes().getUserSessionBean());
-			        		            }
-			        	         } if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
-			        	            	getManagedBean().setShowPrintButton(true);
-			        		            getManagedBean().setBpmActionFlag(false);
-			        	         }
-					     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)) {
+				contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
+				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+					       getManagedBean().setPbConfirmMeeting(true);
+					      if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null
+							    && !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().isEmpty()) {
+						          Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
+					      
+					      } if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+						         getManagedBean().setSignUpdateDecision(true);
+					     }
+				 } 
+				else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
+					          getManagedBean().setLetterOfAcceptance(true);
+					          getManagedBean().setPrepareLOA(true);
+		         	          getManagedBean().setPbQcApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
+		         	          
+		          	           //retrieve approver from CtActor
+		          	           String roleCode = null;
+							   if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+									   ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+								   roleCode = RoleCode.CT_APPROVER.value();
+							   } else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+									   ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+								   roleCode = RoleCode.BPK_CC_APPROVER.value();
+							   }
+							   CtActor approverActor = retrieveContractActor(
+									   ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
+									   ctBackingBean.getManagedBean().getContractVer().getDocType(),
+									   roleCode);
+						       if (approverActor != null) {	  
+						    	   getManagedBean().setApproverName(approverActor.getUserName());
+						       }
+		          	          if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 
+		        			        && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null) {
+		        		            getManagedBean().setDecisionPbQcLOA(true);
+		        	       
+		        	          } if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null) {
+		        	        	      ctReqDTO = new ContractReqDTO();
+		        	        	     ctReqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
+		        		              resDTO = contractAmendmentSO.setScLoa(ctReqDTO);
+		        		            ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(resDTO.getAmendmentScLoa());
+		        		            if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin() == null) {
+		        			            ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(getFacesScopes().getUserSessionBean());
+		        		            }
+		        	         }if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
+		        	        	    getManagedBean().setDisableLoaLetter(true);
+		        	         }
+				     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)) {
 					              this.getManagedBean().setMemberSignOff(true);
 						          this.getManagedBean().setPbConfirmMeeting(true);
 						         this.getManagedBean().setSignUpdateDecision(false);
-					     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-						        this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
-						          
-						        VelocityContext context = new VelocityContext();
-								String vmFile = ContractConst.DOCPATH_CT_INTEGRITY_PACT;
-								String content = null;
-								getManagedBean().setEditorValue("");
-								FacesScopes fs = new FacesScopes();
-								String hostUrl = fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();				
-								context = new VelocityContext();	
-								context.put("hostUrl", hostUrl);
-								context.put("ptjName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgName());
-								context.put("amendmentTitle", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle());
-								context.put("contractNo", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
-								context.put("amendmentRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
-								context.put("supplierUserName", getFacesScopes().getUserSessionBean().getUserName());
-								context.put("supplierUserIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
-								context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-								context.put("supplierMofRegNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
-								if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
-									String supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-									supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-									supplierAddress = supplierAddress.replaceAll("&", "&#38;");
-							    	context.put("supplierAddress", supplierAddress);
-									context.put("supplierPhoneNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNoFull());
-									context.put("supplierFaxNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNoFull());
-								} else {
-									context.put("supplierAddress", "");
-									context.put("supplierPhoneNo", "");
-									context.put("supplierFaxNo", "");
-								}
-								context.put("supplier",true);
-										
-								if (vmFile != null && context != null) {
-									content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
-								}
-								getManagedBean().setEditorValue(content);
-								changeAccountActionListener();
-						
-					     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) 
-								|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)) {
-									this.getManagedBean().setSignOffDecision(true);
-									getManagedBean().setPbQcApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
-						
-					     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)) {
-						           this.getManagedBean().setBpkSaSkApprover(true);
-					     }
-				    
-				    if (this.getManagedBean().isLetterOfAcceptance()) {
-				    	getLoaDocumentList();
-				    }
-				    ConstructTabSideMenu();
-				    }catch (Exception e) {
-					    e.printStackTrace();
-					    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			   	} finally {
+				     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+					        this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
+					          
+					        VelocityContext context = new VelocityContext();
+							String vmFile = ContractConst.DOCPATH_CT_INTEGRITY_PACT;
+							String content = null;
+							getManagedBean().setEditorValue("");
+							FacesScopes fs = new FacesScopes();
+							String hostUrl = fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();				
+							context = new VelocityContext();	
+							context.put("hostUrl", hostUrl);
+							context.put("ptjName", ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgName());
+							context.put("amendmentTitle", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getTitle());
+							context.put("contractNo", ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+							context.put("amendmentRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
+							context.put("supplierUserName", getFacesScopes().getUserSessionBean().getUserName());
+							context.put("supplierUserIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
+							context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+							context.put("supplierMofRegNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
+							if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
+								String supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+								supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+								supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+						    	context.put("supplierAddress", supplierAddress);
+								context.put("supplierPhoneNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNoFull());
+								context.put("supplierFaxNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNoFull());
+							} else {
+								context.put("supplierAddress", "");
+								context.put("supplierPhoneNo", "");
+								context.put("supplierFaxNo", "");
+							}
+							context.put("supplier",true);
+									
+							if (vmFile != null && context != null) {
+								content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
+							}
+							getManagedBean().setEditorValue(content);
+							changeAccountActionListener();
+					
+				     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) 
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)) {
+								this.getManagedBean().setSignOffDecision(true);
+								getManagedBean().setPbQcApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
+					
+				     } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)) {
+					           this.getManagedBean().setBpkSaSkApprover(true);
+				     }
+			    
+			    if (this.getManagedBean().isLetterOfAcceptance()) {
+			    	getLoaDocumentList();
+			    }
+			    
+			    ConstructTabSideMenu();
+			    }catch (Exception e) {
+				    e.printStackTrace();
+				    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		   	} finally {
 			   		contractAmendmentSO = null;
 			   		resDTO = null;
-				}
+			}
 	}
 	
 	/**
@@ -552,7 +553,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		 if(ctBackingBean.getManagedBean().getDeleteAttachmentList() != null ){
 			 ctBackingBean.getManagedBean().getDeleteAttachmentList().clear();
 	        }
-        
 		try {
 					contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 					resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO);
@@ -745,7 +745,41 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
 						} 
 				    }
-			
+				    
+				    if((getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
+				    		|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
+				    		|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME))
+				    		&& (getManagedBean().getCtLetterOfAcceptance() == null || getManagedBean().getCtLetterOfAcceptance().isEmpty())){
+				    	    for(int j =0; j < 2; j++){
+				    	    	CtLetterOfAcceptance ctloa = new CtLetterOfAcceptance();
+				    	    	if(j==0){
+				    	    		ctloa.setContentTypeDesc(ResourceBundleUtils.getMessage("lbl.ct.amend.loa.sst", 
+										    ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				    	    			if(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().size() > 0
+				    	    					&&  ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getSectionId() == ContractConst.ATTACHMENT_LOA_LETTER_SST
+				    	    					&& ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getFilePath() != null){
+				    	    				ctloa.setLoaAttachments(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j));
+				    	    			}else {
+				    	    				CtAttachment attach = new CtAttachment();
+						    	    	    ctloa.setLoaAttachments(attach);
+				    	    			}
+				    	    	}else{
+				    	    		ctloa.setContentTypeDesc(ResourceBundleUtils.getMessage("lbl.ct.amend.loa.receipt", 
+										    ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				    	    			if(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().size() > 1
+				    	    					&&  ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getSectionId() == ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT
+				    	    					&& ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j).getFilePath() != null ){
+				    	    				ctloa.setLoaAttachments(ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().get(j));
+				    	    			}else {
+				    	    				CtAttachment attach = new CtAttachment();
+				    	    				ctloa.setLoaAttachments(attach);
+			    	    			}
+				    	    	}
+				    	    	getManagedBean().getCtLetterOfAcceptance().add(ctloa);
+				    	    }
+				    	    ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().clear();
+				    }
+				 
 				    initializeRemarks();
 				    getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
 				    		ModuleCodeConst.CONTRACT_MANAGEMENT, ctBackingBean.getManagedBean().getContractVer().getDocType(), ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()));
@@ -879,7 +913,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				      ctBackingBean.getManagedBean().getContractVer().setCtPidReasons(null);
              	  }
 			
-			      validateContractAmendment(outcome);
+			 	 validateContractAmendment(outcome);
+			 	 for(CtLetterOfAcceptance loaLetters : getManagedBean().getCtLetterOfAcceptance()){
+		 			 if(loaLetters.getLoaAttachments().getFilePath() != null ){
+		 			       ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().add(loaLetters.getLoaAttachments());
+		 		      }
+		 	      }
 			      reqDTO = new ContractReqDTO();
 			      reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			      reqDTO.setOutcome(outcome);
@@ -925,7 +964,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     	    if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
 	     			   && getManagedBean().getTaskName() != null 
 	     			   && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
-	     			   && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().size() == 1) {
+	     			   && (getManagedBean().getScLoaWitness().getIdentificationNo() != null || getManagedBean().getScLoaWitness().getEmail() != null
+	     			   || getManagedBean().getScLoaWitness().getDesignation() != null || getManagedBean().getScLoaWitness().getAddress() != null
+	     			   || getManagedBean().getScLoaWitness().getPhoneNo() != null || getManagedBean().getScLoaWitness().getWitnessName() != null)) {
 	     		         ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
 	     	    }
 	     	
@@ -1480,26 +1521,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}			
-			// Validation for Upload LOA content
-			List <ScLoaReport> scLoaReportList = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports();
-			for (ScLoaReport scLoaReport : scLoaReportList) {
-				if (scLoaReport.getDefinationType().getParameterId().equals(
-						(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
-								ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD).getParameterId()))) {						
-					if (scLoaReport.getTitle() == null || scLoaReport.getTitle() == "") {
-						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.content.file.name", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+		      	for (CtLetterOfAcceptance letterOfAcceptance  : getManagedBean().getCtLetterOfAcceptance()) {
+		      		if (letterOfAcceptance.getLoaAttachments().getFilePath() == null  && getManagedBean().isPrepareLOA() ) {						
+		      				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+		      				throw new EpException(ResourceBundleUtils.getMessage("lbl.ct.loa.content.file.name", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 					}					
-					if (scLoaReport.getScLoaReportAttachment() != null
-							&& (scLoaReport.getScLoaReportAttachment().getFilePath() == null || scLoaReport.getScLoaReportAttachment().getFilePath() == "")) {
+				if (letterOfAcceptance.getLoaAttachments().getFilePath() == null && 
+						getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {						
 						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.content.upload.file", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						throw new EpException(ResourceBundleUtils.getMessage("lbl.ct.loa.content.reciept.file.name", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 					}
-				}
+		      	}
 			}
 		}
 		// Validation for term and condition
@@ -2112,7 +2148,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 *  secretary for different committee type.
      */
 	private void setSecretary() {
-		//if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
 			PmUser pmUser = null;
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
 					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isComplyAP201()
@@ -2126,7 +2161,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}				
 			}
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setSecretary(pmUser);
-		//}
 	}
 	
 	/**
@@ -2162,19 +2196,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				        amendReqDTO.setSupplierId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
 				        amendReqDTO.setContractSigner(true);
 				      	getManagedBean().setSupplierList(amendSO.retrieveSupplierListById(amendReqDTO).getSupplierList());
-//				IPersonnelSO personnelSO =  SmServiceLookup.getPersonnelSO();
-//				PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
-//				personnelReqDTO.setSmSupplierId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
-//				PersonnelResDTO personnelResDTO = personnelSO.retrievePersonnelBySupplierId(personnelReqDTO);
-//				
-//				for (SmPersonnel smPersonel : personnelResDTO.getSmPersonnelList()) {
-//					if (smPersonel.getPmUser() != null && smPersonel.isRecordStatus()
-//							&& smPersonel.isContractSigner()) { //Only supplier with contract signer for acknowledge
-//						if (!smPersonel.getPmUser().isRecordStatus()) { //TODO remove !
-//							getManagedBean().getSupplierList().add(smPersonel);
-//						}
-//					}
-//				}
 			}
 		} finally {
 			amendSO = null;
@@ -2204,7 +2225,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    	            reports.setPmDocument(document);
 			    	            reports.setTitle(document.getDocName());
 			    	            reports.setDefinationType(document.getDocDefinitionTypeCode());
-			    	            //reports.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			    	            reports.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
 			    	            reports.setScLoa( this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
 			    	            this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(reports);	
@@ -2309,11 +2329,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used to enable the Complete button for loa creation
 	 * after user print out the loa documents.
 	 */
-	public void showCompleteButton() {
+/*	public void showCompleteButton() {
 		if (getManagedBean().isShowPrintButton()) {
 			getManagedBean().setBpmActionFlag(true);
 		}
-	}
+	}*/
 	
 	/**
 	 * The method used to retrieve the new amendment effective date.
@@ -2327,7 +2347,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 		ContractAmendmentResDTO resAmendDto = amendSO.getCtAmendmentByContractId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId());
-		//
 		if (resAmendDto.getAmendmentList() != null && !resAmendDto.getAmendmentList().isEmpty()) {
 			int index = resAmendDto.getAmendmentList().size() - 1;
 			CtAmendment ctAmendment = resAmendDto.getAmendmentList().get(index);
@@ -3059,41 +3078,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to add a new user defined loa content.
-	 * This method will generate a new record in loa content
-	 * list, user allow to enter the title and attachment. 
-	 */
-	public void addLoaContents() {
-		ScLoaReport loaReport = new ScLoaReport();
-		
-		try {
-			loaReport.setDefinationType(new PmParameter());
-		    loaReport.setDefinationType(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD));
-		    //loaReport.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-		    loaReport.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
-		    loaReport.setScLoa(this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
-		 
-		    ScLoaReportAttachment attachment = new ScLoaReportAttachment();
-		    //attachment.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-		    attachment.setScLoaReport(loaReport);			    
-			
-		    loaReport.setScLoaReportAttachment(attachment);
-		    this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(loaReport);
-		} catch(Exception ex) {
-		   ex.printStackTrace();
-		}
-	}
-	
-	/**
-	 * The method used to delete the selected loa content that
-	 * defined by user.
-	 */
-	public void deleteLoaContents() {
-		this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().remove(this.getManagedBean().getSelectedScLoaReports());
-		this.getManagedBean().setSelectedScLoaReports(null);
-	}
-	
-	/**
 	 * The method used to set the amendment information
 	 * when user wish to amend the contract period.
 	 */
@@ -3621,7 +3605,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} else if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange() 
 				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
 			// 10/11/2014 Lilian said clause change & item price change is still comply with AP201.
-			//ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getRecordStatusFlg().intValue()!=DbValueConst.RECORD_STATUS_ACTIVE) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		}
@@ -3767,7 +3750,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					int i = 1;
 					orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 					List<Long> orgProfileIds = new ArrayList<Long>();
-					//Long ownerOrgProfileId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId();
 				   	OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 				   	orgProfileReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 				  
@@ -4104,9 +4086,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
 	 */	
-	public void contentLetterUpload(FileUploadEvent event) throws Exception {
-		UploadedFile item = event.getFile();
+	public void UploadLetterOfAcceptance(FileUploadEvent event) throws Exception {
+		FacesScopes facesScopes = new FacesScopes();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		UploadedFile item = event.getFile();
 		
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
@@ -4116,16 +4100,75 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
-	    
-	    for(ScLoaReport reports : this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()) {
-	    	if(reports.equals(this.getManagedBean().getSelectedScLoaReports())) {
-	    		reports.getScLoaReportAttachment().setFileName(item.getFileName());
-	    		reports.getScLoaReportAttachment().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-	    		reports.getScLoaReportAttachment().setFileDesc(item.getFileName());
-	        }
+         
+		CtAttachment attachment = new CtAttachment();
+		attachment.setFileName(item.getFileName());
+		
+		/*if(getFileExtension(item.getFileName()).equalsIgnoreCase("doc") || 
+				getFileExtension(item.getFileName()).equalsIgnoreCase("docx")	){
+			convertPDFToDocFile(filePath);
+		    attachment.setFileName(getFileName(item.getFileName())+".pdf");
+		} */
+		
+		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		attachment.setCreatedUser(facesScopes.getUserSessionBean());
+		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		if(getManagedBean().isDisableLoaLetter()){
+			 attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_SST);
+			getManagedBean().getCtLetterOfAcceptance().get(0).setLoaAttachments(attachment);
+		}
+		if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
+			 attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT);
+			 getManagedBean().getCtLetterOfAcceptance().get(1).setLoaAttachments(attachment);
+		}
+	}
+	
+	private String getFileExtension( String fileName) {
+	    try {
+	        return fileName.substring(fileName.lastIndexOf(".") + 1);
+	    } catch (Exception e) {
+	        return "";
 	    }
-	    
-	    RequestContext.getCurrentInstance().execute("uploadLetterDlg.hide()");
+	}
+	
+	public static String getFileName(String fileName) {
+	    int index = fileName.lastIndexOf('.');
+	    if (index == -1) {
+	        return fileName;
+	    } else {
+	        return fileName.substring(0, index);
+	    }
+	}
+	
+	/**
+	 * The method used to convert the template into document file.
+	 * @throws Exception 
+	 */
+	protected  void convertPDFToDocFile(String filePath) throws Exception {
+		
+		String outputfilepath;
+		outputfilepath = getFileName(filePath) + ".pdf";
+ 		InputStream is = new FileInputStream(new File(filePath));
+         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(is);
+
+         PdfSettings pdfSettings = new PdfSettings();
+         OutputStream out = new FileOutputStream(new File(outputfilepath));
+         PdfConversion converter = new org.docx4j.convert.out.pdf.viaXSLFO.Conversion(wordMLPackage);
+         converter.output(out, pdfSettings);
+     
+		}
+	
+	/**
+	 * The method used to delete agency from the datatable list.
+	 * @param index  file index of attachment list
+	 */
+	public void deleteLoaAttachment(int index) {
+		CtAttachment attachment = getManagedBean().getCtLetterOfAcceptance().get(index).getLoaAttachments();
+		if(attachment.getAttachmentId() != null){
+			 ctBackingBean.getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+		getManagedBean().getCtLetterOfAcceptance().get(index).setLoaAttachments(new CtAttachment());
 	}
 	
 	/**
@@ -4239,6 +4282,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
     
+    public void downloadLOAContent() throws Exception{
+    	String filePath = getManagedBean().getFileDirectory();		      
+        File file = new File(filePath);
+        file.mkdirs();
+        
+        String fileName = "LetterOfAcceptanceReciept .docx";
+		filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
+		String content = null;	
+		content = getContent(ContractConst.DOC_DEF_KEY_LOA_RECIEPT);
+		if (content != null) {
+			convertHtmlToDocFile(content, filePath);
+			downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+		}
+    }
+    
     /**
 	 * The method used to download the loa report.
 	 * 
@@ -4281,12 +4339,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
     
-    /**
+  /*  *//**
 	 * The method used to download all loa reports
 	 * as a zip file.
 	 */
 	public void downloadAll() {		
-		List<File> fileList = new ArrayList<File>();
+		/*	List<File> fileList = new ArrayList<File>();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();		
 		String fileName = null;
 		String filePath = null;
@@ -4347,7 +4405,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			downloadFile(DocumentRepositoryUtils.getDBFilePath(zipFile.getPath().replace("\\", "/")), zipFileName);
 		} catch(Exception exp) {
 			exp.printStackTrace();
-		}
+		}*/
 	}
 	
 	/**
@@ -4792,7 +4850,35 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			context.put("witnessFaxNo", witnessFaxNo);
 			context.put("witnessMobileNo", witnessMobileNo);
 			context.put("witnessEmail", witnessEmail);				
+	
+		} else if (ContractConst.DOC_DEF_KEY_LOA_RECIEPT.equals(docDefinitionKey)) {
+			context = new VelocityContext();	
+			if(getFacesScopes().getUserLocale().getLanguage().equalsIgnoreCase("bm")){
+			       vmFile = ContractConst.DOCPATH_CT_LOA_LETTER_BM;
+			} else if(getFacesScopes().getUserLocale().getLanguage().equalsIgnoreCase("en")){
+			     vmFile = ContractConst.DOCPATH_CT_LOA_LETTER_EN;
+			}
+			String supplierAddress = "";
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
+				supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+				supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+			}
+			
+			context.put("govSignDate", dateSDF.format(getManagedBean().getNewAmendmentEffDate()));
+			context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
+			if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
+				context.put("supplierName",  getFacesScopes().getUserSessionBean().getUserName());
+				context.put("supplierID",  getFacesScopes().getUserSessionBean().getIdentificationNo());
+				context.put("supplierAddress",supplierAddress);
+				context.put("supplierAckDate", dateSDF.format(getManagedBean().getNewAmendmentEffDate()));
+				context.put("witnessName",  getManagedBean().getScLoaWitness().getWitnessName());
+				context.put("witnessID",  getManagedBean().getScLoaWitness().getIdentificationNo());
+				context.put("witnessAddress", getManagedBean().getScLoaWitness().getAddress());
+				context.put("witnessDate",  dateSDF.format(getManagedBean().getNewAmendmentEffDate()));		
+			}
 		}
+		
 		if (vmFile != null && context != null) {
 			content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
 		}
@@ -4995,7 +5081,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		        		row.createCell(cellIndex++).setCellValue(service.getFreqUom());
 		        		row.createCell(cellIndex++).setCellValue(service.getUomPerDay());
 		        		row.createCell(cellIndex++).setCellValue(service.getUomPerMonth());
-		        	//	row.createCell(cellIndex++).setCellValue(service.getUomPerYear());
 		        		row.createCell(cellIndex++).setCellValue(service.getQuantity());
 		        		row.createCell(cellIndex++).setCellValue(service.getUnitPrice());
 		        	}
@@ -5307,9 +5392,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		   ctDT = null;
 	   }
 	}
-	
-
-
 	/**
 	 * The method used to check whether exist previous extension history
 	 * and the extend start date is already started.
@@ -5329,4 +5411,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		return true;
 	}
+	
+	public boolean disableBtn(int index){
+		if(index ==0 && getManagedBean().isDisableLoaLetter()){
+			return false;
+		} else if(index ==1 && getManagedBean().getAckFA() != null &&
+				getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
+			 return false;
+		}
+		return true;
+	}
+	
+	
 }
