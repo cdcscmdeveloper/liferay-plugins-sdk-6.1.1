@@ -103,6 +103,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean disableContractAmount = true;
 	private boolean chkConceValue;
 	private boolean chkJustification;
+	private boolean bondWaiver;
 	
 	 private boolean selectAll;
 	 private CtPerformanceBond ctPerformanceBond;
@@ -1036,5 +1037,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setCommonView(boolean commonView) {
 		this.commonView = commonView;
+	}
+
+	public boolean isBondWaiver() {
+		return bondWaiver;
+	}
+
+	public void setBondWaiver(boolean bondWaiver) {
+		this.bondWaiver = bondWaiver;
 	}
 }
