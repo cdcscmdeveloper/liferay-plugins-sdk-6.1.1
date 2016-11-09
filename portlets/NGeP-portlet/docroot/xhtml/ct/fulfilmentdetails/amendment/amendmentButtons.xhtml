@@ -25,27 +25,18 @@
 				<td class="ppRightBtn">
 					<ui:decorate template="/xhtml/ct/shared/claim_template.xhtml">
 					<ui:define name="outComeSection">
-					<p:commandButton
-						value="#{lbl['lbl.btn.print']}" styleClass="ui-button"
-						update=":form:panelHeaderException" onclick="printBtn.jq.click();"
-						actionListener="#{amendmentBackingBean.showCompleteButton()}"
-						rendered="#{amendmentBackingBean.managedBean.showPrintButton}" />
-					<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false"
-						widgetVar="printBtn" styleClass="ui-button" style="display:none;"
-						action="#{amendmentBackingBean.downloadAll()}" /> <ui:repeat
+					 <ui:repeat
 						var="outcome" value="#{amendmentBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(outcome)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							styleClass="ui-button"
-							disabled="#{!amendmentBackingBean.managedBean.bpmActionFlag}"
 							action="#{amendmentBackingBean.gpkiSignAction(outcome)}"
 							rendered="#{!amendmentBackingBean.managedBean.memberSignOff and not amendmentBackingBean.isSupplierRole()}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							styleClass="ui-button"
-							disabled="#{!amendmentBackingBean.managedBean.bpmActionFlag}"
 							action="#{amendmentBackingBean.gpkiSignAction(outcome)}"
 							rendered="#{!amendmentBackingBean.managedBean.memberSignOff and amendmentBackingBean.isSupplierRole()}" />
 					</ui:repeat>
