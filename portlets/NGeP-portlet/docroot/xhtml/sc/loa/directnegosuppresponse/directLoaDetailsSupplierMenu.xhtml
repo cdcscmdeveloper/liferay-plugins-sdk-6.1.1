@@ -120,6 +120,7 @@
 						label="#{lbl['lbl.sc.loiloa.loa.supplier.sign.date']}"
 						size="40"
 						disabled="#{directLOABackingBean.managedBean.readOnly}">
+						<p:ajax event="dateSelect" />
 					</p:calendar>
 					<p:message id="supplierSignDateMsg" for="supplierSignDate" display="icon" />
 				</td>
