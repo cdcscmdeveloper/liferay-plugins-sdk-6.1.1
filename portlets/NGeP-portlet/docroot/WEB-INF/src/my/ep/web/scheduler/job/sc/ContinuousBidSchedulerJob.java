@@ -84,9 +84,9 @@ public class ContinuousBidSchedulerJob implements Job {
 
 			if (localBidScheduleIdList != null
 					&& !localBidScheduleIdList.isEmpty()) {
+				log.info("$$$$$ active bid Schedules size at this run is:"
+						+ localBidScheduleIdList.size());
 				for (int i = 0; i < localBidScheduleIdList.size(); i++) {
-					log.info("$$$$$ active bid Schedules size at this run is:"
-							+ localBidScheduleIdList.size());
 					ScBidSchedule currentSchedule = null;
 					try {
 						reqDTO.setBidScheduleId(localBidScheduleIdList.get(i));
@@ -95,10 +95,14 @@ public class ContinuousBidSchedulerJob implements Job {
 						currentSchedule = resDTO.getScBidSchedule();
 						if (currentSchedule.getStartDate().equals(
 								getCompareTime())) {
-
+							System.out
+							.println("Start time compare successfull for bidSchedule ="
+									+ currentSchedule.getBidNo());
 							if (currentSchedule.getPmStatus().getStatusId()
 									.equals(BidStatusConst.BID_PENDING_BIDDING)) {
-
+								System.out
+								.println("status check after Start time successfull for bidSchedule ="
+										+ currentSchedule.getBidNo());
 								currentSchedule
 										.setPmStatus(getPmStatusByStatusId(BidStatusConst.BID_IN_PROGRESS));
 								reqDTO.setScBidSchedule(currentSchedule);
@@ -124,13 +128,22 @@ public class ContinuousBidSchedulerJob implements Job {
 									toDeleteIdList.add(currentSchedule
 											.getBidScheduleId());
 								}
+							}else{
+								System.out
+								.println("status check after Start time not successfull for bidSchedule ="
+										+ currentSchedule.getBidNo());
 							}
 
 						} else if (currentSchedule.getEndDate().equals(
 								getCompareTime())) {
-
+							System.out
+							.println("End time compare successfull for bidSchedule ="
+									+ currentSchedule.getBidNo());
 							if (currentSchedule.getPmStatus().getStatusId()
 									.equals(BidStatusConst.BID_IN_PROGRESS)) {
+								System.out
+								.println("Status check after End time successfull for bidSchedule ="
+										+ currentSchedule.getBidNo());
 								currentSchedule
 										.setPmStatus(getPmStatusByStatusId(BidStatusConst.BID_COMPLETED));
 								reqDTO.setScBidSchedule(currentSchedule);
@@ -152,6 +165,10 @@ public class ContinuousBidSchedulerJob implements Job {
 									}
 								}
 
+							}else{
+								System.out
+								.println("Status check after End time failed for bidSchedule ="
+										+ currentSchedule.getBidNo());
 							}
 
 						} else if ((currentSchedule.getStartDate().before(
