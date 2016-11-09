@@ -876,7 +876,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				}
 			}
 			
-			if (getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() == null
+			/*if (getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() == null
 					|| getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
 				setViewNoticeFlag(false);
 			} else {
@@ -890,7 +890,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 						break;
 					}
 				}
-			}
+			}*/
 		}
 		
 		if (!isViewNoticeFlag()) {
