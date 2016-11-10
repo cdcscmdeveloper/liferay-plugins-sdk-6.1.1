@@ -242,27 +242,18 @@
 								<tr>
 										<td class="TableFieldLeft" width="24%">
 										   <h:outputLabel value="#{terminationBackingBean.managedBean.noticeTypelbl}"  styleClass="required"/></td>
-										<td class="TableFieldRight">
+										<td class="TableFieldRight" width="8%">
 											<p:commandButton oncomplete="uploadTermLetterDlg.show();return false;"
-												update="terminationUploadId, uploadTermLetterDlg" value="#{lbl['lbl.txt.attach.files']}"
+												update="terminationUploadId, uploadTermLetterDlg" icon="ui-icon-upload-arrow"
 												disabled="#{ctBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField
 												or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 									</td>
-							</tr>
-							<tr>
-									<td/>
 									<td>
 											<p:dataGrid id="terminationUploadId" value="#{terminationBackingBean.managedBean.contractVer.terminationLetterAttachments}"
 													var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
-													emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+													emptyMessage ="">
 													<table>
 															<tr>
-																	<td rowspan="2">
-																			<h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
-																	<td width="5"></td>
-															</tr>
-															<tr>
-																<td></td>
 																<td>
 																		<h:commandLink value="#{attachFile.fileName}" 
 																			styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
