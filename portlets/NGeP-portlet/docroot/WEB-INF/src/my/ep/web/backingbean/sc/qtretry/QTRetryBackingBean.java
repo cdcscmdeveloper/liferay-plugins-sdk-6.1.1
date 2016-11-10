@@ -10,6 +10,7 @@
  */
 package my.ep.web.backingbean.sc.qtretry;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,10 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean(name = "qtRetryBackingBean")
 @ViewScoped
-public class QTRetryBackingBean extends SourcingBaseBackingBean {
+public class QTRetryBackingBean extends SourcingBaseBackingBean implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+
 	public static Logger log = EpLogger.getLogger(QTRetryBackingBean.class);
 	
 	private IPagingDataModel<ScQtDisruptionLog> retryQTDataModel = new RetryQTPagingDataModel();

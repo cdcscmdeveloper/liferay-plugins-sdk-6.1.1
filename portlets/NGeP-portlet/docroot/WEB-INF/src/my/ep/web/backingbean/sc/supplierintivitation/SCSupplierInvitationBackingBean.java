@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.sc.supplierintivitation;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -57,8 +58,10 @@ import com.liferay.portal.theme.ThemeDisplay;
  */
 @ManagedBean(name = "scSupplirInvitationdBB")
 @ViewScoped
-public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplierInvitationManagedBean>{
+public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplierInvitationManagedBean> implements Serializable{
 	
+	
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SCSupplierInvitationBackingBean.class);
 	private IPagingDataModel<Object[]> supplierInvitationModel = new SupplierInvitationDataModel();
 	private static final String RESULT_PAGE = "/xhtml/sc/supplierinvitation/resultsView.xhtml";

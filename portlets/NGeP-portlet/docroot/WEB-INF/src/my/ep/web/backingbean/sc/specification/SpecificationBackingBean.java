@@ -12,6 +12,7 @@ package my.ep.web.backingbean.sc.specification;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -209,7 +210,12 @@ import org.primefaces.model.TreeNode;
 @ManagedBean(name = "specificationBackingBean")
 @ViewScoped
 public class SpecificationBackingBean extends
-		SourcingBaseBackingBean<QTDetailManagedBean> {
+		SourcingBaseBackingBean<QTDetailManagedBean> implements Serializable{
+
+	/**
+	 * The serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The search circular. */
 	private IPagingDataModel<CtCircularVer> searchCircular = new SearchCircularPagingDataModel();

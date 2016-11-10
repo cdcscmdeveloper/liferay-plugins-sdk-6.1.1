@@ -5,6 +5,7 @@ package my.ep.web.backingbean.sc.marketresearch;
 
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.faces.bean.ManagedBean;
@@ -58,7 +59,12 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "marketResearchBackingBean")
 @ViewScoped
 public class MarketResearchBackingBean extends
-	SourcingBaseBackingBean<MarketResearchManagedBean> {
+	SourcingBaseBackingBean<MarketResearchManagedBean> implements Serializable{
+
+	/**
+	 * The serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The log. */
 	private static Logger log = Logger

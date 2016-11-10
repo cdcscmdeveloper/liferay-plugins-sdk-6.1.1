@@ -10,6 +10,7 @@
  */
 package my.ep.web.backingbean.sc.evaluation;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -104,7 +105,12 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean(name = "evaluationMeetingBackingBean")
 @ViewScoped
 public class EvaluationMeetingBackingBean extends
-		SourcingBaseBackingBean<EvaluationMeetingManagedBean> {
+		SourcingBaseBackingBean<EvaluationMeetingManagedBean> implements Serializable{
+
+	/**
+	 * The  serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The search quotation tender. */
 	private IPagingDataModel<ScQt> searchQuotatioTender = new clonePagingDataModel();

@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -45,7 +46,10 @@ import org.primefaces.event.FileUploadEvent;
  */
 @ManagedBean
 @ViewScoped
-public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
+public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+
 	public static Logger log = EpLogger
 			.getLogger(ScRemarkAndAttachmentBackingBean.class);
 	
