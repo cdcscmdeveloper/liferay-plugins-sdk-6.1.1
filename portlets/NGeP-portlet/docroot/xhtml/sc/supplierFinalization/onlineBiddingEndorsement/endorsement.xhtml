@@ -9,6 +9,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+	<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"/>
+		</p:blockUI>
 		<p:messages id="supplierFinalization" showDetail="true"
 			autoUpdate="#{suppFinalBiddingBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" />
 
@@ -33,7 +36,8 @@
 				<ui:define name="outComeSection">
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{isOnlineBiddingEndorseMeeting and 
-										suppFinalBiddingBackingBean.managedBean.secretaryUser}" 
+										suppFinalBiddingBackingBean.managedBean.secretaryUser}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"				 
 						process="@all"
 						partialSubmit="true"
 						action="#{suppFinalBiddingBackingBean.saveOnlineEndorsement}"
@@ -42,6 +46,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{!isOnlineBiddingEndorseMeeting and 
 										suppFinalBiddingBackingBean.managedBean.bpkUser}" process="@all"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"					
 						partialSubmit="true"
 						action="#{suppFinalBiddingBackingBean.saveOfflineEndorsement}"
 						update="@form" />
@@ -51,6 +56,7 @@
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"	
 							styleClass="ui-button"
 							action="#{suppFinalBiddingBackingBean.submitBiddingEndorsement(bpmAction)}"
 							rendered="#{validityDaysExpiredQt}" />
