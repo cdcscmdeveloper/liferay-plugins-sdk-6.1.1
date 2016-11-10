@@ -14,14 +14,16 @@
 				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" styleClass="required" /> 
      			<p:calendar style="width:80px;" id="signDateLoaId" showOn="button"  readonlyInput="true" navigator="true"
 			   		 	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-					    label="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" value="#{amendmentBackingBean.managedBean.newAmendmentEffDate}">
+					    label="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" 
+					    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.govtSignDate}">
 				</p:calendar>
 		</h:panelGrid>
 			<h:panelGrid columns="2" style="width:400px;" rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}">
 				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.supp.sign.date']}" styleClass="required" /> 
      			<p:calendar style="width:80px;" id="signLoaDateBySupplier" showOn="button"  readonlyInput="true" navigator="true"
 			   		 	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-					    label="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" value="#{amendmentBackingBean.managedBean.newAmendmentEffDate}">
+					    label="#{lbl['lbl.ct.amend.loa.supp.sign.date']}" 
+					    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.supplierSignDate}">
 				</p:calendar>
 		</h:panelGrid>
 	</h:panelGrid>
