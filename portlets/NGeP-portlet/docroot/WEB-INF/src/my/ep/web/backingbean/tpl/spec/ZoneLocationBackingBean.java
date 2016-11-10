@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.tpl.spec;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +34,10 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean
 @ViewScoped
-public class ZoneLocationBackingBean extends BaseBackingBean<ZoneLocationManagedBean> {
+public class ZoneLocationBackingBean extends BaseBackingBean<ZoneLocationManagedBean> implements Serializable {
 
+	
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(ZoneLocationBackingBean.class);
 	
 	private void debugLogger(Object message) {

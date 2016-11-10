@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sc.procure;
 
+import java.io.Serializable;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -14,7 +16,10 @@ import my.ep.web.managedbean.sc.procure.ProcurementPlanManageBean;
 @ManagedBean(name = "procurementPlanBackingBean")
 @ViewScoped
 public class ProcurementPlanBackingBean extends
-		BaseBackingBean<ProcurementPlanManageBean> {
+		BaseBackingBean<ProcurementPlanManageBean> implements Serializable{
+
+	
+	private static final long serialVersionUID = 1L;
 
 //	private String SEARCH_CATALOG_URL = "/xhtml/cm/catalogue/supplierItemView.xhtml";
 //

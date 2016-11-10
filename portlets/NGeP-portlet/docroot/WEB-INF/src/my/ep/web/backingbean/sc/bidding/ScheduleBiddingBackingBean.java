@@ -4,6 +4,7 @@
 
 package my.ep.web.backingbean.sc.bidding;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -56,8 +57,10 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean(name = "scheduleBiddingBB")
 @ViewScoped
 public class ScheduleBiddingBackingBean extends
-		SourcingBaseBackingBean<ScheduleBiddingManagedBean> {
+		SourcingBaseBackingBean<ScheduleBiddingManagedBean> implements Serializable{
 
+	
+	private static final long serialVersionUID = 1L;
 	private static Logger log = EpLogger
 			.getLogger(ScheduleBiddingBackingBean.class);
 

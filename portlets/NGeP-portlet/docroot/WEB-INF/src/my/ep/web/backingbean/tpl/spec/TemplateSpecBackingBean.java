@@ -10,6 +10,7 @@
  */
 package my.ep.web.backingbean.tpl.spec;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -93,7 +94,10 @@ import org.primefaces.context.RequestContext;
 @ManagedBean(name = "templateSpecBackingBean")
 @ViewScoped
 public class TemplateSpecBackingBean extends
-		BaseBackingBean<TemplateSpecManagedBean> {
+		BaseBackingBean<TemplateSpecManagedBean> implements Serializable{
+
+	
+	private static final long serialVersionUID = 1L;
 
 	private static Logger log = Logger.getLogger(TemplateSpecBackingBean.class);
 

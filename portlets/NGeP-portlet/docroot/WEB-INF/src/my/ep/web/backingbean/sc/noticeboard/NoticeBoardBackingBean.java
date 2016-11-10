@@ -1,6 +1,7 @@
 /* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.backingbean.sc.noticeboard;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -152,7 +153,9 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "noticeBoardBackingBean")
 @ViewScoped
 public class NoticeBoardBackingBean extends
-		SourcingBaseBackingBean<NoticeBoardManagedBean> {
+		SourcingBaseBackingBean<NoticeBoardManagedBean> implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(NoticeBoardBackingBean.class);
 	private static final String NAV_TO_QTN_TENDER_DETAILS_PAGE = "nbQuotationNTendenDetail.xhtml?faces-redirect=true";
 	private static final String MOF_INVALID_MSG_KEY = "lbl.sc.mof.invalid.orinactive";
