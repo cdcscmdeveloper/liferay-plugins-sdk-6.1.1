@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sc.bidding;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,6 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sc.bidding.IBiddingSO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.BidStatusConst;
@@ -21,7 +21,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.bidding.BiddingListManagedBean;
@@ -46,8 +45,10 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "biddingListBB")
 @ViewScoped
 public class BiddingListBackingBean extends
-		BaseBackingBean<BiddingListManagedBean> {
+		BaseBackingBean<BiddingListManagedBean> implements Serializable {
 
+	
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(BiddingListBackingBean.class);
 
 	/**

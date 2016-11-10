@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sc.bidding;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -65,8 +66,10 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "onlineBiddingBB")
 @ViewScoped
-public class OnlineBiddingBackingBean extends BaseBackingBean {
+public class OnlineBiddingBackingBean extends BaseBackingBean implements Serializable {
 
+	
+	private static final long serialVersionUID = 1L;
 	private List<ScBidSchedule> activeBidSchedules;
 	private ScBidSchedule scBidSchedule;
 	private List<ScBidPrice> bidPrices;
