@@ -4072,6 +4072,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IUserSO userSO =null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 				if(getManagedBean().isPidValidityExpired()) {
 					if(isFlFulfilmentRequisitioner()) {
@@ -4081,9 +4082,29 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 				
+				//Bond Waiver Checking upon Contract Request Submission and/or Approval
+				
+				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO contractReqDTO = new ContractReqDTO();
+				contractReqDTO.setContractId(flRequest.getCtContract().getContractId());
+				contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
+				contractReqDTO.setAsAtDate(new Date());
+				
+				ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
+				if(!contractResp.isBondComplete()){
+					CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+					if(!ctContractAmount.isBondWaived()){
+						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+							throw new EpException(MessageConst.ERROR_740051);
+						}
+						}else{
+							throw new EpException(MessageConst.ERROR_740052);
+					}
+				}
+				
 				validateChargelineLimit(action);
 			}
-			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
+			
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			validatePreparedOrgAndAgencies();
 			checkContractValidity(getManagedBean().getFlRequest());
