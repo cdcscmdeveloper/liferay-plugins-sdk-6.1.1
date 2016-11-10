@@ -11,6 +11,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +32,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -1619,6 +1622,55 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			out.close();
 		}
 	}
+	
+	/**
+	 * Download files as a zip.
+	 *
+	 * @param zipFileName the zip file name
+	 * @param fileList the list of the files that want to compress
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public void downloadFilesAsZip(String zipFileName, List<File> fileList) throws IOException {
+		PortletResponse portalresponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil
+				.getHttpServletResponse(portalresponse);
+		response.setContentType("Content-type: text/zip");
+		response.setHeader("Content-Disposition", "attachment; filename=" + zipFileName);
+		
+		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
+				response.getOutputStream()));
+		try {
+			for (File file : fileList) {
+				zos.putNextEntry(new ZipEntry(file.getName()));	
+				// Get the file
+				FileInputStream fis = null;
+				try {
+					fis = new FileInputStream(file);
+				} catch (FileNotFoundException fnfe) {
+					zos.write(("ERROR: Could not find file " + file
+							.getName()).getBytes());
+					zos.closeEntry();
+					continue;
+				}
+				BufferedInputStream fif = new BufferedInputStream(fis);
+				// Write the contents of the file
+				int data = 0;
+				while ((data = fif.read()) != -1) {
+					zos.write(data);
+				}
+				fif.close();
+				zos.closeEntry();
+			}
+		} catch (Exception ex) {
+	
+		} finally {
+			zos.close();
+			response.flushBuffer();
+	
+			FacesContext.getCurrentInstance().responseComplete();
+		}
+	}	
 
 	/**
 	 * Gets the captcha text image.
