@@ -4865,7 +4865,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 			}
 			
-			context.put("govSignDate", dateSDF.format(getManagedBean().getNewAmendmentEffDate()));
+			context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
 			context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
 			if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
 				context.put("supplierName",  getFacesScopes().getUserSessionBean().getUserName());
@@ -4875,7 +4875,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				context.put("witnessName",  getManagedBean().getScLoaWitness().getWitnessName());
 				context.put("witnessID",  getManagedBean().getScLoaWitness().getIdentificationNo());
 				context.put("witnessAddress", getManagedBean().getScLoaWitness().getAddress());
-				context.put("witnessDate",  dateSDF.format(getManagedBean().getNewAmendmentEffDate()));		
+				context.put("witnessDate",  dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getSupplierSignDate()));		
 			}
 		}
 		
