@@ -1,6 +1,7 @@
 /* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.backingbean.sc.bsvattendance;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,8 +70,10 @@ import org.quartz.SchedulerException;
 @ManagedBean(name = "bsvAttendanceBackingBean")
 @ViewScoped
 public class BSVAttendanceBackingBean extends
-		SourcingBaseBackingBean<BSVAttendanceManagedBean> {
+		SourcingBaseBackingBean<BSVAttendanceManagedBean> implements Serializable{
 
+	
+	private static final long serialVersionUID = 1L;
 	private static final String NAV_TO_BSV_REG_PAGE = "/xhtml/sc/bsvattendance/addattendance/bsvAttendanceRegisterPopup.xhtml";
     private static final String BSV_MAIN_PAGE = "/xhtml/sc/bsvattendance/attendancedetails/bsvAttendanceRegisterMain.xhtml";
     private static final String SAVE_SUCCESS_MSG_KEY = "lbl.sc.bsv.save.message";

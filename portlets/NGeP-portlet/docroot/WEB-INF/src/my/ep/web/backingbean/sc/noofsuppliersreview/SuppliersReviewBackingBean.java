@@ -10,14 +10,16 @@
  */
 package my.ep.web.backingbean.sc.noofsuppliersreview;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.sc.marketresearch.IMarketResearchSO;
 import my.ep.biz.service.sc.suppliersreview.ISuppliersReviewSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -37,6 +39,7 @@ import my.ep.web.bean.SuppliersReviewSearchBean;
 import my.ep.web.managedbean.sc.noofsuppliersreview.SuppliersReviewManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
 import org.apache.log4j.Logger;
 
 // TODO: Auto-generated Javadoc
@@ -46,7 +49,12 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "suppliersReviewBackingBean")
 @ViewScoped
 public class SuppliersReviewBackingBean extends
-		BaseBackingBean<SuppliersReviewManagedBean> {
+		BaseBackingBean<SuppliersReviewManagedBean> implements Serializable{
+
+	/**
+	 * The serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The log. */
 	private static Logger log = Logger
