@@ -430,7 +430,7 @@
 		toggleable="true">
 		<p:dataTable id="glAccountSR"
 			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-			selection="#{purchaseRequestBackingBean.managedBean.gosodo}"
+			selection="#{purchaseRequestBackingBean.accCode}"
 			selectionMode="single"
 			value="#{purchaseRequestBackingBean.searchGlAccount}" rows="10"
 			var="glAccountList" rowIndexVar="index" lazy="true">
