@@ -261,16 +261,25 @@
 				</tr>
 				<tr>
 					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.gosodo']}" /></td> 
-					<td><h:panelGroup styleClass="gosodoLov" id="gosodoLov"><ac:lov id="gosodo"
-						lovId="PM_GL_ACCOUNT" headerText="#{lbl['lbl.fl.charge.asset.gosodo']}"
-						saveObject="purchaseRequestBackingBean.managedBean.gosodo"
-						readonly="true"
+					<td><h:panelGroup styleClass="gosodoLov" id="gosodoLov">
+					<p:inputText 
 						size="7"
+						id="itSelectedGlAccount" 
+						value="#{purchaseRequestBackingBean.managedBean.gosodo.glAccCode}" 
+						readonly="true"
+						/>
+					&#160;	
+					<p:commandLink id="gosodo" 
+						partialSubmit="true"
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
-						conditionField="pmOrgProfile.orgProfileId^#{purchaseRequestBackingBean.retrieveJabatanOrgProfile(purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgProfileId).orgProfileId}*pmOrgProfile^1^11"
-						value="#{purchaseRequestBackingBean.managedBean.gosodo.glAccCode}"	
-						tooltip="#{lbl['lbl.fl.tooltip.gosodo']}">
-					</ac:lov></h:panelGroup>
+						process="@this" 
+						readonly="true" 
+						oncomplete="accountCode.show();"
+						update="@form">
+						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+					</p:commandLink>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/>
+					</h:panelGroup>
 					</td>
 				</tr>
 			</table>	
@@ -321,6 +330,135 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="Close" 
 				oncomplete="addQuery.hide();">
+			</p:commandButton>
+		</div>
+	</p:dialog>
+	
+	<p:dialog id="accountCode" header="Listing - Account Code List" widgetVar="accountCode"
+		showEffect="fade" hideEffect="fade" modal="true" width="700" position="top"
+		resizable="false">
+		<p:panel id="glAccountPanel" header="#{lbl['lbl.pm.gl.account.search.location']}" toggleable="true" >
+		<table style="width:100%">
+			<tr>
+				<td width="30%"><p:outputLabel value="#{lbl['lbl.pm.go.search.acc.type']}"></p:outputLabel></td>
+				<td width="30%">
+					<p:selectOneMenu id="somAccType" style="width:205px"
+							value="#{purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccType}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{purchaseRequestBackingBean.retrieveAccountType()}"
+								var="parameter" itemLabel="#{parameter.codeName}"
+								itemValue="#{parameter.pmParameter.parameterCode}" />
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{purchaseRequestBackingBean.onChangeAccType()}"
+								onstart="blockWidget.show()" 
+								oncomplete="blockWidget.hide()" 
+								update="somAccClass,somGoCode" />
+						</p:selectOneMenu>	
+						</td>	
+				<td width="40%">&#160;</td>			
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.go.search.acc.class']}"></p:outputLabel></td>
+				<td>
+					<p:selectOneMenu id="somAccClass" 
+							style="width:205px" 
+							disabled="#{empty purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccType}"
+							value="#{purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccClass}">
+							<f:selectItems
+								value="#{purchaseRequestBackingBean.retrieveAccountClass()}" />
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{purchaseRequestBackingBean.onChangeAccClass()}"
+								update="@this,somGoCode" 
+								onstart="blockWidget.show()" 
+								oncomplete="blockWidget.hide()" />
+						</p:selectOneMenu>				
+						</td>
+						<td>&#160;</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.go.search.gen.obj.code']}"></p:outputLabel></td>
+				<td>
+					<p:selectOneMenu id="somGoCode"  style="width:205px" 
+							disabled="#{empty purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccType 
+							or empty purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedAccClass}"
+							value="#{purchaseRequestBackingBean.managedBean.glAccountSearchBean.selectedGenObjCode}">
+							<f:selectItems
+								value="#{purchaseRequestBackingBean.retrieveGoCodeList()}" />
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="@this" />
+						</p:selectOneMenu>	
+				</td>	
+				<td>&#160;</td>		
+			</tr>
+		
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.gl.accountCode']}"></p:outputLabel></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.glAccountSearchBean.accountCode}"
+						id="glaccountCode" size="28" /></td>	
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.gl.description']}"></p:outputLabel></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.glAccountSearchBean.accountName}"
+						size="50" /></td>
+				<td>&#160;</td>
+			</tr>			
+			<tr>
+				<td colspan="5" width="100%">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}"
+							action="#{purchaseRequestBackingBean.searchGlAccount}"
+							update=":form:glAccountResult"
+							onstart="blockWidget.show()" 
+							oncomplete="blockWidget.hide()"  />
+                        &#160;
+						<p:commandButton value="#{lbl['lbl.btn.reset']}"
+							action="#{purchaseRequestBackingBean.resetGlAccountSearchBean}"
+							process="@this"
+							update=":form:glAccountPanel, :form:glAccountResult"
+							onstart="blockWidget.show()" 
+							oncomplete="blockWidget.hide()"  />
+					</div>
+				</td>
+			</tr>
+		</table>
+		</p:panel>
+		<p:panel id="glAccountResult" header="#{lbl['lbl.pm.gl.account.search.result']}"
+		toggleable="true">
+		<p:dataTable id="glAccountSR"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			selection="#{purchaseRequestBackingBean.managedBean.gosodo}"
+			selectionMode="single"
+			value="#{purchaseRequestBackingBean.searchGlAccount}" rows="10"
+			var="glAccountList" rowIndexVar="index" lazy="true">
+				<p:ajax event="rowUnselect" update="@this" process="@this" partialSubmit="true" />
+				<p:ajax event="rowSelect" update="@this" process="@this" partialSubmit="true" />
+				<p:ajax event="toggleSelect" update="@this" process="@this" partialSubmit="true" />
+				<ac:paginator for="glAccountSR" />
+			
+			<p:column headerText="#{lbl['lbl.pm.gl.accountCode']}" style="width:10%;">
+				<h:outputText value="#{glAccountList.glAccCode}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.gl.description']}" style="white-space: normal;word-wrap: break-word;">
+				<h:outputText value="#{glAccountList.description}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right" >
+			<p:commandButton id="slbtn" value="#{lbl['lbl.btn.select']}"
+				partialSubmit="true"
+				process="@this" update="gosodoLov"
+				action="#{purchaseRequestBackingBean.selectedAccCode}"
+				styleClass="BtnSpacing" 
+				oncomplete="accountCode.hide();"/>
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				partialSubmit="true" process="@this" update="@this"
+				styleClass="BtnSpacing" oncomplete="accountCode.hide();">
 			</p:commandButton>
 		</div>
 	</p:dialog>

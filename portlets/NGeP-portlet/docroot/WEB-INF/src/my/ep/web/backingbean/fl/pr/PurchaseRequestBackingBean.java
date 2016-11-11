@@ -27,6 +27,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
@@ -36,8 +37,10 @@ import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -50,6 +53,8 @@ import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
+import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
+import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -88,6 +93,10 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.division.DivisionResDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
+import my.ep.dto.pm.common.object.ObjectReqDTO;
+import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
@@ -130,11 +139,13 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.pm.common.VPmDo;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
@@ -155,12 +166,14 @@ import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.FLSupplierItemVO;
 
 /**
@@ -182,6 +195,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	private boolean selectAllCheckbox;
 	private IPagingDataModel<PmOrgProfile> chargedPtjDataModel = new chargedPtjPagingDataModel();
 	private PmOrgProfile selectedPmOrgProfile;
+	private IPagingDataModel<VPmDo> searchGlAccount = new SearchGlAccountPagingDataModel();
 	
 	/**
 	 * Gets the class name.
@@ -2618,6 +2632,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
 			getManagedBean().setVotFundDisplay(false);
+			preLoadingGlAccount();
 		}
 		if(selectedTabIndex==4){
 			chargeLineValidationBeforeApproverList();
@@ -3868,4 +3883,220 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 	}
 	
+	public List<PmParameterDesc> retrieveAccountType() {
+		log.info("retrieveAccountType");
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+				ParameterTypeConst.TYPE_OF_ACCOUNT_TYPE, null);
+	}
+	
+	public void onChangeAccType(){
+		getManagedBean().getGlAccountSearchBean().setSelectedAccClass(null);
+		getManagedBean().getGlAccountSearchBean().setSelectedGenObjCode(null);
+	}
+	
+	public SelectItem[] retrieveAccountClass() {
+		log.info("retrieveAccountClass");
+		SelectItem[] items = null;	
+		if (StringUtils.isNotBlank(getManagedBean().getGlAccountSearchBean().getSelectedAccType())) {
+			IObjectSO objectSO = null;
+			try {
+				int i = 1;
+				ObjectReqDTO reqDTO = new ObjectReqDTO();
+				SearchBean<String> accDoSearchBean = new SearchBean<String>();
+				accDoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("accType",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getGlAccountSearchBean().getSelectedAccType()));
+				accDoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatus",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				accDoSearchBean.getSortColumns().add(new SearchOrderBean("accClass"));
+
+				reqDTO.setAccDoSearchBean(accDoSearchBean);
+				objectSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
+				ObjectResDTO resDTO = objectSO
+						.retrieveVPmDoAccClassListBySearchBean(reqDTO);
+				List<String> list = resDTO.getAccDoResultBean().getResultList();
+				items = new SelectItem[list.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+				for (String object : list) {
+					items[i++] = new SelectItem(object,
+							object);
+				}
+			} catch (Exception e) {
+				throw new EpException(e.getMessage());
+			} finally {
+			  objectSO = null;
+			}
+		}else{
+			items = new SelectItem[1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}
+		return items;
+	}
+	
+	public void onChangeAccClass(){
+		getManagedBean().getGlAccountSearchBean().setSelectedGenObjCode(null);
+	}
+	
+	public SelectItem[] retrieveGoCodeList() {
+		log.info("retrieveGoCodeList");
+		SelectItem[] items = null;		
+		if (StringUtils.isNotBlank(getManagedBean().getGlAccountSearchBean().getSelectedAccClass())) {
+			IObjectSO objectSO = null;
+			try {
+				int i = 1;
+				ObjectReqDTO reqDTO = new ObjectReqDTO();
+				SearchBean<String> accDoSearchBean = new SearchBean<String>();
+				accDoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("accType",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getGlAccountSearchBean().getSelectedAccType()));
+				
+				accDoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("accClass",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getGlAccountSearchBean().getSelectedAccClass()));
+				
+				accDoSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatus",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				accDoSearchBean.getSortColumns().add(new SearchOrderBean("goCode"));
+
+				reqDTO.setAccDoSearchBean(accDoSearchBean);
+				objectSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IObjectSO.class);
+				ObjectResDTO resDTO = objectSO
+						.retrieveVPmDoGoCodeListBySearchBean(reqDTO);
+				List<String> list = resDTO.getAccDoResultBean().getResultList();
+				items = new SelectItem[list.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+				for (String object : list) {
+					items[i++] = new SelectItem(object,
+							object);
+				}
+			} catch (Exception e) {
+				throw new EpException(e.getMessage());
+			} finally {
+			  objectSO = null;
+			}
+		}else{
+			items = new SelectItem[1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			
+		}
+		return items;
+	}
+	
+	private class SearchGlAccountPagingDataModel extends PagingDataModel<VPmDo> {
+		private static final long serialVersionUID = 1L;
+
+		public SearchGlAccountPagingDataModel() {
+			super("glAccountSR");
+		}
+
+		@Override
+		public ISearchResultBean<VPmDo> pageChangeListener(ISearchBean<VPmDo> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			IGlAccountSO glAccountSO;
+
+			try {
+				//ISearchBean<PmGlAccount> searchBeanData = getSearchBeanData(searchBean);
+				GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
+				GlAccountSearchBean glAccountSearchBean = getManagedBean().getGlAccountSearchBean();	
+
+				if (StringUtils.isNotBlank(glAccountSearchBean.getSelectedAccType())) {
+					glAccountReqDTO.setAccType(glAccountSearchBean.getSelectedAccType());					
+				}
+
+				if (StringUtils.isNotBlank(glAccountSearchBean.getSelectedAccClass())) {
+					glAccountReqDTO.setAccClass(glAccountSearchBean.getSelectedAccClass());					
+				}
+
+				if (StringUtils.isNotBlank(glAccountSearchBean.getSelectedGenObjCode())) {
+					glAccountReqDTO.setGoCode(glAccountSearchBean.getSelectedGenObjCode());					
+				}
+
+				if (StringUtils.isNotBlank(glAccountSearchBean.getAccountCode())) {
+					glAccountReqDTO.setGlAccountCode(glAccountSearchBean.getAccountCode());					
+				}
+
+				if (StringUtils.isNotBlank(glAccountSearchBean.getAccountName())) {
+					glAccountReqDTO.setGlAccountDesc(glAccountSearchBean.getAccountName());
+				}
+
+				searchBean.setUseEntityClass(true);
+				glAccountReqDTO.setPtjGroupId(retrieveJabatanOrgProfile(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId()).getOrgProfileId());
+				glAccountReqDTO.setGlAccountObjByKumpPTJSearchBean(searchBean);
+				glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IGlAccountSO.class);
+				GlAccountResDTO resDTO = glAccountSO.searchGlAccountDataByKumpPTJ(glAccountReqDTO);				
+				getManagedBean().setLazy(true);		
+				if (resDTO.isSuccessful()) {
+
+					return resDTO.getGlAccountObjByKumpPtjResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+
+			return null;
+		}
+	}
+	
+	/**
+	 * reset search bean fields
+	 */
+	public void resetGlAccountSearchBean() {
+		log.debug("resetGlAccountSearchBean");		
+	    this.getManagedBean().setGlAccountSearchBean(new GlAccountSearchBean());
+		searchGlAccount = new SearchGlAccountPagingDataModel();
+	}
+	
+	public void preLoadingGlAccount() {
+		log.info("preLoading GlAccount method");
+		this.resetGlAccountSearchBean();
+	}
+	
+	public void searchGlAccount() {
+		searchGlAccount.reloadData();
+	}
+
+	public IPagingDataModel<VPmDo> getSearchGlAccount() {
+		return searchGlAccount;
+	}
+
+	public void setSearchGlAccount(IPagingDataModel<VPmDo> searchGlAccount) {
+		this.searchGlAccount = searchGlAccount;
+	}
+	
+	public void selectedAccCode(){
+		getManagedBean().setGosodo(getAccCode());
+	}
+	
+	private PmGlAccount accCode;
+
+	public PmGlAccount getAccCode() {
+		return accCode;
+	}
+	public void setAccCode(PmGlAccount accCode) {
+		this.accCode = accCode;
+	}
 }
