@@ -448,6 +448,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
+		ctReqDTO.setDocId(getManagedBean().getPaymentAdvice().getFlRequest().getFulfilmentReqId());
 		ContractResDTO ctRes = contractSO.calAdvancePaymentTracking(ctReqDTO);
 		if(ctRes.getPaidAdvancePaymentAmt() == null){
 			ctRes.setPaidAdvancePaymentAmt(new BigDecimal(0));
@@ -457,7 +458,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		if(deductionAmt.doubleValue() == 0){
 			getManagedBean().setPaidPerc(new BigDecimal(0));
 		}else{
-			getManagedBean().setPaidPerc(newPaidAmt.divide(deductionAmt,2,RoundingMode.HALF_UP).multiply(new BigDecimal(100)));	
+			getManagedBean().setPaidPerc(newPaidAmt.divide(deductionAmt,4,RoundingMode.HALF_UP).multiply(new BigDecimal(100)));	
 		}
 		getManagedBean().setBalanceAmt(deductionAmt.subtract(newPaidAmt));
 	}
