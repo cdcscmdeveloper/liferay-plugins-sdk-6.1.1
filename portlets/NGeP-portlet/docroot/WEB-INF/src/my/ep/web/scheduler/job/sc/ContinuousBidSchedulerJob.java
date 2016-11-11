@@ -51,20 +51,6 @@ public class ContinuousBidSchedulerJob implements Job {
 
 		Map<String, Object> jobMap = context.getJobDetail().getJobDataMap()
 				.getWrappedMap();
-		if (jobMap.containsKey(SchedulerConstants.JOB_BID_ID_LIST)) {
-			System.out.println("MMMMM Job2 JobDataMap Contains the Key");
-			List<Long> mapBidScheduleIdList = (List<Long>) jobMap
-					.get(SchedulerConstants.JOB_BID_ID_LIST);
-			if (mapBidScheduleIdList != null && !mapBidScheduleIdList.isEmpty()) {
-				System.out
-						.println("MMMMM BidId List in the Map found in Job2 and size is "
-								+ mapBidScheduleIdList.size());
-				for (Long mapBidId : mapBidScheduleIdList) {
-					System.out.println("MMMMM mapBid It in Job2" + mapBidId);
-				}
-			}
-		}
-
 		IBiddingSO biddingSO = null;
 		try {
 			biddingSO = BusinessDelegate.getInstance().getServiceObject(
@@ -74,13 +60,6 @@ public class ContinuousBidSchedulerJob implements Job {
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 			List<Long> cachedBidIdList = biddingSO.getBiddingListFromCache();
 			localBidScheduleIdList = cachedBidIdList;
-			if (cachedBidIdList != null && !cachedBidIdList.isEmpty()) {
-				System.out.println("Printing bidIdList from cache in job2");
-				for (Long cachedBidId : cachedBidIdList) {
-					System.out
-							.println("cached bid Id from Job 2" + cachedBidId);
-				}
-			}
 
 			if (localBidScheduleIdList != null
 					&& !localBidScheduleIdList.isEmpty()) {
@@ -205,13 +184,13 @@ public class ContinuousBidSchedulerJob implements Job {
 							toDeleteIdList);
 					localBidScheduleIdList.removeAll(toDeleteIdList);
 					System.out
-							.println("printing removed bid id list size before update to cache"
+							.println("localBidScheduleIdList size before update to cache"
 									+ localBidScheduleIdList.size());
 					biddingSO.updateBiddingListToCache(localBidScheduleIdList);
-					context.getJobDetail()
+					/*context.getJobDetail()
 							.getJobDataMap()
 							.put(SchedulerConstants.JOB_BID_ID_LIST,
-									localBidScheduleIdList);
+									localBidScheduleIdList);*/
 
 				}
 

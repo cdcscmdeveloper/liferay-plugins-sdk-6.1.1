@@ -248,38 +248,6 @@
 			
 			<br/>
 		</p:outputPanel>
-					
-		<p:panel id="biddingListPanel" header="#{lbl['lbl.sc.bidding.list']}"
-			toggleable="true">
-
-			<p:dataTable id="biddingList"
-			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{schedulerManagerBB.managedBean.currentDayBids}" var="bid">
-
-				<p:column headerText="#{lbl['lbl.sc.bidding.no']}">
-					<h:outputText value="#{bid.bidNo}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.bid.start']}">
-					<h:outputText id="bidStart" value="#{bid.startDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-					</h:outputText>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bid.end']}">
-
-					<h:outputText id="bidEnd" value="#{bid.endDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-					</h:outputText>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.status']}">
-
-					<p:outputLabel style="float : left"
-						value="#{schedulerManagerBB.getStatusDescById(bid.pmStatus.statusId)}" />
-				</p:column>
-			</p:dataTable>
-		</p:panel>
 		
 		<p:dialog width="800px" height="300px"
 			header="#{lbl['lbl.quartz.job.info']}" widgetVar="addJobDialog"

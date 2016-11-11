@@ -121,9 +121,6 @@ public class SchedulerManagerBackingBean extends
 
 			}
 
-			// set bidding list
-			getManagedBean().setCurrentDayBids(
-					SchedulerHelper.getInstance().getJobBidScheduleList());
 
 		} catch (SchedulerException e) {
 			if (tmpJobKey != null) {
