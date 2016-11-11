@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.searchalluser;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,11 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean(name = "searchAllUserBackingBean")
 @ViewScoped //@RequestScoped
-public class SearchAllUserBackingBean extends BaseBackingBean<SearchAllUserManagedBean> {
+public class SearchAllUserBackingBean extends BaseBackingBean<SearchAllUserManagedBean> implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static final String NAV_TO_SEARCH = "/xhtml/pm/searchAllUser/tempSearch.xhtml"; // main page for portlet
 	private static final Logger logger = EpLogger
 			.getLogger(SearchAllUserBackingBean.class);
