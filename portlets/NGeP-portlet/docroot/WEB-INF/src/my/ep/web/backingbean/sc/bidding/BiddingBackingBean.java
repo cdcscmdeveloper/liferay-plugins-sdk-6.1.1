@@ -142,6 +142,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
+	/**
+	 * Method to fetch duration selection drop down menu values
+	 */
+
 	public void populateDurationDropDownValues() {
 		IBiddingSO biddingSO = null;
 
@@ -384,8 +388,6 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	/**
 	 * Listener Method for date selection events for resume bid
-	 * 
-	 * @param e
 	 */
 	public void resumeBidNewStartDateSelectListener() {
 		ScBidAction bidAction = this.getManagedBean().getBidAction();
@@ -426,8 +428,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	/**
 	 * Listener Method for date selection events for re-bid
 	 * 
-	 * @param e
-	 *            (event)
+	 * @param ScBidAction
+	 *            bidAction Instance
 	 */
 	public void reBidDurationSelectListener(ScBidAction bidAction) {
 		if (getManagedBean().getBidAction().getActionType()
@@ -492,9 +494,6 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 						.equals(BiddingConst.BID_ACTION_TYPE_REBIDDING))
 						&& resDTO.getScBidAction().getNewStartDate()
 								.before(getNextDate())) {
-					SchedulerHelper.getJobBidScheduleIdList().add(
-							resDTO.getScBidAction().getScBidSchedule()
-									.getBidScheduleId());
 					getManagedBean().setRemainingTime(null);
 					getManagedBean().setDuration(null);
 					resetDateTimeComponent();
@@ -560,25 +559,23 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				getManagedBean().setScheduledBid(resDto.getScBidSchedule());
 				getManagedBean().setBidPackages(resDto.getBidPackages());
 			}
-			QuationTenderReqDTO qtreqDTO=new QuationTenderReqDTO();
-			QuationTenderResDTO qtresDTO=new QuationTenderResDTO();
-			if(null!=bid.getScBid()){
-			qtreqDTO.setQtTndrNo(bid.getScBid().getDocNo());
-			qtresDTO=qTDetailSO.retriveQtByQtNumber(qtreqDTO);
-		}
-			if(null!=qtresDTO.getQtDetail()){
+			QuationTenderReqDTO qtreqDTO = new QuationTenderReqDTO();
+			QuationTenderResDTO qtresDTO = new QuationTenderResDTO();
+			if (null != bid.getScBid()) {
+				qtreqDTO.setQtTndrNo(bid.getScBid().getDocNo());
+				qtresDTO = qTDetailSO.retriveQtByQtNumber(qtreqDTO);
+			}
+			if (null != qtresDTO.getQtDetail()) {
 				this.getManagedBean().setScQt(qtresDTO.getQtDetail());
 			}
 		}
-		
 
 		finally {
 
 			biddingSO = null;
-			qTDetailSO=null;
+			qTDetailSO = null;
 		}
 
-		
 		getManagedBean().setRemainingTime(
 				remainingTimeCalculator(new Date(), getManagedBean()
 						.getScheduledBid().getEndDate()));
@@ -1009,12 +1006,26 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		return "/xhtml/sc/bidding/bidManagement/biddingmain.xhtml ? faces-redirect=true";
 	}
 
+	/**
+	 * Method to get formatted total amount.
+	 * 
+	 * @param specQuestion
+	 * @param bidPrice
+	 * @param qty
+	 * @return String (Formatted Total Amount)
+	 */
 	public String formattedTotalAmount(TplSpecQuestion specQuestion,
 			BigDecimal bidPrice, BigDecimal qty) {
 		return nf.format(getManagedBean().getTplSpecHelper().calcTotalAmount(
 				specQuestion, bidPrice, qty));
 	}
 
+	/**
+	 * Method to get formatted item start price total amount.
+	 * 
+	 * @param itemBean
+	 * @return String (Formatted Item Start Price Total Amount)
+	 */
 	public String itemizedStartPriceTotal(BidItemBean itemBean) {
 
 		return formattedTotalAmount(this.getManagedBean().getSelectedBidItem()
@@ -1023,6 +1034,12 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 						.getSelectedBidItem().getQty());
 	}
 
+	/**
+	 * Method to get bidAction type radio button code values
+	 * 
+	 * @param parameterType
+	 * @return SelectItem[] (Select Items)
+	 */
 	public SelectItem[] getBidActionTypeRadioButtonCodeValues(
 			String parameterType) {
 
@@ -1056,6 +1073,9 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		return items;
 	}
 
+	/**
+	 * Listener Method for poll component
+	 */
 	public void pollListener() {
 		bidManagementAction(this.getManagedBean().getScheduledBid());
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -1065,33 +1085,36 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 						"bidManagementMain.xhtml?faces-redirect=true");
 	}
 
-	
 	/**
 	 * Check if QT Status published.
 	 * 
 	 * @param currentStatusId
-	 * 		the current status id
-	 * @return	the indicator qt status published.
+	 *            the current status id
+	 * @return the indicator qt status published.
 	 */
 	public boolean isQTStatusPublished(Long currentStatusId) {
-		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT);
+		return isQTStatusGreaterThanOrEquals(currentStatusId,
+				QTStatusConst.QT_BRIEFING_SITE_VISIT);
 	}
-	
+
 	/**
 	 * Check if QT Status greater than or equals from status.
 	 * 
 	 * @param currentStatusId
-	 * 		the current status id
+	 *            the current status id
 	 * @param fromStatusId
-	 * 		the from status id
-	 * @return	the indicator qt status greater than or equals from status.
+	 *            the from status id
+	 * @return the indicator qt status greater than or equals from status.
 	 */
-	public boolean isQTStatusGreaterThanOrEquals(Long currentStatusId, Long fromStatusId) {
-		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		
-		return orderedStatuses.indexOf(currentStatusId) >= orderedStatuses.indexOf(fromStatusId);
+	public boolean isQTStatusGreaterThanOrEquals(Long currentStatusId,
+			Long fromStatusId) {
+		List<Long> orderedStatuses = Arrays
+				.asList(QTStatusConst.QT_ORDERED_STATUSES);
+
+		return orderedStatuses.indexOf(currentStatusId) >= orderedStatuses
+				.indexOf(fromStatusId);
 	}
-	
+
 	/**
 	 * @return the dateTimeInputUIComponent
 	 */
@@ -1108,6 +1131,9 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		this.dateTimeInputUIComponent = dateTimeInputUIComponent;
 	}
 
+	/**
+	 * Listener method to reset custom date component memory value.
+	 */
 	public void resetDateTimeComponent() {
 		this.getManagedBean().setAutoUpdate(true);
 		if (this.getDateTimeInputUIComponent() != null) {
@@ -1115,6 +1141,9 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 	}
 
+	/**
+	 * Action method to close popup.
+	 */
 	public void closePopUpAction() {
 		this.getManagedBean().setAutoUpdate(true);
 	}
