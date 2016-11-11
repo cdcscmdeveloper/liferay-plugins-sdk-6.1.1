@@ -4105,16 +4105,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractReqDTO.setContractId(flRequest.getCtContract().getContractId());
 				contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 				contractReqDTO.setAsAtDate(new Date());
-				
-				ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
-				if(!contractResp.isBondComplete()){
-					CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
-					if(!ctContractAmount.isBondWaived()){
-						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-							throw new EpException(MessageConst.ERROR_740051);
+				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+				if(ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
+					ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
+					if(!contractResp.isBondComplete()){
+						if(!ctContractAmount.isBondWaived()){
+							if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+								throw new EpException(MessageConst.ERROR_740051);
+							}
+							}else{
+								throw new EpException(MessageConst.ERROR_740052);
 						}
-						}else{
-							throw new EpException(MessageConst.ERROR_740052);
 					}
 				}
 				
