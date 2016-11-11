@@ -177,9 +177,6 @@ public class ContinuousBidSchedulerJob implements Job {
 
 				}
 				if (toDeleteIdList != null && toDeleteIdList.size() > 0) {
-
-					SchedulerHelper.getJobBidScheduleIdList().removeAll(
-							toDeleteIdList);
 					localBidScheduleIdList.removeAll(toDeleteIdList);
 					System.out
 							.println("localBidScheduleIdList size before update to cache"
