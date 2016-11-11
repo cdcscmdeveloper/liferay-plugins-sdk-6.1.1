@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.settings;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +38,6 @@ import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
-import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
@@ -111,7 +111,12 @@ import org.primefaces.event.TabChangeEvent;
 @ManagedBean(name = "ruleCatalogueBackingBean")
 @ViewScoped
 public class RuleCatalogueBackingBean extends
-		BaseBackingBean<RuleCatalogueManageBean> {
+		BaseBackingBean<RuleCatalogueManageBean> implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger
 			.getLogger(RuleCatalogueBackingBean.class);
 
