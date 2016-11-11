@@ -304,8 +304,15 @@ public class DirectLOABackingBean extends
 		}
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 				.getScLoaReportAttachment();
-		scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
-		downloadFile(scLoaReportAttachment);
+		ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
+		if(scLoaReport.getDefinationType().getParameterCode().equals(
+				ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) ||
+				scLoaReport.getDefinationType().getParameterCode().equals(
+						ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
+			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+		}
+		downloadFile(scLoaReportAttachmentGenerated);
+		
 	}
 
 	/**
@@ -4212,6 +4219,7 @@ public class DirectLOABackingBean extends
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
+		validateLOADetails(this.getManagedBean().getScLoa(), outcome);
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 			if (isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
 				this.getManagedBean().setAutoUpdate(false);
