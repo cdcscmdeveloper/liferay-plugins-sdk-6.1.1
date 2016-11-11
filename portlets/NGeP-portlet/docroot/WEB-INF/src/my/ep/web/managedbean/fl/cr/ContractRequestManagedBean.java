@@ -60,6 +60,7 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -320,9 +321,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	private BigDecimal maxOrderQuantity;
 	private Double minOrderQuantity;
+	private GlAccountSearchBean glAccountSearchBean;
+	private boolean isLazy;	
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
+	
 	
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
@@ -3028,6 +3032,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setFactored(boolean factored) {
 		this.factored = factored;
+	}
+
+	public GlAccountSearchBean getGlAccountSearchBean() {
+		return glAccountSearchBean;
+	}
+
+	public void setGlAccountSearchBean(GlAccountSearchBean glAccountSearchBean) {
+		this.glAccountSearchBean = glAccountSearchBean;
+	}
+
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
 	}
 
 }

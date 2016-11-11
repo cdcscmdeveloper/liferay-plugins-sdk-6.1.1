@@ -44,6 +44,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.FLSupplierItemVO;
 
@@ -525,6 +526,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private BigDecimal orderSummaryOrderedAmtGrandTotal ;
 	
 	private String itemDesc;
+	private GlAccountSearchBean glAccountSearchBean;
+	private boolean isLazy;	
 	
 /**
  * Gets the charge line item root.
@@ -3412,6 +3415,22 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setItemDesc(String itemDesc) {
 		this.itemDesc = itemDesc;
+	}
+
+	public GlAccountSearchBean getGlAccountSearchBean() {
+		return glAccountSearchBean;
+	}
+
+	public void setGlAccountSearchBean(GlAccountSearchBean glAccountSearchBean) {
+		this.glAccountSearchBean = glAccountSearchBean;
+	}
+
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
 	}
 
 }
