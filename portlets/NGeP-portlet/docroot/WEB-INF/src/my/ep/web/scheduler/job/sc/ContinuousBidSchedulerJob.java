@@ -49,8 +49,6 @@ public class ContinuousBidSchedulerJob implements Job {
 		log.info("%%%%% ContinuousBidSchedulerJob start...... :) :) :)");
 		List<Long> localBidScheduleIdList = null;
 
-		Map<String, Object> jobMap = context.getJobDetail().getJobDataMap()
-				.getWrappedMap();
 		IBiddingSO biddingSO = null;
 		try {
 			biddingSO = BusinessDelegate.getInstance().getServiceObject(
@@ -187,11 +185,6 @@ public class ContinuousBidSchedulerJob implements Job {
 							.println("localBidScheduleIdList size before update to cache"
 									+ localBidScheduleIdList.size());
 					biddingSO.updateBiddingListToCache(localBidScheduleIdList);
-					/*context.getJobDetail()
-							.getJobDataMap()
-							.put(SchedulerConstants.JOB_BID_ID_LIST,
-									localBidScheduleIdList);*/
-
 				}
 
 				if (failedBidSchedulesCount > 0) {

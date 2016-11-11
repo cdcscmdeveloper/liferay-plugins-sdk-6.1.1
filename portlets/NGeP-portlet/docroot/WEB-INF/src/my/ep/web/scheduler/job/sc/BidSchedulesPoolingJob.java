@@ -81,13 +81,6 @@ public class BidSchedulesPoolingJob implements Job {
 					}else{
 						log.info("%$%$%$ Active bid Schedules for next day not found");
 					}
-					/*schedulerHelper
-							.setJobBidScheduleIdList(jobBidScheduleIdList);
-					EpSchedulerHelper.updateJobDetailData(
-							SchedulerConstants.SC_CONTINOUS_JOB,
-							SchedulerConstants.SC_JOB_GROUP,
-							SchedulerConstants.JOB_BID_ID_LIST,
-							jobBidScheduleIdList);*/
 				}
 
 				log.info("%$%$%$ BidSchedulesPoolingJob job executed successfully @"
