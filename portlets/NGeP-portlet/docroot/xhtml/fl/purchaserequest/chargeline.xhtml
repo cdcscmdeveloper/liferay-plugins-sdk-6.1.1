@@ -274,6 +274,7 @@
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
 						process="@this" 
 						readonly="true" 
+						action="#{purchaseRequestBackingBean.resetGlAccountSearchBean}"
 						oncomplete="accountCode.show();"
 						update="@form">
 						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
@@ -334,7 +335,7 @@
 		</div>
 	</p:dialog>
 	
-	<p:dialog id="accountCode" header="Listing - Account Code List" widgetVar="accountCode"
+	<p:dialog id="accountCode" header="#{lbl['lbl.fl.charge.asset.gosodo']}" widgetVar="accountCode"
 		showEffect="fade" hideEffect="fade" modal="true" width="700" position="top"
 		resizable="false">
 		<p:panel id="glAccountPanel" header="#{lbl['lbl.pm.gl.account.search.location']}" toggleable="true" >
