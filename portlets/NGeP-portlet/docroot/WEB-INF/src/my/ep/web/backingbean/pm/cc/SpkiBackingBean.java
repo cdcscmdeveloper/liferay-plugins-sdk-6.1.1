@@ -89,7 +89,6 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 	private String challengeAns1;
 	private String password;
 	private PmDigiSign pmDigiSign = new PmDigiSign();
-	private FacesScopes facesScope = new FacesScopes();
 	private byte[] signedData;
 
 	public SpkiBackingBean() {}
@@ -307,12 +306,12 @@ public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
 
 	public String getDigiCertUserId() {
 
-		return facesScope.getUserSessionBean().getIdentificationNo();	
+		return new FacesScopes().getUserSessionBean().getIdentificationNo();	
 	}
 
 	public String getSupplierEmail() {
 
-		return facesScope.getUserSessionBean().getEmail();
+		return new FacesScopes().getUserSessionBean().getEmail();
 	}
 
 	public String getSupplierEpNo(Long userId) {
