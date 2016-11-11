@@ -54,48 +54,40 @@ public class BidSchedulesPoolingJob implements Job {
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 			List<Long> cachedBiddingList = biddingSO.getBiddingListFromCache();
-			if(cachedBiddingList != null && !cachedBiddingList.isEmpty()){
-				System.out.println("^^^^^ printing cached bid Id list from job1");
-				for(Long cachedBiddingid : cachedBiddingList){
-					System.out.println("^^^^^ cached bid Id from job1"+cachedBiddingid);
+			if (cachedBiddingList != null && !cachedBiddingList.isEmpty()) {
+				System.out
+						.println("^^^^^ printing cached bid Id list from job1");
+				for (Long cachedBiddingid : cachedBiddingList) {
+					System.out.println("^^^^^ cached bid Id from job1"
+							+ cachedBiddingid);
 				}
 			}
-			
+
 			BiddingResDTO resDTO = biddingSO
 					.retriveSchedulerJobBidSchedulesList(reqDTO);
 			if (resDTO.isSuccessful()) {
 				if (resDTO.getActiveBidSchedules() != null) {
-					
-					
 					log.info("jobBidSchedulesList size is"
 							+ resDTO.getActiveBidSchedules().size());
-					SchedulerHelper schedulerHelper = SchedulerHelper
-							.getInstance();
-					schedulerHelper.setJobBidScheduleList(resDTO
-							.getActiveBidSchedules());
 					List<Long> jobBidScheduleIdList = new ArrayList<Long>();
-					for (ScBidSchedule ScBidSchedule : resDTO
-							.getActiveBidSchedules()) {
-						jobBidScheduleIdList.add(ScBidSchedule
-								.getBidScheduleId());
+					if (resDTO.getActiveBidSchedules() != null) {
+						for (ScBidSchedule ScBidSchedule : resDTO
+								.getActiveBidSchedules()) {
+							jobBidScheduleIdList.add(ScBidSchedule
+									.getBidScheduleId());
+						}
+						// to add active bidSchedule id list to cache
+						biddingSO.updateBiddingListToCache(jobBidScheduleIdList);
+					}else{
+						log.info("%$%$%$ Active bid Schedules for next day not found");
 					}
-					// to add active bidSchedule id list to cache
-					biddingSO.updateBiddingListToCache(jobBidScheduleIdList);
-					
-					schedulerHelper
+					/*schedulerHelper
 							.setJobBidScheduleIdList(jobBidScheduleIdList);
 					EpSchedulerHelper.updateJobDetailData(
 							SchedulerConstants.SC_CONTINOUS_JOB,
 							SchedulerConstants.SC_JOB_GROUP,
 							SchedulerConstants.JOB_BID_ID_LIST,
-							jobBidScheduleIdList);
-					System.out.println("JobDataMap is set with the active bid Id list in Job1");
-				}else{
-					EpSchedulerHelper.updateJobDetailData(
-							SchedulerConstants.SC_CONTINOUS_JOB,
-							SchedulerConstants.SC_JOB_GROUP,
-							SchedulerConstants.JOB_BID_ID_LIST,
-							new ArrayList<Long>());
+							jobBidScheduleIdList);*/
 				}
 
 				log.info("%$%$%$ BidSchedulesPoolingJob job executed successfully @"

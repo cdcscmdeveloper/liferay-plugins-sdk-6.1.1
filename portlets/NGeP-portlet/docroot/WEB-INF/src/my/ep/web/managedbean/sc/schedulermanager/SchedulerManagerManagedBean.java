@@ -25,24 +25,10 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	private String jobGroup;
 	private EpJobVO selectedJobVO;
 	private List<String> jobClassList;
-	private List<ScBidSchedule> currentDayBids;
 	private List<EpJobVO> epSchedulerProblemJobList;
 	private boolean othersJobGroup;
 
-	/**
-	 * @return the currentDayBids
-	 */
-	public List<ScBidSchedule> getCurrentDayBids() {
-		return currentDayBids;
-	}
-
-	/**
-	 * @param currentDayBids
-	 *            the currentDayBids to set
-	 */
-	public void setCurrentDayBids(List<ScBidSchedule> currentDayBids) {
-		this.currentDayBids = currentDayBids;
-	}
+	
 
 	public SchedulerManagerManagedBean() {
 		epSchedulerJobList = new ArrayList<>();
