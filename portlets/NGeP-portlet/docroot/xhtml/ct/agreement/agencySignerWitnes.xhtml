@@ -21,7 +21,7 @@
                          value="#{agreementBackingBean.managedBean.ctAgencySigner}" widgetVar="AgSignerObj" 
                          selection="#{agreementBackingBean.managedBean.selectedAgencySigner}" rowKey="#{agSignerVar}" rowIndexVar="index">
 		                 <ac:paginator for="AgSignerTable"/>
-		                     <p:column  style="width:5%;text-align:center" rendered="#{!agreementBackingBean.managedBean.uploadFinalAgreement}">
+		                     <p:column  style="width:5%;text-align:center">
 				                   <f:facet name="header">
 							             <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.selectAll}">
 								               <p:ajax partialSubmit="true" process="@this"
@@ -70,8 +70,7 @@
 					         <h:outputText value="#{lbl['lbl.ct.contract.signer']}" styleClass="required"/>
 				        </f:facet>
                  
-                             <p:selectOneMenu id="contractSigner"  disabled="#{agreementBackingBean.managedBean.uploadFinalAgreement}"
-                                 style="width:180px;" value="#{agSignerVar.officer.userId}"   label="#{lbl['lbl.ct.contract.signer']}">
+                             <p:selectOneMenu id="contractSigner" style="width:180px;" value="#{agSignerVar.officer.userId}" label="#{lbl['lbl.ct.contract.signer']}">
                                  <f:selectItems value="#{agreementBackingBean.getContractSignerDropdown(agSignerVar)}"/>
                                  <p:ajax event="change" update="@([id$=agOfId],[id$=agOfPosition])"  
                                       onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -94,8 +93,7 @@
            <div class="ppRightBtn"> 
            <p:commandButton id="addAgencySignerBtn" value="#{lbl['lbl.btn.add']}"  
                 oncomplete="dlgAgencySigner.show();"  partialSubmit="true" process="@this"
-       	        update=":form:AgSignerTable,:form:dialogAgencySigner" action="#{agreementBackingBean.resetSignerAgencyDetails()}"
-       	        rendered="#{!agreementBackingBean.managedBean.uploadFinalAgreement}">
+       	        update=":form:AgSignerTable,:form:dialogAgencySigner" action="#{agreementBackingBean.resetSignerAgencyDetails()}">
                 <p:tooltip for="addAgencySignerBtn">
 			 	     <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.signer']}" escape="false" />
 			      </p:tooltip>
@@ -103,8 +101,7 @@
        		
 		      <p:commandButton id="delAgencySignerBtn" process="@this" 
 		            disabled="#{agreementBackingBean.managedBean.buttonHideActive}"
-		          value="#{lbl['lbl.ct.delete']}"   onsuccess="dlgAgSignerDel.show()"
-		          rendered="#{!agreementBackingBean.managedBean.uploadFinalAgreement}">
+		          value="#{lbl['lbl.ct.delete']}"   onsuccess="dlgAgSignerDel.show()">
 		  	       <p:tooltip for="delAgencySignerBtn">
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency.signer']}" escape="false" />
 			       </p:tooltip>
@@ -133,7 +130,7 @@
 	                    selection="#{agreementBackingBean.managedBean.selectedAgencyWitnes}" rowKey="#{signAgWitnessVar}">
 		                <ac:paginator for="AgWitnessTable"/>
 		             
-                         <p:column  style="width:5%;text-align:center" rendered="#{!agreementBackingBean.managedBean.uploadFinalAgreement}">
+                         <p:column  style="width:5%;text-align:center">
 				                  <f:facet name="header">
 							            <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.selectAll}">
 								               <p:ajax partialSubmit="true" process="@this"
@@ -149,19 +146,18 @@
 		            
 		                 <p:column headerText="#{lbl['lbl.ct.name']}" style="width:35%;" styleClass="column-align-center">
 		                      <p:inputText value="#{signAgWitnessVar.officerName}" 
-		                          style="width:90%" maxlength="80" disabled="#{agreementBackingBean.managedBean.uploadFinalAgreement}" />
+		                          style="width:90%" maxlength="80" />
 		                </p:column> 
 		
 		                <p:column headerText="#{lbl['lbl.ct.identification.no']}" style="width:20%;" styleClass="column-align-center">
 		                    <p:inputText value="#{signAgWitnessVar.officerIc}" style="width:90%"
-		                        label="#{lbl['lbl.ct.identification.no']}"  maxlength="20" disabled="#{agreementBackingBean.managedBean.uploadFinalAgreement}">
+		                        label="#{lbl['lbl.ct.identification.no']}"  maxlength="20">
 		                    <p:ajax event="change" listener="#{agreementBackingBean.checkDuplicateAgreementParty()}"/>
 		                    </p:inputText>
 		                </p:column> 
 		         
 		                <p:column headerText="#{lbl['lbl.ct.designation']}" style="width:45%;" styleClass="column-align-center">
-		                     <p:inputText value="#{signAgWitnessVar.officerPosition}" style="width:90%" maxlength="255"
-		                     	disabled="#{agreementBackingBean.managedBean.uploadFinalAgreement}" />
+		                     <p:inputText value="#{signAgWitnessVar.officerPosition}" style="width:90%" maxlength="255" />
 		                </p:column> 
 		           </p:dataTable>
              </h:panelGrid>
@@ -170,16 +166,14 @@
 		       <p:commandButton id="addAgencyWitnessBtn" value="#{lbl['lbl.btn.add']}" 
 		            action="#{agreementBackingBean.addAgencyWitnes()}" 
 		           process="@form"  update=":form:AgWitnessTable"
-		           oncomplete="agWitnessTableWidget.paginator.endLink.click();"
-		           rendered="#{!agreementBackingBean.managedBean.uploadFinalAgreement}">
+		           oncomplete="agWitnessTableWidget.paginator.endLink.click();">
 		           <p:tooltip for="addAgencyWitnessBtn">
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.witness']}" escape="false" />
 			       </p:tooltip>
 		       </p:commandButton>
 		       <p:commandButton id="delAgencyWitnessBtn" process="@this"
 		             disabled="#{agreementBackingBean.managedBean.buttonHideActive}"
-		            value="#{lbl['lbl.ct.delete']}"    onsuccess="dlgAgWitnessDel.show()"
-		            rendered="#{!agreementBackingBean.managedBean.uploadFinalAgreement}">
+		            value="#{lbl['lbl.ct.delete']}"    onsuccess="dlgAgWitnessDel.show()">
 		            <p:tooltip for="delAgencyWitnessBtn">
 			             <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency.witness']}" escape="false" />
 			        </p:tooltip>
