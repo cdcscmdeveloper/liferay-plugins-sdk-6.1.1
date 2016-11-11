@@ -123,6 +123,13 @@ public class BiddingListBackingBean extends
 		return items;
 	}
 
+	/**
+	 * Method to navigate to Bid Management Screen.
+	 * @param scheduledBid
+	 * @throws PortalException
+	 * @throws SystemException
+	 * @throws IOException
+	 */
 	public void navigateToBidManagementAction(ScBidSchedule scheduledBid)
 			throws PortalException, SystemException, IOException {
 		this.getManagedBean().setSelectedBidSchedule(scheduledBid);
@@ -154,6 +161,9 @@ public class BiddingListBackingBean extends
 				+ scheduledBid.getBidScheduleId());
 	}
 
+	/**
+	 * Pre-Renderer method for bidding list screen
+	 */
 	public void viewBiddingPreRender() {
 		IBiddingSO biddingSO = null;
 		try {
