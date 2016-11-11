@@ -16,7 +16,6 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
-import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -53,10 +52,10 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private String buttonAction;
 	private int selectedTabIndex;
 	private int varIndex;
-	private boolean uploadFinalAgreement;
-	private boolean uploadStampedAndSignedPage;
 	private boolean agencySignerDropDown;
+	private boolean finalAgreement = false;
 	private boolean approveFinalAgreement = false;
+	private boolean validBondAttachment = false;
 	private boolean agreementDisclaimer = false;
 	private boolean autoUpdate = true;
 	private boolean buttonHideActive = true;
@@ -79,7 +78,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private CtContractVer contractVer;
 	private CtContractVer agreementContractVer;
 	private CtAgreement ctAgreement;
-	private CtAgreementContent selectedAgreementContent;
 	private PmDigiSign pmDigiSign;	
 	private TreeNode docSectionTN;
 	private Map<TplDocSection, TreeNode> docSectionMap;
@@ -197,34 +195,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
-	}
-	
-	/**
-	 * @return the uploadFinalAgreement
-	 */
-	public boolean isUploadFinalAgreement() {
-		return uploadFinalAgreement;
-	}
-	
-	/**
-	 * @param uploadFinalAgreement the uploadFinalAgreement to set
-	 */
-	public void setUploadFinalAgreement(boolean uploadFinalAgreement) {
-		this.uploadFinalAgreement = uploadFinalAgreement;
-	}
-	
-	/**
-	 * @return the uploadStampedAndSignedPage
-	 */
-	public boolean isUploadStampedAndSignedPage() {
-		return uploadStampedAndSignedPage;
-	}
-	
-	/**
-	 * @param uploadStampedAndSignedPage the uploadStampedAndSignedPage to set
-	 */
-	public void setUploadStampedAndSignedPage(boolean uploadStampedAndSignedPage) {
-		this.uploadStampedAndSignedPage = uploadStampedAndSignedPage;
 	}
 
 	/**
@@ -516,20 +486,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setCtAgreement(CtAgreement ctAgreement) {
 		this.ctAgreement = ctAgreement;
 	}
-	
-	/**
-	 * @return the selectedAgreementContent
-	 */
-	public CtAgreementContent getSelectedAgreementContent() {
-		return selectedAgreementContent;
-	}
-	
-	/**
-	 * @param selectedAgreementContent the selectedAgreementContent to set
-	 */
-	public void setSelectedAgreementContent(CtAgreementContent selectedAgreementContent) {
-		this.selectedAgreementContent = selectedAgreementContent;
-	}
 
 	/**
 	 * @return the pmDigiSign
@@ -656,6 +612,20 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setVarIndex(int varIndex) {
 		this.varIndex = varIndex;
 	}
+		
+	/**
+	 * @return the finalAgreement
+	 */
+	public boolean isFinalAgreement() {
+		return finalAgreement;
+	}
+
+	/**
+	 * @param finalAgreement the finalAgreement to set
+	 */
+	public void setFinalAgreement(boolean finalAgreement) {
+		this.finalAgreement = finalAgreement;
+	}
 
 	/**
 	 * @return the approveFinalAgreement
@@ -669,6 +639,20 @@ public class AgreementManagedBean extends BaseManagedBean {
 	 */
 	public void setApproveFinalAgreement(boolean approveFinalAgreement) {
 		this.approveFinalAgreement = approveFinalAgreement;
+	}	
+
+	/**
+	 * @return the validBondAttachment
+	 */
+	public boolean isValidBondAttachment() {
+		return validBondAttachment;
+	}
+
+	/**
+	 * @param validBondAttachment the validBondAttachment to set
+	 */
+	public void setValidBondAttachment(boolean validBondAttachment) {
+		this.validBondAttachment = validBondAttachment;
 	}
 
 	/**
