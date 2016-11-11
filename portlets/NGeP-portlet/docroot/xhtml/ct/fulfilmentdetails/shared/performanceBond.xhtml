@@ -28,30 +28,24 @@
 	  <h:panelGroup id="fileBondWaiver">
 	 		  <table style="width: 100%">
 					<tr>
-							<td class="TableFieldLeft" width="10%"><h:outputLabel value="#{lbl['lbl.ct.bond.waiver.letter']}"  styleClass="required" /></td>
-							<td class="TableFieldRight">
+							<td class="TableFieldLeft" width="17%"><h:outputLabel value="#{lbl['lbl.ct.bond.waiver.letter']}"  styleClass="required" /></td>
+							<td class="TableFieldRight" width="5%">
 									<p:commandButton oncomplete="uploadWaiverDlg.show();return false;"
-											update="dataGridId, uploadWaiverDlg" icon="ui-icon-upload-arrow"
+											update=":form:dataGridId, form:uploadWaiverDlg" icon="ui-icon-upload-arrow" process="@this" partialSubmit="true"
 											disabled="#{ctBackingBean.managedBean.viewContract or (!ctBackingBean.managedBean.ctContractAmount.bondWaived
 											and ctBackingBean.managedBean.contractVer.ctContract.latestContractVer == null)
 											or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 							</td>
-					</tr>
-					<tr>
-							<td/>
 							<td>
 									<p:dataGrid id="dataGridId" value="#{ctBackingBean.managedBean.contractVer.bondWaiverAttachments}"
 											var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%" emptyMessage="">
 										<table>
 												<tr>
-														<td rowspan="2">
-														     <h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
-														<td width="5"></td>
 														<td>
 																<h:commandLink value="#{attachFile.fileName}" 
 																		styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 																<p:commandLink onsuccess="deleteWaiverAttachDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
-																		rendered="#{!ctBackingBean.managedBean.viewContract}"
+																		rendered="#{!ctBackingBean.managedBean.viewContract}" process="@this" partialSubmit="true"
 																		disabled="#{ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim}">
 			   															<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	 												</p:commandLink>
