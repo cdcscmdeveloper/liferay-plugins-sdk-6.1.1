@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -124,7 +125,9 @@ import com.liferay.portal.util.PortalUtil;
  * @author siew mei
  * 
  */
-public abstract class BaseBackingBean<T extends BaseManagedBean> {
+public abstract class BaseBackingBean<T extends BaseManagedBean> implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger.getLogger(BaseBackingBean.class);
 
 	private Class<T> managedBeanClazz;
