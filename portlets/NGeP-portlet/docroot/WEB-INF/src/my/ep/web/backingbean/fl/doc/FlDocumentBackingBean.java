@@ -318,7 +318,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			PrBB.setFulfilmentRequestField(resDTO);
 			PrBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			PrBB.getManagedBean().setBackToDocument(null);
-
+	
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} 
