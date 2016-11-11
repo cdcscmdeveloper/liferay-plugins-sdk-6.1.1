@@ -6,10 +6,36 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="uploadDocument" header="#{lbl['lbl.ct.menu.signed']}" toggleable="true" toggleSpeed="500">
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
-		<h:panelGrid style="width:100%;" columns="2"  columnClasses="columnWidth150">
-				<p:outputLabel value="#{lbl['lbl.ct.signed.date']}"  styleClass="required"/>
+	<p:panel id="uploadDocument" header="#{agreementBackingBean.retrieveContractDocumentName()}" toggleable="true" toggleSpeed="500">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.agreement.disclaimer']}" escape="false"/><br/><br/>
+	   	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.contract.document']}" escape="false"/><br/>
+	   	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.attachment']}" escape="false"/><br/><br/>		
+	   	<h:panelGrid style="width:100%;" columns="2"  columnClasses="columnWidth250">
+			<p:outputLabel value="#{lbl['lbl.ct.contract.document']}" styleClass="required" />
+			<p:commandButton oncomplete="upContractDocumentDlg.show();return false;"
+				update="contractDocumentList, upContractDocumentDlg" value="#{lbl['lbl.btn.upload']}" />		
+			<f:verbatim/>
+			<p:dataGrid id="contractDocumentList" value="#{agreementBackingBean.managedBean.ctAgreement.contractDocumentAttachments}"
+				var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%"
+				emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<table>
+					<tr>
+						<td rowspan="2"><h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
+						<td width="5"></td>
+						<td>
+							<h:commandLink value="#{attachFile.fileName}" 
+								styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+							<p:commandLink onsuccess="delContractDocumentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}">
+		   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+		 	 				</p:commandLink>
+		 	 			</td>
+					</tr>
+				</table>
+			</p:dataGrid>			
+		</h:panelGrid>
+		
+	   	<h:panelGrid style="width:100%;" columns="2"  columnClasses="columnWidth250" rendered="#{agreementBackingBean.managedBean.finalAgreement}">
+			<p:outputLabel value="#{lbl['lbl.ct.signed.date']}"  styleClass="required"/>
 			<h:panelGrid columns="5" styleClass="top-aligned-columns">
 				<p:calendar	value="#{agreementBackingBean.managedBean.agreementContractVer.signedDate}" id="popupButtonCal4" 
 					showOn="button" size="17"   readonlyInput="true"
@@ -19,7 +45,7 @@
 				<p:spacer width="1"/>
 				<p:message for="popupButtonCal4" display="icon" />
 			</h:panelGrid>
-				<p:outputLabel value="#{lbl['lbl.ct.signed.page']}" styleClass="required" />
+			<p:outputLabel value="#{lbl['lbl.ct.signed.page']}" styleClass="required" />
 			<h:panelGrid columns="4">
 				<h:panelGroup id="upAgrSignedPagePg">
 					<p:commandButton oncomplete="upAgrSignedPageDlg.show();return false;"
@@ -38,7 +64,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.page']}" />
 				</h:panelGroup>
 			</h:panelGrid>
-				<p:outputLabel value="#{lbl['lbl.ct.stamped.page']}" styleClass="required" />
+			<p:outputLabel value="#{lbl['lbl.ct.stamped.page']}" styleClass="required" />
 			<h:panelGrid columns="4">
 				<h:panelGroup id="upStampedPagePg">
 					<p:commandButton oncomplete="upStampedPageDlg.show();return false;"
@@ -59,6 +85,44 @@
 			</h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
+	<p:panel id="agreementDisclaimerPnl" header="#{lbl['lbl.ct.disclaimer']}"
+	    toggleable="true" toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.approveFinalAgreement}" >
+		<h:panelGrid columns="2">
+			<p:selectBooleanCheckbox id="disclaimerCheckBox"
+				value="#{agreementBackingBean.managedBean.agreementDisclaimer}" />
+			<h:outputText value="#{lbl['lbl.ct.agreement.disclaimer']}" styleClass="required" />
+		</h:panelGrid>
+	</p:panel>
+	
+	<p:dialog id="upContractDocumentDlg" widgetVar="upContractDocumentDlg" modal="true"  resizable="false"
+	     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{agreementBackingBean.fileUpload}"
+			mode="advanced" id="uploadContractDocumentId" multiple="true"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
+			update="contractDocumentList" >
+		</p:fileUpload>
+		<f:facet name="footer">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="upContractDocumentDlg.hide();" />
+  		</div>
+   		</f:facet>
+	</p:dialog>
+	<p:confirmDialog id="delContractDocumentDlg" widgetVar="delContractDocumentDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+   		<div class="ppRightBtn">
+  		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+    		update=":form:contractDocumentList" 
+        	action="#{agreementBackingBean.deleteContractDocumentAction(ctBackingBean.managedBean.attachFileIndex)}"
+        	oncomplete="delContractDocumentDlg.hide();"/>
+       	<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delContractDocumentDlg.hide();" type="button" />
+      	</div>
+	</p:confirmDialog>
+    	
 	<p:dialog id="upAgrSignedPageDlg" widgetVar="upAgrSignedPageDlg" modal="true" resizable="false"
        width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
        onShow="singleUploadListener(singedUploadWV);">
