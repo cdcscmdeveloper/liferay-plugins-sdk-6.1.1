@@ -6,7 +6,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.EpJobVO;
 

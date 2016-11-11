@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
@@ -16,10 +15,7 @@ import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
-import my.ep.web.scheduler.constants.common.SchedulerConstants;
-import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sc.helper.SchedulerHelper;
 
 import org.apache.log4j.Logger;
 import org.quartz.Job;

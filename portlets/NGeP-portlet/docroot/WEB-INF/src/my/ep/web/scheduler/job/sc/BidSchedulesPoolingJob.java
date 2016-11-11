@@ -9,11 +9,8 @@ import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
-import my.ep.web.scheduler.constants.common.SchedulerConstants;
-import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sc.helper.SchedulerHelper;
 
 import org.apache.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
