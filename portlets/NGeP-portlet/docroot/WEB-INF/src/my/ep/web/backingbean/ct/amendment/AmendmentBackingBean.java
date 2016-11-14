@@ -1523,21 +1523,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}			
 		
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-		      	for (CtLetterOfAcceptance letterOfAcceptance  : getManagedBean().getCtLetterOfAcceptance()) {
-		      		if (letterOfAcceptance.getLoaAttachments().getFilePath() == null  && getManagedBean().isPrepareLOA() ) {						
-		      				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-		      				throw new EpException(ResourceBundleUtils.getMessage("lbl.ct.loa.content.file.name", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-					}					
-				if (letterOfAcceptance.getLoaAttachments().getFilePath() == null && 
-						getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {						
-						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						throw new EpException(ResourceBundleUtils.getMessage("lbl.ct.loa.content.reciept.file.name", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-					}
-		      	}
+					if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
+					       if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() ==  null){
+					    	   RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+					    	   throw new EpException(MessageConst.ERROR_100022, 
+					    			   new String[]{ResourceBundleUtils.getMessage("lbl.ct.amend.loa.gov.sign.date", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					       } if (getManagedBean().getCtLetterOfAcceptance().get(0).getLoaAttachments() != null && 
+			      				getManagedBean().getCtLetterOfAcceptance().get(0).getLoaAttachments().getFilePath() == null ) {						
+			      				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+			      				throw new EpException(ResourceBundleUtils.getMessage("lbl.ct.loa.content.file.name", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+					       }	
+					} else if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
+									if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getSupplierSignDate() ==  null){
+											RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+											throw new EpException(MessageConst.ERROR_100022, 
+													new String[]{ResourceBundleUtils.getMessage("lbl.ct.amend.loa.supp.sign.date", 
+															ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+									} if (getManagedBean().getCtLetterOfAcceptance().get(1).getLoaAttachments() != null &&
+											getManagedBean().getCtLetterOfAcceptance().get(1).getLoaAttachments().getFilePath() == null) {						
+											RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+											throw new EpException(ResourceBundleUtils.getMessage("lbl.ct.loa.content.reciept.file.name", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+									}
+						}
+				  }
 			}
-		}
 		// Validation for term and condition
 		if (getManagedBean().getTaskName() != null 
 				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
@@ -4100,10 +4112,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
-         
+	    
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
-		
+         
 		/*if(getFileExtension(item.getFileName()).equalsIgnoreCase("doc") || 
 				getFileExtension(item.getFileName()).equalsIgnoreCase("docx")	){
 			convertPDFToDocFile(filePath);
@@ -4114,7 +4126,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		if(getManagedBean().isDisableLoaLetter()){
+		if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
 			 attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_SST);
 			getManagedBean().getCtLetterOfAcceptance().get(0).setLoaAttachments(attachment);
 		}
@@ -4867,7 +4879,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
 			context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
-			if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
+			if(getManagedBean().getAckFA() !=  null && getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
 				context.put("supplierName",  getFacesScopes().getUserSessionBean().getUserName());
 				context.put("supplierID",  getFacesScopes().getUserSessionBean().getIdentificationNo());
 				context.put("supplierAddress",supplierAddress);
@@ -5413,7 +5425,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	public boolean disableBtn(int index){
-		if(index ==0 && getManagedBean().isDisableLoaLetter()){
+		if(index ==0 && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
 			return false;
 		} else if(index ==1 && getManagedBean().getAckFA() != null &&
 				getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
@@ -5421,6 +5433,5 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		return true;
 	}
-	
 	
 }
