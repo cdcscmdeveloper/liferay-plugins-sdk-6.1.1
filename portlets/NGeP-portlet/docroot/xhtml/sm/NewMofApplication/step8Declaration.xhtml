@@ -21,8 +21,8 @@
 	</table>
 
 	<p:panel header="#{lbl['lbl.sm.processFee.Header']}">
-		<ui:include
-			src="/xhtml/sm/shared/paymentProcess/makePaymentForm.xhtml" />
+		<ui:include src="/xhtml/sm/shared/paymentProcess/makePaymentForm.xhtml" /><br />
+		<ui:include src="/xhtml/sm/shared/mofRegistration/supplierDeclarationForm.xhtml" />
 
 		<c:choose>
 			<c:when
@@ -30,53 +30,47 @@
 				
 				<c:choose>
 					<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}">
-						<div class="nav-wrapper">
-							<table>
-								<tr>
-									<td><div align="left" style="width: 99%">
-											<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-												actionListener="#{backingBean.setTabValue('9','8')}"
-												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-												update=":form" />
-										</div></td>
-		
-								</tr>
-							</table>
-						</div>
+						<table>
+							<tr>
+								<td><div align="left" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											actionListener="#{backingBean.setTabValue('9','8')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+											update=":form" />
+									</div></td>
+	
+							</tr>
+						</table>
 					</c:when>
 					<c:otherwise>
-						<div class="nav-wrapper">
-							<table>
-								<tr>
-									<td><div align="left" style="width: 99%">
-											<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-												actionListener="#{backingBean.setTabValue('8','7')}"
-												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-												update=":form" />
-										</div></td>
-		
-								</tr>
-							</table>
-						</div>
+						<table>
+							<tr>
+								<td><div align="left" style="width: 99%">
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+											actionListener="#{backingBean.setTabValue('8','7')}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+											update=":form" />
+									</div></td>
+	
+							</tr>
+						</table>
 					</c:otherwise>
 				</c:choose>
 				
 			</c:when>
 			<c:otherwise>
-				<div class="nav-wrapper">
-					<table>
-						<tr>
-							<td><div align="left" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-										actionListener="#{backingBean.setTabValue('7','6')}"
-										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-										update=":form" />
-								</div></td>
+				<table>
+					<tr>
+						<td><div align="left" style="width: 99%">
+								<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+									actionListener="#{backingBean.setTabValue('7','6')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+									update=":form" />
+							</div></td>
 
 
-						</tr>
-					</table>
-				</div>
+					</tr>
+				</table>
 			</c:otherwise>
 		</c:choose>
 	</p:panel>

@@ -101,7 +101,7 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="smDocDtPanel" partialSubmit="true"
 					update=":#{p:component('docDt')},@this" 
-					id="delDockyardBtnId" disabled="#{backingBean.disableDeleteBtnFacility(backingBean.managedBean.dockYardFacilitiesVOList)}"
+					id="delDockyardBtnId" disabled="#{backingBean.disableDeleteBtn(dockyardCatVar.facilityList)}"
 					oncomplete="dockyardDeletePopUp.show()" />
 			</div>
 			<br />
