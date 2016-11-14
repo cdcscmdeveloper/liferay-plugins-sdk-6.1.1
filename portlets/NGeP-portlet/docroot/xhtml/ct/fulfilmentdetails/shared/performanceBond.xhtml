@@ -32,8 +32,8 @@
 							<td class="TableFieldRight" width="5%">
 									<p:commandButton oncomplete="uploadWaiverDlg.show();return false;"
 											update=":form:dataGridId, form:uploadWaiverDlg" icon="ui-icon-upload-arrow" process="@this" partialSubmit="true"
-											disabled="#{ctBackingBean.managedBean.viewContract or (!ctBackingBean.managedBean.ctContractAmount.bondWaived
-											and ctBackingBean.managedBean.contractVer.ctContract.latestContractVer == null)
+											disabled="#{ctBackingBean.managedBean.viewContract or (!ctBackingBean.managedBean.ctContractAmount.bondWaived and 
+											ctBackingBean.managedBean.contractVer.ctContract.latestContractVer == null)
 											or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 							</td>
 							<td>
@@ -46,7 +46,8 @@
 																		styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 																<p:commandLink onsuccess="deleteWaiverAttachDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
 																		rendered="#{!ctBackingBean.managedBean.viewContract}" process="@this" partialSubmit="true"
-																		disabled="#{ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim}">
+																		disabled="#{(ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)
+																		or (ctBackingBean.managedBean.contractVer.ctContract.latestContractVer != null and attachFile.bondWaivedTrue)}">
 			   															<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	 												</p:commandLink>
 														</td>
@@ -199,7 +200,7 @@
 			
 		</div>
 		<p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="true" resizable="false"
-			width="700px" height="350" styleClass="pop_up_top"
+			width="700px" height="auto" styleClass="pop_up_top"
 			header="#{lbl['lbl.txt.choose.files']}"
 			onShow="singleUploadListener(performanceBondUploadWV);">
 			<p:ajax event="close" />
@@ -240,7 +241,7 @@
 	</p:panel>
 	
 		<p:dialog id="uploadWaiverDlg" widgetVar="uploadWaiverDlg" modal="true"  resizable="false"
-	     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
+	     width="700px" height="auto" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
 	     	onShow="singleUploadListener(uploadWaiverFile);">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
