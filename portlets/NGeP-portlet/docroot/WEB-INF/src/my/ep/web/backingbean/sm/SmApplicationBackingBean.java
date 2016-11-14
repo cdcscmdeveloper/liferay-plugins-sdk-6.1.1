@@ -70,6 +70,7 @@ import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -154,6 +155,7 @@ import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmSideMenuIconUtil;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+import my.ep.web.vo.SmPaymentDetailsVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
 
@@ -1213,6 +1215,52 @@ public class SmApplicationBackingBean extends
 									.getSmAppl()));
 		}
 
+		// set payment details section only for supplier and application type is
+		// NEW or RENEW
+		if (getManagedBean().isSupplierUser()
+				&& (getManagedBean().getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) || getManagedBean()
+						.getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
+			SmPaymentDetailsVO paymentVO = new SmPaymentDetailsVO();
+			paymentVO.setDetails(getParameterDesc(
+					ParameterTypeConst.SUPP_PAYMENT_ITEM,
+					SupplierManagementConst.MOF_PAYMENT));
+			paymentVO.setPrice(SmRuleHelper.getInstance().getRegistrationFee());
+			paymentVO.setTotalAmount(paymentVO.getPrice());
+			getManagedBean().setPaymentDetailsVOList(
+					new ArrayList<SmPaymentDetailsVO>());
+			getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+
+			paymentVO = new SmPaymentDetailsVO();
+			paymentVO.setDetails(getParameterDesc(
+					ParameterTypeConst.SUPP_PAYMENT_ITEM,
+					SupplierManagementConst.PROCESSING_PAYMENT));
+			paymentVO.setPrice(SmRuleHelper.getInstance().getProcessingFee());
+			paymentVO.setTotalAmount(paymentVO.getPrice());
+			getManagedBean().getPaymentDetailsVOList().add(paymentVO);
+
+			getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
+			getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
+			getManagedBean().setGstPercentageLabels(
+					SmCommonUtil.getMessage("lbl.sm.gst.percent",
+							new String[] { getManagedBean().getGstAmount()
+									.toString() }));
+
+			for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
+					.getPaymentDetailsVOList()) {
+				getManagedBean().setTotalPaymentAmount(
+						getManagedBean().getTotalPaymentAmount().add(
+								paymentDetailsVO.getPrice()));
+			}
+
+			getManagedBean().setApplDeclarationAlertMsg(
+					SmCommonUtil.getMessage(
+							"lbl.sm.payment.declaration.appl.alert.msg",
+							new String[] { getManagedBean().getApplStatusInfo()
+									.getDaysLeft() }));
+		}
+
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
@@ -1504,13 +1552,6 @@ public class SmApplicationBackingBean extends
 			setSupplierChangeValues(currentPageType);
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
 					false);
-
-			// init machine details table list before entered equipment section
-			// page
-			if (outputPageType
-					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
-				initSmMachineDetails();
-			}
 			log.info("******* Current page AFTER in managed bean ********"
 					+ getManagedBean().getCurrentPageType());
 		}
@@ -4278,18 +4319,11 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void deleteSelectedFactories() {
-		if (getManagedBean().getSelectedFactoryFacilities().size() > 0) {
-			for (SmFacility sm : getManagedBean()
-					.getSelectedFactoryFacilities()) {
-				getManagedBean().getSmAppl().getSmFacilities().remove(sm);
-				getManagedBean().getApplFactoryFacilities().remove(sm);
-			}
-			getManagedBean().getSelectedFactoryFacilities().clear();
-		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Factory" });
-		}
-
+		deleteSelectedFacilities(getManagedBean().getFactoryFacilitiesVOList());
+		getManagedBean().setFactoryFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
 	}
 
 	// factory end
@@ -4304,6 +4338,8 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
+		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
+				.getApplDockyardFacilities());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"smFacilityDockDtWidVar.paginator.endLink.click()");
@@ -4397,19 +4433,11 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void deleteSelectedDocks() {
-
-		if (getManagedBean().getSelectedDockyardFacilities().size() > 0) {
-			for (SmFacility sm : getManagedBean()
-					.getSelectedDockyardFacilities()) {
-				getManagedBean().getSmAppl().getSmFacilities().remove(sm);
-				getManagedBean().getApplDockyardFacilities().remove(sm);
-			}
-			getManagedBean().getSelectedDockyardFacilities().clear();
-		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Dockyard" });
-		}
-
+		deleteSelectedFacilities(getManagedBean().getDockYardFacilitiesVOList());
+		getManagedBean().setDockYardFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD));
 	}
 
 	// Dockyard end
@@ -4517,18 +4545,11 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void deleteSelectedWorkShops() {
-		if (getManagedBean().getSelectedWorkShopFacilities().size() > 0) {
-			for (SmFacility sm : getManagedBean()
-					.getSelectedWorkShopFacilities()) {
-				getManagedBean().getSmAppl().getSmFacilities().remove(sm);
-				getManagedBean().getApplWorkShopFacilities().remove(sm);
-			}
-			getManagedBean().getSelectedWorkShopFacilities().clear();
-		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Workshop" });
-		}
-
+		deleteSelectedFacilities(getManagedBean().getWorkshopFacilitiesVOList());
+		getManagedBean().setWorkshopFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
 	}
 
 	// Workshop end
@@ -4634,18 +4655,11 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void deleteSelectedStores() {
-
-		if (getManagedBean().getSelectedStoreFacilities().size() > 0) {
-			for (SmFacility sm : getManagedBean().getSelectedStoreFacilities()) {
-				getManagedBean().getSmAppl().getSmFacilities().remove(sm);
-				getManagedBean().getApplStoreFacilities().remove(sm);
-			}
-			getManagedBean().getSelectedStoreFacilities().clear();
-		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Store" });
-		}
-
+		deleteSelectedFacilities(getManagedBean().getStoreFacilitiesVOList());
+		getManagedBean().setStoreFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
 	}
 
 	// Store end
@@ -4803,9 +4817,6 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedMachine().setMachine(new PmMachine());
 		}
 
-		// init back smMachine list
-		initSmMachineDetails();
-
 		// set machine category vo list
 		getManagedBean().setMachineCategoryVOList(
 				SmApplicationUtil.getMachineCategoryVO(getManagedBean()
@@ -4815,8 +4826,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the machine dtl information
-	 * dialog
+	 * Cancel add or update functionality and close the machine detail
+	 * information dialog
 	 */
 	public void cancelMachineSaveorUpdate() {
 		assignValReqdToFalse();
@@ -4832,20 +4843,10 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getPopupAction().equals("U")) {
 			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
 					.getSmMachineDtls())) {
-				int i = 0;
-				for (SmMachineDtl mac : getManagedBean().getSmAppl()
-						.getSmMachineDtls()) {
-					if (mac.equals(getManagedBean().getSelectedMachine())) {
-						break;
-					}
-					i++;
-				}
-				getManagedBean()
-						.getSmAppl()
-						.getSmMachineDtls()
-						.set(i,
-								(SmMachineDtl) getManagedBean()
-										.getCloneObject());
+
+				EntityHelper.replaceObjectInListByTempId(
+						(SmMachineDtl) getManagedBean().getCloneObject(),
+						getManagedBean().getSmAppl().getSmMachineDtls());
 			}
 		}
 		RequestContext.getCurrentInstance().reset(":form:tt:equipmentDialog");
@@ -4866,6 +4867,7 @@ public class SmApplicationBackingBean extends
 			macBean.getMachine().setMachineId(-1L);
 		}
 		getManagedBean().setPopupAction("U");
+		macBean.setTempId(System.currentTimeMillis());
 		SmApplicationUtil.assignMachineCategoryIds(getManagedBean(), macBean);
 		getManagedBean().setRentPrevVal(macBean.getValue());
 		getManagedBean().setCategoryTypeItems(
@@ -4896,7 +4898,6 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getSelectedCategoryTypeItems(getManagedBean()
 						.getSmAppl()));
 		getManagedBean().setCategoryCodeItems(new ArrayList<SelectItem>());
-		getManagedBean().setMachineItems(new ArrayList<SelectItem>());
 		getManagedBean().setSelectedMachine(new SmMachineDtl());
 		getManagedBean().getSelectedMachine().setMachine(new PmMachine());
 		getManagedBean().getSelectedMachine()
@@ -4910,6 +4911,16 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedMachine().setBrandNew(true);
 		getManagedBean().getSelectedMachine().setCategoryType(
 				SmApplicationUtil.retrievePmParameterById(categoryTypeId));
+		getManagedBean()
+				.setCategoryCodeItems(
+						SmApplicationUtil.getCategoryCodesItemsByCatTypeId(
+								getManagedBean().getSelectedMachine()
+										.getCategoryType().getParameterId(),
+								getManagedBean().getSmAppl()));
+		getManagedBean().setMachineItems(
+				SmApplicationUtil
+						.getMachineItemsByMachineDetails(getManagedBean()
+								.getSelectedMachine()));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("equipmentDialog.show()");
 	}
@@ -7306,8 +7317,9 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getSmSupplier(), getManagedBean()
 								.getSmAppl()));
 			} else {
-				PmState state = getManagedBean().getSmAppl().getSmCompanyBasic()
-						.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
+				PmState state = getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+						.getSmAddress().getPmState();
 				if (state != null && state.getStateId() != null) {
 					PmZone zone = SmApplicationUtil.retrieveZoneByStateId(state
 							.getStateId());
@@ -8399,368 +8411,345 @@ public class SmApplicationBackingBean extends
 		IReviewApplicationSO reqSO = null;
 		String retMsg = null;
 
-		try {
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			Long pmStatId = getManagedBean().getApprovedStatusId();
-			retriveCurrentAppl();
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		Long pmStatId = getManagedBean().getApprovedStatusId();
+		retriveCurrentAppl();
 
-			// validate personnels email domain
-			SmApplicationUtil
-					.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
-							.getSmAppl().getSmPersonnels());
-			log.info(" **** After retrieve ***"
-					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
-			log.info("----------------------Submit PO / Approver Decision For BPM-------------------------"
-					+ res);
-			log.info(" **** The Value from screen of approval ***" + pmStatId);
-			ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
-			reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
-					.getServiceObject("sm", IReviewApplicationSO.class);
-			reqDTO.setPoLoginId(pmUser.getLoginId());
-			reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
-			reqDTO.setApplNo(this.getManagedBean().getSmAppl().getApplNo());
-			reqDTO.setOutcome(res);
-			reqDTO.setSuppId(this.getManagedBean().getSmAppl().getSmSupplier()
-					.getSupplierId());
-			reqDTO.setBpmTaskName(getManagedBean().getBpmTaskName());
-			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			PmState state = getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
-			if (state != null && state.getStateId() != null) {
-				PmZone zone = SmApplicationUtil.retrieveZoneByStateId(state
-						.getStateId());
-				log.info("*** ZONE SENT TO BPM ***** " + zone.getZoneName());
-				if (zone != null && zone.getZoneName() != null) {
-					reqDTO.setLocation(zone.getZoneName().toUpperCase());
-				}
+		// validate personnels email domain
+		SmApplicationUtil
+				.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
+						.getSmAppl().getSmPersonnels());
+		log.info(" **** After retrieve ***"
+				+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
+		log.info("----------------------Submit PO / Approver Decision For BPM-------------------------"
+				+ res);
+		log.info(" **** The Value from screen of approval ***" + pmStatId);
+		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
+		reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", IReviewApplicationSO.class);
+		reqDTO.setPoLoginId(pmUser.getLoginId());
+		reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
+		reqDTO.setApplNo(this.getManagedBean().getSmAppl().getApplNo());
+		reqDTO.setOutcome(res);
+		reqDTO.setSuppId(this.getManagedBean().getSmAppl().getSmSupplier()
+				.getSupplierId());
+		reqDTO.setBpmTaskName(getManagedBean().getBpmTaskName());
+		reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		PmState state = getManagedBean().getSmAppl().getSmCompanyBasic()
+				.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
+		if (state != null && state.getStateId() != null) {
+			PmZone zone = SmApplicationUtil.retrieveZoneByStateId(state
+					.getStateId());
+			log.info("*** ZONE SENT TO BPM ***** " + zone.getZoneName());
+			if (zone != null && zone.getZoneName() != null) {
+				reqDTO.setLocation(zone.getZoneName().toUpperCase());
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_722568);
+		}
+		reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
+				.getSupplierType().toUpperCase());
+		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
+		if (getManagedBean().getSupplierToPOList() != null) {
+			log.info("**** LIST of supp from BPM earlier task *******"
+					+ getManagedBean().getSupplierToPOList().size());
+			reqDTO.setUserList(getManagedBean().getSupplierToPOList());
+		} else {
+			log.info("***** NO SUPPLIER LIST FROM BPM TO DECISION ***** ");
+			reqDTO.setUserList(new ArrayList<String>());
+		}
+
+		if (this.getManagedBean()
+				.getSmAppl()
+				.getSupportingDocMode()
+				.equalsIgnoreCase(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+			reqDTO.setOnlineDoc(true);
+		} else {
+			reqDTO.setOnlineDoc(false);
+		}
+
+		boolean validSiteVisit = true;
+		String actionDesc = "";
+		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_VISIT)
+				|| res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_VISIT_AFTER_APPROVE)) {
+			SmApplicationUtil.setSiteVisitData(getManagedBean(),
+					getManagedBean().getBumiSiteVisitVOList());
+			SmApplicationUtil.setSiteVisitData(getManagedBean(),
+					getManagedBean().getDockYardSiteVisitVOList());
+			SmApplicationUtil.setSiteVisitData(getManagedBean(),
+					getManagedBean().getStoreSiteVisitVOList());
+			SmApplicationUtil.setSiteVisitData(getManagedBean(),
+					getManagedBean().getFactorySiteVisitVOList());
+			SmApplicationUtil.setSiteVisitData(getManagedBean(),
+					getManagedBean().getWorkshopSiteVisitVOList());
+			if (!StringUtils.isBlank(getManagedBean().getPoSiteVisitType())
+					&& getManagedBean().getPoSiteVisitType().equals("A")) {
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED
+						+ "");
 			} else {
-				throw new EpException(MessageConst.ERROR_722568);
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
 			}
-			reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
-					.getSupplierType().toUpperCase());
-			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-			reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
-			if (getManagedBean().getSupplierToPOList() != null) {
-				log.info("**** LIST of supp from BPM earlier task *******"
-						+ getManagedBean().getSupplierToPOList().size());
-				reqDTO.setUserList(getManagedBean().getSupplierToPOList());
-			} else {
-				log.info("***** NO SUPPLIER LIST FROM BPM TO DECISION ***** ");
-				reqDTO.setUserList(new ArrayList<String>());
-			}
+			reqDTO.setSvTask(getManagedBean().getSvTask());
+			reqDTO.setSvTaskList(getManagedBean().getSvTaskList());
+			actionDesc = SupplierManagementConst.PO_RECOM_SITE_VISIT;
 
-			if (this.getManagedBean()
-					.getSmAppl()
-					.getSupportingDocMode()
-					.equalsIgnoreCase(
-							SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
-				reqDTO.setOnlineDoc(true);
-			} else {
-				reqDTO.setOnlineDoc(false);
-			}
-
-			boolean validSiteVisit = true;
-			String actionDesc = "";
-			if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_VISIT)
-					|| res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_VISIT_AFTER_APPROVE)) {
-				SmApplicationUtil.setSiteVisitData(getManagedBean(),
-						getManagedBean().getBumiSiteVisitVOList());
-				SmApplicationUtil.setSiteVisitData(getManagedBean(),
-						getManagedBean().getDockYardSiteVisitVOList());
-				SmApplicationUtil.setSiteVisitData(getManagedBean(),
-						getManagedBean().getStoreSiteVisitVOList());
-				SmApplicationUtil.setSiteVisitData(getManagedBean(),
-						getManagedBean().getFactorySiteVisitVOList());
-				SmApplicationUtil.setSiteVisitData(getManagedBean(),
-						getManagedBean().getWorkshopSiteVisitVOList());
-				if (!StringUtils.isBlank(getManagedBean().getPoSiteVisitType())
-						&& getManagedBean().getPoSiteVisitType().equals("A")) {
-					setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED
-							+ "");
-				} else {
-					setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
-				}
-				reqDTO.setSvTask(getManagedBean().getSvTask());
-				reqDTO.setSvTaskList(getManagedBean().getSvTaskList());
-				actionDesc = SupplierManagementConst.PO_RECOM_SITE_VISIT;
-
-			}
-			if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)) {
-				for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
-						.getSmApplSupportDocs()) {
-					for (SmApplSupportDoc misDoc : getManagedBean()
-							.getMissinDocs()) {
-						if (misDoc.getApplSupportDocId().equals(
-								doc.getApplSupportDocId())) {
-							getManagedBean()
-									.getSmAppl()
-									.getSmApplSupportDocs()
-									.set(getManagedBean().getSmAppl()
-											.getSmApplSupportDocs()
-											.indexOf(doc), misDoc);
-						}
+		}
+		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)) {
+			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+					.getSmApplSupportDocs()) {
+				for (SmApplSupportDoc misDoc : getManagedBean().getMissinDocs()) {
+					if (misDoc.getApplSupportDocId().equals(
+							doc.getApplSupportDocId())) {
+						getManagedBean()
+								.getSmAppl()
+								.getSmApplSupportDocs()
+								.set(getManagedBean().getSmAppl()
+										.getSmApplSupportDocs().indexOf(doc),
+										misDoc);
 					}
 				}
-				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER);
-				actionDesc = SupplierManagementConst.PO_SEND_INQUIRY_SUPP;
 			}
-			if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT)) {
+			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER);
+			actionDesc = SupplierManagementConst.PO_SEND_INQUIRY_SUPP;
+		}
+		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT)) {
 
-				if (getManagedBean().isPoUser()) {
-					setApplPmStatus(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER);
-					actionDesc = SupplierManagementConst.PO_REJECT_APPL;
-				} else if (getManagedBean().isApproverUser()) {
-					setApplPmStatus(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER);
-					actionDesc = SupplierManagementConst.APPROVER_REJECT_APPL;
-				}
-				if (!getManagedBean()
-						.getSmAppl()
-						.getApplType()
-						.equalsIgnoreCase(
-								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-					setSmApplRejectionReasons();
-					reqDTO.setRejectionReasons(getManagedBean().getReasonDesc());
-				}
-				if (StringUtils.isNotBlank(getManagedBean()
-						.getApplnRejectionRemarks())) {
-					SmApplicationUtil.manageAndSaveNewSmRemarks(
-							getManagedBean().getSmAppl().getApplId(),
-							ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
-							getManagedBean().getApplnRejectionRemarks());
-				}
-				SmApplicationNotificationUtil
-						.setRejectionNotificationParameters(getManagedBean(),
-								reqDTO);
+			if (getManagedBean().isPoUser()) {
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER);
+				actionDesc = SupplierManagementConst.PO_REJECT_APPL;
+			} else if (getManagedBean().isApproverUser()) {
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER);
+				actionDesc = SupplierManagementConst.APPROVER_REJECT_APPL;
+			}
+			if (!getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				setSmApplRejectionReasons();
+				reqDTO.setRejectionReasons(getManagedBean().getReasonDesc());
+			}
+			if (StringUtils.isNotBlank(getManagedBean()
+					.getApplnRejectionRemarks())) {
+				SmApplicationUtil.manageAndSaveNewSmRemarks(getManagedBean()
+						.getSmAppl().getApplId(),
+						ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+						getManagedBean().getApplnRejectionRemarks());
+			}
+			SmApplicationNotificationUtil.setRejectionNotificationParameters(
+					getManagedBean(), reqDTO);
 
-			} else if (res
-					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
-				if (getManagedBean().isPoUser()) {
-					actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
-				} else if (getManagedBean().isApproverUser()) {
-					actionDesc = SupplierManagementConst.APPROVER_APPROVE_APPL;
-				}
-				if (getManagedBean()
-						.getSmAppl()
-						.getApplType()
-						.equalsIgnoreCase(
-								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-					setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
-				} else {
+		} else if (res
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+			if (getManagedBean().isPoUser()) {
+				actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
+			} else if (getManagedBean().isApproverUser()) {
+				actionDesc = SupplierManagementConst.APPROVER_APPROVE_APPL;
+			}
+			if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
+			} else {
 
-					// set SME Status
-					SmApplicationUtil
-							.setSmeStatus(getManagedBean().getSmAppl());
+				// set SME Status
+				SmApplicationUtil.setSmeStatus(getManagedBean().getSmAppl());
 
-					if (pmStatId != null) {
-						// Load PmRegStatus
-						PmStatus regStatus = SmCommonUtil.getInstance()
-								.retrievePmStatusById(pmStatId);
-						if (regStatus != null
-								&& regStatus.getPmRegStatus() != null) {
-							getManagedBean().getSmAppl().setPmStatus(regStatus);
-							getManagedBean().getSmAppl().setPmRegStatus(
-									regStatus.getPmRegStatus());
-							getManagedBean().getSmSupplier().setBumi(
-									regStatus.getPmRegStatus().isBumiAppl());
-							getManagedBean().getSmAppl().setBumi(
-									getManagedBean().getSmSupplier().isBumi());
-						}
-
+				if (pmStatId != null) {
+					// Load PmRegStatus
+					PmStatus regStatus = SmCommonUtil.getInstance()
+							.retrievePmStatusById(pmStatId);
+					if (regStatus != null && regStatus.getPmRegStatus() != null) {
+						getManagedBean().getSmAppl().setPmStatus(regStatus);
+						getManagedBean().getSmAppl().setPmRegStatus(
+								regStatus.getPmRegStatus());
+						getManagedBean().getSmSupplier().setBumi(
+								regStatus.getPmRegStatus().isBumiAppl());
+						getManagedBean().getSmAppl().setBumi(
+								getManagedBean().getSmSupplier().isBumi());
 					}
-					reqDTO.setPaymentReqd(setPaymentMode());
+
 				}
-
-				// approve categories
-				SmApplicationUtil.approveApplCategories(getManagedBean()
-						.isApproverUser(), getManagedBean().isPoUser(),
-						getManagedBean().getSmAppl());
-
-				SmApplicationNotificationUtil
-						.setApprovalNotificationParameters(getManagedBean()
-								.getSmAppl(), getManagedBean().getBasicInfo(),
-								getManagedBean().isPoUser(), getManagedBean()
-										.getSmSupplier(), getManagedBean()
-										.getSupplierRemarks(), getManagedBean()
-										.getApplnApprovalRemarks(), reqDTO);
-
-				if (StringUtils.isNotBlank(getManagedBean()
-						.getApplnApprovalRemarks())) {
-					SmApplicationUtil.manageAndSaveNewSmRemarks(
-							getManagedBean().getSmAppl().getApplId(),
-							ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE,
-							getManagedBean().getApplnApprovalRemarks());
-				}
-				if (getManagedBean().isOverLappedCategoryExists()
-						&& StringUtils.isNotBlank(getManagedBean()
-								.getApplnOverLapRemarks())) {
-					SmApplicationUtil.manageAndSaveNewSmRemarks(
-							getManagedBean().getSmAppl().getApplId(),
-							ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY,
-							getManagedBean().getOverLappedCategoryRemarks());
-					SmApplicationUtil
-							.manageAndSaveNewSmRemarks(
-									getManagedBean().getSmAppl().getApplId(),
-									ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
-									getManagedBean().getApplnOverLapRemarks());
-				}
-
+				reqDTO.setPaymentReqd(setPaymentMode());
 			}
 
-			log.info("Before final decision ---"
-					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
-			validSiteVisit = testSmAppl(getManagedBean().getSmAppl()
-					.getApplType(),
-					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "", true);
-			if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+			// approve categories
+			SmApplicationUtil.approveApplCategories(getManagedBean()
+					.isApproverUser(), getManagedBean().isPoUser(),
+					getManagedBean().getSmAppl());
+
+			SmApplicationNotificationUtil.setApprovalNotificationParameters(
+					getManagedBean().getSmAppl(), getManagedBean()
+							.getBasicInfo(), getManagedBean().isPoUser(),
+					getManagedBean().getSmSupplier(), getManagedBean()
+							.getSupplierRemarks(), getManagedBean()
+							.getApplnApprovalRemarks(), reqDTO);
+
+			if (StringUtils.isNotBlank(getManagedBean()
+					.getApplnApprovalRemarks())) {
+				SmApplicationUtil.manageAndSaveNewSmRemarks(getManagedBean()
+						.getSmAppl().getApplId(),
+						ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE,
+						getManagedBean().getApplnApprovalRemarks());
 			}
-			if (validSiteVisit) {
-				String successMsg = "";
-				SmMofAccount mofAcc = getManagedBean().getSmSupplier() != null
-						&& getManagedBean().getSmAppl() != null ? SmCommonUtil
-						.getMofAccountBySuppIdAndSuppType(getManagedBean()
-								.getSmSupplier().getSupplierId(),
-								getManagedBean().getSmAppl().getSupplierType())
-						: null;
-				String mofNo = mofAcc != null
-						&& StringUtils.isNotBlank(mofAcc.getMofNo()) ? mofAcc
-						.getMofNo() : "";
-				String applNo = getManagedBean().getSmAppl().getApplNo();
-				String applTypeDesc = getParameterDesc(
-						ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-						SmApplicationUtil.setParameterConst(getManagedBean()
-								.getSmAppl().getApplType()));
-				if (getManagedBean().isPoUser()
-						|| getManagedBean().isApproverUser()) {
-					log.info(" **** Final Decision from PO ****");
-					if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
-						if (StringUtils.isNotBlank(mofNo)) {
-							successMsg = SmCommonUtil.getOutputMsgBundle(
-									MessageConst.INFO_700027, new String[] {
-											applNo, mofNo });
-						} else {
-							successMsg = SmCommonUtil.getOutputMsgBundle(
-									MessageConst.INFO_700030,
-									new String[] { applNo });
-						}
-					} else if (res
-							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT)) {
-						if (getManagedBean().getBpmTaskName() != null
-								&& getManagedBean()
-										.getBpmTaskName()
-										.equalsIgnoreCase(
-												SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
-							reqDTO.setLastApprovedAppl(SmApplicationUtil
-									.getLastApprovedApplictionForSupplier(getManagedBean()));
-						}
-						if (StringUtils.isNotBlank(mofNo)) {
-							successMsg = SmCommonUtil.getOutputMsgBundle(
-									MessageConst.INFO_700028, new String[] {
-											applNo, mofNo });
-						} else {
-							successMsg = SmCommonUtil.getOutputMsgBundle(
-									MessageConst.INFO_700029,
-									new String[] { applNo });
-						}
-					} else if (res
-							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.ESCALATE)) {
-						String statusDesc = "";
-						if (getManagedBean().getPoSecReview() != null
-								&& getManagedBean().getPoSecReview()
-										.getRecommendation().equals("APPROVE")) {
-							statusDesc = SmCommonUtil.getMessage(
-									"lbl.sm.approval.lowercaps", null);
-						} else {
-							statusDesc = SmCommonUtil.getMessage(
-									"lbl.sm.rejected.lowercaps", null);
-						}
-						actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
+			if (getManagedBean().isOverLappedCategoryExists()
+					&& StringUtils.isNotBlank(getManagedBean()
+							.getApplnOverLapRemarks())) {
+				SmApplicationUtil.manageAndSaveNewSmRemarks(getManagedBean()
+						.getSmAppl().getApplId(),
+						ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY,
+						getManagedBean().getOverLappedCategoryRemarks());
+				SmApplicationUtil
+						.manageAndSaveNewSmRemarks(
+								getManagedBean().getSmAppl().getApplId(),
+								ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
+								getManagedBean().getApplnOverLapRemarks());
+			}
+
+		}
+
+		log.info("Before final decision ---"
+				+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
+		validSiteVisit = testSmAppl(getManagedBean().getSmAppl().getApplType(),
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "", true);
+		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+		}
+		if (validSiteVisit) {
+			String successMsg = "";
+			SmMofAccount mofAcc = getManagedBean().getSmSupplier() != null
+					&& getManagedBean().getSmAppl() != null ? SmCommonUtil
+					.getMofAccountBySuppIdAndSuppType(getManagedBean()
+							.getSmSupplier().getSupplierId(), getManagedBean()
+							.getSmAppl().getSupplierType()) : null;
+			String mofNo = mofAcc != null
+					&& StringUtils.isNotBlank(mofAcc.getMofNo()) ? mofAcc
+					.getMofNo() : "";
+			String applNo = getManagedBean().getSmAppl().getApplNo();
+			String applTypeDesc = getParameterDesc(
+					ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+					SmApplicationUtil.setParameterConst(getManagedBean()
+							.getSmAppl().getApplType()));
+			if (getManagedBean().isPoUser()
+					|| getManagedBean().isApproverUser()) {
+				log.info(" **** Final Decision from PO ****");
+				if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+					if (StringUtils.isNotBlank(mofNo)) {
 						successMsg = SmCommonUtil.getOutputMsgBundle(
-								MessageConst.INFO_700014, new String[] {
-										applNo, statusDesc,
-										getApproverListForSuccessMsg() });
-					} else if (res
-							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)) {
+								MessageConst.INFO_700027, new String[] {
+										applNo, mofNo });
+					} else {
 						successMsg = SmCommonUtil.getOutputMsgBundle(
-								MessageConst.INFO_700016, new String[] {
-										applTypeDesc, applNo });
-					} else if (res
-							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_VISIT)) {
-						successMsg = SmCommonUtil.getOutputMsgBundle(
-								MessageConst.INFO_700015,
-								new String[] { applNo });
-					} else if (res
-							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_VISIT_AFTER_APPROVE)) {
-						successMsg = SmCommonUtil.getOutputMsgBundle(
-								MessageConst.INFO_700017,
+								MessageConst.INFO_700030,
 								new String[] { applNo });
 					}
-					reqDTO.setPoOrApproverDecision(res);
-					reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
-					reqDTO.setPoRole(getManagedBean().isPoUser());
-					reqDTO.setApproverRole(getManagedBean().isApproverUser());
-
-					FacesScopes fs = new FacesScopes();
-					reqDTO.setServerName(fs.getRequest().getServerName());
-					reqDTO.setServerPort(fs.getRequest().getServerPort());
-					reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-
-					reqDTO.setSvTaskIdsNeedToBeRemoved(getManagedBean()
-							.getSvTaskIdsNeedToDelete());
-
-					SmAddress hqAddr = getHqAddress();
-					if (hqAddr != null) {
-						ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
-						zoneReqDTO.setStateId(hqAddr.getPmState().getStateId());
-						PmZone zone = SmServiceLookup.getZoneSO()
-								.retrieveZoneByStateId(zoneReqDTO).getPmZone();
-						String approverLoginIds = SmCommonUtil.retrieveLoginIdsByZoneAndRole(zone.getZoneCode(), "UPS_APPROVER", getManagedBean().getSmAppl().getSupplierType(), getManagedBean().getSmAppl().getApplType(), getManagedBean().getSmAppl().getApplCategoryType());
-						reqDTO.setApproverLoginIds(approverLoginIds);
+				} else if (res
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT)) {
+					if (getManagedBean().getBpmTaskName() != null
+							&& getManagedBean()
+									.getBpmTaskName()
+									.equalsIgnoreCase(
+											SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+						reqDTO.setLastApprovedAppl(SmApplicationUtil
+								.getLastApprovedApplictionForSupplier(getManagedBean()));
 					}
-					
-					ReviewApplicationResDTO revApplicationResDTO = reqSO
-							.submitPOorApproverReviewToBPM(reqDTO);
-
-					/*
-					 * if (revApplicationResDTO.isSuccessful()) { // to auto
-					 * generate mof cert if
-					 * (res.equalsIgnoreCase(my.ep.constant.
-					 * sm.SupplierManagementConst.APPROVE)) { try {
-					 * SmVirtualCertHelper.getInstance()
-					 * .autoGenerateVirtualCert( getManagedBean().getSmAppl()
-					 * .getApplId()); } catch (Exception ex) { log.info(
-					 * "<<<<MOF Approval - error when generate Virtual Cert>>>>"
-					 * + ex.getMessage()); } } }
-					 */
-
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									successMsg));
-					renewSesionObject();
-					retMsg = SmApplicationUtil.getApplicationErrorPage();
-
-				} else {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											"Sample error message",
-											"Un Authorized user to perform this action"));
-					retMsg = null;
+					if (StringUtils.isNotBlank(mofNo)) {
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700028, new String[] {
+										applNo, mofNo });
+					} else {
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700029,
+								new String[] { applNo });
+					}
+				} else if (res
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.ESCALATE)) {
+					String statusDesc = "";
+					if (getManagedBean().getPoSecReview() != null
+							&& getManagedBean().getPoSecReview()
+									.getRecommendation().equals("APPROVE")) {
+						statusDesc = SmCommonUtil.getMessage(
+								"lbl.sm.approval.lowercaps", null);
+					} else {
+						statusDesc = SmCommonUtil.getMessage(
+								"lbl.sm.rejected.lowercaps", null);
+					}
+					actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
+					successMsg = SmCommonUtil.getOutputMsgBundle(
+							MessageConst.INFO_700014,
+							new String[] { applNo, statusDesc,
+									getApproverListForSuccessMsg() });
+				} else if (res
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)) {
+					successMsg = SmCommonUtil.getOutputMsgBundle(
+							MessageConst.INFO_700016, new String[] {
+									applTypeDesc, applNo });
+				} else if (res
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_VISIT)) {
+					successMsg = SmCommonUtil.getOutputMsgBundle(
+							MessageConst.INFO_700015, new String[] { applNo });
+				} else if (res
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_VISIT_AFTER_APPROVE)) {
+					successMsg = SmCommonUtil.getOutputMsgBundle(
+							MessageConst.INFO_700017, new String[] { applNo });
 				}
+				reqDTO.setPoOrApproverDecision(res);
+				reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
+				reqDTO.setPoRole(getManagedBean().isPoUser());
+				reqDTO.setApproverRole(getManagedBean().isApproverUser());
+
+				FacesScopes fs = new FacesScopes();
+				reqDTO.setServerName(fs.getRequest().getServerName());
+				reqDTO.setServerPort(fs.getRequest().getServerPort());
+				reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+
+				reqDTO.setSvTaskIdsNeedToBeRemoved(getManagedBean()
+						.getSvTaskIdsNeedToDelete());
+
+				SmAddress hqAddr = getHqAddress();
+				if (hqAddr != null) {
+					ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+					zoneReqDTO.setStateId(hqAddr.getPmState().getStateId());
+					PmZone zone = SmServiceLookup.getZoneSO()
+							.retrieveZoneByStateId(zoneReqDTO).getPmZone();
+					String approverLoginIds = SmCommonUtil
+							.retrieveLoginIdsByZoneAndRole(zone.getZoneCode(),
+									"UPS_APPROVER", getManagedBean()
+											.getSmAppl().getSupplierType(),
+									getManagedBean().getSmAppl().getApplType(),
+									getManagedBean().getSmAppl()
+											.getApplCategoryType());
+					reqDTO.setApproverLoginIds(approverLoginIds);
+				}
+
+				ReviewApplicationResDTO revApplicationResDTO = reqSO
+						.submitPOorApproverReviewToBPM(reqDTO);
+
+				/*
+				 * if (revApplicationResDTO.isSuccessful()) { // to auto
+				 * generate mof cert if (res.equalsIgnoreCase(my.ep.constant.
+				 * sm.SupplierManagementConst.APPROVE)) { try {
+				 * SmVirtualCertHelper.getInstance() .autoGenerateVirtualCert(
+				 * getManagedBean().getSmAppl() .getApplId()); } catch
+				 * (Exception ex) { log.info(
+				 * "<<<<MOF Approval - error when generate Virtual Cert>>>>" +
+				 * ex.getMessage()); } } }
+				 */
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								successMsg));
+				renewSesionObject();
+				retMsg = SmApplicationUtil.getApplicationErrorPage();
+
 			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								"Sample error message",
+								"Un Authorized user to perform this action"));
 				retMsg = null;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} else {
 			retMsg = null;
-			retriveLatestApplAfterUpdate("", "");
-			throw new EpException(e.getMessage());
-		} finally {
-			reqSO = null;
 		}
 		return retMsg;
 	}
@@ -10540,6 +10529,37 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	public boolean disableDeleteBtnFacility(List<PmCategoryL3> facilitiesVOList) {
+		boolean retVal = true;
+		if (!EntityHelper.isCollectionEmpty(facilitiesVOList)) {
+			for (PmCategoryL3 l3 : facilitiesVOList) {
+				if (!EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
+					for (SmFacility fac : l3.getFacilityList()) {
+						if (fac.isSelected()) {
+							retVal = false;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return retVal;
+	}
+
+	public <ENTITY extends BaseEntity> boolean disableDeleteBtn(
+			List<ENTITY> entityList) {
+		boolean retVal = true;
+		if (!EntityHelper.isCollectionEmpty(entityList)) {
+			for (ENTITY entity : entityList) {
+				if (entity.isSelected()) {
+					retVal = false;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
 	/**
 	 * On tick checkbox during search rejection reason
 	 * 
@@ -11410,8 +11430,20 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	/**
+	 * Copy hq/branch selected address,owner,price and rate to Facility
+	 * 
+	 * @param SmFacility
+	 *            facility
+	 * @param String
+	 *            panelName
+	 */
 	public void onChangeFacAddrSameAs(SmFacility facility, String panelName) {
 		if (StringUtils.isNotBlank(getManagedBean().getFacAddresSameAs())) {
+			facility.setOwnerName(StringUtils.EMPTY);
+			facility.setPurchasePrice(null);
+			facility.setRentalRate(null);
+			facility.setOwnershipType(StringUtils.EMPTY);
 			if (getManagedBean().getFacAddresSameAs().equals("HQ")) {
 				SmFacility hq = SmApplicationUtil
 						.getHqFacilityByAppl(getManagedBean().getSmAppl());
@@ -11923,6 +11955,29 @@ public class SmApplicationBackingBean extends
 		}
 		if (retVal && personnel.isEquityOwner()) {
 			throw new EpException(MessageConst.ERROR_721052);
+		}
+	}
+
+	private void deleteSelectedFacilities(List<PmCategoryL3> list) {
+		SmFacility facMain = null;
+		for (PmCategoryL3 l3 : list) {
+			if (!EntityHelper.isCollectionEmpty(l3.getFacilityList())
+					&& !EntityHelper.isCollectionEmpty(getManagedBean()
+							.getSmAppl().getSmFacilities())) {
+				for (SmFacility fac : l3.getFacilityList()) {
+					if (fac.isSelected()) {
+						facMain = (SmFacility) EntityHelper
+								.getEntityBySinglePropertyFromList(fac
+										.getFacilityId(), getManagedBean()
+										.getSmAppl().getSmFacilities(),
+										"facilityId");
+						if (facMain != null) {
+							getManagedBean().getSmAppl().getSmFacilities()
+									.remove(facMain);
+						}
+					}
+				}
+			}
 		}
 	}
 

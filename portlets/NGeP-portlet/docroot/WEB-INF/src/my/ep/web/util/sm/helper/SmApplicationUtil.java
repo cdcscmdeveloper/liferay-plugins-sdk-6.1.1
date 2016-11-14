@@ -5291,6 +5291,13 @@ public class SmApplicationUtil {
 	 */
 	public static void handleShowOrHideFacilityPanels(
 			SmApplicationManagedBean managedBean) {
+
+		// reset selected facilities in data table
+		managedBean.setSelectedFactoryFacilities(new ArrayList<SmFacility>());
+		managedBean.setSelectedDockyardFacilities(new ArrayList<SmFacility>());
+		managedBean.setSelectedStoreFacilities(new ArrayList<SmFacility>());
+		managedBean.setSelectedWorkShopFacilities(new ArrayList<SmFacility>());
+
 		managedBean.setAddrSameAsItems(new ArrayList<SelectItem>());
 		SelectItem item = new SelectItem();
 		item.setValue(StringUtils.EMPTY);
@@ -7954,20 +7961,56 @@ public class SmApplicationUtil {
 													.getFullCatcode(),
 											categoryTypeDesc });
 						} else {
-							SmMachineDtl mac = (SmMachineDtl) EntityHelper
+							if ((SmMachineDtl) EntityHelper
 									.getEntityBySinglePropertyFromList(cat
 											.getPmCategoryL3()
-											.getCategoryL3Id(), appl
-											.getSmMachineDtls(), "categoryCode");
-							if (mac == null) {
-								valid = false;
-								if (currentTab != -1) {
-									setNavigationBackToCurrentPage(currentTab,
-											bean);
-								}
+											.getCategoryTypeCode()
+											.getParameterId(),
+											appl.getSmMachineDtls(),
+											"categoryType") == null) {
 								throw new EpException(
 										MessageConst.ERROR_722631,
-										new String[] { categoryTypeDesc });
+										new String[] {
+												cat.getPmCategoryL3()
+														.getFullCatcode(),
+												categoryTypeDesc });
+
+							} else {
+								List<SmMachineCategory> machineCategories = new ArrayList<SmMachineCategory>();
+								for (SmMachineDtl mac : appl.getSmMachineDtls()) {
+									if (mac.getCategoryType()
+											.getParameterId()
+											.compareTo(
+													cat.getPmCategoryL3()
+															.getCategoryTypeCode()
+															.getParameterId()) == 0) {
+										machineCategories.addAll(mac
+												.getSmMachineCategories());
+
+									}
+								}
+
+								SmMachineCategory macCat = (SmMachineCategory) EntityHelper
+										.getEntityBySinglePropertyFromList(cat
+												.getPmCategoryL3()
+												.getCategoryL3Id(),
+												machineCategories,
+												"pmCategoryL3");
+								
+								if (macCat == null) {
+									valid = false;
+									if (currentTab != -1) {
+										setNavigationBackToCurrentPage(
+												currentTab, bean);
+									}
+									throw new EpException(
+											MessageConst.ERROR_722631,
+											new String[] {
+													cat.getPmCategoryL3()
+															.getFullCatcode(),
+													categoryTypeDesc });
+								}
+
 							}
 						}
 					}
@@ -8857,6 +8900,8 @@ public class SmApplicationUtil {
 
 					cat.getPmCategoryL3().setFacilityList(
 							new ArrayList<SmFacility>());
+					cat.getPmCategoryL3().setSelectedFacilityList(
+							new ArrayList<SmFacility>());
 
 					for (SmFacility fac : smAppl.getSmFacilities()) {
 						if (!EntityHelper.isCollectionEmpty(fac
@@ -8896,7 +8941,7 @@ public class SmApplicationUtil {
 				&& !EntityHelper.isCollectionEmpty(smAppl
 						.getSmSupplierCategories())) {
 			SmMachineCategoryVO machineCategoryVO = null;
-			SmMachineDtl machDtl = null;
+			SmMachineDtl machDtlTmp = null;
 			boolean isNew = false;
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
 				if ((cat.getRecordStatusFlg().compareTo(
@@ -8904,8 +8949,6 @@ public class SmApplicationUtil {
 						.getRecordStatusFlg()
 						.compareTo(
 								SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
-						&& !EntityHelper.isCollectionEmpty(smAppl
-								.getSmMachineDtls())
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& Arrays
@@ -8914,38 +8957,41 @@ public class SmApplicationUtil {
 										cat.getPmCategoryL3()
 												.getCategoryTypeCode()
 												.getParameterCode())) {
+
 					machineCategoryVO = (SmMachineCategoryVO) EntityHelper
 							.getEntityBySinglePropertyFromList(cat
 									.getPmCategoryL3().getCategoryTypeCode()
 									.getParameterId(), machineCategoryVOList,
 									"categoryTypeCode");
+
 					if (machineCategoryVO == null) {
-						isNew = true;
 						machineCategoryVO = new SmMachineCategoryVO();
-						machineCategoryVO
-								.setSmMachineDtls(new ArrayList<SmMachineDtl>());
 						machineCategoryVO.setCategoryTypeCode(cat
 								.getPmCategoryL3().getCategoryTypeCode());
+						machineCategoryVO
+								.setSmMachineDtls(new ArrayList<SmMachineDtl>());
+						isNew = true;
 					}
+
 					for (SmMachineDtl mach : smAppl.getSmMachineDtls()) {
-						if (mach.getCategoryType() != null
-								&& mach.getCategoryType()
-										.getParameterId()
-										.compareTo(
-												cat.getPmCategoryL3()
-														.getCategoryTypeCode()
-														.getParameterId()) == 0) {
-							machDtl = (SmMachineDtl) EntityHelper
+						if (mach.getCategoryType()
+								.getParameterId()
+								.compareTo(
+										cat.getPmCategoryL3()
+												.getCategoryTypeCode()
+												.getParameterId()) == 0) {
+							machDtlTmp = (SmMachineDtl) EntityHelper
 									.getEntityBySinglePropertyFromList(mach
 											.getMachineDtlId(),
 											machineCategoryVO
 													.getSmMachineDtls(),
 											"machineDtlId");
-							if (machDtl == null) {
+							if (machDtlTmp == null) {
 								machineCategoryVO.getSmMachineDtls().add(mach);
 							}
 						}
 					}
+
 					if (isNew) {
 						machineCategoryVOList.add(machineCategoryVO);
 						isNew = false;
