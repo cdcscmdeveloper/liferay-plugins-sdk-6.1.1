@@ -6,11 +6,12 @@ import java.util.List;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 
-public class SmMachineCategoryVO implements Serializable{
+public class SmMachineCategoryVO implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -9150227604058321990L;
+	private boolean selected;
 	private PmParameter categoryTypeCode;
 	private List<SmMachineDtl> smMachineDtls;
 
@@ -28,5 +29,13 @@ public class SmMachineCategoryVO implements Serializable{
 
 	public void setSmMachineDtls(List<SmMachineDtl> smMachineDtls) {
 		this.smMachineDtls = smMachineDtls;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 }

@@ -457,6 +457,7 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_VIRTUAL_CERT = "VIRTUALCERTINFO";
 	public static final String SM_APPL_PAGE_TYPE_TRACKING_DIARY = "TRACKINGDIARYINFO";
 	public static final String SM_APPL_PAGE_TYPE_PAYMENT = "PAYMENTINFO";
+	public static final String SM_APPL_PAGE_TYPE_DECLARATION = "DECLAREINFO";
 	public static final String SM_APPL_PAGE_TYPE_SUPPORTDOCSREV = "SUPPORTDOCSREVIEW";
 	public static final String SM_APPL_PAGE_TYPE_SITEVISITREV = "SITEVISITREVSION";
 	public static final String SM_APPL_PAGE_TYPE_PODEC = "PODECISION";
@@ -933,6 +934,10 @@ public class SupplierManagementConst {
 
 	public String getSM_APPL_PAGE_TYPE_PAYMENT() {
 		return SM_APPL_PAGE_TYPE_PAYMENT;
+	}
+	
+	public String getSM_APPL_PAGE_TYPE_DECLARATION() {
+		return SM_APPL_PAGE_TYPE_DECLARATION;
 	}
 
 	public String getSM_APPL_PAGE_TYPE_SUPPORTDOCSREV() {
