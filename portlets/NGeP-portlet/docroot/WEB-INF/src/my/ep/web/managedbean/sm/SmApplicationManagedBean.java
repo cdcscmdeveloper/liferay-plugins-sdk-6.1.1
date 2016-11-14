@@ -80,6 +80,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmMachineCategoryVO;
+import my.ep.web.vo.SmPaymentDetailsVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSectionEditorVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -464,6 +465,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String currRegStatus;
 	private String popupAction;
 	private String rejectReasonsMsg;
+	private String applDeclarationAlertMsg;
 	private Long approvedStatusId;
 
 	private BigDecimal currBumiEquity;
@@ -480,6 +482,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private Object cloneObject;
 
 	private SmSectionEditorVO editVO;
+	private List<SmPaymentDetailsVO> paymentDetailsVOList;
+	private BigDecimal totalPaymentAmount;
+	private BigDecimal gstAmount;
+	private String gstPercentageLabels;
 	private List<PmReasonDesc> selectedPmReasonDescs;
 	private String searchRejectReason;
 	private IPagingDataModel<PmReasonDesc> rejectReasonDataModel = new RejectReasonPagingDataModel();
@@ -3765,5 +3771,46 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setBumiSiteVisitVOList(
 			List<SmSiteVisitFacilityVO> bumiSiteVisitVOList) {
 		this.bumiSiteVisitVOList = bumiSiteVisitVOList;
+	}
+
+	public List<SmPaymentDetailsVO> getPaymentDetailsVOList() {
+		return paymentDetailsVOList;
+	}
+
+	public void setPaymentDetailsVOList(
+			List<SmPaymentDetailsVO> paymentDetailsVOList) {
+		this.paymentDetailsVOList = paymentDetailsVOList;
+	}
+
+	public String getApplDeclarationAlertMsg() {
+		return applDeclarationAlertMsg;
+	}
+
+	public void setApplDeclarationAlertMsg(String applDeclarationAlertMsg) {
+		this.applDeclarationAlertMsg = applDeclarationAlertMsg;
+	}
+
+	public BigDecimal getTotalPaymentAmount() {
+		return totalPaymentAmount;
+	}
+
+	public void setTotalPaymentAmount(BigDecimal totalPaymentAmount) {
+		this.totalPaymentAmount = totalPaymentAmount;
+	}
+
+	public BigDecimal getGstAmount() {
+		return gstAmount;
+	}
+
+	public void setGstAmount(BigDecimal gstAmount) {
+		this.gstAmount = gstAmount;
+	}
+
+	public String getGstPercentageLabels() {
+		return gstPercentageLabels;
+	}
+
+	public void setGstPercentageLabels(String gstPercentageLabels) {
+		this.gstPercentageLabels = gstPercentageLabels;
 	}
 }
