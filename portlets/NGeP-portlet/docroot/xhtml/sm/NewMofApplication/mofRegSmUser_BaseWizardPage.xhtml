@@ -298,7 +298,7 @@
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 												action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 												update=":form" style="margin-bottom:5px;" />
-											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+											<c:if test="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}">
 												<ui:include
 													src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
 												<!-- disable spki for now-->
@@ -342,7 +342,7 @@
 													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 													action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 													update=":form" style="margin-bottom:5px;" />
-												<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+												<c:if test="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}">
 													<ui:include
 														src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
 													<!-- disable spki -->

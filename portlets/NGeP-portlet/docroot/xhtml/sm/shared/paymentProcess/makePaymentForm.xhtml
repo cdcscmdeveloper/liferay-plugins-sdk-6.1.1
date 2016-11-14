@@ -35,11 +35,11 @@
 					<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}" />
 				</td>
 			</tr>
-		</table><br /><br /><br /><br />
+		</table><br /><br />
 		
-		<h:outputText value="#{lbl['lbl.sm.payment.section.instruction']}" escape="false" /><br /><br /><br /><br />
+		<h:outputText value="#{lbl['lbl.sm.payment.section.instruction']}" escape="false" /><br /><br />
 		
-		<p:dataTable value="#{backingBean.managedBean.paymentDetailsVOList}" var="itemLs">
+		<p:dataTable value="#{backingBean.managedBean.paymentDetailsVOList}" var="itemLs" rowIndexVar="index">
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" />
@@ -50,7 +50,7 @@
 	             </p:row>
 			</p:columnGroup>
 			
-			<p:column style="width : 5%;text-align: center !important;">
+			<p:column style="width : 2% !important;">
 				<h:outputText value="#{index + 1}" />
 			</p:column>
 			
@@ -76,19 +76,19 @@
 			
 			<p:columnGroup type="footer">
 				<p:row>
-	                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.gst.total.exclude.gst']} :" colspan="2"/>
+	                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.gst.total.exclude.gst']} :" colspan="3"/>
 	                <p:column footerText="#{backingBean.managedBean.totalPaymentAmount}" style="text-align:left" colspan="2"/>
 	            </p:row>
 	            <p:row>
-	                <p:column style="text-align:right" footerText="#{backingBean.managedBean.gstPercentageLabels} :" colspan="2"/>
+	                <p:column style="text-align:right" footerText="#{backingBean.managedBean.gstPercentageLabels} :" colspan="3"/>
 	                <p:column footerText="0.00" style="text-align:left" colspan="2"/>
 	            </p:row>
 	            <p:row>
-	                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.payment.rounding.adjustment']} :" colspan="2"/>
+	                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.payment.rounding.adjustment']} :" colspan="3"/>
 	                <p:column footerText="0.00" style="text-align:left" colspan="2"/>
 	            </p:row>
 	            <p:row>
-	                <p:column style="text-align:right;font-weight: bold !important;" footerText="#{lbl['lbl.sm.payment.total.payable']} :" colspan="2"/>
+	                <p:column style="text-align:right;font-weight: bold !important;" footerText="#{lbl['lbl.sm.payment.total.payable']} :" colspan="3"/>
 	                <p:column footerText="#{backingBean.managedBean.totalPaymentAmount}" style="text-align:left;font-weight: bold !important;" colspan="2"/>
 	            </p:row>
 	        </p:columnGroup>
