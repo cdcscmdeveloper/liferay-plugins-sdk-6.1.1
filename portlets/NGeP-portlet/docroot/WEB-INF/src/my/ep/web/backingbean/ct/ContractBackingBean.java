@@ -2086,7 +2086,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		        }if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
 		        	 getManagedBean().setBondWaiver(true);
 		        }
-	      }	  if(getManagedBean().getCtContractAmount().isBondWaived() &&
+	      }	 if(getManagedBean().getCtContractAmount().isBondWaived() &&
 	    		  getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
 	    	  getManagedBean().setBondWaiver(false);
 	      }
@@ -3305,4 +3305,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				+String.valueOf(dates.substring(6, 10));
 		return monthYear;
 	}
-}
+	
+	public void chkBondWaivedAttachment(){
+		
+		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
+		      	ContractReqDTO reqDTO = new ContractReqDTO();
+			    reqDTO.setDocId(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
+			    reqDTO.setDocType(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getDocType());
+			    reqDTO.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
+			    IContractSO contractSO =   (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		        List<CtAttachment> attachments = contractSO.retrieveAttachmentBySectionId(reqDTO).getCtAttachments();
+	            if(attachments != null && attachments.size() > 0){
+		             for(CtAttachment ctAttach : attachments){
+		            	 
+		            	 chkBondWaivedAttachment(ctAttach);
+		             }
+	            }
+		}
+	}
+	
+	public void chkBondWaivedAttachment(CtAttachment attach){
+		for(CtAttachment waivedAttach : getManagedBean().getContractVer().getBondWaiverAttachments()){
+			      if(waivedAttach.getFilePath().equalsIgnoreCase(attach.getFilePath())){
+			    	  waivedAttach.setBondWaivedTrue(true);
+			      }
+		}
+	}
+}  
