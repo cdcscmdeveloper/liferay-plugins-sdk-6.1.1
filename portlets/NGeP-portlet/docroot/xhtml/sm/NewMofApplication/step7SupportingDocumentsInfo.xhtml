@@ -25,7 +25,13 @@
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 											update=":form" />
 									</div></td>
-
+								<td><div align="right" style="width: 99%">
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('8','9')}"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+										update=":form" />
+								</div></td>
 
 							</tr>
 						</table>
@@ -41,8 +47,13 @@
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 											update=":form" />
 									</div></td>
-
-
+								<td><div align="right" style="width: 99%">
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('6','7')}"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+										update=":form" />
+								</div></td>
 							</tr>
 						</table>
 					</div>
@@ -65,7 +76,13 @@
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 											update=":form" />
 									</div></td>
-
+								<td><div align="right" style="width: 99%">
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('6','7')}"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+										update=":form" />
+								</div></td>
 							</tr>
 						</table>
 					</div>
@@ -80,6 +97,13 @@
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 											update=":form" />
 									</div></td>
+								<td><div align="right" style="width: 99%">
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('6','7')}"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+										update=":form" />
+								</div></td>
 							</tr>
 						</table>
 					</div>

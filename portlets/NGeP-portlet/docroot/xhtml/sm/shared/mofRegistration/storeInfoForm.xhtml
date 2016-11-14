@@ -96,7 +96,7 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="smStrDtPanel" partialSubmit="true"
-					id="delStoreBtnId" disabled="#{backingBean.disableDeleteBtnFacility(backingBean.managedBean.storeFacilitiesVOList)}"
+					id="delStoreBtnId" disabled="#{backingBean.disableDeleteBtn(storeCatVar.facilityList)}"
 					update=":#{p:component('storeDt')},@this" oncomplete="storeDeletePopUp.show()" />
 			</div>
 			<br />

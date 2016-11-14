@@ -106,7 +106,7 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="smFacilityFactoryDtPanel"
-					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtnFacility(backingBean.managedBean.factoryFacilitiesVOList)}"
+					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtn(factoryCatVar.facilityList)}"
 					update=":#{p:component('facDt')},@this" 
 					oncomplete="factoryDeletePopUp.show()" />
 			</div>

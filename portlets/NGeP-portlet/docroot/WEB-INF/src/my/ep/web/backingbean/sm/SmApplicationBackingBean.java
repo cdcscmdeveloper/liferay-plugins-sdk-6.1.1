@@ -4844,7 +4844,7 @@ public class SmApplicationBackingBean extends
 			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
 					.getSmMachineDtls())) {
 
-				EntityHelper.replaceObjectInListByTempId(
+				EntityHelper.addOrUpdateEntityToList(
 						(SmMachineDtl) getManagedBean().getCloneObject(),
 						getManagedBean().getSmAppl().getSmMachineDtls());
 			}
@@ -4867,7 +4867,6 @@ public class SmApplicationBackingBean extends
 			macBean.getMachine().setMachineId(-1L);
 		}
 		getManagedBean().setPopupAction("U");
-		macBean.setTempId(System.currentTimeMillis());
 		SmApplicationUtil.assignMachineCategoryIds(getManagedBean(), macBean);
 		getManagedBean().setRentPrevVal(macBean.getValue());
 		getManagedBean().setCategoryTypeItems(

@@ -6,7 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel header="#{lbl['lbl.sm.declaration']}" toggleable="true">
-		<h:outputText escape="false" value="#{lbl['lbl.sm.application.no']}"/>
+		<h:outputText escape="false" value="#{lbl['lbl.sm.declaration.msg']}"/>
+		<br /><br />
+		<div align="right"><p:commandButton value="#{lbl['lbl.sm.print.declaration.form']}" /></div>
 	</p:panel>
 
 </ui:composition>
