@@ -13,7 +13,7 @@
 		<h:panelGrid columns="2" style="width:400px;" 	rendered="#{amendmentBackingBean.managedBean.disableLoaLetter}">
 				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" styleClass="required" /> 
      			<p:calendar style="width:80px;" id="signDateLoaId" showOn="button"  readonlyInput="true" navigator="true"
-			   		 	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+			   		 	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 					    label="#{lbl['lbl.ct.amend.loa.gov.sign.date']}" 
 					    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.govtSignDate}">
 				</p:calendar>
@@ -21,7 +21,7 @@
 			<h:panelGrid columns="2" style="width:400px;" rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}">
 				<p:outputLabel value="#{lbl['lbl.ct.amend.loa.supp.sign.date']}" styleClass="required" /> 
      			<p:calendar style="width:80px;" id="signLoaDateBySupplier" showOn="button"  readonlyInput="true" navigator="true"
-			   		 	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+			   		 	 pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 					    label="#{lbl['lbl.ct.amend.loa.supp.sign.date']}" 
 					    value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.supplierSignDate}">
 				</p:calendar>
@@ -37,7 +37,7 @@
 				 
 				 <p:column headerText="#{lbl['lbl.ct.amend.sample']}" styleClass="column-align-center" style="width:10%;">
                			 <h:commandLink  action="#{amendmentBackingBean.downloadLOAContent()}"  
-               			       disabled="#{amendmentBackingBean.disableBtn(index)}">
+               			          disabled="#{amendmentBackingBean.disableBtn(index)}">
 								 <p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
 					     </h:commandLink>
 				 </p:column>
@@ -45,7 +45,7 @@
 				 <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:45%;">
 					 <h:panelGroup id="uploadLetterPg">
 						   <p:commandButton icon="ui-icon-upload-arrow"  rendered="#{loaReportVar.loaAttachments.filePath == null}"
-								   disabled="#{amendmentBackingBean.disableBtn(index)}"
+								   disabled="#{amendmentBackingBean.disableBtn(index)}" process="@this" partialSubmit="true"
 								   update=":form:loaContentDt, :form:uploadLetterDlg" oncomplete="uploadLetterDlg.show();return false;" >
 							</p:commandButton>
 							<h:commandLink rendered="#{loaReportVar.loaAttachments.filePath != null}" title="#{loaReportVar.loaAttachments.fileName}"
@@ -53,15 +53,15 @@
 									action="#{amendmentBackingBean.downloadFile(loaReportVar.loaAttachments.filePath, loaReportVar.loaAttachments.fileName)}">
 							</h:commandLink>
 							<p:commandLink onsuccess="deleteUploadLetterDlg.show();" 
-						         	   disabled="#{amendmentBackingBean.disableBtn(index)}"
-						           action="#{ctBackingBean.setAttachFileIndex(index)}">
+						         	   disabled="#{amendmentBackingBean.disableBtn(index) or loaReportVar.loaAttachments.filePath == null}"
+						           action="#{ctBackingBean.setAttachFileIndex(index)}" process="@this" partialSubmit="true">
 			   					     <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	 		  	 </p:commandLink>
 					 	</h:panelGroup>
 				  </p:column>
 		 </p:dataTable>
 
-			 <p:dialog id="uploadLetterDlg" widgetVar="uploadLetterDlg" height="350px" resizable="false" modal="true" 
+			 <p:dialog id="uploadLetterDlg" widgetVar="uploadLetterDlg" height="auto" resizable="false" modal="true" 
 		    	  width="700px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" onShow="singleUploadListener(letterUploadWV);">
 					<p:ajax event="close" />
 					<p:fileUpload style="display:inline;" mode="advanced"  dragDropSupport="false" 

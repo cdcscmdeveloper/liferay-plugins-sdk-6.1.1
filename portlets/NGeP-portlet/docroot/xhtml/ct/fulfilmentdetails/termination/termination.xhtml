@@ -57,7 +57,7 @@
 					rendered="#{terminationBackingBean.managedBean.contractVer.ctTermination.filePath == null}" />
 				<h:commandLink
 					title="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileName}"
-					value="#{terminationBackingBean.getShortFileName(terminationBackingBean.managedBean.contractVer.ctTermination.fileName)}"
+					value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileName}"
 					style="float:left;padding-top:10px" styleClass="blue_font"
 					rendered="#{terminationBackingBean.managedBean.contractVer.ctTermination.filePath != null}"
 					action="#{terminationBackingBean.downloadFile(terminationBackingBean.managedBean.contractVer.ctTermination.filePath, 
@@ -244,7 +244,7 @@
 										   <h:outputLabel value="#{terminationBackingBean.managedBean.noticeTypelbl}"  styleClass="required"/></td>
 										<td class="TableFieldRight" width="8%">
 											<p:commandButton oncomplete="uploadTermLetterDlg.show();return false;"
-												update="terminationUploadId, uploadTermLetterDlg" icon="ui-icon-upload-arrow"
+												update="terminationUploadId, uploadTermLetterDlg" icon="ui-icon-upload-arrow" process="@this" partialSubmit="true"
 												disabled="#{ctBackingBean.managedBean.viewContract or terminationBackingBean.managedBean.disableField
 												or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 									</td>
@@ -258,7 +258,7 @@
 																		<h:commandLink value="#{attachFile.fileName}" 
 																			styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 																		<p:commandLink onsuccess="deleteUploadLetterDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
-																			rendered="#{!ctBackingBean.managedBean.viewContract}"
+																			rendered="#{!ctBackingBean.managedBean.viewContract}" process="@this" partialSubmit="true"
 																			disabled="#{ctBackingBean.managedBean.viewContract or  terminationBackingBean.managedBean.disableField
 																				or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
 			   																<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
