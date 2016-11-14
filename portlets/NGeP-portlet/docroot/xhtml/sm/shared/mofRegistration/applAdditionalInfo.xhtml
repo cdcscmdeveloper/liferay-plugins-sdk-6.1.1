@@ -4,7 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+	
 	<script>
 		$('.blinkClass').each(function() {
 		    var elem = $(this);
@@ -17,7 +17,7 @@
 		    }, 1000);
 		});
 	</script>
-
+	
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr height="10">
@@ -63,15 +63,17 @@
 							id="daysLeftId"
 							value="#{backingBean.managedBean.applStatusInfo.daysLeft}" /></span></td>
 			</tr>
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sm.rejection.reasons']}"
-						styleClass="outputLabel-view-label" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" escape="false"
-						value="#{backingBean.managedBean.rejectReasonsMsg}" />
-				</td>
-				<td colspan="4">&#160;</td>
-			</tr>
+			<p:outputPanel rendered="#{not empty backingBean.managedBean.rejectReasonsMsg and backingBean.managedBean.smAppl.resubmit}">
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.rejection.reasons']}"
+							styleClass="outputLabel-view-label" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" escape="false"
+							value="#{backingBean.managedBean.rejectReasonsMsg}" />
+					</td>
+					<td colspan="4">&#160;</td>
+				</tr>
+			</p:outputPanel>
 		</table>
 	</div>
 
