@@ -1,0 +1,147 @@
+<html>
+<head>
+	<style>
+		@page {
+			size: A4 portrait;
+         	@top-left { content: "$contractName"; }
+         	@bottom-center { content: "Page " counter(page) " / " counter(pages); }
+         	@bottom-left { content: "$contractNo"; }
+		}
+		
+		li {text-align: justify;word-spacing: -10px;}
+				
+        @media print {
+         .break {page-break-after: always;}
+        }
+        
+		
+	</style>
+</head>
+<body>
+	<div style="border: 1px solid #a1a1a1;">
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td align="center">
+            <span style='font-weight:bold;font-size:18px;font-family: Albertus Medium;'>ACKNOWLEDGEMENT RECEIPT OF THE LETTER OF ACCEPTANCE AND THE RELEVANT APPENDICES BY THE COMPANY</span>
+            <br/> <br/>
+        </td>
+    </tr>
+    
+	<tr>
+		<td>
+			 <span style='font-weight:normal;font-size:14px;font-family: Albertus Medium;'>
+				It is hereby confirmed that the under signed below acknowledge receipt of this Letter and its relevant appendices the reference to $govSignDate dated $agencyRefNo and agrees with the terms and conditions contained in this letter unconditionally where a copy of this Letter has been retained, and it is further reconfirmed that no terms, conditions or additional stipulations to those contained in the "quotation / tender" document and this Letter have been imposed.</span>
+	     <br/> <br/>
+		</td>
+	</tr>	
+
+	
+	<tr>
+		<td>
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td colspan="3" style="font-weight:bold;" align="center">
+				       Supplier
+				</td>
+				<td>
+				</td>
+				<td colspan="3" style="font-weight:bold;" align="center">
+					Supplier Witness
+				</td>
+			</tr>
+			<tr valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
+				<td width="15%">
+					Full Name 
+				</td>
+				<td width="1%">
+					: 
+				</td>
+				<td width="32%">
+					$supplierName
+				</td>
+				<td width="4%">
+				</td>
+				<td width="15%">
+					Full Name
+				</td>
+				<td width="1%">
+					: 
+				</td>
+				<td width="32%">
+					$witnessName
+				</td>
+			</tr>
+			<tr  valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
+				<td>
+					I/C Number 
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierID
+				</td>
+				<td>
+				</td>
+				<td>
+					I/C Number 
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$witnessID
+				</td>
+			</tr>
+			<tr  valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
+				<td>
+					Address
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierAddress
+				</td>
+				<td>
+				</td>
+				<td>
+					Address
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$witnessAddress
+				</td>
+			</tr>
+			<tr valign="top" style="font-weight:normal;font-size:12px;font-family: Albertus Medium;">
+				<td>
+				Date
+				</td>
+				<td>
+					: 
+				</td>
+				<td style="white-space: normal;">
+					$supplierAckDate
+				</td>
+				<td>
+				</td>
+				<td>
+					Date
+				</td>
+				<td>
+					: 
+				</td>
+				<td style="white-space: normal;">
+					$witnessDate
+				</td>
+			</tr>
+			
+			</table>
+			 <div class="break"></div>
+		</td>
+	</tr>		
+	</table>
+</body>
+</html>
