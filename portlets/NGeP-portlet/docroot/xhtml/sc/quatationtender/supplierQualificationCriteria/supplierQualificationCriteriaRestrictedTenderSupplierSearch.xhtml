@@ -54,7 +54,7 @@
 			rowKey="#{smSupplier.supplierId}" lazy="true" style="width : 100%;"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rows="10">
-			<ui:param name="mof" value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccountFromSmSupplier(smSupplier)}" />
+			
 			<ac:paginator for="ressupplier" />
             <p:ajax event="rowSelect" update="@([id$=RestrictedTndrSupplierListPopUpOkBtnId])" />
 			<p:ajax event="rowUnselect" update="@([id$=RestrictedTndrSupplierListPopUpOkBtnId])" />
@@ -68,14 +68,14 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.mofno']}" style="width: 10%;">
-				<h:outputText
-					value="#{mof.mofNo}" />
+				<h:outputText rendered="#{smSupplier.smMofAccount ne null}"
+					value="#{smSupplier.smMofAccount.mofNo}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.mofexp.date']}"
 				style="width: 10%;">
-				<h:outputText
-					value="#{mof.expDate}">
+				<h:outputText rendered="#{smSupplier.smMofAccount ne null}"
+					value="#{smSupplier.smMofAccount.expDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
@@ -88,8 +88,11 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width: 10%;">
-				<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(mof.expDate) eq 'true'}" value="#{lbl['lbl.txt.active']}" />
-				<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(mof.expDate) eq 'false'}" value="#{lbl['lbl.txt.expired']}" style="font-weight: bold;color:red;" />
+				
+			<ui:param name="date" value="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(smSupplier.smMofAccount)}" />		
+				<h:outputText rendered="#{date eq 'true'}" value="#{lbl['lbl.txt.active']}" />
+				<h:outputText rendered="#{date eq 'false'}" value="#{lbl['lbl.txt.expired']}" style="font-weight: bold;color:red;" />
+				
 			</p:column>
 		</p:dataTable>
 		
