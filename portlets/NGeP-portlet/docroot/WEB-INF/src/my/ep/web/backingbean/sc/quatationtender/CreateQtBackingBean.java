@@ -1076,7 +1076,9 @@ public class CreateQtBackingBean extends
 						// supplierResDTO.getCtPanelSuppliers();
 						this.getManagedBean().setTotalSuppliers(
 								supplierResDTO.getCtPanelSuppliers().size());
-
+						for(CtPanelSupplier paelSupplier:supplierResDTO.getCtPanelSuppliers()){
+							paelSupplier.setSmMofAccount(retriveMofAccountBySupplier(paelSupplier.getSupplier()));
+						}
 						this.getManagedBean().setCtZoneSupplierList(
 								supplierResDTO.getCtPanelSuppliers());
 
