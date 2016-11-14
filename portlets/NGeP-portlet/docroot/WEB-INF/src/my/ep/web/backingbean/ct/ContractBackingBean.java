@@ -448,7 +448,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		getManagedBean().getContractVer().getBondWaiverAttachments().remove(getManagedBean().getAttachFileIndex());
 	    if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
-		       getManagedBean().setBondWaiver(false);
+		       getManagedBean().setBondWaiver(true);
 	    }
 	}
 	
