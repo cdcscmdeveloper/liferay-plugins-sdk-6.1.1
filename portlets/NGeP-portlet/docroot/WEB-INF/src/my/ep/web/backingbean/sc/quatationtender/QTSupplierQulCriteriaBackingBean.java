@@ -60,6 +60,7 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -173,13 +174,18 @@ public class QTSupplierQulCriteriaBackingBean extends
 			try {
 				supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+				SupplierSearchResDTO resDTO = new SupplierSearchResDTO();
 				populateSupplierSearchCriteria(supplierSearchBean, searchBean);
 				reqDTO.setSearchBean(searchBean);
-				return supplierSearchSO.retriveSupplierList(reqDTO)
-						.getResultBean();
+				 resDTO=supplierSearchSO.retriveSupplierList(reqDTO);
+				 if(resDTO!=null && null!=resDTO.getResultBean()){
+				retriveMofAccountsRestrictedSuppliers(resDTO.getResultBean().getResultList());
+				return	resDTO.getResultBean();
+				 }
 			} finally {
 				supplierSearchSO = null;
 			}
+			return null;
 		}
 	}
 
@@ -552,8 +558,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 */
 	public boolean supplierStatusDateComparision(SmMofAccount mofAccount) {
 		debugLogger("supplierStatusDateComparision");
-		Date enddate = mofAccount.getExpDate();
 		boolean isDate = false;
+		if(null!=mofAccount){
+		Date enddate = mofAccount.getExpDate();
+		
 		
 		Date d1 = new Date();
 
@@ -563,6 +571,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			if (day > 0) {
 				isDate = true;
 			}
+		}
 		}
 		return isDate;
 	}
@@ -1101,7 +1110,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 			this.getManagedBean().setTotalSuppliers(
 					supplierResDTO.getCtPanelSuppliers().size());
-
+			for(CtPanelSupplier paelSupplier:supplierResDTO.getCtPanelSuppliers()){
+				paelSupplier.setSmMofAccount(retriveMofAccountBySupplier(paelSupplier.getSupplier()));
+			}
 			this.getManagedBean().setCtZoneSupplierList(
 					supplierResDTO.getCtPanelSuppliers());
 		}
@@ -2031,5 +2042,14 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		
 		return BigDecimal.valueOf(0);
+	}
+	
+	private void retriveMofAccountsRestrictedSuppliers(List<SmSupplier> supplierList){
+		if(CollectionUtils.isNotEmpty(supplierList)){
+			for(SmSupplier supplier:supplierList){
+				supplier.setSmMofAccount(retrieveSmMofAccountFromSmSupplier(supplier));
+			}
+		}
+		
 	}
 }
