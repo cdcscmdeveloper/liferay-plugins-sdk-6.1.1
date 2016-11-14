@@ -540,7 +540,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			    }
 		}
 		
-		if(this.getManagedBean().isMutualTermination()) {
+		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().isMutualTermination()) {
 			// Mandatory to upload meeting minutes if the decision is Mutual Termination		
 			if(this.getManagedBean().getAttachmentList().isEmpty()) {
 				throw new EpException(MessageConst.ERROR_750014);
