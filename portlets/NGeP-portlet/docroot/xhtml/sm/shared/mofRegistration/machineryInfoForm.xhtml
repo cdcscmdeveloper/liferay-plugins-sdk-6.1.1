@@ -58,26 +58,22 @@
 					<p:dataTable var="macBean" widgetVar="smMachDtWidVar"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{machCatVar.smMachineDtls}"
-						selection="#{backingBean.managedBean.selectedMachineList}"
 						rowKey="#{macBean}" rowIndexVar="index" id="macDt">
 						<ac:paginator for="macDt" />
 						
-						<p:ajax event="rowSelect" listener="#{backingBean.onChangeMachineChecked}"
-							update=":form:tt:machInfPan"></p:ajax>
-						<p:ajax event="rowUnselect"
-							listener="#{backingBean.onChangeMachineChecked}"
-							update=":form:tt:machInfPan"></p:ajax>
-						<p:ajax event="rowSelectCheckbox"
-							listener="#{backingBean.onChangeMachineChecked}"
-							update=":form:tt:machInfPan"></p:ajax>
-						<p:ajax event="rowUnselectCheckbox"
-							listener="#{backingBean.onChangeMachineChecked}"
-							update=":form:tt:machInfPan"></p:ajax>
-						<p:ajax event="rowDblselect"
-							listener="#{backingBean.onChangeMachineChecked}"
-							update=":form:tt:machInfPan"></p:ajax>
-						
-						<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smMachineDtls}"/>
+						<p:column style="width: 5% !important;" rendered="#{not empty machCatVar.smMachineDtls}">
+							<f:facet name="header">
+					          <p:selectBooleanCheckbox value="#{machCatVar.selected}" >
+					          	<p:ajax event="change" update=":#{p:component('machineMainPanelId')}" 
+									process="@this" partialSubmit="true" 
+									listener="#{backingBean.selectAll(machCatVar.selected,machCatVar.smMachineDtls)}"/>
+					          </p:selectBooleanCheckbox>
+					       </f:facet>
+							<p:selectBooleanCheckbox value="#{macBean.selected}">
+								<p:ajax event="change" update="@this,:#{p:component('machInfPan')}" 
+									process="@this" partialSubmit="true" />
+							</p:selectBooleanCheckbox>
+						</p:column>
 						
 						<p:column headerText="#{lbl['lbl.sm.machine.equiType']}" style="width : 25%;white-space: normal;">
 							<h:outputText value="#{macBean.machineType}" rendered="#{not empty macBean.machineType}"/>
@@ -111,7 +107,7 @@
 						<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 							<p:commandLink partialSubmit="true" process="@this"
 								action="#{backingBean.assignSelMachinery(macBean)}"
-								update=":form:tt:equipmentDialog" style="padding-right:5px" 
+								update=":form:tt:equipmentDialog,macDt" style="padding-right:5px" 
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 								<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 							</p:commandLink>
@@ -125,7 +121,7 @@
 							partialSubmit="true" action="#{backingBean.assignNewMachineryBean(machCatVar.categoryTypeCode.parameterId)}" 
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 						<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="delMachBtnId"
-							disabled="#{empty backingBean.managedBean.smAppl.smMachineDtls}"
+							disabled="#{backingBean.disableDeleteBtn(machCatVar.smMachineDtls)}"
 							partialSubmit="true" process=":form:tt:machInfPan" update=":#{p:component('machineMainPanelId')}" 
 							oncomplete="machDeletePopUp.show()" />
 					</div>
@@ -410,7 +406,7 @@
 					action="#{backingBean.addOrUpdateMachineToSmAppl}"
 					partialSubmit="true" process="equipmentDialog"
 					onclick="machineOutWidget.show();" oncomplete="machineOutWidget.hide();"
-					update=":#{p:component('machInfPan')}, @([Id$=Msg]),:#{p:component('delMachBtnId')}" />
+					update=":#{p:component('machineMainPanelId')}, @([Id$=Msg]),:#{p:component('delMachBtnId')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					partialSubmit="true" process="@this" 
 					action="#{backingBean.cancelMachineSaveorUpdate}" />
