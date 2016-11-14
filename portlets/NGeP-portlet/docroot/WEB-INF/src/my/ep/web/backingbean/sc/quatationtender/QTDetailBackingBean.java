@@ -2739,6 +2739,9 @@ public class QTDetailBackingBean extends
 					if (null != supplierResDTO.getCtPanelSuppliers()) {
 						this.getManagedBean().setTotalSuppliers(
 								supplierResDTO.getCtPanelSuppliers().size());
+						for(CtPanelSupplier paelSupplier:supplierResDTO.getCtPanelSuppliers()){
+							paelSupplier.setSmMofAccount(retriveMofAccountBySupplier(paelSupplier.getSupplier()));
+						}
 						this.getManagedBean().setCtZoneSupplierList(
 								supplierResDTO.getCtPanelSuppliers());
 					}
