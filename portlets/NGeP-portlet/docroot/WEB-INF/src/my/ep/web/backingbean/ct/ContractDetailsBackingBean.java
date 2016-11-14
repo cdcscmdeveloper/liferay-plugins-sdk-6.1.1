@@ -61,6 +61,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -107,6 +108,10 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ViewScoped
 public class ContractDetailsBackingBean extends ContractBaseBackingBean<ContractDetailsManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(ContractDetailsBackingBean.class);
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
 	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml?faces-redirect=true";
@@ -548,6 +553,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			    } else {
 			    	ctBB.getManagedBean().setGstCheckingGUI(false);
 			    }	
+				ctBB.chkBondWaivedAttachment();
 		  } catch(Exception e){
 				e.printStackTrace();
 			} finally {
@@ -863,11 +869,21 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 									(ctBB.getManagedBean().getCtContractAmount().isBondWaived()  
 										&& ctBB.getManagedBean().getContractVer().getBondWaiverAttachments().size() ==  0))&& 
 									 ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() ==  null){
+								       setTabValue("PB");
 								       throw new EpException(MessageConst.ERROR_750044);
 							}else if(!ctBB.getManagedBean().getCtContractAmount().isBondWaived()  
 									    && ctBB.getManagedBean().isBondWaiver()
 										&& ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() !=  null){
-							    	  throw new EpException(MessageConst.ERROR_750004);
+								        int temp=0;
+								       for(CtAttachment attachments : ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
+								    	      if(!attachments.isBondWaivedTrue() && (attachments.getFilePath() !=null || !attachments.getFilePath().isEmpty())){
+								    	    	  temp++;
+								    	      }
+								       }
+								       if(temp == 0){
+								    	   setTabValue("PB");
+									       throw new EpException(MessageConst.ERROR_750044);
+								       }    
 				            }
 			     	}
 						// Validation for zone
