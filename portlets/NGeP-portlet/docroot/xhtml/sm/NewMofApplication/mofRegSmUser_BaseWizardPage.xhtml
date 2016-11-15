@@ -280,94 +280,30 @@
 				</table>
 				<ui:include
 					src="/xhtml/sm/shared/mofRegistration/applAdditionalInfo.xhtml" />
-				<c:choose>
-					<c:when
-						test="#{(backingBean.managedBean.smAppl.applCategoryType eq 'S' and backingBean.managedBean.tabActiveIndex lt 9)}">
-						<table style="width: 100%">
-							<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
-								<tr>
-									<td></td>
-									<td>
-										<div align="right" style="width: 99%" class="button-wrapper">
-											<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
-												update=":form" onclick="mofApplDelConfirm.show()"
-												type="button" style="margin-bottom:5px;" />
-											<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-												onclick="this.disabled=true;" onstart="blockWidget.show()"
-												oncomplete="this.disabled=false;blockWidget.hide();"
-												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
-												action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
-												update=":form" style="margin-bottom:5px;" />
-											<c:if test="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}">
-												<ui:include
-													src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
-												<!-- disable spki for now-->
-												<ui:remove>
-													<c:choose>
-														<c:when
-															test="#{backingBean.managedBean.overLappedCategoryExists}">
-															<ui:include
-																src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
-														</c:when>
-														<c:otherwise>
-															<ui:include
-																src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
-														</c:otherwise>
-													</c:choose>
-												</ui:remove>
-
-											</c:if>
-										</div>
-									</td>
-								</tr>
-							</p:outputPanel>
-						</table>
-					</c:when>
-					<c:otherwise>
-
-						<c:if test="#{backingBean.managedBean.tabActiveIndex lt 7}">
-							<table style="width: 100%">
-								<p:outputPanel
-									rendered="#{backingBean.managedBean.supplierUser}">
-									<tr>
-										<td></td>
-										<td>
-											<div align="right" style="width: 99%" class="button-wrapper">
-												<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
-													update=":form" onclick="mofApplDelConfirm.show()"
-													type="button" style="margin-bottom:5px;" />
-												<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-													onclick="this.disabled=true;" onstart="blockWidget.show()"
-													oncomplete="this.disabled=false;blockWidget.hide();"
-													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
-													action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
-													update=":form" style="margin-bottom:5px;" />
-												<c:if test="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}">
-													<ui:include
-														src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
-													<!-- disable spki -->
-													<ui:remove>
-														<c:choose>
-															<c:when
-																test="#{backingBean.managedBean.overLappedCategoryExists}">
-																<ui:include
-																	src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
-															</c:when>
-															<c:otherwise>
-																<ui:include
-																	src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
-															</c:otherwise>
-														</c:choose>
-													</ui:remove>
-												</c:if>
-											</div>
-										</td>
-									</tr>
-								</p:outputPanel>
-							</table>
-						</c:if>
-					</c:otherwise>
-				</c:choose>
+					
+				<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+					<table style="width: 100%">
+						<tr>
+							<td></td>
+							<td><div align="right" style="width: 99%" class="button-wrapper">
+									<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
+										update=":form" onclick="mofApplDelConfirm.show()"
+										type="button" style="margin-bottom:5px;" />
+									<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+										onclick="this.disabled=true;" onstart="blockWidget.show()"
+										oncomplete="this.disabled=false;blockWidget.hide();"
+										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
+										action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
+										update=":form" style="margin-bottom:5px;" />
+									<p:outputPanel rendered="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}">
+										<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
+									</p:outputPanel>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</p:outputPanel>
+				
 			</c:if>
 			<p:confirmDialog id="mofApplDelConfirm" closable="false"
 				message="#{lbl['lbl.sm.deleteDraft.cnfmMsg']}"
