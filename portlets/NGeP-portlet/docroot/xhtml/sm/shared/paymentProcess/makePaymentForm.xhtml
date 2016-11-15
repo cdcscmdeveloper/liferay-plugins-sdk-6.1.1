@@ -5,19 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<script>
-		$('.blinkClass').each(function() {
-		    var elem = $(this);
-		    setInterval(function() {
-		        if (elem.css('visibility') == 'hidden') {
-		            elem.css('visibility', 'visible');
-		        } else {
-		            elem.css('visibility', 'hidden');
-		        }    
-		    }, 1000);
-		});
-	</script>
-	
 	<p:panel header="#{lbl['lbl.sm.payment.details']}" rendered="#{backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smAppl.applType eq 'R'}"
 		toggleable="true">
 		
