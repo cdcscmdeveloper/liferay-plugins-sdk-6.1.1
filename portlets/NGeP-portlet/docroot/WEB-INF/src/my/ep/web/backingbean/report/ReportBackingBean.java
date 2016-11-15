@@ -152,7 +152,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
-/**
+/**-
  * The Class ReportBackingBean.
  * 
  * @Author Jangari Kondal Reddy
@@ -8245,7 +8245,7 @@ public class ReportBackingBean extends
 	 * retrievePMServiceType - will Retrieve service type List.
 	 * 
 	 * @return the serviceTypeList
-	 */
+	 */  
 	public List<SelectItem> retrievePMServiceType() {
 		log.info("ReportBackingBean-retrievePMServiceType");
 		serviceTypeList = new ArrayList<SelectItem>();
@@ -9888,7 +9888,7 @@ public class ReportBackingBean extends
 												.equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)
 										|| this.getReportValue()
 												.equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL) || this
-										.getReportValue()
+										.getReportValue() 
 										.equals(ReportConst.SM_PERSON_BRANCH_BANK))) {
 							rptGenBean.setSmMandatorySupplierTypeView(false);
 							rptGenBean.setSmSupplierTypeView(false);
@@ -18802,7 +18802,7 @@ public class ReportBackingBean extends
 					
 					String serverName = EpPropertiesUtils.getInstance().getProperty("rpt.SERVER_NAME");
 					String userName = EpPropertiesUtils.getInstance().getProperty("rpt.USER_NAME");
-					String password = EpPropertiesUtils.getInstance().getProperty("rpt.PASSWORD");
+					String password = EpPropertiesUtils.decrypt(EpPropertiesUtils.getInstance().getProperty("rpt.PASSWORD"));
 					String sid = EpPropertiesUtils.getInstance().getProperty("rpt.SID");
 					
 					StringBuffer headerStr = new StringBuffer();
