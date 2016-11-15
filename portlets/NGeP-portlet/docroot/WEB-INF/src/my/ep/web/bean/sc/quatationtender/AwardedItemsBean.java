@@ -3,6 +3,7 @@
  */
 package my.ep.web.bean.sc.quatationtender;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -12,7 +13,10 @@ import java.math.BigDecimal;
  * @author Hemanth
  *
  */
-public class AwardedItemsBean {
+public class AwardedItemsBean implements Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 	
 	private String itemName;
 	private String supplierName;

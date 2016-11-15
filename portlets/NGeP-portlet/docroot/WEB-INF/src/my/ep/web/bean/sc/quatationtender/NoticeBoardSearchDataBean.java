@@ -1,6 +1,7 @@
 /* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.bean.sc.quatationtender;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,10 @@ import java.util.Date;
  * @author VidyasagarReddy
  *
  */
-public class NoticeBoardSearchDataBean {
+public class NoticeBoardSearchDataBean implements Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 	
 	private boolean isToday;
 	private boolean isYesterday;
