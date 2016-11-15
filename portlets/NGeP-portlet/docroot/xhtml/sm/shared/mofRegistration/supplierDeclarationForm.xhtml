@@ -6,9 +6,20 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel header="#{lbl['lbl.sm.declaration']}" toggleable="true">
-		<h:outputText escape="false" value="#{lbl['lbl.sm.declaration.msg']}"/>
-		<br /><br />
-		<div align="right"><p:commandButton value="#{lbl['lbl.sm.print.declaration.form']}" /></div>
+		<table style="width: 100%;">
+			<tr>
+				<td><h:outputText escape="false" value="#{lbl['lbl.sm.declaration.msg']}"/></td>
+				<td style="vertical-align: baseline;">
+					<div align="right">
+						<p:commandLink>
+							<p:fileDownload value="#{backingBean.printDeclaration()}" />
+							<p:graphicImage value="/css/images/design/print.png"
+								style="margin-right:2px;" title="#{lbl['lbl.sm.print.declaration.form']}"/>
+						</p:commandLink>
+					</div>
+				</td>
+			</tr>
+		</table>
 	</p:panel>
 
 </ui:composition>
