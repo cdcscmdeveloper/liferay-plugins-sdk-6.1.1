@@ -4113,8 +4113,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
 								throw new EpException(MessageConst.ERROR_740051);
 							}
-							}else{
-								throw new EpException(MessageConst.ERROR_740052);
+						}else{
+							throw new EpException(MessageConst.ERROR_740052);
 						}
 					}
 				}
@@ -5392,9 +5392,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					glAccountReqDTO.setGoCode(glAccountSearchBean.getSelectedGenObjCode());					
 				}
 
-				if (StringUtils.isNotBlank(glAccountSearchBean.getAccountCode())) {
-					glAccountReqDTO.setGlAccountCode(glAccountSearchBean.getAccountCode());					
-				}
+//				if (StringUtils.isNotBlank(glAccountSearchBean.getAccountCode())) {
+//					glAccountReqDTO.setGlAccountCode(glAccountSearchBean.getAccountCode());					
+//				}
 
 				if (StringUtils.isNotBlank(glAccountSearchBean.getAccountName())) {
 					glAccountReqDTO.setGlAccountDesc(glAccountSearchBean.getAccountName());
