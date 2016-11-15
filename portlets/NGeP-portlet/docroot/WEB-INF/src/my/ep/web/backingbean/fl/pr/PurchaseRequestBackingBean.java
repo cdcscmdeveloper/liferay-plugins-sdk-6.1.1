@@ -4032,9 +4032,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					glAccountReqDTO.setGoCode(glAccountSearchBean.getSelectedGenObjCode());					
 				}
 
-				if (StringUtils.isNotBlank(glAccountSearchBean.getAccountCode())) {
-					glAccountReqDTO.setGlAccountCode(glAccountSearchBean.getAccountCode());					
-				}
+//				if (StringUtils.isNotBlank(glAccountSearchBean.getAccountCode())) {
+//					glAccountReqDTO.setGlAccountCode(glAccountSearchBean.getAccountCode());					
+//				}
 
 				if (StringUtils.isNotBlank(glAccountSearchBean.getAccountName())) {
 					glAccountReqDTO.setGlAccountDesc(glAccountSearchBean.getAccountName());
