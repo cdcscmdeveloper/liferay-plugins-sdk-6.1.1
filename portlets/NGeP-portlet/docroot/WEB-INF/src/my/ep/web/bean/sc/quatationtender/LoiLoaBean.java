@@ -10,6 +10,7 @@
  */
 package my.ep.web.bean.sc.quatationtender;
 
+import java.io.Serializable;
 import java.util.List;
 
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -24,7 +25,10 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
  * @author Sri
  * @since 09.12.2014
  */
-public class LoiLoaBean {
+public class LoiLoaBean implements Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 	
 	/** The sc loi. */
 	private ScLoi scLoi ;

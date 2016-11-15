@@ -3,6 +3,7 @@
  */
 package my.ep.web.bean.sc.common;
 
+import java.io.Serializable;
 import java.util.List;
 
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -14,7 +15,10 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
  * 
  * @author Sri
  */
-public class ZonesBean {
+public class ZonesBean implements Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 	
 	/** The tpl spec zone dtl. */
 	private TplSpecZoneDtl tplSpecZoneDtl;

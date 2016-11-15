@@ -3,6 +3,7 @@
  */
 package my.ep.web.bean.sc.quatationtender;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,7 +12,10 @@ import java.util.Date;
  * @author Ken
  * @since 11.04.2016
  */
-public class MarketResearchSearchBean {
+public class MarketResearchSearchBean implements Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 
 	private String procurementTitle;
 	private String itemName;
