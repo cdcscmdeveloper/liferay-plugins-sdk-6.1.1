@@ -10,6 +10,7 @@
 */
 package my.ep.web.bean.sc.quatationtender;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
@@ -27,7 +28,10 @@ import org.primefaces.model.DualListModel;
  *
  * @author Viswanath
  */
-public class TabBean {
+public class TabBean implements Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 	
 	/** The title name. */
 	private String titleName;

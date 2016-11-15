@@ -17,7 +17,10 @@ import java.io.Serializable;
  * 
  * @author:Garikapati Mangaiah.
  */
-public class CtCircularSearchBean implements Serializable{
+public class CtCircularSearchBean implements Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 
 	/** The cir cular no. */
 	private String cirCularNo;

@@ -10,6 +10,7 @@
  */
 package my.ep.web.bean.sc.quatationtender;
 
+import java.io.Serializable;
 import java.util.List;
 
 // TODO: Auto-generated Javadoc
@@ -18,7 +19,10 @@ import java.util.List;
  * @author Manga
  * @since 29.01.2014
  */
-public class Location {
+public class Location implements Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 
 	/** The state. */
 	private String state;

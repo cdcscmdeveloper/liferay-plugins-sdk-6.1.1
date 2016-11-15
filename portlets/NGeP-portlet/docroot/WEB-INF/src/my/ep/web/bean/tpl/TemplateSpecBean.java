@@ -10,6 +10,7 @@
  */
 package my.ep.web.bean.tpl;
 
+import java.io.Serializable;
 import java.util.List;
 
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -25,7 +26,9 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
  * @author VidyaSagarReddy
  * @since 19.03.2015
  */
-public class TemplateSpecBean {
+public class TemplateSpecBean implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private boolean selectAll;
 	private TplSpecMaster specMaster;
 	private String contentType;
