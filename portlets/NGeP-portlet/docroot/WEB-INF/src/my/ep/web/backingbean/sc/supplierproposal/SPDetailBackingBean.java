@@ -346,6 +346,7 @@ public class SPDetailBackingBean extends
 
 		return duration;
 	}
+	
 
 	/**
 	 * Listener method for tab change to retrieve Quotation/Tender Document
@@ -409,6 +410,19 @@ public class SPDetailBackingBean extends
 		debugLogger("retrieveIntegrityDetails");
 		this.getManagedBean().setPrepareActiveIndex(4);
 		generateDeclarationFromVelocity(getManagedBean().getQt());
+	}
+	
+	/**
+	 * Listener method for tab change to retrieve Quotation/Tender general info
+	 * Details
+	 */
+	public void retrieveGeneralInfo() {
+		debugLogger("retrieveGeneralInfo");
+		this.getManagedBean().setPrepareActiveIndex(5);
+		
+		if(getManagedBean().getSmAppl() == null || getManagedBean().getSmCompanyBasic() == null){
+			retrievePaidUpCapitalNdDeclarationDtls();
+		}
 	}
 
 	/**
@@ -4281,15 +4295,15 @@ public class SPDetailBackingBean extends
 		return publishDate;
 
 	}
-	
-	private void checklistSorting(List<ScQtProposalChecklist> checkList){
-		Collections.sort(checkList, 
-				new Comparator<ScQtProposalChecklist>() {
-					public int compare(ScQtProposalChecklist checklist1, 
-							ScQtProposalChecklist checklist2) {
-						
-						return checklist1.getScQtCheckList().getChecklistSeq()-checklist2.getScQtCheckList().getChecklistSeq();
-					}
-				});
+
+	private void checklistSorting(List<ScQtProposalChecklist> checkList) {
+		Collections.sort(checkList, new Comparator<ScQtProposalChecklist>() {
+			public int compare(ScQtProposalChecklist checklist1,
+					ScQtProposalChecklist checklist2) {
+
+				return checklist1.getScQtCheckList().getChecklistSeq()
+						- checklist2.getScQtCheckList().getChecklistSeq();
+			}
+		});
 	}
 }
