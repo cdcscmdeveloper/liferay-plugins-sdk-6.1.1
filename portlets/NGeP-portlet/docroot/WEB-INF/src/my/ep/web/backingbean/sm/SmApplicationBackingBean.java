@@ -138,6 +138,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -190,6 +191,17 @@ public class SmApplicationBackingBean extends
 	 */
 	public SmApplicationBackingBean() {
 		SmCommonUtil.setMDCUserId();
+	}
+
+	/**
+	 * Print Supplier Profile
+	 * 
+	 * @throws IOException
+	 */
+	public void printDeclaration() throws IOException {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
+		generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
 	}
 
 	/**
@@ -7520,8 +7532,11 @@ public class SmApplicationBackingBean extends
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes()
 														.getUserLocale())));
+		SmOutputMsgBackingBean backingBean = new SmOutputMsgBackingBean();
+		backingBean.getManagedBean().setApplId(
+				getManagedBean().getSmAppl().getApplId());
 		renewSesionObject();
-		return SmApplicationUtil.getApplicationErrorPage();
+		return "/xhtml/sm/shared/mofRegistration/mofApplicationOutputMsg.xhtml";
 	}
 
 	public String submitSmApplToBpm(PmDigiSign pmDigiSign, String applType) {
