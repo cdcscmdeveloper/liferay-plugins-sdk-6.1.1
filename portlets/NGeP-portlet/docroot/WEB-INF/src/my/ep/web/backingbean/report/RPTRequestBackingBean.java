@@ -460,4 +460,14 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 		return false;
 	}
+	
+	public String getFileType(String reportCode){
+		
+		if (reportCode.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL) || 
+				reportCode.equals(ReportConst.SM_REJECTED_SOFTCERT_RPT_VAL) ) {
+			return "Excel";
+		} else {
+			return "Pdf";
+		}
+	}
 }
