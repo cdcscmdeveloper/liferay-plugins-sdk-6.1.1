@@ -10,6 +10,7 @@
  */
 package my.ep.web.bean.report;
 
+import java.io.Serializable;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +45,12 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  * 
  * @Author Jangari Kondal Reddy
  */
-public class ReportsGenerateBean {
+public class ReportsGenerateBean implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
