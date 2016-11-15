@@ -8,8 +8,8 @@
 
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="20%" class="sidemenutd" valign="top">
-				<p:tabMenu id="proposalMenuId"
+			<td width="20%" class="sidemenutd" valign="top"><p:tabMenu
+					id="proposalMenuId"
 					activeIndex="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex}"
 					styleClass="sidemenu">
 					<p:menuitem value="#{lbl['lbl.sc.quotation.tender.document']}"
@@ -27,10 +27,11 @@
 					<p:menuitem value="#{lbl['lbl.sc.integrity.pact']}"
 						action="#{supplierProposalDetailBackingBean.retrieveIntegrityDetails}"
 						update="@form" />
-				</p:tabMenu>
-			</td>
-			<td width="80%" valign="top" >
-			<h:panelGroup
+					<p:menuitem value="#{lbl['lbl.sc.general.infomation']}"
+						action="#{supplierProposalDetailBackingBean.retrieveGeneralInfo}"
+						update="@form" />
+				</p:tabMenu></td>
+			<td width="80%" valign="top"><h:panelGroup
 					id="proposalMenuContent">
 					<c:if
 						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '0'}">
@@ -54,8 +55,11 @@
 						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '4'}">
 						<ui:include src="supplierProposalIntegrityPact.xhtml" />
 					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '5'}">
+						<ui:include src="supplierProposalGeneralInfo.xhtml" />
 					</h:panelGroup>
-			</td>
+				</h:panelGroup></td>
 		</tr>
 	</table>
 
