@@ -17,6 +17,13 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+import org.docx4j.jaxb.Context;
+import org.docx4j.openpackaging.contenttype.ContentType;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.PartName;
+import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
+import org.docx4j.relationships.Relationship;
+import org.docx4j.wml.CTAltChunk;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 /**
@@ -131,6 +138,53 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
         
         os.flush();
 		os.close();
+	}
+	
+	/**
+	 * Generate Doc file by velocity.
+	 * 
+	 * @param velocityTemplate
+	 * 		the velocity template file name.
+	 * @param context
+	 * 		the velocity context for parameters to be replace.
+	 * @param filePath
+	 * 		the filePath to be save.
+	 * @throws Exception
+	 */
+	public void generateDocFromVelocity(String velocityTemplate, VelocityContext context, String filePath) throws Exception {
+		log.info("velocityTemplate: " + velocityTemplate);
+		String html = getHtmlFromVelocity(velocityTemplate, context);
+		
+		generateDoc(filePath, html);
+	}
+	
+	/**
+	 * Generate Doc file by html.
+	 * 
+	 * @param filePath
+	 * 		the filePath to be save.
+	 * @param html
+	 * 		the html content to generate as Doc.
+	 * @throws Exception
+	 */
+	public void generateDoc(String filePath, String html) throws Exception {
+		debugLogger("generateDoc");
+		
+		WordprocessingMLPackage wordMLPackage;
+		wordMLPackage = WordprocessingMLPackage.createPackage();
+		
+		AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
+		afiPart.setBinaryData(html.getBytes());
+		afiPart.setContentType(new ContentType("text/html"));
+		
+		Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart);
+
+		CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
+		ac.setId(altChunkRel.getId());
+		
+		wordMLPackage.getMainDocumentPart().addObject(ac);
+		wordMLPackage.getContentTypeManager().addDefaultContentType("html","text/html");
+		wordMLPackage.save(new java.io.File(filePath));
 	}
 	
 	/**
