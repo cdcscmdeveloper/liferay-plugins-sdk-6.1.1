@@ -142,7 +142,7 @@
 					</td>
 					<td>
 						<p:selectManyMenu showCheckbox="#{backingBean.managedBean.valueReqd}"
-							required="false"
+							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.category']}" id="storeCategoryId"
 							value="#{backingBean.managedBean.selectedSuppCategoryFacilityIds}"
 							style="height:100px;width: 200px;">
