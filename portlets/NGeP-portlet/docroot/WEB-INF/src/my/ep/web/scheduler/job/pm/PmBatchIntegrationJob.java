@@ -10,7 +10,6 @@ import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sc.helper.SchedulerHelper;
 
 import org.apache.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
@@ -50,18 +49,12 @@ public class PmBatchIntegrationJob implements Job {
 			if(resDTO.isSuccessful()){
 				if(resDTO.getActiveBidSchedules()!= null){
 					log.info("jobBidSchedulesList size is"+resDTO.getActiveBidSchedules().size());
-					SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
-					schedulerHelper.setJobBidScheduleList(resDTO.getActiveBidSchedules());
 					List<Long> jobBidScheduleIdList = new ArrayList<Long>();
 					for(ScBidSchedule ScBidSchedule : resDTO.getActiveBidSchedules()){
 						jobBidScheduleIdList.add(ScBidSchedule.getBidScheduleId());
 					}
-					schedulerHelper.setJobBidScheduleIdList(jobBidScheduleIdList);
 					jobBidScheduleIdList = null;
 				}else {
-					SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
-					schedulerHelper.getJobBidScheduleList().clear();
-					schedulerHelper.getJobBidScheduleIdList().clear();
 				}
 			}
 
