@@ -31,6 +31,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.rpt.RPTRequest;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -320,7 +321,9 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		URL obj;
 		BufferedInputStream buf;
 		
-		String gnrtdURL = "http://ngepdevrps01.ngep.com:5901/reports/rwservlet/getjobid" + rptRequest.getJobId() + "?server=RptSvr_NGEPDevRPS01_asinst_FT";
+		String reportServerName = EpPropertiesUtils.getInstance().getProperty("rpt.SERVER_NAME");
+		
+		String gnrtdURL = "http://ngepdevrps01.ngep.com:5901/reports/rwservlet/getjobid" + rptRequest.getJobId() + "?server=" + reportServerName;
 		
 		try {
 			
