@@ -423,8 +423,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		
 		// Enable or Disable GST field
-		if (getManagedBean().getContractVer().getCtContractValue().getGstEffDate() != null 
-			&& getManagedBean().getContractVer().getCtContractValue().getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime()) {
+		if (ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 			if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 				getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 			}
@@ -1352,7 +1351,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				content = getContent(agreementContent.getTitle());
 			}
 			if (content != null) {
-				convertHtmlToDocFile(content, filePath);
+				DocumentGenerator.getInstance().generateDoc(filePath, content);
 				downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 			}
 		}catch (UnsupportedEncodingException e) {

@@ -523,7 +523,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 
 		    	ctBB.getManagedBean().setDisableContractAmount(true);
-				if (ctBB.isContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+				if (ctBB.isLoaContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 					if (ctBB.getManagedBean().getCtContractAmount().getGstAmount() == null) {
 			    		ctBB.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 					}
@@ -758,7 +758,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 						if (ctBB.isBeforeGstReliefDueDate()
 								&& ctBB.imposedServiceTaxCondition()
-								&& ctBB.isContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
+								&& ctBB.isLoaContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
 								&& ctBB.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
 								if (ctBB.getManagedBean().getCtContractAmount().getGstAmount() == null
 										|| ctBB.getManagedBean().getCtContractAmount().getGstAmount().doubleValue() == 0) {
@@ -1801,7 +1801,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		trBB.getCtBB().getManagedBean().setContractVer(resDTO.getCtContractVer());
 		trBB.getManagedBean().setExternalPageUrl(null);
 		
-		if (ctBB.isContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+		if (ctBB.isLoaContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 			if (trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 				trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().setContractAmount(BigDecimal.ZERO);
 			}

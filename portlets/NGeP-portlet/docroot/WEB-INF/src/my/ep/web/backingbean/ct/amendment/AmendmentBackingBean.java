@@ -821,7 +821,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
 					}
 				    
-					if (ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+					if (ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				    	if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null) {
 				    		ctBackingBean.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 						}
@@ -1174,7 +1174,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     		// Validation for GST amount before GST Relief Due Date
 	     		if (ctBackingBean.isBeforeGstReliefDueDate()
 	     				&& ctBackingBean.imposedServiceTaxCondition()
-	     				&& ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
+	     				&& ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
 	     				&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
 	     			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() == null
 	     					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().doubleValue() == 0) {
@@ -4304,7 +4304,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		String content = null;	
 		content = getContent(ContractConst.DOC_DEF_KEY_LOA_RECIEPT);
 		if (content != null) {
-			convertHtmlToDocFile(content, filePath);
+			DocumentGenerator.getInstance().generateDoc(filePath, content);
 			downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 		}
     }
@@ -4481,7 +4481,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}				
 			context.put("newContractValue", amountDF.format(contractValue));
 			
-			if (ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+			if (ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				context.put("newGSTAmout", amountDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount()));
 				context.put("newOverallAmt", amountDF.format(contractValue.add(
 						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount())));
@@ -4672,13 +4672,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				context.put("bondAmt200k", false);
 			}
 			
-			context.put("contractWithGst", ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate()));
+			context.put("contractWithGst", ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate()));
 			String gstRegNo = "TB";
 			String gstEffDate = "TB";
 			String gstDeclareDate = "TB";
 			BigDecimal overallAmt = scLoa.getLoaAmt();
 			
-			if (ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+			if (ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				context.put("contractAmt", amountDF.format(overallAmt));
 				context.put("contractAmtTxt", (scLoa.getLoaAmt() != null && scLoa.getLoaAmt().doubleValue() != 0) ? NumberWordUtil.convert(amountNoCommaDF.format(overallAmt)) : ""); 
 				
