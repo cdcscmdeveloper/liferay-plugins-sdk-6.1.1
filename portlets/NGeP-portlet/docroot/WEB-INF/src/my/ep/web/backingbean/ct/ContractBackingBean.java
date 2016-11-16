@@ -606,7 +606,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			if (isBeforeGstReliefDueDate()	// currentDate <= 31/3/2017
 					&& imposedServiceTaxCondition()	// ack_date < 01/04/2015 & procurement category = Service
-					&& isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())	// supplier gst is effective
+					&& isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())	// supplier gst is effective
 					&& !getManagedBean().getContractVer().getCtContractValue().isServiceTax()	// imposed_service_tax = No
 					&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() > getGstReliefDueDate().getTime()) {	// contract_end_date > 31/3/2017
 				getManagedBean().setServiceTaxAlertFlg(true);				
@@ -3065,11 +3065,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	  
 	  /**
-	   * The method used to verify contract is with GST.
+	   * The method used to verify loa/contract is with GST.
 	   * @param gstEffDate  the gst effective date
-	   * @return true, if contract is with GST false, if contract is without GST
+	   * @return true, if loa/contract is with GST false, if loa/contract is without GST
 	   */
-	public boolean isContractWithGst(Date gstEffDate) {
+	public boolean isLoaContractWithGst(Date gstEffDate) {
 		  if (gstEffDate != null && gstEffDate.getTime() <= DateUtils.getCurrentDateWithoutTime().getTime())
 			  return true;
 		  else
@@ -3112,7 +3112,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		  chkServiceTaxAlert();
 		  getManagedBean().setDisableContractAmount(true);
 		  
-		  if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+		  if (isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 			  getManagedBean().setDisableGstAmount(false);			  
 			  if (getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
 				  getManagedBean().setDisableContractAmount(false);

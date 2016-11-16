@@ -260,7 +260,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 
 			ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-			if (ctBB.isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+			if (ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 					ctBB.getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 				}
@@ -835,8 +835,9 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 							AttachmentFormat attachmentFormat = null;
 							attachmentFormat = new AttachmentDateFormat();
 							filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
-					    convertHtmlToDocFile(DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context), filePath);
-					    downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+							
+							DocumentGenerator.getInstance().generateDocFromVelocity(vmFile, context, filePath);
+							downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 						//RequestContext.getCurrentInstance().execute("noticeDlg.show()");
 				}
 			}

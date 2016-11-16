@@ -275,7 +275,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	    	ctBB.getManagedBean().setContractVer(getManagedBean().getContractVer());
 	    	ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 	    	/*End remark setting*/
-	    	if (ctBB.isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+	    	if (ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 	    		if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 	    			ctBB.getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 	    		}
