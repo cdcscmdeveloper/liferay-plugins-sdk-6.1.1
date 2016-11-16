@@ -4877,7 +4877,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 			}
 			
-			context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate() != null) {
+				context.put("govSignDate", dateSDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getGovtSignDate()));
+			} else {
+				context.put("govSignDate", "");
+			}
 			context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
 			if(getManagedBean().getAckFA() !=  null && getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
 				context.put("supplierName",  getFacesScopes().getUserSessionBean().getUserName());
