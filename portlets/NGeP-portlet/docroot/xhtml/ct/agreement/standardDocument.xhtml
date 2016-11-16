@@ -49,11 +49,11 @@
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content.action']}"/>
 				  	</f:facet>
 				   	<h:panelGroup>
-						<h:commandLink disabled="#{contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeGeneratedFromFulfilment
+						<p:commandLink disabled="#{contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeGeneratedFromFulfilment
 				   				and !agreementBackingBean.managedBean.validBondAttachment}"
 							action="#{agreementBackingBean.clickDownloadIcon(contentsVar)}" immediate="true">
 							<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
-						</h:commandLink>
+						</p:commandLink>
 					 	<p:spacer width="5" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateDocument}" />
 					 	<p:commandLink rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateDocument}"
 								action="#{agreementBackingBean.gotoTemplateDoc(contentsVar)}">
