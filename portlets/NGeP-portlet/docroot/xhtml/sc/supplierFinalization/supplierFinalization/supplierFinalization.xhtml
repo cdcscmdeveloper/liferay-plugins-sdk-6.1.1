@@ -56,7 +56,7 @@
 								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
 								disabled="#{!(isBPKTaskAndClaimed or 
 												isSecretaryUser)}"
-								style="width:225px;">
+								style="width:333px;">
 								<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
 								<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
 															     [id$=rePublishPanel],[id$=itemSupplierPanel])" 
