@@ -794,6 +794,23 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSmAppl().setSmManufacturingDtls(
 					activeManufacturingDtls);
 		}
+
+		getManagedBean().setDockYardFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD));
+		getManagedBean().setWorkshopFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
+		getManagedBean().setStoreFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
+		getManagedBean().setFactoryFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
 	}
 
 	/**

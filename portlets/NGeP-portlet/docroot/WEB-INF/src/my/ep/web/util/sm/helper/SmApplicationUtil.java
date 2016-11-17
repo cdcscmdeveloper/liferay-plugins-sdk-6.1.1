@@ -8164,7 +8164,8 @@ public class SmApplicationUtil {
 							bean.getMachineItems()));
 				}
 				if (EntityHelper.isCollectionEmpty(SmApplicationUtil
-						.getMachineItemsByMachineDetails(mac))) {
+						.getMachineItemsByMachineDetails(mac,
+								bean.getSelectedMachineCategoryIds()))) {
 					if (StringUtils.isBlank(mac.getMachineType())) {
 						valid = false;
 						if (currentTab != -1) {
@@ -8334,22 +8335,27 @@ public class SmApplicationUtil {
 	 * @return List<SelectItem>
 	 */
 	public static List<SelectItem> getMachineItemsByMachineDetails(
-			SmMachineDtl machine) {
+			SmMachineDtl machine, Long[] selectedMachineCategoryIds) {
 		List<SelectItem> machineItems = new ArrayList<SelectItem>();
 		if (machine != null) {
 			if (machine.getCategoryType() != null
 					&& machine.getCategoryType().getParameterId() != null
-					&& (machine.getCategoryCode() == null || machine
-							.getCategoryCode().getCategoryL3Id() == null)) {
+					&& !machine.getCategoryType().getParameterCode()
+							.equals(ParameterConst.CATEGORY_TYPE_PRINTING)) {
 				machineItems = SmCommonUtil.getInstance()
 						.getMachineItemsByCatTypeCode(
 								machine.getCategoryType().getParameterCode());
 			} else {
-				if (machine.getCategoryCode() != null
-						&& machine.getCategoryCode().getCategoryL3Id() != null) {
-					machineItems = SmCommonUtil
-							.getPrintingMachineItemsByCategoryCode(machine
-									.getCategoryCode());
+				if (selectedMachineCategoryIds != null) {
+					CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+					PmCategoryL3 l3 = null;
+					for (Long id : Arrays.asList(selectedMachineCategoryIds)) {
+						reqDTO.setCategoryL3Id(id);
+						l3 = SmServiceLookup.getCategoryCodeSO()
+								.retrieveCategoryL3ById(reqDTO).getCategoryL3();
+						machineItems.addAll(SmCommonUtil
+								.getPrintingMachineItemsByCategoryCode(l3));
+					}
 				}
 			}
 		}

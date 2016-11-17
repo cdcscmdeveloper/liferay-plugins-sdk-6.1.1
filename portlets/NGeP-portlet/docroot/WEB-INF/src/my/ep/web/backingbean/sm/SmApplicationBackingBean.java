@@ -4892,7 +4892,8 @@ public class SmApplicationBackingBean extends
 						.getCategoryType().getParameterId(), getManagedBean()
 						.getSmAppl()));
 		getManagedBean().setMachineItems(
-				SmApplicationUtil.getMachineItemsByMachineDetails(macBean));
+				SmApplicationUtil.getMachineItemsByMachineDetails(macBean,
+						getManagedBean().getSelectedMachineCategoryIds()));
 		getManagedBean().setSelectedMachine(macBean);
 		getManagedBean().getSelectedMachine().setBrandNew(false);
 		getManagedBean().setCloneObject(
@@ -4932,9 +4933,9 @@ public class SmApplicationBackingBean extends
 										.getCategoryType().getParameterId(),
 								getManagedBean().getSmAppl()));
 		getManagedBean().setMachineItems(
-				SmApplicationUtil
-						.getMachineItemsByMachineDetails(getManagedBean()
-								.getSelectedMachine()));
+				SmApplicationUtil.getMachineItemsByMachineDetails(
+						getManagedBean().getSelectedMachine(), getManagedBean()
+								.getSelectedMachineCategoryIds()));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("equipmentDialog.show()");
 	}
@@ -4998,9 +4999,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedMachine().setMachine(new PmMachine());
 		getManagedBean().getSelectedMachine().setMachineType(StringUtils.EMPTY);
 		getManagedBean().setMachineItems(
-				SmApplicationUtil
-						.getMachineItemsByMachineDetails(getManagedBean()
-								.getSelectedMachine()));
+				SmApplicationUtil.getMachineItemsByMachineDetails(
+						getManagedBean().getSelectedMachine(), getManagedBean()
+								.getSelectedMachineCategoryIds()));
 
 		getManagedBean().getSelectedMachine().setCategoryCode(
 				new PmCategoryL3());
@@ -5022,9 +5023,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedMachine().setMachine(new PmMachine());
 		getManagedBean().getSelectedMachine().setMachineType(StringUtils.EMPTY);
 		getManagedBean().setMachineItems(
-				SmApplicationUtil
-						.getMachineItemsByMachineDetails(getManagedBean()
-								.getSelectedMachine()));
+				SmApplicationUtil.getMachineItemsByMachineDetails(
+						getManagedBean().getSelectedMachine(), getManagedBean()
+								.getSelectedMachineCategoryIds()));
 	}
 
 	public void onChangeMachine() {
@@ -12134,7 +12135,8 @@ public class SmApplicationBackingBean extends
 	public List<SelectItem> getMachineItems(SmMachineDtl mac) {
 		List<SelectItem> retVal = new ArrayList<SelectItem>();
 		if (mac.getCategoryType() != null) {
-			retVal = SmApplicationUtil.getMachineItemsByMachineDetails(mac);
+			retVal = SmApplicationUtil.getMachineItemsByMachineDetails(mac,
+					getManagedBean().getSelectedMachineCategoryIds());
 		}
 
 		return retVal;
