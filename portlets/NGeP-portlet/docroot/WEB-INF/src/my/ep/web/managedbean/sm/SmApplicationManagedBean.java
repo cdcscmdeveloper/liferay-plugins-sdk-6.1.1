@@ -422,6 +422,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> categoryTypeItems;
 	private List<SelectItem> categoryCodeItems;
 	private List<SelectItem> machineItems;
+	private List<PmMachine> travellingSoftwareList;
+	private PmMachine selectedTravellingSoftware;
+	private String travellingSoftwareOthers;
 	private Long prevBasicStateId;
 	private SmApplStatusInfoVO applStatusInfo;
 	private PmDigiSign pmDigiSign;
@@ -3812,5 +3815,29 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setGstPercentageLabels(String gstPercentageLabels) {
 		this.gstPercentageLabels = gstPercentageLabels;
+	}
+
+	public List<PmMachine> getTravellingSoftwareList() {
+		return travellingSoftwareList;
+	}
+
+	public void setTravellingSoftwareList(List<PmMachine> travellingSoftwareList) {
+		this.travellingSoftwareList = travellingSoftwareList;
+	}
+
+	public String getTravellingSoftwareOthers() {
+		return travellingSoftwareOthers;
+	}
+
+	public void setTravellingSoftwareOthers(String travellingSoftwareOthers) {
+		this.travellingSoftwareOthers = travellingSoftwareOthers;
+	}
+
+	public PmMachine getSelectedTravellingSoftware() {
+		return selectedTravellingSoftware;
+	}
+
+	public void setSelectedTravellingSoftware(PmMachine selectedTravellingSoftware) {
+		this.selectedTravellingSoftware = selectedTravellingSoftware;
 	}
 }

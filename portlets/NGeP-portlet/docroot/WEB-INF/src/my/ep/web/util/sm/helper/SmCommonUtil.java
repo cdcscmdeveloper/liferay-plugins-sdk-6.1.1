@@ -3522,13 +3522,7 @@ public class SmCommonUtil {
 		if (StringUtils.isNotBlank(catTypeCode)
 				&& Arrays.asList(categoryInMachineSection)
 						.contains(catTypeCode)) {
-			PmParameter categoryType = new PmParameter();
-			categoryType.setParameterCode(catTypeCode);
-			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-			reqDTO.setCategoryTypeCode(categoryType);
-			List<PmMachine> machineList = SmServiceLookup.getCategoryCodeSO()
-					.retrievePmMachineByParameterCategoryType(reqDTO)
-					.getMachineList();
+			List<PmMachine> machineList = getPmMachineByCategoryTypeCode(catTypeCode);
 			if (!SmCommonUtil.isCollectionEmpty(machineList)) {
 				SelectItem machineItem = null;
 				for (PmMachine machine : machineList) {
@@ -3540,6 +3534,24 @@ public class SmCommonUtil {
 			}
 		}
 		return machineItems;
+	}
+
+	/**
+	 * Get pmMachine by categoryTypeCode
+	 * 
+	 * @param String
+	 *            catTypeCode
+	 * @return List<PmMachine>
+	 */
+	public List<PmMachine> getPmMachineByCategoryTypeCode(String catTypeCode) {
+		PmParameter categoryType = new PmParameter();
+		categoryType.setParameterCode(catTypeCode);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryTypeCode(categoryType);
+		List<PmMachine> machineList = SmServiceLookup.getCategoryCodeSO()
+				.retrievePmMachineByParameterCategoryType(reqDTO)
+				.getMachineList();
+		return machineList;
 	}
 
 	/**
@@ -3897,8 +3909,10 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
 				case "70031":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
-/*				case "70032":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);*/
+					/*
+					 * case "70032": throw new
+					 * EpException(MessageConst.ERROR_MYIDENTITY_70032);
+					 */
 				case "70004":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70005":
@@ -3916,16 +3930,17 @@ public class SmCommonUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * verify verify Owner With My Identity
+	 * 
 	 * @param name
 	 * @param identificationNo
 	 * @param postCode
 	 * @param type
 	 */
 	public void verifyOwnerWithMyIdentity(String name, String identificationNo,
-			String postCode, String type){
+			String postCode, String type) {
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
 				"sm", IMyIdentitySO.class);
@@ -4451,7 +4466,7 @@ public class SmCommonUtil {
 	public static String retrieveLoginIdsByZoneAndRole(String zoneZode,
 			String roleCode, String supplierType, String applType,
 			String applCatTyep) {
-		
+
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setZoneCode(zoneZode);
 		userReqDTO.setRoleCode(roleCode);
@@ -4459,7 +4474,8 @@ public class SmCommonUtil {
 		userReqDTO.setApplicationType(applType);
 		userReqDTO.setCategoryType(applCatTyep);
 
-		UserResDTO userResDTO = SmServiceLookup.getUserSO().retrieveUserIdsByRoleAndZone(userReqDTO);
+		UserResDTO userResDTO = SmServiceLookup.getUserSO()
+				.retrieveUserIdsByRoleAndZone(userReqDTO);
 		return userResDTO.getUserIdList();
 	}
 }

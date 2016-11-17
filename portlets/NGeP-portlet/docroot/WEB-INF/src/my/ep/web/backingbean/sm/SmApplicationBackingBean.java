@@ -1102,6 +1102,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setTravellingSoftwareItems(
 				SmCommonUtil.getInstance().getMachineItemsByCatTypeCode(
 						ParameterConst.CATEGORY_TYPE_TRAVEL));
+		SmApplicationUtil.initializeTravellingSoftwareTicked(getManagedBean());
 
 		// set registration status list exclude current registration status
 		getManagedBean().setRegStatusDescList(
@@ -2155,6 +2156,8 @@ public class SmApplicationBackingBean extends
 											.getSmAppl()));
 					SmApplicationUtil
 							.showOrHideTravelSoftwarePanel(getManagedBean());
+					SmApplicationUtil
+							.initializeTravellingSoftwareTicked(getManagedBean());
 					break;
 				default:
 					break;
@@ -5102,14 +5105,8 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmSupplierSystem object
 	 */
 	public void assignNewSystemBean() {
-		getManagedBean().setOthersSystem(false);
-		getManagedBean().setSelectedSystem(new SmSupplierSystem());
-		getManagedBean().getSelectedSystem().setSystem(new PmMachine());
-		getManagedBean().getSelectedSystem().setRevNo(1);
-		getManagedBean().getSelectedSystem().setSmAppl(
-				getManagedBean().getSmAppl());
-		assignValReqdToTrue();
-		RequestContext.getCurrentInstance().execute("systemDialog.show()");
+		PmMachine mac = new PmMachine();
+		getManagedBean().getTravellingSoftwareList().add(mac);
 	}
 
 	/**
@@ -5146,16 +5143,15 @@ public class SmApplicationBackingBean extends
 	 * the application.
 	 */
 	public void addOrUpdateSystemToSmAppl() {
-		EntityHelper.addOrUpdateEntityToList(getManagedBean()
-				.getSelectedSystem(), getManagedBean().getSmAppl()
-				.getSmSupplierSystems());
-		if (getManagedBean().getSelectedSystem().getSupplierSystemId() == null) {
-			RequestContext.getCurrentInstance().execute(
-					"systemDtWidVar.paginator.endLink.click()");
-		}
-		saveOrUpdateAppl();
+		PmMachine mac = new PmMachine();
+		mac.setMachineDesc(getManagedBean().getTravellingSoftwareOthers());
+		getManagedBean().getTravellingSoftwareList().add(mac);
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("systemDialog.hide()");
+	}
+
+	public void onDeleteSystem(PmMachine mach) {
+		getManagedBean().setSelectedTravellingSoftware(mach);
 	}
 
 	/**
@@ -5164,17 +5160,15 @@ public class SmApplicationBackingBean extends
 	 */
 	public void deleteSelectedSystem() {
 
-		if (getManagedBean().getSelectedSupplierSystemList().size() > 0) {
-			for (SmSupplierSystem system : getManagedBean()
-					.getSelectedSupplierSystemList()) {
-				getManagedBean().getSmAppl().getSmSupplierSystems()
-						.remove(system);
+		Iterator<PmMachine> mainTravelSoftwareIt = getManagedBean()
+				.getTravellingSoftwareList().iterator();
+		while (mainTravelSoftwareIt.hasNext()) {
+			PmMachine mainTravelSoftware = mainTravelSoftwareIt.next();
+
+			if (mainTravelSoftware.equals(getManagedBean()
+					.getSelectedTravellingSoftware())) {
+				mainTravelSoftwareIt.remove();
 			}
-			getManagedBean().getSelectedSupplierSystemList().clear();
-		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { SmCommonUtil.getMessage(
-							"lbl.sm.travelling.system", null) });
 		}
 	}
 
@@ -5406,6 +5400,7 @@ public class SmApplicationBackingBean extends
 				.removeNotApplicableInformationBeforeSave(getManagedBean());
 		SmApplicationUtil.updateApplBranchCodeIfEmpty(getManagedBean()
 				.getSmAppl());
+		SmApplicationUtil.updateTravellingSoftware(getManagedBean());
 		reCheckVerifiedSection();
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
@@ -7535,6 +7530,8 @@ public class SmApplicationBackingBean extends
 		SmOutputMsgBackingBean backingBean = new SmOutputMsgBackingBean();
 		backingBean.getManagedBean().setApplId(
 				getManagedBean().getSmAppl().getApplId());
+		backingBean.getManagedBean().setApplType(
+				getManagedBean().getSmAppl().getApplType());
 		renewSesionObject();
 		return "/xhtml/sm/shared/mofRegistration/mofApplicationOutputMsg.xhtml";
 	}
