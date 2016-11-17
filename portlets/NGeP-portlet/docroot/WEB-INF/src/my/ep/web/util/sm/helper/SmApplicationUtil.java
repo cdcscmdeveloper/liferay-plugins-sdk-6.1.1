@@ -5460,6 +5460,92 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Initialize travelling software tick or untick checkbox
+	 * 
+	 * @param List
+	 *            <PmMachine> mainTravellingSoftwareList
+	 * @param List
+	 *            <SmSupplierSystem> travellingSoftwareSystems
+	 */
+	public static void initializeTravellingSoftwareTicked(
+			SmApplicationManagedBean bean) {
+		bean.setSelectedAll(false);
+		bean.setTravellingSoftwareList(SmCommonUtil.getInstance()
+				.getPmMachineByCategoryTypeCode(
+						ParameterConst.CATEGORY_TYPE_TRAVEL));
+
+		// populate others travelling software in list
+		List<PmMachine> addOthersMachineList = new ArrayList<PmMachine>();
+		PmMachine others = null;
+		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
+				.getSmSupplierSystems())) {
+			for (SmSupplierSystem sys : bean.getSmAppl().getSmSupplierSystems()) {
+				if (sys.getSystem() == null
+						&& !StringUtils.isBlank(sys.getSystemName())) {
+					others = new PmMachine();
+					others.setMachineDesc(sys.getSystemName());
+					addOthersMachineList.add(others);
+				}
+			}
+		}
+
+		if (!EntityHelper.isCollectionEmpty(bean.getTravellingSoftwareList())) {
+			// add others travelling software to main machine list
+			if (!EntityHelper.isCollectionEmpty(addOthersMachineList)) {
+				bean.getTravellingSoftwareList().addAll(addOthersMachineList);
+			}
+
+			for (PmMachine machine : bean.getTravellingSoftwareList()) {
+				if ((PmMachine) EntityHelper.getEntityBySinglePropertyFromList(
+						machine.getMachineId(), bean.getSmAppl()
+								.getSmSupplierSystems(), "system") != null) {
+					machine.setSelected(true);
+				} else {
+					machine.setSelected(false);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Update travelling software
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
+	public static void updateTravellingSoftware(SmApplicationManagedBean bean) {
+		if (bean.getCurrentPageType().equals(
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
+			bean.getSmAppl().setSmSupplierSystems(
+					new ArrayList<SmSupplierSystem>());
+			SmSupplierSystem travelSoftware = null;
+			if (!EntityHelper.isCollectionEmpty(bean
+					.getTravellingSoftwareList())) {
+				for (PmMachine mac : bean.getTravellingSoftwareList()) {
+					travelSoftware = new SmSupplierSystem();
+					if (mac.getMachineId() != null) {
+
+						if (mac.isSelected()) {
+							travelSoftware.setRevNo(1);
+							travelSoftware.setSmAppl(bean.getSmAppl());
+							travelSoftware.setSystem(mac);
+							bean.getSmAppl().getSmSupplierSystems()
+									.add(travelSoftware);
+						}
+
+					} else {
+						travelSoftware.setRevNo(1);
+						travelSoftware.setSmAppl(bean.getSmAppl());
+						travelSoftware.setSystemName(mac.getMachineDesc());
+						bean.getSmAppl().getSmSupplierSystems()
+								.add(travelSoftware);
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Remove application information that already not valid after changes been
 	 * made before save
 	 * 
@@ -7996,7 +8082,7 @@ public class SmApplicationUtil {
 												.getCategoryL3Id(),
 												machineCategories,
 												"pmCategoryL3");
-								
+
 								if (macCat == null) {
 									valid = false;
 									if (currentTab != -1) {
