@@ -102,6 +102,10 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierCategory> deleteNewApplCategoryList;
 	private List<SmSupplierCategory> suppProfileOrHistoryCategoryList;
 	private List<SmSupplierBank> smSupplierBankList;
+	private List<PmCategoryL3> dockYardFacilitiesVOList;
+	private List<PmCategoryL3> storeFacilitiesVOList;
+	private List<PmCategoryL3> workshopFacilitiesVOList;
+	private List<PmCategoryL3> factoryFacilitiesVOList;
 
 	// temp added for testing
 	private boolean poUser;
@@ -234,7 +238,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		shareHolderResdAddr.setSmAddress(defaultAddr);
 
 		currDate = new Date();
-		
+
 		applTypeItems = new ArrayList<SelectItem>();
 		SelectItem item = new SelectItem();
 		item.setLabel(SmCommonUtil.getMessage("lbl.sm.appltype.basic", null));
@@ -1373,6 +1377,42 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setLoginUserZone(PmZone loginUserZone) {
 		this.loginUserZone = loginUserZone;
+	}
+
+	public List<PmCategoryL3> getDockYardFacilitiesVOList() {
+		return dockYardFacilitiesVOList;
+	}
+
+	public void setDockYardFacilitiesVOList(
+			List<PmCategoryL3> dockYardFacilitiesVOList) {
+		this.dockYardFacilitiesVOList = dockYardFacilitiesVOList;
+	}
+
+	public List<PmCategoryL3> getStoreFacilitiesVOList() {
+		return storeFacilitiesVOList;
+	}
+
+	public void setStoreFacilitiesVOList(
+			List<PmCategoryL3> storeFacilitiesVOList) {
+		this.storeFacilitiesVOList = storeFacilitiesVOList;
+	}
+
+	public List<PmCategoryL3> getWorkshopFacilitiesVOList() {
+		return workshopFacilitiesVOList;
+	}
+
+	public void setWorkshopFacilitiesVOList(
+			List<PmCategoryL3> workshopFacilitiesVOList) {
+		this.workshopFacilitiesVOList = workshopFacilitiesVOList;
+	}
+
+	public List<PmCategoryL3> getFactoryFacilitiesVOList() {
+		return factoryFacilitiesVOList;
+	}
+
+	public void setFactoryFacilitiesVOList(
+			List<PmCategoryL3> factoryFacilitiesVOList) {
+		this.factoryFacilitiesVOList = factoryFacilitiesVOList;
 	}
 
 }
