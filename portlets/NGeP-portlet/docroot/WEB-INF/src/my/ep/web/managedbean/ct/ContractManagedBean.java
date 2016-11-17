@@ -5,6 +5,7 @@ package my.ep.web.managedbean.ct;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ import my.ep.web.util.FacesScopes;
 @ManagedBean(name="ctManagedBean")
 @SessionScoped
 public class ContractManagedBean extends BaseManagedBean {
-
+	
 	private static final long serialVersionUID = 1L;
 	private String fileDirectory;
 	private int attachFileIndex;
@@ -105,24 +106,29 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean chkJustification;
 	private boolean bondWaiver;
 	
-	 private boolean selectAll;
-	 private CtPerformanceBond ctPerformanceBond;
+	private boolean selectAll;
+	private CtPerformanceBond ctPerformanceBond;
+
+	private CtContractItem selectedItem;
+	private String showItem;
+	private String showServiceItem;
+	private List<CtContractItem> ctItemServiceList;
+	private CtContractItem selectedServiceItem;
+
+	private boolean disableAmendDetails;
+	private CtCircularVer ctCircularVer;
 	 
-	 private CtContractItem selectedItem;
-	 private String showItem;
-	 private String showServiceItem;
-	 private List<CtContractItem> ctItemServiceList;
-	 private CtContractItem selectedServiceItem;
-	 
-	 private boolean disableAmendDetails;
-	 private CtCircularVer ctCircularVer;
-	// private List<CtPidReason> selectedPidReason;
-	 
-	  private boolean updateContract = false;
-	  private boolean serviceTaxAlertFlg = false;
+	private boolean updateContract = false;
+	private boolean serviceTaxAlertFlg = false;
+
+	private CtContractItem selectedItemForSpec;
+
+	// Change Log
+	private Map<String, CtAgency> newAgencyMap;
+	private Map<String, CtAgency> updateAgencyMap;
+	private Map<String, CtAgency> deleteAgencyMap;
+	private Map<Long, CtContractItem> updateItemMap;		  
 	  
-	  private CtContractItem selectedItemForSpec;
-	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1046,4 +1052,49 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setBondWaiver(boolean bondWaiver) {
 		this.bondWaiver = bondWaiver;
 	}
+	
+	public Map<String, CtAgency> getNewAgencyMap() {
+		if(newAgencyMap==null) {
+			newAgencyMap = new HashMap<String, CtAgency>();
+		}
+		return newAgencyMap;
+	}
+
+	public void setNewAgencyMap(Map<String, CtAgency> newAgencyMap) {
+		this.newAgencyMap = newAgencyMap;
+	}
+
+	public Map<String, CtAgency> getUpdateAgencyMap() {
+		if(updateAgencyMap==null) {
+			updateAgencyMap = new HashMap<String, CtAgency>();
+		}
+		return updateAgencyMap;
+	}
+
+	public void setUpdateAgencyMap(Map<String, CtAgency> updateAgencyMap) {
+		this.updateAgencyMap = updateAgencyMap;
+	}
+
+	public Map<String, CtAgency> getDeleteAgencyMap() {
+		if(deleteAgencyMap==null) {
+			deleteAgencyMap = new HashMap<String, CtAgency>();
+		}		
+		return deleteAgencyMap;
+	}
+
+	public void setDeleteAgencyMap(Map<String, CtAgency> deleteAgencyMap) {
+		this.deleteAgencyMap = deleteAgencyMap;
+	}
+
+	public Map<Long, CtContractItem> getUpdateItemMap() {
+		if(updateItemMap==null) {
+			updateItemMap = new HashMap<Long, CtContractItem>();
+		}
+		return updateItemMap;
+	}
+
+	public void setUpdateItemMap(Map<Long, CtContractItem> updateItemMap) {
+		this.updateItemMap = updateItemMap;
+	}
+	
 }
