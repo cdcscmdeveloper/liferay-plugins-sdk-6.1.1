@@ -2556,6 +2556,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		Long  contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
 		reqDTO.setContractVerId(contractVerId);
 		reqDTO.setAgreement(withAgreement);
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		contractSO.proceedForFulfilment(reqDTO);
  		getManagedBean().getContractDataModel().reloadData();
  		
