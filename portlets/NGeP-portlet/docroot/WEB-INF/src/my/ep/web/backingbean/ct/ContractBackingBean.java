@@ -36,6 +36,17 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -138,18 +149,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
-import org.apache.commons.lang.StringUtils;
-//import org.apache.log4j.Logger;
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.ToggleSelectEvent;
-import org.primefaces.event.UnselectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-import org.primefaces.model.UploadedFile;
-
 /**
  * Backing Bean For Contract
  * 
@@ -160,7 +159,7 @@ import org.primefaces.model.UploadedFile;
 @ViewScoped
 public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
-//	private static Logger log = Logger.getLogger(ContractBackingBean.class);
+	private static final long serialVersionUID = 1L;
 	private CtSchedule[] selectedSchedule;
 	private CtProgressivePayment[] selectedProgressive;
 	private CtDeductionClause[] selectedDeductionClauses;
@@ -1656,6 +1655,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					agencyAddressList.add(agencyAddress);
 				}
 				ctAgencyAddress.addAll(agencyAddressList);
+				//CT_CHANGE_LOG
+				if((!getManagedBean().getSelectedAgency().isBrandNew() || getManagedBean().getSelectedAgency().isCloned()) && 
+					!getManagedBean().getUpdateAgencyMap().containsKey(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode()) && 
+					!getManagedBean().getNewAgencyMap().containsKey(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode())) {
+					getManagedBean().getUpdateAgencyMap().put(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode(), getManagedBean().getSelectedAgency());
+				}
 			}
 			getManagedBean().setButtonHideActive(true);
 			
@@ -1711,6 +1716,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void deleteDeliveryAddress() {		
 		try {
 			getManagedBean().getSelectedAgency().getCtAgencyAddresses().removeAll(getManagedBean().getSelectedListOfAddress());
+			//CT_CHANGE_LOG
+			if((!getManagedBean().getSelectedAgency().isBrandNew() || getManagedBean().getSelectedAgency().isCloned()) && 
+				!getManagedBean().getUpdateAgencyMap().containsKey(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode())) {
+				getManagedBean().getUpdateAgencyMap().put(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode(), getManagedBean().getSelectedAgency());
+			}
 			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1740,6 +1750,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 									}
 								}
 							}	
+						}
+						//CT_CHANGE_LOG
+						if((agency.isBrandNew() && !agency.isCloned()) || 
+							getManagedBean().getNewAgencyMap().containsKey(agency.getOrgProfile().getOrgCode())) {
+							getManagedBean().getNewAgencyMap().remove(agency.getOrgProfile().getOrgCode());
+						} else {
+							if(getManagedBean().getUpdateAgencyMap().containsKey(agency.getOrgProfile().getOrgCode())) {
+								getManagedBean().getUpdateAgencyMap().remove(agency.getOrgProfile().getOrgCode());
+							}
+							getManagedBean().getDeleteAgencyMap().put(agency.getOrgProfile().getOrgCode(), agency);
 						}
 					}
 				}
@@ -1822,6 +1842,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						ctAgency.setAp178(true);
 					}		  	
 					ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
+					//CT_CHANGE_LOG
+					getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
 					ctAgencyList.add(ctAgency);
 					 
 					if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
@@ -2101,6 +2123,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void uploadAp201File(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
 			
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
@@ -2693,6 +2716,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		  } 
+		  getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
 	 }
 		    
 	 /**
