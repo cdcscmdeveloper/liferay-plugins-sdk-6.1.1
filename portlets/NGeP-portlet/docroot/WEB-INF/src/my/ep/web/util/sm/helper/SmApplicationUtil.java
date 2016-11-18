@@ -5515,7 +5515,7 @@ public class SmApplicationUtil {
 						}
 
 					} else {
-						if (StringUtils.isBlank(mac.getMachineDesc())) {
+						if (!StringUtils.isBlank(mac.getMachineDesc())) {
 							travelSoftware.setRevNo(1);
 							travelSoftware.setSmAppl(bean.getSmAppl());
 							travelSoftware.setSystemName(mac.getMachineDesc());
