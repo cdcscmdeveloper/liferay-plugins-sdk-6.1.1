@@ -5000,7 +5000,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedMachine().getMachine() != null) {
 			if ((getManagedBean().getSelectedMachine().getMachine()
 					.getMachineId().compareTo(-1L) == 0)) {
-				log.info("<<<<<<<EQUIPMENT TYPE IS OTHERS>>>>>");
+				getManagedBean().setSelectedMachineCategoryIds(null);
 			} else {
 				getManagedBean().getSelectedMachine().setMachine(
 						SmCommonUtil.getInstance().getMachineById(
