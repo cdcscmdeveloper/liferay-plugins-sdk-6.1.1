@@ -215,50 +215,52 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				
-				<p:outputPanel rendered="#{backingBean.managedBean.selectedMachine.categoryType.parameterCode eq 'PC'}">
+				<p:outputPanel rendered="#{backingBean.managedBean.selectedMachine.machine.machineId ne -1}">
 					<tr>
 						<td>
-							<p:outputLabel value="#{lbl['lbl.sm.machine.categorycode']}" /> 
-							<p:outputLabel value="*" styleClass="mandatory"/>
+							<p:outputLabel value="#{lbl['lbl.sm.category']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory" />
 						</td>
-						<td><p:selectOneMenu disabled="#{backingBean.managedBean.popupAction eq 'U'}"
+						<td>
+							<p:selectManyMenu showCheckbox="true"
 								required="#{backingBean.managedBean.valueReqd}"
-								label="#{lbl['lbl.sm.machine.categorycode']}" id="smMachineCatCodeId"
-								value="#{backingBean.managedBean.selectedMachine.categoryCode.categoryL3Id}"
-								style="width: 207px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-								<f:selectItems value="#{backingBean.managedBean.categoryCodeItems}" />
+								label="#{lbl['lbl.sm.category']}" id="smMachCategoryId"
+								value="#{backingBean.managedBean.selectedMachineCategoryIds}"
+								style="height:100px;width: 200px;">
 								<p:ajax event="change" process="@this"
 									onstart="machineOutWidget.show()" oncomplete="machineOutWidget.hide()"
 									listener="#{backingBean.onChangeCategoryCode()}"
 									update="machineOutPanelId" />
-							</p:selectOneMenu>
-							<p:message id="smMachineCatCodeIdMsg" for="smMachineCatCodeId"
-								showSummary="true" showDetail="false" display="icon" /></td>
-					</tr>
-				</p:outputPanel>
-				
-					<tr>
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" /> 
-							<p:outputLabel value="*" styleClass="mandatory"/>
-						</td>
-						<td><p:selectOneMenu 
-								required="#{backingBean.managedBean.valueReqd}"
-								label="#{lbl['lbl.sm.machine.equiType']}" id="smMachineTypeId"
-								value="#{backingBean.managedBean.selectedMachine.machine.machineId}"
-								style="width: 207px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-								<f:selectItems value="#{backingBean.managedBean.machineItems}" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.others']}" itemValue="-1" />
-								<p:ajax event="change" process="@this" update="machineOutPanelId" 
-										onstart="machineOutWidget.show()" oncomplete="machineOutWidget.hide()"
-										listener="#{backingBean.onChangeMachine()}"/>
-							</p:selectOneMenu>
-							<p:message id="smMachineTypeIdMsg" for="smMachineTypeId"
+								<f:selectItems
+									value="#{backingBean.getSelectedCategoryItemsByCategoryType(backingBean.managedBean.selectedMachine.categoryType.parameterId)}" />
+							</p:selectManyMenu>
+							<p:message id="smMachCategoryIdMsg" for="smMachCategoryId"
 								showSummary="true" showDetail="false" display="icon" />
 						</td>
 					</tr>
+				</p:outputPanel>
+				
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory"/>
+					</td>
+					<td><p:selectOneMenu 
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.machine.equiType']}" id="smMachineTypeId"
+							value="#{backingBean.managedBean.selectedMachine.machine.machineId}"
+							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{backingBean.managedBean.machineItems}" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.others']}" itemValue="-1" />
+							<p:ajax event="change" process="@this" update="machineOutPanelId" 
+									onstart="machineOutWidget.show()" oncomplete="machineOutWidget.hide()"
+									listener="#{backingBean.onChangeMachine()}"/>
+						</p:selectOneMenu>
+						<p:message id="smMachineTypeIdMsg" for="smMachineTypeId"
+							showSummary="true" showDetail="false" display="icon" />
+					</td>
+				</tr>
 				
 				<p:outputPanel rendered="#{backingBean.managedBean.selectedMachine.machine.machineId eq -1}">
 					<tr>
@@ -277,25 +279,6 @@
 						</td>
 					</tr>
 				</p:outputPanel>
-				
-				<tr>
-					<td>
-						<p:outputLabel value="#{lbl['lbl.sm.category']}" /> 
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</td>
-					<td>
-						<p:selectManyMenu showCheckbox="true"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.category']}" id="smMachCategoryId"
-							value="#{backingBean.managedBean.selectedMachineCategoryIds}"
-							style="height:100px;width: 200px;">
-							<f:selectItems
-								value="#{backingBean.getSelectedCategoryItemsByCategoryType(backingBean.managedBean.selectedMachine.categoryType.parameterId)}" />
-						</p:selectManyMenu>
-						<p:message id="smMachCategoryIdMsg" for="smMachCategoryId"
-							showSummary="true" showDetail="false" display="icon" />
-					</td>
-				</tr>
 	
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /> <p:outputLabel
