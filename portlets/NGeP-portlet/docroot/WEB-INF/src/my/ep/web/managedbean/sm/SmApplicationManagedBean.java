@@ -706,7 +706,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedManufacturer.setPmUom(new PmUom());
 		selectedMachine = new SmMachineDtl();
 		selectedMachine.setCategoryType(new PmParameter());
-		selectedMachine.setCategoryCode(new PmCategoryL3());
 		selectedMachine.setMachine(new PmMachine());
 		selectedMachineList = new ArrayList<SmMachineDtl>();
 		selectedSystem = new SmSupplierSystem();
@@ -3837,7 +3836,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedTravellingSoftware;
 	}
 
-	public void setSelectedTravellingSoftware(PmMachine selectedTravellingSoftware) {
+	public void setSelectedTravellingSoftware(
+			PmMachine selectedTravellingSoftware) {
 		this.selectedTravellingSoftware = selectedTravellingSoftware;
 	}
 }

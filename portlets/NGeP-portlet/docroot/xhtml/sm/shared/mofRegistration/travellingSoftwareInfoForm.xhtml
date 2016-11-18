@@ -44,67 +44,111 @@
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.supplierSystemVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.supplierSystemVerified : false)}" />
 				
 			<p:outputPanel rendered="#{backingBean.managedBean.showTravelSoftwarePanel}">
-				<p:dataTable var="systemBean" widgetVar="systemBeanDtWidVar"
-					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{backingBean.managedBean.travellingSoftwareList}"
-					rowKey="#{systemBean}" rowIndexVar="index" id="systemBeanDt">
-					<ac:paginator for="systemBeanDt" />
-					
-					<p:column style="width: 2% !important;">
-						<f:facet name="header">
-				          <p:selectBooleanCheckbox value="#{backingBean.managedBean.selectedAll}" >
-				          	<p:ajax event="change" update=":#{p:component('travelSoftwarePanelId')}" 
-								process="@this" partialSubmit="true" 
-								listener="#{backingBean.selectAll(backingBean.managedBean.selectedAll,backingBean.managedBean.travellingSoftwareList)}"/>
-				          </p:selectBooleanCheckbox>
-				       </f:facet>
-						<p:selectBooleanCheckbox value="#{systemBean.selected}" rendered="#{not empty systemBean.machineId}">
-							<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
-						</p:selectBooleanCheckbox>
-						<h:outputText value="*" styleClass="mandatory" rendered="#{empty systemBean.machineId}"/>
-					</p:column>
-					
-					<p:column headerText="#{lbl['lbl.sm.travelling.system.name']}">
-						<h:outputText value="#{systemBean.machineDesc}" rendered="#{not empty systemBean.machineId}"/>
-						<p:outputPanel rendered="#{empty systemBean.machineId}">
-							<p:inputText id="travelSoftwareNameId" required="true" label="#{lbl['lbl.sm.travelling.system.name']}"
-								value="#{systemBean.machineDesc}" size="35" >
-								<p:ajax process="@this" update="@this" partialSubmit="true"/>
-							</p:inputText> 
-							<p:message id="travelSoftwareNameIdMsg" for="travelSoftwareNameId" showSummary="true" showDetail="false" display="icon" />
-						</p:outputPanel>
-					</p:column>
-					
-					
-					<p:column headerText="#{lbl['lbl.sm.label.action']}" 
-						style="text-align: center  !important;width: 2% !important;">
-						<p:commandLink id="deleteActionId"
-							partialSubmit="true"
-							process="@this" update="@([id$=Msg])" 
-							oncomplete="travelSoftwareDeletePopUp.show();" 
-							action="#{backingBean.onDeleteSystem(systemBean)}" 
-							rendered="#{empty systemBean.machineId}">
-							<p:graphicImage value="/css/images/design/icon_trash.png" 
-								title="#{lbl['lbl.sm.travel.software.delete']}"/>
-						</p:commandLink>
-					</p:column>
 				
-				</p:dataTable>
+				<ui:remove>
+					<p:dataTable var="systemBean" widgetVar="systemBeanDtWidVar"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						value="#{backingBean.managedBean.travellingSoftwareList}"
+						rowKey="#{systemBean}" rowIndexVar="index" id="systemBeanDt">
+						<ac:paginator for="systemBeanDt" />
+						
+						<p:column style="width: 2% !important;">
+							<f:facet name="header">
+					          <p:selectBooleanCheckbox value="#{backingBean.managedBean.selectedAll}" >
+					          	<p:ajax event="change" update=":#{p:component('travelSoftwarePanelId')}" 
+									process="@this" partialSubmit="true" 
+									listener="#{backingBean.selectAll(backingBean.managedBean.selectedAll,backingBean.managedBean.travellingSoftwareList)}"/>
+					          </p:selectBooleanCheckbox>
+					       </f:facet>
+							<p:selectBooleanCheckbox value="#{systemBean.selected}" rendered="#{not empty systemBean.machineId}">
+								<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
+							</p:selectBooleanCheckbox>
+							<h:outputText value="*" styleClass="mandatory" rendered="#{empty systemBean.machineId}"/>
+						</p:column>
+						
+						<p:column headerText="#{lbl['lbl.sm.travelling.system.name']}">
+							<h:outputText value="#{systemBean.machineDesc}" rendered="#{not empty systemBean.machineId}"/>
+							<p:outputPanel rendered="#{empty systemBean.machineId}">
+								<p:inputText id="travelSoftwareNameId" required="true" label="#{lbl['lbl.sm.travelling.system.name']}"
+									value="#{systemBean.machineDesc}" size="35" >
+									<p:ajax process="@this" update="@this" partialSubmit="true"/>
+								</p:inputText> 
+								<p:message id="travelSoftwareNameIdMsg" for="travelSoftwareNameId" showSummary="true" showDetail="false" display="icon" />
+							</p:outputPanel>
+						</p:column>
+						
+						
+						<p:column headerText="#{lbl['lbl.sm.label.action']}" 
+							style="text-align: center  !important;width: 2% !important;">
+							<p:commandLink id="deleteActionId"
+								partialSubmit="true"
+								process="@this" update="@([id$=Msg])" 
+								oncomplete="travelSoftwareDeletePopUp.show();" 
+								action="#{backingBean.onDeleteSystem(systemBean)}" 
+								rendered="#{empty systemBean.machineId}">
+								<p:graphicImage value="/css/images/design/icon_trash.png" 
+									title="#{lbl['lbl.sm.travel.software.delete']}"/>
+							</p:commandLink>
+						</p:column>
+					
+					</p:dataTable>
+					
+					<p:spacer height="2px;" />
+					<table style="width: 100%;">
+						<tr>
+							<td>
+								<p:commandButton value="#{lbl['lbl.sm.button.add']}" style="float:right;"
+									update=":#{p:component('travelSoftwarePanelId')}" process="@this"
+									partialSubmit="true" action="#{backingBean.assignNewSystemBean}" 
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+							</td>
+							<td style="width: 20px">
+								<p:graphicImage id="uidti" value="/css/images/design/tooltips.png"  />
+								<p:tooltip id="uidtt" for="uidti">
+									<p:outputLabel escape="false" value="#{lbl['lbl.sm.travel.software.click.add.others']}" />
+								</p:tooltip>
+							</td>
+						</tr>
+					</table>
+				</ui:remove>
 				
-				<p:spacer height="2px;" />
+				<h:outputText styleClass="instruction" value="#{backingBean.showTravellingInstruction()}"/><br /><br />
 				<table style="width: 100%;">
 					<tr>
-						<td>
-							<p:commandButton value="#{lbl['lbl.sm.button.add']}" style="float:right;"
-								update=":#{p:component('travelSoftwarePanelId')}" process="@this"
-								partialSubmit="true" action="#{backingBean.assignNewSystemBean}" 
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+						<td style='vertical-align: baseline;'>
+							<p:outputLabel value="#{lbl['lbl.sm.travelling.system.name']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
 						</td>
-						<td style="width: 20px">
-							<p:graphicImage id="uidti" value="/css/images/design/tooltips.png"  />
-							<p:tooltip id="uidtt" for="uidti">
-								<p:outputLabel escape="false" value="#{lbl['lbl.sm.travel.software.click.add.others']}" />
-							</p:tooltip>
+						<td>
+							<table>
+								<ui:repeat var="systemBean" value="#{backingBean.managedBean.travellingSoftwareList}">
+									<p:outputPanel rendered="#{not empty systemBean.machineId}">
+										<tr>
+											<td style="width: 3% !important;">
+												<p:selectBooleanCheckbox value="#{systemBean.selected}">
+													<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
+												</p:selectBooleanCheckbox>
+											</td>
+											<td>
+												<h:outputText value="#{systemBean.machineDesc}" />
+											</td>
+										</tr>
+									</p:outputPanel>
+									<p:outputPanel rendered="#{empty systemBean.machineId}">
+										<tr>
+											<td colspan="2">
+												<br />
+												<h:outputText value="#{lbl['lbl.sm.sitevisit.if.others']}" />&#160;
+												<p:inputText id="travelSoftwareNameId"
+													label="#{lbl['lbl.sm.travelling.system.name']}"
+													value="#{systemBean.machineDesc}" size="35" >
+													<p:ajax process="@this" update="@this" partialSubmit="true"/>
+												</p:inputText>
+											</td>
+										</tr>
+									</p:outputPanel>
+								</ui:repeat>
+							</table>
 						</td>
 					</tr>
 				</table>

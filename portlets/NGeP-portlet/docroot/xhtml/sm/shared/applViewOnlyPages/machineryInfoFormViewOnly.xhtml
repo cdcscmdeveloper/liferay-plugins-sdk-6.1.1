@@ -17,9 +17,14 @@
 					<h:outputText value="#{viewSmApplBackingBean.getMachineCategoryType(macBean)}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.machine.categorycode']}" style="width : 25%;white-space: normal;">
-					<h:outputText value="#{macBean.categoryCode.categoryL3Code} - #{macBean.categoryCode.categoryName}" 
-						rendered="#{not empty macBean.categoryCode}" />
+				<p:column headerText="#{lbl['lbl.sm.category']}">
+					<ui:repeat var="catFac" value="#{macBean.smMachineCategories}">
+						<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+									#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
+									#{catFac.pmCategoryL3.categoryL3Code}
+								 	(#{catFac.pmCategoryL3.categoryName})" 
+							style="float: left;white-space: normal;" /><br />
+					</ui:repeat>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.machine.equiType']}" style="width : 25%;white-space: normal;">
@@ -71,9 +76,12 @@
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.machine.categorycode']}" /></td>
 						<td>
-							<p:outputLabel styleClass="outputLabel-view"
-								 value="#{viewSmApplBackingBean.managedBean.selectedMachine.categoryCode.categoryL3Code} - 
-								 		#{viewSmApplBackingBean.managedBean.selectedMachine.categoryCode.categoryName}" />
+							<ui:repeat var="catFac" value="#{viewSmApplBackingBean.managedBean.selectedMachine.smMachineCategories}">
+								<p:outputLabel styleClass="outputLabel-view" value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+											#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
+											#{catFac.pmCategoryL3.categoryL3Code}
+										 	(#{catFac.pmCategoryL3.categoryName})" /><br />
+							</ui:repeat>
 						</td>
 					</tr>
 				</p:outputPanel>
