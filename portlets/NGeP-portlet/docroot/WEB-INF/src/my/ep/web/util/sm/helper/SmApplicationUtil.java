@@ -5477,8 +5477,9 @@ public class SmApplicationUtil {
 			}
 
 			for (PmMachine machine : bean.getTravellingSoftwareList()) {
-				if ((SmSupplierSystem) EntityHelper.getEntityBySinglePropertyFromList(
-						machine.getMachineId(), bean.getSmAppl()
+				if ((SmSupplierSystem) EntityHelper
+						.getEntityBySinglePropertyFromList(machine
+								.getMachineId(), bean.getSmAppl()
 								.getSmSupplierSystems(), "system") != null) {
 					machine.setSelected(true);
 				} else {
@@ -8001,8 +8002,7 @@ public class SmApplicationUtil {
 		String language = new FacesScopes().getUserLocale().getLanguage();
 		String categoryTypeDesc = StringUtils.EMPTY;
 
-		if (!EntityHelper.isCollectionEmpty(appl
-						.getSmSupplierCategories())) {
+		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 						&& cat.getPmCategoryL3() != null
@@ -8124,8 +8124,34 @@ public class SmApplicationUtil {
 				if (currentTab != -1) {
 					setNavigationBackToCurrentPage(currentTab, bean);
 				}
-				throw new EpException(MessageConst.ERROR_722644,
-						new String[] {});
+				for (SmSupplierCategory cat : bean.getSmAppl()
+						.getSmSupplierCategories()) {
+					if (cat.isSpecialCategory()
+							&& cat.getPmCategoryL3() != null
+							&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+							&& cat.getPmCategoryL3().getCategoryTypeCode()
+									.getParameterId() != null
+							&& cat.getRecordStatusFlg() != null
+							&& cat.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_ACT_STATUS) == 0
+							&& !SmApplicationUtil.isCategoryRejected(cat)) {
+						String catType = "";
+						if (cat.getPmCategoryL3().getCategoryTypeCode() != null) {
+							catType = cat.getPmCategoryL3()
+									.getCategoryTypeCode().getParameterCode();
+						}
+						if (StringUtils.isNotBlank(catType)
+								&& catType
+										.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_TRAVEL)) {
+							throw new EpException(MessageConst.ERROR_722644,
+									new String[] { cat.getPmCategoryL3()
+											.getCategoryName()
+											+ " - "
+											+ cat.getPmCategoryL3()
+													.getFullCatcode() });
+						}
+					}
+				}
 			}
 		}
 		return valid;
