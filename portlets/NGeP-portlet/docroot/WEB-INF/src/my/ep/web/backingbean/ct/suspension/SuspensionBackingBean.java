@@ -277,14 +277,17 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			 ctBB.getManagedBean().setContractVer(getManagedBean().getContractVer());
 			 ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 			 /*End remark setting*/
-			 if (ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
-				 if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
-					 ctBB.getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
-				 }
-				 ctBB.getManagedBean().setGstCheckingGUI(true);
-			 } else {
-				 ctBB.getManagedBean().setGstCheckingGUI(false);
-			 }
+			 
+			// Enable or Disable GST field
+			if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
+					&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+				ctBB.getManagedBean().setGstCheckingGUI(false);	// Display N/A
+			} else {
+				if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
+					getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+				}
+				ctBB.getManagedBean().setGstCheckingGUI(true);
+			}
 		 }catch (Exception e) {
 			 e.printStackTrace();
 			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));

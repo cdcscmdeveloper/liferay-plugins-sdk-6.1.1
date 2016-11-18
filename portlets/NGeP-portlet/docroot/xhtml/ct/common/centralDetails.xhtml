@@ -41,6 +41,7 @@
 						<p:inputText for="centralCtAmountId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 			   				value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"
 			   				disabled="#{ctBackingBean.managedBean.viewContract
+						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     		or ctBackingBean.managedBean.disableContractAmount}">
 				   			<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
@@ -65,6 +66,7 @@
 					<td>
 						<p:inputText for="gstAmountCentral" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 			   				 disabled="#{ctBackingBean.managedBean.viewContract
+						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     		or ctBackingBean.managedBean.disableGstAmount}"
 			   				 rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"
