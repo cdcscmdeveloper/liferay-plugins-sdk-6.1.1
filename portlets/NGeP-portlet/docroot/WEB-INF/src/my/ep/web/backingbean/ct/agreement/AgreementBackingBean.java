@@ -423,13 +423,14 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		
 		// Enable or Disable GST field
-		if (ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+		if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
+				&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+			ctBB.getManagedBean().setGstCheckingGUI(false);	// Display N/A
+		} else {
 			if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 				getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 			}
 			ctBB.getManagedBean().setGstCheckingGUI(true);
-		} else {
-			ctBB.getManagedBean().setGstCheckingGUI(false);
 		}
 		
 		// Check for valid Bond Attachment

@@ -526,36 +526,30 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 
 			ctBB.getManagedBean().setDisableContractAmount(true);
-			if (ctBB.isLoaContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
-				if (ctBB.getManagedBean().getCtContractAmount().getGstAmount() == null) {
-					ctBB.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
-				}
-				ctBB.getManagedBean().setGstCheckingGUI(true);
-				ctBB.getManagedBean().setDisableGstAmount(true);
-
-				if (!ctBB.getManagedBean().isViewContract()) {
-					// If the GST is effective and the Amount has been keyed in by user in sourcing,0
-					// the value must generate into Fulfilment Details and non-editable.
-					if (ctBB.getManagedBean().getContractVer().getCtContractValue().getLoaGstAmount() == null
-							&& (resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION)
-									|| resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
-						ctBB.getManagedBean().setDisableGstAmount(false);
-					}
-
-					// If original contract is fulfilled imposed service tax rule
-					if (ctBB.isBeforeGstReliefDueDate() && ctBB.imposedServiceTaxCondition()) {
-						if (ctBB.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
-							ctBB.getManagedBean().setDisableContractAmount(false);
-						} else {
-							if (ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= ctBB.getGstReliefDueDate().getTime()) {
-								ctBB.getManagedBean().setDisableGstAmount(true);
-							}
-						}
-					}
-				}
+			// Enable or Disable GST field
+			if (!ctBB.isLoaContractWithGst(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getGstEffDate())
+					&& !ctBB.isLoaContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+				ctBB.getManagedBean().setGstCheckingGUI(false);	// Display N/A
 			} else {
-				ctBB.getManagedBean().setGstCheckingGUI(false);
-			}	
+				if (ctBB.getManagedBean().getCtContractAmount().getGstAmount() == null) {
+		    		ctBB.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+				}
+		    	ctBB.getManagedBean().setGstCheckingGUI(true);
+		    	ctBB.getManagedBean().setDisableGstAmount(false);
+		    	
+		    	if (!ctBB.getManagedBean().isViewContract()) {
+		    		// If original contract is fulfilled imposed service tax rule
+		    		if (ctBB.isBeforeGstReliefDueDate() && ctBB.imposedServiceTaxCondition()) {
+		    			if (ctBB.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
+		    				ctBB.getManagedBean().setDisableContractAmount(false);
+		    			} else {
+		    				if (ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= ctBB.getGstReliefDueDate().getTime()) {
+		    					ctBB.getManagedBean().setDisableGstAmount(true);
+		    				}
+		    			}
+		    		}
+		    	}
+			}
 			ctBB.chkBondWaivedAttachment();
 		} catch(Exception e){
 			e.printStackTrace();
@@ -1785,14 +1779,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		trBB.getCtBB().getManagedBean().setContractVer(resDTO.getCtContractVer());
 		trBB.getManagedBean().setExternalPageUrl(null);
 		
-		if (ctBB.isLoaContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+		// Enable or Disable GST field
+		if (!ctBB.isLoaContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContract().getLoa().getGstEffDate())
+				&& !ctBB.isLoaContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+			ctBB.getManagedBean().setGstCheckingGUI(false);	// Display N/A
+		} else {
 			if (trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
-				trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().setContractAmount(BigDecimal.ZERO);
+				trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 			}
-			trBB.getCtBB().getManagedBean().setGstCheckingGUI(true);
-	    } else {
-	    	trBB.getCtBB().getManagedBean().setGstCheckingGUI(false);
-	    }
+			ctBB.getManagedBean().setGstCheckingGUI(true);
+		}
 		trBB.retrieveContractVerOfAgreement();
 		trBB.getManagedBean().setTerminationList(contractSO.retrieveTerminationHistoryList(ctReqDTO).getTerminationHistoryList());		
 		return TERMINATE_HISTORY_PAGE;

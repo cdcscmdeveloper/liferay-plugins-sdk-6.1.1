@@ -70,6 +70,7 @@
 						<p:inputText for="gstAmount" styleClass="ppRightBtn"  
 						     maxlength="18" style="width:130px;"
 						     disabled="#{ctBackingBean.managedBean.viewContract
+						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     		or ctBackingBean.managedBean.disableGstAmount}"
 			   				 rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"
