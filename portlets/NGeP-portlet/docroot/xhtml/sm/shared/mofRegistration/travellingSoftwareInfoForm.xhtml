@@ -124,7 +124,7 @@
 								<ui:repeat var="systemBean" value="#{backingBean.managedBean.travellingSoftwareList}">
 									<p:outputPanel rendered="#{not empty systemBean.machineId}">
 										<tr>
-											<td style="width: 3% !important;">
+											<td style="width: 2% !important;">
 												<p:selectBooleanCheckbox value="#{systemBean.selected}">
 													<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
 												</p:selectBooleanCheckbox>
