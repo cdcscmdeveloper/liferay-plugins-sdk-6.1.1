@@ -260,13 +260,15 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 
 			ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-			if (ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+			// Enable or Disable GST field
+			if (!ctBB.isLoaContractWithGst(getManagedBean().getCtContract().getLoa().getGstEffDate())
+					&& !ctBB.isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+				ctBB.getManagedBean().setGstCheckingGUI(false);	// Display N/A
+			} else {
 				if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
-					ctBB.getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+					getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 				}
 				ctBB.getManagedBean().setGstCheckingGUI(true);
-			} else {
-				ctBB.getManagedBean().setGstCheckingGUI(false);
 			}
 			flush();
 			if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode() != null) {

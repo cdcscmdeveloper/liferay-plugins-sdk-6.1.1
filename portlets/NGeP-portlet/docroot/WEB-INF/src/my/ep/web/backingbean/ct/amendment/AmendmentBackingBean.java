@@ -821,8 +821,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
 					}
 				    
-					if (ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
-				    	if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null) {
+					// Enable or Disable GST field
+					if (!ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getGstEffDate())
+							&& !ctBackingBean.isLoaContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+						ctBackingBean.getManagedBean().setGstCheckingGUI(false); // Display N/A
+					} else {
+						if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null) {
 				    		ctBackingBean.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 						}
 				    	ctBackingBean.getManagedBean().setGstCheckingGUI(true);
@@ -834,9 +838,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    				&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= ctBackingBean.getGstReliefDueDate().getTime()) {
 			    			ctBackingBean.getManagedBean().setDisableGstAmount(true);
 			    		}
-				    } else {
-				    	ctBackingBean.getManagedBean().setGstCheckingGUI(false);
-				    }
+					}
 					
 				    // Amendment process	  
 				    getManagedBean().setCommitteeType(retrieveCommitteeType());
