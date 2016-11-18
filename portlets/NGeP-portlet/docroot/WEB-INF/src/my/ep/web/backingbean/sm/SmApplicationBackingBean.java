@@ -46,7 +46,6 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
@@ -88,7 +87,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -2737,16 +2735,6 @@ public class SmApplicationBackingBean extends
 		return count;
 	}
 
-	private int getCurrAuthorizedFlg(SmPersonnel personnel) {
-		int authFlg = 0;
-		SmPersonnel tmp = (SmPersonnel) EntityHelper
-				.getEntityBySinglePropertyFromList(personnel.getPersonnelId(),
-						getManagedBean().getSmAppl().getSmPersonnels(),
-						"personnelId");
-		authFlg = tmp == null ? authFlg : tmp.getAuthorizedFlg();
-		return authFlg;
-	}
-
 	/**
 	 * Ajax call to assign selected personnel privilege by ep role.
 	 * 
@@ -4777,11 +4765,6 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateMachineToSmAppl() {
 		SmApplicationUtil.addOrUpdateMachineDtlCategory(getManagedBean(),
 				getManagedBean().getSelectedMachine());
-		if (getManagedBean().getSelectedMachine().getCategoryCode() != null
-				&& getManagedBean().getSelectedMachine().getCategoryCode()
-						.getCategoryL3Id() == null) {
-			getManagedBean().getSelectedMachine().setCategoryCode(null);
-		}
 		if (getManagedBean().getSelectedMachine().getCategoryType() != null
 				&& getManagedBean().getSelectedMachine().getCategoryType()
 						.getParameterId() == null) {
@@ -4917,8 +4900,6 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedMachine().setMachine(new PmMachine());
 		getManagedBean().getSelectedMachine()
 				.setCategoryType(new PmParameter());
-		getManagedBean().getSelectedMachine().setCategoryCode(
-				new PmCategoryL3());
 		getManagedBean().getSelectedMachine().setRevNo(1);
 		getManagedBean().getSelectedMachine().setSmAppl(
 				getManagedBean().getSmAppl());
@@ -4983,15 +4964,12 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getSelectedMachine().getCategoryType()
 						.getParameterCode()
 						.equals(ParameterConst.CATEGORY_TYPE_PRINTING)) {
-			getManagedBean().getSelectedMachine().setCategoryCode(
-					new PmCategoryL3());
 			getManagedBean().setCategoryCodeItems(
 					SmApplicationUtil.getCategoryCodesItemsByCatTypeId(
 							getManagedBean().getSelectedMachine()
 									.getCategoryType().getParameterId(),
 							getManagedBean().getSmAppl()));
 		} else {
-			getManagedBean().getSelectedMachine().setCategoryCode(null);
 			getManagedBean().setCategoryCodeItems(null);
 		}
 
@@ -5002,22 +4980,12 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getMachineItemsByMachineDetails(
 						getManagedBean().getSelectedMachine(), getManagedBean()
 								.getSelectedMachineCategoryIds()));
-
-		getManagedBean().getSelectedMachine().setCategoryCode(
-				new PmCategoryL3());
 	}
 
 	/**
 	 * Populate machine when on change category code selected
 	 */
 	public void onChangeCategoryCode() {
-		// set category code
-		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setCategoryL3Id(getManagedBean().getSelectedMachine()
-				.getCategoryCode().getCategoryL3Id());
-		getManagedBean().getSelectedMachine().setCategoryCode(
-				SmServiceLookup.getCategoryCodeSO()
-						.retrieveCategoryL3ById(reqDTO).getCategoryL3());
 
 		// set dropdown machines
 		getManagedBean().getSelectedMachine().setMachine(new PmMachine());
@@ -5052,20 +5020,9 @@ public class SmApplicationBackingBean extends
 		mac.setCategoryType(SmApplicationUtil.retrievePmParameterById(mac
 				.getCategoryType().getParameterId()));
 
-		// set dropdown category codes
-		if (!StringUtils.isBlank(mac.getCategoryType().getParameterCode())
-				&& mac.getCategoryType().getParameterCode()
-						.equals(ParameterConst.CATEGORY_TYPE_PRINTING)) {
-			mac.setCategoryCode(new PmCategoryL3());
-		} else {
-			mac.setCategoryCode(null);
-		}
-
 		// set dropdown machines
 		mac.setMachine(new PmMachine());
 		mac.setMachineType(StringUtils.EMPTY);
-
-		mac.setCategoryCode(new PmCategoryL3());
 	}
 
 	/**
@@ -5086,13 +5043,6 @@ public class SmApplicationBackingBean extends
 	 * Populate machine when on change category code selected
 	 */
 	public void onChangeCategoryCode(SmMachineDtl mac) {
-		// set category code
-		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setCategoryL3Id(getManagedBean().getSelectedMachine()
-				.getCategoryCode().getCategoryL3Id());
-		mac.setCategoryCode(SmServiceLookup.getCategoryCodeSO()
-				.retrieveCategoryL3ById(reqDTO).getCategoryL3());
-
 		// set dropdown machines
 		mac.setMachine(new PmMachine());
 		mac.setMachineType(StringUtils.EMPTY);
@@ -5382,6 +5332,39 @@ public class SmApplicationBackingBean extends
 
 		}
 
+	}
+
+	public String showTravellingInstruction() {
+		String retVal = StringUtils.EMPTY;
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.isSpecialCategory()
+					&& cat.getPmCategoryL3() != null
+					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+					&& cat.getPmCategoryL3().getCategoryTypeCode()
+							.getParameterId() != null
+					&& cat.getRecordStatusFlg() != null
+					&& cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0
+					&& !SmApplicationUtil.isCategoryRejected(cat)) {
+				String catType = "";
+				if (cat.getPmCategoryL3().getCategoryTypeCode() != null) {
+					catType = cat.getPmCategoryL3().getCategoryTypeCode()
+							.getParameterCode();
+				}
+				if (StringUtils.isNotBlank(catType)
+						&& catType
+								.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_TRAVEL)) {
+					retVal = SmCommonUtil.getMessage(
+							"lbl.sm.travel.software.instruction",
+							new String[] { cat.getPmCategoryL3()
+									.getCategoryName()
+									+ " - "
+									+ cat.getPmCategoryL3().getFullCatcode() });
+				}
+			}
+		}
+		return retVal;
 	}
 
 	/**
@@ -8780,40 +8763,6 @@ public class SmApplicationBackingBean extends
 		return retVal;
 	}
 
-	private void setCategoryNameForApprovedCategory(SmSupplierCategory cat) {
-		CategoryCodeReqDTO reqDTO = null;
-		if (cat.getPmCategoryL1() != null
-				&& cat.getPmCategoryL1().getCategoryL1Id() != null) {
-			reqDTO = new CategoryCodeReqDTO();
-			reqDTO.setCategoryL1Id(cat.getPmCategoryL1().getCategoryL1Id());
-			PmCategoryL1 l1 = SmServiceLookup.getCategoryCodeSO()
-					.retrieveCategoryL1DtlById(reqDTO).getCategoryL1();
-			if (l1 != null) {
-				cat.setCategoryL1Name(l1.getCategoryName());
-			}
-		}
-		if (cat.getPmCategoryL2() != null
-				&& cat.getPmCategoryL2().getCategoryL2Id() != null) {
-			reqDTO = new CategoryCodeReqDTO();
-			reqDTO.setCategoryL2Id(cat.getPmCategoryL2().getCategoryL2Id());
-			PmCategoryL2 l2 = SmServiceLookup.getCategoryCodeSO()
-					.retrieveCategoryL2DtlById(reqDTO).getCategoryL2();
-			if (l2 != null) {
-				cat.setCategoryL2Name(l2.getCategoryName());
-			}
-		}
-		if (cat.getPmCategoryL3() != null
-				&& cat.getPmCategoryL3().getCategoryL3Id() != null) {
-			reqDTO = new CategoryCodeReqDTO();
-			reqDTO.setCategoryL3Id(cat.getPmCategoryL3().getCategoryL3Id());
-			PmCategoryL3 l3 = SmServiceLookup.getCategoryCodeSO()
-					.retrieveCategoryL3DtlById(reqDTO).getCategoryL3();
-			if (l3 != null) {
-				cat.setCategoryL3Name(l3.getCategoryName());
-			}
-		}
-	}
-
 	private String getApproverListForSuccessMsg() {
 		StringBuilder bf = new StringBuilder();
 		String retVal = "";
@@ -10165,34 +10114,6 @@ public class SmApplicationBackingBean extends
 		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
 			getManagedBean().setCurrentStatus(
 					resDTO.getPmStatusDesc().getStatusName());
-		}
-	}
-
-	/**
-	 * Assign Application Registration Status
-	 * 
-	 * @param regStatus
-	 *            - PmRegStatus object
-	 */
-	private void assignApplicationRegistrationStatus(PmRegStatus regStatus) {
-		if (regStatus != null && regStatus.getPmStatus() != null) {
-			log.info("****** reg Status Id ******"
-					+ regStatus.getPmStatus().getStatusId());
-			StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setStatusId(regStatus.getPmStatus().getStatusId());
-			reqDTO.setLanguageCode(new FacesScopes().getUserLocale()
-					.getLanguage());
-			IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IStatusSO.class);
-			StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
-			if (resDTO != null && resDTO.getPmStatusDesc() != null) {
-				getManagedBean().setApplRegStatus(
-						resDTO.getPmStatusDesc().getStatusName());
-			} else {
-				getManagedBean().setApplRegStatus(" ");
-			}
-		} else {
-			getManagedBean().setApplRegStatus(" ");
 		}
 	}
 
@@ -11913,25 +11834,6 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private void setSupplierCategoryEffectiveDate(SmSupplierCategory cat,
-			String applType) {
-		Calendar c = Calendar.getInstance();
-		if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-				&& cat.getCategoryEffDate() == null) {
-			if (StringUtils.isNotBlank(applType)
-					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
-					&& !applType
-							.equals(ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL)) {
-				c.add(Calendar.MONTH, SmServiceLookup.getSmRuleSO()
-						.retrieveNewCatEffectiveMonthAfterAppoved()
-						.getNewCatEffectiveMonth());
-			}
-			cat.setCategoryEffDate(c.getTime());
-		}
-	}
-
 	private void setFacilityAddressSameAs(SmFacility facilityBean) {
 		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		if (!EntityHelper.isObjectDifference(getManagedBean().getSmAppl()
@@ -11986,122 +11888,6 @@ public class SmApplicationBackingBean extends
 						if (facMain != null) {
 							getManagedBean().getSmAppl().getSmFacilities()
 									.remove(facMain);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private void initSmMachineDetails() {
-		getManagedBean().setCategoryTypeItems(
-				SmApplicationUtil.getSelectedCategoryTypeItems(getManagedBean()
-						.getSmAppl()));
-		List<SelectItem> categoryCodeItems = null;
-		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getCategoryTypeItems())) {
-			PmParameter categoryType = null;
-			SmMachineDtl mac = null;
-			if (EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
-					.getSmMachineDtls())) {
-				getManagedBean().getSmAppl().setSmMachineDtls(
-						new ArrayList<SmMachineDtl>());
-				for (SelectItem catItem : getManagedBean()
-						.getCategoryTypeItems()) {
-					if (catItem.getValue() != null) {
-						categoryType = SmCommonUtil.retrieveParameterById(Long
-								.parseLong(catItem.getValue().toString()));
-						categoryCodeItems = SmApplicationUtil
-								.getCategoryCodesItemsByCatTypeId(
-										categoryType.getParameterId(),
-										getManagedBean().getSmAppl());
-
-						if (categoryType.getParameterCode().equals(
-								ParameterConst.CATEGORY_TYPE_PRINTING)
-								&& !EntityHelper
-										.isCollectionEmpty(categoryCodeItems)) {
-							for (SelectItem codeItem : categoryCodeItems) {
-								mac = SmApplicationUtil
-										.getNewSmMachineDtlByCategoryTypeAndCode(
-												categoryType, codeItem,
-												getManagedBean().getSmAppl());
-								getManagedBean().getSmAppl().getSmMachineDtls()
-										.add(mac);
-							}
-						} else {
-							mac = SmApplicationUtil
-									.getNewSmMachineDtlByCategoryTypeAndCode(
-											categoryType, null,
-											getManagedBean().getSmAppl());
-							getManagedBean().getSmAppl().getSmMachineDtls()
-									.add(mac);
-						}
-					}
-				}
-			} else {
-				for (SelectItem catItem : getManagedBean()
-						.getCategoryTypeItems()) {
-					categoryType = SmCommonUtil.retrieveParameterById(Long
-							.parseLong(catItem.getValue().toString()));
-					categoryCodeItems = SmApplicationUtil
-							.getCategoryCodesItemsByCatTypeId(
-									categoryType.getParameterId(),
-									getManagedBean().getSmAppl());
-					mac = (SmMachineDtl) EntityHelper
-							.getEntityBySinglePropertyFromList(categoryType
-									.getParameterId(), getManagedBean()
-									.getSmAppl().getSmMachineDtls(),
-									"categoryType");
-					if (mac == null) {
-						if (categoryType.getParameterCode().equals(
-								ParameterConst.CATEGORY_TYPE_PRINTING)
-								&& !EntityHelper
-										.isCollectionEmpty(categoryCodeItems)) {
-							for (SelectItem codeItem : categoryCodeItems) {
-								mac = SmApplicationUtil
-										.getNewSmMachineDtlByCategoryTypeAndCode(
-												categoryType, codeItem,
-												getManagedBean().getSmAppl());
-								getManagedBean().getSmAppl().getSmMachineDtls()
-										.add(mac);
-							}
-						} else {
-							mac = SmApplicationUtil
-									.getNewSmMachineDtlByCategoryTypeAndCode(
-											categoryType, null,
-											getManagedBean().getSmAppl());
-							getManagedBean().getSmAppl().getSmMachineDtls()
-									.add(mac);
-						}
-					} else {
-						if (categoryType.getParameterCode().equals(
-								ParameterConst.CATEGORY_TYPE_PRINTING)
-								&& !EntityHelper
-										.isCollectionEmpty(categoryCodeItems)) {
-							for (SelectItem codeItem : categoryCodeItems) {
-								CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-								reqDTO.setCategoryL3Id(Long.parseLong(codeItem
-										.getValue().toString()));
-								PmCategoryL3 categoryCode = SmServiceLookup
-										.getCategoryCodeSO()
-										.retrieveCategoryL3ById(reqDTO)
-										.getCategoryL3();
-								mac = (SmMachineDtl) EntityHelper
-										.getEntityBySinglePropertyFromList(
-												categoryCode.getCategoryL3Id(),
-												getManagedBean().getSmAppl()
-														.getSmMachineDtls(),
-												"categoryCode");
-								if (mac == null) {
-									mac = SmApplicationUtil
-											.getNewSmMachineDtlByCategoryTypeAndCode(
-													categoryType, codeItem,
-													getManagedBean()
-															.getSmAppl());
-									getManagedBean().getSmAppl()
-											.getSmMachineDtls().add(mac);
-								}
-							}
 						}
 					}
 				}
