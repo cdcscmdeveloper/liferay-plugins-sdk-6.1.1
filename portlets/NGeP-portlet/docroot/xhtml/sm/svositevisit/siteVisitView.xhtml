@@ -3,10 +3,12 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:include src="/xhtml/sm/svositevisit/siteVisitOfficer.xhtml"></ui:include>
 
-	<p:panel header="#{lbl['lbl.sm.category']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.sitevisit.visiting.category']}" toggleable="true">
 		<p:dataTable var="cTask"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -28,12 +30,14 @@
 
 		<br />
 		<p:dataTable var="cat"
-			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvCategories}"
+			value="#{svoSiteVisitBackingBean.managedBean.supplierCategory}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column headerText="#{lbl['lbl.sm.category.description']}">
 				#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
 				:
 				#{cat.pmCategoryL3.categoryName}
+				
+				<h:outputText value="(#{cat.otherDesc})" rendered="#{cat.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}"></h:outputText>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -58,7 +62,7 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.latitude.longitude']}">
-				<table>
+				<ui:remove><table>
 					<tr>
 						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.latitude']}" style="float:left"
 							styleClass="outputLabel-view-label" /></td>
@@ -73,16 +77,37 @@
 							value="#{svTask.smSvAddress.smAddress.mapLongitude}" /></td>
 					</tr>
 				</table>
+				</ui:remove>
+				<script  type="text/javascript">
+					function getAddress(addr1, addr2, addr3, cityName, districtName, stateName, countryName) {
+						var address = addr1 + addr2 + addr3 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+						return address;
+					}
+				</script>
+	
+				<ac:gmap id="gmap" 
+					locationName="#{svTask.smAppl.smCompanyBasic.companyName}"
+					latitude="#{svTask.smSvAddress.smAddress.mapLatitude}" 
+					longitude="#{svTask.smSvAddress.smAddress.mapLongitude}" 
+					address="#{svTask.smSvAddress.smAddress.address1}#{svTask.smSvAddress.smAddress.address2}#{svTask.smSvAddress.smAddress.address3}#{svTask.smSvAddress.smAddress.pmCity.cityName},#{svTask.smSvAddress.smAddress.pmDistrict.districtName}, #{svTask.smSvAddress.smAddress.pmState.stateName},#{svTask.smSvAddress.smAddress.pmCountry.countryName}" />
 			</p:column>
-
-
+			
 			<p:column
 				headerText="#{lbl['lbl.sm.siteassign.expected.visiting.date']}">
 				<h:outputText value="#{svTask.scheduleDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-
 		</p:dataTable>
+		
+		<c:choose>
+			<c:when test="#{!viewFlag}">
+				<ui:include src="/xhtml/sm/shared/sitevisit/addressRepresentatives.xhtml" />
+			</c:when>
+				
+			<c:otherwise>
+				<ui:include src="/xhtml/sm/shared/sitevisit/view_addressRepresentatives.xhtml" />
+			</c:otherwise>
+		</c:choose>
 	</p:panel>
 </ui:composition>

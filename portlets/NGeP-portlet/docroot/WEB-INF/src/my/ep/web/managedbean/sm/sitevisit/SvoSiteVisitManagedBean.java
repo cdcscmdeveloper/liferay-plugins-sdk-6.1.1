@@ -9,6 +9,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -20,6 +21,7 @@ import my.ep.persistence.entity.sm.SmSvAdtMachine;
 import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvEquipment;
 import my.ep.persistence.entity.sm.SmSvInterviewee;
+import my.ep.persistence.entity.sm.SmSvMachine;
 import my.ep.persistence.entity.sm.SmSvManufacturingDoc;
 import my.ep.persistence.entity.sm.SmSvPrintwork;
 import my.ep.persistence.entity.sm.SmSvTask;
@@ -84,12 +86,12 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmMachineDtl[] selectedWorkshopMachine;
 	
 	//private Map<Long, PmParameterDesc> printingParamMap;
-	private Map<Long, String> printingCategoryCodeMap;
+	//private Map<Long, String> printingCategoryCodeMap;
 	private Map<Long, SmSvCategory> printingCatMap;
 	private SmSvPrintwork[] selectedPrintWorks;
 	
 	private List<SmSupplierCategory> categoryApplicable;
-	private Map<Integer,SmSvTemplate> indexPageMap;
+	//private Map<Integer,SmSvTemplate> indexPageMap;
 	private SmPersonnel contactPerson;
 	
 	private Integer lastIndex;
@@ -98,6 +100,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private List<String> managementNames = new ArrayList<String>();
 	
 	private SmSvAdtMachine selectedAdtMachine;
+	private SmSvMachine selectedSvMachine;
 	
 	private SmGstSupplier smGstSupplier;
 	private SmSvTemplate selectedAttachmentTemplate;
@@ -106,12 +109,21 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private String attachmentDeleteMsg;
 	private boolean viewMode;
 	
-	private SmSvAdtMachine oriAdtMachine;
+	//private SmSvAdtMachine oriAdtMachine;
+	private Object oriSelectedMachine;
 	private Long svTaskId;
 	private SmAppl smAppl;
 	private Map<String, List<SmSvTask>> templateTaskMap;
 	
 	private boolean claimTask;
+	private String businessTypeDesc;
+	private String companyAddress;
+	private String mofNo;
+	private int siteVisitNo;
+	private SmSupplierCategory supplierCategory;
+	private List<SmMachineDtl> machineDtlLs;
+	
+	private List<SmPersonnel> staffLs;
 
 	public Object getBpmPojo() {
 		return bpmPojo;
@@ -439,13 +451,13 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.selectedAddFinancialDoc = selectedAddFinancialDoc;
 	}
 	
-	public Map<Long, String> getPrintingCategoryCodeMap() {
+	/*public Map<Long, String> getPrintingCategoryCodeMap() {
 		return printingCategoryCodeMap;
 	}
 
 	public void setPrintingCategoryCodeMap(Map<Long, String> printingCategoryCodeMap) {
 		this.printingCategoryCodeMap = printingCategoryCodeMap;
-	}
+	}*/
 
 
 	public Map<Long, SmSvCategory> getPrintingCatMap() {
@@ -472,13 +484,13 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.categoryApplicable = categoryApplicable;
 	}
 
-	public Map<Integer, SmSvTemplate> getIndexPageMap() {
+	/*public Map<Integer, SmSvTemplate> getIndexPageMap() {
 		return indexPageMap;
 	}
 
 	public void setIndexPageMap(Map<Integer, SmSvTemplate> indexPageMap) {
 		this.indexPageMap = indexPageMap;
-	}
+	}*/
 
 	public SmPersonnel getContactPerson() {
 		return contactPerson;
@@ -593,13 +605,13 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.viewMode = viewMode;
 	}
 
-	public SmSvAdtMachine getOriAdtMachine() {
+/*	public SmSvAdtMachine getOriAdtMachine() {
 		return oriAdtMachine;
 	}
 
 	public void setOriAdtMachine(SmSvAdtMachine oriAdtMachine) {
 		this.oriAdtMachine = oriAdtMachine;
-	}
+	}*/
 
 	public Long getSvTaskId() {
 		return svTaskId;
@@ -641,4 +653,75 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.claimTask = claimTask;
 	}
 
+	public String getBusinessTypeDesc() {
+		return businessTypeDesc;
+	}
+
+	public void setBusinessTypeDesc(String businessTypeDesc) {
+		this.businessTypeDesc = businessTypeDesc;
+	}
+
+	public String getCompanyAddress() {
+		return companyAddress;
+	}
+
+	public void setCompanyAddress(String companyAddress) {
+		this.companyAddress = companyAddress;
+	}
+
+	public String getMofNo() {
+		return mofNo;
+	}
+
+	public void setMofNo(String mofNo) {
+		this.mofNo = mofNo;
+	}
+
+	public int getSiteVisitNo() {
+		return siteVisitNo;
+	}
+
+	public void setSiteVisitNo(int siteVisitNo) {
+		this.siteVisitNo = siteVisitNo;
+	}
+
+	public SmSupplierCategory getSupplierCategory() {
+		return supplierCategory;
+	}
+
+	public void setSupplierCategory(SmSupplierCategory supplierCategory) {
+		this.supplierCategory = supplierCategory;
+	}
+
+	public List<SmPersonnel> getStaffLs() {
+		return staffLs;
+	}
+
+	public void setStaffLs(List<SmPersonnel> staffLs) {
+		this.staffLs = staffLs;
+	}
+
+	public List<SmMachineDtl> getMachineDtlLs() {
+		return machineDtlLs;
+	}
+
+	public void setMachineDtlLs(List<SmMachineDtl> machineDtlLs) {
+		this.machineDtlLs = machineDtlLs;
+	}
+
+	public SmSvMachine getSelectedSvMachine() {
+		return selectedSvMachine;
+	}
+
+	public void setSelectedSvMachine(SmSvMachine selectedSvMachine) {
+		this.selectedSvMachine = selectedSvMachine;
+	}
+
+	public Object getOriSelectedMachine() {
+		return oriSelectedMachine;
+	}
+
+	public void setOriSelectedMachine(Object oriSelectedMachine) {
+		this.oriSelectedMachine = oriSelectedMachine;
+	}
 }

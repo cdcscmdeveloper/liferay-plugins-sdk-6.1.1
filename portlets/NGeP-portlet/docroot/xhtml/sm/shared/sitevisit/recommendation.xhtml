@@ -33,8 +33,8 @@
 				<td>
 					<p:selectOneRadio id="recommendationId" label="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" required="#{!empty param['disableValidation']}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.recommended}" disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}">
-			            <f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
-			            <f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
+			            <f:selectItem itemLabel="#{lbl['lbl.sm.sitevisit.approve']}" itemValue="true" />
+			            <f:selectItem itemLabel="#{lbl['lbl.sm.sitevisit.reject']}" itemValue="false" />
 			        </p:selectOneRadio>
 				</td>
 			</tr>

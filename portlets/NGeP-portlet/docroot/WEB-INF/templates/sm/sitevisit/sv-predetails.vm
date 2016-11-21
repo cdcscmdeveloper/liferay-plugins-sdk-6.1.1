@@ -75,7 +75,15 @@
 	        <td width="30%"><b>Visiting Date</b></td>
 	    	<td>#if($actualSiteVisitDate != $null) $smVmUtil.formatDate($actualSiteVisitDate) #end</td>
     	</tr>
-    	<tr><td><br /></td></tr>
+    	<tr>
+    		<td width="35%"><b>Latitude</b></td>
+    		<td>$!latitude</td>
+    	</tr>
+    	
+    	<tr>
+    		<td width="35%"><b>Longitude</b></td>
+    		<td>$!longitute</td>
+    	</tr>
 	 
    	    <tr>
 	        <td width="35%"><b>Telephone No.</b></td>
@@ -104,14 +112,18 @@
 			<th>Category Description</th>
 			<th>Category Remarks</th>
 		</tr>
-		#if($catApplicable.size() > 0)
-			#foreach($cat in $catApplicable)
-				#set($codeL1 = $cat.pmCategoryL1.categoryL1Code)
-				#set($codeL2 = $cat.pmCategoryL2.categoryL2Code)
-				#set($codeL3 = $cat.pmCategoryL3.categoryL3Code)
-		    	<tr><td>$codeL1$codeL2$codeL3 : $cat.pmCategoryL3.categoryName</td>
+		#if($catApplicable)
+				#set($codeL1 = $catApplicable.pmCategoryL1.categoryL1Code)
+				#set($codeL2 = $catApplicable.pmCategoryL2.categoryL2Code)
+				#set($codeL3 = $catApplicable.pmCategoryL3.categoryL3Code)
+		    	<tr>
+		    	<td>
+		    		$codeL1$codeL2$codeL3 : $catApplicable.pmCategoryL3.categoryName
+		    		#if($catApplicable.pmCategoryL3.categoryL3Code == "99")
+		    			($catApplicable.otherDesc)
+		    		#end
+		    	</td>
 		    	<td></td></tr>
-		  	#end
   		#else
   			<tr align="center"><td colspan="2">No records found.</td></tr>
   		#end

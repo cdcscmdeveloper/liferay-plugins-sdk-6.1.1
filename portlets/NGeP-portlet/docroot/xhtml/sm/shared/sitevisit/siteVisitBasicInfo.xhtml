@@ -10,63 +10,69 @@
 	<p:panel header="#{lbl['lbl.sm.companyinfo']}" toggleable="true">
 		<table class="customTbl">
 			<tr>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.companyinfo.accptd.app.date']}" /></td>
+				<td>
+					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOfficers[0].createdDate}">
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+					</h:outputText>
+				svTask.getSmSvOfficers().get(0).getCreatedDate()</td>
+				
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.companyinfo.final.info.date']}" /></td>
+				<td>
+					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.changedDate}">
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+					</h:outputText>
+				</td>
+			</tr>
+		
+			<tr>
 				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.equiComp.compName']}" /></td>
 				<td class="header-info-text"><h:outputText value="#{applInfo.smSupplier.companyName}" /></td>
-<!-- 				<td>MOF Registration No</td> -->
+
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.business.company.type']}" /></td>
+				<td class="header-info-text">
+					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.businessTypeDesc}" />
+				</td>
 			</tr>
 			
 			<tr>
-				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.application.ref.no']}" /></td>
-				<td class="header-info-text"><h:outputText value="#{applInfo.applNo}" /></td>
-				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.applicationtype']}" /></td>
-				<td class="header-info-text"><h:outputText value="#{lbl[svoSiteVisitBackingBean.getsupplierApplTypeDesc(applInfo.applType)]}" /></td>
+				<td><p:outputLabel style="font-weight: bold;white-space:normal;" value="#{lbl['lbl.sm.companyaddress']}" /></td>
+				<td class="header-info-text" style="word-break: keep-all;" colspan="3">
+					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.companyAddress}" />
+				</td>
 			</tr>
 			
 			<tr>
-				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sc.spec.roc.no']}" /></td>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.rocNo']}" /></td>
 				<td class="header-info-text"><h:outputText value="#{applInfo.smSupplier.regNo}" /></td>
 				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.telno']}" /></td>
 				<td class="header-info-text"><h:outputText value="#{applInfo.smCompanyBasic.phoneFull}" /></td>
 			</tr>
 			
-			<ui:param name="gstSupplier" value="#{svoSiteVisitBackingBean.managedBean.smGstSupplier}" />
 			<tr>
-				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.gst.regno']}" /></td>
-				<td class="header-info-text"><h:outputText value="#{gstSupplier.gstRegNo}" /></td>
-				<td>&#160;</td>
-				<td>&#160;</td>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.mofno']}" /></td>
+				<td class="header-info-text">
+					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.mofNo}" rendered="#{!empty svoSiteVisitBackingBean.managedBean.mofNo}"/>
+					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty svoSiteVisitBackingBean.managedBean.mofNo}"/>
+				</td>
 				
-			</tr>
-			
-			<tr>
-				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.gst.effdate']}" /></td>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.gst.regno']}" /></td>
 				<td class="header-info-text">
-					<h:outputText value="#{gstSupplier.gstEffDate}">
-						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
+					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.smGstSupplier.gstRegNo}" rendered="#{!empty svoSiteVisitBackingBean.managedBean.smGstSupplier}"/>
+					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty svoSiteVisitBackingBean.managedBean.smGstSupplier}"/>
 				</td>
-				<td>&#160;</td>
-				<td>&#160;</td>
 			</tr>
-			
-			<ui:remove>
-			<tr>
-				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
-				<td class="header-info-text">
-					<h:outputText value="#{gstSupplier.gstEndDate}">
-						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
-				</td>
-				<td>&#160;</td>
-				<td>&#160;</td>
-			</tr>
-			</ui:remove>
 			
 			<tr>
 				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.contact.person.name']}" /></td>
 				<td class="header-info-text"><h:outputText value="#{svoSiteVisitBackingBean.managedBean.contactPerson.name}" /></td>
 				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.contact.person.designation']}" /></td>
 				<td class="header-info-text"><h:outputText value="#{svoSiteVisitBackingBean.managedBean.contactPerson.designation}" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.sitevisit.no']}" /></td>
+				<td class="header-info-text"><h:outputText value="#{svoSiteVisitBackingBean.managedBean.siteVisitNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>

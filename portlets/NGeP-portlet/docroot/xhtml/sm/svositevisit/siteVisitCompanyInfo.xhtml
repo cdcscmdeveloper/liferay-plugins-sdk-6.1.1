@@ -7,18 +7,22 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<c:set var="svTask" value="#{svoSiteVisitBackingBean.managedBean.smSvTask}" />
+	<ui:param name="businessType" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smSupplier.businessType}"></ui:param>
 	<p:panel header="#{lbl['lbl.sm.sitevist.capital.equity.details']}" toggleable="true" id="pnlCapital">
 		<table class="customTbl">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.authCap']}" /></td>
-				<td><p:inputText readonly="true" id="authoCapitalId"
-						value="#{svTask.smAppl.smCompanyBasic.authorizedCapital}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText></td>
-				<td></td>
-
-			</tr>
+			<c:if test="#{businessType == SupplierMgmtConst.smSupplierBusinessTypeLlp or 
+				businessType == SupplierMgmtConst.smSupplierBusinessTypeRocSdnBhd or businessType == SupplierMgmtConst.smSupplierBusinessTypeRocBhd}">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.authCap']}" /></td>
+					<td><p:inputText readonly="true" id="authoCapitalId"
+							value="#{svTask.smAppl.smCompanyBasic.authorizedCapital}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+					<td></td>
+	
+				</tr>
+			</c:if>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.paidUpCap']}" /></td>
 				<td><p:inputText readonly="true" id="paidUpCapitalId" value="#{svTask.smAppl.smCompanyBasic.paidUpCapital}">
@@ -68,6 +72,8 @@
 				<td><p:inputText readonly="true" value="#{svoSiteVisitBackingBean.calculateEquityPercentage(svTask.smAppl.smCompanyBasic.foreignerEquity)}" />%</td>
 			</tr>
 
+			<c:if test="#{businessType == SupplierMgmtConst.smSupplierBusinessTypeLlp or 
+				businessType == SupplierMgmtConst.smSupplierBusinessTypeRocSdnBhd or businessType == SupplierMgmtConst.smSupplierBusinessTypeRocBhd}">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.govagencyequity.unittrustagncy.amount']}" /></td>
 				<td><p:inputText readonly="true" id="eqUnitTrustId"
@@ -106,13 +112,16 @@
 					</p:inputText></td>
 				<td><p:inputText readonly="true" value="#{svoSiteVisitBackingBean.calculateEquityPercentage(svTask.smAppl.smCompanyBasic.foreignCompanyEquity)}" />%</td>
 			</tr>
+			</c:if>
 			
 			<c:choose>
 					<c:when test="#{not empty svoSiteVisitBackingBean.managedBean.equityOwnerLs}">
 					<ui:repeat varStatus="equityStat" var="equityOwner" value="#{svoSiteVisitBackingBean.managedBean.equityOwnerLs}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" rendered="#{equityStat.index == 0}" />
-							<p:outputLabel value="&#160;" rendered="#{equityStat.index != 0}" /></td>
+							<td>
+							<p:outputLabel value="#{equityStat.index +1}." />
+							<p:outputLabel value="#{lbl['lbl.sm.ownername']}" rendered="#{equityStat.index == 0}" />
+							</td>
 							<td><p:inputText readonly="true" value="#{equityOwner.name}" /></td>
 							<td>&#160;</td>
 						</tr>
@@ -130,6 +139,8 @@
 		</table>
 	</p:panel>
 
+	<c:if test="#{businessType == SupplierMgmtConst.smSupplierBusinessTypeLlp or 
+				businessType == SupplierMgmtConst.smSupplierBusinessTypeRocSdnBhd or businessType == SupplierMgmtConst.smSupplierBusinessTypeRocBhd}">	
 	<p:panel header="#{lbl['lbl.sm.sitevist.board.directors']}" toggleable="true" id="pnlBOD">
 		<table class="customTbl">
 			<tr>
@@ -157,8 +168,10 @@
 					<c:when test="#{not empty svoSiteVisitBackingBean.managedBean.bodLs}">
 						<ui:repeat varStatus="status" var="bod" value="#{svoSiteVisitBackingBean.managedBean.bodLs}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.director.name']}" rendered="#{status.index == 0}" /> 
-								<p:outputLabel value="&#160;" rendered="#{status.index != 0}" /></td>
+							<td>
+							<p:outputLabel value="#{status.index + 1.}" />
+							<p:outputLabel value="#{lbl['lbl.sm.sitevist.director.name']}" rendered="#{status.index == 0}" /> 
+							</td>
 							<td><p:inputText readonly="true" value="#{bod.name}" /></td>
 							<td>&#160;</td>
 						</tr>
@@ -175,6 +188,7 @@
 				</c:choose>
 		</table>
 	</p:panel>
+	</c:if>
 
 	<p:panel header="#{lbl['lbl.sm.person.composition.mngt']}" toggleable="true" id="pnlMgmt">
 		<table class="customTbl">
@@ -212,8 +226,10 @@
 				<c:when test="#{not empty svoSiteVisitBackingBean.managedBean.mgmtLs}">
 					<ui:repeat varStatus="mgmtStatus" var="mgmt" value="#{svoSiteVisitBackingBean.managedBean.mgmtLs}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.manager.name']}" rendered="#{mgmtStatus.index == 0}" />
-							<p:outputLabel value="&#160;" rendered="#{mgmtStatus.index != 0}" /></td>
+							<td>
+								<p:outputLabel value="#{mgmtStatus.index + 1}." />
+								<p:outputLabel value="#{lbl['lbl.sm.sitevist.manager.name']}" rendered="#{mgmtStatus.index == 0}" />
+							</td>
 							<td><p:inputText readonly="true" value="#{mgmt.name}" /></td>
 						</tr>
 					</ui:repeat>
@@ -256,6 +272,30 @@
 				<td><p:inputText id="wrkNonMalaysianId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.wrkNonMalaysian}" /> #{lbl['lbl.sm.persons']}</td>
 				<td><p:inputText id="wrkNonMalaysianPercId" readonly="true" value="#{svoSiteVisitBackingBean.calculateWorkerPercentage(svoSiteVisitBackingBean.managedBean.wrkNonMalaysian)}"/>%</td>
 			</tr>
+			
+			<c:choose>
+				<c:when test="#{not empty svoSiteVisitBackingBean.managedBean.staffLs}">
+					<ui:repeat varStatus="staffStatus" var="staff" value="#{svoSiteVisitBackingBean.managedBean.staffLs}">
+						<tr>
+							<td>
+								<p:outputLabel value="#{staffStatus.index + 1}." />
+								<p:outputLabel value="#{lbl['lbl.sm.sitevist.staff.name']}" rendered="#{staffStatus.index == 0}" />
+							</td>
+							<td><p:inputText readonly="true" value="#{staff.name}" /></td>
+						</tr>
+					</ui:repeat>
+				</c:when>
+				
+				<c:otherwise>
+					<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sm.sitevist.staff.name']}" />
+							<p:outputLabel value="&#160;" />
+						</td>
+						<td><p:inputText readonly="true" /></td>
+					</tr>
+				</c:otherwise>
+			</c:choose>
 		</table>
 	</p:panel>
 </ui:composition>

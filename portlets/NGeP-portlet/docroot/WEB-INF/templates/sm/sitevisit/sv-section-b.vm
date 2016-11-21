@@ -39,67 +39,79 @@
 		<td class="sColTwentyPerc">$nonMalaysianCheqSign person(s)</td>
 		<td class="sColTwentyPerc">$nonMalaysianCheqSignPct%</td>
 	</tr>
-	</table>
+</table>
 	
-	<table>
+<table  class="sTable">
 	<tr>
-		<td width="40%" class="txtBold" valign="top">Bank Information</td>
-		<td width="60%">
+		<td class="txtBold">Bank Information</td>
+	</tr>
+</table>
+
+<table>
+	#foreach($bank in $bankInfo)
+	<tr>
+		<td valign="top">
+		<table>
+			<tr><td>$velocityCount.</td></tr>
+			<tr><td><p style="width: 10px;height: 10px;background: white;border:solid thin black;" /></td></tr>
+		</table>
+		</td>
+		
+		<td valign="top">
 			<table>
-				#foreach($bank in $bankInfo)
-					<tr>
-						<td valign="top">$velocityCount.</td>
-						<td class="txtBold" valign="top">Bank Name</td>
-						<td>
-							#set($financialOrg = $bank.smSupplierBank.pmFinancialOrg.finOrgName)
-							#set($bankName = $financialOrg.replace("&", "&#38;"))
-							${bankName}
-						</td>
-					</tr>
-					
-					<tr>
-						<td></td>
-						<td class="txtBold" valign="top">Account No.</td>
-						<td>$bank.smSupplierBank.accountNo<br /></td>
-					</tr>
-					
-					<tr>
-						<td></td>
-						<td class="txtBold" valign="top">Cheque Signatory Name</td>
-						<td>
-							#foreach($signatory in $bank.smSupplierBank.smChequeSignatories)
-								$velocityCount. $signatory.smPersonnel.name<br />
-							#end
-						</td>
-					</tr>
-					
-					<tr>
-						<td></td>
-						<td valign="top" class="txtBold">Terms and Conditions</td>
-						<td valign="top">$!bank.smSupplierBank.signatureInstruction</td>
-					</tr>
-					
-					#if($review)
-						<tr>
-							<td></td>
-							<td valign="top" class="txtBold">Valid</td>
-							<td valign="top">
-								#if($bank.valid)Yes #else No #end
-							</td>
-						</tr>
+			<tr>
+				<td class="txtBold">Bank Name</td>
+				<td>
+					$bank.smSupplierBank.pmFinancialOrg.finOrgName
+				</td>
+			</tr>
 						
-						<tr>
-							<td></td>
-							<td valign="top" class="txtBold">Remark</td>
-							<td valign="top">$!bank.remark</td>
-						</tr>
+			<tr>
+				<td class="txtBold">Account No.</td>
+				<td>$bank.smSupplierBank.accountNo<br /></td>
+			</tr>
+						
+			<tr>
+				<td class="txtBold">Cheque Signatory Name</td>
+				<td>
+					#foreach($signatory in $bank.smSupplierBank.smChequeSignatories)
+						$velocityCount. $signatory.smPersonnel.name<br />
 					#end
-					<br />
-				#end
+				</td>
+			</tr>
+						
+			<tr>
+				<td valign="top" class="txtBold">Terms and Conditions</td>
+				<td valign="top">$!bank.smSupplierBank.signatureInstruction</td>
+			</tr>
+			
+			#*	
+			#if($review)
+				<tr>
+					<td valign="top" class="txtBold">Valid</td>
+					<td valign="top">
+						#if($bank.valid)Yes #else No #end
+					</td>
+				</tr>
+							
+				<tr>
+					<td valign="top" class="txtBold">Remark</td>
+					<td valign="top">$!bank.remark</td>
+				</tr>
+			#end*#
+			
 			</table>
 		</td>
-
+		
+		<td valign="top">
+		<table>
+			<tr>
+				<td>Remarks:</td>
+				<td><p style="width: 200px;height: 50px;background: white;border:solid thin black;" /></td>
+			</tr>
+		</table></td>
 	</tr>
+	#end
 </table>
 <br /><br />
 
@@ -122,17 +134,14 @@
   		#end
 	#else
 		<tr>
-			<td class="txtBold" colspan="2"><u>Check List</u></td>
+			<td class="txtBold"><u>Check List</u></td>
 		</tr>
 		#if($financialCheckList.size() > 0)
 			#foreach($finCheckItem in $financialCheckList)
 			    <tr>
-			    	<td width="20%"><br /></td>
+			    	<td><p style="width: 10px;height: 10px;background: white;border:solid thin black;" /></td>
 			    	<td>$finCheckItem</td>
-			    </tr>
-			    <tr>
-			    	<td><br /></td>
-			    	<td><br /></td>
+			    	<td valign="bottom"><p style="width: 200px; background: white;border-bottom: 1px solid black;" /></td>
 			    </tr>
 			#end
   		#end
