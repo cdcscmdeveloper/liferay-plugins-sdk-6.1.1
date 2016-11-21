@@ -155,7 +155,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-	private ContractBackingBean ctBB = null;
+	private ContractBackingBean ctBB = new ContractBackingBean();
 	
 	/**
 	 * The function constructor used for initializing the variable.
