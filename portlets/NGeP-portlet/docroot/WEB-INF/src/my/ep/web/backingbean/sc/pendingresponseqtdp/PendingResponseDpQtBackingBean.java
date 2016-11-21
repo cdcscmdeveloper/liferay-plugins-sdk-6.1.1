@@ -234,7 +234,10 @@ private void searchSimpleQuoteCount(){
 	}
 }
 
-/*navigate to suppliers page*/
+
+/**
+ * navigate to suppliers page
+ */
 public void  navigatetoSupplierredirect(){
 	ThemeDisplay themeDisplay = (ThemeDisplay) new FacesScopes()
 	.getRequestScope(WebKeys.THEME_DISPLAY);
@@ -265,6 +268,9 @@ log.error(e);
 }
 }
 
+/**
+ * navigate to PreRenderResponse page
+ */
 public void preRenderPendingResposeDpQt() {
 	
 	try {
