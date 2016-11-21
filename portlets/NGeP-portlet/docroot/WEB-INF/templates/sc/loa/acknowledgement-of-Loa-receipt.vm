@@ -6,7 +6,7 @@
 @page { @bottom-left { content:element(footer);	}
 
 @bottom-right {
-	content: "Page " counter(page) " / " counter(pages);}
+	content: "Page " counter(page) " of " counter(pages);}
 
 @top-left {
 	content: element(header);}
@@ -48,7 +48,6 @@ p {text-align: justify;}
 </head>
 <body>
 
-
 	<div class='header'>
 		<span class='title-text'>No.Surat Setuju Terima :$loaNo</span>
 	</div>
@@ -63,8 +62,6 @@ p {text-align: justify;}
 						PENERIMAAN SURAT SETUJU TERIMA DAN LAMPIRAN YANG BERKAITAN OLEH
 						SYARIKAT</b></span></td>
 		</tr>
-
-
 		<tr>
 			<td colspan="2"><p>
 					<span class="text_family"> Dengan ini disahkan bahawa yang
@@ -78,7 +75,6 @@ p {text-align: justify;}
 						dikenakan. </span>
 				</p></td>
 		</tr>
-
 	</table>
 
 	<table align="left" width="50%">
@@ -86,41 +82,31 @@ p {text-align: justify;}
 			<td colspan="3"><br />__________________________________</td>
 
 		</tr>
-
 		<tr>
-			<td>Nama Penuh</td>
+			<td style ="width:100px">Nama Penuh</td>
 			<td>:</td>
 			<td style="white-space: normal;"></td>
-
 		</tr>
 		<tr>
 			<td>No. Kad Pengenalan</td>
 			<td>:</td>
 			<td></td>
-
 		</tr>
 		<tr valign="top">
 			<td>Alamat</td>
 			<td>:</td>
-			<td style="white-space: normal;">$!supplierAddress</td>
-
+			<td style="white-space: normal;"></td>
 		</tr>
 		<tr>
 			<td>Tarikh</td>
 			<td>:</td>
 			<td></td>
 		</tr>
-
-
 		<tr>
 			<td colspan="3"><br />
 			<br /> Meterai atau Cop Syarikat <br /> *potong mana yang tidak
 				berkenaan</td>
-
 		</tr>
-
-
-
 	</table>
 
 	<table align="right" width="50%">
@@ -128,7 +114,7 @@ p {text-align: justify;}
 			<td colspan="3"><br />__________________________________</td>
 		</tr>
 		<tr>
-			<td>Nama Penuh</td>
+			<td style ="width:100px">Nama Penuh</td>
 			<td>:</td>
 			<td style="white-space: normal;">$supplierWitnessUser</td>
 
