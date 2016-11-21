@@ -15,7 +15,7 @@
     	
     	<tr>
 	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.final.info.date')</b></td>
-	        <td></td>
+	        <td>$finalInfoDate</td>
     	</tr>
     	
     	<tr>
