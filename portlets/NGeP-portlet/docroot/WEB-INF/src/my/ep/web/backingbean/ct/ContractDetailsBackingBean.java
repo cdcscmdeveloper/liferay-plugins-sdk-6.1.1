@@ -107,10 +107,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ManagedBean (name = "contractDetailsBackingBean") 
 @ViewScoped
 public class ContractDetailsBackingBean extends ContractBaseBackingBean<ContractDetailsManagedBean> {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(ContractDetailsBackingBean.class);
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
@@ -1734,30 +1731,28 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public String gotoUpdatePage(Long contractId, int agStatus) {
 		IContractSO contractSO = null;
-		
 		try {
-			
-			     contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			     ContractReqDTO reqDTO = new ContractReqDTO();
-			     reqDTO.setContractId(contractId);	
-			     reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
-			     if (agStatus == 1) {
-				        reqDTO.setDocType(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT);
-			     } else {
-				       reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
-			     }
-		
-			     reqDTO.setUpdateAction(true);
-		         ctBB.getManagedBean().setViewContract(false);
-		         ctBB.getManagedBean().setUpdateContract(true);
-		         setValidateContractField(reqDTO);
-		         getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-		         ctBB.chkServiceTaxAlert();
-	             getManagedBean().setExternalPageUrl(null);
-	             getManagedBean().setSelectedTabIndex(0);	     
-			     return CONTRACT_PAGE;
-		  } finally {
-			     contractSO = null;
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setContractId(contractId);	
+			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
+			if (agStatus == 1) {
+				reqDTO.setDocType(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT);
+			} else {
+				reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			}
+
+			reqDTO.setUpdateAction(true);
+			ctBB.getManagedBean().setViewContract(false);
+			ctBB.getManagedBean().setUpdateContract(true);
+			setValidateContractField(reqDTO);
+			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			ctBB.chkServiceTaxAlert();
+			getManagedBean().setExternalPageUrl(null);
+			getManagedBean().setSelectedTabIndex(0);	     
+			return CONTRACT_PAGE;
+		} finally {
+			contractSO = null;
 		}
 	}
 	
@@ -1896,35 +1891,29 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public String gotoBackPage() throws IOException {
 		try {
-		             String url = getManagedBean().getGotoPreviewPage();
-		             Long contractId =  ctBB.getManagedBean().getContractVer().getCtContract().getContractId();
-		             boolean isTrue =  getManagedBean().isBackPageAmendment();
-		             String taskId = getManagedBean().getTaskId();
-	                renewSesionObject();
-	                if(isTrue && taskId == null){
-	    	               return gotoAmendPage(contractId);
-	                 }else if (isTrue && taskId != null){
-	    		              FacesScopes facesScope = new FacesScopes();
-				              ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
-				              String commonUrl = themeDisplay.getURLCurrent().substring(
-						           0,themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup()
+			String url = getManagedBean().getGotoPreviewPage();
+			Long contractId =  ctBB.getManagedBean().getContractVer().getCtContract().getContractId();
+			boolean isTrue =  getManagedBean().isBackPageAmendment();
+			String taskId = getManagedBean().getTaskId();
+			renewSesionObject();
+			if(isTrue && taskId == null){
+				return gotoAmendPage(contractId);
+			}else if (isTrue && taskId != null){
+				FacesScopes facesScope = new FacesScopes();
+				ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+				String commonUrl = themeDisplay.getURLCurrent().substring(
+						0,themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup()
 								.getFriendlyURL())	+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
-			                 	System.out.println("commonUrl" + commonUrl);
-
-				               ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-				               externalContext.redirect(commonUrl + "/" +ContractConst.NAV_TO_CONTRACT_AMENDMENT + "?taskId="+ taskId);
-	     }	else{
-	
-	    		return url;
-	     }
+				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+				externalContext.redirect(commonUrl + "/" +ContractConst.NAV_TO_CONTRACT_AMENDMENT + "?taskId="+ taskId);
+			} else{
+				return url;
+			}
 		} catch (PortalException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SystemException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return null;
 	}
 	
@@ -1969,7 +1958,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public SelectItem[] getSearchStatusDropdown() {
 		SelectItem[] items = null;
-		
 		try {
 			items = new SelectItem[4];
 			int i = 0;
