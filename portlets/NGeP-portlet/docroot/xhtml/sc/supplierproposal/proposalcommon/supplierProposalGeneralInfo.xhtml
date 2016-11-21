@@ -28,7 +28,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="50"
-						value="#{supplierProposalDetailBackingBean.managedBean.smAppl.smCompanyBasic.website}" /></td>
+						value="#{supplierProposalDetailBackingBean.managedBean.contactPerson.email}" /></td>
 			</tr>
 
 		</table>
@@ -65,8 +65,10 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td></td>
-				<td></td>
+				<td><p:outputLabel id="ministryName"
+						value="#{lbl['lbl.sc.ministry.name']}" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="125"
+						value="#{supplierProposalDetailBackingBean.retrieveMinistryByOrgProfileId(supplierProposalDetailBackingBean.managedBean.qt.pmOrgProfile.orgProfileId)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel id="ptjNameMain"

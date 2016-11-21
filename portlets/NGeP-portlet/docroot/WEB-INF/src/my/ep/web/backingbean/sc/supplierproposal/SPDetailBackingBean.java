@@ -346,7 +346,6 @@ public class SPDetailBackingBean extends
 
 		return duration;
 	}
-	
 
 	/**
 	 * Listener method for tab change to retrieve Quotation/Tender Document
@@ -411,7 +410,7 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(4);
 		generateDeclarationFromVelocity(getManagedBean().getQt());
 	}
-	
+
 	/**
 	 * Listener method for tab change to retrieve Quotation/Tender general info
 	 * Details
@@ -419,9 +418,21 @@ public class SPDetailBackingBean extends
 	public void retrieveGeneralInfo() {
 		debugLogger("retrieveGeneralInfo");
 		this.getManagedBean().setPrepareActiveIndex(5);
-		
-		if(getManagedBean().getSmAppl() == null || getManagedBean().getSmCompanyBasic() == null){
+
+		if (getManagedBean().getSmAppl() == null
+				|| getManagedBean().getSmCompanyBasic() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
+			if (getManagedBean().getSmAppl().getSmPersonnels() != null
+					&& !getManagedBean().getSmAppl().getSmPersonnels()
+							.isEmpty()) {
+				for (SmPersonnel smContactperson : getManagedBean().getSmAppl()
+						.getSmPersonnels()) {
+					if (smContactperson.isContactPerson()) {
+						this.getManagedBean().setContactPerson(smContactperson);
+						break;
+					}
+				}
+			}
 		}
 	}
 
