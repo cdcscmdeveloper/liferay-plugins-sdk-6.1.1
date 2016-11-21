@@ -57,7 +57,7 @@
 			<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{suppFinalizationBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>	
 			
-			<p:dataTable id="supplierListTblSingle" var="shortlistedSupp" widgetVar="shortlistedSuppDtls" 
+			<p:dataTable id="supplierListTblSingle" var="shortlistedSupp" 
 						 value="#{suppFinalizationBackingBean.managedBean.shortlistedSuppliersByRecommendType}"
 						 editable="true" lazy="true" rows="10" rowIndexVar="index" rowKey="#{shortlistedSupp}" 
 						 style="width:100%;" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -206,7 +206,7 @@
 														suppFinalizationBackingBean.managedBean.disableSupplierSelection}" />
 			</p:dataTable>							 	    
 
-			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp" widgetVar="shortlistedSuppDtls" 
+			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp" 
 						 value="#{suppFinalizationBackingBean.managedBean.shortlistedSuppliersByRecommendType}"
 						 editable="true" lazy="true" rows="10" rowIndexVar="index" rowKey="#{shortlistedSupp}" 
 						 style="width:100%;"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
