@@ -13,24 +13,28 @@
 			<th width="10%" class="txtBold">Purchasing/Method</th>
 			<th width="10%" class="txtBold">Guarantor Name</th>
 		</tr>
-		
+	
 		#if($machineLs.size() > 0)
-			#foreach($machine in $machineLs)
+			#foreach($svmachine in $machineLs)
 			<tr>
 				<td>$velocityCount</td>
-				<td>$!machine.machineType</td>
-				<td>$!machine.brandName</td>
-				<td>$!machine.machineFunction</td>
-				<td>$!machine.qty</td>
+				#if($!svmachine.smMachineDtl.machine.machineDes)
+					<td>$!svmachine.smMachineDtl.machineType</td>
+				#else
+					<td>$!svmachine.smMachineDtl.machine.machineDesc</td>
+				#end
+				<td>$!svmachine.smMachineDtl.brandName</td>
+				<td>$!svmachine.smMachineDtl.machineFunction</td>
+				<td>$!svmachine.smMachineDtl.qty</td>
 				<td style="text-align:right">
-				#if($machine.value) 
-					$smVmUtil.formatToTwoDecimalPoint($machine.value)
+				#if($svmachine.smMachineDtl.value) 
+					$smVmUtil.formatToTwoDecimalPoint($svmachine.smMachineDtl.value)
 				#end
 				</td>
 				<td>
-					$purchaseMethodMap.get($machine.purchaseMethod)
+					$purchaseMethodMap.get($svmachine.smMachineDtl.purchaseMethod)
 				</td>
-				<td>$!machine.guarantorName</td>
+				<td>$!svmachine.smMachineDtl.guarantorName</td>
 			</tr>
 			#end
 		#else

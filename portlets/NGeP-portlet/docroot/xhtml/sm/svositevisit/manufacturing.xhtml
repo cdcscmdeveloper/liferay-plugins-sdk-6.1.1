@@ -8,7 +8,8 @@
 	
 	<h:outputText value="#{lbl['lbl.sm.sitevisit.category.manufacturing']}" styleClass="screen-title" />
 	<p:tabView>
-		<p:tab title="#{lbl['lbl.sm.manufacturing.siteinfo']}">
+		
+		<p:tab title="#{lbl['lbl.sm.license.insurance']}">
  			<c:choose>
 				<c:when test="#{!viewFlag}">
 					<ui:include src="/xhtml/sm/shared/sitevisit/addressRepresentatives.xhtml" />
@@ -19,9 +20,11 @@
 				</c:otherwise>
 			</c:choose>
 			<ui:include src="/xhtml/sm/shared/sitevisit/financialDoc.xhtml" />
+			<ui:include src="/xhtml/sm/shared/sitevisit/additional_License.xhtml" />
 		</p:tab>
+		
 
-		<p:tab title="#{lbl['lbl.sm.manufacturing.equipmnt.mchne']}">
+		<p:tab title="#{lbl['lbl.sm.sitevisit.equipment.detail']}">
 			<c:choose>
 				<c:when test="#{!viewFlag}">
 					<ui:include src="/xhtml/sm/shared/sitevisit/machine.xhtml" />
@@ -34,9 +37,11 @@
 			</c:choose>
 		</p:tab>
 		
-		<p:tab title="#{lbl['lbl.sm.manufacturing.comment.and.recommndtn']}">
+		<p:tab title="#{lbl['lbl.sm.sitevisit.premiselocation']}">
 			<ui:include src="/xhtml/sm/shared/sitevisit/manufacturingComment.xhtml" />
+			<ui:remove>
 			<ui:include src="/xhtml/sm/shared/sitevisit/commentRecommendation.xhtml" />
+			</ui:remove>
 		</p:tab>
 	</p:tabView>
 </ui:composition>

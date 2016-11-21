@@ -87,6 +87,11 @@
 				
 				<p:column headerText="#{lbl['lbl.sm.category.description']}">
 					#{catApp.pmCategoryL3.categoryName}
+					
+					<c:if test="#{catApp.pmCategoryL3.categoryL3Code == SupplierMgmtConst.categoryCatManufacturingCode}">
+					
+					</c:if>
+					
 				</p:column>
 			</p:dataTable>
 		</p:panel>

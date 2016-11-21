@@ -9,36 +9,48 @@
 		<td>Req. Method</td>
 		<td>Req. Year</td>
 		<td>Guarantor</td>
+		#if($review)
+		<td>Available</td>
+		#end
 	</tr>
 	
-	#if($printingCat != $null && $printingCat.size() > 0)
-		#foreach($pCat in $printingCat.keySet())
-				<tr><td colspan="7"><b>$pCat</b></td></tr>
-				#foreach($machine in $printingCat.get($pCat))
-					#if($review)
-						<tr>
-							<td>$velocityCount</td>
-							<td>$!machine.pmMachine.machineDesc</td>
-							<td>$!machine.brand</td>
-							<td>$!machine.qty</td>
-							<td>$!machine.requisiteMethod</td>
-							<td>$!machine.requisiteYear</td>
-							<td>$!machine.guarantor</td>
-						</tr>
+	<tr><td colspan="7"><b>$pCat</b></td></tr>
+	#if($printingMachineLs != $null && $printingMachineLs.size() > 0)
+		#foreach($machine in $printingMachineLs)
+			#if($review)
+				<tr>
+					<td>$velocityCount</td>
+					#if($!machine.machine.machineDes)
+						<td>$!machine.machineType</td>
 					#else
-						<tr>
-							<td>$velocityCount</td>
-							<td>$!machine.pmMachine.machineDesc</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
+						<td>$!machine.machine.machineDesc</td>
 					#end
-				#end
+					<td>$!machine.brand</td>
+					<td>$!machine.qty</td>
+					<td>$!machine.requisiteMethod</td>
+					<td>$!machine.requisiteYear</td>
+					<td>$!machine.guarantor</td>
+					<td>
+						#if($!machine.available)Yes #else No #end
+					</td>
+				</tr>
+			#else
+				<tr>
+					<td>$velocityCount</td>
+					<td>$!machine.pmMachine.machineDesc</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			#end
 		#end
 	#end
+</table>
+<br /><br />	
 
-</table>	
+#if($review == false)
+	#parse("templates/sm/sitevisit/shared/machine.vm")
+#end
 

@@ -117,7 +117,7 @@
 		<tr align="left">
 			<td width="25%"><b>Site Visit No</b></td>
 			<td width="5%">:</td>
-			<td width="50%"></td>
+			<td width="50%">$siteVisitNo</td>
 		</tr>
 	</table>
 	
