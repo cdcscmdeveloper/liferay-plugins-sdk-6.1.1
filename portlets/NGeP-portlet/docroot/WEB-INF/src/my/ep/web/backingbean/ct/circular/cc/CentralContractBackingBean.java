@@ -148,7 +148,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 public class CentralContractBackingBean extends BaseBackingBean<CentralContractManagedBean>{
 
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
-	private ContractBackingBean ctBB = null;
+	private ContractBackingBean ctBB = new ContractBackingBean();
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	private IPagingDataModel<PmOrgProfile> exemptedOrgDataModel = new ExemptedOrgDataModel();	
 
