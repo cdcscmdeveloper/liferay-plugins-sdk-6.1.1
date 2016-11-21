@@ -343,7 +343,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (ctBB.getManagedBean().getContractVer().getCtAgencies() != null  && ctBB.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
 				ctBB.getManagedBean().setSelectedAgency(null);
 				for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
-					ctBB.checkAgencyStatus(ctAgency);		        	   
+					ctBB.checkAgencyStatus(ctAgency);		 
+					if(ctAgency.getFilePath() != null && !ctAgency.getFilePath().isEmpty()){
+						ctAgency.setContractSharing(true);
+					}
 				}
 			}
 
@@ -1061,13 +1064,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							DecimalFormat df = new DecimalFormat("#.00");
 							for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 								ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-								if (ctAgency.isAp178() == true && (ctAgency.getFileName() == null  || ctAgency.getFileName().equalsIgnoreCase(""))) {
+								if (ctAgency.isAp178() == true && ctAgency.isContractSharing() && (ctAgency.getFileName() == null  || ctAgency.getFileName().equalsIgnoreCase(""))) {
 									setTabValue("AG");
 									throw new EpException(MessageConst.ERROR_750008); 
 									// Approval document is mandatory for AP178 agency. Please upload the document.
 								}
 								
-								if (ctAgency.isAp178() == true && (ctAgency.getRefNo() == null  || ctAgency.getRefNo().equalsIgnoreCase(""))) {
+								if (ctAgency.isAp178() == true && ctAgency.isContractSharing() &&  (ctAgency.getRefNo() == null  || ctAgency.getRefNo().equalsIgnoreCase(""))) {
 									setTabValue("AG");
 									throw new EpException(MessageConst.ERROR_100061, 
 				           					new String[] {ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
