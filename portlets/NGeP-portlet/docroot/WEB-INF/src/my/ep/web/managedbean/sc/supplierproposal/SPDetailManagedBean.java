@@ -186,6 +186,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private SmGstSupplier smGstSupplierBranch;
 	private int technicalTableRow;
 	private int financialTableRow;
+	private SmPersonnel contactPerson;
 
 	private boolean agreeWithIntegrityPact;
 	private boolean agreeWithOthersTermsConditions;
@@ -1789,6 +1790,18 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.isProcCategoryMedicine = isProcCategoryMedicine;
 	}
 	
-	
+	/**
+	 * @return the contactPerson
+	 */
+	public SmPersonnel getContactPerson() {
+		return contactPerson;
+	}
+
+	/**
+	 * @param contactPerson the contactPerson to set
+	 */
+	public void setContactPerson(SmPersonnel contactPerson) {
+		this.contactPerson = contactPerson;
+	}
 
 }
