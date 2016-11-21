@@ -7303,22 +7303,6 @@ private void retriveCommitteeRemarksList(){
 				reqDtO.setDemoList(presentationDemoList);
 			}
 
-			List<ScQtCommitteeActivity> committeActivities = this
-					.getManagedBean().getEndorscommitteeMemberList();
-			if (null != committeActivities) {
-				PmUser pmUser = new FacesScopes().getUserSessionBean();
-				for (int i = 0; i < committeActivities.size(); i++) {
-					if (pmUser.getIdentificationNo().equals(
-							committeActivities.get(i).getScCommitteeMember()
-									.getPmUser().getIdentificationNo())) {
-						committeActivities.get(i).setSignedOff(true);
-						break;
-					}
-
-				}
-				qtCommittee.setCommitteeActivities(committeActivities);
-			}
-			reqDtO.setCommitteeMemberEndorsmentList(committeActivities);
 			reqDtO.setScQtCommitte(qtCommittee);
 
 		} finally {
@@ -7993,6 +7977,22 @@ private void retriveCommitteeRemarksList(){
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTEvaluationSO.class);
 		EvaluationReqDTO reqDtO = evaluationPreparation();
+		List<ScQtCommitteeActivity> committeActivities = this
+				.getManagedBean().getEndorscommitteeMemberList();
+		if (null != committeActivities) {
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			for (int i = 0; i < committeActivities.size(); i++) {
+				if (pmUser.getIdentificationNo().equals(
+						committeActivities.get(i).getScCommitteeMember()
+								.getPmUser().getIdentificationNo())) {
+					committeActivities.get(i).setSignedOff(true);
+					break;
+				}
+
+			}
+			reqDtO.getScQtCommitte().setCommitteeActivities(committeActivities);
+		}
+		reqDtO.setCommitteeMemberEndorsmentList(committeActivities);
 		ScQt scQt = this.getManagedBean().getScQt();
 		EvaluationReqDTO endorsmentRemarks=committeeRemarksSave();
 		if(null!=endorsmentRemarks.getScQt()){
