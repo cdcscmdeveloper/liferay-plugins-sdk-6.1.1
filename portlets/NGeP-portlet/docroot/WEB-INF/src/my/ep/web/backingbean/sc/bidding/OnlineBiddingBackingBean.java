@@ -107,7 +107,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 
 	private Long servicetype = Long.parseLong(ParameterConst.ITEM_TYPE_SERVICE);
 
-	private TemplateSpecHelper tplSpecHelper = TemplateSpecHelper.getInstance();
 	private ScQt scQt;
 
 	private static Logger log = Logger
@@ -447,6 +446,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		log.info("itemDetialsPopupAction");
 
 		setScBidPrice(scBidPrice);
+		
+		scBidPrice.getScBidSupplierItem().getScBidItem().getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
 
 	}
 
@@ -564,7 +565,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	 */
 	private Double getBidPriceTotals(ScBidPrice scBidPrice, BigDecimal itemPrice) {
 
-		return this.tplSpecHelper.calcTotalAmount(
+		return TemplateSpecHelper.getInstance().calcTotalAmount(
 				scBidPrice.getScBidSupplierItem().getScBidItem()
 						.getScRequestItem().getTplSpecQuestion(), itemPrice,
 				scBidPrice.getScBidSupplierItem().getScBidItem().getQty())
@@ -660,7 +661,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		log.info("updateBidPriceNDcalculateRank");
 		ScBidPrice priceItemToPersist = null;
 		priceItemToPersist = this.getScBidPrice().getNewBidPrice();
-		priceItemToPersist.setBidTotalPrice(this.tplSpecHelper.calcTotalAmount(
+		priceItemToPersist.setBidTotalPrice(TemplateSpecHelper.getInstance().calcTotalAmount(
 				this.getScBidPrice().getScBidSupplierItem().getScBidItem()
 						.getScRequestItem().getTplSpecQuestion(), this
 						.getScBidPrice().getNewBidPrice().getBidPrice(), this
@@ -741,7 +742,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 
 		if (getBidPrices() != null && getBidPrices().size() != 0) {
 			for (ScBidPrice bidPrice : bidPriceList) {
-				BigDecimal temptotal = tplSpecHelper.calcTotalAmount(bidPrice
+				BigDecimal temptotal = TemplateSpecHelper.getInstance().calcTotalAmount(bidPrice
 						.getScBidSupplierItem().getScBidItem()
 						.getScRequestItem().getTplSpecQuestion(), bidPrice
 						.getScBidSupplierItem().getItemStartPrice(), bidPrice
@@ -764,7 +765,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 
 				if (bidPrice.getNewBidPrice() != null
 						&& bidPrice.getNewBidPrice().getBidPrice() != null) {
-					BigDecimal temptotal = tplSpecHelper.calcTotalAmount(
+					BigDecimal temptotal = TemplateSpecHelper.getInstance().calcTotalAmount(
 							bidPrice.getScBidSupplierItem().getScBidItem()
 									.getScRequestItem().getTplSpecQuestion(),
 							bidPrice.getNewBidPrice().getBidPrice(), bidPrice
@@ -775,7 +776,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 
 				} else if (bidPrice.getBidPrice() != null) {
 
-					BigDecimal temptotal = tplSpecHelper.calcTotalAmount(
+					BigDecimal temptotal = TemplateSpecHelper.getInstance().calcTotalAmount(
 							bidPrice.getScBidSupplierItem().getScBidItem()
 									.getScRequestItem().getTplSpecQuestion(),
 							bidPrice.getBidPrice(), bidPrice
@@ -785,7 +786,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 
 				} else {
 
-					BigDecimal temptotal = tplSpecHelper
+					BigDecimal temptotal = TemplateSpecHelper.getInstance()
 							.calcTotalAmount(bidPrice.getScBidSupplierItem()
 									.getScBidItem().getScRequestItem()
 									.getTplSpecQuestion(),
@@ -847,7 +848,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 			for (ScBidPrice bidPrice : this.getBidPrices()) {
 
 				if (bidPrice.getBidPrice() == null) {
-					BigDecimal tempTotal = tplSpecHelper
+					BigDecimal tempTotal = TemplateSpecHelper.getInstance()
 							.calcTotalAmount(bidPrice.getScBidSupplierItem()
 									.getScBidItem().getScRequestItem()
 									.getTplSpecQuestion(),
@@ -858,7 +859,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 					lastBidPriceTotal = lastBidPriceTotal.add(tempTotal);
 
 				} else {
-					BigDecimal tempTotal = tplSpecHelper.calcTotalAmount(
+					BigDecimal tempTotal = TemplateSpecHelper.getInstance().calcTotalAmount(
 							bidPrice.getScBidSupplierItem().getScBidItem()
 									.getScRequestItem().getTplSpecQuestion(),
 							bidPrice.getBidPrice(), bidPrice
@@ -965,7 +966,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		BigDecimal newPriceTotal = null;
 		if (bidPriceItem.getNewBidPrice() != null
 				&& bidPriceItem.getNewBidPrice().getBidPrice() != null) {
-			newPriceTotal = this.tplSpecHelper.calcTotalAmount(bidPriceItem
+			newPriceTotal = TemplateSpecHelper.getInstance().calcTotalAmount(bidPriceItem
 					.getScBidSupplierItem().getScBidItem().getScRequestItem()
 					.getTplSpecQuestion(), bidPriceItem.getNewBidPrice()
 					.getBidPrice(), bidPriceItem.getScBidSupplierItem()
@@ -989,7 +990,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 
 		BigDecimal lastBidPriceTotal = null;
 		if (bidPriceItem.getBidPrice() != null) {
-			lastBidPriceTotal = this.tplSpecHelper
+			lastBidPriceTotal = TemplateSpecHelper.getInstance()
 					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
 							.getScBidItem().getScRequestItem()
 							.getTplSpecQuestion(), bidPriceItem.getBidPrice(),
@@ -1013,7 +1014,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 
 		BigDecimal lastStartPriceTotal = null;
 		if (bidPriceItem.getScBidSupplierItem().getItemStartPrice() != null) {
-			lastStartPriceTotal = this.tplSpecHelper
+			lastStartPriceTotal = TemplateSpecHelper.getInstance()
 					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
 							.getScBidItem().getScRequestItem()
 							.getTplSpecQuestion(), bidPriceItem
@@ -1029,16 +1030,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		}
 	}
 
-	/**
-	 * @return the tplSpecHelper
-	 */
-	public TemplateSpecHelper getTplSpecHelper() {
-
-		if (null == tplSpecHelper) {
-			tplSpecHelper = new TemplateSpecHelper();
-		}
-		return tplSpecHelper;
-	}
+	
 
 	/**
 	 * Retrive qt details.
@@ -1364,13 +1356,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 		this.remainingSeconds = remainingSeconds;
 	}
 
-	/**
-	 * @param tplSpecHelper
-	 *            the tplSpecHelper to set
-	 */
-	public void setTplSpecHelper(TemplateSpecHelper tplSpecHelper) {
-		this.tplSpecHelper = tplSpecHelper;
-	}
+	
 
 	/**
 	 * @return the servicetype
