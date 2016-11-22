@@ -5043,7 +5043,10 @@ public class SmApplicationUtil {
 			} else {
 				bean.setSvTaskIdsNeedToDelete(new ArrayList<Long>());
 				for (SmSvTask svTask : bean.getSmAppl().getSmSvTasks()) {
-					bean.getSvTaskIdsNeedToDelete().add(svTask.getSvTaskId());
+					if (svTask.getSvTaskId() != null) {
+						bean.getSvTaskIdsNeedToDelete().add(
+								svTask.getSvTaskId());
+					}
 				}
 			}
 
