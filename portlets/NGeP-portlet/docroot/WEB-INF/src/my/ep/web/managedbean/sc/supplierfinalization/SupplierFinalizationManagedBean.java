@@ -37,8 +37,8 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
 
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.StreamedContent;
 //import my.ep.persistence.entity.sc.quationtender.ScQtReport;
 
 /**
@@ -149,7 +149,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private Boolean qtRefinalized;
 	private boolean isInitialSelectionItemized;
 	
-	private StreamedContent endorsementReportStream;
+	private DefaultStreamedContent endorsementReportStream;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -983,7 +983,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the endorsementReportStream
 	 */
-	public StreamedContent getEndorsementReportStream() {
+	public DefaultStreamedContent getEndorsementReportStream() {
 		return endorsementReportStream;
 	}
 
@@ -992,7 +992,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 *            the endorsementReportStream to set
 	 */
 	public void setEndorsementReportStream(
-			StreamedContent endorsementReportStream) {
+			DefaultStreamedContent endorsementReportStream) {
 		this.endorsementReportStream = endorsementReportStream;
 	}
 

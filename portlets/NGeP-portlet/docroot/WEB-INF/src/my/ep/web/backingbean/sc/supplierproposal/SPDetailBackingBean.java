@@ -63,7 +63,6 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
@@ -121,8 +120,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultMenuModel;
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
@@ -4115,7 +4114,7 @@ public class SPDetailBackingBean extends
 		slAttachment.setDocNo(getManagedBean().getQt().getQtNo());
 		generateSampleLabelsFromVelocityToPdf(slAttachment, getManagedBean()
 				.getQt());
-		StreamedContent slStreamContent = getAttachmentStreamContent(
+		DefaultStreamedContent slStreamContent = getAttachmentStreamContent(
 				slAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 		getManagedBean().setSampleLabelStreamContent(slStreamContent);
 		RequestContext.getCurrentInstance().execute(
