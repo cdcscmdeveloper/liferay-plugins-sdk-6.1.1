@@ -8,6 +8,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DualListModel;
+
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -21,7 +26,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmRemark;
-import my.ep.persistence.entity.sm.SmSvCategory;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
@@ -38,15 +43,12 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmSvcAssignmentVO;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DualListModel;
-
 @ManagedBean(name = "svcSiteAssignBackingBean")
 @RequestScoped
 public class SvcSiteAssignBackingBean extends
 		BaseBackingBean<SvcSiteAssignManagedBean> {
+	private static final long serialVersionUID = 1L;
+
 	public static Logger log = Logger.getLogger(SvcSiteAssignBackingBean.class);
 	
 	private final Long SV_BEFORE_APPROVE = 20110L;
@@ -80,7 +82,7 @@ public class SvcSiteAssignBackingBean extends
 		getManagedBean().setSmAppl(resDTO.getSmAppl());
 		
 		setSiteVisitAddressesFacilityName();
-		getAllCategoryCode();
+		getAllSiteVisitCategoryCode();
 		getWorkFlowInfo(getManagedBean().getAppId());
 	}
 	
@@ -377,22 +379,28 @@ public class SvcSiteAssignBackingBean extends
 		}
 	}
 	
-	private void getAllCategoryCode(){
+	private void getAllSiteVisitCategoryCode(){
 		SmAppl smAppl = getManagedBean().getSmAppl();
 		
-		getManagedBean().setCategoryLs(new ArrayList<SmSvCategory>());
+		getManagedBean().setCategoryLs(new ArrayList<SmSupplierCategory>());
 		
 		List<String> tempCatLs = new ArrayList<String>();
+		
 		for(SmSvTask svTask : smAppl.getSmSvTasks()){
-			if(svTask.getSmSvCategories().size() > 0){
-				for(SmSvCategory svCategory : svTask.getSmSvCategories()){
+			if(svTask.getPmCategoryL3() != null){
+				SmSupplierCategory suppCat = SmCommonUtil.getInstance().
+						retrieveSupplierCategoryByApplIdAndCategoryId(smAppl.getApplId(), svTask.getPmCategoryL3().getCategoryL3Id());
+				
+				if(suppCat != null){
 					StringBuilder catrStr = new StringBuilder();
-					catrStr.append(svCategory.getPmCategoryL1().getCategoryL1Code());
-					catrStr.append(svCategory.getPmCategoryL2().getCategoryL2Code());
-					catrStr.append(svCategory.getPmCategoryL3().getCategoryL3Code());
+					catrStr.append(suppCat.getPmCategoryL1().getCategoryL1Code());
+					catrStr.append(suppCat.getPmCategoryL2().getCategoryL2Code());
+					catrStr.append(suppCat.getPmCategoryL3().getCategoryL3Code());
 					
 					if(!tempCatLs.contains(catrStr.toString())){
-						getManagedBean().getCategoryLs().add(svCategory);
+						if(suppCat != null){
+							getManagedBean().getCategoryLs().add(suppCat);
+						}
 						tempCatLs.add(catrStr.toString());
 					}
 				}
