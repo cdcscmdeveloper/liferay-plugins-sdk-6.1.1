@@ -151,7 +151,7 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.StreamedContent;
+import org.primefaces.model.DefaultStreamedContent;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -1907,8 +1907,8 @@ public class LOADetailBackingBean extends
 	 * @return the loa stream content
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public StreamedContent getLoaStreamContent() throws IOException {
-		StreamedContent loaStreamContent = getManagedBean()
+	public DefaultStreamedContent getLoaStreamContent() throws IOException {
+		DefaultStreamedContent loaStreamContent = getManagedBean()
 				.getLoaStreamContent();
 
 		if (loaStreamContent == null) {
@@ -4084,12 +4084,12 @@ public class LOADetailBackingBean extends
 	 * @return the bond letter stream content
 	 * @throws Exception the exception
 	 */
-	public StreamedContent getBondLetterStreamContent() throws Exception {
+	public DefaultStreamedContent getBondLetterStreamContent() throws Exception {
 
 		ScPbAttachment pbAttachment = new ScPbAttachment();
 		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
 		generateBondLetterFromVelocityToPdf((ScAttachment) pbAttachment,null);
-		StreamedContent pbStreamContent = getAttachmentStreamContent(
+		DefaultStreamedContent pbStreamContent = getAttachmentStreamContent(
 				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 
 		return pbStreamContent;
