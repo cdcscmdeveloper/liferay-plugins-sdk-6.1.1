@@ -128,6 +128,7 @@ import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
@@ -4477,5 +4478,14 @@ public class SmCommonUtil {
 		UserResDTO userResDTO = SmServiceLookup.getUserSO()
 				.retrieveUserIdsByRoleAndZone(userReqDTO);
 		return userResDTO.getUserIdList();
+	}
+	
+	public SmSupplierCategory retrieveSupplierCategoryByApplIdAndCategoryId(Long applId, Long categoryL3Id){
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setApplId(applId);
+		reqDTO.setCategoryId(categoryL3Id);
+		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveCategoryByApplIdAndCategoryId(reqDTO);
+	
+		return resDTO.getSupplierCategory();	
 	}
 }
