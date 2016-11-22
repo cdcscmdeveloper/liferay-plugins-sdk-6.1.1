@@ -1,6 +1,10 @@
 package my.ep.web.bean.tree;
 
-public class TreeNodeBean<T> {
+import java.io.Serializable;
+
+public class TreeNodeBean<T> implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private boolean selected;
 	private String type;
 	private T object;
