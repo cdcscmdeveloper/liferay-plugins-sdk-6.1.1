@@ -39,7 +39,11 @@
 					<td style="width: 15%"><h:outputLabel
 							value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td class="header-info-text">
-						#{bsvAttendanceBackingBean.managedBean.scQt.qtNo}</td>
+						<p:commandLink 
+						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,bsvAttendanceBackingBean.managedBean.scQt,true)}">
+				<h:outputText value="#{bsvAttendanceBackingBean.managedBean.scQt.qtNo}" escape="false" />
+					</p:commandLink>
+						</td>
 					<td style="width: 10%"><h:outputLabel
 							value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td class="header-info-text">

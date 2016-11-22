@@ -12,7 +12,12 @@
 					<td width="15%"><h:outputLabel
 							value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td class="header-info-text">
-						#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}</td>
+						<p:commandLink 
+						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,supplierProposalDetailBackingBean.managedBean.qt,false)}">
+				<h:outputText value="#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}" escape="false" />
+					</p:commandLink>
+						
+						</td>
 					
 					<td width="8%"><h:outputLabel value="#{lbl['lbl.sc.proposal.no']}" /></td>
 					<td class="header-info-text">#{supplierProposalDetailBackingBean.managedBean.qtProposal.proposalNo}
