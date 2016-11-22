@@ -1547,6 +1547,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
 	
+    private String viewOriginalUrl;
+    private boolean showAndHideAmounts=Boolean.TRUE;
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -9693,6 +9695,37 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFinancialUserScoringSchema = isFinancialUserScoringSchema;
 	}
 
+	/**
+	 * @return the viewOriginalUrl
+	 */
+	public String getViewOriginalUrl() {
+		return viewOriginalUrl;
+	}
+
+	/**
+	 * @param viewOriginalUrl the viewOriginalUrl to set
+	 */
+	public void setViewOriginalUrl(String viewOriginalUrl) {
+		this.viewOriginalUrl = viewOriginalUrl;
+	}
+
+	/**
+	 * @return the showAndHideAmounts
+	 */
+	public boolean isShowAndHideAmounts() {
+		return showAndHideAmounts;
+	}
+
+	/**
+	 * @param showAndHideAmounts the showAndHideAmounts to set
+	 */
+	public void setShowAndHideAmounts(boolean showAndHideAmounts) {
+		this.showAndHideAmounts = showAndHideAmounts;
+	}
+
+	
+
+	
 	
 
 }
