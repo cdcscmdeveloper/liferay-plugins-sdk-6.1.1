@@ -57,7 +57,6 @@ public class LovBackingBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(LovBackingBean.class);
 
-	WebApplicationContext webApplicationContext = null;
 //	private ILovEvent ?ookupEvent = null;
 	
 	private IPagingDataModel searchDataModel = new SearchPagingDataModel();
@@ -492,7 +491,7 @@ public class LovBackingBean implements Serializable {
 	protected LovBean getBeanByLovId(String lovId) {
 		HttpServletRequest request = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
 		ServletContext servletContext = request.getSession().getServletContext();
-		webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		LovBean lovBean = (LovBean)webApplicationContext.getBean(lovId);
 		
 		return lovBean;
