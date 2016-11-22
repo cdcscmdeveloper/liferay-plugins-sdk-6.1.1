@@ -4962,7 +4962,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 			
 			Long selectedItemId = null;
-			if (getManagedBean().isItemize()) {
+			if (isItemized) {
 				selectedItemId = getManagedBean().getSelectedItem()
 								 .getRequestItem().getRequestNoteItemId();
 			} else {
@@ -5198,7 +5198,7 @@ public class SupplierFinalizationBackingBean extends
 							IQTSuppFinalizationSO.class);
 			
 			String evaluationStage = null;
-			if (requestItemId != null)  {
+			if (requestItemId != null && !DEFAULT_ITEM.equals(requestItemId))  {
 				evaluationStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM;
 			} else {
 				evaluationStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG;
@@ -6030,6 +6030,8 @@ public class SupplierFinalizationBackingBean extends
 								}
 								
 								if (qualSupplier.isAwareded()) {
+									recommendationBean = updateCachedData(qualSupplier, 
+											zoneId, selectedItemId);
 									getManagedBean().setRecommendedSupplier(qualSupplier);
 								} else {
 									recommendationBean = updateCachedData(qualSupplier, 
