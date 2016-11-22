@@ -88,7 +88,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//Briefing Paper/Kertas Taklimat
 	private ScQtFinalizationReport selectedFinalizationReport;
 	private List<ScQtFinalizationReport> documentList;
-	private StreamedContent streamContent;
 	private String attachmentDocType;
 	
 	//Supplier Finalization
@@ -1451,21 +1450,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
-	}
-
-	/**
-	 * @return the streamContent
-	 */
-	public StreamedContent getStreamContent() {
-		return streamContent;
-	}
-
-	/**
-	 * @param streamContent 
-	 * 					the streamContent to set
-	 */
-	public void setStreamContent(StreamedContent streamContent) {
-		this.streamContent = streamContent;
 	}
 
 	/**
