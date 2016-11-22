@@ -96,6 +96,9 @@
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
 						<ui:include src="step5BumiAppln_SupportingDocumentsInfo.xhtml" />
 					</c:if>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+						<ui:include src="step7BumiAppln_DeclarationForm.xhtml" />
+					</c:if>
 				</c:when>
 				<c:otherwise>
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">

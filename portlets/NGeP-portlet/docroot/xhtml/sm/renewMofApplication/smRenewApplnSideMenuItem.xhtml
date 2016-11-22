@@ -105,6 +105,16 @@
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 										tabNo="8" label="#{lbl['lbl.sm.docsReviewLbl']}" />
 								</p:menuitem>
+								
+								<p:menuitem>
+									<ac:smApplMenuItem
+										backingBean = "#{backingBean}"
+										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+										appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}" 
+										tabNo="9" label="#{lbl['lbl.sm.wizard.declarationLbl']}" />
+								</p:menuitem>
 		
 							</c:when>
 							<c:when test="#{backingBean.managedBean.poUser}">
@@ -207,6 +217,16 @@
 										appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 										tabNo="7" label="#{lbl['lbl.sm.docsReviewLbl']}" />
+								</p:menuitem>
+								
+								<p:menuitem>
+									<ac:smApplMenuItem
+										backingBean = "#{backingBean}"
+										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+										appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}" 
+										tabNo="8" label="#{lbl['lbl.sm.wizard.declarationLbl']}" />
 								</p:menuitem>
 		
 							</c:when>
@@ -313,6 +333,16 @@
 								appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 								tabNo="6" label="#{lbl['lbl.sm.docsReviewLbl']}" />
+						</p:menuitem>
+						
+						<p:menuitem>
+							<ac:smApplMenuItem
+								backingBean = "#{backingBean}"
+								suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+								poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+								appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}" 
+								tabNo="7" label="#{lbl['lbl.sm.wizard.declarationLbl']}" />
 						</p:menuitem>
 
 					</c:when>
