@@ -50,6 +50,7 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -1014,7 +1015,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 */
 	public String formattedTotalAmount(TplSpecQuestion specQuestion,
 			BigDecimal bidPrice, BigDecimal qty) {
-		return nf.format(getManagedBean().getTplSpecHelper().calcTotalAmount(
+		return nf.format(TemplateSpecHelper.getInstance().calcTotalAmount(
 				specQuestion, bidPrice, qty));
 	}
 
