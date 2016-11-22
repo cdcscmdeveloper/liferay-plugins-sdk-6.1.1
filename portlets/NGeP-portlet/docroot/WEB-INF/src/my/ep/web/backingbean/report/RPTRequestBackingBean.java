@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.report;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -230,7 +231,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 						
 						if(isInProgress(rptRequest.getStatusCode())){
 							RPTRequestBackingBean rptRequestBackingBean = new RPTRequestBackingBean();
-							rptRequestBackingBean.getLatestStatusCode(rptRequest);	
+							rptRequestBackingBean.update(rptRequest);	
 						}
 					}
 					
@@ -279,7 +280,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		logger.info(message);
 	}
 	
-	public void getLatestStatusCode(RPTRequest rptRequest){
+	public void update(RPTRequest rptRequest){
 		
 		IRPTRequestSO reqSO = (IRPTRequestSO) BusinessDelegate.getInstance()
 				.getServiceObject("rpt", IRPTRequestSO.class);
@@ -472,5 +473,21 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		} else {
 			return "Pdf";
 		}
+	}
+		
+	public void attachmentDownload(RPTRequest rptRequest) throws IOException{
+		
+		String path = rptRequest.getReportPath();
+		String displayName = rptRequest.getReportName();
+		
+		this.commonReportDownload(path, displayName);
+		
+		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IRPTRequestSO.class);
+		
+		rptRequest.setDownloaded(true);
+		rptRequestSO.updateDownloadedFlag(rptRequest);
+		
 	}
 }

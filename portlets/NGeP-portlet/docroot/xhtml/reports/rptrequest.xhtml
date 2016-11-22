@@ -66,8 +66,8 @@
 	
 									<p:column  selectionMode="multiple" style="width:7%;text-align:center"/>
 	
-									<p:column headerText="#{lbl['lbl.rpt.jobId']}" style="text-align:center;">
-										<h:outputText value="#{rptRequest.jobId}" style="text-align:center;"/>
+									<p:column headerText="#{lbl['lbl.rpt.requestId']}" style="text-align:center;">
+										<h:outputText value="#{rptRequest.requestId}" style="text-align:center;"/>
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.rpt.reportModule']}" style="text-align:center;">
@@ -99,11 +99,8 @@
 									
 									<p:column headerText="#{lbl['lbl.txt.action']}" style="text-align:center;">
 										
-										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}"
-											onstart="blkReportContent.show();" update="@form"
-															ajax="false" style="text-align:center;">
-											<p:fileDownload
-												value="#{rptRequestBackingBean.generateReport(rptRequest)}" />
+										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}" action="#{rptRequestBackingBean.attachmentDownload(rptRequest)}"
+											onstart="blkReportContent.show();" update="@form" ajax="false" style="text-align:center;">
 											<p:graphicImage value="/css/images/design/download.png" id="downloadImage"
 												style="margin-right:2px;" />
 											<p:tooltip id="tooltip" for="downloadImage">
@@ -111,7 +108,12 @@
 											</p:tooltip>	
 											
 										</p:commandLink>
+										
+									</p:column>
 									
+									<p:column style="text-align:center; width:7%">
+										<h:graphicImage title="#{lbl['lbl.rpt.downloaded']}" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png"
+											rendered="#{rptRequest.downloaded eq '0'}" />
 									</p:column>
 									
 									<p:ajax event="rowSelectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" update=":form:rptRequestTable, :form:deleteBtn"/>
