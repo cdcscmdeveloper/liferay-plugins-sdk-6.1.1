@@ -24,7 +24,6 @@ import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.StreamedContent;
 
 /**
  * Class to handle user session data corresponding to
@@ -61,7 +60,6 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 
 	// Briefing Paper/Kertas Taklimat
 	private List<ScQtFinalizationReport> finalizationReports;
-	private StreamedContent streamContent;
 
 	private boolean isSubmit;
 	private boolean itemized;
@@ -326,21 +324,6 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setFinalizationReports(
 			List<ScQtFinalizationReport> finalizationReports) {
 		this.finalizationReports = finalizationReports;
-	}
-
-	/**
-	 * @return the streamContent
-	 */
-	public StreamedContent getStreamContent() {
-		return streamContent;
-	}
-
-	/**
-	 * @param streamContent
-	 *            the streamContent to set
-	 */
-	public void setStreamContent(StreamedContent streamContent) {
-		this.streamContent = streamContent;
 	}
 
 	/**
