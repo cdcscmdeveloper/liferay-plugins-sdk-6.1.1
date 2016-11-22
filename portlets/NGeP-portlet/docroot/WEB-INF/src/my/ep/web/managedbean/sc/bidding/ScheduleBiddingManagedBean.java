@@ -65,15 +65,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private Long bidMinDuration;
 	private Long bidMaxDuration;
 	private SelectItem[] selectItems;
-	
-	private TemplateSpecHelper tplSpecHelper = TemplateSpecHelper.getInstance();
-
-	/**
-	 * @return the tplSpecHelper
-	 */
-	public TemplateSpecHelper getTplSpecHelper() {
-		return tplSpecHelper;
-	}
 
 	/**
 	 * Default COnstructor
@@ -282,7 +273,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		this.scQt = scQt;
 	}
 
-
 	/**
 	 * @return the scBidContactPersonList
 	 */
@@ -364,7 +354,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		this.selectedAllBidContacts = selectedAllBidContacts;
 	}
 
-
 	/**
 	 * @return the selectedBidItem
 	 */
@@ -418,11 +407,11 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectItems the selectItems to set
+	 * @param selectItems
+	 *            the selectItems to set
 	 */
 	public void setSelectItems(SelectItem[] selectItems) {
 		this.selectItems = selectItems;
 	}
-	
 
 }

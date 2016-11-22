@@ -33,7 +33,6 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.chart.CartesianChartModel;
@@ -105,12 +104,13 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private Date createdDateTo;
 
 	private String createdBy;
+	
+	//private List<Long> roleBasedQtIdList;
 
 	private String bidManagementViewBy;
 	private String bidManagementInitialViewBy;
 	private boolean rendered;
 
-	private TemplateSpecHelper tplSpecHelper;
 
 	private Long pendingBidding = BidStatusConst.BID_PENDING_BIDDING;
 	private Long bidInProgress = BidStatusConst.BID_IN_PROGRESS;
@@ -980,24 +980,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 		this.zoneDetailsList = zoneDetailsList;
 	}
 
-	/**
-	 * @return the tplSpecHelper
-	 */
-	public TemplateSpecHelper getTplSpecHelper() {
-
-		if (this.tplSpecHelper == null) {
-			this.tplSpecHelper = new TemplateSpecHelper();
-		}
-		return tplSpecHelper;
-	}
-
-	/**
-	 * @param tplSpecHelper
-	 *            the tplSpecHelper to set
-	 */
-	public void setTplSpecHelper(TemplateSpecHelper tplSpecHelper) {
-		this.tplSpecHelper = tplSpecHelper;
-	}
+	
 
 	/**
 	 * @return the nonBumiAvail
@@ -1059,6 +1042,19 @@ public class BiddingManagedBean extends BaseManagedBean {
 
 					bidSchSearchBean.getDataFilterBeans().add(docNOFilterBean);
 				}
+				
+				/*if (getSearchDocumentNo() != null
+						&& StringUtils
+								.isNotBlank((String) getSearchDocumentNo())) {
+
+					SearchFilterBean docIdFilterBean = new SearchFilterBean(
+							"scBid.docId",
+							SearchOperator.OPERATOR_IN.value(),
+							new ArrayList<Long>());
+					docIdFilterBean.setCaseInsensitive(true);
+
+					bidSchSearchBean.getDataFilterBeans().add(docIdFilterBean);
+				}*/
 
 				if (getSearchBidTitle() != null
 						&& StringUtils.isNotBlank((String) getSearchBidTitle())) {
@@ -1238,5 +1234,21 @@ public class BiddingManagedBean extends BaseManagedBean {
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
+
+	/**
+	 * @return the roleBasedQtIdList
+	 *//*
+	public List<Long> getRoleBasedQtIdList() {
+		return roleBasedQtIdList;
+	}
+
+	*//**
+	 * @param roleBasedQtIdList the roleBasedQtIdList to set
+	 *//*
+	public void setRoleBasedQtIdList(List<Long> roleBasedQtIdList) {
+		this.roleBasedQtIdList = roleBasedQtIdList;
+	}
+	*/
+	
 
 }

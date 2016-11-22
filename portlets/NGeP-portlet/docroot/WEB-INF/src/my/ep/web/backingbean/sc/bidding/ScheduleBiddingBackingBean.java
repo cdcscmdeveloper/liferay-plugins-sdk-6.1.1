@@ -43,6 +43,7 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.bidding.ScheduleBiddingManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -57,9 +58,9 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean(name = "scheduleBiddingBB")
 @ViewScoped
 public class ScheduleBiddingBackingBean extends
-		SourcingBaseBackingBean<ScheduleBiddingManagedBean> implements Serializable{
+		SourcingBaseBackingBean<ScheduleBiddingManagedBean> implements
+		Serializable {
 
-	
 	private static final long serialVersionUID = 1L;
 	private static Logger log = EpLogger
 			.getLogger(ScheduleBiddingBackingBean.class);
@@ -277,8 +278,9 @@ public class ScheduleBiddingBackingBean extends
 
 	/**
 	 * Listener method for Bid item selection event.
-	 *
-	 * @param event the event
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	public void bidItemSelectionListner(SelectEvent event) {
 		ScBidItem bidItem = (ScBidItem) event.getObject();
@@ -585,10 +587,13 @@ public class ScheduleBiddingBackingBean extends
 
 	/**
 	 * Common message acknowledgment page.
-	 *
-	 * @param messageId the message id
-	 * @param variable1 the variable 1
-	 * @param variable2 the variable 2
+	 * 
+	 * @param messageId
+	 *            the message id
+	 * @param variable1
+	 *            the variable 1
+	 * @param variable2
+	 *            the variable 2
 	 */
 	private void commonMessageAcknowledgmentPage(String messageId,
 			String variable1, String variable2) {
@@ -654,15 +659,14 @@ public class ScheduleBiddingBackingBean extends
 
 	/**
 	 * Method to calculate Item unit price sub total.
-	 *
-	 * @param recommendDtl the ScQtRecommendDtl
+	 * 
+	 * @param recommendDtl
+	 *            the ScQtRecommendDtl
 	 * @return the big decimal
 	 */
 	public BigDecimal itemUnitPriceSubTotal(ScQtRecommendDtl recommendDtl) {
 
-		BigDecimal itemSubTotal = this
-				.getManagedBean()
-				.getTplSpecHelper()
+		BigDecimal itemSubTotal = TemplateSpecHelper.getInstance()
 				.calcTotalAmount(
 						recommendDtl.getScQtProposalItem().getScRequestItem()
 								.getTplSpecQuestion(),
