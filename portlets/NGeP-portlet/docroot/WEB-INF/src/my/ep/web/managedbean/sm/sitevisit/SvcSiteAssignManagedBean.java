@@ -8,14 +8,14 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.primefaces.model.DualListModel;
+
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmSvCategory;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.SmSvcAssignmentVO;
-
-import org.primefaces.model.DualListModel;
 
 @ManagedBean(name = "smSiteVisitAssignMB")
 @SessionScoped
@@ -36,7 +36,7 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	
 	private SmAppl smAppl;
 	private List<SmSvcAssignmentVO> svcTaskVOLs;
-	private List<SmSvCategory> categoryLs;
+	private List<SmSupplierCategory> categoryLs;
 
 	public SmSvTask getSmSvTask() {
 		return smSvTask;
@@ -138,11 +138,11 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 		this.svcTaskVOLs = svcTaskVOLs;
 	}
 
-	public List<SmSvCategory> getCategoryLs() {
+	public List<SmSupplierCategory> getCategoryLs() {
 		return categoryLs;
 	}
 
-	public void setCategoryLs(List<SmSvCategory> categoryLs) {
+	public void setCategoryLs(List<SmSupplierCategory> categoryLs) {
 		this.categoryLs = categoryLs;
 	}
 
