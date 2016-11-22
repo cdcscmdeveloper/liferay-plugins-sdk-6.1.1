@@ -89,6 +89,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
+import my.ep.web.backingbean.report.ReportBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -964,10 +965,35 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public StreamedContent commonDownload(String path, String displayFileName)
 			throws IOException {
+		
 		String filePath = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		
 		filePath += "/" + path;
 
+		commonDownloadUtil(filePath, displayFileName);
+		
+		return null;
+	}
+
+	/**
+	 * Common report download.
+	 *
+	 * @param path the path
+	 * @param displayFileName the display file name
+	 * @return the streamed content
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public StreamedContent commonReportDownload(String path, String displayFileName)
+			throws IOException {
+		
+		commonDownloadUtil(path, displayFileName);
+		
+		return null;
+	}
+	
+	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException{
+		
 		PortletResponse resp = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
@@ -999,10 +1025,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		out.close();
 		docInputStream.close();
-		return null;
 	}
 
-
+	public static void main(String argv[]) throws Exception{
+		new ReportBackingBean().commonReportDownload("c:/a", "abc");
+	}
+	
 	/**
 	 * Success message.
 	 * 
