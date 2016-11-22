@@ -18753,6 +18753,8 @@ public class ReportBackingBean extends
 		
 		String footerStr = "";
 		
+		boolean isExcel = false;
+		
 		if (this.getManagedBean().getReportValue()
 				.equals(ReportConst.SM_LIST_OF_SOFTCERT_PAYMENT_RPT_VAL) || this.getManagedBean().getReportValue()
 				.equals(ReportConst.SM_REJECTED_SOFTCERT_RPT_VAL) ) {
@@ -18760,6 +18762,8 @@ public class ReportBackingBean extends
 					EpPropertiesConst.EXC_NEXT_URL_XLS));
 			
 			footerStr = " destype=cache desformat=enhancedspreadsheet ";
+			
+			isExcel = true;
 			
 		} else {
 			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
@@ -18793,42 +18797,22 @@ public class ReportBackingBean extends
 					e1.printStackTrace();
 				}
 				
+				
 				if(testing){
 					
-					//Jimmy add (temporarily workaround for report).
-					String contentStr = paramConstrString.toString();
+					StringBuffer reportUrl = new StringBuffer(paramConstrString.replace("&", " "));
 					
-					contentStr = contentStr.replace("&", " ");
-					
-					String serverName = EpPropertiesUtils.getInstance().getProperty("rpt.SERVER_NAME");
-					String userName = EpPropertiesUtils.getInstance().getProperty("rpt.USER_NAME");
-					String password = EpPropertiesUtils.decrypt(EpPropertiesUtils.getInstance().getProperty("rpt.PASSWORD"));
-					String sid = EpPropertiesUtils.getInstance().getProperty("rpt.SID");
-					
-					StringBuffer headerStr = new StringBuffer();
-					
-					headerStr.append("server=");
-					headerStr.append(serverName);
-					headerStr.append(" userid=");
-					headerStr.append(userName);
-					headerStr.append("/");
-					headerStr.append(password);
-					headerStr.append("@");
-					headerStr.append(sid);
-					
-					reportStr =  headerStr.append(contentStr).append(footerStr).toString();
-
 					IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IRPTRequestSO.class);
 					
-					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportStr, this.getReportValue());
+					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl, this.getReportValue(), reportTitle, isExcel);
 					
 					this.getManagedBean().setJobId(String.valueOf(resDTO.getJobId()));
 					
 					RequestContext.getCurrentInstance().execute("ex.show();");
 					
-				} else {
+				}  else {
 		
 		HttpURLConnection urlConnection = null;
 		URL obj;
