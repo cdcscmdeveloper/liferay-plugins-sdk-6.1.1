@@ -11,7 +11,11 @@
 				<td style="width: 10%"><h:outputLabel
 						value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td style="width: 10%" class="header-info-text">
-					#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}</td>
+					<p:commandLink 
+						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,committeBackingBean.managedBean.qtCommittee.scQt,true)}">
+				<h:outputText value="#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}" escape="false" />
+					</p:commandLink>
+					</td>
 				<td style="width: 5%"><h:outputLabel
 						value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td style="width: 30%" class="header-info-text">
