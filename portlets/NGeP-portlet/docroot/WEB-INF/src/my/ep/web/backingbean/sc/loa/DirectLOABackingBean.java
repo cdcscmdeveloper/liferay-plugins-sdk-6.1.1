@@ -2131,6 +2131,8 @@ public class DirectLOABackingBean extends
 		}
 		loa.setScQt(scQt);
 		
+		loa.setProcurementMode(scQt.getProcurementMode());
+		
 		if (loa.getProcurementMode() == null) {
 			loa.setProcurementMode(new PmParameter());
 		}
