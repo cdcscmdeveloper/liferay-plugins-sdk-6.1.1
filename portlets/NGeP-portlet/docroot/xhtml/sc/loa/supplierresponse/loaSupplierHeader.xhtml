@@ -41,9 +41,12 @@
 			<tr>
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.document.no']}" /></td>
-				<td class="header-info-text"><h:outputText
-						value="#{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}"
-						rendered="#{isDocTypeQuotation}" /> <h:outputText
+				<td class="header-info-text">
+						<p:commandLink rendered="#{isDocTypeQuotation}" process="@this" partialSubmit="true"
+						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,lOADetailBackingBean.managedBean.scQt,false)}">
+				<h:outputText value="#{lOADetailBackingBean.managedBean.scQt !=null ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{isDocTypeQuotation}" escape="false" />
+					</p:commandLink>
+						<h:outputText
 						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
 						rendered="#{!isDocTypeQuotation}" />
 				</td>
