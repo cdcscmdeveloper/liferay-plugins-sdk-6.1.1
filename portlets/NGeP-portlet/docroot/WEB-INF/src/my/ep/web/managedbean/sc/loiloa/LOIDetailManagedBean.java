@@ -54,8 +54,8 @@ import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.StreamedContent;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -302,7 +302,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private boolean editFlag;
 	
 	/** The streamed content. */
-	private StreamedContent streamedContent;
+	private DefaultStreamedContent streamedContent;
 	
 	/** The award supplier id. */
 	private Long awardSupplierId;
@@ -1793,7 +1793,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 *
 	 * @return the streamed content
 	 */
-	public StreamedContent getStreamedContent() {
+	public DefaultStreamedContent getStreamedContent() {
 		return streamedContent;
 	}
 
@@ -1802,7 +1802,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 *
 	 * @param streamedContent the new streamed content
 	 */
-	public void setStreamedContent(StreamedContent streamedContent) {
+	public void setStreamedContent(DefaultStreamedContent streamedContent) {
 		this.streamedContent = streamedContent;
 	}
 

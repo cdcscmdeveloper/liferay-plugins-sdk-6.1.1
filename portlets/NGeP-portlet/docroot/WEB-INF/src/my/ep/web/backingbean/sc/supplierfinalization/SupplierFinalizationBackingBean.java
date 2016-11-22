@@ -136,8 +136,8 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultMenuModel;
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.StreamedContent;
 
 /**
  * Implementation for supplier finalization
@@ -2288,7 +2288,7 @@ public class SupplierFinalizationBackingBean extends
 
 		generateEndorsementReportFromVelocityToPdf(getManagedBean()
 				.getScQtFinalization(), (ScAttachment) reportAttachment);
-		StreamedContent streamContent = getAttachmentStreamContent(
+		DefaultStreamedContent streamContent = getAttachmentStreamContent(
 				reportAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 
 		getManagedBean().setEndorsementReportStream(streamContent);
