@@ -12,7 +12,7 @@
 				<td class="tdTitle"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.no']}" /></td>
 				<td class="tdContent">
 					<ui:repeat var="svOfficer" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOfficers}" varStatus="svOfficerVarStatus">
-						<p:outputLabel styleClass="outputLabel-view" value="#{svOfficerVarStatus.index + 1}. #{svOfficer.pmUser.userName}" /><br />
+						<h:outputText styleClass="outputLabel-view" value="#{svOfficerVarStatus.index + 1}. #{svOfficer.pmUser.userName}" /><br />
 					</ui:repeat>
 				</td>
 				<td></td>
