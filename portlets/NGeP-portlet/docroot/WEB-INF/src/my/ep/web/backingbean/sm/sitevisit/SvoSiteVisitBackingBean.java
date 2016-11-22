@@ -25,6 +25,20 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.StreamedContent;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
+
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
@@ -64,7 +78,7 @@ import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
-import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmMachineCategory;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
@@ -108,20 +122,6 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.StreamedContent;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
 
 @ManagedBean(name = "svoSiteVisitBackingBean")
 @RequestScoped
@@ -342,8 +342,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		if(svTemplate != null){
 //			this.getManagedBean().setSelectedSvTemplate(svTemplate);
 			//SmSvTemplate svTemplate = this.getManagedBean().getSmSvTemplateMap().get(catType);
-			
-			String catCode = svTemplate.getPmParameter().getParameterCode();
 			if(svTemplate.getSmSvInterviewees() == null){
 				svTemplate.setSmSvInterviewees(new ArrayList<SmSvInterviewee>());
 			}
@@ -983,7 +981,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 			
 			
-			if(svTemplate.getSmSvMachines() != null){
+			/*if(svTemplate.getSmSvMachines() != null){
 				log.info("***svTemplate.getSmSvMachines()>>>" + svTemplate.getSmSvMachines().size());
 				if(svTemplate.getSelectedSmMachine() == null){
 //					svTemplate.setSelectedSmMachine(new SmMachineDtl[svTemplate.getSmSvTemplateAddresses().size()]);
@@ -995,7 +993,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 //					log.info("****selectedAdd*******" + svTemplate.getSmSvTemplateAddresses().get(macCount).getSmSvAddress());
 //					macCount++;
 				}
-			}
+			}*/
 			
 			log.info("---------------viewActiveIndex End-----------");
 		}else{
@@ -2254,9 +2252,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
-	/**
+/*	*//**
 	 * Retrieve Category Type
-	 */
+	 *//*
 	private String retrieveCategoryTypeByLvl3Id(Long catL3Id){
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -2266,7 +2264,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		return resDTO.getCategoryL3().getCategoryTypeCode().getParameterCode();
 		
-	}
+	}*/
 	
 	/**
 	 * Retrieve PmMachineSection List by SectionId, CatType
@@ -2558,35 +2556,29 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		reqDTO.setCategoryId(getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id());
 		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveCategoryByApplIdAndCategoryId(reqDTO);
 		
-		if(resDTO.getSmSupplierCategoryList().size() > 0){
-			return resDTO.getSmSupplierCategoryList().get(0);
-		}else{
-			return null;
-		}
+		return resDTO.getSupplierCategory();
 	}
 	
-	public List<SmMachineDtl> retrieveMachineDtlByApplIdAndCategoryL3Id(Long applId, Long catL3Id){
+	public List<SmMachineCategory> retrieveMachineDtlByApplIdAndCategoryL3Id(Long applId, Long catL3Id){
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		reqDTO.setAppId(applId);
 		reqDTO.setCategoryL3Id(catL3Id);
 		SiteVisitResDTO resDTO = SmServiceLookup.getSiteVisitSO().retrieveMachineDtlByApplIdAndCategoryL3Id(reqDTO);
 		
-		return resDTO.getMachineDtlLs();
+		return resDTO.getMachineCategoryLs();
 	}
 	
 	public void setMachineList(){
-		log.info("setMachineList>>>>>>>>>>>");
-		log.info("SvMachines>>>>>>" + getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvMachines().size());
 		if(getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvMachines() == null || 
 				getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvMachines().size() < 1){
 			
-			List<SmMachineDtl> machineDtlLs = retrieveMachineDtlByApplIdAndCategoryL3Id(getManagedBean().getSmSvTask().getSmAppl().getApplId(),
+			List<SmMachineCategory> machineCategoryLs = retrieveMachineDtlByApplIdAndCategoryL3Id(getManagedBean().getSmSvTask().getSmAppl().getApplId(),
 					getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id());
 			
-			if(machineDtlLs.size() > 0){
-				for(SmMachineDtl machineDtl : machineDtlLs){
+			if(machineCategoryLs.size() > 0){
+				for(SmMachineCategory machineCat : machineCategoryLs){
 					SmSvMachine svMachine = new SmSvMachine();
-					svMachine.setSmMachineDtl(machineDtl);
+					svMachine.setSmMachineDtl(machineCat.getSmMachineDtl());
 					svMachine.setSmSvTemplate(getManagedBean().getSmSvTask().getSmSvTemplate());
 					
 					getManagedBean().getSmSvTask().getSmSvTemplate().getSmSvMachines().add(svMachine);
