@@ -142,8 +142,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultMenuModel;
-import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.MenuModel;
+import org.primefaces.model.StreamedContent;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -2694,13 +2694,13 @@ public class LOIDetailBackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	public DefaultStreamedContent getLoiLetterStreamContent() throws Exception {
+	public StreamedContent getLoiLetterStreamContent() throws Exception {
 
 		ScPbAttachment pbAttachment = new ScPbAttachment();
 		pbAttachment.setDocNo(getManagedBean().getScLoi().getLoiNo());
 		generateLoiLetterFromVelocityToPdf(getManagedBean().getScLoi(),
 				(ScAttachment) pbAttachment);
-		DefaultStreamedContent pbStreamContent = getAttachmentStreamContent(
+		StreamedContent pbStreamContent = getAttachmentStreamContent(
 				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 
 		return pbStreamContent;
@@ -2718,7 +2718,7 @@ public class LOIDetailBackingBean extends
 		pbAttachment.setDocNo(getManagedBean().getScLoi().getLoiNo());
 		generateLoiLetterFromVelocityToPdf(getManagedBean().getScLoi(),
 				(ScAttachment) pbAttachment);
-		DefaultStreamedContent pbStreamContent = getAttachmentStreamContent(
+		StreamedContent pbStreamContent = getAttachmentStreamContent(
 				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 		getManagedBean().setStreamedContent(pbStreamContent);
 		RequestContext.getCurrentInstance().execute("loiLetterDlg.show();");

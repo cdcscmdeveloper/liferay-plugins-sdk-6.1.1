@@ -162,6 +162,7 @@ import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPar
 import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
 import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
@@ -738,7 +739,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return StreamContent instance
 	 * @throws IOException
 	 */
-	protected <ATTACHMENT extends ScAttachment> DefaultStreamedContent getAttachmentStreamContent(
+	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(
 			ATTACHMENT scAttachment, String contentType) throws IOException {
 		if (scAttachment != null) {
 			File file = new File(getActualFilePath(scAttachment));
