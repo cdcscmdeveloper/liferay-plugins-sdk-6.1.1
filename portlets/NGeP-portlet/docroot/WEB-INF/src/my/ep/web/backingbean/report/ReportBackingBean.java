@@ -13,8 +13,11 @@
 package my.ep.web.backingbean.report;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -138,6 +141,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -160,7 +164,7 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "reportBackingBean")
 @ViewScoped
 public class ReportBackingBean extends
-		SourcingBaseBackingBean<ReportMangedBean> {
+		SourcingBaseBackingBean<ReportMangedBean>{
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -172,6 +176,8 @@ public class ReportBackingBean extends
 	public ReportBackingBean() {
 
 	}
+	
+	StreamedContent content;
 
 	/** The module value. */
 	private String moduleValue;
@@ -4841,9 +4847,6 @@ public class ReportBackingBean extends
 	/** The report url. */
 	private String reportURL;
 
-	/** The pdf file. */
-	private StreamedContent pdfFile;
-
 	/** The constructed param string. */
 	private String constructedParamString;
 
@@ -5395,16 +5398,7 @@ public class ReportBackingBean extends
 	public void setFlPurchaseOrderNo(String flPurchaseOrderNo) {
 		this.flPurchaseOrderNo = flPurchaseOrderNo;
 	}
-
-	/**
-	 * Gets the report file name jsp.
-	 * 
-	 * @return the reportFileNameJSP
-	 */
-	public String getReportFileNameJSP() {
-		return reportFileNameJSP;
-	}
-
+	
 	/**
 	 * Sets the report file name jsp.
 	 * 
@@ -5416,12 +5410,12 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * Gets the pdf file.
+	 * Gets the report file name jsp.
 	 * 
-	 * @return the pdfFile
+	 * @return the reportFileNameJSP
 	 */
-	public StreamedContent getPdfFile() {
-		return pdfFile;
+	public String getReportFileNameJSP() {
+		return reportFileNameJSP;
 	}
 
 	/**
@@ -6708,16 +6702,6 @@ public class ReportBackingBean extends
 	 */
 	public void setScPaymentId(String scPaymentId) {
 		this.scPaymentId = scPaymentId;
-	}
-
-	/**
-	 * Sets the pdf file.
-	 * 
-	 * @param pdfFile
-	 *            the new pdf file
-	 */
-	public void setPdfFile(StreamedContent pdfFile) {
-		this.pdfFile = pdfFile;
 	}
 
 	/**
