@@ -1052,7 +1052,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		//set new requestnotedtl to request note (without deleted requestnoteDtl
 		scRequestNote.setNewRequestNoteDtls(nonDeletedDtls);
 		requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-		getRequestNoteSO().validateRNBeforeSubmitting(requestNoteReqDTO);
+		//getRequestNoteSO().validateRNBeforeSubmitting(requestNoteReqDTO);
 		
 		updateBPMTask(outcome);
 	}
