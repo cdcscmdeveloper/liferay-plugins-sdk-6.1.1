@@ -76,6 +76,10 @@
 						rendered="#{pmInterfaceProject.codeStatus==0}" />
 					<h:outputText value="#{lbl['lbl.gfmas.process.success']}"
 						rendered="#{pmInterfaceProject.codeStatus==1}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.dependency']}"
+						rendered="#{pmInterfacePrgAct.processStatus==3}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.error']}"
+						rendered="#{pmInterfacePrgAct.processStatus==4}" />
 				</p:column>
 			</p:dataTable>
 
