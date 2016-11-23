@@ -38,7 +38,7 @@ import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 
 // TODO: Auto-generated Javadoc
@@ -104,7 +104,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private ScLoaApproval scLoaApproval;
 
 	/** The loa stream content. */
-	private DefaultStreamedContent loaStreamContent;
+	private StreamedContent loaStreamContent;
 
 	/** The selected sc loa reports. */
 	private List<ScLoaReport> selectedScLoaReports;
@@ -600,7 +600,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 * 
 	 * @return the loaStreamContent
 	 */
-	public DefaultStreamedContent getLoaStreamContent() {
+	public StreamedContent getLoaStreamContent() {
 		return loaStreamContent;
 	}
 
@@ -610,7 +610,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 * @param loaStreamContent
 	 *            the loaStreamContent to set
 	 */
-	public void setLoaStreamContent(DefaultStreamedContent loaStreamContent) {
+	public void setLoaStreamContent(StreamedContent loaStreamContent) {
 		this.loaStreamContent = loaStreamContent;
 	}
 

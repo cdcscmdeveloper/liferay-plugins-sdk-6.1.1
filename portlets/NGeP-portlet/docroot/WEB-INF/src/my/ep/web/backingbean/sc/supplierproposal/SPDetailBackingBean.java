@@ -120,8 +120,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultMenuModel;
-import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.MenuModel;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
@@ -4114,7 +4114,7 @@ public class SPDetailBackingBean extends
 		slAttachment.setDocNo(getManagedBean().getQt().getQtNo());
 		generateSampleLabelsFromVelocityToPdf(slAttachment, getManagedBean()
 				.getQt());
-		DefaultStreamedContent slStreamContent = getAttachmentStreamContent(
+		StreamedContent slStreamContent = getAttachmentStreamContent(
 				slAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 		getManagedBean().setSampleLabelStreamContent(slStreamContent);
 		RequestContext.getCurrentInstance().execute(

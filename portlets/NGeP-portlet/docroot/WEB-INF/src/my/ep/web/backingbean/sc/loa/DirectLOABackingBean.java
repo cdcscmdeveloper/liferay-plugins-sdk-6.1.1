@@ -164,7 +164,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
-import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 
 // TODO: Auto-generated Javadoc
@@ -390,8 +390,8 @@ public class DirectLOABackingBean extends
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public DefaultStreamedContent getLoaStreamContent() throws IOException {
-		DefaultStreamedContent loaStreamContent = getManagedBean()
+	public StreamedContent getLoaStreamContent() throws IOException {
+		StreamedContent loaStreamContent = getManagedBean()
 				.getLoaStreamContent();
 
 		if (loaStreamContent == null) {
@@ -4188,12 +4188,12 @@ public class DirectLOABackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	public DefaultStreamedContent getBondLetterStreamContent() throws Exception {
+	public StreamedContent getBondLetterStreamContent() throws Exception {
 
 		ScPbAttachment pbAttachment = new ScPbAttachment();
 		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
 		generateBondLetterFromVelocityToPdf((ScAttachment) pbAttachment, null);
-		DefaultStreamedContent pbStreamContent = getAttachmentStreamContent(
+		StreamedContent pbStreamContent = getAttachmentStreamContent(
 				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 
 		return pbStreamContent;
