@@ -70,6 +70,8 @@
 				</tr>
 		</table>
 		<br />
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.instruction.attachment']}" escape="false">
+		</h:outputText>
 
 		<p:dataTable value="#{registrationBackingBean.managedBean.smGstSupplier.smGstSupplierDocs}" var="gstDoc" rowIndexVar="index" id="dtGstDocId">
 			<p:column headerText="No.">
@@ -106,7 +108,7 @@
 		height="350" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}" onShow="singleUploadListener(uploadWV);">
 		<p:fileUpload style="display:inline;" multiple="false" fileUploadListener="#{registrationBackingBean.handleFileUpload}"
 			mode="basic" id="upload" fileLimit="1" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="dtGstDocId"
+			allowTypes="/(\.|\/)(pdf|doc|docx)$/" update="dtGstDocId"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			oncomplete="uploadDlg.hide();return false;" 
 			uploadLabel="#{lbl['lbl.btn.upload.all']}"  
