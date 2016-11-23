@@ -70,6 +70,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	private static Logger log = Logger.getLogger(BiddingBackingBean.class);
 	private DateTimeInput dateTimeInputUIComponent;
+	private static final DecimalFormat nf = new DecimalFormat((new CommonUtils())			
+					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 	/**
 	 * Default Constructor
@@ -92,11 +94,6 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 		log.info(message);
 	}
-
-	CommonUtils commonUtils = new CommonUtils();
-	DecimalFormat nf = new DecimalFormat(
-			commonUtils
-					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 	/**
 	 * method to reset search fields

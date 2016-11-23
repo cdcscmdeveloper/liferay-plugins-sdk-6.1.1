@@ -112,11 +112,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 	private static Logger log = Logger
 			.getLogger(OnlineBiddingBackingBean.class);
 
-	DecimalFormat durationFormat = new DecimalFormat("#00");
-
-	CommonUtils commonUtils = new CommonUtils();
-	DecimalFormat nf = new DecimalFormat(
-			commonUtils
+	private static final DecimalFormat durationFormat = new DecimalFormat("#00");
+	private static final DecimalFormat nf = new DecimalFormat(
+			(new CommonUtils())
 					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 	/**
