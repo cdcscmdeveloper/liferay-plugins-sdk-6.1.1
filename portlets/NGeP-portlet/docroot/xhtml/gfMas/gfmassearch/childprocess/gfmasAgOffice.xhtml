@@ -21,12 +21,12 @@
 				rowIndexVar="index" rows="10" lazy="true"
 				rowKey="#{pmInterfaceAgOffice}"
 				value="#{gfMasBackingBean.managedBean.searchAgOff}">
-				
+
 				<ac:paginator for="gfMasAgOfficeId"></ac:paginator>
-				
+
 				<p:column style="width:2%">
 					<f:facet name="header">
-						<p:selectBooleanCheckbox id="selAllChk"							
+						<p:selectBooleanCheckbox id="selAllChk"
 							value="#{gfMasBackingBean.flag}">
 							<p:ajax partialSubmit="true" process="@this" update="@form"
 								listener="#{gfMasBackingBean.selectAllAccountingOffice}"></p:ajax>
@@ -72,6 +72,10 @@
 						rendered="#{pmInterfaceAgOffice.processStatus==1}" />
 					<h:outputText value="#{lbl['lbl.gfmas.process.fail']}"
 						rendered="#{pmInterfaceAgOffice.processStatus==2}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.dependency']}"
+						rendered="#{pmInterfacePrgAct.processStatus==3}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.error']}"
+						rendered="#{pmInterfacePrgAct.processStatus==4}" />
 				</p:column>
 
 			</p:dataTable>
