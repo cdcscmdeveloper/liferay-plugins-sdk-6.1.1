@@ -593,12 +593,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestNoteDtl.setAssignedUser(null);
 				}
 				
-				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) && requestNoteDtl.getAssignedUser() == null) {
-					throw new EpException(
-							MessageConst.ERROR_760315,
-							new String[] {ResourceBundleUtils.getMessage("lbl.sc.request.note.loa.prepare.by",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
 				if(requestNoteDtl.getProcurementTypeCategory() != null && null == requestNoteDtl.getProcurementTypeCategory().getParameterId()){
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
