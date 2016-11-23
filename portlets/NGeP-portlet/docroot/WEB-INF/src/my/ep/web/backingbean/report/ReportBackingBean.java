@@ -176,8 +176,6 @@ public class ReportBackingBean extends
 	public ReportBackingBean() {
 
 	}
-	
-	StreamedContent content;
 
 	/** The module value. */
 	private String moduleValue;
