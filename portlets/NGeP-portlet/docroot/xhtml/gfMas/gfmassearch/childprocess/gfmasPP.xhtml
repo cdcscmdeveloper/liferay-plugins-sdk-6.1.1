@@ -18,12 +18,12 @@
 		<p:panel header="#{lbl['lbl.gfmas.glsegdef']}" id="childPPPage"
 			toggleable="true">
 			<p:dataTable id="gfMasPPId" var="pmInterfacePP" rows="10"
-				rowIndexVar="index" rowKey="#{pmInterfacePP}" lazy="true"			
+				rowIndexVar="index" rowKey="#{pmInterfacePP}" lazy="true"
 				value="#{gfMasBackingBean.managedBean.searchPp}">
-					<ac:paginator for="gfMasPPId"></ac:paginator>
+				<ac:paginator for="gfMasPPId"></ac:paginator>
 				<p:column style="width:2%">
 					<f:facet name="header">
-						<p:selectBooleanCheckbox id="selAllChk"							
+						<p:selectBooleanCheckbox id="selAllChk"
 							value="#{gfMasBackingBean.flag}">
 							<p:ajax partialSubmit="true" process="@this" update="@form"
 								listener="#{gfMasBackingBean.selectAllPp}"></p:ajax>
@@ -70,6 +70,10 @@
 						rendered="#{pmInterfacePP.processStatus==1}" />
 					<h:outputText value="#{lbl['lbl.gfmas.process.fail']}"
 						rendered="#{pmInterfacePP.processStatus==2}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.dependency']}"
+						rendered="#{pmInterfacePrgAct.processStatus==3}" />
+					<h:outputText value="#{lbl['lbl.gfmas.process.error']}"
+						rendered="#{pmInterfacePrgAct.processStatus==4}" />
 				</p:column>
 			</p:dataTable>
 
