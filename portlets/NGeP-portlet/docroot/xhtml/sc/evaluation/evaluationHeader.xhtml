@@ -15,7 +15,7 @@
 				<td style="width: 13%"><h:outputLabel
 						value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td style="width: 27%" class="header-info-text">
-				<p:commandLink 
+				<p:commandLink process="@this" partialSubmit="true"
 						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,evaluationBackingBean.managedBean.scQt,true)}">
 				<h:outputText value="#{evaluationBackingBean.managedBean.scQt.qtNo}" escape="false" />
 					</p:commandLink>
