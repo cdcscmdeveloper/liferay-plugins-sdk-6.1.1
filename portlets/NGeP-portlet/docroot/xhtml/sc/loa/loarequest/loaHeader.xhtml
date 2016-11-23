@@ -37,7 +37,7 @@
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.document.no']}" /></td>
 				<td class="header-info-text">
-				<p:commandLink rendered="#{isDocTypeQuotation}"
+				<p:commandLink rendered="#{isDocTypeQuotation}" process="@this" partialSubmit="true"
 						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,lOADetailBackingBean.managedBean.scLoa.scQt,true)}">
 				<h:outputText value="#{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}" rendered="#{isDocTypeQuotation}" escape="false" />
 					</p:commandLink>

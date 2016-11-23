@@ -39,7 +39,7 @@
 					<td style="width: 15%"><h:outputLabel
 							value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td class="header-info-text">
-						<p:commandLink 
+						<p:commandLink process="@this" partialSubmit="true"
 						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,bsvAttendanceBackingBean.managedBean.scQt,true)}">
 				<h:outputText value="#{bsvAttendanceBackingBean.managedBean.scQt.qtNo}" escape="false" />
 					</p:commandLink>
