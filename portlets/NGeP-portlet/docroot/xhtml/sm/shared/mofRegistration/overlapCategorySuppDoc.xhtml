@@ -1,0 +1,129 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<c:if test="#{backingBean.managedBean.overLappedCategoryExists}">
+			
+	<script>
+		function blink() {
+		    var e = document.getElementById('blinkId');
+		    setInterval(function() {
+		    	if (e.style.display == 'block' || e.style.display=='') e.style.display = 'none';
+			    else e.style.display = 'block';   
+		    }, 1000);
+		};
+		window.onload = blink;
+	</script>
+			
+		<table style="width: 100%">
+			<tr>
+				<td>
+					<span id="blinkId3"><h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" /></span><span style="opacity: 0.0;"><h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" /></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h:outputText styleClass="warning" value="#{backingBean.managedBean.overLappedCategoryMsg}" escape="false"/>
+				</td>
+			</tr>
+		</table>
+		
+		<script>
+			$(function(){
+			    // Self-executing recursive animation
+			    (function pulse(){
+			        $('#blinkId3').delay(1000).fadeOut('slow').delay(50).fadeIn('slow',pulse);
+			    })();
+			});
+		</script>
+		
+		<br />
+		<p:dataTable var="table" id="overlapCatSuppDocDtId" value="#{backingBean.managedBean.smAppl.smCategoryOverlapDocs}" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+			rowIndexVar="index">
+
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+				style="width : 5%;">
+				<p:outputLabel value="#{index + 1}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.reason']}">
+				<p:inputTextarea value="#{table.overlapReason}" maxlength="200" 
+					style="width : auto;" rows="5" cols="20" required="true"
+					label="#{lbl['lbl.sm.reason']}" id="overlapCaReasonId">
+					<p:ajax process="@this" update="overlapCatSuppDocDtId" />
+					<f:validateLength maximum="200" />
+				</p:inputTextarea>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+				style="width : 35%;">
+				<h:outputText value="#{table.pmDocument.docName}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
+				style="width : 10%;">
+				<p:commandLink oncomplete="overlapCatUploadDialog.show();return false;"
+					update="@([id$=overlapCatUploadDialog])"
+					action="#{backingBean.assignSelectedOverlapDoc(table)}">
+					<p:graphicImage value="/css/images/design/upload.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
+
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.document.name']}"
+				style="width : 20% !important;">
+				<p:commandLink ajax="false" value="#{table.fileName}" rendered="#{not empty table.fileName}">
+					<p:fileDownload value="#{backingBean.commonDownload(table.filePath,table.fileName,table.fileName)}" />
+				</p:commandLink>
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
+				<p:commandLink id="deleteOverlapCatAttId" style="white-space: normal !important;"
+					partialSubmit="true" rendered="#{not empty table.fileName}"
+					process="@this" action="#{backingBean.onDeleteOverlapCatAttachment(table)}"
+					update="overlapCatSuppDocDtId" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()">
+					&#160;
+					<p:graphicImage value="/css/images/design/icon_trash.png" 
+						title="#{lbl['lbl.sm.gst.delete.attachment']}" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable><br />
+		
+		<p:dialog id="overlapCatUploadDialog" widgetVar="overlapCatUploadDialog" modal="true"
+			dynamic="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}" 
+			onShow="singleUploadListener(uploadWV);">
+			<p:fileUpload widgetVar="uploadWV" allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+				sizeLimit="2000000"
+				invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
+				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
+				fileUploadListener="#{backingBean.handleOverlapSupDocFileAttachment}"
+				update="overlapCatSuppDocDtId" oncomplete="overlapCatUploadDialog.hide();" 
+				uploadLabel="#{lbl['lbl.btn.upload']}"  
+				label="#{lbl['lbl.btn.choose']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}" 
+				multiple="false" showButtons="false"/>
+		</p:dialog>
+		
+		<p:confirmDialog id="confirmDeleteOverlapCatDialog" closable="true"
+			message="#{lbl['lbl.sm.gst.delete.attachment.confirm.msg']}"
+			header="#{lbl['lbl.sm.gst.delete.attachment.header']}" severity="alert"
+			widgetVar="confirmDeleteOverlapCatDialog">
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDeleteOverlapCatDialog.hide();" 
+					action="#{backingBean.deleteOverlapCategoryAttachment}" update="@form" partialSubmit="true"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeleteOverlapCatDialog.hide();" />
+			</div>
+		</p:confirmDialog>
+		
+	</c:if>
+	
+</ui:composition>
