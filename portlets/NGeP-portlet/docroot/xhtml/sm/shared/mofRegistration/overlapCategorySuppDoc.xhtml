@@ -52,7 +52,11 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sm.reason']}">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sm.reason']}" />
+				</f:facet>
 				<p:inputTextarea value="#{table.overlapReason}" maxlength="200" 
 					style="width : auto;" rows="5" cols="20" required="true"
 					label="#{lbl['lbl.sm.reason']}" id="overlapCaReasonId">
@@ -67,8 +71,11 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
-				style="width : 10%;">
+			<p:column style="width : 10%;">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.btn.upload.doc']}" />
+				</f:facet>
 				<p:commandLink oncomplete="overlapCatUploadDialog.show();return false;"
 					update="@([id$=overlapCatUploadDialog])"
 					action="#{backingBean.assignSelectedOverlapDoc(table)}">

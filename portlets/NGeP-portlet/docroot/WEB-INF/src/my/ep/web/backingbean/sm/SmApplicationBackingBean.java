@@ -10014,7 +10014,7 @@ public class SmApplicationBackingBean extends
 
 	public void handleOverlapSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
-			if (getManagedBean().getSelectedGstSuppDoc() != null) {
+			if (getManagedBean().getSelectedOverlapDoc() != null) {
 
 				// construct file path
 				String filePath = SmCommonUtil
