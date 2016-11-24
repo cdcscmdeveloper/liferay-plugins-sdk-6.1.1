@@ -41,6 +41,11 @@ import org.apache.log4j.Logger;
 @ViewScoped
 public class ProjectBackingBean extends
 BaseBackingBean<ProjectManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger
 			.getLogger(ProjectBackingBean.class);
 

@@ -45,6 +45,11 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 public class AccessApplResendActivationBackingBean extends
 	BaseBackingBean<BaseManagedBean>{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger
 			.getLogger(AccessApplResendActivationBackingBean.class);

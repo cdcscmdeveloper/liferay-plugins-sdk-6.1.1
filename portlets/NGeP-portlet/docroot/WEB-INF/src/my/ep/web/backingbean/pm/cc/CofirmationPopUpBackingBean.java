@@ -23,7 +23,6 @@ import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 /**
  * The Class CofirmationPopUpBackingBean.
@@ -34,6 +33,10 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class CofirmationPopUpBackingBean extends
 		BaseBackingBean<ConfirmationPopUpManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = EpLogger
 			.getLogger(CofirmationPopUpBackingBean.class);
 

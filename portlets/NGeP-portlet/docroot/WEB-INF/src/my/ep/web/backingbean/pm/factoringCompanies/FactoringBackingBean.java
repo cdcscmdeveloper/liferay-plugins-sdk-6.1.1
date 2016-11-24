@@ -32,6 +32,10 @@ import com.liferay.portal.theme.ThemeDisplay;
 @ViewScoped
 public class FactoringBackingBean extends
 		BaseBackingBean<FactoringManageBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger
 			.getLogger(FactoringManageBean.class);
 

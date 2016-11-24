@@ -77,7 +77,6 @@ import my.ep.persistence.entity.pm.common.PmStatusRole;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -109,6 +108,11 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class TaskReassignmentBackingBean extends
 		BaseBackingBean<TaskReassignmentManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger
 			.getLogger(TaskReassignmentBackingBean.class);
 

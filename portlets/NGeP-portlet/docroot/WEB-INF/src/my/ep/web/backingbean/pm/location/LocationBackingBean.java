@@ -60,6 +60,10 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "locationBackingBean")
 @ViewScoped
 public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(LocationBackingBean.class);
 	private IPagingDataModel<VPmLocation> searchLocation = new SearchLocatonPagingDataModel();
 

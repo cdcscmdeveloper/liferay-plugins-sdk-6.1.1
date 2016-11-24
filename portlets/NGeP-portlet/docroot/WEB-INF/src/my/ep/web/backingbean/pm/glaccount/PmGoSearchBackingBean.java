@@ -43,6 +43,11 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean> {
 
+		/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 		private static Logger log = Logger.getLogger(PmGoSearchBackingBean.class);
 
 		// Paging for listing

@@ -37,6 +37,10 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class OrgProfileSearchBackingBean extends
 		BaseBackingBean<OrgProfileSearchManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger
 			.getLogger(OrgProfileSearchBackingBean.class);
 

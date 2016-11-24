@@ -22,10 +22,6 @@ import my.ep.web.managedbean.pm.listOfStates.StatesManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class StatesBackingBean.
- */
 /**
  * EJB BakingBean For List Of States.
  * 
@@ -37,6 +33,10 @@ import org.apache.log4j.Logger;
 @ViewScoped
 public class StatesBackingBean extends BaseBackingBean<StatesManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The log. */
 	private static Logger log = Logger.getLogger(StatesBackingBean.class);
 
