@@ -38,7 +38,6 @@ import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.StreamedContent;
 //import my.ep.persistence.entity.sc.quationtender.ScQtReport;
 
 /**
@@ -148,9 +147,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean disableFwdToHighAuthorityOption;
 	private Boolean qtRefinalized;
 	private boolean isInitialSelectionItemized;
-	
-	private StreamedContent endorsementReportStream;
-	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
 	private TplSpecZoneDtl currentZone;
@@ -978,22 +974,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectionMode(String selectionMode) {
 		this.selectionMode = selectionMode;
-	}
-
-	/**
-	 * @return the endorsementReportStream
-	 */
-	public StreamedContent getEndorsementReportStream() {
-		return endorsementReportStream;
-	}
-
-	/**
-	 * @param endorsementReportStream
-	 *            the endorsementReportStream to set
-	 */
-	public void setEndorsementReportStream(
-			StreamedContent endorsementReportStream) {
-		this.endorsementReportStream = endorsementReportStream;
 	}
 
 	/**
