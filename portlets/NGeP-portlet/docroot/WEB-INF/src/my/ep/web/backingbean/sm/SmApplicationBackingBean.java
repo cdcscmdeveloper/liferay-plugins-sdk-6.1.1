@@ -101,6 +101,7 @@ import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
+import my.ep.persistence.entity.sm.SmCategoryOverlapDoc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -154,6 +155,7 @@ import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmSideMenuIconUtil;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmPaymentDetailsVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -290,6 +292,18 @@ public class SmApplicationBackingBean extends
 				"confirmDeleteHqDialog.show();");
 	}
 
+	/**
+	 * On click delete overlap category supporting doc
+	 * 
+	 * @param SmGstSupplierDoc
+	 *            doc
+	 */
+	public void onDeleteOverlapCatAttachment(SmCategoryOverlapDoc doc) {
+		getManagedBean().setSelectedOverlapDoc(doc);
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteOverlapCatDialog.show();");
+	}
+
 	public void onChangeBussType() {
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
 		RequestContext.getCurrentInstance().execute(
@@ -307,6 +321,19 @@ public class SmApplicationBackingBean extends
 						.getSmGstSupplierDocs(), "pmDocument");
 		mainDoc.setFileName(StringUtils.EMPTY);
 		mainDoc.setFilePath(StringUtils.EMPTY);
+	}
+
+	/**
+	 * Delete overlap category attachment
+	 */
+	public void deleteOverlapCategoryAttachment() {
+		SmCategoryOverlapDoc doc = (SmCategoryOverlapDoc) EntityHelper
+				.getEntityBySinglePropertyFromList(getManagedBean()
+						.getSelectedOverlapDoc().getPmDocument()
+						.getDocumentId(), getManagedBean().getSmAppl()
+						.getSmCategoryOverlapDocs(), "pmDocument");
+		doc.setFileName(StringUtils.EMPTY);
+		doc.setFilePath(StringUtils.EMPTY);
 	}
 
 	public void deleteBrAttachment(SmGstSupplierDoc doc) {
@@ -9985,8 +10012,51 @@ public class SmApplicationBackingBean extends
 
 	}
 
+	public void handleOverlapSupDocFileAttachment(FileUploadEvent event) {
+		if (event.getFile() != null) {
+			if (getManagedBean().getSelectedGstSuppDoc() != null) {
+
+				// construct file path
+				String filePath = SmCommonUtil
+						.getUploadFilePath(SupplierManagementConst.OVERLAP_CATEGORY_PATH)
+						+ getManagedBean().getSmAppl().getApplNo()
+						+ "/"
+						+ System.currentTimeMillis() + "/";
+
+				// init suppDocFile (currently only default one file)
+				SmCategoryOverlapDoc doc = getManagedBean()
+						.getSelectedOverlapDoc();
+				doc.setFileName(StringUtils.replace(event.getFile()
+						.getFileName(), " ", "-"));
+				doc.setFilePath(filePath);
+
+				int i = 0;
+				for (SmCategoryOverlapDoc docTmp : getManagedBean().getSmAppl()
+						.getSmCategoryOverlapDocs()) {
+					if (doc.equals(docTmp)) {
+						break;
+					} else if (docTmp.getPmDocument().getDocumentId()
+							.compareTo(doc.getPmDocument().getDocumentId()) == 0) {
+						break;
+					}
+					i++;
+					getManagedBean().getSmAppl().getSmCategoryOverlapDocs()
+							.set(i, doc);
+				}
+
+				// upload file
+				commonUploadFile(event, filePath);
+			}
+		}
+
+	}
+
 	public void assignSelectedGstDoc(SmGstSupplierDoc doc) {
 		getManagedBean().setSelectedGstSuppDoc(doc);
+	}
+
+	public void assignSelectedOverlapDoc(SmCategoryOverlapDoc doc) {
+		getManagedBean().setSelectedOverlapDoc(doc);
 	}
 
 	private void setSuppDocFileAttachment(SmGstSupplierDoc doc) {

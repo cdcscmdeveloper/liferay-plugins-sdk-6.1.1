@@ -127,6 +127,7 @@ import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
+import my.ep.persistence.entity.sm.SmCategoryOverlapDoc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
@@ -1193,6 +1194,22 @@ public class SmApplicationUtil {
 		return validSave;
 	}
 
+	public static void validateOverlapSuppDoc(boolean validSave,
+			SmApplicationManagedBean managedBean, int currentTab) {
+		if (!EntityHelper.isCollectionEmpty(managedBean.getSmAppl()
+				.getSmCategoryOverlapDocs())) {
+			for (SmCategoryOverlapDoc doc : managedBean.getSmAppl()
+					.getSmCategoryOverlapDocs()) {
+				if (doc.getPmDocument() != null
+						&& StringUtils.isBlank(doc.getFileName())) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+					throw new EpException(MessageConst.ERROR_722645,
+							new String[] { doc.getPmDocument().getDocName() });
+				}
+			}
+		}
+	}
+
 	/**
 	 * Validate categories before saving application based on supplier type ,
 	 * personnel info and logged in user role.
@@ -1209,7 +1226,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean, int currentTab) {
 		SmAppl appl = managedBean.getSmAppl();
 		validateCategoryOtherDesc(validSave, managedBean, currentTab);
-
+		validateOverlapSuppDoc(validSave, managedBean, currentTab);
 		if (managedBean.isSupplierUser()) {
 			if (appl.getSmSupplierCategories() == null
 					|| appl.getSmSupplierCategories().isEmpty()) {
@@ -2487,6 +2504,8 @@ public class SmApplicationUtil {
 			managedBean.setOverLappedCategoryRemarks(overlapCategoryVO
 					.getOverLappedCategoryRemarks());
 		}
+		initOverlapCategoryDocs(managedBean.isOverLappedCategoryExists(),
+				managedBean.getSmAppl());
 	}
 
 	public static SmOverlapCategoryVO getOverlapCategoryVO(SmAppl smAppl) {
@@ -5552,6 +5571,31 @@ public class SmApplicationUtil {
 			removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl());
 			removeTravellingSoftwareIfNotApplicable(bean);
 			removeEquipmentIfNotApplicable(bean);
+			removeOverlapCategoryIfDocNotUploaded(bean);
+		}
+	}
+
+	/**
+	 * Remove overlap category document if file name or file path is null (means
+	 * not uploaded)
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
+	public void removeOverlapCategoryIfDocNotUploaded(
+			SmApplicationManagedBean bean) {
+		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
+				.getSmCategoryOverlapDocs())) {
+			Iterator<SmCategoryOverlapDoc> it = bean.getSmAppl()
+					.getSmCategoryOverlapDocs().iterator();
+			while (it.hasNext()) {
+				SmCategoryOverlapDoc itTmp = it.next();
+
+				if (StringUtils.isBlank(itTmp.getFileName())
+						|| StringUtils.isBlank(itTmp.getFilePath())) {
+					it.remove();
+				}
+			}
 		}
 	}
 
@@ -7244,6 +7288,52 @@ public class SmApplicationUtil {
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * Initialize overlap category supporting documents
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 */
+	public static void initOverlapCategoryDocs(boolean hasOverlapCategory,
+			SmAppl smAppl) {
+		if (hasOverlapCategory) {
+			DocumentReqDTO reqDTO = new DocumentReqDTO();
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			List<PmDocument> suppDocList = SmServiceLookup.getDocumentSO()
+					.retrieveOverlapCategorySuppDocuments(reqDTO)
+					.getDocumentList();
+			SmCategoryOverlapDoc suppDoc = null;
+
+			if (!EntityHelper.isCollectionEmpty(suppDocList)) {
+				if (EntityHelper.isCollectionEmpty(smAppl
+						.getSmCategoryOverlapDocs())) {
+					smAppl.setSmCategoryOverlapDocs(new ArrayList<SmCategoryOverlapDoc>());
+					for (PmDocument doc : suppDocList) {
+						suppDoc = new SmCategoryOverlapDoc();
+						suppDoc.setPmDocument(doc);
+						suppDoc.setSmAppl(smAppl);
+						smAppl.getSmCategoryOverlapDocs().add(suppDoc);
+					}
+				} else {
+					for (PmDocument doc : suppDocList) {
+						if (EntityHelper
+								.getEntityBySinglePropertyFromList(
+										doc.getDocumentId(),
+										smAppl.getSmCategoryOverlapDocs(),
+										"pmDocument") == null) {
+							suppDoc = new SmCategoryOverlapDoc();
+							suppDoc.setPmDocument(doc);
+							suppDoc.setSmAppl(smAppl);
+							smAppl.getSmCategoryOverlapDocs().add(suppDoc);
+						}
+					}
+				}
+			}
+		} else {
+			smAppl.setSmCategoryOverlapDocs(new ArrayList<SmCategoryOverlapDoc>());
 		}
 	}
 
