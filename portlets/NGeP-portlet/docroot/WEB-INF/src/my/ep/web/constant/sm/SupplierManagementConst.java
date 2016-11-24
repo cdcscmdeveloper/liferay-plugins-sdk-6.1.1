@@ -571,6 +571,7 @@ public class SupplierManagementConst {
 	public static final String SITE_VISIT_REPORT_PATH = "/SM/SITE_VISIT/";
 	public static final String OFFLINE_DOC_CHECKLIST_PATH = "/SM/OFFLINE_DOC/CHECKLIST/";
 	public static final String SUPPORTING_DOC_TEMP_PATH = "/SM/SUPPORTING_TEMP_DOWNLOAD/";
+	public static final String OVERLAP_CATEGORY_PATH = "/SM/OVERLAP_CATEGORY/";
 
 	// SME STATUS
 	public static final String SME_STATUS_SERVICES = my.ep.constant.sm.SupplierManagementConst.SME_STATUS_SERVICES;

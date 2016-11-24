@@ -44,6 +44,7 @@ import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
+import my.ep.persistence.entity.sm.SmCategoryOverlapDoc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
@@ -439,6 +440,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmGstSupplier companyBasicGst;
 	private SmGstSupplier selectedGst;
 	private SmGstSupplierDoc selectedGstSuppDoc;
+	private SmCategoryOverlapDoc selectedOverlapDoc;
 	private List<SmSiteVisitFacilityVO> siteVisitFacVOList;
 	private List<PmCategoryL3> dockYardFacilitiesVOList;
 	private List<PmCategoryL3> storeFacilitiesVOList;
@@ -3839,5 +3841,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedTravellingSoftware(
 			PmMachine selectedTravellingSoftware) {
 		this.selectedTravellingSoftware = selectedTravellingSoftware;
+	}
+
+	public SmCategoryOverlapDoc getSelectedOverlapDoc() {
+		return selectedOverlapDoc;
+	}
+
+	public void setSelectedOverlapDoc(SmCategoryOverlapDoc selectedOverlapDoc) {
+		this.selectedOverlapDoc = selectedOverlapDoc;
 	}
 }
