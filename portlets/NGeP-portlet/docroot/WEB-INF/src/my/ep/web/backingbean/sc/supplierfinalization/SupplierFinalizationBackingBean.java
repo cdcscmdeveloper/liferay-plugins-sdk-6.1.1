@@ -2281,7 +2281,8 @@ public class SupplierFinalizationBackingBean extends
 	 *             the exception that would be thrown in case of any error while
 	 *             downloading the report(s)
 	 */
-    public void getSuppFinalizationEndorsementReportStreamContent() throws Exception {
+    public StreamedContent getSuppFinalizationEndorsementReportStreamContent() throws Exception {
+    	
 		debugLogger("getSuppFinalizationEndorsementReportStreamContent");
 		ScQtFinalizationReportAttachment reportAttachment = new ScQtFinalizationReportAttachment();
 		reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
@@ -2291,7 +2292,7 @@ public class SupplierFinalizationBackingBean extends
 		StreamedContent streamContent = getAttachmentStreamContent(
 				reportAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 
-		getManagedBean().setEndorsementReportStream(streamContent);
+		return streamContent;
     }	
      
     /**
@@ -6028,23 +6029,18 @@ public class SupplierFinalizationBackingBean extends
 									qualSupplier.setAwareded(
 											recommendationBean.isAwarded());
 								}
-								
-								if (qualSupplier.isAwareded()) {
-									recommendationBean = updateCachedData(qualSupplier, 
-											zoneId, selectedItemId);
-									getManagedBean().setRecommendedSupplier(qualSupplier);
-								} else {
-									recommendationBean = updateCachedData(qualSupplier, 
-											zoneId, selectedItemId);
-								}
-							} else if (qualSupplier.isAwareded()) {
 								recommendationBean = updateCachedData(qualSupplier, 
 										zoneId, selectedItemId);
-								getManagedBean().setRecommendedSupplier(qualSupplier);
+								if (qualSupplier.isAwareded()) {
+									getManagedBean().setRecommendedSupplier(qualSupplier);
+								} 
 							} else {
 								recommendationBean = updateCachedData(qualSupplier, 
 										zoneId, selectedItemId);
-							}
+								if (qualSupplier.isAwareded()) {
+									getManagedBean().setRecommendedSupplier(qualSupplier);
+								}
+							} 
 							
 							if (selectedItem != null) {
 								if (!selectedItem.isCancelled()) {
