@@ -6983,8 +6983,9 @@ public class SmApplicationUtil {
 				currPersonnel.setSoftcertFlg(0);
 				currPersonnel.setContractSignerFlg(0);
 			} else {
-				currPersonnel
-						.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+				currPersonnel.setSoftcertFlg(StringUtils.isBlank(currPersonnel
+						.getEpRole()) ? 0
+						: SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 				currPersonnel.setContractSignerFlg(prevPersonnel == null ? 0
 						: prevPersonnel.getContractSignerFlg());
 			}
