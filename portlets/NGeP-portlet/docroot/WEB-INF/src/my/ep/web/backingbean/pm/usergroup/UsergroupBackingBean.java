@@ -77,6 +77,11 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger logger = EpLogger
 			.getLogger(UsergroupBackingBean.class);
 

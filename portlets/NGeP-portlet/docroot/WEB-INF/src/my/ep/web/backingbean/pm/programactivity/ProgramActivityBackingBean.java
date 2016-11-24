@@ -47,7 +47,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ProgramActivityBackingBean.
  */
@@ -56,6 +55,11 @@ import org.apache.log4j.Logger;
 public class ProgramActivityBackingBean extends
 BaseBackingBean<ProgramActivityManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger
 			.getLogger(ProgramActivityBackingBean.class);

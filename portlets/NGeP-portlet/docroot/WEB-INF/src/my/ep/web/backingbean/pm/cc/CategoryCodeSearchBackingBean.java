@@ -26,7 +26,6 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -54,6 +53,10 @@ import org.primefaces.context.RequestContext;
 @ManagedBean
 @RequestScoped
 public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeSearchManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = EpLogger.getLogger(CategoryCodeSearchBackingBean.class);
 	
 	private void debugLogger(Object message) {

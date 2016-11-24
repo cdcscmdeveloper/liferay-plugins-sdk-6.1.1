@@ -80,6 +80,10 @@ import org.primefaces.context.RequestContext;
 public class FinancialOrgBackingBean extends
 		BaseBackingBean<FinancialOrgManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(FinancialOrgBackingBean.class);
 	boolean result = false;
 	// Tab values

@@ -47,6 +47,11 @@ import org.apache.log4j.Logger;
 public class AccountingOfficeBackingBean extends
 		BaseBackingBean<AccountingOfficeManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger
 			.getLogger(AccountingOfficeBackingBean.class);

@@ -57,6 +57,11 @@ import org.apache.log4j.Logger;
 @ViewScoped
 public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The Constant NAV_TO_MAIN. */
 	private static final String NAV_TO_MAIN = "educationFieldMain";
 

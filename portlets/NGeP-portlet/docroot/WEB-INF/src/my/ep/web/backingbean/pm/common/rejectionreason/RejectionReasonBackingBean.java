@@ -72,6 +72,10 @@ import org.apache.log4j.Logger;
 @ManagedBean(name="rejectionReasonBackingBean")
 @ViewScoped
 public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonManagedBean>{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(RejectionReasonBackingBean.class);
 	//Navigation Details
 	public static final String NAV_TO_MAINTAIN = "rejectionReasonMaintain";

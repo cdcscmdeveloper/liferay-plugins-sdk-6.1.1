@@ -6,8 +6,6 @@ package my.ep.web.backingbean.pm.race;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -44,8 +42,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
 
 /**
  * Backing Bean Class for Race.

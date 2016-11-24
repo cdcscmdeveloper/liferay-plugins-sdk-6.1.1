@@ -29,6 +29,11 @@ import org.apache.log4j.Logger;
 @ViewScoped
 public class FundBackingBean extends
 BaseBackingBean<FundManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger
 			.getLogger(FundBackingBean.class);
 

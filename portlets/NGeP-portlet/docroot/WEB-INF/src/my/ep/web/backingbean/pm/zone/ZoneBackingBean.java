@@ -57,6 +57,11 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger.getLogger(ZoneBackingBean.class);
 	

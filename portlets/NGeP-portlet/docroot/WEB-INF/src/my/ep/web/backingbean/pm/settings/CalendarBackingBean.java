@@ -48,6 +48,10 @@ import org.primefaces.model.ScheduleEvent;
 @ViewScoped
 public class CalendarBackingBean extends
 		BaseBackingBean<CalendarManageBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(CalendarBackingBean.class);
 	private Date endDateTemp;    
     
