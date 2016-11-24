@@ -84,8 +84,9 @@
 						return address;
 					}
 				</script>
-	
-				<ac:gmap id="gmap" 
+				
+				
+				<ac:gmap id="gmap" disabled="#{viewFlag}"
 					locationName="#{svTask.smAppl.smCompanyBasic.companyName}"
 					latitude="#{svTask.smSvAddress.smAddress.mapLatitude}" 
 					longitude="#{svTask.smSvAddress.smAddress.mapLongitude}" 
