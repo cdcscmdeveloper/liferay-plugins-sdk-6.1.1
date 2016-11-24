@@ -258,6 +258,13 @@
 
 	<!-- Fulfilment Start Added by Giri -->
 	<portlet>
+		<portlet-name>flCustomerService</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>flcos-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>flContractList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
