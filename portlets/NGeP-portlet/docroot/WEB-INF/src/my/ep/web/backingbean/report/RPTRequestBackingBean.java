@@ -322,7 +322,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		URL obj;
 		BufferedInputStream buf;
 		
-		String reportServerName = EpPropertiesUtils.getInstance().getProperty("rpt.SERVER_NAME");
+		String reportServerName = rptRequest.getReportServer(); 
 		
 		String gnrtdURL = "http://ngepdevrps01.ngep.com:5901/reports/rwservlet/getjobid" + rptRequest.getJobId() + "?server=" + reportServerName;
 		
@@ -477,10 +477,12 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 	public void attachmentDownload(RPTRequest rptRequest) throws IOException{
 		
-		String path = rptRequest.getReportPath();
+		String dir = EpPropertiesUtils.getInstance().getProperty("document.repository.shared.report.dir");
+		
+		String path = dir + "/" + rptRequest.getReportPath();
 		String displayName = rptRequest.getReportName();
 		
-		this.commonReportDownload(path, displayName);
+		this.commonDownloadUtil(path, rptRequest.getReportPath());
 		
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,

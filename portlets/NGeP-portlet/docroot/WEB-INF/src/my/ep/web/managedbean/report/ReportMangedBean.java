@@ -182,6 +182,8 @@ public class ReportMangedBean extends BaseManagedBean {
 	/** The search operator. */
 	private List<SelectItem> searchOperator;
 
+	private String requestId;
+	
 	private String jobId;
 	
 
@@ -1046,6 +1048,20 @@ public class ReportMangedBean extends BaseManagedBean {
 	public void setReportStr(String reportStr) {
 		this.reportStr = reportStr;
 	}
+
+	/**
+	 * @return the requestId
+	 */
+	public String getRequestId() {
+		return requestId;
+	}
+
+	/**
+	 * @param requestId the requestId to set
+	 */
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
+	}
 	
 	/**
 	 * @return the jobId
@@ -1060,5 +1076,4 @@ public class ReportMangedBean extends BaseManagedBean {
 	public void setJobId(String jobId) {
 		this.jobId = jobId;
 	}
-
 }

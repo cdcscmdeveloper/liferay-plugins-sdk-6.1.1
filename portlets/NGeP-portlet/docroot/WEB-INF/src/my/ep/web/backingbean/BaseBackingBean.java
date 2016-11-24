@@ -975,22 +975,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 		return null;
 	}
-
-	/**
-	 * Common report download.
-	 *
-	 * @param path the path
-	 * @param displayFileName the display file name
-	 * @return the streamed content
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public StreamedContent commonReportDownload(String path, String displayFileName)
-			throws IOException {
-		
-		commonDownloadUtil(path, displayFileName);
-		
-		return null;
-	}
 	
 	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException{
 		
@@ -1025,10 +1009,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		out.close();
 		docInputStream.close();
-	}
-
-	public static void main(String argv[]) throws Exception{
-		new ReportBackingBean().commonReportDownload("c:/a", "abc");
 	}
 	
 	/**
