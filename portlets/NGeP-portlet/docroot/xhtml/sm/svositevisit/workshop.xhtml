@@ -23,18 +23,10 @@
 		</p:tab>
 		
 		<p:tab title="#{lbl['lbl.sm.sitevisit.equipment.detail']}">
-		<ui:include src="/xhtml/sm/shared/sitevisit/equipment.xhtml" />
-		<ui:include src="/xhtml/sm/shared/sitevisit/worker.xhtml" />
-		<c:choose>
-				<c:when test="#{!viewFlag}">
-					<ui:include src="/xhtml/sm/shared/sitevisit/machine.xhtml" />
-					<ui:include src="/xhtml/sm/shared/sitevisit/additional_machine.xhtml" />
-				</c:when>
-				
-				<c:otherwise>
-					<ui:include src="/xhtml/sm/shared/sitevisit/view_machine.xhtml" />
-				</c:otherwise>
-			</c:choose>
+			<ui:include src="/xhtml/sm/shared/sitevisit/equipment.xhtml" />
+			<ui:include src="/xhtml/sm/shared/sitevisit/worker.xhtml" />
+			<ui:include src="/xhtml/sm/shared/sitevisit/machine.xhtml" />
+			<ui:include src="/xhtml/sm/shared/sitevisit/additional_machine.xhtml" />
 		</p:tab>
 		
 		<p:tab title="#{lbl['lbl.sm.sitevisit.premiselocation']}">
