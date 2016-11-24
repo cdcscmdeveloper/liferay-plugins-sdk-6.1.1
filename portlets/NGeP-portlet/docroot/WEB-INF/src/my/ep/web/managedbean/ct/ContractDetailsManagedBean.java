@@ -87,7 +87,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private Date asAtDate = null;
 	private int selectedTabIndex = 0;
 	private int attachFileIndex;
-	private boolean autoUpdate = true;
+	private boolean autoUpdate = false;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<String> finalListOfSideMenu;
