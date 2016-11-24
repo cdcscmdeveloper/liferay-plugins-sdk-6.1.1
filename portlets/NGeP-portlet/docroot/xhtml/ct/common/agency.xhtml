@@ -88,10 +88,10 @@
 	      	                 </p:column>
 	      	                 
 	      	                 <p:column style="width:25%;white-space:normal;" >
-				                    <h:outputText value="#{ctBackingBean.retrieveMinistryByOrgProfileId(agencyData.orgProfile.orgProfileId)}" style="float:left;"/>
+				                    <h:outputText value="#{agencyData.ministryName}" style="float:left;"/>
 			                 </p:column>
 			                 <p:column style="width:25%;white-space:normal;" >
-				                    <h:outputText value="#{ctBackingBean.retrieveJabatanByOrgProfileId(agencyData.orgProfile.orgProfileId)}"  style="float:left;"/>
+				                    <h:outputText value="#{agencyData.kumpulanPtjName}"  style="float:left;"/>
 			                 </p:column>
 			                 
 			                  <p:column style="width:25%;white-space:normal;" >
@@ -135,14 +135,14 @@
 		       <p:column style="white-space:normal;">
 		         <p:commandButton id="uploadSharingDoc" oncomplete="uploadDlg1.show();return false;" icon="ui-icon-upload" 
 					        rendered="#{agencyData.contractSharing and agencyData.fileName == null}" action="#{ctBackingBean.setIndexProperty(indexVar)}"
-					       disabled="#{ctBackingBean.managedBean.viewContract}"/>
+					       disabled="#{ctBackingBean.managedBean.viewContract}" process="@this" partialSubmit="true"/>
 
 		      <h:commandLink title="#{agencyData.fileName}"
 						value="#{ctBackingBean.getShortFileName(agencyData.fileName)}"						
 						style="float:left;margin-top:10px;" styleClass="blue_font"
 						action="#{ctBackingBean.downloadFile(agencyData.filePath, agencyData.fileName)}" />
 						
-			   	<p:commandLink 
+			   	<p:commandLink process="@this" partialSubmit="true"
 			   	   onclick="deleteAttachmentDlg1.show();" action="#{ctBackingBean.setIndexProperty(indexVar)}"
 						  rendered="#{!ctBackingBean.managedBean.viewContract and agencyData.contractSharing and agencyData.fileName != null}">
 			   				<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
@@ -166,15 +166,16 @@
 		
        	<div class="ppRightBtn">
        		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"   oncomplete="dlgAgency.show();" 
-       	         partialSubmit="true" process="@this"	action="#{ctBackingBean.resetAgencyDetails}" 
+       	         partialSubmit="true" process="@this"	
+       	         action="#{ctBackingBean.resetAgencyDetails}" 
        	         disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
        	        update=":form:agencyies" rendered="#{!ctBackingBean.managedBean.viewContract}">
        			<p:tooltip for="addBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
 				</p:tooltip>
        		</p:commandButton>
-			 <p:commandButton id="delBtn" value="#{lbl['lbl.ct.delete']}" process="@form"
-			 	onsuccess="dlgAgenyDel.show()"
+			 <p:commandButton id="delBtn" value="#{lbl['lbl.ct.delete']}" process="@this"
+			 	onsuccess="dlgAgenyDel.show()" partialSubmit="true"
 			 	disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}" 
 			 	rendered="#{!ctBackingBean.managedBean.viewContract}">
        			<p:tooltip for="delBtn">
@@ -185,7 +186,7 @@
 	  	<p:confirmDialog id="dlgDelid" widgetVar="dlgAgenyDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                          <div class="ppRightBtn">
-		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@all"  
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true" 
 		                         update=":form:agencyId,:form:itemId,:form:agencyRemarksAttachmentPnl" 
 		                         action="#{ctBackingBean.deleteAgencyDetails()}" onsuccess="dlgAgenyDel.hide();" 
 		                         onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
@@ -247,28 +248,106 @@
 	  	<ac:lovPopup />
                    
 	   </p:panel>  
+	
+	
 		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" 
-			styleClass="pop_up_top" modal="true" width="700" height="auto" resizable="false">
-		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
-		   <h:panelGroup  id="agencyies">
-              <h:panelGrid columns="3">
-                 <p:selectOneMenu for="ministry"  style="width:150px" disabled="true" >
-            	    <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu id="ministry" style="width:350px"
-                      value="#{ctBackingBean.managedBean.ministryProfileId}" >
-            	   <f:selectItems value="#{ctBackingBean.getMinistryDropdown()}"/>
-            	   <p:ajax event="change" />
-                 </p:selectOneMenu>
-			  </h:panelGrid>
-			  	<div class="ppRightBtn">
-			  		<p:commandButton id="agySlectBtnId"  value="#{lbl['lbl.btn.select']}" process="@form" 
-					update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
-				    action="#{ctBackingBean.addAgencyDetails()}"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-		       </div>
+				styleClass="pop_up_top" modal="true" width="700" height="auto" resizable="false">
+				<p:messages id="agencyMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
+			   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
+			   <h:panelGroup  id="agencyies">
+		  		     <p:panel id="agencyPopUpId" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500" >
+            			  <h:panelGrid columns="3">
+               					  <p:selectOneMenu for="ministry"  style="width:150px" disabled="true" >
+            	 						   <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
+               					  </p:selectOneMenu>
+            				     <p:spacer height="1"/>
+                				 <p:selectOneMenu id="ministry" style="width:300px"
+                   					   value="#{ctBackingBean.managedBean.ministryProfileId}" required="true" label="#{lbl['lbl.ct.ministry']}">
+            	  						 <f:selectItems value="#{ctBackingBean.getMinistryDropdown()}"/>
+            	  						 <p:ajax event="change" update=":form:agencyies" 
+            	  						      listener="#{ctBackingBean.resetPtjDetails}" process="@this" partialSubmit="true" />
+               					  </p:selectOneMenu>
+                				 <p:selectOneMenu for="jabatan"  style="width:150px" 
+                				      disabled="true" rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" >
+            	   					 <f:selectItem itemLabel="#{lbl['lbl.ct.jabatan']}" itemValue=""/>
+                				 </p:selectOneMenu>
+                 				<p:spacer height="1"  rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" />
+               					<p:selectOneMenu id="jabatan" style="width:300px"
+                   					   value="#{ctBackingBean.managedBean.jabatanProfileId}"  rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" >
+            	  						 <f:selectItems value="#{ctBackingBean.getJabatanDropdown()}"/>
+            	  						  <p:ajax event="change" update=":form:jabatan,:form:tableAgency" 
+            	  						      listener="#{ctBackingBean.resetPtjDetails}" process="@this" partialSubmit="true" />
+              					  </p:selectOneMenu>
+                 				<p:selectOneMenu for="ptjcodename"   rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" 
+                   						 value="#{ctBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
+                     					  <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
+            	     					 <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
+            	     					 <p:ajax process="@this"/>
+               					  </p:selectOneMenu>
+							 <p:spacer height="1"  rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" />
+                 				<p:inputText id="ptjCodeVaue"  style="width:300px;" 
+                     					value="#{ctBackingBean.managedBean.ptjCodeNameSearchValues}"   rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" >
+                    					 <p:ajax process="@this"/></p:inputText>
+						  </h:panelGrid>
+			  				<div class="ppRightBtn">
+			  				       <p:commandButton id="agyAllSlectBtnId"  value="#{lbl['lbl.btn.select']}" process="@this" partialSubmit="true" 
+										update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
+									    action="#{ctBackingBean.addAgencyDetails()}"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									     rendered="#{!ctBackingBean.managedBean.ownerOrgProfile}"  />
+									       <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" process="@this" partialSubmit="true" 
+									           onclick="dlgAgency.hide();"  rendered="#{!ctBackingBean.managedBean.ownerOrgProfile}"/>
+       		      				   <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"  
+       		        				    action="#{ctBackingBean.searchAgencyDetails}" process="@this" partialSubmit="true"
+       		         				   disabled="#{ctBackingBean.managedBean.ministryProfileId == null}"  rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" /> 
+			       					  <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}" process="@this" partialSubmit="true"
+			        					    action="#{ctBackingBean.resetAgencyDetails}" update=":form:agencyies"   rendered="#{ctBackingBean.managedBean.ownerOrgProfile}"   />
+		     				  </div>
+		     	  </p:panel>
+			   <p:spacer height="2"  rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" />
+			        <p:panel id="agencyTablePopUpId" header="#{lbl['lbl.ct.search.result']}" toggleable="true" toggleSpeed="500"   rendered="#{ctBackingBean.managedBean.ownerOrgProfile}" >
+            			  <p:dataTable id="tableAgency" var="pmVar" value="#{ctBackingBean.agencyDataModel}" 
+               					  rowIndexVar="rowIndex"  rowKey="#{pmVar}" lazy="true">
+               					   <ac:paginator for="tableAgency"/>
+                 					  <p:column style="width:3%;text-align:left;white-space:normal;"
+				      					     rendered="#{!ctBackingBean.managedBean.viewContract}">
+				       					    <f:facet name="header">
+											   <p:selectBooleanCheckbox id="checkBoxAll" value="#{ctBackingBean.managedBean.selectAll}">
+							     				    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.popup.chkBox']}"/>
+												     <p:ajax partialSubmit="true" process="@this"
+													       update=":form:tableAgency,:form:agySlectBtnId" listener="#{ctBackingBean.selectAllMinstryAgency}" />
+							      					   </p:selectBooleanCheckbox>
+						   					  </f:facet>
+		           
+		                 			    <p:selectBooleanCheckbox 
+		                         				  value="#{pmVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		        		   <p:ajax event="change" 
+		           		            		    update=":form:tableAgency,:form:agySlectBtnId" listener="#{ctBackingBean.selectOneAgyCheckboxSelect}"></p:ajax>
+			               				  </p:selectBooleanCheckbox>
+				    				  </p:column>
+                  
+                  				  <p:column headerText="#{lbl['lbl.ct.ptj.code']}" >
+                    				   	#{pmVar.orgCode}
+									</p:column>
+                 				   <p:column headerText="#{lbl['lbl.ct.ptj.name']}" >
+                      					#{pmVar.orgName}
+									</p:column>
+			 			</p:dataTable>           
+						<div class="ppRightBtn">
+						<p:commandButton id="agySlectBtnId"  value="#{lbl['lbl.btn.select']}" process="@this" partialSubmit="true" 
+								update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
+				    			action="#{ctBackingBean.addAgencyDetails()}" onclick="dlgAgency.hide();"
+				   				 disabled="#{ctBackingBean.managedBean.buttonHideActive}"
+				  				  oncomplete="tableAgencyWidget.paginator.endLink.click();" />
+				  		  <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" 
+				  		    	 process="@this" partialSubmit="true"  ajax="false" onclick="dlgAgency.hide();" />
+           			</div>
+       				   </p:panel>
            </h:panelGroup>
 	</p:dialog>
+	
+	
+	
+	
 	<p:panel id="agencyRemarksAttachmentPnl" header="#{lbl['lbl.txt.remarks']}" toggleable="true" 
 	  rendered="#{!ctBackingBean.managedBean.viewContract}" >
 		<table style="width: 100%">
