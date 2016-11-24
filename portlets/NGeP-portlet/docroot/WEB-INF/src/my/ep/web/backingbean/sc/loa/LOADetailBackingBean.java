@@ -1161,6 +1161,11 @@ public class LOADetailBackingBean extends
 		debugLogger("downloadReport");
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 				.getScLoaReportAttachment();
+		if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT) &&
+				getManagedBean().getScLoa().getPmStatus().getStatusId().
+				equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
+			validateLoaWitness();
+		}
 		scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
 		downloadFile(scLoaReportAttachment);
 	}
@@ -1326,11 +1331,15 @@ public class LOADetailBackingBean extends
 	public void downloadAllReports() throws IOException {
 		debugLogger("downloadAllReports");
 
-		List<ScLoaReport> scLoaReports = getManagedBean().getScLoa()
-				.getScLoaReports();
+		ScLoa scLoa = getManagedBean().getScLoa();
+		List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
 		List<ScLoaReportAttachment> scAttachments = new ArrayList<ScLoaReportAttachment>();
 
 		for (ScLoaReport scLoaReport : scLoaReports) {
+			if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT) &&
+					scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
+				validateLoaWitness();
+			}
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
 			scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
@@ -5251,4 +5260,15 @@ public class LOADetailBackingBean extends
 		this.flag = flag;
 	}
 	
+	/**
+	 * Validate ScLoaWitness before download attachment of Acknowledge LOA Receipt
+	 */
+	private void validateLoaWitness() {
+		ScLoaWitness witness = this.getManagedBean().getLoaSupplierWitness();
+		if(witness == null || witness.getWitnessName().isEmpty() || witness.getIdentificationNo().isEmpty() ||
+				witness.getDesignation().isEmpty() || witness.getAddress().isEmpty() || 
+				witness.getPhoneNo().isEmpty() || witness.getFaxNo().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760442);
+		}
+	}
 }
