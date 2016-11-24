@@ -391,41 +391,31 @@ public class DirectLOABackingBean extends
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public StreamedContent getLoaStreamContent() throws IOException {
-		StreamedContent loaStreamContent = getManagedBean()
-				.getLoaStreamContent();
+		StreamedContent loaStreamContent = null;
+		ScLoaReport agreementLetterReport = null;
+		for (ScLoaReport scLoaReport : getManagedBean().getScLoa()
+				.getScLoaReports()) {
+			if (null != scLoaReport.getPmDocument()) {
+				String docDefinitionKey = scLoaReport.getPmDocument()
+						.getDocDefinitionKey();
 
-		if (loaStreamContent == null) {
-			ScLoaReport agreementLetterReport = null;
-			for (ScLoaReport scLoaReport : getManagedBean().getScLoa()
-					.getScLoaReports()) {
-				if (null != scLoaReport.getPmDocument()) {
-					String docDefinitionKey = scLoaReport.getPmDocument()
-							.getDocDefinitionKey();
-
-					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-							.equals(docDefinitionKey)) {
-						agreementLetterReport = scLoaReport;
-
-						break;
-					}
+				if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+						.equals(docDefinitionKey)) {
+					agreementLetterReport = scLoaReport;
+					break;
 				}
 			}
-
-			if (agreementLetterReport != null) {
-				ScLoaReportAttachment agreementLetterAttachment = generateDocumentAttachment(agreementLetterReport);
-				agreementLetterReport
-						.setScLoaReportAttachment(agreementLetterAttachment);
-
-				loaStreamContent = getAttachmentStreamContent(
-						agreementLetterAttachment,
-						CommonConstants.FILE_CONTENT_TYPE_PDF);
-
-				getManagedBean().setLoaStreamContent(loaStreamContent);
-			}
-		} else {
-			loaStreamContent.getStream().reset();
 		}
 
+		if (agreementLetterReport != null) {
+			ScLoaReportAttachment agreementLetterAttachment = generateDocumentAttachment(agreementLetterReport);
+			agreementLetterReport
+			.setScLoaReportAttachment(agreementLetterAttachment);
+
+			loaStreamContent = getAttachmentStreamContent(
+					agreementLetterAttachment,
+					CommonConstants.FILE_CONTENT_TYPE_PDF);
+		}
 		return loaStreamContent;
 	}
 
