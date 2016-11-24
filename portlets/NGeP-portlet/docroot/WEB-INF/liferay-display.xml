@@ -162,6 +162,7 @@
 
 		<!-- Fulfilment Start Added by Giri -->
 		<category name="category.ep.fl">
+			<portlet id="flCustomerService" />
 			<portlet id="flContractList" />
 			<portlet id="flRequestNoteList" />
 			<portlet id="flPendingDeliveryList" />
