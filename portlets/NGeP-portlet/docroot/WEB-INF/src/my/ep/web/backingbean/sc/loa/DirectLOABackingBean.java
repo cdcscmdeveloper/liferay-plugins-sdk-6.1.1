@@ -3670,12 +3670,13 @@ public class DirectLOABackingBean extends
 	public void downloadAllReports() throws IOException {
 		debugLogger("downloadAllReports");
 
-		List<ScLoaReport> scLoaReports = getManagedBean().getScLoa()
-				.getScLoaReports();
+		ScLoa scLoa = getManagedBean().getScLoa();
+		List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
 		List<ScLoaReportAttachment> scAttachments = new ArrayList<ScLoaReportAttachment>();
 
 		for (ScLoaReport scLoaReport : scLoaReports) {
-			if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT)) {
+			if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT) &&
+					scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
 				validateLoaWitness();
 			}
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
