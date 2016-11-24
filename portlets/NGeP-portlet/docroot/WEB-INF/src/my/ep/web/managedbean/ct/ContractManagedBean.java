@@ -78,6 +78,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean ButtonHideActive = true;
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
+	private boolean ownerOrgProfile = true;
 	
 	/*Payment tracking start*/
 	private BigDecimal gstTotalAmount;
@@ -1096,5 +1097,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setUpdateItemMap(Map<Long, CtContractItem> updateItemMap) {
 		this.updateItemMap = updateItemMap;
 	}
-	
+
+	public boolean isOwnerOrgProfile() {
+		return ownerOrgProfile;
+	}
+
+	public void setOwnerOrgProfile(boolean ownerOrgProfile) {
+		this.ownerOrgProfile = ownerOrgProfile;
+	}
 }
