@@ -1979,6 +1979,10 @@ public class ProfileManagementBackingBean extends
 					reqDTO.setStatusList(intStatusIds);
 					reqDTO.setState(BpmConstants.STATE_ASSIGNED);
 					reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
+					for (String docNum : noteNumberList) {
+						logger.info("docNum******" + docNum);
+						reqDTO.getDocNumberList().add(docNum);
+					}
 					responseDTO = bpmSO.getGroupByOthersItems(reqDTO);
 					if (responseDTO.getWorklistVO() != null && responseDTO.getWorklistVO().getTotal() > 0) {
 						anyPendingTask = true;
