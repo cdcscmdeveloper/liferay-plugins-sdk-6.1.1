@@ -147,7 +147,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -18790,6 +18789,7 @@ public class ReportBackingBean extends
 					
 					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl, this.getReportValue(), reportTitle, isExcel);
 					
+					this.getManagedBean().setRequestId(String.valueOf(resDTO.getRequestId()));
 					this.getManagedBean().setJobId(String.valueOf(resDTO.getJobId()));
 					
 					RequestContext.getCurrentInstance().execute("ex.show();");
