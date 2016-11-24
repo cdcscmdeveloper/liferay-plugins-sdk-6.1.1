@@ -306,6 +306,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 				setSelectedSmSvFacility(smSvTask.getSmSvTemplate());
 			}
+			
+			retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplate());
 		}
 		
 	}
@@ -389,11 +391,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				setSelectedSmSvFacility(svTemplate);
 			}
 			
-		}else{
+		}
+/*		else{
 			if(index == this.getManagedBean().getLastIndex()){
 				retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplate());
 			}
-		}
+		}*/
 	}
 	
 	/**
@@ -996,10 +999,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}*/
 			
 			log.info("---------------viewActiveIndex End-----------");
-		}else{
-			if(index == this.getManagedBean().getLastIndex()){
-				retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplate());
-			}
 		}
 	}
 	
@@ -2387,8 +2386,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		
 		SmAppl appl = reqSO.retrieveSiteVisitInfoByAppId(reqDTO).getSmAppl();
-
-		if(appl != null){
+		getManagedBean().setSmAppl(appl);
+/*		if(appl != null){
 			getManagedBean().setSmAppl(appl);
 			Map<String, List<SmSvTask>> templateTaskMap = new HashMap<String,List<SmSvTask>>();
 			if(appl.getSmSvTasks().size() > 0){
@@ -2406,7 +2405,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			log.info("templateTaskMap size=" + templateTaskMap.size());
 		}
 		
-		log.info("TemplateTaskMap=" + getManagedBean().getTemplateTaskMap().size());
+		log.info("TemplateTaskMap=" + getManagedBean().getTemplateTaskMap().size());*/
 	}
 	
 	/**
@@ -2417,6 +2416,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		//getManagedBean().setSelectedSvTask(svTask);
 		retrieveSiteVisitInfo("V");
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.execute("poReportDlg.show();");
+		
 	}
 	
 	/**
