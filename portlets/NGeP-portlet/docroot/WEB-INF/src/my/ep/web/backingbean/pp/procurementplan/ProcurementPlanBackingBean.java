@@ -108,6 +108,10 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "pPlanBackingBean")
 @ViewScoped
 public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(ProcurementPlanBackingBean.class);
 	//Navigation Details
 	public static final String NAV_TO_MAINTAIN = "procurementPlanDet";

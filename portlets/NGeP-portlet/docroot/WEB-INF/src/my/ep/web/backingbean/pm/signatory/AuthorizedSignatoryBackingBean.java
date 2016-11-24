@@ -50,6 +50,10 @@ import org.primefaces.context.RequestContext;
 public class AuthorizedSignatoryBackingBean extends
 		BaseBackingBean<AuthorizedSignatoryManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final Logger log = EpLogger
 			.getLogger(AuthorizedSignatoryManagedBean.class);	
 	//Navigation Details

@@ -58,6 +58,11 @@ import org.apache.log4j.Logger;
 @ViewScoped
 public class DistrictBackingBean extends BaseBackingBean<DistrictManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger.getLogger(DistrictBackingBean.class);
 

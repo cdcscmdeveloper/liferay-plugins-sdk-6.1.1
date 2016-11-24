@@ -34,6 +34,11 @@ import org.apache.log4j.Logger;
 @ViewScoped
 public class VotBackingBean extends
 BaseBackingBean<VotManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger
 			.getLogger(VotBackingBean.class);
 

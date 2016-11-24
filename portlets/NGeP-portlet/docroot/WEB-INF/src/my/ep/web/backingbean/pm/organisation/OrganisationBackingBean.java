@@ -106,6 +106,11 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class OrganisationBackingBean extends
 		BaseBackingBean<OrganisationManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger.getLogger(OrganisationBackingBean.class);
 
 	private IPagingDataModel<PmOrgProfile> searchOrganisation = new SearchOrgPagingDataModel();

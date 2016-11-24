@@ -98,6 +98,11 @@ import org.primefaces.context.RequestContext;
 // @RequestScoped
 public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger.getLogger(CategoryBackingBean.class);
 

@@ -17,7 +17,6 @@ import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.persistence.entity.BaseEntity;
@@ -50,7 +49,11 @@ import org.apache.log4j.Logger;
 public class ProfileManagementSearchBackingBean extends
 		BaseBackingBean<ProfileManagementSearchManagedBean> {
 
-	// Navigation search
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+		// Navigation search
 		public static final String NAV_TO_SEARCH = "/xhtml/pm/profilemanagementsearch/profileManagementMain.xhtml?faces-redirect=true";
 	/** The log. */
 	private static Logger log = Logger

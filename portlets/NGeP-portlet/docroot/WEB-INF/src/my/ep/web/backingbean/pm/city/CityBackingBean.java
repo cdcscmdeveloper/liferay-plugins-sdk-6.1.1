@@ -46,7 +46,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CityBackingBean.
  * 
@@ -56,6 +55,11 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "cityBackingBean")
 @ViewScoped
 public class CityBackingBean extends BaseBackingBean<CityManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(CityBackingBean.class);

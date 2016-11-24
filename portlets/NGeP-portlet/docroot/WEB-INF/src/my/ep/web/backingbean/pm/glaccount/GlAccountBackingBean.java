@@ -46,6 +46,11 @@ import org.apache.log4j.Logger;
 public class GlAccountBackingBean extends
 		BaseBackingBean<GlAccountManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger
 			.getLogger(GlAccountBackingBean.class);
 	

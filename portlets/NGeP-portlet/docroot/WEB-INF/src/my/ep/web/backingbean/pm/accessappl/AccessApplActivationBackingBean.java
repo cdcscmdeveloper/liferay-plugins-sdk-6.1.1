@@ -43,6 +43,11 @@ import my.ep.web.util.pm.helper.RuleConfigHelper;
 public class AccessApplActivationBackingBean extends
 BaseBackingBean<AccessApplActivationManagedBean>{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger
 			.getLogger(AccessApplActivationBackingBean.class);

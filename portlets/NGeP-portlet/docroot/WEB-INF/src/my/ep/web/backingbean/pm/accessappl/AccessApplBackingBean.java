@@ -89,6 +89,11 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 public class AccessApplBackingBean extends
 	BaseBackingBean<AccessApplManagedBean>{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger
 			.getLogger(AccessApplBackingBean.class);

@@ -51,6 +51,11 @@ import org.apache.log4j.Logger;
 @ViewScoped
 public class DivisionBackingBean extends BaseBackingBean<DivisionManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = Logger.getLogger(DivisionBackingBean.class);
 

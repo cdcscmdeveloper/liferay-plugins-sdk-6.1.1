@@ -130,6 +130,11 @@ import org.primefaces.model.UploadedFile;
 public class ProfileManagementBackingBean extends
 		BaseBackingBean<ProfileManagementManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger logger = EpLogger
 			.getLogger(ProfileManagementBackingBean.class);
 

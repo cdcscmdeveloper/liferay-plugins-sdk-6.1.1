@@ -50,6 +50,11 @@ import org.apache.log4j.Logger;
 public class BusinessNatureBackingBean extends
 		BaseBackingBean<BusinessNatureManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger log = EpLogger
 			.getLogger(BusinessNatureManagedBean.class);
 

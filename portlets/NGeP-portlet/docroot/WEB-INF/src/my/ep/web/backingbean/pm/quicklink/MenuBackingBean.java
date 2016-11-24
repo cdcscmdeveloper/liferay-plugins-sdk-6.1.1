@@ -18,6 +18,11 @@ import org.apache.log4j.Logger;
 @ManagedBean
 @RequestScoped
 public class MenuBackingBean extends BaseBackingBean<BaseManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger.getLogger(MenuBackingBean.class);
 	
 	private List<MenuBean> menuBeans;
