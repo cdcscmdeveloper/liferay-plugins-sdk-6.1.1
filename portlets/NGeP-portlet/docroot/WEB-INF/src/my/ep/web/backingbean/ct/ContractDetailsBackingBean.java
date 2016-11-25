@@ -334,6 +334,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctBB.getManagedBean().setNewAgencyMap(resDTO.getNewAgencyMap());
 			ctBB.getManagedBean().setUpdateAgencyMap(resDTO.getUpdateAgencyMap());
 			ctBB.getManagedBean().setDeleteAgencyMap(resDTO.getDeleteAgencyMap());
+			ctBB.getManagedBean().setUpdateZoneMap(resDTO.getUpdateZoneMap());
 			ctBB.getManagedBean().setUpdateItemMap(resDTO.getUpdateItemMap());
 
 			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
@@ -630,6 +631,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    reqDTO.setNewAgencyMap(ctBB.getManagedBean().getNewAgencyMap());
 		    reqDTO.setUpdateAgencyMap(ctBB.getManagedBean().getUpdateAgencyMap());
 		    reqDTO.setDeleteAgencyMap(ctBB.getManagedBean().getDeleteAgencyMap());
+		    reqDTO.setUpdateZoneMap(ctBB.getManagedBean().getUpdateZoneMap());
 		    reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());
 			
 		    if (this.getManagedBean().getPmDigiSign() != null) {
