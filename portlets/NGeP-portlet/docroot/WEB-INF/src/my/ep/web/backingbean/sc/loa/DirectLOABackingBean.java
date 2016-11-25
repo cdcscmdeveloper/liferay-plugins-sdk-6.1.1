@@ -40,7 +40,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
-import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -69,8 +68,6 @@ import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
-import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
-import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
@@ -216,6 +213,8 @@ import org.primefaces.model.TreeNode;
 @RequestScoped
 public class DirectLOABackingBean extends
 		SourcingBaseBackingBean<DirectLOAManagedBean> {
+
+	private static final long serialVersionUID = 1L;
 
 	/** The log. */
 	public static Logger log = EpLogger.getLogger(DirectLOABackingBean.class);
@@ -5203,44 +5202,11 @@ public class DirectLOABackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
-	/**
-	 * Form jadual harga. To download jadual-harga.xlsx file
-	 * 
-	 * @param attachment
-	 *            the attachment
-	 * @param scLoa
-	 *            the sc loa
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void formJadualHarga(ScAttachment attachment, ScLoa scLoa)
-			throws Exception {
-		populateAttachmentDetails(attachment);
-		TplSpecMaster productSpecMaster = getManagedBean()
-				.getProdTemplateSpecBean().getSpecMaster();
-		TplSpecMaster serviceSpecMaster = getManagedBean()
-				.getSpecTemplateSpecBean().getSpecMaster();
-		List<JadualHargaBean> productJadualHargaList = convertSpecToJadualHargaBean(productSpecMaster);
-		List<JadualHargaBean> serviceJadualHargaList = convertSpecToJadualHargaBean(serviceSpecMaster);
 
-		// check whether loa from s1 or s2.
-		boolean isS1OrS2 = Boolean.TRUE;
-		if (scLoa.getScLoiLoa() != null) {
-			if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
-					.getDocType())) {
-				isS1OrS2 = Boolean.FALSE;
-			}
-		}
-
-		generateJadualHarga(attachment, productJadualHargaList,
-				serviceJadualHargaList, isS1OrS2);
-
-	}
-
-	private List<JadualHargaBean> convertSpecToJadualHargaBean(
+	private List<ItemBean> convertSpecToJadualHargaBean(
 			TplSpecMaster specMaster) {
-		List<JadualHargaBean> jadualHargaList = new ArrayList<JadualHargaBean>();
-		JadualHargaBean jadualHarga = null;
+		List<ItemBean> itemBeans = new ArrayList<ItemBean>();
+		ItemBean itemBean = null;
 
 		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
 			List<TplSpecQuestion> specQuestions = specMaster
@@ -5252,16 +5218,16 @@ public class DirectLOABackingBean extends
 							.getTplSpecAnswers()) {
 						if (TemplateSpecConst.QUESTION_TYPE_ITEM
 								.equals(specQuestion.getQuestionType())) {
-							jadualHarga = mappingJadualHarga(specAnswer);
+							itemBean = mappingJadualHarga(specAnswer);
 
-							jadualHargaList.add(jadualHarga);
+							itemBeans.add(itemBean);
 						}
 					}
 				}
 			}
 		}
 
-		return jadualHargaList;
+		return itemBeans;
 	}
 
 	/**
@@ -5271,13 +5237,13 @@ public class DirectLOABackingBean extends
 	 *            the item
 	 * @return the jadual harga bean
 	 */
-	private JadualHargaBean mappingJadualHarga(TplSpecAnswer specAnswer) {
-		JadualHargaBean jadualHarga = new JadualHargaBean();
+	private ItemBean mappingJadualHarga(TplSpecAnswer specAnswer) {
+		ItemBean itemBean = new ItemBean();
 		TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
 		TplSpecZoneDtl specZoneDtl = specAnswer.getTplSpecSuppAnswer()
 				.getTplSpecZoneDtl();
 		BigDecimal qty = null;
-		BigDecimal unitPrice =  null;
+		//BigDecimal unitPrice =  null;
 		
 		if (specAnswer.getTplSpecZoneQty() != null) {
 			qty = specAnswer.getTplSpecZoneQty().getQty();
@@ -5285,36 +5251,36 @@ public class DirectLOABackingBean extends
 			qty = specQuestion.getClQuantity();
 		}
 
-		jadualHarga.setZone(specZoneDtl != null ? specZoneDtl.getZoneName()
+		itemBean.setZoneName(specZoneDtl != null ? specZoneDtl.getZoneName()
 				: "");
-		jadualHarga.setItem(specQuestion.getClItem());
+		itemBean.setItem(specQuestion.getClItem());
 
-		if(specAnswer.getRatePerUom() != null){
+		/*if(specAnswer.getRatePerUom() != null){
 			 unitPrice = specAnswer.getRatePerUom().setScale(2,
 					BigDecimal.ROUND_HALF_EVEN);
-			jadualHarga.setUnitPrice(unitPrice.toString());
+			 itemBean.setUnitPrice(unitPrice.toString());
 		}
-		jadualHarga.setUom(null == specQuestion.getClUom() ? "" : specQuestion.getClUom().getUomName());
-		jadualHarga.setFreqUom(null == specQuestion.getClUomFrequency() ? ""
+		itemBean.setUom(null == specQuestion.getClUom() ? "" : specQuestion.getClUom().getUomName());
+		itemBean.setFreqUom(null == specQuestion.getClUomFrequency() ? ""
 				: specQuestion.getClUomFrequency().toString());
-		jadualHarga.setUomPerDay(null == specQuestion.getClUomPerDay() ? ""
+		itemBean.setUomPerDay(null == specQuestion.getClUomPerDay() ? ""
 				: specQuestion.getClUomPerDay().toString());
-		jadualHarga.setUomPerMonth(null == specQuestion.getClUomPerMonth() ? ""
+		itemBean.setUomPerMonth(null == specQuestion.getClUomPerMonth() ? ""
 				: specQuestion.getClUomPerMonth().toString());
-		jadualHarga
+		itemBean
 				.setUomPerYear(null == specQuestion.getClDurationMonth() ? ""
-						: specQuestion.getClDurationMonth().toString());
-		jadualHarga.setQuantity(null == qty ? "" : qty.toString());
+						: specQuestion.getClDurationMonth().toString());*/
+		itemBean.setQuantity(null == qty ? "" : qty.toString());
 
-		BigDecimal totalAmount = BigDecimal.valueOf(0d);
+		/*BigDecimal totalAmount = BigDecimal.valueOf(0d);
 		BigDecimal subTotal = TemplateSpecHelper.getInstance()
 				.calculateTotalAmount(specQuestion, unitPrice, qty);
 		if (subTotal != null) {
 			totalAmount = totalAmount.add(subTotal);
 			totalAmount = totalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-		}
-		jadualHarga.setTotalAmount(totalAmount.toString());
-		return jadualHarga;
+		}*/
+		//itemBean.setTotalAmount(totalAmount.toString());
+		return itemBean;
 
 	}
 
@@ -5452,51 +5418,6 @@ public class DirectLOABackingBean extends
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Form specification. To download specification.xlsx file
-	 * 
-	 * @param attachment
-	 *            the attachment
-	 * @param scLoa
-	 *            the sc loa
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void formSpecification(ScAttachment attachment, ScLoa scLoa)
-			throws Exception {
-		populateAttachmentDetails(attachment);
-
-		List<TplSpecQuestion> productQuestions = this.getManagedBean()
-				.getProdscQtDoc().getTplSpecMaster().getTplSpecQuestions();
-		List<TplSpecQuestion> serviceQuestions = this.getManagedBean()
-				.getServicescQtDoc().getTplSpecMaster().getTplSpecQuestions();
-		List<String> itemNames = new ArrayList<String>();
-		if (CollectionUtils.isNotEmpty(productQuestions)) {
-			for (TplSpecQuestion specQuestion : productQuestions) {
-				if (TemplateSpecConst.QUESTION_TYPE_ITEM
-						.equalsIgnoreCase(specQuestion.getQuestionType())) {
-					itemNames.add(specQuestion.getClItem());
-				}
-			}
-		}
-		if (CollectionUtils.isNotEmpty(serviceQuestions)) {
-			for (TplSpecQuestion specQuestion : serviceQuestions) {
-				if (TemplateSpecConst.QUESTION_TYPE_ITEM
-						.equalsIgnoreCase(specQuestion.getQuestionType())) {
-					itemNames.add(specQuestion.getClItem());
-				}
-			}
-		}
-		TplSpecMaster productSpecMaster = getManagedBean()
-				.getProdTemplateSpecBean().getSpecMaster();
-		TplSpecMaster serviceSpecMaster = getManagedBean()
-				.getSpecTemplateSpecBean().getSpecMaster();
-		List<TplSpecAnswer> serviceAnswers = convertSpecQuestionToSpecAnswer(productSpecMaster);
-		List<TplSpecAnswer> productAnswers = convertSpecQuestionToSpecAnswer(serviceSpecMaster);
-
-		generateSpecification(attachment, productAnswers, serviceAnswers);
 	}
 
 	private List<TplSpecAnswer> convertSpecQuestionToSpecAnswer(
@@ -7002,71 +6923,67 @@ public class DirectLOABackingBean extends
 	 * @param scLoa the sc loa
 	 */
 	private void formJadualHarga(VelocityContext context, ScLoa scLoa){
+		List<ItemBean> productItemBeans = null;
+		List<ItemBean> serviceItemBeans = null;
 		JadualHargaItemBean itemBean = new JadualHargaItemBean();
-		List<ItemBean> productItemBeans = new ArrayList<ItemBean>();
-		List<ItemBean> serviceItemBeans = new ArrayList<ItemBean>();
-		ItemBean jadualHarga = null;
-		String itemType = null;
+		TplSpecMaster productSpecMaster = getManagedBean()
+				.getProdTemplateSpecBean().getSpecMaster();
+		TplSpecMaster serviceSpecMaster = getManagedBean()
+				.getSpecTemplateSpecBean().getSpecMaster();
+		productItemBeans = convertSpecToJadualHargaBean(productSpecMaster);
+		serviceItemBeans = convertSpecToJadualHargaBean(serviceSpecMaster);
+
+		// check whether loa from s1 or s2.
+		/*boolean isS1OrS2 = Boolean.TRUE;
+		if (scLoa.getScLoiLoa() != null) {
+			if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
+					.getDocType())) {
+				isS1OrS2 = Boolean.FALSE;
+			}
+		}*/
 		
-		for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
-			// is zonal
-			if(item.getTplSpecZoneDtl() != null){
-				itemBean.setZonal(Boolean.TRUE);
-				
-				if(itemBean.getZoneIds().isEmpty()){
-					itemBean.setZoneName(item.getTplSpecZoneDtl().getZoneName());
-					itemBean.getZoneIds().add(item.getTplSpecZoneDtl().getSpecZoneId());
-				} else{
-					if(itemBean.getZoneIds().contains(item.getTplSpecZoneDtl().getSpecZoneId())){
-						itemBean.setZoneName(item.getTplSpecZoneDtl().getZoneName());
-					}
-				}
-			}
-			
-			jadualHarga = mappingJadualHarga(item);
-			itemType = item.getScRequestItem().getItemType().getParameterCode();
-			if (ParameterConst.ITEM_TYPE_PRODUCT.equals(itemType)) {
-				productItemBeans.add(jadualHarga);
-			} else if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-				serviceItemBeans.add(jadualHarga);
-			}
-		}
 		itemBean.setProductItemBeans(productItemBeans);
 		itemBean.setServiceItemBeans(serviceItemBeans);
 		context.put("jadualHargaItemBean", itemBean);
 	}
 	
-	public void formSpecification(VelocityContext context, ScLoa scLoa)
+	private void formSpecification(VelocityContext context, ScLoa scLoa)
 			throws Exception {
-		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
-		TemplateSpecReqDTO templateSpecReqDTO = new TemplateSpecReqDTO();
+		List<TplSpecAnswer> serviceAnswers  = null;
+		List<TplSpecAnswer> productAnswers  = null;
 
+		List<TplSpecQuestion> productQuestions = this.getManagedBean()
+				.getProdscQtDoc().getTplSpecMaster().getTplSpecQuestions();
+		List<TplSpecQuestion> serviceQuestions = this.getManagedBean()
+				.getServicescQtDoc().getTplSpecMaster().getTplSpecQuestions();
 		List<String> itemNames = new ArrayList<String>();
-		if(scLoa.getScLoiLoaItems() != null && scLoa.getScLoiLoaItems().size()>0){
-			for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
-				itemNames.add(item.getScRequestItem().getItemName());
-			}
-		}
-		templateSpecReqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
-		templateSpecReqDTO.setSupplier(scLoa.getScLoiLoa().getSmSupplier());
-		templateSpecReqDTO.setItemNameList(itemNames);
-		
-		List<TplSpecAnswer> serviceAnswers  = new ArrayList<>();
-		List<TplSpecAnswer> productAnswers  = new ArrayList<>();
-		TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.retrieveSupplierTechAnswersByItemNames(templateSpecReqDTO);
-		if(templateSpecResDTO.getSpecAnswerList() != null && templateSpecResDTO.getSpecAnswerList().size()>0){
-			for (TplSpecAnswer tplSpecAnswer : templateSpecResDTO.getSpecAnswerList()) {
-				if(ParameterConst.ITEM_TYPE_PRODUCT.equals(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode())){
-					productAnswers.add(tplSpecAnswer);
-				} else if(ParameterConst.ITEM_TYPE_SERVICE.equals(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode())){
-					serviceAnswers.add(tplSpecAnswer);
+		if (CollectionUtils.isNotEmpty(productQuestions)) {
+			for (TplSpecQuestion specQuestion : productQuestions) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM
+						.equalsIgnoreCase(specQuestion.getQuestionType())) {
+					itemNames.add(specQuestion.getClItem());
 				}
 			}
 		}
+		if (CollectionUtils.isNotEmpty(serviceQuestions)) {
+			for (TplSpecQuestion specQuestion : serviceQuestions) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM
+						.equalsIgnoreCase(specQuestion.getQuestionType())) {
+					itemNames.add(specQuestion.getClItem());
+				}
+			}
+		}
+		TplSpecMaster productSpecMaster = getManagedBean()
+				.getProdTemplateSpecBean().getSpecMaster();
+		TplSpecMaster serviceSpecMaster = getManagedBean()
+				.getSpecTemplateSpecBean().getSpecMaster();
+		productAnswers = convertSpecQuestionToSpecAnswer(productSpecMaster);
+		serviceAnswers = convertSpecQuestionToSpecAnswer(serviceSpecMaster);
+
 		context.put("productAnswers", productAnswers);
 		context.put("serviceAnswers", serviceAnswers);
 	}
-	
+
 	/**
 	 * Mapping jadual harga.
 	 * @param item the item
