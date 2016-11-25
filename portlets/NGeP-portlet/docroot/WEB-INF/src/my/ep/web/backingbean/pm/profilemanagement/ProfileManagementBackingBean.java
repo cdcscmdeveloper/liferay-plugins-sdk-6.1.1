@@ -40,16 +40,11 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
-import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
-import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.role.RoleResDTO;
@@ -95,7 +90,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -163,8 +157,7 @@ public class ProfileManagementBackingBean extends
 
 	// Authorization
 	private ISearchBean<PmParameterDesc> orgTypeSearchBean;
-	private String roleDecriptionFilter;
-
+	
 	public ISearchBean<PmParameterDesc> getOrgTypeSearchBean() {
 		logger.info("getOrgTypeSearchBean");
 		if (this.orgTypeSearchBean == null) {
@@ -813,22 +806,6 @@ public class ProfileManagementBackingBean extends
 			throw new EpException(MessageConst.ERROR_770017,
 					new String[] { e.getMessage() });
 		}
-	}
-
-	public String getRoleDecriptionFilter() {
-		String assignorRole = getRoleCode();
-		StringBuilder sb = new StringBuilder();
-		sb.append("assignorRole.roleCode^");
-		sb.append(assignorRole);
-		sb.append("|");
-		sb.append("assigneeRole.pmRoleDescs.languageCode^");
-		sb.append(getFacesScopes().getUserLocale()
-		.getLanguage());
-		return sb.toString();
-	}
-
-	public void setRoleDecriptionFilter(String roleDecriptionFilter) {
-		this.roleDecriptionFilter = roleDecriptionFilter;
 	}
 
 	/**
@@ -1623,8 +1600,8 @@ public class ProfileManagementBackingBean extends
 		// throw new EpException(MessageConst.ERROR_770020);
 		// }
 
-		String orgType = this.getManagedBean().getSelectedUserOrg()
-				.getPmOrgProfile().getOrgTypeCode().getParameterCode();
+//		String orgType = this.getManagedBean().getSelectedUserOrg()
+//				.getPmOrgProfile().getOrgTypeCode().getParameterCode();
 
 		// Check unique org role
 		// List<String> uniqueRoles = new ArrayList<String>(
@@ -1915,6 +1892,13 @@ public class ProfileManagementBackingBean extends
 
 	}
 
+	/**
+	 * Check if any pending BPM Task for address type
+	 * 
+	 * @param addressType
+	 * @param loginId
+	 * @return boolean
+	 */
 	private boolean isAnyPendingTaskForAdressType(PmAddressType addressType,
 			String loginId) {
 		logger.info("isAnyPendingTaskForAdressType");
@@ -1927,11 +1911,7 @@ public class ProfileManagementBackingBean extends
 		intStatusIds.add(43000);
 		intStatusIds.add(43004);
 
-		IFulfilmentSO fulfilmentSO = null;
-		IBpmSO bpmSO = null;
-		BpmRequestDTO reqDTO = null;
-		BpmResponseDTO responseDTO = null;
-
+		IFulfilmentSO fulfilmentSO = null;		
 		try {
 
 			fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance()
@@ -1942,132 +1922,32 @@ public class ProfileManagementBackingBean extends
 							.getPmAddress().getAddressId(), statusIds);			
 			if (noteNumberList != null && noteNumberList.size() > 0
 					&& loginId != null && loginId.length() > 0) {
-				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-						.getServiceObject(IBpmSO.class);
-
-				reqDTO = new BpmRequestDTO();
-				logger.info("BPM statusIds******" + intStatusIds.size());
-
-				reqDTO.setStatusList(intStatusIds);
-				reqDTO.setUserId(loginId);
-				for (String docNum : noteNumberList) {
-					logger.info("docNum******" + docNum);
-					reqDTO.getDocNumberList().add(docNum);
-				}
-
-				// Invoke BPM
-				responseDTO = bpmSO.getReassignedItems(reqDTO);
-
-				if (responseDTO.getWorklistVO() != null) {
-					logger.info("BPM size******"
-							+ responseDTO.getWorklistVO().getWorklistItem()
-									.size());
-					logger.info("BPM total******"
-							+ responseDTO.getWorklistVO().getTotal());
-					if (responseDTO.getWorklistVO().getTotal() > 0) {
-						anyPendingTask = true;
-					}
-				}
-				
-				//continue to check for others task (group task but claimed by others)
-				if(!anyPendingTask){
-					reqDTO = new BpmRequestDTO();
-					responseDTO = new BpmResponseDTO();
-					Object ctxToken = bpmSO.authenticate(loginId);
-					reqDTO.setCtxToken(ctxToken);
-					reqDTO.setUserId(loginId);
-					reqDTO.setStatusList(intStatusIds);
-					reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-					reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
-					for (String docNum : noteNumberList) {
-						logger.info("docNum******" + docNum);
-						reqDTO.getDocNumberList().add(docNum);
-					}
-					responseDTO = bpmSO.getGroupByOthersItems(reqDTO);
-					if (responseDTO.getWorklistVO() != null && responseDTO.getWorklistVO().getTotal() > 0) {
-						anyPendingTask = true;
-					}
-				}
+				anyPendingTask = PmCommonUtil.isAnyPendingTask(loginId, intStatusIds, noteNumberList);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			bpmSO = null;
+			fulfilmentSO = null;
 		}
 
 		return anyPendingTask;
 	}
 
+	/**
+	 * Check if any pending BPM task for user role
+	 * 
+	 * @param pmUserRole
+	 * @param loginId
+	 * @return
+	 */
 	private boolean isAnyPendingTaskForUserRole(PmUserRole pmUserRole,
 			String loginId) {
 		logger.info("isAnyPendingTaskForUserRole");
 		boolean anyPendingTask = false;
 		List<Integer> statusIds = retrieveAvailableStatusIdForRole(pmUserRole);
 		if (statusIds != null && !statusIds.isEmpty()) {
-			IBpmSO bpmSO = null;
-			BpmRequestDTO reqDTO = null;
-			BpmResponseDTO responseDTO = null;
-			try {
-
-				if (loginId != null && loginId.length() > 0) {
-					// token = getFacesScopes().getBPMAuthenticationCtxToken();
-
-					bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-							.getServiceObject(IBpmSO.class);
-					reqDTO = new BpmRequestDTO();
-					logger.info("BPM loginId******" + loginId);
-					logger.info("BPM statusIds******" + statusIds.size());
-					
-					reqDTO.setStatusList(statusIds);
-					reqDTO.setUserId(loginId);
-
-					// Invoke BPM
-					responseDTO = bpmSO.getReassignedItems(reqDTO);
-
-					if (responseDTO.getWorklistVO() != null) {
-						logger.info("BPM size******"
-								+ responseDTO.getWorklistVO().getWorklistItem()
-										.size());
-						logger.info("BPM total******"
-								+ responseDTO.getWorklistVO().getTotal());
-						if (responseDTO.getWorklistVO().getTotal() > 0) {
-							for(WorklistItemVO item : responseDTO.getWorklistVO().getWorklistItem()){
-								if(item.isSwimlane()){
-									if(item.getAcquiredBy() != null && item.getAcquiredBy().equals(loginId)){
-										anyPendingTask = true;
-										break;
-									}
-								}else{
-									anyPendingTask = true;
-									break;
-								}
-							}						
-						}
-					}
-					
-					//continue to check for others task (group task but claimed by others)
-					if(!anyPendingTask){
-						reqDTO = new BpmRequestDTO();
-						responseDTO = new BpmResponseDTO();
-						Object ctxToken = bpmSO.authenticate(loginId);
-						reqDTO.setCtxToken(ctxToken);
-						reqDTO.setUserId(loginId);
-						reqDTO.setStatusList(statusIds);
-						reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-						reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
-						responseDTO = bpmSO.getGroupByOthersItems(reqDTO);
-						if (responseDTO.getWorklistVO() != null && responseDTO.getWorklistVO().getTotal() > 0) {
-							anyPendingTask = true;
-						}
-					}
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				bpmSO = null;
-			}
+			anyPendingTask = PmCommonUtil.isAnyPendingTask(loginId, statusIds);
 		}
 		return anyPendingTask;
 	}
@@ -4649,65 +4529,8 @@ public class ProfileManagementBackingBean extends
 	}
 
 	private boolean isAnyPendingTaskForUser(String loginId) {
-		logger.info("isAnyPendingTaskForUser");
-		boolean anyPendingTask = false;
-
-		IBpmSO bpmSO = null;
-		BpmRequestDTO reqDTO = null;
-		BpmResponseDTO responseDTO = null;
-		
-		try {
-			if (loginId != null && loginId.length() > 0) {				
-				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-						.getServiceObject(IBpmSO.class);
-				reqDTO = new BpmRequestDTO();
-				logger.info("BPM loginId******" + loginId);				
-				reqDTO.setUserId(loginId);
-				// Invoke BPM
-				responseDTO = bpmSO.getReassignedItems(reqDTO);
-				if (responseDTO.getWorklistVO() != null) {
-					logger.info("BPM size******"
-							+ responseDTO.getWorklistVO().getWorklistItem()
-									.size());
-					logger.info("BPM total******"
-							+ responseDTO.getWorklistVO().getTotal());
-					if (responseDTO.getWorklistVO().getTotal() > 0) {
-						for(WorklistItemVO item : responseDTO.getWorklistVO().getWorklistItem()){
-							if(item.isSwimlane()){
-								if(item.getAcquiredBy() != null && item.getAcquiredBy().equals(loginId)){
-									anyPendingTask = true;
-									break;
-								}
-							}else{
-								anyPendingTask = true;
-								break;
-							}
-						}	
-					}
-				}
-				
-				//continue to check for others task (group task but claimed by others)
-				if(!anyPendingTask){
-					reqDTO = new BpmRequestDTO();
-					responseDTO = new BpmResponseDTO();
-					Object ctxToken = bpmSO.authenticate(loginId);
-					reqDTO.setCtxToken(ctxToken);
-					reqDTO.setUserId(loginId);
-					reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-					reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
-					responseDTO = bpmSO.getGroupByOthersItems(reqDTO);
-					if (responseDTO.getWorklistVO() != null && responseDTO.getWorklistVO().getTotal() > 0) {
-						anyPendingTask = true;
-					}
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			bpmSO = null;
-		}
-		return anyPendingTask;
+		logger.info("isAnyPendingTaskForUser");		
+		return PmCommonUtil.isAnyPendingTask(loginId);
 	}
 	
 	
