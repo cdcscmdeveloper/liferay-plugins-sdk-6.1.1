@@ -13,6 +13,7 @@ package my.ep.web.util.pm.helper;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -48,10 +49,15 @@ import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.userattachment.IUserAttachmentSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -118,6 +124,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -138,7 +145,9 @@ import com.liferay.portal.theme.ThemeDisplay;
  * @since 8/7/2014
  * 
  */
-public class PmCommonUtil {
+public class PmCommonUtil implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PmCommonUtil.class);
 
 	/**
@@ -2363,6 +2372,117 @@ public class PmCommonUtil {
 			statusSO = null;
 		}
 		return null;
+	}
+	
+	/**
+	 *  Check if any pending BPM task by login id
+	 * 
+	 * @param loginId
+	 * @return boolean
+	 */
+	public static boolean isAnyPendingTask(String loginId){
+		return isAnyPendingTask(loginId,null,null);
+	}
+	
+	/**
+	 *  Check if any pending BPM task by login id and status id list
+	 * 
+	 * @param loginId
+	 * @param intStatusIds
+	 * @return boolean
+	 */
+	public static boolean isAnyPendingTask(String loginId,List<Integer> intStatusIds){
+		return isAnyPendingTask(loginId,intStatusIds,null);
+	}
+	
+	/**
+	 *  Check if any pending BPM task filter by login id and(or) status id list and(or) noteNumberList
+	 * 
+	 * @param loginId
+	 * @param intStatusIds
+	 * @param noteNumberList
+	 * @return boolean
+	 */
+	public static boolean isAnyPendingTask(String loginId,List<Integer> intStatusIds, List<String> docNumberList) {
+		log.info("isAnyPendingTask");
+		boolean anyPendingTask = false;
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		BpmResponseDTO responseDTO = null;
+		
+		try {			
+			if (loginId != null && loginId.length() > 0) {				
+				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+						.getServiceObject(IBpmSO.class);
+				reqDTO = new BpmRequestDTO();
+				log.info("BPM loginId******" + loginId);				
+				reqDTO.setUserId(loginId);	
+				
+				if(intStatusIds != null && !intStatusIds.isEmpty()){
+					reqDTO.setStatusList(intStatusIds);
+				}
+				
+				if(docNumberList != null){
+					for (String docNum : docNumberList) {
+						log.info("docNum******" + docNum);
+						reqDTO.getDocNumberList().add(docNum);
+					}
+				}
+				
+				// Invoke BPM
+				responseDTO = bpmSO.getReassignedItems(reqDTO);
+				if (responseDTO.getWorklistVO() != null) {				
+					log.info("BPM total******"
+							+ responseDTO.getWorklistVO().getTotal());
+					if (responseDTO.getWorklistVO().getTotal() > 0) {
+						for(WorklistItemVO item : responseDTO.getWorklistVO().getWorklistItem()){
+							if(item.isSwimlane()){
+								if(item.getAcquiredBy() != null && item.getAcquiredBy().equals(loginId)){
+									anyPendingTask = true;
+									break;
+								}
+							}else{
+								anyPendingTask = true;
+								break;
+							}
+						}	
+					}
+				}
+				
+				//continue to check for others task (group task but claimed by others)
+				if(!anyPendingTask){
+					reqDTO = new BpmRequestDTO();
+					responseDTO = new BpmResponseDTO();
+					Object ctxToken = bpmSO.authenticate(loginId);
+					reqDTO.setCtxToken(ctxToken);
+					reqDTO.setUserId(loginId);
+					
+					if(intStatusIds != null && !intStatusIds.isEmpty()){
+						reqDTO.setStatusList(intStatusIds);
+					}
+					
+					if(docNumberList != null){
+						for (String docNum : docNumberList) {
+							log.info("docNum******" + docNum);
+							reqDTO.getDocNumberList().add(docNum);
+						}
+					}
+					
+					reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+					reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
+					responseDTO = bpmSO.getGroupByOthersItems(reqDTO);
+					if (responseDTO.getWorklistVO() != null && responseDTO.getWorklistVO().getTotal() > 0) {
+						anyPendingTask = true;
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			bpmSO = null;
+		}
+		return anyPendingTask;
 	}
 
 }
