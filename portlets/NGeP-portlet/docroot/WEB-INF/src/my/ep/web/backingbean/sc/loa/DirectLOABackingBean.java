@@ -6821,7 +6821,7 @@ public class DirectLOABackingBean extends
 		context.put("headerTitle", headerTitle); 
 		
 		// loa title
-		context.put("title", scLoiLoa.getTitle().replaceAll("&", "&#38;"));
+		context.put("title", scQt.getQtTitle().replaceAll("&", "&#38;"));
 		
 		context.put("hasLoi", false); // TODO
 		context.put("bondReq", scLoa.isBondReq());
