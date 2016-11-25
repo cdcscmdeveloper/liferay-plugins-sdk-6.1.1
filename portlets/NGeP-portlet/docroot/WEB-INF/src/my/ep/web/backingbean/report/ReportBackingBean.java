@@ -18778,9 +18778,8 @@ public class ReportBackingBean extends
 					e1.printStackTrace();
 				}
 				
-				
 				if(testing){
-					
+
 					StringBuffer reportUrl = new StringBuffer(paramConstrString.replace("&", " "));
 					
 					IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
@@ -18788,6 +18787,8 @@ public class ReportBackingBean extends
 									IRPTRequestSO.class);
 					
 					RPTRequestResDTO resDTO = rptRequestSO.generateReport(reportUrl, this.getReportValue(), reportTitle, isExcel);
+					
+					System.out.println("jimmy reportbackingbean - " + reportTitle);
 					
 					this.getManagedBean().setRequestId(String.valueOf(resDTO.getRequestId()));
 					this.getManagedBean().setJobId(String.valueOf(resDTO.getJobId()));
