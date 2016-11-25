@@ -2809,6 +2809,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		  } 
 		  getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
 	 }
+	
+	/**
+	 * The method used to validate the entered zone delivery term.
+	 */
+	public void onChangeDeliveryTerm(LocationDTO locationDTO) {
+		if (!getManagedBean().getContractVer().getCtContractZones().isEmpty()) {
+			for (CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
+				if(ctContractZone.getZoneName().equalsIgnoreCase(locationDTO.getZone())) {
+					getManagedBean().getUpdateZoneMap().put(locationDTO.getZone(), ctContractZone);
+					break;
+				}
+			}
+		}
+	}	
 		    
 	 /**
 	   * The method used to indicate the label flag for new price of service item.
