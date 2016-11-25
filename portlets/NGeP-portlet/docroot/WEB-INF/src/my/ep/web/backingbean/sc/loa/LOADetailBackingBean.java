@@ -1166,8 +1166,14 @@ public class LOADetailBackingBean extends
 				equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
 			validateLoaWitness();
 		}
-		scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
-		downloadFile(scLoaReportAttachment);
+		ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
+		if(scLoaReport.getDefinationType().getParameterCode().equals(
+				ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) ||
+				scLoaReport.getDefinationType().getParameterCode().equals(
+						ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
+			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+		}
+		downloadFile(scLoaReportAttachmentGenerated);
 	}
 
 	/**
@@ -1183,8 +1189,9 @@ public class LOADetailBackingBean extends
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 				.getScLoaReportAttachment();
 
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-				.equals(definitionType)) {
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType) || 
+				ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD.equals(definitionType) ||
+				ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD.equals(definitionType)) {
 			try {
 				String docDefinitionKey = scLoaReport.getPmDocument()
 						.getDocDefinitionKey();
@@ -1340,15 +1347,17 @@ public class LOADetailBackingBean extends
 					scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
 				validateLoaWitness();
 			}
+			
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
-			scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
-			if (scLoaReportAttachment != null
-					&& StringUtils.isNotBlank(scLoaReportAttachment.getFileName())) {
+			ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
+			if(scLoaReport.getDefinationType().getParameterCode().equals(
+					ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) ||
+					scLoaReport.getDefinationType().getParameterCode().equals(
+							ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
 				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
-			}
-		
-			scAttachments.add(scLoaReportAttachment);
+			} 
+			scAttachments.add(scLoaReportAttachmentGenerated);
 		}
 	        
 		downloadAllFiles("NGeP-LOA-Report", scAttachments);
