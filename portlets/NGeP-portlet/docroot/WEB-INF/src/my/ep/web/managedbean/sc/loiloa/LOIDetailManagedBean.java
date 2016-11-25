@@ -301,9 +301,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The edit flag. */
 	private boolean editFlag;
 	
-	/** The streamed content. */
-	private StreamedContent streamedContent;
-	
 	/** The award supplier id. */
 	private Long awardSupplierId;
 	
@@ -1786,24 +1783,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setEditFlag(boolean editFlag) {
 		this.editFlag = editFlag;
-	}
-
-	/**
-	 * Gets the streamed content.
-	 *
-	 * @return the streamed content
-	 */
-	public StreamedContent getStreamedContent() {
-		return streamedContent;
-	}
-
-	/**
-	 * Sets the streamed content.
-	 *
-	 * @param streamedContent the new streamed content
-	 */
-	public void setStreamedContent(StreamedContent streamedContent) {
-		this.streamedContent = streamedContent;
 	}
 
 	/**
