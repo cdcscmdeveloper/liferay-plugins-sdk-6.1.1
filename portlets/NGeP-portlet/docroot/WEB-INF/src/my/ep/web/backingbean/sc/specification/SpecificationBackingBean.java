@@ -723,9 +723,10 @@ public class SpecificationBackingBean extends
 
 		case 4:
 			ScQt scQtTechScore = constructSpecCommitteDtls().getScQt();
+			if (!this.getManagedBean().isReadOnly()) {
 			checktemplateSpecStatus(scQtTechScore);
 			checkFinancialSpecStatus(scQtTechScore);
-
+			}
 			List<ScQtCheckList> technicalScoring = this.getManagedBean()
 					.getTechnicalScoring();
 			ScQtScoreSetting technicalScoreSetting = this.getManagedBean()
@@ -748,9 +749,10 @@ public class SpecificationBackingBean extends
 		case 5:
 
 			ScQt scQtFinScore = constructSpecCommitteDtls().getScQt();
+			if (!this.getManagedBean().isReadOnly()) {
 			checktemplateSpecStatus(scQtFinScore);
 			checkFinancialSpecStatus(scQtFinScore);
-
+			}
 			List<ScQtCheckList> financialScoring = this.getManagedBean()
 					.getFinancialScoring();
 			ScQtScoreSetting financialScoreSetting = this.getManagedBean()
@@ -770,9 +772,10 @@ public class SpecificationBackingBean extends
 		case 6:
 
 			ScQt scQtRecommendation = constructSpecCommitteDtls().getScQt();
+			if (!this.getManagedBean().isReadOnly()) {
 			checktemplateSpecStatus(scQtRecommendation);
 			checkFinancialSpecStatus(scQtRecommendation);
-
+			}
 			List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 			ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 					.getRecommendationPackageScore();
@@ -862,21 +865,27 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 4:
+			if (!this.getManagedBean().isReadOnly()) {
 			checktemplateSpecStatus(this.getManagedBean().getQt());
 			checkFinancialSpecStatus(this.getManagedBean().getQt());
+			}
 			retriveTechnicalScoring();
 			break;
 
 		case 5:
+			if (!this.getManagedBean().isReadOnly()) {
 			checktemplateSpecStatus(this.getManagedBean().getQt());
 			checkFinancialSpecStatus(this.getManagedBean().getQt());
+			}
 			retriveFinancialScoring();
 			break;
 
 		case 6:
 			retriveRecommendationDetails();
+			if (!this.getManagedBean().isReadOnly()) {
 			checktemplateSpecStatus(this.getManagedBean().getQt());
 			checkFinancialSpecStatus(this.getManagedBean().getQt());
+			}
 			break;
 
 		case 7:
