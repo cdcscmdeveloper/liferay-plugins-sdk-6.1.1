@@ -10,6 +10,7 @@
 */
 package my.ep.web.util.pm.helper;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -42,8 +43,13 @@ import org.apache.log4j.Logger;
  * @since 29.12.2013
  * 
  */
-public class ParameterHelper {
+public class ParameterHelper implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The log. */
 	private static Logger log = EpLogger.getLogger(ParameterHelper.class);
 	

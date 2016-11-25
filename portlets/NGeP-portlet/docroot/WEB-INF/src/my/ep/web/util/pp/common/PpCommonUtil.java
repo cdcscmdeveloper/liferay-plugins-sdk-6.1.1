@@ -3,6 +3,7 @@
  */
 package my.ep.web.util.pp.common;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -54,7 +55,11 @@ import org.apache.log4j.Logger;
  * @since 27/10/2013
  * 
  */
-public class PpCommonUtil {
+public class PpCommonUtil implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PpCommonUtil.class);
 
 	/**
