@@ -112,6 +112,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -141,8 +142,11 @@ import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
+import my.ep.persistence.entity.sm.SmStaffAcademic;
+import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -5157,9 +5161,6 @@ public class SmApplicationUtil {
 		// SmSvAddress
 		setSmSvAddress(addr, svTask, siteRefId, siteType);
 
-		// SmSvCategories
-		setSmSvCategories(svTask, facVO.getSuppCategories());
-
 		bean.getSmAppl().getSmSvTasks().add(svTask);
 		bean.getSvTaskList().add(svTask);
 	}
@@ -5192,21 +5193,6 @@ public class SmApplicationUtil {
 		svOff.setSmSvTask(svTask);
 		svOff.setSmFacility(bean.getBasicCompanyFacility());
 		svTask.setSmSvOffice(svOff);
-	}
-
-	private static void setSmSvCategories(SmSvTask svTask,
-			List<SmSupplierCategory> catList) {
-		if (!SmCommonUtil.isCollectionEmpty(catList)) {
-			svTask.setSmSvCategories(new ArrayList<SmSvCategory>());
-			for (SmSupplierCategory cat : catList) {
-				SmSvCategory svCat = new SmSvCategory();
-				svCat.setSmSvTask(svTask);
-				svCat.setPmCategoryL1(cat.getPmCategoryL1());
-				svCat.setPmCategoryL2(cat.getPmCategoryL2());
-				svCat.setPmCategoryL3(cat.getPmCategoryL3());
-				svTask.getSmSvCategories().add(svCat);
-			}
-		}
 	}
 
 	/**
@@ -6287,6 +6273,35 @@ public class SmApplicationUtil {
 			for (SmPersonnel currPersonnel : smAppl.getSmPersonnels()) {
 				setPrevApprovedPersonnelNoneEditable(prevApprovedPersonnels,
 						currPersonnel);
+			}
+		}
+	}
+	
+	
+
+	/**
+	 * Remove personnel if admin or softcert is processing from param list
+	 * 
+	 * @param List
+	 *            <SmPersonnel> personnelList
+	 */
+	public static void removePersonnelAdminOrSoftcertProcessFromList(
+			List<SmPersonnel> personnelList) {
+		if (personnelList != null) {
+			Iterator<SmPersonnel> iterator = personnelList.iterator();
+			while (iterator.hasNext()) {
+				SmPersonnel personnel = iterator.next();
+				if ((personnel.getEpRole() != null && (personnel.getEpRole()
+						.equals(RoleCode.SUPPLIER_TEMP.value())
+						|| personnel.getEpRole().equalsIgnoreCase(
+								RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
+						.getEpRole().equalsIgnoreCase(
+								RoleCode.BASIC_SUPPLIER_ADMIN.value())))
+						|| (personnel.isPrevApprovedDirector() || personnel
+								.isPrevApprovedEquityOwner())
+						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+					iterator.remove();
+				}
 			}
 		}
 	}
@@ -9359,6 +9374,29 @@ public class SmApplicationUtil {
 				cat.setCategoryL3Name(l3.getCategoryName());
 			}
 		}
+	}
+	
+	/**
+	 * Sets the default values for new added personnel.
+	 * 
+	 * @param shr
+	 *            - SmPersonnel object
+	 */
+	private static void setDefaultPersonnelValues(SmPersonnel shr,SmAppl smAppl) {
+		shr.setTitle(new PmSalutation());
+		shr.setRevNo(1);
+		shr.setSmAppl(smAppl);
+		shr.setBumiFlg(1);
+		shr.setMuslimFlg(1);
+		shr.setPmCountry(new PmCountry());
+		shr.setPmRace(new PmRace());
+		shr.setIdentificationType(new PmParameter());
+		shr.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+		shr.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());
+		shr.setSmStaffExperiences(new ArrayList<SmStaffExperience>());
+		shr.setSmRelatedCompanies(new ArrayList<SmRelatedCompany>());
+		shr.setSmAssociationBodies(new ArrayList<SmAssociationBody>());
+		shr.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 	}
 
 	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {
