@@ -2470,6 +2470,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 public void selectOneAgencyCheckboxSelect(AjaxBehaviorEvent e){
 			getManagedBean().setSelectAll(false);
 			Long orgProfileId = new Long(0);
+			getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+					getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 		    if((boolean) e.getComponent().getAttributes().get("value")){
 					for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
 							if(ctAgencies.isSelectedCheckBox()){
