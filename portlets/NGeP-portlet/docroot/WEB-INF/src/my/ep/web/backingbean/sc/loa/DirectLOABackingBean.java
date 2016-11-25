@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -39,6 +40,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -67,6 +69,8 @@ import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
@@ -98,6 +102,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -133,6 +138,8 @@ import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
+import my.ep.web.bean.sc.common.ItemBean;
+import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -159,6 +166,36 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
+import org.docx4j.jaxb.Context;
+import org.docx4j.model.structure.SectionWrapper;
+import org.docx4j.openpackaging.contenttype.ContentType;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.exceptions.InvalidFormatException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.PartName;
+import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
+import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
+import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
+import org.docx4j.relationships.Relationship;
+import org.docx4j.wml.Br;
+import org.docx4j.wml.CTAltChunk;
+import org.docx4j.wml.FldChar;
+import org.docx4j.wml.FooterReference;
+import org.docx4j.wml.Ftr;
+import org.docx4j.wml.Hdr;
+import org.docx4j.wml.HdrFtrRef;
+import org.docx4j.wml.HeaderReference;
+import org.docx4j.wml.HpsMeasure;
+import org.docx4j.wml.Jc;
+import org.docx4j.wml.JcEnumeration;
+import org.docx4j.wml.ObjectFactory;
+import org.docx4j.wml.P;
+import org.docx4j.wml.PPr;
+import org.docx4j.wml.R;
+import org.docx4j.wml.RPr;
+import org.docx4j.wml.STFldCharType;
+import org.docx4j.wml.SectPr;
+import org.docx4j.wml.Text;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -3715,8 +3752,26 @@ public class DirectLOABackingBean extends
 					scLoaReportAttachment.setScLoaReport(scLoaReport);
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
-
-					if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
+					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+							.equals(docDefinitionKey)) {
+						filename.append(".docx");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateAgreementLetterDocFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
+					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateAckOfLOAReceiptPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					}else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateDeclarationPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					} 
+					/*if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
@@ -3775,7 +3830,7 @@ public class DirectLOABackingBean extends
 						scLoaReportAttachment.setFileName(filename.toString());
 						//TODO generate acknowledgement LOA receipt
 						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
-					}
+					}*/
 				} else if (scLoaReportAttachment != null
 						&& QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(statusId)
@@ -3784,8 +3839,26 @@ public class DirectLOABackingBean extends
 					// pending supplier acknowledgement , always regenerate
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
-
-					if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
+					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+							.equals(docDefinitionKey)) {
+						filename.append(".docx");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateAgreementLetterDocFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
+					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateAckOfLOAReceiptPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					}else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateDeclarationPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					} 
+					/*if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
@@ -3832,7 +3905,7 @@ public class DirectLOABackingBean extends
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateContractSummaryPdfFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa);
-					}
+					}*/
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -6698,6 +6771,581 @@ public class DirectLOABackingBean extends
 		}
 		return userName;
 	}
+	
+
+	/**
+	 * Generate ack of loa receipt pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoa the sc loa
+	 * @throws Exception the exception
+	 */
+	public void generateAckOfLOAReceiptPdfFromVelocity(ScAttachment attachment,
+			ScLoa scLoa) throws Exception {
+		populateAttachmentDetails(attachment);
+		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		VelocityContext context = new VelocityContext();
+		
+		context.put("loaNo", scLoa.getLoaNo());
+		
+		String fileNo ="";
+		if(!StringUtils.isBlank(scLoiLoa.getFileNo())){
+			fileNo = scLoiLoa.getFileNo();
+			if(fileNo.length()>30){
+				fileNo = splitLongLengthString(fileNo, 29);
+			}
+		}
+		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
+
+		String govtSignDate	 = "";
+		if (scLoa.getGovtSignDate() != null) {
+			govtSignDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
+		}
+		context.put("govtSignDate", govtSignDate);
+
+		// Supplier Witness
+		String supplierWitnessUser = "";
+		String supplierWitnessIcNo = "";
+		String supplierWitnessAddress = "";
+		
+		ScLoaWitness supplierWitness = null;
+		if(scLoa.getScLoaWitnesses() !=null){
+			for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
+				String partyType = scLoaWitness.getPartyType();
+
+				if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER.equals(partyType)) {
+					supplierWitness = scLoaWitness;
+					break;
+				}
+			}
+		}
+		if (supplierWitness != null) {
+			supplierWitnessUser = supplierWitness.getWitnessName();
+			supplierWitnessIcNo = supplierWitness.getIdentificationNo();
+			supplierWitnessAddress = supplierWitness.getAddress();
+		}
+		context.put("supplierWitnessUser", supplierWitnessUser);
+		context.put("supplierWitnessIcNo", supplierWitnessIcNo);
+		context.put("supplierWitnessAddress", supplierWitnessAddress);
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.LOA_ACKNOWLEDGEMENT_OF_LOA_RECEIPT, context,
+				new FileOutputStream(getActualFilePath(attachment)));
+	}
+	
+	/**
+	 * Generate agreement letter doc from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoa the sc loa
+	 * @param scQt the sc qt
+	 * @throws Exception the exception
+	 */
+	private void generateAgreementLetterDocFromVelocity(ScAttachment attachment, ScLoa scLoa, ScQt scQt) throws Exception {
+		debugLogger("generateAgreementLetterDocFromVelocity");
+		populateAttachmentDetails(attachment);
+		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateSDF = new SimpleDateFormat(
+				commonUtils
+						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		
+		DecimalFormat amountDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		DecimalFormat percentageDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
+		VelocityContext context = new VelocityContext();
+		
+		// date formatter
+		context.put("dateSDF", dateSDF);
+		
+		String fileNo = "";
+		if(!StringUtils.isBlank(scLoiLoa.getFileNo())){
+			fileNo = scLoiLoa.getFileNo();
+			if(fileNo.length()>30){
+				fileNo = splitLongLengthString(fileNo, 29);
+			}
+		}
+		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
+		context.put("loaNo", scLoa.getLoaNo());
+
+		String issueDate = "";
+		if (scLoa.getIssueDate() != null) {
+			issueDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
+		}
+		context.put("issueDate", issueDate);
+
+		context.put("supplierName", scLoiLoa.getSupplierName());
+		String supplierAddress = "";
+		if (scLoa.getScSupplierAddress() != null) {
+			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
+			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+		}
+		context.put("supplierAddress", supplierAddress);
+		
+
+		String headerTitle = "";
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			headerTitle = "Pembelian Terus";
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			headerTitle = "Sebut Harga / Tender";
+		}
+		context.put("headerTitle", headerTitle); 
+		
+		// loa title
+		context.put("title", scLoiLoa.getTitle().replaceAll("&", "&#38;"));
+		
+		context.put("hasLoi", false); // TODO
+		context.put("bondReq", scLoa.isBondReq());
+
+		String bondAmt = "";
+		String bondAmtText = "";
+		if (scLoa.getBondAmt() != null) {
+			bondAmt = amountDF.format(scLoa.getBondAmt());
+			bondAmtText = NumberWordUtil.convert(scLoa.getBondAmt().toString());
+		}
+		context.put("bondAmt", bondAmt);
+		context.put("bondAmtText", bondAmtText);
+
+		String bondPercentage = "";
+		String bondPercentageText = "";
+		if (scLoa.getBondPercentage() != null) {
+			bondPercentage = percentageDF.format(scLoa.getBondPercentage());
+			bondPercentageText  = NumberWordUtil.convert(scLoa.getBondPercentage().toString());
+		}
+		context.put("bondPercentageText", bondPercentageText); 
+		context.put("bondPercentage", bondPercentage);
+		
+		String bondExpDate = "";
+		//bond exp date should be one year after the end of the contract period
+		if(scLoa.getContractExpDate() != null){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(scLoa.getContractExpDate());
+			cal.add(Calendar.YEAR, 1); //add one year
+			bondExpDate = getLocalizeDate(cal.getTime(), myLocale);
+		} 
+		context.put("bondExpDate", bondExpDate); 
+
+		// bond response due days  - 30
+		context.put("bondResDueDays", 30);
+
+		String ackDate = "";
+		if (scLoa.getAckDate() != null) {
+			ackDate = DateUtils.getLocalizeDate(scLoa.getAckDate(), myLocale);
+		}
+		context.put("ackDate", ackDate);
+		context.put("insWarrantyReq", scLoa.isInsWarrantyReq());
+
+		String contractEffDate = "";
+		if (scLoa.getContractEffDate() != null) {
+			contractEffDate = DateUtils.getLocalizeDate(scLoa.getContractEffDate(), myLocale);
+		}
+		context.put("contractEffDate", contractEffDate);
+		
+		//ontractDuration
+		context.put("contractDuration", scLoa.getContractDuration());
+
+		String LoaSigner = "";
+		String loaSignerDesig = "";
+		if(getManagedBean().getContractSignerUser() != null){
+			PmUser contractSigner = getManagedBean().getContractSignerUser();
+			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
+				LoaSigner = contractSigner.getUserName();
+			}
+		}
+		context.put("loaSigner", LoaSigner);	
+		
+		loaSignerDesig = scLoa.getLoaSignerDesig();
+		 if(StringUtils.isNotEmpty(loaSignerDesig) && loaSignerDesig.length()>86){
+			loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
+		}
+		context.put("loaSignerDesignation", loaSignerDesig);
+		
+		// Setting GST info
+		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+	    String gstRegFlag = "false";
+		if(supplier != null && supplier.getGstRegisteredFlag()== DbValueConst.RECORD_STATUS_ACTIVE){
+			gstRegFlag = "true";
+		}
+		context.put("gstRegFlag", gstRegFlag);
+		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+		
+		// qtno
+		context.put("qtNo", scQt.getQtNo());
+		
+		// JadualHarga
+		 formJadualHarga(context, scLoa);
+		
+		// Specification
+		formSpecification(context, scLoa);
+		
+		// scLoa
+		context.put("scLoa", scLoa);
+		
+		String content = DocumentGenerator.getInstance().getHtmlFromVelocity(SourcingConstants.LOA_AGREEMENT_LETTER, context);
+
+		if (content != null) {
+			convertHtmlToDocFile(content, getActualFilePath(attachment), scLoa.getLoaNo());
+		}
+	}
+	
+	/**
+	 * Form jadual harga.
+	 * @param context the context
+	 * @param scLoa the sc loa
+	 */
+	private void formJadualHarga(VelocityContext context, ScLoa scLoa){
+		JadualHargaItemBean itemBean = new JadualHargaItemBean();
+		List<ItemBean> productItemBeans = new ArrayList<ItemBean>();
+		List<ItemBean> serviceItemBeans = new ArrayList<ItemBean>();
+		ItemBean jadualHarga = null;
+		String itemType = null;
+		
+		for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
+			// is zonal
+			if(item.getTplSpecZoneDtl() != null){
+				itemBean.setZonal(Boolean.TRUE);
+				
+				if(itemBean.getZoneIds().isEmpty()){
+					itemBean.setZoneName(item.getTplSpecZoneDtl().getZoneName());
+					itemBean.getZoneIds().add(item.getTplSpecZoneDtl().getSpecZoneId());
+				} else{
+					if(itemBean.getZoneIds().contains(item.getTplSpecZoneDtl().getSpecZoneId())){
+						itemBean.setZoneName(item.getTplSpecZoneDtl().getZoneName());
+					}
+				}
+			}
+			
+			jadualHarga = mappingJadualHarga(item);
+			itemType = item.getScRequestItem().getItemType().getParameterCode();
+			if (ParameterConst.ITEM_TYPE_PRODUCT.equals(itemType)) {
+				productItemBeans.add(jadualHarga);
+			} else if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+				serviceItemBeans.add(jadualHarga);
+			}
+		}
+		itemBean.setProductItemBeans(productItemBeans);
+		itemBean.setServiceItemBeans(serviceItemBeans);
+		context.put("jadualHargaItemBean", itemBean);
+	}
+	
+	public void formSpecification(VelocityContext context, ScLoa scLoa)
+			throws Exception {
+		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
+		TemplateSpecReqDTO templateSpecReqDTO = new TemplateSpecReqDTO();
+
+		List<String> itemNames = new ArrayList<String>();
+		if(scLoa.getScLoiLoaItems() != null && scLoa.getScLoiLoaItems().size()>0){
+			for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
+				itemNames.add(item.getScRequestItem().getItemName());
+			}
+		}
+		templateSpecReqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
+		templateSpecReqDTO.setSupplier(scLoa.getScLoiLoa().getSmSupplier());
+		templateSpecReqDTO.setItemNameList(itemNames);
+		
+		List<TplSpecAnswer> serviceAnswers  = new ArrayList<>();
+		List<TplSpecAnswer> productAnswers  = new ArrayList<>();
+		TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.retrieveSupplierTechAnswersByItemNames(templateSpecReqDTO);
+		if(templateSpecResDTO.getSpecAnswerList() != null && templateSpecResDTO.getSpecAnswerList().size()>0){
+			for (TplSpecAnswer tplSpecAnswer : templateSpecResDTO.getSpecAnswerList()) {
+				if(ParameterConst.ITEM_TYPE_PRODUCT.equals(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode())){
+					productAnswers.add(tplSpecAnswer);
+				} else if(ParameterConst.ITEM_TYPE_SERVICE.equals(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode())){
+					serviceAnswers.add(tplSpecAnswer);
+				}
+			}
+		}
+		context.put("productAnswers", productAnswers);
+		context.put("serviceAnswers", serviceAnswers);
+	}
+	
+	/**
+	 * Mapping jadual harga.
+	 * @param item the item
+	 * @return the item bean
+	 */
+	private ItemBean mappingJadualHarga(ScLoiLoaItem item) {
+		ItemBean itemBean = new ItemBean();
+		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item
+				.getTplSpecZoneDtl().getZoneName() : "");
+		itemBean.setItem(item.getScRequestItem().getItemName());
+		
+		if(item.getTplSpecTierQty() != null){
+			itemBean.setTier(Boolean.TRUE);
+			itemBean.setFromQty(null == item.getTplSpecTierQty().getFromQty()? "" 
+					: item.getTplSpecTierQty().getFromQty().toString());
+			itemBean.setToQty(null == item.getTplSpecTierQty().getToQty()? "" 
+					: item.getTplSpecTierQty().getToQty().toString());
+		}
+		
+       /*BigDecimal unitPrice = item.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		jadualHarga.setUnitPrice(unitPrice.toString());
+		jadualHarga.setFreqUom(null == item.getScRequestItem().getTplSpecQuestion()
+				.getClUom() ? "" : item.getScRequestItem().getTplSpecQuestion()
+						.getClUom().getUomName());
+		jadualHarga.setFreqUom(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClUomFrequency() ? "" : item
+				.getScRequestItem().getTplSpecQuestion().getClUomFrequency()
+				.toString());
+		jadualHarga.setUomPerDay(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClUomPerDay() ? "" : item
+				.getScRequestItem().getTplSpecQuestion().getClUomPerDay()
+				.toString());
+		jadualHarga.setUomPerMonth(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClUomPerMonth() ? "" : item
+				.getScRequestItem().getTplSpecQuestion().getClUomPerMonth()
+				.toString());
+		jadualHarga.setUomPerYear(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClDurationMonth() ? "" : item
+				.getScRequestItem().getTplSpecQuestion().getClDurationMonth()
+				.toString());*/
+		itemBean.setQuantity(null == item.getQty()? "" : item.getQty()
+				.toString());
+
+		/*BigDecimal  totalAmount = BigDecimal.valueOf(0d);
+		BigDecimal subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(item.getScRequestItem().getTplSpecQuestion(), 
+				item.getUnitPrice(), item.getQty());
+		totalAmount = totalAmount.add(subTotal);
+		totalAmount =  totalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		jadualHarga.setTotalAmount(totalAmount.toString());*/
+		
+		return itemBean;
+	}
+	
+
+	/**
+	 * The method used to convert the template into document file.
+	 */
+	protected  void convertHtmlToDocFile(String content, String filePath, String docNo) {
+		WordprocessingMLPackage wordMLPackage;
+		try {
+			wordMLPackage = WordprocessingMLPackage.createPackage();
+			AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
+			afiPart.setBinaryData(content.getBytes());
+			afiPart.setContentType(new ContentType("text/html"));
+			Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart);
+
+			CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
+			ac.setId(altChunkRel.getId());
+			wordMLPackage.getMainDocumentPart().addObject(ac);
+			wordMLPackage.getContentTypeManager().addDefaultContentType("html","text/html");
+			createHeaderPart(wordMLPackage, docNo);
+			addFooterToDocument(wordMLPackage);
+			wordMLPackage.save(new java.io.File(filePath));
+		} catch (InvalidFormatException e) {
+			e.printStackTrace();
+		} catch (Docx4JException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void addFooterToDocument(WordprocessingMLPackage wordMLPackage)throws InvalidFormatException {
+		ObjectFactory factory = Context.getWmlObjectFactory();
+		Relationship relationship = createFooterPart(wordMLPackage, factory);
+		createFooterReference(relationship, wordMLPackage, factory);
+	}
+	
+  	private static Relationship createFooterPart(
+				WordprocessingMLPackage wordMLPackage, ObjectFactory factory) throws InvalidFormatException {
+	    FooterPart footerPart = new FooterPart();
+	    footerPart.setPackage(wordMLPackage);
+	    footerPart.setJaxbElement(createFooter(factory));
+	  
+	    return wordMLPackage.getMainDocumentPart().addTargetPart(footerPart);
+	 }
+	
+  	private static Ftr createFooter(ObjectFactory factory) {
+	     Ftr footer = factory.createFtr();
+	     // Page nors
+	     P pageNumParagraph = factory.createP();
+	     addFieldBegin(factory, pageNumParagraph);
+	     addPageNumberField(factory, pageNumParagraph);
+	     addFieldEnd(factory, pageNumParagraph);
+	     footer.getContent().add(pageNumParagraph);
+	     
+	     // Footer content
+	     P paragraph = factory.createP();
+	     R run = factory.createR();
+	     RPr rpr = new RPr();
+	     HpsMeasure size = new HpsMeasure();
+	     size.setVal(BigInteger.valueOf(18));
+	     rpr.setSz(size);
+	     run.setRPr(rpr);
+	     
+	     Text t1 = factory.createText();
+	     t1.setValue("Tandatangan & Cop (Kerajaan)  : …………………………………");
+	     Br br = factory.createBr(); // this Br element is used break the current and go for next line
+	     Text t2 = factory.createText();
+	     t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : …………………………………");
+	     Text t3 = factory.createText();
+	   
+	     t3.setValue("\r\n  Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani Surat ini");
+	     Text t4 = factory.createText();
+	     t4.setValue("\r\n  Pihak Syarikat  : pegawai yang diberi kuasa dengan sewajarnya oleh syarikat untuk menandatangani Surat ini");
+	     run.getContent().add(t1);
+	     run.getContent().add(br);
+	     run.getContent().add(t2);
+	     run.getContent().add(br);
+	    
+	     
+	     RPr rpr1 = new RPr();
+	     HpsMeasure sizeContent = new HpsMeasure();
+	     sizeContent.setVal(BigInteger.valueOf(18));
+	     rpr1.setSz(sizeContent);
+	     org.docx4j.wml.Color color = factory.createColor();
+	     R run1 = factory.createR();
+	     color.setVal("FF0000");
+	     rpr1.setColor(color);
+	     run1.setRPr(rpr1);
+	     
+	     run1.getContent().add(br);
+	     run1.getContent().add(t3);
+	     run1.getContent().add(br);
+	     run1.getContent().add(t4);
+	     
+	     paragraph.getContent().add(run);
+	     paragraph.getContent().add(run1);
+	     footer.getContent().add(paragraph);
+	    
+	     return footer;
+	  }
+
+  	private static void createFooterReference(Relationship relationship,
+  			WordprocessingMLPackage wordMLPackage, ObjectFactory factory) {
+  		List<SectionWrapper> sections = wordMLPackage.getDocumentModel()
+  				.getSections();
+  		SectPr sectionProperties = sections.get(sections.size() - 1)
+  				.getSectPr();
+  		// There is always a section wrapper, but it might not contain a sectPr
+  		if (sectionProperties == null) {
+  			sectionProperties = factory.createSectPr();
+  			wordMLPackage.getMainDocumentPart().addObject(sectionProperties);
+  			sections.get(sections.size() - 1).setSectPr(sectionProperties);
+  		}
+
+  		FooterReference footerReference = factory.createFooterReference();
+  		footerReference.setId(relationship.getId());
+  		footerReference.setType(HdrFtrRef.DEFAULT);
+  		sectionProperties.getEGHdrFtrReferences().add(footerReference);
+  		FooterReference firstPagefooterRef = factory.createFooterReference();
+  		firstPagefooterRef.setId(relationship.getId());
+  		firstPagefooterRef.setType(HdrFtrRef.FIRST);
+  		sectionProperties.getEGHdrFtrReferences().add(firstPagefooterRef);
+  	}
+
+
+	/**
+	  * Add header to the document
+	  * 
+	  * @param wordMLPackage
+	  * @throws InvalidFormatException
+	  */
+	  private  void createHeaderPart(WordprocessingMLPackage wordMLPackage, String docNo)
+				throws InvalidFormatException {
+	    ObjectFactory factory = Context.getWmlObjectFactory();
+	    HeaderPart headerPart = new HeaderPart();
+	    headerPart.setPackage(wordMLPackage);
+
+	    Hdr header = factory.createHdr();
+	    P paragraph = factory.createP();
+	    R run = factory.createR();
+	    
+	    RPr rpr = new RPr();
+	    HpsMeasure size = new HpsMeasure();
+	    size.setVal(BigInteger.valueOf(18));
+	    rpr.setSz(size);
+	    run.setRPr(rpr);
+	    Text text = new Text();
+	    text.setValue("No. Surat Setuju Terima : " +docNo);
+	    run.getContent().add(text);
+	    paragraph.getContent().add(run);
+	    header.getContent().add(paragraph);
+	    headerPart.setJaxbElement(header);
+
+	    Relationship relationship = wordMLPackage.getMainDocumentPart()
+					.addTargetPart(headerPart);
+	    List<SectionWrapper> sections = wordMLPackage.getDocumentModel()
+					.getSections();
+	    SectPr sectionProperties = sections.get(sections.size() - 1)
+					.getSectPr();
+	    // There is always a section wrapper, but it might not contain a sectPr
+	    if (sectionProperties == null) {
+	         sectionProperties = factory.createSectPr();
+	         wordMLPackage.getMainDocumentPart().addObject(sectionProperties);
+	         sections.get(sections.size() - 1).setSectPr(sectionProperties);
+	     }
+
+	     HeaderReference headerReference = factory.createHeaderReference();
+	      headerReference.setId(relationship.getId());
+	      headerReference.setType(HdrFtrRef.DEFAULT);
+	      sectionProperties.getEGHdrFtrReferences().add(headerReference);
+	      HeaderReference firstPageHeaderRef = factory.createHeaderReference();
+	      firstPageHeaderRef.setId(relationship.getId());
+	      firstPageHeaderRef.setType(HdrFtrRef.FIRST);
+	      sectionProperties.getEGHdrFtrReferences().add(firstPageHeaderRef);
+	  }
+	  
+	  /**
+	   * Creating the page number field is nearly the same as creating the field
+	   * in the TOC example. The only difference is in the value. We use the PAGE
+	   * command, which prints the number of the current page, together with the
+	   * MERGEFORMAT switch, which indicates that the current formatting should be
+	   * preserved when the field is updated.
+	   * 
+	   * @param paragraph
+	   */
+	  private static void addPageNumberField(ObjectFactory factory, P paragraph) {
+	     R run = factory.createR();
+	     PPr ppr = new PPr();
+	     Jc jc = new Jc();
+	     jc.setVal(JcEnumeration.RIGHT);
+	     ppr.setJc(jc);
+	     paragraph.setPPr(ppr);
+	     Text txt = new Text();
+	     txt.setSpace("preserve");
+	     txt.setValue(" PAGE   \\* MERGEFORMAT ");
+	     run.getContent().add(factory.createRInstrText(txt));
+	     paragraph.getContent().add(run);
+	  }
+
+	  /**
+	   * Every fields needs to be delimited by complex field characters. This
+	   * method adds the delimiter that precedes the actual field to the given
+	   * paragraph.
+	   * 
+	   * @param paragraph
+	   */
+	  private static void addFieldBegin(ObjectFactory factory, P paragraph) {
+	     R run = factory.createR();
+	     FldChar fldchar = factory.createFldChar();
+	     fldchar.setFldCharType(STFldCharType.BEGIN);
+	     run.getContent().add(fldchar);
+	     paragraph.getContent().add(run);
+	  }
+
+	  /**
+	   * Every fields needs to be delimited by complex field characters. This
+	   * method adds the delimiter that follows the actual field to the given
+	   * paragraph.
+	   * 
+	   * @param paragraph
+	   */
+	  private static void addFieldEnd(ObjectFactory factory, P paragraph) {
+	     FldChar fldcharend = factory.createFldChar();
+	     fldcharend.setFldCharType(STFldCharType.END);
+	     R run3 = factory.createR();
+	     run3.getContent().add(fldcharend);
+	     paragraph.getContent().add(run3);
+	  }
+	 
 	
 	/**
 	 * Validate ScLoaWitness before download attachment of Acknowledge LOA Receipt
