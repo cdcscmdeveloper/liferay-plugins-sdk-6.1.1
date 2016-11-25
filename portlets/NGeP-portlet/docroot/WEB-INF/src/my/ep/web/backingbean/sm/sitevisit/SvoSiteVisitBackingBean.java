@@ -88,7 +88,6 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAdtMachine;
 import my.ep.persistence.entity.sm.SmSvAssistantOfficer;
 import my.ep.persistence.entity.sm.SmSvBankInfo;
-import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvComment;
 import my.ep.persistence.entity.sm.SmSvDocLicense;
 import my.ep.persistence.entity.sm.SmSvEquipment;
@@ -282,7 +281,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			getManagedBean().setSmGstSupplier(gstSupp);
 			
 			//populateSmSvAddresses();
-			groupCategoryCodeByType(svoTask.getSmSvTemplate());
+			//groupCategoryCodeByType(svoTask.getSmSvTemplate());
 			
 			getManagedBean().setSelectedSvTemplate(smSvTask.getSmSvTemplate());
 			getManagedBean().setBusinessTypeDesc(getBusinessTypeDesc());
@@ -339,8 +338,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	public void changeActiveIndex(int index, SmSvTemplate svTemplate){
 		log.info("*******changeActiveIndex********" + index);
 		this.getManagedBean().setActiveIndex(index);
-		//log.info("*******Category pass********" + this.getManagedBean().getSmSvTask().getSmSvCategories().get(0).getPassed()+"****"+ this.getManagedBean().getSmSvTask().getSmSvCategories().get(0).getPmCategoryL3().getCategoryL3Code());
-		//log.info("*******changeActiveIndex CatType********" + catType.length());
 		if(svTemplate != null){
 //			this.getManagedBean().setSelectedSvTemplate(svTemplate);
 			//SmSvTemplate svTemplate = this.getManagedBean().getSmSvTemplateMap().get(catType);
@@ -1929,86 +1926,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			this.getManagedBean().setSelectedSvMachine((SmSvMachine) obj);
 		}
 	}
-
-	/**
-	 * group category for display purpose
-	 */
-	public void groupCategoryCodeByType(SmSvTemplate template){
-		if(this.getManagedBean().getSmSvTask().getSmSvCategories().size() > 0){
-			for(SmSvCategory cat : this.getManagedBean().getSmSvTask().getSmSvCategories()){
-				//SmSvTemplate template = this.getManagedBean().getSmSvTemplateMap().get(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode());
-				if(template != null){
-					if(template.getGroupedCategory() == null){
-						template.setGroupedCategory(new ArrayList<SmSvCategory>());
-					}
-					template.getGroupedCategory().add(cat);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * retrieve printing accessories from PM
-	 * @param svTemplate
-	 *//*
-	private void preparePrintingAcc(SmSvTemplate svTemplate){
-		if(this.getManagedBean().getSmSvTask().getSmSvCategories().size() > 0){
-			for(SmSvCategory svCat : this.getManagedBean().getSmSvTask().getSmSvCategories()){
-				Long lv1 = svCat.getPmCategoryL1().getCategoryL1Id();
-				Long lv2 = svCat.getPmCategoryL2().getCategoryL2Id();
-				Long lv3 = svCat.getPmCategoryL3().getCategoryL3Id();
-				
-				if(retrieveCategoryTypeByLvl3Id(lv3).equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_PRINTING)){			
-					if(getManagedBean().getPrintingCategoryCodeMap() == null){
-						getManagedBean().setPrintingCategoryCodeMap(new HashMap<Long, String>());
-					}
-					
-					if(getManagedBean().getPrintingCategoryCodeMap().get(lv3) == null){
-						String catCode = svCat.getPmCategoryL1().getCategoryL1Code() + svCat.getPmCategoryL2().getCategoryL2Code() + 
-										svCat.getPmCategoryL3().getCategoryL3Code();
-						
-						getManagedBean().getPrintingCategoryCodeMap().put(lv3, catCode + " " +svCat.getPmCategoryL3().getCategoryName());
-					}
-					
-					if(svCat.getSmSvPrintmachines() == null || svCat.getSmSvPrintmachines().size() < 1){
-						log.info("Printing Category code>>>>" + lv1+lv2+lv3);
-						log.info("retrieve from pmMachine>>>");
-						if(retrieveCategoryTypeByLvl3Id(lv3).equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_PRINTING)){
-							List<PmMachineCategory> machineCatLs = retrievePrintingAcc(lv1,lv2,lv3);
-
-							if(svCat.getSmSvPrintmachines() == null){
-								svCat.setSmSvPrintmachines(new ArrayList<SmSvPrintmachine>());
-							}
-
-							if(machineCatLs.size() > 0){
-								for(PmMachineCategory machineCategory : machineCatLs){
-									SmSvPrintmachine svPrintMac = new SmSvPrintmachine();
-									svPrintMac.setSmSvTemplate(svTemplate);
-									svPrintMac.setSmSvCategory(svCat);
-									svPrintMac.setPmMachine(machineCategory.getPmMachine());
-									svCat.getSmSvPrintmachines().add(svPrintMac);
-								}
-							}
-							
-							log.info("Printing Machine Size 1>>>>>" + svCat.getSmSvPrintmachines().size());
-						}
-					}
-					
-					if(this.getManagedBean().getPrintingCatMap() == null){
-						this.getManagedBean().setPrintingCatMap(new HashMap<Long, SmSvCategory>());
-					}
-					this.getManagedBean().getPrintingCatMap().put(lv3, svCat);	
-					
-					log.info("Printing Category code>>>>" + lv1+lv2+lv3);
-					log.info("Printing Machine Size>>>>>" + svCat.getSmSvPrintmachines().size());
-
-				}
-				
-//				log.info("printingMap>>>>>" + this.getManagedBean().getPrintingCatMap().size());
-//				log.info("printingLs>>>>>" + this.getManagedBean().getPrintingCategoryCodeMap().size());
-			}
-		}
-	}*/
 	
 	/**
 	 * save Site Visit Report
