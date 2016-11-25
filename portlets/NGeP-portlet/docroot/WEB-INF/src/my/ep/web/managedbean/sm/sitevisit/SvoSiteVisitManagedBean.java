@@ -9,7 +9,6 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -18,7 +17,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvAdtMachine;
-import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvEquipment;
 import my.ep.persistence.entity.sm.SmSvInterviewee;
 import my.ep.persistence.entity.sm.SmSvMachine;
@@ -87,7 +85,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	
 	//private Map<Long, PmParameterDesc> printingParamMap;
 	//private Map<Long, String> printingCategoryCodeMap;
-	private Map<Long, SmSvCategory> printingCatMap;
 	private SmSvPrintwork[] selectedPrintWorks;
 	
 	private List<SmSupplierCategory> categoryApplicable;
@@ -458,15 +455,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setPrintingCategoryCodeMap(Map<Long, String> printingCategoryCodeMap) {
 		this.printingCategoryCodeMap = printingCategoryCodeMap;
 	}*/
-
-
-	public Map<Long, SmSvCategory> getPrintingCatMap() {
-		return printingCatMap;
-	}
-
-	public void setPrintingCatMap(Map<Long, SmSvCategory> printingCatMap) {
-		this.printingCatMap = printingCatMap;
-	}
 
 	public SmSvPrintwork[] getSelectedPrintWorks() {
 		return selectedPrintWorks;
