@@ -21,14 +21,14 @@
 			autoUpdate="true" closable="true" severity="error, info"></p:messages>
 		<table width="100%" class="BtnSpacing">
 			<tr>
-				<td align="right"><p:commandButton
+				<td align="right"><p:commandButton process="@this" partialSubmit="true"
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
 						immediate="true"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
 						value="#{lbl['lbl.btn.print']}" process="@all" type="button">
 						<p:printer target="techCheckListNoOfEmps" />
 					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.save']}"
-						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
+						rendered="#{((!specificationBackingBean.managedBean.readOnly) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.saveCheckListScores}">
@@ -50,7 +50,7 @@
 
 				<h:panelGrid columns="2">
 					<p:selectOneRadio
-						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.allEmployee}">
 						<f:selectItem
 							itemLabel="#{lbl['lbl.sc.spec.total.num.employees.for.this.project']}"
@@ -78,14 +78,14 @@
 				<table>
 					<tr>
 						<td width="150px"><ui:fragment
-								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
+								rendered="#{!specificationBackingBean.managedBean.readOnly}">
 								<p:outputLabel value="*" styleClass="mandatory"
 									style="float : left"></p:outputLabel>
 							</ui:fragment> <p:outputLabel style="float : left"
 								value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
 						<td><p:selectOneMenu required="true"
 								style="width:180px;margin-bottom: 5px;"
-								disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								label="#{lbl['lbl.sc.spec.asset.score.type']}"
 								id="techTotalEmployeeAutoScore"
 								value="#{specificationBackingBean.managedBean.checklistScoreType}">
@@ -119,14 +119,14 @@
 							<div align="right">
 								<p:commandButton value="#{lbl['lbl.btn.add']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+									disabled="#{specificationBackingBean.managedBean.readOnly}"
 									process="@this,#{scoringPnlId}" partialSubmit="true"
 									oncomplete="scoreWidget.paginator.endLink.click();"
 									update="#{scoringPnlId}"
 									actionListener="#{specificationBackingBean.addScoring(21)}" />
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									process="@this" styleClass="BtnSpacing" partialSubmit="true"
-									disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(scoringList)}"
+									disabled="#{specificationBackingBean.deleteselectedList(scoringList)}"
 									oncomplete="technicalNumberOfEmployeesDeletePopUp.show();"
 									update="@([id$=#{technicalNumberofEmployeesDeleteId}])">
 									<f:setPropertyActionListener
@@ -159,7 +159,7 @@
 										value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
 								<td><p:inputText id="totalEmployeesScore" required="true"
 										style="text-align:right;"
-										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+										disabled="#{specificationBackingBean.managedBean.readOnly}"
 										label="#{lbl['lbl.sc.spec.max.score']}"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
 										maxlength="14">
