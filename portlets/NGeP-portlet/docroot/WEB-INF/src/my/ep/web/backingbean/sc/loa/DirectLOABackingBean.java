@@ -3671,8 +3671,14 @@ public class DirectLOABackingBean extends
 			}
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
-			scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
-			scAttachments.add(scLoaReportAttachment);
+			ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
+			if(scLoaReport.getDefinationType().getParameterCode().equals(
+					ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) ||
+					scLoaReport.getDefinationType().getParameterCode().equals(
+							ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
+				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			} 
+			scAttachments.add(scLoaReportAttachmentGenerated);
 		}
 
 		downloadAllFiles("NGeP-LOA-Report", scAttachments);
@@ -4469,7 +4475,7 @@ public class DirectLOABackingBean extends
 			procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
 		}
 		String title = procurementMode != null ? procurementMode + " " + 
-				scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();
+				scQt.getQtTitle().toUpperCase() : scQt.getQtTitle().toUpperCase();
 		context.put("title", title);
 
 		String userName = "&#60;supplier user name&#62;";
