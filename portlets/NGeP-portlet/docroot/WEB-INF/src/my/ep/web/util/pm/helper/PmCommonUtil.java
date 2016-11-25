@@ -2396,11 +2396,11 @@ public class PmCommonUtil implements Serializable{
 	}
 	
 	/**
-	 *  Check if any pending BPM task filter by login id and(or) status id list and(or) noteNumberList
+	 *  Check if any pending BPM task filter by login id and(or) status id list and(or) docNumberList
 	 * 
 	 * @param loginId
 	 * @param intStatusIds
-	 * @param noteNumberList
+	 * @param docNumberList
 	 * @return boolean
 	 */
 	public static boolean isAnyPendingTask(String loginId,List<Integer> intStatusIds, List<String> docNumberList) {
