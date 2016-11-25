@@ -21,14 +21,14 @@
 
 		<table width="100%" class="BtnSpacing">
 			<tr>
-				<td align="right"><p:commandButton
+				<td align="right"><p:commandButton process="@this" partialSubmit="true"
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
 						immediate="true"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
 						value="#{lbl['lbl.btn.print']}" process="@all" type="button">
 						<p:printer target="financialCheckListPrivateComp" />
 					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.save']}"
-						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
+						rendered="#{((!specificationBackingBean.managedBean.readOnly) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.saveCheckListScores}">
@@ -52,11 +52,11 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.spec.company.exp.since.year']} "></p:outputLabel>
 							<ui:fragment
-								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
+								rendered="#{!specificationBackingBean.managedBean.readOnly}">
 								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 							</ui:fragment></td>
 						<td><p:inputText maxlength="4"
-								disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								label="#{lbl['lbl.sc.spec.company.exp.since.year']}"
 								required="true" id="finPrivateYears" style="text-align:right;"
 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}">
@@ -119,13 +119,13 @@
 				<table>
 					<tr>
 						<td style="width: 260px;"><ui:fragment
-								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
+								rendered="#{!specificationBackingBean.managedBean.readOnly}">
 								<p:outputLabel value="*" styleClass="mandatory"
 									style="float : left"></p:outputLabel>
 							</ui:fragment> <p:outputLabel style="float : left"
 								value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
 						<td><p:selectOneMenu style="width: 180px;margin-bottom: 5px;"
-								disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								label="#{lbl['lbl.sc.spec.asset.score.type']}"
 								id="financialPrivateAutoScore"
 								value="#{specificationBackingBean.managedBean.checklistScoreType}">
@@ -161,14 +161,14 @@
 							<div align="right">
 								<p:commandButton value="#{lbl['lbl.btn.add']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+									disabled="#{specificationBackingBean.managedBean.readOnly}"
 									process="@this,#{scoringPnlId}" partialSubmit="true"
 									oncomplete="scoreWidget.paginator.endLink.click();"
 									actionListener="#{specificationBackingBean.addScoring(17)}"
 									update="#{scoringPnlId}" />
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									styleClass="BtnSpacing"
-									disabled="#{(specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.deleteselectedList(scoringList)}"
+									disabled="#{specificationBackingBean.deleteselectedList(scoringList)}"
 									process="@this" partialSubmit="true"
 									oncomplete="financialNonGovCompanyExpDeletePopUp.show();"
 									update="@([id$=#{financialNonGovCompanyExperienceNoOfContractsDeleteId}])">
@@ -198,7 +198,7 @@
 						<table>
 							<tr>
 								<td style="width: 260px;"><ui:fragment
-										rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
+										rendered="#{!specificationBackingBean.managedBean.readOnly}">
 										<p:outputLabel value="*" styleClass="mandatory"
 											style="float : left"></p:outputLabel>
 									</ui:fragment> <p:outputLabel style="float : left"
@@ -206,7 +206,7 @@
 
 								<td><p:inputText id="finprivateScore" required="true"
 										style="text-align:right;"
-										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+										disabled="#{specificationBackingBean.managedBean.readOnly}"
 										label="#{lbl['lbl.sc.spec.max.score']}" maxlength="14"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>

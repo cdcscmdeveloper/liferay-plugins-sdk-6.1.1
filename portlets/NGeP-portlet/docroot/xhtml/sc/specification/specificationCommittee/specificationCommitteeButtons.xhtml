@@ -27,7 +27,7 @@
 								action="#{specificationBackingBean.specCommitteBpmTask(bpmAction)}" />
 						</ui:fragment>
 					</ui:repeat> <ui:fragment
-						rendered="#{((((!specificationBackingBean.managedBean.readOnly) and (specificationBackingBean.isQTStatusChecklistScoring() or specificationBackingBean.isQTStatusChecklistScoringRevision())) or (specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoring())))}">
+						rendered="#{!specificationBackingBean.managedBean.readOnly}">
 						<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all"
 							style="float:right;" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();" rendered="#{specificationBackingBean.managedBean.assignedState}"
