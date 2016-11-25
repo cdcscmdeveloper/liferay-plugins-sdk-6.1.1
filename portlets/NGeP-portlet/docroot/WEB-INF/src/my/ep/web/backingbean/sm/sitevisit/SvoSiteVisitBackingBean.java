@@ -2416,8 +2416,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		//getManagedBean().setSelectedSvTask(svTask);
 		retrieveSiteVisitInfo("V");
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.execute("poReportDlg.show();");
 		
 	}
 	
