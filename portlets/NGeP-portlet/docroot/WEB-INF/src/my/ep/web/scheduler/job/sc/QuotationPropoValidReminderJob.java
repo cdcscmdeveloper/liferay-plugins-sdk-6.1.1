@@ -43,7 +43,9 @@ import org.apache.log4j.Logger;
 public class QuotationPropoValidReminderJob extends BaseReminderJob{
 	private static Logger log = EpLogger
 			.getLogger(QuotationPropoValidReminderJob.class);
-
+	
+	/** The Constant Proposal valid end at less than or equal to 30 days. */
+	private static final String PROPO_VALID_END_AT_MAX_DAYS = "30";
 	/* (non-Javadoc)
 	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#getReminderBeans()
 	 */
@@ -56,6 +58,7 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob{
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setProcurementModeCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+			reqDTO.setPropoValidEndAtMaxDays(PROPO_VALID_END_AT_MAX_DAYS);
 			reqDTO.setStatusIds(qtStatusListInBetween(QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PENDING_LOA));
 			QuationTenderResDTO resDTO = detailSO.getQTDetailsByStatusIds(reqDTO);
 			if(resDTO.isSuccessful()){
@@ -63,10 +66,10 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob{
 				List<String> userIds = new ArrayList<String>();
 				for (Object[] objects : resDTO.getQtDetailsArray()) {
 					for (int i = 0; i < objects.length; i++) {
-						Date currentDate = new Date();
+						//Date currentDate = new Date();
 
 						// Before proposal validity expired qts 
-						if(objects[7] != null && currentDate.compareTo((Date)objects[7])<0){
+						//if(objects[7] != null && currentDate.compareTo((Date)objects[7])<0){
 							ReminderBean bean = new ReminderBean();
 							Date propoValidityEndDate = (Date)objects[7];
 							String qtId    = objects[0].toString();
@@ -83,7 +86,7 @@ public class QuotationPropoValidReminderJob extends BaseReminderJob{
 							bean.setReciepts(userIds);
 							beans.add(bean);
 							userIds.clear();
-						}
+						//}
 					}
 				}
 			}
