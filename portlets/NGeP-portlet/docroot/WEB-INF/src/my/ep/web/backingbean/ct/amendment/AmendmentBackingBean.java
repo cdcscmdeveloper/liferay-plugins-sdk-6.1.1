@@ -566,6 +566,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctBackingBean.getManagedBean().setNewAgencyMap(resDTO.getNewAgencyMap());
 					ctBackingBean.getManagedBean().setUpdateAgencyMap(resDTO.getUpdateAgencyMap());
 					ctBackingBean.getManagedBean().setDeleteAgencyMap(resDTO.getDeleteAgencyMap());
+					ctBackingBean.getManagedBean().setUpdateZoneMap(resDTO.getUpdateZoneMap());
 					ctBackingBean.getManagedBean().setUpdateItemMap(resDTO.getUpdateItemMap());
 					
 					 reqDTO = new ContractReqDTO();
@@ -1046,6 +1047,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			reqDTO.setNewAgencyMap(ctBackingBean.getManagedBean().getNewAgencyMap());
 			reqDTO.setUpdateAgencyMap(ctBackingBean.getManagedBean().getUpdateAgencyMap());
 			reqDTO.setDeleteAgencyMap(ctBackingBean.getManagedBean().getDeleteAgencyMap());
+			reqDTO.setUpdateZoneMap(ctBackingBean.getManagedBean().getUpdateZoneMap());
 			reqDTO.setUpdateItemMap(ctBackingBean.getManagedBean().getUpdateItemMap());
 
 			if (getManagedBean().getPmDigiSign() != null) {
