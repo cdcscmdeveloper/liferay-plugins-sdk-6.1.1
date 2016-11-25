@@ -93,8 +93,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/** The sc loa approval. */
 	private ScLoaApproval scLoaApproval;
 	
-	/** The loa stream content. */
-	private StreamedContent loaStreamContent;
+	
 	
 	/** The selected sc loa reports. */
 	private List<ScLoaReport> selectedScLoaReports;
@@ -533,24 +532,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScLoaApproval(ScLoaApproval scLoaApproval) {
 		this.scLoaApproval = scLoaApproval;
-	}
-
-	/**
-	 * Gets the loa stream content.
-	 *
-	 * @return the loaStreamContent
-	 */
-	public StreamedContent getLoaStreamContent() {
-		return loaStreamContent;
-	}
-
-	/**
-	 * Sets the loa stream content.
-	 *
-	 * @param loaStreamContent the loaStreamContent to set
-	 */
-	public void setLoaStreamContent(StreamedContent loaStreamContent) {
-		this.loaStreamContent = loaStreamContent;
 	}
 
 	/**

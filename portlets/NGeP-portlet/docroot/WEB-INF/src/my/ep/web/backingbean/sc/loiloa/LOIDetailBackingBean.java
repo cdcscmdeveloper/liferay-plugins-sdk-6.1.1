@@ -2712,16 +2712,15 @@ public class LOIDetailBackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void previewLetter() throws Exception {
-
+	public StreamedContent previewLetter() throws Exception {
 		ScPbAttachment pbAttachment = new ScPbAttachment();
 		pbAttachment.setDocNo(getManagedBean().getScLoi().getLoiNo());
 		generateLoiLetterFromVelocityToPdf(getManagedBean().getScLoi(),
 				(ScAttachment) pbAttachment);
 		StreamedContent pbStreamContent = getAttachmentStreamContent(
 				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
-		getManagedBean().setStreamedContent(pbStreamContent);
 		RequestContext.getCurrentInstance().execute("loiLetterDlg.show();");
+		return pbStreamContent;
 	}
 
 	/**
