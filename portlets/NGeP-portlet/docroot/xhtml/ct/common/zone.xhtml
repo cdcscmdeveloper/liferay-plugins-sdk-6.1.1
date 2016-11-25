@@ -53,7 +53,9 @@
 	                <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="false" maxlength="4"
 	                     style="width:40px;" styleClass="ppRightBtn"  label="#{lbl['lbl.ct.delivery.term']}"
 	                     disabled="#{ctBackingBean.managedBean.viewContract or 
-	                      ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}"/>
+	                      ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}">
+	                     <p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeDeliveryTerm(zoneTree)}"/>
+	                </p:inputText>
 	                <h:outputText rendered="#{zoneTree.zone != null}" value="#{lbl['lbl.ct.days']}" ></h:outputText>
              	</h:panelGrid>
              </p:treeNode>
