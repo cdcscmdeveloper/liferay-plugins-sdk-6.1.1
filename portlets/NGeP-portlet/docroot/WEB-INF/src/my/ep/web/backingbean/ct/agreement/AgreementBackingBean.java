@@ -692,12 +692,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			
 			// Validate for contract document
 			if (getManagedBean().getCtAgreement().getContractDocumentAttachments().size() == 0) {
-				if (getManagedBean().getAgreementContractVer().getSignedDate() == null){
-					getManagedBean().setSelectedTabIndex(2);
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.contract.document", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
+				getManagedBean().setSelectedTabIndex(2);
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.contract.document", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			
 			// Validate for Signed & Stamped Process
