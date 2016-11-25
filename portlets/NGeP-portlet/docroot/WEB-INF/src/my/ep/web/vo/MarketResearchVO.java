@@ -3,6 +3,7 @@
  */
 package my.ep.web.vo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -16,8 +17,12 @@ import my.ep.persistence.entity.pm.common.PmParameter;
  * @since 14.04.2016
  *
  */
-public class MarketResearchVO  {
+public class MarketResearchVO implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String loaNo;
 	private boolean isPanel;
 	private String circularNo;

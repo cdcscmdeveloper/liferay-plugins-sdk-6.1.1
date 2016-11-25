@@ -3,6 +3,7 @@
  */
 package my.ep.web.util.pm.helper;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,12 @@ import org.apache.log4j.Logger;
  * @since 18.12.2015
  * 
  */
-public class ReasonHelper {
+public class ReasonHelper implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = EpLogger.getLogger(ReasonHelper.class);
 	
 	public static final String KEY_SEPARATOR = "_";

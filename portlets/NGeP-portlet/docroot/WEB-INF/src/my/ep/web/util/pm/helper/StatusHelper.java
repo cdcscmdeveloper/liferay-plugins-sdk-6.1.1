@@ -3,6 +3,7 @@
  */
 package my.ep.web.util.pm.helper;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,12 @@ import org.apache.log4j.Logger;
  * @since 29.12.2013
  * 
  */
-public class StatusHelper {
+public class StatusHelper implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = EpLogger.getLogger(StatusHelper.class);
 	
 	public static final String KEY_SEPARATOR = "_";

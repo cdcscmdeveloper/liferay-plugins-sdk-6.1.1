@@ -7,6 +7,7 @@
 */
 package my.ep.web.bean.pm;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -16,8 +17,12 @@ import java.math.BigDecimal;
  * @since 7/12/2015
  *
  */
-public class CategoryCodePublicSearchBean {
+public class CategoryCodePublicSearchBean implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String catDesc;
 	private Long selectedSupplierType;
 	private Long selectedCompanyType;
