@@ -1146,9 +1146,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 												}
 									}	
 									
-									if((!ctBB.getManagedBean().getCtContractAmount().isBondWaived() ||
-											(ctBB.getManagedBean().getCtContractAmount().isBondWaived()  
-												&& ctBB.getManagedBean().getContractVer().getBondWaiverAttachments().size() ==  0))&& 
+									if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()  
+												&& ctBB.getManagedBean().getContractVer().getBondWaiverAttachments().size() ==  0 && 
 											 ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer() ==  null){
 										       setTabValue("PB");
 										       throw new EpException(MessageConst.ERROR_750044);
