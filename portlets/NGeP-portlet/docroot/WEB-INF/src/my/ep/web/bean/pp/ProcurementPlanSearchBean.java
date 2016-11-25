@@ -1,5 +1,7 @@
 package my.ep.web.bean.pp;
 
+import java.io.Serializable;
+
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameter;
 
@@ -10,8 +12,12 @@ import my.ep.persistence.entity.pm.common.PmParameter;
  * @since 20/10/2013
  * 
  */
-public class ProcurementPlanSearchBean {
+public class ProcurementPlanSearchBean implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String planNumber;
 	private Long status;
 	private String year;

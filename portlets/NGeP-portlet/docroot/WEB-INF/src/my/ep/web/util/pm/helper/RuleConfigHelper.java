@@ -3,6 +3,7 @@
  */
 package my.ep.web.util.pm.helper;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,12 @@ import org.apache.log4j.Logger;
  * @since 20.11.2014
  * 
  */
-public class RuleConfigHelper {
+public class RuleConfigHelper implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = EpLogger.getLogger(RoleHelper.class);
 
 	public static final String KEY_SEPARATOR = "_";
