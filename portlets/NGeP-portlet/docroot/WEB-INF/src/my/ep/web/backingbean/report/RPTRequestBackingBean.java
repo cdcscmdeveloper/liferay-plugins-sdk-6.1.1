@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.report;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -415,6 +416,17 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 		String submodule = reportSO.retriveSubModuleNameByReportCode(strLanguage, reportCode);
 		
+		String reportTitleInEnglish = pmReport.getReportTitle();
+		String reportTitleInMalay = pmReport.getReportTitleMalay();
+		
+		String reportTitle = "";
+		
+		if(strLanguage.equals("en")){
+			reportTitle = pmReport.getReportTitle();
+		} else if(strLanguage.equals("ms")){
+			reportTitle = pmReport.getReportTitleMalay();
+		}
+			
 		if(submodule != null && !submodule.isEmpty()){
 		
 			System.out.println("1");
@@ -422,12 +434,12 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 			StringBuilder str = new StringBuilder();
 			str.append(submodule);
 			str.append(" / ");
-			str.append(pmReport.getReportTitle());
+			str.append(reportTitle);
 		
 			return str.toString();
 			
 		} else {
-			return pmReport.getReportTitle();
+			return reportTitle;
 		}
 	}
 	
@@ -480,9 +492,11 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		String dir = EpPropertiesUtils.getInstance().getProperty("document.repository.shared.report.dir");
 		
 		String path = dir + "/" + rptRequest.getReportPath();
-		String displayName = rptRequest.getReportName();
+		String displayName = this.getReportName(rptRequest.getReportCode());
 		
-		this.commonDownloadUtil(path, rptRequest.getReportPath());
+		System.out.println(new File(dir).getAbsolutePath());
+		
+		this.commonDownloadUtil(path, displayName);
 		
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
