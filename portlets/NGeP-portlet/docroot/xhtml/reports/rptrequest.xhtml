@@ -100,7 +100,7 @@
 									<p:column headerText="#{lbl['lbl.txt.action']}" style="text-align:center;">
 										
 										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}" action="#{rptRequestBackingBean.attachmentDownload(rptRequest)}"
-											onstart="blkReportContent.show();" update="@form" ajax="false" style="text-align:center;">
+											onstart="blkReportContent.show();" update=":form:downloadGraphic" ajax="false" style="text-align:center;">
 											<p:graphicImage value="/css/images/design/download.png" id="downloadImage"
 												style="margin-right:2px;" />
 											<p:tooltip id="tooltip" for="downloadImage">
@@ -112,8 +112,8 @@
 									</p:column>
 									
 									<p:column style="text-align:center; width:7%">
-										<h:graphicImage title="#{lbl['lbl.rpt.downloaded']}" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png"
-											rendered="#{rptRequest.downloaded eq '0'}" />
+										<p:graphicImage id="downloadGraphic" title="#{lbl['lbl.rpt.downloaded']}" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png"
+											rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode) and rptRequest.downloaded eq '0'}" />
 									</p:column>
 									
 									<p:ajax event="rowSelectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" update=":form:rptRequestTable, :form:deleteBtn"/>
