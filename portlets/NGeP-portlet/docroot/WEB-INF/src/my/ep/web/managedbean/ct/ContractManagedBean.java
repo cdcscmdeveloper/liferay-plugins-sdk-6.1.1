@@ -26,6 +26,7 @@ import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -128,6 +129,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, CtAgency> newAgencyMap;
 	private Map<String, CtAgency> updateAgencyMap;
 	private Map<String, CtAgency> deleteAgencyMap;
+	private Map<String, CtContractZone> updateZoneMap;	
 	private Map<Long, CtContractItem> updateItemMap;		  
 	  
 	/**
@@ -1104,5 +1106,16 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setOwnerOrgProfile(boolean ownerOrgProfile) {
 		this.ownerOrgProfile = ownerOrgProfile;
+	}
+
+	public Map<String, CtContractZone> getUpdateZoneMap() {
+		if(updateZoneMap==null) {
+			updateZoneMap = new HashMap<String, CtContractZone>();
+		}
+		return updateZoneMap;
+	}
+
+	public void setUpdateZoneMap(Map<String, CtContractZone> updateZoneMap) {
+		this.updateZoneMap = updateZoneMap;
 	}
 }
