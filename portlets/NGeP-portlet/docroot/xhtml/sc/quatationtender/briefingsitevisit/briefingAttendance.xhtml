@@ -44,9 +44,14 @@
 				</tr>
 
 			</table>
-		
-
+		<ui:param name="scQt" value="#{bsvAttendanceBackingBean.managedBean.scQt}" />
 		<ui:include src="/xhtml/sc/bsvattendance/addattendance/addRegistrationdetails.xhtml"></ui:include>
+			
+		<ac:scRemarkAndAttachment header="#{lbl['lbl.sc.remark.supporting.doc']}"
+			remarkList="#{bsvAttendanceBackingBean.managedBean.scQtApprovalRemarks}"
+			attachmentList="#{bsvAttendanceBackingBean.managedBean.scQtApprovalAttachments}"
+			fileUploadListener="bsvAttendanceBackingBean.handleFileUpload"
+			updatable="false" />
 
 	</ui:define>
 </ui:composition>
