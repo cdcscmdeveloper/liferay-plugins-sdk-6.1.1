@@ -1532,12 +1532,15 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 			if (null != approval) {
 				List<ScQtApprovalRemark> newApprovalRemarks = finalizeRemarks(getManagedBean().getScQtApprovalRemarks());
 				if (CollectionUtils.isNotEmpty(newApprovalRemarks)) {
-					List<ScQtApprovalRemark> scQtApprovalRemarks = approval.getScQtApprovalRemarks();
-					if (scQtApprovalRemarks == null) {
-						scQtApprovalRemarks = new ArrayList<ScQtApprovalRemark>();
+					ScQtApprovalRemark newApprovalRemark = newApprovalRemarks.get(0);
+					if (newApprovalRemark.isBrandNew()) {
+						List<ScQtApprovalRemark> scQtApprovalRemarks = approval.getScQtApprovalRemarks();
+						if (scQtApprovalRemarks == null) {
+							scQtApprovalRemarks = new ArrayList<ScQtApprovalRemark>();
+						}
+						scQtApprovalRemarks.add(0, newApprovalRemark);
+						approval.setScQtApprovalRemarks(scQtApprovalRemarks);	
 					}
-					scQtApprovalRemarks.add(0, newApprovalRemarks.get(0));
-					approval.setScQtApprovalRemarks(scQtApprovalRemarks);
 				}
 				
 				List<ScQtApprovalAttachment> newApprovalAttachments = getManagedBean().getScQtApprovalAttachments();
