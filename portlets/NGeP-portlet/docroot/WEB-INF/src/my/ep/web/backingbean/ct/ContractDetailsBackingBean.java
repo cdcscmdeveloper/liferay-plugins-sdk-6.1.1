@@ -1172,7 +1172,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							// Validation for Approver
 							if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
 									&& getManagedBean().getApproverModel().getTarget().size() == 0) {
-									if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+									if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 											setTabValue("SE");
 									}else{
 										setTabCentralValue("SE");
