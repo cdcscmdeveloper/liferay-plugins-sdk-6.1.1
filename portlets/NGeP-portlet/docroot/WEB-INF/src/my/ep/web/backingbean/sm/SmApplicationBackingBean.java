@@ -1304,6 +1304,9 @@ public class SmApplicationBackingBean extends
 									.getDaysLeft() }));
 		}
 
+		//set Personnel List Count
+		calcPersonnelListCount();
+		
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
