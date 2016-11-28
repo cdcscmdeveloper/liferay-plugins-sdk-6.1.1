@@ -99,7 +99,7 @@
 													<p:commandLink process="@this" partialSubmit="true"
 														oncomplete="delAttPopup.show();"
 														update="@([id$=delAttPopupId])"
-														rendered="#{!cc.attrs.readonly and scRemarkAndAttachmentBackingBean.compareUserName(scAttachment.createdUser.loginId)}">
+														rendered="#{!cc.attrs.readonly and scRemarkAndAttachmentBackingBean.compareUserName(scAttachment.createdUser.loginId) and (cc.attrs.updatable or scAttachment.brandNew)}">
 														<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
 															styleClass="tasklist_title1" />
 														<f:setPropertyActionListener
