@@ -293,6 +293,7 @@
 		<portlet id="smExpiredPersonnel"></portlet>
 		<portlet id="smRequestActivation"></portlet>
 		<portlet id="forceReplaceSupplierAdmin"></portlet>
+		<portlet id="updatePersonnelInformation"></portlet>
 		<portlet id="reactivateBasicAccount"></portlet>
 		<portlet id="basicAccountActivation"></portlet>
 		<portlet id="supplierBusinessNature"></portlet>

@@ -177,6 +177,11 @@ import com.liferay.portal.kernel.util.StringUtil;
 public class SmApplicationBackingBean extends
 		BaseBackingBean<SmApplicationManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7293382095687532399L;
+
 	public static Logger log = Logger.getLogger(SmApplicationBackingBean.class);
 
 	private int currentTab;
@@ -5468,24 +5473,8 @@ public class SmApplicationBackingBean extends
 	 * @return boolean
 	 */
 	public boolean disableEpRoleDropDown(SmPersonnel smPersonnel) {
-		boolean retVal = false;
-		SmPersonnel prevPersonnel = getPrevApprovedPersonnel(smPersonnel);
-
-		// disabled drop down for Admin
-		if (!StringUtils.isBlank(smPersonnel.getEpRole())
-				&& (smPersonnel.getEpRole().equals(
-						RoleCode.MOF_SUPPLIER_ADMIN.value())
-						|| smPersonnel.getEpRole().equals(
-								RoleCode.SUPPLIER_TEMP.value()) || smPersonnel
-						.getEpRole().equals(
-								RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
-			retVal = true;
-		}
-		// disabled drop down if softcert processing
-		else if (prevPersonnel != null
-				&& prevPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
-			retVal = true;
-		}
+		boolean retVal = SmApplicationUtil.disableEpRoleDropDown(smPersonnel,
+				getManagedBean().getPrevApprovedPersonnels());
 		return retVal;
 	}
 
@@ -5498,43 +5487,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public boolean disableAuthorizedRadio(SmPersonnel personnel) {
 		boolean retVal = false;
-		if (!StringUtils.isBlank(personnel.getEpRole())) {
-			// Supplier Admin not allowed to change authorized flag
-			if (personnel.getEpRole().equals(RoleCode.SUPPLIER_TEMP.value())
-					|| personnel.getEpRole().equals(
-							RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-				retVal = true;
-			}
-			// disabled authorized flag if soft cert is still processing
-			else if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
-				retVal = true;
-			} else if (getManagedBean().isValidSmUserLimit()) {
-				// new personnel not allowed to change authorized flag if
-				// already reach limit
-				if (personnel.getPersonnelId() == null) {
-					retVal = true;
-				}
-				// already activated personnel not allowed to change authorized
-				// flag if already reach limit
-				else if (!StringUtils.isBlank(personnel.getEpRole())
-						&& personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					retVal = true;
-				}
-				// pending activation FL_USER not allowed to change authorized
-				// flag if already reach limit
-				else if (personnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
-						&& !StringUtils.isBlank(personnel.getEpRole())
-						&& personnel.getEpRole().equals(
-								RoleCode.FL_USER.value())) {
-					retVal = true;
-				}
-			}
-		} else {
-			// if no epRole and already reach limit
-			if (getManagedBean().isValidSmUserLimit()) {
-				retVal = true;
-			}
-		}
+		retVal = SmApplicationUtil.isDisableAuthorizedRadio(personnel,
+				getManagedBean().isValidSmUserLimit());
 		getManagedBean().setDisableAuthorizedRadio(retVal);
 		return retVal;
 	}
@@ -5566,106 +5520,12 @@ public class SmApplicationBackingBean extends
 	 *            - SmPersonnel object
 	 */
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
-		shareHolderBean.setBumiFlgTrans(shareHolderBean.getBumiFlg());
-		shareHolderBean.setMuslimFlgTrans(shareHolderBean.getMuslimFlg());
-		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
-			validatePaidCaptialAmt(false);
-			getManagedBean().setPersonnelInfoHeader(
-					SmCommonUtil.getMessage("lbl.sm.equity.owner.information",
-							null));
-		} else if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
-			getManagedBean().setPersonnelInfoHeader(
-					SmCommonUtil.getMessage("lbl.sm.person.panHdr", null));
-		}
-
-		if (shareHolderBean.getPmUser() != null
-				&& shareHolderBean.getPmUser().getUserId() != null
-				&& shareHolderBean.getPmUser().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE)
-			getManagedBean().setDisableIcEmail(true);
-		else
-			getManagedBean().setDisableIcEmail(false);
-
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
-		if (shareHolderBean.getEpRole() != null
-				&& (shareHolderBean.getEpRole().equalsIgnoreCase(
-						RoleCode.SUPPLIER_TEMP.value())
-						|| shareHolderBean.getEpRole().equalsIgnoreCase(
-								RoleCode.MOF_SUPPLIER_USER.value())
-						|| shareHolderBean.getEpRole().equalsIgnoreCase(
-								RoleCode.FL_USER.value())
-						|| shareHolderBean.getEpRole().equalsIgnoreCase(
-								RoleCode.MOF_SUPPLIER_ADMIN.value()) || shareHolderBean
-						.getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))) {
-			getManagedBean().setUserWithRole(true);
-		} else {
-			getManagedBean().setUserWithRole(false);
-		}
-		getManagedBean().setSelectedShareHolder(
-				(SmPersonnel) SerializationUtils.clone(shareHolderBean));
-		if (getManagedBean().getSelectedShareHolder().getPmCountry() == null) {
-			getManagedBean().getSelectedShareHolder().setPmCountry(
-					new PmCountry());
-		}
-		if (getManagedBean().getSelectedShareHolder().getPmRace() == null) {
-			getManagedBean().getSelectedShareHolder().setPmRace(new PmRace());
-		}
-		if (getManagedBean().getSelectedShareHolder().getTitle() == null) {
-			getManagedBean().getSelectedShareHolder().setTitle(
-					new PmSalutation());
-		}
-		if (getManagedBean().getSelectedShareHolder().getEpRole() == null) {
-			getManagedBean().getSelectedShareHolder().setEpRole("");
-		}
-
-		assignSelShareHolderAddress(getManagedBean().getSelectedShareHolder());
-		managePersonnelRoles("Y");
-		manageEquityLimit(getManagedBean().getSelectedShareHolder());
-		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
-			getManagedBean().getSelectedShareHolder().setIdentificationType(
-					SmApplicationUtil
-							.retrievePmParameterById(getManagedBean()
-									.getSelectedShareHolder()
-									.getIdentificationTypeId()));
-		}
-		if (getManagedBean().getSelectedShareHolder().getIdentificationType() == null) {
-			getManagedBean().getSelectedShareHolder().setIdentificationType(
-					new PmParameter());
-		}
-		getManagedBean().setRedirectToPersonPage(true);
-		getManagedBean().setRemoveEpRole(false);
-		buildRoleList(getManagedBean().getSelectedShareHolder());
-
-		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
-				&& (getManagedBean().getSelectedShareHolder().getEpRole() == null
-						|| getManagedBean().getSelectedShareHolder()
-								.getEpRole().isEmpty() || getManagedBean()
-						.getSelectedShareHolder().getEpRole()
-						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))) {
-			getManagedBean().getSelectedShareHolder().setEpRole(
-					RoleCode.MOF_SUPPLIER_USER.value());
-		}
-
-		// to determine whether shareholder for viewonly or edit
-		setShareHolderForViewOnly(shareHolderBean);
-
-		// disable shareholder/personnel name and nationality if already
-		// activate (have login id) or created in basic
-		setDisabledShareholderNameAndNationality(shareHolderBean);
+		SmApplicationUtil.assignSelShareHolder(shareHolderBean,
+				getManagedBean(), currentTab);
 
 		// set personnel field change value
 		SmFieldChangeUtil.initPersonnelChangeField(getManagedBean());
-
-		// disable or enable role selection
-		getManagedBean().setDisableRoleSelection(
-				disableEpRoleDropDown(shareHolderBean));
-
-		// disable or enable authorized flag
-		getManagedBean().setDisableAuthorizedRadio(
-				disableAuthorizedRadio(getManagedBean()
-						.getSelectedShareHolder()));
 
 	}
 
@@ -5768,87 +5628,10 @@ public class SmApplicationBackingBean extends
 	 * Builds the role list.
 	 */
 	public void buildRoleList(SmPersonnel personnel) {
-		List<SelectItem> roles = new ArrayList<SelectItem>();
-
-		// If authorized and current role is FL_USER, set to
-		// MOF_SUPPLIER_USER
-		if (personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-				&& StringUtils.isNotBlank(personnel.getEpRole())
-				&& personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
-			personnel.setEpRole(RoleCode.MOF_SUPPLIER_USER.value());
-		}
-		// if not authorized and current role is MOF_SUPPLIER_USER, set to null
-		else if (personnel.getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE
-				&& StringUtils.isNotBlank(personnel.getEpRole())
-				&& personnel.getEpRole().equals(
-						RoleCode.MOF_SUPPLIER_USER.value())) {
-			personnel.setEpRole(StringUtils.EMPTY);
-		}
-
-		// add MOF_SUPPLIER_USER role
-		if (!StringUtils.isBlank(personnel.getEpRole())
-				&& personnel.getEpRole().equals(
-						RoleCode.MOF_SUPPLIER_USER.value())) {
-			addRoles(roles, RoleCode.MOF_SUPPLIER_USER.value(), false);
-		} else {
-			if (!getManagedBean().isValidSmUserLimit()
-					&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				addRoles(roles, RoleCode.MOF_SUPPLIER_USER.value(), false);
-			}
-		}
-
-		// add FL_USER role
-		if (!StringUtils.isBlank(personnel.getEpRole())
-				&& personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
-			addRoles(roles, RoleCode.FL_USER.value(), false);
-		} else {
-			if (getManagedBean().isValidSmUserLimit()
-					&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				// add if already reach limit and personnel role is empty
-				if (StringUtils.isBlank(personnel.getEpRole())) {
-					addRoles(roles, RoleCode.FL_USER.value(), false);
-				}
-				// add if already reach limit and personnel role is not already
-				// activated as MOF_SUPPLIER_USER
-				else if (!StringUtils.isBlank(personnel.getEpRole())
-						&& !personnel.getEpRole().equals(
-								RoleCode.MOF_SUPPLIER_USER.value())
-						&& personnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-					addRoles(roles, RoleCode.FL_USER.value(), false);
-				}
-
-			}
-		}
-
-		// only add CM_USER for contractor that transact with federal govt
-		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)
-				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
-				&& getManagedBean().getSmAppl().getSmCompanyBasic()
-						.isWithFederal()) {
-			addRoles(roles, RoleCode.CM_USER.value(), false);
-		}
-
-		if (personnel.getEpRole() != null
-				&& (personnel.getEpRole().equalsIgnoreCase(
-						RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
-						.getEpRole().equalsIgnoreCase(
-								RoleCode.SUPPLIER_TEMP.value()))) {
-			addRoles(roles, personnel.getEpRole(), true);
-		}
-		getManagedBean().setePRoleList(roles);
-	}
-
-	private void addRoles(List<SelectItem> roles, String epRole, boolean isAdmin) {
-		SelectItem role = new SelectItem();
-		if (isAdmin) {
-			role.setLabel(getEpRoleDescByRoleCode(RoleCode.MOF_SUPPLIER_ADMIN
-					.value()));
-		} else {
-			role.setLabel(getEpRoleDescByRoleCode(epRole));
-		}
-		role.setValue(epRole);
-		roles.add(role);
+		getManagedBean().setePRoleList(
+				SmApplicationUtil.getPersonnelRoleItems(personnel,
+						getManagedBean().getSmAppl(), getManagedBean()
+								.isValidSmUserLimit()));
 	}
 
 	/**
@@ -5857,98 +5640,8 @@ public class SmApplicationBackingBean extends
 	 * @param personelType
 	 *            - the personel type to define equity or not
 	 */
-	public void assignNewShareHolder(String personelType) {
-		log.info("********* assignNewShareHolder *****");
-		SmPersonnel shr = new SmPersonnel();
-		shr.setEpRole("");
-		shr.setShareAmt(new BigDecimal(0));
-		shr.setSharePercentage(new BigDecimal(0));
-		setDefaultPersonnelValues(shr);
-		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
-
-		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
-			validatePaidCaptialAmt(false);
-			manageEquityLimit(shr);
-			if (!getManagedBean().isValidEquityLimit()) {
-				if (getManagedBean()
-						.getBusinessTypeVal()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)) {
-					throw new EpException(
-							MessageConst.ERROR_722547,
-							new String[] { String.valueOf(ruleHelper
-									.getMaxEquityOwnerCountForROBIndividual()) });
-				} else {
-					throw new EpException(
-							MessageConst.ERROR_722547,
-							new String[] { String.valueOf(ruleHelper
-									.getMaxEquityOwnerCountForOtherThanROBIndividaul()) });
-				}
-
-			}
-			shr.setEquityOwner(true);
-			getManagedBean().setPersonnelInfoHeader(
-					SmCommonUtil.getMessage("lbl.sm.equity.owner.information",
-							null));
-		} else if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
-			manageEquityLimit(shr);
-			getManagedBean().setPersonnelInfoHeader(
-					SmCommonUtil.getMessage("lbl.sm.person.panHdr", null));
-		}
-		assignSelShareHolderAddress(shr);
-
-		// display justification
-		shr.setJustificationReqd(SmApplicationUtil
-				.getSmAuthorizedPersonnelCountVO(
-						getManagedBean().getSmSupplier().getSupplierId(),
-						getManagedBean().getSmAppl().getApplType(),
-						getManagedBean().getSmAppl().getApplId(), true)
-				.isJustificationRequired());
-
-		getManagedBean().setSelectedShareHolder(shr);
-		if (getManagedBean().isValidSmUserLimit()) {
-			getManagedBean().setUserWithRole(false);
-		} else {
-			getManagedBean().setUserWithRole(true);
-		}
-
-		// if already reach authorized limit, default authorized flag to 0
-		if (getManagedBean().isValidSmUserLimit()) {
-			getManagedBean().getSelectedShareHolder().setAuthorizedFlg(0);
-		}
-		buildRoleList(getManagedBean().getSelectedShareHolder());
-
-		getManagedBean().setRedirectToPersonPage(true);
-
-		// set default nationality to MALAYSIA
-		getManagedBean()
-				.getSelectedShareHolder()
-				.setPmCountry(
-						SmCommonUtil
-								.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
-		SmCommonUtil.setDefaultPersonnelNationality(getManagedBean()
-				.getSelectedShareHolder());
-		getManagedBean().setDisableIcEmail(false);
-
-		// reset personnel view only to false for add new
-		getManagedBean().setShowPersonnelViewOnly(false);
-
-		// reset personnel name and nationality to false for add new
-		getManagedBean().setDisabledShareholderPersonnelNameAndNationality(
-				false);
-
-		// reset previous approved personnel because not exist for new personnel
-		getManagedBean().setLatestPersonnel(null);
-
-		getManagedBean()
-				.setDisableRoleSelection(
-						disableEpRoleDropDown(getManagedBean()
-								.getSelectedShareHolder()));
-		getManagedBean().setDisableAuthorizedRadio(
-				disableAuthorizedRadio(getManagedBean()
-						.getSelectedShareHolder()));
+	public void assignNewShareHolder() {
+		SmApplicationUtil.initNewSmPersonnel(getManagedBean(), currentTab);
 
 	}
 
@@ -5961,47 +5654,10 @@ public class SmApplicationBackingBean extends
 	 */
 	public void deleteSelectedShareHolders(String personType,
 			boolean confirmDelete) {
-		boolean existAsBankSignatory = false;
-		boolean existAsBranchPoc = false;
-		boolean isDeletedAuthPersonnel = false;
-		getManagedBean().setPersonType(personType);
-		for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
-			if (shr.getEpRole() != null
-					&& (shr.getEpRole().equalsIgnoreCase(
-							RoleCode.SUPPLIER_TEMP.value())
-							|| shr.getEpRole().equalsIgnoreCase(
-									RoleCode.MOF_SUPPLIER_ADMIN.value()) || shr
-							.getEpRole().equalsIgnoreCase(
-									RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
-				throw new EpException(MessageConst.ERROR_722553);
-			}
-			if (SmApplicationUtil.isPersonnelBankSignatory(shr,
-					getManagedBean().getSmAppl().getSmSupplierBanks())) {
-				existAsBankSignatory = true;
-			}
-			if (SmApplicationUtil.isPersonnelBranchPointOfContact(shr,
-					getManagedBean().getSmAppl().getSmSupplierBranches())) {
-				existAsBranchPoc = true;
-			}
+		int countDeleteAuthPersonnel = SmApplicationUtil
+				.validateDeletePersonnel(personType, getManagedBean());
 
-			if (existAsBankSignatory && existAsBranchPoc) {
-				throw new EpException(MessageConst.ERROR_722588);
-			} else {
-				if (existAsBankSignatory) {
-					throw new EpException(MessageConst.ERROR_722585);
-				} else if (existAsBranchPoc) {
-					throw new EpException(MessageConst.ERROR_722586);
-				}
-			}
-
-			if (shr.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				isDeletedAuthPersonnel = true;
-			}
-		}
-		log.info("*** Delete Share Holders ******* "
-				+ getManagedBean().getSelectedShareHolders().size());
-
-		if (!confirmDelete && isDeletedAuthPersonnel) {
+		if (!confirmDelete && countDeleteAuthPersonnel > 0) {
 			if (personType
 					.equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)) {
 				RequestContext.getCurrentInstance().execute(
@@ -8006,17 +7662,11 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setTaskId(resDTO.getTaskId());
 			log.info(">>>>>>>>TASK ID AFTER:" + getManagedBean().getTaskId()
 					+ "<<<<<<<<");
-			if (resDTO != null) {
-				log.info("******* From SO ******** " + resDTO.isBpmSuccess());
-				valid = resDTO.isBpmSuccess();
-				if (!valid) {
-					log.info("******* Process No Valid ******");
-					throw new EpException(MessageConst.ERROR_700020);
-				}
-			} else {
-				log.info("*** The Save as draft returned null **** ");
-				valid = false;
-				throw new EpException(MessageConst.ERROR_722519);
+			log.info("******* From SO ******** " + resDTO.isBpmSuccess());
+			valid = resDTO.isBpmSuccess();
+			if (!valid) {
+				log.info("******* Process No Valid ******");
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 			return valid;
 		} finally {
@@ -8741,8 +8391,7 @@ public class SmApplicationBackingBean extends
 					reqDTO.setApproverLoginIds(approverLoginIds);
 				}
 
-				ReviewApplicationResDTO revApplicationResDTO = reqSO
-						.submitPOorApproverReviewToBPM(reqDTO);
+				reqSO.submitPOorApproverReviewToBPM(reqDTO);
 
 				/*
 				 * if (revApplicationResDTO.isSuccessful()) { // to auto
@@ -9747,29 +9396,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Sets the default values for new added personnel.
-	 * 
-	 * @param shr
-	 *            - SmPersonnel object
-	 */
-	private void setDefaultPersonnelValues(SmPersonnel shr) {
-		shr.setTitle(new PmSalutation());
-		shr.setRevNo(1);
-		shr.setSmAppl(getManagedBean().getSmAppl());
-		shr.setBumiFlg(1);
-		shr.setMuslimFlg(1);
-		shr.setPmCountry(new PmCountry());
-		shr.setPmRace(new PmRace());
-		shr.setIdentificationType(new PmParameter());
-		shr.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-		shr.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());
-		shr.setSmStaffExperiences(new ArrayList<SmStaffExperience>());
-		shr.setSmRelatedCompanies(new ArrayList<SmRelatedCompany>());
-		shr.setSmAssociationBodies(new ArrayList<SmAssociationBody>());
-		shr.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-	}
-
-	/**
 	 * Sets the default review section for approver in the SmAppSectionReview.
 	 */
 	private void setDefaultApproverReviewSection() {
@@ -10512,24 +10138,9 @@ public class SmApplicationBackingBean extends
 	 * 
 	 */
 	public void unSelectAdmin(AjaxBehaviorEvent e) {
-		if (getManagedBean().getSelectedShareHolders() != null) {
-			Iterator<SmPersonnel> iterator = getManagedBean()
-					.getSelectedShareHolders().iterator();
-			while (iterator.hasNext()) {
-				SmPersonnel personnel = iterator.next();
-				if ((personnel.getEpRole() != null && (personnel.getEpRole()
-						.equals(RoleCode.SUPPLIER_TEMP.value())
-						|| personnel.getEpRole().equalsIgnoreCase(
-								RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
-						.getEpRole().equalsIgnoreCase(
-								RoleCode.BASIC_SUPPLIER_ADMIN.value())))
-						|| (personnel.isPrevApprovedDirector() || personnel
-								.isPrevApprovedEquityOwner())
-						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
-					iterator.remove();
-				}
-			}
-		}
+		SmApplicationUtil
+				.removePersonnelAdminOrSoftcertProcessFromList(getManagedBean()
+						.getSelectedShareHolders());
 	}
 
 	public boolean disableDeleteBtnFacility(List<PmCategoryL3> facilitiesVOList) {
@@ -10999,17 +10610,8 @@ public class SmApplicationBackingBean extends
 	 * @return String - MY Identity status description value
 	 */
 	public String getMyIdentityStatusDescription(String identityResponseCode) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("lbl.sm.myIdentityCode.");
-		if (StringUtils.isNotBlank(identityResponseCode)) {
-			sb.append(identityResponseCode);
-		} else {
-			sb.append("emptyVal");
-		}
-		log.debug("*** Value from getMyIdentityStatusDescription output is ****** "
-				+ sb.toString());
-		return SmCommonUtil.getMessage(sb.toString(), null);
-
+		return SmCommonUtil.getInstance().getMyIdentityStatusDescription(
+				identityResponseCode);
 	}
 
 	/**
@@ -11020,7 +10622,7 @@ public class SmApplicationBackingBean extends
 	 */
 	private void setShareHolderForViewOnly(SmPersonnel smPersonnel) {
 		getManagedBean().setShowPersonnelViewOnly(
-				isPersonnelViewOnly(smPersonnel));
+				SmApplicationUtil.isPersonnelViewOnly(smPersonnel));
 		if (getManagedBean().isShowPersonnelViewOnly()) {
 			getManagedBean()
 					.setSelectedShareholderIdentificationType(
@@ -11039,11 +10641,7 @@ public class SmApplicationBackingBean extends
 	 * @return true, if is personnel view only
 	 */
 	public boolean isPersonnelViewOnly(SmPersonnel smPersonnel) {
-		boolean retVal = false;
-		if (smPersonnel.isPrevApprovedDirector()
-				|| smPersonnel.isPrevApprovedEquityOwner()) {
-			retVal = true;
-		}
+		boolean retVal = SmApplicationUtil.isPersonnelViewOnly(smPersonnel);
 		return retVal;
 	}
 
@@ -11056,22 +10654,10 @@ public class SmApplicationBackingBean extends
 	 */
 	private void setDisabledShareholderNameAndNationality(
 			SmPersonnel smPersonnel) {
-		boolean retVal = false;
-		try {
-			if (smPersonnel.getPmUser() != null
-					&& smPersonnel.getPmUser().getRecordStatusFlg() == 1) {
-				retVal = true;
-			} else if (SmApplicationUtil.isPersonnelCreatedInBasic(smPersonnel,
-					getManagedBean().getSmAppl().getSmSupplier()
-							.getSupplierId())) {
-				retVal = true;
-			}
-		} catch (Exception ex) {
-			log.info(ex.getMessage());
-		}
-
 		getManagedBean().setDisabledShareholderPersonnelNameAndNationality(
-				retVal);
+				SmApplicationUtil.isDisabledShareholderNameAndNationality(
+						smPersonnel, getManagedBean().getSmAppl()
+								.getSmSupplier()));
 	}
 
 	/**
