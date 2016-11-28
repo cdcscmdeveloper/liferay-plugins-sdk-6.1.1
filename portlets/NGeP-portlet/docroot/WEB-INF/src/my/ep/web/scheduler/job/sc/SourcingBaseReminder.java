@@ -34,8 +34,8 @@ import org.apache.log4j.Logger;
  * @author Sri
  * @since 16/10/2016
  */
-public abstract class BaseReminderJob {
-	private static Logger log = EpLogger.getLogger(BaseReminderJob.class);
+public abstract class SourcingBaseReminder {
+	private static Logger log = EpLogger.getLogger(SourcingBaseReminder.class);
 
 	private List<ReminderBean> reminderBeans;
 	private String kpiCode;
