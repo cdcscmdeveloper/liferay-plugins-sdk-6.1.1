@@ -1536,7 +1536,7 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 					if (scQtApprovalRemarks == null) {
 						scQtApprovalRemarks = new ArrayList<ScQtApprovalRemark>();
 					}
-					scQtApprovalRemarks.add(newApprovalRemarks.get(0));
+					scQtApprovalRemarks.add(0, newApprovalRemarks.get(0));
 					approval.setScQtApprovalRemarks(scQtApprovalRemarks);
 				}
 				
