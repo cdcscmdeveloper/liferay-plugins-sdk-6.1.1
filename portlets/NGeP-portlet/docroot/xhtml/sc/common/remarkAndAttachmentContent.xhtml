@@ -43,12 +43,12 @@
 								<td><p:inputTextarea cols="#{cc.attrs.numberOfCols}" maxlength="1000"
 								onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 										value="#{scRemark.remark}"
-										rendered="#{scRemark.brandNew or scRemark.editable}"
+										rendered="#{scRemark.brandNew or (cc.attrs.updatable and scRemark.editable)}"
 										disabled="#{cc.attrs.readonly}">
 										<p:ajax partialSubmit="true" process="@this" update="@this" />
 									</p:inputTextarea>
 									<h:outputText value="#{scRemark.remark}"
-										rendered="#{!scRemark.brandNew and !scRemark.editable}"
+										rendered="#{!scRemark.brandNew and (!cc.attrs.updatable or !scRemark.editable)}"
 										style="display: inline-block; width:220px;word-wrap: break-word;" />
 								</td>
 							</tr>
