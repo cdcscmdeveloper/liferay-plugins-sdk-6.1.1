@@ -4479,13 +4479,34 @@ public class SmCommonUtil {
 				.retrieveUserIdsByRoleAndZone(userReqDTO);
 		return userResDTO.getUserIdList();
 	}
-	
-	public SmSupplierCategory retrieveSupplierCategoryByApplIdAndCategoryId(Long applId, Long categoryL3Id){
+
+	public SmSupplierCategory retrieveSupplierCategoryByApplIdAndCategoryId(
+			Long applId, Long categoryL3Id) {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setApplId(applId);
 		reqDTO.setCategoryId(categoryL3Id);
-		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveCategoryByApplIdAndCategoryId(reqDTO);
-	
-		return resDTO.getSupplierCategory();	
+		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO()
+				.retrieveCategoryByApplIdAndCategoryId(reqDTO);
+
+		return resDTO.getSupplierCategory();
+	}
+
+	/**
+	 * Gets the my identity status description based on the responsecode.
+	 * 
+	 * @param identityResponseCode
+	 *            - the identity response code
+	 * @return String - MY Identity status description value
+	 */
+	public String getMyIdentityStatusDescription(String identityResponseCode) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("lbl.sm.myIdentityCode.");
+		if (StringUtils.isNotBlank(identityResponseCode)) {
+			sb.append(identityResponseCode);
+		} else {
+			sb.append("emptyVal");
+		}
+		return getMessage(sb.toString(), null);
+
 	}
 }
