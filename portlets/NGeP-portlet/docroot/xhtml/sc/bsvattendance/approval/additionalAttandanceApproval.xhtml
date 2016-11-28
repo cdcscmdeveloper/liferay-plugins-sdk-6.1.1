@@ -12,25 +12,28 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<ui:param name="scQt" value="#{bsvAttendanceBackingBean.managedBean.scQt}" />
+		<ui:param name="scQtApproval" value="#{bsvAttendanceBackingBean.managedBean.scQtApproval}" />
+	
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
 		
-		<ac:gpkiPopup textBeforeSign="#{qTScheduleDetailBackingBean.textBeforeSign}"
-			postSignAction="#{qTScheduleDetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
-			enableAutoUpdate="#{qTScheduleDetailBackingBean.enableAutoUpdate()}" />
+		<ac:gpkiPopup textBeforeSign="#{bsvAttendanceBackingBean.textBeforeSign}"
+			postSignAction="#{bsvAttendanceBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{bsvAttendanceBackingBean.enableAutoUpdate()}" />
 
-		<p:messages id="messages" showDetail="true" autoUpdate="#{qTScheduleDetailBackingBean.managedBean.autoUpdate}"
+		<p:messages id="messages" showDetail="true" autoUpdate="#{bsvAttendanceBackingBean.managedBean.autoUpdate}"
 			closable="true" severity="error, info" />
 		<div class="ppRightBtn">
 			<ui:repeat var="bpmAction"
-				value="#{qTScheduleDetailBackingBean.managedBean.outComes}">
+				value="#{bsvAttendanceBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel"
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 					styleClass="ui-button" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
-					action="#{qTScheduleDetailBackingBean.updateBpmTask(bpmAction)}" />
+					action="#{bsvAttendanceBackingBean.updateAdditionalAttendanceBpmTask(bpmAction)}" />
 			</ui:repeat>
 		</div>
 
@@ -39,12 +42,12 @@
 		<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 			<p:dataTable id="publicrequestdtlid"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{qTScheduleDetailBackingBean.managedBean.scQtApprovalRequestList}"
+				value="#{bsvAttendanceBackingBean.managedBean.scQtApprovalRequests}"
 				var="publicapproval" rowIndexVar="index" editable="true"
 				rowKey="#{publicapproval}">
 				<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
 					<h:outputText
-						value="#{qTScheduleDetailBackingBean.getParameterDesc(publicapproval.approvalType)}" />
+						value="#{bsvAttendanceBackingBean.getParameterDesc(publicapproval.approvalType)}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -52,19 +55,19 @@
 		<p:panel header="#{lbl['lbl.sc.brifing.sv.dtls']}" toggleable="true">
 			<!-- <h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
 				<h:outputText value="* #{lbl['lbl.sc.all.attendance.required.for.briefiing']}"
-					rendered="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.allBriefingReq}"
+					rendered="#{bsvAttendanceBackingBean.managedBean.scQtBriefing.scQtBsv.allBriefingReq}"
 					style="font-weight:bold;text-align: left;" />
 
 				<h:outputText
-					value="#{lbl['lbl.sc.qt.atleast']} #{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.minBriefingAttend} Attandence required for Briefing and SiteVisit"
-					rendered="#{!qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.allBriefingReq}"
+					value="#{lbl['lbl.sc.qt.atleast']} #{bsvAttendanceBackingBean.managedBean.scQtBriefing.scQtBsv.minBriefingAttend} Attandence required for Briefing and SiteVisit"
+					rendered="#{!bsvAttendanceBackingBean.managedBean.scQtBriefing.scQtBsv.allBriefingReq}"
 					style="font-weight:bold;text-align: left;" />
 
 			</h:panelGroup> -->
 
 			<p:dataTable id="samebsvdtls" var="brfsitdtl"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing}"
+				value="#{bsvAttendanceBackingBean.managedBean.scQtBriefing}"
 				style="width:100%">
 
 				<p:column headerText="#{lbl['lbl.sc.description']}"
@@ -96,7 +99,7 @@
 				<p:column headerText="#{lbl['lbl.sc.status']}"
 					style="width:9%;white-space: normal;">
 					<h:outputText
-						value="#{qTScheduleDetailBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+						value="#{bsvAttendanceBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
 				</p:column>
 
 			</p:dataTable>
@@ -108,7 +111,7 @@
 
 			<p:dataTable id="complisttbl" var="scQtBriefReg" style="width:100%"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{qTScheduleDetailBackingBean.managedBean.briefingRegistrationList}">
+				value="#{bsvAttendanceBackingBean.managedBean.briefingRegistrationList}">
 
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 
@@ -120,9 +123,10 @@
 			</p:dataTable>
 		</p:panel>
 		
-		<ac:scRemarkAndAttachment
-			remarkList="#{qTScheduleDetailBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
-			showAttachment="false" />
+		<ac:scRemarkAndAttachment header="#{lbl['lbl.sc.remark.supporting.doc']}"
+			remarkList="#{bsvAttendanceBackingBean.managedBean.scQtApprovalRemarks}"
+			attachmentList="#{bsvAttendanceBackingBean.managedBean.scQtApprovalAttachments}"
+			fileUploadListener="bsvAttendanceBackingBean.handleFileUpload" />
 
 	</ui:define>
 </ui:composition>
