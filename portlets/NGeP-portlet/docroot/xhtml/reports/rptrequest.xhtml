@@ -24,8 +24,10 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
-	
+			
 	  	<p:remoteCommand name="onload" action="#{rptRequestBackingBean.getLatestStatusCodeForRequests()}" partialSubmit="true" process="@this" update="@form"/>
+	  
+		<p:remoteCommand name="stop" update="@form" />
 	  
 		<p:messages id="messages" autoUpdate="true" closable="true" />
 		
@@ -100,7 +102,8 @@
 									<p:column headerText="#{lbl['lbl.txt.action']}" style="text-align:center;">
 										
 										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}" action="#{rptRequestBackingBean.attachmentDownload(rptRequest)}"
-											onstart="blkReportContent.show();" update=":form:downloadGraphic" ajax="false" style="text-align:center;">
+										    onclick="setTimeout('location.reload();', 1000);"
+											style="text-align:center;">
 											<p:graphicImage value="/css/images/design/download.png" id="downloadImage"
 												style="margin-right:2px;" />
 											<p:tooltip id="tooltip" for="downloadImage">
@@ -108,6 +111,7 @@
 											</p:tooltip>	
 											
 										</p:commandLink>
+										
 										
 									</p:column>
 									

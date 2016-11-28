@@ -664,8 +664,8 @@ width:32.5%;
 					<p:dialog id="dialog1"  widgetVar="ex" header="Generate Report Status" onHide="jQuery('#someId').hide();" onShow="jQuery('#someId').show();" draggable="false" closable="true" resizable="false">
 						<table>
 							<tr>
-								<td style="padding-left: 5px; padding-right: 5px" width="3px">
-									<p:graphicImage value="/css/images/design/tooltips.png" />
+								<td style="padding:5px" width="20px">
+									<p:graphicImage value="/css/images/design/tooltips.png" height="20px" width="20px"/>
 								</td>
 								<td>
 									<h:outputText value="System starts generating the report"/>
@@ -679,11 +679,17 @@ width:32.5%;
 								</td>
 							</tr>
 							<tr>
+								<td colspan="2" height="2px"></td>
+							</tr>
+							<tr>
 								<td colspan="2">
 									<p:commandButton value="Continue" onclick="ex.hide();"/>
 									<p:commandButton value="View Report" action="#{reportBackingBean.redirect()}">
 									</p:commandButton>
 								</td>
+							</tr>
+							<tr>
+								<td colspan="2" height="3px"></td>
 							</tr>
 						</table>
 					</p:dialog>
