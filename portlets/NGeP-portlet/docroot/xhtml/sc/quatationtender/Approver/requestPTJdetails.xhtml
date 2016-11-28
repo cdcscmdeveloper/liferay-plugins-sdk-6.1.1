@@ -11,13 +11,13 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.ministry']}" /></td>
 				<td colspan="3"><p:inputText
-						value="#{approvalBackingBean.retrieveMinistryByOrgProfileId(approvalBackingBean.managedBean.qt.pmOrgProfile.orgProfileId)}"
+						value="#{approvalBackingBean.retrieveMinistryByOrgProfileId(scQt.pmOrgProfile.orgProfileId)}"
 						disabled="true" readonly="true" style="width:866px;" /></td>
 			</tr>
 			<!-- <tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.department']}" /></td>
 				<td><p:inputText
-						value="#{approvalBackingBean.managedBean.qt.pmOrgProfile.parentOrgProfile.orgName}"
+						value="#{scQt.pmOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" readonly="true" size="80" /></td>
 				<td />
 				<td />
@@ -25,18 +25,18 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td colspan="3"><p:inputText
-						value="#{approvalBackingBean.retrievePTJByOrgProfileId(approvalBackingBean.managedBean.qt.pmOrgProfile.orgProfileId,approvalBackingBean.isQTStatusPublished(approvalBackingBean.managedBean.currentStatusId)?approvalBackingBean.managedBean.qt.publishDate : approvalBackingBean.managedBean.qt.createdDate)}"
+						value="#{approvalBackingBean.retrievePTJByOrgProfileId(scQt.pmOrgProfile.orgProfileId,approvalBackingBean.isQTStatusPublished(approvalBackingBean.managedBean.currentStatusId)?scQt.publishDate : scQt.createdDate)}"
 						disabled="true" readonly="true" style="width:866px;" /></td>
 			</tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.requestor']}" /></td>
 				<td style="width: 450px;"><p:inputText
-						value="#{approvalBackingBean.retriveUserName(approvalBackingBean.managedBean.qt.createdBy)}"
+						value="#{approvalBackingBean.retriveUserName(scQt.createdBy)}"
 						disabled="true" readonly="true" style="width:350px;" /></td>
 				
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.request.date']}" /></td>
 				<td><p:inputText
-						value="#{approvalBackingBean.managedBean.scQtApproval.requestDate}"
+						value="#{scQtApproval.requestDate}"
 						disabled="true" readonly="true" style="width:212px;">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -45,17 +45,17 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td><p:inputText
-						value="#{approvalBackingBean.managedBean.qt.qtNo}" disabled="true"
+						value="#{scQt.qtNo}" disabled="true"
 						readonly="true" style="width:350px;" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 				<td><p:inputText
-						value="#{approvalBackingBean.getParameterDesc(approvalBackingBean.managedBean.qt.procurementMode)}"
+						value="#{approvalBackingBean.getParameterDesc(scQt.procurementMode)}"
 						disabled="true" readonly="true" style="width:212px;" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea
-						value="#{approvalBackingBean.managedBean.qt.qtTitle}" cols="170"
+						value="#{scQt.qtTitle}" cols="170"
 						rows="3" style=" margin-bottom:5px; width:866px;" disabled="true" /></td>
 			</tr>
 		</table>
