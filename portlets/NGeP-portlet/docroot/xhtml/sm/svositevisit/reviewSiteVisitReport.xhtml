@@ -28,7 +28,8 @@
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sm.action']}">
-			<p:commandButton value="#{lbl['lbl.btn.view']}" oncomplete="poReportDlg.show()"  update="@form"
+			<p:commandButton value="#{lbl['lbl.btn.view']}" oncomplete="blockWidget.hide();poReportDlg.show();"  
+			update="@form" onclick="blockWidget.show();"
 				action="#{svoSiteVisitBackingBean.selectReportTask(svTask)}">
 			</p:commandButton>
 
