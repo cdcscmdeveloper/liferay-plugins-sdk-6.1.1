@@ -8,6 +8,10 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
@@ -59,6 +63,19 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private List<SmMofAccount> mofAccountsList;
 	private List<ScQtSupplier> restrictedSupplierList;
 	private ScQtBsvRegistration selectedbriefRegistrationEnableDisable; 
+	
+	private ScQtApproval scQtApproval;
+	private List<ScQtApprovalRemark> scQtApprovalRemarks;
+	private List<ScQtApprovalAttachment> scQtApprovalAttachments;
+	/** The sc qt approval request list. */
+	private List<ScQtApprovalRequest> scQtApprovalRequests;
+	
+	/** The auto update. */
+	private boolean autoUpdate = true;
+	
+	/** The action. */
+	private String action;
+	
 	/**
 	 * @return the briefingRegistrationList
 	 */
@@ -359,6 +376,92 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	 */
 	public void setMaintanceFlow(boolean maintanceFlow) {
 		this.maintanceFlow = maintanceFlow;
+	}
+
+	/**
+	 * @return the scQtApproval
+	 */
+	public ScQtApproval getScQtApproval() {
+		return scQtApproval;
+	}
+
+	/**
+	 * @param scQtApproval the scQtApproval to set
+	 */
+	public void setScQtApproval(ScQtApproval scQtApproval) {
+		this.scQtApproval = scQtApproval;
+	}
+
+	/**
+	 * @return the scQtApprovalRemarks
+	 */
+	public List<ScQtApprovalRemark> getScQtApprovalRemarks() {
+		return scQtApprovalRemarks;
+	}
+
+	/**
+	 * @param scQtApprovalRemarks the scQtApprovalRemarks to set
+	 */
+	public void setScQtApprovalRemarks(List<ScQtApprovalRemark> scQtApprovalRemarks) {
+		this.scQtApprovalRemarks = scQtApprovalRemarks;
+	}
+
+	/**
+	 * @return the scQtApprovalAttachments
+	 */
+	public List<ScQtApprovalAttachment> getScQtApprovalAttachments() {
+		return scQtApprovalAttachments;
+	}
+
+	/**
+	 * @param scQtApprovalAttachments the scQtApprovalAttachments to set
+	 */
+	public void setScQtApprovalAttachments(
+			List<ScQtApprovalAttachment> scQtApprovalAttachments) {
+		this.scQtApprovalAttachments = scQtApprovalAttachments;
+	}
+
+	/**
+	 * @return the scQtApprovalRequests
+	 */
+	public List<ScQtApprovalRequest> getScQtApprovalRequests() {
+		return scQtApprovalRequests;
+	}
+
+	/**
+	 * @param scQtApprovalRequests the scQtApprovalRequests to set
+	 */
+	public void setScQtApprovalRequests(
+			List<ScQtApprovalRequest> scQtApprovalRequests) {
+		this.scQtApprovalRequests = scQtApprovalRequests;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the action
+	 */
+	public String getAction() {
+		return action;
+	}
+
+	/**
+	 * @param action the action to set
+	 */
+	public void setAction(String action) {
+		this.action = action;
 	}
 	
 }
