@@ -14,29 +14,23 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
-import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
-import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
-import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -45,35 +39,22 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
-import my.ep.dto.sc.quationtender.BriefingReqDTO;
-import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
-import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.MessageUtils;
-import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -94,9 +75,6 @@ public class QTScheduleDetailBackingBean extends
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTScheduleDetailBackingBean.class);
-	
-	/** The text before sign. */
-	private String textBeforeSign;
 
 	/**
 	 * Debug logger.
@@ -672,226 +650,6 @@ public class QTScheduleDetailBackingBean extends
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#
-	 * preRenderView()
-	 */
-	/**
-	 *Navigate to additional Attendance Approval Details Page.
-	 * 
-	 *
-	 */
-	public void preRenderView() {
-
-		SCSiteVisitProposalDataType payLoad = getBpmTaskDetails(SCSiteVisitProposalDataType.class, null);
-
-		if (SCProcessNameConst.APPROVE_SUPPLIER_ADD.equalsIgnoreCase(this
-				.getManagedBean().getTaskName())) {
-
-			IQTBriefingSO briefingSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTBriefingSO.class);
-			BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-			briefingReqDTO.setQtId(payLoad.getQtId());
-			briefingReqDTO.setApprovalReqId(Long.valueOf(payLoad
-					.getXflagPublication()));
-
-			BriefingResDTO briefingResDTO = briefingSO
-					.retrieveRegistartionDtlsByQt(briefingReqDTO);
-			ScQt scQt = briefingResDTO.getScQt();
-			List<ScQtApprovalRequest> approvalRequests = briefingResDTO
-					.getApprovalRequests();
-			ScQtApproval approval = approvalRequests.get(0).getScQtApproval();
-			approval.setScQtApprovalRemarks(initializeRemarks(approval, scQt.getCurrentWorkFlowStatus(),
-					approval.getScQtApprovalRemarks(), ScQtApprovalRemark.class));
-			this.getManagedBean().setScQtApproval(approval);
-			this.getManagedBean().setScQtApprovalRequestList(approvalRequests);
-			this.getManagedBean().setQt(scQt);
-			this.getManagedBean().setBriefingRegistrationList(
-					briefingResDTO.getBriefingRegResultBean().getResultList());
-			this.getManagedBean().setQtBriefing(
-					briefingResDTO.getScQtBriefing());
-
-		}
-
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication()
-				.getNavigationHandler()
-				.handleNavigation(fc, null,
-						"/xhtml/sc/bsvattendance/approval/additionalAttandanceApproval.xhtml");
-	}
-	
-	/**
-	 * Submit Approval Details. Event handle to submit data for bpm.
-	 * 
-	 * @param action
-	 * 		the action out come
-	 */
-	public String updateBpmTask(String action) {
-		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
-			ScQtApproval approval = this.getManagedBean().getScQtApproval();
-			if (null != approval) {
-				List<ScQtApprovalRemark> remarks = approval.getScQtApprovalRemarks();
-				if (null != remarks) {
-					for (int i = 0; i < remarks.size(); i++) {
-						String userRemark = remarks.get(i).getRemark();
-						if (null == userRemark || "".equals(userRemark)) {
-							throw new EpException(MessageConst.ERROR_100022,
-									new String[] { 
-										ResourceBundleUtils.getMessage(
-											"lbl.sc.remark", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()) });
-						}
-					}
-				}	
-			}
-			
-			return approveAdditionalAttendance(action, null);
-		} else {
-			this.getManagedBean().setAction(action);
-			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			
-			return null;
-		}
-	}
-	
-	/**
-	 * Gpki sign action.Event handle when Approver submit.
-	 * 
-	 * @param digiSign
-	 *            (Mandatory)
-	 * @return the string(ACKNOWLEDGE_PAGE)
-	 */
-	public String gpkiSignAction(PmDigiSign digiSign) {
-		return approveAdditionalAttendance(this.getManagedBean()
-				.getAction(), digiSign);
-	}
-	
-	/**
-	 * Gets the text before sign.
-	 * 
-	 * @return the text before sign
-	 */
-	public String getTextBeforeSign() {
-		return textBeforeSign;
-	}
-
-	/**
-	 * Sets the text before sign.
-	 * 
-	 * @param textBeforeSign
-	 *            the new text before sign
-	 */
-	public void setTextBeforeSign(String textBeforeSign) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getManagedBean().getQt().getQtNo());
-		sb.append(new FacesScopes().getUserSessionBean().getUserId());
-		this.textBeforeSign = sb.toString();
-	}
-
-	/**
-	 * Submit registarion details.
-	 * 
-	 * @param outcome
-	 *            the outcome
-	 * @param digiSign
-	 * 			the PmDigiSign instance
-	 * @return the string
-	 */
-	public String approveAdditionalAttendance(String outcome, PmDigiSign digiSign) {
-
-		BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-
-		FacesScopes facesScopes = new FacesScopes();
-		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-		
-		IQTBriefingSO briefingSO;
-		try {
-			ScQt scQt = this.getManagedBean().getQt();
-			List<ScQtBsvRegistration> registrations = this.getManagedBean()
-					.getBriefingRegistrationList();
-			
-			briefingReqDTO.setBriefingReqDtls(registrations);
-			briefingReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			briefingReqDTO.setScQt(scQt);
-			briefingReqDTO.setToken(ctxToken);
-			briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());
-			briefingReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
-			briefingReqDTO.setOutcome(outcome);
-			briefingReqDTO.setTplSpecZoneDtl(this.getManagedBean()
-					.getQtBriefing().getScQtBsv().getTplSpecZoneDtl());
-			ScQtApproval approval = this.getManagedBean().getScQtApproval();
-			if (null != approval) {
-				finalizeRemarks(approval.getScQtApprovalRemarks());
-				updateApprovalRequest(this.getManagedBean()
-						.getScQtApprovalRequestList(), outcome);
-				approval.setScQtApprovalDtls(this.getManagedBean()
-						.getScQtApprovalRequestList());
-				briefingReqDTO.setApproval(approval);
-
-			}
-			
-			if (null != digiSign) {
-				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_BSV_ATTENDANCE,
-						scQt.getQtId(), scQt.getQtNo());
-			}
-			briefingReqDTO.setDigiSignData(digiSign);
-			
-			briefingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
-
-			BriefingResDTO resDTO = briefingSO
-					.updateSupplierRegistionsNSendNotifications(briefingReqDTO);
-
-			if (resDTO.isSuccessful()) {
-
-				renewSesionObject();
-
-				Locale locate = new FacesScopes().getUserLocale();
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														getMsgCodeByOutCome(outcome),
-														new String[] {
-															ResourceBundleUtils.getMessage(
-																	"lbl.sc.bsv.additional.attendance", 
-																	ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-																	locate),
-																scQt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														locate)));
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
-			}
-		} finally {
-			briefingSO = null;
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the msg code by out come.
-	 * 
-	 * @param outCome
-	 *            the out come
-	 * @return the msg code by out come
-	 */
-	private String getMsgCodeByOutCome(String outCome) {
-		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outCome)) {
-			return MessageConst.INFO_700007;
-		}
-		return MessageConst.INFO_700008;
-	}
-
 	/**
 	 * Validate postcode.
 	 */
@@ -909,12 +667,4 @@ public class QTScheduleDetailBackingBean extends
 		}
 
 	}
-	
-	/**
-	 * The method to used auto update of request.
-	 */
-	public void enableAutoUpdate() {
-		getManagedBean().setAutoUpdate(Boolean.TRUE);		
-	}
-	
 }
