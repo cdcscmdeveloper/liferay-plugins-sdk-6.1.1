@@ -10,6 +10,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<ui:param name="scQt" value="#{approvalBackingBean.managedBean.qt}" />
+		<ui:param name="scQtApproval" value="#{approvalBackingBean.managedBean.scQtApproval}" />
+		
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
 		</p:blockUI>
