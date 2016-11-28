@@ -1123,8 +1123,14 @@ public class SmCommonUtil {
 					persCalcVo.setBumiRecommendNote(getMessage(
 							"lbl.sm.recommend.supplier.nonbumi", null));
 				} else {
-					persCalcVo.setBumiRecommendNote(getMessage(
-							"lbl.sm.recommend.poapprover.nonbumi", null));
+					if(persCalcVo.getStfBumiEnterPerc() != null && 
+							persCalcVo.getStfBumiEnterPerc().compareTo(new BigDecimal(50)) == 1){
+						persCalcVo.setBumiRecommendNote(getMessage(
+								"lbl.sm.recommend.poapprover.bumi", null));
+					}else{
+						persCalcVo.setBumiRecommendNote(getMessage(
+								"lbl.sm.recommend.poapprover.nonbumi", null));
+					}
 				}
 			}
 		}
