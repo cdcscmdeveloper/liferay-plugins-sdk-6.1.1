@@ -1,6 +1,8 @@
 /* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.backingbean.sc.bsvattendance;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,23 +18,32 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
@@ -45,6 +56,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
@@ -57,6 +69,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.quartz.SchedulerException;
@@ -79,7 +93,10 @@ public class BSVAttendanceBackingBean extends
     private static final String SAVE_SUCCESS_MSG_KEY = "lbl.sc.bsv.save.message";
     
 	public static Logger log = Logger.getLogger(BSVAttendanceBackingBean.class);
-	private String slectedHeaderName;
+	private String slectedHeaderName;	
+	
+	/** The text before sign. */
+	private String textBeforeSign;
 
 	public BSVAttendanceBackingBean() {
 
@@ -1035,12 +1052,37 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 				}
 
 			}
+			
+			if (!invokeBPM) {
+				throw new EpException(MessageConst.ERROR_760206);
+			}
 
 			// reqDTO.setQtBriefingList(briefingDetails);
 			// reqDTO.setBriefingDetail(scQtBrief);
 			reqDTO.setBriefingReqDtls(this.getManagedBean()
 					.getBriefingRegistrationList());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
+			
+			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
+			List<ScQtApprovalRemark> scQtApprovalRemarks = super.finalizeRemarks(scQtApproval.getScQtApprovalRemarks());
+			List<ScQtApprovalRemark> newApprovalRemarks = super.finalizeRemarks(getManagedBean().getScQtApprovalRemarks());
+			if (CollectionUtils.isNotEmpty(newApprovalRemarks)) {
+				if (scQtApprovalRemarks == null) {
+					scQtApprovalRemarks = new ArrayList<ScQtApprovalRemark>();
+				}
+				scQtApprovalRemarks.addAll(0, newApprovalRemarks);
+			}
+			scQtApproval.setScQtApprovalRemarks(scQtApprovalRemarks);
+			List<ScQtApprovalAttachment> scQtApprovalAttachments = scQtApproval.getScQtApprovalAttachments();
+			if (CollectionUtils.isNotEmpty(getManagedBean().getScQtApprovalAttachments())) {
+				if (scQtApprovalAttachments == null) {
+					scQtApprovalAttachments = new ArrayList<ScQtApprovalAttachment>();
+				}
+				scQtApprovalAttachments.addAll(getManagedBean().getScQtApprovalAttachments());
+			}
+			scQtApproval.setScQtApprovalAttachments(scQtApprovalAttachments);
+			reqDTO.setApproval(scQtApproval);
+			
 			reqDTO.setToBeDeletedRegistations(this.getManagedBean()
 					.getToBeDeletedRegistartions());
 			reqDTO.setInvokeBpm(invokeBPM);
@@ -1288,5 +1330,299 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 	 */
 	public String mofAccountNumber(SmSupplier supplier){
 		return retriveMofAccountBySupplier(supplier).getMofNo();
+	}
+	
+	/**
+	 * Add attachment to list.
+	 * 
+	 * @param event
+	 *            File upload event instance
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void handleFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		log.info("handleFileUpload - START");
+		if (event.getFile() != null) {
+			ScQtApprovalAttachment attachment = new ScQtApprovalAttachment();
+			ScQtApproval scQtApproval = getManagedBean().getScQtApproval();
+			List<ScQtApprovalAttachment> attachments = getManagedBean().getScQtApprovalAttachments();
+			if (null == attachments) {
+				attachments = new ArrayList<ScQtApprovalAttachment>();
+			}
+			attachment.setScQtApproval(scQtApproval);
+			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+			attachments.add(attachment);
+			getManagedBean().setScQtApprovalAttachments(attachments);
+			uploadAttachment(event.getFile(), attachment);
+		}
+		log.info("handleFileUpload - END");
+	}
+	
+	/**
+	 *Navigate to additional Attendance Approval Details Page.
+	 * 
+	 *
+	 */
+	public void preRenderViewAdditionalAttendance() {
+
+		SCSiteVisitProposalDataType payLoad = getBpmTaskDetails(SCSiteVisitProposalDataType.class, null);
+
+		if (SCProcessNameConst.APPROVE_SUPPLIER_ADD.equalsIgnoreCase(this
+				.getManagedBean().getTaskName())) {
+
+			IQTBriefingSO briefingSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTBriefingSO.class);
+			BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+			briefingReqDTO.setQtId(payLoad.getQtId());
+			briefingReqDTO.setApprovalReqId(Long.valueOf(payLoad
+					.getXflagPublication()));
+
+			BriefingResDTO briefingResDTO = briefingSO
+					.retrieveRegistartionDtlsByQt(briefingReqDTO);
+			ScQt scQt = briefingResDTO.getScQt();
+			List<ScQtApprovalRequest> approvalRequests = briefingResDTO
+					.getApprovalRequests();
+			ScQtApprovalRequest approvalRequest = approvalRequests.get(0);
+			ScQtApproval approval = approvalRequest.getScQtApproval();
+			List<ScQtApprovalRemark> scQtApprovalRemarks = new ArrayList<ScQtApprovalRemark>();
+			List<ScQtApprovalAttachment> scQtApprovalAttachments = new ArrayList<ScQtApprovalAttachment>();
+			this.getManagedBean().setScQtApproval(approval);
+			if (approvalRequest.getSubmissionDate() != null) {
+				Date submissionDate = approvalRequest.getSubmissionDate();
+				for (ScQtApprovalRemark scQtApprovalRemark : approval.getScQtApprovalRemarks()) {
+					// To show remark matched with the submission date
+					if (scQtApprovalRemark.getCreatedDate().compareTo(submissionDate) == 0) {
+						scQtApprovalRemarks.add(scQtApprovalRemark);
+					}
+				}
+				for (ScQtApprovalAttachment scQtApprovalAttachment : approval.getScQtApprovalAttachments()) {
+					// To show attachment matched with the submission date
+					if (scQtApprovalAttachment.getCreatedDate().compareTo(submissionDate) == 0) {
+						scQtApprovalAttachments.add(scQtApprovalAttachment);
+					}
+				}
+			}
+			this.getManagedBean().setScQtApprovalRemarks(initializeRemarks(approval, 
+					scQt.getCurrentWorkFlowStatus(),
+					scQtApprovalRemarks, 
+					ScQtApprovalRemark.class));
+			this.getManagedBean().setScQtApprovalAttachments(scQtApprovalAttachments);
+			this.getManagedBean().setScQtApprovalRequests(approvalRequests);
+			this.getManagedBean().setScQt(scQt);
+			this.getManagedBean().setBriefingRegistrationList(
+					briefingResDTO.getBriefingRegResultBean().getResultList());
+			this.getManagedBean().setScQtBriefing(
+					briefingResDTO.getScQtBriefing());
+
+		}
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						"/xhtml/sc/bsvattendance/approval/additionalAttandanceApproval.xhtml");
+	}
+	
+	/**
+	 * Gpki sign action.Event handle when Approver submit.
+	 * 
+	 * @param digiSign
+	 *            (Mandatory)
+	 * @return the string(ACKNOWLEDGE_PAGE)
+	 */
+	public String gpkiSignAction(PmDigiSign digiSign) {
+		return approveAdditionalAttendance(this.getManagedBean()
+				.getAction(), digiSign);
+	}
+	
+	/**
+	 * Gets the text before sign.
+	 * 
+	 * @return the text before sign
+	 */
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	/**
+	 * Sets the text before sign.
+	 * 
+	 * @param textBeforeSign
+	 *            the new text before sign
+	 */
+	public void setTextBeforeSign(String textBeforeSign) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getScQt().getQtNo());
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		this.textBeforeSign = sb.toString();
+	}
+	
+	/**
+	 * Submit Approval Details. Event handle to submit data for bpm.
+	 * 
+	 * @param action
+	 * 		the action out come
+	 */
+	public String updateAdditionalAttendanceBpmTask(String action) {
+		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
+			ScQtApproval approval = this.getManagedBean().getScQtApproval();
+			if (null != approval) {
+				List<ScQtApprovalRemark> remarks = getManagedBean().getScQtApprovalRemarks();
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						String userRemark = remarks.get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { 
+										ResourceBundleUtils.getMessage(
+											"lbl.sc.remark", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()) });
+						}
+					}
+				}	
+			}
+			
+			return approveAdditionalAttendance(action, null);
+		} else {
+			this.getManagedBean().setAction(action);
+			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			return null;
+		}
+	}
+	
+	/**
+	 * Submit registarion details.
+	 * 
+	 * @param outcome
+	 *            the outcome
+	 * @param digiSign
+	 * 			the PmDigiSign instance
+	 * @return the string
+	 */
+	private String approveAdditionalAttendance(String outcome, PmDigiSign digiSign) {
+
+		BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+
+		FacesScopes facesScopes = new FacesScopes();
+		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		
+		IQTBriefingSO briefingSO;
+		try {
+			ScQt scQt = this.getManagedBean().getScQt();
+			List<ScQtBsvRegistration> registrations = this.getManagedBean()
+					.getBriefingRegistrationList();
+			
+			briefingReqDTO.setBriefingReqDtls(registrations);
+			briefingReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			briefingReqDTO.setScQt(scQt);
+			briefingReqDTO.setToken(ctxToken);
+			briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			briefingReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+			briefingReqDTO.setOutcome(outcome);
+			briefingReqDTO.setTplSpecZoneDtl(this.getManagedBean()
+					.getScQtBriefing().getScQtBsv().getTplSpecZoneDtl());
+			ScQtApproval approval = this.getManagedBean().getScQtApproval();
+			if (null != approval) {
+				List<ScQtApprovalRemark> newApprovalRemarks = finalizeRemarks(getManagedBean().getScQtApprovalRemarks());
+				if (CollectionUtils.isNotEmpty(newApprovalRemarks)) {
+					List<ScQtApprovalRemark> scQtApprovalRemarks = approval.getScQtApprovalRemarks();
+					if (scQtApprovalRemarks == null) {
+						scQtApprovalRemarks = new ArrayList<ScQtApprovalRemark>();
+					}
+					scQtApprovalRemarks.add(newApprovalRemarks.get(0));
+					approval.setScQtApprovalRemarks(scQtApprovalRemarks);
+				}
+				
+				List<ScQtApprovalAttachment> newApprovalAttachments = getManagedBean().getScQtApprovalAttachments();
+				if (CollectionUtils.isNotEmpty(newApprovalAttachments)) {
+					List<ScQtApprovalAttachment> scQtApprovalAttachments = approval.getScQtApprovalAttachments();
+					if (scQtApprovalAttachments == null) {
+						scQtApprovalAttachments = new ArrayList<ScQtApprovalAttachment>();
+					}
+					for (ScQtApprovalAttachment newApprovalAttachment : newApprovalAttachments) {
+						if (newApprovalAttachment.isBrandNew()) {
+							scQtApprovalAttachments.add(newApprovalAttachment);
+						}
+					}
+					approval.setScQtApprovalAttachments(scQtApprovalAttachments);
+				}
+ 				
+				updateApprovalRequest(this.getManagedBean()
+						.getScQtApprovalRequests(), outcome);
+				approval.setScQtApprovalDtls(this.getManagedBean()
+						.getScQtApprovalRequests());
+				briefingReqDTO.setApproval(approval);
+
+			}
+			
+			if (null != digiSign) {
+				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_BSV_ATTENDANCE,
+						scQt.getQtId(), scQt.getQtNo());
+			}
+			briefingReqDTO.setDigiSignData(digiSign);
+			
+			briefingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
+
+			BriefingResDTO resDTO = briefingSO
+					.updateSupplierRegistionsNSendNotifications(briefingReqDTO);
+
+			if (resDTO.isSuccessful()) {
+
+				renewSesionObject();
+
+				Locale locate = new FacesScopes().getUserLocale();
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														getMsgCodeByOutCome(outcome),
+														new String[] {
+															ResourceBundleUtils.getMessage(
+																	"lbl.sc.bsv.additional.attendance", 
+																	ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+																	locate),
+																scQt.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														locate)));
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			}
+		} finally {
+			briefingSO = null;
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the msg code by out come.
+	 * 
+	 * @param outCome
+	 *            the out come
+	 * @return the msg code by out come
+	 */
+	private String getMsgCodeByOutCome(String outCome) {
+		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outCome)) {
+			return MessageConst.INFO_700007;
+		}
+		return MessageConst.INFO_700008;
+	}
+	
+	/**
+	 * The method to used auto update of request.
+	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);		
 	}
 }
