@@ -29,11 +29,14 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 /**
  * The Class QuotationPropoValidReminderJob.
  */
-public class TenderPropoValidReminderJob extends BaseReminderJob{
+public class TenderPropoValidReminderJob extends SourcingBaseReminder implements Job{
 	private static Logger log = EpLogger
 			.getLogger(TenderPropoValidReminderJob.class);
 	/** The Constant Proposal valid end at less than or equal to 30 days. */
@@ -157,18 +160,12 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 		}		
 	}
 
-	/* (non-Javadoc)
-	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#getTemplateId()
-	 */
-	@Override
+	
 	public String getTemplateId() {
 		return NotificationTextConst.TEMPLATE_ID_401164;
 	}
 
-	/* (non-Javadoc)
-	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#getParams(java.lang.Long, java.lang.Object[])
-	 */
-	@Override
+	
 	public List<String> getParams(Long reminders, Object[] data) {
 		String qtId = data[0].toString();
 		String qtNo = data[1].toString();
@@ -239,6 +236,20 @@ public class TenderPropoValidReminderJob extends BaseReminderJob{
 	public String getKpiCode() {
 		// Proposal Validity Reminder (Quotation)
 		return QTConstants.KPI_CODE_TENDER_REMINDER;
+	}
+
+	@Override
+	public void execute(JobExecutionContext context)
+			throws JobExecutionException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected List<String> getParameterListForNotification(Long reminderDays,
+			Date reminderDate) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
