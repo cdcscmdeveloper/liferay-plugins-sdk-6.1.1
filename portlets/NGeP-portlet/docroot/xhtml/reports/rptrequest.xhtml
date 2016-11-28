@@ -104,7 +104,7 @@
 										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}" action="#{rptRequestBackingBean.attachmentDownload(rptRequest)}"
 										    onclick="setTimeout('location.reload();', 1000);"
 											style="text-align:center;">
-											<p:graphicImage value="/css/images/design/download.png" id="downloadImage"
+											<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/download.png" id="downloadImage"
 												style="margin-right:2px;" />
 											<p:tooltip id="tooltip" for="downloadImage">
 												<p:outputLabel escape="false" value="Download"  />
@@ -116,7 +116,7 @@
 									</p:column>
 									
 									<p:column style="text-align:center; width:7%">
-										<p:graphicImage id="downloadGraphic" title="#{lbl['lbl.rpt.downloaded']}" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png"
+										<p:graphicImage id="downloadGraphic" title="#{lbl['lbl.rpt.downloaded']}" value="#{CommonUIConstant.imagePathUptoDesign}/ico-pdf.png"
 											rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode) and rptRequest.downloaded eq '0'}" />
 									</p:column>
 									
