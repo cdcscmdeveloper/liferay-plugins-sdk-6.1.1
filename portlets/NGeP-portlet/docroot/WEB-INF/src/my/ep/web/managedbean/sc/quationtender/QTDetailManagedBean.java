@@ -657,9 +657,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The selected zone. */
 	private TplSpecZoneDtl selectedZone;
 
-	/** The sc qt bsv registration. */
-	private ScQtBsvRegistration scQtBsvRegistration;
-
 	/** The required. */
 	private boolean required = false;
 
@@ -1549,6 +1546,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
     private String viewOriginalUrl;
     private boolean showAndHideAmounts=Boolean.TRUE;
+	
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -4975,25 +4973,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSelectedbriefRegistration(
 			ScQtBsvRegistration selectedbriefRegistration) {
 		this.selectedbriefRegistration = selectedbriefRegistration;
-	}
-
-	/**
-	 * Gets the sc qt bsv registration.
-	 * 
-	 * @return the sc qt bsv registration
-	 */
-	public ScQtBsvRegistration getScQtBsvRegistration() {
-		return scQtBsvRegistration;
-	}
-
-	/**
-	 * Sets the sc qt bsv registration.
-	 * 
-	 * @param scQtBsvRegistration
-	 *            the new sc qt bsv registration
-	 */
-	public void setScQtBsvRegistration(ScQtBsvRegistration scQtBsvRegistration) {
-		this.scQtBsvRegistration = scQtBsvRegistration;
 	}
 
 	/**
@@ -9722,10 +9701,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setShowAndHideAmounts(boolean showAndHideAmounts) {
 		this.showAndHideAmounts = showAndHideAmounts;
 	}
-
-	
-
-	
-	
 
 }
