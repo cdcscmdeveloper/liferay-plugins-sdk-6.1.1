@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-	<c:set var="svTask" value="#{svoSiteVisitBackingBean.managedBean.smSvTask}" />
+	<ui:param name="svTask" value="#{svoSiteVisitBackingBean.managedBean.smSvTask}" />
 	<ui:param name="businessType" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smSupplier.businessType}"></ui:param>
 	<p:panel header="#{lbl['lbl.sm.sitevist.capital.equity.details']}" toggleable="true" id="pnlCapital">
 		<table class="customTbl">
