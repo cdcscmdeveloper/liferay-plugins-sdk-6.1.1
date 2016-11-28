@@ -50,6 +50,9 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
@@ -58,6 +61,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.sc.bsvattendance.BSVAttendanceBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
+import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -425,6 +429,24 @@ public class QTBriefingSiteVisitBackingBean extends
 		BSVAttendanceBackingBean attendanceBackingBean= new BSVAttendanceBackingBean();
 		attendanceBackingBean.getregistrationDetails(scQtBriefing, true);
 		attendanceBackingBean.getManagedBean().setScQt(this.getManagedBean().getQt());
+		
+		new QTDetailBackingBean().retrieveApprovalTabDtl();
+		List<TabBean> tabList = this.getManagedBean().getTabList();
+		for (TabBean tabBean : tabList) {
+			if (ParameterConst.APPROVAL_CATEGORY_PTJ.equals(tabBean.getTabType())) {
+				ScQt scQt = this.getManagedBean().getQt();
+				ScQtApproval qtApproval = tabBean.getScQtApproval();
+				List<ScQtApprovalRemark> scQtApprovalRemarks = initializeRemarks(
+						qtApproval, scQt.getCurrentWorkFlowStatus(),
+						null,
+						ScQtApprovalRemark.class);
+				attendanceBackingBean.getManagedBean().setScQtApproval(qtApproval);
+				attendanceBackingBean.getManagedBean().setScQtApprovalRemarks(scQtApprovalRemarks);
+				attendanceBackingBean.getManagedBean().setScQtApprovalAttachments(new ArrayList<ScQtApprovalAttachment>());
+				break;
+			}
+		}
+		
 		attendanceBackingBean.getManagedBean().setMaintanceFlow(true);
 		return NAV_TO_BSV_ATTENDANCE_PAGE + "?faces-redirect=true";
 	}
