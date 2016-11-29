@@ -70,11 +70,11 @@
 	
 	<p:panel header="#{lbl['lbl.sm.complaint.upload.docproof']}" id="pnlComplDoc" toggleable="true">
 		<p:dataTable value="#{complaintBackingBean.managedBean.complaintDocs}" var="complDoc">
-			<p:column headerText="Document Name">
+			<p:column headerText="#{lbl['lbl.sm.complainant.document.name']}">
 				#{complDoc.fileName}
 			</p:column>
 			
-			<p:column headerText="Action">
+			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink oncomplete="attachmentDeleteDlg.show()" action="#{complaintBackingBean.showDeleteDialog(complDoc)}" 
 						update="@([id$=attachmentDeleteDlg])" rendered="#{complaintBackingBean.managedBean.smComplaint.brandNew}">
 							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
