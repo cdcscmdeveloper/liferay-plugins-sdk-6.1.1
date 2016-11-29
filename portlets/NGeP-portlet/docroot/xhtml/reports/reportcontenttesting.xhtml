@@ -665,7 +665,7 @@ width:32.5%;
 						<table>
 							<tr>
 								<td style="padding:5px" width="20px">
-									<p:graphicImage value="/css/images/design/tooltips.png" height="20px" width="20px"/>
+									<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/tooltips.png" height="16px" width="16px"/>
 								</td>
 								<td>
 									<h:outputText value="System starts generating the report"/>
@@ -690,6 +690,14 @@ width:32.5%;
 							</tr>
 							<tr>
 								<td colspan="2" height="3px"></td>
+							</tr>
+						</table>
+					</p:dialog>
+					
+					<p:dialog id="errorDialog"  widgetVar="errorDialog" header="Report server down" onHide="jQuery('#someId').hide();" onShow="jQuery('#someId').show();" draggable="false" closable="true" resizable="false">
+						<table>
+							<tr>
+								<td> The connection to report server is interrupt.</td>
 							</tr>
 						</table>
 					</p:dialog>
