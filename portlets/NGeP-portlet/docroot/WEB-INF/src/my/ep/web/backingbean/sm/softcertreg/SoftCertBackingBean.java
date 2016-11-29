@@ -1239,7 +1239,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * Retrieve Soft Cert Renewal Period
 	 * @return int
 	 */
-	
 	private int retrieveSoftcertRenewalPeriod(){
 		int softCertPeriod = SmServiceLookup.getSmRuleSO().retrieveSoftCertRenewalPeriod().getSoftCertRenewalMonth();
 		softCertPeriod = -softCertPeriod;
