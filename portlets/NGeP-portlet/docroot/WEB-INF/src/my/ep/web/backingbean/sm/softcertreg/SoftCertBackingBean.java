@@ -16,9 +16,16 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.bpm.dto.BpmRequestDTO;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -49,15 +56,6 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SoftcertUploadSuppDocVO;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "softCertBackingBean")
 @RequestScoped
@@ -874,7 +872,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					Calendar renewDate = Calendar.getInstance();
 					renewDate.setTime(softcertRequest.getPmDigiCert()
 							.getValidTo());
-					renewDate.add(Calendar.MONTH, -3);
+					renewDate.add(Calendar.MONTH, retrieveSoftcertRenewalPeriod());
+
 					if (DateUtils.isDateGreaterOrEqual(new Date(),
 							renewDate.getTime())) {
 						smPersonnel
@@ -1234,5 +1233,17 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			e.printStackTrace();
 		}
 
+	}
+	
+	/**
+	 * Retrieve Soft Cert Renewal Period
+	 * @return int
+	 */
+	
+	private int retrieveSoftcertRenewalPeriod(){
+		int softCertPeriod = SmServiceLookup.getSmRuleSO().retrieveSoftCertRenewalPeriod().getSoftCertRenewalMonth();
+		softCertPeriod = -softCertPeriod;
+		
+		return softCertPeriod;
 	}
 }
