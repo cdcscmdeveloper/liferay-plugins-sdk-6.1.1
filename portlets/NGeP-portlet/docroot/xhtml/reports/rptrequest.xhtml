@@ -101,11 +101,11 @@
 									
 									<p:column headerText="#{lbl['lbl.txt.action']}" style="text-align:center;">
 										
-										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}" action="#{rptRequestBackingBean.attachmentDownload(rptRequest)}"
+										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}" action="#{rptRequestBackingBean.attachmentDownload(rptRequest)}" ajax="false"
 										    onclick="setTimeout('location.reload();', 1000);"
 											style="text-align:center;">
 											<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/download.png" id="downloadImage"
-												style="margin-right:2px;" />
+												style="margin-right:2px;" height="16px" width="16px"/>
 											<p:tooltip id="tooltip" for="downloadImage">
 												<p:outputLabel escape="false" value="Download"  />
 											</p:tooltip>	
@@ -116,8 +116,8 @@
 									</p:column>
 									
 									<p:column style="text-align:center; width:7%">
-										<p:graphicImage id="downloadGraphic" title="#{lbl['lbl.rpt.downloaded']}" value="#{CommonUIConstant.imagePathUptoDesign}/ico-pdf.png"
-											rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode) and rptRequest.downloaded eq '0'}" />
+										<p:graphicImage id="downloadGraphic" title="#{lbl['lbl.rpt.downloaded']}" value="#{CommonUIConstant.imagePath}/ico-pdf.png"
+											rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode) and rptRequest.downloaded eq '0'}" height="16px" width="16px"/>
 									</p:column>
 									
 									<p:ajax event="rowSelectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" update=":form:rptRequestTable, :form:deleteBtn"/>
@@ -155,6 +155,14 @@
 			</div>
 	
 		</p:confirmDialog>
+		
+		<p:dialog id="errorDialog"  widgetVar="errorDialog" header="Report server down" onHide="jQuery('#someId').hide();" onShow="jQuery('#someId').show();" draggable="false" closable="true" resizable="false">
+			<table>
+				<tr>
+					<td> The connection to report server is interrupt.</td>
+				</tr>
+			</table>
+		</p:dialog>
 	
 	</ui:define>
 	
