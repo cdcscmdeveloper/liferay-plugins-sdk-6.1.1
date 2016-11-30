@@ -31,14 +31,14 @@ import org.apache.log4j.Logger;
 /**
  * The Class BaseReminderJob.
  * 
- * @author Sri
+ * @author Sri,Venkat
  * @since 16/10/2016
  */
 public abstract class SourcingBaseReminder {
 	private static Logger log = EpLogger.getLogger(SourcingBaseReminder.class);
 
-	private List<ReminderBean> reminderBeans;
 	private String kpiCode;
+	private String templateId;
 
 	/**
 	 * Send reminder.
@@ -197,23 +197,14 @@ public abstract class SourcingBaseReminder {
  * @return List<String> theReminderParamsList
  */
 	protected abstract List<String> getParameterListForNotification(
-			Long reminderDays, Date reminderDate);
+			Long reminderDays, Object[] data);
 
 	/**
-	 * @return the reminderBeans
+	 * Mandatory implementation to be provided to populate reminder beans
+	 * @return List<ReminderBean>
 	 */
-	public List<ReminderBean> getReminderBeans() {
-		return reminderBeans;
-	}
-
-	/**
-	 * @param reminderBeans
-	 *            the reminderBeans to set
-	 */
-	public void setReminderBeans(List<ReminderBean> reminderBeans) {
-		this.reminderBeans = reminderBeans;
-	}
-
+	protected abstract List<ReminderBean> getReminderBeans();
+		
 	/**
 	 * @return the kpiCode
 	 */
@@ -227,6 +218,20 @@ public abstract class SourcingBaseReminder {
 	 */
 	public void setKpiCode(String kpiCode) {
 		this.kpiCode = kpiCode;
+	}
+
+	/**
+	 * @return the templateId
+	 */
+	public String getTemplateId() {
+		return templateId;
+	}
+
+	/**
+	 * @param templateId the templateId to set
+	 */
+	public void setTemplateId(String templateId) {
+		this.templateId = templateId;
 	}
 
 }
