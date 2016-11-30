@@ -382,7 +382,7 @@ public class SmSideMenuIconUtil {
 						.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
 						|| bean.getSmAppl().getApplType()
 								.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
-					retVal = ICON_TICK;
+					retVal = StringUtils.EMPTY;
 				} else {
 					boolean isAllCatcodeVerified = true;
 					if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
@@ -390,11 +390,13 @@ public class SmSideMenuIconUtil {
 						for (SmSupplierCategory cat : bean.getSmAppl()
 								.getSmSupplierCategories()) {
 							if (bean.isPoUser()
-									&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS
+									&& (cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS || cat
+											.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)
 									&& cat.getPoDecFlg() == null) {
 								isAllCatcodeVerified = false;
 							} else if (bean.isApproverUser()
-									&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS
+									&& (cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS || cat
+											.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)
 									&& cat.getApprvrDecFlg() == null) {
 								isAllCatcodeVerified = false;
 							}
