@@ -1852,6 +1852,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			        			  ctAgency.setAp178(true);
 			        		  }		  	
 			        		  ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
+			        		  //CT_CHANGE_LOG
+			        		  getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
+			      			
 			        		  ctAgencyList.add(ctAgency);
 					 
 			        		  if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
@@ -1909,6 +1912,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    			ctAgency.setCeilingAmount(new BigDecimal(0));
 		    			ctAgency.setChkStatus(true);  	
 		    			ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
+		    			getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
+		    			
+		    			//CT_CHANGE_LOG
 		    			getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
 		    			ctAgencyList.add(ctAgency);
 		 
