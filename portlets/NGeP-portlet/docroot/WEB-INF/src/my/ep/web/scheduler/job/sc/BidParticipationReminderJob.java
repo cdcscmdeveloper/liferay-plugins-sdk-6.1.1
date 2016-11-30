@@ -1,6 +1,5 @@
 package my.ep.web.scheduler.job.sc;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +11,12 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/**
+ * Reminder to supplier to participate in Bidding 
+ * @author Venkat Chanumolu
+ * @since 28/11/2016
+ *
+ */
 @DisallowConcurrentExecution
 public class BidParticipationReminderJob extends SourcingBaseReminder implements Job{
 
@@ -23,10 +28,6 @@ public class BidParticipationReminderJob extends SourcingBaseReminder implements
 	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		// TODO Auto-generated method stub
-		List<ReminderBean> reminderBeanList = new ArrayList<ReminderBean>();
-		
-		
 		List<ReminderBean> beans = getReminderBeans();
 		// no.of reminder days
 		List<Integer> notificationDays =  getNotificationDays(getKpiCode());
@@ -43,7 +44,13 @@ public class BidParticipationReminderJob extends SourcingBaseReminder implements
 		}
 	}
 	
-	protected List<String> getParameterListForNotification(Long reminderDays, Date reminndrDte){
+	protected List<String> getParameterListForNotification(Long reminderDays,Object[] data){
+		return null;
+	}
+
+	
+	protected List<ReminderBean> getReminderBeans() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }
