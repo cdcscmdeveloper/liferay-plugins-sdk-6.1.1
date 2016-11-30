@@ -154,7 +154,18 @@ public class SchedulerConstants {
 	public static final String SPA_MASTER_DATA_MEASUREMENT_JOB = "MATERIAL MASTER DATA MEASUREMENT JOB";
 	public static final String SPA_MASTER_DATA_TYPE_JOB = "MATERIAL MASTER DATA TYPE JOB";
 	
+	///GFMAS AUTOMIC JON
 	
+	public static final String GFMAS_KPTJ_JOB = "GFMAS KPTJ JOB";
+	public static final String GFMAS_PP_JOB = "GFMAS PP JOB";
+	public static final String GFMAS_BANK_JOB = "GFMAS BANK JOB";
+	public static final String GFMAS_AGOFF_JOB = "GFMAS AG OFFICE JOB";
+	public static final String GFMAS_GLACC_JOB = "GFMAS GL ACCOUNT JOB";
+	public static final String GFMAS_PTJ_JOB = "GFMAS PTJ JOB";
+	public static final String GFMAS_VOT_JOB = "GFMAS VOT JOB";
+	public static final String GFMAS_DANA_JOB = "GFMAS DANA JOB";
+	public static final String GFMAS_PROG_ACT_JOB = "GFMAS PROGRAM ACT JOB";
+	public static final String GFMAS_PROJECT_JOB = "GFMAS PROJECT JOB";
 
 	// 1GFMAS OUT BOUND
 
@@ -191,6 +202,10 @@ public class SchedulerConstants {
 	public static final String GFMAS_MASTERDATA_MATERIAL_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
 	public static final String SPA_JOB_DESC = "Job run every 5 minutes";
 	public static final String SPA_JOB_DAILY_DESC = "Job run once daily after 12 AM";
+	
+	
+	///GFMAS AUTO
+	public static final String GFMAS_KPTJ_INTEGRATION_JOB_DESC = "Job run once daily after 1 AM";
 
 	// CRM Job Group ID
 	public static final String CRM_INTEGRATION_JOB_GROUP = "CRM INTEGRATION JOB GROUP";
