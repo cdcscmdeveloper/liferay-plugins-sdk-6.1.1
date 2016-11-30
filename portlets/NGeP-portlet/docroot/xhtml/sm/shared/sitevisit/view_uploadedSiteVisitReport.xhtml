@@ -12,7 +12,7 @@
 				#{svoSiteVisitBackingBean.getParameterDesc(svTask.smSvTemplate.pmParameter)}
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sm.sitevist.report.uploadedfile']} - #{svTask.smSvTemplate.smAttachment}">
+			<p:column headerText="#{lbl['lbl.sm.sitevist.report.uploadedfile']}">
 				<table>
 					<ui:repeat var="attch" value="#{svTask.smSvTemplate.smAttachments}">
 						<p:outputPanel rendered="#{attch.recordStatusFlg == svoSiteVisitBackingBean.getRecordStatusActive()}">
