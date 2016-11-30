@@ -12,6 +12,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.pm.common.myidentity.IDiMyidentitySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -567,5 +568,16 @@ public class SmServiceLookup {
 		return (IDiMyidentitySO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IDiMyidentitySO.class);
+	}
+	
+	/**
+	 * Get IPmKpiSO
+	 * 
+	 * @return IPmKpiSO
+	 */
+	public static IPmKpiSO getPmKpiSO() {
+		return (IPmKpiSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IPmKpiSO.class);
 	}
 }
