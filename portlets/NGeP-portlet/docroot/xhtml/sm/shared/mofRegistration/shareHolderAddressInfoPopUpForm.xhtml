@@ -245,7 +245,7 @@
 										<td width="10px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}">
 												<p:ajax event="change" partialSubmit="true" process="@this"
-													update=":form:tt:mailAddrPan" onstart="blockWidget.show()" 
+													update=":#{p:component('mailAddrPan')}" onstart="blockWidget.show()" 
 													oncomplete="blockWidget.hide()"/>
 											</p:selectBooleanCheckbox></td>
 										<td><h:outputText
@@ -497,7 +497,7 @@
 										<td width="10px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}">
 												<p:ajax event="change" partialSubmit="true" process="@this"
-													update=":form:tt:resiAddrPan" onstart="blockWidget.show()" 
+													update=":#{p:component('resiAddrPan')}" onstart="blockWidget.show()" 
 													oncomplete="blockWidget.hide()"/>
 											</p:selectBooleanCheckbox></td>
 										<td><h:outputText
@@ -743,7 +743,7 @@
 										<td width="10px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}">
 												<p:ajax event="change" partialSubmit="true" process="@this"
-													update=":form:tt:offcAddrPan" onstart="blockWidget.show()" 
+													update=":#{p:component('offcAddrPan')}" onstart="blockWidget.show()" 
 													oncomplete="blockWidget.hide()"/>
 											</p:selectBooleanCheckbox></td>
 										<td><h:outputText
