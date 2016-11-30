@@ -447,7 +447,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<p:ajax event="change" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							update=":form:tt:shareHolderAddrDialog,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5"
+							update=":#{p:component('shareHolderAddrDialog')},shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5"
 							listener="#{backingBean.assignShareHolderPrivilege}" partialSubmit="true"/>
 					</p:selectOneRadio></td>
 				<td>
@@ -685,7 +685,7 @@
 					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.label.action']}" />
 				</f:facet>
-				<p:commandLink update=":form:tt:equiJobFunctionInfo"
+				<p:commandLink update=":#{p:component('equiJobFunctionInfo')}"
 					action="#{backingBean.assignSelShrHldrJobFunc(jf)}"
 					partialSubmit="true" process="@this" style="text-align: center  !important;">
 					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
@@ -699,11 +699,11 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 				action="#{backingBean.addShrHldrJobFunction()}"
-				update=":form:tt:equiJobFunctionInfo" partialSubmit="true"
+				update=":#{p:component('equiJobFunctionInfo')}" partialSubmit="true"
 				process="@this" />
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 				oncomplete="equiJobFunctionDeletePopUp.show()"
-				update=":form:tt:shrJfdt" partialSubmit="true" id="delJobFuncBtnId"
+				update=":#{p:component('shrJfdt')}" partialSubmit="true" id="delJobFuncBtnId"
 				process="equiShrHldrJbFnc" />
 		</div>
 	</p:panel>
@@ -714,7 +714,7 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":form:tt:shrJfdt, @([id$=Msg]),:#{p:component('delJobFuncBtnId')}"/>
+		update=":#{p:component('shrJfdt')}, @([id$=Msg]),:#{p:component('delJobFuncBtnId')}"/>
 		
 	<p:dialog width="500px" height="200px"
 		header="#{lbl['lbl.sm.job.function.details']}"
@@ -741,7 +741,7 @@
 						currValue="#{backingBean.managedBean.selectedJobFunction.companyName}" 
 						alertValue="#{backingBean.managedBean.latestJobFunction.companyName}"/>
 					<p:message id="equiJbFnInfCmpNameMsg"
-						for=":form:tt:equiJbFnInfCmpName" showSummary="true"
+						for=":#{p:component('equiJbFnInfCmpName')}" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -758,7 +758,7 @@
 						oriValue="#{backingBean.managedBean.latestJobFunction.designation}" 
 						currValue="#{backingBean.managedBean.selectedJobFunction.designation}" 
 						alertValue="#{backingBean.managedBean.latestJobFunction.designation}"/>
-					<p:message id="equiJbFnInfDesgMsg" for=":form:tt:equiJbFnInfDesg"
+					<p:message id="equiJbFnInfDesgMsg" for=":#{p:component('equiJbFnInfDesg')}"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -774,7 +774,7 @@
 						<p:ajax process="@this" update="equiJbFnInfYrTo" partialSubmit="true"/>
 					</p:selectOneMenu> 
 					<p:message id="equiJbFnInfYrFrmMsg"
-						for=":form:tt:equiJbFnInfYrFrm" showSummary="true"
+						for=":#{p:component('equiJbFnInfYrFrm')}" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -789,7 +789,7 @@
 						<f:selectItems value="#{backingBean.getYearsWorkExp()}" />
 						<p:ajax process="@this" update="@this" partialSubmit="true"/>
 					</p:selectOneMenu>
-					<p:message id="equiJbFnInfYrToMsg" for=":form:tt:equiJbFnInfYrTo"
+					<p:message id="equiJbFnInfYrToMsg" for=":#{p:component('equiJbFnInfYrTo')}"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 		</table>
@@ -842,7 +842,7 @@
 					<h:outputText value="#{relCom.mofNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
-					<p:commandLink update=":form:tt:equiRelCompInfo"
+					<p:commandLink update=":#{p:component('equiRelCompInfo')}"
 						action="#{backingBean.assignSelShrHldrRelatedCompany(relCom)}"
 						partialSubmit="true" process="@this">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
@@ -870,7 +870,7 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":form:tt:shrRelCom, @([id$=Msg]),:#{p:component('delRelCompBtnId')}"/>
+		update=":#{p:component('shrRelCom')}, @([id$=Msg]),:#{p:component('delRelCompBtnId')}"/>
 		
 		<p:dialog width="500px" height="300px" closable="false"
 			header="#{lbl['lbl.sm.related.company.details']}"
@@ -1035,7 +1035,7 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
-					<p:commandLink update=":form:tt:equiShrProfBeanInfo"
+					<p:commandLink update=":#{p:component('equiShrProfBeanInfo')}"
 						action="#{backingBean.assignSelShrHldrProfBody(profBean)}"
 						partialSubmit="true" process="@this">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
@@ -1064,7 +1064,7 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":form:tt:shrProfDt, @([id$=Msg]),:#{p:component('delShrProfBodyBtnId')}"/>
+		update=":#{p:component('shrProfDt')}, @([id$=Msg]),:#{p:component('delShrProfBodyBtnId')}"/>
 		
 		<p:dialog width="500px" height="300px" closable="false"
 			header="#{lbl['lbl.sm.profBody.panHdr']}" id="equiShrProfBeanInfo"
@@ -1214,7 +1214,7 @@
 				<h:outputText value="#{aq.fieldMajor}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}">
-				<p:commandLink update=":form:tt:equiAcadInfo"
+				<p:commandLink update=":#{p:component('equiAcadInfo')}"
 					action="#{backingBean.assignSelShrHldrAcademics(aq)}"
 					partialSubmit="true" process="@this">
 					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
@@ -1243,7 +1243,7 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":form:tt:shrAqdt, @([id$=Msg]),:#{p:component('delShrShrAcadBtnId')}"/>
+		update=":#{p:component('shrAqdt')}, @([id$=Msg]),:#{p:component('delShrShrAcadBtnId')}"/>
 		
 	<p:dialog width="450px" height="230px" closable="false"
 		header="#{lbl['lbl.sm.staff.academic.details']}" id="equiAcadInfo"

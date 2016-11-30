@@ -1,6 +1,7 @@
 package my.ep.web.util.sm.helper;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -17,17 +18,6 @@ import java.util.Locale;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
-import org.apache.commons.lang.SerializationUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-
-import com.liferay.portal.kernel.util.StringUtil;
-//import my.ep.biz.service.pm.common.educationlevel.IEducationLevelSO;
-//import my.ep.dto.pm.common.educationlevel.EducationLevelReqDTO;
-//import my.ep.dto.pm.common.educationlevel.EducationLevelResDTO;
-//import my.ep.persistence.entity.pm.common.PmEduLevel;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -190,6 +180,19 @@ import my.ep.web.vo.SmMachineCategoryVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.kernel.util.StringUtil;
+//import my.ep.biz.service.pm.common.educationlevel.IEducationLevelSO;
+//import my.ep.dto.pm.common.educationlevel.EducationLevelReqDTO;
+//import my.ep.dto.pm.common.educationlevel.EducationLevelResDTO;
+//import my.ep.persistence.entity.pm.common.PmEduLevel;
 
 // TODO: Auto-generated Javadoc
 public class SmApplicationUtil {
@@ -9746,6 +9749,29 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Ajax call to assign selected personnel privilege
+	 * 
+	 * @param e
+	 *            - AjaxBehaviorEvent object
+	 */
+	public static void assignShareHolderPrivilege(SmApplicationManagedBean bean) {
+		if (bean.getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+			bean.getSelectedShareHolder().setContractSignerFlg(
+					DbValueConst.RECORD_STATUS_SUSPENDED);
+			bean.getShareHolderMailAddr().setSameAsPerm(true);
+		} else {
+			bean.getShareHolderMailAddr().setSameAsPerm(false);
+			assignSelShareHolderAddress(bean.getSelectedShareHolder(), bean);
+		}
+		bean.setePRoleList(SmApplicationUtil.getPersonnelRoleItems(
+				bean.getSelectedShareHolder(), bean.getSmAppl(),
+				bean.isValidSmUserLimit()));
+		bean.setDisableAuthorizedRadio(SmApplicationUtil
+				.isDisableAuthorizedRadio(bean.getSelectedShareHolder(),
+						bean.isValidSmUserLimit()));
+	}
+
+	/**
 	 * Checks if is personnel view only.
 	 * 
 	 * @param smPersonnel
@@ -9759,6 +9785,51 @@ public class SmApplicationUtil {
 			retVal = true;
 		}
 		return retVal;
+	}
+
+	/**
+	 * Set or assign selected personnel nationality
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
+	public static void setSelectedPersonnelNationality(
+			SmApplicationManagedBean bean) {
+		if (bean.getSelectedShareHolder().getPmCountry().getCountryId() != null) {
+			PmCountry cntry = new PmCountry();
+
+			cntry = retrievePmCountryById(bean.getSelectedShareHolder()
+					.getPmCountry().getCountryId());
+			if (cntry != null) {
+				bean.getSelectedShareHolder().setPmCountry(cntry);
+				SmCommonUtil.setDefaultPersonnelNationality(bean
+						.getSelectedShareHolder());
+			}
+		}
+	}
+
+	/**
+	 * Set or assign selected personnel identification type
+	 * 
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 */
+	public static void setSelectedPersonnelIdentificationType(
+			SmApplicationManagedBean bean) {
+		if (bean.getSelectedShareHolder().getIdentificationTypeId() != null) {
+			bean.getSelectedShareHolder().setIdentificationType(
+					SmApplicationUtil
+							.retrievePmParameterById(bean
+									.getSelectedShareHolder()
+									.getIdentificationTypeId()));
+			if (bean.getSelectedShareHolder().getIdentificationType() == null) {
+				bean.getSelectedShareHolder().setIdentificationType(
+						new PmParameter());
+			}
+		} else {
+			bean.getSelectedShareHolder().setIdentificationType(
+					new PmParameter());
+		}
 	}
 
 	private static void addRoles(List<SelectItem> roles, String epRole,
@@ -9847,6 +9918,33 @@ public class SmApplicationUtil {
 		}
 
 		return retVal;
+	}
+
+	/**
+	 * Getys Authorized Personnel Account Status
+	 * 
+	 * @param shareHolderBean
+	 *            - SmPersonnel object
+	 */
+	public static String getPersonnelActivationStatus(SmPersonnel smPersonnel,
+			SmSupplier smSupplier) {
+		String accStatus = StringUtils.EMPTY;
+		if (smSupplier != null && smSupplier.getSupplierId() != null
+				&& smPersonnel.getEpRole() != null
+				&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
+
+			if (smPersonnel.getPersonnelId() != null
+					&& SmApplicationUtil.isLatestApprovedPersonnelActivated(
+							smPersonnel.getIdentificationNo(),
+							smSupplier.getSupplierId())) {
+				accStatus = SmCommonUtil.getMessage(
+						"lbl.sm.activation.status.activated", null);
+			} else {
+				accStatus = SmCommonUtil.getMessage(
+						"lbl.sm.activation.status.pending", null);
+			}
+		}
+		return accStatus;
 	}
 
 	/**
@@ -10042,10 +10140,8 @@ public class SmApplicationUtil {
 	 */
 	public static void managePersonnelRoles(SmApplicationManagedBean bean,
 			String updateAddressDetails) {
-		log.info("**** Enter Manage Roles  ******");
 		if (bean.getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			log.info(" **** Role management for contractor ***********");
 			if (bean.getSelectedShareHolder().isEquityOwner()
 					|| bean.getSelectedShareHolder().isDirector()
 					|| bean.getSelectedShareHolder().isHigherManagement()
@@ -10058,7 +10154,6 @@ public class SmApplicationUtil {
 
 		} else if (bean.getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-			log.info(" **** Role management for consultant ***********");
 			if (bean.getSelectedShareHolder().isEquityOwner()
 					|| bean.getSelectedShareHolder().isDirector()
 					|| bean.getSelectedShareHolder().isHigherManagement()
@@ -10100,6 +10195,587 @@ public class SmApplicationUtil {
 				bean.getShareHolderOffAddr().setSameAsPerm(true);
 			}
 		}
+	}
+
+	/**
+	 * Set address fields whether need to be mandatory
+	 */
+	public static void setRoleStaffAddrReqd(SmApplicationManagedBean bean) {
+		bean.setRoleStaffAndPermAddrReqd(false);
+		bean.setRoleStaffAndMailAddrReqd(false);
+		if (bean.getShareHolderPermAddr() != null
+				&& bean.getShareHolderPermAddr().getSmAddress() != null) {
+			SmAddress permAddress = bean.getShareHolderPermAddr()
+					.getSmAddress();
+			bean.setRoleStaffAndPermAddrReqd(isAddressReqdForRoleStaff(
+					bean.getSelectedShareHolder(), permAddress));
+		}
+		if (bean.getShareHolderMailAddr() != null
+				&& bean.getShareHolderMailAddr().getSmAddress() != null) {
+			SmAddress mailAddress = bean.getShareHolderMailAddr()
+					.getSmAddress();
+			bean.setRoleStaffAndMailAddrReqd(isAddressReqdForRoleStaff(
+					bean.getSelectedShareHolder(), mailAddress));
+		}
+	}
+
+	/**
+	 * Assign selected job function - SmStaffExperience object to managed bean
+	 * for editing the information.
+	 * 
+	 * @param exp
+	 *            - SmStaffExperience object
+	 */
+	public static void assignSelShrHldrJobFunc(SmStaffExperience exp,
+			SmApplicationManagedBean bean) {
+		bean.setSelectedJobFunction(exp);
+		if (bean.getLatestPersonnel() != null) {
+			bean.setLatestJobFunction((SmStaffExperience) EntityHelper
+					.getEntityByMultiplePropertiesFromList(exp, bean
+							.getLatestPersonnel().getSmStaffExperiences(),
+							new String[] { "companyName", "toYear" }, null,
+							null));
+		}
+		RequestContext.getCurrentInstance().execute(
+				"equiJobFunctionInfo.show()");
+		if (bean.isShowPersonnelViewOnly()) {
+			SmCommonUtil.closeBlockUI();
+		} else {
+			assignValReqdToTrue(bean);
+		}
+	}
+
+	/**
+	 * Add or update selected job function info to SmStaffExperience list of the
+	 * selected SmPersonnel.
+	 */
+	public static void addOrUpdateJobFunctions(SmApplicationManagedBean bean) {
+		Long expCode = bean.getSelectedJobFunction().getStaffExpCode() == null ? getPersonnelMaxExpCode(bean
+				.getSelectedShareHolder()) + 1 : bean.getSelectedJobFunction()
+				.getStaffExpCode();
+		if (!EntityHelper.isCollectionEmpty(bean.getSelectedShareHolder()
+				.getSmStaffExperiences())) {
+			StringBuilder sb1 = null;
+			StringBuilder sb2 = null;
+			for (SmStaffExperience exp : bean.getSelectedShareHolder()
+					.getSmStaffExperiences()) {
+				if (bean.getSelectedJobFunction() != null) {
+					sb1 = new StringBuilder();
+					sb1.append(bean.getSelectedJobFunction().getCompanyName());
+					sb1.append(bean.getSelectedJobFunction().getDesignation());
+
+					sb2 = new StringBuilder();
+					sb2.append(exp.getCompanyName());
+					sb2.append(exp.getDesignation());
+
+					if (bean.getSelectedJobFunction().getStaffExpCode() == null
+							|| (expCode != null
+									&& exp.getStaffExpCode() != null && expCode
+									.compareTo(exp.getStaffExpCode()) != 0)) {
+						if (sb1.toString().equals(sb2.toString())
+								&& bean.getSelectedJobFunction().getFromYear()
+										.equals(exp.getFromYear())
+								&& bean.getSelectedJobFunction().getToYear()
+										.equals(exp.getToYear())) {
+							throw new EpException(MessageConst.ERROR_722638,
+									new String[] { exp.getCompanyName() });
+						} else if (sb1.toString().equals(sb2.toString())
+								&& (SmCommonUtil.isBetweenDuration(
+										bean.getSelectedJobFunction()
+												.getFromYear(), bean
+												.getSelectedJobFunction()
+												.getToYear(),
+										exp.getFromYear(), exp.getToYear()))) {
+							throw new EpException(MessageConst.ERROR_722639,
+									new String[] { exp.getCompanyName() });
+						}
+					}
+				}
+			}
+		}
+
+		if (bean.getSelectedJobFunction().getFromYear()
+				.compareTo(bean.getSelectedJobFunction().getToYear()) > 0) {
+			throw new EpException(MessageConst.ERROR_722531);
+
+		}
+		if (bean.getSelectedJobFunction().getStaffExpCode() == null) {
+			bean.getSelectedJobFunction().setStaffExpCode(expCode);
+		}
+
+		SmStaffExperience existingExp = (SmStaffExperience) EntityHelper
+				.getEntityBySinglePropertyFromList(expCode, bean
+						.getSelectedShareHolder().getSmStaffExperiences(),
+						"staffExpCode");
+		if (existingExp == null) {
+			bean.getSelectedShareHolder().getSmStaffExperiences()
+					.add(bean.getSelectedJobFunction());
+		} else {
+			int i = 0;
+			for (SmStaffExperience tmp : bean.getSelectedShareHolder()
+					.getSmStaffExperiences()) {
+				if (tmp.getStaffExpCode().equals(existingExp.getStaffExpCode())) {
+					break;
+				}
+				i++;
+			}
+			bean.getSelectedShareHolder().getSmStaffExperiences()
+					.set(i, bean.getSelectedJobFunction());
+		}
+
+		if (bean.getSelectedJobFunction().getStaffExperienceId() == null) {
+			RequestContext.getCurrentInstance().execute(
+					"suppPrsnJobFunDtWidVar.paginator.endLink.click()");
+		}
+		SmFieldChangeUtil.setPersonnelTableListChangeStatus(bean);
+
+		RequestContext.getCurrentInstance().execute(
+				"equiJobFunctionInfo.hide()");
+
+	}
+
+	/**
+	 * Assign selected related company - SmRelatedCompany object to managed bean
+	 * for editing the information.
+	 * 
+	 * @param com
+	 *            -SmRelatedCompany object
+	 */
+	public static void assignSelShrHldrRelatedCompany(SmRelatedCompany com,
+			SmApplicationManagedBean bean) {
+		bean.setSelectedRelatedCompany(com);
+		if (bean.getLatestPersonnel() != null) {
+			bean.setLatestRelatedCompany((SmRelatedCompany) EntityHelper
+					.getEntityByMultiplePropertiesFromList(com, bean
+							.getLatestPersonnel().getSmRelatedCompanies(),
+							new String[] { "regNo" }, null, null));
+		}
+		RequestContext.getCurrentInstance().execute("equiRelCompInfo.show()");
+		if (bean.isShowPersonnelViewOnly()) {
+			SmCommonUtil.closeBlockUI();
+		} else {
+			bean.setShowParentMsg(false);
+			bean.setValueReqd(true);
+		}
+	}
+
+	/**
+	 * Add or update selected related company info to SmRelatedCompany list of
+	 * the selected SmPersonnel.
+	 */
+	public static void addOrUpdateRelatedCompanies(SmApplicationManagedBean bean) {
+		if (bean.getSelectedShareHolder().getSmRelatedCompanies()
+				.contains(bean.getSelectedRelatedCompany())) {
+
+			// TODO if any validation reqd for edit
+		} else {
+			bean.getSelectedShareHolder().getSmRelatedCompanies()
+					.add(bean.getSelectedRelatedCompany());
+			RequestContext.getCurrentInstance().execute(
+					"suppPrsnRelComDtWidVar.paginator.endLink.click()");
+		}
+		assignValReqdToFalse(bean);
+		RequestContext.getCurrentInstance().execute("equiRelCompInfo.hide()");
+
+	}
+
+	/**
+	 * Assign selected professional body - SmAssocication object to managed bean
+	 * for editing the information.
+	 * 
+	 * @param asb
+	 *            -SmAssociationBody object
+	 */
+	public static void assignSelShrHldrProfBody(SmAssociationBody asb,
+			SmApplicationManagedBean bean) {
+		bean.setSelectedStfPrfBdy(asb);
+		if (bean.getLatestAppl() != null) {
+			bean.setLatestStfPrfBdy((SmAssociationBody) EntityHelper
+					.getEntityByMultiplePropertiesFromList(asb, bean
+							.getLatestAppl().getSmAssociationBodies(),
+							new String[] { "regNo" }, null, null));
+		}
+		RequestContext.getCurrentInstance().execute(
+				"equiShrProfBeanInfo.show()");
+		if (bean.isShowPersonnelViewOnly()) {
+			SmCommonUtil.closeBlockUI();
+		} else {
+			assignValReqdToTrue(bean);
+		}
+
+	}
+
+	/**
+	 * Assign selected staff academics - SmStaffAcademic object to managed bean
+	 * for editing the information.
+	 * 
+	 * @param aca
+	 *            -SmStaffAcademic
+	 */
+	public static void assignSelShrHldrAcademics(SmStaffAcademic aca,
+			SmApplicationManagedBean bean) {
+		if (aca.getQualificationId() == null) {
+			aca.setQualificationId(new PmParameter());
+		}
+		bean.setSelectedStaffAcademic(aca);
+		if (bean.getLatestPersonnel() != null) {
+			bean.setLatestStaffAcademic((SmStaffAcademic) EntityHelper
+					.getEntityByMultiplePropertiesFromList(aca, bean
+							.getLatestPersonnel().getSmStaffAcademics(), null,
+							new String[] { "pmEduField", "pmEduLevel" }, null));
+		}
+		RequestContext.getCurrentInstance().execute("equiAcadInfo.show()");
+		if (bean.isShowPersonnelViewOnly()) {
+			SmCommonUtil.closeBlockUI();
+		} else {
+			assignValReqdToTrue(bean);
+		}
+
+	}
+
+	/**
+	 * Add or update selected prof body info to SmAssocationBody list of the
+	 * selected SmPersonnel.
+	 */
+	public static void addOrUpdateShrHldrProfBody(SmApplicationManagedBean bean) {
+		if (bean.getSelectedShareHolder().getSmAssociationBodies()
+				.contains(bean.getSelectedStfPrfBdy())) {
+
+			// TODO if any validation reqd for edit
+		} else {
+			bean.getSelectedShareHolder().getSmAssociationBodies()
+					.add(bean.getSelectedStfPrfBdy());
+			RequestContext.getCurrentInstance().execute(
+					"suppPrsnProfBdyDtWidVar.paginator.endLink.click()");
+		}
+		assignValReqdToFalse(bean);
+		RequestContext.getCurrentInstance().execute(
+				"equiShrProfBeanInfo.hide()");
+
+	}
+
+	/**
+	 * Add or update selected staff academics info to SmStaffAcademic list of
+	 * the selected SmPersonnel.
+	 */
+	public static void addOrUpdateShrHldrAcademic(SmApplicationManagedBean bean) {
+		for (PmEduField edu : bean.getEduFieldList()) {
+			if (bean.getSelectedStaffAcademic().getPmEduField().getEduFieldId()
+					.equals(edu.getEduFieldId())) {
+				bean.getSelectedStaffAcademic().setPmEduField(edu);
+				break;
+			}
+		}
+		for (PmParameterDesc lvl : bean.getEduLevelList()) {
+			if (bean.getSelectedStaffAcademic().getQualificationId()
+					.getParameterId()
+					.equals(lvl.getPmParameter().getParameterId())) {
+				bean.getSelectedStaffAcademic().setQualificationLevelId(
+						bean.getSelectedStaffAcademic().getQualificationId()
+								.getParameterId().intValue());
+				break;
+			}
+		}
+
+		if (bean.getSelectedStaffAcademic().getQualificationId() != null) {
+
+			String qual = "";
+			if (bean.getSelectedStaffAcademic().getQualificationId()
+					.getParameterCode() != null) {
+				qual = bean.getSelectedStaffAcademic().getQualificationId()
+						.getParameterCode();
+				if (bean.getSelectedShareHolder().isProf()) {
+					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
+							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_LEVEL_CERT)
+							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_LEVEL_DIPLOMA)) {
+						throw new EpException(MessageConst.ERROR_722574,
+								new String[] { "Professional Staff",
+										"BACHELOR'S DEGREE" });
+					}
+				} else if (bean.getSelectedShareHolder().isSemiProf()) {
+					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
+							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_LEVEL_CERT)) {
+						throw new EpException(MessageConst.ERROR_722574,
+								new String[] { "Semi-Professional Staff",
+										"DIPLOMA" });
+					}
+				} else if (bean.getSelectedShareHolder().isClerical()) {
+					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)) {
+						throw new EpException(
+								MessageConst.ERROR_722574,
+								new String[] { "Clerical Staff", "CERTIFICATE" });
+					}
+				}
+
+			}
+		}
+		if (bean.getSelectedShareHolder().getSmStaffAcademics()
+				.contains(bean.getSelectedStaffAcademic())) {
+			// TODO if any validation reqd for edit
+		} else {
+
+			bean.getSelectedShareHolder().getSmStaffAcademics()
+					.add(bean.getSelectedStaffAcademic());
+			RequestContext.getCurrentInstance().execute(
+					"suppPrsnAcadDtWidVar.paginator.endLink.click()");
+		}
+		assignValReqdToFalse(bean);
+		RequestContext.getCurrentInstance().execute("equiAcadInfo.hide()");
+
+	}
+
+	/**
+	 * Add or create a new sm personnel child object
+	 */
+	public static void addNewPersonnelChildObject(
+			SmApplicationManagedBean bean, SmPersonnel selectedPersonnel,
+			Object childObject, String beanPropName, String addPopupName) {
+		try {
+			if (childObject == null) {
+				childObject = new Object();
+			}
+			PropertyUtils.setProperty(childObject, "smPersonnel",
+					selectedPersonnel);
+			PropertyUtils.setProperty(bean, "selectedJobFunction", childObject);
+			assignValReqdToTrue(bean);
+			RequestContext.getCurrentInstance().execute(
+					addPopupName + ".show()");
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Delete sm personnel child object
+	 */
+	public static void deletePersonnelChildObject(
+			SmApplicationManagedBean bean, SmPersonnel selectedPersonnel,
+			String selectedListPropName, String mainListPropName,
+			String exceptionId, String[] exceptionParam) {
+		try {
+			List<? extends Object> selectedListToDelete = getPropListValue(
+					bean, selectedListPropName);
+			List<? extends Object> mainListToDelete = getPropListValue(
+					selectedPersonnel, mainListPropName);
+			if (!EntityHelper.isCollectionEmpty(selectedListToDelete)) {
+				for (Object deleteObj : selectedListToDelete) {
+					mainListToDelete.remove(deleteObj);
+				}
+				selectedListToDelete.clear();
+			} else {
+				if (exceptionParam != null && exceptionParam.length > 0) {
+					throw new EpException(exceptionId, exceptionParam);
+				} else {
+					throw new EpException(exceptionId);
+				}
+
+			}
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Get years select item list for work experience
+	 * 
+	 * @return List<SelectItem>
+	 */
+	public static List<SelectItem> getYearsWorkExp(
+			SmStaffExperience selectedExp, List<SelectItem> mainYearList) {
+		List<SelectItem> initYears = mainYearList;
+		List<SelectItem> selectYears = new ArrayList<SelectItem>();
+		if (initYears != null && selectedExp != null
+				&& selectedExp.getFromYear() != null
+				&& selectedExp.getFromYear().compareTo(0) != 0) {
+			int minYear = Integer
+					.parseInt(selectedExp.getFromYear().toString());
+
+			Iterator<SelectItem> itemIt = initYears.iterator();
+			while (itemIt.hasNext()) {
+				SelectItem item = itemIt.next();
+				if (item.getValue() != null) {
+					int tmp = Integer.parseInt(item.getValue().toString());
+					if (tmp >= minYear) {
+						selectYears.add(item);
+					}
+				} else {
+					selectYears.add(item);
+				}
+			}
+		}
+		return selectYears;
+	}
+
+	/**
+	 * Get personnel maximum experience code
+	 * 
+	 * @param SmPersonnel
+	 *            selectedPersonnel
+	 * @return Long
+	 */
+	public static Long getPersonnelMaxExpCode(SmPersonnel selectedPersonnel) {
+		Long expCode = 0L;
+		if (!EntityHelper.isCollectionEmpty(selectedPersonnel
+				.getSmStaffExperiences())) {
+			for (SmStaffExperience exp : selectedPersonnel
+					.getSmStaffExperiences()) {
+				if (exp.getStaffExpCode() != null
+						&& exp.getStaffExpCode().compareTo(expCode) > 0) {
+					expCode = exp.getStaffExpCode();
+				}
+			}
+		}
+		return expCode;
+	}
+
+	/**
+	 * Get list of academic qualification
+	 * 
+	 * @return List<SelectItem>
+	 */
+	public static List<SelectItem> getQualificationLevels(
+			SmApplicationManagedBean bean) {
+		String suppType = StringUtils.isNotBlank(bean.getNewSupplierType()) ? bean
+				.getNewSupplierType() : bean.getSmAppl().getSupplierType();
+		List<SelectItem> finalList = new ArrayList<SelectItem>();
+		SelectItem item = null;
+
+		if (bean.getSelectedShareHolder() != null
+				&& StringUtils.isNotBlank(suppType)
+				&& suppType.equals("J")
+				&& (bean.getSelectedShareHolder().isEquityOwner()
+						|| bean.getSelectedShareHolder().isProf()
+						|| bean.getSelectedShareHolder().isSemiProf() || bean
+						.getSelectedShareHolder().isClerical())) {
+			for (PmParameterDesc eduLevel : bean.getEduLevelList()) {
+				if ((bean.getSelectedShareHolder().isEquityOwner() && SupplierManagementConst.EQUI_OWNER_EDU_LEVEL_CODES
+						.contains(eduLevel.getPmParameter().getParameterCode()))
+						|| (bean.getSelectedShareHolder().isProf() && SupplierManagementConst.PROF_STAFF_EDU_LEVEL_CODES
+								.contains(eduLevel.getPmParameter()
+										.getParameterCode()))
+						|| (bean.getSelectedShareHolder().isSemiProf() && SupplierManagementConst.SEMI_PROF_STAFF_EDU_LEVEL_CODES
+								.contains(eduLevel.getPmParameter()
+										.getParameterCode()))
+						|| (bean.getSelectedShareHolder().isClerical() && SupplierManagementConst.CLERICAL_STAFF_EDU_LEVEL_CODES
+								.contains(eduLevel.getPmParameter()
+										.getParameterCode()))) {
+					item = (SelectItem) EntityHelper
+							.getEntityBySinglePropertyFromList(
+									eduLevel.getParameterDescId(), finalList,
+									"value");
+					if (item == null) {
+						item = new SelectItem();
+						item.setLabel(eduLevel.getCodeName());
+						item.setValue(eduLevel.getParameterDescId());
+						finalList.add(item);
+					}
+				}
+			}
+
+		} else {
+			finalList = getAllPmEduLevelItems(finalList, bean);
+		}
+		return finalList;
+	}
+
+	/**
+	 * Count current authorize personnel in application personnels
+	 * 
+	 * @return int
+	 */
+	public static int getCurrAuthPersonnelCount(SmApplicationManagedBean bean) {
+		int count = 0;
+		for (SmPersonnel per : bean.getSmAppl().getSmPersonnels()) {
+			if ((per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || per
+					.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
+					&& per.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	private static List<SelectItem> getAllPmEduLevelItems(
+			List<SelectItem> eduLevelItems, SmApplicationManagedBean bean) {
+		SelectItem item = null;
+		for (PmParameterDesc eduLevel : bean.getEduLevelList()) {
+			item = (SelectItem) EntityHelper.getEntityBySinglePropertyFromList(
+					eduLevel.getParameterDescId(), eduLevelItems, "value");
+			if (item == null) {
+				item = new SelectItem();
+				item.setLabel(eduLevel.getCodeName());
+				item.setValue(eduLevel.getParameterDescId());
+				eduLevelItems.add(item);
+			}
+		}
+		return eduLevelItems;
+	}
+
+	private static List<? extends Object> getPropListValue(Object obj,
+			String mainListPropName) throws IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException {
+		return (List<? extends Object>) PropertyUtils.getProperty(obj,
+				mainListPropName);
+	}
+
+	/**
+	 * Assign value reqd to false when anyof the pop up is opened in the
+	 * screen.Used for enable and disable screen validation dynamically.
+	 */
+	public static void assignValReqdToTrue(SmApplicationManagedBean bean) {
+		bean.setShowParentMsg(false);
+		bean.setValueReqd(true);
+	}
+
+	/**
+	 * Assign value reqd to false when anyof the pop up is closed in the
+	 * screen.Used for enable and disable screen validation dynamically.
+	 */
+	public static void assignValReqdToFalse(SmApplicationManagedBean bean) {
+		bean.setShowParentMsg(true);
+		bean.setValueReqd(false);
+	}
+
+	/**
+	 * Get whether address fields is mandatory for role staff
+	 * 
+	 * @param smAddress
+	 * @return boolean
+	 */
+	private static boolean isAddressReqdForRoleStaff(SmPersonnel personnel,
+			SmAddress smAddress) {
+		boolean retVal = false;
+		if (personnel.isClerical()) {
+			if (StringUtils.isNotBlank(smAddress.getAddress1())) {
+				retVal = true;
+			} else if (smAddress.getPmState() != null
+					&& smAddress.getPmState().getStateId() != null) {
+				retVal = true;
+			} else if (smAddress.getPmDistrict() != null
+					&& smAddress.getPmDistrict().getDistrictId() != null) {
+				retVal = true;
+			} else if (smAddress.getPmCity() != null
+					&& smAddress.getPmCity().getCityId() != null) {
+				retVal = true;
+			} else if (StringUtils.isNotBlank(smAddress.getPostcode())) {
+				retVal = true;
+			}
+		}
+		return retVal;
 	}
 
 	private static void setSupplierCategoryEffectiveDate(

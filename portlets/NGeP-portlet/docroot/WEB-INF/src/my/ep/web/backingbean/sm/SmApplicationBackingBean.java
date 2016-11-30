@@ -62,7 +62,6 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.revertApplication.RevertApplicationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
-import my.ep.dto.sm.reviewApplication.ReviewApplicationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
@@ -75,19 +74,14 @@ import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -155,7 +149,6 @@ import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmSideMenuIconUtil;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
-import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmPaymentDetailsVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -1304,9 +1297,9 @@ public class SmApplicationBackingBean extends
 									.getDaysLeft() }));
 		}
 
-		//set Personnel List Count
+		// set Personnel List Count
 		calcPersonnelListCount();
-		
+
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
@@ -1756,31 +1749,15 @@ public class SmApplicationBackingBean extends
 		return SmCommonUtil.getOwnershipTypeLabel(ownershipType);
 	}
 
+	/**
+	 * Get year list for work experience
+	 * 
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> getYearsWorkExp() {
 		List<SelectItem> initYears = Arrays.asList(getYearDropDown());
-		List<SelectItem> selectYears = new ArrayList<SelectItem>();
-		if (initYears != null
-				&& getManagedBean().getSelectedJobFunction() != null
-				&& getManagedBean().getSelectedJobFunction().getFromYear() != null
-				&& getManagedBean().getSelectedJobFunction().getFromYear()
-						.compareTo(0) != 0) {
-			int minYear = Integer.parseInt(getManagedBean()
-					.getSelectedJobFunction().getFromYear().toString());
-
-			Iterator<SelectItem> itemIt = initYears.iterator();
-			while (itemIt.hasNext()) {
-				SelectItem item = itemIt.next();
-				if (item.getValue() != null) {
-					int tmp = Integer.parseInt(item.getValue().toString());
-					if (tmp >= minYear) {
-						selectYears.add(item);
-					}
-				} else {
-					selectYears.add(item);
-				}
-			}
-		}
-		return selectYears;
+		return SmApplicationUtil.getYearsWorkExp(getManagedBean()
+				.getSelectedJobFunction(), initYears);
 	}
 
 	/**
@@ -2743,31 +2720,11 @@ public class SmApplicationBackingBean extends
 	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
-		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-			getManagedBean().getSelectedShareHolder().setContractSignerFlg(
-					DbValueConst.RECORD_STATUS_SUSPENDED);
-			getManagedBean().getShareHolderMailAddr().setSameAsPerm(true);
-		} else {
-			getManagedBean().getShareHolderMailAddr().setSameAsPerm(false);
-			assignSelShareHolderAddress(getManagedBean()
-					.getSelectedShareHolder());
-		}
-		buildRoleList(getManagedBean().getSelectedShareHolder());
-		getManagedBean().setDisableAuthorizedRadio(
-				disableAuthorizedRadio(getManagedBean()
-						.getSelectedShareHolder()));
+		SmApplicationUtil.assignShareHolderPrivilege(getManagedBean());
 	}
 
 	private int getCurrAuthPersonnelCount() {
-		int count = 0;
-		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
-			if ((per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || per
-					.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
-					&& per.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				count++;
-			}
-		}
-		return count;
+		return SmApplicationUtil.getCurrAuthPersonnelCount(getManagedBean());
 	}
 
 	/**
@@ -2778,8 +2735,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignShareHolderPrivilegeByEpRole(AjaxBehaviorEvent e) {
 		SmApplicationUtil.setPersonnelRoleChange(getManagedBean().getSmAppl(),
-				getPrevApprovedPersonnel(getManagedBean()
-						.getSelectedShareHolder()), getManagedBean()
+				SmApplicationUtil.getPrevApprovedPersonnel(getManagedBean()
+						.getSelectedShareHolder(), getManagedBean()
+						.getPrevApprovedPersonnels()), getManagedBean()
 						.getSelectedShareHolder());
 		getManagedBean()
 				.setDisableRoleSelection(
@@ -5540,23 +5498,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public String getPersonnelActivationStatus(SmPersonnel smPersonnel,
 			SmSupplier smSupplier) {
-		String accStatus = "";
-		if (smSupplier != null && smSupplier.getSupplierId() != null
-				&& smPersonnel.getEpRole() != null
-				&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
-
-			if (smPersonnel.getPersonnelId() != null
-					&& SmApplicationUtil.isLatestApprovedPersonnelActivated(
-							smPersonnel.getIdentificationNo(),
-							smSupplier.getSupplierId())) {
-				accStatus = SmCommonUtil.getMessage(
-						"lbl.sm.activation.status.activated", null);
-			} else {
-				accStatus = SmCommonUtil.getMessage(
-						"lbl.sm.activation.status.pending", null);
-			}
-		}
-		return accStatus;
+		return SmApplicationUtil.getPersonnelActivationStatus(smPersonnel,
+				smSupplier);
 	}
 
 	@SuppressWarnings("unused")
@@ -5716,14 +5659,10 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new sm staff experience object
 	 */
 	public void addShrHldrJobFunction() {
-		log.info("******* getManagedBean().getSelectedShareHolder() **********"
-				+ getManagedBean().getSelectedShareHolder().getName());
-		SmStaffExperience exp = new SmStaffExperience();
-		exp.setSmPersonnel(getManagedBean().getSelectedShareHolder());
-		getManagedBean().setSelectedJobFunction(exp);
-		assignValReqdToTrue();
-		RequestContext.getCurrentInstance().execute(
-				"equiJobFunctionInfo.show()");
+		SmApplicationUtil.addNewPersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				new SmStaffExperience(), "selectedJobFunction",
+				"equiJobFunctionInfo");
 	}
 
 	/**
@@ -5734,23 +5673,7 @@ public class SmApplicationBackingBean extends
 	 *            - SmStaffExperience object
 	 */
 	public void assignSelShrHldrJobFunc(SmStaffExperience exp) {
-		getManagedBean().setSelectedJobFunction(exp);
-		if (getManagedBean().getLatestPersonnel() != null) {
-			getManagedBean().setLatestJobFunction(
-					(SmStaffExperience) EntityHelper
-							.getEntityByMultiplePropertiesFromList(exp,
-									getManagedBean().getLatestPersonnel()
-											.getSmStaffExperiences(),
-									new String[] { "companyName", "toYear" },
-									null, null));
-		}
-		RequestContext.getCurrentInstance().execute(
-				"equiJobFunctionInfo.show()");
-		if (getManagedBean().isShowPersonnelViewOnly()) {
-			SmCommonUtil.closeBlockUI();
-		} else {
-			assignValReqdToTrue();
-		}
+		SmApplicationUtil.assignSelShrHldrJobFunc(exp, getManagedBean());
 	}
 
 	/**
@@ -5758,113 +5681,13 @@ public class SmApplicationBackingBean extends
 	 * selected SmPersonnel.
 	 */
 	public void addOrUpdateJobFunctions() {
-		Long expCode = getManagedBean().getSelectedJobFunction()
-				.getStaffExpCode() == null ? getMaxExpCode() + 1
-				: getManagedBean().getSelectedJobFunction().getStaffExpCode();
-		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getSelectedShareHolder().getSmStaffExperiences())) {
-			StringBuilder sb1 = null;
-			StringBuilder sb2 = null;
-			for (SmStaffExperience exp : getManagedBean()
-					.getSelectedShareHolder().getSmStaffExperiences()) {
-				if (getManagedBean().getSelectedJobFunction() != null) {
-					sb1 = new StringBuilder();
-					sb1.append(getManagedBean().getSelectedJobFunction()
-							.getCompanyName());
-					sb1.append(getManagedBean().getSelectedJobFunction()
-							.getDesignation());
-
-					sb2 = new StringBuilder();
-					sb2.append(exp.getCompanyName());
-					sb2.append(exp.getDesignation());
-
-					if (getManagedBean().getSelectedJobFunction()
-							.getStaffExpCode() == null
-							|| (expCode != null
-									&& exp.getStaffExpCode() != null && expCode
-									.compareTo(exp.getStaffExpCode()) != 0)) {
-						if (sb1.toString().equals(sb2.toString())
-								&& getManagedBean().getSelectedJobFunction()
-										.getFromYear()
-										.equals(exp.getFromYear())
-								&& getManagedBean().getSelectedJobFunction()
-										.getToYear().equals(exp.getToYear())) {
-							throw new EpException(MessageConst.ERROR_722638,
-									new String[] { exp.getCompanyName() });
-						} else if (sb1.toString().equals(sb2.toString())
-								&& (SmCommonUtil.isBetweenDuration(
-										getManagedBean()
-												.getSelectedJobFunction()
-												.getFromYear(),
-										getManagedBean()
-												.getSelectedJobFunction()
-												.getToYear(),
-										exp.getFromYear(), exp.getToYear()))) {
-							throw new EpException(MessageConst.ERROR_722639,
-									new String[] { exp.getCompanyName() });
-						}
-					}
-				}
-			}
-		}
-
-		if (getManagedBean()
-				.getSelectedJobFunction()
-				.getFromYear()
-				.compareTo(
-						getManagedBean().getSelectedJobFunction().getToYear()) > 0) {
-			throw new EpException(MessageConst.ERROR_722531);
-
-		}
-		if (getManagedBean().getSelectedJobFunction().getStaffExpCode() == null) {
-			getManagedBean().getSelectedJobFunction().setStaffExpCode(expCode);
-		}
-
-		SmStaffExperience existingExp = (SmStaffExperience) EntityHelper
-				.getEntityBySinglePropertyFromList(expCode, getManagedBean()
-						.getSelectedShareHolder().getSmStaffExperiences(),
-						"staffExpCode");
-		if (existingExp == null) {
-			getManagedBean().getSelectedShareHolder().getSmStaffExperiences()
-					.add(getManagedBean().getSelectedJobFunction());
-		} else {
-			int i = 0;
-			for (SmStaffExperience tmp : getManagedBean()
-					.getSelectedShareHolder().getSmStaffExperiences()) {
-				if (tmp.getStaffExpCode().equals(existingExp.getStaffExpCode())) {
-					break;
-				}
-				i++;
-			}
-			getManagedBean().getSelectedShareHolder().getSmStaffExperiences()
-					.set(i, getManagedBean().getSelectedJobFunction());
-		}
-
-		if (getManagedBean().getSelectedJobFunction().getStaffExperienceId() == null) {
-			RequestContext.getCurrentInstance().execute(
-					"suppPrsnJobFunDtWidVar.paginator.endLink.click()");
-		}
-		assignValReqdToFalse();
+		SmApplicationUtil.addOrUpdateJobFunctions(getManagedBean());
 		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
-
-		RequestContext.getCurrentInstance().execute(
-				"equiJobFunctionInfo.hide()");
-
 	}
 
 	public Long getMaxExpCode() {
-		Long expCode = 0L;
-		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getSelectedShareHolder().getSmStaffExperiences())) {
-			for (SmStaffExperience exp : getManagedBean()
-					.getSelectedShareHolder().getSmStaffExperiences()) {
-				if (exp.getStaffExpCode() != null
-						&& exp.getStaffExpCode().compareTo(expCode) > 0) {
-					expCode = exp.getStaffExpCode();
-				}
-			}
-		}
-		return expCode;
+		return SmApplicationUtil.getPersonnelMaxExpCode(getManagedBean()
+				.getSelectedShareHolder());
 	}
 
 	/**
@@ -5884,21 +5707,12 @@ public class SmApplicationBackingBean extends
 	 * of the selected SmPersonnel
 	 */
 	public void deleteSelectedShrHldrJobFunction() {
-		log.info(" ******* The is size of job holders is ********* "
-				+ getManagedBean().getSelectedShrHldrJobFunctions().size());
-		if (getManagedBean().getSelectedShrHldrJobFunctions().size() > 0) {
-			for (SmStaffExperience exp : getManagedBean()
-					.getSelectedShrHldrJobFunctions()) {
-				getManagedBean().getSelectedShareHolder()
-						.getSmStaffExperiences().remove(exp);
-
-			}
-			getManagedBean().getSelectedShrHldrJobFunctions().clear();
-		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { SmCommonUtil.getMessage(
-							"lbl.sm.personnel.dash.jobfunction", null) });
-		}
+		SmApplicationUtil.deletePersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				"selectedShrHldrJobFunctions", "smStaffExperiences",
+				MessageConst.ERROR_722534,
+				new String[] { SmCommonUtil.getMessage(
+						"lbl.sm.personnel.dash.jobfunction", null) });
 
 	}
 
@@ -5906,11 +5720,10 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new related company object
 	 */
 	public void addShrHldrRelatedCompany() {
-		SmRelatedCompany com = new SmRelatedCompany();
-		com.setSmPersonnel(getManagedBean().getSelectedShareHolder());
-		getManagedBean().setSelectedRelatedCompany(com);
-		assignValReqdToTrue();
-		RequestContext.getCurrentInstance().execute("equiRelCompInfo.show()");
+		SmApplicationUtil.addNewPersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				new SmRelatedCompany(), "selectedRelatedCompany",
+				"equiRelCompInfo");
 	}
 
 	/**
@@ -5921,21 +5734,7 @@ public class SmApplicationBackingBean extends
 	 *            -SmRelatedCompany object
 	 */
 	public void assignSelShrHldrRelatedCompany(SmRelatedCompany com) {
-		getManagedBean().setSelectedRelatedCompany(com);
-		if (getManagedBean().getLatestPersonnel() != null) {
-			getManagedBean().setLatestRelatedCompany(
-					(SmRelatedCompany) EntityHelper
-							.getEntityByMultiplePropertiesFromList(com,
-									getManagedBean().getLatestPersonnel()
-											.getSmRelatedCompanies(),
-									new String[] { "regNo" }, null, null));
-		}
-		RequestContext.getCurrentInstance().execute("equiRelCompInfo.show()");
-		if (getManagedBean().isShowPersonnelViewOnly()) {
-			SmCommonUtil.closeBlockUI();
-		} else {
-			assignValReqdToTrue();
-		}
+		SmApplicationUtil.assignSelShrHldrRelatedCompany(com, getManagedBean());
 	}
 
 	/**
@@ -5943,20 +5742,8 @@ public class SmApplicationBackingBean extends
 	 * the selected SmPersonnel.
 	 */
 	public void addOrUpdateRelatedCompanies() {
-		if (getManagedBean().getSelectedShareHolder().getSmRelatedCompanies()
-				.contains(getManagedBean().getSelectedRelatedCompany())) {
-
-			// TODO if any validation reqd for edit
-		} else {
-			getManagedBean().getSelectedShareHolder().getSmRelatedCompanies()
-					.add(getManagedBean().getSelectedRelatedCompany());
-			RequestContext.getCurrentInstance().execute(
-					"suppPrsnRelComDtWidVar.paginator.endLink.click()");
-		}
-		assignValReqdToFalse();
+		SmApplicationUtil.addOrUpdateRelatedCompanies(getManagedBean());
 		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
-		RequestContext.getCurrentInstance().execute("equiRelCompInfo.hide()");
-
 	}
 
 	/**
@@ -5964,20 +5751,12 @@ public class SmApplicationBackingBean extends
 	 * list of the selected SmPersonnel
 	 */
 	public void deleteSelectedShrHldrRelatedCompanies() {
-
-		if (getManagedBean().getSelectedShrHldrRelatedCompanies().size() > 0) {
-			for (SmRelatedCompany rel : getManagedBean()
-					.getSelectedShrHldrRelatedCompanies()) {
-				getManagedBean().getSelectedShareHolder()
-						.getSmRelatedCompanies().remove(rel);
-			}
-			getManagedBean().getSelectedShrHldrRelatedCompanies().clear();
-		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { SmCommonUtil.getMessage(
-							"lbl.sm.personnel.dash.relatedcompany", null) });
-		}
-
+		SmApplicationUtil.deletePersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				"selectedShrHldrRelatedCompanies", "smRelatedCompanies",
+				MessageConst.ERROR_722534, new String[] { SmCommonUtil
+						.getMessage("lbl.sm.personnel.dash.relatedcompany",
+								null) });
 	}
 
 	/**
@@ -5994,7 +5773,6 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new staff academics object for selected Smpersonnel
 	 */
 	public void addShrHldrAcademicQualification() {
-
 		SmStaffAcademic aca = new SmStaffAcademic();
 		aca.setPmEduField(new PmEduField());
 		// aca.setPmEduLevel(new PmEduLevel());
@@ -6014,31 +5792,7 @@ public class SmApplicationBackingBean extends
 	 *            -SmStaffAcademic
 	 */
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
-		// if (aca.getPmEduLevel() == null) {
-		// aca.setPmEduLevel(new PmEduLevel());
-		// }
-		if (aca.getQualificationId() == null) {
-			aca.setQualificationId(new PmParameter());
-		}
-		getManagedBean().setSelectedStaffAcademic(aca);
-		if (getManagedBean().getLatestPersonnel() != null) {
-			getManagedBean()
-					.setLatestStaffAcademic(
-							(SmStaffAcademic) EntityHelper
-									.getEntityByMultiplePropertiesFromList(aca,
-											getManagedBean()
-													.getLatestPersonnel()
-													.getSmStaffAcademics(),
-											null, new String[] { "pmEduField",
-													"pmEduLevel" }, null));
-		}
-		RequestContext.getCurrentInstance().execute("equiAcadInfo.show()");
-		if (getManagedBean().isShowPersonnelViewOnly()) {
-			SmCommonUtil.closeBlockUI();
-		} else {
-			assignValReqdToTrue();
-		}
-
+		SmApplicationUtil.assignSelShrHldrAcademics(aca, getManagedBean());
 	}
 
 	/**
@@ -6046,19 +5800,11 @@ public class SmApplicationBackingBean extends
 	 * selected SmPersonnel.
 	 */
 	public void deleteSelectedShrHldrAcademics() {
-		if (getManagedBean().getSelectedShrHldrAcademics().size() > 0) {
-			for (SmStaffAcademic aca : getManagedBean()
-					.getSelectedShrHldrAcademics()) {
-				getManagedBean().getSelectedShareHolder().getSmStaffAcademics()
-						.remove(aca);
-			}
-			getManagedBean().getSelectedShrHldrAcademics().clear();
-		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { SmCommonUtil.getMessage(
-							"lbl.sm.personnel.dash.academics", null) });
-		}
-
+		SmApplicationUtil.deletePersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				"selectedShrHldrAcademics", "smStaffAcademics",
+				MessageConst.ERROR_722534, new String[] { SmCommonUtil
+						.getMessage("lbl.sm.personnel.dash.academics", null) });
 	}
 
 	/**
@@ -6076,81 +5822,14 @@ public class SmApplicationBackingBean extends
 	 * the selected SmPersonnel.
 	 */
 	public void addOrUpdateShrHldrAcademic() {
-		for (PmEduField edu : getManagedBean().getEduFieldList()) {
-			if (getManagedBean().getSelectedStaffAcademic().getPmEduField()
-					.getEduFieldId().equals(edu.getEduFieldId())) {
-				getManagedBean().getSelectedStaffAcademic().setPmEduField(edu);
-				break;
-			}
-		}
-		for (PmParameterDesc lvl : getManagedBean().getEduLevelList()) {
-			if (getManagedBean().getSelectedStaffAcademic()
-					.getQualificationId().getParameterId()
-					.equals(lvl.getPmParameter().getParameterId())) {
-				getManagedBean().getSelectedStaffAcademic()
-						.setQualificationLevelId(
-								getManagedBean().getSelectedStaffAcademic()
-										.getQualificationId().getParameterId()
-										.intValue());
-				break;
-			}
-		}
-
-		if (getManagedBean().getSelectedStaffAcademic().getQualificationId() != null) {
-
-			String qual = "";
-			if (getManagedBean().getSelectedStaffAcademic()
-					.getQualificationId().getParameterCode() != null) {
-				qual = getManagedBean().getSelectedStaffAcademic()
-						.getQualificationId().getParameterCode();
-				if (getManagedBean().getSelectedShareHolder().isProf()) {
-					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
-							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_LEVEL_CERT)
-							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_LEVEL_DIPLOMA)) {
-						throw new EpException(MessageConst.ERROR_722574,
-								new String[] { "Professional Staff",
-										"BACHELOR'S DEGREE" });
-					}
-				} else if (getManagedBean().getSelectedShareHolder()
-						.isSemiProf()) {
-					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
-							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_LEVEL_CERT)) {
-						throw new EpException(MessageConst.ERROR_722574,
-								new String[] { "Semi-Professional Staff",
-										"DIPLOMA" });
-					}
-				} else if (getManagedBean().getSelectedShareHolder()
-						.isClerical()) {
-					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)) {
-						throw new EpException(
-								MessageConst.ERROR_722574,
-								new String[] { "Clerical Staff", "CERTIFICATE" });
-					}
-				}
-
-			}
-		}
-		if (getManagedBean().getSelectedShareHolder().getSmStaffAcademics()
-				.contains(getManagedBean().getSelectedStaffAcademic())) {
-			// TODO if any validation reqd for edit
-		} else {
-
-			getManagedBean().getSelectedShareHolder().getSmStaffAcademics()
-					.add(getManagedBean().getSelectedStaffAcademic());
-			RequestContext.getCurrentInstance().execute(
-					"suppPrsnAcadDtWidVar.paginator.endLink.click()");
-		}
-		assignValReqdToFalse();
+		SmApplicationUtil.addOrUpdateShrHldrAcademic(getManagedBean());
 		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
-		RequestContext.getCurrentInstance().execute("equiAcadInfo.hide()");
-
 	}
 
 	/**
 	 * Add or create a new shr hldr prof body object
 	 */
 	public void addShrHldrProfBody() {
-
 		SmAssociationBody assBody = new SmAssociationBody();
 		assBody.setPmCertBody(new PmCertBody());
 		assBody.setRevNo(1);
@@ -6170,27 +5849,11 @@ public class SmApplicationBackingBean extends
 	 *            -SmAssociationBody object
 	 */
 	public void assignSelShrHldrProfBody(SmAssociationBody asb) {
-		getManagedBean().setSelectedStfPrfBdy(asb);
-		if (getManagedBean().getLatestAppl() != null) {
-			getManagedBean().setLatestStfPrfBdy(
-					(SmAssociationBody) EntityHelper
-							.getEntityByMultiplePropertiesFromList(asb,
-									getManagedBean().getLatestAppl()
-											.getSmAssociationBodies(),
-									new String[] { "regNo" }, null, null));
-		}
-		RequestContext.getCurrentInstance().execute(
-				"equiShrProfBeanInfo.show()");
-		if (getManagedBean().isShowPersonnelViewOnly()) {
-			SmCommonUtil.closeBlockUI();
-		} else {
-			assignValReqdToTrue();
-		}
-
+		SmApplicationUtil.assignSelShrHldrProfBody(asb, getManagedBean());
 	}
 
 	/**
-	 * Cancel add or update functionality and close the professionl body
+	 * Cancel add or update functionality and close the professional body
 	 * information dialog
 	 */
 	public void cancelShrHldrProfBody() {
@@ -6206,21 +5869,8 @@ public class SmApplicationBackingBean extends
 	 * selected SmPersonnel.
 	 */
 	public void addOrUpdateShrHldrProfBody() {
-		if (getManagedBean().getSelectedShareHolder().getSmAssociationBodies()
-				.contains(getManagedBean().getSelectedStfPrfBdy())) {
-
-			// TODO if any validation reqd for edit
-		} else {
-			getManagedBean().getSelectedShareHolder().getSmAssociationBodies()
-					.add(getManagedBean().getSelectedStfPrfBdy());
-			RequestContext.getCurrentInstance().execute(
-					"suppPrsnProfBdyDtWidVar.paginator.endLink.click()");
-		}
-		assignValReqdToFalse();
+		SmApplicationUtil.addOrUpdateShrHldrProfBody(getManagedBean());
 		SmFieldChangeUtil.setPersonnelTableListChangeStatus(getManagedBean());
-		RequestContext.getCurrentInstance().execute(
-				"equiShrProfBeanInfo.hide()");
-
 	}
 
 	/**
@@ -6228,18 +5878,11 @@ public class SmApplicationBackingBean extends
 	 * the selected SmPersonnel.
 	 */
 	public void deleteSelectedShrHldrProfBodies() {
-		if (getManagedBean().getSelectedShrHldrProfBodies().size() > 0) {
-			for (SmAssociationBody prof : getManagedBean()
-					.getSelectedShrHldrProfBodies()) {
-				getManagedBean().getSelectedShareHolder()
-						.getSmAssociationBodies().remove(prof);
-			}
-			getManagedBean().getSelectedShrHldrProfBodies().clear();
-		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { SmCommonUtil.getMessage(
-							"lbl.sm.personnel.dash.profbody", null) });
-		}
+		SmApplicationUtil.deletePersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				"selectedShrHldrProfBodies", "smAssociationBodies",
+				MessageConst.ERROR_722534, new String[] { SmCommonUtil
+						.getMessage("lbl.sm.personnel.dash.profbody", null) });
 	}
 
 	/**
@@ -6283,21 +5926,8 @@ public class SmApplicationBackingBean extends
 	 *            - AjaxBehaviorEvent
 	 */
 	public void assignPersonIdentType(AjaxBehaviorEvent e) {
-		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
-			getManagedBean().getSelectedShareHolder().setIdentificationType(
-					SmApplicationUtil
-							.retrievePmParameterById(getManagedBean()
-									.getSelectedShareHolder()
-									.getIdentificationTypeId()));
-			if (getManagedBean().getSelectedShareHolder()
-					.getIdentificationType() == null) {
-				getManagedBean().getSelectedShareHolder()
-						.setIdentificationType(new PmParameter());
-			}
-		} else {
-			getManagedBean().getSelectedShareHolder().setIdentificationType(
-					new PmParameter());
-		}
+		SmApplicationUtil
+				.setSelectedPersonnelIdentificationType(getManagedBean());
 	}
 
 	/**
@@ -6307,25 +5937,7 @@ public class SmApplicationBackingBean extends
 	 *            - AjaxBehaviorEvent
 	 */
 	public void assignPersonNationality(AjaxBehaviorEvent e) {
-		if (getManagedBean().getSelectedShareHolder().getPmCountry()
-				.getCountryId() != null) {
-			log.info(" **** Selected Country Id ***** "
-					+ getManagedBean().getSelectedShareHolder().getPmCountry()
-							.getCountryId());
-			PmCountry cntry = new PmCountry();
-
-			cntry = SmApplicationUtil.retrievePmCountryById(getManagedBean()
-					.getSelectedShareHolder().getPmCountry().getCountryId());
-			if (cntry != null) {
-				getManagedBean().getSelectedShareHolder().setPmCountry(cntry);
-				SmCommonUtil.setDefaultPersonnelNationality(getManagedBean()
-						.getSelectedShareHolder());
-			}
-
-			log.info(" **** Selected Country Id ***** "
-					+ getManagedBean().getSelectedShareHolder().getPmCountry()
-							.getCountryCode());
-		}
+		SmApplicationUtil.setSelectedPersonnelNationality(getManagedBean());
 	}
 
 	/**
@@ -6336,235 +5948,8 @@ public class SmApplicationBackingBean extends
 	 *            - SmPersonnel object
 	 */
 	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean) {
-		if (isPersonnelViewOnly(shareHolderBean)
-				&& shareHolderBean.getPersonnelId() != null) {
-			if (shareHolderBean.getSmPersonnelAddresses() != null
-					&& shareHolderBean.getSmPersonnelAddresses().size() > 0) {
-				for (SmPersonnelAddress personnelAddress : shareHolderBean
-						.getSmPersonnelAddresses()) {
-					if (personnelAddress
-							.getAddressType()
-							.equalsIgnoreCase(
-									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
-						if (personnelAddress.getSmAddress() != null
-								&& personnelAddress.getSmAddress()
-										.getAddressId() != null) {
-							getManagedBean().setShareHolderPermAddr(
-									personnelAddress);
-						}
-					} else if (personnelAddress
-							.getAddressType()
-							.equalsIgnoreCase(
-									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
-						if (personnelAddress.getSmAddress() != null
-								&& personnelAddress.getSmAddress()
-										.getAddressId() != null) {
-							getManagedBean().setShareHolderMailAddr(
-									personnelAddress);
-						}
-					} else if (personnelAddress
-							.getAddressType()
-							.equalsIgnoreCase(
-									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
-						if (personnelAddress.getSmAddress() != null
-								&& personnelAddress.getSmAddress()
-										.getAddressId() != null) {
-							getManagedBean().setShareHolderResdAddr(
-									personnelAddress);
-						}
-					} else if (personnelAddress
-							.getAddressType()
-							.equalsIgnoreCase(
-									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
-						if (personnelAddress.getSmAddress() != null
-								&& personnelAddress.getSmAddress()
-										.getAddressId() != null) {
-							getManagedBean().setShareHolderOffAddr(
-									personnelAddress);
-						}
-					}
-				}
-			}
-		} else {
-			SmPersonnelAddress perm = new SmPersonnelAddress();
-			perm.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM);
-			perm.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
-			perm.setSmPersonnel(shareHolderBean);
-			perm.setSameAsPerm(false);
-
-			SmPersonnelAddress mail = new SmPersonnelAddress();
-			mail.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL);
-			mail.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
-			mail.setSmPersonnel(shareHolderBean);
-			mail.setSameAsPerm(false);
-
-			SmPersonnelAddress off = new SmPersonnelAddress();
-			off.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE);
-			off.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
-			off.setSmPersonnel(shareHolderBean);
-			off.setSameAsPerm(false);
-
-			SmPersonnelAddress res = new SmPersonnelAddress();
-			res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
-			res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
-			res.setSmPersonnel(shareHolderBean);
-			res.setSameAsPerm(false);
-
-			getManagedBean().setShareHolderPermAddr(perm);
-			getManagedBean().setShareHolderMailAddr(mail);
-			getManagedBean().setShareHolderOffAddr(off);
-			getManagedBean().setShareHolderResdAddr(res);
-			List<SelectItem> defStateItems = SmCommonUtil.getStateList(perm
-					.getSmAddress().getPmCountry().getCountryId());
-			if (shareHolderBean.getSmPersonnelAddresses().isEmpty()) {
-
-				// reset to default values for a new record
-				getManagedBean().setShrHldrPermStates(defStateItems);
-				getManagedBean().setShrHldrPermDistricts(
-						new ArrayList<SelectItem>());
-				getManagedBean().setShrHldrPermCities(
-						new ArrayList<SelectItem>());
-				getManagedBean().setShrHldrMailStates(defStateItems);
-				getManagedBean().setShrHldrMailDistricts(
-						new ArrayList<SelectItem>());
-				getManagedBean().setShrHldrMailCities(
-						new ArrayList<SelectItem>());
-				getManagedBean().setShrHldrResdStates(defStateItems);
-				getManagedBean().setShrHldrResdDistricts(
-						new ArrayList<SelectItem>());
-				getManagedBean().setShrHldrResdCities(
-						new ArrayList<SelectItem>());
-				getManagedBean().setShrHldrOffStates(defStateItems);
-				getManagedBean().setShrHldrOffDistricts(
-						new ArrayList<SelectItem>());
-				getManagedBean().setShrHldrOffCities(
-						new ArrayList<SelectItem>());
-
-			} else {
-				for (SmPersonnelAddress addr : shareHolderBean
-						.getSmPersonnelAddresses()) {
-					SmAddress smAddress = new SmAddress();
-					smAddress.setAddress1(addr.getSmAddress().getAddress1());
-					smAddress.setAddress2(addr.getSmAddress().getAddress2());
-					smAddress.setAddress3(addr.getSmAddress().getAddress3());
-					PmCountry country = new PmCountry();
-					country.setCountryId(addr.getSmAddress().getPmCountry()
-							.getCountryId());
-					smAddress.setPmCountry(country);
-					smAddress.setCountryId(country.getCountryId());
-					PmState state = new PmState();
-					state.setStateId(addr.getSmAddress().getPmState()
-							.getStateId());
-					smAddress.setPmState(state);
-					smAddress.setStateId(state.getStateId());
-					PmDistrict district = new PmDistrict();
-					district.setDistrictId(addr.getSmAddress().getPmDistrict()
-							.getDistrictId());
-					smAddress.setPmDistrict(district);
-					smAddress.setDistrictId(district.getDistrictId());
-					PmCity city = new PmCity();
-					city.setCityId(addr.getSmAddress().getPmCity().getCityId());
-					smAddress.setPmCity(city);
-					smAddress.setCityId(city.getCityId());
-					smAddress.setPostcode(addr.getSmAddress().getPostcode());
-					addr.setSmAddress(smAddress);
-
-					if (addr.getAddressType()
-							.equalsIgnoreCase(
-									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
-						getManagedBean().setShareHolderPermAddr(addr);
-						SmApplicationUtil
-								.getInstance()
-								.assignStateDistAndCityForSelVal(
-										getManagedBean(),
-										getManagedBean()
-												.getShareHolderPermAddr()
-												.getSmAddress(),
-										SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL);
-
-					}
-					if (addr.getAddressType()
-							.equalsIgnoreCase(
-									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
-						getManagedBean().setShareHolderMailAddr(addr);
-						SmApplicationUtil
-								.getInstance()
-								.assignStateDistAndCityForSelVal(
-										getManagedBean(),
-										getManagedBean()
-												.getShareHolderMailAddr()
-												.getSmAddress(),
-										SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL);
-
-					}
-					if (addr.getAddressType().equalsIgnoreCase(
-							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
-						getManagedBean().setShareHolderResdAddr(addr);
-						SmApplicationUtil
-								.getInstance()
-								.assignStateDistAndCityForSelVal(
-										getManagedBean(),
-										getManagedBean()
-												.getShareHolderResdAddr()
-												.getSmAddress(),
-										SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
-
-					}
-					if (addr.getAddressType()
-							.equalsIgnoreCase(
-									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
-						getManagedBean().setShareHolderOffAddr(addr);
-						SmApplicationUtil
-								.getInstance()
-								.assignStateDistAndCityForSelVal(
-										getManagedBean(),
-										getManagedBean()
-												.getShareHolderOffAddr()
-												.getSmAddress(),
-										SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL);
-					}
-				}
-
-				if ((getManagedBean().getShrHldrPermStates() == null)
-						|| (getManagedBean().getShrHldrPermStates() != null && getManagedBean()
-								.getShrHldrPermStates().isEmpty())) {
-					getManagedBean().setShrHldrPermStates(defStateItems);
-					getManagedBean().setShrHldrPermDistricts(
-							new ArrayList<SelectItem>());
-					getManagedBean().setShrHldrPermCities(
-							new ArrayList<SelectItem>());
-				}
-				if ((getManagedBean().getShrHldrMailStates() == null)
-						|| (getManagedBean().getShrHldrMailStates() != null && getManagedBean()
-								.getShrHldrMailStates().isEmpty())) {
-					getManagedBean().setShrHldrMailStates(defStateItems);
-					getManagedBean().setShrHldrMailDistricts(
-							new ArrayList<SelectItem>());
-					getManagedBean().setShrHldrMailCities(
-							new ArrayList<SelectItem>());
-				}
-				if ((getManagedBean().getShrHldrResdStates() == null)
-						|| (getManagedBean().getShrHldrResdStates() != null && getManagedBean()
-								.getShrHldrResdStates().isEmpty())) {
-					getManagedBean().setShrHldrResdStates(defStateItems);
-					getManagedBean().setShrHldrResdDistricts(
-							new ArrayList<SelectItem>());
-					getManagedBean().setShrHldrResdCities(
-							new ArrayList<SelectItem>());
-				}
-				if ((getManagedBean().getShrHldrOffStates() == null)
-						|| (getManagedBean().getShrHldrOffStates() != null && getManagedBean()
-								.getShrHldrOffStates().isEmpty())) {
-					getManagedBean().setShrHldrOffStates(defStateItems);
-					getManagedBean().setShrHldrOffDistricts(
-							new ArrayList<SelectItem>());
-					getManagedBean().setShrHldrOffCities(
-							new ArrayList<SelectItem>());
-				}
-
-			}
-		}
-		getManagedBean().setSelectedShareHolder(shareHolderBean);
+		SmApplicationUtil.assignSelShareHolder(shareHolderBean,
+				getManagedBean(), currentTab);
 	}
 
 	// -- Process Common for both Personnel and Share Holder Start --
@@ -9759,19 +9144,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Manages min and max equity holder limit for supplier.
-	 * 
-	 * @param personnel
-	 *            - SmPersonnel object
-	 */
-	private void manageEquityLimit(SmPersonnel personnel) {
-		getManagedBean().setValidEquityLimit(
-				SmApplicationUtil.manageEquityLimit(personnel, getManagedBean()
-						.getBusinessTypeVal(), getManagedBean()
-						.getSmapplShareHolders()));
-	}
-
-	/**
 	 * Assign supplier business type for screen validation purpose.
 	 * 
 	 * @param sup
@@ -9821,8 +9193,7 @@ public class SmApplicationBackingBean extends
 	 * screen.Used for enable and disable screen validation dynamically.
 	 */
 	private void assignValReqdToTrue() {
-		getManagedBean().setShowParentMsg(false);
-		getManagedBean().setValueReqd(true);
+		SmApplicationUtil.assignValReqdToTrue(getManagedBean());
 	}
 
 	/**
@@ -9926,74 +9297,8 @@ public class SmApplicationBackingBean extends
 	 * Manage personnel roles for the selected SmPersonnel in the application.
 	 */
 	public void managePersonnelRoles(String updateAddressDetails) {
-		log.info("**** Enter Manage Roles  ******");
-		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			log.info(" **** Role management for contractor ***********");
-			if (getManagedBean().getSelectedShareHolder().isEquityOwner()
-					|| getManagedBean().getSelectedShareHolder().isDirector()
-					|| getManagedBean().getSelectedShareHolder()
-							.isHigherManagement()
-					|| getManagedBean().getSelectedShareHolder().isManagement()) {
-				getManagedBean().getSelectedShareHolder().setClerical(false);
-				getManagedBean().getSelectedShareHolder().setDisableStaff(true);
-			} else {
-				getManagedBean().getSelectedShareHolder()
-						.setDisableStaff(false);
-			}
-
-		} else if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-			log.info(" **** Role management for consultant ***********");
-			if (getManagedBean().getSelectedShareHolder().isEquityOwner()
-					|| getManagedBean().getSelectedShareHolder().isDirector()
-					|| getManagedBean().getSelectedShareHolder()
-							.isHigherManagement()
-					|| getManagedBean().getSelectedShareHolder().isProf()
-					|| getManagedBean().getSelectedShareHolder().isSemiProf()) {
-				getManagedBean().getSelectedShareHolder().setClerical(false);
-				getManagedBean().getSelectedShareHolder().setDisableStaff(true);
-			} else if (getManagedBean().getSelectedShareHolder().isManagement()
-					&& (getManagedBean().getSelectedShareHolder()
-							.isEquityOwner() || getManagedBean()
-							.getSelectedShareHolder().isDirector())) {
-				getManagedBean().getSelectedShareHolder().setClerical(false);
-				getManagedBean().getSelectedShareHolder().setDisableStaff(true);
-			} else {
-				getManagedBean().getSelectedShareHolder()
-						.setDisableStaff(false);
-			}
-
-			if (getManagedBean().getSelectedShareHolder().isEquityOwner()
-					|| getManagedBean().getSelectedShareHolder().isDirector()
-					|| getManagedBean().getSelectedShareHolder()
-							.isHigherManagement()
-					|| getManagedBean().getSelectedShareHolder().isProf()
-					|| getManagedBean().getSelectedShareHolder().isManagement()) {
-				getManagedBean().getSelectedShareHolder().setSemiProf(false);
-				getManagedBean().getSelectedShareHolder().setDisableSemiProf(
-						true);
-			} else {
-				getManagedBean().getSelectedShareHolder().setDisableSemiProf(
-						false);
-			}
-		}
-
-		if (getManagedBean().getSelectedShareHolder().getPersonnelId() != null
-				&& updateAddressDetails.equalsIgnoreCase("Y")) {
-			if (getManagedBean().getSelectedShareHolder().isEquityOwner()
-					|| getManagedBean().getSelectedShareHolder().isDirector()
-					|| getManagedBean().getSelectedShareHolder()
-							.isHigherManagement()) {
-				getManagedBean().getShareHolderResdAddr().setSameAsPerm(false);
-				getManagedBean().getShareHolderOffAddr().setSameAsPerm(false);
-				assignSelShareHolderAddress(getManagedBean()
-						.getSelectedShareHolder());
-			} else {
-				getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
-				getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
-			}
-		}
+		SmApplicationUtil.managePersonnelRoles(getManagedBean(),
+				updateAddressDetails);
 	}
 
 	/**
@@ -10618,25 +9923,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Sets the share holder for view only.
-	 * 
-	 * @param smPersonnel
-	 *            - SmPersonnel object
-	 */
-	private void setShareHolderForViewOnly(SmPersonnel smPersonnel) {
-		getManagedBean().setShowPersonnelViewOnly(
-				SmApplicationUtil.isPersonnelViewOnly(smPersonnel));
-		if (getManagedBean().isShowPersonnelViewOnly()) {
-			getManagedBean()
-					.setSelectedShareholderIdentificationType(
-							SmCommonUtil
-									.getParamDescriptionByLanguageAndPmParameter(getManagedBean()
-											.getSelectedShareHolder()
-											.getIdentificationType()));
-		}
-	}
-
-	/**
 	 * Checks if is personnel view only.
 	 * 
 	 * @param smPersonnel
@@ -10646,21 +9932,6 @@ public class SmApplicationBackingBean extends
 	public boolean isPersonnelViewOnly(SmPersonnel smPersonnel) {
 		boolean retVal = SmApplicationUtil.isPersonnelViewOnly(smPersonnel);
 		return retVal;
-	}
-
-	/**
-	 * Checks the record status and Sets the disabled shareholder name and
-	 * nationality.
-	 * 
-	 * @param smPersonnel
-	 *            - SmPersonnel object to be checked or validated
-	 */
-	private void setDisabledShareholderNameAndNationality(
-			SmPersonnel smPersonnel) {
-		getManagedBean().setDisabledShareholderPersonnelNameAndNationality(
-				SmApplicationUtil.isDisabledShareholderNameAndNationality(
-						smPersonnel, getManagedBean().getSmAppl()
-								.getSmSupplier()));
 	}
 
 	/**
@@ -10716,12 +9987,12 @@ public class SmApplicationBackingBean extends
 	 * @return String
 	 */
 	public String getEpRoleLabelByRole(String roleCode) {
-		String retVal = "";
-		for (SelectItem item : getManagedBean().getePRoleList()) {
-			if (item.getValue().equals(roleCode)) {
-				retVal = item.getLabel();
-				break;
-			}
+		String retVal = StringUtils.EMPTY;
+		SelectItem item = (SelectItem) EntityHelper
+				.getEntityBySinglePropertyFromList(roleCode, getManagedBean()
+						.getePRoleList(), "value");
+		if (item != null) {
+			retVal = item.getLabel();
 		}
 		return retVal;
 	}
@@ -10732,67 +10003,7 @@ public class SmApplicationBackingBean extends
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> getAcademicQualifications() {
-		String suppType = StringUtils.isNotBlank(getManagedBean()
-				.getNewSupplierType()) ? getManagedBean().getNewSupplierType()
-				: getManagedBean().getSmAppl().getSupplierType();
-		List<SelectItem> finalList = new ArrayList<SelectItem>();
-		SelectItem item = null;
-
-		if (getManagedBean().getSelectedShareHolder() != null
-				&& StringUtils.isNotBlank(suppType)
-				&& suppType.equals("J")
-				&& (getManagedBean().getSelectedShareHolder().isEquityOwner()
-						|| getManagedBean().getSelectedShareHolder().isProf()
-						|| getManagedBean().getSelectedShareHolder()
-								.isSemiProf() || getManagedBean()
-						.getSelectedShareHolder().isClerical())) {
-			for (PmParameterDesc eduLevel : getManagedBean().getEduLevelList()) {
-				if ((getManagedBean().getSelectedShareHolder().isEquityOwner() && SupplierManagementConst.EQUI_OWNER_EDU_LEVEL_CODES
-						.contains(eduLevel.getPmParameter().getParameterCode()))
-						|| (getManagedBean().getSelectedShareHolder().isProf() && SupplierManagementConst.PROF_STAFF_EDU_LEVEL_CODES
-								.contains(eduLevel.getPmParameter()
-										.getParameterCode()))
-						|| (getManagedBean().getSelectedShareHolder()
-								.isSemiProf() && SupplierManagementConst.SEMI_PROF_STAFF_EDU_LEVEL_CODES
-								.contains(eduLevel.getPmParameter()
-										.getParameterCode()))
-						|| (getManagedBean().getSelectedShareHolder()
-								.isClerical() && SupplierManagementConst.CLERICAL_STAFF_EDU_LEVEL_CODES
-								.contains(eduLevel.getPmParameter()
-										.getParameterCode()))) {
-					item = (SelectItem) EntityHelper
-							.getEntityBySinglePropertyFromList(
-									eduLevel.getParameterDescId(), finalList,
-									"value");
-					if (item == null) {
-						item = new SelectItem();
-						item.setLabel(eduLevel.getCodeName());
-						item.setValue(eduLevel.getParameterDescId());
-						finalList.add(item);
-					}
-				}
-			}
-
-		} else {
-			finalList = getAllPmEduLevelItems(finalList);
-		}
-		return finalList;
-	}
-
-	private List<SelectItem> getAllPmEduLevelItems(
-			List<SelectItem> eduLevelItems) {
-		SelectItem item = null;
-		for (PmParameterDesc eduLevel : getManagedBean().getEduLevelList()) {
-			item = (SelectItem) EntityHelper.getEntityBySinglePropertyFromList(
-					eduLevel.getParameterDescId(), eduLevelItems, "value");
-			if (item == null) {
-				item = new SelectItem();
-				item.setLabel(eduLevel.getCodeName());
-				item.setValue(eduLevel.getParameterDescId());
-				eduLevelItems.add(item);
-			}
-		}
-		return eduLevelItems;
+		return SmApplicationUtil.getQualificationLevels(getManagedBean());
 	}
 
 	/**
@@ -10976,50 +10187,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Get previous approved personnel
-	 * 
-	 * @param currPersonnel
-	 * @return SmPersonnel
-	 */
-	private SmPersonnel getPrevApprovedPersonnel(SmPersonnel currPersonnel) {
-		List<SmPersonnel> prevPersonnels = getManagedBean()
-				.getPrevApprovedPersonnels();
-		SmPersonnel retVal = null;
-
-		if (currPersonnel != null
-				&& !StringUtils.isBlank(currPersonnel.getIdentificationNo())
-				&& prevPersonnels != null && !prevPersonnels.isEmpty()) {
-			for (SmPersonnel prevPersonnel : prevPersonnels) {
-				if (prevPersonnel.getIdentificationNo().equals(
-						currPersonnel.getIdentificationNo())) {
-					retVal = prevPersonnel;
-				}
-			}
-		}
-
-		return retVal;
-	}
-
-	/**
 	 * Set address fields whether need to be mandatory
 	 */
 	public void setRoleStaffAddrReqd() {
-		getManagedBean().setRoleStaffAndPermAddrReqd(false);
-		getManagedBean().setRoleStaffAndMailAddrReqd(false);
-		if (getManagedBean().getShareHolderPermAddr() != null
-				&& getManagedBean().getShareHolderPermAddr().getSmAddress() != null) {
-			SmAddress permAddress = getManagedBean().getShareHolderPermAddr()
-					.getSmAddress();
-			getManagedBean().setRoleStaffAndPermAddrReqd(
-					isAddressReqdForRoleStaff(permAddress));
-		}
-		if (getManagedBean().getShareHolderMailAddr() != null
-				&& getManagedBean().getShareHolderMailAddr().getSmAddress() != null) {
-			SmAddress mailAddress = getManagedBean().getShareHolderMailAddr()
-					.getSmAddress();
-			getManagedBean().setRoleStaffAndMailAddrReqd(
-					isAddressReqdForRoleStaff(mailAddress));
-		}
+		SmApplicationUtil.setRoleStaffAddrReqd(getManagedBean());
 	}
 
 	/**

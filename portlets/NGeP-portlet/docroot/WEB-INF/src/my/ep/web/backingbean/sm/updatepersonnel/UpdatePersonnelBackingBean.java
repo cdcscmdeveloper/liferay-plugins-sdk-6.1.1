@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.updatepersonnel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,11 +13,20 @@ import javax.faces.model.SelectItem;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
+import my.ep.persistence.entity.pm.common.PmCertBody;
+import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmRelatedCompany;
+import my.ep.persistence.entity.sm.SmStaffAcademic;
+import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -24,10 +34,12 @@ import my.ep.web.managedbean.sm.updatepersonnel.UpdatePersonnelManagedBean;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "updatePersonnelBackingBean")
@@ -71,7 +83,28 @@ public class UpdatePersonnelBackingBean extends
 						.getSmSupplier()));
 		getManagedBean().setCurrentPageType(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL);
+		getManagedBean().setAcadQualifications(
+				SmApplicationUtil.getAcademicQualifications(getManagedBean()));
+		getManagedBean().setEduFieldList(
+				SmApplicationUtil.retrieveEduFieldList());
+		getManagedBean().setRacesList(SmApplicationUtil.retrievePmRaceList());
+		getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
+		getManagedBean().setProfBodyItems(SmApplicationUtil.getProfBodyItems());
 		SmCommonUtil.redirectToPage("updatePersonnelBasePage.xhtml", "", null);
+	}
+
+	/**
+	 * To redirect from personnel information page the main screen when click
+	 * Back.
+	 */
+	public void backFromPersonnelPage() {
+		getManagedBean().setRedirectToPersonPage(false);
+		getManagedBean().setValidSmUserLimit(false);
+		if (SmApplicationUtil.getCurrAuthPersonnelCount(getManagedBean()) >= SmRuleHelper
+				.getInstance().getMaxAdditionalMofAuthorizedUser()) {
+			getManagedBean().setValidSmUserLimit(true);
+		}
+		RequestContext.getCurrentInstance().reset(":form:shareHolderDialog");
 	}
 
 	/**
@@ -178,26 +211,8 @@ public class UpdatePersonnelBackingBean extends
 			if (getManagedBean().getSelectedShareHolders().size() > 0) {
 				for (SmPersonnel shr : getManagedBean()
 						.getSelectedShareHolders()) {
-					getManagedBean().getSmAppl().getSmPersonnels().remove(shr);
-					getManagedBean().getSmapplShareHolders().remove(shr);
+
 				}
-				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
-				reqDto.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
-				reqDto.setBranchGst(getManagedBean().getSelectedBranch()
-						.getGst());
-				reqDto.setSameAsHq(getManagedBean().getSelectedBranch()
-						.isSameAsHq());
-				SmServiceLookup.getMofRegistrationSO()
-						.updateApplication(reqDto).getSmAppl();
-				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-				reqDTO.setSupplierId(getManagedBean().getSmSupplier()
-						.getSupplierId());
-				getManagedBean().setSmAppl(
-						SmServiceLookup
-								.getMofRegistrationSO()
-								.retrieveLatestSmApplWithChildBySupplierId(
-										reqDTO).getSmAppl());
 				SmApplicationUtil.getInstance().setApplAddressTransientValue(
 						getManagedBean().getSmAppl(), false);
 				SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
@@ -214,6 +229,14 @@ public class UpdatePersonnelBackingBean extends
 			}
 		}
 
+	}
+
+	/**
+	 * Manage personnel roles for the selected SmPersonnel in the application.
+	 */
+	public void managePersonnelRoles(String updateAddressDetails) {
+		SmApplicationUtil.managePersonnelRoles(getManagedBean(),
+				updateAddressDetails);
 	}
 
 	/**
@@ -235,6 +258,266 @@ public class UpdatePersonnelBackingBean extends
 	 */
 	public void confirmDeleteAuthorizedPersonnel() {
 		deleteSelectedShareHolders(getManagedBean().getPersonType(), true);
+	}
+
+	/**
+	 * Assign selected job function - SmStaffExperience object to managed bean
+	 * for editing the information.
+	 * 
+	 * @param exp
+	 *            - SmStaffExperience object
+	 */
+	public void assignSelShrHldrJobFunc(SmStaffExperience exp) {
+		SmApplicationUtil.assignSelShrHldrJobFunc(exp, getManagedBean());
+	}
+
+	/**
+	 * Add or create a new sm staff experience object
+	 */
+	public void addShrHldrJobFunction() {
+		SmApplicationUtil.addNewPersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				new SmStaffExperience(), "selectedJobFunction",
+				"equiJobFunctionInfo");
+	}
+
+	/**
+	 * Delete or remove selected job functions from the SmStaffExperience list
+	 * of the selected SmPersonnel
+	 */
+	public void deleteSelectedShrHldrJobFunction() {
+		SmApplicationUtil.deletePersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				"selectedShrHldrJobFunctions", "smStaffExperiences",
+				MessageConst.ERROR_722534,
+				new String[] { SmCommonUtil.getMessage(
+						"lbl.sm.personnel.dash.jobfunction", null) });
+
+	}
+
+	/**
+	 * Cancel add or update functionality and close the job function information
+	 * dialog
+	 */
+	public void cancelJobFunctions() {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(
+				":form:equiJobFunctionInfo");
+		RequestContext.getCurrentInstance().execute(
+				"equiJobFunctionInfo.hide()");
+	}
+
+	/**
+	 * Add or update selected job function info to SmStaffExperience list of the
+	 * selected SmPersonnel.
+	 */
+	public void addOrUpdateJobFunctions() {
+		SmApplicationUtil.addOrUpdateJobFunctions(getManagedBean());
+	}
+
+	/**
+	 * Add or create a new related company object
+	 */
+	public void addShrHldrRelatedCompany() {
+		SmApplicationUtil.addNewPersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				new SmRelatedCompany(), "selectedRelatedCompany",
+				"equiRelCompInfo");
+	}
+
+	/**
+	 * Add or create a new shr hldr prof body object
+	 */
+	public void addShrHldrProfBody() {
+		SmAssociationBody assBody = new SmAssociationBody();
+		assBody.setPmCertBody(new PmCertBody());
+		assBody.setRevNo(1);
+		assBody.setSmAppl(getManagedBean().getSmAppl());
+		assBody.setSmPersonnel(getManagedBean().getSelectedShareHolder());
+		getManagedBean().setSelectedStfPrfBdy(assBody);
+		SmApplicationUtil.assignValReqdToTrue(getManagedBean());
+		RequestContext.getCurrentInstance().execute(
+				"equiShrProfBeanInfo.show()");
+	}
+
+	/**
+	 * Assign selected related company - SmRelatedCompany object to managed bean
+	 * for editing the information.
+	 * 
+	 * @param com
+	 *            -SmRelatedCompany object
+	 */
+	public void assignSelShrHldrRelatedCompany(SmRelatedCompany com) {
+		SmApplicationUtil.assignSelShrHldrRelatedCompany(com, getManagedBean());
+	}
+
+	/**
+	 * Add or update selected related company info to SmRelatedCompany list of
+	 * the selected SmPersonnel.
+	 */
+	public void addOrUpdateRelatedCompanies() {
+		SmApplicationUtil.addOrUpdateRelatedCompanies(getManagedBean());
+	}
+
+	/**
+	 * Delete or remove selected related companies from the SmRelatedCompany
+	 * list of the selected SmPersonnel
+	 */
+	public void deleteSelectedShrHldrRelatedCompanies() {
+		SmApplicationUtil.deletePersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				"selectedShrHldrRelatedCompanies", "smRelatedCompanies",
+				MessageConst.ERROR_722534, new String[] { SmCommonUtil
+						.getMessage("lbl.sm.personnel.dash.relatedcompany",
+								null) });
+	}
+
+	/**
+	 * Cancel add or update functionality and close the related company
+	 * information dialog
+	 */
+	public void cancelShrHldrRelatedCompanies() {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(":form:tt:equiRelCompInfo");
+		RequestContext.getCurrentInstance().execute("equiRelCompInfo.hide()");
+	}
+
+	/**
+	 * Assign selected professional body - SmAssocication object to managed bean
+	 * for editing the information.
+	 * 
+	 * @param asb
+	 *            -SmAssociationBody object
+	 */
+	public void assignSelShrHldrProfBody(SmAssociationBody asb) {
+		SmApplicationUtil.assignSelShrHldrProfBody(asb, getManagedBean());
+	}
+
+	/**
+	 * Delete or remove selected prof bodies from the SmAssocationBody list of
+	 * the selected SmPersonnel.
+	 */
+	public void deleteSelectedShrHldrProfBodies() {
+		SmApplicationUtil.deletePersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				"selectedShrHldrProfBodies", "smAssociationBodies",
+				MessageConst.ERROR_722534, new String[] { SmCommonUtil
+						.getMessage("lbl.sm.personnel.dash.profbody", null) });
+	}
+
+	/**
+	 * Cancel add or update functionality and close the professional body
+	 * information dialog
+	 */
+	public void cancelShrHldrProfBody() {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(
+				":form:equiShrProfBeanInfo");
+		RequestContext.getCurrentInstance().execute(
+				"equiShrProfBeanInfo.hide()");
+	}
+
+	/**
+	 * Load cert body from DB based on selected id and set to PmCertBody object
+	 */
+	public void onChangeProfBody() {
+		CertBodyReqDTO reqDTO = new CertBodyReqDTO();
+		reqDTO.setCertBodyId(getManagedBean().getSelectedStfPrfBdy()
+				.getPmCertBody().getCertBodyId());
+		PmCertBody selCertBody = SmServiceLookup.getCertBodySO()
+				.retrievePmCertBodyDtlById(reqDTO).getCertBody();
+		getManagedBean().getSelectedStfPrfBdy().setPmCertBody(selCertBody);
+	}
+
+	/**
+	 * Assign selected staff academics - SmStaffAcademic object to managed bean
+	 * for editing the information.
+	 * 
+	 * @param aca
+	 *            -SmStaffAcademic
+	 */
+	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
+		SmApplicationUtil.assignSelShrHldrAcademics(aca, getManagedBean());
+	}
+
+	/**
+	 * Add or create a new staff academics object for selected SmPersonnel
+	 */
+	public void addShrHldrAcademicQualification() {
+		SmStaffAcademic aca = new SmStaffAcademic();
+		aca.setPmEduField(new PmEduField());
+		// aca.setPmEduLevel(new PmEduLevel());
+		aca.setQualificationId(new PmParameter());
+		aca.setSmPersonnel(getManagedBean().getSelectedShareHolder());
+		getManagedBean().setSelectedStaffAcademic(aca);
+		SmApplicationUtil.assignValReqdToTrue(getManagedBean());
+		RequestContext.getCurrentInstance().execute("equiAcadInfo.show()");
+	}
+
+	/**
+	 * Add or update selected staff academics info to SmStaffAcademic list of
+	 * the selected SmPersonnel.
+	 */
+	public void addOrUpdateShrHldrAcademic() {
+		SmApplicationUtil.addOrUpdateShrHldrAcademic(getManagedBean());
+	}
+
+	/**
+	 * Delete or remove selected records from the SmStaffAcademics list of the
+	 * selected SmPersonnel.
+	 */
+	public void deleteSelectedShrHldrAcademics() {
+		SmApplicationUtil.deletePersonnelChildObject(getManagedBean(),
+				getManagedBean().getSelectedShareHolder(),
+				"selectedShrHldrAcademics", "smStaffAcademics",
+				MessageConst.ERROR_722534, new String[] { SmCommonUtil
+						.getMessage("lbl.sm.personnel.dash.academics", null) });
+	}
+
+	/**
+	 * Cancel add or update functionality and close the staff academics
+	 * information dialog
+	 */
+	public void cancelShrHldrAcademic() {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(":form:equiAcadInfo");
+		RequestContext.getCurrentInstance().execute("equiAcadInfo.hide()");
+	}
+
+	/**
+	 * Get list of academic qualification
+	 * 
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> getAcademicQualifications() {
+		return SmApplicationUtil.getQualificationLevels(getManagedBean());
+	}
+
+	/**
+	 * Get education level from session list by eduLvlId
+	 * 
+	 * @param Long
+	 *            eduLvlId
+	 * @return String
+	 */
+	public String getEduLvlByIdFromList(Long eduLvlId) {
+		String retVal = "";
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getEduLevelList())
+				&& eduLvlId != null) {
+			for (PmParameterDesc eduLvl : getManagedBean().getEduLevelList()) {
+				if (eduLvl.getParameterDescId().compareTo(eduLvlId) == 0) {
+					retVal = eduLvl.getCodeName();
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * Set address fields whether need to be mandatory
+	 */
+	public void setRoleStaffAddrReqd() {
+		SmApplicationUtil.setRoleStaffAddrReqd(getManagedBean());
 	}
 
 	/**
@@ -272,6 +555,200 @@ public class UpdatePersonnelBackingBean extends
 
 	}
 
+	/**
+	 * Assign selected personnel nationality.
+	 * 
+	 * @param e
+	 *            - AjaxBehaviorEvent
+	 */
+	public void assignPersonNationality(AjaxBehaviorEvent e) {
+		SmApplicationUtil.setSelectedPersonnelNationality(getManagedBean());
+	}
+
+	/**
+	 * Ajax call to assign selected personnel privilege
+	 * 
+	 * @param e
+	 *            - AjaxBehaviorEvent object
+	 */
+	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
+		SmApplicationUtil.assignShareHolderPrivilege(getManagedBean());
+	}
+
+	/**
+	 * Ajax call to assign selected personnel privilege by ep role.
+	 * 
+	 * @param e
+	 *            - AjaxBehaviorEvent object
+	 */
+	public void assignShareHolderPrivilegeByEpRole(AjaxBehaviorEvent e) {
+		SmApplicationUtil.setPersonnelRoleChange(getManagedBean().getSmAppl(),
+				SmApplicationUtil.getPrevApprovedPersonnel(getManagedBean()
+						.getSelectedShareHolder(), getManagedBean()
+						.getPrevApprovedPersonnels()), getManagedBean()
+						.getSelectedShareHolder());
+		getManagedBean()
+				.setDisableRoleSelection(
+						disableEpRoleDropDown(getManagedBean()
+								.getSelectedShareHolder()));
+
+		getManagedBean().setDisableAuthorizedRadio(
+				disableAuthorizedRadio(getManagedBean()
+						.getSelectedShareHolder()));
+	}
+
+	/**
+	 * Get epRole from select items list
+	 * 
+	 * @param String
+	 *            roleCode
+	 * @return String
+	 */
+	public String getEpRoleLabelByRole(String roleCode) {
+		String retVal = StringUtils.EMPTY;
+		SelectItem item = (SelectItem) EntityHelper
+				.getEntityBySinglePropertyFromList(roleCode, getManagedBean()
+						.getePRoleList(), "value");
+		if (item != null) {
+			retVal = item.getLabel();
+		}
+		return retVal;
+	}
+
+	/**
+	 * Get year list for work experience
+	 * 
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> getYearsWorkExp() {
+		List<SelectItem> initYears = Arrays.asList(getYearDropDown());
+		return SmApplicationUtil.getYearsWorkExp(getManagedBean()
+				.getSelectedJobFunction(), initYears);
+	}
+
+	/**
+	 * Getys Authorized Personnel Account Status
+	 * 
+	 * @param shareHolderBean
+	 *            - SmPersonnel object
+	 */
+	public String getPersonnelActivationStatus(SmPersonnel smPersonnel,
+			SmSupplier smSupplier) {
+		return SmApplicationUtil.getPersonnelActivationStatus(smPersonnel,
+				smSupplier);
+	}
+
+	/**
+	 * Ajax call when select country to populate states
+	 * 
+	 * @param SmAddress
+	 *            addr
+	 * @param String
+	 *            panelName
+	 */
+	public void onChangeCountry(SmAddress addr, String panelName) {
+		SmApplicationUtil.getInstance().populateStateByCountry(addr, panelName,
+				getManagedBean());
+		setRoleStaffAddrReqd();
+	}
+
+	/**
+	 * Ajax call when select state to populate district
+	 * 
+	 * @param SmAddress
+	 *            addr
+	 * @param String
+	 *            panelName
+	 */
+	public void onChangeState(SmAddress addr, String panelName) {
+		SmApplicationUtil.getInstance().populateDistrictsByState(addr,
+				panelName, getManagedBean());
+		setRoleStaffAddrReqd();
+	}
+
+	/**
+	 * Ajax call when select district to populate cities
+	 * 
+	 * @param SmAddress
+	 *            addr
+	 * @param String
+	 *            panelName
+	 */
+	public void onChangeDistrict(SmAddress addr, String panelName) {
+		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
+				panelName, getManagedBean());
+		setRoleStaffAddrReqd();
+		populateLocalAuthority(getManagedBean().getSmSupplier(),
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
+	}
+
+	/**
+	 * Ajax call when select city to reload and set city by city id transient
+	 * value
+	 * 
+	 * @param SmAddress
+	 *            addr
+	 */
+	public void onChangeCity(SmAddress addr, String panelName) {
+		addr.setPmCity(SmCommonUtil.getInstance().getCityById(addr.getCityId()));
+		setRoleStaffAddrReqd();
+	}
+
+	/**
+	 * Get personnel maximum experience code
+	 * 
+	 * @return Long
+	 */
+	public Long getMaxExpCode() {
+		return SmApplicationUtil.getPersonnelMaxExpCode(getManagedBean()
+				.getSelectedShareHolder());
+	}
+
+	/**
+	 * Get country label by country Id
+	 * 
+	 * @param Long
+	 *            countryId
+	 * @return String
+	 */
+	public String getCountryLabelById(Long countryId) {
+		return SmCommonUtil.getCountryLabelById(countryId);
+	}
+
+	/**
+	 * Get state label by state Id
+	 * 
+	 * @param Long
+	 *            stateId
+	 * @return String
+	 */
+	public String getStateLabelById(Long stateId) {
+		return SmCommonUtil.getStateLabelById(stateId);
+	}
+
+	/**
+	 * Get district label by district Id
+	 * 
+	 * @param Long
+	 *            districtId
+	 * @return String
+	 */
+	public String getDistrictLabelById(Long districtId) {
+		return SmCommonUtil.getDistrictLabelById(districtId);
+	}
+
+	/**
+	 * Get city label by city Id
+	 * 
+	 * @param Long
+	 *            cityId
+	 * @return String
+	 */
+	public String getCityLabelById(Long cityId) {
+		return SmCommonUtil.getCityLabelById(cityId);
+	}
+
 	private void calcPersonnelListCount() {
 		SmPersonnleCalcVO calcVO = SmCommonUtil.calcPersonnelListCount(
 				getManagedBean().getSmAppl().getSmPersonnels(),
@@ -290,6 +767,15 @@ public class UpdatePersonnelBackingBean extends
 						.getSmAppl().getApplId(), false);
 		getManagedBean().setValidSmUserLimit(
 				countVO.isReachAuthorizedPersonnelLimit());
+	}
+
+	/**
+	 * Assign value reqd to false when anyof the pop up is closed in the
+	 * screen.Used for enable and disable screen validation dynamically.
+	 */
+	private void assignValReqdToFalse() {
+		getManagedBean().setShowParentMsg(true);
+		getManagedBean().setValueReqd(false);
 	}
 
 }
