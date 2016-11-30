@@ -223,6 +223,7 @@ import my.ep.web.vo.FLCtSupplierItemVO;
 @ManagedBean(name = "contractRequestBackingBean")
 @ViewScoped
 public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<ContractRequestManagedBean> {
+	private static final long serialVersionUID = 1L;
 	private static Logger log =  Logger.getLogger(ContractRequestBackingBean.class);
 	private final static long MILLIS_PER_DAY = 24 * 3600 * 1000;
 	public static final String NAV_TO_CREATE_CONTRACT_REQUEST = "/xhtml/fl/contractrequest/crBasePage.xhtml";
@@ -1049,10 +1050,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
 			}	
 			for(CtAgency agency : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
-				if(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE || 
-						(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_SUSPENDED && agency.getEffDate().after(new Date()))) {
+				if((agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE && DateUtils.getCurrentDateWithoutTime().compareTo(agency.getEffDate())>=0 && DateUtils.getCurrentDateWithoutTime().compareTo(agency.getExpDate())<=0) || 
+					(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_SUSPENDED && (DateUtils.getCurrentDateWithoutTime().compareTo(agency.getEffDate())<0 || DateUtils.getCurrentDateWithoutTime().compareTo(agency.getExpDate())>0) )) {
 					getManagedBean().getAgentOrgProfileList().add(agency.getOrgProfile().getOrgProfileId());
-					if(agency == getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0)){
+					if(getManagedBean().getOrgProfileIds()==null || getManagedBean().getOrgProfileIds().length()==0){
 						getManagedBean().setOrgProfileIds(agency.getOrgProfile().getOrgProfileId().toString());
 					}else{
 						getManagedBean().setOrgProfileIds(getManagedBean().getOrgProfileIds() + "," +agency.getOrgProfile().getOrgProfileId().toString());
@@ -1174,10 +1175,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			for(CtAgency agency : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
-				if(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE || 
-					(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_SUSPENDED && agency.getEffDate().after(new Date()))) {
+				if((agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE && DateUtils.getCurrentDateWithoutTime().compareTo(agency.getEffDate())>=0 && DateUtils.getCurrentDateWithoutTime().compareTo(agency.getExpDate())<=0) || 
+					(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_SUSPENDED && (DateUtils.getCurrentDateWithoutTime().compareTo(agency.getEffDate())<0 || DateUtils.getCurrentDateWithoutTime().compareTo(agency.getExpDate())>0) )) {
 					getManagedBean().getAgentOrgProfileList().add(agency.getOrgProfile().getOrgProfileId());
-					if(agency == getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0)){
+					if(getManagedBean().getOrgProfileIds()==null || getManagedBean().getOrgProfileIds().length()==0){
 						getManagedBean().setOrgProfileIds(agency.getOrgProfile().getOrgProfileId().toString());
 					}else{
 						getManagedBean().setOrgProfileIds(getManagedBean().getOrgProfileIds() + "," +agency.getOrgProfile().getOrgProfileId().toString());
@@ -4019,6 +4020,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		String condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
 				retrieveMinistryOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId()).getOrgProfileId();
 		if(getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			if(getManagedBean().getOrgProfileIds()==null || getManagedBean().getOrgProfileIds().length()==0) {
+				getManagedBean().setOrgProfileIds("-1");
+			}
 			condition = condition + "|orgProfileId^"+getManagedBean().getOrgProfileIds()+"^9";
 		}
 		return condition;
@@ -5073,10 +5077,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setFlDocId(flReqId);
 			setFulfilmentRequestField(resDTO);
 			for(CtAgency agency : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
-				if(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE || 
-						(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_SUSPENDED && agency.getEffDate().after(new Date()))) {
+				if((agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE && DateUtils.getCurrentDateWithoutTime().compareTo(agency.getEffDate())>=0 && DateUtils.getCurrentDateWithoutTime().compareTo(agency.getExpDate())<=0) || 
+						(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_SUSPENDED && (DateUtils.getCurrentDateWithoutTime().compareTo(agency.getEffDate())<0 || DateUtils.getCurrentDateWithoutTime().compareTo(agency.getExpDate())>0) )) {
 					getManagedBean().getAgentOrgProfileList().add(agency.getOrgProfile().getOrgProfileId());
-					if(agency == getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0)){
+					if(getManagedBean().getOrgProfileIds()==null || getManagedBean().getOrgProfileIds().length()==0){
 						getManagedBean().setOrgProfileIds(agency.getOrgProfile().getOrgProfileId().toString());
 					}else{
 						getManagedBean().setOrgProfileIds(getManagedBean().getOrgProfileIds() + "," +agency.getOrgProfile().getOrgProfileId().toString());
