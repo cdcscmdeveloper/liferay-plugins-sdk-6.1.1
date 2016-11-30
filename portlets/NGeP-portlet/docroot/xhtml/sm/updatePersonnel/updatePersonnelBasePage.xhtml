@@ -28,7 +28,12 @@
 			<p:outputPanel id="stfSummaryPan" layout="block"></p:outputPanel>
 			
 			<p:outputPanel id="personnelTableOutPanelId" rendered="#{!backingBean.managedBean.redirectToPersonPage}">
-				<ui:include src="/xhtml/sm/shared/mofRegistration/personnelTableList.xhtml" />
+				<p:panel header="#{lbl['lbl.sm.update.personnel.list']}" toggleable="true">
+					<p:outputPanel rendered="#{backingBean.managedBean.disAllowOwnerEdit}">
+						<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.update.personel.disallowed.edit']}" />
+					</p:outputPanel><br />
+					<ui:include src="/xhtml/sm/shared/mofRegistration/personnelTableList.xhtml" />
+				</p:panel>
 			</p:outputPanel>
 			<p:outputPanel id="personnelMainOutPanelId" rendered="#{backingBean.managedBean.redirectToPersonPage}">
 				<ui:include src="/xhtml/sm/shared/mofRegistration/captialShareHolderInfoRedirectForm.xhtml" />
