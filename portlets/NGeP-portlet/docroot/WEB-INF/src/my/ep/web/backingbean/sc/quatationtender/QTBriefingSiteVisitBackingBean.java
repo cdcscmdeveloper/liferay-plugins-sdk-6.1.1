@@ -415,6 +415,10 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		this.getManagedBean().setBsvDtlBean(briefingDtlBean);
 		
+		// Set QtAmendMentBean to invoke BPM from Maintenance.
+		if(this.getManagedBean().getAmendMentBean() == null){
+			this.getManagedBean().setAmendMentBean(new QtAmendMentBean());
+		}
 		updateLatestBsvDate();
 	}
 
@@ -1063,7 +1067,6 @@ public class QTBriefingSiteVisitBackingBean extends
 		} 
 		
 		scQt.setProposalStartDate(latestBsvDate);
-		this.getManagedBean().setAmendMentBean(new QtAmendMentBean());
 		updatePublishClosingDate(scQt);
 	}
 	
