@@ -33,22 +33,30 @@ import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
  * The Class QuotationPropoValidReminderJob.
+ * @author Sri,Venkat
+ * @since 28/11/2016
  */
+@DisallowConcurrentExecution
 public class QuotationPropoValidReminderJob extends SourcingBaseReminder implements Job{
 	private static Logger log = EpLogger
 			.getLogger(QuotationPropoValidReminderJob.class);
 	
 	/** The Constant Proposal valid end at less than or equal to 30 days. */
 	private static final String PROPO_VALID_END_AT_MAX_DAYS = "30";
+	
+	
 	/* (non-Javadoc)
 	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#getReminderBeans()
 	 */
@@ -291,8 +299,8 @@ public class QuotationPropoValidReminderJob extends SourcingBaseReminder impleme
 		}		
 	}
 
-	
-	public List<String> getParams(Long reminders, Object[] data) {
+	@Override
+	protected List<String> getParameterListForNotification(Long reminders, Object[] data) {
 		String qtId = data[0].toString();
 		String qtNo = data[1].toString();
 		String qtTitle = data[2].toString();
@@ -354,27 +362,23 @@ public class QuotationPropoValidReminderJob extends SourcingBaseReminder impleme
 
 		return paramList;
 	}
-
-	/* (non-Javadoc)
-	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#getKpiCode()
-	 */
-	@Override
-	public String getKpiCode() {
-		// Proposal Validity Reminder (Quotation)
-		return QTConstants.KPI_CODE_QUOTATION_REMINDER;
-	}
-
+	
 	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		// TODO Auto-generated method stub
-		
-	}
+		super.setKpiCode(QTConstants.KPI_CODE_QUOTATION_REMINDER);
+		super.setTemplateId(NotificationTextConst.TEMPLATE_ID_401163);
+		List<ReminderBean> beans = getReminderBeans();
+		// no.of reminder days
+		List<Integer> notificationDays =  getNotificationDays(getKpiCode());
 
-	@Override
-	protected List<String> getParameterListForNotification(Long reminderDays,
-			Date reminderDate) {
-		// TODO Auto-generated method stub
-		return null;
+		for (ReminderBean reminderBean : beans) {
+			Long reminderDays = DateUtils.getDaysDifference(reminderBean.getDueDate(), new Date());
+
+			if(CollectionUtils.isNotEmpty(notificationDays) && notificationDays.contains(reminderDays)){
+				List<String> paramList = getParameterListForNotification(reminderDays, reminderBean.getData());
+				sendReminder(super.getTemplateId(), reminderBean,  paramList);
+			}
+		}
 	}
 }
