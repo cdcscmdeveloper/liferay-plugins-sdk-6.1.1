@@ -661,30 +661,32 @@ width:32.5%;
 								</c:if></td>
 						</tr>
 					</table>
-					<p:dialog id="dialog1"  widgetVar="ex" header="Generate Report Status" onHide="jQuery('#someId').hide();" onShow="jQuery('#someId').show();" draggable="false" closable="true" resizable="false">
+					<p:dialog id="dialog1"  widgetVar="ex" header="#{lbl['lbl.rpt.gen.popup.title']}" onHide="jQuery('#someId').hide();" onShow="jQuery('#someId').show();" draggable="false" closable="true" resizable="false">
 						<table>
 							<tr>
 								<td style="padding:5px" width="20px">
 									<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/tooltips.png" height="16px" width="16px"/>
 								</td>
 								<td>
-									<h:outputText value="System starts generating the report"/>
-									<h:outputText value=" (Report request id = "/>
+									<h:outputText value="#{lbl['lbl.rpt.gen.popup.message.one']}"/>
+									<h:outputText value=" ("/>
+									<h:outputText value="#{lbl['lbl.rpt.gen.popup.message.two']}"/>
+									<h:outputText value=" = "/>
 									<h:outputText value="#{reportBackingBean.managedBean.requestId}"/>
 									<h:outputText value=")."/>
 									<br/>
-									<h:outputText value="Click continue button if you still want to generate another report."/>
+									<h:outputText value="#{lbl['lbl.rpt.gen.popup.message.three']}."/>
 									<br/>
-									<h:outputText value="Click view report button if u want to see the report output."/>
+									<h:outputText value="#{lbl['lbl.rpt.gen.popup.message.four']}."/>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2" height="2px"></td>
 							</tr>
 							<tr>
-								<td colspan="2">
-									<p:commandButton value="Continue" onclick="ex.hide();"/>
-									<p:commandButton value="View Report" action="#{reportBackingBean.redirect()}">
+								<td colspan="2" align="right">
+									<p:commandButton value="#{lbl['lbl.rpt.btn.generate']}" onclick="ex.hide();"/>
+									<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}" action="#{reportBackingBean.redirect()}">
 									</p:commandButton>
 								</td>
 							</tr>
