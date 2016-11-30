@@ -204,6 +204,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
 		SmSvTask svoTask = reqSO.retrieveSiteVisitInfoBySvTaskId(reqDTO).getSmSvTask();
 		log.info("*********SV Task***********" + svoTask.getSvTaskId());
+		
+		if(StringUtils.isNotBlank(viewMode)){
+			getManagedBean().setViewMode(true);
+		}
+		
 		if(svoTask != null){
 			this.getManagedBean().setSmSvTask(svoTask);
 			SmSvTask smSvTask = this.getManagedBean().getSmSvTask();
@@ -2333,7 +2338,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		//getManagedBean().setSelectedSvTask(svTask);
 		retrieveSiteVisitInfo("V");
-		
+		RequestContext.getCurrentInstance().update("@form");
 	}
 	
 	/**
@@ -2397,8 +2402,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @throws Exception
 	 */
 	public void downloadPOApprovalSiteVisitReport(SmSvTask svTask) throws Exception{
-		getManagedBean().setSmSvTask(svTask);
-		downloadSiteVisitTemplate(svTask, true);
+		getManagedBean().setSvTaskId(svTask.getSvTaskId());
+		retrieveSiteVisitInfo("V");
+		downloadSiteVisitTemplate(getManagedBean().getSmSvTask(), true);
 	}
 	
 	/**
