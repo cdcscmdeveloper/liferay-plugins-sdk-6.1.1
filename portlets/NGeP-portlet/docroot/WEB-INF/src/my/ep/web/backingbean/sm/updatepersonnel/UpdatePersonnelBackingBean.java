@@ -90,6 +90,10 @@ public class UpdatePersonnelBackingBean extends
 		getManagedBean().setRacesList(SmApplicationUtil.retrievePmRaceList());
 		getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 		getManagedBean().setProfBodyItems(SmApplicationUtil.getProfBodyItems());
+		if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+				.getSmSupplier())) {
+			getManagedBean().setDisAllowOwnerEdit(true);
+		}
 		SmCommonUtil.redirectToPage("updatePersonnelBasePage.xhtml", "", null);
 	}
 
@@ -301,8 +305,7 @@ public class UpdatePersonnelBackingBean extends
 	 */
 	public void cancelJobFunctions() {
 		assignValReqdToFalse();
-		RequestContext.getCurrentInstance().reset(
-				":form:equiJobFunctionInfo");
+		RequestContext.getCurrentInstance().reset(":form:equiJobFunctionInfo");
 		RequestContext.getCurrentInstance().execute(
 				"equiJobFunctionInfo.hide()");
 	}
@@ -411,8 +414,7 @@ public class UpdatePersonnelBackingBean extends
 	 */
 	public void cancelShrHldrProfBody() {
 		assignValReqdToFalse();
-		RequestContext.getCurrentInstance().reset(
-				":form:equiShrProfBeanInfo");
+		RequestContext.getCurrentInstance().reset(":form:equiShrProfBeanInfo");
 		RequestContext.getCurrentInstance().execute(
 				"equiShrProfBeanInfo.hide()");
 	}
