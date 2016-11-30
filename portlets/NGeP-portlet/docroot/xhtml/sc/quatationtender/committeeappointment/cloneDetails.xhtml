@@ -127,52 +127,52 @@
 				        style="text-align:left;"
 					value="#{qTCommitteBackingBean.managedBean.cloneSearchQTDataModel}"
 					selection="#{qTCommitteBackingBean.managedBean.selectedCloneTender}"
-					rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
+					rowKey="#{qtInfo}" selectionMode="single" var="qtInfo" lazy="true"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					styleClass="cloneResults" rows="10">
 
 					<ac:paginator for="clonesearchCommitteid" />
-
+				
 					<p:ajax event="rowSelect" update=":form:pnlid"
 						listener="#{qTCommitteBackingBean.onRowCloneCommitteeApprovalsAction}" />
 
 					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
-						<h:outputText value="#{scQt.qtNo}" style="white-space: normal;" />
+						<h:outputText value="#{qtInfo.qtNo}" style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.title']}">
-						<h:outputText value="#{scQt.qtTitle}" style="white-space: normal;" />
+						<h:outputText value="#{qtInfo.qtTitle}" style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
 						<h:outputText
-							value="#{qTCommitteBackingBean.getParameterDesc(scQt.procurementMode)}"
+							value="#{qTCommitteBackingBean.getParameterDesc(qtInfo.procurementMode)}"
 							style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.created.date']}">
-						<h:outputText value="#{scQt.createdDate}">
+						<h:outputText value="#{qtInfo.createdDate}">
 							<f:convertDateTime
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 						</h:outputText>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.published.date']}">
-						<h:outputText value="#{scQt.publishDate}">
+						<h:outputText value="#{qtInfo.publishDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.closing.date']}">
-						<h:outputText value="#{scQt.closingDate}">
+						<h:outputText value="#{qtInfo.closingDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.status']}">
 						<h:outputText
-							value="#{qTCommitteBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" style="white-space: normal;"/>
+							value="#{qTCommitteBackingBean.getStatusDescById(qtInfo.qtStatus.statusId)}" style="white-space: normal;"/>
 					</p:column>
 				</p:dataTable>
 				<br />
