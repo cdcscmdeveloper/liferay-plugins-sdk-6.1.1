@@ -100,16 +100,6 @@ public class SchedulerConstants {
 	public static final String SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC = "Job run every day at 03:30 AM to send offline supporting document reminder.";
 	public static final String SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB_DESC = "Job run every day at 1 AM to check or deactivate Basic Account";
 	public static final String SM_CHANGE_EXPIRED_MOF_PERSONNEL_ROLE_JOB_DESC = "Job run every hour to Change MOF Expired Personnel Role";
-	
-	// Payment Reminder
-	public static final int PAYMENT_REMINDER_DAY = 3;
-	public static final Long STATUS_PROCESSING_PAYMENT = 20114L;
-	public static final Long STATUS_APPLICATION_PAYMENT = 20251L;
-
-	// Soft Cert Renewal Reminder
-	public static final String CERT_MODE_NEW = "N";
-	public static final String CERT_MODE_RENEW = "R";
-	public static final int SOFTCERT_RENEWAL_DAY = 7;
 
 	// Integration
 	public static final String PHIS_INTEGRATION_JOB_GROUP = "PHIS INTEGRATION JOB GROUP";
