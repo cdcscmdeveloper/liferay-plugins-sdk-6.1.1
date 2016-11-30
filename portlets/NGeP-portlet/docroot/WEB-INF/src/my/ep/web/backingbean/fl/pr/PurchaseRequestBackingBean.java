@@ -3173,6 +3173,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 					getManagedBean().setTaskDeadLine(roleResDTO.getRuleValueList().get(0).getRuleValue());
 				}
+				
+				for(FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+					for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+						if(itemAddr.getCmItem() == null){
+							throw new EpException(MessageConst.ERROR_740053);
+						}
+					}
+				}
 			}
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();

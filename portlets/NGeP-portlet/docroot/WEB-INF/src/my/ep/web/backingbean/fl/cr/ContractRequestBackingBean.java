@@ -4197,6 +4197,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							throw new EpException(MessageConst.ERROR_740015);
 						}
 					}
+					for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+						for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+							if(itemAddr.getCmItem() == null){
+								throw new EpException(MessageConst.ERROR_740053);
+							}
+						}
+					}
 				} else {
 					if(getManagedBean().getSelectedApprover() == null){
 						getManagedBean().setSelectedTabIndex(4);
