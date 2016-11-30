@@ -31,7 +31,10 @@ public class SchedulerConstants {
 	public static final String QT_PUBLISH_SIMPLE_JOB = "QT PUBLISH SIMPLE JOB FOR QT:";
 	public static final String QT_PUBLISH_SIMPLE_JOB_GROUP = "QT PUBLISH SIMPLE JOB GROUP";
 	public static final String QT_PUBLISH_CLOSE_JOB_DATA = "qtId";
-
+	public static final String SC_QUOTATION_PROPOSAL_VALIDITY_REMINDER_JOB = "QUOTATION PROPOSAL VALIDITY REMINDER";
+	//public static final String SC_TENDER_PROPOSAL_VALIDITY_REMINDER_JOB = "TENDER PROPOSAL VALIDITY REMINDER";
+	public static final String SC_UPCOMING_BIDSCHEDULE_REMINDER_JOB = "UPCOMING BIDSESSIONS REMINDER";
+	
 	// Sourcing Job description
 	public static final String SC_DAILY_JOB_DESCRIPTION = "Job to run daily at 11:55 PM";
 	public static final String SC_CONTINUOUS_JOB_DESCRIPTION = "Job to run every 60 Seconds";
@@ -39,7 +42,9 @@ public class SchedulerConstants {
 	public static final String SC_PROPOSAL_EXPIRY_JOB_DESCRIPTION = "Job to run daily at 12:05 AM";
 	public static final String SC_QT_PUBLISH_JOB_DESCRIPTION = "Job to run daily at 12:00 am to publish Qt's";
 	public static final String SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION = "Job to run daily at 12:00 am to close proposal";
-
+	public static final String SC_QUOTATION_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION  = "Job to Send Reminder for proposal validity";
+	public static final String SC_UPCOMING_BIDSCHEDULE_REMINDER_JOB_DESCRIPTION = "Job to send reminder for upcoming bid sessions";
+	
 	// Contracts Module Constants
 	// CT Job Group ID
 	public static final String CT_JOB_GROUP = "CONTRACT JOB GROUP";
