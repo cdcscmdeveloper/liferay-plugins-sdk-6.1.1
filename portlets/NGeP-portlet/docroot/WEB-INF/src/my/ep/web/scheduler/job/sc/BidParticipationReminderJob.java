@@ -18,7 +18,7 @@ import org.quartz.JobExecutionException;
  *
  */
 @DisallowConcurrentExecution
-public class BidParticipationReminderJob extends SourcingBaseReminder implements Job{
+public class BidParticipationReminderJob extends BaseReminderJob{
 
 	/**
 	 * Generated Serial Version Id
@@ -48,8 +48,26 @@ public class BidParticipationReminderJob extends SourcingBaseReminder implements
 		return null;
 	}
 
-	
-	protected List<ReminderBean> getReminderBeans() {
+	@Override
+	public String getTemplateId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getKpiCode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getParams(Long reminderDays, Object[] data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ReminderBean> getReminderBeans() {
 		// TODO Auto-generated method stub
 		return null;
 	}

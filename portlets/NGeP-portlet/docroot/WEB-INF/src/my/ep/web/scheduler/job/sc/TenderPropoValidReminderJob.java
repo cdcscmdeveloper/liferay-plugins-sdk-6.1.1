@@ -26,40 +26,26 @@ import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.sc.QTConstants;
-import my.ep.web.scheduler.job.sc.SourcingBaseReminder.ReminderBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
-import org.quartz.DisallowConcurrentExecution;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 /**
  * The Class QuotationPropoValidReminderJob.
- * 
- * @author Sri,Venkat
- * @since 28/11/2016
  */
-@DisallowConcurrentExecution
-public class TenderPropoValidReminderJob extends SourcingBaseReminder implements
-		Job {
+public class TenderPropoValidReminderJob extends BaseReminderJob{
 	private static Logger log = EpLogger
 			.getLogger(TenderPropoValidReminderJob.class);
 	/** The Constant Proposal valid end at less than or equal to 30 days. */
-	private static final String PROPO_VALID_END_AT_MAX_DAYS = "30";
+	private static final String PROPO_VALID_END_AT_MAX_DAYS = (new Long(30)).toString();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * my.ep.web.scheduler.job.sc.BaseReminderJob#sendProposalValidReminder()
+	/* (non-Javadoc)
+	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#sendProposalValidReminder()
 	 */
+	
 
 	@Override
-	protected List<ReminderBean> getReminderBeans() {
+	public List<ReminderBean> getReminderBeans() {
 		IQTDetailSO detailSO = null;
 		List<ReminderBean> beans = null;
 		try {
@@ -68,12 +54,9 @@ public class TenderPropoValidReminderJob extends SourcingBaseReminder implements
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setProcurementModeCode(ParameterConst.PROCUREMENT_MODE_TENDER);
 			reqDTO.setPropoValidEndAtMaxDays(PROPO_VALID_END_AT_MAX_DAYS);
-			reqDTO.setStatusIds(qtStatusListInBetween(
-					QTStatusConst.QT_BRIEFING_SITE_VISIT,
-					QTStatusConst.QT_PENDING_LOA));
-			QuationTenderResDTO resDTO = detailSO
-					.getQTDetailsByStatusIds(reqDTO);
-			if (resDTO.isSuccessful()) {
+			reqDTO.setStatusIds(qtStatusListInBetween(QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PENDING_LOA));
+			QuationTenderResDTO resDTO = detailSO.getQTDetailsByStatusIds(reqDTO);
+			if(resDTO.isSuccessful()){
 
 				beans = new ArrayList<ReminderBean>();
 
@@ -81,18 +64,16 @@ public class TenderPropoValidReminderJob extends SourcingBaseReminder implements
 					for (int i = 0; i < objects.length; i++) {
 						Date currentDate = new Date();
 
-						// Before proposal validity expired QTs
-						if (objects[7] != null
-								&& currentDate.compareTo((Date) objects[7]) > 0) {
+						// Before proposal validity expired QTs 
+						if(objects[7] != null && currentDate.compareTo((Date)objects[7]) >0){
 							ReminderBean bean = new ReminderBean();
-							Date propoValidityEndDate = (Date) objects[7];
+							Date propoValidityEndDate = (Date)objects[7];
 							List<String> userIds = new ArrayList<String>();
-							String qtId = objects[0].toString();
+							String qtId    = objects[0].toString();
 
-							ScActor actorDO = getActorByQtIdAndRoleCode(
-									Long.valueOf(qtId),
+							ScActor actorDO = getActorByQtIdAndRoleCode(Long.valueOf(qtId),
 									RoleCode.DESK_OFFICER.value());
-							if (actorDO != null) {
+							if(actorDO != null) {
 								userIds.add(actorDO.getUserId().toString());
 							} else {
 								log.info("user not found.");
@@ -116,13 +97,13 @@ public class TenderPropoValidReminderJob extends SourcingBaseReminder implements
 	}
 
 	private List<Long> qtStatusListInBetween(Long fromStatusId, Long toStatusId) {
-		List<Long> orderedStatuses = Arrays
-				.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		orderedStatuses = orderedStatuses.subList(
-				orderedStatuses.indexOf(fromStatusId),
-				orderedStatuses.indexOf(toStatusId) + 1);
-		return orderedStatuses;
+		List<Long> orderedStatuses = new ArrayList<Long>(Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES));
+		List<Long> subStatuses = new ArrayList<Long>(orderedStatuses.subList(
+				orderedStatuses.indexOf(fromStatusId), 
+				orderedStatuses.indexOf(toStatusId)+1));
+		return subStatuses;
 	}
+
 
 	/**
 	 * Gets the user so.
@@ -148,11 +129,11 @@ public class TenderPropoValidReminderJob extends SourcingBaseReminder implements
 	 * Retrieve ScActor by qtId and roleCode
 	 * 
 	 * @param qtId
-	 *            the QT id
+	 * 		the QT id
 	 * @param roleCode
-	 *            the roleCode
-	 * @return the scActor.
-	 */
+	 * 		the roleCode
+	 * @return	the scActor.
+	 */	
 	private ScActor getActorByQtIdAndRoleCode(Long qtId, String roleCode) {
 		IScActorSO actorSO = null;
 		try {
@@ -173,12 +154,22 @@ public class TenderPropoValidReminderJob extends SourcingBaseReminder implements
 			return scActor;
 		} finally {
 			actorSO = null;
-		}
+		}		
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#getTemplateId()
+	 */
 	@Override
-	protected List<String> getParameterListForNotification(Long reminders,
-			Object[] data) {
+	public String getTemplateId() {
+		return NotificationTextConst.TEMPLATE_ID_401164;
+	}
+
+	/* (non-Javadoc)
+	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#getParams(java.lang.Long, java.lang.Object[])
+	 */
+	@Override
+	public List<String> getParams(Long reminders, Object[] data) {
 		String qtId = data[0].toString();
 		String qtNo = data[1].toString();
 		String qtTitle = data[2].toString();
@@ -192,7 +183,7 @@ public class TenderPropoValidReminderJob extends SourcingBaseReminder implements
 		List<String> paramList = new ArrayList<String>();
 		List<String> userIds = new ArrayList<String>();
 
-		// 1. Ministry Name
+		// 1. Ministry Name        
 		paramList.add(ministryName);
 
 		// 2. PTJ Code
@@ -207,18 +198,17 @@ public class TenderPropoValidReminderJob extends SourcingBaseReminder implements
 		// 5. Qt Title in header
 		paramList.add(qtTitle);
 
-		// 6. Publish Date/ Time
+		// 6. Publish Date/ Time    
 		paramList.add(publishDate);
 
 		String preferredLanguage = CommonConstants.DEFAULT_LANGUAGE_CODE;
 		ScActor actorDO = getActorByQtIdAndRoleCode(Long.valueOf(qtId),
 				RoleCode.DESK_OFFICER.value());
-		if (actorDO != null) {
+		if(actorDO != null) {
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(actorDO.getUserId());
-			PmUser pmUser = getUserSO().retrieveUserByUserId(userReqDTO)
-					.getPmUser();
-			if (pmUser != null) {
+			PmUser pmUser = getUserSO().retrieveUserByUserId(userReqDTO).getPmUser();
+			if(pmUser != null) {
 				preferredLanguage = pmUser.getPreferredLanguage();
 			}
 			userIds.add(actorDO.getUserId().toString());
@@ -229,39 +219,26 @@ public class TenderPropoValidReminderJob extends SourcingBaseReminder implements
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 		statusReqDTO.setLanguageCode(preferredLanguage);
 		statusReqDTO.setStatusId(Long.valueOf(status));
-		PmStatusDesc statusDesc = getStatusSO().retrieveStatusDescById(
-				statusReqDTO).getPmStatusDesc();
+		PmStatusDesc statusDesc = getStatusSO().retrieveStatusDescById(statusReqDTO).getPmStatusDesc();
 		// 7. Status
 		paramList.add(statusDesc.getStatusName());
 
 		// 8. Proposal validity due date
 		paramList.add(propoValidEndDate);
 
-		// 9. Total Days left
+		// 9. Total Days left 
 		paramList.add(String.valueOf(reminders));
 
 		return paramList;
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see my.ep.web.scheduler.job.sc.BaseReminderJob#getKpiCode()
+	 */
 	@Override
-	public void execute(JobExecutionContext context)
-			throws JobExecutionException {
-		super.setKpiCode(QTConstants.KPI_CODE_TENDER_REMINDER);
-		super.setTemplateId(NotificationTextConst.TEMPLATE_ID_401164);
-		List<ReminderBean> beans = getReminderBeans();
-		// no.of reminder days
-		List<Integer> notificationDays = getNotificationDays(getKpiCode());
-
-		for (ReminderBean reminderBean : beans) {
-			Long reminderDays = DateUtils.getDaysDifference(
-					reminderBean.getDueDate(), new Date());
-
-			if (CollectionUtils.isNotEmpty(notificationDays)
-					&& notificationDays.contains(reminderDays)) {
-				List<String> paramList = getParameterListForNotification(
-						reminderDays, reminderBean.getData());
-				 sendReminder(super.getTemplateId(), reminderBean, paramList);
-			}
-		}
+	public String getKpiCode() {
+		// Proposal Validity Reminder (Quotation)
+		return QTConstants.KPI_CODE_TENDER_REMINDER;
 	}
+
 }
