@@ -3762,7 +3762,7 @@ public class DirectLOABackingBean extends
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateAckOfLOAReceiptPdfFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa);
+								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
 					}else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
@@ -3849,7 +3849,7 @@ public class DirectLOABackingBean extends
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateAckOfLOAReceiptPdfFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa);
+								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
 					}else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
@@ -5250,9 +5250,20 @@ public class DirectLOABackingBean extends
 		} else {
 			qty = specQuestion.getClQuantity();
 		}
+		
+		if(specZoneDtl != null) {
+			itemBean.setZonal(true);
+		}
+		
+		if(specAnswer.getTplSpecTierQty() != null) {
+			itemBean.setTier(true);
+			itemBean.setFromQty(specAnswer.getTplSpecTierQty().getFromQty().toString());
+			itemBean.setToQty(specAnswer.getTplSpecTierQty().getToQty().toString());
+		}
 
-		itemBean.setZoneName(specZoneDtl != null ? specZoneDtl.getZoneName()
-				: "");
+		String zoneName = specZoneDtl != null ? specZoneDtl.getZoneName() : "";
+		zoneName = zoneName.replaceAll("&", "&#38;");
+		itemBean.setZoneName(zoneName);
 		itemBean.setItem(specQuestion.getClItem());
 
 		/*if(specAnswer.getRatePerUom() != null){
@@ -6702,17 +6713,20 @@ public class DirectLOABackingBean extends
 	 * @throws Exception the exception
 	 */
 	public void generateAckOfLOAReceiptPdfFromVelocity(ScAttachment attachment,
-			ScLoa scLoa) throws Exception {
+			ScLoa scLoa, ScQt scQt) throws Exception {
 		populateAttachmentDetails(attachment);
 		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
-		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		VelocityContext context = new VelocityContext();
 		
-		context.put("loaNo", scLoa.getLoaNo());
+		String loaNo = "N/A";
+		if(!StringUtils.isEmpty(scLoa.getLoaNo())) {
+			loaNo = scLoa.getLoaNo();
+		}
+		context.put("loaNo", loaNo);
 		
 		String fileNo ="";
-		if(!StringUtils.isBlank(scLoiLoa.getFileNo())){
-			fileNo = scLoiLoa.getFileNo();
+		if(!StringUtils.isBlank(scQt.getFileNo())){
+			fileNo = scQt.getFileNo();
 			if(fileNo.length()>30){
 				fileNo = splitLongLengthString(fileNo, 29);
 			}
@@ -6784,9 +6798,11 @@ public class DirectLOABackingBean extends
 		// date formatter
 		context.put("dateSDF", dateSDF);
 		
+		context.put("isZonal", scQt.isZonal());
+		
 		String fileNo = "";
-		if(!StringUtils.isBlank(scLoiLoa.getFileNo())){
-			fileNo = scLoiLoa.getFileNo();
+		if(!StringUtils.isBlank(scQt.getFileNo())){
+			fileNo = scQt.getFileNo();
 			if(fileNo.length()>30){
 				fileNo = splitLongLengthString(fileNo, 29);
 			}
@@ -6814,9 +6830,9 @@ public class DirectLOABackingBean extends
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			headerTitle = "Pembelian Terus";
-		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
-				.getDocType())) {
-			headerTitle = "Sebut Harga / Tender";
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || 
+				ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType())) {
+			headerTitle = "Sebut Harga/ Tender";
 		}
 		context.put("headerTitle", headerTitle); 
 		
@@ -6826,8 +6842,8 @@ public class DirectLOABackingBean extends
 		context.put("hasLoi", false); // TODO
 		context.put("bondReq", scLoa.isBondReq());
 
-		String bondAmt = "";
-		String bondAmtText = "";
+		String bondAmt = "______________";
+		String bondAmtText = "______________";
 		if (scLoa.getBondAmt() != null) {
 			bondAmt = amountDF.format(scLoa.getBondAmt());
 			bondAmtText = NumberWordUtil.convert(scLoa.getBondAmt().toString());
@@ -6835,8 +6851,8 @@ public class DirectLOABackingBean extends
 		context.put("bondAmt", bondAmt);
 		context.put("bondAmtText", bondAmtText);
 
-		String bondPercentage = "";
-		String bondPercentageText = "";
+		String bondPercentage = "______________";
+		String bondPercentageText = "______________";
 		if (scLoa.getBondPercentage() != null) {
 			bondPercentage = percentageDF.format(scLoa.getBondPercentage());
 			bondPercentageText  = NumberWordUtil.convert(scLoa.getBondPercentage().toString());
@@ -6844,7 +6860,7 @@ public class DirectLOABackingBean extends
 		context.put("bondPercentageText", bondPercentageText); 
 		context.put("bondPercentage", bondPercentage);
 		
-		String bondExpDate = "";
+		String bondExpDate = "______________";
 		//bond exp date should be one year after the end of the contract period
 		if(scLoa.getContractExpDate() != null){
 			Calendar cal = Calendar.getInstance();
@@ -6873,8 +6889,8 @@ public class DirectLOABackingBean extends
 		//ontractDuration
 		context.put("contractDuration", scLoa.getContractDuration());
 
-		String LoaSigner = "";
-		String loaSignerDesig = "";
+		String LoaSigner = "______________";
+		String loaSignerDesig = "______________";
 		if(getManagedBean().getContractSignerUser() != null){
 			PmUser contractSigner = getManagedBean().getContractSignerUser();
 			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
@@ -6897,12 +6913,13 @@ public class DirectLOABackingBean extends
 		}
 		context.put("gstRegFlag", gstRegFlag);
 		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
-		
+
 		// qtno
-		context.put("qtNo", scQt.getQtNo());
+		String qtNo = (StringUtils.isEmpty(scQt.getQtNo()))? "______________" : scQt.getQtNo();
+		context.put("qtNo", qtNo);
 		
 		// JadualHarga
-		 formJadualHarga(context, scLoa);
+		formJadualHarga(context, scLoa);
 		
 		// Specification
 		formSpecification(context, scLoa);
@@ -7180,7 +7197,8 @@ public class DirectLOABackingBean extends
 	    size.setVal(BigInteger.valueOf(18));
 	    rpr.setSz(size);
 	    run.setRPr(rpr);
-	    Text text = new Text();
+	    Text text = new Text();  
+	    docNo = docNo == null ? "______________" : docNo; 
 	    text.setValue("No. Surat Setuju Terima : " +docNo);
 	    run.getContent().add(text);
 	    paragraph.getContent().add(run);
