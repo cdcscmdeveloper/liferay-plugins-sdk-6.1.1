@@ -1142,17 +1142,23 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * Bank info action listener.
 	 */
 	public void bankInfoActionListener() {
-		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getInvoice().getAccountNo());
-		if(supplierBank!=null) {
-			getManagedBean().getInvoice().setPaymentBank(supplierBank.getPmFinancialOrg());
-			if(getManagedBean().getInvoice().getPaymentBankAddress() != null){
-				getManagedBean().getInvoice().setPaymentBankAddress(convertSmAddressToFlAddress(supplierBank.getSmAddress(),getManagedBean().getInvoice().getPaymentBankAddress()));
-			}else{
-				FlAddress flAddress = new FlAddress();
-				getManagedBean().getInvoice().setPaymentBankAddress(convertSmAddressToFlAddress(supplierBank.getSmAddress(),flAddress));
+		if(null != getManagedBean().getInvoice().getAccountNo()){
+			SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getInvoice().getAccountNo());
+			if(supplierBank!=null) {
+				getManagedBean().getInvoice().setPaymentBank(supplierBank.getPmFinancialOrg());
+				if(getManagedBean().getInvoice().getPaymentBankAddress() != null){
+					getManagedBean().getInvoice().setPaymentBankAddress(convertSmAddressToFlAddress(supplierBank.getSmAddress(),getManagedBean().getInvoice().getPaymentBankAddress()));
+				}else{
+					FlAddress flAddress = new FlAddress();
+					getManagedBean().getInvoice().setPaymentBankAddress(convertSmAddressToFlAddress(supplierBank.getSmAddress(),flAddress));
+				}
+				getManagedBean().getInvoice().setPaymentBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
 			}
-			getManagedBean().getInvoice().setPaymentBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
+		}else{
+			getManagedBean().getInvoice().setPaymentBankAddress(new FlAddress());
+			
 		}
+		
 	}
 	
 	/**

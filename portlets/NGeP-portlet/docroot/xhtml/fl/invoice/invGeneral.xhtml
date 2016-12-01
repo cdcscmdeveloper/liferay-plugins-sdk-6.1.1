@@ -210,16 +210,26 @@
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}"
 						disabled="#{invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmCancel || invoiceBackingBean.managedBean.buttonVal=='ACK' || !bpmTasklistBackingBean.managedBean.claim}"
 						style="width:350px;margin-bottom: 5px;"
+						update=":form:addressTest"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems value="#{invoiceBackingBean.populateBankAccountList}" />
-						<p:ajax event="change" 
+						<p:ajax event="change" update="paymentBankAddress"
 							listener="#{invoiceBackingBean.bankInfoActionListener}" />
 					</p:selectOneMenu>
 					<p:message for="accountId" display="icon" /> 
 					<p:inputText size="45" disabled="true" rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView }"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo} #{invoiceBackingBean.managedBean.invoice.paymentBankName}" />
 					 </td>		
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.bank.address']}"
+						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" /></td>
+				<td><p:inputTextarea id="paymentBankAddress" rows="5" cols="47" rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
+						style="margin-bottom:5px;" disabled="true" autoResize="false"
+						value="#{invoiceBackingBean.getFullAddress(invoiceBackingBean.managedBean.invoice.paymentBankAddress)}" />
+				</td>
 			</tr>
 			<tr>
 				<td style="width: 99px;"><p:outputLabel
