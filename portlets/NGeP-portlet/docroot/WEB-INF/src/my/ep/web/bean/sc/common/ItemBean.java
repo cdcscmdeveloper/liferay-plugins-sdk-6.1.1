@@ -11,11 +11,11 @@ package my.ep.web.bean.sc.common;
 public class ItemBean {
 	private String item;
 	private String quantity;
-	private boolean isTier;
 	private String fromQty;
 	private String toQty;
 	private String zoneName;
-	private boolean isZonal;
+	private boolean tier;
+	private boolean zonal;
 	
 	/**
 	 * @return the item
@@ -79,28 +79,27 @@ public class ItemBean {
 		this.toQty = toQty;
 	}
 	/**
-	 * @return the isTier
+	 * @return the tier
 	 */
 	public boolean isTier() {
-		return isTier;
+		return tier;
 	}
 	/**
-	 * @param isTier the isTier to set
+	 * @param tier the tier to set
 	 */
-	public void setTier(boolean isTier) {
-		this.isTier = isTier;
+	public void setTier(boolean tier) {
+		this.tier = tier;
 	}
 	/**
-	 * @return the isZonal
+	 * @return the zonal
 	 */
 	public boolean isZonal() {
-		return isZonal;
+		return zonal;
 	}
 	/**
-	 * @param isZonal the isZonal to set
+	 * @param zonal the zonal to set
 	 */
-	public void setZonal(boolean isZonal) {
-		this.isZonal = isZonal;
+	public void setZonal(boolean zonal) {
+		this.zonal = zonal;
 	}
-	                              
 }
