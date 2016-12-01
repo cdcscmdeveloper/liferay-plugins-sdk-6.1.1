@@ -5252,9 +5252,9 @@ public class LOADetailBackingBean extends
 	     t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : …………………………………");
 	     Text t3 = factory.createText();
 	   
-	     t3.setValue("\r\n  Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani Surat ini");
+	     t3.setValue("\r\n Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani Surat ini");
 	     Text t4 = factory.createText();
-	     t4.setValue("\r\n  Pihak Syarikat  : pegawai yang diberi kuasa dengan sewajarnya oleh syarikat untuk menandatangani Surat ini");
+	     t4.setValue("\r\n Pihak Syarikat : pegawai yang diberi kuasa dengan sewajarnya oleh syarikat untuk menandatangani Surat ini");
 	     run.getContent().add(t1);
 	     run.getContent().add(br);
 	     run.getContent().add(t2);
@@ -5328,6 +5328,7 @@ public class LOADetailBackingBean extends
 	    rpr.setSz(size);
 	    run.setRPr(rpr);
 	    Text text = new Text();
+	    docNo = docNo == null ? "N/A" : docNo; 
 	    text.setValue("No. Surat Setuju Terima : " +docNo);
 	    run.getContent().add(text);
 	    paragraph.getContent().add(run);
