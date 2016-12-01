@@ -21,26 +21,30 @@
 			<p:column headerText="#{lbl['lbl.pm.go.search.acc.class']}" style="width:10%;">
 				<h:outputText value="#{glAccountList[1]}" />
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.pm.gl.accountCode']}" style="width:10%;">
+			
+			<p:column headerText="#{lbl['lbl.pm.go.search.gen.obj.code']}" style="width:10%;">
 				<h:outputText value="#{glAccountList[2]}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.gl.description']}" style="width:50%;white-space: normal;word-wrap: break-word;">
+			<p:column headerText="#{lbl['lbl.pm.gl.accountCode']}" style="width:10%;">
 				<h:outputText value="#{glAccountList[3]}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.gl.description']}" style="width:50%;white-space: normal;word-wrap: break-word;">
+				<h:outputText value="#{glAccountList[4]}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.pm.gl.account.kumpulan.ptj']}" style="width:33%;white-space: normal;word-wrap: break-word;">
 				
-				<h:outputText value="#{glAccountList[4]}" />
-				<p:spacer width="1%"></p:spacer>
 				<h:outputText value="#{glAccountList[5]}" />
+				<p:spacer width="1%"></p:spacer>
+				<h:outputText value="#{glAccountList[6]}" />
 				
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}"
 				style="width:10%;white-space: normal;word-wrap: break-word;"> 
-   	    #{(glAccountList[6]==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
+   	    #{(glAccountList[7]==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
        </p:column>
 		</p:dataTable>
 	</p:panel>
