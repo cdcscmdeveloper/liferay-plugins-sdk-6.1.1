@@ -19,6 +19,7 @@ import my.ep.web.scheduler.job.sc.InviteSuppliersJob;
 import my.ep.web.scheduler.job.sc.ProposalValidityExpiaryJob;
 import my.ep.web.scheduler.job.sc.QTProposalCloseSchedulingJob;
 import my.ep.web.scheduler.job.sc.QTPublishSchedulingJob;
+import my.ep.web.scheduler.job.sc.QuotationPropoValidReminderJob;
 import my.ep.web.scheduler.job.sc.ScFailoverHandlerJob;
 
 import org.apache.log4j.Logger;
@@ -44,25 +45,25 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_DAILY_JOB));
-		
-		// Sc Continous job
-		EpSchedulerHelper
-		.scheduleJob(
-				new JobKey(SchedulerConstants.SC_CONTINOUS_JOB,
-						SchedulerConstants.SC_JOB_GROUP),
-				ContinuousBidSchedulerJob.class,
-				SchedulerConstants.SC_CONTINUOUS_JOB_DESCRIPTION,
-				SchedulerPropertiesUtils
-						.getInstance()
-						.getProperty(
-								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_CONTINUOUS_JOB),
-								new JobDataMap(new HashMap<String, List<Long>>()));
 
 		// daily Job to be run at server startup
 
 		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_DAILY_JOB,
 				SchedulerConstants.SC_JOB_GROUP), BidSchedulesPoolingJob.class);
+
+		// Sc Continous job
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(SchedulerConstants.SC_CONTINOUS_JOB,
+								SchedulerConstants.SC_JOB_GROUP),
+						ContinuousBidSchedulerJob.class,
+						SchedulerConstants.SC_CONTINUOUS_JOB_DESCRIPTION,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_CONTINUOUS_JOB),
+						new JobDataMap(new HashMap<String, List<Long>>()));
 
 		// Sc Daily job for published Quatation Tenders.
 		EpSchedulerHelper
@@ -133,12 +134,35 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QT_PUBLISH_JOB));
-		
+
 		// Job to be run at server startup
 		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_QT_PROPOSAL_CLOSE_JOB,
-				SchedulerConstants.SC_JOB_GROUP), QTProposalCloseSchedulingJob.class);
+				SchedulerConstants.SC_JOB_GROUP),
+				QTProposalCloseSchedulingJob.class);
+
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(
+								SchedulerConstants.SC_QUOTATION_PROPOSAL_VALIDITY_REMINDER_JOB,
+								SchedulerConstants.SC_JOB_GROUP),
+						QuotationPropoValidReminderJob.class,
+						SchedulerConstants.SC_QUOTATION_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION,
+						SchedulerPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QUOTATION_PROPVALIDIDITY_REMINDER));
+		EpSchedulerHelper
+		.scheduleJob(
+				new JobKey(
+						SchedulerConstants.SC_TENDER_PROPOSAL_VALIDITY_REMINDER_JOB,
+						SchedulerConstants.SC_JOB_GROUP),
+				QuotationPropoValidReminderJob.class,
+				SchedulerConstants.SC_TENDER_PROPOSAL_VALIDITY_REMINDER_JOB_DESCRIPTION,
+				SchedulerPropertiesUtils
+						.getInstance()
+						.getProperty(
+								EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QUOTATION_PROPVALIDIDITY_REMINDER));
 
 	}
-
 }
