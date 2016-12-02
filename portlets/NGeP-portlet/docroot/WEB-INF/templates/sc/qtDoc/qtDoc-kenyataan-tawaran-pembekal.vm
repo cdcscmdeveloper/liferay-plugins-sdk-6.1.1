@@ -234,6 +234,7 @@ th{
 			            		</tr>
 								</span>
 			            		#foreach( $briefingdtls in $zoneList.briefingList )
+			            			#if($briefingdtls.bsvStatus.statusId != $QTStatusConst.BSV_CANCELLED)
 									<span class="textfont">
 									<tr>
 										<td>$briefingdtls.bsvDesc</td>
@@ -243,6 +244,7 @@ th{
 										<td>$briefingdtls.maxNoOfAttendance</td>
 									</tr>
 									</span>
+									#end
 								#end
 							</table>
 							<br />
@@ -260,6 +262,7 @@ th{
 			            		</tr>
 								</span>
 			            		#foreach( $sitevisitdtls in $zoneList.sitevisitList )
+			            			#if($sitevisitdtls.bsvStatus.statusId != $QTStatusConst.BSV_CANCELLED)
 									<span class="textfont">
 									<tr>
 										<td>$sitevisitdtls.bsvDesc</td>
@@ -269,6 +272,7 @@ th{
 										<td>$sitevisitdtls.maxNoOfAttendance</td>
 									</tr>
 									</span>
+									#end
 			             		#end
 							</table>
 							<span class="headerfont">
