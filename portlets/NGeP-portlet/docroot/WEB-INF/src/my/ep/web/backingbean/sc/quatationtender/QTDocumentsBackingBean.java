@@ -2354,6 +2354,7 @@ public class QTDocumentsBackingBean extends
 		context.put("hostUrl", hostUrl);
 
 		context.put("commonUtils", commonUtils);
+		context.put("QTStatusConst", new QTStatusConst());
 
 		String ministryOrgName = null;
 		if (qt.getMinistryOrgProfile() != null) {
