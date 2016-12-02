@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -372,7 +373,7 @@ public class DirectLOABackingBean extends
 			validateLOAReportAttachments(scLoa);
 			validateLOADetails(scLoa, outcome);
 
-			validateContractAmount(scLoa.getLoaAmt());
+			validateContractAmount(scLoa.getLoaAmt(), outcome);
 
 			scLoa.setScLoaWorkFlowStatuses(null);
 			// To avoid insert workflow status when direct submit without save.
@@ -4346,7 +4347,7 @@ public class DirectLOABackingBean extends
 
 			parseLOADetails(scLoa, outcome, reqDTO);
 			validateLOADetails(scLoa, outcome);
-			validateContractAmount(scLoa.getLoaAmt());
+			validateContractAmount(scLoa.getLoaAmt(), outcome);
 			// if reject, remove the new witness
 			if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
 				ScLoaWitness scLoaWitness = null;
@@ -5431,28 +5432,36 @@ public class DirectLOABackingBean extends
 		}
 	}
 
-	private List<TplSpecAnswer> convertSpecQuestionToSpecAnswer(
+	private List<ItemBean> convertSpecQuestionToSpecAnswer(
 			TplSpecMaster specMaster) {
-		List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
+		Map<Integer, ItemBean> questionSpecMap = new HashMap<Integer, ItemBean>();
 
 		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
 			for (TplSpecQuestion specQuestion : specMaster
 					.getTplSpecQuestions()) {
-				if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion
-						.getQuestionType())) {
-					if (specQuestion.getTplSpecAnswers() != null) {
-						specAnswers.addAll(specQuestion.getTplSpecAnswers());
+				/*if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion
+						.getQuestionType())) {*/
+					if(specQuestion.getParentSpecQuestion() == null) {
+						int order = specQuestion.getQuestionOrder();
+						if (!questionSpecMap.containsKey(order)) {
+							ItemBean specBean = new ItemBean();
+							specBean.setItem(specQuestion.getClItem());
+							specBean.setSpecs(new ArrayList<String>());
+							questionSpecMap.put(order, specBean);						} 
+					} else {
+						int parentOrder = specQuestion.getParentSpecQuestion().getQuestionOrder();
+						questionSpecMap.get(parentOrder).getSpecs().add(specQuestion.getClSpecDetail());
 					}
-				} else {
+				/*} else {
 					TplSpecAnswer specAnswer = new TplSpecAnswer();
 					specAnswer.setTplSpecQuestion(specQuestion);
 
 					specAnswers.add(specAnswer);
-				}
+				}*/
 			}
 		}
 
-		return specAnswers;
+		return new ArrayList<ItemBean>(questionSpecMap.values());
 	}
 
 	/**
@@ -6322,19 +6331,20 @@ public class DirectLOABackingBean extends
 		}
 	}
 
-	private void validateContractAmount(BigDecimal contractAmt) {
-
-		TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
-		BigDecimal prodAmount = templateSpecBackingBean
-				.calcGrandTotalAmount(this.getManagedBean()
-						.getProdTemplateSpecBean());
-		BigDecimal servAmount = templateSpecBackingBean
-				.calcGrandTotalAmount(this.getManagedBean()
-						.getSpecTemplateSpecBean());
-		BigDecimal totalSpecEstimatedAmt = prodAmount.add(servAmount);
-		if (contractAmt.compareTo(totalSpecEstimatedAmt) < 0) {
-			throw new EpException(MessageConst.ERROR_700115, new String[] {
-					totalSpecEstimatedAmt.toString(), contractAmt.toString() });
+	private void validateContractAmount(BigDecimal contractAmt, String outcome) {
+		if(!BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
+			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+			BigDecimal prodAmount = templateSpecBackingBean
+					.calcGrandTotalAmount(this.getManagedBean()
+							.getProdTemplateSpecBean());
+			BigDecimal servAmount = templateSpecBackingBean
+					.calcGrandTotalAmount(this.getManagedBean()
+							.getSpecTemplateSpecBean());
+			BigDecimal totalSpecEstimatedAmt = prodAmount.add(servAmount);
+			if (contractAmt.compareTo(totalSpecEstimatedAmt) < 0) {
+				throw new EpException(MessageConst.ERROR_700115, new String[] {
+						totalSpecEstimatedAmt.toString(), contractAmt.toString() });
+			}
 		}
 	}
 
@@ -6966,8 +6976,8 @@ public class DirectLOABackingBean extends
 	
 	private void formSpecification(VelocityContext context, ScLoa scLoa)
 			throws Exception {
-		List<TplSpecAnswer> serviceAnswers  = null;
-		List<TplSpecAnswer> productAnswers  = null;
+		List<ItemBean> serviceBeans  = null;
+		List<ItemBean> productBeans  = null;
 
 		List<TplSpecQuestion> productQuestions = this.getManagedBean()
 				.getProdscQtDoc().getTplSpecMaster().getTplSpecQuestions();
@@ -6994,11 +7004,11 @@ public class DirectLOABackingBean extends
 				.getProdTemplateSpecBean().getSpecMaster();
 		TplSpecMaster serviceSpecMaster = getManagedBean()
 				.getSpecTemplateSpecBean().getSpecMaster();
-		productAnswers = convertSpecQuestionToSpecAnswer(productSpecMaster);
-		serviceAnswers = convertSpecQuestionToSpecAnswer(serviceSpecMaster);
+		productBeans = convertSpecQuestionToSpecAnswer(productSpecMaster);
+		serviceBeans = convertSpecQuestionToSpecAnswer(serviceSpecMaster);
 
-		context.put("productAnswers", productAnswers);
-		context.put("serviceAnswers", serviceAnswers);
+		context.put("productAnswers", productBeans);
+		context.put("serviceAnswers", serviceBeans);
 	}
 
 	/**

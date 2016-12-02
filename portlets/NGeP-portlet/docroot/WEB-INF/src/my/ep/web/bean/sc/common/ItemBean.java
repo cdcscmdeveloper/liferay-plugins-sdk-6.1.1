@@ -2,6 +2,9 @@
  * Copyright © 2016 Archisoft. All rights reserved.
  */
 package my.ep.web.bean.sc.common;
+
+import java.util.List;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class ItemBean.
@@ -16,7 +19,7 @@ public class ItemBean {
 	private String zoneName;
 	private boolean tier;
 	private boolean zonal;
-	
+	private List<String> specs;
 	/**
 	 * @return the item
 	 */
@@ -101,5 +104,17 @@ public class ItemBean {
 	 */
 	public void setZonal(boolean zonal) {
 		this.zonal = zonal;
+	}
+	/**
+	 * @return the specs
+	 */
+	public List<String> getSpecs() {
+		return specs;
+	}
+	/**
+	 * @param specs the specs to set
+	 */
+	public void setSpecs(List<String> specs) {
+		this.specs = specs;
 	}
 }
