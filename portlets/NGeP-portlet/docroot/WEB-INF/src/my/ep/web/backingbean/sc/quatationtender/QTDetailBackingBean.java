@@ -28,6 +28,7 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
+import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -4203,70 +4204,93 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			ScQt qtDetails = quationTenderReqDTO.getQtdetail();
+			QtAmendMentBean amendMentBean = getManagedBean().getAmendMentBean();
 
 			quationTenderReqDTO.setQtdetail(qtDetails);
-			quationTenderReqDTO.setAmendMentBean(this.getManagedBean()
-					.getAmendMentBean());
+			quationTenderReqDTO.setAmendMentBean(amendMentBean);
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
-			ScQt scQt = quationTenderResDTO.getQtDetail();
-			Long currentStatusId = qtDetails.getQtStatus().getStatusId();
-			
-			if (QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION.equals(currentStatusId)) {
-				Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-				if (!DateUtils.isDateGreater(DateUtils.setDefaultDateTime(scQt.getPublishDate()), todayDate)) {
-					try {
-						log.info("call simple scheduler if QT is publishing today.");
-						ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
-					} catch (SchedulerException e) {
-						e.printStackTrace();
-						log.error(e.getMessage());
-					}
-				} 
-			} else if (QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE.equals(currentStatusId)) {
-				Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
-				if (!DateUtils.isDateGreater(DateUtils.setDefaultDateTime(scQt.getClosingDate()), todayDate)) {
-					try {
-						log.info("call simple scheduler if QT is closing today.");
-						ScSchedulerHelper.getInstance().scheduleSimpleQTClosingJob(scQt);
-					} catch (SchedulerException e) {
-						e.printStackTrace();
-						log.error(e.getMessage());
-					}
-				} 
-			}
-			
-			String msgCode;
 			if (quationTenderResDTO.isSuccessful()) {
-				msgCode = MessageConst.INFO_700026;
-			} else {
-				msgCode = MessageConst.INFO_700004;
+				ScQt scQt = quationTenderResDTO.getQtDetail();
+				Long currentStatusId = qtDetails.getQtStatus().getStatusId();
+				
+				if (QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION.equals(currentStatusId)) {
+					Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+					if (!DateUtils.isDateGreater(DateUtils.setDefaultDateTime(scQt.getPublishDate()), todayDate)) {
+						try {
+							log.info("call simple scheduler if QT is publishing today.");
+							ScSchedulerHelper.getInstance().scheduleSimpleQTPublishingJob(scQt);
+						} catch (SchedulerException e) {
+							e.printStackTrace();
+							log.error(e.getMessage());
+						}
+					} 
+				} else if (QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE.equals(currentStatusId)) {
+					Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+					if (!DateUtils.isDateGreater(DateUtils.setDefaultDateTime(scQt.getClosingDate()), todayDate)) {
+						try {
+							log.info("call simple scheduler if QT is closing today.");
+							ScSchedulerHelper.getInstance().scheduleSimpleQTClosingJob(scQt);
+						} catch (SchedulerException e) {
+							e.printStackTrace();
+							log.error(e.getMessage());
+						}
+					} 
+				} else if (QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(currentStatusId)) {
+					if (amendMentBean != null) {
+						Map<String, QtAmendMentValueBean> valueMap = amendMentBean.getValueMap();
+						if (valueMap != null && valueMap.size() > 0) {
+							boolean isBSVChanged = false;
+							for (String key : valueMap.keySet()) {
+								if (key.indexOf(QTFieldConst.FILED_QT_BSV_DESC.substring(0, 4)) > 0) {
+									isBSVChanged = true;
+									break;
+								}
+							}
+							
+							if (isBSVChanged) {
+								new QTDocumentsBackingBean().reGenerateDocuments(
+										scQt.getQtId(), 
+										QTFieldConst.FILED_QT_BSVDETAILS);	
+							}
+						}
+					}
+				}
+				
+				String msgCode;
+				if (quationTenderResDTO.isSuccessful()) {
+					msgCode = MessageConst.INFO_700026;
+				} else {
+					msgCode = MessageConst.INFO_700004;
+				}
+				
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														msgCode,
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.DOCUMENT_TYPES,
+																		ParameterConst.DOCTYPE_QUOTATION),
+																scQt.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
-			
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													msgCode,
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.DOCUMENT_TYPES,
-																	ParameterConst.DOCTYPE_QUOTATION),
-															scQt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
 
 		} finally {
 			detailSO = null;
 		}
 
+		return null;
 	}
 
 	/**
