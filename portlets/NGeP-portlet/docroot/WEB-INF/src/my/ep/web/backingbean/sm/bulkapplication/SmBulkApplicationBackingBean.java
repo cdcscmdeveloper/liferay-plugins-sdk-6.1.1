@@ -162,18 +162,20 @@ public class SmBulkApplicationBackingBean extends
 	public void onCheckSelectedAppl(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSelectedTasks().size() > getManagedBean()
 				.getMaxBulkApprovalCount()) {
-			Iterator<SmBulkApplicationVO> iterator = getManagedBean()
-					.getSelectedTasks().iterator();
-			SmBulkApplicationVO bulkVO = iterator.next();
-			while (iterator.hasNext()) {
+			SmBulkApplicationVO removeBulkVO = null;
+			for (SmBulkApplicationVO bulkVO : getManagedBean()
+					.getSelectedTasks()) {
 				SmBulkApplicationVO tempBulkVO = (SmBulkApplicationVO) EntityHelper
 						.getEntityBySinglePropertyFromList(bulkVO.getAppl()
 								.getApplId(), getManagedBean()
 								.getInitSelectedTasks(), "appl");
 				if (tempBulkVO == null) {
-					iterator.remove();
+					removeBulkVO = bulkVO;
 					break;
 				}
+			}
+			if (removeBulkVO != null) {
+				getManagedBean().getSelectedTasks().remove(removeBulkVO);
 			}
 		}
 		getManagedBean().setInitSelectedTasks(
