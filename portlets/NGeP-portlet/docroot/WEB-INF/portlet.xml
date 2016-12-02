@@ -9151,4 +9151,40 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
+		<portlet>
+			<portlet-name>1gfmasMasterData</portlet-name>
+			<display-name>1gfmasMasterData</display-name>
+			<portlet-class>
+				org.portletfaces.bridge.GenericFacesPortlet
+			</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>
+					/xhtml/gfMas/prerender1GfmasMasterData.xhtml
+				</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>1GFMAS Master Data</title>
+				<short-title>NewJSFPortlet</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+	</portlet>
 </portlet-app>

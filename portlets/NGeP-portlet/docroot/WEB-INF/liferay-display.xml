@@ -233,6 +233,7 @@
 		<category name="GfMas">
 			<portlet id="ptjGfmasInbound"></portlet>
 			<portlet id="gfmasSearch"></portlet>
+			<portlet id="1gfmasMasterData"></portlet>
 		</category>
 
 
