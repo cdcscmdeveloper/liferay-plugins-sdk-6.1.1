@@ -149,6 +149,9 @@ public class ContinuousBidSchedulerJob implements Job {
 										getCompareTime()) && currentSchedule
 										.getPmStatus().getStatusId()
 										.equals(BidStatusConst.BID_IN_PROGRESS))) {
+							log.info("$%$%$% current schedule start date "+currentSchedule.getStartDate());
+							log.info("$%$%$% current schedule End date "+currentSchedule.getEndDate());
+							log.info("$%$%$% current schedule status id "+currentSchedule.getPmStatus().getStatusId());
 							log.info("$%$%$% bid seesion creation/closing failed for bid no"
 									+ currentSchedule.getBidNo());
 							failedBidSchedulesCount++;
