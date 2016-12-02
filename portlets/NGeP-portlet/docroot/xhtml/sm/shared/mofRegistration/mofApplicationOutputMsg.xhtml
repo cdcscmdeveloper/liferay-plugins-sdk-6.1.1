@@ -18,16 +18,16 @@
 	<ui:define name="contentSection">
 		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}">
 			<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" escape="false" /><br/>
-			<div align="right">
-				<h:commandLink rendered="#{smOutputMsgBackingBean.managedBean.applType eq 'N' or smOutputMsgBackingBean.managedBean.applType eq 'R'}">
-					<p:commandButton type="button" value="#{lbl['lbl.sm.print.payment.details']}" />
-				</h:commandLink>
-				<h:commandLink>
-					<p:commandButton type="button" value="#{lbl['lbl.sm.print.application.details']}" />
-				</h:commandLink>
-				<h:commandLink>
-					<p:commandButton type="button" value="#{lbl['lbl.sm.print.acknowledgement']}" />
-				</h:commandLink>
+			<div align="center">
+				<p:commandButton id="pyDetailsBtnId" value="#{lbl['lbl.sm.print.payment.details']}" ajax="false">
+					<p:fileDownload value="#{smOutputMsgBackingBean.printPaymentDetails()}" />
+				</p:commandButton>
+				<p:commandButton id="applDetailsBtnId" value="#{lbl['lbl.sm.print.application.details']}" ajax="false">
+					<p:fileDownload value="#{smOutputMsgBackingBean.printSupplierProfile()}" />
+				</p:commandButton>
+				<p:commandButton id="pyAckBtnId" value="#{lbl['lbl.sm.print.acknowledgement']}" ajax="false">
+					<p:fileDownload value="#{smOutputMsgBackingBean.printPaymentAck()}" />
+				</p:commandButton>
 			</div>
 		</p:panel> 
 	</ui:define>

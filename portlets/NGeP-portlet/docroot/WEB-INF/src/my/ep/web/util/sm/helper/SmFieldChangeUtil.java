@@ -37,7 +37,6 @@ public class SmFieldChangeUtil {
 	 */
 	public static void initLatestAppl(SmApplicationManagedBean bean) {
 		if (bean.isShowNewChanges()
-				&& bean.isPoUser()
 				&& bean.getSmAppl() != null
 				&& StringUtils.isNotBlank(bean.getSmAppl().getApplType())
 				&& !bean.getSmAppl().getApplType()

@@ -43,8 +43,10 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 	private PagingDataModel<SmBulkApplicationVO> claimTaskListDataModel = new ClaimTaskPagingDataModel();
 	private PagingDataModel<SmBulkApplicationVO> unClaimTaskListDataModel = new UnClaimTaskPagingDataModel();
 	private List<SmBulkApplicationVO> selectedTasks;
+	private List<SmBulkApplicationVO> initSelectedTasks;
 	private List<PmStatusDesc> regStatusDescList;
 	private List<SmAppl> failedSubmittedList;
+	private int maxBulkApprovalCount;
 
 	private class ClaimTaskPagingDataModel extends
 			PagingDataModel<SmBulkApplicationVO> {
@@ -316,5 +318,21 @@ public class SmBulkApplicationManagedBean extends BaseManagedBean {
 
 	public void setFailedSubmittedList(List<SmAppl> failedSubmittedList) {
 		this.failedSubmittedList = failedSubmittedList;
+	}
+
+	public int getMaxBulkApprovalCount() {
+		return maxBulkApprovalCount;
+	}
+
+	public void setMaxBulkApprovalCount(int maxBulkApprovalCount) {
+		this.maxBulkApprovalCount = maxBulkApprovalCount;
+	}
+
+	public List<SmBulkApplicationVO> getInitSelectedTasks() {
+		return initSelectedTasks;
+	}
+
+	public void setInitSelectedTasks(List<SmBulkApplicationVO> initSelectedTasks) {
+		this.initSelectedTasks = initSelectedTasks;
 	}
 }
