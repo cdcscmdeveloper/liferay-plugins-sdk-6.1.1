@@ -113,6 +113,11 @@ public class SmRuleHelper {
 				.getSoftcertRate();
 	}
 
+	public int getMaxBulkApproval() {
+		return SmServiceLookup.getSmRuleSO().retrieveMaxBulkApprovalCount()
+				.getMaxBulkApprovalCount();
+	}
+
 	public static SmRuleHelper getInstance() {
 		if (instance == null) {
 			instance = new SmRuleHelper();
