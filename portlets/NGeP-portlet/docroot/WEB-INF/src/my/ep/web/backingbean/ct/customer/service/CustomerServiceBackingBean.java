@@ -50,8 +50,8 @@ public class CustomerServiceBackingBean extends BaseBackingBean<CustomerServiceM
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String SERVICE_VIEW_PAGE = "/xhtml/ct/fulfilmentdetails/association/viewcontractservice.xhtml?faces-redirect=true";
-	private static final String CONTRACT_SERVICE_PAGE = "/xhtml/ct/fulfilmentdetails/association/customerservice.xhtml?faces-redirect=true";
+	private static final String SERVICE_VIEW_PAGE = "/xhtml/ct/customercare/viewcontractservice.xhtml?faces-redirect=true";
+	private static final String CONTRACT_SERVICE_PAGE = "/xhtml/ct/customercare/customerservice.xhtml?faces-redirect=true";
 	private String sysUserId = "weblogic";
 	
 	public CustomerServiceBackingBean(){
