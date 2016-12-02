@@ -279,7 +279,6 @@ public class NoticeBoardBackingBean extends
 						briefingReqDTO.setQtId(scQt.getQtId());
 						briefingReqDTO.setSpecZoneId(specZoneDtl
 								.getSpecZoneId());
-						briefingReqDTO.setAttandanceReq(true);
 						IQTBriefingSO briefingSO = EpEjbBusinessDelegate
 								.getInstance().getServiceObject(
 										ModuleCodeConst.SUPPLIER_SELECTION,
@@ -2079,7 +2078,6 @@ public class NoticeBoardBackingBean extends
 					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 					briefingReqDTO.setQtId(scQt.getQtId());
 					briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
-					briefingReqDTO.setAttandanceReq(true);
 					briefingReqDTO.setSupplierId(this.getManagedBean()
 							.getSmSupplier().getSupplierId());
 					IQTBriefingSO briefingSO = EpEjbBusinessDelegate
@@ -2087,7 +2085,7 @@ public class NoticeBoardBackingBean extends
 									ModuleCodeConst.SUPPLIER_SELECTION,
 									IQTBriefingSO.class);
 					BriefingResDTO briefingResDTO = briefingSO
-							.retrieveBriefingSiteVisitDtls(briefingReqDTO);
+							.retrieveSupplierBriefingSiteVisitDtls(briefingReqDTO);
 
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 							specZoneDtl, briefingResDTO.getBriefingList(),
@@ -2169,9 +2167,7 @@ public class NoticeBoardBackingBean extends
 				throw new EpException(MessageConst.ERROR_760230,
 						new String[] { bsvDtl.getBsvDesc() });
 			}
-		} else {
-
-		}
+		} 
 
 		List<ScQtBsvDtl> bsvDetails = this.getManagedBean().getNormalBsvBean()
 				.getBriefingList();
