@@ -192,17 +192,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Print Supplier Profile
-	 * 
-	 * @throws IOException
-	 */
-	public void printDeclaration() throws IOException {
-		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
-		generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
-	}
-
-	/**
 	 * Custom validation for required field
 	 * 
 	 * @param FacesContext
@@ -1289,7 +1278,8 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getTotalPaymentAmount().add(
 								paymentDetailsVO.getPrice()));
 			}
-
+			getManagedBean().getTotalPaymentAmount().setScale(2,
+					BigDecimal.ROUND_UP);
 			getManagedBean().setApplDeclarationAlertMsg(
 					SmCommonUtil.getMessage(
 							"lbl.sm.payment.declaration.appl.alert.msg",
@@ -6535,7 +6525,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-		initiateSmApplicationTask();
+		// initiateSmApplicationTask();
 		String msgConst = "";
 		String urlParam = SmCommonUtil.getBasePortalUrl()
 				+ "/web/epapp/task-list";
@@ -6583,10 +6573,7 @@ public class SmApplicationBackingBean extends
 												new FacesScopes()
 														.getUserLocale())));
 		SmOutputMsgBackingBean backingBean = new SmOutputMsgBackingBean();
-		backingBean.getManagedBean().setApplId(
-				getManagedBean().getSmAppl().getApplId());
-		backingBean.getManagedBean().setApplType(
-				getManagedBean().getSmAppl().getApplType());
+		backingBean.getManagedBean().setSmAppl(getManagedBean().getSmAppl());
 		renewSesionObject();
 		return "/xhtml/sm/shared/mofRegistration/mofApplicationOutputMsg.xhtml";
 	}
