@@ -6525,7 +6525,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-		// initiateSmApplicationTask();
+		initiateSmApplicationTask();
 		String msgConst = "";
 		String urlParam = SmCommonUtil.getBasePortalUrl()
 				+ "/web/epapp/task-list";

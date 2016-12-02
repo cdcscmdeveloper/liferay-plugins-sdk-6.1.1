@@ -1,12 +1,14 @@
 package my.ep.web.backingbean.sm.bulkapplication;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
@@ -15,13 +17,17 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.bulkapplication.SmBulkApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,12 +37,21 @@ import org.apache.commons.lang.StringUtils;
 public class SmBulkApplicationBackingBean extends
 		BaseBackingBean<SmBulkApplicationManagedBean> {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2492540872306203847L;
+
+	/**
 	 * Pre-render bulk application screen
 	 */
 	public void preRenderBulkApplication() {
 		renewSesionObject();
 		getManagedBean().setSelectedTasks(new ArrayList<SmBulkApplicationVO>());
+		getManagedBean().setInitSelectedTasks(
+				new ArrayList<SmBulkApplicationVO>());
 		SmCommonUtil.setMDCUserId();
+		getManagedBean().setMaxBulkApprovalCount(
+				SmRuleHelper.getInstance().getMaxBulkApproval());
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/bulkApplication/bulkApplicationTaskList.xhtml", "",
 				null);
@@ -135,6 +150,34 @@ public class SmBulkApplicationBackingBean extends
 			retVal = true;
 		}
 		return retVal;
+	}
+
+	/**
+	 * Remove un selected admin from the selected personnel list.
+	 * 
+	 * @param e
+	 *            - AjaxBehaviorEvent
+	 * 
+	 */
+	public void onCheckSelectedAppl(AjaxBehaviorEvent e) {
+		if (getManagedBean().getSelectedTasks().size() > getManagedBean()
+				.getMaxBulkApprovalCount()) {
+			Iterator<SmBulkApplicationVO> iterator = getManagedBean()
+					.getSelectedTasks().iterator();
+			SmBulkApplicationVO bulkVO = iterator.next();
+			while (iterator.hasNext()) {
+				SmBulkApplicationVO tempBulkVO = (SmBulkApplicationVO) EntityHelper
+						.getEntityBySinglePropertyFromList(bulkVO.getAppl()
+								.getApplId(), getManagedBean()
+								.getInitSelectedTasks(), "appl");
+				if (tempBulkVO == null) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
+		getManagedBean().setInitSelectedTasks(
+				getManagedBean().getSelectedTasks());
 	}
 
 	private void showSuccessApplicationMsg(List<SmAppl> applList) {

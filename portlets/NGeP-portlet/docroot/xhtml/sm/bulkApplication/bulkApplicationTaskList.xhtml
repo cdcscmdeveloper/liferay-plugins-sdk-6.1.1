@@ -25,7 +25,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton
-						action="#{bulkApplicationBackingBean.refreshTaskList}"
+						action="#{bulkApplicationBackingBean.refreshTaskList}" process="@this"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						value="#{lbl['lbl.bpm.refresh']}" update="@form" /></td>
 				<td style="white-space: nowrap; float: right;"><p:commandButton
@@ -116,11 +116,16 @@
 				selection="#{bulkApplicationBackingBean.managedBean.selectedTasks}">
 				<ac:paginator for="claimTaskListId" />
 
-				<p:ajax event="toggleSelect" update="@([id$=approveBtnId])" />
-				<p:ajax event="rowSelect" update="@([id$=approveBtnId])" />
-				<p:ajax event="rowSelectCheckbox" update="@([id$=approveBtnId])" />
-				<p:ajax event="rowUnselectCheckbox" update="@([id$=approveBtnId])" />
-				<p:ajax event="rowUnselect" update="@([id$=approveBtnId])" />
+				<p:ajax event="toggleSelect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId])"  
+					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this"/>
+				<p:ajax event="rowSelect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId])" 
+					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
+				<p:ajax event="rowSelectCheckbox" update=":#{p:component('resultPanelId')},@([id$=approveBtnId])" 
+					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
+				<p:ajax event="rowUnselectCheckbox" update=":#{p:component('resultPanelId')},@([id$=approveBtnId])" 
+					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
+				<p:ajax event="rowUnselect" update=":#{p:component('resultPanelId')},@([id$=approveBtnId])" 
+					listener="#{bulkApplicationBackingBean.onCheckSelectedAppl}" process="@this" />
 
 				<p:column selectionMode="multiple" style="width:2% !important;" />
 
