@@ -40,7 +40,7 @@
 			<p:column headerText="#{lbl['lbl.sc.description']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:panelGroup
-					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId}">
+					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId and briefingdtls.bsvStatus.statusId ne QTStatusConst.BSV_CANCELLED}">
 					<p:commandLink
 						action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(briefingdtls)}"
 						partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
@@ -48,7 +48,7 @@
 					</p:commandLink>
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId}">
+					rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId or briefingdtls.bsvStatus.statusId eq QTStatusConst.BSV_CANCELLED}">
 					<h:outputText value="#{briefingdtls.bsvDesc}" />
 				</h:panelGroup>
 			</p:column>
@@ -152,7 +152,7 @@
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="white-space: normal;word-wrap: break-word;">
 						<h:panelGroup
-							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId}">
+							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId and sitevisitdtls.bsvStatus.statusId ne QTStatusConst.BSV_CANCELLED}">
 							<p:commandLink
 								action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(sitevisitdtls)}"
 								partialSubmit="true" process="@this"
@@ -161,7 +161,7 @@
 							</p:commandLink>
 						</h:panelGroup>
 						<h:panelGroup
-							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId}">
+							rendered="#{QTStatusConst.QT_PROPOSAL_PREPARATION ne qTBriefingSiteVisitBackingBean.managedBean.currentStatusId or sitevisitdtls.bsvStatus.statusId eq QTStatusConst.BSV_CANCELLED}">
 							<h:outputText value="#{sitevisitdtls.bsvDesc}" />
 						</h:panelGroup>
 					</p:column>
