@@ -112,6 +112,15 @@
 						style="width:9%;white-space: normal;">
 						<h:outputText
 							value="#{noticeBoardBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+						<br />
+						<ui:param name="bsvStatusField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_STATUS}" />
+						<ui:param name="bsvStatusChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvStatusField]}" />
+						<h:panelGroup rendered="#{!empty bsvStatusChangeDate}">
+							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+							<h:outputText value="#{bsvStatusChangeDate}" styleClass="lastUpdated">
+								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+							</h:outputText>
+						</h:panelGroup>
 					</p:column>
 
 				</p:dataTable>
@@ -226,6 +235,15 @@
 						style="width:9%;white-space: normal;">
 						<h:outputText
 							value="#{noticeBoardBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+						<br />
+						<ui:param name="bsvStatusField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_STATUS}" />
+						<ui:param name="bsvStatusChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvStatusField]}" />
+						<h:panelGroup rendered="#{!empty bsvStatusChangeDate}">
+							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+							<h:outputText value="#{bsvStatusChangeDate}" styleClass="lastUpdated">
+								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+							</h:outputText>
+						</h:panelGroup>
 					</p:column>
 
 				</p:dataTable>
@@ -346,9 +364,17 @@
 
 					<p:column headerText="#{lbl['lbl.sc.status']}"
 						style="width:9%;white-space: normal;">
-
 						<h:outputText
 							value="#{noticeBoardBackingBean.getStatusDescById(sitevisitDtls.bsvStatus.statusId)}" />
+						<br />
+						<ui:param name="bsvStatusField" value="#{sitevisitDtls.qtBsvDtlId}#{QTFieldConst.FILED_QT_BSV_SEPARATOR}#{QTFieldConst.FILED_QT_BSV_STATUS}" />
+						<ui:param name="bsvStatusChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentDateMap[bsvStatusField]}" />
+						<h:panelGroup rendered="#{!empty bsvStatusChangeDate}">
+							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
+							<h:outputText value="#{bsvStatusChangeDate}" styleClass="lastUpdated">
+								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+							</h:outputText>
+						</h:panelGroup>
 					</p:column>
 
 				</p:dataTable>

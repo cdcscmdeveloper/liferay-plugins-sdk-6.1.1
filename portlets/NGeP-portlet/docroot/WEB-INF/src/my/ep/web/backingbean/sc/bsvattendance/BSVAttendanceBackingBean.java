@@ -797,8 +797,9 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 	private boolean isBsvStatusComplete(List<ScQtBsvDtl> bsvDetails) {
 
 		for (ScQtBsvDtl bsvDtl : bsvDetails) {
-			if (!QTStatusConst.BSV_COMPLETED.equals(bsvDtl.getBsvStatus()
-					.getStatusId())) {
+			Long statusId = bsvDtl.getBsvStatus().getStatusId();
+			if (!QTStatusConst.BSV_COMPLETED.equals(statusId) &&
+					!QTStatusConst.BSV_CANCELLED.equals(statusId)) {
 				return false;
 			}
 
@@ -984,7 +985,8 @@ this.getManagedBean().setSelectedbriefRegistrationEnableDisable(briefingRegistra
 	 */
 	public boolean showRegistrationIcon(ScQtBsvDtl bsvDtl) {
 
-		if (null != bsvDtl) {
+		if (null != bsvDtl && null != bsvDtl.getBsvStatus() && 
+				!QTStatusConst.BSV_CANCELLED.equals(bsvDtl.getBsvStatus().getStatusId())) {
 			return DateUtils.isDateGreaterOrEqual(new Date(),
 					bsvDtl.getBsvDate());
 		}
