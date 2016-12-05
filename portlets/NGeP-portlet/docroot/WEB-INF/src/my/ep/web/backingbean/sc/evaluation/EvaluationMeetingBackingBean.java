@@ -46,6 +46,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -181,12 +182,27 @@ public class EvaluationMeetingBackingBean extends
 	}
 
 	private boolean orgProfileCheckExist(ScQt scqt, PmUser user, boolean isptj) {
-		PmOrgProfile orgProfile = scqt.getPmOrgProfile();
-		log.info("===qt PtjId===" + orgProfile.getOrgProfileId());
-		if (null != user.getPmUserOrgs()) {
+		//PmOrgProfile orgProfile = scqt.getPmOrgProfile();
+		IOrgProfileSO	orgProfileSO=null;
+		try{
+			orgProfileSO= BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		PmOrgProfile orgProfile=null;
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(scqt
+				.getPmOrgProfile().getOrgProfileId());
+		OrgProfileResDTO resDTO = orgProfileSO
+				.retrieveMinistryByOrgProfileId(reqDTO);
+		if (resDTO.getPmOrgProfile() != null) {
+		 orgProfile=resDTO.getPmOrgProfile();
+		}
+		
+		if (null != user.getPmUserOrgs() && null!=orgProfile) {
 			for (PmUserOrg userorg : user.getPmUserOrgs()) {
 				log.info("===user org record status==="
 						+ userorg.isRecordStatus());
+				//orgProfile.setOrgProfileId(273481L);
+				log.info("===qt PtjId===" + orgProfile.getOrgProfileId());
 				if (userorg.isRecordStatus()
 						&& null != userorg.getPmOrgProfile()
 						&& userorg.getPmOrgProfile().getOrgProfileId()
@@ -196,6 +212,9 @@ public class EvaluationMeetingBackingBean extends
 				}
 
 			}
+		}
+		}finally{
+			orgProfileSO=null;
 		}
 		return isptj;
 	}
