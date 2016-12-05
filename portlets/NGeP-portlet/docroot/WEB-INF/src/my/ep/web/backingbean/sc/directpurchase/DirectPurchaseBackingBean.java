@@ -46,7 +46,6 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -67,7 +66,6 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.directpurchase.DirectPurchaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.springframework.util.CollectionUtils;
 // TODO: Auto-generated Javadoc
@@ -197,31 +195,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * @return the list
 	 * @throws NamingException the naming exception
 	 */
-	public List<SelectItem> searchStatusDesc() throws NamingException {
-		List<SelectItem> items = null;
-
-		try {
-			items = new ArrayList<SelectItem>();
-
-			items.add(new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					getFacesScopes().getUserLocale())));
-
-			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(
-					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), getManagedBean().getSearchDocumentType());
-			for (PmStatusDesc statusDesc : statusDescs) {
-				items.add(new SelectItem(statusDesc.getPmStatus()
-						.getStatusId(), statusDesc.getStatusName()));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		}
-
-		return items;
+	public SelectItem[] searchStatusDesc() throws NamingException {
+		return super.getStatusDropdownValues(
+				ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
+				getManagedBean().getSearchDocumentType());
 	}
 
 	/**

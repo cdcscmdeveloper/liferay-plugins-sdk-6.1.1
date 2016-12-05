@@ -23,7 +23,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -34,7 +33,6 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.trackingdiary.ScTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
 
@@ -88,31 +86,10 @@ public class ScTrackingDiaryBackingBean extends
 		return items;
 	}
 
-	public List<SelectItem> searchStatusDesc() throws NamingException {
-		List<SelectItem> items = null;
-
-		try {
-			items = new ArrayList<SelectItem>();
-
-			items.add(new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					getFacesScopes().getUserLocale())));
-			
-			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(
-					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), getManagedBean().getSearchDocumentType());
-			for (PmStatusDesc statusDesc : statusDescs) {
-				items.add(new SelectItem(statusDesc.getPmStatus()
-						.getStatusId(), statusDesc.getStatusName()));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		}
-
-		return items;
+	public SelectItem[] searchStatusDesc() throws NamingException {
+		return super.getStatusDropdownValues(
+				ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
+				getManagedBean().getSearchDocumentType());
 	}
 
 	public void search() {
