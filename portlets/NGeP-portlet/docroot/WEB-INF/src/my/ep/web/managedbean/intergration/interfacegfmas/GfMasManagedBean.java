@@ -31,6 +31,7 @@ import my.ep.biz.service.pm.common.interfaceptj.IInterfaceProjectSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfacePtjSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotDanaSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotSO;
+import my.ep.constant.IntegrationConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.interfaceptj.InterfaceAgOffReqDTO;
@@ -178,6 +179,17 @@ public class GfMasManagedBean extends BaseManagedBean {
 	
 	/** The selected pp list. */
 	private List<PmInterfacePP> selectedPpList;
+	
+	private int glAccSize = 0;
+	private int agOffSize = 0;
+	private int bankSize = 0;
+	private int danaSize = 0;
+	private int votSize = 0;
+	private int kptjSize = 0;
+	private int ptjSize = 0;
+	private int projectSize = 0;
+	private int prgActSize = 0;
+	private int ppSize = 0;
 	
 	private static Logger log = Logger.getLogger(GfMasManagedBean.class);
 	
@@ -1394,5 +1406,147 @@ public class GfMasManagedBean extends BaseManagedBean {
 	public void setSelectedPpList(List<PmInterfacePP> selectedPpList) {
 		this.selectedPpList = selectedPpList;
 	}
+
+	/**
+	 * @return the glAccSize
+	 */
+	public int getGlAccSize() {
+		return glAccSize;
+	}
+
+	/**
+	 * @param glAccSize the glAccSize to set
+	 */
+	public void setGlAccSize(int glAccSize) {
+		this.glAccSize = glAccSize;
+	}
+
+	/**
+	 * @return the agOffSize
+	 */
+	public int getAgOffSize() {
+		return agOffSize;
+	}
+
+	/**
+	 * @param agOffSize the agOffSize to set
+	 */
+	public void setAgOffSize(int agOffSize) {
+		this.agOffSize = agOffSize;
+	}
+
+	/**
+	 * @return the bankSize
+	 */
+	public int getBankSize() {
+		return bankSize;
+	}
+
+	/**
+	 * @param bankSize the bankSize to set
+	 */
+	public void setBankSize(int bankSize) {
+		this.bankSize = bankSize;
+	}
+
+	/**
+	 * @return the danaSize
+	 */
+	public int getDanaSize() {
+		return danaSize;
+	}
+
+	/**
+	 * @param danaSize the danaSize to set
+	 */
+	public void setDanaSize(int danaSize) {
+		this.danaSize = danaSize;
+	}
+
+	/**
+	 * @return the votSize
+	 */
+	public int getVotSize() {
+		return votSize;
+	}
+
+	/**
+	 * @param votSize the votSize to set
+	 */
+	public void setVotSize(int votSize) {
+		this.votSize = votSize;
+	}
+
+	/**
+	 * @return the kptjSize
+	 */
+	public int getKptjSize() {
+		return kptjSize;
+	}
+
+	/**
+	 * @param kptjSize the kptjSize to set
+	 */
+	public void setKptjSize(int kptjSize) {
+		this.kptjSize = kptjSize;
+	}
+
+	/**
+	 * @return the ptjSize
+	 */
+	public int getPtjSize() {
+		return ptjSize;
+	}
+
+	/**
+	 * @param ptjSize the ptjSize to set
+	 */
+	public void setPtjSize(int ptjSize) {
+		this.ptjSize = ptjSize;
+	}
+
+	/**
+	 * @return the projectSize
+	 */
+	public int getProjectSize() {
+		return projectSize;
+	}
+
+	/**
+	 * @param projectSize the projectSize to set
+	 */
+	public void setProjectSize(int projectSize) {
+		this.projectSize = projectSize;
+	}
+
+	/**
+	 * @return the prgActSize
+	 */
+	public int getPrgActSize() {
+		return prgActSize;
+	}
+
+	/**
+	 * @param prgActSize the prgActSize to set
+	 */
+	public void setPrgActSize(int prgActSize) {
+		this.prgActSize = prgActSize;
+	}
+
+	/**
+	 * @return the ppSize
+	 */
+	public int getPpSize() {
+		return ppSize;
+	}
+
+	/**
+	 * @param ppSize the ppSize to set
+	 */
+	public void setPpSize(int ppSize) {
+		this.ppSize = ppSize;
+	}
+	
+	
 
 }
