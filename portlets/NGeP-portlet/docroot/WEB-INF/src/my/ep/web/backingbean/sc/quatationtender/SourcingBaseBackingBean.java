@@ -2207,9 +2207,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	
 	private boolean orgProfileCheckExist(ScQt scqt,PmUser user, boolean isptj){
-		PmOrgProfile orgProfile=	scqt.getPmOrgProfile();
-		log.info("===qt PtjId==="+orgProfile.getOrgProfileId());
-		if(null!=user.getPmUserOrgs()){
+		IOrgProfileSO	orgProfileSO=null;
+		try{
+			orgProfileSO= BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		PmOrgProfile orgProfile=null;
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(scqt
+				.getPmOrgProfile().getOrgProfileId());
+		OrgProfileResDTO resDTO = orgProfileSO
+				.retrieveMinistryByOrgProfileId(reqDTO);
+		if (resDTO.getPmOrgProfile() != null) {
+		 orgProfile=resDTO.getPmOrgProfile();
+		}
+		if(null!=user.getPmUserOrgs() && null!=orgProfile){
+			//orgProfile.setOrgProfileId(273481L);
+			log.info("===qt PtjId==="+orgProfile.getOrgProfileId());
 		for(PmUserOrg userorg:user.getPmUserOrgs()){
 			log.info("===user org record status==="+userorg.isRecordStatus());
 			if(userorg.isRecordStatus() && null!=userorg.getPmOrgProfile() && userorg.getPmOrgProfile().getOrgProfileId().equals(orgProfile.getOrgProfileId())){
@@ -2218,6 +2231,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 		}
+		}
+		}finally{
+			orgProfileSO=null;
 		}
 		return isptj;
 	}
