@@ -165,13 +165,27 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.qt.max.attendance']}" /></td>
-						<td colspan="3">
+						<td>
 							<p:inputText style="text-align: right;" size="30" maxlength="2" 
 										 required="true" label="#{lbl['lbl.sc.qt.max.attendance']}"
 										 value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.maxNoOfAttendance}">
 							</p:inputText>
 							<ac:iconTooltip value="#{lbl['lbl.sc.qt.max.attendance.tooltip']}" />
 						</td>
+						<c:if test="#{QTStatusConst.QT_BRIEFING_SITE_VISIT eq qTBriefingSiteVisitBackingBean.managedBean.currentStatusId and qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvStatusId != QTStatusConst.BSV_COMPLETED}">
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sc.status']}" />
+						</td>
+						<td>
+							<p:selectOneMenu
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvStatusId}"
+								style="width: 249px;margin-bottom: 5px;">
+								<f:selectItems
+									value="#{qTBriefingSiteVisitBackingBean.getBsvStatusDropdownValues()}" />
+								<p:ajax event="change" partialSubmit="true" process="@this" update="@this" listener="#{qTBriefingSiteVisitBackingBean.bsvStatusChanged}" />
+							</p:selectOneMenu>
+						</td>
+						</c:if>
 					</tr>
 				</table>
 				<div class="ppRightBtn">
