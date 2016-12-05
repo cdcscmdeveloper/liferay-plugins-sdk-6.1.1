@@ -47,7 +47,7 @@
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.published.date']}" /></td>
-				<td class="header-info-text"><p:inputText
+				<td class="header-info-text"><p:inputText disabled="true" readonly="true"
 						style="float : left;"
 						value="#{supplierProposalDetailBackingBean.managedBean.qt.publishDate}">
 						<f:convertDateTime
@@ -57,8 +57,8 @@
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.closing.date']}" /></td>
-				<td class="header-info-text"><p:inputText
-						style="float : left;"
+				<td class="header-info-text"><p:inputText readonly="true"
+						style="float : left;" disabled="true"
 						value="#{supplierProposalDetailBackingBean.managedBean.qt.closingDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
