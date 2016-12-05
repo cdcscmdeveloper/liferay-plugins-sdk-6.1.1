@@ -41,6 +41,8 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -69,6 +71,10 @@ import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
+import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
@@ -113,6 +119,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -2415,6 +2422,42 @@ public class DirectLOABackingBean extends
 	private IQTDirectAwardSO getQtDirectAwardSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDirectAwardSO.class);
+	}
+	
+	/**
+	 * Gets the mof account by supplier id.
+	 *
+	 * @param supplierId the supplier id
+	 * @return the mof account by supplier id
+	 */
+	public SmMofAccount getMofAccountBySupplierId(Long supplierId) {
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IMofAccountSO.class);
+		MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
+		accountReqDTO.setSupplierId(supplierId);
+		MofAccountResDTO mofAccountResDTO = mofAccountSO
+				.retrieveMofNoBySupplierId(accountReqDTO);
+		return mofAccountResDTO.getMofAccount();
+	}
+	
+	/**
+	 * Gets the mof cert by mof account id.
+	 *
+	 * @param mofAccountId the mofAccountId id
+	 * @return the mof cert by mof account id
+	 */
+	public SmMofCert getMofCertBySupplierId(Long mofAccountId) {
+		IVirtualCertSO virtualCertSO = (IVirtualCertSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IVirtualCertSO.class);
+		VirtualCertReqDTO certReqDTO = new VirtualCertReqDTO();
+		certReqDTO.setMofAccountId(mofAccountId);
+		VirtualCertResDTO certResDTO = virtualCertSO
+				.retrieveLatestCertByAccountId(certReqDTO);
+		return certResDTO.getSmMofCert();
 	}
 
 	/**
@@ -5034,6 +5077,52 @@ public class DirectLOABackingBean extends
 		context.put("overallCtAmtWording", overallctAmtWording);
 
 	}
+	
+	/**
+	 * @param context
+	 * @param scLoa
+	 * @param myLocale
+	 */
+	private void setMofInfoForAgreementLetter(VelocityContext context,
+			ScLoa scLoa, Locale myLocale) {
+
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		SmSupplier smSupplier = scLoiLoa.getSmSupplier();
+		Long supplierId = smSupplier.getSupplierId();
+		context.put("mofNo", scLoiLoa.getMofNo());
+		
+		SmMofAccount mofAccount = getMofAccountBySupplierId(supplierId);
+		
+		String mofEffectiveDate = "";
+		String mofExpiredDate = "";
+		String mofCertEffectiveDate = "";
+		String mofCertExpiredDate = "";
+		if(mofAccount != null) {
+			mofEffectiveDate = mofAccount.getEffDate() != null ? DateUtils
+					.getLocalizeDate(mofAccount.getEffDate(), myLocale) : "";
+			mofExpiredDate = mofAccount.getExpDate() != null ? DateUtils
+					.getLocalizeDate(mofAccount.getExpDate(), myLocale) : "";
+					
+			SmMofCert mofCert = getMofCertBySupplierId(mofAccount.getMofAccountId());
+			mofCertEffectiveDate = mofCert.getEffDate() != null ? DateUtils
+					.getLocalizeDate(mofCert.getEffDate(), myLocale) : "";
+			mofCertExpiredDate = mofCert.getExpDate() != null ? DateUtils
+					.getLocalizeDate(mofCert.getExpDate(), myLocale) : "";
+		}
+		
+		context.put("mofEffectiveDate", mofEffectiveDate);
+		context.put("mofExpiredDate", mofExpiredDate);
+		context.put("mofCertEffectiveDate", mofCertEffectiveDate);
+		context.put("mofCertExpiredDate", mofCertExpiredDate);
+		
+		context.put("kodBidang", "_______________________________");
+		
+		if(smSupplier.isBumi()) {
+			context.put("isBumi", "Bumiputera");
+		} else {
+			context.put("isBumi", "Bukan Bumiputera");
+		}
+	}
 
 	/**
 	 * Generate declaration pdf from velocity in Performance Bond.
@@ -6923,6 +7012,7 @@ public class DirectLOABackingBean extends
 		}
 		context.put("gstRegFlag", gstRegFlag);
 		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
+		setMofInfoForAgreementLetter(context, scLoa, myLocale);
 
 		// qtno
 		String qtNo = (StringUtils.isEmpty(scQt.getQtNo()))? "______________" : scQt.getQtNo();
