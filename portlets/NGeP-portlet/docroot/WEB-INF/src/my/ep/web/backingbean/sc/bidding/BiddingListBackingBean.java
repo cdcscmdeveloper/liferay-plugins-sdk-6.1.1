@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -13,6 +12,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -21,12 +22,11 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
-import my.ep.util.ResourceBundleUtils;
+import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.bidding.BiddingListManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
 
@@ -82,45 +82,21 @@ public class BiddingListBackingBean extends
 
 	private SelectItem[] getBiddingDropdownValues(String moduleCode,
 			String docType) {
-		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
+		SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
+		// Filter By - statusId
+		List<Long> statusIds = new ArrayList<Long>();
+		statusIds.add(BidStatusConst.BID_PENDING_BIDDING);
+		statusIds.add(BidStatusConst.BID_IN_PROGRESS);
+		statusIds.add(BidStatusConst.BID_RESCHEDULE_BIDDING);
+		searchBean.getDataFilterBeans().add(new SearchFilterBean(
+				"pmStatus.statusId",
+				SearchOperator.OPERATOR_IN.value(),
+				statusIds));
 
-		try {
-			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
-					.getStatusDescList(moduleCode, docType);
-			List<PmStatusDesc> requiredStatusDescs = new ArrayList<PmStatusDesc>();
-			for (PmStatusDesc statusDesc : statusDescs) {
-				if (statusDesc.getPmStatus().getStatusId()
-						.equals(BidStatusConst.BID_PENDING_BIDDING)
-						|| statusDesc.getPmStatus().getStatusId()
-								.equals(BidStatusConst.BID_IN_PROGRESS)
-						|| statusDesc.getPmStatus().getStatusId()
-								.equals(BidStatusConst.BID_RESCHEDULE_BIDDING)) {
-					requiredStatusDescs.add(statusDesc);
-				}
-
-			}
-
-			items = new SelectItem[requiredStatusDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
-			int i = 1;
-			for (PmStatusDesc statusDesc : requiredStatusDescs) {
-
-				items[i++] = new SelectItem(statusDesc.getPmStatus()
-						.getStatusId(), statusDesc.getStatusName());
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		}
-
-		return items;
+		return super.getStatusDropdownValuesBySearchBean(
+				moduleCode, 
+				docType, 
+				searchBean);
 	}
 
 	/**
