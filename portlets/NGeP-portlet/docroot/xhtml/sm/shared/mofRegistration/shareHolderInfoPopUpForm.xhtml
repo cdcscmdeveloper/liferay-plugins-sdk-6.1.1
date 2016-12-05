@@ -32,10 +32,10 @@
 							alertValue="#{backingBean.managedBean.latestPersonnel.name}"/>
 						<p:message id="equiPerNamMsg" for="equiPerNam"
 						showSummary="true" showDetail="false" display="icon" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.person.nationality']}" />
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.nationality.origin']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu
-						label="#{lbl['lbl.sm.person.nationality']}" id="equiPerNational"
+						label="#{lbl['lbl.sm.person.nationality.origin']}" id="equiPerNational"
 						required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryId}"
 						disabled="#{backingBean.managedBean.disabledShareholderPersonnelNameAndNationality}"
