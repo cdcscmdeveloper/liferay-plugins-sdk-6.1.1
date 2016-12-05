@@ -636,6 +636,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ctAgency.setAp178(false);
 							}
 				  		}
+				  		ctBackingBean.getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+				  				ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 					}
 		  	
 				  	// Retrieve Items
