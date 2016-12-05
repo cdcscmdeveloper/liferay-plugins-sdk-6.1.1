@@ -2628,7 +2628,7 @@ public class QTDocumentsBackingBean extends
 
 			SupplierFinalizationBackingBean finalizationBackingBean = new SupplierFinalizationBackingBean();
 			SupplierFinalizationManagedBean finalizationManagedBean = finalizationBackingBean.getManagedBean();
-			AttachmentDateFormat attachmentDateFormat = new AttachmentDateFormat();
+			AttachmentDateFormat attachmentDateFormat = null;
 			for (int i = 0; i < reports.size(); i++) {
 				ScReport report = reports.get(i);
 				try {
@@ -2639,6 +2639,9 @@ public class QTDocumentsBackingBean extends
 							ScQtDocReportAttachment qtDocReportAttachment = qtDocReport.getScQtDocReportAttachment();
 							
 							// rename the original file before regenerate the documents.
+							if (attachmentDateFormat == null) {
+								attachmentDateFormat = new AttachmentDateFormat();
+							}
 							backupExistingFile(qtDocReportAttachment, attachmentDateFormat);
 							
 							qtDocReportAttachment = generateDocumentAttachment(qtDocReport, 
@@ -2652,9 +2655,6 @@ public class QTDocumentsBackingBean extends
 							ScQtFinalizationReport finalizationReport = (ScQtFinalizationReport)report;
 							finalizationManagedBean.setScQtFinalization(finalizationReport.getScQtFinalization());
 							finalizationManagedBean.setScQt(finalizationReport.getScQtFinalization().getScQt());
-							
-							// rename the original file before regenerate the documents.
-							backupExistingFile(finalizationReport.getScQtFinalizationReportAttachment(), attachmentDateFormat);
 							
 							ScQtFinalizationReportAttachment reportAttachment = finalizationBackingBean
 									.generateDocumentAttachment(finalizationReport, true);	
@@ -2678,14 +2678,16 @@ public class QTDocumentsBackingBean extends
 	}
 	
 	private void backupExistingFile(ScAttachment attachment, AttachmentDateFormat attachmentDateFormat) {
-		String oldFilePath = getActualFilePath(attachment);
-		File oldFile = new File(oldFilePath);
-		String fileName = attachment.getFileName();
-		String newFilePath = oldFilePath.replaceAll(
-				fileName, 
-				attachmentDateFormat.format(fileName, null));
-		
-		oldFile.renameTo(new File(newFilePath));
+		if (attachment != null) {
+			String oldFilePath = getActualFilePath(attachment);
+			File oldFile = new File(oldFilePath);
+			String fileName = attachment.getFileName();
+			String newFilePath = oldFilePath.replaceAll(
+					fileName, 
+					attachmentDateFormat.format(fileName, null));
+			
+			oldFile.renameTo(new File(newFilePath));	
+		}
 	}
 	
 	private String getPrefixFileName(int increment) {
