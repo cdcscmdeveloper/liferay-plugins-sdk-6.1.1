@@ -10,6 +10,7 @@
  */
 package my.ep.web.backingbean.integration.interfacegfmas;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -39,6 +41,7 @@ import my.ep.biz.service.pm.common.interfaceptj.IInterfaceProjectSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfacePtjSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotDanaSO;
 import my.ep.biz.service.pm.common.interfaceptj.IInterfaceVotSO;
+import my.ep.constant.IntegrationConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.interfaceptj.InterfaceAgOffReqDTO;
@@ -81,6 +84,7 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ProcessCodeType;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -92,6 +96,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 
 
@@ -2738,5 +2748,100 @@ public class GfMasBackingBean extends BaseBackingBean<GfMasManagedBean> {
 			setFlag(false);
 		}
 	}
+	
+	
+	
+	
+
+	public void prerenderMasterDataList() throws Exception {
+
+		System.out.println("***********prerenderMasterDataList**************");
+		renewSesionObject();
+		
+		IDIInterfaceSO interfaceSo = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDIInterfaceSO.class);
+
+		List<String> serviceCodeLs = new ArrayList<String>();
+		serviceCodeLs.add(IntegrationConst.GLBAC_SERVICE_CODE);
+		serviceCodeLs.add(IntegrationConst.GLSEG_SERVICE_CODE);
+		serviceCodeLs.add(IntegrationConst.GLVOT_SERVICE_CODE);
+		serviceCodeLs.add(IntegrationConst.GLDNA_SERVICE_CODE);
+		serviceCodeLs.add(IntegrationConst.GLPRG_SERVICE_CODE);
+		serviceCodeLs.add(IntegrationConst.GLPRJ_SERVICE_CODE);
+		serviceCodeLs.add(IntegrationConst.GLGLC_SERVICE_CODE);
+		serviceCodeLs.add(IntegrationConst.GLPTJ_SERVICE_CODE);
+		serviceCodeLs.add(IntegrationConst.CMBNK_SERVICE_CODE);
+		serviceCodeLs.add(IntegrationConst.GLPCG_SERVICE_CODE);
+		
+		
+		for(String serviceCode :serviceCodeLs){
+			InterfaceLogResDto resDTO = interfaceSo.retrieveInterfaceHeaderByServiceCode(serviceCode);
+			
+			
+			if(resDTO.getListOfDiInterfaceLog()!=null && resDTO.getListOfDiInterfaceLog().size()>0){
+				if(serviceCode.equalsIgnoreCase(IntegrationConst.GLBAC_SERVICE_CODE)){
+					this.getManagedBean().setAgOffSize(resDTO.getListOfDiInterfaceLog().size());
+				}else if(serviceCode.equalsIgnoreCase(IntegrationConst.GLSEG_SERVICE_CODE)){
+					this.getManagedBean().setPpSize(resDTO.getListOfDiInterfaceLog().size());
+				}else if(serviceCode.equalsIgnoreCase(IntegrationConst.GLVOT_SERVICE_CODE)){
+					this.getManagedBean().setVotSize(resDTO.getListOfDiInterfaceLog().size());
+				}else if(serviceCode.equalsIgnoreCase(IntegrationConst.GLDNA_SERVICE_CODE)){
+					this.getManagedBean().setDanaSize(resDTO.getListOfDiInterfaceLog().size());
+				}else if(serviceCode.equalsIgnoreCase(IntegrationConst.GLPRG_SERVICE_CODE)){
+					this.getManagedBean().setPrgActSize(resDTO.getListOfDiInterfaceLog().size());
+				}else if(serviceCode.equalsIgnoreCase(IntegrationConst.GLPRJ_SERVICE_CODE)){
+					this.getManagedBean().setProjectSize(resDTO.getListOfDiInterfaceLog().size());
+				}else if(serviceCode.equalsIgnoreCase(IntegrationConst.GLGLC_SERVICE_CODE)){
+					this.getManagedBean().setGlAccSize(resDTO.getListOfDiInterfaceLog().size());
+				}else if (serviceCode.equalsIgnoreCase(IntegrationConst.GLPTJ_SERVICE_CODE)){
+					this.getManagedBean().setPtjSize(resDTO.getListOfDiInterfaceLog().size());
+				}else if (serviceCode.equalsIgnoreCase(IntegrationConst.GLPCG_SERVICE_CODE)){
+					this.getManagedBean().setKptjSize(resDTO.getListOfDiInterfaceLog().size());
+				}else if(serviceCode.equalsIgnoreCase(IntegrationConst.CMBNK_SERVICE_CODE)){
+					this.getManagedBean().setBankSize(resDTO.getListOfDiInterfaceLog().size());
+				}
+			}
+			
+			
+		}
+		
+		
+		
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, "gfmasDashboard");
+		
+		RequestContext.getCurrentInstance().execute(
+				"refreshId();");
+
+	}
+	
+	
+	
+	public void navigateToGfmasURL() throws IOException,
+	PortalException, SystemException {
+		
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
+				.getRequestScope(WebKeys.THEME_DISPLAY);
+
+		System.out.println("getURLCurrent" + themeDisplay.getURLCurrent());
+		String commonUrl = themeDisplay.getURLCurrent().substring(
+				0,
+				themeDisplay.getURLCurrent().indexOf(
+						themeDisplay.getLayout().getGroup().getFriendlyURL())
+						+ themeDisplay.getLayout().getGroup().getFriendlyURL()
+						.length());
+		System.out.println("commonUrl" + commonUrl);
+
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		externalContext.redirect(commonUrl + "/gfmas-master-data");
+	}
+	
+	
+	
 
 }
