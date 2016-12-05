@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -39,7 +38,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.onlinebiddingstatus.OnlineBiddingStatusCountManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
@@ -123,33 +121,20 @@ public class OnlineBiddingStatusCountBackingBean extends
 
 	private List<PmStatusDesc> getBiddingDropdownValues(String moduleCode,
 			String docType) {
-		List<PmStatusDesc> requiredStatusDescs = new ArrayList<PmStatusDesc>();
-		try {
-			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
-					.getStatusDescList(moduleCode, docType);
-			for (PmStatusDesc statusDesc : statusDescs) {
-				if (statusDesc.getPmStatus().getStatusId()
-						.equals(BidStatusConst.BID_PENDING_BIDDING)
-						|| statusDesc.getPmStatus().getStatusId()
-								.equals(BidStatusConst.BID_IN_PROGRESS)
-						|| statusDesc.getPmStatus().getStatusId()
-								.equals(BidStatusConst.BID_RESCHEDULE_BIDDING)
-						|| statusDesc.getPmStatus().getStatusId()
-								.equals(BidStatusConst.BID_PAUSED)) {
-					requiredStatusDescs.add(statusDesc);
-				}
+		SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
+		// Filter By - statusId
+		List<Long> statusIds = new ArrayList<Long>();
+		statusIds.add(BidStatusConst.BID_PENDING_BIDDING);
+		statusIds.add(BidStatusConst.BID_IN_PROGRESS);
+		statusIds.add(BidStatusConst.BID_RESCHEDULE_BIDDING);
+		statusIds.add(BidStatusConst.BID_PAUSED);
+		searchBean.getDataFilterBeans().add(new SearchFilterBean(
+				"pmStatus.statusId",
+				SearchOperator.OPERATOR_IN.value(),
+				statusIds));
 
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		}
-
-		return requiredStatusDescs;
+		return StatusHelper.getInstance().getStatusDescList(
+				moduleCode, docType, searchBean);
 	}
 
 	public String getBidInProgress() {
