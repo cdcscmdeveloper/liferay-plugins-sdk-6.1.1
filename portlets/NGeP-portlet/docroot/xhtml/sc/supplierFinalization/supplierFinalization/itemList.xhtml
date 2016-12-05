@@ -141,7 +141,7 @@
 					process="@this" partialSubmit="true" 
 					actionListener="#{suppFinalizationBackingBean.getShortlistedCommomSupplier}"
 					oncomplete="commomSuppPopUp.show();" update="@([id$=commomSuppPopUpId])"  
-					disabled="#{!(isSecretaryUser or isBPKTaskAndClaimed)}" style="float:right;"/>
+					disabled="#{!(isSecretaryUser or isBPKTaskAndClaimed) or isBidding}" style="float:right;"/>
 			</h:column>
 
 		</h:panelGrid>
