@@ -30,8 +30,7 @@
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					style="float:right;" process="@all" partialSubmit="true"
-					action="#{evaluationMeetingBackingBean.submitMettingDetails(bpmAction)}"
-					title="#{lbl['lbl.sc.eva.btn.submit.meeting.tooltip']}" />
+					action="#{evaluationMeetingBackingBean.submitMettingDetails(bpmAction)}" />
 			</ui:fragment>
 		</ui:repeat>
 	</div>
