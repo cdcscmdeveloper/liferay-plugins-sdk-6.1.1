@@ -1398,8 +1398,9 @@ public class SupplierFinalizationBackingBean extends
 			} else {
 				recommendedSupplier.setAwarded(false);
 			}
-			if (recommendedSupplier.isAwarded() || 
-					recommendedSupplier.isShortlisted()) {
+			if ((recommendedSupplier.isAwarded() || 
+					recommendedSupplier.isShortlisted()) && 
+					!(scQtRecommend.isCancelled()&& !isQTRefinalized())) {
 				hasRecommendedSuppliers = true;
 				boolean alreadyExists = false;
 				
@@ -4627,8 +4628,23 @@ public class SupplierFinalizationBackingBean extends
 			if (scQtRecommend.getRecommendDtls() != null) {
 				scQtRecommend.setAwardSupplierList(
 						new ArrayList<ScQtEvaluationResultDtl>());
-				
 				prepareToDeleteRecommendDtls(scQtRecommend);
+				// reset flag value of is Awarded and shortlisted in evalResultDtls
+				Long currentZoneId = this.getManagedBean()
+						.getCurrentZone() != null ? this.getManagedBean()
+								.getCurrentZone().getSpecZoneId():DEFAULT_ZONE;
+				MapKey mapKey = new MapKey(currentZoneId, scQtRecommend
+						.getRequestItem().getRequestNoteItemId());
+				List<QtEvaluationResultDtlBean> cachedSuppliers = 
+						getManagedBean().getQualifiedSuppliersCache()
+										.get(mapKey);
+				if (CollectionUtils.isNotEmpty(cachedSuppliers)) {
+					for (QtEvaluationResultDtlBean cachedSupplier 
+												: cachedSuppliers) {
+						cachedSupplier.setShortlisted(false);
+						cachedSupplier.setAwarded(false);
+					}
+				}
 			}
 		} else {
 			this.getManagedBean().setItemCancelled(false);
@@ -6016,7 +6032,7 @@ public class SupplierFinalizationBackingBean extends
 						} else {
 							processShortlistedSuppliersByPackage(qualifiedSuppliers);
 						}
-						
+
 						for (ScQtEvaluationResultDtl qualSupplier 
 												: qualifiedSuppliers) {
 							QtEvaluationResultDtlBean recommendationBean = null;
@@ -6029,6 +6045,12 @@ public class SupplierFinalizationBackingBean extends
 									qualSupplier.setAwareded(
 											recommendationBean.isAwarded());
 								}
+								// Set shortlisted as true by defaultly for qualified suppliers in Bidding 
+								if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+										.equals(getManagedBean().getFinalizationMethod())
+										&& !qualSupplier.isSuppSelectionDisabled()) {
+									qualSupplier.setShortListed(true);		
+								}
 								recommendationBean = updateCachedData(qualSupplier, 
 										zoneId, selectedItemId);
 								if (qualSupplier.isAwareded()) {
@@ -6039,6 +6061,12 @@ public class SupplierFinalizationBackingBean extends
 										zoneId, selectedItemId);
 								if (qualSupplier.isAwareded()) {
 									getManagedBean().setRecommendedSupplier(qualSupplier);
+								}
+								//  Set shortlisted as true by defaultly for qualified suppliers in Bidding  
+								if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+										.equals(getManagedBean().getFinalizationMethod())
+										&& !qualSupplier.isSuppSelectionDisabled()) {
+									qualSupplier.setShortListed(true);		
 								}
 							} 
 							
@@ -6489,5 +6517,5 @@ public class SupplierFinalizationBackingBean extends
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSuppFinalizationSO.class);
 	}
-
+	
 }
