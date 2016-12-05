@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.bulkapplication;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -17,10 +16,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.bulkapplication.SmBulkApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.StatusHelper;
@@ -160,8 +156,10 @@ public class SmBulkApplicationBackingBean extends
 	 * 
 	 */
 	public void onCheckSelectedAppl(AjaxBehaviorEvent e) {
-		if (getManagedBean().getSelectedTasks().size() > getManagedBean()
-				.getMaxBulkApprovalCount()) {
+		boolean isReachMaxBulkApproval = getManagedBean().getSelectedTasks()
+				.size() > getManagedBean().getMaxBulkApprovalCount() ? true
+				: false;
+		if (isReachMaxBulkApproval) {
 			SmBulkApplicationVO removeBulkVO = null;
 			for (SmBulkApplicationVO bulkVO : getManagedBean()
 					.getSelectedTasks()) {
@@ -178,6 +176,20 @@ public class SmBulkApplicationBackingBean extends
 				getManagedBean().getSelectedTasks().remove(removeBulkVO);
 			}
 		}
+
+		for (SmBulkApplicationVO bulkVO : getManagedBean()
+				.getClaimTaskListDataModel()) {
+			SmBulkApplicationVO tempBulkVO = (SmBulkApplicationVO) EntityHelper
+					.getEntityBySinglePropertyFromList(bulkVO.getAppl()
+							.getApplId(), getManagedBean().getSelectedTasks(),
+							"appl");
+			if (isReachMaxBulkApproval && tempBulkVO == null) {
+				bulkVO.setNotAllowedToTick(true);
+			} else {
+				bulkVO.setNotAllowedToTick(false);
+			}
+		}
+
 		getManagedBean().setInitSelectedTasks(
 				getManagedBean().getSelectedTasks());
 	}
