@@ -89,7 +89,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.acid.ratio']}" /></td>
 				<td style="width: 350px;"><p:inputText
 						style="text-align:right;margin-bottom: 5px;" id="totalacidratio"
-						value="#{(supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.acidRatio eq null) ? 'null' : supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.acidRatio }"
+						value="#{(supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.acidRatio eq null) ? '' : supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.acidRatio }"
 						size="30" readonly="true" disabled="true">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -129,7 +129,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.current.ration']}" /></td>
 				<td style="width: 350px;"><p:inputText style="text-align:right"
 						id="totalcurrentratio"
-						value="#{(supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentRatio eq null) ? 'null' : supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentRatio}"
+						value="#{(supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentRatio eq null) ? '' : supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentRatio}"
 						size="30" readonly="true" disabled="true">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
