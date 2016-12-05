@@ -20,12 +20,16 @@ import java.util.regex.Pattern;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -40,6 +44,8 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
@@ -48,6 +54,8 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
@@ -59,6 +67,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.sc.bsvattendance.BSVAttendanceBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
@@ -835,7 +844,8 @@ public class QTBriefingSiteVisitBackingBean extends
 			ScQtBsvDtl tempScQtBsvDtl = new ScQtBsvDtl();
 			ScAddress currentAddress = bsvDtl.getAddress();
 			ScAddress tempPmAddress = new ScAddress();
-			try {
+			PmStatus currentBsvStatus = bsvDtl.getBsvStatus();
+			try {				
 				ConvertUtilsBean convertUtilsBean = BeanUtilsBean
 						.getInstance().getConvertUtils();
 				convertUtilsBean.register(false, true, -1);
@@ -862,6 +872,14 @@ public class QTBriefingSiteVisitBackingBean extends
 				// PmCity
 				tempPmAddress.setPmCity(new PmCity());
 				tempPmAddress.getPmCity().setCityId(currentAddress.getPmCity().getCityId());
+				
+				if (currentBsvStatus != null) {
+					// update transient for bsv status id
+					bsvDtl.setBsvStatusId(currentBsvStatus.getStatusId());
+					
+					tempScQtBsvDtl.setBsvStatus(new PmStatus());
+					tempScQtBsvDtl.getBsvStatus().setStatusId(currentBsvStatus.getStatusId());	
+				}
 			} catch (IllegalAccessException e) {
 				log.error("Exception occured while copying properties"
 						+ e.getMessage());
@@ -998,6 +1016,13 @@ public class QTBriefingSiteVisitBackingBean extends
 				fieldPrefix + QTFieldConst.FILED_QT_BSV_MAX_NO_OF_ATTENDANCE, 
 				oldBsvDtl.getMaxNoOfAttendance(), newBsvDtl.getMaxNoOfAttendance());
 
+		// bsvStatus
+		Long oldBsvStatusId = oldBsvDtl.getBsvStatus() != null ? oldBsvDtl.getBsvStatus().getStatusId() : null;
+		Long newBsvStatusId = newBsvDtl.getBsvStatus() != null ? newBsvDtl.getBsvStatus().getStatusId() : null;
+		putIntoAmendMentBeanIfChanged(amendMentBean, 
+				fieldPrefix + QTFieldConst.FILED_QT_BSV_STATUS, 
+				oldBsvStatusId, newBsvStatusId);
+
 		this.getManagedBean().setAmendMentBean(amendMentBean);
 		this.getManagedBean().setTempScQtBsvDtl(null);
 
@@ -1101,5 +1126,48 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		return minDate;
 
+	}
+	
+	/**
+	 * Get BSV Status Dropdown
+	 * 
+	 * @return	the array of SelectItem instance
+	 */
+	public SelectItem[] getBsvStatusDropdownValues() {
+		SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
+		// Filter By - statusId
+		List<Long> statusIds = new ArrayList<Long>();
+		statusIds.add(QTStatusConst.BSV_COMPLETED);
+		searchBean.getDataFilterBeans().add(new SearchFilterBean(
+				"pmStatus.statusId",
+				SearchOperator.OPERATOR_NOT_IN.value(),
+				statusIds));
+
+		return super.getStatusDropdownValuesBySearchBean(
+				ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
+				ParameterConst.DOCTYPE_BSV_REGISTRATION, 
+				searchBean);
+	}
+	
+	/**
+	 * BSV Status dropdown change action
+	 */
+	public void bsvStatusChanged() {
+		IStatusSO statusSO = null;
+		try {
+			ScQtBsvDtl scQtBsvDtl = getManagedBean().getQtBriefing();
+			Long statusId = scQtBsvDtl.getBsvStatusId();
+
+			if (statusId != null) {
+				statusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setStatusId(statusId);
+				StatusResDTO resDTO = statusSO.retrieveStatusByStatusId(reqDTO);
+				scQtBsvDtl.setBsvStatus(resDTO.getPmStatus());	
+			}
+		} finally {
+			statusSO = null;
+		}
 	}
 }
